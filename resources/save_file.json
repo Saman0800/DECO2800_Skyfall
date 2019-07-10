@@ -1,0 +1,4 @@
+{"entities": [{"col":"0.0","texture":"spacman_ded","objectName":"playerPeon","entityID":"1","row":"0.0"}
+],"tiles": [{"texture":"grass_1_0","elevation":1,"index":-1,"tileID":30301,"rowPos":1.0,"colPos":1.0},
+{"texture":"grass_1_0","elevation":1,"index":-1,"tileID":30302,"rowPos":5.0,"colPos":4.0}
+]}
