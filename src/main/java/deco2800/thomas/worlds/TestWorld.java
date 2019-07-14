@@ -7,6 +7,7 @@ import java.util.Random;
 
 import deco2800.thomas.entities.AbstractEntity;
 import deco2800.thomas.entities.StaticEntity;
+import deco2800.thomas.entities.Tree;
 import deco2800.thomas.entities.PlayerPeon;
 import deco2800.thomas.entities.Rock;
 import deco2800.thomas.managers.GameManager;
@@ -23,7 +24,7 @@ public class TestWorld extends AbstractWorld {
 	 */
 	boolean notGenerated = true;
 
-	private static int RADIUS = 100;
+	private static int RADIUS = 25;
 
 	public TestWorld() {
 		super();
@@ -47,7 +48,6 @@ public class TestWorld extends AbstractWorld {
 	
 	//building with a fence
 	private StaticEntity createBuilding2(float col, float row) {
-		StaticEntity building;
 		Map<HexVector, String> textures = new HashMap<HexVector, String>();
 		
 		textures = new HashMap<HexVector, String>();
@@ -70,25 +70,32 @@ public class TestWorld extends AbstractWorld {
 		textures.put(new HexVector(2, 1), "fenceNW-S");
 		//textures.put(new HexVector(2, 0), "fenceN-S");
 		textures.put(new HexVector(2, -1), "fenceN-SW");
-
-		return new StaticEntity(col, row, 1, textures);
+		StaticEntity building =  new StaticEntity(col, row, 1, textures);
 		
+		return building;
+		
+	}
+	
+	private void addTree(float col, float row) {
+		Map<HexVector, String> textures = new HashMap<HexVector, String>();				
+		Tile t = GameManager.get().getWorld().getTile(col, row);
+		Tree tree = new  Tree(t, true);		
+		entities.add(tree);
 	}
 
 
 	//this get ran on first game tick so the world tiles exist.
 	public void createBuildings() {
-	
-
 
 		Random random = new Random();
 		int tileCount = GameManager.get().getWorld().getTileMap().size();
 		// Generate some rocks to mine later
-		for (int i = 0; i <1000;  i++) { 
+		for (int i = 0; i <200;  i++) { 
 			Tile t = GameManager.get().getWorld().getTile(random.nextInt(tileCount));
-			entities.add(new Rock(t,true));
+			if (t != null) {
+				entities.add(new Rock(t,true));
+			}
 		}
-
 		entities.add(createBuilding2(-5, 0.5f));
 
 	}
@@ -112,7 +119,7 @@ public class TestWorld extends AbstractWorld {
 
 					type += elevation;
 
-					tiles.add(new Tile(type, q, r+oddCol, elevation));
+					tiles.add(new Tile(type, q, r+oddCol));
 				}
 			}
 		}
@@ -132,6 +139,8 @@ public class TestWorld extends AbstractWorld {
 
 		if (notGenerated) {
 			createBuildings();
+			addTree(-1, -3.5f);
+			
 			notGenerated = false;
 		}
 	}

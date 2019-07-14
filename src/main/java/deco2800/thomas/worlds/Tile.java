@@ -13,20 +13,24 @@ import deco2800.thomas.managers.NetworkManager;
 import deco2800.thomas.managers.TextureManager;
 import deco2800.thomas.util.HexVector;
 
-public class Tile implements Comparable<Tile> {
+public class Tile{
 	private static int nextID = 0;
 
 	private static int getNextID() {
 		return nextID++;
 	}
 
+	public static void resetID() {
+		nextID = 0;
+	}
+	@Expose
     private String texture;
     private HexVector coords;
     
-    @Expose
-    private int elevation;
+
     private StaticEntity parent;
-    
+	
+	@Expose
     private boolean obstructed = false;
     
     
@@ -49,13 +53,12 @@ public class Tile implements Comparable<Tile> {
     private int tileID = 0;
     
     public Tile(String texture) {
-        this(texture, 0, 0, 0);
+        this(texture, 0, 0);
     }
 
-    public Tile(String texture, float col, float row, int elevation) {
+    public Tile(String texture, float col, float row) {
         this.texture = texture;
         coords = new HexVector(col, row);
-        this.elevation = elevation;
         this.neighbours = new HashMap<Integer,Tile>();
         this.tileID = Tile.getNextID();
     }
@@ -115,20 +118,6 @@ public class Tile implements Comparable<Tile> {
 		return String.format("[%.0f, %.1f: %d]", coords.getCol(), coords.getRow(), index);
 	}
 
-	
-	@Override
-	public int compareTo(Tile other) {
-		return this.elevation - other.getElevation();
-	}
-
-	public int getElevation() {
-		return elevation;
-	}
-	
-	public void setElevation(int elevation) {
-		this.elevation = elevation;
-	}
-
 	public StaticEntity getParent() {
 		return parent;
 	}
@@ -147,8 +136,8 @@ public class Tile implements Comparable<Tile> {
 
 	public void dispose() {
 		if (this.hasParent() && this.parent != null) {
-			for (Integer childId : parent.getChildrenID()) {
-				Tile child = GameManager.get().getWorld().getTile(childId);
+			for (HexVector childposn : parent.getChildrenPositions()) {
+				Tile child = GameManager.get().getWorld().getTile(childposn);
 				if (child != null) {
 					child.setParent(null);
 					child.dispose();
@@ -198,5 +187,14 @@ public class Tile implements Comparable<Tile> {
 	public void setObstructed(boolean b) {
 		obstructed = b;
 		
+	}
+
+
+	public void setCol(float col) {
+		this.coords.setCol(col);
+	}
+
+	public void setRow(float row) {
+		this.coords.setRow(row);
 	}
 }

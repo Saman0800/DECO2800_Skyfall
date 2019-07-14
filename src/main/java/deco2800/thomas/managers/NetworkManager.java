@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * NetworkManager
@@ -32,8 +33,8 @@ public class NetworkManager extends TickableManager  {
     private int messagesSent = 0;
 
     private static final int BUFFER_SIZE = 1048576;
-    private static final int TCP_PORT = 54555;
-    private static final int UDP_PORT = 54777;
+    private static final int TCP_PORT = 54556;
+    private static final int UDP_PORT = 54778;
 
     private Server server = null;
     private Client client = null;
@@ -167,10 +168,15 @@ public class NetworkManager extends TickableManager  {
             }
          });
 
+        
 
 
         logger.info("Sending initial connect message to host, requesting initial information to be sent to this client.");
         
+        ConnectMessage request = new ConnectMessage();
+        request.username = username;
+        client.sendTCP(request);
+
         // Broadcast to the host in-game that this client has connected.
         sendChatMessage("Joined the game.");
 
@@ -214,7 +220,42 @@ public class NetworkManager extends TickableManager  {
 
         // Add all listeners for the host, allowing it to receive information from all its clients.
         logger.info("Attempting to add message listeners to server.");
-        server.addListener(new Listener());
+        server.addListener(new Listener() {
+            @Override
+            public void received (Connection connection, Object object) {
+                messagesReceived++;
+                System.out.println(object);
+
+                if (object instanceof SingleEntityUpdateMessage) {
+                    SingleEntityUpdateMessage message = (SingleEntityUpdateMessage) object;
+
+                    System.out.println(message);
+
+                    GameManager.get().getWorld().updateEntity(((SingleEntityUpdateMessage) object).entity);
+                }
+
+                if (object instanceof ChatMessage) {
+                    // Forward the chat message to all clients
+                    server.sendToAllTCP(object);
+                    GameManager.get().getManager(OnScreenMessageManager.class).addMessage(object.toString());
+                }
+
+                if (object instanceof ConnectMessage) {
+                    sendChatMessage(connection.getID() + " connected.");
+                    // Reply with the tilemap
+                    TileUpdateMessage message = new TileUpdateMessage();
+                    List<Tile> tiles = GameManager.get().getWorld().getTileMap();
+                    for (Tile t : tiles) {
+                        message.tile = t;
+                        server.sendToTCP(connection.getID(), message);
+                    }
+                }
+
+                if (object instanceof TileDeleteMessage) {
+                    GameManager.get().getWorld().deleteTile(((TileDeleteMessage) object).tileID);
+                }
+            }
+        });
 
         logger.info("HOST WAS INITIALISED SUCCESSFULLY.");
         return true;

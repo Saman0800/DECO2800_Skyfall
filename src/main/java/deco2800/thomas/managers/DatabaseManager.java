@@ -3,6 +3,8 @@ package deco2800.thomas.managers;
 import deco2800.thomas.entities.*;
 import deco2800.thomas.worlds.AbstractWorld;
 import deco2800.thomas.worlds.Tile;
+import deco2800.thomas.util.HexVector;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -22,7 +24,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.lang.reflect.InvocationTargetException;
 
-public final class DatabaseManager extends TickableManager {
+import java.lang.reflect.Type;
+import com.google.gson.reflect.TypeToken;
+
+public final class DatabaseManager extends AbstractManager {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
     private static final String TEXTURESTRING = "texture";
     private static final String ROWPOSSTRING = "rowPos";
@@ -55,7 +60,6 @@ public final class DatabaseManager extends TickableManager {
         JsonElement element = tileJson.fromJson(json, JsonElement.class);
         JsonObject jsonObject = element.getAsJsonObject();
         JsonObject result = new JsonObject();
-        result.addProperty(TEXTURESTRING, t.getTextureName());
 
         for (String s : jsonObject.keySet()) {
             result.add(s, jsonObject.get(s));
@@ -80,21 +84,24 @@ public final class DatabaseManager extends TickableManager {
      */
     private static StringBuilder generateJsonForEntity(AbstractEntity e, StringBuilder entireJsonAsString,
                                                       boolean appendComma) {
-        Gson entityJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        JsonElement element = entityJson.fromJson("{}", JsonElement.class);
+        Gson tileJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        Float rowPosition = e.getRow();
+        Float colPosition = e.getCol();
+        String json = tileJson.toJson(e);
+
+        JsonElement element = tileJson.fromJson(json, JsonElement.class);
         JsonObject jsonObject = element.getAsJsonObject();
-
-        // Save the data
-        e.saveData();
-
-        HashMap<String, Object> dataToLoad = (HashMap<String, Object>) e.getDataToSave();
-        for (Map.Entry<String, Object> entry : dataToLoad.entrySet()) {
-            jsonObject.addProperty(entry.getKey(), entry.getValue().toString());
+        JsonObject result = new JsonObject();
+        
+        result.addProperty("objectName",e.getObjectName());                                                
+        for (String s : jsonObject.keySet()) {
+            result.add(s, jsonObject.get(s));
         }
+        result.addProperty(ROWPOSSTRING, rowPosition);
+        result.addProperty(COLPOSSTRING, colPosition);
 
-        String finalJson = jsonObject.toString();
+        String finalJson = result.toString();
         entireJsonAsString.append(finalJson);
-
         if (appendComma) {
             entireJsonAsString.append(",");
         }
@@ -154,24 +161,12 @@ public final class DatabaseManager extends TickableManager {
             reader.beginArray();
             while (reader.hasNext()) {
             	reader.beginObject();
-                reader.nextName();
-                String textureName = reader.nextString();
-                reader.nextName();
-                Integer elevation = reader.nextInt();
-                reader.nextName();
-                Integer indexValue = reader.nextInt();
-                reader.nextName();
-                Integer tileId = reader.nextInt();
-                reader.nextName();
-                double rowPosition = reader.nextDouble();
-                reader.nextName();
-                double colPosition = reader.nextDouble();
-                Tile tile = new Tile(textureName, (float) colPosition,
-                        (float) rowPosition,  elevation);
                 
-                tile.setIndex(indexValue);
-                tile.setTileID(tileId);
-                
+                Tile tile = new Tile("textureName", 0,0);
+                while (reader.hasNext()) {
+                    checkBasicTileSettings(tile,reader.nextName(),reader);
+                }
+ 
                 newTiles.add(tile);
                 reader.endObject();
             }
@@ -182,11 +177,53 @@ public final class DatabaseManager extends TickableManager {
         }
     }
 
+    private static boolean checkBasicTileSettings(Tile tile, String entityField, JsonReader reader) {
+        try {
+            switch (entityField) {
+                case "colPos":
+                    tile.setCol((float) reader.nextDouble());
+                    return true;
+                case "rowPos":
+                    tile.setRow((float) reader.nextDouble());
+                    return true;
+                case "index":
+                    tile.setIndex(reader.nextInt());
+                    return true;
+                case "texture":
+                    tile.setTexture(reader.nextString());
+                    return true;
+                case "tileID":
+                    tile.setTileID(reader.nextInt());
+                    return true;
+                case "obstructed":
+                    tile.setObstructed( reader.nextBoolean());
+                    return true;
+                default:
+                    logger.error("Unexpected attribute when loading an entity:" + entityField);
+                    return false;
+            }
+        } catch (IOException e) {
+            logger.error("Cannot read the tile json array");
+        }
+        return false;
+    }
+
+
+
+
     private static AbstractEntity resolveEntityToLoad(String entityObjectName) {
         try {
             for (String s:Arrays.asList("rock")){
                 if (entityObjectName.startsWith(s)){ 
                     Rock create = new Rock();
+                    create.setObjectName(entityObjectName); 
+                    return (AbstractEntity) create;
+                }
+            }
+
+            for (String s:Arrays.asList("staticEntityID")){
+                if (entityObjectName.startsWith(s)){ 
+                    StaticEntity create = new StaticEntity();
                     create.setObjectName(entityObjectName); 
                     return (AbstractEntity) create;
                 }
@@ -200,13 +237,14 @@ public final class DatabaseManager extends TickableManager {
                 }
             }
 
-
             StringBuilder fullEntityName = new StringBuilder();
             fullEntityName.append("deco2800.thomas");
             HashMap<String, String> entityMap = new HashMap<>();
-            entityMap.put("fog", "entities.UndiscoveredArea");
-            entityMap.put("buildingA", "entities.UndiscoveredArea");
             entityMap.put("player", "entities.PlayerPeon");
+            entityMap.put("rock", "entities.rock");
+            entityMap.put("tree", "entities.Tree");
+            entityMap.put("staticEntityID", "entities.StaticEntity");
+
             fullEntityName.append(entityMap.get(entityObjectName));
             return (AbstractEntity) Class.forName(fullEntityName.toString()).getDeclaredConstructor().newInstance();
         } catch (ClassNotFoundException|NoSuchMethodException|InstantiationException|
@@ -215,53 +253,50 @@ public final class DatabaseManager extends TickableManager {
         }
     }
 
-    private static AbstractEntity processEntityList(List<String> entityAsList, String entityName,
-                                                    Map<Integer, AbstractEntity> newEntities) {
-        AbstractEntity entity = resolveEntityToLoad(entityName);
-        if (entity == null) {
-            logger.error("Unable to resolve an entity from the save file, on load.");
-            logger.error("This is likely due to the entity being a new addition to the game.");
-            return null;
-        }
-        for (int i = 0; i < entityAsList.size(); i += 2) {
-            String numString = entityAsList.get(i+1);
-            String entityField = entityAsList.get(i);
-            if (!checkBasicSettings(entity, entityField, numString)) {
-                checkOtherSettings(entity, entityField, numString, newEntities);
-            }
-        }
-        return entity;
-    }
-
-    private static boolean checkBasicSettings(AbstractEntity entity, String entityField, String numString) {
-        switch (entityField) {
-            case "col":
-                entity.setCol(Float.parseFloat(numString));
-                return true;
-            case "row":
-                entity.setRow(Float.parseFloat(numString));
-                return true;
-            case TEXTURESTRING:
-                entity.setTexture(numString);
-                return true;
-            case "objectName":
-                entity.setObjectName(numString);
-                return true;
-            case "entityID":
-                entity.setEntityID(Integer.parseInt(numString));
-                return true;
-            default:
-                logger.error("Unexpected attribute when loading an entity");
-                return false;
-        }
-    }
-
-    private static void checkOtherSettings(AbstractEntity entity, String entityField,String numString, Map<Integer, AbstractEntity> newEntities) {
+    private static AbstractEntity checkBasicEntitySettings(AbstractEntity entity,  String entityField,JsonReader reader) {
+        try {
             switch (entityField) {
+                case "speed":
+                    ((AgentEntity)entity).setSpeed((float) reader.nextDouble());
+                    return entity;
+                case "colPos":
+                    entity.setCol((float) reader.nextDouble());
+                    return entity;
+                case "rowPos":
+                    entity.setRow((float) reader.nextDouble());
+                    return entity;
+                case "texture":
+                    entity.setTexture(reader.nextString());
+                    return entity;
+                case "children":
+                case "staticTexture":
+                    reader.beginObject();
+                    Map<HexVector, String> children = new HashMap<>();
+                    while (reader.hasNext()) {
+                    JsonToken t = reader.peek();
+                    String position = reader.nextName();
+                    String texture =  reader.nextString();
+                    HexVector pos = new HexVector(position);
+                    children.put(pos,texture);
+                    }
+                    
+                    ((StaticEntity) entity).setChildren(children);
+                    reader.endObject();
+                    return entity;
+               
+                case "entityID":
+                    entity.setEntityID(reader.nextInt());
+                    return entity;
+                case "obstructed":
+                    return entity;
                 default:
-                    logger.error("Unexpected attribute when loading an entity");
-                    break;
+                    logger.error("Unexpected attribute when loading an entity:" + entityField);
+                    return null;
             }
+        } catch (IOException e) {
+            logger.error("Cannot read the tile json array");
+        }  
+        return null;
     }
 
     /**
@@ -270,38 +305,36 @@ public final class DatabaseManager extends TickableManager {
      * @param reader the JsonReader object for loading JsonTokens
      * @param newEntities the map of new entities.
      */
-    private static void processEntityJson(com.google.gson.stream.JsonReader reader,
+    private static void processEntityJson(JsonReader reader,
                                           Map<Integer, AbstractEntity> newEntities) {
-        boolean entityNameNext = false;
+   
         String entityName = "";
-        List<String> jsonObjectsRead = new ArrayList<>();
         try {
-            while (reader.peek() != JsonToken.END_OBJECT) {
-                String next;
-                if (reader.peek() == JsonToken.NAME) {
-                    next = reader.nextName();
-                    if (next.equals("objectName")) {
-                        entityNameNext = true;
-                    }
-                } else {
-                    next = reader.nextString();
-                    if (entityNameNext) {
-                        entityNameNext = false;
-                        entityName = next;
-                    }
+            AbstractEntity entity;
+            JsonToken t = reader.peek();
+            entityName = reader.nextName();
+            if ( entityName.startsWith("objectName")) {
+                entityName = reader.nextString();
+                entity = resolveEntityToLoad(entityName);
+                if (entity == null) {
+                    logger.error("Unable to resolve an " + entityName +" from the save file, on load.");
+                    logger.error("This is likely due to the entity being a new addition to the game.");
+                    return;
+                }            
+                entity.setObjectName(entityName);
+  
+                while (reader.hasNext()) {
+                    entity = checkBasicEntitySettings(entity,reader.nextName(), reader);
                 }
-                jsonObjectsRead.add(next);
+                reader.endObject();
+            if (entity != null) {
+                newEntities.put(entity.getEntityID(), entity);
             }
-            reader.endObject();
+            }
         } catch (IOException e) {
-            logger.error("Cannot read the entity json data");
-        }
-
-        AbstractEntity entity = processEntityList(jsonObjectsRead, entityName, newEntities);
-        if (entity == null) {
-            return;
-        }
-        newEntities.put(entity.getEntityID(), entity);
+            logger.error("Cannot read the tile json array");
+        }       
+       
     }
 
 
@@ -336,15 +369,25 @@ public final class DatabaseManager extends TickableManager {
             logger.error("Somehow loaded the JSON file, but it's somewhat corrupted", e);
         }
     }
-
     private static void readEntities(JsonReader reader, Map<Integer, AbstractEntity> newEntities, CopyOnWriteArrayList<Tile> newTiles) throws IOException {
         while (reader.hasNext()) {
             if (!startArrayReading(reader, newTiles)) {
                 break;
             }
             while (reader.hasNext()) {
-                reader.beginObject();
-                processEntityJson(reader, newEntities);
+                JsonToken nextToken = reader.peek();
+                if (JsonToken.BEGIN_OBJECT.equals(nextToken)) {
+                    reader.beginObject();
+                    processEntityJson(reader, newEntities);             
+                } else if (JsonToken.NAME.equals(nextToken)) {
+                    reader.nextName();                    
+                } else if (JsonToken.STRING.equals(nextToken)) {     
+                    reader.nextString();                   
+                } else if (JsonToken.NUMBER.equals(nextToken)) {
+                    reader.nextDouble();
+                } else if (JsonToken.END_OBJECT.equals(nextToken)) {
+                    reader.endObject();
+                }
             }
             reader.endArray();
         }
@@ -362,8 +405,7 @@ public final class DatabaseManager extends TickableManager {
      * @param world We have a world as a parameter for testing purposes.  In the main game, this will never need to be
      *              passed, but when testing a TestWorld is needed to be passed.
      */
-    @SuppressWarnings("unchecked")
-	public static void loadWorld(AbstractWorld world) {
+    public static void loadWorld(AbstractWorld world) {
         // This check allows for the world parameter to act as an optional
         if (world == null) {
             world = GameManager.get().getWorld();
@@ -393,7 +435,8 @@ public final class DatabaseManager extends TickableManager {
         }
 
         world.setTileMap(newTiles);
-        world.setEntities(new ArrayList(newEntities.values()));
+        world.generateNeighbours();
+        world.setEntities(new ArrayList<AbstractEntity>(newEntities.values()));
         logger.info("Load succeeded");
         GameManager.get().getManager(OnScreenMessageManager.class).addMessage("Loaded game from the database.");
     }
@@ -480,9 +523,4 @@ public final class DatabaseManager extends TickableManager {
         GameManager.get().getManager(OnScreenMessageManager.class).addMessage("Game saved to the database.");
     }
 
-	@Override
-	public void onTick(long i) {
-		// TODO Auto-generated method stub
-		
-	}
 }

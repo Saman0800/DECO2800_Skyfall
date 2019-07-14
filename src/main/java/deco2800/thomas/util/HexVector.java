@@ -19,6 +19,13 @@ public class HexVector {
     	this.row = vector.row;
     }
 
+    public HexVector(String vector) {
+        String[] pos = vector.split(",",2);
+    	this.col = Float.parseFloat(pos[0]);
+    	this.row = Float.parseFloat(pos[1]);
+    }
+
+
     public HexVector() {
 
     }
@@ -132,7 +139,7 @@ public class HexVector {
     
     @Override
     public String toString() {
-    	return String.format("[%f, %f]", col, row);
+    	return String.format("%f, %f", col, row);
     }
 
 	public HexVector getInt() {

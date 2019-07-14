@@ -16,20 +16,24 @@ import com.google.gson.annotations.Expose;
  * AbstractEntities are rendered by Render2D and Render3D An item that does not
  * need to be rendered should not be a WorldEntity
  */
-public abstract class AbstractEntity implements Renderable {
+public abstract class AbstractEntity implements Comparable<AbstractEntity>, Renderable {
 	private static final String ENTITY_ID_STRING = "entityID";
 	
 	@Expose
-	private transient HashMap<String, Object> dataToSave = new HashMap<>();
-
-	
+	private String objectName = null;
+		
 	static int nextID = 0;
+
+	public static void resetID() {
+		nextID = 0;
+	}
 
 	static int getNextID() {
 		return nextID++;
 	}
-
+	@Expose
 	private String texture = "error_box";
+
 
 	protected HexVector position;
 	
@@ -39,13 +43,15 @@ public abstract class AbstractEntity implements Renderable {
 
 	private float rowRenderLength;
 	
-	@Expose
-	private String objectName = null;
 
+
+	@Expose
 	private int entityID = 0;
 
 	/** Whether an entity should trigger a collision when */
 	private boolean collidable = true; 
+	
+	private int renderOrder = 0; 
 	
 	/**
 	 * Constructor for an abstract entity
@@ -54,10 +60,11 @@ public abstract class AbstractEntity implements Renderable {
 	 * @param height the height position on the world
      */
 
-	public AbstractEntity(float col, float row, int height) {
-		this(col, row, height, 1f, 1f);
+	public AbstractEntity(float col, float row, int renderOrder) {
+		this(col, row, renderOrder, 1f, 1f);
 		entityID = AbstractEntity.getNextID();
 		this.setObjectName(ENTITY_ID_STRING);
+		this.renderOrder = renderOrder;
 	}
 
 	public AbstractEntity() {
@@ -147,6 +154,19 @@ public abstract class AbstractEntity implements Renderable {
 	public float getRowRenderWidth() {
 		return rowRenderLength;
 	}
+	
+	public void setRenderOrder(int newLevel) {
+		this.renderOrder = newLevel;
+	}
+	
+	public int getRenderOrder() {
+		return renderOrder;
+	} 
+	
+	@Override 
+	public int compareTo(AbstractEntity otherEntity) {
+		return this.renderOrder - otherEntity.getRenderOrder();
+	}
 
 	/**
 	 * Tests to see if the item collides with another entity in the world
@@ -190,23 +210,6 @@ public abstract class AbstractEntity implements Renderable {
 	}
 
 
-	/**
-	 * Set whether entity should trigger a collision on contact with another
-	 * entity.
-	 * @param collidable - boolean whether it should trigger COLLIDE events.
-	 */
-	public void setCollidable(boolean collidable) {
-		this.collidable = collidable;
-	}
-
-	/**
-	 * Return the collidable property's current value.
-	 * @return Boolean, whether collidable or not.
-	 */
-	public boolean isCollidable() {
-		return collidable;
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -237,15 +240,6 @@ public abstract class AbstractEntity implements Renderable {
 		return this.position.distance(e.position);
 	}
 	
-	@Override
-	public float getResizeRatio() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	@Override
-	public void setResizeRatio(float newRatio) {
-		// TODO Auto-generated method stub
-	}
 
 	public HexVector getPosition() {
 		return position;
@@ -281,32 +275,7 @@ public abstract class AbstractEntity implements Renderable {
 	public void dispose() {
 		GameManager.get().getManager(NetworkManager.class).deleteEntity(this);
 		GameManager.get().getWorld().getEntities().remove(this);
-	}
-	
-	/**
-	 * Adds data to the dataToSave dictionary.  Anything about an entity that needs to be
-	 * saved should go through this function.
-	 *
-	 * @param key: A description of the data being saved.  This is used by the load function to figure out
-	 *           which entity is being loaded.
-	 */
-	public void addDataToSave(String key, Object value) {
-		this.dataToSave.put(key, value);
-	}
-
-	@Override
-	public void saveData() {
-		addDataToSave(ENTITY_ID_STRING, this.entityID);
-		addDataToSave("row", this.getRow());
-		addDataToSave("col", this.getCol());
-		addDataToSave("texture", this.getTexture());
-		addDataToSave("objectName", this.getObjectName());
-	}
-
-	public Map<String, Object> getDataToSave() {
-		return this.dataToSave;
-	}
-	
+	}	
 }
 
 

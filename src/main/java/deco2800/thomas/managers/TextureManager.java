@@ -27,7 +27,7 @@ public class TextureManager extends AbstractManager {
 	/**
 	 * The height of the tile to use when positioning the tile.
 	 */
-	public static final int TILE_HEIGHT = 320;
+	public static final int TILE_HEIGHT = 278;
 
 	
 	//private final Logger log = LoggerFactory.getLogger(TextureManager.class);
@@ -54,12 +54,13 @@ public class TextureManager extends AbstractManager {
             textureMap.put("grass_2", new Texture("resources/grass_3.png"));
  
             textureMap.put("selection", new Texture("resources/blue_selection.png"));
+            textureMap.put("path", new Texture("resources/yellow_selection.png"));
             
             
             textureMap.put("buildingB", new Texture("resources/building3x2.png"));
             
             textureMap.put("buildingA", new Texture("resources/buildingA.png"));
-            
+            textureMap.put("tree", new Texture("resources/tree.png"));
             
             textureMap.put("fenceN-S", new Texture("resources/fence N-S.png"));
           

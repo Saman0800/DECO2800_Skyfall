@@ -48,18 +48,4 @@ public interface Renderable {
      * @return the length in the y direction
      */
     float getRowRenderLength();
-
-    /**
-     * Getter for the resize ration of an entity
-     * @return the resize ratio
-     */
-    float getResizeRatio();
-
-    /**
-     * Setter for the resizeRatio of an entity
-     * @param newRatio the new ratio to set as the resize ratio
-     */
-    void setResizeRatio(float newRatio);
-
-	void saveData();
 }

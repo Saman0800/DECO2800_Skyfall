@@ -21,7 +21,6 @@ public class GrassTuft extends AbstractEntity {
      */
     public GrassTuft(AbstractWorld world, float col, float row) {
         super(col, row, 0);
-        setCollidable(false);
         setTexture("grass_tuft");
         setObjectName(ENTITY_ID_STRING);
     }

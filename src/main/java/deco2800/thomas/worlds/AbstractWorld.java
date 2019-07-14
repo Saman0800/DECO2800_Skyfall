@@ -1,6 +1,7 @@
 package deco2800.thomas.worlds;
 
 import deco2800.thomas.entities.AbstractEntity;
+import deco2800.thomas.entities.AgentEntity;
 import deco2800.thomas.entities.StaticEntity;
 import deco2800.thomas.managers.GameManager;
 import deco2800.thomas.util.HexVector;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.*;
 
 /**
  * AbstractWorld is the Game AbstractWorld
@@ -34,7 +36,6 @@ public abstract class AbstractWorld {
     	generateWorld();
     	generateNeighbours();
     	generateTileIndexes();
-    	Collections.sort(tiles);
     }
     
     
@@ -108,6 +109,34 @@ public abstract class AbstractWorld {
     public List<AbstractEntity> getEntities() {
         return new CopyOnWriteArrayList<>(this.entities);
     }
+    
+    /**
+     *  Returns a list of entities in this world, ordered by their render level 
+     *  @return all entities in the world 
+     */
+    public List<AbstractEntity> getSortedEntities(){
+		List<AbstractEntity> e = new CopyOnWriteArrayList<>(this.entities);
+    	Collections.sort(e);
+		return e;
+    }
+
+
+    /**
+     *  Returns a list of entities in this world, ordered by their render level 
+     *  @return all entities in the world 
+     */
+    public List<AgentEntity> getSortedAgentEntities(){
+        List<AgentEntity> e = this.entities
+            .stream()
+            .filter(p -> p instanceof AgentEntity)
+            .map(p -> (AgentEntity) p)
+            .collect(Collectors.toList());
+
+    	Collections.sort(e);
+		return e;
+    }
+
+
 
     /**
      * Adds an entity to the world

@@ -70,8 +70,8 @@ public class SaveLoadTest {
         float row_one = 1.0f;
         float col_two = 4.0f;
         float row_two = 5.0f;
-        saveTileMap.add(new Tile("grass_1_0", col_one, row_one, 1));
-        saveTileMap.add(new Tile("grass_1_0", col_two, row_two, 1));
+        saveTileMap.add(new Tile("grass_1_0", col_one, row_one));
+        saveTileMap.add(new Tile("grass_1_0", col_two, row_two));
         w.setTileMap(saveTileMap);
 
         newEntities.put(0, new PlayerPeon(1, 1, 1));
@@ -92,8 +92,6 @@ public class SaveLoadTest {
 
         for (int i = 0; i < saveTileMap.size(); i++) {
             assertEquals(saveTileMap.get(i).getTextureName(), w.getTileMap().get(i).getTextureName());
-            assertEquals(saveTileMap.get(i).getElevation(), w.getTileMap().get(i).getElevation());
-
             
             assertEquals(saveTileMap.get(i).getTileID(), w.getTileMap().get(i).getTileID());
             assertEquals(saveTileMap.get(i).getRow(), w.getTileMap().get(i).getRow(), 0.001f);
@@ -104,7 +102,6 @@ public class SaveLoadTest {
             assertEquals(testEntities.get(i).getEntityID(), worldEntities.get(i).getEntityID(), 1f);
             assertEquals(testEntities.get(i).getTexture(), worldEntities.get(i).getTexture());
             assertEquals(testEntities.get(i).getPosition(), worldEntities.get(i).getPosition());
-
         }
    }
 }

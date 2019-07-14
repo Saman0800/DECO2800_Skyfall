@@ -1,13 +1,18 @@
 package deco2800.thomas.entities;
 
+import com.google.gson.annotations.Expose;
+
 import deco2800.thomas.util.HexVector;
 
 public abstract class AgentEntity extends AbstractEntity{
-	
+	@Expose
 	protected float speed;
 
-	public AgentEntity(float col, float row, int height, float speed) {
-		super(col, row, height);
+	
+
+
+	public AgentEntity(float col, float row, int renderOrder, float speed) {
+		super(col, row, renderOrder);
 		
 		this.speed = speed;
 	}
@@ -23,5 +28,10 @@ public abstract class AgentEntity extends AbstractEntity{
 	public float getSpeed() {
 		return speed;
 	}
-	
+
+	public void setSpeed( float speed) {
+		this.speed = speed;
+	}
+
+
 }

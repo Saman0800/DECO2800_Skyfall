@@ -1,7 +1,9 @@
 package deco2800.thomas.renderers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import deco2800.thomas.entities.*;
 import deco2800.thomas.managers.InputManager;
@@ -36,7 +38,8 @@ public class Renderer3D implements Renderer {
 	
 	//mouse cursor
 	private static final String TEXTURE_SELECTION = "selection";
-	private static final String TEXTURE_DESTINATION = "rock";
+	private static final String TEXTURE_DESTINATION = "selection";
+	private static final String TEXTURE_PATH = "path";
 
 	private int tilesSkipped = 0;
 
@@ -62,6 +65,8 @@ public class Renderer3D implements Renderer {
 				
 		batch.begin();
 		// Render elements section by section
+		//	tiles will render the static entity attaced to each tile after the tile is rendered
+
 		tilesSkipped =0;
 		for (Tile t: tileMap) {
 			// Render each tile
@@ -70,7 +75,9 @@ public class Renderer3D implements Renderer {
 			// Render each undiscovered area
 		}
 
-		renderEntities(batch, camera);
+
+		renderAbstractEntities(batch, camera);
+
 		renderMouse(batch);
 
 		debugRender(batch, camera);
@@ -107,12 +114,7 @@ public class Renderer3D implements Renderer {
 		GameManager.get().setTilesRendered(tileMap.size() - tilesSkipped);
 		GameManager.get().setTilesCount(tileMap.size());
 		
-		if (tile.hasParent()) {	 
-			 tex = tile.getParent().getTexture(tile.getTileID());
-			 
-			 batch.draw(tex, tileWorldCord[0],	tileWorldCord[1] , // +	 ((tile.getElevation() +1) * elevationZeroThiccness* WorldUtil.SCALE_Y )
-					tex.getWidth() * WorldUtil.SCALE_X, tex.getHeight() * WorldUtil.SCALE_Y );
-		}
+
 	}
 
 
@@ -133,13 +135,13 @@ public class Renderer3D implements Renderer {
         // snap to the tile under the mouse by converting mouse position to colrow then back to mouse coordinates
         float[] colrow = WorldUtil.worldCoordinatesToColRow(worldCoord[0], worldCoord[1]);
 
-        worldCoord = WorldUtil.colRowToWorldCords(colrow[0], colrow[1] + 1);
+        float[] snapWorldCoord = WorldUtil.colRowToWorldCords(colrow[0], colrow[1] + 1);
 
         //Needs to getTile with a HexVector for networking to work atm
         Tile tile = GameManager.get().getWorld().getTile(new HexVector(colrow[0], colrow[1]));
 
         if (tile != null) {
-            batch.draw(tex, (int) worldCoord[0], (int) worldCoord[1]  - (tex.getHeight() * WorldUtil.SCALE_Y),  // (tile.getElevation() * 13) + (-1 * elevationZeroThiccness * WorldUtil.SCALE_Y) 
+            batch.draw(tex, (int) snapWorldCoord[0], (int) snapWorldCoord[1]  - (tex.getHeight() * WorldUtil.SCALE_Y), 
                     tex.getWidth() * WorldUtil.SCALE_X,
                     tex.getHeight() * WorldUtil.SCALE_Y);
         }
@@ -153,15 +155,15 @@ public class Renderer3D implements Renderer {
 	 * @param batch the sprite batch.
 	 * @param camera the camera.
 	 */
-	private void renderEntities(SpriteBatch batch, OrthographicCamera camera) {
-		List<AbstractEntity> entities = GameManager.get().getWorld().getEntities();
+	private void renderAbstractEntities(SpriteBatch batch, OrthographicCamera camera) {
+		List<AbstractEntity> entities = GameManager.get().getWorld().getSortedEntities();
 		int entitiesSkipped = 0;
 		logger.debug("NUMBER OF ENTITIES IN ENTITY RENDER LIST: {}", entities.size());
 		for (AbstractEntity entity : entities) {
 			Texture tex = textureManager.getTexture(entity.getTexture());
-			float[] entityWorldCord = WorldUtil.colRowToWorldCords(entity.getCol(), entity.getRow());
+			float[] entityWorldCoord = WorldUtil.colRowToWorldCords(entity.getCol(), entity.getRow());
 			// If it's offscreen
-			if (WorldUtil.areCoordinatesOffScreen(entityWorldCord[0], entityWorldCord[1], camera)) {
+			if (WorldUtil.areCoordinatesOffScreen(entityWorldCoord[0], entityWorldCoord[1], camera)) {
 				entitiesSkipped++;
 				continue;
 			}
@@ -169,11 +171,37 @@ public class Renderer3D implements Renderer {
 			// Place movement tiles
 			if (entity instanceof Peon) {
 				if (GameManager.get().showPath) {
-					renderPeonMovementTiles(batch, camera, entity, entityWorldCord);
+					renderPeonMovementTiles(batch, camera, entity, entityWorldCoord);
 				}
-				renderAbstractEntity(batch, entity, entityWorldCord, tex);
-			 } 
+				renderAbstractEntity(batch, entity, entityWorldCoord, tex);
+			 }
 			
+			if (entity instanceof StaticEntity) {	 
+				StaticEntity staticEntity = ((StaticEntity) entity);
+				Set<HexVector> childrenPosns = staticEntity.getChildrenPositions();
+				for(HexVector childpos: childrenPosns) {
+					Texture childTex = staticEntity.getTexture(childpos);
+					
+					float[] childWorldCoord = WorldUtil.colRowToWorldCords(childpos.getCol(), childpos.getRow());
+										
+					// time for some funky math: we want to render the entity at the centre of the tile. 
+					// this way centres of textures bigger than tile textures render exactly on the top of the tile centre
+					// think of a massive tree with the tree trunk at the centre of the tile 
+					// and it's branches and leaves over surrounding tiles 
+					
+					// We get the tile height and width :
+					int w = GameManager.get().getWorld().getTile(childpos).getTexture().getWidth();
+					int h = GameManager.get().getWorld().getTile(childpos).getTexture().getHeight(); 
+					
+					int drawX = (int) (childWorldCoord[0] + (w - childTex.getWidth()) /2 * WorldUtil.SCALE_X);
+					int drawY = (int) (childWorldCoord[1] + (h - childTex.getHeight())/2 * WorldUtil.SCALE_Y);
+
+					batch.draw(
+							childTex, drawX, drawY, 
+							childTex.getWidth() * WorldUtil.SCALE_X, 
+							childTex.getHeight() * WorldUtil.SCALE_Y );				 
+				}
+			}			
 		}
 
 		GameManager.get().setEntitiesRendered(entities.size() - entitiesSkipped);
@@ -201,7 +229,7 @@ public class Renderer3D implements Renderer {
 			for (Tile tile : path) {
 				// Place transparent tiles for the path, but place a non-transparent tile for the destination
 				Texture tex = path.get(path.size() - 1) == tile ?
-						textureManager.getTexture(TEXTURE_DESTINATION) : textureManager.getTexture(TEXTURE_SELECTION);
+						textureManager.getTexture(TEXTURE_DESTINATION) : textureManager.getTexture(TEXTURE_PATH);
 				float[] tileWorldCord = WorldUtil.colRowToWorldCords(tile.getCol(), tile.getRow());
 				if (WorldUtil.areCoordinatesOffScreen(tileWorldCord[0], tileWorldCord[1], camera)) {
 					tilesSkipped++;
@@ -213,13 +241,13 @@ public class Renderer3D implements Renderer {
 						tex.getHeight() * WorldUtil.SCALE_Y);
 
 			}
-			if (!path.isEmpty()) {
-				// draw Peon
-				Texture tex = textureManager.getTexture(entity.getTexture());
-				batch.draw(tex, entityWorldCord[0], entityWorldCord[1] + entity.getHeight(),// + path.get(0).getElevation()) * elevationZeroThiccness * WorldUtil.SCALE_Y,
-						tex.getWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X,
-						tex.getHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y);
-			}
+//			if (!path.isEmpty()) {
+//				// draw Peon
+//				Texture tex = textureManager.getTexture(entity.getTexture());
+//				batch.draw(tex, entityWorldCord[0], entityWorldCord[1] + entity.getHeight(),// + path.get(0).getElevation()) * elevationZeroThiccness * WorldUtil.SCALE_Y,
+//						tex.getWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X,
+//						tex.getHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y);
+//			}
 		}
 	}
 	

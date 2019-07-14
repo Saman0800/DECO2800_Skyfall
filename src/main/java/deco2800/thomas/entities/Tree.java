@@ -1,21 +1,29 @@
 package deco2800.thomas.entities;
 
 import deco2800.thomas.Tickable;
+import deco2800.thomas.util.HexVector;
 import deco2800.thomas.worlds.AbstractWorld;
+import deco2800.thomas.worlds.Tile;
+
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Tree extends AbstractEntity implements Tickable {
+public class Tree extends StaticEntity implements Tickable {
 	private final Logger LOG = LoggerFactory.getLogger(Tree.class);
 
 	AbstractWorld world;
+	
 
-
-	public Tree(AbstractWorld world, float col, float row) {
-		super(col, row, 0);
+	public Tree(float col, float row, int renderOrder, Map<HexVector, String> texture) {
+		super(col, row, renderOrder, texture);
 		LOG.info("Making a tree at {}, {}", col, row);
 		this.setTexture("tree_cubeH1A0");
+	}
+
+	public Tree(Tile t, boolean obstructed) {
+        super(t, 5, "tree", obstructed);
 	}
 
 

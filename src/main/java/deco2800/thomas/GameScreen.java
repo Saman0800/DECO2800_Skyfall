@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+
+import deco2800.thomas.entities.AbstractEntity;
 import deco2800.thomas.entities.Peon;
 import deco2800.thomas.entities.PlayerPeon;
 import deco2800.thomas.entities.Rock;
@@ -86,8 +88,6 @@ public class GameScreen implements Screen,KeyDownObserver {
 		Gdx.input.setInputProcessor(multiplexer);
 		
 		GameManager.get().getManager(KeyboardManager.class).registerForKeyDown(this);
-
-		DatabaseManager a = GameManager.get().getManager(DatabaseManager.class);
 	}
 
 	/**
@@ -192,6 +192,8 @@ public class GameScreen implements Screen,KeyDownObserver {
 
 		if (keycode == Input.Keys.F5) {
 			world = new TestWorld();
+			AbstractEntity.resetID();
+			Tile.resetID();
 			GameManager gameManager = GameManager.get();
 			gameManager.setWorld(world);
 
@@ -200,6 +202,12 @@ public class GameScreen implements Screen,KeyDownObserver {
 		}
 		
 		if (keycode == Input.Keys.F11) { // F11
+			GameManager.get().showCoords = !GameManager.get().showCoords;
+			LOG.info("Show coords is now {}", GameManager.get().showCoords);
+		}
+		
+		
+		if (keycode == Input.Keys.C) { // F11
 			GameManager.get().showCoords = !GameManager.get().showCoords;
 			LOG.info("Show coords is now {}", GameManager.get().showCoords);
 		}

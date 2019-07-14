@@ -20,7 +20,7 @@ public class Peon extends AgentEntity implements Tickable {
 	 * Peon constructor
      */
 	public Peon(float row, float col, float speed) {
-		super(row, col, 1, speed);
+		super(row, col, 3, speed);
 		this.setTexture("spacman_ded");
 	}
 
