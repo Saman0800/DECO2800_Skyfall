@@ -18,6 +18,9 @@ public class MainMenuScreen implements Screen {
     private Stage stage;
     private Skin skin;
 
+    private static final int MIN_HEIGHT = 720;
+    private static final int MIN_WIDTH = 1280;
+
     /**
      * The constructor of the MainMenuScreen
      * @param game the Iguana Chase Game to run
@@ -25,29 +28,29 @@ public class MainMenuScreen implements Screen {
     public MainMenuScreen(final ThomasGame game) {
         this.game = game;
 
-        stage = new Stage(new ExtendViewport(1280, 720), game.batch);
+        stage = new Stage(new ExtendViewport(MIN_WIDTH, MIN_HEIGHT), game.batch);
         skin = GameManager.get().getSkin();
 
         Image background = new Image(GameManager.get().getManager(TextureManager.class).getTexture("background"));
         background.setFillParent(true);
         stage.addActor(background);
 
-        Label logo = new Label("BIG PHARMA", skin);
-        logo.setFontScale(5.0f);
-        logo.setPosition(1280/2 - 225, 720/2 + 100);
-        stage.addActor(logo);
+//        Label logo = new Label("BIG PHARMA", skin);
+//        logo.setFontScale(5.0f);
+//        logo.setPosition(1280/2 - 225, 720/2 + 100);
+//        stage.addActor(logo);
 
         Button newGameBtn = new TextButton("SINGLE PLAYER", skin, "main_menu");
-        newGameBtn.setPosition(10, 100);
+        newGameBtn.setPosition(10, MIN_HEIGHT - 100);
         stage.addActor(newGameBtn);
 
         Button connectToServerButton = new TextButton("CONNECT TO SERVER", skin, "main_menu");
-        connectToServerButton.setPosition(10, 50);
+        connectToServerButton.setPosition(10, MIN_HEIGHT - 50);
         stage.addActor(connectToServerButton);
 
 //        Button startServerButton = new TextButton("START SERVER", skin, "main_menu");
-////        startServerButton.setPosition(10, 0);
-////        stage.addActor(startServerButton);
+//        startServerButton.setPosition(10, 0);
+//        stage.addActor(startServerButton);
 
         connectToServerButton.addListener(new ClickListener() {
             @Override

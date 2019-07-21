@@ -2,19 +2,14 @@ package deco2800.thomas.entities;
 
 import deco2800.thomas.Tickable;
 import deco2800.thomas.util.HexVector;
-import deco2800.thomas.worlds.AbstractWorld;
 import deco2800.thomas.worlds.Tile;
-
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Tree extends StaticEntity implements Tickable {
-	private final Logger LOG = LoggerFactory.getLogger(Tree.class);
+import java.util.Map;
 
-	AbstractWorld world;
-	
+public class Tree extends StaticEntity implements Tickable {
+	private static final Logger LOG = LoggerFactory.getLogger(Tree.class);
 
 	public Tree(float col, float row, int renderOrder, Map<HexVector, String> texture) {
 		super(col, row, renderOrder, texture);
@@ -22,10 +17,9 @@ public class Tree extends StaticEntity implements Tickable {
 		this.setTexture("tree_cubeH1A0");
 	}
 
-	public Tree(Tile t, boolean obstructed) {
-        super(t, 5, "tree", obstructed);
+	public Tree(Tile tile, boolean obstructed) {
+        super(tile, 5, "tree", obstructed);
 	}
-
 
 	@Override
 	public boolean equals(Object other) {
@@ -36,10 +30,11 @@ public class Tree extends StaticEntity implements Tickable {
 			return false;
 		}
 		Tree otherTree = (Tree) other;
-		if (this.getCol() != otherTree.getCol() || this.getRow() != otherTree.getRow() || this.getHeight() != otherTree.getHeight()) {
+		if (this.getCol() != otherTree.getCol() || this.getRow() != otherTree.getRow()) {
 			return false;
 		}
-		return true;
+
+		return this.getHeight() == otherTree.getHeight();
 	}
 
 

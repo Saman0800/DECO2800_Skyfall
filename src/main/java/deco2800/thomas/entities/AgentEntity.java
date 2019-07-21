@@ -8,9 +8,6 @@ public abstract class AgentEntity extends AbstractEntity{
 	@Expose
 	protected float speed;
 
-	
-
-
 	public AgentEntity(float col, float row, int renderOrder, float speed) {
 		super(col, row, renderOrder);
 		
@@ -29,9 +26,7 @@ public abstract class AgentEntity extends AbstractEntity{
 		return speed;
 	}
 
-	public void setSpeed( float speed) {
+	public void setSpeed(float speed) {
 		this.speed = speed;
 	}
-
-
 }

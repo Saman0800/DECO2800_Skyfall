@@ -11,7 +11,7 @@ public class Peon extends AgentEntity implements Tickable {
 	public Peon() {
 		super();
 		this.setTexture("spacman_ded");
-		 this.setObjectName("Peon");
+		this.setObjectName("Peon");
 		this.setHeight(1);
 		this.speed = 0.05f;
 	}
@@ -21,7 +21,7 @@ public class Peon extends AgentEntity implements Tickable {
      */
 	public Peon(float row, float col, float speed) {
 		super(row, col, 3, speed);
-		this.setTexture("spacman_ded");
+		this.setTexture("spacman_green");
 	}
 
 	@Override

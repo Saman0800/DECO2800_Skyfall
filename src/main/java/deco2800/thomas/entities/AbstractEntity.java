@@ -1,15 +1,12 @@
 package deco2800.thomas.entities;
 
+import com.google.gson.annotations.Expose;
 import deco2800.thomas.managers.GameManager;
 import deco2800.thomas.managers.NetworkManager;
 import deco2800.thomas.renderers.Renderable;
 import deco2800.thomas.util.HexVector;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
-
-import com.google.gson.annotations.Expose;
 
 /**
  * A AbstractEntity is an item that can exist in both 3D and 2D worlds
@@ -22,28 +19,23 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	@Expose
 	private String objectName = null;
 		
-	static int nextID = 0;
+	private static int nextID = 0;
 
 	public static void resetID() {
 		nextID = 0;
 	}
 
-	static int getNextID() {
+	protected static int getNextID() {
 		return nextID++;
 	}
-	@Expose
-	private String texture = "error_box";
-
 
 	protected HexVector position;
-	
 	private int height;
-
 	private float colRenderLength;
-
 	private float rowRenderLength;
-	
 
+	@Expose
+	private String texture = "error_box";
 
 	@Expose
 	private int entityID = 0;
@@ -57,7 +49,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 * Constructor for an abstract entity
 	 * @param col the col position on the world
 	 * @param row the row position on the world
-	 * @param height the height position on the world
+	 * @param renderOrder the height position on the world
      */
 
 	public AbstractEntity(float col, float row, int renderOrder) {
@@ -83,7 +75,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 * @param colRenderLength the rendered length in col direction
 	 * @param rowRenderLength the rendered length in the row direction
      */
-	public AbstractEntity(float col, float row, int height, float colRenderLength, float rowRenderLength) {
+	public AbstractEntity(float col, float row, int height,
+						  float colRenderLength, float rowRenderLength) {
 		this.position = new HexVector(col, row);
 		this.height = height;
 		this.colRenderLength = colRenderLength;
@@ -209,19 +202,24 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		this.texture = texture;
 	}
 
-
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		AbstractEntity that = (AbstractEntity) o;
-		return height == that.height &&
-				Float.compare(that.colRenderLength, colRenderLength) == 0 &&
-				Float.compare(that.rowRenderLength, rowRenderLength) == 0 &&
-				entityID == that.entityID &&
-				collidable == that.collidable &&
-				Objects.equals(texture, that.texture) &&
-				Objects.equals(position, that.position);
+	public boolean equals(Object other) {
+		if (this == other) {
+			return true;
+		}
+
+		if (!(other instanceof AbstractEntity)) {
+			return false;
+		}
+
+		AbstractEntity entity = (AbstractEntity) other;
+		return height == entity.height &&
+				Float.compare(entity.colRenderLength, colRenderLength) == 0 &&
+				Float.compare(entity.rowRenderLength, rowRenderLength) == 0 &&
+				entityID == entity.entityID &&
+				collidable == entity.collidable &&
+				Objects.equals(texture, entity.texture) &&
+				Objects.equals(position, entity.position);
 	}
 
 	@Override
@@ -261,7 +259,9 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 *
 	 * @return Name of object
 	 */
-	public String getObjectName() { return this.objectName; }
+	public String getObjectName() {
+		return this.objectName;
+	}
 	
 	
 	public int getEntityID() {

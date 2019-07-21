@@ -45,7 +45,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 	 * Create a camera for panning and zooming.
 	 * Camera must be updated every render cycle.
 	 */
-	PotateCamera camera,cameraDebug;
+	PotateCamera camera, cameraDebug;
 
 	public Stage stage = new Stage(new ExtendViewport(1280, 720));
 
@@ -63,7 +63,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 			world = new ServerWorld();
 			GameManager.get().getManager(NetworkManager.class).connectToHost("localhost", "duck1234");
 		} else {
-			world = new TestWorld();
+			world = new RocketWorld();
 			GameManager.get().getManager(NetworkManager.class).startHosting("host");
 		}
 
@@ -191,7 +191,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 		}
 
 		if (keycode == Input.Keys.F5) {
-			world = new TestWorld();
+			world = new RocketWorld();
 			AbstractEntity.resetID();
 			Tile.resetID();
 			GameManager gameManager = GameManager.get();

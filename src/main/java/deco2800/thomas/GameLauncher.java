@@ -23,10 +23,9 @@ public class GameLauncher {
 	@SuppressWarnings("unused") //app
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		LwjglApplication app;
 		config.width = 1280;
 		config.height = 1000;
-		config.title = "DECO2800 2018: Big Pharma";
-		app = new LwjglApplication(new ThomasGame(), config);
+		config.title = "DECO2800 2018: TBD";
+		LwjglApplication app = new LwjglApplication(new ThomasGame(), config);
 	}
 }
