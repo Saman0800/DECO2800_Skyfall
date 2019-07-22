@@ -15,10 +15,10 @@ apply plugin: 'idea'
 apply plugin: 'jacoco'
 
 allprojects {
-	group = 'deco2800-2018-thomas'
+	group = 'deco2800-2018-skyfall'
     version = '0.1'
     ext {
-        appName = "deco2800-2018-thomas"
+        appName = "deco2800-2018-skyfall"
         gdxVersion = '1.9.6'
         roboVMVersion = '2.3.1'
         box2DLightsVersion = '1.4'
@@ -134,6 +134,6 @@ test {
 }
 
 task(run, dependsOn: "classes", type: JavaExec) {
-    main = "deco2800.thomas.GameLauncher"
+    main = "deco2800.skyfall.GameLauncher"
     classpath = sourceSets.main.runtimeClasspath
 }
