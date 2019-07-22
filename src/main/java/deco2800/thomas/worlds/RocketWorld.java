@@ -2,14 +2,17 @@ package deco2800.thomas.worlds;
 
 import com.badlogic.gdx.Gdx;
 import deco2800.thomas.entities.AbstractEntity;
+import deco2800.thomas.entities.Harvestable;
 import deco2800.thomas.entities.PlayerPeon;
 import deco2800.thomas.entities.Tree;
+import deco2800.thomas.entities.WoodCube;
 import deco2800.thomas.managers.GameManager;
 import deco2800.thomas.managers.InputManager;
 import deco2800.thomas.observers.TouchDownObserver;
 import deco2800.thomas.util.Cube;
 import deco2800.thomas.util.WorldUtil;
 
+import java.util.List;
 import java.util.Random;
 
 public class RocketWorld extends AbstractWorld implements TouchDownObserver {
@@ -52,6 +55,8 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             Tile tile = getTile(1f, 2.5f);
             addEntity(new Tree(tile, true));
 
+            addEntity(new WoodCube(1.0f, -2.5f));
+
             generated = true;
         }
     }
@@ -70,8 +75,17 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
         // todo: more efficient way to find entities
         for (AbstractEntity entity : getEntities()) {
-            if (tile.getCoordinates().equals(entity.getPosition())) {
+            if (!tile.getCoordinates().equals(entity.getPosition())) {
+                continue;
+            }
+
+            if (entity instanceof Harvestable) {
                 removeEntity(entity);
+                List<AbstractEntity> drops = ((Harvestable) entity).harvest(tile);
+
+                for (AbstractEntity drop : drops) {
+                    addEntity(drop);
+                }
             }
         }
     }

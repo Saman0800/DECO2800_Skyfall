@@ -6,9 +6,12 @@ import deco2800.thomas.worlds.Tile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
-public class Tree extends StaticEntity implements Tickable {
+public class Tree extends StaticEntity implements Tickable, Harvestable {
 	private static final Logger LOG = LoggerFactory.getLogger(Tree.class);
 
 	public Tree(float col, float row, int renderOrder, Map<HexVector, String> texture) {
@@ -63,5 +66,18 @@ public class Tree extends StaticEntity implements Tickable {
 	 */
 	@Override
 	public void onTick(long tick) {
+	}
+
+	@Override
+	public List<AbstractEntity> harvest(Tile tile) {
+		Random random = new Random();
+
+		int dropCount = random.nextInt(15);
+		List<AbstractEntity> drops = new ArrayList<>();
+		for (int i = 0; i < dropCount; i++) {
+			drops.add(new WoodCube(getCol(), getRow()));
+		}
+
+		return drops;
 	}
 }

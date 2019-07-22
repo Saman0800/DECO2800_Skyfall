@@ -167,13 +167,12 @@ public class Renderer3D implements Renderer {
 				entitiesSkipped++;
 				continue;
 			}
+
+			renderAbstractEntity(batch, entity, entityWorldCoord, tex);
 			/* Draw Peon */
 			// Place movement tiles
-			if (entity instanceof Peon) {
-				if (GameManager.get().showPath) {
-					renderPeonMovementTiles(batch, camera, entity, entityWorldCoord);
-				}
-				renderAbstractEntity(batch, entity, entityWorldCoord, tex);
+			if (entity instanceof Peon && GameManager.get().showPath) {
+				renderPeonMovementTiles(batch, camera, entity, entityWorldCoord);
 			 }
 			
 			if (entity instanceof StaticEntity) {	 
