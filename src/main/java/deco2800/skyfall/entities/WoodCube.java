@@ -1,6 +1,5 @@
 package deco2800.skyfall.entities;
 
-import deco2800.skyfall.Tickable;
 import deco2800.skyfall.util.HexVector;
 
 import java.util.Random;
@@ -10,7 +9,7 @@ import java.util.Random;
  *
  * When on the ground it wiggles around randomly.
  */
-public class WoodCube extends AbstractEntity implements Tickable {
+public class WoodCube extends AbstractEntity implements Collectable {
 
     // used for finding a target location for the cube to randomly wiggle towards
     private static final int RANGE = 100;
@@ -23,6 +22,16 @@ public class WoodCube extends AbstractEntity implements Tickable {
         this.setTexture("woodcube");
         this.setHeight(1);
         this.setObjectName("WoodCube");
+    }
+
+    @Override
+    public boolean collidesWith(AbstractEntity entity) {
+        // TODO: you will want to make collisions more generic and manageable
+        if (entity instanceof PlayerPeon) {
+            return entity.getPosition().getInt().equals(getPosition().getInt());
+        }
+
+        return false;
     }
 
     @Override

@@ -2,6 +2,7 @@ package deco2800.skyfall.worlds;
 
 import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.Collectable;
 import deco2800.skyfall.entities.Harvestable;
 import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.Tree;
@@ -19,6 +20,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
     private static final int RADIUS = 5;
 
     private boolean generated = false;
+    private PlayerPeon player;
 
     @Override
     protected void generateWorld() {
@@ -37,7 +39,8 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         }
 
         // Create the entities in the game
-        addEntity(new PlayerPeon(0f, 0f, 0.05f));
+        player = new PlayerPeon(0f, 0f, 0.05f);
+        addEntity(player);
 
         GameManager.getManagerFromInstance(InputManager.class)
                 .addTouchDownListener(this);
@@ -49,13 +52,17 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
         for (AbstractEntity e : this.getEntities()) {
             e.onTick(0);
+
+            if (e instanceof Collectable) {
+                if (e.collidesWith(player)) {
+                    removeEntity(e);
+                }
+            }
         }
 
         if (!generated) {
             Tile tile = getTile(1f, 2.5f);
             addEntity(new Tree(tile, true));
-
-            addEntity(new WoodCube(1.0f, -2.5f));
 
             generated = true;
         }
