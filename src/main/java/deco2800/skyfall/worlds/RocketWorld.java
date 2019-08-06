@@ -1,13 +1,7 @@
 package deco2800.skyfall.worlds;
 
 import com.badlogic.gdx.Gdx;
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.BowMan;
-import deco2800.skyfall.entities.Collectable;
-import deco2800.skyfall.entities.Harvestable;
-import deco2800.skyfall.entities.PlayerPeon;
-import deco2800.skyfall.entities.Tree;
-import deco2800.skyfall.entities.WoodCube;
+import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
@@ -40,11 +34,15 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         }
 
         // Create the entities in the game
-        player = new PlayerPeon(0f, 0f, 0.05f, "Player", 10);
-        addEntity(player);
-
+//        player = new PlayerPeon(0f, 0f, 0.05f, "Player", 10);
+//        addEntity(player);
 //        BowMan bowMan = new BowMan(0f, 3.5f);
 //        addEntity(bowMan);
+
+        MainCharacter testCharacter = new MainCharacter(0f, 0f, 0.05f, "Main " +
+                "Piece",
+                10);
+        addEntity(testCharacter);
 
         GameManager.getManagerFromInstance(InputManager.class)
                 .addTouchDownListener(this);

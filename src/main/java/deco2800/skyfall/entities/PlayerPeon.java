@@ -18,7 +18,6 @@ public class PlayerPeon extends Peon implements TouchDownObserver {
                 .addTouchDownListener(this);
     }
 
-
 	@Override
     public void onTick(long i) {
         if (task != null && task.isAlive()) {

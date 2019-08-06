@@ -29,14 +29,14 @@ public class Peon extends AgentEntity implements Tickable {
 		super(row, col, 3, speed);
 		this.setTexture("spacman_ded");
 
-		if(name==null||name.equals("")) {
+		if (name == null || name.equals("")) {
 			setName("DEFAULT");
 		} else {
 			setName(name);
 		}
 
-		if(health<=0){
-			this.health=10;
+		if (health <= 0){
+			this.health = 10;
 		} else {
 			this.health = health;
 		}

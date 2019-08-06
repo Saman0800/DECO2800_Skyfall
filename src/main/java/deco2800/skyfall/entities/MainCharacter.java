@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import deco2800.skyfall.tasks.*;
 import deco2800.skyfall.util.*;
 
@@ -26,14 +27,43 @@ public class MainCharacter extends Peon {
         private List<Attributes> attributes
      */
 
+    // Textures for all 6 directions to correspond to movement of character
+    private Texture text1;
+    private Texture text2;
+    private Texture text3;
+    private Texture text4;
+    private Texture text5;
+    private Texture text6;
+
     public MainCharacter(float col, float row, float speed, String name,
                          int health) {
         super(row, col, speed, name, health);
+        this.setTexture("main_piece");
+        this.setHeight(1);
+        this.setObjectName("MainPiece");
+//        GameManager.getManagerFromInstance(InputManager.class)
+//                .addTouchDownListener(this);
 
         this.inventories = new ArrayList<>();
         this.hotbar = new ArrayList<>();
-        hotbar.add("Rusty Sword");
-        equipped_item = 0;
+        this.hotbar.add("Rusty Sword");
+        this.equipped_item = 0;
+    }
+
+    /**
+     * Constructor with various textures
+     */
+    public MainCharacter(float col, float row, float speed, String name,
+                         int health, Texture dir1, Texture dir2, Texture dir3
+            , Texture dir4, Texture dir5, Texture dir6) {
+        this(row, col, speed, name, health);
+
+        this.text1 = dir1;
+        this.text2 = dir2;
+        this.text3 = dir3;
+        this.text4 = dir4;
+        this.text5 = dir5;
+        this.text6 = dir6;
     }
 
     /**
