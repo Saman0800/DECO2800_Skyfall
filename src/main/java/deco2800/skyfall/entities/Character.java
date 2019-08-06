@@ -71,4 +71,5 @@ public abstract class Character extends AgentEntity {
             this.task = GameManager.getManagerFromInstance(TaskPool.class).getTask(this);
         }
     }
+
 }
