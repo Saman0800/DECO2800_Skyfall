@@ -5,6 +5,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
@@ -12,6 +14,10 @@ import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.SkyfallGame;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.worlds.TutorialWorld;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class MainMenuScreen implements Screen {
     final SkyfallGame game;
@@ -48,9 +54,22 @@ public class MainMenuScreen implements Screen {
         connectToServerButton.setPosition(10, MIN_HEIGHT - 50);
         stage.addActor(connectToServerButton);
 
+        Button tutorialButton = new TextButton("Tutorial", skin,
+                "main_menu");
+        tutorialButton.setPosition(10, MIN_HEIGHT );
+        stage.addActor(tutorialButton);
+
 //        Button startServerButton = new TextButton("START SERVER", skin, "main_menu");
 //        startServerButton.setPosition(10, 0);
 //        stage.addActor(startServerButton);
+
+        tutorialButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new GameScreen(new SkyfallGame(), true));
+                GameManager.get().setWorld(new TutorialWorld());
+            }
+        });
 
         connectToServerButton.addListener(new ClickListener() {
             @Override
