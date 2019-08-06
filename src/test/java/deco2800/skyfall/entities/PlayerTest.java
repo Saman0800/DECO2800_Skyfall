@@ -8,17 +8,17 @@ import static org.junit.Assert.assertThat;
 
 public class PlayerTest {
 
-	private PlayerPeon player = new PlayerPeon(0,0,1);
+	private PlayerPeon player = new PlayerPeon(0,0,1,"pTest",10);
 	
 	@Test
 	public void testPlayerSet() {
-		PlayerPeon p = new PlayerPeon(0,0,1);
+		PlayerPeon p = new PlayerPeon(0,0,1,"pTest",10);
 		assertThat("", p.getTexture(), is(equalTo("spacman_ded")));
 	}
 	
 	@Test
 	public void testConstructor() {
-		PlayerPeon p = new PlayerPeon(1,1,1);
+		PlayerPeon p = new PlayerPeon(1,1,1,"pTest",10);
 		assertThat("", p.getCol(), is(equalTo(1f)));
 		assertThat("", p.getRow(), is(equalTo(1f)));
 		assertThat("", p.getSpeed(), is(equalTo(1f)));

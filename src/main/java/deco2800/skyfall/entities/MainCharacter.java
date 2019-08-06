@@ -11,12 +11,29 @@ public class MainCharacter extends Peon {
     // List of the player's inventories
     // TODO need to replace List<String> with List<InventoryClass>
     private List<String> inventories;
+    private List<String> hotbar;
+    private int equipped_item;
+
+    /*
+        Potential future implementations
+
+        private List<InventoryItem> misc; // This is equipped items like rings,
+                                             armour etc.
+
+        // These are status effects (ie. poison, regen, weakness)
+        private List<StatusEffect> statusEffects;
+        // These are player attributes ie. combat strength
+        private List<Attributes> attributes
+     */
 
     public MainCharacter(float col, float row, float speed, String name,
                          int health) {
         super(row, col, speed, name, health);
 
         this.inventories = new ArrayList<>();
+        this.hotbar = new ArrayList<>();
+        hotbar.add("Rusty Sword");
+        equipped_item = 0;
     }
 
     /**

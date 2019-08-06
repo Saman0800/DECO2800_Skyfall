@@ -124,7 +124,7 @@ public class TestWorld extends AbstractWorld {
 		}
 
 		// Create the entities in the game
-		addEntity(new PlayerPeon(0f, 0f, 0.05f));
+		addEntity(new PlayerPeon(0f, 0f, 0.05f,"entity",5));
 
 	}
 
