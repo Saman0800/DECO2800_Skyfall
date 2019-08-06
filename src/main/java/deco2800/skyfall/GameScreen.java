@@ -83,6 +83,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 		GameManager.get().getManager(KeyboardManager.class).registerForKeyDown(this);
 	}
 
+
 	/**
 	 * Renderer thread
 	 * Must update all displayed elements using a Renderer
@@ -90,7 +91,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 	@Override
 	public void render(float delta) {
 		handleRenderables();
-		
+
 		moveCamera();
 			
 		cameraDebug.position.set(camera.position);
