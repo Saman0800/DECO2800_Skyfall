@@ -2,12 +2,15 @@ package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.InputManager;
+import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.tasks.*;
 import deco2800.skyfall.util.*;
 
 import java.util.*;
 
-public class MainCharacter extends Peon {
+public class MainCharacter extends Peon implements TouchDownObserver {
 
     // List of the player's inventories
     // TODO need to replace List<String> with List<InventoryClass>
@@ -28,12 +31,14 @@ public class MainCharacter extends Peon {
      */
 
     // Textures for all 6 directions to correspond to movement of character
-    private Texture text1;
-    private Texture text2;
-    private Texture text3;
-    private Texture text4;
-    private Texture text5;
-    private Texture text6;
+    private String[] textures;
+
+    private void instantiateInventory() {
+        this.inventories = new ArrayList<>();
+        this.hotbar = new ArrayList<>();
+        this.hotbar.add("Rusty Sword");
+        this.equipped_item = 0;
+    }
 
     public MainCharacter(float col, float row, float speed, String name,
                          int health) {
@@ -41,29 +46,32 @@ public class MainCharacter extends Peon {
         this.setTexture("main_piece");
         this.setHeight(1);
         this.setObjectName("MainPiece");
-//        GameManager.getManagerFromInstance(InputManager.class)
-//                .addTouchDownListener(this);
+        GameManager.getManagerFromInstance(InputManager.class)
+                .addTouchDownListener(this);
 
-        this.inventories = new ArrayList<>();
-        this.hotbar = new ArrayList<>();
-        this.hotbar.add("Rusty Sword");
-        this.equipped_item = 0;
+        this.instantiateInventory();
+
     }
 
     /**
      * Constructor with various textures
+     * @param textures A array of length 6 with string names corresponding to different orientation
+     *                 0 = North
+     *                 1 = North-East
+     *                 2 = South-East
+     *                 3 = South
+     *                 4 = South-West
+     *                 5 = North-West
      */
     public MainCharacter(float col, float row, float speed, String name,
-                         int health, Texture dir1, Texture dir2, Texture dir3
-            , Texture dir4, Texture dir5, Texture dir6) {
+                         int health, String[] textures) {
         this(row, col, speed, name, health);
 
-        this.text1 = dir1;
-        this.text2 = dir2;
-        this.text3 = dir3;
-        this.text4 = dir4;
-        this.text5 = dir5;
-        this.text6 = dir6;
+        this.textures = textures;
+        this.setHeight(1);
+        this.setTexture(textures[2]);
+
+        this.instantiateInventory();
     }
 
     /**
@@ -91,8 +99,9 @@ public class MainCharacter extends Peon {
         return new ArrayList<>(inventories);
     }
 
+    @Override
     public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
-        // only allow left clicks to move player
+    // only allow left clicks to move player
         if (button != 0) {
             return;
         }
@@ -101,5 +110,16 @@ public class MainCharacter extends Peon {
         float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 
         this.task = new MovementTask(this, new HexVector(clickedPosition[0],clickedPosition[1]));
+    }
+
+    @Override
+    public void onTick(long i) {
+        if (task != null && task.isAlive()) {
+            task.onTick(i);
+
+            if (task.isComplete()) {
+                this.task = null;
+            }
+        }
     }
 }
