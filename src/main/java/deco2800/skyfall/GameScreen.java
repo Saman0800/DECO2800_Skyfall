@@ -191,7 +191,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 			gameManager.setWorld(world);
 
 			// Add first peon to the world
-			world.addEntity(new Peon(0f, 0f, 0.05f));
+			world.addEntity(new Peon(0f, 0f, 0.05f, "Side Piece", 10));
 		}
 		
 		if (keycode == Input.Keys.F11) { // F11

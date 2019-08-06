@@ -10,8 +10,9 @@ import deco2800.skyfall.util.WorldUtil;
 
 public class PlayerPeon extends Peon implements TouchDownObserver {
 
-    public PlayerPeon(float row, float col, float speed) {
-        super(row, col, speed);
+    public PlayerPeon(float col, float row, float speed, String name,
+                      int health) {
+        super(row, col, speed, name, health);
         this.setObjectName("playerPeon");
         GameManager.getManagerFromInstance(InputManager.class)
                 .addTouchDownListener(this);

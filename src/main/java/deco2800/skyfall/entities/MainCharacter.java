@@ -1,15 +1,20 @@
 package deco2800.skyfall.entities;
 
+import com.badlogic.gdx.Gdx;
+import deco2800.skyfall.tasks.*;
+import deco2800.skyfall.util.*;
+
 import java.util.*;
 
-public class MainCharacter extends Character {
+public class MainCharacter extends Peon {
 
     // List of the player's inventories
     // TODO need to replace List<String> with List<InventoryClass>
     private List<String> inventories;
 
-    public MainCharacter(float col, float row, String name, int health) {
-        super(col, row, name, health);
+    public MainCharacter(float col, float row, float speed, String name,
+                         int health) {
+        super(row, col, speed, name, health);
 
         this.inventories = new ArrayList<>();
     }
@@ -37,5 +42,17 @@ public class MainCharacter extends Character {
      */
     public List<String> getInventories() {
         return new ArrayList<>(inventories);
+    }
+
+    public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
+        // only allow left clicks to move player
+        if (button != 0) {
+            return;
+        }
+
+        float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
+        float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
+
+        this.task = new MovementTask(this, new HexVector(clickedPosition[0],clickedPosition[1]));
     }
 }
