@@ -48,6 +48,10 @@ public class MainMenuScreen implements Screen {
         connectToServerButton.setPosition(10, MIN_HEIGHT - 50);
         stage.addActor(connectToServerButton);
 
+        Button tutorialButton = new TextButton("TUTORIAL", skin, "main_menu");
+        tutorialButton.setPosition(10, MIN_HEIGHT - 150);
+        stage.addActor(tutorialButton);
+
 //        Button startServerButton = new TextButton("START SERVER", skin, "main_menu");
 //        startServerButton.setPosition(10, 0);
 //        stage.addActor(startServerButton);
@@ -60,6 +64,13 @@ public class MainMenuScreen implements Screen {
         });
 
         newGameBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new GameScreen(new SkyfallGame(), true));
+            }
+        });
+
+        tutorialButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new GameScreen(new SkyfallGame(), true));
