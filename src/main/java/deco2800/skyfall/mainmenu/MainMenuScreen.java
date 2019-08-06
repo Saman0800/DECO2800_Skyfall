@@ -83,13 +83,6 @@ public class MainMenuScreen implements Screen {
                 game.setScreen(new GameScreen(new SkyfallGame(), true));
             }
         });
-
-        tutorialButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen(new SkyfallGame(), true));
-            }
-        });
     }
     
    /**
