@@ -34,7 +34,7 @@ public class Rock extends StaticEntity implements HasHealth {
      * The newInstance method implemented for the Rock class to allow for item
      * dispersal on game start up.
      * 
-     * @return Duplicate rock tile with modified position.
+     * @return Duplicate rock instance with modified position.
      */
     @Override
     public Rock newInstance(Tile tile) {
