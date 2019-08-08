@@ -3,6 +3,7 @@ package deco2800.skyfall.entities;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,8 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
 
     @Expose
     public Map<HexVector, String> children;
+
+    private Map<HexVector, String> textures;
 
     public StaticEntity() {
         super();
@@ -58,6 +61,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         Tile center = GameManager.get().getWorld().getTile(this.getPosition());
         this.renderOrder = renderOrder;
         this.obstructed = true;
+        this.textures = texture;
 
         if (center == null) {
             log.debug("Center is null");
@@ -103,6 +107,15 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         return this.obstructed;
     }
 
+    /**
+     * A simple getter function to retrieve the textures used for this object
+     * 
+     * @return The obstruction value.
+     */
+    public Map<HexVector, String> getTextures() {
+        return Collections.unmodifiableMap(this.textures);
+    }
+
     public void setup() {
         if (children == null) {
             return;
@@ -134,7 +147,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
      *         changed
      */
     public StaticEntity newInstance(float col, float row) {
-        return new StaticEntity(col, row, this.getRenderOrder(), this.children);
+        return new StaticEntity(col, row, this.getRenderOrder(), this.getTextures());
     }
 
     @Override
