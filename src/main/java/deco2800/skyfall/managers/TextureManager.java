@@ -71,10 +71,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("fenceNE-SW", new Texture("resources/fence NE-SW.png"));
             textureMap.put("fenceNW-SE", new Texture("resources/fence NW-SE.png"));
             
-            
-            textureMap.put("fenceNE-SW", new Texture("resources/fence NE-SW.png"));
-            textureMap.put("fenceNW-SE", new Texture("resources/fence NW-SE.png"));
-            
             textureMap.put("fenceNE-S", new Texture("resources/fence NE-S.png"));
             textureMap.put("fenceNE-SE", new Texture("resources/fence NE-SE.png"));
             textureMap.put("fenceN-SE", new Texture("resources/fence N-SE.png"));
