@@ -1,15 +1,12 @@
 package deco2800.skyfall.entities;
 
-import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.OnScreenMessageManager;
 import deco2800.skyfall.worlds.TestWorld;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,11 +15,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -35,8 +28,6 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ GameManager.class, DatabaseManager.class, PlayerPeon.class })
 public class StaticEntityTest {
-    private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
-
     private TestWorld w = null;
 
     @Mock
@@ -65,6 +56,7 @@ public class StaticEntityTest {
     public void SetPropertiesTileConstructor() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
         Tile tile1 = new Tile("grass_1_0", 0.0f, 0.0f);
+        tileMap.add(tile1);
         w.setTileMap(tileMap);
 
         StaticEntity rock1 = new StaticEntity(tile1, 2, "rock", true);
@@ -81,8 +73,32 @@ public class StaticEntityTest {
     }
 
     @Test
+    public void SetPropertiesRowColConstructor() {
+        CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
+        Tile tile1 = new Tile("grass_1_0", 0.0f, 0.0f);
+        tileMap.add(tile1);
+        w.setTileMap(tileMap);
+
+        Map<HexVector, String> texture = new HashMap<>();
+        texture.put(new HexVector(0.0f, 0.0f), "rock");
+        StaticEntity rock1 = new StaticEntity(0.0f, 0.0f, 2, texture);
+        w.addEntity(rock1);
+
+        // Check that the various properties of this static entity have been
+        // set correctly
+        assertTrue(rock1.equals(rock1));
+        assertTrue(rock1.getPosition().equals(new HexVector(0.0f, 0.0f)));
+        assertEquals(rock1.getRenderOrder(), 2);
+        assertEquals(rock1.getCol(), 0.0f, 0.0f);
+        assertEquals(rock1.getRow(), 0.0f, 0.0f);
+        assertTrue(rock1.getObstructed());
+        assertEquals(rock1.getObjectName(), "staticEntityID");
+    }
+
+    @Test
     public void PlaceDownTest() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
+        // Populate world with tiles
         Tile tile1 = new Tile("grass_1_0", 0.0f, 0.0f);
         Tile tile2 = new Tile("grass_1_0", 0.0f, 1.0f);
         Tile tile3 = new Tile("grass_1_0", 1.0f, -0.5f);
@@ -96,6 +112,7 @@ public class StaticEntityTest {
         tileMap.add(new Tile("grass_1_0", 0.0f, -1.f));
         w.setTileMap(tileMap);
 
+        // Just check that the tiles have indeed been placed into the world
         Tile tileGet1 = w.getTile(0.0f, 0.0f);
         assertNotNull(tileGet1);
 
@@ -125,7 +142,7 @@ public class StaticEntityTest {
         // Now that we have made a duplicate rock on tile 3 we expect that tile
         // 3 would have a parent and is obstructed.
         rock1.newInstance(tile3);
-        assertTrue(tile3.hasParent());
-        assertTrue(tile3.isObstructed());
+        assertTrue("New instance of static item not found.", tile3.hasParent());
+        assertTrue("New instance of static item not found.", tile3.isObstructed());
     }
 }

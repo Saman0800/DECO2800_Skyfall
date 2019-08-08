@@ -56,6 +56,8 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         this.setObjectName(ENTITY_ID_STRING);
 
         Tile center = GameManager.get().getWorld().getTile(this.getPosition());
+        this.renderOrder = renderOrder;
+        this.obstructed = true;
 
         if (center == null) {
             log.debug("Center is null");
