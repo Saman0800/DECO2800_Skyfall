@@ -1,5 +1,8 @@
 package deco2800.skyfall.resources;
 
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.Tile;
+
 /**
  * An abstract class representing a Natural Resource item
  */
@@ -17,15 +20,20 @@ public abstract class NaturalResources implements Item {
     // does the item impact the player's health
     private Boolean hasHealingPower;
 
+    // the co-ordinates of the tile the item has been placed on
+    private HexVector position;
+
     /**
      * Creates a new Natural Resource with the given name
      * @param name the identifying name of the Natural Resource
+     * @param position the tile which the item has been placed on
      */
-    public NaturalResources(String name){
+    public NaturalResources(String name, Tile position){
         this.name = name;
         this.carryable = true;
         this.subtype = "Natural Resource";
         this.hasHealingPower = false;
+        this.position = position.getCoordinates();
 
     }
 
@@ -64,5 +72,14 @@ public abstract class NaturalResources implements Item {
     @Override
     public Boolean hasHealingPower() {
         return hasHealingPower;
+    }
+
+    /**
+     * Returns the co-ordinates of the tile the item is on.
+     * @return the co-ordinates of the tile the item is on.
+     */
+    @Override
+    public HexVector getCoords() {
+        return position;
     }
 }
