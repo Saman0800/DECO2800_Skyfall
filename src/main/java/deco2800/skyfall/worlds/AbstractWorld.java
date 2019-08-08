@@ -26,6 +26,7 @@ public abstract class AbstractWorld {
     protected int length;
 
     protected CopyOnWriteArrayList<Tile> tiles;
+    protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
 
     protected List<AbstractEntity> entitiesToDelete = new CopyOnWriteArrayList<>();
     protected List<Tile> tilesToDelete = new CopyOnWriteArrayList<>();

@@ -18,14 +18,26 @@ import java.util.List;
 import java.util.Random;
 
 public class RocketWorld extends AbstractWorld implements TouchDownObserver {
-    private static final int RADIUS = 5;
+    private static final int RADIUS = 10;
+    private static final int WORLD_SIZE = 10;
+    private static final int NODE_SPACING = 5;
 
     private boolean generated = false;
     private PlayerPeon player;
 
     @Override
     protected void generateWorld() {
+
+        int nodeCount = (int) Math.round(Math.pow((float)WORLD_SIZE / (float)NODE_SPACING, 2));
+
         Random random = new Random();
+
+        for (int i = 0; i < nodeCount; i++) {
+            float x = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
+            float y = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
+            worldGenNodes.add(new WorldGenNode(x, y));
+        }
+
         for (int q = -1000; q < 1000; q++) {
             for (int r = -1000; r < 1000; r++) {
                 if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= RADIUS) {
@@ -42,9 +54,6 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         // Create the entities in the game
         player = new PlayerPeon(0f, 0f, 0.05f);
         addEntity(player);
-
-        BowMan bowMan = new BowMan(0f, 3.5f);
-        addEntity(bowMan);
 
         GameManager.getManagerFromInstance(InputManager.class)
                 .addTouchDownListener(this);
