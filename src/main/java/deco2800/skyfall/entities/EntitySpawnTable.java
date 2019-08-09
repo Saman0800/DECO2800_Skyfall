@@ -7,6 +7,7 @@ import deco2800.skyfall.managers.GameManager;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.lang.Math;
 
 
 
@@ -16,13 +17,12 @@ import java.util.Random;
  * however, simpler methods exist that will handle this for you
  */
 public class EntitySpawnTable {
-
-
     /**
      * Simple static method for placing static items
      * Takes the given entity and places a deep copy within the world at a given tile
      * @param tile The tile the new entity will occupy
      * @param entity The entity to be deep copied
+     * @param <T> T must extend StaticEntity and have .newInstance inherited
      * @return The duplicated instance with the new tile position.
      * See NewInstance to place items
      */
@@ -31,27 +31,45 @@ public class EntitySpawnTable {
         world.addEntity((T) entity.newInstance(tile));
     }
 
+    /**
+     * Randomly distributes an entity with a given spawn rule
+     * @param entity The entity to copied and distributed
+     * @param rule A spawn rule, which specifies how the entity will be distributed
+     *     example rules are chance, min/max, next to, a combination of these, e.g.
+     * @param <T> T must extend StaticEntity and have .newInstance inherited
+     */
     public static <T extends StaticEntity> void spawnEnities(T entity, EntitySpawnRule rule) {
-        int max = rule.getMax();
-        int min = rule.getMin();
-        double chance = rule.getChance() < 0 ? rule.getChance() : 1 / (double)( max - min );
-
         AbstractWorld world = GameManager.get().getWorld();
         Random r = new Random();
 
         List<Tile> tiles = world.getTileMap();
+        //randomise tile order
         Collections.shuffle(tiles, r);
 
-        int placed = 0;
+        int max = rule.getMax();
+        int min = rule.getMin();
+        double chance = rule.getChance();
+
+        //generate the number of tiles of this ent to place based on rule
+        int toPlace = (chance < 0) ?
+                //probability is determined by min max
+                r.nextInt(max - min + 1) + min
+                //direct determine number of tiles
+                : (int)(chance*tiles.size());
+
+        //ensure min max is enforced
+        toPlace = java.lang.Math.max(min, toPlace);
+        toPlace = java.lang.Math.min(max, toPlace);
+        //ensure number of tiles to place isn't more than the world contains
+        toPlace = java.lang.Math.min(tiles.size(), toPlace);
 
         //continue iterating over tiles while rule needs to be satisfied
-        for (int i = 0; (i < tiles.size() || placed <= min) && placed <= max; i = (++i)%tiles.size()) {
+        for (int i = 0; i < toPlace; i++) {
             Tile tile = tiles.get(i);
             if (tile != null && r.nextDouble() < chance) {
                 placeEntity(entity, tile);
             }
         }
-
 
     }
 }
