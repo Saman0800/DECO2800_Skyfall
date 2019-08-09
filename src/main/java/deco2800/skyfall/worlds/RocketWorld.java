@@ -30,6 +30,8 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
         int nodeCount = (int) Math.round(Math.pow((float)WORLD_SIZE / (float)NODE_SPACING, 2));
 
+        // TODO: if nodeCount is less than the number of biomes, throw an exception
+
         Random random = new Random();
 
         for (int i = 0; i < nodeCount; i++) {
