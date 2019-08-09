@@ -7,7 +7,7 @@ package deco2800.skyfall.entities;
  */
 public class EntitySpawnRule {
     //chance to spawn in tile, value of zero represents uninitialised
-    private float chance = 0;
+    private double chance = 0;
     //minimum number to spawn
     private int min = 0;
     //maximum number to spawn
@@ -17,7 +17,7 @@ public class EntitySpawnRule {
      * sets spawn rule based on chance
      * @param chance The likelihood of spawning an ent in a given tile of the world
      */
-    public EntitySpawnRule(float chance) {
+    public EntitySpawnRule(double chance) {
         setChance(chance);
     }
 
@@ -39,7 +39,7 @@ public class EntitySpawnRule {
      * @param min minimum number of entities to spawn into the world inclusive
      * @param max maximum number of entities to spawn into the world inclusive
      */
-    public EntitySpawnRule(float chance, int min, int max) {
+    public EntitySpawnRule(double chance, int min, int max) {
         setChance(chance); //entity spawn handler will deal with this
         setMin(min);
         setMax(max);
@@ -48,18 +48,20 @@ public class EntitySpawnRule {
     /**
      * @return get chance of the spawn rule, a value of -1 is returned when other spawn rules are
      */
-    public float getChance() {
+    public double getChance() {
         return chance;
     }
 
     /**
      * @param chance sets chance, negative values will cause other parameters to determine distribution
      */
-    public void setChance(float chance) {
+    public void setChance(double chance) {
         this.chance = chance;
     }
 
-
+    /**
+     * @return returns inclusive minimum number of entities this rule will allow to spawn
+     */
     public int getMin() {
         return min;
     }
@@ -71,6 +73,9 @@ public class EntitySpawnRule {
         this.min = min;
     }
 
+    /**
+     * @return returns inclusive maximum number of entities this rule will allow to spawn
+     */
     public int getMax() {
         return max;
     }

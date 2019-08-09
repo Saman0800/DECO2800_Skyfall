@@ -76,7 +76,7 @@ public class EntitySpawnTable {
      * @param chance probability that the entity will be in a given tile
      * @param <T>  T must extend StaticEntity and have .newInstance inherited
      */
-    public static <T extends StaticEntity> void spawnEntities(T entity, float chance) {
+    public static <T extends StaticEntity> void spawnEntities(T entity, double chance) {
         EntitySpawnRule spawnRule = new EntitySpawnRule(chance);
         spawnEntities(entity, spawnRule);
     }
