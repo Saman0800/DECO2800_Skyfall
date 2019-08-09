@@ -64,6 +64,9 @@ public class EntitySpawnRule {
         return min;
     }
 
+    /**
+     * @param min This minimum is inclusive and stricty enforced
+     */
     public void setMin(int min) {
         this.min = min;
     }
@@ -72,6 +75,10 @@ public class EntitySpawnRule {
         return max;
     }
 
+    /**
+     *
+     * @param max This maximum is inclusive and stricty enforced
+     */
     public void setMax(int max) {
         this.max = max;
     }

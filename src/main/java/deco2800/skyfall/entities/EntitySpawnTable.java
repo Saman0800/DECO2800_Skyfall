@@ -61,7 +61,7 @@ public class EntitySpawnTable {
         //ensure number of tiles to place isn't more than the world contains
         toPlace = java.lang.Math.min(tiles.size(), toPlace);
 
-        //continue iterating over tiles while rule needs to be satisfied
+        //place entity on random tiles
         for (int i = 0; i < toPlace; i++) {
             Tile tile = tiles.get(i);
             if (tile != null && r.nextDouble() < chance) {
@@ -72,7 +72,9 @@ public class EntitySpawnTable {
 
     /**
      * Does entity placing with a simple probability, with no need for a EntitySpawnRule
-     * TODO: finish documentation
+     * @param entity Entity to be copied and inserted
+     * @param chance probability that the entity will be in a given tile
+     * @param <T>  T must extend StaticEntity and have .newInstance inherited
      */
     public static <T extends StaticEntity> void spawnEntities(T entity, float chance) {
         EntitySpawnRule spawnRule = new EntitySpawnRule(chance);
