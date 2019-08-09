@@ -23,8 +23,16 @@ public abstract class NaturalResources implements Item {
     // the co-ordinates of the tile the item has been placed on
     private HexVector position;
 
+    /***
+     * Creates a default natural resource
+     */
+    public NaturalResources(){
+        //default constructor added for building inventory
+    }
+
+
     /**
-     * Creates a new Natural Resource with the given name
+     * Creates a new Natural Resource with the given name and position
      * @param name the identifying name of the Natural Resource
      * @param position the tile which the item has been placed on
      */

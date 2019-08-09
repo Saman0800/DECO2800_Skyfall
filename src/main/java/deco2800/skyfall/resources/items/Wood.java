@@ -7,6 +7,10 @@ import deco2800.skyfall.worlds.Tile;
 
 public class Wood extends NaturalResources implements Item {
 
+    public Wood(){
+        //default constructor added for building inventory
+    }
+
     public Wood(String name, Tile position){
         super(name, position);
     }
