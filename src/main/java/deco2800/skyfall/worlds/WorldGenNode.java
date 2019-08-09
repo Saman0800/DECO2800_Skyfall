@@ -159,6 +159,7 @@ public class WorldGenNode {
             for (WorldGenNode node : nodes) {
                 float[] centroid = node.getCentroid();
                 node.setCoords(centroid);
+                // TODO reapply Fortune's algorithm
             }
         }
     }
@@ -216,23 +217,31 @@ public class WorldGenNode {
      * @param tiles
      */
     public static void assignTiles(List<WorldGenNode> nodes, List<Tile> tiles) {
-        // TODO check if this is necessary (may have already been sorted in
-        // TODO fortune's algorithm
+        // TODO check if osrt is necessary (may have already been sorted in
+        // TODO fortune's algorithm)
+        // Ensure nodes are stored in order of Y value
         sortNodes(nodes);
         for (Tile tile : tiles) {
             // TODO see if this needs to be transformed according to dimensions of hexagon
+            // Y coordinate of the tile
             float tileY = tile.getCoordinates().getRow();
+            // Find the index of the node with the node with one of the nearest
+            // Y values (note, if there is no node with the exact Y value, it)
+            // Can choose the node on either side, not the strictly closest one
             int nearestIndex = binarySearch(tileY, nodes, 0, nodes.size() - 1);
             boolean lowerLimitFound = false;
             boolean upperLimitFound = false;
-            // TODO check with someone if this should be stored, or just the index
+            // Store the minimum distance to a node, and the index of that node
             float minDistance = nodes.get(nearestIndex).distanceToTile(tile);
             int minDistanceIndex = nearestIndex;
             int iterations = 1;
+            // Starting from the initial index, this loop checks the 1st node on
+            // either side, then the 2nd node on either side, continuing
+            // outwards (kept track of by iterations).
             while (!(upperLimitFound && lowerLimitFound)) {
-                // Stop the algorithm from checking off the end of the list
                 int lower = nearestIndex - iterations;
                 int upper = nearestIndex + iterations;
+                // Stop the algorithm from checking off the end of the list
                 if (lower < 0) {
                     lowerLimitFound = true;
                 }
@@ -242,10 +251,15 @@ public class WorldGenNode {
 
                 if (!lowerLimitFound) {
                     float distance = nodes.get(lower).distanceToTile(tile);
+                    // Update the closest node if necessary
                     if (distance < minDistance) {
                         minDistance = distance;
                         minDistanceIndex = lower;
                     }
+                    // As distance to a node is necessarily >= the difference in
+                    // y value, if the difference in y value is greater than the
+                    // smallest distance to a node, all future nodes in that
+                    // direction will be further away
                     if (nodes.get(lower).yDistanceToTile(tile) > minDistance) {
                         lowerLimitFound = true;
                     }
@@ -262,6 +276,7 @@ public class WorldGenNode {
                 }
                 iterations++;
             }
+            // Assign tile to the node
             nodes.get(minDistanceIndex).addTile(tile);
         }
     }
