@@ -3,6 +3,12 @@ package deco2800.skyfall.worlds;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * A class used in the world generation procedure to help the world and biomes
+ * have a natural looking shape. To see how they are being used, this class is
+ * heavily based on
+ * <a href="http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/?fbclid=IwAR30I7ILTznH6YzYYqZfjIE3vcqPsed85ta9bohPZWi74SfWMwWpD8AVddQ#source">This</a>
+ */
 public class WorldGenNode {
 
     // position
@@ -39,6 +45,59 @@ public class WorldGenNode {
 
     }
 
+    public int comparePosition(WorldGenNode other) {
+        if (other == null) {
+            //TODO throw exception
+        }
+        if (this.getY() == other.getY()) {
+            if (this.getX() == other.getX()) {
+                return 0;
+            }
+            if (this.getX() < other.getX()) {
+                return -1;
+            }
+            return 1;
+        }
+        if (this.getY() < other.getY()) {
+            return -1;
+        }
+        return 1;
+    }
+
+    /**
+     * Quicksort the list of nodes. Quicksort method taken from
+     * <a href="https://www.geeksforgeeks.org/quick-sort/">Geeks for Geeks</a>
+     * @param nodes
+     */
+    public static void sortNodes(List<WorldGenNode> nodes) {
+        quickSort(nodes, 0, nodes.size() - 1);
+    }
+
+    /*
+     * Helper method for sortNodes
+     */
+    private static void quickSort(List<WorldGenNode> nodes, int start, int end) {
+        if (start < end) {
+            int pivotIndex = start - 1;
+            WorldGenNode pivot = nodes.get(end);
+            for (int i = start; i < end; i++) {
+                if (nodes.get(i).comparePosition(pivot) <= 0) {
+                    pivotIndex++;
+                    WorldGenNode temp = nodes.get(pivotIndex);
+                    nodes.set(pivotIndex, nodes.get(i));
+                    nodes.set(i, temp);
+                }
+            }
+            pivotIndex++;
+            WorldGenNode temp = nodes.get(end);
+            nodes.set(end, nodes.get(pivotIndex));
+            nodes.set(pivotIndex, temp);
+
+            quickSort(nodes, start, pivotIndex - 1);
+            quickSort(nodes, pivotIndex + 1, end);
+        }
+    }
+
     /**
      * Calculates the approximate centroid of the polygon defined by this node.
      * The centroid is approximated as the average position of the vertices of
@@ -69,6 +128,14 @@ public class WorldGenNode {
      */
     public void assignNeighbour(WorldGenNode other) {
         this.neighbours.add(other);
+    }
+
+    /**
+     * Associates a tile with this node
+     * @param tile the tile in question
+     */
+    public void addTile(Tile tile) {
+        this.tiles.add(tile);
     }
 
     /**
@@ -149,7 +216,77 @@ public class WorldGenNode {
      * @param tiles
      */
     public static void assignTiles(List<WorldGenNode> nodes, List<Tile> tiles) {
+        // TODO check if this is necessary (may have already been sorted in
+        // TODO fortune's algorithm
+        sortNodes(nodes);
+        for (Tile tile : tiles) {
+            // TODO see if this needs to be transformed according to dimensions of hexagon
+            float tileY = tile.getCoordinates().getRow();
+            int nearestIndex = binarySearch(tileY, nodes, 0, nodes.size() - 1);
+            boolean lowerLimitFound = false;
+            boolean upperLimitFound = false;
+            // TODO check with someone if this should be stored, or just the index
+            float minDistance = nodes.get(nearestIndex).distanceToTile(tile);
+            int minDistanceIndex = nearestIndex;
+            int iterations = 1;
+            while (!(upperLimitFound && lowerLimitFound)) {
+                // Stop the algorithm from checking off the end of the list
+                int lower = nearestIndex - iterations;
+                int upper = nearestIndex + iterations;
+                if (lower < 0) {
+                    lowerLimitFound = true;
+                }
+                if (upper > nodes.size() - 1) {
+                    upperLimitFound = true;
+                }
 
+                if (!lowerLimitFound) {
+                    float distance = nodes.get(lower).distanceToTile(tile);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        minDistanceIndex = lower;
+                    }
+                    if (nodes.get(lower).yDistanceToTile(tile) > minDistance) {
+                        lowerLimitFound = true;
+                    }
+                }
+                if (!upperLimitFound) {
+                    float distance = nodes.get(upper).distanceToTile(tile);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        minDistanceIndex = upper;
+                    }
+                    if (nodes.get(upper).yDistanceToTile(tile) > minDistance) {
+                        upperLimitFound = true;
+                    }
+                }
+                iterations++;
+            }
+            nodes.get(minDistanceIndex).addTile(tile);
+        }
+    }
+
+    public float distanceToTile(Tile tile) {
+        // TODO see if this needs to be transformed according to dimensions of hexagon
+        float[] tileCoords = {tile.getCoordinates().getCol(), tile.getCoordinates().getRow()};
+        return (float) Math.sqrt(Math.pow(this.getX() - tileCoords[0], 2) + Math.pow(this.getY() - tileCoords[1], 2));
+    }
+
+    public float yDistanceToTile(Tile tile) {
+        return Math.abs(this.getY() - tile.getCoordinates().getRow());
+    }
+
+    private static int binarySearch(float toFind, List<WorldGenNode> nodes, int start, int end) {
+        float tolerance = 0.0001f;
+        int middle = (end + start) / 2;
+        float middleValue = nodes.get(middle).getY();
+        if (middleValue == toFind || start >= end) {
+            return middle;
+        }
+        if (middleValue < toFind) {
+            return binarySearch(toFind, nodes, middle + 1, end);
+        }
+        return binarySearch(toFind, nodes, start, middle - 1);
     }
 
     /* ------------------------------------------------------------------------
