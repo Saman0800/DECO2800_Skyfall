@@ -7,8 +7,6 @@ import deco2800.skyfall.managers.GameManager;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.lang.Math;
-
 
 
 /**
@@ -38,7 +36,7 @@ public class EntitySpawnTable {
      *     example rules are chance, min/max, next to, a combination of these, e.g.
      * @param <T> T must extend StaticEntity and have .newInstance inherited
      */
-    public static <T extends StaticEntity> void spawnEnities(T entity, EntitySpawnRule rule) {
+    public static <T extends StaticEntity> void spawnEntities(T entity, EntitySpawnRule rule) {
         AbstractWorld world = GameManager.get().getWorld();
         Random r = new Random();
 
@@ -70,6 +68,14 @@ public class EntitySpawnTable {
                 placeEntity(entity, tile);
             }
         }
+    }
 
+    /**
+     * Does entity placing with a simple probability, with no need for a EntitySpawnRule
+     * TODO: finish documentation
+     */
+    public static <T extends StaticEntity> void spawnEntities(T entity, float chance) {
+        EntitySpawnRule spawnRule = new EntitySpawnRule(chance);
+        spawnEntities(entity, spawnRule);
     }
 }
