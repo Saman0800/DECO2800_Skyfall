@@ -1,6 +1,8 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import deco2800.skyfall.managers.ConstructionManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
@@ -18,7 +20,7 @@ public class PlayerPeon extends Peon implements TouchDownObserver {
     }
 
 
-	@Override
+    @Override
     public void onTick(long i) {
         if (task != null && task.isAlive()) {
             task.onTick(i);
@@ -26,6 +28,13 @@ public class PlayerPeon extends Peon implements TouchDownObserver {
             if (task.isComplete()) {
                 this.task = null;
             }
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+            ConstructionManager construction = GameManager.getManagerFromInstance(ConstructionManager.class);
+            construction.createWindow(GameManager.get().getStage());
+            construction.initialiseMenu();
+            construction.switchView();
         }
     }
 
@@ -39,6 +48,6 @@ public class PlayerPeon extends Peon implements TouchDownObserver {
         float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
         float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 
-        this.task = new MovementTask(this, new HexVector (clickedPosition[0],clickedPosition[1]));
+        this.task = new MovementTask(this, new HexVector(clickedPosition[0], clickedPosition[1]));
     }
 }
