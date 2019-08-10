@@ -14,21 +14,21 @@ public interface Item {
     String getName();
 
     /**
-     * Returns whether or not the item can be stored in the inventory
-     * @return True if the item can be added to the inventory, false
-     * if it is consumed immediately
+     * Returns the subtype which the item belongs to.
+     * @return The subtype which the item belongs to.
      */
     String getSubtype();
 
     /**
-     * Returns the subtype which the item belongs to.
-     * @return The subtype which the item belongs to.
+     * Returns whether or not the item can be stored in the inventory
+     * @return True if the item can be added to the inventory, false
+     * if it is consumed immediately
      */
     Boolean isCarryable();
 
 
     /**
-     * Returns whether or not the item impacts the player's health
+     * Returns whether or not the item impacts the player's health (HP)
      * @return True if the item impacts on the player's health, false otherwise
      */
     Boolean hasHealingPower();
@@ -39,18 +39,22 @@ public interface Item {
      */
     HexVector getCoords();
 
+    /**
+     * Returns whether or not the item can be exchanged
+     * @return True if the item can be exhanged, false otherwise
+     */
+    Boolean getExchangeable();
+
     //method for getting the biome?
 
+
+    // don't think this method is needed:
     /**
      * Returns whether or not the item could deduct the HP of players
      * @return True if the item deduct the player's health, false otherwise
      */
-    default Boolean getNotHealingPower();
+    // default Boolean getNotHealingPower();
 
-    /**
-     * Returns whether or not the item could be exchanged
-     * @return True if the item could be exhanged, false otherwise
-     */
-    Boolean getExchangeable();
+
 
 }

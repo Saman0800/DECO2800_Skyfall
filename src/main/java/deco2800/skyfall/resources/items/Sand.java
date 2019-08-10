@@ -5,7 +5,8 @@ import deco2800.skyfall.resources.NaturalResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 
-public class Stone extends NaturalResources implements Item {
+public class Sand extends NaturalResources implements Item {
+
     // the name of the item
     private String name;
 
@@ -24,16 +25,13 @@ public class Stone extends NaturalResources implements Item {
     // determines whether or not the resource can be traded
     private Boolean exchangeable;
 
-    // the colour of the stone
-    private String colour;
-
-    // the biome the wood is in (will change to different type in future?)
+    // the biome the sand is in (will change to different type in future?)
     private String biome;
 
     /**
-     * Creates a default stone item
+     * Creates a default sand item
      */
-    public Stone(){
+    public Sand(){
         //default constructor added for building inventory
     }
 
@@ -42,25 +40,18 @@ public class Stone extends NaturalResources implements Item {
      * @param name the identifying name of the Natural Resource
      * @param position the tile which the item has been placed on
      */
-    public Stone(String name, Tile position){
+    public Sand(String name, Tile position){
         super(name, position);
-        this.colour = "white";
         this.biome = biome;
     }
 
-    /**
-     * Returns the colour of the stone
-     * @return the colour of the stone
-     */
-    public String getColour(){
-        return colour;
-    }
 
     /**
-     * Returns the biome the stone is situated in
-     * @return the biome the stone is situated in
+     * Returns the biome the sand is situated in
+     * @return the biome the sand is situated in
      */
     public String getBiome(){
         return biome;
     }
+
 }

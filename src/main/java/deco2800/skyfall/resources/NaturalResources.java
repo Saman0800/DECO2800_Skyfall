@@ -23,6 +23,9 @@ public abstract class NaturalResources implements Item {
     // the co-ordinates of the tile the item has been placed on
     private HexVector position;
 
+    // determines whether or not the resource can be traded
+    private Boolean exchangeable;
+
     /***
      * Creates a default natural resource
      */
@@ -42,6 +45,7 @@ public abstract class NaturalResources implements Item {
         this.subtype = "Natural Resource";
         this.hasHealingPower = false;
         this.position = position.getCoordinates();
+        this.exchangeable = true;
 
     }
 
@@ -89,5 +93,28 @@ public abstract class NaturalResources implements Item {
     @Override
     public HexVector getCoords() {
         return position;
+    }
+
+    @Override
+    public Boolean getExchangeable() {
+        return exchangeable;
+    }
+
+    /**
+     * Creates a string representation of the natural resource in the format:
+     *
+     * <p>'{Nautral Resource}:{Name}'
+     *
+     * <p>without surrounding quotes and with {natural resource} replaced by
+     * the subtype of the item and {name} replaced with the item name
+     * For example:
+     *
+     * <p>Natural Resource:Wood
+     *
+     * @return A string representation of the natural resource.
+     */
+    @Override
+    public String toString() {
+        return "" + subtype + ":" + name;
     }
 }

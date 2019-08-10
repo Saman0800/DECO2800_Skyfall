@@ -1,5 +1,8 @@
 package deco2800.skyfall.resources;
 
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.Tile;
+
 public abstract class HealthResources implements Item {
     // can the item be stored in the inventory
     private Boolean carryable;
@@ -12,9 +15,9 @@ public abstract class HealthResources implements Item {
     // the co-ordinates of the tile the item has been placed on
     private HexVector position;
     //How many amount of healing power could be recovered
-    private Int AmountOfHealingPower;
+    private Integer AmountOfHealingPower;
     //How many amount of healing will be deducted if have a poison
-    private Int HealingDeducted;
+    private Integer HealingDeducted;
     //if and only if the items deduct the HP of player
     private Boolean notHealingPower;
     //Items could change or not e.g. coins, items
@@ -32,7 +35,7 @@ public abstract class HealthResources implements Item {
         this.carryable = true;
         this.subtype = "Health Resource";
         this.hasHealingPower = true;
-        this.notHealingPower=false;
+        //this.notHealingPower=false;
         this.exchangeable=true;
         this.position = position.getCoordinates();
     }
@@ -53,7 +56,6 @@ public abstract class HealthResources implements Item {
      * @return True if the item can be added to the inventory, false
      * if it is consumed immediately
      */
-    @Override
     public Boolean getCarryable() {
         return carryable;
     }
@@ -71,25 +73,23 @@ public abstract class HealthResources implements Item {
      * Returns whether or not the item impacts the player's health
      * @return True if the item impacts on the player's health, false otherwise
      */
-    @Override
     public Boolean getHasHealingPower() {
         return hasHealingPower;
     }
 
-    /**
+/*    *//**
      * Returns whether or not the item could deduct the HP of players
      * @return True if the item deduct the player's health, false otherwise
-     */
-    @Override
+     *//*
     public Boolean getNotHealingPower() {
         return notHealingPower;
-    }
+    }*/
 
     /**
      * Returns the integer of healing power
      * @return the integer of healing power
      */
-    public Int AmountOfHealingPower(Int AmountOfRecoverHP){
+    public Integer AmountOfHealingPower(Integer AmountOfRecoverHP){
         AmountOfHealingPower=AmountOfRecoverHP;
         return AmountOfHealingPower;
     }
@@ -98,7 +98,7 @@ public abstract class HealthResources implements Item {
      * Returns the integer of deducting healing power
      * @return the integer of deducting healing power
      */
-    public Int HealingDeducted(int AmountOfDeducted){
+    public Integer HealingDeducted(int AmountOfDeducted){
         HealingDeducted=AmountOfDeducted;
         return HealingDeducted;
     }
