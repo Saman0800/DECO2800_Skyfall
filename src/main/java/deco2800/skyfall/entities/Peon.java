@@ -4,6 +4,7 @@ import deco2800.skyfall.Tickable;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.TaskPool;
 import deco2800.skyfall.tasks.AbstractTask;
+import deco2800.skyfall.tasks.MovementTask;
 
 public class Peon extends AgentEntity implements Tickable {
 	protected transient AbstractTask task;
@@ -79,8 +80,15 @@ public class Peon extends AgentEntity implements Tickable {
 		if(task != null && task.isAlive()) {
 			if(task.isComplete()) {
 				this.task = GameManager.getManagerFromInstance(TaskPool.class).getTask(this);
+				
+				//Resetting moving and angle once Peon has stopped
+				if (task instanceof MovementTask) {
+                    this.isMoving = false;
+                    this.angle = 0;
+                }
 			}
-			task.onTick(i);
+
+            task.onTick(i);
 		} else {
 			this.task = GameManager.getManagerFromInstance(TaskPool.class).getTask(this);
 		}

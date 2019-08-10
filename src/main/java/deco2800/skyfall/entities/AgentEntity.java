@@ -11,6 +11,7 @@ public abstract class AgentEntity extends AbstractEntity{
 
 	protected boolean isMoving;
 	protected double angle;
+
 	public AgentEntity(float col, float row, int renderOrder, float speed) {
 		super(col, row, renderOrder);
         this.isMoving = false;
@@ -22,6 +23,7 @@ public abstract class AgentEntity extends AbstractEntity{
 		super();
 	}
 
+	/*Gets reset in the Peon class*/
 	public void moveTowards(HexVector destination) {
 		position.moveToward(destination, speed);
 		isMoving = true;
@@ -40,15 +42,8 @@ public abstract class AgentEntity extends AbstractEntity{
         return isMoving;
     }
 
-    public void setMoving(boolean moving) {
-        isMoving = moving;
-    }
-
     public double getAngle() {
         return angle;
     }
 
-    public void setAngle(int angle) {
-        this.angle = angle;
-    }
 }

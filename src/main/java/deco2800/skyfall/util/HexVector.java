@@ -103,7 +103,7 @@ public class HexVector {
         double xShift = Math.cos(angle) * distance;
         double yShift = Math.sin(angle) * distance;
         
-        System.out.println(String.format("    dCol: %.2f, dRow: %.2f, angle: %.2f, colShift: %.2f, rowShift: %.2f", deltaCol, deltaRow, angle, xShift, yShift));
+        //System.out.println(String.format("    dCol: %.2f, dRow: %.2f, angle: %.2f, colShift: %.2f, rowShift: %.2f", deltaCol, deltaRow, angle, xShift, yShift));
 
         
         this.col += xShift;
