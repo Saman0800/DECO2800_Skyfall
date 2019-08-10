@@ -1,7 +1,6 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.physics.box2d.Box2D;
-import deco2800.skyfall.util.HexVector;
 
 /**
  * An entity that is shot from a weapon.

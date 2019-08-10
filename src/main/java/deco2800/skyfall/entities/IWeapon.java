@@ -2,6 +2,7 @@ package deco2800.skyfall.entities;
 
 /**
  * Created by James Nguyen on 06/08/2019
+ * Edited by Christopher Poli on 10/08/2019
  */
 public interface IWeapon {
     /**
@@ -14,7 +15,7 @@ public interface IWeapon {
      * Get weapon name
      * @return the name of the weapon
      */
-    String getWeapon();
+    String getWeaponName();
 
     /**
      * Get durability of the weapon
@@ -28,7 +29,7 @@ public interface IWeapon {
      * @return a number represent the attack rate of the weapon
      * on the scale of 1 to 5
      */
-    Number getAttachRate();
+    Number getAttackRate();
 
     /**
      * Get damage of the weapon
@@ -45,21 +46,7 @@ public interface IWeapon {
      */
     String getDamageType();
 
-    /**
-     * Is the weapon carryable?
-     * If so, the weapon can be
-     * added to the Player's inventory.
-     * @return true if carryable, false if not
-     */
-    boolean isCarryable();
 
-    /**
-     * Can the weapon be dropped?
-     * If so, the weapon can be
-     * added to the Player's inventory.
-     * @return true if can drop, false if not
-     */
-    boolean isDroppable();
 
 
 }

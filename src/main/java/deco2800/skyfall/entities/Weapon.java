@@ -2,6 +2,8 @@ package deco2800.skyfall.entities;
 
 public class Weapon implements IWeapon {
 
+    private String weaponType;
+
     public Weapon() {
 
     }
@@ -12,7 +14,7 @@ public class Weapon implements IWeapon {
     }
 
     @Override
-    public String getWeapon() {
+    public String getWeaponName() {
         return null;
     }
 
@@ -22,7 +24,7 @@ public class Weapon implements IWeapon {
     }
 
     @Override
-    public Number getAttachRate() {
+    public Number getAttackRate() {
         return null;
     }
 
@@ -36,13 +38,4 @@ public class Weapon implements IWeapon {
         return null;
     }
 
-    @Override
-    public boolean isCarryable() {
-        return false;
-    }
-
-    @Override
-    public boolean isDroppable() {
-        return false;
-    }
 }
