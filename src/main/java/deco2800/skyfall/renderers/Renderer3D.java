@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.InputManager;
 import org.slf4j.Logger;
@@ -44,6 +47,7 @@ public class Renderer3D implements Renderer {
 
 	private TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
 
+	private float elapsedTime = 0;
 	/**
 	 * Renders onto a batch, given a renderables with entities It is expected
 	 * that AbstractWorld contains some entities and a Map to read tiles from
@@ -61,8 +65,9 @@ public class Renderer3D implements Renderer {
 		// Render tiles onto the map
 		List<Tile> tileMap = GameManager.get().getWorld().getTileMap();
 		List<Tile> tilesToBeSkipped = new ArrayList<>();
-				
-		batch.begin();
+        elapsedTime += Gdx.graphics.getDeltaTime();
+
+        batch.begin();
 		// Render elements section by section
 		//	tiles will render the static entity attaced to each tile after the tile is rendered
 
@@ -73,7 +78,10 @@ public class Renderer3D implements Renderer {
 
 			// Render each undiscovered area
 		}
-
+		Animation<TextureRegion> test =  textureManager.getAnimation("marioTest");
+		if(test != null) {
+            batch.draw(test.getKeyFrame(elapsedTime, true) ,0 ,0);
+        }
 
 		renderAbstractEntities(batch, camera);
 

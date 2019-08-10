@@ -18,7 +18,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	
 	@Expose
 	private String objectName = null;
-		
+	protected boolean animatable = false;
 	private static int nextID = 0;
 
 	public static void resetID() {
@@ -275,7 +275,15 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	public void dispose() {
 		GameManager.get().getManager(NetworkManager.class).deleteEntity(this);
 		GameManager.get().getWorld().getEntities().remove(this);
-	}	
+	}
+
+    public boolean isAnimatable() {
+        return animatable;
+    }
+
+    public void setAnimatable(boolean animatable) {
+        this.animatable = animatable;
+    }
 }
 
 
