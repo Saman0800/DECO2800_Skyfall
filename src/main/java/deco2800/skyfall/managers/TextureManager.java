@@ -41,7 +41,6 @@ public class TextureManager extends AbstractManager {
     private Map<String, Texture> textureMap = new HashMap<>();
 
     //For animations
-    private Map<String, Animation<TextureRegion>> animationMap = new HashMap<String, Animation<TextureRegion>>();
 
     /**
      * Constructor
@@ -87,7 +86,7 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("rock", new Texture("resources/rocks.png"));
 
-            this.generateAnimationObject("marioTest", "mario", 100, 138);
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -133,45 +132,4 @@ public class TextureManager extends AbstractManager {
         }
     }
 
-    /*
-        For animation could separated into different file later.
-     */
-    private void splitTexture() {
-
-    }
-
-    private void convert2DTo1D(){
-
-    }
-
-    public void generateAnimationObject(String animationName,
-            String textureName, int tileWidth, int tileHeight) {
-        if (animationMap.containsKey(animationName)) {
-            return;
-        }
-        Texture texture = this.getTexture(textureName);
-        System.out.println("Texture has been fetched");
-
-
-        TextureRegion[][] tmpFrames = TextureRegion.split(texture, tileWidth, tileHeight);
-        //Assuming tmpFrames is a matrix;
-        int height = tmpFrames.length ;
-        int width =  tmpFrames[0].length;
-        int size = height * width;
-
-        TextureRegion[] animationFrames = new TextureRegion[height * width];
-        int index = 0;
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-              animationFrames[index++] = tmpFrames[i][j];
-            }
-        }
-
-        animationMap.put(animationName, new Animation<>(1f/4f, animationFrames));
-        System.out.println("Object has been generated");
-    }
-
-    public Animation<TextureRegion> getAnimation(String animationName) {
-        return animationMap.get(animationName);
-    }
 }

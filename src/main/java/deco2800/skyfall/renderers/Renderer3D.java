@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.managers.AnimationManager;
 import deco2800.skyfall.managers.InputManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +47,7 @@ public class Renderer3D implements Renderer {
 	private int tilesSkipped = 0;
 
 	private TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
+    private AnimationManager animationManager = GameManager.getManagerFromInstance(AnimationManager.class);
 
 	private float elapsedTime = 0;
 	/**
@@ -71,14 +73,15 @@ public class Renderer3D implements Renderer {
 		// Render elements section by section
 		//	tiles will render the static entity attaced to each tile after the tile is rendered
 
-		tilesSkipped =0;
+		tilesSkipped = 0;
 		for (Tile t: tileMap) {
 			// Render each tile
 			renderTile(batch, camera, tileMap, tilesToBeSkipped, t);
 
 			// Render each undiscovered area
 		}
-		Animation<TextureRegion> test =  textureManager.getAnimation("marioTest");
+
+		Animation<TextureRegion> test =  animationManager.getAnimation("marioTest");
 		if(test != null) {
             batch.draw(test.getKeyFrame(elapsedTime, true) ,0 ,0);
         }
