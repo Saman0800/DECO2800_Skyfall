@@ -12,12 +12,6 @@ public interface IWeapon {
     String getWeaponType();
 
     /**
-     * Get weapon name
-     * @return the name of the weapon
-     */
-    String getWeaponName();
-
-    /**
      * Get durability of the weapon
      * @return a number represent the durability of the weapon
      * on the scale of 0 to 10
@@ -45,8 +39,6 @@ public interface IWeapon {
      * bow and spear will have splash effect
      */
     String getDamageType();
-
-
 
 
 }

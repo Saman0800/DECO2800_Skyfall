@@ -7,12 +7,12 @@ package deco2800.skyfall.entities;
 public interface ICombatEntity {
 
     /**
-     * Deal damage to the entity.
+     * Deal damage to this entity.
      */
      void takeDamage(int damage);
 
     /**
-     * Deal damage to another entity.
+     * Deal damage to another ICombatEntity so damage calculation can be applied.
      */
     void dealDamage(ICombatEntity entity);
 
@@ -29,15 +29,16 @@ public interface ICombatEntity {
     int getArmour();
 
     /**
-     *
-     * @return an array containing the resistance attributes of the combat entity.
+     * Get an array of the resistance attributes.
+     * @return A array containing the resistance attributes of the combat entity.
      */
-    int[] getResistanceAttributes();
+     int[] getResistanceAttributes();
 
     /**
-     * Check the status indicators for the enemy, such as "stun", "disable", "poison".
-     * @return An array of status indicators for the enemy.
+     * Get an array of the status indicators for the combat entity,
+     * such as "stun", "disable", "poison", "invincible".
+     * @return An array of status indicators.
      */
     String[] statusIndicators();
-    
+
 }
