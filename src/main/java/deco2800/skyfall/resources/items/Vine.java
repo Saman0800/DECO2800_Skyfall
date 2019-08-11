@@ -34,18 +34,19 @@ public class Vine extends NaturalResources implements Item {
      */
     public Vine(){
         //default constructor added for building inventory
-    }
-
-    /**
-     * Creates a new Natural Resource with the given name and position
-     * @param name the identifying name of the Natural Resource
-     * @param position the tile which the item has been placed on
-     */
-    public Vine(String name, Tile position){
-        super(name, position);
         this.biome = biome;
     }
 
+
+
+    /**
+     * Returns the name of the natural resource
+     * @return The name of the natural resource
+     */
+    @Override
+    public String getName() {
+        return "Vine";
+    }
 
     /**
      * Returns the biome the vine is situated in

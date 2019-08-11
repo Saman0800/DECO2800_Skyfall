@@ -34,18 +34,18 @@ public class Stone extends NaturalResources implements Item {
      * Creates a default stone item
      */
     public Stone(){
+        this.colour = "white";
+        this.biome = biome;
         //default constructor added for building inventory
     }
 
     /**
-     * Creates a new Natural Resource with the given name and position
-     * @param name the identifying name of the Natural Resource
-     * @param position the tile which the item has been placed on
+     * Returns the name of the natural resource
+     * @return The name of the natural resource
      */
-    public Stone(String name, Tile position){
-        super(name, position);
-        this.colour = "white";
-        this.biome = biome;
+    @Override
+    public String getName() {
+        return "Stone";
     }
 
     /**

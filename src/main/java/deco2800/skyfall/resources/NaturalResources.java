@@ -1,5 +1,6 @@
 package deco2800.skyfall.resources;
 
+import deco2800.skyfall.resources.items.Wood;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 
@@ -9,13 +10,13 @@ import deco2800.skyfall.worlds.Tile;
 public abstract class NaturalResources implements Item {
 
     // the name of the item e.g. wood, stone
-    private String name;
+    public String name;
 
     // can the item be stored in the inventory
     private Boolean carryable;
 
     // the name of the subtype the item belongs to
-    private String subtype;
+    public String subtype;
 
     // does the item impact the player's health
     private Boolean hasHealingPower;
@@ -31,16 +32,21 @@ public abstract class NaturalResources implements Item {
      */
     public NaturalResources(){
         //default constructor added for building inventory
+        this.name = null;
+        this.carryable = true;
+        this.subtype = "Natural Resource";
+        this.hasHealingPower = false;
+        this.exchangeable = true;
+
     }
 
 
     /**
      * Creates a new Natural Resource with the given name and position
-     * @param name the identifying name of the Natural Resource
-     * @param position the tile which the item has been placed on
+     * * @param position the tile which the item has been placed on
      */
-    public NaturalResources(String name, Tile position){
-        this.name = name;
+    public NaturalResources(Tile position){
+        this.name = null;
         this.carryable = true;
         this.subtype = "Natural Resource";
         this.hasHealingPower = false;
@@ -57,6 +63,7 @@ public abstract class NaturalResources implements Item {
     public String getName() {
         return name;
     }
+
 
     /**
      * Returns whether or not the item can be stored in the inventory
@@ -116,5 +123,12 @@ public abstract class NaturalResources implements Item {
     @Override
     public String toString() {
         return "" + subtype + ":" + name;
+    }
+
+
+    public static void main(String[] args) {
+        NaturalResources n = new Wood();
+        System.out.println(n.getName());
+        System.out.println(n.getSubtype());
     }
 }

@@ -10,7 +10,8 @@ public class Wood extends NaturalResources implements Item {
     // the name of the item
     private String name;
 
-    // can the item be stored in the inventory
+
+/*    // can the item be stored in the inventory
     private Boolean carryable;
 
     // the name of the subtype the item belongs to
@@ -23,7 +24,7 @@ public class Wood extends NaturalResources implements Item {
     private HexVector position;
 
     // determines whether or not the resource can be traded
-    private Boolean exchangeable;
+    private Boolean exchangeable;*/
 
     // the colour of the wood
     private String colour;
@@ -36,18 +37,21 @@ public class Wood extends NaturalResources implements Item {
      */
     public Wood(){
         //default constructor added for building inventory
+        this.name = "Wood";
+        this.colour = "brown";
+        this.biome = biome;
+
     }
 
     /**
-     * Creates a new Natural Resource with the given name and position
-     * @param name the identifying name of the Natural Resource
-     * @param position the tile which the item has been placed on
+     * Returns the name of the natural resource
+     * @return The name of the natural resource
      */
-    public Wood(String name, Tile position){
-        super(name, position);
-        this.colour = "brown";
-        this.biome = biome;
+    @Override
+    public String getName() {
+        return "Wood";
     }
+
 
     /**
      * Returns the colour of the wood
@@ -63,6 +67,24 @@ public class Wood extends NaturalResources implements Item {
      */
     public String getBiome(){
         return biome;
+    }
+
+    /**
+     * Creates a string representation of the natural resource in the format:
+     *
+     * <p>'{Nautral Resource}:{Name}'
+     *
+     * <p>without surrounding quotes and with {natural resource} replaced by
+     * the subtype of the item and {name} replaced with the item name
+     * For example:
+     *
+     * <p>Natural Resource:Wood
+     *
+     * @return A string representation of the natural resource.
+     */
+    @Override
+    public String toString() {
+        return "" + subtype + ":" + name;
     }
 
 
