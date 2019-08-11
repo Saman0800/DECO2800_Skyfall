@@ -11,7 +11,7 @@ public class BowMan extends AgentEntity {
     protected transient AbstractTask task;
 
     public BowMan(float col, float row) {
-        super(col, row, 2, 1f);
+        super(col, row, 2, 0.2f);
 
         this.setTexture("bowman");
         this.setHeight(1);
