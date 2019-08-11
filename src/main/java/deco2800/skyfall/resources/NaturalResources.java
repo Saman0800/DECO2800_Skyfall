@@ -7,7 +7,7 @@ import deco2800.skyfall.worlds.Tile;
 /**
  * An abstract class representing a Natural Resource item
  */
-public class NaturalResources implements Item {
+public abstract class NaturalResources implements Item {
 
     // the name of the item e.g. wood, stone
     public String name;
