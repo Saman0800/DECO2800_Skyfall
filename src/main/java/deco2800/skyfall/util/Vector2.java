@@ -49,6 +49,18 @@ public class Vector2 {
     }
 
     /**
+     * Adds the argument vector and returns the result
+     * @param arg the vector to be added
+     */
+    public Vector2 add(Vector2 arg) { return new Vector2(this.x + arg.x, this.y + arg.y); }
+
+    /**
+     * Subtracts the argument vector and returns the result
+     * @param arg the vector to be subtracted
+     */
+    public Vector2 subtract(Vector2 arg) { return new Vector2(this.x - arg.x, this.y - arg.y); }
+
+    /**
      * Equals Method returns true iff the two objects are equal 
      * based on their X and Y Value.
      * @return 
