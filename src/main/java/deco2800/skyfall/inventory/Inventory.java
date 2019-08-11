@@ -1,11 +1,8 @@
 package deco2800.skyfall.inventory;
 
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.resources.items.Sand;
 import deco2800.skyfall.resources.items.Stone;
-import deco2800.skyfall.resources.items.Vine;
 import deco2800.skyfall.resources.items.Wood;
-
 import java.util.*;
 import java.lang.*;
 
