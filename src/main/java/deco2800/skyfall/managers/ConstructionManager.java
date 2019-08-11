@@ -16,13 +16,17 @@ public class ConstructionManager extends AbstractManager {
     private Boolean menuVisible = false;
     //Has menu been created and added
     private Boolean menuAdded = false;
-
+    //Has the menu been set up
+    private Boolean menuSetUp = false;
     private Window buildMenu;
+
+    //Put window components here:
+
 
     //Start of UI
     //Create UI Window
     //Does nothing if window already created
-    public void createWindow(Stage stage){
+    public void createWindow(Stage stage) {
         if (!menuAdded) {
             Skin skin = new Skin(Gdx.files.internal("resources/uiskin.skin"));
             buildMenu = new Window("Construction", skin);
@@ -36,27 +40,46 @@ public class ConstructionManager extends AbstractManager {
     }
 
     //Set up window
-    //Called every time window is shown so that most accurate (up to date info is shown"
-    public void initialiseMenu(){
-        System.out.println("Window Initialised");
+    public void setUpMenu(float width, float height) {
+        if (!menuSetUp) {
+            buildMenu.setHeight(3 * height / 4);
+            buildMenu.setWidth(3 * width / 4);
+            buildMenu.setPosition(width / 8, height / 8);
+
+            //Add window components here: e.g. buttons, labels, etc
+            //example buildMenu.add(button1);
+
+            System.out.println("Window set up");
+            menuSetUp = true;
+        } else {
+            System.out.println("Window already set up");
+        }
+
+    }
+
+    //Called every time window is shown so that most accurate, up to date info is shown
+    public void updateWindow() {
+        //Update window components here:
+
+        System.out.println("Window updated");
     }
 
     //Switches the menu on or odd
-    public void switchView(){
-        if(menuVisible){
+    public void switchView() {
+        if (menuVisible) {
             hideBuildMenu();
         } else {
             showBuildMenu();
         }
     }
 
-    public void showBuildMenu(){
+    public void showBuildMenu() {
         menuVisible = true;
         buildMenu.setVisible(true);
         System.out.println("Menu Shown");
     }
 
-    public void hideBuildMenu(){
+    public void hideBuildMenu() {
         menuVisible = false;
         buildMenu.setVisible(false);
         System.out.println("Menu Hidden");
