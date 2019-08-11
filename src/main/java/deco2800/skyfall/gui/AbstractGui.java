@@ -3,6 +3,7 @@ package deco2800.skyfall.gui;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import deco2800.skyfall.util.Vector2;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,11 +56,11 @@ public abstract class AbstractGui {
     }
 
     abstract public void update(long timeDelta);
-    abstract public void render(BitmapFont font, SpriteBatch batch, OrthographicCamera camera);
+    abstract public void render(BitmapFont font, SpriteBatch batch, OrthographicCamera camera, ShapeRenderer shapeRenderer);
 
-    protected void renderChildren(BitmapFont font, SpriteBatch batch, OrthographicCamera camera) {
+    protected void renderChildren(BitmapFont font, SpriteBatch batch, OrthographicCamera camera, ShapeRenderer shapeRenderer) {
         for (AbstractGui element : children) {
-            element.render(font, batch, camera);
+            element.render(font, batch, camera, shapeRenderer);
         }
     }
 

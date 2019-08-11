@@ -1,13 +1,16 @@
 package deco2800.skyfall.gui;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import java.util.LinkedList;
 import java.util.List;
 
 public class GuiMaster {
-    public List<AbstractGui> guiElements = new LinkedList<AbstractGui>();
+    List<AbstractGui> guiElements = new LinkedList<AbstractGui>();
 
     private static GuiMaster singleInstance = null;
 
@@ -19,9 +22,9 @@ public class GuiMaster {
         }
     }
 
-    public void renderAll(BitmapFont font, SpriteBatch batch, OrthographicCamera camera) {
+    public void renderAll(BitmapFont font, SpriteBatch batch, OrthographicCamera camera, ShapeRenderer shapeRenderer) {
         for (AbstractGui element : guiElements) {
-            element.render(font, batch, camera);
+            element.render(font, batch, camera, shapeRenderer);
         }
     }
 
