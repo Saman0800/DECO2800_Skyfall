@@ -9,7 +9,7 @@ import java.lang.*;
  * resources. Able to add and remove items from the inventory, as well as return
  * inventory contents.
  */
-public class Inventory {
+public class inventory {
     //Map that stores the inventory contents
     private Map<Item, Integer> inventory;
 
@@ -17,7 +17,7 @@ public class Inventory {
 
 
 
-    public Inventory(){
+    public inventory(){
         this.inventory = new HashMap<Item, Integer>();
 
         //Add default items to inventory - eventually use static final constant to populate?
@@ -25,7 +25,7 @@ public class Inventory {
     }
 
 
-    public Inventory(Map<Item, Integer> inventory){
+    public inventory(Map<Item, Integer> inventory){
         //custom constructor
         this.inventory = new HashMap<Item, Integer>();
 
