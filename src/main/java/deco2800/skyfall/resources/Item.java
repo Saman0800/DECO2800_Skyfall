@@ -33,6 +33,13 @@ public interface Item {
      */
     Boolean hasHealingPower();
 
+
+    /**
+     * Returns whether or not the item impacts the player's food fullness
+     * @return True if the item impacts on the player's food fullness, false otherwise
+     */
+    Boolean hasFoodEffect();
+
     /**
      * Returns the co-ordinates of the tile the item is on
      * @return the co-ordinates of the tile the item is on
