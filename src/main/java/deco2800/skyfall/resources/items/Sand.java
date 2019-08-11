@@ -5,7 +5,7 @@ import deco2800.skyfall.resources.NaturalResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 
-public class Sand extends NaturalResources implements Item {
+public abstract class Sand extends NaturalResources implements Item {
 
     // the name of the item
     private String name;
