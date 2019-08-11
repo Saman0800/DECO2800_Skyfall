@@ -3,6 +3,7 @@ package deco2800.skyfall.renderers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.FPSLogger;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,6 +15,7 @@ import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.OnScreenMessageManager;
 import deco2800.skyfall.managers.PathFindingService;
 import deco2800.skyfall.util.WorldUtil;
+import javax.swing.JFrame;
 
 public class OverlayRenderer implements Renderer {
 	
@@ -54,12 +56,13 @@ public class OverlayRenderer implements Renderer {
 					ScrollingTextBox test = new ScrollingTextBox();
 					test.setString("hello and welcome to scrolling text as you can see this text is scrolling and that is very cool. Now, what is very epic about this scrolling is that its very easy to make. The issue is that it can not\n"
 							+ "be very easily constructed and stored without more code writing and tbh I am kinda tired of doing code at this point I just wanna play games not make one haha anyways why are you still reading\n"
-							+ "this haha enjoy refactoring this whoever sees this (probably me) lolololoololololololololollol");
+							+ "this haha enjoy refactoring this whoever sees this (probably me) lolololoololololololololollollolololoololololololololollollolololoololololololololollollolololoololololololololollollolololoololololololololollol");
 					test.start();
+					guiInitialized = true;
 				}
 
-				//GuiMaster.getInstance().updateAll(1);
-        //GuiMaster.getInstance().renderAll(font, batch, camera);
+				GuiMaster.getInstance().updateAll(1);
+        GuiMaster.getInstance().renderAll(font, batch, camera);
 
         int line = GameManager.get().getManager(OnScreenMessageManager.class).getMessages().size();
         for (String message : GameManager.get().getManager(OnScreenMessageManager.class).getMessages()) {

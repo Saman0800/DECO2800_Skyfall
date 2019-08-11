@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class GuiMaster {
-    List<AbstractGui> guiElements = new LinkedList<AbstractGui>();;
+    public List<AbstractGui> guiElements = new LinkedList<AbstractGui>();
 
     private static GuiMaster singleInstance = null;
 

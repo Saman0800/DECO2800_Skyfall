@@ -58,8 +58,6 @@ public final class ScrollingTextBox extends AbstractGui {
                     currentIndex + (int)(residueTime / timePerChar));
 
             residueTime %= timePerChar;
-            // Get the substring relative to time elapsed
-            subString = printedString.substring(0, currentIndex);
 
             lastTime = System.currentTimeMillis();
         }
@@ -70,12 +68,9 @@ public final class ScrollingTextBox extends AbstractGui {
     @Override
     public void render(BitmapFont font, SpriteBatch batch,
             OrthographicCamera camera) {
-
-        if (Math.random() > 0.5) {
-            font.draw(batch, subString,
+            font.draw(batch, printedString.substring(0, currentIndex),
                     camera.position.x - camera.viewportWidth / 2 + 10,
                     camera.position.y - camera.viewportHeight / 2 + 100);
-        }
 
         renderChildren(font, batch, camera);
     }
