@@ -50,16 +50,16 @@ public class OverlayRenderer implements Renderer {
         }
 
 
-        if (!guiInitialized) {
+       if (!guiInitialized) {
 					ScrollingTextBox test = new ScrollingTextBox();
 					test.setString("hello and welcome to scrolling text as you can see this text is scrolling and that is very cool. Now, what is very epic about this scrolling is that its very easy to make. The issue is that it can not\n"
 							+ "be very easily constructed and stored without more code writing and tbh I am kinda tired of doing code at this point I just wanna play games not make one haha anyways why are you still reading\n"
-							+ "this haha enjoy refactoring this whoever sees this (probably me) lolololoololololololololollolololoololololololololollolololoololololololololollolololoololololololololollolololoololololololololollolololoololololololololollolololoololololololololollolololoololololololololol");
+							+ "this haha enjoy refactoring this whoever sees this (probably me) lolololoololololololololollol");
 					test.start();
 				}
 
-				GuiMaster.getInstance().updateAll(1);
-        GuiMaster.getInstance().renderAll(font, batch, camera);
+				//GuiMaster.getInstance().updateAll(1);
+        //GuiMaster.getInstance().renderAll(font, batch, camera);
 
         int line = GameManager.get().getManager(OnScreenMessageManager.class).getMessages().size();
         for (String message : GameManager.get().getManager(OnScreenMessageManager.class).getMessages()) {

@@ -14,6 +14,7 @@ public final class ScrollingTextBox extends AbstractGui {
     private int currentIndex;
     private int residueTime;
     private String subString;
+    private boolean finished = false;
 
     public ScrollingTextBox() {
         super();
@@ -31,7 +32,12 @@ public final class ScrollingTextBox extends AbstractGui {
 
     public void start() {
         started = true;
+        finished = false;
         lastTime = System.currentTimeMillis();
+    }
+
+    public boolean isFinished() {
+        return finished;
     }
 
     public void reset() {
@@ -40,8 +46,13 @@ public final class ScrollingTextBox extends AbstractGui {
 
     @Override
     public void update(long timeDelta) {
-        if (started) {
+        if (started && !finished) {
             residueTime += (int)(System.currentTimeMillis() - lastTime);
+
+            if (printedString.length() - 1
+                    < currentIndex + (int)(residueTime / timePerChar)) {
+                finished = true;
+            }
 
             currentIndex = Math.min(printedString.length() - 1,
                     currentIndex + (int)(residueTime / timePerChar));
@@ -59,8 +70,12 @@ public final class ScrollingTextBox extends AbstractGui {
     @Override
     public void render(BitmapFont font, SpriteBatch batch,
             OrthographicCamera camera) {
-        font.draw(batch, subString, camera.position.x - camera.viewportWidth / 2 + 10,
-                camera.position.y - camera.viewportHeight / 2 + 100);
+
+        if (Math.random() > 0.5) {
+            font.draw(batch, subString,
+                    camera.position.x - camera.viewportWidth / 2 + 10,
+                    camera.position.y - camera.viewportHeight / 2 + 100);
+        }
 
         renderChildren(font, batch, camera);
     }
