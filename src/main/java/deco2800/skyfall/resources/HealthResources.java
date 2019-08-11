@@ -14,6 +14,8 @@ public abstract class HealthResources implements Item {
     private String name;
     //impact the player's health or not
     private Boolean hasHealingPower;
+    //whether or not the item impacts the player's food fullness
+    private Boolean hasFoodEffect;
     // the name of the subtype the item belongs to
     private String subtype;
     // the co-ordinates of the tile the item has been placed on
@@ -41,9 +43,11 @@ public abstract class HealthResources implements Item {
         this.carryable = true;
         this.subtype = "Health Resource";
         this.hasHealingPower = true;
+        //Do we need a new type like FoodResources? and hasFoodEffect may false in here as medicine may not affect the food fullness
+        this.hasFoodEffect = true;
         //this.notHealingPower=false;
         this.exchangeable = true;
-        this.exchangeable=true;
+
         this.position = position.getCoordinates();
     }
 
@@ -93,6 +97,14 @@ public abstract class HealthResources implements Item {
         return hasHealingPower;
     }
 
+    /**
+     * Returns whether or not the item impacts the player's food fullness
+     *
+     * @return True if the item impacts on the player's food fullness, false otherwise
+     */
+    public Boolean hasFoodEffect() {
+        return hasFoodEffect;
+    }
 /*    *//**
      * Returns whether or not the item could deduct the HP of players
      * @return True if the item deduct the player's health, false otherwise

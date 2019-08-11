@@ -27,6 +27,9 @@ public class NaturalResources implements Item {
     // determines whether or not the resource can be traded
     private Boolean exchangeable;
 
+    //
+    private Boolean hasFoodEffect;
+
     /***
      * Creates a default natural resource
      */
@@ -36,6 +39,8 @@ public class NaturalResources implements Item {
         this.carryable = true;
         this.subtype = "Natural Resource";
         this.hasHealingPower = false;
+        // Natural Resources do not has food effect
+        this.hasFoodEffect = false;
         this.exchangeable = true;
 
     }
@@ -105,6 +110,10 @@ public class NaturalResources implements Item {
     @Override
     public Boolean getExchangeable() {
         return exchangeable;
+    }
+
+    public Boolean hasFoodEffect() {
+        return hasFoodEffect;
     }
 
     /**
