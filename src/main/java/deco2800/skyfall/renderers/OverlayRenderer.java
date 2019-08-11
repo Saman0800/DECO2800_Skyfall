@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import deco2800.skyfall.gui.GuiMaster;
+import deco2800.skyfall.gui.ScrollingTextBox;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.OnScreenMessageManager;
@@ -17,6 +19,7 @@ public class OverlayRenderer implements Renderer {
 	
     BitmapFont font;
     ShapeRenderer shapeRenderer;
+    boolean guiInitialized = false;
      
     FPSLogger fpsLogger = new FPSLogger();
 
@@ -46,10 +49,24 @@ public class OverlayRenderer implements Renderer {
         	renderDebugText(batch, camera);
         }
 
+
+        if (!guiInitialized) {
+					ScrollingTextBox test = new ScrollingTextBox();
+					test.setString("hello and welcome to scrolling text as you can see this text is scrolling and that is very cool. Now, what is very epic about this scrolling is that its very easy to make. The issue is that it can not\n"
+							+ "be very easily constructed and stored without more code writing and tbh I am kinda tired of doing code at this point I just wanna play games not make one haha anyways why are you still reading\n"
+							+ "this haha enjoy refactoring this whoever sees this (probably me) lolololoololololololololollolololoololololololololollolololoololololololololollolololoololololololololollolololoololololololololollolololoololololololololollolololoololololololololollolololoololololololololol");
+					test.start();
+				}
+
+				GuiMaster.getInstance().updateAll(1);
+        GuiMaster.getInstance().renderAll(font, batch, camera);
+
         int line = GameManager.get().getManager(OnScreenMessageManager.class).getMessages().size();
         for (String message : GameManager.get().getManager(OnScreenMessageManager.class).getMessages()) {
             chatLine(batch, camera, line--, message);
         }
+
+
 
         if (GameManager.get().getManager(OnScreenMessageManager.class).isTyping()) {
             chatLine(batch, camera, 0, GameManager.get().getManager(OnScreenMessageManager.class).getUnsentMessage());

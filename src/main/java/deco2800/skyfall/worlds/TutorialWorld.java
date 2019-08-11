@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Random;
 
 public class TutorialWorld extends AbstractWorld implements TouchDownObserver {
-    private static final int RADIUS = 5;
+    private static final int RADIUS = 50;
 
     private boolean generated = false;
     private PlayerPeon player;
@@ -42,13 +42,6 @@ public class TutorialWorld extends AbstractWorld implements TouchDownObserver {
         // Create the entities in the game
         player = new PlayerPeon(0f, 0f, 0.05f);
         addEntity(player);
-        JFrame tutorialBox = new JFrame();
-        tutorialBox.setTitle("Skyfall Tutorial");
-        tutorialBox.setSize(600, 400);
-        tutorialBox.setLocation(200, 200);
-        tutorialBox.setVisible(true);
-        tutorialBox.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        tutorialBox.setResizable(false);
 
         GameManager.getManagerFromInstance(InputManager.class)
                 .addTouchDownListener(this);
