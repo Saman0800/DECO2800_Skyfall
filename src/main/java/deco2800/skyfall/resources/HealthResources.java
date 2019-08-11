@@ -3,7 +3,11 @@ package deco2800.skyfall.resources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 
-public class HealthResources implements Item {
+
+
+
+public abstract class HealthResources implements Item {
+
     // can the item be stored in the inventory
     private Boolean carryable;
     // the name of the item e.g. food, poison
@@ -90,6 +94,7 @@ public class HealthResources implements Item {
 /*    *//**
      * Returns whether or not the item could deduct the HP of players
      * @return True if the item deduct the player's health, false otherwise
+<<<<<<< HEAD
 
      */
 
@@ -97,7 +102,6 @@ public class HealthResources implements Item {
     /**public Boolean getNotHealingPower() {
      * return notHealingPower;
      * }*/
-
 
 
     public Boolean getNotHealingPower() {
@@ -111,7 +115,6 @@ public class HealthResources implements Item {
      * @return the integer of healing power
      */
 
-
     public Integer AmountOfHealingPower(Integer AmountOfRecoverHP){
         AmountOfHealingPower=AmountOfRecoverHP;
 
@@ -123,6 +126,7 @@ public class HealthResources implements Item {
      *
      * @return the integer of deducting healing power
      */
+
 
 
 

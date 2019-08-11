@@ -10,7 +10,6 @@ public class Stone extends NaturalResources implements Item {
     // the name of the item
     private String name;
 
-
     // can the item be stored in the inventory
     private Boolean carryable;
 
