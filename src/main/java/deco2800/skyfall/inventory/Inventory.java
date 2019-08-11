@@ -1,6 +1,11 @@
 package deco2800.skyfall.inventory;
 
 import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.resources.items.Sand;
+import deco2800.skyfall.resources.items.Stone;
+import deco2800.skyfall.resources.items.Vine;
+import deco2800.skyfall.resources.items.Wood;
+
 import java.util.*;
 import java.lang.*;
 
@@ -11,44 +16,103 @@ import java.lang.*;
  */
 public class Inventory {
     //Map that stores the inventory contents
-    private Map<Item, Integer> inventory;
+    private Map<Class<?>, Integer> inventory;
 
     //private List<Item> quickAccessInventory;
 
 
-
+    /***
+     *Create an inventory and add initial default items to the inventory.
+     */
     public Inventory(){
-        this.inventory = new HashMap<Item, Integer>();
+        this.inventory = new HashMap<Class<?>, Integer>();
 
-        //Add default items to inventory - eventually use static final constant to populate?
+        //Add default items to inventory - eventually find a way to populate more flexibly
+        this.inventoryAdd(new Stone());
+        this.inventoryAdd(new Stone());
+        this.inventoryAdd(new Wood());
+        this.inventoryAdd(new Wood());
+
 
     }
 
-
-    public Inventory(Map<Item, Integer> inventory){
-        //custom constructor
-        this.inventory = new HashMap<Item, Integer>();
+    /***
+     * Create an inventory and populate it with custom mappings of resource
+     * type to the number of that particular resource.
+     * @param inventory Map of Class to integer containing inventory items to add
+     */
+    public Inventory(Map<Class<?>, Integer> inventory){
+        this.inventory = new HashMap<Class<?>, Integer>();
 
         //Add inventoryContents to inventory
-
+        this.inventory.putAll(inventory);
 
     }
 
-    public void getInventory(){
-        //Return a copy of the inventory
+
+    /***
+     * Return the inventory.
+     * @return Map that represents the inventory.
+     */
+    public Map<Class<?>, Integer> getInventory(){
+        return Collections.unmodifiableMap(this.inventory);
     }
 
+
+    /***
+     * Print the inventory
+     */
+    public void printInventory(){
+        //Print inventory
+    }
+
+
+    /***
+     * Sort inventory items into sub types for display
+     */
     public void displayInventory(){
         //Sort Items into types for display in GUI and return as 3 Maps rather than 1
     }
 
-    public void inventoryAdd(){
-        //Add item to inventory
+
+    /***
+     * Add an item to the inventory.
+     * @param item Item to add to the inventory.
+     */
+    public void inventoryAdd(Item item){
+        if(item.isCarryable()){
+            Class<?> type = item.getClass();
+
+            if(inventory.get(type) != null){
+
+                inventory.put(type, inventory.get(type) + 1);
+
+            }else{
+                inventory.put(type, 1);
+            }
+
+        }else{
+            System.out.println("Item can not be carried in the inventory");
+        }
+
     }
 
-    public void inventoryRemove(){
-        //Remove item from inventory
-        //Include ability to remove more than one??
+
+    /***
+     * Remove an item from the inventory.
+     * @param type The type of item to remove
+     */
+    public void inventoryDrop(Class<?> type){
+        Integer num = this.inventory.get(type);
+
+        if(num == null){
+            System.out.println("You can't remove what you don't have!");
+        } else if(num == 1){
+            this.inventory.remove(type);
+        } else if(num > 1){
+            this.inventory.put(type, inventory.get(type) - 1);
+        }
+
     }
 
 
