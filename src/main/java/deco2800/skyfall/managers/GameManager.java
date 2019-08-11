@@ -19,6 +19,8 @@ public class GameManager {
 	//debug values stored here
 	public int entitiesRendered, entitiesCount, tilesRendered, tilesCount;
 
+	public boolean isTutorial = false;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(GameManager.class);
 
 	private static GameManager instance = null;

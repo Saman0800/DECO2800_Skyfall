@@ -51,7 +51,7 @@ public class OverlayRenderer implements Renderer {
         	renderDebugText(batch, camera);
         }
 
-			if (firstTime) {
+			if (firstTime && GameManager.get().isTutorial) {
 					ScrollingTextBox test = new ScrollingTextBox();
 					test.setString("hello and welcome to scrolling text as you can see this text is scrolling and that is very cool. Now, what is very epic about this scrolling is that its very easy to make. The issue is that it can not\n"
 							+ "be very easily constructed and stored without more code writing and tbh I am kinda tired of doing code at this point I just wanna play games not make one haha anyways why are you still reading\n"

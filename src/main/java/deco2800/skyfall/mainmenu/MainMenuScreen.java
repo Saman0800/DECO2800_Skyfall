@@ -67,6 +67,7 @@ public class MainMenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new GameScreen(new SkyfallGame(), true));
                 GameManager.get().setWorld(new TutorialWorld());
+                GameManager.get().isTutorial = true;
             }
         });
 
@@ -74,6 +75,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new GameScreen(new SkyfallGame(), false));
+                GameManager.get().isTutorial = false;
             }
         });
 
@@ -81,6 +83,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new GameScreen(new SkyfallGame(), true));
+                GameManager.get().isTutorial = false;
             }
         });
     }
