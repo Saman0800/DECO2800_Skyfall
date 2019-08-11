@@ -22,6 +22,8 @@ public abstract class HealthResources implements Item {
     private Integer AmountOfHealingPower;
     //How many amount of healing will be deducted if have a poison
     private Integer HealingDeducted;
+    //Amount of food fullness increased
+    private Integer amoutoffoodeffect;
     //if and only if the items deduct the HP of player
     private Boolean notHealingPower;
     //Items could change or not e.g. coins, items
@@ -136,6 +138,15 @@ public abstract class HealthResources implements Item {
         return HealingDeducted;
     }
 
+    /**
+     * Returns Amount of food fullness increased
+     *
+     * @return Amount of food fullness increased
+     */
+    public Integer amoutoffoodeffect(Integer Amountoffood) {
+        amoutoffoodeffect = Amountoffood;
+        return amoutoffoodeffect;
+    }
     /**
      * Returns whether or not the item could be exchanged
      *
