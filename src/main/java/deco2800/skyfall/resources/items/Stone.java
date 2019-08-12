@@ -6,7 +6,7 @@ import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 
 
-public abstract class Stone extends NaturalResources implements Item {
+public class Stone extends NaturalResources implements Item {
     // the name of the item
     private String name;
 
