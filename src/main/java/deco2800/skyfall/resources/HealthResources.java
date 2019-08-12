@@ -32,6 +32,7 @@ public abstract class HealthResources implements Item {
     private Boolean exchangeable;
 
 
+
     public HealthResources(){
         //Added this default constructor to resolve an issue in apple class - Kathryn
         this.name = name;
@@ -58,7 +59,7 @@ public abstract class HealthResources implements Item {
         this.subtype = "Health Resource";
         this.hasHealingPower = true;
         //Do we need a new type like FoodResources? and hasFoodEffect may false in here as medicine may not affect the food fullness
-        this.hasFoodEffect = true;
+        this.hasFoodEffect = true
         //this.notHealingPower=false;
         this.exchangeable = true;
 
@@ -173,6 +174,10 @@ public abstract class HealthResources implements Item {
         amoutoffoodeffect = Amountoffood;
         return amoutoffoodeffect;
     }
+
+
+
+
     /**
      * Returns whether or not the item could be exchanged
      *
