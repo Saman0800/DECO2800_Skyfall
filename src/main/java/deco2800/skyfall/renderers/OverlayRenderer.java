@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.Tree;
 import deco2800.skyfall.gui.GuiMaster;
 import deco2800.skyfall.gui.ScrollingTextBox;
 import deco2800.skyfall.managers.GameManager;
@@ -15,6 +17,9 @@ import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.OnScreenMessageManager;
 import deco2800.skyfall.managers.PathFindingService;
 import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.TutorialWorld;
+import java.util.List;
 import javax.swing.JFrame;
 
 public class OverlayRenderer implements Renderer {
@@ -26,6 +31,10 @@ public class OverlayRenderer implements Renderer {
     FPSLogger fpsLogger = new FPSLogger();
 
     long peakRAM = 0;
+
+		ScrollingTextBox testTutorialBox;
+		Tree testTutorialTree;
+		boolean testKilledTree = false;
 
 
     /**
@@ -51,14 +60,34 @@ public class OverlayRenderer implements Renderer {
         	renderDebugText(batch, camera);
         }
 
+			List<AbstractEntity> entityList = GameManager.get().getWorld().getEntities();
+
 			if (firstTime && GameManager.get().isTutorial) {
-					ScrollingTextBox test = new ScrollingTextBox();
-					test.setString("hello and welcome to scrolling text as you can see this text is scrolling and that is very cool. Now, what is very epic about this scrolling is that its very easy to make. The issue is that it can not\n"
+					testTutorialBox = new ScrollingTextBox();
+					testTutorialBox.setString("hello and welcome to scrolling text as you can see this text is scrolling and that is very cool. Now, what is very epic about this scrolling is that its very easy to make. The issue is that it can not\n"
 							+ "be very easily constructed and stored without more code writing and tbh I am kinda tired of doing code at this point I just wanna play games not make one haha anyways why are you still reading\n"
-							+ "this haha enjoy refactoring this whoever sees this (probably me) lolololoololololololololollollolololoololololololololollollolololoololololololololollollolololoololololololololollollolololoololololololololollollolololololololollollolololoololololololololollollolololololololollollolololoololololololololollol");
-					test.start();
+							+ "this haha enjoy refactoring this whoever sees this (probably me) lolololoololololololololollollolololoololololololololollollolololoololololololololollollolololoololololololololollollolololoololololololololollollolololololololollollolololoololololololololollollolololololololollollolololoololololololololollol\n"
+							+ "Okay now u gotta left click to move and right click to interact. Go chop down that tree.");
+					testTutorialBox.start();
 					firstTime = false;
+
+					for (AbstractEntity e : entityList) {
+						if (e instanceof Tree) {
+							testTutorialTree = (Tree)e;
+						}
+					}
 				}
+
+
+
+
+
+			if (!entityList.contains(testTutorialTree) && !testKilledTree) {
+				testKilledTree = true;
+				testTutorialBox.reset();
+				testTutorialBox.setString("Well done on killing him, you monster");
+				testTutorialBox.start();
+			}
 
 				GuiMaster.getInstance().updateAll(1);
         GuiMaster.getInstance().renderAll(font, batch, camera, shapeRenderer);

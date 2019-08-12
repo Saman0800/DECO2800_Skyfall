@@ -37,6 +37,8 @@ public final class ScrollingTextBox extends AbstractGui {
         started = true;
         finished = false;
         lastTime = System.currentTimeMillis();
+        residueTime = 0;
+        currentIndex = 0;
     }
 
     public boolean isFinished() {
