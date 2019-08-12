@@ -32,12 +32,26 @@ public abstract class HealthResources implements Item {
     private Boolean exchangeable;
 
 
+    public HealthResources(){
+        //Added this default constructor to resolve an issue in apple class - Kathryn
+        this.name = name;
+        this.carryable = true;
+        this.subtype = "Health Resource";
+        this.hasHealingPower = true;
+        //Do we need a new type like FoodResources? and hasFoodEffect may false in here as medicine may not affect the food fullness
+        this.hasFoodEffect = true;
+        //this.notHealingPower=false;
+        this.exchangeable = true;
+
+    }
+
     /**
      * Creates a new Health Resource with the given name
      *
      * @param name     the identifying name of the Health Resource
      * @param position the tile which the item has been placed on
      */
+
     public HealthResources(String name, Tile position) {
         this.name = name;
         this.carryable = true;
