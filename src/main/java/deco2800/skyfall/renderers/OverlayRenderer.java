@@ -78,10 +78,6 @@ public class OverlayRenderer implements Renderer {
 					}
 				}
 
-
-
-
-
 			if (!entityList.contains(testTutorialTree) && !testKilledTree) {
 				testKilledTree = true;
 				testTutorialBox.reset();
