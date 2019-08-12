@@ -81,7 +81,7 @@ public class OverlayRenderer implements Renderer {
 			if (!entityList.contains(testTutorialTree) && !testKilledTree) {
 				testKilledTree = true;
 				testTutorialBox.reset();
-				testTutorialBox.setString("Well done on killing him, you monster");
+				testTutorialBox.setString("Well done on killing him, you monster.");
 				testTutorialBox.start();
 			}
 
