@@ -54,12 +54,12 @@ public final class ScrollingTextBox extends AbstractGui {
         if (started && !finished) {
             residueTime += (int)(System.currentTimeMillis() - lastTime);
 
-            if (printedString.length() - 1
+            if (printedString.length()
                     < currentIndex + (int)(residueTime / timePerChar)) {
                 finished = true;
             }
 
-            currentIndex = Math.min(printedString.length() - 1,
+            currentIndex = Math.min(printedString.length(),
                     currentIndex + (int)(residueTime / timePerChar));
 
             residueTime %= timePerChar;
