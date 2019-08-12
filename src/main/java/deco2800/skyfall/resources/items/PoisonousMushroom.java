@@ -5,7 +5,7 @@ import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 
-public abstract class PoisonousMushroom extends HealthResources implements Item {
+public class PoisonousMushroom extends HealthResources implements Item {
     // the name of the item
     private String name;
 
@@ -21,6 +21,12 @@ public abstract class PoisonousMushroom extends HealthResources implements Item 
     // the co-ordinates of the tile the item has been placed on
     private HexVector position;
 
+    //whether or not the item impacts the player's food fullness
+    //For PoisonousMushroom, it could recover players' food fullness,
+    //but deduct the healing power
+    private Boolean hasFoodEffect;
+
+
     // determines whether or not the resource can be traded
     private Boolean exchangeable;
 
@@ -33,6 +39,7 @@ public abstract class PoisonousMushroom extends HealthResources implements Item 
     public PoisonousMushroom(){
         this.biome = biome;
         this.hasHealingPower = true;
+        this.hasFoodEffect=true
         //this.notHealingPower=false;
         this.exchangeable = true;
         //default constructor added for building inventory
