@@ -1,9 +1,9 @@
 package deco2800.skyfall.resources;
 
 import deco2800.skyfall.resources.items.Apple;
-import deco2800.skyfall.resources.items.Aloe_vera;
-import deco2800.skyfall.resources.items.Berry;
-import deco2800.skyfall.resources.items.PoisonousMushroom;
+//import deco2800.skyfall.resources.items.Aloe_Vera;
+//import deco2800.skyfall.resources.items.Berry;
+//import deco2800.skyfall.resources.items.PoisonousMushroom;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,10 +15,10 @@ public class HealthResourcesTest extends HealthResources{
 
     @Before
     public void setUp() throws Exception {
-        healthResourcesResource = new Apple();
-        healthResourcesResource = new Aloe_Vera();
-        healthResourcesResource = new Berry();
-        healthResourcesResource = new PoisonousMushroom();
+        healthResources = new Apple();
+        //healthResources = new Aloe_Vera();
+        //healthResources= new Berry();
+        //healthResources= new PoisonousMushroom();
 
     }
 
@@ -28,10 +28,10 @@ public class HealthResourcesTest extends HealthResources{
 
     @Test
     public void getName2() {
-        assertEquals("Apple", naturalResource.getName());
-        assertEquals("Aloe_Vera", naturalResource.getName());
-        assertEquals("Berry", naturalResource.getName());
-        assertEquals("PoisonousMushroom", naturalResource.getName());
+        assertEquals("Apple", healthResources.getName());
+        //assertEquals("Aloe_Vera", healthResources.getName());
+        //assertEquals("Berry", healthResources.getName());
+        //assertEquals("PoisonousMushroom", healthResources.getName());
     }
 
     @Test
@@ -41,7 +41,7 @@ public class HealthResourcesTest extends HealthResources{
 
     @Test
     public void getSubtype2() {
-        assertEquals("Health Resource", naturalResource.getSubtype());
+        assertEquals("Health Resource", healthResources.getSubtype());
     }
 
     @Test
@@ -51,7 +51,7 @@ public class HealthResourcesTest extends HealthResources{
 
     @Test
     public void getCoords2() {
-        assertEquals(Tile.getCoordinates(),healthResources.getCoords());
+        //assertEquals(Tile.getCoordinates(),healthResources.getCoords());
     }
 
     @Test
@@ -59,10 +59,7 @@ public class HealthResourcesTest extends HealthResources{
         assertTrue(healthResources.getExchangeable());
     }
 
-    @Test
-    public void getamoutoffoodeffect2() {
-        assertTrue(healthResources.getamoutoffoodeffect());
-    }
+
 
 
 }
