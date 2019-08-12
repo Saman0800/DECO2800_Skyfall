@@ -1,5 +1,6 @@
 package deco2800.skyfall.worlds;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -120,6 +121,10 @@ public class WorldGenNode {
         centroid[0] /= this.vertices.size();
         centroid[1] /= this.vertices.size();
         return centroid;
+    }
+
+    public boolean isBorderNode() {
+        return false; // FIXME Implement.
     }
 
     /**
