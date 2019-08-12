@@ -13,7 +13,7 @@ import java.lang.*;
  */
 public class Inventory {
     //Map that stores the inventory contents
-    private Map<Class<?>, Integer> inventory;
+    private Map<Class<? extends Item>, Integer> inventory;
 
     //private List<Item> quickAccessInventory;
 
@@ -22,7 +22,7 @@ public class Inventory {
      *Create an inventory and add initial default items to the inventory.
      */
     public Inventory(){
-        this.inventory = new HashMap<Class<?>, Integer>();
+        this.inventory = new HashMap<Class<? extends Item>, Integer>();
 
         //Add default items to inventory - eventually find a way to populate more flexibly
         this.inventoryAdd(new Stone());
@@ -38,8 +38,8 @@ public class Inventory {
      * type to the number of that particular resource.
      * @param inventory Map of Class to integer containing inventory items to add
      */
-    public Inventory(Map<Class<?>, Integer> inventory){
-        this.inventory = new HashMap<Class<?>, Integer>();
+    public Inventory(Map<Class<? extends Item>, Integer> inventory){
+        this.inventory = new HashMap<Class<? extends Item>, Integer>();
 
         //Add inventoryContents to inventory
         this.inventory.putAll(inventory);
@@ -51,7 +51,7 @@ public class Inventory {
      * Return the inventory.
      * @return Map that represents the inventory.
      */
-    public Map<Class<?>, Integer> getInventory(){
+    public Map<Class<? extends Item>, Integer> getInventory(){
         return Collections.unmodifiableMap(this.inventory);
     }
 
@@ -78,7 +78,7 @@ public class Inventory {
      */
     public void inventoryAdd(Item item){
         if(item.isCarryable()){
-            Class<?> type = item.getClass();
+            Class<? extends Item> type = item.getClass();
 
             if(inventory.get(type) != null){
 
@@ -99,7 +99,7 @@ public class Inventory {
      * Remove an item from the inventory.
      * @param type The type of item to remove
      */
-    public void inventoryDrop(Class<?> type){
+    public void inventoryDrop(Class<? extends Item> type){
         Integer num = this.inventory.get(type);
 
         if(num == null){
