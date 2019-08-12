@@ -39,7 +39,7 @@ public class PoisonousMushroom extends HealthResources implements Item {
     public PoisonousMushroom(){
         this.biome = biome;
         this.hasHealingPower = true;
-        this.hasFoodEffect=true
+        this.hasFoodEffect=true;
         //this.notHealingPower=false;
         this.exchangeable = true;
         //default constructor added for building inventory
