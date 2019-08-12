@@ -65,8 +65,4 @@ public class HealthResourcesTest extends HealthResources{
     }
 
 
-
-
-
-
 }
