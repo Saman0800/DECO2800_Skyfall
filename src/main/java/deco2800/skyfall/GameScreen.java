@@ -233,19 +233,19 @@ public class GameScreen implements Screen,KeyDownObserver {
 				goFastSpeed *= goFastSpeed * goFastSpeed;
 			}
 			
-			if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+			if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 				camera.translate(-goFastSpeed, 0, 0);
 			}
 	
-			if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+			if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 				camera.translate(goFastSpeed, 0, 0);
 			}
 	
-			if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+			if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 				camera.translate(0, -goFastSpeed, 0);
 			}
 	
-			if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+			if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
 				camera.translate(0, goFastSpeed, 0);
 			}
 			
