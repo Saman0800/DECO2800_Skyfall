@@ -30,7 +30,6 @@ public class Inventory {
         this.inventoryAdd(new Wood());
         this.inventoryAdd(new Wood());
 
-
     }
 
     /***
@@ -89,6 +88,7 @@ public class Inventory {
             }
 
         }else{
+            //Eventually make this throw an exception?
             System.out.println("Item can not be carried in the inventory");
         }
 
