@@ -5,7 +5,7 @@ import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 
-public abstract class Apple extends HealthResources implements Item {
+public abstract class Aloe_Vera extends HealthResources implements Item {
     // the name of the item
     private String name;
 
@@ -33,10 +33,10 @@ public abstract class Apple extends HealthResources implements Item {
     //How many amount of healing power could be recovered
     private Integer AmountOfHealingPower;
 
-    public Apple(){
+    public Aloe_Vera(){
         this.biome = biome;
         this.hasHealingPower = true;
-        this.hasFoodEffect = true;
+        this.hasFoodEffect = false;
         this.exchangeable = true;
         //default constructor added for building inventory
     }
@@ -44,7 +44,7 @@ public abstract class Apple extends HealthResources implements Item {
 
     @Override
     public String getName() {
-        return "Apple";
+        return "Aloe_Vera";
     }
 
 
@@ -70,4 +70,6 @@ public abstract class Apple extends HealthResources implements Item {
 
 
 
+
 }
+
