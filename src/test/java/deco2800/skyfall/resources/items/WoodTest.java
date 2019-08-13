@@ -11,7 +11,6 @@ public class WoodTest extends NaturalResources {
 
     private Wood wood;
 
-
     @Before
     public void setUp()  {
         wood = new Wood();
@@ -59,5 +58,6 @@ public class WoodTest extends NaturalResources {
 
     @Test
     public void getBiome() {
+        assertEquals("Forest", wood.getBiome());
     }
 }

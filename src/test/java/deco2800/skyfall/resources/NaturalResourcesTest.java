@@ -9,6 +9,7 @@ import static org.junit.Assert.*;
 
 public class NaturalResourcesTest extends NaturalResources {
 
+    // create Wood, Sand, Stone, Metal and Vine instances of Natural Resource
     private NaturalResources wood;
     private NaturalResources sand;
     private NaturalResources stone;
@@ -39,7 +40,6 @@ public class NaturalResourcesTest extends NaturalResources {
 
     @Test
     public void isCarryable1() {
-
         assertTrue(wood.isCarryable());
         assertTrue(sand.isCarryable());
         assertTrue(stone.isCarryable());
