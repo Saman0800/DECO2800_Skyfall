@@ -16,9 +16,15 @@ import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.renderers.OverlayRenderer;
 import deco2800.skyfall.renderers.Renderer3D;
 import deco2800.skyfall.worlds.*;
+import deco2800.skyfall.managers.SoundManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class GameScreen implements Screen,KeyDownObserver {
 	private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
@@ -70,7 +76,15 @@ public class GameScreen implements Screen,KeyDownObserver {
 		GameManager.get().setSkin(skin);
 		GameManager.get().setStage(stage);
 		GameManager.get().setCamera(camera);
-		
+
+		/* Play BGM */
+		try {
+			SoundManager.backgroundGameMusic("resources/sounds/Forest Day.wav");
+			SoundManager.play();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		PathFindingService pathFindingService = new PathFindingService();
 		GameManager.get().addManager(pathFindingService);
 		
