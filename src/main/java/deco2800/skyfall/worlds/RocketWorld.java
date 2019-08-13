@@ -2,12 +2,10 @@ package deco2800.skyfall.worlds;
 
 import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.BowMan;
 import deco2800.skyfall.entities.Collectable;
 import deco2800.skyfall.entities.Harvestable;
 import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.Tree;
-import deco2800.skyfall.entities.WoodCube;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
@@ -40,18 +38,25 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             worldGenNodes.add(new WorldGenNode(x, y));
         }
 
+        //Generating the biome
+        AbstractBiome biome = new ForestBiome();
+
         for (int q = -1000; q < 1000; q++) {
             for (int r = -1000; r < 1000; r++) {
                 if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= RADIUS) {
                     float oddCol = (q % 2 != 0 ? 0.5f : 0);
 
                     int elevation = random.nextInt(2);
-                    String type = "grass_" + elevation;
-
-                    tiles.add(new Tile(type, q, r + oddCol));
+//                    String type = "grass_" + elevation;
+                    Tile tile = new Tile(biome, q, r+oddCol);
+                    tiles.add(tile);
+                    biome.addTileToBiome(tile);
                 }
             }
         }
+
+        //Setting all the textures
+        biome.setTileTextures();
 
         // Create the entities in the game
         player = new PlayerPeon(0f, 0f, 0.05f);
