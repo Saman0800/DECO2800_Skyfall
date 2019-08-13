@@ -2,26 +2,26 @@ package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.NaturalResources;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.worlds.Tile;
+
 
 /**
- * A class representing a Vine Natural Resource item
+ * A class representing a Metal Natural Resource item
  */
-public class Vine extends NaturalResources implements Item {
+public class Metal extends NaturalResources implements Item {
 
     // the name of the item
     private String name;
 
-    // the biome the vine is in
+    // the biome the metal is in
     private String biome;
 
     /**
-     * Creates a default vine item
+     * Creates a default metal item
      */
-    public Vine(){
-        this.name = "Vine";
-        this.biome = "Forest";
+    public Metal(){
+        this.name = "Metal";
+        this.biome = "Ruined City";
+
     }
 
     /**
@@ -33,9 +33,10 @@ public class Vine extends NaturalResources implements Item {
         return this.name;
     }
 
+
     /**
-     * Returns the biome the vine is situated in
-     * @return the biome the vine is situated in
+     * Returns the biome the metal is situated in
+     * @return the biome the metal is situated in
      */
     public String getBiome(){
         return biome;
@@ -61,14 +62,15 @@ public class Vine extends NaturalResources implements Item {
 
 
     public static void main(String[] args) {
-        NaturalResources n = new Vine();
+        NaturalResources n = new Metal();
         System.out.println(n.getName());
         System.out.println(n.getSubtype());
         System.out.println(n.toString());
-        Vine w = new Vine();
+        Metal w = new Metal();
         System.out.println(w.getName());
         System.out.println(w.getSubtype());
         System.out.println(w.toString());
         System.out.println(w.getBiome());
     }
+
 }
