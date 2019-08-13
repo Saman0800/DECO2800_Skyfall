@@ -1,6 +1,8 @@
 package deco2800.skyfall.entities;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.physics.box2d.Box2D;
+import deco2800.skyfall.managers.GameManager;
 
 /**
  * An entity that is shot from a weapon.
@@ -11,8 +13,12 @@ import com.badlogic.gdx.physics.box2d.Box2D;
 public class Projectile extends AbstractEntity {
 
     /**
+     * How many game ticks all projectiles survive for before being removed.
+     */
+    public static final int LIFE_TIME_TICKS = 50;
+
+    /**
      * Collider of this object.
-     * TODO implement collision events.
      */
     private Box2D collider;
 
@@ -32,6 +38,11 @@ public class Projectile extends AbstractEntity {
     protected float speed;
 
     /**
+     * How many game ticks this object has survived.
+     */
+    private long ticksAliveFor = 0;
+
+    /**
      * Construct a new projectile class.
      * @param damage
      */
@@ -41,18 +52,25 @@ public class Projectile extends AbstractEntity {
 
         this.damage = damage;
 
-        this.setTexture(textureName);
+        this.setTexture("slash");
         this.setObjectName(objectName);
-
     }
 
     /**
-     *
+     * Checks how long the projectile has been alive
+     * for and deletes after a set number of game ticks.
      * @param tick Current game tick.
      */
     @Override
     public void onTick(long tick) {
-        //TODO implement collision events and movement.
+
+        //Each game tick add to counter.
+        this.ticksAliveFor++;
+
+        //If this projectile has been alive for longer than the set number of ticks, remove it from the world.
+        if (this.ticksAliveFor > LIFE_TIME_TICKS) {
+            GameManager.get().getWorld().removeEntity(this);
+        }
     }
 
 
