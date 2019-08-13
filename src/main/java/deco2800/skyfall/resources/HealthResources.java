@@ -149,7 +149,7 @@ public abstract class HealthResources implements Item {
      * @return True if the item could be exhanged, false otherwise
      */
     @Override
-    public Boolean getExchangeable() {
+    public Boolean isExchangeable() {
         return exchangeable;
     }
 
