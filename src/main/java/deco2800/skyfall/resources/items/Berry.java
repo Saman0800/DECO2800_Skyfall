@@ -11,34 +11,42 @@ public class Berry extends HealthResources implements Item {
     private String name;
 
     // can the item be stored in the inventory
-    private Boolean carryable;
+    //private Boolean carryable;
 
     // the name of the subtype the item belongs to
-    private String subtype;
+    //private String subtype;
 
     // does the item impact the player's health
-    private Boolean hasHealingPower;
+    //private Boolean hasHealingPower;
 
     //whether or not the item impacts the player's food fullness
-    private Boolean hasFoodEffect;
+    //private Boolean hasFoodEffect;
 
     // the co-ordinates of the tile the item has been placed on
-    private HexVector position;
+    //private HexVector position;
 
     // determines whether or not the resource can be traded
-    private Boolean exchangeable;
+    //private Boolean exchangeable;
 
-    // the biome the sand is in (will change to different type in future?)
+    //Amount of food fullness increased
+     private Integer amoutoffoodeffect;
+
+    // the biome the berry is in (will change to different type in future?)
     private String biome;
 
     //How many amount of healing power could be recovered
     private Integer AmountOfHealingPower;
 
+    //The color of the berry
+    private String colour;
+
+    //How many Berry that players have;
+    private Integer NumberOfBerry;
+
     public Berry(){
         this.biome = biome;
-        this.hasHealingPower = true;
-        this.hasFoodEffect = true;
-        this.exchangeable = true;
+        this.colour ="wine red";
+        this.name ="berry";
         //default constructor added for building inventory
     }
 
@@ -64,11 +72,37 @@ public class Berry extends HealthResources implements Item {
      */
 
     public Integer AmountOfHealingPower(Integer AmountOfRecoverHP){
-        AmountOfHealingPower=AmountOfRecoverHP;
+        AmountOfHealingPower = AmountOfRecoverHP;
 
         return AmountOfHealingPower;
     }
 
+
+    /**
+     * Returns Amount of food fullness increased
+     *
+     * @return Amount of food fullness increased
+     */
+    public Integer amoutoffoodeffect(Integer Amountoffood) {
+        amoutoffoodeffect = Amountoffood;
+        return amoutoffoodeffect;
+    }
+
+    /**
+     * Returns the integer of number of Berry
+     *
+     * @return the integer of number of Berry
+     */
+
+    public Integer getNumberOfBerry(Integer numberOfBerry){
+
+        NumberOfBerry = numberOfBerry;
+
+        if(NumberOfBerry > 99){
+            System.out.println("Out of Maximum number of Berry");
+        }
+        return NumberOfBerry;
+    }
 
 
 

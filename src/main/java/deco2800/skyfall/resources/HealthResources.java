@@ -20,16 +20,20 @@ public abstract class HealthResources implements Item {
     private String subtype;
     // the co-ordinates of the tile the item has been placed on
     private HexVector position;
+
     //How many amount of healing power could be recovered
-    private Integer AmountOfHealingPower;
+    //private Integer AmountOfHealingPower;
+
     //How many amount of healing will be deducted if have a poison
-    private Integer HealingDeducted;
-    //Amount of food fullness increased
-    private Integer amoutoffoodeffect;
+    //private Integer HealingDeducted;
+
+
     //if and only if the items deduct the HP of player
-    private Boolean notHealingPower;
+    //private Boolean notHealingPower;
+
     //Items could change or not e.g. coins, items
     private Boolean exchangeable;
+
 
 
     public HealthResources(){
@@ -122,7 +126,7 @@ public abstract class HealthResources implements Item {
 /*    *//**
      * Returns whether or not the item could deduct the HP of players
      * @return True if the item deduct the player's health, false otherwise
-<<<<<<< HEAD
+
 
      */
 
@@ -132,47 +136,13 @@ public abstract class HealthResources implements Item {
      * }*/
 
 
-    public Boolean getNotHealingPower() {
-        return notHealingPower;
-    }
-
-
-    /**
-     * Returns the integer of healing power
-     *
-     * @return the integer of healing power
-     */
-
-    public Integer AmountOfHealingPower(Integer AmountOfRecoverHP){
-        AmountOfHealingPower=AmountOfRecoverHP;
-
-        return AmountOfHealingPower;
-    }
-
-    /**
-     * Returns the integer of deducting healing power
-     *
-     * @return the integer of deducting healing power
-     */
+    //public Boolean getNotHealingPower() {
+        //return notHealingPower;
+    //}
 
 
 
 
-
-    public Integer HealingDeducted(Integer AmountOfDeducted){
-        HealingDeducted=AmountOfDeducted;
-        return HealingDeducted;
-    }
-
-    /**
-     * Returns Amount of food fullness increased
-     *
-     * @return Amount of food fullness increased
-     */
-    public Integer amoutoffoodeffect(Integer Amountoffood) {
-        amoutoffoodeffect = Amountoffood;
-        return amoutoffoodeffect;
-    }
     /**
      * Returns whether or not the item could be exchanged
      *

@@ -36,7 +36,8 @@ public interface Item {
 
     /**
      * Returns whether or not the item impacts the player's food fullness
-     * @return True if the item impacts on the player's food fullness, false otherwise
+     * @return True if the item impacts on the player's food fullness,
+     * false otherwise
      */
     Boolean hasFoodEffect();
 
@@ -67,6 +68,7 @@ public interface Item {
      * Returns whether or not the item could be exchanged
      * @return True if the item could be exhanged, false otherwise
      */
+
 
 
 
