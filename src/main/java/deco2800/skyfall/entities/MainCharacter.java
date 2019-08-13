@@ -20,8 +20,12 @@ public class MainCharacter extends Peon implements TouchDownObserver {
     // Hotbar of inventories
     private List<String> hotbar;
 
-    // Number of equipped_items
+    // The index of the item selected to be used in the hotbar
+    // ie. [sword][gun][apple]
+    // if selecting sword then equipped_item = 0,
+    // if selecting gun the equipped_item = 1
     private int equipped_item;
+    private final int INVENTORY_MAX_CAPACITY = 20;
 
     /*
     Potential future implementations
@@ -50,7 +54,7 @@ public class MainCharacter extends Peon implements TouchDownObserver {
         this.inventories = new ArrayList<>();
         this.hotbar = new ArrayList<>();
         this.hotbar.add("Rusty Sword");
-        this.equipped_item = 1;
+        this.equipped_item = 0;
     }
 
     /**
@@ -103,9 +107,7 @@ public class MainCharacter extends Peon implements TouchDownObserver {
      * @param item inventory being removed
      */
     public void dropInventory(String item) {
-        if (inventories.contains(item)) {
-            inventories.remove(item);
-        }
+        inventories.remove(item);
     }
 
     /**
@@ -122,10 +124,11 @@ public class MainCharacter extends Peon implements TouchDownObserver {
      * Max no of equipped items is 5
      * @param item inventory being equipped
      */
-    public void equipItem(String item) {
-        if (inventories.contains(item) && equipped_item < 5) {
-            hotbar.add(item);
-            equipped_item += 1;
+    public void equipItem(String item, int index) {
+        if(hotbar.size()==5){
+            String item_to_replace = hotbar.get(index);
+            hotbar.set(index,item);
+            inventories.add(item_to_replace);
         }
     }
 
@@ -134,9 +137,9 @@ public class MainCharacter extends Peon implements TouchDownObserver {
      * @param item inventory being unequipped
      */
     public void unequipItem(String item) {
-        if (hotbar.contains(item)) {
+        if(inventories.size()>=INVENTORY_MAX_CAPACITY){
             hotbar.remove(item);
-            equipped_item -= 1;
+            inventories.add(item);
         }
     }
 
@@ -145,16 +148,16 @@ public class MainCharacter extends Peon implements TouchDownObserver {
      * returned list doesn't impact the internal class
      * @return a list of the player's equipped inventories
      */
-    public List<String> getEquippedItems() {
+    public List<String> getHotbar() {
         return new ArrayList<>(hotbar);
     }
 
     /**
-     * Gets the number of items equipped
-     * @return the number of items equipped
+     * Gets the item currently equipped
+     * @return the item currently equipped
      */
-    public int equippedItems() {
-        return this.equipped_item;
+    public String getEquippedItem() {
+        return this.hotbar.get(equipped_item);
     }
 
     /**
@@ -173,6 +176,14 @@ public class MainCharacter extends Peon implements TouchDownObserver {
      */
     public int getLevel() {
         return this.level;
+    }
+
+    /**
+     * Get the inventory of the player
+     * @return the inventory of the player
+     */
+    public ArrayList<String> getInventory(){
+        return new ArrayList<>(inventories);
     }
 
     /*
