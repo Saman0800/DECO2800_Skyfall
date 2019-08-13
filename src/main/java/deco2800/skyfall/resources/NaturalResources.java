@@ -112,10 +112,4 @@ public abstract class NaturalResources implements Item {
     }
 
 
-    public static void main(String[] args) {
-        NaturalResources n = new Wood();
-        System.out.println(n.getName());
-        System.out.println(n.getSubtype());
-    }
-
 }
