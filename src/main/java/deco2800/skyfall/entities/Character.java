@@ -8,7 +8,6 @@ import deco2800.skyfall.tasks.*;
  * enemies) to inherit from.
  */
 public abstract class Character extends AgentEntity {
-
     protected transient AbstractTask task;
 
     // Name of the character
@@ -58,8 +57,6 @@ public abstract class Character extends AgentEntity {
         return health;
     }
 
-
-
     @Override
     public void onTick(long i) {
         if(task != null && task.isAlive()) {
@@ -71,5 +68,4 @@ public abstract class Character extends AgentEntity {
             this.task = GameManager.getManagerFromInstance(TaskPool.class).getTask(this);
         }
     }
-
 }
