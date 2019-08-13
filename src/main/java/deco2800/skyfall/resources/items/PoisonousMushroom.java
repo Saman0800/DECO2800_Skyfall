@@ -10,27 +10,29 @@ public class PoisonousMushroom extends HealthResources implements Item {
     private String name;
 
     // can the item be stored in the inventory
-    private Boolean carryable;
+    //private Boolean carryable;
 
     // the name of the subtype the item belongs to
-    private String subtype;
+    //private String subtype;
 
     // does the item impact the player's health
-    private Boolean hasHealingPower;
+    ///private Boolean hasHealingPower;
 
     // the co-ordinates of the tile the item has been placed on
-    private HexVector position;
+    //private HexVector position;
 
     //whether or not the item impacts the player's food fullness
     //For PoisonousMushroom, it could recover players' food fullness,
     //but deduct the healing power
-    private Boolean hasFoodEffect;
+    //private Boolean hasFoodEffect;
 
+    // the colour of the PoisonousMushroom
+    private String colour;
 
     // determines whether or not the resource can be traded
-    private Boolean exchangeable;
+    //private Boolean exchangeable;
 
-    // the biome the sand is in (will change to different type in future?)
+    // the biome the poisonous mushroom is in (will change to different type in future?)
     private String biome;
 
     //How many amount of healing power could be recovered
@@ -39,12 +41,13 @@ public class PoisonousMushroom extends HealthResources implements Item {
     //Amount of food fullness increased
     private Integer amoutoffoodeffect;
 
+    //How many PoisonousMushroom that players have;
+    private Integer NumberOfPoisonousMushroom;
+
     public PoisonousMushroom(){
         this.biome = biome;
-        this.hasHealingPower = true;
-        this.hasFoodEffect=true;
-        //this.notHealingPower=false;
-        this.exchangeable = true;
+        this.colour ="black white";
+        this.name ="PoisonousMushrrom";
         //default constructor added for building inventory
     }
 
@@ -55,8 +58,8 @@ public class PoisonousMushroom extends HealthResources implements Item {
 
 
     /**
-     * Returns the biome the sand is situated in
-     * @return the biome the sand is situated in
+     * Returns the biome the PoisonousMushroom is situated in
+     * @return the biome the PoisonousMushroom is situated in
      */
     public String getBiome(){
         return biome;
@@ -70,12 +73,16 @@ public class PoisonousMushroom extends HealthResources implements Item {
 
 
     public Integer HealingDeducted(Integer AmountOfDeducted){
-        HealingDeducted=AmountOfDeducted;
+        HealingDeducted = AmountOfDeducted;
         return HealingDeducted;
     }
 
 
-
+    /**
+     * Returns Amount of food fullness increased
+     *
+     * @return Amount of food fullness increased
+     */
     public Integer amoutoffoodeffect(Integer Amountoffood) {
         amoutoffoodeffect = Amountoffood;
         return amoutoffoodeffect;
@@ -83,7 +90,21 @@ public class PoisonousMushroom extends HealthResources implements Item {
 
 
 
+    /**
+     * Returns the integer of number of Poisonous Mushroom
+     *
+     * @return the integer of number of Poisonous Mushroom
+     */
 
+    public Integer getNumberOfPoisonousMushroom(Integer numberOfPoisonousMushroom){
+
+        NumberOfPoisonousMushroom = numberOfPoisonousMushroom;
+
+        if(NumberOfPoisonousMushroom > 99){
+            System.out.println("Out of Maximum number of PoisonousMushroom");
+        }
+        return NumberOfPoisonousMushroom;
+    }
 
 
 
