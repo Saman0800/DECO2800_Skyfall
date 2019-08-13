@@ -28,20 +28,6 @@ public interface Item {
 
 
     /**
-     * Returns whether or not the item impacts the player's health (HP)
-     * @return True if the item impacts on the player's health, false otherwise
-     */
-    Boolean hasHealingPower();
-
-
-    /**
-     * Returns whether or not the item impacts the player's food fullness
-     * @return True if the item impacts on the player's food fullness,
-     * false otherwise
-     */
-    Boolean hasFoodEffect();
-
-    /**
      * Returns the co-ordinates of the tile the item is on
      * @return the co-ordinates of the tile the item is on
      */
@@ -51,23 +37,10 @@ public interface Item {
      * Returns whether or not the item can be exchanged
      * @return True if the item can be exhanged, false otherwise
      */
-    Boolean getExchangeable();
+    Boolean isExchangeable();
 
     //method for getting the biome?
 
-
-    // don't think this method is needed:
-    /**
-     * Returns whether or not the item could deduct the HP of players
-     * @return True if the item deduct the player's health, false otherwise
-     */
-
-
-    // default Boolean getNotHealingPower();
-    /**
-     * Returns whether or not the item could be exchanged
-     * @return True if the item could be exhanged, false otherwise
-     */
 
 
 

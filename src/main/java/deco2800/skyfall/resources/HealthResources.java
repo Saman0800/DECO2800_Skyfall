@@ -162,4 +162,21 @@ public abstract class HealthResources implements Item {
     public HexVector getCoords() {
         return position;
     }
+
+
+    /**
+     * Returns whether or not the item could deduct the HP of players
+     * @return True if the item deduct the player's health, false otherwise
+     */
+
+/*
+    default Boolean getNotHealingPower(){
+
+    }*/
+    /**
+     * Returns whether or not the item could be exchanged
+     * @return True if the item could be exhanged, false otherwise
+     */
+
+
 }
