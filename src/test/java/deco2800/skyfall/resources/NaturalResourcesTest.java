@@ -59,7 +59,7 @@ public class NaturalResourcesTest extends NaturalResources {
 
     /**
      * Ensure that the correct subtype "Natural Resource" is returned when
-     * getSubtype is run
+     * getSubtype(); is run
      */
     @Test
     public void getSubtype1() {
