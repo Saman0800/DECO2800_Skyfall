@@ -91,10 +91,7 @@ public abstract class ManufacturedResources implements Item {
      * Returns whether or not the item impacts the player's health
      * @return True if the item impacts on the player's health, false otherwise
      */
-    @Override
-    public Boolean hasHealingPower() {
-        return hasHealingPower;
-    }
+
 
     /**
      * Returns the co-ordinates of the tile the item is on.
@@ -105,10 +102,7 @@ public abstract class ManufacturedResources implements Item {
         return position;
     }
 
-    @Override
-    public Boolean getExchangeable() {
-        return exchangeable;
-    }
+
 
     public Boolean hasFoodEffect() {
         return hasFoodEffect;
