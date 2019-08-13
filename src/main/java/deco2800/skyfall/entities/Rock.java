@@ -5,7 +5,7 @@ import deco2800.skyfall.worlds.Tile;
 public class Rock extends StaticEntity implements HasHealth {
     private int health = 100;
     private static final String ENTITY_ID_STRING = "rock";
-    
+
     public Rock() {
         this.setObjectName(ENTITY_ID_STRING);
     }
@@ -28,5 +28,16 @@ public class Rock extends StaticEntity implements HasHealth {
     @Override
     public void setHealth(int health) {
         this.health = health;
+    }
+
+    /**
+     * The newInstance method implemented for the Rock class to allow for item
+     * dispersal on game start up.
+     * 
+     * @return Duplicate rock tile with modified position.
+     */
+    @Override
+    public Rock newInstance(Tile tile) {
+        return new Rock(tile, this.getObstructed());
     }
 }
