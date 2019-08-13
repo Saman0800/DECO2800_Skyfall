@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Random;
 
 public class RocketWorld extends AbstractWorld implements TouchDownObserver {
-    private static final int RADIUS = 10;
+    private static final int RADIUS = 4;
     private static final int WORLD_SIZE = 10;
     private static final int NODE_SPACING = 5;
 
@@ -39,7 +39,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         }
 
         //Generating the biome
-        AbstractBiome biome = new ForestBiome();
+        AbstractBiome biome = new MountainBiome();
 
         for (int q = -1000; q < 1000; q++) {
             for (int r = -1000; r < 1000; r++) {
@@ -50,7 +50,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 //                    String type = "grass_" + elevation;
                     Tile tile = new Tile(biome, q, r+oddCol);
                     tiles.add(tile);
-                    biome.addTileToBiome(tile);
+                    biome.addTile(tile);
                 }
             }
         }

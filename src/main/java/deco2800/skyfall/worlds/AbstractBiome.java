@@ -3,28 +3,34 @@ package deco2800.skyfall.worlds;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+/**
+ * Class that represents the biomes
+ */
 public abstract class AbstractBiome {
+    //The biome name, i.e forest, desert, mountain
     private String biomeName;
     //The tiles the biome contains
     private ArrayList<Tile> tiles;
+
 
     /**
      * Constructer that creates biome with biome name and a list of tiles the biome has
      * @param biomeName The name of the biome
      * @param tiles The tiles in the biome
      */
-    public AbstractBiome(String biomeName, ArrayList<Tile> tiles){
-        this.tiles = tiles;
-        this.biomeName = biomeName;
-    }
-
+//    public AbstractBiome(String biomeName, ArrayList<Tile> tiles){
+//        this.tiles = tiles;
+//        this.biomeName = biomeName;
+//    }
+//
     /**
      * Constructer for a Biome
      * @param biomeName The biome name
      */
     public AbstractBiome(String biomeName) {
+//        this(biomeName, new ArrayList<>());
         this.biomeName = biomeName;
-        this.tiles = new ArrayList<>();
+        tiles = new ArrayList<>();
     }
 
     /**
@@ -47,21 +53,16 @@ public abstract class AbstractBiome {
      * Adds a tile to a biome
      * @param tile The tile to be added
      */
-    public void addTileToBiome(Tile tile){
+    public void addTile(Tile tile){
         tiles.add(tile);
     }
 
-    /**
-     * Adds a whole list of tiles to a biome
-     * @param tiles
-     */
-    public void addTileListToBiome(ArrayList<Tile> tiles){
-        this.tiles.addAll(tiles);
-    }
+
+
 
 
     /**
      * Sets all the textures within a biome
      */
-    abstract public void setTileTextures();
+    protected abstract void setTileTextures();
 }
