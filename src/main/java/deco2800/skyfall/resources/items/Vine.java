@@ -5,36 +5,23 @@ import deco2800.skyfall.resources.NaturalResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 
+/**
+ * A class representing a Vine Natural Resource item
+ */
 public class Vine extends NaturalResources implements Item {
 
     // the name of the item
     private String name;
 
-    // can the item be stored in the inventory
-    private Boolean carryable;
-
-    // the name of the subtype the item belongs to
-    private String subtype;
-
-    // does the item impact the player's health
-    private Boolean hasHealingPower;
-
-    // the co-ordinates of the tile the item has been placed on
-    private HexVector position;
-
-    // determines whether or not the resource can be traded
-    private Boolean exchangeable;
-
-
-    // the biome the vine is in (will change to different type in future?)
+    // the biome the vine is in
     private String biome;
 
     /**
      * Creates a default vine item
      */
     public Vine(){
-        //default constructor added for building inventory
-        this.biome = biome;
+        this.name = "Vine";
+        this.biome = "Forest";
     }
 
 
@@ -45,7 +32,7 @@ public class Vine extends NaturalResources implements Item {
      */
     @Override
     public String getName() {
-        return "Vine";
+        return this.name;
     }
 
     /**
@@ -54,5 +41,36 @@ public class Vine extends NaturalResources implements Item {
      */
     public String getBiome(){
         return biome;
+    }
+
+    /**
+     * Creates a string representation of the natural resource in the format:
+     *
+     * <p>'{Natural Resource}:{Name}' </p>
+     *
+     * <p>without surrounding quotes and with {natural resource} replaced by
+     * the subtype of the item and {name} replaced with the item name
+     * For example: </p>
+     *
+     * <p>Natural Resource:Wood </p>
+     *
+     * @return A string representation of the natural resource.
+     */
+    @Override
+    public String toString() {
+        return "" + subtype + ":" + name;
+    }
+
+
+    public static void main(String[] args) {
+        NaturalResources n = new Vine();
+        System.out.println(n.getName());
+        System.out.println(n.getSubtype());
+        System.out.println(n.toString());
+        Vine w = new Vine();
+        System.out.println(w.getName());
+        System.out.println(w.getSubtype());
+        System.out.println(w.toString());
+        System.out.println(w.getBiome());
     }
 }

@@ -5,41 +5,27 @@ import deco2800.skyfall.resources.NaturalResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 
+/**
+ * A class representing a Wood Natural Resource item
+ */
 public class Wood extends NaturalResources implements Item {
 
     // the name of the item
     private String name;
 
-
-/*    // can the item be stored in the inventory
-    private Boolean carryable;
-
-    // the name of the subtype the item belongs to
-    private String subtype;
-
-    // does the item impact the player's health
-    private Boolean hasHealingPower;
-
-    // the co-ordinates of the tile the item has been placed on
-    private HexVector position;
-
-    // determines whether or not the resource can be traded
-    private Boolean exchangeable;*/
-
     // the colour of the wood
     private String colour;
 
-    // the biome the wood is in (will change to different type in future?)
+    // the biome the wood is in
     private String biome;
 
     /**
      * Creates a default wood item
      */
     public Wood(){
-        //default constructor added for building inventory
         this.name = "Wood";
         this.colour = "brown";
-        this.biome = biome;
+        this.biome = "Forest";
 
     }
 
@@ -49,7 +35,7 @@ public class Wood extends NaturalResources implements Item {
      */
     @Override
     public String getName() {
-        return "Wood";
+        return this.name;
     }
 
 
@@ -72,13 +58,13 @@ public class Wood extends NaturalResources implements Item {
     /**
      * Creates a string representation of the natural resource in the format:
      *
-     * <p>'{Nautral Resource}:{Name}'
+     * <p>'{Natural Resource}:{Name}' </p>
      *
      * <p>without surrounding quotes and with {natural resource} replaced by
      * the subtype of the item and {name} replaced with the item name
-     * For example:
+     * For example: </p>
      *
-     * <p>Natural Resource:Wood
+     * <p>Natural Resource:Wood </p>
      *
      * @return A string representation of the natural resource.
      */
@@ -87,5 +73,18 @@ public class Wood extends NaturalResources implements Item {
         return "" + subtype + ":" + name;
     }
 
+
+    public static void main(String[] args) {
+        NaturalResources n = new Wood();
+        System.out.println(n.getName());
+        System.out.println(n.getSubtype());
+        System.out.println(n.toString());
+        Wood w = new Wood();
+        System.out.println(w.getName());
+        System.out.println(w.getSubtype());
+        System.out.println(w.toString());
+        System.out.println(w.getColour());
+        System.out.println(w.getBiome());
+    }
 
 }
