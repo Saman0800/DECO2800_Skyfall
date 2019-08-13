@@ -102,6 +102,7 @@ public class TestWorld extends AbstractWorld {
 	@Override
 	protected void generateWorld() {
 		Random random = new Random();
+		AbstractBiome biome = new ForestBiome();
 		for (int q = -1000; q < 1000; q++) {
 			for (int r = -1000; r < 1000; r++) {
 				if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= RADIUS) {
@@ -113,12 +114,10 @@ public class TestWorld extends AbstractWorld {
 					int elevation = random.nextInt(2);
 					
 					int rand = random.nextInt(8);
-					String type = "grass_";
-					
 
-					type += elevation;
 
-					tiles.add(new Tile(type, q, r+oddCol));
+
+					tiles.add(new Tile(biome, q, r+oddCol));
 				}
 			}
 		}

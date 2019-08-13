@@ -16,6 +16,7 @@ import deco2800.skyfall.util.HexVector;
 public class Tile{
 	private static int nextID = 0;
 
+
 	private static int getNextID() {
 		return nextID++;
 	}
@@ -26,9 +27,10 @@ public class Tile{
 	@Expose
     private String texture;
     private HexVector coords;
-    
-
+    //Class that stores the tiles biome and its texture
     private StaticEntity parent;
+    //The Biome the tile is in
+    private AbstractBiome biome;
 	
 	@Expose
     private boolean obstructed = false;
@@ -52,15 +54,16 @@ public class Tile{
     @Expose
     private int tileID = 0;
     
-    public Tile(String texture) {
-        this(texture, 0, 0);
-    }
+//    public Tile(String texture) {
+//        this(, 0, 0, new Biome("forest"));
+//    }
 
-    public Tile(String texture, float col, float row) {
-        this.texture = texture;
+    public Tile(AbstractBiome biome, float col, float row) {
+//        this.texture = "grass_1";
         coords = new HexVector(col, row);
         this.neighbours = new HashMap<Integer,Tile>();
         this.tileID = Tile.getNextID();
+        this.biome = biome;
     }
 
     public Tile() {
