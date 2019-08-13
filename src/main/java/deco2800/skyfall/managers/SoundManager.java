@@ -22,6 +22,12 @@ public class SoundManager extends AbstractManager {
     //Current position of clip
     private static Long currentPosition;
 
+    //Volume of the clip
+    private static FloatControl volume;
+
+    //Boolean mute control
+    public static BooleanControl muteVol;
+
     public void playSound(String soundName) {
         Sound sound = Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + soundName));
         sound.play(1);
@@ -46,6 +52,8 @@ public class SoundManager extends AbstractManager {
             //Open and loop the clip until told otherwise
             clip.open(audioInputStream);
             clip.loop(Clip.LOOP_CONTINUOUSLY);
+
+            volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 
         } catch (Exception e) {
             System.out.println("Cannot play sound from given file.");
@@ -111,5 +119,14 @@ public class SoundManager extends AbstractManager {
      */
     public static Clip getClip()  {
         return clip;
+    }
+
+    /**
+     * Mutes the clip
+     */
+    public static void mute () {
+        //Set mute value to true
+        muteVol = (BooleanControl) clip.getControl(BooleanControl.Type.MUTE);
+        muteVol.setValue(true);
     }
 }
