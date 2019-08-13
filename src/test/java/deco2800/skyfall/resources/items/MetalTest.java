@@ -77,7 +77,8 @@ public class MetalTest {
     }
 
     /**
-     * Ensure that the correct biome is returned when getBiome() is called.
+     * Ensure that the metal's biome is correctly returned when getBiome()
+     * is called
      */
     @Test
     public void getBiome() {
