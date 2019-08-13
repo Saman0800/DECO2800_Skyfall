@@ -32,11 +32,11 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
         Random random = new Random();
 
-        for (int i = 0; i < nodeCount; i++) {
-            float x = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
-            float y = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
-            worldGenNodes.add(new WorldGenNode(x, y));
-        }
+//        for (int i = 0; i < nodeCount; i++) {
+//            float x = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
+//            float y = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
+//            worldGenNodes.add(new WorldGenNode(x, y));
+//        }
 
         //Generating the biome
         AbstractBiome biome = new MountainBiome();
