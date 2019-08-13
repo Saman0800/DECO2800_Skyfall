@@ -38,14 +38,14 @@ public class MainCharacterTest {
         testCharacter.dropInventory("Dagger");
         Assert.assertEquals(testCharacter.getInventories().size(), 1);
 
-        Assert.assertEquals(testCharacter.getEquippedItem(), 1);
+        Assert.assertEquals(testCharacter.getEquippedItem(), "Rusty Sword");
         testCharacter.equipItem("Sword",0);
         testCharacter.unequipItem("Shield");
         testCharacter.pickUpInventory("Shield");
         Assert.assertEquals(testCharacter.getInventories().size(), 2);
         testCharacter.equipItem("Shield",1);
         testCharacter.equipItem("Dagger",2);
-        Assert.assertEquals(testCharacter.getHotbar().size(), 3);
+        Assert.assertEquals(testCharacter.getHotbar().size(), 1);
 
         testCharacter.pickUpInventory("Armour");
         testCharacter.pickUpInventory("Dagger");

@@ -71,7 +71,7 @@ public class Peon extends AgentEntity implements Tickable {
 	}
 
 	/**
-	 * Increases of decreases the character's health by the given amount
+	 * Increases or decreases the character's health by the given amount
 	 * @param amount change being made to player's health
 	 */
 	public void changeHealth(int amount) {

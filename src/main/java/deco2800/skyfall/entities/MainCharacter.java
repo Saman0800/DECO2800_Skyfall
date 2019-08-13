@@ -125,9 +125,9 @@ public class MainCharacter extends Peon implements TouchDownObserver {
      * @param item inventory being equipped
      */
     public void equipItem(String item, int index) {
-        if(hotbar.size()==5){
+        if (hotbar.size() == 5) {
             String item_to_replace = hotbar.get(index);
-            hotbar.set(index,item);
+            hotbar.set(index, item);
             inventories.add(item_to_replace);
         }
     }
@@ -137,7 +137,7 @@ public class MainCharacter extends Peon implements TouchDownObserver {
      * @param item inventory being unequipped
      */
     public void unequipItem(String item) {
-        if(inventories.size()>=INVENTORY_MAX_CAPACITY){
+        if(inventories.size() >= INVENTORY_MAX_CAPACITY) {
             hotbar.remove(item);
             inventories.add(item);
         }
