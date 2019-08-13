@@ -89,14 +89,6 @@ public abstract class NaturalResources implements Item {
         return subtype;
     }
 
-    /**
-     * Returns whether or not the item impacts the player's health
-     * @return True if the item impacts on the player's health, false otherwise
-     */
-    @Override
-    public Boolean hasHealingPower() {
-        return hasHealingPower;
-    }
 
     /**
      * Returns the co-ordinates of the tile the item is on.
@@ -108,7 +100,7 @@ public abstract class NaturalResources implements Item {
     }
 
     @Override
-    public Boolean getExchangeable() {
+    public Boolean isExchangeable() {
         return exchangeable;
     }
 
