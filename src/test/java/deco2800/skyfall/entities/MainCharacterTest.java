@@ -38,28 +38,23 @@ public class MainCharacterTest {
         testCharacter.dropInventory("Dagger");
         Assert.assertEquals(testCharacter.getInventories().size(), 1);
 
-        Assert.assertEquals(testCharacter.equippedItems(), 1);
-        testCharacter.equipItem("Sword");
+        Assert.assertEquals(testCharacter.getEquippedItem(), 1);
+        testCharacter.equipItem("Sword",0);
         testCharacter.unequipItem("Shield");
         testCharacter.pickUpInventory("Shield");
         Assert.assertEquals(testCharacter.getInventories().size(), 2);
-        testCharacter.equipItem("Shield");
-        testCharacter.equipItem("Dagger");
-        Assert.assertEquals(testCharacter.equippedItems(), 3);
+        testCharacter.equipItem("Shield",1);
+        testCharacter.equipItem("Dagger",2);
+        Assert.assertEquals(testCharacter.getHotbar().size(), 3);
 
         testCharacter.pickUpInventory("Armour");
         testCharacter.pickUpInventory("Dagger");
         testCharacter.pickUpInventory("Boots");
         testCharacter.pickUpInventory("Hat");
-        testCharacter.equipItem("Armour");
-        testCharacter.equipItem("Dagger");
-        testCharacter.equipItem("Boots");
-        testCharacter.equipItem("Hat");
-        Assert.assertEquals(testCharacter.getInventories().size(), 6);
-        Assert.assertEquals(testCharacter.equippedItems(), 5);
-
-        Assert.assertEquals(testCharacter.getEquippedItems().size(),
-                testCharacter.equippedItems());
+        testCharacter.equipItem("Armour",0);
+        testCharacter.equipItem("Dagger",1);
+        testCharacter.equipItem("Boots",2);
+        testCharacter.equipItem("Hat",3);
     }
 
     @Test
