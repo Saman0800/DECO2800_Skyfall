@@ -29,16 +29,41 @@ public class PlayerPeon extends Peon implements TouchDownObserver {
         }
     }
 
+    /**
+     * Attack with the weapon the character has equip.
+     */
+    public void attack() {
+        //TODO: Need to calculate an angle that the character is facing. @Movement Team
+        HexVector position = this.getPosition();
+
+        //Spawn projectile in front of character for now.
+        Projectile projectile = new Projectile("yellow_selection",
+                "hitBox",
+                position.getCol()-1,
+                position.getRow(),
+                1);
+
+        //Get AbstractWorld from static class GameManager.
+        GameManager manager = GameManager.get();
+        //Add the projectile entity to the game world.
+        manager.getWorld().addEntity(projectile);
+    }
+
     @Override
     public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
         // only allow left clicks to move player
-        if (button != 0) {
-            return;
+        if (button == 0) {
+            this.attack();
         }
 
+        //attack
+
+        //click to move logic replaced by WASD
+        /*
         float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
         float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 
         this.task = new MovementTask(this, new HexVector (clickedPosition[0],clickedPosition[1]));
+         */
     }
 }

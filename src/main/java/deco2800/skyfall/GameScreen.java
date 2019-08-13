@@ -62,9 +62,6 @@ public class GameScreen implements Screen,KeyDownObserver {
 
 		gameManager.setWorld(world);
 
-		//Create a new combat manager.
-		GameManager.addManagerToInstance(new CombatManager());
-
 		// Add first peon to the world
 		camera = new PotateCamera(1920, 1080);
 		cameraDebug = new PotateCamera(1920, 1080);

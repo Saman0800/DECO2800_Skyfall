@@ -37,12 +37,13 @@ public class Projectile extends AbstractEntity {
      */
     public Projectile(String textureName, String objectName, float col, float row, int damage) {
 
-        super(col, row,1, 2, 0.2f);
+        super(col,row,3);
 
         this.damage = damage;
 
         this.setTexture(textureName);
         this.setObjectName(objectName);
+
     }
 
     /**
