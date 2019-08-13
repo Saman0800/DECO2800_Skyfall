@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class WeaponTest extends Weapon {
+public class WeaponTest {
 
     private Weapon weapon;
 

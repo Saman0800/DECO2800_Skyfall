@@ -15,7 +15,7 @@ public class Projectile extends AbstractEntity {
     /**
      * How many game ticks all projectiles survive for before being removed.
      */
-    public static final int LIFE_TIME_TICKS = 50;
+    public static final int LIFE_TIME_TICKS = 20;
 
     /**
      * Collider of this object.
