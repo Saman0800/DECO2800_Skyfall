@@ -80,12 +80,6 @@ public class Peon extends AgentEntity implements Tickable {
 		if(task != null && task.isAlive()) {
 			if(task.isComplete()) {
 				this.task = GameManager.getManagerFromInstance(TaskPool.class).getTask(this);
-				
-				//Resetting moving and angle once Peon has stopped
-				if (task instanceof MovementTask) {
-                    this.isMoving = false;
-                    this.angle = 0;
-                }
 			}
 
             task.onTick(i);

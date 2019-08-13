@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.AnimationManager;
 import deco2800.skyfall.managers.InputManager;
+import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,11 +82,11 @@ public class Renderer3D implements Renderer {
 			// Render each undiscovered area
 		}
 
-		Animation<TextureRegion> test =  animationManager.getAnimation("marioTest");
-		if(test != null) {
-            batch.draw(test.getKeyFrame(elapsedTime, true) ,0 ,0);
-        }
-
+		//Animation<TextureRegion> test =  animationManager.getAnimation("mario_right");
+		//if(test != null) {
+        //    batch.draw(test.getKeyFrame(elapsedTime, true) ,x ,0);
+        //}
+        //x++;
 		renderAbstractEntities(batch, camera);
 
 		renderMouse(batch);
@@ -178,15 +179,37 @@ public class Renderer3D implements Renderer {
 				continue;
 			}
 
-			renderAbstractEntity(batch, entity, entityWorldCoord, tex);
+			//TODO: Change depending on animation.
+            //TODO: This is just for movement and temporary
+            //TODO: Put this into a function.
+            AnimationRole moveType = entity.getMovingAnimation();
+			if (moveType == AnimationRole.NULL) {
+                renderAbstractEntity(batch, entity, entityWorldCoord, tex);
+            } else {
+			    String animationName = entity.getAnimationName(moveType);
+
+			    if (animationName == null) {
+                    System.out.println("Could not find animation in entity" + entity.getObjectName());
+                    renderAbstractEntity(batch, entity, entityWorldCoord, tex);
+                } else {
+                    Animation<TextureRegion> runAnimation = animationManager.getAnimation(animationName);
+
+                    if (runAnimation == null) {
+                        System.out.println("Could not find animation object in animationManager");
+                        renderAbstractEntity(batch, entity, entityWorldCoord, tex);
+                    } else {
+                        batch.draw(runAnimation.getKeyFrame(elapsedTime, true) ,entityWorldCoord[0] ,entityWorldCoord[1]);
+                    }
+                }
+            }
+
 			/* Draw Peon */
 			// Place movement tiles
 			if (entity instanceof Peon && GameManager.get().showPath) {
 				renderPeonMovementTiles(batch, camera, entity, entityWorldCoord);
 			 }
 			
-			if (entity instanceof StaticEntity) {	 
-				StaticEntity staticEntity = ((StaticEntity) entity);
+			if (entity instanceof StaticEntity) {	 				StaticEntity staticEntity = ((StaticEntity) entity);
 				Set<HexVector> childrenPosns = staticEntity.getChildrenPositions();
 				for(HexVector childpos: childrenPosns) {
 					Texture childTex = staticEntity.getTexture(childpos);
@@ -216,7 +239,7 @@ public class Renderer3D implements Renderer {
 		GameManager.get().setEntitiesRendered(entities.size() - entitiesSkipped);
 		GameManager.get().setEntitiesCount(entities.size());
 	}
-	
+
 	
 	private void renderAbstractEntity(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCord, Texture tex) {
         float x = entityWorldCord[0];

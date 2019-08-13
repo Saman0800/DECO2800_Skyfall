@@ -26,8 +26,7 @@ public class PlayerPeon extends Peon implements TouchDownObserver {
 
             if (task.isComplete()) {
                 this.task = null;
-                this.isMoving = false;
-                this.angle = 0;
+
             }
         }
     }

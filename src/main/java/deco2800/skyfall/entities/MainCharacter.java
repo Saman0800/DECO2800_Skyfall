@@ -18,6 +18,8 @@ public class MainCharacter extends Peon implements TouchDownObserver {
     private List<String> hotbar;
     private int equipped_item;
 
+
+
     /*
         Potential future implementations
 
@@ -50,7 +52,18 @@ public class MainCharacter extends Peon implements TouchDownObserver {
                 .addTouchDownListener(this);
 
         this.instantiateInventory();
+        //Remove this.
+        this.configure_animations();
+    }
 
+    /*Tester*/
+    private void configure_animations() {
+        animations.put(AnimationRole.MOVE_NORTH, "mario_right");
+        animations.put(AnimationRole.MOVE_NORTH_EAST, "mario_right");
+        animations.put(AnimationRole.MOVE_NORTH_WEST, "mario_right");
+        animations.put(AnimationRole.MOVE_SOUTH, "mario_left");
+        animations.put(AnimationRole.MOVE_SOUTH_EAST, "mario_left");
+        animations.put(AnimationRole.MOVE_SOUTH_WEST, "mario_left");
     }
 
     /**
@@ -103,6 +116,7 @@ public class MainCharacter extends Peon implements TouchDownObserver {
     public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
     // only allow left clicks to move player
         if (button != 0) {
+            //Right click run animation.
             return;
         }
 
@@ -119,9 +133,8 @@ public class MainCharacter extends Peon implements TouchDownObserver {
             task.onTick(i);
 
             if (task.isComplete()) {
+                //Resetting moving and angle once Peon has stopped move this to separate function
                 this.task = null;
-
-
             }
         }
     }

@@ -6,6 +6,8 @@ import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.renderers.Renderable;
 import deco2800.skyfall.util.HexVector;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -18,7 +20,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	
 	@Expose
 	private String objectName = null;
-	protected boolean animatable = false;
 	private static int nextID = 0;
 
 	public static void resetID() {
@@ -43,8 +44,12 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	/** Whether an entity should trigger a collision when */
 	private boolean collidable = true; 
 	
-	private int renderOrder = 0; 
-	
+	private int renderOrder = 0;
+
+	//For animations
+    protected Map<AnimationRole, String> animations;
+    protected AnimationRole movingAnimation = AnimationRole.NULL;
+
 	/**
 	 * Constructor for an abstract entity
 	 * @param col the col position on the world
@@ -57,6 +62,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		entityID = AbstractEntity.getNextID();
 		this.setObjectName(ENTITY_ID_STRING);
 		this.renderOrder = renderOrder;
+        animations = new HashMap<>();
 	}
 
 	public AbstractEntity() {
@@ -64,7 +70,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		this.colRenderLength = 1f;
 		this.rowRenderLength = 1f;
 		this.setObjectName(ENTITY_ID_STRING);
-	}
+        animations = new HashMap<>();
+    }
 
 
 	/**
@@ -277,13 +284,24 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		GameManager.get().getWorld().getEntities().remove(this);
 	}
 
-    public boolean isAnimatable() {
-        return animatable;
+
+    //Used for managing animations
+    public void setMovingAnimation(AnimationRole movingAnimation) {
+        this.movingAnimation = movingAnimation;
     }
 
-    public void setAnimatable(boolean animatable) {
-        this.animatable = animatable;
+    public AnimationRole getMovingAnimation() {
+        return movingAnimation;
     }
+
+    public String getAnimationName(AnimationRole type) {
+	    if (animations.containsKey(type)) {
+            String aniName = animations.get(type);
+            return aniName;
+        }
+	        return null;
+    }
+
 }
 
 

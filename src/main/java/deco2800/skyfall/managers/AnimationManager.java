@@ -14,14 +14,17 @@ public class AnimationManager extends AbstractManager {
     private final float DEFAULT_FRAME_RATE  = 1f/4f;
 
     public AnimationManager() {
-        this.generateAnimationObject("marioTest",
-                "mario", 100, 138, DEFAULT_FRAME_RATE);
+        this.generateAnimationObject("mario_right",
+                "mario_right", 100, 138, DEFAULT_FRAME_RATE);
+        this.generateAnimationObject("mario_left",
+                "mario_left", 100, 138, DEFAULT_FRAME_RATE);
     }
 
 
     /*
         For animation could separated into different file later.
      */
+    //TODO: This.
     private void splitTexture() {
 
     }
@@ -46,7 +49,7 @@ public class AnimationManager extends AbstractManager {
         int width =  tmpFrames[0].length;
         int size = height * width;
 
-        System.out.println("After split, Width: " + width + "Height: " +  height);
+        System.out.println("After split, Width: " + width + " Height: " +  height);
 
         TextureRegion[] animationFrames = new TextureRegion[height * width];
 
@@ -63,6 +66,16 @@ public class AnimationManager extends AbstractManager {
     }
 
     public Animation<TextureRegion> getAnimation(String animationName) {
-        return animationMap.get(animationName);
+        if (animationMap.containsKey(animationName)) {
+            return animationMap.get(animationName);
+        }
+
+        return null;
+    }
+
+
+    /**Please read the gitlab documentation on animations for more info**/
+    public Texture getKeyFrameFromAnimation(String animationName, int index) {
+        return null;
     }
 }
