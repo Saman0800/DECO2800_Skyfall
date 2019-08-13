@@ -61,16 +61,5 @@ public class Metal extends NaturalResources implements Item {
     }
 
 
-    public static void main(String[] args) {
-        NaturalResources n = new Metal();
-        System.out.println(n.getName());
-        System.out.println(n.getSubtype());
-        System.out.println(n.toString());
-        Metal w = new Metal();
-        System.out.println(w.getName());
-        System.out.println(w.getSubtype());
-        System.out.println(w.toString());
-        System.out.println(w.getBiome());
-    }
 
 }

@@ -60,16 +60,5 @@ public class Sand extends NaturalResources implements Item {
         return "" + subtype + ":" + name;
     }
 
-    public static void main(String[] args) {
-        NaturalResources n = new Sand();
-        System.out.println(n.getName());
-        System.out.println(n.getSubtype());
-        System.out.println(n.toString());
-        Sand w = new Sand();
-        System.out.println(w.getName());
-        System.out.println(w.getSubtype());
-        System.out.println(w.toString());
-        System.out.println(w.getBiome());
-    }
 
 }

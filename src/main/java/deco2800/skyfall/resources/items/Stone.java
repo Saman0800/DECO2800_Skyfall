@@ -71,17 +71,4 @@ public class Stone extends NaturalResources implements Item {
     }
 
 
-    public static void main(String[] args) {
-        NaturalResources n = new Stone();
-        System.out.println(n.getName());
-        System.out.println(n.getSubtype());
-        System.out.println(n.toString());
-        Stone w = new Stone();
-        System.out.println(w.getName());
-        System.out.println(w.getSubtype());
-        System.out.println(w.toString());
-        System.out.println(w.getColour());
-        System.out.println(w.getBiome());
-    }
-
 }
