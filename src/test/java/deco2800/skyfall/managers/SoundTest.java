@@ -59,9 +59,8 @@ public class SoundTest {
             TimeUnit.SECONDS.sleep(1);
             SoundManager.resume();
             TimeUnit.SECONDS.sleep(1);
-            SoundManager.pause();
-            TimeUnit.SECONDS.sleep(1);
-            assertEquals(SoundManager.getClip().getMicrosecondLength(), 120000000);
+            assertEquals(SoundManager.getClip().isRunning(), true);
+            //assertEquals(SoundManager.getClip().getFramePosition(), 84737);
         } catch (Exception e) {
             //exception caught
         }
@@ -77,7 +76,21 @@ public class SoundTest {
             TimeUnit.SECONDS.sleep(1);
             SoundManager.resetClip();
             TimeUnit.SECONDS.sleep(1);
-            assertEquals(SoundManager.getClip().getMicrosecondLength(),0);
+            SoundManager.backgroundGameMusic(file);
+            assertEquals(SoundManager.getClip().getLongFramePosition(),0);
+        } catch (Exception e) {
+            //exception caught
+        }
+    }
+
+    @Test
+    public void muteTest() {
+        try {
+            SoundManager.backgroundGameMusic(file);
+            SoundManager.play();
+            TimeUnit.SECONDS.sleep(1);
+            SoundManager.mute();
+            assertEquals(SoundManager.muteVol.getValue(),true);
         } catch (Exception e) {
             //exception caught
         }

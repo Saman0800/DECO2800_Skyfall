@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class GameScreen implements Screen,KeyDownObserver {
 	private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
@@ -80,11 +81,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 		try {
 			SoundManager.backgroundGameMusic("resources/sounds/Forest Day.wav");
 			SoundManager.play();
-		} catch (UnsupportedAudioFileException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (LineUnavailableException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
