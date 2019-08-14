@@ -15,20 +15,33 @@ public class ConstructionManager extends AbstractManager {
     //This manager while control all features related to construction
 
     //Is menu visible
-    private Boolean menuVisible = false;
+    private Boolean menuVisible;
     //Has menu been created and added
-    private Boolean menuAdded = false;
+    private Boolean menuAdded;
     //Has the menu been set up
-    private Boolean menuSetUp = false;
+    private Boolean menuSetUp;
     private Window buildMenu;
 
     //Put window components here:
 
+    public ConstructionManager(){
+        menuVisible = false;
+        menuAdded = false;
+        menuSetUp = false;
+    }
 
     //Start of UI
+    public void displayWindow(){
+        createWindow();
+        setUpMenu();
+        updateWindow();
+        switchView();
+    }
+
     //Create UI Window
     //Does nothing if window already created
-    public void createWindow(Stage stage) {
+    private void createWindow() {
+        Stage stage = GameManager.get().getStage();
         if (!menuAdded) {
             Skin skin = new Skin(Gdx.files.internal("resources/uiskin.skin"));
             buildMenu = new Window("Construction", skin);
@@ -42,8 +55,11 @@ public class ConstructionManager extends AbstractManager {
     }
 
     //Set up window
-    public void setUpMenu(float width, float height) {
+    private void setUpMenu() {
         if (!menuSetUp) {
+            float width = GameManager.get().getStage().getWidth();
+            float height = GameManager.get().getStage().getHeight();
+
             buildMenu.setHeight(3 * height / 4);
             buildMenu.setWidth(3 * width / 4);
             buildMenu.setPosition(width / 8, height / 8);
@@ -60,14 +76,14 @@ public class ConstructionManager extends AbstractManager {
     }
 
     //Called every time window is shown so that most accurate, up to date info is shown
-    public void updateWindow() {
+    private void updateWindow() {
         //Update window components here:
 
         System.out.println("Window updated");
     }
 
     //Switches the menu on or odd
-    public void switchView() {
+    private void switchView() {
         if (menuVisible) {
             hideBuildMenu();
         } else {
@@ -75,18 +91,20 @@ public class ConstructionManager extends AbstractManager {
         }
     }
 
-    public void showBuildMenu() {
+    private void showBuildMenu() {
         menuVisible = true;
         buildMenu.setVisible(true);
         System.out.println("Menu Shown");
     }
 
-    public void hideBuildMenu() {
+    private void hideBuildMenu() {
         menuVisible = false;
         buildMenu.setVisible(false);
         System.out.println("Menu Hidden");
     }
+    //End of UI
 
+    //Start of terrain
     // terrain map is list of terrains with their building permission
     private TreeMap<String, Boolean> terrainMap = new TreeMap<String, Boolean>();
 
