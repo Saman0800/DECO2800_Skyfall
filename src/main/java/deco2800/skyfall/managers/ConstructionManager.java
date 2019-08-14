@@ -232,7 +232,24 @@ public class ConstructionManager extends AbstractManager {
     //TODO: Inventory check
     //return a list of how much of each relevant resources the player owns
 
+//    When given a structure class gets its cost and compares it to the players
+//        inventory and returning a Boolean if the player meets the inventory requirements.
+
+//    public Boolean invCheck(Structure building){
+//
+//    }
     //TODO: Inventory remove
     //takes in a structure class and removes the material cost from
     //player inventory
+    //Takes in a structure class and removes it's material cost from
+    //the players inventory, no return
+
+//    public void invRemove(Structure building){ }
 }
+
+//class Structure
+//{
+//
+//
+//
+//}
