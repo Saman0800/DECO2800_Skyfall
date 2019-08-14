@@ -6,9 +6,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 
 import java.io.*;
+import java.util.AbstractList;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.TreeMap;
+import deco2800.skyfall.worlds.AbstractWorld;
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.entities.AbstractEntity;
 
 
 public class ConstructionManager extends AbstractManager {
@@ -108,7 +112,8 @@ public class ConstructionManager extends AbstractManager {
     // terrain map is list of terrains with their building permission
     private TreeMap<String, Boolean> terrainMap = new TreeMap<String, Boolean>();
 
-    // load terrain permission file into terrain map
+    // TODO: load terrain permission file
+    // load terrain permission file into terrain map, format as (e.g. texture, boolean) for one terrain
     private void initializeTerrainMap(String fileBase) {
         try {
             File file = new File(fileBase);
@@ -138,35 +143,91 @@ public class ConstructionManager extends AbstractManager {
         }
     }
 
+    // TODO: update terrain permission for structures
+    // update terrain permission to allow/disallow building something
     public void updateTerrainMap(String texture, Boolean value) {
         terrainMap.put(texture, value);
     }
 
+    // TODO: check if tiles is valid or not
     // use terrain map to verify if tile(s) is built valid or not
     public boolean verifyTile(Tile ...tiles) {
         for (Tile tile : tiles) {
             String texture = tile.getTextureName();
-            if (terrainMap.containsKey(texture)) {
-                if (terrainMap.get(texture) == true) {
-                    return true;
-                }
+            if (!terrainMap.containsKey(texture)) {
+                return false;
+            }
+            if (terrainMap.containsKey(texture) && (!terrainMap.get(texture))) {
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
-    // uses terrain_map to verify if a region (list of tiles) is built valid or not
+    // TODO: check if a region of tiles is valid or not
+    // use terrain_map to verify if a region (list of tiles) is built valid or not
     public boolean verifyRegion(List<Tile> tiles) {
         for (Tile tile : tiles) {
             String texture = tile.getTextureName();
-            if (terrainMap.containsKey(texture)) {
-                if (terrainMap.get(texture) == true) {
-                    return true;
+            if (!terrainMap.containsKey(texture)) {
+                return false;
+            }
+            if (terrainMap.containsKey(texture) && (!terrainMap.get(texture))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // TODO: check if tiles contains biome or not for building permission
+    // use tile's biome method to know build permission
+    public boolean verifyBiome(Tile ...tiles) {
+        for (Tile tile : tiles) {
+            if (!tile.getIsBuildable()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // TODO: read entities to verify building permission
+    // Non-empty entities in a tile can't be built and should be destroyed first
+    public boolean verifyEntity(AbstractWorld worldMap, Tile ...tiles) {
+        for (AbstractEntity entity : worldMap.getEntities()) {
+            for (Tile tile : tiles) {
+                float col = tile.getCol();
+                float row = tile.getRow();
+                if ((entity.getCol() == col) && (entity.getRow() == row)) {
+                    return false;
                 }
             }
         }
-        return false;
+        return true;
     }
+
+    // TODO: check if a building could be located in a region
+    // use most left-bottom position of a building with its size to check permission
+    public boolean isBuildable(AbstractWorld worldMap, AbstractEntity building, int xSize, int ySize) {
+        float col = building.getCol();
+        float row = building.getRow();
+        List map = worldMap.getTileMap();
+
+        for (int i = 0; i < xSize; i++) {
+            for (int j = 0; j < ySize; j++) {
+                Tile tile = worldMap.getTile(col + xSize, row + ySize);
+                if (tile == null) {
+                    return false;
+                }
+                if (!verifyTile(tile) || !verifyBiome(tile) || !verifyEntity(worldMap, tile)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    // TODO: type of building relates to type of tile
+    // different type of tiles affect to decide type of buildings
 
     //TODO: Inventory check
     //return a list of how much of each relevant resources the player owns
