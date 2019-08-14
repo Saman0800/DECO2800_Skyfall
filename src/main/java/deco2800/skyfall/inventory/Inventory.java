@@ -27,28 +27,33 @@ public class Inventory {
     }
 
 
-    public Inventory(Map<Class<? extends Item>, Integer> inventory){
-
-
+    public Inventory(Map<String, List<Item>> inventory){
+        this.inventory.putAll(inventory);
     }
 
 
-    public void getInventory(){
-        System.out.println(this.inventory);
+    public Map<String, List<Item>> getInventoryContents(){
+        return Collections.unmodifiableMap(this.inventory);
+    }
+
+    public Map<String, Integer> getInventoryAmounts(){
+
+        Map<String, Integer> inventoryAmounts = new HashMap<String, Integer>();
+
+        for (String key : this.inventory.keySet()) {
+            Integer amount = this.inventory.get(key).size();
+            inventoryAmounts.put(key, amount);
+
+        }
+
+        return inventoryAmounts;
     }
 
 
-
-    public void printInventory(){
-        //Print inventory with numbers
+    public String toString(){
+        Map<String, Integer> inventoryAmounts = this.getInventoryAmounts();
+        return "Inventory Contents " + inventoryAmounts.toString();
     }
-
-
-
-    public void displayInventory(){
-        //Sort Items into types for display in GUI and return as 3 Maps rather than 1
-    }
-
 
 
     public void inventoryAdd(Item item){
