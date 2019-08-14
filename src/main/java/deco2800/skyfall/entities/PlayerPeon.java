@@ -31,11 +31,7 @@ public class PlayerPeon extends Peon implements TouchDownObserver {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-            ConstructionManager construction = GameManager.getManagerFromInstance(ConstructionManager.class);
-            construction.createWindow(GameManager.get().getStage());
-            construction.setUpMenu(GameManager.get().getStage().getWidth(), GameManager.get().getStage().getHeight());
-            construction.updateWindow();
-            construction.switchView();
+            GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
         }
     }
 
