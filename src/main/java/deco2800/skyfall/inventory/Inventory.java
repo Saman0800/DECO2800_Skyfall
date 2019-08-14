@@ -36,6 +36,7 @@ public class Inventory {
         return Collections.unmodifiableMap(this.inventory);
     }
 
+
     public Map<String, Integer> getInventoryAmounts(){
 
         Map<String, Integer> inventoryAmounts = new HashMap<String, Integer>();
@@ -43,13 +44,18 @@ public class Inventory {
         for (String key : this.inventory.keySet()) {
             Integer amount = this.inventory.get(key).size();
             inventoryAmounts.put(key, amount);
-
         }
 
         return inventoryAmounts;
     }
 
+    public Integer getAmount(String item){
+        Map<String, Integer> inventoryAmounts = this.getInventoryAmounts();
+        return inventoryAmounts.get(item);
+    }
 
+
+    @Override
     public String toString(){
         Map<String, Integer> inventoryAmounts = this.getInventoryAmounts();
         return "Inventory Contents " + inventoryAmounts.toString();
@@ -75,7 +81,7 @@ public class Inventory {
 
 
 
-    public Item inventoryDrop(String itemName){
+    public Item inventoryDrop(String itemName, Integer amount){
 
         if(this.inventory.get(itemName) != null){
             Integer num = this.inventory.get(itemName).size();
@@ -99,6 +105,39 @@ public class Inventory {
     }
 
 
+    public List<Item> inventoryDropMultiple(String itemName, Integer amount){
+        List<Item> itemsDropped = new ArrayList<Item>();
+        List<Item> itemsList = this.inventory.get(itemName);
 
+        if(itemsList != null){
+            Integer num = this.inventory.get(itemName).size();
+
+            if(amount < num){
+
+                for(int i = 1; i <= amount; i ++){
+                    Item item = itemsList.get(num-i);
+                    itemsDropped.add(item);
+                    itemsList.remove(num-i);
+                }
+
+                this.inventory.put(itemName, itemsList);
+
+            } else if(amount == num){
+                itemsDropped.addAll(itemsList);
+                this.inventory.remove(itemName);
+
+            } else if(amount > num){
+                System.out.println("You don't have that many " + itemName + "s!");
+                itemsDropped = null;
+            }
+
+
+        }else{
+            itemsDropped = null;
+        }
+
+        return itemsDropped;
+
+    }
 
 }
