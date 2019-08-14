@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
@@ -8,6 +9,9 @@ import deco2800.skyfall.tasks.MovementTask;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 
+/**
+ * The PlayerPeon represents a player in the game world.
+ */
 public class PlayerPeon extends Peon implements TouchDownObserver {
 
     /**
@@ -56,13 +60,19 @@ public class PlayerPeon extends Peon implements TouchDownObserver {
         manager.getWorld().addEntity(this.hitBox);
     }
 
+    /**
+     * Perform a special attack with the right click.
+     */
     public void specialAttack() {
-        //TODO release a more powerful attack.
+        //TODO: release a more powerful attack.
     }
 
     @Override
     public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
-        //TODO: Add game state conditions so player does not always attack. I.e. when menu is open this should be ignored.
+        //TODO: Add game state conditions so player does not always attack.
+        // I.e. when menu is open this should be ignored.
+        //System.out.println(screenX);
+        //System.out.println(screenY);
         if (button == 0) {
             this.attack();
         } else if (button == 1) {
