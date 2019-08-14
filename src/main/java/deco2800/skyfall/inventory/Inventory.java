@@ -1,12 +1,16 @@
 package deco2800.skyfall.inventory;
 
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.resources.items.Stone;
-import deco2800.skyfall.resources.items.Wood;
+import deco2800.skyfall.resources.items.*;
 import java.util.*;
 import java.lang.*;
 
 
+/***
+ * A player's inventory within the game, stored as mappings between
+ * the item type name String and a list of items. Player is able to add to, remove
+ * from and get inventory contents.
+ */
 public class Inventory {
     //Map that stores the inventory contents
     private Map<String, List<Item>> inventory;
@@ -15,11 +19,13 @@ public class Inventory {
     private List<Item> quickAccessInventory;
 
 
-
+    /***
+     * Create an inventory and add default items to the inventory.
+     */
     public Inventory(){
         this.inventory = new HashMap<String, List<Item>>();
 
-        //Add default items to inventory - eventually find a way to populate more flexibly
+        //Add default items to inventory
         this.inventoryAdd(new Stone());
         this.inventoryAdd(new Stone());
         this.inventoryAdd(new Wood());
@@ -27,16 +33,30 @@ public class Inventory {
     }
 
 
-    public Inventory(Map<String, List<Item>> inventory){
-        this.inventory.putAll(inventory);
+    /***
+     * Create an inventory and add a custom map of items to the inventory.
+     * @param inventoryContents a Map<String, List<Item>> where String is the item's name and List<Item>
+     * is a list of objects that implement the Item interface.
+     */
+    public Inventory(Map<String, List<Item>> inventoryContents){
+        this.inventory = new HashMap<String, List<Item>>();
+
+        this.inventory.putAll(inventoryContents);
     }
 
 
+    /***
+     * Get a copy of the inventory contents.
+     * @return a copy of the inventory
+     */
     public Map<String, List<Item>> getInventoryContents(){
         return Collections.unmodifiableMap(this.inventory);
     }
 
-
+    /***
+     * Get the amount of each item in the inventory
+     * @return a map of item name to the integer amount in the inventory for all inventory items.
+     */
     public Map<String, Integer> getInventoryAmounts(){
 
         Map<String, Integer> inventoryAmounts = new HashMap<String, Integer>();
@@ -49,12 +69,28 @@ public class Inventory {
         return inventoryAmounts;
     }
 
+
+    /***
+     * Get the amount of a single item in the inventory.
+     * @param item the string name for the item
+     * @return the integer number of that item type in the inventory
+     */
     public Integer getAmount(String item){
         Map<String, Integer> inventoryAmounts = this.getInventoryAmounts();
-        return inventoryAmounts.get(item);
+
+        if(inventoryAmounts.get(item) != null){
+            return inventoryAmounts.get(item);
+        } else{
+            return 0;
+        }
+
     }
 
 
+    /***
+     * Get the inventory as a string.
+     * @return a string representation of the inventory.
+     */
     @Override
     public String toString(){
         Map<String, Integer> inventoryAmounts = this.getInventoryAmounts();
@@ -62,6 +98,10 @@ public class Inventory {
     }
 
 
+    /***
+     * Add an item to the inventory.
+     * @param item the item to add to the inventory, implements Item interface.
+     */
     public void inventoryAdd(Item item){
         String name = item.getName();
 
@@ -80,8 +120,12 @@ public class Inventory {
     }
 
 
-
-    public Item inventoryDrop(String itemName, Integer amount){
+    /***
+     * Removes an item from the inventory and returns it.
+     * @param itemName the String name of the item to drop from the inventory.
+     * @return the Item dropped from the inventory
+     */
+    public Item inventoryDrop(String itemName){
 
         if(this.inventory.get(itemName) != null){
             Integer num = this.inventory.get(itemName).size();
@@ -105,6 +149,12 @@ public class Inventory {
     }
 
 
+    /***
+     * Drop multiple items of the same type from the inventory, and return as a list.
+     * @param itemName the string name of the item to drop from the inventory
+     * @param amount the number of the item type to drop from the inventory
+     * @return a list of the items dropped from the inventory
+     */
     public List<Item> inventoryDropMultiple(String itemName, Integer amount){
         List<Item> itemsDropped = new ArrayList<Item>();
         List<Item> itemsList = this.inventory.get(itemName);
