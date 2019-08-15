@@ -36,10 +36,10 @@ public class NaturalResourcesTest extends NaturalResources {
         assertEquals("Natural Resource", naturalResource.getSubtype());
     }
 
-    @Test
-    public void hasHealingPower1() {
-        assertFalse(naturalResource.hasHealingPower());
-    }
+    //@Test
+   // public void hasHealingPower1() {
+       // assertFalse(naturalResource.hasHealingPower());
+   // }
 
     @Test
     public void getCoords1() {
@@ -47,7 +47,7 @@ public class NaturalResourcesTest extends NaturalResources {
 
     @Test
     public void getExchangeable1() {
-        assertTrue(naturalResource.getExchangeable());
+        assertTrue(naturalResource.isExchangeable());
     }
 
     @Test

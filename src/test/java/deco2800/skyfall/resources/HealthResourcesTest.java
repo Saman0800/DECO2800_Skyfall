@@ -56,7 +56,7 @@ public class HealthResourcesTest extends HealthResources{
 
     @Test
     public void getExchangeable2() {
-        assertTrue(healthResources.getExchangeable());
+        assertTrue(healthResources.isExchangeable());
     }
 
 

@@ -6,7 +6,7 @@ import deco2800.skyfall.worlds.Tile;
 
 
 
-public abstract class HealthResources implements Item {
+public abstract class HealthResources implements deco2800.skyfall.resources.Item {
 
     // can the item be stored in the inventory
     private Boolean carryable;
@@ -149,7 +149,7 @@ public abstract class HealthResources implements Item {
      * @return True if the item could be exhanged, false otherwise
      */
     @Override
-    public Boolean getExchangeable() {
+    public Boolean isExchangeable() {
         return exchangeable;
     }
 

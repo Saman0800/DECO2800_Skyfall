@@ -25,7 +25,7 @@ public class Aloe_Vera extends HealthResources implements Item {
     //private HexVector position;
 
     // determines whether or not the resource can be traded
-    //private Boolean exchangeable;
+
 
     // the colour of the Aloe_Vera
     private String colour;
@@ -89,6 +89,8 @@ public class Aloe_Vera extends HealthResources implements Item {
         }
         return NumberOfAloeVera;
     }
+
+
 
 
 }
