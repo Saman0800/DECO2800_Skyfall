@@ -47,6 +47,7 @@ public class Berry extends HealthResources implements Item {
     private Boolean hasFoodEffect;
 
     public Berry(){
+
         this.biome = "Forest";
         this.colour ="wine red";
         this.name ="Berry";

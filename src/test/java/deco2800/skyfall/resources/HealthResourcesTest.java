@@ -95,10 +95,13 @@ public class HealthResourcesTest extends HealthResources{
      */
     @Test
     public void isExchangeable2() {
+
         assertTrue(apple.isExchangeable());
         assertTrue(aloe_vera.isExchangeable());
         assertTrue(berry.isExchangeable());
         assertTrue(poisonousmushroom.isExchangeable());
+
+
     }
 
     /**

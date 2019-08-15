@@ -51,6 +51,7 @@ public class PoisonousMushroom extends HealthResources implements Item {
     //PoisonousMushroom could recover the food fullness, but deducting the
     //healing power
     public PoisonousMushroom(){
+
         this.biome = "Forest";
         this.colour ="black white";
         this.name ="PoisonousMushroom";

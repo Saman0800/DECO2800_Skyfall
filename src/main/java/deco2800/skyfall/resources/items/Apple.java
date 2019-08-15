@@ -48,6 +48,7 @@ public class Apple extends HealthResources implements Item {
 
 
     public Apple(){
+
         this.biome = "Forest";
         this.name ="Apple";
         this.colour ="red";

@@ -20,8 +20,8 @@ public interface Item {
     String getSubtype();
 
     /**
-     * Returns whether or not the item can be stored in the inventory
-     * @return True if the item can be added to the inventory, false
+     * Returns whether or not the item can be carried
+     * @return True if the item can be carried in the inventory, false
      * if it is consumed immediately
      */
     Boolean isCarryable();
@@ -35,17 +35,10 @@ public interface Item {
 
     /**
      * Returns whether or not the item can be exchanged
-     * @return True if the item can be exhanged, false otherwise
+     * @return True if the item can be exchanged, false otherwise
      */
     Boolean isExchangeable();
 
     //method for getting the biome?
-
-
-
-
-
-
-
 
 }
