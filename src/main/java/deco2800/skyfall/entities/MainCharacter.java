@@ -65,8 +65,8 @@ public class MainCharacter extends Peon implements TouchDownObserver {
     public MainCharacter(float col, float row, float speed, String name,
                          int health) {
         super(row, col, speed, name, health);
-
-        this.setTexture("main_piece");
+        //TODO: Change this to properly.
+        this.setTexture("__ANIMATION_mario_right:1");
         this.setHeight(1);
         this.setObjectName("MainPiece");
 
@@ -84,11 +84,10 @@ public class MainCharacter extends Peon implements TouchDownObserver {
     private void configure_animations() {
         animations.put(AnimationRole.MOVE_NORTH, "mario_right");
         animations.put(AnimationRole.MOVE_NORTH_EAST, "mario_right");
-        animations.put(AnimationRole.MOVE_NORTH_WEST, "mario_right");
+        animations.put(AnimationRole.MOVE_NORTH_WEST, "mario_left");
         animations.put(AnimationRole.MOVE_SOUTH, "mario_left");
-        animations.put(AnimationRole.MOVE_SOUTH_EAST, "mario_left");
+        animations.put(AnimationRole.MOVE_SOUTH_EAST, "mario_right");
         animations.put(AnimationRole.MOVE_SOUTH_WEST, "mario_left");
-
     }
 
     /**

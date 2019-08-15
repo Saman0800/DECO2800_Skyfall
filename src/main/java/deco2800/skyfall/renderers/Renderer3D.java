@@ -172,6 +172,7 @@ public class Renderer3D implements Renderer {
 		logger.debug("NUMBER OF ENTITIES IN ENTITY RENDER LIST: {}", entities.size());
 		for (AbstractEntity entity : entities) {
 			Texture tex = textureManager.getTexture(entity.getTexture());
+      		//System.out.println("Renderer3D " + entity.getTexture() + " " + tex.getHeight() + " " + tex.getWidth());
 			float[] entityWorldCoord = WorldUtil.colRowToWorldCords(entity.getCol(), entity.getRow());
 			// If it's offscreen
 			if (WorldUtil.areCoordinatesOffScreen(entityWorldCoord[0], entityWorldCoord[1], camera)) {
@@ -179,29 +180,8 @@ public class Renderer3D implements Renderer {
 				continue;
 			}
 
-			//TODO: Change depending on animation.
-            //TODO: This is just for movement and temporary
-            //TODO: Put this into a function.
-            AnimationRole moveType = entity.getMovingAnimation();
-			if (moveType == AnimationRole.NULL) {
-                renderAbstractEntity(batch, entity, entityWorldCoord, tex);
-            } else {
-			    String animationName = entity.getAnimationName(moveType);
 
-			    if (animationName == null) {
-                    System.out.println("Could not find animation in entity" + entity.getObjectName());
-                    renderAbstractEntity(batch, entity, entityWorldCoord, tex);
-                } else {
-                    Animation<TextureRegion> runAnimation = animationManager.getAnimation(animationName);
 
-                    if (runAnimation == null) {
-                        System.out.println("Could not find animation object in animationManager");
-                        renderAbstractEntity(batch, entity, entityWorldCoord, tex);
-                    } else {
-                        batch.draw(runAnimation.getKeyFrame(elapsedTime, true) ,entityWorldCoord[0] ,entityWorldCoord[1]);
-                    }
-                }
-            }
 
 			/* Draw Peon */
 			// Place movement tiles
@@ -233,14 +213,15 @@ public class Renderer3D implements Renderer {
 							childTex.getWidth() * WorldUtil.SCALE_X, 
 							childTex.getHeight() * WorldUtil.SCALE_Y );				 
 				}
-			}			
+			}
+			runMovementAnimations(batch, entity, entityWorldCoord, tex);
 		}
 
 		GameManager.get().setEntitiesRendered(entities.size() - entitiesSkipped);
 		GameManager.get().setEntitiesCount(entities.size());
 	}
 
-	
+
 	private void renderAbstractEntity(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCord, Texture tex) {
         float x = entityWorldCord[0];
 		float y = entityWorldCord[1];
@@ -314,4 +295,34 @@ public class Renderer3D implements Renderer {
 			}
 		}
 	}
+
+
+	//Animations
+	private void runMovementAnimations(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord, Texture tex) {
+		AnimationRole moveType = entity.getMovingAnimation();
+
+		if (moveType == AnimationRole.NULL) {
+			renderAbstractEntity(batch, entity, entityWorldCoord, tex);
+		} else {
+			String animationName = entity.getAnimationName(moveType);
+
+			if (animationName == null) {
+				System.out.println("Could not find animation in entity" + entity.getObjectName());
+				renderAbstractEntity(batch, entity, entityWorldCoord, tex);
+			} else {
+				Animation<TextureRegion> runAnimation = animationManager.getAnimation(animationName);
+
+				if (runAnimation == null) {
+					System.out.println("Could not find animation object in animationManager");
+
+					renderAbstractEntity(batch, entity, entityWorldCoord, tex);
+				} else {
+					float width = runAnimation.getKeyFrame(elapsedTime).getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X;
+					float height = runAnimation.getKeyFrame(elapsedTime).getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y;
+					batch.draw(runAnimation.getKeyFrame(elapsedTime, true) ,entityWorldCoord[0] ,entityWorldCoord[1], width, height);
+				}
+			}
+		}
+	}
+
 }

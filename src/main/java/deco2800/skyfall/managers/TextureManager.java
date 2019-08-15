@@ -3,8 +3,10 @@ package deco2800.skyfall.managers;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import javafx.util.Pair;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,12 +44,15 @@ public class TextureManager extends AbstractManager {
 
     //For animations
 
+
+
     /**
      * Constructor
      * Currently loads up all the textures but probably shouldn't/doesn't
      * need to.
      */
     public TextureManager() {
+
         try {
             textureMap.put("background", new Texture("resources/background.jpg"));
             textureMap.put("spacman_ded", new Texture("resources/spacman_ded.png"));
@@ -103,10 +108,24 @@ public class TextureManager extends AbstractManager {
     public Texture getTexture(String id) {
         if (textureMap.containsKey(id)) {
             return textureMap.get(id);
-        } else {
-        	//log.info("Texture map does not contain P{}, returning default texture.", id);
+        } else if (id.startsWith("__ANIMATION_")) {
+            System.out.println("Getting animation texture");
+            AnimationManager animationManager = GameManager.getManagerFromInstance(AnimationManager.class);
+            Texture texture = this.getTextureFromAnimation(id, animationManager);
+
+            if (texture != null) {
+                return texture;
+            } else {
+                System.out.println("Texture animation could not be found");
+                return textureMap.get("spacman_ded");
+            }
+
+        }else {
+            //log.info("Texture map does not contain P{}, returning default texture.", id);
             return textureMap.get("spacman_ded");
         }
+
+
 
     }
 
@@ -131,6 +150,23 @@ public class TextureManager extends AbstractManager {
         if (!textureMap.containsKey(id)) {
             textureMap.put(id, new Texture(filename));
         }
+    }
+
+
+    private Texture getTextureFromAnimation(String id, AnimationManager animationManager) {
+        String id1 = id.replaceAll("__ANIMATION_", "");
+        String[] split = id1.split(":");
+        System.out.println(split[0] + " " + split[1]);
+        Texture texture = animationManager.
+                getKeyFrameFromAnimation(split[0],
+                        Integer.valueOf(split[1]));
+        if (texture == null) {
+            System.out.println("getTextureFromAnimation did not find texture");
+            return null;
+        }
+
+        textureMap.put(id, texture);
+        return texture;
     }
 
 }
