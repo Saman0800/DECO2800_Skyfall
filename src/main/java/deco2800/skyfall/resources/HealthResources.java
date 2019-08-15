@@ -14,10 +14,9 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
     private String name;
     //impact the player's health or not
     private Boolean hasHealingPower;
-    //whether or not the item impacts the player's food fullness
-    private Boolean hasFoodEffect;
+
     // the name of the subtype the item belongs to
-    private String subtype;
+    public String subtype;
     // the co-ordinates of the tile the item has been placed on
     private HexVector position;
 
@@ -38,12 +37,12 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
 
     public HealthResources(){
         //Added this default constructor to resolve an issue in apple class - Kathryn
-        this.name = name;
+        //this.name = name;
         this.carryable = true;
         this.subtype = "Health Resource";
         this.hasHealingPower = true;
         //Do we need a new type like FoodResources? and hasFoodEffect may false in here as medicine may not affect the food fullness
-        this.hasFoodEffect = true;
+
         //this.notHealingPower=false;
         this.exchangeable = true;
 
@@ -62,7 +61,7 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
         this.subtype = "Health Resource";
         this.hasHealingPower = true;
         //Do we need a new type like FoodResources? and hasFoodEffect may false in here as medicine may not affect the food fullness
-        this.hasFoodEffect = true;
+
         //this.notHealingPower=false;
         this.exchangeable = true;
 
@@ -109,20 +108,11 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
      * @return True if the item impacts on the player's health, false otherwise
      */
 
-
-
     public Boolean hasHealingPower() {
         return hasHealingPower;
     }
 
-    /**
-     * Returns whether or not the item impacts the player's food fullness
-     *
-     * @return True if the item impacts on the player's food fullness, false otherwise
-     */
-    public Boolean hasFoodEffect() {
-        return hasFoodEffect;
-    }
+
 /*    *//**
      * Returns whether or not the item could deduct the HP of players
      * @return True if the item deduct the player's health, false otherwise
@@ -165,18 +155,23 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
 
 
     /**
-     * Returns whether or not the item could deduct the HP of players
-     * @return True if the item deduct the player's health, false otherwise
+     * Creates a string representation of the health resource in the format:
+     *
+     * <p>'{Health Resource}:{Name}' </p>
+     *
+     * <p>without surrounding quotes and with {natural resource} replaced by
+     * the subtype of the item and {name} replaced with the item name
+     * For example: </p>
+     *
+     * <p>Health Resource:Wood </p>
+     *
+     * @return A string representation of the health resource.
      */
+    @Override
+    public String toString() {
+        return "" + subtype + ":" + name;
+    }
 
-/*
-    default Boolean getNotHealingPower(){
-
-    }*/
-    /**
-     * Returns whether or not the item could be exchanged
-     * @return True if the item could be exhanged, false otherwise
-     */
 
 
 }
