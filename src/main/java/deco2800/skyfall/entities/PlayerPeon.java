@@ -3,12 +3,17 @@ package deco2800.skyfall.entities;
 import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
+import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.tasks.MovementTask;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 
 public class PlayerPeon extends Peon implements TouchDownObserver {
+
+    private static final String WALK_NORMAL = "people_walk_normal";
+
+    private SoundManager soundManager = GameManager.get().getManager(SoundManager.class);
 
     public PlayerPeon(float row, float col, float speed) {
         super(row, col, speed);

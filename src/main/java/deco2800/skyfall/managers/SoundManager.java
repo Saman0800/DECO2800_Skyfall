@@ -1,10 +1,16 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 
 import javax.sound.sampled.*;
 
@@ -28,9 +34,53 @@ public class SoundManager extends AbstractManager {
     //Boolean mute control
     public static BooleanControl muteVol;
 
-    public void playSound(String soundName) {
-        Sound sound = Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + soundName));
-        sound.play(1);
+    private Music song;
+
+    private static Map<String, Sound> soundMap = new HashMap<>();
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SoundManager.class);
+
+    private static Map<String, Sound> soundLoops = new HashMap<>();
+
+
+    public SoundManager() {
+        LOGGER.info("soundManager song list");
+        song = null;
+        try {
+            soundMap.put("menu", Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + "menu.wav")));
+            soundMap.put("pick_up", Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + "pick_up.wav")));
+            soundMap.put("people_walk_normal", Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + "People Walk-Normal")));
+        } catch(Exception e) {
+            LOGGER.error("no song be found");
+        }
+    }
+
+    public boolean soundInMap(String soundName){
+        return soundMap.containsKey(soundName);
+    }
+
+    public static boolean playSound(String soundName) {
+        if (soundMap.containsKey(soundName)) {
+            Sound sound = soundMap.get(soundName);
+            sound.play(1);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static void loopSound(String soundName){
+        if (soundMap.containsKey(soundName)){
+            Sound sound = soundMap.get(soundName);
+            sound.play(1);
+            soundLoops.put(soundName, soundMap.get(soundName));
+        } else {
+            LOGGER.error("Can't loop the sound", soundName);
+        }
+    }
+
+    public static boolean checkLoop(String soundName){
+        return soundMap.containsKey(soundName);
     }
 
     /**
