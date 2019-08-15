@@ -89,6 +89,8 @@ public class InventoryTest {
         assertTrue(test.getAmount("Vine") == 1);
         assertTrue(test.getAmount("Sand") == 0);
 
+        //Add multiple??
+
 
     }
 
