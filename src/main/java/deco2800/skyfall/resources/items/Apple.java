@@ -34,19 +34,24 @@ public class Apple extends HealthResources implements Item {
     private String biome;
 
     //How many amount of healing power could be recovered
-    private Integer AmountOfHealingPower;
+    //private Integer AmountOfHealingPower;
 
     //Amount of food fullness increased
-    private Integer amoutoffoodeffect;
+    //private Integer amoutoffoodeffect;
 
     //How many Apple that players have;
-    private Integer NumberOfApple;
+    //private Integer NumberOfApple;
+
+    //whether or not the item impacts the player's food fullness
+     private Boolean hasFoodEffect;
+
 
 
     public Apple(){
-        this.biome = biome;
+        this.biome = "Forest";
         this.name ="Apple";
         this.colour ="red";
+        this.hasFoodEffect = true;
         //default constructor added for building inventory
     }
 
@@ -66,26 +71,37 @@ public class Apple extends HealthResources implements Item {
     }
 
     /**
+     * Returns whether or not the item impacts the player's food fullness
+     *
+     * @return True if the item impacts on the player's food fullness, false otherwise
+     */
+    public Boolean hasFoodEffect() {
+        return hasFoodEffect;
+    }
+
+    /**
      * Returns the integer of healing power
      *
      * @return the integer of healing power
      */
 
-    public Integer AmountOfHealingPower(Integer AmountOfRecoverHP){
+    /*public Integer AmountOfHealingPower(Integer AmountOfRecoverHP){
         AmountOfHealingPower = AmountOfRecoverHP;
 
         return AmountOfHealingPower;
     }
-
+    */
     /**
      * Returns Amount of food fullness increased
      *
      * @return Amount of food fullness increased
      */
-    public Integer amoutoffoodeffect(Integer Amountoffood) {
+    /*public Integer amoutoffoodeffect(Integer Amountoffood) {
         amoutoffoodeffect = Amountoffood;
         return amoutoffoodeffect;
     }
+
+     */
 
     /**
      * Returns the integer of number of Apple
@@ -93,7 +109,7 @@ public class Apple extends HealthResources implements Item {
      * @return the integer of number of Apple
      */
 
-    public Integer getNumberOfApple(Integer numberOfApple){
+    /*public Integer getNumberOfApple(Integer numberOfApple){
 
         NumberOfApple = numberOfApple;
 
@@ -101,6 +117,11 @@ public class Apple extends HealthResources implements Item {
             System.out.println("Out of Maximum number of Apple");
         }
         return NumberOfApple;
+    }*/
+
+    @Override
+    public String toString() {
+        return "" + subtype + ":" + name;
     }
 
 

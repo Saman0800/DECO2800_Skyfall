@@ -34,16 +34,20 @@ public class Aloe_Vera extends HealthResources implements Item {
     private String biome;
 
     //How many amount of healing power could be recovered
-    private Integer AmountOfHealingPower;
+    //private Integer AmountOfHealingPower;
 
     //How many AloeVeras that players have;
-    private Integer NumberOfAloeVera;
+    //private Integer NumberOfAloeVera;
+
+    //whether or not the item impacts the player's food fullness
+    private Boolean hasFoodEffect;
 
 
     public Aloe_Vera(){
-        this.biome = biome;
+        this.biome = "Forest";
         this.name = "Aloe_Vera";
         this.colour = "green";
+        this.hasFoodEffect = true;
         //default constructor added for building inventory
     }
 
@@ -63,24 +67,33 @@ public class Aloe_Vera extends HealthResources implements Item {
     }
 
     /**
+     * Returns whether or not the item impacts the player's food fullness
+     *
+     * @return True if the item impacts on the player's food fullness, false otherwise
+     */
+    public Boolean hasFoodEffect() {
+        return hasFoodEffect;
+    }
+
+    /**
      * Returns the integer of healing power
      *
      * @return the integer of healing power
      */
 
-    public Integer AmountOfHealingPower(Integer AmountOfRecoverHP){
+    /*public Integer AmountOfHealingPower(Integer AmountOfRecoverHP){
         AmountOfHealingPower = AmountOfRecoverHP;
 
         return AmountOfHealingPower;
     }
-
+    */
     /**
      * Returns the integer of number of Aloe Vera
      *
      * @return the integer of number of Aloe Vera
      */
 
-    public Integer getNumberOfAloeVera(Integer numberOfAloeVera){
+     /*public Integer getNumberOfAloeVera(Integer numberOfAloeVera){
 
         NumberOfAloeVera = numberOfAloeVera;
 
@@ -88,8 +101,13 @@ public class Aloe_Vera extends HealthResources implements Item {
             System.out.println("Out of Maximum number of Aloe Vera");
         }
         return NumberOfAloeVera;
-    }
+    }*/
 
+
+    @Override
+    public String toString() {
+        return "" + subtype + ":" + name;
+    }
 
 
 
