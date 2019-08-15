@@ -45,7 +45,7 @@ public class PoisonousMushroom extends HealthResources implements Item {
     private Integer NumberOfPoisonousMushroom;
 
     public PoisonousMushroom(){
-        this.biome = biome;
+        //this.biome = biome;
         this.colour ="black white";
         this.name ="PoisonousMushrrom";
         //default constructor added for building inventory

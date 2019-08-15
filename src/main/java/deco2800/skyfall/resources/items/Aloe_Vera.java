@@ -41,7 +41,7 @@ public class Aloe_Vera extends HealthResources implements Item {
 
 
     public Aloe_Vera(){
-        this.biome = biome;
+        //this.biome = biome;
         this.name = "Aloe_Vera";
         this.colour = "green";
         //default constructor added for building inventory
