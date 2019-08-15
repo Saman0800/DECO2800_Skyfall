@@ -34,14 +34,14 @@ public class Aloe_Vera extends HealthResources implements Item {
     private String biome;
 
     //How many amount of healing power could be recovered
-    private Integer AmountOfHealingPower;
+    //private Integer AmountOfHealingPower;
 
     //How many AloeVeras that players have;
     private Integer NumberOfAloeVera;
 
 
     public Aloe_Vera(){
-        this.biome = biome;
+        //this.biome = biome;
         this.name = "Aloe_Vera";
         this.colour = "green";
         //default constructor added for building inventory
@@ -68,12 +68,12 @@ public class Aloe_Vera extends HealthResources implements Item {
      * @return the integer of healing power
      */
 
-    public Integer AmountOfHealingPower(Integer AmountOfRecoverHP){
+    /*public Integer AmountOfHealingPower(Integer AmountOfRecoverHP){
         AmountOfHealingPower = AmountOfRecoverHP;
 
         return AmountOfHealingPower;
     }
-
+    */
     /**
      * Returns the integer of number of Aloe Vera
      *

@@ -36,16 +36,16 @@ public class PoisonousMushroom extends HealthResources implements Item {
     private String biome;
 
     //How many amount of healing power could be recovered
-    private Integer HealingDeducted;
+    //private Integer HealingDeducted;
 
     //Amount of food fullness increased
-    private Integer amoutoffoodeffect;
+    //private Integer amoutoffoodeffect;
 
     //How many PoisonousMushroom that players have;
     private Integer NumberOfPoisonousMushroom;
 
     public PoisonousMushroom(){
-        this.biome = biome;
+        //this.biome = biome;
         this.colour ="black white";
         this.name ="PoisonousMushrrom";
         //default constructor added for building inventory
@@ -72,21 +72,24 @@ public class PoisonousMushroom extends HealthResources implements Item {
      */
 
 
-    public Integer HealingDeducted(Integer AmountOfDeducted){
+    /*public Integer HealingDeducted(Integer AmountOfDeducted){
         HealingDeducted = AmountOfDeducted;
         return HealingDeducted;
     }
-
+    */
 
     /**
      * Returns Amount of food fullness increased
      *
      * @return Amount of food fullness increased
      */
+    /*
     public Integer amoutoffoodeffect(Integer Amountoffood) {
         amoutoffoodeffect = Amountoffood;
         return amoutoffoodeffect;
     }
+
+     */
 
 
 
