@@ -3,6 +3,9 @@ package deco2800.skyfall.managers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import deco2800.skyfall.entities.AgentEntity;
+import deco2800.skyfall.tasks.MovementTask;
+import deco2800.skyfall.util.HexVector;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
@@ -42,6 +45,12 @@ public class SoundManager extends AbstractManager {
 
     private static Map<String, Sound> soundLoops = new HashMap<>();
 
+    public static AgentEntity entity;
+    public static HexVector destination;
+
+    // Create a movement walk to check whether this action is completed or not
+    private static MovementTask movementWalk = new MovementTask(entity, destination);
+
 
     public SoundManager() {
         LOGGER.info("soundManager song list");
@@ -59,28 +68,48 @@ public class SoundManager extends AbstractManager {
         return soundMap.containsKey(soundName);
     }
 
-    public static boolean playSound(String soundName) {
+    public  boolean playSound(String soundName) {
         if (soundMap.containsKey(soundName)) {
             Sound sound = soundMap.get(soundName);
-            sound.play(1);
+            sound.play(4);
             return true;
         } else {
             return false;
         }
     }
 
-    public static void loopSound(String soundName){
-        if (soundMap.containsKey(soundName)){
-            Sound sound = soundMap.get(soundName);
-            sound.play(1);
-            soundLoops.put(soundName, soundMap.get(soundName));
-        } else {
+    public void loopSound(String soundName){
+        if (!soundMap.containsKey(soundName)){
             LOGGER.error("Can't loop the sound", soundName);
         }
+        Sound sound = soundMap.get(soundName);
+        sound.play(1);
+        soundLoops.put(soundName, soundMap.get(soundName));
     }
 
-    public static boolean checkLoop(String soundName){
+    /**
+     * Return the selected sound for corresponding action
+     */
+    public  String getTheSound(String soundName){
+        return soundName;
+    }
+
+    public  boolean checkLoop(String soundName){
         return soundMap.containsKey(soundName);
+    }
+
+    /**
+     * Check which action is taken and then select related sound
+     * and also check that action is completed or not
+     */
+    public  void selectMusic(String soundName){
+        String walkNormal = "people_walk_normal";
+        String pickUp = "pick_up";
+        if(playSound(soundName)){
+            if(getTheSound(soundName) == walkNormal && !movementWalk.isComplete()) {
+                loopSound(soundName);
+            }
+        }
     }
 
     /**

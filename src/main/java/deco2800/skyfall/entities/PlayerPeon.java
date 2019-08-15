@@ -11,9 +11,7 @@ import deco2800.skyfall.util.WorldUtil;
 
 public class PlayerPeon extends Peon implements TouchDownObserver {
 
-    private static final String WALK_NORMAL = "people_walk_normal";
-
-    private SoundManager soundManager = GameManager.get().getManager(SoundManager.class);
+    public SoundManager soundManager = GameManager.get().getManager(SoundManager.class);
 
     public PlayerPeon(float row, float col, float speed) {
         super(row, col, speed);
@@ -27,7 +25,8 @@ public class PlayerPeon extends Peon implements TouchDownObserver {
     public void onTick(long i) {
         if (task != null && task.isAlive()) {
             task.onTick(i);
-
+            //Play the walking sound when player is walking
+            soundManager.selectMusic("People Walk-Normal.wav");
             if (task.isComplete()) {
                 this.task = null;
             }
