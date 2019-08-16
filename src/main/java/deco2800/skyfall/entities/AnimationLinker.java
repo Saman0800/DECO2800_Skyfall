@@ -7,6 +7,10 @@ import deco2800.skyfall.managers.GameManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Links the Entity and Non-Looping animations for ease of use for the
+ * Renderer3D.
+ */
 public class AnimationLinker {
 
     private final String entityName;
@@ -18,11 +22,13 @@ public class AnimationLinker {
     private static AnimationManager animationManager = GameManager.get().getManager(AnimationManager.class);
     private final Logger logger = LoggerFactory.getLogger(AnimationLinker.class);
     private boolean isCompleted = false;
+
     public AnimationLinker(AnimationRole type, String animationName,
                            String entityName, int offset[]) {
         this.type = type;
         this.animationName = animationName;
         this.entityName = entityName;
+        
         this.animation = animationManager.getAnimation(animationName);
         if (animation == null) {
             logger.error(animationName + " for entity " + entityName + "not found.");
@@ -36,6 +42,15 @@ public class AnimationLinker {
         this.offset[0] = offset[0];
         this.offset[1] = offset[1];
     }
+     /**
+      * Increments the internal animation time
+     **/
+    public void incrTime(float incr) {
+        this.startingTime += incr;
+    }
+
+
+    /*GETTERS AND SETTERS*/
 
     public String getEntityName() {
         return entityName;
@@ -62,9 +77,6 @@ public class AnimationLinker {
         return startingTime;
     }
 
-    public void incrTime(float incr) {
-        this.startingTime += incr;
-    }
 
     public int[] getOffset() {
         return offset;

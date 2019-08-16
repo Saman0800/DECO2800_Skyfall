@@ -45,9 +45,18 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	private int renderOrder = 0;
 
 	//For animations
+	/**
+	 * Maps animations roles to animation names
+	 */
     protected Map<AnimationRole, String> animations;
-    protected AnimationRole movingAnimation = AnimationRole.NULL;
-    protected AnimationLinker movementLinker = null;
+	/**
+	 * Current direction that the entity is moving, set in MainCharacter or
+	 * Movement Task.
+	 */
+	protected AnimationRole movingAnimation = AnimationRole.NULL;
+	/**
+	 * Non-looping animations to keep track of run by the Renderer3D.
+	 */
 	protected Queue<AnimationLinker> toBeRun = new PriorityQueue<>();
 	/**
 	 * Constructor for an abstract entity
@@ -71,6 +80,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		this.setObjectName(ENTITY_ID_STRING);
         animations = new HashMap<>();
     }
+
+
 
 
 	/**
@@ -289,11 +300,21 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         this.movingAnimation = movingAnimation;
     }
 
-    public AnimationRole getMovingAnimation() {
+	/**
+	 * Current moving state of Entity
+	 * @return animation role.
+	 */
+	public AnimationRole getMovingAnimation() {
         return movingAnimation;
     }
 
-    public String getAnimationName(AnimationRole type) {
+	/**
+	 * Gets the associate animation with an animation role
+	 * @param type Animation role to get animation for
+	 * @return animation name
+	 */
+
+	public String getAnimationName(AnimationRole type) {
 	    if (animations.containsKey(type)) {
             String aniName = animations.get(type);
             return aniName;
@@ -301,17 +322,15 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	        return null;
     }
 
+	/**
+	 * Getter for the animation queue
+	 * @return Reference to queue.
+	 */
 	public Queue<AnimationLinker> getToBeRun() {
 		return toBeRun;
 	}
 
-	public AnimationLinker getMovementLinker() {
-		return movementLinker;
-	}
 
-	public void setMovementLinker(AnimationLinker movementLinker) {
-		this.movementLinker = movementLinker;
-	}
 }
 
 

@@ -1,6 +1,9 @@
 package deco2800.skyfall.entities;
 
 public enum AnimationRole {
+    /*
+
+     */
     NULL,
     MOVE_NORTH,
     MOVE_NORTH_EAST,

@@ -258,7 +258,7 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
         this.moveTowards(new HexVector(this.direction.x, this.direction.y));
         //System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction, this.getPosition(), this.direction.x - this.getCol(), this.direction.y - this.getRow());
         //System.out.printf("%s%n", this.currentSpeed);
-
+        //TODO: Check direction for animation here
     }
 
     @Override

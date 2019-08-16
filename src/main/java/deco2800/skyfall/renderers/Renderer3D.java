@@ -78,11 +78,6 @@ public class Renderer3D implements Renderer {
 			// Render each undiscovered area
 		}
 
-		//Animation<TextureRegion> test =  animationManager.getAnimation("mario_right");
-		//if(test != null) {
-        //    batch.draw(test.getKeyFrame(elapsedTime, true) ,x ,0);
-        //}
-        //x++;
 		renderAbstractEntities(batch, camera);
 
 		renderMouse(batch);
@@ -211,7 +206,6 @@ public class Renderer3D implements Renderer {
 				}
 			}
             runAnimations(batch, entity, entityWorldCoord);
-
             runMovementAnimations(batch, entity, entityWorldCoord, tex);
 		}
 
@@ -295,7 +289,14 @@ public class Renderer3D implements Renderer {
 	}
 
 
-	//Animations
+    /**
+     * Runs the movement animations for the current entity. If NULL draws a
+     * static texture
+     * @param batch Sprite batch to draw onto
+     * @param entity Entity who the animation is associate with
+     * @param entityWorldCoord Where on the game screen the entity is
+     * @param tex Texture to draw if
+     */
 	private void runMovementAnimations(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord, Texture tex) {
 		AnimationRole moveType = entity.getMovingAnimation();
 
@@ -324,6 +325,13 @@ public class Renderer3D implements Renderer {
 		}
 	}
 
+
+    /**
+     * Runs all other non-looping animations for the entity
+     * @param batch Sprite batch to draw onto
+     * @param entity Current entity
+     * @param entityWorldCoord Where to draw.
+     */
 	private void runAnimations(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord){
         Queue<AnimationLinker> q = entity.getToBeRun();
         int queueSize = q.size();
