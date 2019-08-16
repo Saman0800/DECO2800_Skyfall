@@ -285,19 +285,19 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
         switch (keycode) {
             case Input.Keys.W:
                 MOVE_UP = true;
-                movingAnimation = AnimationRole.MOVE_NORTH;
+                //movingAnimation = AnimationRole.MOVE_NORTH;
                 break;
             case Input.Keys.A:
                 MOVE_LEFT = true;
-                movingAnimation = AnimationRole.MOVE_WEST;
+                //movingAnimation = AnimationRole.MOVE_WEST;
                 break;
             case Input.Keys.S:
                 MOVE_DOWN = true;
-                movingAnimation = AnimationRole.MOVE_SOUTH;
+                //movingAnimation = AnimationRole.MOVE_SOUTH;
                 break;
             case Input.Keys.D:
                 MOVE_RIGHT = true;
-                movingAnimation = AnimationRole.MOVE_EAST;
+                //movingAnimation = AnimationRole.MOVE_EAST;
                 break;
         }
     }
@@ -316,14 +316,14 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
                 break;
             case Input.Keys.A:
                 MOVE_LEFT = false;
-                this.setTexture("__ANIMATION_mario_left:1");
+                //this.setTexture("__ANIMATION_mario_left:1");
                 break;
             case Input.Keys.S:
                 MOVE_DOWN = false;
                 break;
             case Input.Keys.D:
                 MOVE_RIGHT = false;
-                this.setTexture("__ANIMATION_mario_right:1");
+                //this.setTexture("__ANIMATION_mario_right:1");
                 break;
         }
     }

@@ -79,8 +79,8 @@ public class GameScreen implements Screen,KeyDownObserver {
 
 		/* Play BGM */
 		try {
-			SoundManager.backgroundGameMusic("resources/sounds/Forest Day.wav");
-			SoundManager.play();
+			//SoundManager.backgroundGameMusic("resources/sounds/Forest Day.wav");
+			//SoundManager.play();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -206,7 +206,7 @@ public class Renderer3D implements Renderer {
 							childTex.getHeight() * WorldUtil.SCALE_Y );				 
 				}
 			}
-            runAnimations(batch, entity, entityWorldCoord);
+            //runAnimations(batch, entity, entityWorldCoord);
             runMovementAnimations(batch, entity, entityWorldCoord, tex);
 		}
 
