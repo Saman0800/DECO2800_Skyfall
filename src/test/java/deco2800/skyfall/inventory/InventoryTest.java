@@ -9,7 +9,7 @@ import org.junit.Test;
 
 public class InventoryTest {
 
-    Inventory test;
+    private Inventory test;
 
     @Before
     public void initialize() {
@@ -19,21 +19,30 @@ public class InventoryTest {
         stoneList.add(new Stone());
         inv.put("Stone", stoneList);
 
-        test = new Inventory(inv);
+        List<String> qai = new ArrayList<>();
+        qai.add("Stone");
+
+        test = new Inventory(inv, qai);
 
     }
 
 
     @Test
     public void inventoryDefaultConstructorTest(){
-        //????
+        Inventory inv = new Inventory();
+
+        assertEquals(2, inv.getInventoryContents().size());
+        assertEquals((Integer)2, inv.getAmount("Stone"));
+        assertEquals((Integer)2, inv.getAmount("Wood"));
 
     }
 
 
     @Test
     public void inventoryCustomConstructorTest(){
-        //?????
+        assertEquals(1, test.getInventoryContents().size());
+        assertEquals((Integer)1, test.getAmount("Stone"));
+        assertEquals(1, test.getQuickAccess().size());
     }
 
     @Test
@@ -41,12 +50,12 @@ public class InventoryTest {
         Map<String, List<Item>> contents = test.getInventoryContents();
 
         assertNotNull(contents.get("Stone"));
-        assertTrue(contents.get("Stone").size() == 1);
+        assertEquals(1, contents.get("Stone").size());
 
         test.inventoryAdd(new Vine());
         assertNotNull(contents.get("Vine"));
-        assertTrue(contents.get("Vine").size() == 1);
-        assertTrue(contents.size() == 2);
+        assertEquals(1, contents.get("Vine").size());
+        assertEquals(2, contents.size());
 
 
         test.inventoryDrop("Stone");
@@ -61,58 +70,105 @@ public class InventoryTest {
             fail();
 
         }catch(UnsupportedOperationException e){
-
+            //Unable to modify returned inventory map as expected
         }
 
     }
 
     @Test
-    public void getAmountsTest(){
+    public void getAmountsAddDropTest(){
 
-        assertTrue(test.getInventoryAmounts().size() == 1);
-        assertTrue(test.getInventoryAmounts().get("Stone") == 1);
-        assertTrue(test.getAmount("Stone") == 1);
+        assertEquals(1, test.getInventoryAmounts().size());
+        assertEquals((Integer)1, test.getInventoryAmounts().get("Stone"));
+        assertEquals((Integer)1, test.getAmount("Stone"));
 
         test.inventoryDrop("Stone");
 
-        assertTrue(test.getInventoryAmounts().size() == 0);
-        assertTrue(test.getAmount("Stone") == 0);
+        assertEquals(0, test.getInventoryAmounts().size());
+        assertEquals((Integer)0,test.getAmount("Stone"));
 
         test.inventoryAdd(new Wood());
         test.inventoryAdd(new Wood());
         test.inventoryAdd(new Vine());
         test.inventoryAdd(new Stone());
+        test.inventoryAdd(new Stone());
+        test.inventoryAdd(new Sand());
+        test.inventoryAdd(new Sand());
+        test.inventoryAdd(new Sand());
 
-        assertTrue(test.getInventoryAmounts().size() == 3);
-        assertTrue(test.getAmount("Stone") == 1);
-        assertTrue(test.getAmount("Wood") == 2);
-        assertTrue(test.getAmount("Vine") == 1);
-        assertTrue(test.getAmount("Sand") == 0);
+        assertEquals(4, test.getInventoryAmounts().size());
+        assertEquals((Integer) 2, test.getAmount("Stone"));
+        assertEquals((Integer) 2, test.getAmount("Wood"));
+        assertEquals((Integer)1, test.getAmount("Vine"));
+        assertEquals((Integer)3, test.getAmount("Sand"));
+        assertEquals((Integer)0, test.getAmount("Apple"));
 
-        //Add multiple??
+        assertTrue(test.inventoryDrop("Stone") instanceof Stone);
+        assertEquals((Integer)1, test.getAmount("Stone"));
+        test.inventoryDrop("Stone");
+        assertEquals((Integer)0, test.getAmount("Stone"));
+        assertNull(test.inventoryDrop("Stone"));
 
+        assertEquals(3, test.getInventoryAmounts().size());
+        assertEquals((Integer) 0, test.getAmount("Stone"));
 
+        test.inventoryDropMultiple("Wood", 2);
+        assertEquals(2, test.getInventoryAmounts().size());
+        assertEquals((Integer)0, test.getAmount("Wood"));
+
+        test.inventoryDropMultiple("Sand", 2);
+        assertEquals(2, test.getInventoryAmounts().size());
+        assertEquals((Integer)1, test.getAmount("Sand"));
+
+        assertNull(test.inventoryDropMultiple("Sand", 2));
+        assertNull(test.inventoryDropMultiple("Apple", 3));
     }
 
     @Test
     public void toStringTest(){
-
-    }
-
-    @Test
-    public void inventoryAddTest(){
-
+        String toStringTest = "Inventory Contents " + test.getInventoryAmounts().toString();
+        assertEquals(test.toString(), toStringTest);
     }
 
 
     @Test
-    public void inventoryDropTest(){
+    public void QuickAccessTest(){
+
+        assertEquals(1, test.getQuickAccess().size());
+        assertEquals((Integer)1, test.getQuickAccess().get("Stone"));
+
+        test.quickAccessAdd("Apple");
+
+        assertEquals(1, test.getQuickAccess().size());
+        assertEquals((Integer)1, test.getQuickAccess().get("Stone"));
+
+        test.inventoryAdd(new Wood());
+        test.inventoryAdd(new Wood());
+        test.inventoryAdd(new Vine());
+        test.inventoryAdd(new Stone());
+        test.inventoryAdd(new Stone());
+        test.inventoryAdd(new Sand());
+        test.inventoryAdd(new Apple());
+        test.inventoryAdd(new Berry());
+        test.inventoryAdd(new Metal());
+
+        test.quickAccessAdd("Wood");
+        test.quickAccessAdd("Vine");
+
+        assertEquals(3, test.getQuickAccess().size());
+        assertEquals((Integer)2, test.getQuickAccess().get("Wood"));
+        assertEquals((Integer)1, test.getQuickAccess().get("Vine"));
+        assertEquals((Integer)3, test.getQuickAccess().get("Stone"));
+
+        test.quickAccessAdd("Sand");
+        test.quickAccessAdd("Apple");
+        test.quickAccessAdd("Berry");
+
+        assertEquals(6, test.getQuickAccess().size());
+
+        test.quickAccessAdd("Metal");
+        assertEquals(6, test.getQuickAccess().size());
+        assertFalse(test.getQuickAccess().containsKey("Metal"));
 
     }
-
-    @Test
-    public void inventoryDropMultipleTest(){
-
-    }
-
 }

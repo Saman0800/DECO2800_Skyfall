@@ -40,14 +40,7 @@ public class Aloe_VeraTest{
     public void isCarryable2() {
         assertTrue(aloe_vera.isCarryable());
     }
-
-    /**
-     * Ensure that aloe vera is classified as food effect
-     */
-    @Test
-    public void hasFoodEffect() {
-        assertTrue(aloe_vera.hasFoodEffect());
-    }
+    
 
     /**
      * Ensure that the correct subtype "Health Resource" is returned when

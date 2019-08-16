@@ -40,14 +40,14 @@ public class Aloe_Vera extends HealthResources implements Item {
     //private Integer NumberOfAloeVera;
 
     //whether or not the item impacts the player's food fullness
-    private Boolean hasFoodEffect;
+    //private Boolean hasFoodEffect;
 
 
     public Aloe_Vera(){
         this.biome = "Forest";
         this.name = "Aloe_Vera";
         this.colour = "green";
-        this.hasFoodEffect = true;
+        //this.hasFoodEffect = true;
         //default constructor added for building inventory
     }
 
@@ -66,14 +66,7 @@ public class Aloe_Vera extends HealthResources implements Item {
         return biome;
     }
 
-    /**
-     * Returns whether or not the item impacts the player's food fullness
-     *
-     * @return True if the item impacts on the player's food fullness, false otherwise
-     */
-    public Boolean hasFoodEffect() {
-        return hasFoodEffect;
-    }
+
 
     /**
      * Returns the integer of healing power
