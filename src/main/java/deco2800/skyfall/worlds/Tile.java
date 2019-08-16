@@ -194,7 +194,7 @@ public class Tile{
 		this.index = indexValue;		
 	}
 
-	public boolean isObstructed() {
+	public boolean getObstructed() {
 		return obstructed;
 	}
 

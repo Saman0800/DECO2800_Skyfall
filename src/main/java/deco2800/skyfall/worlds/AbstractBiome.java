@@ -57,10 +57,6 @@ public abstract class AbstractBiome {
         tiles.add(tile);
     }
 
-
-
-
-
     /**
      * Sets all the textures within a biome
      */

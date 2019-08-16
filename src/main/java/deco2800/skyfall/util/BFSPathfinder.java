@@ -50,7 +50,7 @@ public class BFSPathfinder extends Pathfinder {
 			}
 			
 			for (Tile child : root.getNeighbours().values()) {
-				if (closedSet.contains(child) || queue.contains(child) || child.isObstructed()) {
+				if (closedSet.contains(child) || queue.contains(child) || child.getObstructed()) {
 					continue;
 				}
 				path.put(child, root);

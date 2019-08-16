@@ -91,7 +91,7 @@ public class WorldUtil {
 		if (GameManager.get().getWorld() == null || GameManager.get().getWorld().getTile(col, row) == null)
 			return false;
 
-		return !GameManager.get().getWorld().getTile(col, row).isObstructed();
+		return !GameManager.get().getWorld().getTile(col, row).getObstructed();
 	}
     
   	public static boolean areCoordinatesOffScreen(float hexX, float hexY, OrthographicCamera camera) {

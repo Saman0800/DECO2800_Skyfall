@@ -100,6 +100,6 @@ public class LongGrassTest {
         assertTrue("Tile has had a rock placed on it with the tile construct thus the tile should have a parent.",
                 tile2.hasParent());
         assertTrue("Tile has had a rock placed on it with the tile construct thus the tile should be obstructed",
-                tile2.isObstructed());
+                tile2.getObstructed());
     }
 }

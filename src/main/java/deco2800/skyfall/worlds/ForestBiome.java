@@ -4,6 +4,9 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Forest Biome
+ */
 public class ForestBiome extends AbstractBiome {
     private ArrayList<String> textures = new ArrayList<>();
     private Random randomGen;
@@ -31,6 +34,7 @@ public class ForestBiome extends AbstractBiome {
         for (Tile tile : getTiles()) {
             int randInt = randomGen.nextInt(textures.size());
             tile.setTexture(textures.get(randInt));
+            System.out.println(tile.getNeighbours());
         }
     }
 }
