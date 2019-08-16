@@ -7,7 +7,7 @@ import java.util.*;
 public class InventoryManager extends TickableManager {
 
     //Map that stores the inventory contents
-    private Map<String, List<Item>> inventoryContents;
+    private Map<String, List<Item>> inventory;
 
     //List that stores the names of items in quick access inventory
     private List<String> quickAccess;
@@ -17,16 +17,16 @@ public class InventoryManager extends TickableManager {
 
     @Override
     public void onTick(long i) {
-
+        // TODO Auto-generated method stub
     }
 
 
     /***
-     * Creates an inventory and adds default items to the inventory, as well
-     * as initialises an empty quick access inventory.
+     * Creates Inventory Manager and adds default items to the inventory (2x Stone, 2x Wood),
+     * as well as initialises an empty quick access inventory.
      */
     public InventoryManager(){
-        this.inventoryContents = new HashMap<>();
+        this.inventory = new HashMap<>();
         this.quickAccess = new ArrayList<>();
 
         //Add default items to inventory
@@ -38,7 +38,7 @@ public class InventoryManager extends TickableManager {
 
 
     /***
-     * Create an inventory and adds a custom map of items to the inventory.
+     * Create an Inventory Manager and adds a custom map of items to the inventory.
      * Creates a quick access inventory and adds items to it.
      *
      * @param inventoryContents a Map<String, List<Item>> where String is the item's name and List<Item>
@@ -47,10 +47,10 @@ public class InventoryManager extends TickableManager {
      */
 
     public InventoryManager(Map<String, List<Item>> inventoryContents, List<String> quickAccessContents){
-        this.inventoryContents = new HashMap<>();
+        this.inventory = new HashMap<>();
         this.quickAccess = new ArrayList<>();
 
-        this.inventoryContents.putAll(inventoryContents);
+        this.inventory.putAll(inventoryContents);
 
         for (String quickAccessContent : quickAccessContents) {
             this.quickAccessAdd(quickAccessContent);
@@ -63,7 +63,7 @@ public class InventoryManager extends TickableManager {
      * @return a copy of the inventory
      */
     public Map<String, List<Item>> getInventoryContents(){
-        return Collections.unmodifiableMap(this.inventoryContents);
+        return Collections.unmodifiableMap(this.inventory);
     }
 
     /***
@@ -74,7 +74,7 @@ public class InventoryManager extends TickableManager {
 
         Map<String, Integer> inventoryAmounts = new HashMap<>();
 
-        for (Map.Entry<String, List<Item>> entry : this.inventoryContents.entrySet()) {
+        for (Map.Entry<String, List<Item>> entry : this.inventory.entrySet()) {
             Integer amount = entry.getValue().size();
             inventoryAmounts.put(entry.getKey(), amount);
         }
@@ -158,16 +158,16 @@ public class InventoryManager extends TickableManager {
     public void inventoryAdd(Item item){
         String name = item.getName();
 
-        if(this.inventoryContents.get(name) != null){
+        if(this.inventory.get(name) != null){
 
-            List<Item> itemsList = this.inventoryContents.get(name);
+            List<Item> itemsList = this.inventory.get(name);
             itemsList.add(item);
-            this.inventoryContents.put(name, itemsList);
+            this.inventory.put(name, itemsList);
 
         }else{
             List<Item> itemsList = new ArrayList<>();
             itemsList.add(item);
-            this.inventoryContents.put(name, itemsList);
+            this.inventory.put(name, itemsList);
 
         }
     }
@@ -183,19 +183,19 @@ public class InventoryManager extends TickableManager {
      */
     public Item inventoryDrop(String itemName){
 
-        if(this.inventoryContents.get(itemName) != null){
-            Integer num = this.inventoryContents.get(itemName).size();
+        if(this.inventory.get(itemName) != null){
+            Integer num = this.inventory.get(itemName).size();
 
             if(num == 1){
-                Item item = this.inventoryContents.get(itemName).get(0);
-                this.inventoryContents.remove(itemName);
+                Item item = this.inventory.get(itemName).get(0);
+                this.inventory.remove(itemName);
                 this.quickAccessRemove((itemName));
                 return item;
             } else if(num > 1){
-                List<Item> itemsList = this.inventoryContents.get(itemName);
+                List<Item> itemsList = this.inventory.get(itemName);
                 Item item = itemsList.get(num-1);
                 itemsList.remove(num-1);
-                this.inventoryContents.put(itemName, itemsList);
+                this.inventory.put(itemName, itemsList);
                 return item;
             }
 
@@ -217,10 +217,10 @@ public class InventoryManager extends TickableManager {
      */
     public List<Item> inventoryDropMultiple(String itemName, Integer amount){
         List<Item> itemsDropped = new ArrayList<>();
-        List<Item> itemsList = this.inventoryContents.get(itemName);
+        List<Item> itemsList = this.inventory.get(itemName);
 
         if(itemsList != null){
-            int num = this.inventoryContents.get(itemName).size();
+            int num = this.inventory.get(itemName).size();
 
             if(amount < num){
 
@@ -230,11 +230,11 @@ public class InventoryManager extends TickableManager {
                     itemsList.remove(num-i);
                 }
 
-                this.inventoryContents.put(itemName, itemsList);
+                this.inventory.put(itemName, itemsList);
 
             } else if(amount == num){
                 itemsDropped.addAll(itemsList);
-                this.inventoryContents.remove(itemName);
+                this.inventory.remove(itemName);
                 this.quickAccessRemove((itemName));
 
 
