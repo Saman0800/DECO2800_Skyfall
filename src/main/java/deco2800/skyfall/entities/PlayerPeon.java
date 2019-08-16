@@ -1,46 +1,142 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
+import deco2800.skyfall.Tickable;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
-import deco2800.skyfall.observers.TouchDownObserver;
-import deco2800.skyfall.tasks.MovementTask;
+import deco2800.skyfall.observers.KeyDownObserver;
+import deco2800.skyfall.observers.KeyUpObserver;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
 
-public class PlayerPeon extends Peon implements TouchDownObserver {
+public class PlayerPeon extends Peon implements KeyDownObserver, KeyUpObserver, Tickable {
 
-    public PlayerPeon(float col, float row, float speed, String name,
-                      int health) {
+
+    protected Vector2 direction;
+    protected float currentSpeed;
+    private boolean MOVE_UP = false;
+    private boolean MOVE_LEFT = false;
+    private boolean MOVE_RIGHT = false;
+    private boolean MOVE_DOWN = false;
+    /**
+     * PlayerPeon Constructor
+     *
+     * @param row the row position in the world
+     * @param col the column position in the world
+     * @param speed the player's speed
+     */
+    public PlayerPeon(float row, float col, float speed, String name, int health) {
         super(row, col, speed, name, health);
+        this.direction = new Vector2(row, col);
+        this.direction.limit2(0.05f);
+        System.out.println(speed);
+
         this.setObjectName("playerPeon");
         GameManager.getManagerFromInstance(InputManager.class)
-                .addTouchDownListener(this);
+                .addKeyDownListener(this);
+        GameManager.getManagerFromInstance(InputManager.class)
+                .addKeyUpListener(this);
+        this.configure_animations();
     }
 
+    private void configure_animations() {
+        animations.put(AnimationRole.MOVE_NORTH, "mario_right");
+        animations.put(AnimationRole.MOVE_NORTH_EAST, "mario_right");
+        animations.put(AnimationRole.MOVE_NORTH_WEST, "mario_left");
+        animations.put(AnimationRole.MOVE_EAST, "mario_right");
+        animations.put(AnimationRole.MOVE_WEST, "mario_left");
+
+        animations.put(AnimationRole.MOVE_SOUTH, "mario_left");
+        animations.put(AnimationRole.MOVE_SOUTH_EAST, "mario_right");
+        animations.put(AnimationRole.MOVE_SOUTH_WEST, "mario_left");
+    }
+
+    /**
+     * Calculates the new movement point depending on what movement keys are held down.
+     */
+    private void updateMoveVector() {
+        if (MOVE_UP){this.direction.add(0.0f, speed);}
+        if (MOVE_LEFT){this.direction.sub(speed, 0.0f);}
+        if (MOVE_DOWN){this.direction.sub(0.0f, speed);}
+        if (MOVE_RIGHT){this.direction.add(speed, 0.0f);}
+    }
+
+    /**
+     *
+     * @param i
+     */
 	@Override
-    public void onTick(long i) {
+    public void onTick(long i){
+        updateMoveVector();
+        this.setCurrentSpeed(this.direction.len());
+        this.moveTowards(new HexVector(this.direction.x, this.direction.y));
+        //System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction, this.getPosition(), this.direction.x - this.getCol(), this.direction.y - this.getRow());
+        //System.out.printf("%s%n", this.currentSpeed);
 
-        if (task != null && task.isAlive()) {
-            task.onTick(i);
-
-            if (task.isComplete()) {
-                this.task = null;
-
-            }
-        }
     }
 
     @Override
-    public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
-        // only allow left clicks to move player
-        if (button != 0) {
-            return;
+    public void moveTowards(HexVector destination) {
+        position.moveToward(destination, this.currentSpeed);
+    }
+
+    /**
+     * Sets the Player's current movement speed.
+     *
+     * @param cSpeed the speed for the player to currently move at.
+     */
+    private void setCurrentSpeed(float cSpeed){
+        this.currentSpeed = cSpeed;
+    }
+
+    /**
+     * Sets the appropriate movement flags to true on keyDown
+     *
+     * @param keycode the key being pressed
+     */
+    @Override
+    public void notifyKeyDown(int keycode) {
+        switch (keycode) {
+            case Input.Keys.W:
+                MOVE_UP = true;
+                movingAnimation = AnimationRole.MOVE_NORTH;
+                break;
+            case Input.Keys.A:
+                MOVE_LEFT = true;
+                movingAnimation = AnimationRole.MOVE_WEST;
+                break;
+            case Input.Keys.S:
+                MOVE_DOWN = true;
+                movingAnimation = AnimationRole.MOVE_SOUTH;
+                break;
+            case Input.Keys.D:
+                MOVE_RIGHT = true;
+                movingAnimation = AnimationRole.MOVE_EAST;
+                break;
         }
+    }
 
-        float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
-        float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
-
-        this.task = new MovementTask(this, new HexVector (clickedPosition[0],clickedPosition[1]));
+    /**
+     * Sets the appropriate movement flags to false on keyUp
+     *
+     * @param keycode the key being released
+     */
+    @Override
+    public void notifyKeyUp(int keycode) {
+        movingAnimation = AnimationRole.NULL;
+        switch(keycode){
+            case Input.Keys.W:
+                MOVE_UP = false;
+                break;
+            case Input.Keys.A:
+                MOVE_LEFT = false;
+                break;
+            case Input.Keys.S:
+                MOVE_DOWN = false;
+                break;
+            case Input.Keys.D:
+                MOVE_RIGHT = false;
+                break;
+        }
     }
 }
