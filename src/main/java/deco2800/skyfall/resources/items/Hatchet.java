@@ -54,6 +54,12 @@ public class Hatchet extends ManufacturedResources implements Item {
         return this.position;
     }
 
+    /**
+     * A getter method to check if it's carryable.
+     * @return true if carryable, false otherwise.
+     */
+
+
      /**
      * Creates a string representation Hatchet
      * @return hatchet name and it's subtype.
