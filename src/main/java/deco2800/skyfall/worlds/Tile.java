@@ -1,6 +1,9 @@
 package deco2800.skyfall.worlds;
 
+import com.badlogic.gdx.utils.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -16,6 +19,7 @@ import deco2800.skyfall.util.HexVector;
 public class Tile{
 	private static int nextID = 0;
 
+
 	private static int getNextID() {
 		return nextID++;
 	}
@@ -26,10 +30,13 @@ public class Tile{
 	@Expose
     private String texture;
     private HexVector coords;
-    
-
+    //Class that stores the tiles biome and its texture
     private StaticEntity parent;
-	
+    //The Biome the tile is in
+    private AbstractBiome biome;
+	//Determines whether a tile can be built on, main use is for the construction team
+	private boolean isBuildable;
+
 	@Expose
     private boolean obstructed = false;
     
@@ -44,23 +51,28 @@ public class Tile{
     static final int[] NORTHS = {NORTH_WEST, NORTH, NORTH_EAST};
     static final int[] SOUTHS = {SOUTH_WEST, SOUTH, SOUTH_EAST};
 
+
     private transient Map<Integer,Tile> neighbours;
-    
-    @Expose
+
+
+	@Expose
     private int index = -1;
 
     @Expose
     private int tileID = 0;
-    
-    public Tile(String texture) {
-        this(texture, 0, 0);
+
+    public Tile(AbstractBiome biome) {
+        this(biome, 0, 0);
     }
 
-    public Tile(String texture, float col, float row) {
-        this.texture = texture;
+    public Tile(AbstractBiome biome, float col, float row) {
         coords = new HexVector(col, row);
         this.neighbours = new HashMap<Integer,Tile>();
         this.tileID = Tile.getNextID();
+        this.biome = biome;
+
+        //Default add the tile to the biome it gives it
+        biome.addTile(this);
     }
 
     public Tile() {
@@ -131,6 +143,8 @@ public class Tile{
 	}
 
 	public void setTexture(String texture) {
+        setObstructed(checkObstructured(texture));
+		setIsBuildable(checkIsBuildable(texture));
 		this.texture = texture;
 	}
 
@@ -186,7 +200,17 @@ public class Tile{
 
 	public void setObstructed(boolean b) {
 		obstructed = b;
-		
+	}
+
+	public boolean checkObstructured(String texture){
+		ArrayList<String> obstructables = new ArrayList<>();
+		obstructables.add("water");
+		for (String obstructable : obstructables){
+			if (texture.contains(obstructable)){
+				return true;
+			}
+		}
+		return false;
 	}
 
 
@@ -197,4 +221,37 @@ public class Tile{
 	public void setRow(float row) {
 		this.coords.setRow(row);
 	}
+
+	/**
+	 * Used to determine whether a tile can be built on
+	 * @return false if the tile cannot be built on, and true if it can be built on
+	 */
+	public boolean getIsBuildable() {
+		return isBuildable;
+	}
+
+	/**
+	 * Sets the isBuildable value
+	 * @param isBuildable true if it can be built on, false if not
+	 */
+	public void setIsBuildable(boolean isBuildable){
+    	this.isBuildable = isBuildable;
+	}
+
+	private boolean checkIsBuildable(String texture){
+		ArrayList<String> buildables = new ArrayList<>();
+		buildables.add("water");
+		buildables.add("sand");
+		for (String obstructable : buildables){
+			if (texture.contains(obstructable)){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public AbstractBiome getBiome(){
+		return biome;
+	}
+
 }
