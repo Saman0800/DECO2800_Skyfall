@@ -3,27 +3,32 @@ package deco2800.skyfall.inventory;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.*;
 import java.util.*;
-import java.lang.*;
 
 
 /***
- * A player's inventory within the game, stored as mappings between
- * the item type name String and a list of items. Player is able to add to, remove
- * from and get inventory contents.
+ * A player's inventory within the game. Includes full inventory, stored as mappings between
+ * the item type name String and a list of items, and quick access which visualises amounts of 6 items
+ * of player's choice. Player is able to add to and remove from inventory and quick access inventory, as
+ * well as get items in the inventory and quick access inventory.
  */
 public class Inventory {
     //Map that stores the inventory contents
-    private Map<String, List<Item>> inventory;
+    private Map<String, List<Item>> inventoryContents;
 
-    //Quick Access Inventory
-    private List<Item> quickAccessInventory;
+    //List that stores the names of items in quick access inventory
+    private List<String> quickAccess;
+
+    //Maximum size of quick access inventory
+    private static final int QA_MAX_SIZE = 6;
 
 
     /***
-     * Create an inventory and add default items to the inventory.
+     * Create an inventory and add default items to the inventory, as well
+     * as an empty quick access inventory.
      */
     public Inventory(){
-        this.inventory = new HashMap<String, List<Item>>();
+        this.inventoryContents = new HashMap<>();
+        this.quickAccess = new ArrayList<>();
 
         //Add default items to inventory
         this.inventoryAdd(new Stone());
@@ -34,14 +39,23 @@ public class Inventory {
 
 
     /***
-     * Create an inventory and add a custom map of items to the inventory.
+     * Create an inventory and adds a custom map of items to the inventory.
+     * Creates a quick access inventory and adds items to it.
+     *
      * @param inventoryContents a Map<String, List<Item>> where String is the item's name and List<Item>
-     * is a list of objects that implement the Item interface.
+     *                          is a list of objects that implement the Item interface.
+     * @param quickAccessContents a List<String> where String is the name of item in quick access inventory
      */
-    public Inventory(Map<String, List<Item>> inventoryContents){
-        this.inventory = new HashMap<String, List<Item>>();
 
-        this.inventory.putAll(inventoryContents);
+    public Inventory(Map<String, List<Item>> inventoryContents, List<String> quickAccessContents){
+        this.inventoryContents = new HashMap<>();
+        this.quickAccess = new ArrayList<>();
+
+        this.inventoryContents.putAll(inventoryContents);
+
+        for (String quickAccessContent : quickAccessContents) {
+            this.quickAccessAdd(quickAccessContent);
+        }
     }
 
 
@@ -50,7 +64,7 @@ public class Inventory {
      * @return a copy of the inventory
      */
     public Map<String, List<Item>> getInventoryContents(){
-        return Collections.unmodifiableMap(this.inventory);
+        return Collections.unmodifiableMap(this.inventoryContents);
     }
 
     /***
@@ -59,15 +73,55 @@ public class Inventory {
      */
     public Map<String, Integer> getInventoryAmounts(){
 
-        Map<String, Integer> inventoryAmounts = new HashMap<String, Integer>();
+        Map<String, Integer> inventoryAmounts = new HashMap<>();
 
-        for (String key : this.inventory.keySet()) {
-            Integer amount = this.inventory.get(key).size();
-            inventoryAmounts.put(key, amount);
+        for (Map.Entry<String, List<Item>> entry : this.inventoryContents.entrySet()) {
+            Integer amount = entry.getValue().size();
+            inventoryAmounts.put(entry.getKey(), amount);
         }
 
         return inventoryAmounts;
     }
+
+    /***
+     * Get the items in the quick access inventory.
+     * @return a map of the items in the quick access inventory, and the number of each item
+     */
+    public Map<String, Integer> getQuickAccess(){
+
+        Map<String, Integer> qai = new HashMap<>();
+
+        for (String item : quickAccess) {
+            qai.put(item, getAmount(item));
+        }
+
+        return qai;
+    }
+
+
+    /***
+     * Add an item type from the full inventory to the quick access inventory.
+     * Ensures that the item being added to quick access inventory is in full inventory
+     * and that quick access inventory doesn't contain more than 6 item type.
+     * @param item the String name of the item to add to the quick access inventory.
+     */
+    public void quickAccessAdd(String item){
+        if((this.getAmount(item) > 0) && (this.quickAccess.size() < QA_MAX_SIZE)){
+            this.quickAccess.add(item);
+        } else{
+            System.out.println("Sorry I can't add that!");
+        }
+    }
+
+
+    /***
+     * Remove an item type from the quick access inventory.
+     * @param item the String name of the item to remove from quick access.
+     */
+    public void quickAccessRemove(String item){
+        this.quickAccess.remove(item);
+    }
+
 
 
     /***
@@ -88,7 +142,7 @@ public class Inventory {
 
 
     /***
-     * Get the inventory as a string.
+     * Get the full inventory as a string.
      * @return a string representation of the inventory.
      */
     @Override
@@ -99,46 +153,50 @@ public class Inventory {
 
 
     /***
-     * Add an item to the inventory.
+     * Add an item to the full inventory.
      * @param item the item to add to the inventory, implements Item interface.
      */
     public void inventoryAdd(Item item){
         String name = item.getName();
 
-        if(this.inventory.get(name) != null){
+        if(this.inventoryContents.get(name) != null){
 
-            List<Item> itemsList = this.inventory.get(name);
+            List<Item> itemsList = this.inventoryContents.get(name);
             itemsList.add(item);
-            this.inventory.put(name, itemsList);
+            this.inventoryContents.put(name, itemsList);
 
         }else{
             List<Item> itemsList = new ArrayList<>();
             itemsList.add(item);
-            this.inventory.put(name, itemsList);
+            this.inventoryContents.put(name, itemsList);
 
         }
     }
 
 
+
+
     /***
-     * Removes an item from the inventory and returns it.
+     * Removes an item from the inventory and returns it. If the item is the last of a specific type
+     * present in the inventory (and quick access inventory) it is also removed from these stores.
      * @param itemName the String name of the item to drop from the inventory.
      * @return the Item dropped from the inventory
      */
     public Item inventoryDrop(String itemName){
 
-        if(this.inventory.get(itemName) != null){
-            Integer num = this.inventory.get(itemName).size();
+        if(this.inventoryContents.get(itemName) != null){
+            Integer num = this.inventoryContents.get(itemName).size();
 
             if(num == 1){
-                Item item = this.inventory.get(itemName).get(0);
-                this.inventory.remove(itemName);
+                Item item = this.inventoryContents.get(itemName).get(0);
+                this.inventoryContents.remove(itemName);
+                this.quickAccessRemove((itemName));
                 return item;
             } else if(num > 1){
-                List<Item> itemsList = this.inventory.get(itemName);
+                List<Item> itemsList = this.inventoryContents.get(itemName);
                 Item item = itemsList.get(num-1);
                 itemsList.remove(num-1);
-                this.inventory.put(itemName, itemsList);
+                this.inventoryContents.put(itemName, itemsList);
                 return item;
             }
 
@@ -151,16 +209,19 @@ public class Inventory {
 
     /***
      * Drop multiple items of the same type from the inventory, and return as a list.
+     * If these items are the last of a specific type present in the inventory
+     * (and quick access inventory) the type is also removed from these stores.
+     *
      * @param itemName the string name of the item to drop from the inventory
      * @param amount the number of the item type to drop from the inventory
      * @return a list of the items dropped from the inventory
      */
     public List<Item> inventoryDropMultiple(String itemName, Integer amount){
-        List<Item> itemsDropped = new ArrayList<Item>();
-        List<Item> itemsList = this.inventory.get(itemName);
+        List<Item> itemsDropped = new ArrayList<>();
+        List<Item> itemsList = this.inventoryContents.get(itemName);
 
         if(itemsList != null){
-            Integer num = this.inventory.get(itemName).size();
+            int num = this.inventoryContents.get(itemName).size();
 
             if(amount < num){
 
@@ -170,13 +231,15 @@ public class Inventory {
                     itemsList.remove(num-i);
                 }
 
-                this.inventory.put(itemName, itemsList);
+                this.inventoryContents.put(itemName, itemsList);
 
             } else if(amount == num){
                 itemsDropped.addAll(itemsList);
-                this.inventory.remove(itemName);
+                this.inventoryContents.remove(itemName);
+                this.quickAccessRemove((itemName));
 
-            } else if(amount > num){
+
+            } else {
                 System.out.println("You don't have that many " + itemName + "s!");
                 itemsDropped = null;
             }
