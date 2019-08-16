@@ -1,15 +1,12 @@
 package deco2800.skyfall.renderers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import deco2800.skyfall.entities.*;
-import deco2800.skyfall.managers.AnimationManager;
-import deco2800.skyfall.managers.InputManager;
+import deco2800.skyfall.managers.*;
 import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +16,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.tasks.AbstractTask;
 import deco2800.skyfall.tasks.MovementTask;
 import deco2800.skyfall.util.HexVector;
@@ -49,6 +44,7 @@ public class Renderer3D implements Renderer {
 
 	private TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
     private AnimationManager animationManager = GameManager.getManagerFromInstance(AnimationManager.class);
+    private Queue<AnimationLinker> animationQueue = new PriorityQueue<>();
 
 	private float elapsedTime = 0;
 	/**
@@ -214,7 +210,9 @@ public class Renderer3D implements Renderer {
 							childTex.getHeight() * WorldUtil.SCALE_Y );				 
 				}
 			}
-			runMovementAnimations(batch, entity, entityWorldCoord, tex);
+            runAnimations(batch, entity, entityWorldCoord);
+
+            runMovementAnimations(batch, entity, entityWorldCoord, tex);
 		}
 
 		GameManager.get().setEntitiesRendered(entities.size() - entitiesSkipped);
@@ -317,12 +315,46 @@ public class Renderer3D implements Renderer {
 
 					renderAbstractEntity(batch, entity, entityWorldCoord, tex);
 				} else {
-					float width = runAnimation.getKeyFrame(elapsedTime).getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X;
-					float height = runAnimation.getKeyFrame(elapsedTime).getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y;
-					batch.draw(runAnimation.getKeyFrame(elapsedTime, true) ,entityWorldCoord[0] ,entityWorldCoord[1], width, height);
+				    TextureRegion frame = runAnimation.getKeyFrame(elapsedTime, true);
+					float width = frame.getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X;
+					float height = frame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y;
+					batch.draw(frame, entityWorldCoord[0] ,entityWorldCoord[1], width, height);
 				}
 			}
 		}
 	}
 
+	private void runAnimations(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord){
+        Queue<AnimationLinker> q = entity.getToBeRun();
+        int queueSize = q.size();
+		if (queueSize == 0) {
+		    return;
+        }
+
+		for (int i = 0; i < queueSize ; i++) {
+            AnimationLinker aniLink = q.remove();
+            Animation<TextureRegion> ani = aniLink.getAnimation();
+            float time = aniLink.getStartingTime();
+
+            if (ani == null) {
+                System.out.println("Animation is null");
+                continue;
+            }
+
+            if (ani.isAnimationFinished(time)) {
+                System.out.println("Animation is done");
+                continue;
+            }
+
+            TextureRegion currentFrame = ani.getKeyFrame(time, false);
+            float width = currentFrame.getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X;
+			float height = currentFrame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y;
+			int offset[] = aniLink.getOffset();
+
+
+            batch.draw(currentFrame ,entityWorldCoord[0]  + offset[0] ,entityWorldCoord[1] + offset[0], width,  height);
+            aniLink.incrTime(Gdx.graphics.getDeltaTime());
+            q.add(aniLink);
+        }
+	}
 }

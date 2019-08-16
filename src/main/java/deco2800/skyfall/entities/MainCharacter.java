@@ -89,11 +89,12 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
         this.level = 1;
         this.instantiateInventory();
 
-        //Remove this.
+        //TODO: Remove this.
         this.configure_animations();
     }
 
     /*Tester*/
+    //TODO: change this to actual animations.
     private void configure_animations() {
         animations.put(AnimationRole.MOVE_NORTH, "mario_right");
         animations.put(AnimationRole.MOVE_NORTH_EAST, "mario_right");
@@ -103,6 +104,7 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
         animations.put(AnimationRole.MOVE_SOUTH_WEST, "mario_left");
         animations.put(AnimationRole.MOVE_WEST, "mario_left");
         animations.put(AnimationRole.MOVE_EAST, "mario_right");
+
     }
 
     /**
@@ -231,6 +233,19 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
         if (MOVE_DOWN){this.direction.sub(0.0f, speed);}
         if (MOVE_RIGHT){this.direction.add(speed, 0.0f);}
     }
+
+    public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
+        // only allow left clicks to move player
+        if (button != 0) {
+            // Right click run animation.
+            //TODO: remove this.
+            //System.out.println("MainCharacter Added to Queue");
+            //toBeRun.add(new AnimationLinker(AnimationRole.COMBAT, "mario_right", this.getName(), new int[]{10, 10}));
+            //System.out.println("Right Click run Animation");
+            return;
+        }
+    }
+
 
     /**
      *

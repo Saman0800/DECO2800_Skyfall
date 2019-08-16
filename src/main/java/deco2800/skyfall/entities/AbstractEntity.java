@@ -6,9 +6,7 @@ import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.renderers.Renderable;
 import deco2800.skyfall.util.HexVector;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * A AbstractEntity is an item that can exist in both 3D and 2D worlds
@@ -49,7 +47,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	//For animations
     protected Map<AnimationRole, String> animations;
     protected AnimationRole movingAnimation = AnimationRole.NULL;
-
+    protected AnimationLinker movementLinker = null;
+	protected Queue<AnimationLinker> toBeRun = new PriorityQueue<>();
 	/**
 	 * Constructor for an abstract entity
 	 * @param col the col position on the world
@@ -302,6 +301,17 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	        return null;
     }
 
+	public Queue<AnimationLinker> getToBeRun() {
+		return toBeRun;
+	}
+
+	public AnimationLinker getMovementLinker() {
+		return movementLinker;
+	}
+
+	public void setMovementLinker(AnimationLinker movementLinker) {
+		this.movementLinker = movementLinker;
+	}
 }
 
 

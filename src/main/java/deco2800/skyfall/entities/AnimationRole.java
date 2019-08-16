@@ -10,4 +10,6 @@ public enum AnimationRole {
     MOVE_SOUTH_WEST,
     MOVE_NORTH_WEST,
     MOVE_WEST,
+    COMBAT,
+
 }
