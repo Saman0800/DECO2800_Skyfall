@@ -36,20 +36,9 @@ public class PlayerPeon extends Peon implements KeyDownObserver, KeyUpObserver, 
                 .addKeyDownListener(this);
         GameManager.getManagerFromInstance(InputManager.class)
                 .addKeyUpListener(this);
-        this.configure_animations();
     }
 
-    private void configure_animations() {
-        animations.put(AnimationRole.MOVE_NORTH, "mario_right");
-        animations.put(AnimationRole.MOVE_NORTH_EAST, "mario_right");
-        animations.put(AnimationRole.MOVE_NORTH_WEST, "mario_left");
-        animations.put(AnimationRole.MOVE_EAST, "mario_right");
-        animations.put(AnimationRole.MOVE_WEST, "mario_left");
 
-        animations.put(AnimationRole.MOVE_SOUTH, "mario_left");
-        animations.put(AnimationRole.MOVE_SOUTH_EAST, "mario_right");
-        animations.put(AnimationRole.MOVE_SOUTH_WEST, "mario_left");
-    }
 
     /**
      * Calculates the new movement point depending on what movement keys are held down.
@@ -123,7 +112,6 @@ public class PlayerPeon extends Peon implements KeyDownObserver, KeyUpObserver, 
      */
     @Override
     public void notifyKeyUp(int keycode) {
-        movingAnimation = AnimationRole.NULL;
         switch(keycode){
             case Input.Keys.W:
                 MOVE_UP = false;
