@@ -23,8 +23,8 @@ public class Inventory {
 
 
     /***
-     * Create an inventory and add default items to the inventory, as well
-     * as an empty quick access inventory.
+     * Creates an inventory and adds default items to the inventory, as well
+     * as initialises an empty quick access inventory.
      */
     public Inventory(){
         this.inventoryContents = new HashMap<>();
@@ -129,7 +129,7 @@ public class Inventory {
      * @param item the string name for the item
      * @return the integer number of that item type in the inventory
      */
-    public Integer getAmount(String item){
+    public int getAmount(String item){
         Map<String, Integer> inventoryAmounts = this.getInventoryAmounts();
 
         if(inventoryAmounts.get(item) != null){

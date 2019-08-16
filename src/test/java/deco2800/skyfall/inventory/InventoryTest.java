@@ -32,8 +32,8 @@ public class InventoryTest {
         Inventory inv = new Inventory();
 
         assertEquals(2, inv.getInventoryContents().size());
-        assertEquals((Integer)2, inv.getAmount("Stone"));
-        assertEquals((Integer)2, inv.getAmount("Wood"));
+        assertEquals(2, inv.getAmount("Stone"));
+        assertEquals(2, inv.getAmount("Wood"));
 
     }
 
@@ -41,7 +41,7 @@ public class InventoryTest {
     @Test
     public void inventoryCustomConstructorTest(){
         assertEquals(1, test.getInventoryContents().size());
-        assertEquals((Integer)1, test.getAmount("Stone"));
+        assertEquals(1, test.getAmount("Stone"));
         assertEquals(1, test.getQuickAccess().size());
     }
 
@@ -80,12 +80,12 @@ public class InventoryTest {
 
         assertEquals(1, test.getInventoryAmounts().size());
         assertEquals((Integer)1, test.getInventoryAmounts().get("Stone"));
-        assertEquals((Integer)1, test.getAmount("Stone"));
+        assertEquals(1, test.getAmount("Stone"));
 
         test.inventoryDrop("Stone");
 
         assertEquals(0, test.getInventoryAmounts().size());
-        assertEquals((Integer)0,test.getAmount("Stone"));
+        assertEquals(0,test.getAmount("Stone"));
 
         test.inventoryAdd(new Wood());
         test.inventoryAdd(new Wood());
@@ -97,28 +97,28 @@ public class InventoryTest {
         test.inventoryAdd(new Sand());
 
         assertEquals(4, test.getInventoryAmounts().size());
-        assertEquals((Integer) 2, test.getAmount("Stone"));
-        assertEquals((Integer) 2, test.getAmount("Wood"));
-        assertEquals((Integer)1, test.getAmount("Vine"));
-        assertEquals((Integer)3, test.getAmount("Sand"));
-        assertEquals((Integer)0, test.getAmount("Apple"));
+        assertEquals(2, test.getAmount("Stone"));
+        assertEquals(2, test.getAmount("Wood"));
+        assertEquals(1, test.getAmount("Vine"));
+        assertEquals(3, test.getAmount("Sand"));
+        assertEquals(0, test.getAmount("Apple"));
 
         assertTrue(test.inventoryDrop("Stone") instanceof Stone);
-        assertEquals((Integer)1, test.getAmount("Stone"));
+        assertEquals(1, test.getAmount("Stone"));
         test.inventoryDrop("Stone");
-        assertEquals((Integer)0, test.getAmount("Stone"));
+        assertEquals(0, test.getAmount("Stone"));
         assertNull(test.inventoryDrop("Stone"));
 
         assertEquals(3, test.getInventoryAmounts().size());
-        assertEquals((Integer) 0, test.getAmount("Stone"));
+        assertEquals(0, test.getAmount("Stone"));
 
         test.inventoryDropMultiple("Wood", 2);
         assertEquals(2, test.getInventoryAmounts().size());
-        assertEquals((Integer)0, test.getAmount("Wood"));
+        assertEquals(0, test.getAmount("Wood"));
 
         test.inventoryDropMultiple("Sand", 2);
         assertEquals(2, test.getInventoryAmounts().size());
-        assertEquals((Integer)1, test.getAmount("Sand"));
+        assertEquals(1, test.getAmount("Sand"));
 
         assertNull(test.inventoryDropMultiple("Sand", 2));
         assertNull(test.inventoryDropMultiple("Apple", 3));
