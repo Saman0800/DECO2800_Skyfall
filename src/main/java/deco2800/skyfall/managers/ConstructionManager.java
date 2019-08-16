@@ -108,12 +108,12 @@ public class ConstructionManager extends AbstractManager {
     }
     //End of UI
 
-    //Start of terrain
-    // terrain map is list of terrains with their building permission
+    // TODO: check the buildability of tiles, in term of terrain, boime and entity
+    // terrain map is a collection of terrains with their building permission
     private TreeMap<String, Boolean> terrainMap = new TreeMap<String, Boolean>();
 
-    // TODO: load terrain permission file
-    // load terrain permission file into terrain map, format as (e.g. texture, boolean) for one terrain
+    // load file of initial terrain permission into the terrain map
+    // file format as (texture name, boolean value) for one terrain
     private void initializeTerrainMap(String fileBase) {
         try {
             File file = new File(fileBase);
@@ -143,16 +143,22 @@ public class ConstructionManager extends AbstractManager {
         }
     }
 
-    // TODO: update terrain permission for structures
-    // update terrain permission to allow/disallow building something
+    // update terrain building permission to allow/disallow building
     public void updateTerrainMap(String texture, Boolean value) {
-        terrainMap.put(texture, value);
+        if (texture == null || value == null) {
+            return;
+        }
+        if (terrainMap.containsKey(texture)) {
+            terrainMap.put(texture, value);
+        }
     }
 
-    // TODO: check if tiles is valid or not
-    // use terrain map to verify if tile(s) is built valid or not
+    // use terrain map to check if tile(s) is buildable or not
     public boolean verifyTile(Tile ...tiles) {
         for (Tile tile : tiles) {
+            if (tile == null) {
+                return false;
+            }
             String texture = tile.getTextureName();
             if (!terrainMap.containsKey(texture)) {
                 return false;
@@ -164,10 +170,15 @@ public class ConstructionManager extends AbstractManager {
         return true;
     }
 
-    // TODO: check if a region of tiles is valid or not
-    // use terrain_map to verify if a region (list of tiles) is built valid or not
+    // use terrain map to check if a collection of tiles is buildable or not
     public boolean verifyRegion(List<Tile> tiles) {
+        if (tiles == null) {
+            return false;
+        }
         for (Tile tile : tiles) {
+            if (tile == null) {
+                return false;
+            }
             String texture = tile.getTextureName();
             if (!terrainMap.containsKey(texture)) {
                 return false;
@@ -179,10 +190,12 @@ public class ConstructionManager extends AbstractManager {
         return true;
     }
 
-    // TODO: check if tiles contains biome or not for building permission
-    // use tile's biome method to know build permission
+    // use tile class's biome method provided to know buildability
     public boolean verifyBiome(Tile ...tiles) {
         for (Tile tile : tiles) {
+            if (tile == null) {
+                return false;
+            }
             if (!tile.getIsBuildable()) {
                 return false;
             }
@@ -190,13 +203,19 @@ public class ConstructionManager extends AbstractManager {
         return true;
     }
 
-    // TODO: read entities to verify building permission
     // Non-empty entities in a tile can't be built and should be destroyed first
+    // check if a region on the world contains entities or not
     public boolean verifyEntity(AbstractWorld worldMap, Tile ...tiles) {
-        for (AbstractEntity entity : worldMap.getEntities()) {
-            for (Tile tile : tiles) {
-                float col = tile.getCol();
-                float row = tile.getRow();
+        if (worldMap == null) {
+            return false;
+        }
+        for (Tile tile : tiles) {
+            if (tile == null) {
+                return false;
+            }
+            float col = tile.getCol();
+            float row = tile.getRow();
+            for (AbstractEntity entity : worldMap.getEntities()) {
                 if ((entity.getCol() == col) && (entity.getRow() == row)) {
                     return false;
                 }
@@ -205,20 +224,27 @@ public class ConstructionManager extends AbstractManager {
         return true;
     }
 
-    // TODO: check if a building could be located in a region
+    // check if a building could be located on a region or not
     // use most left-bottom position of a building with its size to check permission
     public boolean isBuildable(AbstractWorld worldMap, AbstractEntity building, int xSize, int ySize) {
+        if (building == null || worldMap == null) {
+            return false;
+        }
+
         float col = building.getCol();
         float row = building.getRow();
-        List map = worldMap.getTileMap();
-
         for (int i = 0; i < xSize; i++) {
             for (int j = 0; j < ySize; j++) {
                 Tile tile = worldMap.getTile(col + xSize, row + ySize);
                 if (tile == null) {
                     return false;
                 }
-                if (!verifyTile(tile) || !verifyBiome(tile) || !verifyEntity(worldMap, tile)) {
+                if (terrainMap.containsKey(tile.getTextureName())) {
+                    if (!verifyTile(tile) || !verifyBiome(tile) || !verifyEntity(worldMap, tile)) {
+                        return false;
+                    }
+                }
+                if (!verifyBiome(tile) || !verifyEntity(worldMap, tile)) {
                     return false;
                 }
             }
@@ -226,8 +252,12 @@ public class ConstructionManager extends AbstractManager {
         return true;
     }
 
-    // TODO: type of building relates to type of tile
-    // different type of tiles affect to decide type of buildings
+    // TODO: world placement of building
+    // place a building on the world
+    public boolean placeBuilding(AbstractWorld worldMap, AbstractEntity building) {
+        // wait for building class method to gain size and position
+        return true;
+    }
 
     //TODO: Inventory check
     //return a list of how much of each relevant resources the player owns
