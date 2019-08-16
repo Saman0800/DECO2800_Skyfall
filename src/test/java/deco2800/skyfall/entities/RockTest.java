@@ -6,6 +6,8 @@ import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.OnScreenMessageManager;
 import deco2800.skyfall.worlds.TestWorld;
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.AbstractBiome;
+import deco2800.skyfall.worlds.ForestBiome;
 import deco2800.skyfall.util.HexVector;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +57,8 @@ public class RockTest {
     public void TestConstruction() {
         // Populate the world with tiles
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        Tile tile1 = new Tile("grass_1_0", 0.0f, 0.0f);
+        AbstractBiome biome = new ForestBiome();
+        Tile tile1 = new Tile(biome, 0.0f, 0.0f);
         tileMap.add(tile1);
         w.setTileMap(tileMap);
 
@@ -80,10 +83,11 @@ public class RockTest {
     public void TestAddedFunctions() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
         // Populate world with tiles
-        Tile tile1 = new Tile("grass_1_0", 0.0f, 0.0f);
-        Tile tile2 = new Tile("grass_1_0", 0.0f, 1.0f);
-        Tile tile3 = new Tile("grass_1_0", 1.0f, -0.5f);
-        Tile tile4 = new Tile("grass_1_0", 1.0f, 0.5f);
+        AbstractBiome biome = new ForestBiome();
+        Tile tile1 = new Tile(biome, 0.0f, 0.0f);
+        Tile tile2 = new Tile(biome, 0.0f, 1.0f);
+        Tile tile3 = new Tile(biome, 1.0f, -0.5f);
+        Tile tile4 = new Tile(biome, 1.0f, 0.5f);
         tileMap.add(tile1);
         tileMap.add(tile2);
         tileMap.add(tile4);

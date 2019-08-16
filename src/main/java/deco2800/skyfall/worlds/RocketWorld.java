@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.Random;
 
 public class RocketWorld extends AbstractWorld implements TouchDownObserver {
-    private static final int RADIUS = 4;
+    private static final int RADIUS_INNER = 3;
+    private static final int RADIUS_OUTER = 6;
     private static final int WORLD_SIZE = 10;
     private static final int NODE_SPACING = 5;
 
@@ -26,44 +27,43 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
     @Override
     protected void generateWorld() {
 
-        int nodeCount = (int) Math.round(Math.pow((float)WORLD_SIZE / (float)NODE_SPACING, 2));
+        int nodeCount = (int) Math.round(Math.pow((float) WORLD_SIZE / (float) NODE_SPACING, 2));
 
         // TODO: if nodeCount is less than the number of biomes, throw an exception
 
         Random random = new Random();
 
-//        for (int i = 0; i < nodeCount; i++) {
-//            float x = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
-//            float y = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
-//            worldGenNodes.add(new WorldGenNode(x, y));
-//        }
+        // for (int i = 0; i < nodeCount; i++) {
+        // float x = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
+        // float y = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
+        // worldGenNodes.add(new WorldGenNode(x, y));
+        // }
 
-        //Generating the biome
+        // Generating the biome
         AbstractBiome biome = new MountainBiome();
 
         for (int q = -1000; q < 1000; q++) {
             for (int r = -1000; r < 1000; r++) {
-                if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= RADIUS) {
+                if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= RADIUS_INNER) {
                     float oddCol = (q % 2 != 0 ? 0.5f : 0);
 
                     int elevation = random.nextInt(2);
-//                    String type = "grass_" + elevation;
-                    Tile tile = new Tile(biome, q, r+oddCol);
+                    // String type = "grass_" + elevation;
+                    Tile tile = new Tile(biome, q, r + oddCol);
                     tiles.add(tile);
                     biome.addTile(tile);
                 }
             }
         }
 
-        //Setting all the textures
+        // Setting all the textures
         biome.setTileTextures();
 
         // Create the entities in the game
         player = new PlayerPeon(0f, 0f, 0.05f);
         addEntity(player);
 
-        GameManager.getManagerFromInstance(InputManager.class)
-                .addTouchDownListener(this);
+        GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
     }
 
     @Override
