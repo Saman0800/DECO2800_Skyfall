@@ -46,14 +46,14 @@ public class TextureManager extends AbstractManager {
             textureMap.put("spacman_blue", new Texture("resources/spacman_blue.png"));
             textureMap.put("bowman", new Texture("resources/bowman.png"));
 
-            textureMap.put("grass_0", new Texture("resources/grass_1.png"));
-            textureMap.put("grass_1", new Texture("resources/grass_2.png"));
-            textureMap.put("grass_2", new Texture("resources/grass_3.png"));
+            textureMap.put("grass_0", new Texture("resources/tile_textures/grass_1.png"));
+            textureMap.put("grass_1", new Texture("resources/tile_textures/grass_2.png"));
+            textureMap.put("grass_2", new Texture("resources/tile_textures/grass_3.png"));
             textureMap.put("grass_tuff", new Texture("resources/world_details/grass1.png"));
             // TODO change these to something nicer, just temporary to test biome generation
-            textureMap.put("water_0", new Texture("resources/water_1.png"));
-            textureMap.put("desert_0", new Texture("resources/desert_1.png"));
-            textureMap.put("mountain_0", new Texture("resources/mountain_1.png"));
+            textureMap.put("water_0", new Texture("resources/tile_textures/water_1.png"));
+            textureMap.put("desert_0", new Texture("resources/tile_textures/desert_1.png"));
+            textureMap.put("mountain_0", new Texture("resources/tile_textures/mountain_1.png"));
 
             textureMap.put("woodcube", new Texture("resources/woodcube.png"));
 
