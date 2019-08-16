@@ -1,6 +1,7 @@
 package deco2800.skyfall.resources;
 
 
+import deco2800.skyfall.entities.AgentEntity;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 
@@ -20,18 +21,20 @@ public abstract class ManufacturedResources implements Item {
     private Boolean hasHealingPower;
 
     // the co-ordinates of the tile the item has been placed on
-    private HexVector position;
+    protected HexVector position;
 
     // determines whether or not the resource can be traded
     private Boolean exchangeable;
-
-    //
+    protected AgentEntity owner;
     private Boolean hasFoodEffect;
 
 
-    public ManufacturedResources() {
+    public ManufacturedResources(AgentEntity owner, HexVector position, String name) {
 
-        this.name = null;
+        this.name = name;
+        this.owner = owner;
+        this.position = position;
+
         this.carryable = true;
         this.subtype = "Manufactured Resource";
         this.hasHealingPower = false;
@@ -40,32 +43,10 @@ public abstract class ManufacturedResources implements Item {
         this.exchangeable = true;
     }
 
-
-    /***
-     * Creates a default manufactured  resource
-     */
-    public ManufacturedResources(Tile position){
-        //default constructor added for building inventory
-        this.name = null;
-        this.carryable = true;
-        this.subtype = "Manufactured Resource";
-        this.hasHealingPower = false;
-        this.hasFoodEffect = false;
-        this.exchangeable = true;
-
-    }
-
-
-
-
     /**
      * Returns the name of the Manufactured resource
      * @return The name of the manufactured resource
      */
-    @Override
-    public String getName() {
-        return name;
-    }
 
 
     /**
@@ -75,6 +56,7 @@ public abstract class ManufacturedResources implements Item {
      */
     @Override
     public Boolean isCarryable() {
+
         return carryable;
     }
 
@@ -84,6 +66,7 @@ public abstract class ManufacturedResources implements Item {
      */
     @Override
     public String getSubtype() {
+
         return subtype;
     }
 
@@ -99,12 +82,14 @@ public abstract class ManufacturedResources implements Item {
      */
     @Override
     public HexVector getCoords() {
+
         return position;
     }
 
 
 
     public Boolean hasFoodEffect() {
+
         return hasFoodEffect;
     }
 
@@ -123,6 +108,7 @@ public abstract class ManufacturedResources implements Item {
      */
     @Override
     public String toString() {
+
         return "" + subtype + ":" + name;
     }
 

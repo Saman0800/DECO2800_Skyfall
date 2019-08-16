@@ -1,54 +1,59 @@
 package deco2800.skyfall.resources.items;
 
+import deco2800.skyfall.entities.AgentEntity;
+import deco2800.skyfall.entities.Tree;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.inventory.Inventory;
 
 
 public class Hatchet extends ManufacturedResources implements Item {
 
 
-    public Hatchet() {
-        super();
+
+    public Hatchet(AgentEntity owner, HexVector position, String name) {
+        super(owner, position, name);
+        this.name="Hatchet";
     }
 
-    public Hatchet(Tile position) {
-        super(position);
-    }
 
     @Override
     public String getName() {
-        return super.getName();
+
+        return this.name;
     }
 
-    @Override
-    public Boolean isCarryable() {
-        return super.isCarryable();
-    }
 
     @Override
     public String getSubtype() {
-        return super.getSubtype();
+
+        return super.subtype;
     }
 
     @Override
     public HexVector getCoords() {
-        return super.getCoords();
+        return this.position;
     }
 
-    @Override
-    public Boolean hasFoodEffect() {
-        return super.hasFoodEffect();
-    }
 
     @Override
     public String toString() {
-        return super.toString();
+
+        return "" + subtype + ":" + name;
     }
 
     @Override
     public Boolean isExchangeable() {
-        return null;
+        return true;
     }
+
+
+
+
+
+
+
+
 }
