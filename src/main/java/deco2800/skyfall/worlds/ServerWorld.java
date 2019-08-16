@@ -9,8 +9,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class ServerWorld extends AbstractWorld {
 
-    public ServerWorld() {
-        tiles = new CopyOnWriteArrayList<Tile>();
+    public ServerWorld(long seed) {
+        super(seed);
     }
 
     /**
@@ -22,7 +22,7 @@ public class ServerWorld extends AbstractWorld {
     }
 
 	@Override
-	protected void generateWorld() {
+	protected void generateWorld(long seed) {
 		// TODO Auto-generated method stub
 		
 	}

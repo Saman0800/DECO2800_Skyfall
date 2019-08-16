@@ -37,7 +37,7 @@ public class StaticEntityTest {
 
     @Before
     public void Setup() {
-        w = new TestWorld();
+        w = new TestWorld(0);
 
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);

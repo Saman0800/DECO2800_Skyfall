@@ -39,7 +39,7 @@ public class SaveLoadTest {
     
     @Before
     public void Setup() {
-        w = new TestWorld();
+        w = new TestWorld(0);
         
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
@@ -82,7 +82,7 @@ public class SaveLoadTest {
         deco2800.skyfall.managers.DatabaseManager.saveWorld(w);
         
         
-        TestWorld q = new TestWorld();
+        TestWorld q = new TestWorld(0);
         deco2800.skyfall.managers.DatabaseManager.loadWorld(q);
 
         

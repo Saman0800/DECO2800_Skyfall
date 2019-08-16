@@ -31,16 +31,16 @@ public abstract class AbstractWorld {
     protected List<AbstractEntity> entitiesToDelete = new CopyOnWriteArrayList<>();
     protected List<Tile> tilesToDelete = new CopyOnWriteArrayList<>();
 
-    protected AbstractWorld() {
+    protected AbstractWorld(long seed) {
     	tiles = new CopyOnWriteArrayList<Tile>();
 //        worldGenNodes = new CopyOnWriteArrayList<>();
-    	generateWorld();
+    	generateWorld(seed);
         generateNeighbours();
     	generateTileIndexes();
     }
     
     
-    protected abstract void generateWorld();
+    protected abstract void generateWorld(long seed);
     
     public void generateNeighbours() {
     //multiply coords by 2 to remove floats

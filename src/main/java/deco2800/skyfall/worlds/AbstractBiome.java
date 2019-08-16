@@ -2,6 +2,7 @@ package deco2800.skyfall.worlds;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Class that represents the biomes
@@ -13,18 +14,18 @@ public abstract class AbstractBiome {
     private ArrayList<Tile> tiles;
 
 
-    /**
-     * Constructer that creates biome with biome name and a list of tiles the biome has
-     * @param biomeName The name of the biome
-     * @param tiles The tiles in the biome
-     */
+//    /**
+//     * Constructor that creates biome with biome name and a list of tiles the biome has
+//     * @param biomeName The name of the biome
+//     * @param tiles The tiles in the biome
+//     */
 //    public AbstractBiome(String biomeName, ArrayList<Tile> tiles){
 //        this.tiles = tiles;
 //        this.biomeName = biomeName;
 //    }
 //
     /**
-     * Constructer for a Biome
+     * Constructor for a Biome
      * @param biomeName The biome name
      */
     public AbstractBiome(String biomeName) {
@@ -58,7 +59,9 @@ public abstract class AbstractBiome {
     }
 
     /**
-     * Sets all the textures within a biome
+     * Sets all the textures within a biome.
+     *
+     * @param random the RNG to use to generate the textures
      */
-    protected abstract void setTileTextures();
+    protected abstract void setTileTextures(Random random);
 }

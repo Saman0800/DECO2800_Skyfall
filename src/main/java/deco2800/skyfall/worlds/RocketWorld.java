@@ -28,14 +28,18 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
     // Generating the biome
     private AbstractBiome biome;
 
+    public RocketWorld(long seed) {
+        super(seed);
+    }
+
     @Override
-    protected void generateWorld() {
+    protected void generateWorld(long seed) {
 
         int nodeCount = (int) Math.round(Math.pow((float) WORLD_SIZE / (float) NODE_SPACING, 2));
 
         // TODO: if nodeCount is less than the number of biomes, throw an exception
 
-        Random random = new Random();
+        Random random = new Random(seed);
 
         // for (int i = 0; i < nodeCount; i++) {
         // float x = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
@@ -44,7 +48,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         // }
 
         // Create a new biome
-        biome = new MountainBiome();
+        biome = new ForestBiome();
 
         for (int q = -1000; q < 1000; q++) {
             for (int r = -1000; r < 1000; r++) {
@@ -61,7 +65,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         }
 
         // Setting all the textures
-        biome.setTileTextures();
+        biome.setTileTextures(random);
 
         // Create the entities in the game
         player = new PlayerPeon(0f, 0f, 0.05f);

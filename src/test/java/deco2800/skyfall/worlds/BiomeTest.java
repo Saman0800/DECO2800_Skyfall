@@ -3,6 +3,8 @@ package deco2800.skyfall.worlds;
 import deco2800.skyfall.util.Cube;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Random;
+
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,16 +43,23 @@ public class BiomeTest {
                 }
 
 
-                desertBiome.setTileTextures();
+                desertBiome.setTileTextures(new Random(0));
                 for (Tile tile : desertBiome.getTiles()){
                         assertEquals("desert_0", tile.getTextureName());
                 }
-                forestBiome.setTileTextures();
+
+                forestBiome.setTileTextures(new Random(0));
                 //Implement test for seeding
                 for (Tile tile : forestBiome.getTiles()){
                         assertEquals("grass_0", tile.getTextureName());
                 }
-                mountainBiome.setTileTextures();
+                forestBiome.setTileTextures(new Random(2));
+                //Implement test for seeding
+                for (Tile tile : forestBiome.getTiles()){
+                        assertEquals("grass_1", tile.getTextureName());
+                }
+
+                mountainBiome.setTileTextures(new Random(0));
                 for (Tile tile : mountainBiome.getTiles()){
                         assertEquals("mountain_0", tile.getTextureName());
                 }

@@ -25,8 +25,8 @@ public class TestWorld extends AbstractWorld {
 
     private static int RADIUS = 25;
 
-    public TestWorld() {
-        super();
+    public TestWorld(long seed) {
+        super(seed);
     }
 
     // 5 tile building
@@ -99,8 +99,8 @@ public class TestWorld extends AbstractWorld {
     }
 
     @Override
-    protected void generateWorld() {
-        Random random = new Random();
+    protected void generateWorld(long seed) {
+        Random random = new Random(seed);
         AbstractBiome biome = new ForestBiome();
         for (int q = -1000; q < 1000; q++) {
             for (int r = -1000; r < 1000; r++) {
