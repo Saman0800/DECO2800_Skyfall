@@ -64,8 +64,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             }
         }
 
-        // Setting all the textures
-        biome.setTileTextures(random);
+        addBiome(biome);
 
         // Create the entities in the game
         player = new PlayerPeon(0f, 0f, 0.05f);
