@@ -73,7 +73,7 @@ public class LongGrassTest {
         assertEquals(longGrass1.getRenderOrder(), 2);
         assertEquals(longGrass1.getCol(), 0.0f, 0.0f);
         assertEquals(longGrass1.getRow(), 0.0f, 0.0f);
-        assertTrue(longGrass1.getObstructed());
+        assertTrue(longGrass1.isObstructed());
         assertEquals(longGrass1.getObjectName(), "long_grass");
     }
 
