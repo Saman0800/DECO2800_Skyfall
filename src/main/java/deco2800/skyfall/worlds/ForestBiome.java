@@ -8,7 +8,6 @@ public class ForestBiome extends AbstractBiome {
     private ArrayList<String> textures = new ArrayList<>();
     private Random randomGen;
 
-
     /**
      * Constructer for a Biome
      *
@@ -18,11 +17,9 @@ public class ForestBiome extends AbstractBiome {
         randomGen = new Random();
     }
 
-
-
-    //TODO implement an algorithm that determines the ground patterns
-    //TODO add seeding to the random generation so it can be tested
-    //Likes grouped with likes
+    // TODO implement an algorithm that determines the ground patterns
+    // TODO add seeding to the random generation so it can be tested
+    // Likes grouped with likes
     /**
      * Method that will determine the textures of the forest biome textures
      *
