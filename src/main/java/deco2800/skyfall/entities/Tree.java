@@ -33,7 +33,7 @@ public class Tree extends StaticEntity implements Tickable, Harvestable {
      */
     @Override
     public Tree newInstance(Tile tile) {
-        return new Tree(tile, this.getObstructed());
+        return new Tree(tile, this.isObstructed());
     }
 
     @Override

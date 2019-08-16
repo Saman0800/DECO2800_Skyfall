@@ -42,6 +42,6 @@ public class Rock extends StaticEntity implements HasHealth {
      */
     @Override
     public Rock newInstance(Tile tile) {
-        return new Rock(tile, this.getObstructed());
+        return new Rock(tile, this.isObstructed());
     }
 }
