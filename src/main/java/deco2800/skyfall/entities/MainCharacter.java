@@ -13,7 +13,7 @@ import java.util.*;
 /**
  * Main character in the game
  */
-public class MainCharacter extends Peon implements  KeyDownObserver, KeyUpObserver, Tickable {
+public class MainCharacter extends Peon implements Tickable {
 
     // List of the player's inventories
     // TODO need to replace List<String> with List<InventoryClass>
@@ -30,12 +30,6 @@ public class MainCharacter extends Peon implements  KeyDownObserver, KeyUpObserv
     private final int INVENTORY_MAX_CAPACITY = 20;
 
 
-    protected Vector2 direction;
-    protected float currentSpeed;
-    private boolean MOVE_UP = false;
-    private boolean MOVE_LEFT = false;
-    private boolean MOVE_RIGHT = false;
-    private boolean MOVE_DOWN = false;
     /*
     Potential future implementations
 
@@ -101,8 +95,6 @@ public class MainCharacter extends Peon implements  KeyDownObserver, KeyUpObserv
         animations.put(AnimationRole.MOVE_SOUTH_WEST, "mario_left");
         animations.put(AnimationRole.MOVE_WEST, "mario_left");
         animations.put(AnimationRole.MOVE_EAST, "mario_right");
-
-
     }
 
     /**
@@ -215,6 +207,7 @@ public class MainCharacter extends Peon implements  KeyDownObserver, KeyUpObserv
     public ArrayList<String> getInventory(){
         return new ArrayList<>(inventories);
     }
+}
 
     /*
     Potential more methods and related attributes:
@@ -223,95 +216,3 @@ public class MainCharacter extends Peon implements  KeyDownObserver, KeyUpObserv
     -interaction with movement
     */
 
-
-    /**
-     * Handles tick based stuff, e.g. movement
-     */
-    private void updateMoveVector() {
-        if (MOVE_UP){this.direction.add(0.0f, speed);}
-        if (MOVE_LEFT){this.direction.sub(speed, 0.0f);}
-        if (MOVE_DOWN){this.direction.sub(0.0f, speed);}
-        if (MOVE_RIGHT){this.direction.add(speed, 0.0f);}
-    }
-
-    /**
-     *
-     * @param i
-     */
-    @Override
-    public void onTick(long i){
-        updateMoveVector();
-        this.setCurrentSpeed(this.direction.len());
-        this.moveTowards(new HexVector(this.direction.x, this.direction.y));
-        //System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction, this.getPosition(), this.direction.x - this.getCol(), this.direction.y - this.getRow());
-        //System.out.printf("%s%n", this.currentSpeed);
-
-    }
-
-    @Override
-    public void moveTowards(HexVector destination) {
-        position.moveToward(destination, this.currentSpeed);
-    }
-
-    /**
-     * Sets the Player's current movement speed.
-     *
-     * @param cSpeed the speed for the player to currently move at.
-     */
-    private void setCurrentSpeed(float cSpeed){
-        this.currentSpeed = cSpeed;
-    }
-
-    /**
-     * Sets the appropriate movement flags to true on keyDown
-     *
-     * @param keycode the key being pressed
-     */
-    @Override
-    public void notifyKeyDown(int keycode) {
-        switch (keycode) {
-            case Input.Keys.W:
-                MOVE_UP = true;
-                movingAnimation = AnimationRole.MOVE_NORTH;
-                break;
-            case Input.Keys.A:
-                MOVE_LEFT = true;
-                movingAnimation = AnimationRole.MOVE_WEST;
-                break;
-            case Input.Keys.S:
-                MOVE_DOWN = true;
-                movingAnimation = AnimationRole.MOVE_SOUTH;
-                break;
-            case Input.Keys.D:
-                MOVE_RIGHT = true;
-                movingAnimation = AnimationRole.MOVE_EAST;
-                break;
-        }
-    }
-
-    /**
-     * Sets the appropriate movement flags to false on keyUp
-     *
-     * @param keycode the key being released
-     */
-    @Override
-    public void notifyKeyUp(int keycode) {
-        movingAnimation = AnimationRole.NULL;
-        switch(keycode){
-            case Input.Keys.W:
-                MOVE_UP = false;
-                break;
-            case Input.Keys.A:
-                MOVE_LEFT = false;
-                this.setTexture("__ANIMATION_mario_left:1");
-                break;
-            case Input.Keys.S:
-                MOVE_DOWN = false;
-                break;
-            case Input.Keys.D:
-                MOVE_RIGHT = false;
-                this.setTexture("__ANIMATION_mario_right:1");
-                break;
-        }
-    }
-}
