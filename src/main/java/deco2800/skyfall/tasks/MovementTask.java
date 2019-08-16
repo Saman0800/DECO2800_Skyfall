@@ -3,12 +3,11 @@ package deco2800.skyfall.tasks;
 import java.util.List;
 
 import deco2800.skyfall.entities.AgentEntity;
-import deco2800.skyfall.entities.AnimationRole;
+import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.PathFindingService;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
-import javafx.animation.Animation;
 
 public class MovementTask extends AbstractTask{
 	

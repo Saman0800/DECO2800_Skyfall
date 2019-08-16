@@ -3,9 +3,9 @@ package deco2800.skyfall.entities;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.Vector2;
 import deco2800.skyfall.Tickable;
+import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.*;
-import deco2800.skyfall.tasks.*;
 import deco2800.skyfall.util.*;
 
 import java.util.*;
@@ -75,7 +75,7 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
                          int health) {
         super(row, col, speed, name, health);
         //TODO: Change this to properly.
-        this.setTexture("__ANIMATION_mario_right:1");
+        this.setTexture("main_piece");
         this.setHeight(1);
         this.setObjectName("MainPiece");
 
@@ -90,7 +90,7 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
         this.instantiateInventory();
 
         //TODO: Remove this.
-        this.configure_animations();
+        //this.configure_animations();
     }
 
     /*Tester*/

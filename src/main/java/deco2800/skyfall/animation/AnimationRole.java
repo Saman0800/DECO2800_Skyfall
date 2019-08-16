@@ -1,4 +1,4 @@
-package deco2800.skyfall.entities;
+package deco2800.skyfall.animation;
 
 public enum AnimationRole {
     /*
