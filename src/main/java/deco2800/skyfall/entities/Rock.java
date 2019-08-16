@@ -11,7 +11,7 @@ public class Rock extends StaticEntity implements HasHealth {
     }
 
     public Rock(Tile tile, boolean obstructed) {
-        super(tile, 2, "rock", obstructed);
+        super(tile, 2, "mountain_rock", obstructed);
         this.setObjectName(ENTITY_ID_STRING);
     }
 

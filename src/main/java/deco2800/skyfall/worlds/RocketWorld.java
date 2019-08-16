@@ -6,6 +6,8 @@ import deco2800.skyfall.entities.Collectable;
 import deco2800.skyfall.entities.Harvestable;
 import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.Tree;
+import deco2800.skyfall.entities.Rock;
+import deco2800.skyfall.entities.EntitySpawnTable;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
@@ -16,13 +18,15 @@ import java.util.List;
 import java.util.Random;
 
 public class RocketWorld extends AbstractWorld implements TouchDownObserver {
-    private static final int RADIUS_INNER = 3;
-    private static final int RADIUS_OUTER = 6;
+    private static final int RADIUS = 4;
     private static final int WORLD_SIZE = 10;
     private static final int NODE_SPACING = 5;
 
     private boolean generated = false;
     private PlayerPeon player;
+
+    // Generating the biome
+    private AbstractBiome biome;
 
     @Override
     protected void generateWorld() {
@@ -39,12 +43,12 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         // worldGenNodes.add(new WorldGenNode(x, y));
         // }
 
-        // Generating the biome
-        AbstractBiome biome = new MountainBiome();
+        // Create a new biome
+        biome = new MountainBiome();
 
         for (int q = -1000; q < 1000; q++) {
             for (int r = -1000; r < 1000; r++) {
-                if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= RADIUS_INNER) {
+                if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= RADIUS) {
                     float oddCol = (q % 2 != 0 ? 0.5f : 0);
 
                     int elevation = random.nextInt(2);
@@ -85,6 +89,11 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             addEntity(new Tree(tile, true));
 
             generated = true;
+
+            Tile tileRock = getTile(0.0f, 1.0f);
+            Rock startRock = new Rock(tileRock, true);
+            // EntitySpawnTable rockSpawnRule = new EntitySpawnTable();
+            EntitySpawnTable.spawnEntities(startRock, 0.2, biome);
         }
     }
 
