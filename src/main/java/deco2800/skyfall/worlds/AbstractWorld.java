@@ -2,7 +2,6 @@ package deco2800.skyfall.worlds;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.AgentEntity;
-import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
@@ -253,14 +252,4 @@ public abstract class AbstractWorld {
     public void queueTilesForDelete(List<Tile> tiles) {
         tilesToDelete.addAll(tiles);
     }
-
-    public void handleCollision(AbstractEntity e1, AbstractEntity e2) {
-        //TODO: implement proper game logic for collisions between different types of entities.
-        if (e1 instanceof PlayerPeon) {
-            removeEntity(e2);
-        } else if (e2 instanceof PlayerPeon) {
-            removeEntity(e1);
-        }
-    }
-
 }

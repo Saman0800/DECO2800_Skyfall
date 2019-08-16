@@ -1,13 +1,10 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.physics.box2d.World;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.renderers.Renderable;
-import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
 
 import java.util.Objects;
 
@@ -31,8 +28,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	protected static int getNextID() {
 		return nextID++;
 	}
-
-	private Collider collider;
 
 	protected HexVector position;
 	private int height;
@@ -62,10 +57,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		entityID = AbstractEntity.getNextID();
 		this.setObjectName(ENTITY_ID_STRING);
 		this.renderOrder = renderOrder;
-
-		float[] coords = WorldUtil.colRowToWorldCords(col, row);
-		//TODO: length and width of collider to be determined by actual size of texture
-		this.collider = new Collider(coords[0], coords[1], 100, 100);
 	}
 
 	public AbstractEntity() {
@@ -255,16 +246,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	public abstract void onTick(long i);
 
 	/**
-	 * Updates the collider for each AbstractEntity to its current position
-	 * in the game.
-	 */
-	public void updateCollider() {
-		float[] coords = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
-		this.collider.setX(coords[0]);
-		this.collider.setY(coords[1]);
-	}
-
-	/**
 	 * Set objectID (If applicable)
 	 *
 	 * @param name of object
@@ -281,20 +262,14 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	public String getObjectName() {
 		return this.objectName;
 	}
-
+	
+	
 	public int getEntityID() {
 		return entityID;
 	}
 
 	public void setEntityID(int id) {
 		this.entityID = id;
-	}
-
-	/**
-	 * @return The collider for the AbstractEntity
-	 */
-	public Collider getCollider() {
-		return this.collider;
 	}
 
 	public void dispose() {

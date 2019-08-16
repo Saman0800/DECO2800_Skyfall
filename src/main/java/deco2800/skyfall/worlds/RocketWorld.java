@@ -11,7 +11,6 @@ import deco2800.skyfall.entities.WoodCube;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
-import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.WorldUtil;
 
@@ -23,7 +22,6 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
     private boolean generated = false;
     private PlayerPeon player;
-    private BowMan bowMan;
 
     @Override
     protected void generateWorld() {
@@ -45,7 +43,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         player = new PlayerPeon(0f, 0f, 0.05f);
         addEntity(player);
 
-        bowMan = new BowMan(0f, 3.5f);
+        BowMan bowMan = new BowMan(0f, 3.5f);
         addEntity(bowMan);
 
         GameManager.getManagerFromInstance(InputManager.class)
@@ -56,41 +54,22 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
     public void onTick(long i) {
         super.onTick(i);
 
-        //Collision detection for entities
-        for (AbstractEntity e1 : this.getEntities()) {
-            e1.onTick(0);
+        for (AbstractEntity e : this.getEntities()) {
+            e.onTick(0);
 
-            Collider c1 = e1.getCollider();
-            boolean collided = false;
-            for (AbstractEntity e2 : this.getEntities()) {
-                Collider c2 = e2.getCollider();
-
-                if (e1 != e2 && c1.overlaps(c2)) {
-                    collided = true;
-
-                    //collision handler
-                    this.handleCollision(e1, e2);
-                    System.out.println("Collision!");
-
-                    break;
+            if (e instanceof Collectable) {
+                if (e.collidesWith(player)) {
+                    removeEntity(e);
                 }
             }
-            //no collision
-
-
-//            if (e instanceof Collectable) {
-//                if (e.collidesWith(player)) {
-//                    removeEntity(e);
-//                }
-//            }
         }
 
-//        if (!generated) {
-//            Tile tile = getTile(1f, 2.5f);
-//            addEntity(new Tree(tile, true));
-//
-//            generated = true;
-//        }
+        if (!generated) {
+            Tile tile = getTile(1f, 2.5f);
+            addEntity(new Tree(tile, true));
+
+            generated = true;
+        }
     }
 
     @Override

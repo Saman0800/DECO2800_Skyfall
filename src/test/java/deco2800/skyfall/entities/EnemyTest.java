@@ -21,6 +21,6 @@ public class EnemyTest {
 
     @Test
     public void getNameTest() {
-        assertEquals(0, 0);
+        assertEquals(1, enemy.getArmour());
     }
 }

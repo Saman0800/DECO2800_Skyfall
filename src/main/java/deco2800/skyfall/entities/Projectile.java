@@ -3,7 +3,6 @@ package deco2800.skyfall.entities;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.util.Collider;
 
 /**
  * An entity that is shot from a weapon.
@@ -21,7 +20,7 @@ public class Projectile extends AbstractEntity {
     /**
      * Collider of this object.
      */
-    private Collider collider;
+    private Box2D collider;
 
     /**
      * The amount of damage this projectile deals.
