@@ -1,14 +1,14 @@
 package deco2800.skyfall.resources;
 
-
 import deco2800.skyfall.entities.AgentEntity;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.worlds.Tile;
 
-
+/**
+ * An abstract class representing a Manufactured Resource item.
+ */
 public abstract class ManufacturedResources implements Item {
 
-    // the name of the item e.g. wood, stone
+    // the name of the item e.g. Hatchet, Pick Axe
     public String name;
 
     // can the item be stored in the inventory
@@ -17,37 +17,25 @@ public abstract class ManufacturedResources implements Item {
     // the name of the subtype the item belongs to
     public String subtype;
 
-    // does the item impact the player's health
-    private Boolean hasHealingPower;
-
     // the co-ordinates of the tile the item has been placed on
     protected HexVector position;
 
-    // determines whether or not the resource can be traded
-    private Boolean exchangeable;
+    // an AngnetEntity instance representing the owner of the resource.
     protected AgentEntity owner;
-    private Boolean hasFoodEffect;
 
-
+    /***
+     * Creates a default manufactured resource .
+     * @param owner the resource owner.
+     * @param position the Hexvector position of the manufactured resource.
+     * @param name the name of the manufactured resource.
+     */
     public ManufacturedResources(AgentEntity owner, HexVector position, String name) {
-
         this.name = name;
         this.owner = owner;
         this.position = position;
-
         this.carryable = true;
         this.subtype = "Manufactured Resource";
-        this.hasHealingPower = false;
-        // Manufactured  Resources do not has food effect
-        this.hasFoodEffect = false;
-        this.exchangeable = true;
     }
-
-    /**
-     * Returns the name of the Manufactured resource
-     * @return The name of the manufactured resource
-     */
-
 
     /**
      * Returns whether or not the item can be stored in the inventory
@@ -56,7 +44,6 @@ public abstract class ManufacturedResources implements Item {
      */
     @Override
     public Boolean isCarryable() {
-
         return carryable;
     }
 
@@ -66,15 +53,8 @@ public abstract class ManufacturedResources implements Item {
      */
     @Override
     public String getSubtype() {
-
         return subtype;
     }
-
-    /**
-     * Returns whether or not the item impacts the player's health
-     * @return True if the item impacts on the player's health, false otherwise
-     */
-
 
     /**
      * Returns the co-ordinates of the tile the item is on.
@@ -82,36 +62,17 @@ public abstract class ManufacturedResources implements Item {
      */
     @Override
     public HexVector getCoords() {
-
         return position;
     }
 
-
-
-    public Boolean hasFoodEffect() {
-
-        return hasFoodEffect;
-    }
-
     /**
-     * Creates a string representation of the manufactured resource in the format:
-     *
-     * <p>'{Manufactured Resource}:{Name}'
-     *
-     * <p>without surrounding quotes and with {manufactured resource} replaced by
-     * the subtype of the item and {name} replaced with the item name
-     * For example:
-     *
-     * <p>Manufactured Resource:Rope
-     *
-     * @return A string representation of the manufactured resource.
+     * A string representation of the manufactured resource.
+     * @return name of the natural resource and its subtype as a string.
      */
     @Override
     public String toString() {
-
         return "" + subtype + ":" + name;
     }
-
 
 }
 
