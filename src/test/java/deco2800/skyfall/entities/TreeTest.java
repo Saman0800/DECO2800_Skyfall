@@ -137,7 +137,7 @@ public class TreeTest {
         assertTrue("Unexpected drop size.", 15 >= drops.size());
 
         // Check that the drops are instance of Woodblocks
-        if (0 <= drops.size()) {
+        if (0 < drops.size()) {
             AbstractEntity dropItem = drops.get(0);
             assertTrue("Incorrect instance type for tree drop", dropItem instanceof WoodCube);
         }
