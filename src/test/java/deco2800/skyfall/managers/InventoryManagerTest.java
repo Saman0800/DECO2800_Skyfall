@@ -1,15 +1,11 @@
 package deco2800.skyfall.managers;
 
-import deco2800.skyfall.inventory.Inventory;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.*;
 

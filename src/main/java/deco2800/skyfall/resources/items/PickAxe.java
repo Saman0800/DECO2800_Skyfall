@@ -5,7 +5,7 @@ import deco2800.skyfall.entities.Rock;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.inventory.Inventory;
+import deco2800.skyfall.managers.InventoryManager;
 
 /***
  * A Pick Axe item. Pick Axe is a manufacturd resource. It can harvest a rock.
@@ -81,7 +81,7 @@ public class PickAxe extends ManufacturedResources implements Item {
         int i;
 
         //temporary  inventory. this will change to the player inventory later.
-        Inventory ownerInventory = new Inventory();
+        InventoryManager ownerInventory = new InventoryManager();
 
         for (i = 0; i < rockToFarm.getHealth()/10; i++) {
             ownerInventory.inventoryAdd(new Stone());

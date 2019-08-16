@@ -5,7 +5,7 @@ import deco2800.skyfall.entities.Tree;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.inventory.Inventory;
+import deco2800.skyfall.managers.InventoryManager;
 
 
 /***
@@ -82,7 +82,7 @@ public class Hatchet extends ManufacturedResources implements Item {
         int i;
 
         //temporary  inventory. this will change to the player inventory later.
-        Inventory ownerInventory = new Inventory();
+        InventoryManager ownerInventory = new InventoryManager();
 
         for (i = 0; i < treeToFarm.getWoodAmount(); i++) {
             ownerInventory.inventoryAdd(new Wood());
