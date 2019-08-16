@@ -1,4 +1,4 @@
-package deco2800.skyfall.structures;
+package deco2800.skyfall.entities.structures;
 
 import deco2800.skyfall.entities.AbstractEntity;
 
@@ -21,6 +21,7 @@ public abstract class AbstractBuilding extends AbstractEntity {
         this.width = width;
         this.height = height;
         //Cost ( What is needed to build / Blueprints)
+        //This might need to be together, i.e. if a building requires multiple types of objects to build
         this.buildItem = buildItem; //Object needed to build
         this.numItems = numItems; // Num of items needed to build
         //Texture  (Thumbnail to display in menu for player to see what it looks like, can just be the picture)
@@ -37,5 +38,33 @@ public abstract class AbstractBuilding extends AbstractEntity {
      */
     public int getHeight() {return height;}
 
+    /**
+     * @return - Return the "object"(needs to be integrated to items) required to build
+     */
+    public Object getBuildItem() {return buildItem;}
 
+    /**
+     * @return - Return number of the object required to build.
+     */
+    public int getNumItems() {return numItems;}
+
+    /**
+     * @param newWidth - Set new width for building
+     */
+    public void setWidth(int newWidth) {this.width = newWidth;}
+
+    /**
+     * @param newHeight - Set new height for building
+     */
+    public void setheight(int newHeight) {this.height = newHeight;}
+
+    /**
+     * @param newItem - Set new object required to build.
+     */
+    public void setBuildItem(Object newItem) {this.buildItem = newItem;}
+
+    /**
+     * @param newNumItems - Set number of objects required to build.
+     */
+    public void setNumItems(int newNumItems) {this.numItems = newNumItems;}
 }
