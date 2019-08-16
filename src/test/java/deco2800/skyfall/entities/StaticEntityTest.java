@@ -133,21 +133,21 @@ public class StaticEntityTest {
         assertTrue("Tile has had a static entity placed on it with the tile construct"
                 + " thus the tile should have a parent.", tile1.hasParent());
         assertTrue("Tile has had a static entity placed on it with the tile construct"
-                + " thus the tile should be obstructed", tile1.getObstructed());
+                + " thus the tile should be obstructed", tile1.isObstructed());
 
         // Likewise for a static entity that occupies more than one tile
         assertTrue("Tile has had static entity placed on it. Thus the tile should be obstructed.",
-                tile2.getObstructed());
+                tile2.isObstructed());
         assertTrue("Tile has had static entity placed on it. Thus the tile should be obstructed.",
-                tile4.getObstructed());
+                tile4.isObstructed());
 
         assertFalse("Nothing placed on tile yet, should not have parent.", tile3.hasParent());
-        assertFalse("Nothing placed on tile yet, should not be obstructed.", tile3.getObstructed());
+        assertFalse("Nothing placed on tile yet, should not be obstructed.", tile3.isObstructed());
 
         // Now that we have made a duplicate rock on tile 3 we expect that tile
         // 3 would have a parent and is obstructed.
         rock1.newInstance(tile3);
         assertTrue("New instance of static item not found.", tile3.hasParent());
-        assertTrue("New instance of static item not found.", tile3.getObstructed());
+        assertTrue("New instance of static item not found.", tile3.isObstructed());
     }
 }

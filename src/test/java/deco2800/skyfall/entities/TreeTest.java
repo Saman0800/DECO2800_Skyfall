@@ -106,12 +106,12 @@ public class TreeTest {
         assertTrue("Tile has had a rock placed on it with the tile construct thus the tile should have a parent.",
                 tile2.hasParent());
         assertTrue("Tile has had a rock placed on it with the tile construct thus the tile should be obstructed",
-                tile2.getObstructed());
+                tile2.isObstructed());
         // Check that no other tiles have static instances
         assertFalse("Unexpected rock placement.", tile3.hasParent());
-        assertFalse("Unexpected rock placement.", tile3.getObstructed());
+        assertFalse("Unexpected rock placement.", tile3.isObstructed());
         assertFalse("Unexpected rock placement.", tile4.hasParent());
-        assertFalse("Unexpected rock placement.", tile4.getObstructed());
+        assertFalse("Unexpected rock placement.", tile4.isObstructed());
     }
 
     @Test

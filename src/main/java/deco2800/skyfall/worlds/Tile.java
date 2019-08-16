@@ -1,9 +1,7 @@
 package deco2800.skyfall.worlds;
 
-import com.badlogic.gdx.utils.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -143,7 +141,7 @@ public class Tile{
 	}
 
 	public void setTexture(String texture) {
-        setObstructed(checkObstructured(texture));
+        setObstructed(checkObstructed(texture));
 		setIsBuildable(checkIsBuildable(texture));
 		this.texture = texture;
 	}
@@ -194,7 +192,24 @@ public class Tile{
 		this.index = indexValue;		
 	}
 
+	/**
+	 * Returns whether the tile obstructs entities.
+	 *
+	 * @return whether the tile obstructs entities
+	 *
+	 * @deprecated use {@link #isObstructed()}
+	 */
+	@Deprecated
 	public boolean getObstructed() {
+    	return isObstructed();
+	}
+
+	/**
+	 * Returns whether the tile obstructs entities.
+	 *
+	 * @return whether the tile obstructs entities
+	 */
+	public boolean isObstructed() {
 		return obstructed;
 	}
 
@@ -202,7 +217,7 @@ public class Tile{
 		obstructed = b;
 	}
 
-	public boolean checkObstructured(String texture){
+	public boolean checkObstructed(String texture){
 		ArrayList<String> obstructables = new ArrayList<>();
 		obstructables.add("water");
 		for (String obstructable : obstructables){
