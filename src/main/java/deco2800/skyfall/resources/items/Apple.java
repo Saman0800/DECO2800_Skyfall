@@ -44,7 +44,7 @@ public class Apple extends HealthResources implements Item {
 
 
     public Apple(){
-        this.biome = biome;
+       // this.biome = biome;
         this.name ="Apple";
         this.colour ="red";
         //default constructor added for building inventory

@@ -38,7 +38,7 @@ public abstract class HealthResources implements Item {
 
     public HealthResources(){
         //Added this default constructor to resolve an issue in apple class - Kathryn
-        this.name = name;
+        //this.name = name;
         this.carryable = true;
         this.subtype = "Health Resource";
         this.hasHealingPower = true;

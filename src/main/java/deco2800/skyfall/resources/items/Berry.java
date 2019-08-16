@@ -44,7 +44,7 @@ public class Berry extends HealthResources implements Item {
     private Integer NumberOfBerry;
 
     public Berry(){
-        this.biome = biome;
+        //this.biome = biome;
         this.colour ="wine red";
         this.name ="berry";
         //default constructor added for building inventory

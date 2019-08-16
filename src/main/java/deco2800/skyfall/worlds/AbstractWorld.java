@@ -35,7 +35,7 @@ public abstract class AbstractWorld {
     	tiles = new CopyOnWriteArrayList<Tile>();
 //        worldGenNodes = new CopyOnWriteArrayList<>();
     	generateWorld();
-    	generateNeighbours();
+        generateNeighbours();
     	generateTileIndexes();
     }
     
