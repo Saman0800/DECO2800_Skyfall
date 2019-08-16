@@ -22,6 +22,9 @@ public abstract class AbstractBuilding extends AbstractEntity {
         this.height = height;
         //Cost ( What is needed to build / Blueprints)
         //This might need to be together, i.e. if a building requires multiple types of objects to build
+
+        //Make an object to store an object and int
+
         this.buildItem = buildItem; //Object needed to build
         this.numItems = numItems; // Num of items needed to build
         //Texture  (Thumbnail to display in menu for player to see what it looks like, can just be the picture)
