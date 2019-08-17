@@ -16,7 +16,8 @@ public class ProjectileTest  {
     /**
      * Create a new Projectile.
      */
-    private Projectile projectile = new Projectile("slash","projectileTest",1,1,1);
+    private Projectile projectile = new Projectile("slash",
+            "projectileTest",1,1,1,1);
 
 
     /**
