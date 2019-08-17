@@ -95,4 +95,20 @@ public class SoundTest {
             //exception caught
         }
     }
+
+    @Test
+    public void unmuteTest() {
+        try {
+            SoundManager.backgroundGameMusic(file);
+            SoundManager.play();
+            TimeUnit.SECONDS.sleep(1);
+            SoundManager.mute();
+            TimeUnit.SECONDS.sleep(1);
+            SoundManager.unmute();
+            TimeUnit.SECONDS.sleep(1);
+            assertEquals(SoundManager.muteVol.getValue(),false);
+        } catch (Exception e) {
+            //exception caught
+        }
+    }
 }

@@ -26,7 +26,7 @@ public class SoundManager extends AbstractManager {
     private static FloatControl volume;
 
     //Boolean mute control
-    public static BooleanControl muteVol;
+    private static BooleanControl muteVol;
 
     public void playSound(String soundName) {
         Sound sound = Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + soundName));
@@ -128,5 +128,14 @@ public class SoundManager extends AbstractManager {
         //Set mute value to true
         muteVol = (BooleanControl) clip.getControl(BooleanControl.Type.MUTE);
         muteVol.setValue(true);
+    }
+
+    /**
+     * Unmutes the clip
+     */
+    public static void unmute () {
+        //Set mute value to true
+        muteVol = (BooleanControl) clip.getControl(BooleanControl.Type.MUTE);
+        muteVol.setValue(false);
     }
 }
