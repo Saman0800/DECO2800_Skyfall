@@ -53,6 +53,24 @@ public class EntitySpawnTableTest {
         when(mockGM.getWorld()).thenReturn(testWorld);
     }
 
+    //tests the place method
+    @Test
+    public void testPlaceEntity() {
+        Tile tile = new Tile("grass_1_0", 0.0f, 0.0f);
+        Rock rock = new Rock();
+
+        //check tile has no rock
+        assertTrue(!tile.hasParent());
+
+        //place
+        EntitySpawnTable.placeEntity(rock, tile);
+
+        //has the rock
+        assertTrue(tile.hasParent());
+
+    }
+
+
     //simple method to count number of static entities on world
     private int countWorldEntities() {
         int count = 0;
