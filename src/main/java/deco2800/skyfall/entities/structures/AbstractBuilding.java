@@ -9,15 +9,15 @@ import deco2800.skyfall.entities.AbstractEntity;
  */
 public abstract class AbstractBuilding extends AbstractEntity {
 
-    private int xcoord;
-    private int ycoord;
+    private float xcoord;
+    private float ycoord;
 
     /**
      *
      * @param x - X coordinate of building
      * @param y - Y coordinate of building
      */
-    public AbstractBuilding(int x, int y) {
+    public AbstractBuilding(float x, float y) {
         this.xcoord = x;
         this.ycoord = y;
     }
@@ -25,12 +25,12 @@ public abstract class AbstractBuilding extends AbstractEntity {
     /**
      * @return - X coordinate of building
      */
-    public int getXcoord() {return xcoord;}
+    public float getXcoord() {return xcoord;}
 
     /**
      * @return - Y coordinate of building
      */
-    public int getYcoord() {return ycoord;}
+    public float getYcoord() {return ycoord;}
 
     /**
      * @param newXcoord - New X coordinate of building
@@ -43,6 +43,9 @@ public abstract class AbstractBuilding extends AbstractEntity {
     public void setYcoord(int newYcoord) {this.ycoord = newYcoord;}
 
     //place method
+    public void placeBuilding(float x, float y, int height) {
+        setPosition(x, y, height);
+    }
 
     //remove method
 

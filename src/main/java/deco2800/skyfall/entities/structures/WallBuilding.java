@@ -14,9 +14,11 @@ public class WallBuilding extends AbstractBuilding {
     private int sizeX = 1;
     private int sizeY = 1;
 
-    public WallBuilding(int x, int y) {
+    public WallBuilding(float x, float y) {
         super(x, y);
         this.currentHealth = maxHealth;
+        //Ignore that the fence is using a building image.
+        this.setTexture("buildingA");
     }
     /**
      * @return - Health of the fence
