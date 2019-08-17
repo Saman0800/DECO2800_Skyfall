@@ -3,9 +3,10 @@ package deco2800.skyfall.entities;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.Vector2;
 import deco2800.skyfall.Tickable;
-import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.*;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.*;
+import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.*;
 
 import java.util.*;
@@ -13,14 +14,22 @@ import java.util.*;
 /**
  * Main character in the game
  */
-public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserver, Tickable {
+public class MainCharacter extends Peon implements KeyDownObserver,
+        KeyUpObserver, Tickable {
 
-    // List of the player's inventories
-    // TODO need to replace List<String> with List<InventoryClass>
-    private List<String> inventories;
+    // Combat manager for MainCharacter
+    // TODO should be ok once merged with combat
+    // private CombatManager combatManager;
+
+    // List of weapons for MainCharacter
+    // TODO replace List<String> with List<Weapon>
+    private List<String> weapons;
+
+    // Manager for all of MainCharacter's inventories
+    public InventoryManager inventories; // maybe could be public?
 
     // Hotbar of inventories
-    private List<String> hotbar;
+    private List<Item> hotbar;
 
     // The index of the item selected to be used in the hotbar
     // ie. [sword][gun][apple]
@@ -28,7 +37,7 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
     // if selecting gun the equipped_item = 1
     private int equipped_item;
     private final int INVENTORY_MAX_CAPACITY = 20;
-
+    private final int HOTBAR_MAX_CAPACITY = 5;
 
     /*
     Potential future implementations
@@ -46,25 +55,28 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
 
+    // food is from 100 to 0;
+    private int foodLevel;
+
     // Textures for all 6 directions to correspond to movement of character
     private String[] textures;
 
     protected Vector2 direction;
     protected float currentSpeed;
+
     private boolean MOVE_UP = false;
     private boolean MOVE_LEFT = false;
     private boolean MOVE_RIGHT = false;
     private boolean MOVE_DOWN = false;
-
 
     /**
      * Private helper method to instantiate inventory for Main Character
      * constructor
      */
     private void instantiateInventory() {
-        this.inventories = new ArrayList<>();
+        this.inventories = new InventoryManager();
+
         this.hotbar = new ArrayList<>();
-        this.hotbar.add("Rusty Sword");
         this.equipped_item = 0;
     }
 
@@ -83,11 +95,14 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
                 .addKeyDownListener(this);
         GameManager.getManagerFromInstance(InputManager.class)
                 .addKeyUpListener(this);
+
         this.direction = new Vector2(row, col);
         this.direction.limit2(0.05f);
 
+        this.weapons = new ArrayList<>();
+
         this.level = 1;
-        this.instantiateInventory();
+        this.foodLevel = 100;
 
         //TODO: Remove this.
         //this.configure_animations();
@@ -125,71 +140,127 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
         this.setTexture(textures[2]);
     }
 
+    // TODO Replace all (String item) with (Weapon itme)
     /**
      * Adds item to player's collection
-     * @param item inventory being added
+     * @param item weapon being added
      */
-    public void pickUpInventory(String item) {
-        inventories.add(item);
+    public void pickUpInventory(Item item) {
+        this.inventories.inventoryAdd(item);
+    }
+
+    public void pickUpWeapon(String item) {
+        weapons.add(item);
     }
 
     /**
      * Removes items from player's collection
-     * @param item inventory being removed
+     * @param item weapon being removed
      */
+    public void dropWeapon(String item) {
+        if (weapons.contains(item)) {
+            weapons.remove(item);
+        }
+    }
+
     public void dropInventory(String item) {
-        inventories.remove(item);
+        this.inventories.inventoryDrop(item);
     }
 
     /**
-     * Gets the player's inventories, modification of the returned list
+     * Change the player's appearance to the set texture
+     * @param texture the texture to set
+     */
+    public void changeTexture(String texture){
+        this.setTexture(texture);
+    }
+
+    /**
+     * Change the hunger points value for the player
+     * (+ve amount increases hunger points)
+     * (-ve amount decreases hunger points)
+     * @param amount the amount to change it by
+     */
+    public void change_food(int amount){
+        this.foodLevel += amount;
+        if(foodLevel>100) foodLevel = 100;
+        if(foodLevel<0) foodLevel = 0;
+    }
+
+    /**
+     * Get how many hunger points the player has
+     * @return The number of hunger points the player has
+     */
+    public int getFoodLevel(){
+        return foodLevel;
+    }
+
+    /**
+     * Gets the player's weapons, modification of the returned list
      * doesn't impact the internal class
-     * @return a list of the player's inventories
+     * @return a list of the player's weapons
+     * See if the player is starving
+     * @return true if hunger points is <= 0, else false
      */
-    public List<String> getInventories() {
-        return new ArrayList<>(inventories);
+    public boolean isStarving(){
+        return foodLevel <= 0;
     }
 
     /**
-     * Equips an item from the inventory list
-     * Max no of equipped items is 5
-     * @param item inventory being equipped
+     * Get the weapons for the player
+     * @return weapons
      */
-    public void equipItem(String item, int index) {
-        if (hotbar.size() == 5) {
-            String item_to_replace = hotbar.get(index);
-            hotbar.set(index, item);
-            inventories.add(item_to_replace);
-        }
+    public List<String> getWeapons() {
+        return new ArrayList<>(weapons);
     }
 
-    /**
-     * Unequips an item
-     * @param item inventory being unequipped
-     */
-    public void unequipItem(String item) {
-        if(inventories.size() >= INVENTORY_MAX_CAPACITY) {
-            hotbar.remove(item);
-            inventories.add(item);
-        }
-    }
+    /*
+    Methods for actually interacting with weapons, e.g. damage, level-ups, etc.
+    Could also consider writing a WeaponManager similar to InventoryManger if
+    not already done for future sprints.
+    */
 
-    /**
-     * Gets the player's currently equipped inventory, modification of the
-     * returned list doesn't impact the internal class
-     * @return a list of the player's equipped inventories
-     */
-    public List<String> getHotbar() {
-        return new ArrayList<>(hotbar);
-    }
-
-    /**
-     * Gets the item currently equipped
-     * @return the item currently equipped
-     */
-    public String getEquippedItem() {
-        return this.hotbar.get(equipped_item);
-    }
+    /* Pretty much all redundant because we have InventoryManager class */
+//    /**
+//     * Equips an item from the inventory list
+//     * Max no of equipped items is 5
+//     * @param item inventory being equipped
+//     */
+//    public void equipItem(String item, int index) {
+//        if (hotbar.size() == 5) {
+//            String item_to_replace = hotbar.get(index);
+//            hotbar.set(index, item);
+//            inventories.add(item_to_replace);
+//        }
+//    }
+//
+//    /**
+//     * Unequips an item
+//     * @param item inventory being unequipped
+//     */
+//    public void unequipItem(String item) {
+//        if(inventories.size() >= INVENTORY_MAX_CAPACITY) {
+//            hotbar.remove(item);
+//            inventories.add(item);
+//        }
+//    }
+//
+//    /**
+//     * Gets the player's currently equipped inventory, modification of the
+//     * returned list doesn't impact the internal class
+//     * @return a list of the player's equipped inventories
+//     */
+//    public List<String> getHotbar() {
+//        return new ArrayList<>(hotbar);
+//    }
+//
+//    /**
+//     * Gets the item currently equipped
+//     * @return the item currently equipped
+//     */
+//    public String getEquippedItem() {
+//        return this.hotbar.get(equipped_item);
+//    }
 
     /**
      * Change current level of character
@@ -210,12 +281,14 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
     }
 
     /**
-     * Get the inventory of the player
-     * @return the inventory of the player
+     * Set the players inventory to a predefined inventory
+     * e.g for loading player saves
+     * @param inventoryContents the save for the inventory
      */
-    public ArrayList<String> getInventory(){
-        return new ArrayList<>(inventories);
+    public void setInventory(Map<String, List<Item>> inventoryContents, List<String> quickAccessContent) {
+        this.inventories = new InventoryManager(inventoryContents, quickAccessContent);
     }
+
     /*
     Potential more methods and related attributes:
     -record killed enemies
@@ -233,31 +306,33 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
         if (MOVE_RIGHT){this.direction.add(speed, 0.0f);}
     }
 
-    public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
+    public void notifyTouchDown(int screenX, int screenY, int pointer,
+                                int button) {
         // only allow left clicks to move player
         if (button != 0) {
-            // Right click run animation.
-            //TODO: remove this.
-            //System.out.println("MainCharacter Added to Queue");
-            //toBeRun.add(new AnimationLinker(AnimationRole.COMBAT, "mario_right", this.getName(), new int[]{10, 10}));
-            //System.out.println("Right Click run Animation");
+//             Right click run animation.
+//            TODO: remove this.
+//            System.out.println("MainCharacter Added to Queue");
+//            toBeRun.add(new AnimationLinker(AnimationRole.COMBAT,
+//             "mario_right", this.getName(), new int[]{10, 10}));
+//            System.out.println("Right Click run Animation");
             return;
         }
     }
 
-
     /**
-     *
-     * @param i
+     * Handles tick based stuff, e.g. movement
      */
     @Override
-    public void onTick(long i){
+    public void onTick(long i) {
         updateMoveVector();
         this.setCurrentSpeed(this.direction.len());
         this.moveTowards(new HexVector(this.direction.x, this.direction.y));
-        //System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction, this.getPosition(), this.direction.x - this.getCol(), this.direction.y - this.getRow());
-        //System.out.printf("%s%n", this.currentSpeed);
-        //TODO: Check direction for animation here
+//        System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction,
+//         this.getPosition(), this.direction.x - this.getCol(),
+//         this.direction.y - this.getRow());
+//        System.out.printf("%s%n", this.currentSpeed);
+//        TODO: Check direction for animation here
     }
 
     @Override
@@ -267,7 +342,6 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
 
     /**
      * Sets the Player's current movement speed.
-     *
      * @param cSpeed the speed for the player to currently move at.
      */
     private void setCurrentSpeed(float cSpeed){
@@ -303,7 +377,6 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
 
     /**
      * Sets the appropriate movement flags to false on keyUp
-     *
      * @param keycode the key being released
      */
     @Override
@@ -328,4 +401,9 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
     }
 }
 
-
+    /*
+    Potential more methods and related attributes for future sprints:
+    -record killed enemies
+    -interaction with worlds
+    -effects on MainCharacter with different Inventory and Weapon items
+    */

@@ -1,19 +1,14 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.math.Vector2;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.managers.*;
-import deco2800.skyfall.observers.KeyDownObserver;
-import deco2800.skyfall.observers.KeyUpObserver;
 import deco2800.skyfall.tasks.*;
-import deco2800.skyfall.util.HexVector;
 
 /**
  * Base class of character in game where main characters and enemies will
  * inherit from
  */
-public class Peon extends AgentEntity implements  Tickable {
+public class Peon extends AgentEntity implements Tickable {
 	// Task being completed by character
 	protected transient AbstractTask task;
 
@@ -25,7 +20,6 @@ public class Peon extends AgentEntity implements  Tickable {
 
 	// Boolean of whether character is dead
 	private boolean is_dead;
-
 
 	/**
 	 * Constructor with no parameters
@@ -107,7 +101,6 @@ public class Peon extends AgentEntity implements  Tickable {
 		return false;
 	}
 
-
 	/**
 	 * Gets the task for the character
 	 * @return task of character
@@ -116,24 +109,20 @@ public class Peon extends AgentEntity implements  Tickable {
 		return task;
 	}
 
-
     @Override
     /**
      * Handles tick based stuff, e.g. movement
      */
-
     public void onTick(long i) {
         if(task != null && task.isAlive()) {
             if(task.isComplete()) {
-                this.task = GameManager.getManagerFromInstance(TaskPool.class).getTask(this);
+                this.task = GameManager.getManagerFromInstance(TaskPool.class)
+						.getTask(this);
             }
-
             task.onTick(i);
         } else {
             this.task = GameManager.getManagerFromInstance(TaskPool.class)
-                    .getTask(this);
+					.getTask(this);
         }
     }
-
 }
-

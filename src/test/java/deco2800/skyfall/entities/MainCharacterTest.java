@@ -1,5 +1,7 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.resources.items.Stone;
 import org.junit.*;
 
 public class MainCharacterTest {
@@ -9,7 +11,7 @@ public class MainCharacterTest {
 
     @Test
     /**
-     * Test setters and getter from Peon super Character class
+     * Test getters and setters from Peon super Character class
      */
     public void test1() {
         Assert.assertEquals(testCharacter.getName(), "Main Piece");
@@ -27,34 +29,40 @@ public class MainCharacterTest {
 
     @Test
     /**
-     * Test main character is interacting correctly with basic inventory action
+     * Test main character is interacting correctly with basic weapon action
      */
     public void test2() {
-        Assert.assertEquals(testCharacter.getInventories().size(), 0);
-        testCharacter.pickUpInventory("Dagger");
-        testCharacter.pickUpInventory("Sword");
-        Assert.assertEquals(testCharacter.getInventories().size(), 2);
-        testCharacter.dropInventory("Shield");
-        testCharacter.dropInventory("Dagger");
-        Assert.assertEquals(testCharacter.getInventories().size(), 1);
+        Assert.assertEquals(testCharacter.getWeapons().size(), 0);
+        testCharacter.pickUpWeapon("Dagger");
+        testCharacter.pickUpWeapon("Sword");
+        Assert.assertEquals(testCharacter.getWeapons().size(), 2);
+        testCharacter.dropWeapon("Shield");
+        testCharacter.dropWeapon("Dagger");
+        Assert.assertEquals(testCharacter.getWeapons().size(), 1);
+        Assert.assertEquals((int)testCharacter.inventories.getAmount("Stone"), 2);
+        Assert.assertEquals((int)testCharacter.inventories.getAmount("Wood"), 2);
+        Stone stone = new Stone();
+        testCharacter.pickUpInventory(stone);
+        Assert.assertEquals((int)testCharacter.inventories.getAmount("Stone"), 3);
+        testCharacter.dropInventory("Stone");
+        Assert.assertEquals((int)testCharacter.inventories.getAmount("Stone"), 2);
+        pickUpInventoryMultiple(stone, 500);
+        Assert.assertEquals((int)testCharacter.inventories.getAmount("Stone"), 502);
+        /* Had to change inventory method inventoryDropMultiple
+            -   if(amount == num)
+            to:
+            -   if(amount.equals(num)
+            for this to work
+        */
+        testCharacter.inventories.inventoryDropMultiple("Stone",502);
+        Assert.assertEquals((int)testCharacter.inventories.getAmount("Stone"), 0);
+    }
 
-        Assert.assertEquals(testCharacter.getEquippedItem(), "Rusty Sword");
-        testCharacter.equipItem("Sword",0);
-        testCharacter.unequipItem("Shield");
-        testCharacter.pickUpInventory("Shield");
-        Assert.assertEquals(testCharacter.getInventories().size(), 2);
-        testCharacter.equipItem("Shield",1);
-        testCharacter.equipItem("Dagger",2);
-        Assert.assertEquals(testCharacter.getHotbar().size(), 1);
-
-        testCharacter.pickUpInventory("Armour");
-        testCharacter.pickUpInventory("Dagger");
-        testCharacter.pickUpInventory("Boots");
-        testCharacter.pickUpInventory("Hat");
-        testCharacter.equipItem("Armour",0);
-        testCharacter.equipItem("Dagger",1);
-        testCharacter.equipItem("Boots",2);
-        testCharacter.equipItem("Hat",3);
+    private void pickUpInventoryMultiple(Item item, int amount) {
+        for(int i = 0; i < amount; i++) {
+            testCharacter.pickUpInventory(item);
+        }
+        // TODO writes tests with new InventoryManager
     }
 
     @Test

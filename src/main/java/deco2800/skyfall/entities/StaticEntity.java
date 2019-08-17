@@ -99,11 +99,11 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
      * 
      * @return The obstruction value.
      *
-     * @deprecated use isObstructed() instead
+     * @deprecated use {@link #isObstructed()}
      */
     @Deprecated()
     public boolean getObstructed() {
-        return this.obstructed;
+        return isObstructed();
     }
 
     /**
