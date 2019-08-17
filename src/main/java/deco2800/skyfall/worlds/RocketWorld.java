@@ -16,6 +16,7 @@ import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.delaunay.WorldGenException;
 import deco2800.skyfall.worlds.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.delaunay.WorldGenTriangle;
+import deco2800.skyfall.worlds.PerlinNoiseGenerator;
 
 import javax.xml.ws.WebServiceException;
 import java.util.List;
@@ -23,7 +24,7 @@ import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class RocketWorld extends AbstractWorld implements TouchDownObserver {
-    private static final int RADIUS = 4;
+    private static final int RADIUS = 40;
     private static final int WORLD_SIZE = 100;
     private static final int NODE_SPACING = 5;
 
@@ -77,12 +78,18 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
                     // String type = "grass_" + elevation;
                     Tile tile = new Tile(biome, q, r + oddCol);
                     tiles.add(tile);
-                    biome.addTile(tile);
+                    // biome.addTile(tile);
                 }
             }
         }
 
+        PerlinNoiseGenerator perlinNoise = new PerlinNoiseGenerator(random);
+        perlinNoise.setPerlinValues(biome.getTiles(), 10);
+
         addBiome(biome);
+//        for (Tile tile : biome.getTiles()){
+//            System.out.printf("row = %f, col = %f\n", tile.getRow(), tile.getCol());
+//        }
 
         // Create the entities in the game
         player = new PlayerPeon(0f, 0f, 0.05f);

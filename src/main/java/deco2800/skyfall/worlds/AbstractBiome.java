@@ -64,4 +64,6 @@ public abstract class AbstractBiome {
      * @param random the RNG to use to generate the textures
      */
     protected abstract void setTileTextures(Random random);
+
+
 }

@@ -1,5 +1,6 @@
 package deco2800.skyfall.worlds;
 
+import deco2800.skyfall.worlds.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.delaunay.InvalidCoordinatesException;
 import deco2800.skyfall.worlds.delaunay.WorldGenNode;
 

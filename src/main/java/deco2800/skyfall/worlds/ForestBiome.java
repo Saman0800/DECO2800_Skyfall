@@ -30,9 +30,18 @@ public class ForestBiome extends AbstractBiome {
         textures.add("grass_0");
         textures.add("grass_1");
         textures.add("grass_2");
+        textures.add("mountain_0");
+        textures.add("water_0");
+
         for (Tile tile : getTiles()) {
-            int randInt = random.nextInt(textures.size());
-            tile.setTexture(textures.get(randInt));
+//            int randInt = random.nextInt(textures.size());
+            if (tile.getPerlinValue() == 0){
+                tile.setTexture("grass_0");
+            } else if (tile.getPerlinValue() == 1){
+                tile.setTexture("grass_1");
+            } else {
+                tile.setTexture("grass_2");
+            }
         }
     }
 }

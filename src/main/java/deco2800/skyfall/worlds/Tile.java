@@ -16,6 +16,7 @@ import deco2800.skyfall.util.HexVector;
 
 public class Tile{
 	private static int nextID = 0;
+	private double perlinValue;
 
 
 	private static int getNextID() {
@@ -125,7 +126,8 @@ public class Tile{
     }
 
 	public String toString() {
-		return String.format("[%.0f, %.1f: %d]", coords.getCol(), coords.getRow(), index);
+//		return String.format("[%.0f, %.1f: %d]", coords.getCol(), coords.getRow(), index);
+        return String.format("%f", perlinValue);
 	}
 
 	public StaticEntity getParent() {
@@ -269,4 +271,12 @@ public class Tile{
 		return biome;
 	}
 
+
+	public void setPerlinValue(double perlinValue) {
+		this.perlinValue = perlinValue;
+	}
+
+	public double getPerlinValue() {
+		return perlinValue;
+	}
 }
