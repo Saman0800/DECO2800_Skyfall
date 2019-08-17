@@ -1,5 +1,6 @@
 package deco2800.skyfall.worlds;
 
+import deco2800.skyfall.worlds.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.delaunay.InvalidCoordinatesException;
 
@@ -30,6 +31,12 @@ class BiomeGenerator {
 
     private HashMap<WorldGenNode, BiomeInProgress> nodesBiomes;
 
+    public static void generateBiomes(List<WorldGenNode> nodes, Random random, int[] biomeSizes,
+                                      List<AbstractBiome> biomes) throws NotEnoughPointsException {
+        BiomeGenerator biomeGenerator = new BiomeGenerator(nodes, random, biomeSizes, biomes);
+        biomeGenerator.generateBiomesInternal();
+    }
+
     /**
      * Creates a {@code BiomeGenerator} for a list of nodes (but does not start the generation).
      * <p>
@@ -38,7 +45,8 @@ class BiomeGenerator {
      *
      * @param nodes the nodes generated in the previous phase of the world generation
      */
-    public BiomeGenerator(List<WorldGenNode> nodes, Random random, int[] biomeSizes, List<AbstractBiome> realBiomes) {
+    private BiomeGenerator(List<WorldGenNode> nodes, Random random, int[] biomeSizes, List<AbstractBiome> realBiomes)
+            throws NotEnoughPointsException {
         Objects.requireNonNull(nodes, "nodes must not be null");
         Objects.requireNonNull(nodes, "random must not be null");
         Objects.requireNonNull(nodes, "biomeSizes must not be null");
@@ -52,11 +60,12 @@ class BiomeGenerator {
         }
 
         if (biomeSizes.length + 1 != realBiomes.size()) {
-            throw new IllegalArgumentException("The number of biomes must be one greater than the biome sizes");
+            throw new IllegalArgumentException(
+                    "The number of biomes must be one greater than the number of biome sizes");
         }
 
         if (nodes.stream().filter(node -> !node.isBorderNode()).count() < Arrays.stream(biomeSizes).sum()) {
-            throw new IllegalArgumentException("Not enough nodes to build biomes");
+            throw new NotEnoughPointsException("Not enough nodes to build biomes");
         }
 
         this.nodes = nodes;
@@ -68,7 +77,7 @@ class BiomeGenerator {
     /**
      * Runs the generation process.
      */
-    public void generateBiomes() {
+    private void generateBiomesInternal() {
         while (true) {
             try {
                 biomes = new ArrayList<>(biomeSizes.length + 1);
