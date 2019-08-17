@@ -46,6 +46,7 @@ public class BiomeTest {
                         assertEquals("desert_0", tile.getTextureName());
                 }
                 forestBiome.setTileTextures();
+                //Implement test for seeding
                 for (Tile tile : forestBiome.getTiles()){
                         assertEquals("grass_0", tile.getTextureName());
                 }

@@ -35,7 +35,7 @@ public class SoundManager extends AbstractManager {
 
     /**
      * Initialises the Audio Input Stream
-     *
+     * @param file to play
      */
     public static void backgroundGameMusic(String file) throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
@@ -128,5 +128,14 @@ public class SoundManager extends AbstractManager {
         //Set mute value to true
         muteVol = (BooleanControl) clip.getControl(BooleanControl.Type.MUTE);
         muteVol.setValue(true);
+    }
+
+    /**
+     * Unmutes the clip
+     */
+    public static void unmute () {
+        //Set mute value to true
+        muteVol = (BooleanControl) clip.getControl(BooleanControl.Type.MUTE);
+        muteVol.setValue(false);
     }
 }
