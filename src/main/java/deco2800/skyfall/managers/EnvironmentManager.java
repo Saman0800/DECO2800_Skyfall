@@ -1,15 +1,11 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.PlayerPeon;
-import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.*;
 
 import java.util.List;
 
 public class EnvironmentManager {
-   //Game Time variable
-   private long gameTime;
 
    //Hours in a game day
    private long hours;
@@ -18,17 +14,16 @@ public class EnvironmentManager {
    private boolean isDay;
 
    //Biome the player is in
-   private AbstractBiome biome;
+   private String biome;
 
    /**
     * Constructor
     *
     */
    public EnvironmentManager(long i) {
-      gameTime = i;
 
       //Each day cycle goes for approx 24 minutes
-      long time = (gameTime / 60000);
+      long time = (i / 60000);
       hours = time % 24;
 
       //Set Day/Night tracker
@@ -37,19 +32,26 @@ public class EnvironmentManager {
       } else {
          isDay = true;
       }
+
+      //Set biome
+      setBiome();
    }
 
-   public void test() {
+   /**
+    * Private helper function for constructor to set biome
+    */
+   private void setBiome() {
       List<AbstractEntity> entities = GameManager.get().getWorld().getEntities();
       AbstractEntity player;
       for (int i = 0; i < entities.size(); i++) {
-         if (entities.get(i).getObjectName() == "playerPeon") {
+         if (entities.get(i).getObjectName().equals("playerPeon")) {
             player = entities.get(i);
-            HexVector playerPosition = player.getPosition();
-
+            Tile currentTile = GameManager.get().getWorld().getTile(player.getCol(), player.getRow());
+            if (currentTile != null) {
+               biome = currentTile.getBiome().getBiomeName();
+            }
          }
       }
-
    }
 
    /**
@@ -66,8 +68,17 @@ public class EnvironmentManager {
     *
     * @param time The time of day to be set
     */
-   public void setTime(int time) {
+   public void setTime(long time) {
       hours = time;
+   }
+
+   /**
+    * Gets current biome player is in
+    *
+    * @return AbstractBiome Current biome of player
+    */
+   public String currentBiome() {
+      return biome;
    }
 
 
