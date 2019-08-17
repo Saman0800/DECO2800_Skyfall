@@ -4,8 +4,10 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.Vector2;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.inventory.Inventory;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.*;
+import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.*;
 
 import java.util.*;
@@ -15,12 +17,10 @@ import java.util.*;
  */
 public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserver, Tickable {
 
-    // List of the player's inventories
-    // TODO need to replace List<String> with List<InventoryClass>
-    private List<String> inventories;
+    Inventory inventory;
 
     // Hotbar of inventories
-    private List<String> hotbar;
+    private List<Item> hotbar;
 
     // The index of the item selected to be used in the hotbar
     // ie. [sword][gun][apple]
@@ -28,6 +28,7 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
     // if selecting gun the equipped_item = 1
     private int equipped_item;
     private final int INVENTORY_MAX_CAPACITY = 20;
+    private final int HOTBAR_MAX_CAPACITY = 5;
 
 
     /*
@@ -59,18 +60,6 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
     private boolean MOVE_RIGHT = false;
     private boolean MOVE_DOWN = false;
 
-
-    /**
-     * Private helper method to instantiate inventory for Main Character
-     * constructor
-     */
-    private void instantiateInventory() {
-        this.inventories = new ArrayList<>();
-        this.hotbar = new ArrayList<>();
-        this.hotbar.add("Rusty Sword");
-        this.equipped_item = 0;
-    }
-
     /**
      * Basic Main Character constructor
      */
@@ -91,7 +80,8 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
 
         this.level = 1;
         this.foodLevel = 100;
-        this.instantiateInventory();
+
+        inventory = new Inventory();
 
         //TODO: Remove this.
         //this.configure_animations();
@@ -134,8 +124,8 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
      * Adds item to player's collection
      * @param item inventory being added
      */
-    public void pickUpInventory(String item) {
-        inventories.add(item);
+    public void pickUpInventory(Item item) {
+        this.inventory.inventoryAdd(item);
     }
 
     /**
@@ -143,34 +133,43 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
      * @param item inventory being removed
      */
     public void dropInventory(String item) {
-        inventories.remove(item);
+        this.inventory.inventoryDrop(item);
     }
 
+    /**
+     * Change the player's appearance to the set texture
+     * @param texture the texture to set
+     */
     public void changeTexture(String texture){
         this.setTexture(texture);
     }
 
+    /**
+     * Change the hunger points value for the player
+     * (+ve amount increases hunger points)
+     * (-ve amount decreases hunger points)
+     * @param amount the amount to change it by
+     */
     public void change_food(int amount){
         this.foodLevel += amount;
         if(foodLevel>100) foodLevel = 100;
         if(foodLevel<0) foodLevel = 0;
     }
 
+    /**
+     * Get how many hunger points the player has
+     * @return The number of hunger points the player has
+     */
     public int getFoodLevel(){
         return foodLevel;
     }
 
+    /**
+     * See if the player is starving
+     * @return true if hunger points is <= 0, else false
+     */
     public boolean isStarving(){
         return foodLevel <= 0;
-    }
-
-    /**
-     * Gets the player's inventories, modification of the returned list
-     * doesn't impact the internal class
-     * @return a list of the player's inventories
-     */
-    public List<String> getInventories() {
-        return new ArrayList<>(inventories);
     }
 
     /**
@@ -178,11 +177,15 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
      * Max no of equipped items is 5
      * @param item inventory being equipped
      */
-    public void equipItem(String item, int index) {
-        if (hotbar.size() == 5) {
-            String item_to_replace = hotbar.get(index);
+    public void equipItem(Item item, int index) {
+        boolean hasItem = inventory.getAmount(item.getName()) > 0;
+        if(index < 0 || index >= HOTBAR_MAX_CAPACITY) {
+            System.out.println("Invalid hotbar index given");
+        }
+        if(!hasItem) {
+            System.out.println("You do not possess this item");
+        } else {
             hotbar.set(index, item);
-            inventories.add(item_to_replace);
         }
     }
 
@@ -190,11 +193,8 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
      * Unequips an item
      * @param item inventory being unequipped
      */
-    public void unequipItem(String item) {
-        if(inventories.size() >= INVENTORY_MAX_CAPACITY) {
-            hotbar.remove(item);
-            inventories.add(item);
-        }
+    public void unequipItem(Item item) {
+        hotbar.set(hotbar.indexOf(item), null);
     }
 
     /**
@@ -202,7 +202,7 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
      * returned list doesn't impact the internal class
      * @return a list of the player's equipped inventories
      */
-    public List<String> getHotbar() {
+    public List<Item> getHotbar() {
         return new ArrayList<>(hotbar);
     }
 
@@ -210,7 +210,7 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
      * Gets the item currently equipped
      * @return the item currently equipped
      */
-    public String getEquippedItem() {
+    public Item getEquippedItem() {
         return this.hotbar.get(equipped_item);
     }
 
@@ -233,12 +233,14 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
     }
 
     /**
-     * Get the inventory of the player
-     * @return the inventory of the player
+     * Set the players inventory to a predefined inventory
+     * e.g for loading player saves
+     * @param inventoryContents the save for the inventory
      */
-    public ArrayList<String> getInventory(){
-        return new ArrayList<>(inventories);
+    public void setInventory(Map<String, List<Item>> inventoryContents) {
+        this.inventory = new Inventory(inventoryContents);
     }
+
     /*
     Potential more methods and related attributes:
     -record killed enemies

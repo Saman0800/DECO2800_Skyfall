@@ -172,7 +172,7 @@ public class Inventory {
 
                 this.inventory.put(itemName, itemsList);
 
-            } else if(amount == num){
+            } else if(amount.equals(num)){
                 itemsDropped.addAll(itemsList);
                 this.inventory.remove(itemName);
 
