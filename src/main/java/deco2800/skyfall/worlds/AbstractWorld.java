@@ -250,7 +250,7 @@ public abstract class AbstractWorld {
 
                     //collision handler
                     this.handleCollision(e1, e2);
-                    System.out.println("Collision!");
+                    //System.out.println("Collision!");
 
                     break;
                 }
@@ -282,8 +282,11 @@ public abstract class AbstractWorld {
         tilesToDelete.addAll(tiles);
     }
 
+    // e1 is the entity that created the collision
     public void handleCollision(AbstractEntity e1, AbstractEntity e2) {
         //TODO: implement proper game logic for collisions between different types of entities.
+        // i.e. if (e1 instanceof Projectile && e2 instanceof Enemy) {
+        // removeEntity(e2); removeEntity(e1); }
         if (e1 instanceof PlayerPeon) {
             removeEntity(e2);
         } else if (e2 instanceof PlayerPeon) {
