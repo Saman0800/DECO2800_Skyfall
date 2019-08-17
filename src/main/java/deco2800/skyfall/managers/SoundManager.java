@@ -35,7 +35,7 @@ public class SoundManager extends AbstractManager {
 
     /**
      * Initialises the Audio Input Stream
-     *
+     * @param file is the name of the audio intended to be played.
      */
     public static void backgroundGameMusic(String file) throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
@@ -137,5 +137,30 @@ public class SoundManager extends AbstractManager {
         //Set mute value to true
         muteVol = (BooleanControl) clip.getControl(BooleanControl.Type.MUTE);
         muteVol.setValue(false);
+    }
+
+    /**
+     * Gets the current volume of the clip.
+     * @return float of current volume.
+     */
+    public static float getVolume() {
+        // Get the current volume of the clip.
+        volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        return volume.getValue();
+    }
+
+    /**
+     * Sets the volume of the clip.
+     * @param x is the intended float value to set the clip to.
+     */
+    public static void setVolume(float x) throws IndexOutOfBoundsException {
+        // Checks whether the given value is valid.
+        volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        if ( !(x > volume.getMaximum()) && !(x < volume.getMinimum())) {
+            volume.setValue(x);
+        } else {
+            System.out.println("Value is too high/low. Pls don't.");
+            throw new IndexOutOfBoundsException();
+        }
     }
 }
