@@ -26,7 +26,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private List<String> weapons;
 
     // Manager for all of MainCharacter's inventories
-    private InventoryManager inventories; // maybe could be public?
+    public InventoryManager inventories; // maybe could be public?
 
     // Hotbar of inventories
     private List<Item> hotbar;
@@ -77,7 +77,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.inventories = new InventoryManager();
 
         this.hotbar = new ArrayList<>();
-        this.hotbar.add("Rusty Sword");
         this.equipped_item = 0;
     }
 
@@ -147,8 +146,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @param item weapon being added
      */
     public void pickUpInventory(Item item) {
-        this.inventory.inventoryAdd(item);
+        this.inventories.inventoryAdd(item);
     }
+
     public void pickUpWeapon(String item) {
         weapons.add(item);
     }
@@ -164,7 +164,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     public void dropInventory(String item) {
-        this.inventory.inventoryDrop(item);
+        this.inventories.inventoryDrop(item);
     }
 
     /**
@@ -207,9 +207,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Equips an item from the inventory list
-     * Max no of equipped items is 5
-     * @param item inventory being equipped
+     * Get the weapons for the player
+     * @return weapons
      */
     public List<String> getWeapons() {
         return new ArrayList<>(weapons);
@@ -286,8 +285,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * e.g for loading player saves
      * @param inventoryContents the save for the inventory
      */
-    public void setInventory(Map<String, List<Item>> inventoryContents) {
-        this.inventory = new Inventory(inventoryContents);
+    public void setInventory(Map<String, List<Item>> inventoryContents, List<String> quickAccessContent) {
+        this.inventories = new InventoryManager(inventoryContents, quickAccessContent);
     }
 
     /*

@@ -39,23 +39,23 @@ public class MainCharacterTest {
         testCharacter.dropWeapon("Shield");
         testCharacter.dropWeapon("Dagger");
         Assert.assertEquals(testCharacter.getWeapons().size(), 1);
-        Assert.assertEquals((int)testCharacter.inventory.getAmount("Stone"), 2);
-        Assert.assertEquals((int)testCharacter.inventory.getAmount("Wood"), 2);
+        Assert.assertEquals((int)testCharacter.inventories.getAmount("Stone"), 2);
+        Assert.assertEquals((int)testCharacter.inventories.getAmount("Wood"), 2);
         Stone stone = new Stone();
         testCharacter.pickUpInventory(stone);
-        Assert.assertEquals((int)testCharacter.inventory.getAmount("Stone"), 3);
+        Assert.assertEquals((int)testCharacter.inventories.getAmount("Stone"), 3);
         testCharacter.dropInventory("Stone");
-        Assert.assertEquals((int)testCharacter.inventory.getAmount("Stone"), 2);
+        Assert.assertEquals((int)testCharacter.inventories.getAmount("Stone"), 2);
         pickUpInventoryMultiple(stone, 500);
-        Assert.assertEquals((int)testCharacter.inventory.getAmount("Stone"), 502);
+        Assert.assertEquals((int)testCharacter.inventories.getAmount("Stone"), 502);
         /* Had to change inventory method inventoryDropMultiple
             -   if(amount == num)
             to:
             -   if(amount.equals(num)
             for this to work
         */
-        testCharacter.inventory.inventoryDropMultiple("Stone",502);
-        Assert.assertEquals((int)testCharacter.inventory.getAmount("Stone"), 0);
+        testCharacter.inventories.inventoryDropMultiple("Stone",502);
+        Assert.assertEquals((int)testCharacter.inventories.getAmount("Stone"), 0);
     }
 
     private void pickUpInventoryMultiple(Item item, int amount) {
