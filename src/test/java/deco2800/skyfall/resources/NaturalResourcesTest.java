@@ -71,9 +71,19 @@ public class NaturalResourcesTest extends NaturalResources {
     }
 
 
+    //@Test
+   // public void hasHealingPower1() {
+       // assertFalse(naturalResource.hasHealingPower());
+   // }
+
+
     /**
      * Ensure that the item is considered exchangeable for later use in the game
      */
+    @Test
+    public void getCoords1() {
+    }
+
     @Test
     public void isExchangeable1() {
         assertTrue(wood.isExchangeable());
@@ -81,6 +91,7 @@ public class NaturalResourcesTest extends NaturalResources {
         assertTrue(stone.isExchangeable());
         assertTrue(metal.isExchangeable());
         assertTrue(vine.isExchangeable());
+
     }
 
     /**

@@ -7,6 +7,8 @@ import deco2800.skyfall.observers.KeyTypedObserver;
 import java.util.ArrayList;
 import java.util.List;
 
+import deco2800.skyfall.resources.items.*;
+
 public class OnScreenMessageManager extends AbstractManager implements KeyTypedObserver {
     private List<String> messages = new ArrayList<String>();
     boolean isTyping = false;
@@ -65,7 +67,7 @@ public class OnScreenMessageManager extends AbstractManager implements KeyTypedO
 					GameManager.get().getWorld().addEntity(new Peon(0f, 0f, 0.05f,"GOD",10000000));
 				} else if (unsentMessage.startsWith("/resources")) {
 					// Display resources in the console
-					this.addMessage(String.format("Stone: %s", GameManager.getManagerFromInstance(InventoryManager.class).getStone()));
+					this.addMessage(String.format(GameManager.getManagerFromInstance(InventoryManager.class).toString()));
 				} else {
 					GameManager.get().getManager(NetworkManager.class).sendChatMessage(unsentMessage);
 				}
