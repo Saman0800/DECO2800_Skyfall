@@ -1,12 +1,14 @@
 package deco2800.skyfall.entities;
 
 import com.google.gson.annotations.Expose;
+import deco2800.skyfall.animation.AnimationLinker;
+import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.renderers.Renderable;
 import deco2800.skyfall.util.HexVector;
 
-import java.util.Objects;
+import java.util.*;
 
 /**
  * A AbstractEntity is an item that can exist in both 3D and 2D worlds
@@ -18,7 +20,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	
 	@Expose
 	private String objectName = null;
-		
 	private static int nextID = 0;
 
 	public static void resetID() {
@@ -43,8 +44,22 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	/** Whether an entity should trigger a collision when */
 	private boolean collidable = true; 
 	
-	private int renderOrder = 0; 
-	
+	private int renderOrder = 0;
+
+	//For animations
+	/**
+	 * Maps animations roles to animation names
+	 */
+    protected Map<AnimationRole, String> animations;
+	/**
+	 * Current direction that the entity is moving, set in MainCharacter or
+	 * Movement Task.
+	 */
+	protected AnimationRole movingAnimation = AnimationRole.NULL;
+	/**
+	 * Non-looping animations to keep track of run by the Renderer3D.
+	 */
+	protected Queue<AnimationLinker> toBeRun = new PriorityQueue<>();
 	/**
 	 * Constructor for an abstract entity
 	 * @param col the col position on the world
@@ -57,6 +72,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		entityID = AbstractEntity.getNextID();
 		this.setObjectName(ENTITY_ID_STRING);
 		this.renderOrder = renderOrder;
+        animations = new HashMap<>();
 	}
 
 	public AbstractEntity() {
@@ -64,7 +80,10 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		this.colRenderLength = 1f;
 		this.rowRenderLength = 1f;
 		this.setObjectName(ENTITY_ID_STRING);
-	}
+        animations = new HashMap<>();
+    }
+
+
 
 
 	/**
@@ -275,7 +294,45 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	public void dispose() {
 		GameManager.get().getManager(NetworkManager.class).deleteEntity(this);
 		GameManager.get().getWorld().getEntities().remove(this);
-	}	
+	}
+
+
+    //Used for managing animations
+    public void setMovingAnimation(AnimationRole movingAnimation) {
+        this.movingAnimation = movingAnimation;
+    }
+
+	/**
+	 * Current moving state of Entity
+	 * @return animation role.
+	 */
+	public AnimationRole getMovingAnimation() {
+        return movingAnimation;
+    }
+
+	/**
+	 * Gets the associate animation with an animation role
+	 * @param type Animation role to get animation for
+	 * @return animation name
+	 */
+
+	public String getAnimationName(AnimationRole type) {
+	    if (animations.containsKey(type)) {
+            String aniName = animations.get(type);
+            return aniName;
+        }
+	        return null;
+    }
+
+	/**
+	 * Getter for the animation queue
+	 * @return Reference to queue.
+	 */
+	public Queue<AnimationLinker> getToBeRun() {
+		return toBeRun;
+	}
+
+
 }
 
 

@@ -56,6 +56,8 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         this.setObjectName(ENTITY_ID_STRING);
 
         Tile center = GameManager.get().getWorld().getTile(this.getPosition());
+        this.renderOrder = renderOrder;
+        this.obstructed = true;
 
         if (center == null) {
             log.debug("Center is null");
@@ -96,8 +98,20 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
      * A simple getter function to retrieve the obstruction value of this object
      * 
      * @return The obstruction value.
+     *
+     * @deprecated use isObstructed() instead
      */
+    @Deprecated()
     public boolean getObstructed() {
+        return this.obstructed;
+    }
+
+    /**
+     * A simple getter function to retrieve the obstruction value of this object
+     *
+     * @return The obstruction value.
+     */
+    public boolean isObstructed() {
         return this.obstructed;
     }
 
@@ -121,7 +135,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
      * @return A clone of the instance with only the tile position having changed.
      */
     public StaticEntity newInstance(Tile tile) {
-        return new StaticEntity(tile, this.getRenderOrder(), this.getTexture(), this.getObstructed());
+        return new StaticEntity(tile, this.getRenderOrder(), this.getTexture(), this.isObstructed());
     }
 
     /**
