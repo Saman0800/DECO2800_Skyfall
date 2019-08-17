@@ -52,11 +52,22 @@ public class WoodTest extends NaturalResources {
     }
 
 
+    //@Test
+    //public void hasHealingPower1() {
+        //assertFalse(wood.hasHealingPower());
+    //}
+
+    @Test
+    public void getCoords1() {
+    }
+
+
     /**
      * Ensure that the item is considered exchangeable for later use in the game
      */
     @Test
     public void isExchangeable1() {
+
         assertTrue(wood.isExchangeable());
     }
 

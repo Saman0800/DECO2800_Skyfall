@@ -77,6 +77,9 @@ public class GameScreen implements Screen,KeyDownObserver {
 		GameManager.get().setStage(stage);
 		GameManager.get().setCamera(camera);
 
+		/* Add inventory to game manager */
+		gameManager.addManager(new InventoryManager());
+
 		/* Play BGM */
 		try {
 			SoundManager.backgroundGameMusic("resources/sounds/Forest Day.wav");
