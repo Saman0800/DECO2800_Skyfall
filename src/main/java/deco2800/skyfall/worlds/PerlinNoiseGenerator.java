@@ -114,41 +114,53 @@ public class PerlinNoiseGenerator {
             double highestCol = tiles.get(0).getCol();
             double highestRow = tiles.get(0).getRow();
             for (Tile tile : tiles){
-                lowestCol = (tile.getCol() < lowestCol) ? tile.getCol() : lowestCol;
-                lowestRow = (tile.getRow() < lowestRow) ? tile.getRow() : lowestRow;
-                highestCol = (tile.getCol() > highestCol) ? tile.getCol() : highestCol;
-                highestRow = (tile.getRow() > highestRow) ? tile.getRow() : highestRow;
+                lowestCol = Math.min(lowestCol, tile.getCol());
+                lowestRow = Math.min(lowestRow, tile.getRow());
+                highestCol = Math.max(highestCol, tile.getCol());
+                highestRow = Math.max(highestRow, tile.getRow());
             }
 
             double[][][] gradientVectors = getGradientVectors((int) Math.ceil(highestRow - lowestRow)
                 , (int) Math.ceil(highestCol - lowestCol), period);
             for (Tile tile : tiles){
-                tile.setPerlinValue((getPerlinValue((tile.getRow() - lowestRow) , (tile.getCol() - lowestCol), gradientVectors,period)+
-                    getPerlinValue((tile.getRow() - lowestRow + period/2) , (tile.getCol() - lowestCol + period/2), gradientVectors,period))/2);
+                tile.setPerlinValue(getPerlinValue((tile.getRow() - lowestRow) , (tile.getCol() - lowestCol), gradientVectors,period));
+//                tile.setPerlinValue((getPerlinValue((tile.getRow() - lowestRow) , (tile.getCol() - lowestCol), gradientVectors,period)+
+//                    getPerlinValue((tile.getRow() - lowestRow + period/2) , (tile.getCol() - lowestCol + period/2), gradientVectors,period))/2);
             }
 
-
-            double minPerlinValue = tiles.get(0).getPerlinValue();
-            double maxPerlinValue = tiles.get(0).getPerlinValue();
-            for (Tile tile : tiles){
-                minPerlinValue = Math.min(tile.getPerlinValue(), minPerlinValue);
-                maxPerlinValue = Math.max(tile.getPerlinValue(), maxPerlinValue);
-            }
-            System.out.println(maxPerlinValue);
-            for (Tile tile : tiles){
-                tile.setPerlinValue(tile.getPerlinValue() - minPerlinValue);
-                tile.setPerlinValue(Math.floor(tile.getPerlinValue()/(maxPerlinValue-minPerlinValue)*3));
-            }
 
         }
-        //TODO handle cast with not enough itles
-
+        //TODO handle case not enough itles
     }
 
 
-//    public ArrayList[][] getOctavedPerlinNoiseGrid(int width, int height, double startPeriod, int octaves, double attenuation){
-//        ArrayList[][] finalGrid = new ArrayList[height][width];
-//
-//    }
+    public void getOctavedPerlinNoiseGrid(ArrayList<Tile> tiles,int octaves, double startPeriod, double attenuation){
+        for (int octave = 0; octave < octaves; octave++){
+            double period = startPeriod * Math.pow(0.5, octave);
+            double octaveAttenutation = Math.pow(attenuation, octave);
+            setPerlinValues(tiles, period);
+            for (Tile tile : tiles){
+                tile.setPerlinValue(tile.getPerlinValue() * octaveAttenutation);
+            }
+        }
 
+        double maxValue = 0 ;
+        for (int octave = 0; octave < octaves; octave++){
+                maxValue += Math.pow(attenuation, octave);
+        }
+        for (Tile tile: tiles){
+            tile.setPerlinValue(tile.getPerlinValue()/maxValue);
+        }
+
+        double minPerlinValue = tiles.get(0).getPerlinValue();
+        double maxPerlinValue = tiles.get(0).getPerlinValue();
+        for (Tile tile : tiles){
+            minPerlinValue = Math.min(tile.getPerlinValue(), minPerlinValue);
+            maxPerlinValue = Math.max(tile.getPerlinValue(), maxPerlinValue);
+        }
+        for (Tile tile : tiles){
+            tile.setPerlinValue(tile.getPerlinValue() - minPerlinValue);
+            tile.setPerlinValue(Math.floor(tile.getPerlinValue()/(maxPerlinValue-minPerlinValue)*3));
+        }
+    }
 }

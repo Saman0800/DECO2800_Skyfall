@@ -85,7 +85,8 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         }
 
         PerlinNoiseGenerator perlinNoise = new PerlinNoiseGenerator(random);
-        perlinNoise.setPerlinValues(biome.getTiles(), 10);
+//        perlinNoise.setPerlinValues(biome.getTiles(), 30);
+        perlinNoise.getOctavedPerlinNoiseGrid(biome.getTiles(),1, 20, 0.3 );
 
         addBiome(biome);
 //        for (Tile tile : biome.getTiles()){
