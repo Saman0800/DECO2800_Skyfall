@@ -23,7 +23,7 @@ public class SoundManager extends AbstractManager {
     private static Long currentPosition;
 
     //Volume of the clip
-    public static FloatControl volume;
+    private static FloatControl volume;
 
     //Boolean mute control
     public static BooleanControl muteVol;

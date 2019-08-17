@@ -160,4 +160,13 @@ public class SoundTest {
         } catch (Exception e) { }
     }
 
+    @Test
+    public void stopTest(){
+        try {
+            SoundManager.backgroundGameMusic(file);
+            SoundManager.play();
+            SoundManager.stop();
+            assertEquals(SoundManager.getClip().isRunning(), false);
+        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException e) { }
+    }
 }
