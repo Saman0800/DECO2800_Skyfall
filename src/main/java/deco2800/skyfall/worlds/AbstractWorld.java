@@ -7,10 +7,12 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.delaunay.WorldGenNode;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.*;
 
@@ -26,24 +28,40 @@ public abstract class AbstractWorld {
     protected int width;
     protected int length;
 
+    //List that contains the world biomes
+    private ArrayList<AbstractBiome> biomes;
+
     protected CopyOnWriteArrayList<Tile> tiles;
-    protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
+//    protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
 
     protected List<AbstractEntity> entitiesToDelete = new CopyOnWriteArrayList<>();
     protected List<Tile> tilesToDelete = new CopyOnWriteArrayList<>();
 
-    protected AbstractWorld() {
+    protected AbstractWorld(long seed) {
     	tiles = new CopyOnWriteArrayList<Tile>();
-        worldGenNodes = new CopyOnWriteArrayList<>();
-
-    	generateWorld();
-    	generateNeighbours();
+//        worldGenNodes = new CopyOnWriteArrayList<>();
+        biomes = new ArrayList<>();
+    	generateWorld(seed);
+        generateNeighbours();
     	generateTileIndexes();
+    	generateTileTypes();
     }
     
     
-    protected abstract void generateWorld();
-    
+    protected abstract void generateWorld(long seed);
+
+
+    /**
+     * Loops through all the biomes within the world and adds textures to the tiles which
+     * determine their properties
+     */
+    public void generateTileTypes(){
+        //TODO fix the seeding here
+        for (AbstractBiome biome : biomes){
+            biome.setTileTextures(new Random(0));
+        }
+    }
+
     public void generateNeighbours() {
     //multiply coords by 2 to remove floats
     	Map<Integer, Map<Integer, Tile>> tileMap = new HashMap<Integer, Map<Integer, Tile>>();
@@ -254,5 +272,21 @@ public abstract class AbstractWorld {
 
     public void queueTilesForDelete(List<Tile> tiles) {
         tilesToDelete.addAll(tiles);
+    }
+
+
+    /**
+     * Adds a biome to a world
+     * @param biome The biome getting added
+     */
+    public void addBiome(AbstractBiome biome){
+        this.biomes.add(biome);
+    }
+
+    /**
+     * Gets the list of biomes in a world
+     */
+    public ArrayList<AbstractBiome> getBiomes(){
+        return this.biomes;
     }
 }

@@ -6,38 +6,49 @@ import deco2800.skyfall.entities.Collectable;
 import deco2800.skyfall.entities.Harvestable;
 import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.Tree;
+import deco2800.skyfall.entities.Rock;
+import deco2800.skyfall.entities.EntitySpawnTable;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.delaunay.WorldGenNode;
 
 import java.util.List;
 import java.util.Random;
 
 public class RocketWorld extends AbstractWorld implements TouchDownObserver {
-    private static final int RADIUS = 10;
+    private static final int RADIUS = 4;
     private static final int WORLD_SIZE = 10;
     private static final int NODE_SPACING = 5;
 
     private boolean generated = false;
     private PlayerPeon player;
 
-    @Override
-    protected void generateWorld() {
+    // Generating the biome
+    private AbstractBiome biome;
 
-        int nodeCount = (int) Math.round(Math.pow((float)WORLD_SIZE / (float)NODE_SPACING, 2));
+    public RocketWorld(long seed) {
+        super(seed);
+    }
+
+    @Override
+    protected void generateWorld(long seed) {
+
+        int nodeCount = (int) Math.round(Math.pow((float) WORLD_SIZE / (float) NODE_SPACING, 2));
 
         // TODO: if nodeCount is less than the number of biomes, throw an exception
 
-        Random random = new Random();
+        Random random = new Random(seed);
 
-        for (int i = 0; i < nodeCount; i++) {
-            float x = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
-            float y = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
-            worldGenNodes.add(new WorldGenNode(x, y));
-        }
+        // for (int i = 0; i < nodeCount; i++) {
+        // float x = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
+        // float y = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
+        // worldGenNodes.add(new WorldGenNode(x, y));
+        // }
+
+        // Create a new biome
+        biome = new ForestBiome();
 
         for (int q = -1000; q < 1000; q++) {
             for (int r = -1000; r < 1000; r++) {
@@ -45,19 +56,21 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
                     float oddCol = (q % 2 != 0 ? 0.5f : 0);
 
                     int elevation = random.nextInt(2);
-                    String type = "grass_" + elevation;
-
-                    tiles.add(new Tile(type, q, r + oddCol));
+                    // String type = "grass_" + elevation;
+                    Tile tile = new Tile(biome, q, r + oddCol);
+                    tiles.add(tile);
+                    biome.addTile(tile);
                 }
             }
         }
+
+        addBiome(biome);
 
         // Create the entities in the game
         player = new PlayerPeon(0f, 0f, 0.05f);
         addEntity(player);
 
-        GameManager.getManagerFromInstance(InputManager.class)
-                .addTouchDownListener(this);
+        GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
     }
 
     @Override
@@ -79,6 +92,11 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             addEntity(new Tree(tile, true));
 
             generated = true;
+
+            Tile tileRock = getTile(0.0f, 1.0f);
+            Rock startRock = new Rock(tileRock, true);
+            // EntitySpawnTable rockSpawnRule = new EntitySpawnTable();
+            EntitySpawnTable.spawnEntities(startRock, 0.2, biome);
         }
     }
 
