@@ -62,7 +62,6 @@ public class EntitySpawnTable {
         toPlace = java.lang.Math.min(tiles.size(), toPlace);
 
         //place entity on random tiles
-        System.out.print(toPlace);
         for (int i = 0; i < toPlace; i++) {
             Tile tile = tiles.get(i);
             if (tile != null) {
