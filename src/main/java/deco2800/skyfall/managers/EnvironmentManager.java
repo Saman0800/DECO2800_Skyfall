@@ -24,9 +24,9 @@ public class EnvironmentManager {
 
       //Print time
       if (hours > 11 && hours < 24) {
-         System.out.println(pmHours + "pm");
+         //System.out.println(pmHours + "pm");
       } else {
-         System.out.println(hours + "am");
+         //System.out.println(hours + "am");
       }
    }
 
