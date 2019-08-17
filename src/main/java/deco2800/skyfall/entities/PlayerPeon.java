@@ -49,11 +49,11 @@ public class PlayerPeon extends Peon implements TouchDownObserver {
         HexVector position = this.getPosition();
 
         //Spawn projectile in front of character for now.
-        this.hitBox = new Projectile("",
-                "",
+        this.hitBox = new Projectile("slash",
+                "test hitbox",
                 position.getCol()+1,
                 position.getRow(),
-                1);
+                1,1);
 
         //Get AbstractWorld from static class GameManager.
         GameManager manager = GameManager.get();
