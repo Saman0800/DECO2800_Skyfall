@@ -3,8 +3,7 @@ package deco2800.skyfall.entities;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.Vector2;
 import deco2800.skyfall.Tickable;
-import deco2800.skyfall.animation.AnimationRole;
-import deco2800.skyfall.inventory.Inventory;
+import deco2800.skyfall.animation.*;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.*;
 import deco2800.skyfall.resources.Item;
@@ -15,9 +14,19 @@ import java.util.*;
 /**
  * Main character in the game
  */
-public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserver, Tickable {
+public class MainCharacter extends Peon implements KeyDownObserver,
+        KeyUpObserver, Tickable {
 
-    Inventory inventory;
+    // Combat manager for MainCharacter
+    // TODO should be ok once merged with combat
+    // private CombatManager combatManager;
+
+    // List of weapons for MainCharacter
+    // TODO replace List<String> with List<Weapon>
+    private List<String> weapons;
+
+    // Manager for all of MainCharacter's inventories
+    private InventoryManager inventories; // maybe could be public?
 
     // Hotbar of inventories
     private List<Item> hotbar;
@@ -29,7 +38,6 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
     private int equipped_item;
     private final int INVENTORY_MAX_CAPACITY = 20;
     private final int HOTBAR_MAX_CAPACITY = 5;
-
 
     /*
     Potential future implementations
@@ -55,10 +63,23 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
 
     protected Vector2 direction;
     protected float currentSpeed;
+
     private boolean MOVE_UP = false;
     private boolean MOVE_LEFT = false;
     private boolean MOVE_RIGHT = false;
     private boolean MOVE_DOWN = false;
+
+    /**
+     * Private helper method to instantiate inventory for Main Character
+     * constructor
+     */
+    private void instantiateInventory() {
+        this.inventories = new InventoryManager();
+
+        this.hotbar = new ArrayList<>();
+        this.hotbar.add("Rusty Sword");
+        this.equipped_item = 0;
+    }
 
     /**
      * Basic Main Character constructor
@@ -75,13 +96,14 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
                 .addKeyDownListener(this);
         GameManager.getManagerFromInstance(InputManager.class)
                 .addKeyUpListener(this);
+
         this.direction = new Vector2(row, col);
         this.direction.limit2(0.05f);
 
+        this.weapons = new ArrayList<>();
+
         this.level = 1;
         this.foodLevel = 100;
-
-        inventory = new Inventory();
 
         //TODO: Remove this.
         //this.configure_animations();
@@ -98,7 +120,6 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
         animations.put(AnimationRole.MOVE_SOUTH_WEST, "mario_left");
         animations.put(AnimationRole.MOVE_WEST, "mario_left");
         animations.put(AnimationRole.MOVE_EAST, "mario_right");
-
     }
 
     /**
@@ -120,18 +141,28 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
         this.setTexture(textures[2]);
     }
 
+    // TODO Replace all (String item) with (Weapon itme)
     /**
      * Adds item to player's collection
-     * @param item inventory being added
+     * @param item weapon being added
      */
     public void pickUpInventory(Item item) {
         this.inventory.inventoryAdd(item);
     }
+    public void pickUpWeapon(String item) {
+        weapons.add(item);
+    }
 
     /**
      * Removes items from player's collection
-     * @param item inventory being removed
+     * @param item weapon being removed
      */
+    public void dropWeapon(String item) {
+        if (weapons.contains(item)) {
+            weapons.remove(item);
+        }
+    }
+
     public void dropInventory(String item) {
         this.inventory.inventoryDrop(item);
     }
@@ -165,6 +196,9 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
     }
 
     /**
+     * Gets the player's weapons, modification of the returned list
+     * doesn't impact the internal class
+     * @return a list of the player's weapons
      * See if the player is starving
      * @return true if hunger points is <= 0, else false
      */
@@ -177,42 +211,57 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
      * Max no of equipped items is 5
      * @param item inventory being equipped
      */
-    public void equipItem(Item item, int index) {
-        boolean hasItem = inventory.getAmount(item.getName()) > 0;
-        if(index < 0 || index >= HOTBAR_MAX_CAPACITY) {
-            System.out.println("Invalid hotbar index given");
-        }
-        if(!hasItem) {
-            System.out.println("You do not possess this item");
-        } else {
-            hotbar.set(index, item);
-        }
+    public List<String> getWeapons() {
+        return new ArrayList<>(weapons);
     }
 
-    /**
-     * Unequips an item
-     * @param item inventory being unequipped
-     */
-    public void unequipItem(Item item) {
-        hotbar.set(hotbar.indexOf(item), null);
-    }
+    /*
+    Methods for actually interacting with weapons, e.g. damage, level-ups, etc.
+    Could also consider writing a WeaponManager similar to InventoryManger if
+    not already done for future sprints.
+    */
 
-    /**
-     * Gets the player's currently equipped inventory, modification of the
-     * returned list doesn't impact the internal class
-     * @return a list of the player's equipped inventories
-     */
-    public List<Item> getHotbar() {
-        return new ArrayList<>(hotbar);
-    }
-
-    /**
-     * Gets the item currently equipped
-     * @return the item currently equipped
-     */
-    public Item getEquippedItem() {
-        return this.hotbar.get(equipped_item);
-    }
+    /* Pretty much all redundant because we have InventoryManager class */
+//    /**
+//     * Equips an item from the inventory list
+//     * Max no of equipped items is 5
+//     * @param item inventory being equipped
+//     */
+//    public void equipItem(String item, int index) {
+//        if (hotbar.size() == 5) {
+//            String item_to_replace = hotbar.get(index);
+//            hotbar.set(index, item);
+//            inventories.add(item_to_replace);
+//        }
+//    }
+//
+//    /**
+//     * Unequips an item
+//     * @param item inventory being unequipped
+//     */
+//    public void unequipItem(String item) {
+//        if(inventories.size() >= INVENTORY_MAX_CAPACITY) {
+//            hotbar.remove(item);
+//            inventories.add(item);
+//        }
+//    }
+//
+//    /**
+//     * Gets the player's currently equipped inventory, modification of the
+//     * returned list doesn't impact the internal class
+//     * @return a list of the player's equipped inventories
+//     */
+//    public List<String> getHotbar() {
+//        return new ArrayList<>(hotbar);
+//    }
+//
+//    /**
+//     * Gets the item currently equipped
+//     * @return the item currently equipped
+//     */
+//    public String getEquippedItem() {
+//        return this.hotbar.get(equipped_item);
+//    }
 
     /**
      * Change current level of character
@@ -258,31 +307,33 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
         if (MOVE_RIGHT){this.direction.add(speed, 0.0f);}
     }
 
-    public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
+    public void notifyTouchDown(int screenX, int screenY, int pointer,
+                                int button) {
         // only allow left clicks to move player
         if (button != 0) {
-            // Right click run animation.
-            //TODO: remove this.
-            //System.out.println("MainCharacter Added to Queue");
-            //toBeRun.add(new AnimationLinker(AnimationRole.COMBAT, "mario_right", this.getName(), new int[]{10, 10}));
-            //System.out.println("Right Click run Animation");
+//             Right click run animation.
+//            TODO: remove this.
+//            System.out.println("MainCharacter Added to Queue");
+//            toBeRun.add(new AnimationLinker(AnimationRole.COMBAT,
+//             "mario_right", this.getName(), new int[]{10, 10}));
+//            System.out.println("Right Click run Animation");
             return;
         }
     }
 
-
     /**
-     *
-     * @param i
+     * Handles tick based stuff, e.g. movement
      */
     @Override
-    public void onTick(long i){
+    public void onTick(long i) {
         updateMoveVector();
         this.setCurrentSpeed(this.direction.len());
         this.moveTowards(new HexVector(this.direction.x, this.direction.y));
-        //System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction, this.getPosition(), this.direction.x - this.getCol(), this.direction.y - this.getRow());
-        //System.out.printf("%s%n", this.currentSpeed);
-        //TODO: Check direction for animation here
+//        System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction,
+//         this.getPosition(), this.direction.x - this.getCol(),
+//         this.direction.y - this.getRow());
+//        System.out.printf("%s%n", this.currentSpeed);
+//        TODO: Check direction for animation here
     }
 
     @Override
@@ -292,7 +343,6 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
 
     /**
      * Sets the Player's current movement speed.
-     *
      * @param cSpeed the speed for the player to currently move at.
      */
     private void setCurrentSpeed(float cSpeed){
@@ -328,7 +378,6 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
 
     /**
      * Sets the appropriate movement flags to false on keyUp
-     *
      * @param keycode the key being released
      */
     @Override
@@ -353,4 +402,9 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
     }
 }
 
-
+    /*
+    Potential more methods and related attributes for future sprints:
+    -record killed enemies
+    -interaction with worlds
+    -effects on MainCharacter with different Inventory and Weapon items
+    */

@@ -11,7 +11,7 @@ public class MainCharacterTest {
 
     @Test
     /**
-     * Test setters and getter from Peon super Character class
+     * Test getters and setters from Peon super Character class
      */
     public void test1() {
         Assert.assertEquals(testCharacter.getName(), "Main Piece");
@@ -29,9 +29,16 @@ public class MainCharacterTest {
 
     @Test
     /**
-     * Test main character is interacting correctly with basic inventory action
+     * Test main character is interacting correctly with basic weapon action
      */
     public void test2() {
+        Assert.assertEquals(testCharacter.getWeapons().size(), 0);
+        testCharacter.pickUpWeapon("Dagger");
+        testCharacter.pickUpWeapon("Sword");
+        Assert.assertEquals(testCharacter.getWeapons().size(), 2);
+        testCharacter.dropWeapon("Shield");
+        testCharacter.dropWeapon("Dagger");
+        Assert.assertEquals(testCharacter.getWeapons().size(), 1);
         Assert.assertEquals((int)testCharacter.inventory.getAmount("Stone"), 2);
         Assert.assertEquals((int)testCharacter.inventory.getAmount("Wood"), 2);
         Stone stone = new Stone();
@@ -55,6 +62,7 @@ public class MainCharacterTest {
         for(int i = 0; i < amount; i++) {
             testCharacter.pickUpInventory(item);
         }
+        // TODO writes tests with new InventoryManager
     }
 
     @Test

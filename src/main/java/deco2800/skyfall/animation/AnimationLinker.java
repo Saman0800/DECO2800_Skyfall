@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
  */
 public class AnimationLinker {
 
-    private final String entityName;
     private int offset[];
     private AnimationRole type;
     private String animationName;
@@ -23,18 +22,24 @@ public class AnimationLinker {
     private final Logger logger = LoggerFactory.getLogger(AnimationLinker.class);
     private boolean isCompleted = false;
 
-    public AnimationLinker(AnimationRole type, String animationName,
-                           String entityName, int offset[]) {
-        this.type = type;
+
+    /**
+     * Construct
+     * @param type Animation Type
+     * @param animationName The name of the animation name
+     * @param offset Position to display animation relative to the entity. Needs
+     *               to be of length 2. Only first 2 values are used.
+     */
+    public AnimationLinker(AnimationRole type, String animationName, int offset[]) {
+            this.type = type;
         this.animationName = animationName;
-        this.entityName = entityName;
-        
+
         this.animation = animationManager.getAnimation(animationName);
         if (animation == null) {
-            logger.error(animationName + " for entity " + entityName + "not found.");
+            logger.error(animationName + " for entity" + "not found.");
         }
         if (offset.length != 2) {
-            logger.error(animationName + " for entity " + entityName + ": incorrect offset specified. Must of length 2");
+            logger.error(animationName + " for entity " + ": incorrect offset specified. Must of length 2");
 
         }
         this.startingTime = 0f;
@@ -44,6 +49,7 @@ public class AnimationLinker {
     }
      /**
       * Increments the internal animation time
+      * @param incr Time to increment by this is done by Renderer3D.
      **/
     public void incrTime(float incr) {
         this.startingTime += incr;
@@ -51,10 +57,6 @@ public class AnimationLinker {
 
 
     /*GETTERS AND SETTERS*/
-
-    public String getEntityName() {
-        return entityName;
-    }
 
     public String getAnimationName() {
         return animationName;

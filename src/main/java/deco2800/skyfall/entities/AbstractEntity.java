@@ -57,7 +57,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 */
 	protected AnimationRole movingAnimation = AnimationRole.NULL;
 	/**
-	 * Non-looping animations to keep track of run by the Renderer3D.
+	 * Non-looping animations to keep track of run by the Renderer3D associated
+	 * to this entity
 	 */
 	protected Queue<AnimationLinker> toBeRun = new PriorityQueue<>();
 	/**
