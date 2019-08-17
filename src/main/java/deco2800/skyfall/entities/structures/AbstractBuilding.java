@@ -1,13 +1,12 @@
 package deco2800.skyfall.entities.structures;
 
-//Most likely extend from this to render structures.
 import deco2800.skyfall.entities.AbstractEntity;
 
 /**
  * An abstract building is an item that can be placed in the world
  * by the player.
  */
-public abstract class AbstractBuilding {
+public abstract class AbstractBuilding extends AbstractEntity {
 
     private int xcoord;
     private int ycoord;
