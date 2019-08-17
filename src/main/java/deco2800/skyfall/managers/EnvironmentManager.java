@@ -1,6 +1,11 @@
 package deco2800.skyfall.managers;
 
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.PlayerPeon;
+import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.*;
+
+import java.util.List;
 
 public class EnvironmentManager {
    //Game Time variable
@@ -9,8 +14,8 @@ public class EnvironmentManager {
    //Hours in a game day
    private long hours;
 
-   //Night hours in a game day
-   private long pmHours;
+   //Day/Night tracker
+   private boolean isDay;
 
    //Biome the player is in
    private AbstractBiome biome;
@@ -23,15 +28,28 @@ public class EnvironmentManager {
       gameTime = i;
 
       //Each day cycle goes for approx 24 minutes
-      long time = (gameTime/ 60000);
+      long time = (gameTime / 60000);
       hours = time % 24;
 
-      pmHours = hours;
-
-      //Refactor hours to standard time
+      //Set Day/Night tracker
       if (hours > 12 && hours < 24) {
-         pmHours = hours - 12;
+         isDay = false;
+      } else {
+         isDay = true;
       }
+   }
+
+   public void test() {
+      List<AbstractEntity> entities = GameManager.get().getWorld().getEntities();
+      AbstractEntity player;
+      for (int i = 0; i < entities.size(); i++) {
+         if (entities.get(i).getObjectName() == "playerPeon") {
+            player = entities.get(i);
+            HexVector playerPosition = player.getPosition();
+
+         }
+      }
+
    }
 
    /**
@@ -40,11 +58,6 @@ public class EnvironmentManager {
     * @return long The time of day
     */
    public long getTime() {
-      if (hours > 11 && hours < 24) {
-         return pmHours;
-         //System.out.println(pmHours + "pm");
-      }
-      //System.out.println(hours + "am");
       return hours;
    }
 
