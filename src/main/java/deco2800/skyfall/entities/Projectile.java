@@ -58,6 +58,14 @@ public class Projectile extends AbstractEntity {
     }
 
     /**
+     * Get the damage this projectile will
+     * @return
+     */
+    public int getDamage() {
+        return this.damage;
+    }
+
+    /**
      * Checks how long the projectile has been alive
      * for and deletes after a set number of game ticks.
      * @param tick Current game tick.
