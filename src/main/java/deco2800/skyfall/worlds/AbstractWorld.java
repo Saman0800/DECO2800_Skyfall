@@ -5,6 +5,7 @@ import deco2800.skyfall.entities.AgentEntity;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.delaunay.WorldGenNode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +32,7 @@ public abstract class AbstractWorld {
     private ArrayList<AbstractBiome> biomes;
 
     protected CopyOnWriteArrayList<Tile> tiles;
-//    protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
+    protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
 
     protected List<AbstractEntity> entitiesToDelete = new CopyOnWriteArrayList<>();
     protected List<Tile> tilesToDelete = new CopyOnWriteArrayList<>();
