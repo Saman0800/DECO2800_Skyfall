@@ -101,9 +101,8 @@ public class EntitySpawnRule {
     /**
      * @param biome object the name of the biome, pretty safe, can be null for no biome
      */
-    public void setBiome(AbstractBiome biome) {
-        this.biome =
-                biome != null? biome.getBiomeName() : "";
+    public <B extends AbstractBiome> void setBiome(B biome) {
+        this.biome = biome != null? biome.getBiomeName() : "";
     }
 
     public String getBiome() {
