@@ -104,7 +104,6 @@ public class MainCharacter extends Peon implements KeyDownObserver, KeyUpObserve
         animations.put(AnimationRole.MOVE_SOUTH_WEST, "mario_left");
         animations.put(AnimationRole.MOVE_WEST, "mario_left");
         animations.put(AnimationRole.MOVE_EAST, "mario_right");
-
     }
 
     /**

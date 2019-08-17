@@ -205,7 +205,7 @@ public class Renderer3D implements Renderer {
 							childTex.getHeight() * WorldUtil.SCALE_Y );				 
 				}
 			}
-            //runAnimations(batch, entity, entityWorldCoord);
+            runAnimations(batch, entity, entityWorldCoord);
             runMovementAnimations(batch, entity, entityWorldCoord, tex);
 		}
 
@@ -290,12 +290,13 @@ public class Renderer3D implements Renderer {
 
 
     /**
-     * Runs the movement animations for the current entity. If NULL draws a
-     * static texture
+     * Runs the movement animations for the current entity. If NULL draws the
+     * static texture gotten by Entity.getTexture().
      * @param batch Sprite batch to draw onto
      * @param entity Entity who the animation is associate with
      * @param entityWorldCoord Where on the game screen the entity is
-     * @param tex Texture to draw if
+     * @param tex Texture to draw if animation does not exist or is in state
+	 *            AnimationRole.NULL
      */
 	private void runMovementAnimations(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord, Texture tex) {
 		AnimationRole moveType = entity.getMovingAnimation();
