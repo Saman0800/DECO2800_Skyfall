@@ -29,8 +29,18 @@ public class Weapon implements Item, IWeapon {
     }
 
     @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
     public String getWeaponType() {
         return this.weaponType;
+    }
+
+    @Override
+    public String getDamageType() {
+        return this.damageType;
     }
 
     @Override
@@ -48,13 +58,5 @@ public class Weapon implements Item, IWeapon {
         return this.damage;
     }
 
-    @Override
-    public String getDamageType() {
-        return this.damageType;
-    }
 
-    @Override
-    public String getName() {
-        return this.name;
-    }
 }
