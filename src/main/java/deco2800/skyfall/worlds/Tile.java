@@ -126,8 +126,7 @@ public class Tile{
     }
 
 	public String toString() {
-//		return String.format("[%.0f, %.1f: %d]", coords.getCol(), coords.getRow(), index);
-        return String.format("%f", perlinValue);
+		return String.format("[%.0f, %.1f: %d]", coords.getCol(), coords.getRow(), index);
 	}
 
 	public StaticEntity getParent() {
@@ -255,6 +254,11 @@ public class Tile{
     	this.isBuildable = isBuildable;
 	}
 
+	/**
+	 * Checks whether a tile is able to built on depending on the texture name
+	 * @param texture The texture being checked
+	 * @return False if the tile can not be built on, and true if it can
+	 */
 	private boolean checkIsBuildable(String texture){
 		ArrayList<String> buildables = new ArrayList<>();
 		buildables.add("water");
@@ -267,14 +271,22 @@ public class Tile{
 		return false;
 	}
 
+	/**
+	 * Gets the reference to the biome the tile is in
+	 * @return An AbstractBiome representing the biome the tile is in
+	 */
 	public AbstractBiome getBiome(){
 		return biome;
 	}
 
-
+	/**
+	 * Sets the perlin noise value
+	 * @param perlinValue The noise value
+	 */
 	public void setPerlinValue(double perlinValue) {
 		this.perlinValue = perlinValue;
 	}
+
 
 	public double getPerlinValue() {
 		return perlinValue;
