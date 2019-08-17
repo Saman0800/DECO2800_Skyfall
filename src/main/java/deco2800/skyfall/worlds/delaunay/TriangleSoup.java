@@ -71,10 +71,8 @@ class TriangleSoup {
      * edge as specified. If no neighbor sharing the same edge exists null is
      * returned.
      *
-     * @param triangle
-     *            The triangle
-     * @param edge
-     *            The edge
+     * @param triangle The triangle
+     * @param edge The edge
      * @return The triangles neighbor triangle sharing the same edge or null if
      *         no triangle exists
      */
@@ -93,8 +91,7 @@ class TriangleSoup {
      * triangle may differ. To find the other triangle that shares this edge use
      * the findNeighbour(WorldGenTriangle triangle, WorldGenEdge edge) method.
      *
-     * @param edge
-     *            The edge
+     * @param edge The edge
      * @return Returns one triangle that shares the specified edge
      */
     public WorldGenTriangle findOneTriangleSharing(WorldGenEdge edge) {
@@ -109,8 +106,7 @@ class TriangleSoup {
     /**
      * Returns the edge from the triangle soup nearest to the specified point.
      *
-     * @param point
-     *            The point
+     * @param point The point
      * @return The edge from the triangle soup nearest to the specified point
      */
     public WorldGenEdge findNearestEdge(WorldGenNode point) {
@@ -145,5 +141,27 @@ class TriangleSoup {
         triangleSoup.removeAll(trianglesToBeRemoved);
     }
 
+    public void findBorderNodes() {
+        for (WorldGenTriangle triangle : this.getTriangles()) {
+            WorldGenEdge edgeAB = new WorldGenEdge(triangle.a, triangle.b);
+            // If there is no triangle on the other side of the edge, both nodes
+            // are border nodes
+            if (findNeighbour(triangle, edgeAB) == null) {
+                triangle.a.setBorderNode(true);
+                triangle.b.setBorderNode(true);
+            }
+            // TODO find out if it is impossible for all three to be border nodes
+            WorldGenEdge edgeAC = new WorldGenEdge(triangle.a, triangle.c);
+            if (findNeighbour(triangle, edgeAC) == null) {
+                triangle.a.setBorderNode(true);
+                triangle.c.setBorderNode(true);
+            }
+            WorldGenEdge edgeBC = new WorldGenEdge(triangle.b, triangle.c);
+            if (findNeighbour(triangle, edgeBC) == null) {
+                triangle.b.setBorderNode(true);
+                triangle.c.setBorderNode(true);
+            }
+        }
+    }
 
 }

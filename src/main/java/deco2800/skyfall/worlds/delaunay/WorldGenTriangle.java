@@ -217,7 +217,7 @@ public class WorldGenTriangle {
     }
 
     /**
-     * Calculates the coordinates circumcentre of the triangle
+     * Calculates the coordinates circumcentre of the triangle.
      * This method was not taken from the source of the rest of this class
      *
      * @author Daniel Nathan
@@ -230,14 +230,75 @@ public class WorldGenTriangle {
         double by = b.getY();
         double cx = c.getX();
         double cy = c.getY();
-        // Check if the points are colinear
-        if ((by - ay) / (bx - ax) == (cy - ay) / (cx - ax)) {
+
+        // Check if the points are collinear
+
+        // If they all have the same x value they are collinear
+        if (ax == bx && ax == cx) {
             throw new CollinearPointsException();
         }
+
+        // If two have the same x value and one doesn't, they aren't collinear
+        // If they all have different x values, they are collinear if any two of
+        // The gradients between them are equal
+        if (ax != bx && ax != cx) {
+            if ((by - ay) / (bx - ax) == (cy - ay) / (cx - ax)) {
+                throw new CollinearPointsException();
+            }
+        }
+
+        // The coordinates to return. This method calculates the circumcentre by
+        // finding the intersection between the normals of sides AB and AC
+        // passing through the midpoint
         double[] coords = {0, 0};
-        coords[0] = ((ay - by) * (by - cy) * (cy - ay) + (ay * (cx * cx - bx * bx) + by * (ax * ax - cx * cx) + cy * (bx * bx - ax * ax)))
-                / (2*(ax * (by - cy) + bx * (cy - ay) + cx * (ay - by)));
-        coords[1] = (ay + by) / 2 + (bx - ax) / (ay - by) * (coords[0] - (ax + bx) / 2);
+
+        // The midpoints of the sides of the triangle
+        double[] midAB = {(ax + bx) / 2, (ay + by) / 2};
+        double[] midAC = {(ax + cx) / 2, (ay + cy) / 2};
+
+        // See if two points have the same y value (if so, the gradient of the
+        // normal is undefined)
+        boolean sameYAB = false;
+        boolean sameYAC = false;
+
+        // else if is used because from the collinearity check, they can't all
+        // have the same y value
+        if (ay == by) {
+            sameYAB = true;
+            // The normal line will be vertical passing through the midpoint
+            // meaning the x value is the same as that of the midpoint
+            coords[0] = midAB[0];
+        } else if (ay == cy) {
+            sameYAC = true;
+            coords[0] = midAC[0];
+        }
+
+        // The slope of the normal to the sides of the triangle;
+        double normAB = 0;
+        double normAC = 0;
+
+        // Don't calculate the slopes if it will cause division by 0
+        if (!sameYAB) {
+            normAB = (bx - ax) / (ay - by);
+        }
+        if (!sameYAC) {
+            normAC = (cx - ax) / (ay - cy);
+        }
+
+        if (sameYAB) {
+            // Substitute into y-y0 = m(x-x0) for the normal to AC
+            coords[1] = midAC[1] + normAC * (midAB[0] - midAC[0]);
+        } else if (sameYAC) {
+            // Substitute into y-y0 = m(x-x0) for the normal to AB
+            coords[1] = midAB[1] + normAB * (midAC[0] - midAB[0]);
+        } else {
+            // Solution to simultaneous equations y - yab = mab(x - xab) and
+            // y - yac = mac(x - xac)
+            coords[0] = (normAB * midAB[0] - normAC * midAC[0]
+                    - midAB[1] + midAC[1]) / (normAB - normAC);
+            coords[1] = midAB[1] + normAB * (coords[0] - midAB[0]);
+        }
+
         return coords;
     }
 

@@ -28,6 +28,9 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     // List of tiles that are within the polygon defined by this node
     private List<Tile> tiles;
 
+    // Whether or not this is a border node
+    private boolean borderNode;
+
     /**
      * Constructor for a WorldGenNode
      * @param x the x coordinate of the node
@@ -39,6 +42,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         this.neighbours = new ArrayList<>();
         this.vertices = new ArrayList<>();
         this.tiles = new ArrayList<>();
+        this.borderNode = false;
     }
 
     @Override
@@ -484,6 +488,9 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         triangleSoup.removeTrianglesUsing(superTriangle.b);
         triangleSoup.removeTrianglesUsing(superTriangle.c);
 
+        // Set the borderNode variable for each node in the soup
+        triangleSoup.findBorderNodes();
+
         return triangleSoup;
     }
 
@@ -571,5 +578,17 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
 
     public List<Tile> getTiles() {
         return this.tiles;
+    }
+
+    public void setBorderNode(boolean borderNode) {
+        this.borderNode = borderNode;
+    }
+
+    /**
+     * Returns whether or not this is a border node
+     * @return whether or not this is a border node
+     */
+    public boolean isBorderNode() {
+        return this.borderNode;
     }
 }

@@ -15,10 +15,12 @@ import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.delaunay.WorldGenException;
 import deco2800.skyfall.worlds.delaunay.WorldGenNode;
+import deco2800.skyfall.worlds.delaunay.WorldGenTriangle;
 
 import javax.xml.ws.WebServiceException;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class RocketWorld extends AbstractWorld implements TouchDownObserver {
     private static final int RADIUS = 4;
@@ -44,6 +46,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         // TODO: if nodeCount is less than the number of biomes, throw an exception
 
         Random random = new Random(seed);
+        worldGenNodes = new CopyOnWriteArrayList<>();
 
         for (int i = 0; i < nodeCount; i++) {
             // Sets coordinates to a random number from -WORLD_SIZE to WORLD_SIZE
@@ -52,6 +55,9 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             worldGenNodes.add(new WorldGenNode(x, y));
         }
 
+        // Apply Delaunay triangulation to the nodes, so that vertices and
+        // adjacencies can be calculated. Also apply Lloyd Relaxation twice
+        // for more smooth looking polygons
         try {
             WorldGenNode.calculateVertices(worldGenNodes);
             WorldGenNode.lloydRelaxation(worldGenNodes, 2);
