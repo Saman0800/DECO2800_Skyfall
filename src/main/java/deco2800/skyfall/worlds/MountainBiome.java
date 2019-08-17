@@ -29,10 +29,10 @@ public class MountainBiome extends AbstractBiome {
      */
     @Override
     protected void setTileTextures(Random random) {
-//        textures.add("mountain_0");
-//        for (Tile tile : getTiles()) {
-//            int randInt = random.nextInt(textures.size());
-//            tile.setTexture(textures.get(randInt));
-//        }
+        textures.add("mountain_0");
+        for (Tile tile : getTiles()) {
+            int randInt = random.nextInt(textures.size());
+            tile.setTexture(textures.get(randInt));
+        }
     }
 }
