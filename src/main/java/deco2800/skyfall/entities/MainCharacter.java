@@ -43,6 +43,9 @@ public class MainCharacter extends Peon implements TouchDownObserver {
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
 
+    // food is from 100 to 0;
+    private int foodLevel;
+
     // Textures for all 6 directions to correspond to movement of character
     private String[] textures;
 
@@ -72,6 +75,7 @@ public class MainCharacter extends Peon implements TouchDownObserver {
                 .addTouchDownListener(this);
 
         this.level = 1;
+        this.foodLevel = 100;
         this.instantiateInventory();
     }
 
@@ -108,6 +112,24 @@ public class MainCharacter extends Peon implements TouchDownObserver {
      */
     public void dropInventory(String item) {
         inventories.remove(item);
+    }
+
+    public void changeTexture(String texture){
+        this.setTexture(texture);
+    }
+
+    public void change_food(int amount){
+        this.foodLevel += amount;
+        if(foodLevel>100) foodLevel = 100;
+        if(foodLevel<0) foodLevel = 0;
+    }
+
+    public int getFoodLevel(){
+        return foodLevel;
+    }
+
+    public boolean isStarving(){
+        return foodLevel <= 0;
     }
 
     /**
