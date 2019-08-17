@@ -27,16 +27,16 @@ public class ForestBiome extends AbstractBiome {
      */
     @Override
     protected void setTileTextures(Random random) {
-
         PerlinNoiseGenerator perlinNoise = new PerlinNoiseGenerator(random);
-        perlinNoise.getOctavedPerlinNoiseGrid(getTiles(), 2, 30 , 0.5);
-        perlinNoise.normalisePerlinValues(getTiles(),5);
+        // perlinNoise.getOctavedPerlinNoiseGrid(getTiles(), 2, 30, 0.5);
+        perlinNoise.getOctavedPerlinNoiseGrid(getTiles(), 2, 15, 0.5);
+        perlinNoise.normalisePerlinValues(getTiles(),3);
 
         textures.add("grass_0");
         textures.add("grass_1");
         textures.add("grass_2");
-        textures.add("mountain_0");
-        textures.add("water_0");
+//        textures.add("mountain_0");
+//        textures.add("water_0");
 
         for (Tile tile : getTiles()) {
 //            int randInt = random.nextInt(textures.size());
@@ -47,18 +47,16 @@ public class ForestBiome extends AbstractBiome {
                 case 1:
                     tile.setTexture("grass_1");
                     break;
-                case 2:
+//                case 2:
+                default:
                     tile.setTexture("grass_2");
                     break;
-                case 3:
-                    tile.setTexture("mountain_0");
-                    break;
-                default:
-                    tile.setTexture("water_0");
-
-
+//                case 3:
+//                    tile.setTexture("mountain_0");
+//                    break;
+//                default:
+//                    tile.setTexture("water_0");
             }
-
         }
     }
 }

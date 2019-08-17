@@ -71,9 +71,8 @@ public class SaveLoadTest {
         float row_one = 1.0f;
         float col_two = 4.0f;
         float row_two = 5.0f;
-        AbstractBiome biome = new ForestBiome();
-        saveTileMap.add(new Tile(biome, col_one, row_one));
-        saveTileMap.add(new Tile(biome, col_two, row_two));
+        saveTileMap.add(new Tile(col_one, row_one));
+        saveTileMap.add(new Tile(col_two, row_two));
         w.setTileMap(saveTileMap);
 
         newEntities.put(0, new PlayerPeon(1, 1, 1));

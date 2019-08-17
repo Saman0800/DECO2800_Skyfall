@@ -28,11 +28,8 @@ public abstract class AbstractWorld {
     protected int width;
     protected int length;
 
-    //Seed used for all the world generation
-    private long seed;
-
     //List that contains the world biomes
-    private ArrayList<AbstractBiome> biomes;
+    protected ArrayList<AbstractBiome> biomes;
 
     protected CopyOnWriteArrayList<Tile> tiles;
     protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
@@ -41,29 +38,30 @@ public abstract class AbstractWorld {
     protected List<Tile> tilesToDelete = new CopyOnWriteArrayList<>();
 
     protected AbstractWorld(long seed) {
-        this.seed = seed;
+        Random random = new Random(seed);
+
+    	tiles = new CopyOnWriteArrayList<>();
+        worldGenNodes = new CopyOnWriteArrayList<>();
 
     	tiles = new CopyOnWriteArrayList<Tile>();
 //        worldGenNodes = new CopyOnWriteArrayList<>();
         biomes = new ArrayList<>();
-    	generateWorld(seed);
+
+    	generateWorld(random);
         generateNeighbours();
     	generateTileIndexes();
-    	generateTileTypes();
+    	generateTileTypes(random);
     }
     
-    
-    protected abstract void generateWorld(long seed);
-
+    protected abstract void generateWorld(Random random);
 
     /**
      * Loops through all the biomes within the world and adds textures to the tiles which
      * determine their properties
      */
-    public void generateTileTypes(){
-        //TODO fix the seeding here
+    public void generateTileTypes(Random random) {
         for (AbstractBiome biome : biomes){
-            biome.setTileTextures(new Random(seed));
+            biome.setTileTextures(random);
         }
     }
 

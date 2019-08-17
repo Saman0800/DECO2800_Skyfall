@@ -24,8 +24,10 @@ public abstract class AbstractBiome {
 //        this.biomeName = biomeName;
 //    }
 //
+
     /**
      * Constructor for a Biome
+     *
      * @param biomeName The biome name
      */
     public AbstractBiome(String biomeName) {
@@ -36,6 +38,7 @@ public abstract class AbstractBiome {
 
     /**
      * Returns all the tiles within a biome
+     *
      * @return An ArrayList of all the tiles within a biome
      */
     public ArrayList<Tile> getTiles() {
@@ -44,6 +47,7 @@ public abstract class AbstractBiome {
 
     /**
      * Gets the biomes name
+     *
      * @return The biome name
      */
     public String getBiomeName() {
@@ -52,10 +56,12 @@ public abstract class AbstractBiome {
 
     /**
      * Adds a tile to a biome
+     *
      * @param tile The tile to be added
      */
-    public void addTile(Tile tile){
+    public void addTile(Tile tile) {
         tiles.add(tile);
+        tile.setBiome(this);
     }
 
     /**

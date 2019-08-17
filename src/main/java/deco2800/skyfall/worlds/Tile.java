@@ -60,22 +60,14 @@ public class Tile{
     @Expose
     private int tileID = 0;
 
-    public Tile(AbstractBiome biome) {
-        this(biome, 0, 0);
+    public Tile() {
+        this(0, 0);
     }
 
-    public Tile(AbstractBiome biome, float col, float row) {
+    public Tile(float col, float row) {
         coords = new HexVector(col, row);
         this.neighbours = new HashMap<Integer,Tile>();
         this.tileID = Tile.getNextID();
-        this.biome = biome;
-
-        //Default add the tile to the biome it gives it
-        biome.addTile(this);
-    }
-
-    public Tile() {
-		this.neighbours = new HashMap<Integer,Tile>();
     }
 
     public float getCol() {
@@ -277,6 +269,10 @@ public class Tile{
 	 */
 	public AbstractBiome getBiome(){
 		return biome;
+	}
+
+	public void setBiome(AbstractBiome biome) {
+		this.biome = biome;
 	}
 
 	/**

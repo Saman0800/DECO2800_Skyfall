@@ -2,7 +2,6 @@ package deco2800.skyfall.worlds;
 
 import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.Collectable;
 import deco2800.skyfall.entities.Harvestable;
 import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.Tree;
@@ -11,44 +10,40 @@ import deco2800.skyfall.entities.EntitySpawnTable;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
-import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.delaunay.InvalidCoordinatesException;
 import deco2800.skyfall.worlds.delaunay.WorldGenException;
 import deco2800.skyfall.worlds.delaunay.WorldGenNode;
-import deco2800.skyfall.worlds.delaunay.WorldGenTriangle;
-import deco2800.skyfall.worlds.PerlinNoiseGenerator;
 
-import javax.xml.ws.WebServiceException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class RocketWorld extends AbstractWorld implements TouchDownObserver {
-    private static final int RADIUS = 40;
+    // private static final int RADIUS = 40;
+    private static final int RADIUS = 80;
     private static final int WORLD_SIZE = 100;
     private static final int NODE_SPACING = 5;
 
     private boolean generated = false;
     private PlayerPeon player;
 
-    // Generating the biome
-    private AbstractBiome biome;
+    long entitySeed;
 
     public RocketWorld(long seed) {
         super(seed);
     }
 
     @Override
-    protected void generateWorld(long seed) {
+    protected void generateWorld(Random random) {
+        this.entitySeed = random.nextLong();
 
         int nodeCount = (int) Math.round(
                 Math.pow((float) WORLD_SIZE * 2 / (float) NODE_SPACING, 2));
 
         // TODO: if nodeCount is less than the number of biomes, throw an exception
-
-        Random random = new Random(seed);
-        worldGenNodes = new CopyOnWriteArrayList<>();
 
         for (int i = 0; i < nodeCount; i++) {
             // Sets coordinates to a random number from -WORLD_SIZE to WORLD_SIZE
@@ -62,13 +57,10 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         // for more smooth looking polygons
         try {
             WorldGenNode.calculateVertices(worldGenNodes);
-            WorldGenNode.lloydRelaxation(worldGenNodes, 2);
+//            WorldGenNode.lloydRelaxation(worldGenNodes, 2);
         } catch (WorldGenException e) {
             // TODO handle this
         }
-
-        // Create a new biome
-        biome = new ForestBiome();
 
         for (int q = -1000; q < 1000; q++) {
             for (int r = -1000; r < 1000; r++) {
@@ -77,15 +69,26 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
                     int elevation = random.nextInt(2);
                     // String type = "grass_" + elevation;
-                    Tile tile = new Tile(biome, q, r + oddCol);
+                    Tile tile = new Tile(q, r + oddCol);
                     tiles.add(tile);
                     // biome.addTile(tile);
                 }
             }
         }
+        try {
+            WorldGenNode.assignNeighbours(worldGenNodes);
+        } catch (InvalidCoordinatesException e) {
+            throw new RuntimeException(e);
+        }
+        WorldGenNode.assignTiles(worldGenNodes, tiles);
 
+        addBiome(new ForestBiome());
+        addBiome(new DesertBiome());
+        addBiome(new MountainBiome());
+        addBiome(new OceanBiome());
 
-        addBiome(biome);
+        BiomeGenerator biomeGenerator = new BiomeGenerator(worldGenNodes, random, new int[] { 30, 20, 20 }, biomes);
+        biomeGenerator.generateBiomes();
 
         // Create the entities in the game
         player = new PlayerPeon(0f, 0f, 0.05f);
@@ -108,7 +111,11 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             Tile tileRock = getTile(0.0f, 1.0f);
             Rock startRock = new Rock(tileRock, true);
             // EntitySpawnTable rockSpawnRule = new EntitySpawnTable();
-            EntitySpawnTable.spawnEntities(startRock, 0.2, biome);
+            for (AbstractBiome biome : biomes) {
+                if (!biome.getBiomeName().equals("ocean")) {
+                    EntitySpawnTable.spawnEntities(startRock, 0.2, biome, entitySeed);
+                }
+            }
         }
     }
 
