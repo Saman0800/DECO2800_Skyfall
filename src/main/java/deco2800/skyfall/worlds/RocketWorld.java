@@ -11,6 +11,7 @@ import deco2800.skyfall.entities.EntitySpawnTable;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
+import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.WorldUtil;
 
@@ -74,27 +75,6 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
     @Override
     public void onTick(long i) {
         super.onTick(i);
-
-        //Collision detection for entities
-        for (AbstractEntity e1 : this.getEntities()) {
-            e1.onTick(0);
-
-            Collider c1 = e1.getCollider();
-            boolean collided = false;
-            for (AbstractEntity e2 : this.getEntities()) {
-                Collider c2 = e2.getCollider();
-
-                if (e1 != e2 && c1.overlaps(c2)) {
-                    collided = true;
-
-                    //collision handler
-                    this.handleCollision(e1, e2);
-                    System.out.println("Collision!");
-
-                    break;
-                }
-            }
-            //no collision
 
         if (!generated) {
             Tile tile = getTile(1f, 2.5f);

@@ -75,18 +75,23 @@ public class PlayerPeon extends Peon implements TouchDownObserver {
         // I.e. when menu is open this should be ignored.
         //System.out.println(screenX);
         //System.out.println(screenY);
-        if (button == 0) {
-            this.attack();
-        } else if (button == 1) {
-            this.specialAttack();
+
+        // Comment out click to move controls when merging into master and
+        // uncomment below.
+
+        if (button == 1) {
+           this.attack();
         }
+//        else if (button == 1) {
+//            this.specialAttack();
+//        }
 
         //Click to move logic replaced by WASD controls.
-        /*
+
         float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
         float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 
         this.task = new MovementTask(this, new HexVector (clickedPosition[0],clickedPosition[1]));
-         */
+
     }
 }
