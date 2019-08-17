@@ -35,7 +35,7 @@ public class SoundManager extends AbstractManager {
 
     /**
      * Initialises the Audio Input Stream
-     *
+     * @param file to play
      */
     public static void backgroundGameMusic(String file) throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
