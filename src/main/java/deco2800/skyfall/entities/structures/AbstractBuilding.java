@@ -1,73 +1,51 @@
 package deco2800.skyfall.entities.structures;
 
+//Most likely extend from this to render structures.
 import deco2800.skyfall.entities.AbstractEntity;
 
-public abstract class AbstractBuilding extends AbstractEntity {
+/**
+ * An abstract building is an item that can be placed in the world
+ * by the player.
+ */
+public abstract class AbstractBuilding {
 
-    private int width;
-    private int height;
-    private Object buildItem;
-    private int numItems;
+    private int xcoord;
+    private int ycoord;
 
     /**
-     * Constructor for abstract building
      *
-     * @param width width of the building
-     * @param height height of the building
+     * @param x - X coordinate of building
+     * @param y - Y coordinate of building
      */
-    public AbstractBuilding(int width, int height, Object buildItem, int numItems) {
-        //Size ( Row : Col) Straight coordinates system, not shifted
-        //What if we have funny shaped buildings? Like L shaped.
-        this.width = width;
-        this.height = height;
-        //Cost ( What is needed to build / Blueprints)
-        //This might need to be together, i.e. if a building requires multiple types of objects to build
-
-        //Make an object to store an object and int
-
-        this.buildItem = buildItem; //Object needed to build
-        this.numItems = numItems; // Num of items needed to build
-        //Texture  (Thumbnail to display in menu for player to see what it looks like, can just be the picture)
-        //Description ( What does this building do?)
+    public AbstractBuilding(int x, int y) {
+        this.xcoord = x;
+        this.ycoord = y;
     }
 
     /**
-     * @return - width of the structure.
+     * @return - X coordinate of building
      */
-    public int getWidth() {return width;}
+    public int getXcoord() {return xcoord;}
 
     /**
-     * @return - height of the structure.
+     * @return - Y coordinate of building
      */
-    public int getHeight() {return height;}
+    public int getYcoord() {return ycoord;}
 
     /**
-     * @return - Return the "object"(needs to be integrated to items) required to build
+     * @param newXcoord - New X coordinate of building
      */
-    public Object getBuildItem() {return buildItem;}
+    public void setXcoord(int newXcoord) {this.xcoord = newXcoord;}
 
     /**
-     * @return - Return number of the object required to build.
+     * @param newYcoord - New Y coordinate of building
      */
-    public int getNumItems() {return numItems;}
+    public void setYcoord(int newYcoord) {this.ycoord = newYcoord;}
 
-    /**
-     * @param newWidth - Set new width for building
-     */
-    public void setWidth(int newWidth) {this.width = newWidth;}
+    //place method
 
-    /**
-     * @param newHeight - Set new height for building
-     */
-    public void setheight(int newHeight) {this.height = newHeight;}
+    //remove method
 
-    /**
-     * @param newItem - Set new object required to build.
-     */
-    public void setBuildItem(Object newItem) {this.buildItem = newItem;}
+    //Interaction method
 
-    /**
-     * @param newNumItems - Set number of objects required to build.
-     */
-    public void setNumItems(int newNumItems) {this.numItems = newNumItems;}
 }
