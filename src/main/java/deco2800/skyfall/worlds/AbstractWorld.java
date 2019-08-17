@@ -233,17 +233,17 @@ public abstract class AbstractWorld {
         //Collision detection for entities
         for (AbstractEntity e1 : this.getEntities()) {
             e1.onTick(0);
-            if (e1 instanceof Projectile) {
-                break;
-            }
+//            if (e1 instanceof Projectile) {
+//                break;
+//            }
 
             Collider c1 = e1.getCollider();
             boolean collided = false;
             for (AbstractEntity e2 : this.getEntities()) {
                 Collider c2 = e2.getCollider();
-                if (e2 instanceof Projectile) {
-                    break;
-                }
+//                if (e2 instanceof Projectile) {
+//                    break;
+//                }
 
                 if (e1 != e2 && c1.overlaps(c2)) {
                     collided = true;
@@ -287,9 +287,9 @@ public abstract class AbstractWorld {
         //TODO: implement proper game logic for collisions between different types of entities.
         // i.e. if (e1 instanceof Projectile && e2 instanceof Enemy) {
         // removeEntity(e2); removeEntity(e1); }
-        if (e1 instanceof PlayerPeon) {
+        if (e1 instanceof Projectile && !(e2 instanceof PlayerPeon)) {
             removeEntity(e2);
-        } else if (e2 instanceof PlayerPeon) {
+        } else if (e2 instanceof Projectile && !(e1 instanceof PlayerPeon)) {
             removeEntity(e1);
         }
     }
