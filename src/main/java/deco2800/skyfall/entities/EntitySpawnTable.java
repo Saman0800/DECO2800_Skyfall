@@ -5,6 +5,7 @@ import deco2800.skyfall.worlds.AbstractBiome;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.managers.GameManager;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -39,11 +40,25 @@ public class EntitySpawnTable {
      *               combination of these, e.g.
      * @param <T>    T must extend StaticEntity and have .newInstance inherited
      */
-    public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntities(T entity, EntitySpawnRule rule,
-            B biome) {
+    public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntities(T entity, EntitySpawnRule rule) {
         Random r = new Random();
 
-        List<Tile> tiles = biome.getTiles();
+        AbstractWorld world = GameManager.get().getWorld();
+        List<Tile> allTiles = world.getTileMap();
+        List<Tile> tiles = new ArrayList<>();
+
+        //get list based on parameter
+        if (rule.getBiome() != "") {
+            for (Tile tile : allTiles) {
+                if (tile.getBiome().getBiomeName() == rule.getBiome()) {
+                    tiles.add(tile);
+                }
+            }
+
+        } else {
+            tiles = allTiles;
+        }
+
         // randomise tile order
         Collections.shuffle(tiles, r);
 
@@ -79,11 +94,13 @@ public class EntitySpawnTable {
      * 
      * @param entity Entity to be copied and inserted
      * @param chance probability that the entity will be in a given tile
-     * @param <T>    T must extend StaticEntity and have .newInstance inherited
+     * @param <T> T must extend StaticEntity and have .newInstance inherited
+     * @param biome specified biome to spawn in, null for no specification
      */
     public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntities(T entity, double chance,
             B biome) {
         EntitySpawnRule spawnRule = new EntitySpawnRule(chance);
-        spawnEntities(entity, spawnRule, biome);
+        spawnRule.setBiome(biome);
+        spawnEntities(entity, spawnRule);
     }
 }
