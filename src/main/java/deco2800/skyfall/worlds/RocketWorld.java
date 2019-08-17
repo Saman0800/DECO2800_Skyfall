@@ -2,17 +2,16 @@ package deco2800.skyfall.worlds;
 
 import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.BowMan;
 import deco2800.skyfall.entities.Collectable;
 import deco2800.skyfall.entities.Harvestable;
 import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.Tree;
-import deco2800.skyfall.entities.WoodCube;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.delaunay.WorldGenNode;
 
 import java.util.List;
 import java.util.Random;

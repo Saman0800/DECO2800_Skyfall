@@ -5,6 +5,7 @@ import deco2800.skyfall.entities.AgentEntity;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.delaunay.WorldGenNode;
 
 import java.util.Collections;
 import java.util.HashMap;
