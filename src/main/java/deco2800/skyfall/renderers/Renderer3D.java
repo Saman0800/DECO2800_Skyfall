@@ -45,7 +45,6 @@ public class Renderer3D implements Renderer {
 
 	private TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
     private AnimationManager animationManager = GameManager.getManagerFromInstance(AnimationManager.class);
-    private Queue<AnimationLinker> animationQueue = new PriorityQueue<>();
 
 	private float elapsedTime = 0;
 	/**
