@@ -9,7 +9,7 @@ public class MainCharacterTest {
 
     @Test
     /**
-     * Test setters and getter from Peon super Character class
+     * Test getters and setters from Peon super Character class
      */
     public void test1() {
         Assert.assertEquals(testCharacter.getName(), "Main Piece");
@@ -27,34 +27,18 @@ public class MainCharacterTest {
 
     @Test
     /**
-     * Test main character is interacting correctly with basic inventory action
+     * Test main character is interacting correctly with basic weapon action
      */
     public void test2() {
-        Assert.assertEquals(testCharacter.getInventories().size(), 0);
-        testCharacter.pickUpInventory("Dagger");
-        testCharacter.pickUpInventory("Sword");
-        Assert.assertEquals(testCharacter.getInventories().size(), 2);
-        testCharacter.dropInventory("Shield");
-        testCharacter.dropInventory("Dagger");
-        Assert.assertEquals(testCharacter.getInventories().size(), 1);
+        Assert.assertEquals(testCharacter.getWeapons().size(), 0);
+        testCharacter.pickUpWeapon("Dagger");
+        testCharacter.pickUpWeapon("Sword");
+        Assert.assertEquals(testCharacter.getWeapons().size(), 2);
+        testCharacter.dropWeapon("Shield");
+        testCharacter.dropWeapon("Dagger");
+        Assert.assertEquals(testCharacter.getWeapons().size(), 1);
 
-        Assert.assertEquals(testCharacter.getEquippedItem(), "Rusty Sword");
-        testCharacter.equipItem("Sword",0);
-        testCharacter.unequipItem("Shield");
-        testCharacter.pickUpInventory("Shield");
-        Assert.assertEquals(testCharacter.getInventories().size(), 2);
-        testCharacter.equipItem("Shield",1);
-        testCharacter.equipItem("Dagger",2);
-        Assert.assertEquals(testCharacter.getHotbar().size(), 1);
-
-        testCharacter.pickUpInventory("Armour");
-        testCharacter.pickUpInventory("Dagger");
-        testCharacter.pickUpInventory("Boots");
-        testCharacter.pickUpInventory("Hat");
-        testCharacter.equipItem("Armour",0);
-        testCharacter.equipItem("Dagger",1);
-        testCharacter.equipItem("Boots",2);
-        testCharacter.equipItem("Hat",3);
+        // TODO writes tests with new InventoryManager
     }
 
     @Test
