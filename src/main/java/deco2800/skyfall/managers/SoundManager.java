@@ -23,7 +23,7 @@ public class SoundManager extends AbstractManager {
     private static Long currentPosition;
 
     //Volume of the clip
-    private static FloatControl volume;
+    public static FloatControl volume;
 
     //Boolean mute control
     public static BooleanControl muteVol;
@@ -153,14 +153,18 @@ public class SoundManager extends AbstractManager {
      * Sets the volume of the clip.
      * @param x is the intended float value to set the clip to.
      */
-    public static void setVolume(float x) throws IndexOutOfBoundsException {
+    public static void setVolume(float x) throws IndexOutOfBoundsException,
+            NullPointerException, IllegalArgumentException {
         // Checks whether the given value is valid.
-        volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-        if ( !(x > volume.getMaximum()) && !(x < volume.getMinimum())) {
-            volume.setValue(x);
-        } else {
-            System.out.println("Value is too high/low. Pls don't.");
-            throw new IndexOutOfBoundsException();
-        }
+        try {
+            volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+
+            if (!(x > volume.getMaximum()) && !(x < volume.getMinimum())) {
+                volume.setValue(x);
+            } else {
+                System.out.println("Value is too high/low. Pls don't.");
+                throw new IndexOutOfBoundsException();
+            }
+        } catch (NullPointerException | IllegalArgumentException ex) { }
     }
 }
