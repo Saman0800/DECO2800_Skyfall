@@ -13,13 +13,16 @@ import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.delaunay.WorldGenException;
+import deco2800.skyfall.worlds.delaunay.WorldGenNode;
 
+import javax.xml.ws.WebServiceException;
 import java.util.List;
 import java.util.Random;
 
 public class RocketWorld extends AbstractWorld implements TouchDownObserver {
     private static final int RADIUS = 4;
-    private static final int WORLD_SIZE = 10;
+    private static final int WORLD_SIZE = 100;
     private static final int NODE_SPACING = 5;
 
     private boolean generated = false;
@@ -35,17 +38,26 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
     @Override
     protected void generateWorld(long seed) {
 
-        int nodeCount = (int) Math.round(Math.pow((float) WORLD_SIZE / (float) NODE_SPACING, 2));
+        int nodeCount = (int) Math.round(
+                Math.pow((float) WORLD_SIZE * 2 / (float) NODE_SPACING, 2));
 
         // TODO: if nodeCount is less than the number of biomes, throw an exception
 
         Random random = new Random(seed);
 
-        // for (int i = 0; i < nodeCount; i++) {
-        // float x = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
-        // float y = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
-        // worldGenNodes.add(new WorldGenNode(x, y));
-        // }
+        for (int i = 0; i < nodeCount; i++) {
+            // Sets coordinates to a random number from -WORLD_SIZE to WORLD_SIZE
+            float x = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
+            float y = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
+            worldGenNodes.add(new WorldGenNode(x, y));
+        }
+
+        try {
+            WorldGenNode.calculateVertices(worldGenNodes);
+            WorldGenNode.lloydRelaxation(worldGenNodes, 2);
+        } catch (WorldGenException e) {
+            // TODO handle this
+        }
 
         // Create a new biome
         biome = new ForestBiome();
