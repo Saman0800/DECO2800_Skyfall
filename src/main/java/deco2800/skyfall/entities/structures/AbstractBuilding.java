@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities.structures;
 
+//Needs to extend this to render buildings
 import deco2800.skyfall.entities.AbstractEntity;
 
 /**
