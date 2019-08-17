@@ -1,5 +1,8 @@
 package deco2800.skyfall.worlds;
 
+import deco2800.skyfall.worlds.delaunay.InvalidCoordinatesException;
+import deco2800.skyfall.worlds.delaunay.WorldGenNode;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -65,7 +68,12 @@ class BiomeGenerator {
                         // Math.sqrt().
                         double centerDistanceSquared = Double.POSITIVE_INFINITY;
                         for (WorldGenNode node : nodes) {
-                            float[] centroid = node.getCentroid();
+                            double[] centroid = {0, 0};
+                            try {
+                                centroid = node.getCentroid();
+                            } catch (InvalidCoordinatesException e) {
+                                // TODO handle this
+                            }
                             double newCenterDistanceSquared = centroid[0] * centroid[0] + centroid[1] * centroid[1];
                             if (newCenterDistanceSquared < centerDistanceSquared) {
                                 centerDistanceSquared = newCenterDistanceSquared;
