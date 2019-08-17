@@ -26,7 +26,7 @@ public class SoundManager extends AbstractManager {
     private static FloatControl volume;
 
     //Boolean mute control
-    private static BooleanControl muteVol;
+    public static BooleanControl muteVol;
 
     public void playSound(String soundName) {
         Sound sound = Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + soundName));
