@@ -13,12 +13,15 @@ class TriangleSoup {
 
     private List<WorldGenTriangle> triangleSoup;
 
+    private List<WorldGenNode> borderNodes;
+
     /**
      * Constructor of the triangle soup class used to create a new triangle soup
      * instance.
      */
     public TriangleSoup() {
         this.triangleSoup = new ArrayList<WorldGenTriangle>();
+        this.borderNodes = new ArrayList<>();
     }
 
     /**
@@ -127,8 +130,7 @@ class TriangleSoup {
      * Removes all triangles from this triangle soup that contain the specified
      * vertex.
      *
-     * @param vertex
-     *            The vertex
+     * @param vertex The vertex
      */
     public void removeTrianglesUsing(WorldGenNode vertex) {
         List<WorldGenTriangle> trianglesToBeRemoved = new ArrayList<WorldGenTriangle>();
@@ -141,27 +143,63 @@ class TriangleSoup {
         triangleSoup.removeAll(trianglesToBeRemoved);
     }
 
+    /**
+     * Assigns each node as a border and/or corner node if it is one
+     * This method was not taken from the source of the rest of this class
+     *
+     * @author Daniel Nathan
+     * @return the coordinates of the circumcentre
+     */
     public void findBorderNodes() {
         for (WorldGenTriangle triangle : this.getTriangles()) {
             WorldGenEdge edgeAB = new WorldGenEdge(triangle.a, triangle.b);
+            // Indicates whether each node is a border node
+            boolean[] isBorder = {false, false, false};
             // If there is no triangle on the other side of the edge, both nodes
             // are border nodes
             if (findNeighbour(triangle, edgeAB) == null) {
-                triangle.a.setBorderNode(true);
-                triangle.b.setBorderNode(true);
+                isBorder[0] = true;
+                isBorder[1] = true;
+                triangle.a.addBorderNeighbour(triangle.b);
+                triangle.b.addBorderNeighbour(triangle.a);
             }
-            // TODO find out if it is impossible for all three to be border nodes
             WorldGenEdge edgeAC = new WorldGenEdge(triangle.a, triangle.c);
             if (findNeighbour(triangle, edgeAC) == null) {
-                triangle.a.setBorderNode(true);
-                triangle.c.setBorderNode(true);
+                isBorder[0] = true;
+                isBorder[2] = true;
+                triangle.a.addBorderNeighbour(triangle.c);
+                triangle.c.addBorderNeighbour(triangle.a);
             }
             WorldGenEdge edgeBC = new WorldGenEdge(triangle.b, triangle.c);
             if (findNeighbour(triangle, edgeBC) == null) {
-                triangle.b.setBorderNode(true);
-                triangle.c.setBorderNode(true);
+                isBorder[1] = true;
+                isBorder[2] = true;
+                triangle.b.addBorderNeighbour(triangle.c);
+                triangle.c.addBorderNeighbour(triangle.b);
+            }
+
+            // Record the relevant nodes as borders
+            if (isBorder[0]) {
+                this.borderNodes.add(triangle.a);
+            }
+            if (isBorder[1]) {
+                this.borderNodes.add(triangle.b);
+            }
+            if (isBorder[2]) {
+                this.borderNodes.add(triangle.c);
             }
         }
+    }
+
+    /**
+     * Returns a list of corner nodes
+     * This method was not taken from the source of the rest of this class
+     *
+     * @author Daniel Nathan
+     * @return the corner nodes
+     */
+    public List<WorldGenNode> getBorderNodes() {
+        return this.borderNodes;
     }
 
 }
