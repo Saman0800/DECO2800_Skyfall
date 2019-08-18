@@ -1,7 +1,7 @@
 package deco2800.skyfall.entities;
 import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.worlds.AbstractBiome;
-import deco2800.skyfall.worlds.ForestBiome;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.ForestBiome;
 import deco2800.skyfall.worlds.TestWorld;
 
 import deco2800.skyfall.worlds.Tile;
@@ -13,6 +13,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.junit.Assert.assertEquals;
@@ -38,7 +39,7 @@ public class EntitySpawnTableTest {
 
     @Before
     public void createTestEnvironment() {
-        testWorld = new TestWorld();
+        testWorld = new TestWorld(0);
 
         biome = new ForestBiome();
 
@@ -46,7 +47,9 @@ public class EntitySpawnTableTest {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
 
         for (int i = 0; i < worldSize; i++) {
-            tileMap.add(new Tile(biome, 1.0f*i, 0.0f));
+            Tile tile = new Tile(1.0f * i, 0.0f);
+            tileMap.add(tile);
+            biome.addTile(tile);
         }
 
         testWorld.setTileMap(tileMap);
@@ -62,7 +65,7 @@ public class EntitySpawnTableTest {
     //tests the place method
     @Test
     public void testPlaceEntity() {
-        Tile tile = new Tile(biome, 0.0f, 0.0f);
+        Tile tile = new Tile(0.0f, 0.0f);
         Rock rock = new Rock();
 
         //check tile has no rock
@@ -99,7 +102,7 @@ public class EntitySpawnTableTest {
         //check basic spawnEntities
         final double chance = 0.5;
         Rock rock = new Rock();
-        EntitySpawnTable.spawnEntities(rock, chance, biome);
+        EntitySpawnTable.spawnEntities(rock, chance, biome, new Random());
 
         //count after spawning
         assertTrue(countWorldEntities()>0);

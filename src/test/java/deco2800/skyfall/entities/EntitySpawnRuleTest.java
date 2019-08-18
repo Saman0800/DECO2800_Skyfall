@@ -5,8 +5,8 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
-import deco2800.skyfall.worlds.AbstractBiome;
-import deco2800.skyfall.worlds.ForestBiome;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.ForestBiome;
 
 public class EntitySpawnRuleTest {
     @Test
