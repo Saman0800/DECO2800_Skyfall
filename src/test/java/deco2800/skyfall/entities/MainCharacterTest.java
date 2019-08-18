@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.Apple;
 import deco2800.skyfall.resources.items.PoisonousMushroom;
@@ -144,7 +145,6 @@ public class MainCharacterTest {
 
     //TODO: change these tests as Animation System Changes
     //These test abstract entity methods
-
     /**
      * Tests movingAnimation
      */
@@ -157,6 +157,7 @@ public class MainCharacterTest {
         assertEquals(AnimationRole.NULL, testCharacter.getMovingAnimation());
 
     }
+
     /**
      * Set and get Animations
      */
@@ -165,8 +166,4 @@ public class MainCharacterTest {
         testCharacter.addAnimations(AnimationRole.MOVE_EAST, "right");
         testCharacter.getAnimationName(AnimationRole.MOVE_EAST);
     }
-
-
-
-
 }
