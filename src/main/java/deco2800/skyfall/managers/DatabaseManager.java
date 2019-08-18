@@ -2,8 +2,6 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.worlds.AbstractWorld;
-import deco2800.skyfall.worlds.AbstractBiome;
-import deco2800.skyfall.worlds.ForestBiome;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.util.HexVector;
 

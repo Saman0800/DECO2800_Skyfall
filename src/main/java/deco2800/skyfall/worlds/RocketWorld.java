@@ -12,10 +12,10 @@ import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.delaunay.InvalidCoordinatesException;
-import deco2800.skyfall.worlds.delaunay.NotEnoughPointsException;
-import deco2800.skyfall.worlds.delaunay.WorldGenException;
-import deco2800.skyfall.worlds.delaunay.WorldGenNode;
+import deco2800.skyfall.worlds.biomes.*;
+import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
+import deco2800.skyfall.worlds.generation.WorldGenException;
+import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,6 +105,9 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         super.onTick(i);
 
         if (!generated) {
+            Random random = new Random(entitySeed);
+            entitySeed = random.nextLong();
+
             Tile tile = getTile(1f, 2.5f);
             addEntity(new Tree(tile, true));
 
@@ -115,7 +118,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             // EntitySpawnTable rockSpawnRule = new EntitySpawnTable();
             for (AbstractBiome biome : biomes) {
                 if (!biome.getBiomeName().equals("ocean")) {
-                    EntitySpawnTable.spawnEntities(startRock, 0.2, biome, entitySeed);
+                    EntitySpawnTable.spawnEntities(startRock, 0.2, biome, random);
                 }
             }
         }

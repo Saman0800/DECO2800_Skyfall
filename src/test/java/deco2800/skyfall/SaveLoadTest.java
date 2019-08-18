@@ -5,8 +5,6 @@ import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.OnScreenMessageManager;
-import deco2800.skyfall.worlds.AbstractBiome;
-import deco2800.skyfall.worlds.ForestBiome;
 import deco2800.skyfall.worlds.TestWorld;
 import deco2800.skyfall.worlds.Tile;
 import org.junit.Before;

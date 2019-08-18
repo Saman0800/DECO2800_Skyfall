@@ -1,5 +1,10 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import com.esotericsoftware.kryo.NotNull;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import jdk.nashorn.internal.ir.annotations.Immutable;
+
 /**
  * Used to set conditions about an entity template spawning distributions in EntitySpawnTable
  * Example conditions include probablity, min to max, must be beside another, which biomes
@@ -12,6 +17,8 @@ public class EntitySpawnRule {
     private int min = 0;
     //maximum number to spawn
     private int max = Integer.MAX_VALUE;
+    //The biome name, for no biome, default for no selection is ""
+    private String biome = "";
 
     /**
      * sets spawn rule based on chance
@@ -81,10 +88,27 @@ public class EntitySpawnRule {
     }
 
     /**
-     *
      * @param max This maximum is inclusive and stricty enforced
      */
     public void setMax(int max) {
         this.max = max;
+    }
+
+    /**
+     * @param biomeName the name of the biome, less safe than directly passing biome
+     */
+    public void setBiome(String biomeName) {
+        biome = biomeName;
+    }
+
+    /**
+     * @param biome object the name of the biome, pretty safe, can be null for no biome
+     */
+    public <B extends AbstractBiome> void setBiome(B biome) {
+        this.biome = biome != null? biome.getBiomeName() : "";
+    }
+
+    public String getBiome() {
+        return biome;
     }
 }

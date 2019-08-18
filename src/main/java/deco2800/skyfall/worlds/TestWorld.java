@@ -12,6 +12,8 @@ import deco2800.skyfall.entities.Rock;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.ForestBiome;
 
 @SuppressWarnings("unused")
 public class TestWorld extends AbstractWorld {

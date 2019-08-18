@@ -1,10 +1,11 @@
 package deco2800.skyfall.entities;
 
 import deco2800.skyfall.worlds.AbstractWorld;
-import deco2800.skyfall.worlds.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.managers.GameManager;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -18,7 +19,7 @@ public class EntitySpawnTable {
     /**
      * Simple static method for placing static items. Takes the given entity and
      * places a deep copy within the world at a given tile
-     * 
+     *
      * @param tile   The tile the new entity will occupy
      * @param entity The entity to be deep copied
      * @param <T>    T must extend StaticEntity and have .newInstance inherited
@@ -32,7 +33,7 @@ public class EntitySpawnTable {
 
     /**
      * Randomly distributes an entity with a given spawn rule
-     * 
+     *
      * @param entity The entity to copied and distributed
      * @param rule   A spawn rule, which specifies how the entity will be
      *               distributed example rules are chance, min/max, next to, a
@@ -40,10 +41,23 @@ public class EntitySpawnTable {
      * @param <T>    T must extend StaticEntity and have .newInstance inherited
      */
     public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntities(T entity, EntitySpawnRule rule,
-            B biome, long seed) {
-        Random r = new Random(seed);
+                                                                                       Random r) {
+        AbstractWorld world = GameManager.get().getWorld();
+        List<Tile> allTiles = world.getTileMap();
+        List<Tile> tiles = new ArrayList<>();
 
-        List<Tile> tiles = biome.getTiles();
+        // get list based on parameter
+        if (rule.getBiome() != "") {
+            for (Tile tile : allTiles) {
+                if (tile.getBiome().getBiomeName() == rule.getBiome()) {
+                    tiles.add(tile);
+                }
+            }
+
+        } else {
+            tiles = allTiles;
+        }
+
         // randomise tile order
         Collections.shuffle(tiles, r);
 
@@ -67,6 +81,9 @@ public class EntitySpawnTable {
         // place entity on random tiles
         for (int i = 0; i < toPlace; i++) {
             Tile tile = tiles.get(i);
+            if (tile.isObstructed()) {
+                continue;
+            }
             if (tile != null && r.nextDouble() < chance) {
                 placeEntity(entity, tile);
             }
@@ -76,14 +93,16 @@ public class EntitySpawnTable {
     /**
      * Does entity placing with a simple probability, with no need for a
      * EntitySpawnRule
-     * 
+     *
      * @param entity Entity to be copied and inserted
      * @param chance probability that the entity will be in a given tile
      * @param <T>    T must extend StaticEntity and have .newInstance inherited
+     * @param biome  specified biome to spawn in, null for no specification
      */
     public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntities(T entity, double chance,
-            B biome, long seed) {
+            B biome, Random random) {
         EntitySpawnRule spawnRule = new EntitySpawnRule(chance);
-        spawnEntities(entity, spawnRule, biome, seed);
+        spawnRule.setBiome(biome);
+        spawnEntities(entity, spawnRule, random);
     }
 }

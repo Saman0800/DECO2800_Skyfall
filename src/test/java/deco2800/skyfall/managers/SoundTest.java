@@ -1,6 +1,7 @@
 package deco2800.skyfall.managers;
 
 import org.junit.Test;
+import org.mockito.internal.matchers.Null;
 
 import javax.sound.sampled.*;
 import java.io.*;
@@ -11,7 +12,7 @@ import static org.junit.Assert.*;
 
 public class SoundTest {
 
-    String file ="resources/sounds/Forest Day.wav";
+    String file = "resources/sounds/Forest Day.wav";
 
     @Test
     public void exceptionTest() throws UnsupportedAudioFileException,
@@ -77,6 +78,9 @@ public class SoundTest {
             SoundManager.resetClip();
             TimeUnit.SECONDS.sleep(1);
             SoundManager.backgroundGameMusic(file);
+            assertEquals(SoundManager.getClip().getLongFramePosition(), 0);
+
+            // Test that current clip is reset to the start
             assertEquals(SoundManager.getClip().getLongFramePosition(),0);
         } catch (Exception e) {
             //exception caught
@@ -90,6 +94,9 @@ public class SoundTest {
             SoundManager.play();
             TimeUnit.SECONDS.sleep(1);
             SoundManager.mute();
+            assertEquals(SoundManager.muteVol.getValue(), true);
+
+            // Test that sound is muted
             assertEquals(SoundManager.muteVol.getValue(),true);
         } catch (Exception e) {
             //exception caught
@@ -106,6 +113,9 @@ public class SoundTest {
             TimeUnit.SECONDS.sleep(1);
             SoundManager.unmute();
             TimeUnit.SECONDS.sleep(1);
+            assertEquals(SoundManager.muteVol.getValue(), false);
+
+            // Test that sound is unmuted
             assertEquals(SoundManager.muteVol.getValue(),false);
         } catch (Exception e) {
             //exception caught
@@ -126,7 +136,8 @@ public class SoundTest {
             SoundManager.setVolume(100);
             assertEquals(100, SoundManager.getVolume(), 0.01);
 
-        } catch (Exception e) { }
+        } catch (Exception e) {
+        }
     }
 
     @Test
@@ -155,8 +166,16 @@ public class SoundTest {
                 fail();
             } catch (IndexOutOfBoundsException e) { }
 
-        } catch (Exception e) {
-        }
+        } catch (Exception e) { }
     }
 
+//    @Test
+//    public void stopTest(){
+//        try {
+//            SoundManager.backgroundGameMusic(file);
+//            SoundManager.play();
+//            SoundManager.stop();
+//            assertEquals(SoundManager.getClip().isRunning(), false); // assert false
+//        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException e) { }
+//    }
 }
