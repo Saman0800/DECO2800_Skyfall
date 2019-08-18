@@ -9,8 +9,8 @@ package deco2800.skyfall.worlds.generation.delaunay;
  */
 class EdgeDistancePack implements Comparable<EdgeDistancePack> {
 
-    public WorldGenEdge edge;
-    public double distance;
+    WorldGenEdge edge;
+    private double distance;
 
     /**
      * Constructor of the edge distance pack class used to create a new edge
@@ -20,7 +20,7 @@ class EdgeDistancePack implements Comparable<EdgeDistancePack> {
      * @param edge The edge
      * @param distance The distance of the edge to some point
      */
-    public EdgeDistancePack(WorldGenEdge edge, double distance) {
+    EdgeDistancePack(WorldGenEdge edge, double distance) {
         this.edge = edge;
         this.distance = distance;
     }

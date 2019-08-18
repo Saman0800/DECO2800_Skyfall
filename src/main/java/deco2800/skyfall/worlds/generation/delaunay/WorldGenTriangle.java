@@ -10,9 +10,9 @@ import java.util.Arrays;
  */
 class WorldGenTriangle {
 
-    public WorldGenNode a;
-    public WorldGenNode b;
-    public WorldGenNode c;
+    private WorldGenNode a;
+    private WorldGenNode b;
+    private WorldGenNode c;
 
     /**
      * Constructor of the 2D triangle class used to create a new triangle
@@ -22,7 +22,7 @@ class WorldGenTriangle {
      * @param b The second vertex of the triangle
      * @param c The third vertex of the triangle
      */
-    public WorldGenTriangle(WorldGenNode a, WorldGenNode b, WorldGenNode c) {
+    WorldGenTriangle(WorldGenNode a, WorldGenNode b, WorldGenNode c) {
         this.a = a;
         this.b = b;
         this.c = c;
@@ -65,7 +65,7 @@ class WorldGenTriangle {
      * @return Returns true iff the point lies inside the circumcircle through
      *         the three points a, b, and c of the triangle
      */
-    public boolean isPointInCircumcircle(WorldGenNode point) {
+    boolean isPointInCircumcircle(WorldGenNode point) {
         double a11 = a.getX() - point.getX();
         double a21 = b.getX() - point.getX();
         double a31 = c.getX() - point.getX();
@@ -99,7 +99,7 @@ class WorldGenTriangle {
      * @return Returns true iff the triangle ABC is oriented counterclockwise
      *         (CCW)
      */
-    public boolean isOrientedCCW() {
+    boolean isOrientedCCW() {
         double a11 = a.getX() - c.getX();
         double a21 = b.getX() - c.getX();
 
@@ -117,8 +117,9 @@ class WorldGenTriangle {
      * @param edge The edge to be tested
      * @return Returns true if this triangle contains the edge
      */
-    public boolean isNeighbour(WorldGenEdge edge) {
-        return (a == edge.a || b == edge.a || c == edge.a) && (a == edge.b || b == edge.b || c == edge.b);
+    boolean isNeighbour(WorldGenEdge edge) {
+        return (a == edge.getA() || b == edge.getA() || c == edge.getA())
+                && (a == edge.getB() || b == edge.getB() || c == edge.getB());
     }
 
     /**
@@ -127,12 +128,12 @@ class WorldGenTriangle {
      * @param edge The edge
      * @return The vertex of this triangle that is not part of the edge
      */
-    public WorldGenNode getNoneEdgeVertex(WorldGenEdge edge) {
-        if (a != edge.a && a != edge.b) {
+    WorldGenNode getNoneEdgeVertex(WorldGenEdge edge) {
+        if (a != edge.getA() && a != edge.getB()) {
             return a;
-        } else if (b != edge.a && b != edge.b) {
+        } else if (b != edge.getA() && b != edge.getB()) {
             return b;
-        } else if (c != edge.a && c != edge.b) {
+        } else if (c != edge.getA() && c != edge.getB()) {
             return c;
         }
 
@@ -147,7 +148,7 @@ class WorldGenTriangle {
      * @return Returns true if the Vertex is one of the vertices describing this
      *         triangle
      */
-    public boolean hasVertex(WorldGenNode vertex) {
+    boolean hasVertex(WorldGenNode vertex) {
         if (a == vertex || b == vertex || c == vertex) {
             return true;
         }
@@ -162,7 +163,7 @@ class WorldGenTriangle {
      * @param point The point the nearest edge is queried for
      * @return The edge of this triangle that is nearest to the specified point
      */
-    public EdgeDistancePack findNearestEdge(WorldGenNode point) {
+    EdgeDistancePack findNearestEdge(WorldGenNode point) {
         EdgeDistancePack[] edges = new EdgeDistancePack[3];
 
         edges[0] = new EdgeDistancePack(new WorldGenEdge(a, b),
@@ -184,8 +185,9 @@ class WorldGenTriangle {
      * @return The closest point on the given edge to the specified point
      */
     private WorldGenNode computeClosestPoint(WorldGenEdge edge, WorldGenNode point) {
-        WorldGenNode ab = edge.b.subtract(edge.a);
-        double t = point.subtract(edge.a).dotProduct(ab) / ab.dotProduct(ab);
+        WorldGenNode ab = edge.getB().subtract(edge.getA());
+        double t = point.subtract(edge.getA()).dotProduct(ab)
+                / ab.dotProduct(ab);
 
         if (t < 0.0d) {
             t = 0.0d;
@@ -193,7 +195,7 @@ class WorldGenTriangle {
             t = 1.0d;
         }
 
-        return edge.a.add(ab.scalarMultiply(t));
+        return edge.getA().add(ab.scalarMultiply(t));
     }
 
     /**
@@ -223,7 +225,7 @@ class WorldGenTriangle {
      * @throws CollinearPointsException if the three points of this triangle are
      *         collinear
      */
-    public double[] circumcentre() throws CollinearPointsException {
+    double[] circumcentre() throws CollinearPointsException {
         double ax = a.getX();
         double ay = a.getY();
         double bx = b.getX();
@@ -300,6 +302,33 @@ class WorldGenTriangle {
         }
 
         return coords;
+    }
+
+    /**
+     * Return the first node of this triangle
+     *
+     * @return the first node of this triangle
+     */
+    WorldGenNode getA() {
+        return this.a;
+    }
+
+    /**
+     * Return the second node of this triangle
+     *
+     * @return the second node of this triangle
+     */
+    WorldGenNode getB() {
+        return this.b;
+    }
+
+    /**
+     * Return the third node of this triangle
+     *
+     * @return the third node of this triangle
+     */
+    WorldGenNode getC() {
+        return this.c;
     }
 
 }
