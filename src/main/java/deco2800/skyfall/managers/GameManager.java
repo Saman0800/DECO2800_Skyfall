@@ -17,7 +17,10 @@ import java.util.List;
 
 public class GameManager {
 	//debug values stored here
-	public int entitiesRendered, entitiesCount, tilesRendered, tilesCount;
+	public int entitiesRendered;
+	public int entitiesCount;
+	public int tilesRendered;
+	public int tilesCount;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GameManager.class);
 

@@ -8,8 +8,12 @@ package deco2800.skyfall.entities;
  */
 public class Weapon implements Item, IWeapon {
 
-    private String name, weaponType, damageType;
-    private float attackRate, damage, durability;
+    private String name;
+    private String weaponType;
+    private String damageType;
+    private float attackRate;
+    private float damage;
+    private float durability;
 
 
     public Weapon() {
