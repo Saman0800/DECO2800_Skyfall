@@ -42,9 +42,9 @@ public class GameScreen implements Screen,KeyDownObserver {
 	 * Create a camera for panning and zooming.
 	 * Camera must be updated every render cycle.
 	 */
-	PotateCamera camera, cameraDebug;
-
-	public Stage stage = new Stage(new ExtendViewport(1280, 720));
+	PotateCamera camera;
+	PotateCamera cameraDebug;
+	private Stage stage = new Stage(new ExtendViewport(1280, 720));
 
 	long lastGameTick = 0;
 
@@ -213,7 +213,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 			gameManager.setWorld(world);
 
 			// Add first peon to the world
-			world.addEntity(new Peon(0f, 0f, 0.05f));
+			world.addEntity(new Peon(0f, 0f, 0.05f, "Side Piece", 10));
 		}
 		
 		if (keycode == Input.Keys.F11) { // F11
@@ -255,19 +255,19 @@ public class GameScreen implements Screen,KeyDownObserver {
 				goFastSpeed *= goFastSpeed * goFastSpeed;
 			}
 			
-			if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+			if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 				camera.translate(-goFastSpeed, 0, 0);
 			}
 	
-			if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+			if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 				camera.translate(goFastSpeed, 0, 0);
 			}
 	
-			if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+			if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 				camera.translate(0, -goFastSpeed, 0);
 			}
 	
-			if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+			if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
 				camera.translate(0, goFastSpeed, 0);
 			}
 			

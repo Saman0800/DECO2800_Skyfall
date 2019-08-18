@@ -344,9 +344,9 @@ public abstract class AbstractWorld {
         //TODO: implement proper game logic for collisions between different types of entities.
         // i.e. if (e1 instanceof Projectile && e2 instanceof Enemy) {
         // removeEntity(e2); removeEntity(e1); }
-        if (e1 instanceof Projectile && !(e2 instanceof PlayerPeon)) {
+        if (e1 instanceof Projectile && !(e2 instanceof MainCharacter)) {
             removeEntity(e2);
-        } else if (e2 instanceof Projectile && !(e1 instanceof PlayerPeon)) {
+        } else if (e2 instanceof Projectile && !(e1 instanceof MainCharacter)) {
             removeEntity(e1);
         }
     }

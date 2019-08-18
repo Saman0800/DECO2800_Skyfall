@@ -10,7 +10,7 @@ public class Spear extends RangeWeapon {
     @Override
     public Number getDurability() {
         return 7;
-    };
+    }
 
     /**
      * Get attack rate of the weapon
@@ -20,7 +20,7 @@ public class Spear extends RangeWeapon {
     @Override
     public Number getAttackRate() {
         return 4;
-    };
+    }
 
     /**
      * Get damage of the weapon
@@ -29,7 +29,7 @@ public class Spear extends RangeWeapon {
     @Override
     public Number getDamage() {
         return 5;
-    };
+    }
 
     /**
      * Return the name of the weapon
