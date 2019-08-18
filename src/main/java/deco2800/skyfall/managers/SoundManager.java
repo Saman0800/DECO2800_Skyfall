@@ -84,7 +84,7 @@ public class SoundManager extends AbstractManager {
     public static boolean playSound(String soundName) {
         if (soundMap.containsKey(soundName)) {
             Sound sound = soundMap.get(soundName);
-            sound.play(1);
+            sound.play(6);
             return true;
         } else {
             return false;
@@ -101,7 +101,7 @@ public class SoundManager extends AbstractManager {
     public static void loopSound(String soundName){
         if (soundMap.containsKey(soundName)) {
             Sound sound = soundMap.get(soundName);
-            sound.loop(1);
+            sound.loop(6);
             //Add to the sounds which are being looped
             soundLoops.put(soundName, soundMap.get(soundName));
         } else {
