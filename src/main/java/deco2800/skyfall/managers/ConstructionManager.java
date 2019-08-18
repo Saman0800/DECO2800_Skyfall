@@ -30,7 +30,7 @@ public class ConstructionManager extends AbstractManager {
 
     //Put window components here:
 
-    public ConstructionManager(){
+    public ConstructionManager() {
         menuVisible = false;
         menuAdded = false;
         menuSetUp = false;
@@ -41,7 +41,7 @@ public class ConstructionManager extends AbstractManager {
     //Called to either display or hide the build menu
     //Sets up the menu the first time its called
     //Updates the menu each time it is called
-    public void displayWindow(){
+    public void displayWindow() {
         createWindow();
         setUpMenu();
         updateWindow();
@@ -169,7 +169,7 @@ public class ConstructionManager extends AbstractManager {
     }
 
     // use terrain map to check if tile(s) is buildable or not
-    public boolean verifyTerrain(Tile ...tiles) {
+    public boolean verifyTerrain(Tile... tiles) {
         if (tiles == null) {
             return false;
         }
@@ -186,7 +186,7 @@ public class ConstructionManager extends AbstractManager {
     }
 
     // inherit provided method inside tile's class to check if tile(s) is buildable or not
-    public boolean verifyBiome(Tile ...tiles) {
+    public boolean verifyBiome(Tile... tiles) {
         if (tiles == null) {
             return false;
         }
@@ -203,7 +203,7 @@ public class ConstructionManager extends AbstractManager {
 
     // check if tile(s) on the world contains entities or not
     // non-empty entities in tiles interfere building and should be destroyed first
-    public boolean verifyEntity(AbstractWorld worldMap, Tile ...tiles) {
+    public boolean verifyEntity(AbstractWorld worldMap, Tile... tiles) {
         if (worldMap == null || tiles == null) {
             return false;
         }
@@ -254,27 +254,48 @@ public class ConstructionManager extends AbstractManager {
         return true;
     }
 
-    //TODO: Inventory check
-    //return a list of how much of each relevant resources the player owns
-    //When given a structure class gets its cost and compares it to the players
-    //inventory and returning a Boolean if the player
-    //meets the inventory requirements.
-    public Boolean invCheck(AbstractBuilding building){
+
+    /**
+     * return a list of how much of each relevant resources the player owns
+     * When given a structure class gets its cost and compares it to the players inventory
+     *
+     * @param building
+     * @param inventoryManager
+     * @return True, if the player's inventory meets the inventory requirements, otherwise false
+     */
+    public Boolean invCheck(AbstractBuilding building, InventoryManager inventoryManager) {
+
+        TreeMap<String, Integer> buildingCost = building.getCost();
+
+        for (Map.Entry<String, Integer> entry : buildingCost.entrySet()) {
+
+            String item = entry.getKey();
+            Integer value = entry.getValue();
+            System.out.println(key + " => " + value);
+
+            if (value.intValue() > inventoryManager.getAmount(item)) {
+                return false;
+            }
+        }
+
         return true;
     }
-    //TODO: Inventory remove
-    //takes in a structure class and removes the material cost from
-    //player inventory
-    //Takes in a structure class and removes it's material cost from
-    //the players inventory, no return
-    public void invRemove(AbstractBuilding building){
 
+
+    /**
+     * Takes in a structure class and removes the material cost from player inventory
+     *
+     * @param building
+     * @param inventoryManager
+     * @pre: Assume that building has been verified against inventoryAmount in inventoryManager
+     */
+    public void invRemove(AbstractBuilding building, InventoryManager inventoryManager) {
+        TreeMap<String, Integer> buildingCost = building.getCost();
+        for (Map.Entry<String, Integer> entry : buildingCost.entrySet()) {
+
+            String item = entry.getKey();
+            Integer amount = entry.getValue();
+            inventoryManager.inventoryDropMultiple(item, amount);
+        }
     }
 }
-
-//class Structure
-//{
-//
-//
-//
-//}
