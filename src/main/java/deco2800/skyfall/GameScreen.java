@@ -63,7 +63,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 			world = new ServerWorld(seed);
 			GameManager.get().getManager(NetworkManager.class).connectToHost("localhost", "duck1234");
 		} else {
-			world = new RocketWorld(seed, 10, 1);
+			world = new RocketWorld(seed, 80, 5);
 			GameManager.get().getManager(NetworkManager.class).startHosting("host");
 		}
 
