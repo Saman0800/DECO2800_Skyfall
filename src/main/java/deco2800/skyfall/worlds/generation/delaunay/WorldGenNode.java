@@ -244,7 +244,6 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
 
         // Ensure nodes are stored in order of Y value
         nodes.sort(Comparable::compareTo);
-        //sortNodes(nodes);
         for (Tile tile : tiles) {
             // Y coordinate of the tile
             float tileY = tile.getCoordinates().getRow();
@@ -472,32 +471,32 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
                 triangleSoup.remove(second);
 
                 WorldGenTriangle triangle1 = new WorldGenTriangle(
-                        edge.a, firstNoneEdgeVertex, nodes.get(i));
+                        edge.getA(), firstNoneEdgeVertex, nodes.get(i));
                 WorldGenTriangle triangle2 = new WorldGenTriangle(
-                        edge.b, firstNoneEdgeVertex, nodes.get(i));
+                        edge.getB(), firstNoneEdgeVertex, nodes.get(i));
                 WorldGenTriangle triangle3 = new WorldGenTriangle(
-                        edge.a, secondNoneEdgeVertex, nodes.get(i));
+                        edge.getA(), secondNoneEdgeVertex, nodes.get(i));
                 WorldGenTriangle triangle4 = new WorldGenTriangle(
-                        edge.b, secondNoneEdgeVertex, nodes.get(i));
+                        edge.getB(), secondNoneEdgeVertex, nodes.get(i));
 
                 triangleSoup.add(triangle1);
                 triangleSoup.add(triangle2);
                 triangleSoup.add(triangle3);
                 triangleSoup.add(triangle4);
 
-                legalizeEdge(triangle1, new WorldGenEdge(edge.a,
+                legalizeEdge(triangle1, new WorldGenEdge(edge.getA(),
                         firstNoneEdgeVertex), nodes.get(i), triangleSoup);
-                legalizeEdge(triangle2, new WorldGenEdge(edge.b,
+                legalizeEdge(triangle2, new WorldGenEdge(edge.getB(),
                         firstNoneEdgeVertex), nodes.get(i), triangleSoup);
-                legalizeEdge(triangle3, new WorldGenEdge(edge.a,
+                legalizeEdge(triangle3, new WorldGenEdge(edge.getA(),
                         secondNoneEdgeVertex), nodes.get(i), triangleSoup);
-                legalizeEdge(triangle4, new WorldGenEdge(edge.b,
+                legalizeEdge(triangle4, new WorldGenEdge(edge.getB(),
                         secondNoneEdgeVertex), nodes.get(i), triangleSoup);
             } else {
                 // The vertex is inside a triangle.
-                WorldGenNode a = triangle.a;
-                WorldGenNode b = triangle.b;
-                WorldGenNode c = triangle.c;
+                WorldGenNode a = triangle.getA();
+                WorldGenNode b = triangle.getB();
+                WorldGenNode c = triangle.getC();
 
                 triangleSoup.remove(triangle);
 
@@ -522,9 +521,9 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         }
 
         // Remove all triangles that contain vertices of the super triangle.
-        triangleSoup.removeTrianglesUsing(superTriangle.a);
-        triangleSoup.removeTrianglesUsing(superTriangle.b);
-        triangleSoup.removeTrianglesUsing(superTriangle.c);
+        triangleSoup.removeTrianglesUsing(superTriangle.getA());
+        triangleSoup.removeTrianglesUsing(superTriangle.getB());
+        triangleSoup.removeTrianglesUsing(superTriangle.getC());
 
         // Set the borderNode variable for each node in the soup
         triangleSoup.findBorderNodes();
@@ -559,17 +558,19 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
                         neighbourTriangle.getNoneEdgeVertex(edge);
 
                 WorldGenTriangle firstTriangle =
-                        new WorldGenTriangle(noneEdgeVertex, edge.a, newVertex);
+                        new WorldGenTriangle(noneEdgeVertex, edge.getA(),
+                                newVertex);
                 WorldGenTriangle secondTriangle =
-                        new WorldGenTriangle(noneEdgeVertex, edge.b, newVertex);
+                        new WorldGenTriangle(noneEdgeVertex, edge.getB(),
+                                newVertex);
 
                 triangleSoup.add(firstTriangle);
                 triangleSoup.add(secondTriangle);
 
                 legalizeEdge(firstTriangle, new WorldGenEdge(
-                        noneEdgeVertex, edge.a), newVertex, triangleSoup);
+                        noneEdgeVertex, edge.getA()), newVertex, triangleSoup);
                 legalizeEdge(secondTriangle, new WorldGenEdge(
-                        noneEdgeVertex, edge.b), newVertex, triangleSoup);
+                        noneEdgeVertex, edge.getB()), newVertex, triangleSoup);
             }
         }
     }
@@ -601,17 +602,17 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         TriangleSoup triangleSoup = triangulate(nodes);
         for (WorldGenTriangle triangle : triangleSoup.getTriangles()) {
             double[] circumcentre = triangle.circumcentre();
-            triangle.a.addVertex(circumcentre);
-            triangle.b.addVertex(circumcentre);
-            triangle.c.addVertex(circumcentre);
+            triangle.getA().addVertex(circumcentre);
+            triangle.getB().addVertex(circumcentre);
+            triangle.getC().addVertex(circumcentre);
 
             // Make sure all three are border nodes if circumcentre is outside
             // world
             if (Math.abs(circumcentre[0]) > worldSize && Math.abs(
                     circumcentre[1]) > worldSize) {
-                triangle.a.setBorderNode(true);
-                triangle.b.setBorderNode(true);
-                triangle.c.setBorderNode(true);
+                triangle.getA().setBorderNode(true);
+                triangle.getB().setBorderNode(true);
+                triangle.getC().setBorderNode(true);
             }
         }
     }
