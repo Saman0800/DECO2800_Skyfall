@@ -99,8 +99,7 @@ public class TestWorld extends AbstractWorld {
     }
 
     @Override
-    protected void generateWorld(long seed) {
-        Random random = new Random(seed);
+    protected void generateWorld(Random random) {
         AbstractBiome biome = new ForestBiome();
         for (int q = -1000; q < 1000; q++) {
             for (int r = -1000; r < 1000; r++) {
@@ -114,7 +113,9 @@ public class TestWorld extends AbstractWorld {
 
                     int rand = random.nextInt(8);
 
-                    tiles.add(new Tile(biome, q, r + oddCol));
+                    Tile tile = new Tile(q, r + oddCol);
+                    tiles.add(tile);
+                    biome.addTile(tile);
                 }
             }
         }
@@ -154,5 +155,5 @@ public class TestWorld extends AbstractWorld {
  * System.out.println("south_east " +(firend.getValue())); break; case
  * Tile.south_west: System.out.println("south_west " + (firend.getValue()));
  * break; } } }
- * 
+ *
  */

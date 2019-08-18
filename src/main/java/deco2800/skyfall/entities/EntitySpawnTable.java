@@ -40,8 +40,8 @@ public class EntitySpawnTable {
      * @param <T>    T must extend StaticEntity and have .newInstance inherited
      */
     public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntities(T entity, EntitySpawnRule rule,
-            B biome) {
-        Random r = new Random();
+            B biome, long seed) {
+        Random r = new Random(seed);
 
         List<Tile> tiles = biome.getTiles();
         // randomise tile order
@@ -82,8 +82,8 @@ public class EntitySpawnTable {
      * @param <T>    T must extend StaticEntity and have .newInstance inherited
      */
     public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntities(T entity, double chance,
-            B biome) {
+            B biome, long seed) {
         EntitySpawnRule spawnRule = new EntitySpawnRule(chance);
-        spawnEntities(entity, spawnRule, biome);
+        spawnEntities(entity, spawnRule, biome, seed);
     }
 }

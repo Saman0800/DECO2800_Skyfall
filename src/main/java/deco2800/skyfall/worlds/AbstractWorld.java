@@ -1,12 +1,12 @@
 package deco2800.skyfall.worlds;
 
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.AgentEntity;
-import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.delaunay.WorldGenNode;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,7 +29,7 @@ public abstract class AbstractWorld {
     protected int length;
 
     //List that contains the world biomes
-    private ArrayList<AbstractBiome> biomes;
+    protected ArrayList<AbstractBiome> biomes;
 
     protected CopyOnWriteArrayList<Tile> tiles;
     protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
@@ -38,27 +38,30 @@ public abstract class AbstractWorld {
     protected List<Tile> tilesToDelete = new CopyOnWriteArrayList<>();
 
     protected AbstractWorld(long seed) {
+        Random random = new Random(seed);
+
+    	tiles = new CopyOnWriteArrayList<>();
+        worldGenNodes = new CopyOnWriteArrayList<>();
+
     	tiles = new CopyOnWriteArrayList<Tile>();
 //        worldGenNodes = new CopyOnWriteArrayList<>();
         biomes = new ArrayList<>();
-    	generateWorld(seed);
+
+    	generateWorld(random);
         generateNeighbours();
     	generateTileIndexes();
-    	generateTileTypes();
+    	generateTileTypes(random);
     }
     
-    
-    protected abstract void generateWorld(long seed);
-
+    protected abstract void generateWorld(Random random);
 
     /**
      * Loops through all the biomes within the world and adds textures to the tiles which
      * determine their properties
      */
-    public void generateTileTypes(){
-        //TODO fix the seeding here
+    public void generateTileTypes(Random random) {
         for (AbstractBiome biome : biomes){
-            biome.setTileTextures(new Random(0));
+            biome.setTileTextures(random);
         }
     }
 
@@ -249,6 +252,34 @@ public abstract class AbstractWorld {
         for (Tile t : tilesToDelete) {
             tiles.remove(t);
         }
+
+        //Collision detection for entities
+        for (AbstractEntity e1 : this.getEntities()) {
+            e1.onTick(0);
+//            if (e1 instanceof Projectile) {
+//                break;
+//            }
+
+            Collider c1 = e1.getCollider();
+            boolean collided = false;
+            for (AbstractEntity e2 : this.getEntities()) {
+                Collider c2 = e2.getCollider();
+//                if (e2 instanceof Projectile) {
+//                    break;
+//                }
+
+                if (e1 != e2 && c1.overlaps(c2)) {
+                    collided = true;
+
+                    //collision handler
+                    this.handleCollision(e1, e2);
+                    //System.out.println("Collision!");
+
+                    break;
+                }
+            }
+            //no collision
+        }
     }
 
     public void deleteTile(int tileid) {
@@ -289,4 +320,17 @@ public abstract class AbstractWorld {
     public ArrayList<AbstractBiome> getBiomes(){
         return this.biomes;
     }
+
+    // e1 is the entity that created the collision
+    public void handleCollision(AbstractEntity e1, AbstractEntity e2) {
+        //TODO: implement proper game logic for collisions between different types of entities.
+        // i.e. if (e1 instanceof Projectile && e2 instanceof Enemy) {
+        // removeEntity(e2); removeEntity(e1); }
+        if (e1 instanceof Projectile && !(e2 instanceof PlayerPeon)) {
+            removeEntity(e2);
+        } else if (e2 instanceof Projectile && !(e1 instanceof PlayerPeon)) {
+            removeEntity(e1);
+        }
+    }
+
 }

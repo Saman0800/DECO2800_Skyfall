@@ -160,8 +160,9 @@ public final class DatabaseManager extends AbstractManager {
             reader.beginArray();
             while (reader.hasNext()) {
             	reader.beginObject();
-                
-                Tile tile = new Tile(new ForestBiome(), 0,0);
+
+            	// TODO This looks broken.
+                Tile tile = new Tile(0,0);
                 while (reader.hasNext()) {
                     checkBasicTileSettings(tile,reader.nextName(),reader);
                 }

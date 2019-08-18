@@ -95,4 +95,68 @@ public class SoundTest {
             //exception caught
         }
     }
+
+    @Test
+    public void unmuteTest() {
+        try {
+            SoundManager.backgroundGameMusic(file);
+            SoundManager.play();
+            TimeUnit.SECONDS.sleep(1);
+            SoundManager.mute();
+            TimeUnit.SECONDS.sleep(1);
+            SoundManager.unmute();
+            TimeUnit.SECONDS.sleep(1);
+            assertEquals(SoundManager.muteVol.getValue(),false);
+        } catch (Exception e) {
+            //exception caught
+        }
+    }
+
+    @Test
+    public void getVolumeTest() {
+        try {
+            SoundManager.backgroundGameMusic(file);
+            SoundManager.play();
+
+            // Test Minimum (0)
+            SoundManager.setVolume(0);
+            assertEquals(0, SoundManager.getVolume(), 0.01);
+
+            // Test Maximum (100)
+            SoundManager.setVolume(100);
+            assertEquals(100, SoundManager.getVolume(), 0.01);
+
+        } catch (Exception e) { }
+    }
+
+    @Test
+    public void setVolumeTest() {
+        try {
+            SoundManager.backgroundGameMusic(file);
+            SoundManager.play();
+
+            // Test Minimum (0)
+            SoundManager.setVolume(0);
+            assertEquals(0, SoundManager.getVolume(), 0.01);
+
+            // Test Maximum (100)
+            SoundManager.setVolume(100);
+            assertEquals(100, SoundManager.getVolume(), 0.01);
+
+            // Test whether exceptions are thrown (x > MAX).
+            try {
+                SoundManager.setVolume(1000);
+                fail();
+            } catch (IndexOutOfBoundsException e) { }
+
+            // Test whether exceptions are thrown (x > MAX).
+            try {
+                SoundManager.setVolume(-1);
+                fail();
+            } catch (IndexOutOfBoundsException e) { }
+
+        } catch (Exception e) {
+        }
+    }
+
 }

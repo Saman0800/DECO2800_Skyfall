@@ -57,8 +57,7 @@ public class StaticEntityTest {
     @Test
     public void SetPropertiesTileConstructor() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        AbstractBiome biome = new ForestBiome();
-        Tile tile1 = new Tile(biome, 0.0f, 0.0f);
+        Tile tile1 = new Tile(0.0f, 0.0f);
         tileMap.add(tile1);
         w.setTileMap(tileMap);
 
@@ -78,8 +77,7 @@ public class StaticEntityTest {
     @Test
     public void SetPropertiesRowColConstructor() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        AbstractBiome biome = new ForestBiome();
-        Tile tile1 = new Tile(biome, 0.0f, 0.0f);
+        Tile tile1 = new Tile(0.0f, 0.0f);
         tileMap.add(tile1);
         w.setTileMap(tileMap);
 
@@ -103,18 +101,17 @@ public class StaticEntityTest {
     public void PlaceDownTest() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
         // Populate world with tiles
-        AbstractBiome biome = new ForestBiome();
-        Tile tile1 = new Tile(biome, 0.0f, 0.0f);
-        Tile tile2 = new Tile(biome, 0.0f, 1.0f);
-        Tile tile3 = new Tile(biome, 1.0f, -0.5f);
-        Tile tile4 = new Tile(biome, 1.0f, 0.5f);
+        Tile tile1 = new Tile(0.0f, 0.0f);
+        Tile tile2 = new Tile(0.0f, 1.0f);
+        Tile tile3 = new Tile(1.0f, -0.5f);
+        Tile tile4 = new Tile(1.0f, 0.5f);
         tileMap.add(tile1);
         tileMap.add(tile2);
         tileMap.add(tile4);
         tileMap.add(tile3);
-        tileMap.add(new Tile(biome, -1.0f, 0.5f));
-        tileMap.add(new Tile(biome, -1.0f, -0.5f));
-        tileMap.add(new Tile(biome, 0.0f, -1.f));
+        tileMap.add(new Tile(-1.0f, 0.5f));
+        tileMap.add(new Tile(-1.0f, -0.5f));
+        tileMap.add(new Tile(0.0f, -1.f));
         w.setTileMap(tileMap);
 
         // Just check that the tiles have indeed been placed into the world

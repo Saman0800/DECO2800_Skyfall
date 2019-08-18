@@ -29,9 +29,9 @@ public class BiomeTest {
                 }
 
 
-                new Tile(desertBiome);
-                new Tile(forestBiome);
-                new Tile(mountainBiome);
+                desertBiome.addTile(new Tile());
+                forestBiome.addTile(new Tile());
+                mountainBiome.addTile(new Tile());
 
                 assertEquals("mountain", mountainBiome.getBiomeName());
                 assertEquals("forest", forestBiome.getBiomeName());
@@ -56,7 +56,7 @@ public class BiomeTest {
                 forestBiome.setTileTextures(new Random(2));
                 //Implement test for seeding
                 for (Tile tile : forestBiome.getTiles()){
-                        assertEquals("grass_1", tile.getTextureName());
+                        assertEquals("grass_0", tile.getTextureName());
                 }
 
                 mountainBiome.setTileTextures(new Random(0));
