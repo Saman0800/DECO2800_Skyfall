@@ -69,13 +69,25 @@ public class EnvironmentManager {
     * @param time The time of day to be set
     */
    public void setTime(long time) {
-      hours = time;
+      if (time > 24) {
+         hours = 24;
+      } else {
+         hours = time;
+      }
+   }
+
+   /**
+    * Returns whether it is day or not
+    * @return boolean True if it is day, False if night
+    */
+   public boolean isDay() {
+      return isDay;
    }
 
    /**
     * Gets current biome player is in
     *
-    * @return AbstractBiome Current biome of player
+    * @return String Current biome of player, or null if player is moving between tiles
     */
    public String currentBiome() {
       return biome;
