@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -173,6 +174,15 @@ public class SoundManager extends AbstractManager {
      */
     public Sound getTheSound(String soundName){
         return soundMap.get(soundName);
+    }
+
+    /**
+     * Returns the map of sounds
+     * @return soundMap<Sound, String>
+     */
+    public Map<String, Sound> getSoundMap() {
+        return Collections.unmodifiableMap(soundMap);
+
     }
 
 //    /**
