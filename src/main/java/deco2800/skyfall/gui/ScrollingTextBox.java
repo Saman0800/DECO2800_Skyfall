@@ -6,18 +6,27 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.TextureManager;
 
-public final class ScrollingTextBox extends AbstractGui {
+public class ScrollingTextBox extends AbstractGui {
     private static final long timePerChar = 20;
     private String printedString;
+
     private Label guiLabel;
+    private Group guiGroup;
+    private Image guiImage;
 
     private long lastTime = 0;
     private boolean started = false;
@@ -29,17 +38,30 @@ public final class ScrollingTextBox extends AbstractGui {
     ScrollingTextBox(String hash) {
         super(hash);
         Label.LabelStyle guiLabelStyle = new Label.LabelStyle();
-        BitmapFont myFont = new BitmapFont();
-        guiLabelStyle.font = myFont;
-        guiLabelStyle.fontColor = Color.RED;
+        guiLabelStyle.font = new BitmapFont();
+        guiLabelStyle.fontColor = Color.WHITE;
+
+        guiGroup = new Group();
+        guiGroup.setPosition(0, 100); // VERY BAD MAGIC NUMBER PLS FIX
+        guiGroup.setWidth(1280); // VERY BAD MAGIC NUMBER PLS FIX
+        guiGroup.setHeight(100);
+
+        guiImage = new Image(GameManager.get().getManager(TextureManager.class).getTexture("dialogue_text_background"));
+        guiImage.setWidth(1280);
+        guiImage.setPosition(0, -guiGroup.getHeight());
+        guiImage.setHeight(guiGroup.getHeight());
+        guiImage.setScaling(Scaling.stretch);
 
         guiLabel = new Label("", guiLabelStyle);
         guiLabel.setWrap(true);
-        guiLabel.setWidth(1280-20); // VERY BAD MAGIC NUMBER PLS FIX
+        guiLabel.setWidth(guiGroup.getWidth() - 20);
         guiLabel.setAlignment(Align.topLeft);
-        guiLabel.setPosition(10, 100); // VERY BAD MAGIC NUMBER PLS FIX
+        guiLabel.setPosition(10, 0);
 
-        GameManager.get().getStage().addActor(guiLabel);
+        guiGroup.addActor(guiImage);
+        guiGroup.addActor(guiLabel);
+
+        GameManager.get().getStage().addActor(guiGroup);
     }
 
     ScrollingTextBox(String hash, AbstractGui parent) {
@@ -94,20 +116,6 @@ public final class ScrollingTextBox extends AbstractGui {
     @Override
     public void render(BitmapFont font, SpriteBatch batch,
             OrthographicCamera camera, ShapeRenderer shapeRenderer) {
-            batch.end();
-            Stage stageInstance = GameManager.get().getStage();
-            shapeRenderer.setProjectionMatrix(camera.projection);
-            Gdx.gl.glEnable(GL20.GL_BLEND);
-            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(0, 0, 0, 0.25f);
-            shapeRenderer.rect(camera.position.x - camera.viewportWidth / 2,
-                    camera.position.x - camera.viewportHeight / 2,
-                    camera.viewportWidth, 110);
-            shapeRenderer.end();
-            Gdx.gl.glDisable(GL20.GL_BLEND);
-            batch.begin();
-
             //font.draw(batch, printedString.substring(0, currentIndex),
             //        camera.position.x - camera.viewportWidth / 2 + 10,
             //        camera.position.y - camera.viewportHeight / 2 + 100);
@@ -117,7 +125,7 @@ public final class ScrollingTextBox extends AbstractGui {
 
     @Override
     public void destroy(){
-        guiLabel.remove();
+        guiGroup.remove();
         super.destroy();
     }
 }
