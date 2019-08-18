@@ -3,6 +3,7 @@ package deco2800.skyfall.renderers;
 import java.util.*;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import deco2800.skyfall.animation.AnimationLinker;
@@ -113,6 +114,10 @@ public class Renderer3D implements Renderer {
         Texture tex = tile.getTexture();
 			batch.draw(tex, tileWorldCord[0], tileWorldCord[1], tex.getWidth() * WorldUtil.SCALE_X,
 					tex.getHeight() * WorldUtil.SCALE_Y);
+        if (GameManager.getPaused()) {
+            Color c = batch.getColor();
+            batch.setColor(c.r, c.g, c.b, .5f);
+        }
 		GameManager.get().setTilesRendered(tileMap.size() - tilesSkipped);
 		GameManager.get().setTilesCount(tileMap.size());
 		

@@ -95,6 +95,22 @@ public class TextureManager extends AbstractManager {
             textureMap.put("rock1", new Texture("resources/world_details/rock1.png"));
             textureMap.put("rock2", new Texture("resources/world_details/rock2.png"));
             textureMap.put("rock3", new Texture("resources/world_details/rock3.png"));
+
+            textureMap.put("pop up screen", new Texture("resources/pop_up_screen_background.png"));
+            textureMap.put("game menu bar", new Texture("resources/pop_up_screen_title_background.png"));
+
+            textureMap.put("pause", new Texture("resources/pause_icon.png"));
+            textureMap.put("settings", new Texture("resources/settings.png"));
+            textureMap.put("info", new Texture("resources/information.png"));
+            textureMap.put("select-character", new Texture("resources/character_selection.png"));
+
+            textureMap.put("resume", new Texture("resources/resume.png"));
+            textureMap.put("goHome", new Texture("resources/home.png"));
+            textureMap.put("reset", new Texture("resources/reset_game.png"));
+
+            textureMap.put("radar", new Texture("resources/radar.png"));
+            textureMap.put("build", new Texture("resources/build.png"));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
