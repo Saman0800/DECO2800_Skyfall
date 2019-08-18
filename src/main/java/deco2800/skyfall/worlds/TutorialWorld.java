@@ -1,12 +1,7 @@
 package deco2800.skyfall.worlds;
 
 import com.badlogic.gdx.Gdx;
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.Collectable;
-import deco2800.skyfall.entities.Harvestable;
-import deco2800.skyfall.entities.PlayerPeon;
-import deco2800.skyfall.entities.Tree;
-import deco2800.skyfall.entities.WoodCube;
+import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
@@ -22,6 +17,9 @@ public class TutorialWorld extends AbstractWorld implements TouchDownObserver {
 
     private boolean generated = false;
     private PlayerPeon player;
+
+    Tree testTutorialTree;
+    boolean testKilledTree = false;
 
     @Override
     protected void generateWorld() {
@@ -42,6 +40,9 @@ public class TutorialWorld extends AbstractWorld implements TouchDownObserver {
         // Create the entities in the game
         player = new PlayerPeon(0f, 0f, 0.05f);
         addEntity(player);
+
+        SleepingBowMan bowMan = new SleepingBowMan(0f, 6.5f);
+        addEntity(bowMan);
 
         GameManager.getManagerFromInstance(InputManager.class)
                 .addTouchDownListener(this);

@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.SleepingBowMan;
 import deco2800.skyfall.entities.Tree;
 import deco2800.skyfall.gui.GuiMaster;
 import deco2800.skyfall.gui.ScrollingTextBox;
@@ -20,7 +21,6 @@ import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.TutorialWorld;
 import java.util.List;
-import javax.swing.JFrame;
 
 public class OverlayRenderer implements Renderer {
 	
@@ -35,6 +35,8 @@ public class OverlayRenderer implements Renderer {
 		ScrollingTextBox testTutorialBox;
 		Tree testTutorialTree;
 		boolean testKilledTree = false;
+		SleepingBowMan testTutorialEnemy;
+		boolean testKilledEnemy = false;
 
 
     /**
@@ -63,29 +65,59 @@ public class OverlayRenderer implements Renderer {
 			List<AbstractEntity> entityList = GameManager.get().getWorld().getEntities();
 
 			if (firstTime && GameManager.get().isTutorial) {
-					testTutorialBox = new ScrollingTextBox();
-					testTutorialBox.setString("hello and welcome to scrolling text as you can see this text is scrolling and that is very cool. Now, what is very epic about this scrolling is that its very easy to make. The issue is that it can not\n"
-							+ "be very easily constructed and stored without more code writing and tbh I am kinda tired of doing code at this point I just wanna play games not make one haha anyways why are you still reading\n"
-							+ "this haha enjoy refactoring this whoever sees this (probably me) lolololoololololololololollollolololoololololololololollollolololoololololololololollollolololoololololololololollollolololoololololololololollollolololololololollollolololoololololololololollollolololololololollollolololoololololololololollol\n"
-							+ "Okay now u gotta left click to move and right click to interact. Go chop down that tree.");
-					testTutorialBox.start();
-					firstTime = false;
+				testTutorialBox = new ScrollingTextBox();
+				testTutorialBox.setString("Good morning citizen 27720. I am " +
+						"the caretaker AI responsible for this cryopod " +
+						"facility. You may call me Karen. While thousand of " +
+						"years looking after what amounts to vegetables has " +
+						"made me \nsomewhat jaded, in accordance with " +
+						"protocol I must teach you the skills required to " +
+						"function properly. Please go murder that piece of " +
+						"flora over there and take its flesh.\nYou can do " +
+						"this by right clicking on it. If you wish to get " +
+						"closer to it before ending its existence, please " +
+						"left click on any tile to move to it.");
+				testTutorialBox.start();
+				firstTime = false;
 
-					for (AbstractEntity e : entityList) {
-						if (e instanceof Tree) {
-							testTutorialTree = (Tree)e;
-						}
+				for (AbstractEntity e : entityList) {
+					if (e instanceof Tree) {
+						testTutorialTree = (Tree) e;
+					}
+					if(e instanceof SleepingBowMan) {
+						testTutorialEnemy = (SleepingBowMan) e;
 					}
 				}
-
+			}
 			if (!entityList.contains(testTutorialTree) && !testKilledTree && GameManager.get().isTutorial) {
 				testKilledTree = true;
 				testTutorialBox.reset();
-				testTutorialBox.setString("Well done on killing him, you monster.");
+				testTutorialBox.setString("Congratulations. You have " +
+						"successfully ended the life of a harmless, " +
+						"non-sentient life form. If we had more time I would " +
+						"enjoy testing your current emotional situation, " +
+						"however it seems that a still \nharmless, but " +
+						"far more sentient creature is currently immobile to " +
+						"your north. Please move your camera up by using " +
+						"the w key and end this creature in the same way" +
+						" you did the last.");
 				testTutorialBox.start();
 			}
 
-				GuiMaster.getInstance().updateAll(1);
+		if (!entityList.contains(testTutorialEnemy) && !testKilledEnemy && GameManager.get().isTutorial) {
+			testKilledEnemy = true;
+			testTutorialBox.reset();
+			testTutorialBox.setString("Now that nothing, no matter how " +
+					"harmless, can hurt your squishy body, please go collect " +
+					"the remnants of the first creature you slaughtered. This" +
+					" can be done by walking on top of it where it used to " +
+					"stand. With these materials you can now create morally" +
+					" questionable tools and building. Hooray. Please press " +
+					"(inventory key here) to begin this process.");
+			testTutorialBox.start();
+		}
+
+			GuiMaster.getInstance().updateAll(1);
         GuiMaster.getInstance().renderAll(font, batch, camera, shapeRenderer);
 
         int line = GameManager.get().getManager(OnScreenMessageManager.class).getMessages().size();
