@@ -17,10 +17,8 @@ class EdgeDistancePack implements Comparable<EdgeDistancePack> {
      * distance pack instance from a 2D edge and a scalar value describing a
      * distance.
      *
-     * @param edge
-     *            The edge
-     * @param distance
-     *            The distance of the edge to some point
+     * @param edge The edge
+     * @param distance The distance of the edge to some point
      */
     public EdgeDistancePack(WorldGenEdge edge, double distance) {
         this.edge = edge;

@@ -220,6 +220,8 @@ class WorldGenTriangle {
      *
      * @author Daniel Nathan
      * @return the coordinates of the circumcentre
+     * @throws CollinearPointsException if the three points of this triangle are
+     *         collinear
      */
     public double[] circumcentre() throws CollinearPointsException {
         double ax = a.getX();

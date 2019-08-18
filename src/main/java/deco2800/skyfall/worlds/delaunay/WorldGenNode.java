@@ -11,8 +11,9 @@ import java.util.ArrayList;
 /**
  * A class used in the world generation procedure to help the world and biomes
  * have a natural looking shape. To see how they are being used, this class is
- * heavily based on
- * <a href="http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/?fbclid=IwAR30I7ILTznH6YzYYqZfjIE3vcqPsed85ta9bohPZWi74SfWMwWpD8AVddQ#source">This</a>
+ * inspired by
+ * <a href="http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/?fbclid=IwAR30I7ILTznH6YzYYqZfjIE3vcqPsed85ta9bohPZWi74SfWMwWpD8AVddQ#source">
+ *     This</a>
  */
 public class WorldGenNode implements Comparable<WorldGenNode> {
 
@@ -29,10 +30,12 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     // List of tiles that are within the polygon defined by this node
     private List<Tile> tiles;
 
+    // Whether or not this node's polygon is on the edge of the map
     private boolean borderNode;
 
     /**
      * Constructor for a WorldGenNode
+     *
      * @param x the x coordinate of the node
      * @param y the y coordinate of the node
      */
@@ -69,7 +72,10 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * Calculates the approximate centroid of the polygon defined by this node.
      * The centroid is approximated as the average position of the vertices of
      * the polygon, rather than integrating to calculate the exact centroid
+     *
      * @return The approximate centroid of the polygon defined by this node
+     * @throws InvalidCoordinatesException if any vertex's coordinates are not
+     *         2 dimensional
      */
     public double[] getCentroid() throws InvalidCoordinatesException {
         double[] centroid = {0, 0};
@@ -97,6 +103,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
 
     /**
      * Adds another node to this node's list of adjacent nodes
+     *
      * @param other the adjacent node
      */
     public void assignNeighbour(WorldGenNode other) {
@@ -105,6 +112,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
 
     /**
      * Associates a tile with this node
+     *
      * @param tile the tile in question
      */
     public void addTile(Tile tile) {
@@ -116,16 +124,20 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * spread apart.
      *
      * For info on what Lloyd's Algorithm is, see
-     * <a href="https://en.wikipedia.org/wiki/Lloyd%27s_algorithm">the Wikipedia page</a>
+     * <a href="https://en.wikipedia.org/wiki/Lloyd%27s_algorithm">
+     *     the Wikipedia page</a>
      *
      * One key simplification from the method described on Wikipedia used here
      * is approximating the centroid as the average position of the vertices of
-     * the polygon, rather than integrating to calculate the exact centroid
+     * the polygon, rather than integrating to calculate the exact centroid.
+     *
      * @param nodes The list of nodes to apply the Lloyd's Algorithm
      * @param iterations The number of times to apply the algorithm. Too few
      *                   iterations can result in the algorithm not evening out
      *                   the points enough, and too many iterations can
      *                   eliminate the randomness of the node placement
+     * @throws WorldGenException if there is an exception thrown when trying
+     *         to run Lloyd Relaxation
      */
     public static void lloydRelaxation(List<WorldGenNode> nodes, int iterations,
             int worldSize) throws WorldGenException {
@@ -150,10 +162,15 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     }
 
     /**
-     * This method is O(n^2). If you can find a more efficient implementation
-     * go ahead
+     * Finds which nodes are neighbours, and assigns them to each other's list
+     * of neighbours
+     *
+     * @param nodes the list of nodes to assign neighbours
+     * @throws InvalidCoordinatesException if any nodes have a vertex whose
+     *         coordinates are not 2 dimensional
      */
-    public static void assignNeighbours(List<WorldGenNode> nodes) throws InvalidCoordinatesException {
+    public static void assignNeighbours(List<WorldGenNode> nodes)
+            throws InvalidCoordinatesException {
         // Compare each node with each other node
         for (int i = 0; i < nodes.size(); i++) {
             for (int j = i + 1; j < nodes.size(); j++) {
@@ -171,8 +188,8 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * @param a The first node
      * @param b The second node
      * @return True if the nodes share a vertex, false otherwise
-     * @throws InvalidCoordinatesException if one of the WorldGenNodes has invalid
-     * coordinates
+     * @throws InvalidCoordinatesException if one of the WorldGenNodes has
+     *         invalid coordinates
      */
     public static boolean isAdjacent(WorldGenNode a, WorldGenNode b)
             throws InvalidCoordinatesException {
@@ -185,6 +202,17 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         }
     }
 
+    /**
+     * Finds a shared vertex between two nodes
+     *
+     * @param a the first node
+     * @param b the second node
+     * @return the coordinates of the first shared vertex found between the
+     *         nodes
+     * @throws InvalidCoordinatesException if one of the nodes has a vertex
+     *         whose coordinates are not 2 dimensions
+     * @throws NotAdjacentException if the nodes don't have a common vertex
+     */
     public static double[] sharedVertex(WorldGenNode a, WorldGenNode b)
             throws InvalidCoordinatesException, NotAdjacentException {
         // Compare each vertex of one with each vertex of the other
@@ -208,9 +236,8 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     }
 
     /**
-     * Assigns each tile in the world to the nearest node. This algorithm is
-     * O(n^3) where n is the side length of the world, so if you think of
-     * something that is O(n^2 log(n)), go for it
+     * Assigns each tile in the world to the nearest node.
+     *
      * @param nodes The list of nodes that can be assigned to
      * @param tiles The list of tiles to assign
      */
@@ -220,13 +247,13 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         nodes.sort(Comparable::compareTo);
         //sortNodes(nodes);
         for (Tile tile : tiles) {
-            // TODO see if this needs to be transformed according to dimensions of hexagon
             // Y coordinate of the tile
             float tileY = tile.getCoordinates().getRow();
             // Find the index of the node with the node with one of the nearest
             // Y values (note, if there is no node with the exact Y value, it)
             // Can choose the node on either side, not the strictly closest one
-            int nearestIndex = binarySearch((double) tileY, nodes, 0, nodes.size() - 1);
+            int nearestIndex = binarySearch((double) tileY, nodes, 0,
+                    nodes.size() - 1);
             boolean lowerLimitFound = false;
             boolean upperLimitFound = false;
             // Store the minimum distance to a node, and the index of that node
@@ -281,26 +308,31 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
 
     /**
      * Returns the square of the distance to the tile
+     *
      * @param tile The tile to find the distance to
      * @return The square of the distance
      */
     public double distanceToTile(Tile tile) {
-        // TODO see if this needs to be transformed according to dimensions of hexagon
-        double[] tileCoords = {tile.getCoordinates().getCol(), tile.getCoordinates().getRow()};
-        return (Math.pow(this.getX() - tileCoords[0], 2) + Math.pow(this.getY() - tileCoords[1], 2));
+        double[] tileCoords = {tile.getCoordinates().getCol(),
+                tile.getCoordinates().getRow()};
+        return (Math.pow(this.getX() - tileCoords[0], 2)
+                + Math.pow(this.getY() - tileCoords[1], 2));
     }
 
     /**
      * Returns the square of the difference in y value between this node and the
      * tile
+     *
      * @param tile The tile to find the distance to
      * @return The square of the difference in y value
      */
     public double yDistanceToTile(Tile tile) {
-        return Math.pow(Math.abs(this.getY() - tile.getCoordinates().getRow()), 2);
+        return Math.pow(Math.abs(
+                this.getY() - tile.getCoordinates().getRow()), 2);
     }
 
-    private static int binarySearch(double toFind, List<WorldGenNode> nodes, int start, int end) {
+    private static int binarySearch(double toFind, List<WorldGenNode> nodes,
+            int start, int end) {
         double tolerance = 0.0001f;
         int middle = (end + start) / 2;
         double middleValue = nodes.get(middle).getY();
@@ -376,104 +408,121 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
 
     /**
      * Apply Delaunay Triangulation to a set of nodes
-     * Code adapted from https://github.com/jdiemke/delaunay-triangulator/blob/master/library/src/main/java/io/github/jdiemke/triangulation/DelaunayTriangulator.java
+     * Code adapted from <a href="https://github.com/jdiemke/delaunay-triangulator/blob/master/library/src/main/java/io/github/jdiemke/triangulation/DelaunayTriangulator.java">
+     *     Johannes Dieme's Implementation</a>
      *
      * @author Johannes Diemke
-     * @throws NotEnoughPointsException Thrown when the point set contains less than three points
+     * @throws NotEnoughPointsException Thrown when the point set contains less
+     *         than three points
      */
-    public static TriangleSoup triangulate(List<WorldGenNode> nodes) {
+    public static TriangleSoup triangulate(List<WorldGenNode> nodes)
+            throws NotEnoughPointsException {
         TriangleSoup triangleSoup = new TriangleSoup();
 
         if (nodes == null || nodes.size() < 3) {
-            throw new NotEnoughPointsException("Less than three points in point set.");
+            throw new NotEnoughPointsException(
+                    "Less than three points in point set.");
         }
 
-        /**
-         * In order for the in circumcircle test to not consider the vertices of
-         * the super triangle we have to start out with a big triangle
-         * containing the whole point set. We have to scale the super triangle
-         * to be very large. Otherwise the triangulation is not convex.
-         */
+        // In order for the in circumcircle test to not consider the vertices of
+        // the super triangle we have to start out with a big triangle
+        // containing the whole point set. We have to scale the super triangle
+        // to be very large. Otherwise the triangulation is not convex.
         double maxOfAnyCoordinate = 0.0d;
 
         for (WorldGenNode vector : nodes) {
-            maxOfAnyCoordinate = Math.max(Math.max(vector.getX(), vector.getY()), maxOfAnyCoordinate);
+            maxOfAnyCoordinate = Math.max(
+                    Math.max(vector.getX(), vector.getY()), maxOfAnyCoordinate);
         }
 
         maxOfAnyCoordinate *= 16.0d;
 
         WorldGenNode p1 = new WorldGenNode(0.0d, 3.0d * maxOfAnyCoordinate);
         WorldGenNode p2 = new WorldGenNode(3.0d * maxOfAnyCoordinate, 0.0d);
-        WorldGenNode p3 = new WorldGenNode(-3.0d * maxOfAnyCoordinate, -3.0d * maxOfAnyCoordinate);
+        WorldGenNode p3 = new WorldGenNode(
+                -3.0d * maxOfAnyCoordinate, -3.0d * maxOfAnyCoordinate);
 
         WorldGenTriangle superTriangle = new WorldGenTriangle(p1, p2, p3);
 
         triangleSoup.add(superTriangle);
 
         for (int i = 0; i < nodes.size(); i++) {
-            WorldGenTriangle triangle = triangleSoup.findContainingTriangle(nodes.get(i));
+            WorldGenTriangle triangle =
+                    triangleSoup.findContainingTriangle(nodes.get(i));
 
             if (triangle == null) {
-                /*
-                 * If no containing triangle exists, then the vertex is not
-                 * inside a triangle (this can also happen due to numerical
-                 * errors) and lies on an edge. In order to find this edge we
-                 * search all edges of the triangle soup and select the one
-                 * which is nearest to the point we try to add. This edge is
-                 * removed and four new edges are added.
-                 */
+                // If no containing triangle exists, then the vertex is not
+                // inside a triangle (this can also happen due to numerical
+                // errors) and lies on an edge. In order to find this edge we
+                // search all edges of the triangle soup and select the one
+                // which is nearest to the point we try to add. This edge is
+                // removed and four new edges are added.
                 WorldGenEdge edge = triangleSoup.findNearestEdge(nodes.get(i));
 
-                WorldGenTriangle first = triangleSoup.findOneTriangleSharing(edge);
-                WorldGenTriangle second = triangleSoup.findNeighbour(first, edge);
+                WorldGenTriangle first =
+                        triangleSoup.findOneTriangleSharing(edge);
+                WorldGenTriangle second =
+                        triangleSoup.findNeighbour(first, edge);
 
-                WorldGenNode firstNoneEdgeVertex = first.getNoneEdgeVertex(edge);
-                WorldGenNode secondNoneEdgeVertex = second.getNoneEdgeVertex(edge);
+                WorldGenNode firstNoneEdgeVertex =
+                        first.getNoneEdgeVertex(edge);
+                WorldGenNode secondNoneEdgeVertex =
+                        second.getNoneEdgeVertex(edge);
 
                 triangleSoup.remove(first);
                 triangleSoup.remove(second);
 
-                WorldGenTriangle triangle1 = new WorldGenTriangle(edge.a, firstNoneEdgeVertex, nodes.get(i));
-                WorldGenTriangle triangle2 = new WorldGenTriangle(edge.b, firstNoneEdgeVertex, nodes.get(i));
-                WorldGenTriangle triangle3 = new WorldGenTriangle(edge.a, secondNoneEdgeVertex, nodes.get(i));
-                WorldGenTriangle triangle4 = new WorldGenTriangle(edge.b, secondNoneEdgeVertex, nodes.get(i));
+                WorldGenTriangle triangle1 = new WorldGenTriangle(
+                        edge.a, firstNoneEdgeVertex, nodes.get(i));
+                WorldGenTriangle triangle2 = new WorldGenTriangle(
+                        edge.b, firstNoneEdgeVertex, nodes.get(i));
+                WorldGenTriangle triangle3 = new WorldGenTriangle(
+                        edge.a, secondNoneEdgeVertex, nodes.get(i));
+                WorldGenTriangle triangle4 = new WorldGenTriangle(
+                        edge.b, secondNoneEdgeVertex, nodes.get(i));
 
                 triangleSoup.add(triangle1);
                 triangleSoup.add(triangle2);
                 triangleSoup.add(triangle3);
                 triangleSoup.add(triangle4);
 
-                legalizeEdge(triangle1, new WorldGenEdge(edge.a, firstNoneEdgeVertex), nodes.get(i), triangleSoup);
-                legalizeEdge(triangle2, new WorldGenEdge(edge.b, firstNoneEdgeVertex), nodes.get(i), triangleSoup);
-                legalizeEdge(triangle3, new WorldGenEdge(edge.a, secondNoneEdgeVertex), nodes.get(i), triangleSoup);
-                legalizeEdge(triangle4, new WorldGenEdge(edge.b, secondNoneEdgeVertex), nodes.get(i), triangleSoup);
+                legalizeEdge(triangle1, new WorldGenEdge(edge.a,
+                        firstNoneEdgeVertex), nodes.get(i), triangleSoup);
+                legalizeEdge(triangle2, new WorldGenEdge(edge.b,
+                        firstNoneEdgeVertex), nodes.get(i), triangleSoup);
+                legalizeEdge(triangle3, new WorldGenEdge(edge.a,
+                        secondNoneEdgeVertex), nodes.get(i), triangleSoup);
+                legalizeEdge(triangle4, new WorldGenEdge(edge.b,
+                        secondNoneEdgeVertex), nodes.get(i), triangleSoup);
             } else {
-                /**
-                 * The vertex is inside a triangle.
-                 */
+                // The vertex is inside a triangle.
                 WorldGenNode a = triangle.a;
                 WorldGenNode b = triangle.b;
                 WorldGenNode c = triangle.c;
 
                 triangleSoup.remove(triangle);
 
-                WorldGenTriangle first = new WorldGenTriangle(a, b, nodes.get(i));
-                WorldGenTriangle second = new WorldGenTriangle(b, c, nodes.get(i));
-                WorldGenTriangle third = new WorldGenTriangle(c, a, nodes.get(i));
+                WorldGenTriangle first =
+                        new WorldGenTriangle(a, b, nodes.get(i));
+                WorldGenTriangle second =
+                        new WorldGenTriangle(b, c, nodes.get(i));
+                WorldGenTriangle third =
+                        new WorldGenTriangle(c, a, nodes.get(i));
 
                 triangleSoup.add(first);
                 triangleSoup.add(second);
                 triangleSoup.add(third);
 
-                legalizeEdge(first, new WorldGenEdge(a, b), nodes.get(i), triangleSoup);
-                legalizeEdge(second, new WorldGenEdge(b, c), nodes.get(i), triangleSoup);
-                legalizeEdge(third, new WorldGenEdge(c, a), nodes.get(i), triangleSoup);
+                legalizeEdge(first, new WorldGenEdge(a, b), nodes.get(i),
+                        triangleSoup);
+                legalizeEdge(second, new WorldGenEdge(b, c), nodes.get(i),
+                        triangleSoup);
+                legalizeEdge(third, new WorldGenEdge(c, a), nodes.get(i),
+                        triangleSoup);
             }
         }
 
-        /**
-         * Remove all triangles that contain vertices of the super triangle.
-         */
+        // Remove all triangles that contain vertices of the super triangle.
         triangleSoup.removeTrianglesUsing(superTriangle.a);
         triangleSoup.removeTrianglesUsing(superTriangle.b);
         triangleSoup.removeTrianglesUsing(superTriangle.c);
@@ -486,41 +535,53 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
 
     /**
      * This method legalizes edges by recursively flipping all illegal edges.
-     * Code adapted from https://github.com/jdiemke/delaunay-triangulator/blob/master/library/src/main/java/io/github/jdiemke/triangulation/DelaunayTriangulator.java
+     * Code adapted from <a href="https://github.com/jdiemke/delaunay-triangulator/blob/master/library/src/main/java/io/github/jdiemke/triangulation/DelaunayTriangulator.java">
+     *      Johannes Dieme's Implementation</a>
      *
      * @author Johannes Diemke
      * @param triangle The triangle
      * @param edge The edge to be legalized
      * @param newVertex The new vertex
      */
-    private static void legalizeEdge(WorldGenTriangle triangle, WorldGenEdge edge,
-            WorldGenNode newVertex, TriangleSoup triangleSoup) {
+    private static void legalizeEdge(WorldGenTriangle triangle,
+            WorldGenEdge edge, WorldGenNode newVertex,
+            TriangleSoup triangleSoup) {
 
         WorldGenTriangle neighbourTriangle
                 = triangleSoup.findNeighbour(triangle, edge);
 
-        /*
-         * If the triangle has a neighbor, then legalize the edge
-         */
+        // If the triangle has a neighbor, then legalize the edge
         if (neighbourTriangle != null) {
             if (neighbourTriangle.isPointInCircumcircle(newVertex)) {
                 triangleSoup.remove(triangle);
                 triangleSoup.remove(neighbourTriangle);
 
-                WorldGenNode noneEdgeVertex = neighbourTriangle.getNoneEdgeVertex(edge);
+                WorldGenNode noneEdgeVertex =
+                        neighbourTriangle.getNoneEdgeVertex(edge);
 
-                WorldGenTriangle firstTriangle = new WorldGenTriangle(noneEdgeVertex, edge.a, newVertex);
-                WorldGenTriangle secondTriangle = new WorldGenTriangle(noneEdgeVertex, edge.b, newVertex);
+                WorldGenTriangle firstTriangle =
+                        new WorldGenTriangle(noneEdgeVertex, edge.a, newVertex);
+                WorldGenTriangle secondTriangle =
+                        new WorldGenTriangle(noneEdgeVertex, edge.b, newVertex);
 
                 triangleSoup.add(firstTriangle);
                 triangleSoup.add(secondTriangle);
 
-                legalizeEdge(firstTriangle, new WorldGenEdge(noneEdgeVertex, edge.a), newVertex, triangleSoup);
-                legalizeEdge(secondTriangle, new WorldGenEdge(noneEdgeVertex, edge.b), newVertex, triangleSoup);
+                legalizeEdge(firstTriangle, new WorldGenEdge(
+                        noneEdgeVertex, edge.a), newVertex, triangleSoup);
+                legalizeEdge(secondTriangle, new WorldGenEdge(
+                        noneEdgeVertex, edge.b), newVertex, triangleSoup);
             }
         }
     }
 
+    /**
+     * Adds a vertex to the list of vertices for a node
+     *
+     * @param vertex the vertex to add
+     * @throws InvalidCoordinatesException if the vertex's coordinates are not 2
+     *         dimensional
+     */
     public void addVertex(double[] vertex) throws InvalidCoordinatesException {
         if (vertex.length != 2) {
             throw new InvalidCoordinatesException();
@@ -531,9 +592,13 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     /**
      * Calculates the vertices of each node by converting the Delaunay
      * Triangulation to its equivalent Voronoi Graph
+     *
      * @param nodes The nodes to perform the algorithm with
+     * @throws WorldGenException if there is an exception thrown when trying
+     *         to triangulate the nodes
      */
-    public static void calculateVertices(List<WorldGenNode> nodes, int worldSize) throws WorldGenException {
+    public static void calculateVertices(List<WorldGenNode> nodes,
+            int worldSize) throws WorldGenException {
         TriangleSoup triangleSoup = triangulate(nodes);
         for (WorldGenTriangle triangle : triangleSoup.getTriangles()) {
             double[] circumcentre = triangle.circumcentre();
@@ -543,7 +608,8 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
 
             // Make sure all three are border nodes if circumcentre is outside
             // world
-            if (Math.abs(circumcentre[0]) > worldSize && Math.abs(circumcentre[1]) > worldSize) {
+            if (Math.abs(circumcentre[0]) > worldSize && Math.abs(
+                    circumcentre[1]) > worldSize) {
                 triangle.a.setBorderNode(true);
                 triangle.b.setBorderNode(true);
                 triangle.c.setBorderNode(true);
@@ -551,45 +617,81 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         }
     }
 
-    public void setBorderNode(boolean borderNode) {
-        this.borderNode = borderNode;
-    }
-
     /* ------------------------------------------------------------------------
      * 				GETTERS AND SETTERS BELOW THIS COMMENT.
      * ------------------------------------------------------------------------ */
 
+    /**
+     * Returns the x value of this node
+     *
+     * @return the x value of this node
+     */
     public double getX() {
         return this.x;
     }
 
+    /**
+     * Returns the y value of this node
+     *
+     * @return the y value of this node
+     */
     public double getY() {
         return this.y;
     }
 
+    /**
+     * Sets the coordinates of this node
+     *
+     * @param coords the coordinates to set
+     */
     public void setCoords(double[] coords) {
         this.x = coords[0];
         this.y = coords[1];
     }
 
+    /**
+     * Get the neighbours of this node
+     *
+     * @return the neighbours of this node
+     */
     public List<WorldGenNode> getNeighbours() {
         return this.neighbours;
     }
 
+    /**
+     * Get the vertices of this node
+     *
+     * @return the vertices of this node
+     */
     public List<double[]> getVertices() {
         return this.vertices;
     }
 
+    /**
+     * Get the tiles within this node
+     *
+     * @return the tiles within this node
+     */
     public List<Tile> getTiles() {
         return this.tiles;
     }
 
     /**
      * Returns whether or not this is a border node
+     *
      * @return whether or not this is a border node
      */
     public boolean isBorderNode() {
         return this.borderNode;
+    }
+
+    /**
+     * Sets the border node status of this node
+     *
+     * @param borderNode whether or not this node is a border node
+     */
+    public void setBorderNode(boolean borderNode) {
+        this.borderNode = borderNode;
     }
 
 }
