@@ -1,5 +1,6 @@
 package deco2800.skyfall.worlds;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -12,9 +13,12 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
 
 public class Tile{
 	private static int nextID = 0;
+	private double perlinValue;
+
 
 	private static int getNextID() {
 		return nextID++;
@@ -26,10 +30,13 @@ public class Tile{
 	@Expose
     private String texture;
     private HexVector coords;
-    
-
+    //Class that stores the tiles biome and its texture
     private StaticEntity parent;
-	
+    //The Biome the tile is in
+    private AbstractBiome biome;
+	//Determines whether a tile can be built on, main use is for the construction team
+	private boolean isBuildable;
+
 	@Expose
     private boolean obstructed = false;
     
@@ -44,27 +51,24 @@ public class Tile{
     static final int[] NORTHS = {NORTH_WEST, NORTH, NORTH_EAST};
     static final int[] SOUTHS = {SOUTH_WEST, SOUTH, SOUTH_EAST};
 
+
     private transient Map<Integer,Tile> neighbours;
-    
-    @Expose
+
+
+	@Expose
     private int index = -1;
 
     @Expose
     private int tileID = 0;
-    
-    public Tile(String texture) {
-        this(texture, 0, 0);
+
+    public Tile() {
+        this(0, 0);
     }
 
-    public Tile(String texture, float col, float row) {
-        this.texture = texture;
+    public Tile(float col, float row) {
         coords = new HexVector(col, row);
         this.neighbours = new HashMap<Integer,Tile>();
         this.tileID = Tile.getNextID();
-    }
-
-    public Tile() {
-		this.neighbours = new HashMap<Integer,Tile>();
     }
 
     public float getCol() {
@@ -118,6 +122,7 @@ public class Tile{
 		return String.format("[%.0f, %.1f: %d]", coords.getCol(), coords.getRow(), index);
 	}
 
+
 	public StaticEntity getParent() {
 		return parent;
 	}
@@ -131,6 +136,8 @@ public class Tile{
 	}
 
 	public void setTexture(String texture) {
+        setObstructed(checkObstructed(texture));
+		setIsBuildable(checkIsBuildable(texture));
 		this.texture = texture;
 	}
 
@@ -180,13 +187,40 @@ public class Tile{
 		this.index = indexValue;		
 	}
 
+	/**
+	 * Returns whether the tile obstructs entities.
+	 *
+	 * @return whether the tile obstructs entities
+	 *
+	 * @deprecated use {@link #isObstructed()}
+	 */
+	@Deprecated
+	public boolean getObstructed() {
+    	return isObstructed();
+	}
+
+	/**
+	 * Returns whether the tile obstructs entities.
+	 *
+	 * @return whether the tile obstructs entities
+	 */
 	public boolean isObstructed() {
 		return obstructed;
 	}
 
 	public void setObstructed(boolean b) {
 		obstructed = b;
-		
+	}
+
+	public boolean checkObstructed(String texture){
+		ArrayList<String> obstructables = new ArrayList<>();
+		obstructables.add("water");
+		for (String obstructable : obstructables){
+			if (texture.contains(obstructable)){
+				return true;
+			}
+		}
+		return false;
 	}
 
 
@@ -196,5 +230,68 @@ public class Tile{
 
 	public void setRow(float row) {
 		this.coords.setRow(row);
+	}
+
+	/**
+	 * Used to determine whether a tile can be built on
+	 * @return false if the tile cannot be built on, and true if it can be built on
+	 */
+	public boolean getIsBuildable() {
+		return isBuildable;
+	}
+
+	/**
+	 * Sets the isBuildable value
+	 * @param isBuildable true if it can be built on, false if not
+	 */
+	public void setIsBuildable(boolean isBuildable){
+    	this.isBuildable = isBuildable;
+	}
+
+	/**
+	 * Checks whether a tile is able to built on depending on the texture name
+	 * @param texture The texture being checked
+	 * @return False if the tile can not be built on, and true if it can
+	 */
+	private boolean checkIsBuildable(String texture){
+		ArrayList<String> buildables = new ArrayList<>();
+		//List of buildable tiles
+		buildables.add("water");
+		buildables.add("sand");
+		for (String obstructable : buildables){
+			if (texture.contains(obstructable)){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Gets the reference to the biome the tile is in
+	 * @return An AbstractBiome representing the biome the tile is in
+	 */
+	public AbstractBiome getBiome(){
+		return biome;
+	}
+
+	public void setBiome(AbstractBiome biome) {
+		this.biome = biome;
+	}
+
+	/**
+	 * Sets the perlin noise value
+	 * @param perlinValue The noise value
+	 */
+	public void setPerlinValue(double perlinValue) {
+		this.perlinValue = perlinValue;
+	}
+
+
+	/**
+	 * Returns the perlin value
+	 * @return The perlin value
+	 */
+	public double getPerlinValue() {
+		return perlinValue;
 	}
 }

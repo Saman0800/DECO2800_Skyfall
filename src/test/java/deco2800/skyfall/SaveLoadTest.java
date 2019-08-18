@@ -37,7 +37,7 @@ public class SaveLoadTest {
     
     @Before
     public void Setup() {
-        w = new TestWorld();
+        w = new TestWorld(0);
         
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
@@ -69,17 +69,17 @@ public class SaveLoadTest {
         float row_one = 1.0f;
         float col_two = 4.0f;
         float row_two = 5.0f;
-        saveTileMap.add(new Tile("grass_1_0", col_one, row_one));
-        saveTileMap.add(new Tile("grass_1_0", col_two, row_two));
+        saveTileMap.add(new Tile(col_one, row_one));
+        saveTileMap.add(new Tile(col_two, row_two));
         w.setTileMap(saveTileMap);
 
-        newEntities.put(0, new PlayerPeon(1, 1, 1));
+        newEntities.put(0, new PlayerPeon(1, 1, 1, "test", 10));
         
         List<AbstractEntity> testEntities = new ArrayList<>(w.getEntities());        
         deco2800.skyfall.managers.DatabaseManager.saveWorld(w);
         
         
-        TestWorld q = new TestWorld();
+        TestWorld q = new TestWorld(0);
         deco2800.skyfall.managers.DatabaseManager.loadWorld(q);
 
         
