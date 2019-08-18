@@ -10,32 +10,32 @@ import javax.sound.sampled.*;
 
 public class SoundManager extends AbstractManager {
 
-    //Audio input stream
+    /* Audio input stream */
     private static AudioInputStream audioInputStream;
 
-    //Clip that will be played
+    /* Clip that will be played */
     private static Clip clip;
 
-    //File to be played
+    /* File to be played */
     private static String audio;
 
-    //Current position of clip
+    /* Current position of clip */
     private static Long currentPosition;
 
-    //Volume of the clip
+    /* Volume of the clip */
     private static FloatControl volume;
 
-    //Boolean mute control
+    /* Boolean mute control */
     public static BooleanControl muteVol;
 
-    public void playSound(String soundName) {
-        Sound sound = Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + soundName));
-        sound.play(1);
-    }
+//    public void playSound(String soundName) {
+//        Sound sound = Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + soundName));
+//        sound.play(1);
+//    }
 
     /**
-     * Initialises the Audio Input Stream
-     * @param file to play
+     * Initialises the Audio Input Stream and allows clip to loop continuously.
+     * @param file is the name of the audio intended to be played.
      */
     public static void backgroundGameMusic(String file) throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
@@ -63,7 +63,7 @@ public class SoundManager extends AbstractManager {
     }
 
     /**
-     * Play the clip
+     * Plays the clip.
      */
     public static void play()  {
         //Play the clip
@@ -71,7 +71,7 @@ public class SoundManager extends AbstractManager {
     }
 
     /**
-     * Pause the clip
+     * Pauses the clip.
      */
     public static void pause() {
         //Get paused position
@@ -82,7 +82,7 @@ public class SoundManager extends AbstractManager {
     }
 
     /**
-     * Resumes the clip
+     * Resumes the clip.
      */
     public static void resume() throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
@@ -94,7 +94,7 @@ public class SoundManager extends AbstractManager {
     }
 
     /**
-     * Stop the clip
+     * Stops the clip.
      */
     public static void stop() throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
@@ -105,7 +105,7 @@ public class SoundManager extends AbstractManager {
     }
 
     /**
-     * Resets the clip to start time
+     * Resets the clip to start time.
      */
     public static void resetClip() throws UnsupportedAudioFileException, IOException,
     LineUnavailableException {
@@ -115,14 +115,14 @@ public class SoundManager extends AbstractManager {
     }
 
     /**
-     * Returns the current clip
+     * Returns the current clip.
      */
     public static Clip getClip()  {
         return clip;
     }
 
     /**
-     * Mutes the clip
+     * Mutes the clip.
      */
     public static void mute () {
         //Set mute value to true
@@ -131,7 +131,7 @@ public class SoundManager extends AbstractManager {
     }
 
     /**
-     * Unmutes the clip
+     * Unmutes the clip.
      */
     public static void unmute () {
         //Set mute value to true
