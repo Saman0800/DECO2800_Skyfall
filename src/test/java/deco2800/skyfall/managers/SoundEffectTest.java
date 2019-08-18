@@ -16,32 +16,22 @@ public class SoundEffectTest {
     public void exceptionTest() throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
         try {
-            SoundManager.backgroundGameMusic("resources/sounds/09-running-in-the-90-s.mp3");
+            sound.playSound("people_walk_normal");
         } catch (Exception e) {
-            //exception caught
+            e.getMessage();
         }
     }
 
     @Test
     public void playSoundEffect(){
         try {
-            sound.playSound("menu");
+            sound.playSound("people_walk_normal");
             TimeUnit.SECONDS.sleep(1);
-            assertEquals(sound.soundInMap("menu"), true);
+            assertEquals(sound.soundInMap("people_walk_normal"), false);
         } catch (Exception e) {
             //exception caught
         }
     }
 
-    @Test
-    public void playSoundEffectFOrPause(){
-        try {
-            sound.playTheSound("09-running-in-the-90-s.mp3");
-            TimeUnit.SECONDS.sleep(1);
-            sound.pauseTheSound("09-running-in-the-90-s.mp3");
-            //assertEquals(SoundManager.getClip().isRunning(), false);
-        } catch (Exception e) {
-            //exception caught
-        }
-    }
+
 }
