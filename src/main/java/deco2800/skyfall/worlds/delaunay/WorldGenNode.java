@@ -2,6 +2,7 @@ package deco2800.skyfall.worlds.delaunay;
 
 import com.badlogic.gdx.graphics.g3d.particles.values.MeshSpawnShapeValue;
 import deco2800.skyfall.worlds.Tile;
+import org.lwjgl.Sys;
 
 import java.lang.Comparable;
 import java.util.List;
@@ -28,8 +29,8 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     // List of tiles that are within the polygon defined by this node
     private List<Tile> tiles;
 
-    // Whether or not this is a border node
-    private boolean borderNode;
+    // Any neighbours that share a border edge with this one
+    private List<WorldGenNode> borderNeighbours;
 
     /**
      * Constructor for a WorldGenNode
@@ -42,7 +43,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         this.neighbours = new ArrayList<>();
         this.vertices = new ArrayList<>();
         this.tiles = new ArrayList<>();
-        this.borderNode = false;
+        this.borderNeighbours = new ArrayList<>();
     }
 
     @Override
@@ -63,42 +64,6 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
             return -1;
         }
         return 1;
-    }
-
-    /**
-     * Quicksort the list of nodes. Quicksort method taken from
-     * <a href="https://www.geeksforgeeks.org/quick-sort/">Geeks for Geeks</a>
-     * @param nodes
-     * TODO delete this
-     */
-    public static void sortNodes(List<WorldGenNode> nodes) {
-        quickSort(nodes, 0, nodes.size() - 1);
-    }
-
-    /*
-     * Helper method for sortNodes
-     * TODO delete this
-     */
-    private static void quickSort(List<WorldGenNode> nodes, int start, int end) {
-        if (start < end) {
-            int pivotIndex = start - 1;
-            WorldGenNode pivot = nodes.get(end);
-            for (int i = start; i < end; i++) {
-                if (nodes.get(i).compareTo(pivot) <= 0) {
-                    pivotIndex++;
-                    WorldGenNode temp = nodes.get(pivotIndex);
-                    nodes.set(pivotIndex, nodes.get(i));
-                    nodes.set(i, temp);
-                }
-            }
-            pivotIndex++;
-            WorldGenNode temp = nodes.get(end);
-            nodes.set(end, nodes.get(pivotIndex));
-            nodes.set(pivotIndex, temp);
-
-            quickSort(nodes, start, pivotIndex - 1);
-            quickSort(nodes, pivotIndex + 1, end);
-        }
     }
 
     /**
@@ -156,7 +121,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      *                   the points enough, and too many iterations can
      *                   eliminate the randomness of the node placement
      */
-    public static void lloydRelaxation(List<WorldGenNode> nodes, int iterations)
+    public static void lloydRelaxation(List<WorldGenNode> nodes, int iterations, int worldSize)
             throws WorldGenException {
         for (int i = 0; i < iterations; i++) {
             for (WorldGenNode node : nodes) {
@@ -165,7 +130,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
                 node.setCoords(centroid);
             }
             // Reapply the Delaunay Triangulation
-            calculateVertices(nodes);
+            calculateVertices(nodes, worldSize);
         }
     }
 
@@ -196,7 +161,17 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      */
     public static boolean isAdjacent(WorldGenNode a, WorldGenNode b)
             throws InvalidCoordinatesException {
+        try {
+            sharedVertex(a, b);
+            // Return true if there wasn't a NotAdjacentException
+            return true;
+        } catch (NotAdjacentException e) {
+            return false;
+        }
+    }
 
+    public static double[] sharedVertex(WorldGenNode a, WorldGenNode b)
+            throws InvalidCoordinatesException, NotAdjacentException {
         // Compare each vertex of one with each vertex of the other
         for (double[] vertexA : a.getVertices()) {
             if (vertexA.length != 2) {
@@ -209,11 +184,12 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
                 // If the vertices are sufficiently close (ie the nodes share at
                 // least one vertex
                 if (vertexA[0] == vertexB[0] && vertexA[1] == vertexB[1]) {
-                    return true;
+                    return vertexA;
                 }
             }
         }
-        return false;
+        // Indicate that the points are not adjacent
+        throw new NotAdjacentException();
     }
 
     /**
@@ -224,8 +200,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * @param tiles The list of tiles to assign
      */
     public static void assignTiles(List<WorldGenNode> nodes, List<Tile> tiles) {
-        // TODO check if sort is necessary (may have already been sorted in
-        // TODO fortune's algorithm)
+
         // Ensure nodes are stored in order of Y value
         nodes.sort(Comparable::compareTo);
         //sortNodes(nodes);
@@ -391,7 +366,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * @author Johannes Diemke
      * @throws NotEnoughPointsException Thrown when the point set contains less than three points
      */
-    public static TriangleSoup triangulate(List<WorldGenNode> nodes) throws NotEnoughPointsException {
+    public static TriangleSoup triangulate(List<WorldGenNode> nodes) {
         TriangleSoup triangleSoup = new TriangleSoup();
 
         if (nodes == null || nodes.size() < 3) {
@@ -505,9 +480,11 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      */
     private static void legalizeEdge(WorldGenTriangle triangle, WorldGenEdge edge,
             WorldGenNode newVertex, TriangleSoup triangleSoup) {
-        WorldGenTriangle neighbourTriangle = triangleSoup.findNeighbour(triangle, edge);
 
-        /**
+        WorldGenTriangle neighbourTriangle
+                = triangleSoup.findNeighbour(triangle, edge);
+
+        /*
          * If the triangle has a neighbor, then legalize the edge
          */
         if (neighbourTriangle != null) {
@@ -541,14 +518,184 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * Triangulation to its equivalent Voronoi Graph
      * @param nodes The nodes to perform the algorithm with
      */
-    public static void calculateVertices(List<WorldGenNode> nodes) throws WorldGenException {
+    public static void calculateVertices(List<WorldGenNode> nodes, int worldSize) throws WorldGenException {
         TriangleSoup triangleSoup = triangulate(nodes);
         for (WorldGenTriangle triangle : triangleSoup.getTriangles()) {
             double[] circumcentre = triangle.circumcentre();
-            triangle.a.addVertex(circumcentre);
-            triangle.b.addVertex(circumcentre);
-            triangle.c.addVertex(circumcentre);
+            // Don't count vertices outside the map
+            if (Math.abs(circumcentre[0]) <= worldSize && Math.abs(circumcentre[1]) <= worldSize) {
+                triangle.a.addVertex(circumcentre);
+                triangle.b.addVertex(circumcentre);
+                triangle.c.addVertex(circumcentre);
+            }
         }
+        List<WorldGenNode> borderNodes = triangleSoup.getBorderNodes();
+
+        // Add the corners as vertices to the nearest border node
+        for (int i = 0; i < 4; i++) {
+            // Assigns a different vertex for each iteration
+            // (bottom left, bottom right, top left, top right)
+            double[] vertex = {worldSize * ((i % 2) - 0.5) * 2,
+                    worldSize * (((i / 2) % 2) - 0.5) * 2};
+
+            double minDistance = -1;
+            int minDistanceIndex = 0;
+
+            // Find the closest border node
+            for (int j = 0; j < borderNodes.size(); j++) {
+                double distance = Math.pow(borderNodes.get(j).getX() - vertex[0], 2)
+                        + Math.pow(borderNodes.get(j).getY() - vertex[1], 2);
+                if (minDistance == -1 || distance < minDistance) {
+                    minDistance = distance;
+                    minDistanceIndex = i;
+                }
+            }
+
+            borderNodes.get(minDistanceIndex).addVertex(vertex);
+        }
+
+        // Add the border nodes
+        boolean backToStart = false;
+        // Start from an arbitrary border node
+        WorldGenNode firstBorderNode = triangleSoup.getBorderNodes().get(0);
+        WorldGenNode currentBorderNode = firstBorderNode;
+        WorldGenNode lastBorderNode = new WorldGenNode(0, 0);
+
+        do {
+            WorldGenNode nextBorderNode = new WorldGenNode(0, 0);
+            for (WorldGenNode node : currentBorderNode.getBorderNeighbours()) {
+                if (node != lastBorderNode) {
+                    nextBorderNode = node;
+                    break;
+                }
+            }
+
+            // TODO put in try catch
+            double[] boundaryIntersection = currentBorderNode
+                    .getBoundaryIntersection(nextBorderNode, worldSize);
+            currentBorderNode.addVertex(boundaryIntersection);
+            nextBorderNode.addVertex(boundaryIntersection);
+
+            // Move to the next set of nodes
+            lastBorderNode = currentBorderNode;
+            currentBorderNode = nextBorderNode;
+
+            // Exit loop after traversing the full border
+            if (currentBorderNode == firstBorderNode) {
+                backToStart = true;
+            }
+        } while (!backToStart);
+    }
+
+    public double[] getBoundaryIntersection(WorldGenNode other, int worldSize)
+            throws InvalidCoordinatesException, NotAdjacentException {
+        // Only adjacent border nodes will have a boundary intersection
+        if (!this.getBorderNeighbours().contains(other)
+                || !other.getBorderNeighbours().contains(this)) {
+            throw new NotAdjacentException();
+        }
+
+        double[] coords = {0, 0};
+        double ax = this.getX();
+        double ay = this.getY();
+        double bx = other.getX();
+        double by = other.getY();
+
+        double[] midAB = {(ax + bx) / 2, (ay + by) / 2};
+
+        // If the gradient of the equidistant line is undefined
+        if (ay == by) {
+            coords[0] = midAB[0];
+            // If the top edge is closer
+            if (ay > 0) {
+                coords[1] = worldSize;
+            } else {
+                coords[1] = -1 * worldSize;
+            }
+            return coords;
+        }
+
+        // The normal line is horizontal
+        if (ax == bx) {
+            coords[1] = midAB[1];
+            if (ax > 0) {
+                coords[0] = worldSize;
+            } else {
+                coords[0] = -1 * worldSize;
+            }
+            return coords;
+        }
+
+        // Get gradient of the equidistant line
+        double normAB = (bx - ax) / (ay - by);
+
+        // y value of left boundary intersection, y of right, x of top, x of bottom
+        double[] intersectOtherCoord = {0, 0, 0, 0};
+        // Sub into y - y0 = m(x - x0)
+        intersectOtherCoord[0] = midAB[1] + normAB * (-1 * worldSize - midAB[0]);
+        intersectOtherCoord[1] = midAB[1] + normAB * (worldSize - midAB[0]);
+        intersectOtherCoord[2] = midAB[0] +  (worldSize - midAB[1]) / normAB;
+        intersectOtherCoord[3] = midAB[0] + (-1 * worldSize - midAB[1]) / normAB;
+
+        double minDistance = -1;
+        int minDistanceIndex = 0;
+        for (int i = 0; i < 4; i++) {
+            // Note: it is not necessary to check that the intersection is
+            // actually in the square
+            double distance = -1;
+            // If it is a horizontal boundary
+            switch (i) {
+                case 0:
+                    distance = Math.pow(ax - (-1 * worldSize), 2)
+                            + Math.pow(ay - intersectOtherCoord[0], 2);
+                    break;
+                case 1:
+                    distance = Math.pow(ax - worldSize, 2)
+                            + Math.pow(ay - intersectOtherCoord[1], 2);
+                    break;
+                case 2:
+                    distance = Math.pow(ax - intersectOtherCoord[2], 2)
+                            + Math.pow(ay - worldSize, 2);
+                    break;
+                case 3:
+                    distance = Math.pow(ax - intersectOtherCoord[3], 2)
+                            + Math.pow(ay - (-1 * worldSize), 2);
+                    break;
+                default:
+                    distance = -1;
+                }
+
+            if (distance != -1
+                    && (minDistance == -1 || distance < minDistance)) {
+                minDistance = distance;
+                minDistanceIndex = i;
+            }
+        }
+
+        switch (minDistanceIndex) {
+            case 0:
+                coords[0] = -1 * worldSize;
+                coords[1] = intersectOtherCoord[0];
+                break;
+            case 1:
+                coords[0] = worldSize;
+                coords[1] = intersectOtherCoord[1];
+                break;
+            case 2:
+                coords[0] = intersectOtherCoord[2];
+                coords[1] = worldSize;
+                break;
+            case 3:
+                coords[0] = intersectOtherCoord[3];
+                coords[1] = -1 * worldSize;
+                break;
+        }
+
+        return coords;
+    }
+
+    public void addBorderNeighbour(WorldGenNode neighbour) {
+        this.borderNeighbours.add(neighbour);
     }
 
     /* ------------------------------------------------------------------------
@@ -580,15 +727,16 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         return this.tiles;
     }
 
-    public void setBorderNode(boolean borderNode) {
-        this.borderNode = borderNode;
-    }
-
     /**
      * Returns whether or not this is a border node
      * @return whether or not this is a border node
      */
     public boolean isBorderNode() {
-        return this.borderNode;
+        return this.borderNeighbours.size() != 0;
     }
+
+    public List<WorldGenNode> getBorderNeighbours() {
+        return this.borderNeighbours;
+    }
+
 }
