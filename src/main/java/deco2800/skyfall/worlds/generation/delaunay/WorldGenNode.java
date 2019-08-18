@@ -413,7 +413,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * @throws NotEnoughPointsException Thrown when the point set contains less
      *         than three points
      */
-    public static TriangleSoup triangulate(List<WorldGenNode> nodes)
+     static TriangleSoup triangulate(List<WorldGenNode> nodes)
             throws NotEnoughPointsException {
         TriangleSoup triangleSoup = new TriangleSoup();
 
