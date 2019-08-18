@@ -6,10 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 
 import java.io.*;
-import java.util.AbstractList;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.TreeMap;
+import java.util.*;
 
 import deco2800.skyfall.entities.structures.AbstractBuilding;
 import deco2800.skyfall.worlds.AbstractWorld;
@@ -259,8 +256,8 @@ public class ConstructionManager extends AbstractManager {
      * return a list of how much of each relevant resources the player owns
      * When given a structure class gets its cost and compares it to the players inventory
      *
-     * @param building
-     * @param inventoryManager
+     * @param building         - AbstractBuilding
+     * @param inventoryManager - player's inventory
      * @return True, if the player's inventory meets the inventory requirements, otherwise false
      */
     public Boolean invCheck(AbstractBuilding building, InventoryManager inventoryManager) {
@@ -271,7 +268,7 @@ public class ConstructionManager extends AbstractManager {
 
             String item = entry.getKey();
             Integer value = entry.getValue();
-            System.out.println(key + " => " + value);
+//          System.out.println(item + " => " + value);
 
             if (value.intValue() > inventoryManager.getAmount(item)) {
                 return false;
@@ -285,8 +282,8 @@ public class ConstructionManager extends AbstractManager {
     /**
      * Takes in a structure class and removes the material cost from player inventory
      *
-     * @param building
-     * @param inventoryManager
+     * @param building         - AbstractBuilding
+     * @param inventoryManager - player's inventory
      * @pre: Assume that building has been verified against inventoryAmount in inventoryManager
      */
     public void invRemove(AbstractBuilding building, InventoryManager inventoryManager) {
