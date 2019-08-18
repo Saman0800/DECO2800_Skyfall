@@ -25,7 +25,7 @@ public class Aloe_Vera extends HealthResources implements Item {
     //private HexVector position;
 
     // determines whether or not the resource can be traded
-    //private Boolean exchangeable;
+
 
     // the colour of the Aloe_Vera
     private String colour;
@@ -37,13 +37,18 @@ public class Aloe_Vera extends HealthResources implements Item {
     //private Integer AmountOfHealingPower;
 
     //How many AloeVeras that players have;
-    private Integer NumberOfAloeVera;
+    //private Integer NumberOfAloeVera;
+
+    //whether or not the item impacts the player's food fullness
+    //private Boolean hasFoodEffect;
 
 
     public Aloe_Vera(){
-        this.biome = biome;
+        this.biome = "Forest";
         this.name = "Aloe_Vera";
         this.colour = "green";
+        this.foodValue = 20;
+        //this.hasFoodEffect = true;
         //default constructor added for building inventory
     }
 
@@ -61,6 +66,8 @@ public class Aloe_Vera extends HealthResources implements Item {
     public String getBiome(){
         return biome;
     }
+
+
 
     /**
      * Returns the integer of healing power
@@ -80,7 +87,7 @@ public class Aloe_Vera extends HealthResources implements Item {
      * @return the integer of number of Aloe Vera
      */
 
-    public Integer getNumberOfAloeVera(Integer numberOfAloeVera){
+     /*public Integer getNumberOfAloeVera(Integer numberOfAloeVera){
 
         NumberOfAloeVera = numberOfAloeVera;
 
@@ -88,7 +95,14 @@ public class Aloe_Vera extends HealthResources implements Item {
             System.out.println("Out of Maximum number of Aloe Vera");
         }
         return NumberOfAloeVera;
+    }*/
+
+
+    @Override
+    public String toString() {
+        return "" + subtype + ":" + name;
     }
+
 
 
 }

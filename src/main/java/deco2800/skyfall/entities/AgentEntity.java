@@ -8,9 +8,10 @@ public abstract class AgentEntity extends AbstractEntity{
 	@Expose
 	protected float speed;
 
+
+
 	public AgentEntity(float col, float row, int renderOrder, float speed) {
 		super(col, row, renderOrder);
-		
 		this.speed = speed;
 	}
 
@@ -18,6 +19,7 @@ public abstract class AgentEntity extends AbstractEntity{
 		super();
 	}
 
+	/*Gets reset in the Peon class*/
 	public void moveTowards(HexVector destination) {
 		position.moveToward(destination, speed);
 	}
@@ -29,4 +31,7 @@ public abstract class AgentEntity extends AbstractEntity{
 	public void setSpeed(float speed) {
 		this.speed = speed;
 	}
+
+
+
 }

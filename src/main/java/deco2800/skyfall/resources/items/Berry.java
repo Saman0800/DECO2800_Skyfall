@@ -41,12 +41,18 @@ public class Berry extends HealthResources implements Item {
     private String colour;
 
     //How many Berry that players have;
-    private Integer NumberOfBerry;
+    //private Integer NumberOfBerry;
+
+    //whether or not the item impacts the player's food fullness
+    private Boolean hasFoodEffect;
 
     public Berry(){
-        this.biome = biome;
+
+        this.biome = "Forest";
         this.colour ="wine red";
-        this.name ="berry";
+        this.name ="Berry";
+        this.hasFoodEffect = true;
+        this.foodValue = 20;
         //default constructor added for building inventory
     }
 
@@ -63,6 +69,15 @@ public class Berry extends HealthResources implements Item {
      */
     public String getBiome(){
         return biome;
+    }
+
+    /**
+     * Returns whether or not the item impacts the player's food fullness
+     *
+     * @return True if the item impacts on the player's food fullness, false otherwise
+     */
+    public Boolean hasFoodEffect() {
+        return hasFoodEffect;
     }
 
     /**
@@ -96,7 +111,7 @@ public class Berry extends HealthResources implements Item {
      * @return the integer of number of Berry
      */
 
-    public Integer getNumberOfBerry(Integer numberOfBerry){
+    /*public Integer getNumberOfBerry(Integer numberOfBerry){
 
         NumberOfBerry = numberOfBerry;
 
@@ -104,6 +119,11 @@ public class Berry extends HealthResources implements Item {
             System.out.println("Out of Maximum number of Berry");
         }
         return NumberOfBerry;
+    }*/
+
+    @Override
+    public String toString() {
+        return "" + subtype + ":" + name;
     }
 
 

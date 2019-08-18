@@ -4,144 +4,141 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.StaticEntity;
-import deco2800.skyfall.entities.Tree;
-import deco2800.skyfall.entities.PlayerPeon;
-import deco2800.skyfall.entities.Rock;
+import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.ForestBiome;
 
 @SuppressWarnings("unused")
 public class TestWorld extends AbstractWorld {
-	/*
-	 * radius for tiles 1 - 7 2 - 19 3 - 37 4 - 61 5 - 91 10 - 331 25 - 1951 50 -
-	 * 7,651 100 - 30,301 150 - 67,951 200 - 120601
-	 * 
-	 * N = 1 + 6 * summation[0 -> N]
-	 */
-	boolean notGenerated = true;
+    /*
+     * radius for tiles 1 - 7 2 - 19 3 - 37 4 - 61 5 - 91 10 - 331 25 - 1951 50 -
+     * 7,651 100 - 30,301 150 - 67,951 200 - 120601
+     * 
+     * N = 1 + 6 * summation[0 -> N]
+     */
+    boolean notGenerated = true;
 
-	private static int RADIUS = 25;
+    private static int RADIUS = 25;
 
-	public TestWorld() {
-		super();
-	}
+    public TestWorld(long seed) {
+        super(seed, 5, 5);
+    }
 
-	//5 tile building
-	private StaticEntity  createBuilding1(float col, float row) {
-		StaticEntity building;
-		
-		Map<HexVector, String> textures = new HashMap<HexVector, String>();
-		
-		textures.put(new HexVector(1, -0.5f), "spacman_ded");
-		textures.put(new HexVector(-1, -0.5f), "spacman_ded");
-		textures.put(new HexVector(-1, 0.5f), "spacman_ded");
-		textures.put(new HexVector(1, 0.5f), "spacman_ded");
-		textures.put(new HexVector(0, 0), "spacman_ded");
+    // 5 tile building
+    private StaticEntity createBuilding1(float col, float row) {
+        StaticEntity building;
 
-		return  new StaticEntity(col, row, 1, textures);
-		
-	}
-	
-	//building with a fence
-	private StaticEntity createBuilding2(float col, float row) {
-		Map<HexVector, String> textures = new HashMap<HexVector, String>();
-		
-		textures = new HashMap<HexVector, String>();
-		textures.put(new HexVector(0, 0), "buildingA");
-		
-		textures.put(new HexVector(-2, 1), "fenceNE-S");
-		textures.put(new HexVector(-2, 0), "fenceN-S");
-		textures.put(new HexVector(-2, -1), "fenceN-SE");
-		
-		textures.put(new HexVector(-1, 1.5f), "fenceNE-SW");
-		textures.put(new HexVector(-1, -1.5f), "fenceNW-SE");
-		
-		//textures.put(new HexVector(2, 0), "fenceN-S");
-		textures.put(new HexVector(0, 2), "fenceSE-SW");
-		textures.put(new HexVector(0, -2), "fenceNW-NE");
-		
-		textures.put(new HexVector(1, -1.5f), "fenceNE-SW");
-		textures.put(new HexVector(1, 1.5f), "fenceNW-SE");
-		
-		textures.put(new HexVector(2, 1), "fenceNW-S");
-		//textures.put(new HexVector(2, 0), "fenceN-S");
-		textures.put(new HexVector(2, -1), "fenceN-SW");
-		StaticEntity building =  new StaticEntity(col, row, 1, textures);
-		
-		return building;
-		
-	}
-	
-	private void addTree(float col, float row) {
-		Map<HexVector, String> textures = new HashMap<HexVector, String>();				
-		Tile t = GameManager.get().getWorld().getTile(col, row);
-		Tree tree = new  Tree(t, true);		
-		entities.add(tree);
-	}
+        Map<HexVector, String> textures = new HashMap<HexVector, String>();
 
+        textures.put(new HexVector(1, -0.5f), "spacman_ded");
+        textures.put(new HexVector(-1, -0.5f), "spacman_ded");
+        textures.put(new HexVector(-1, 0.5f), "spacman_ded");
+        textures.put(new HexVector(1, 0.5f), "spacman_ded");
+        textures.put(new HexVector(0, 0), "spacman_ded");
 
-	//this get ran on first game tick so the world tiles exist.
-	public void createBuildings() {
+        return new StaticEntity(col, row, 1, textures);
 
-		Random random = new Random();
-		int tileCount = GameManager.get().getWorld().getTileMap().size();
-		// Generate some rocks to mine later
-		for (int i = 0; i <200;  i++) { 
-			Tile t = GameManager.get().getWorld().getTile(random.nextInt(tileCount));
-			if (t != null) {
-				entities.add(new Rock(t,true));
-			}
-		}
-		entities.add(createBuilding2(-5, 0.5f));
+    }
 
-	}
+    // building with a fence
+    private StaticEntity createBuilding2(float col, float row) {
+        Map<HexVector, String> textures = new HashMap<HexVector, String>();
 
-	@Override
-	protected void generateWorld() {
-		Random random = new Random();
-		AbstractBiome biome = new ForestBiome();
-		for (int q = -1000; q < 1000; q++) {
-			for (int r = -1000; r < 1000; r++) {
-				if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= RADIUS) {
-					
-					int col = q;
-					
-					float oddCol = (col%2 !=0? 0.5f : 0);
-					
-					int elevation = random.nextInt(2);
-					
-					int rand = random.nextInt(8);
+        textures = new HashMap<HexVector, String>();
+        textures.put(new HexVector(0, 0), "buildingA");
 
+        textures.put(new HexVector(-2, 1), "fenceNE-S");
+        textures.put(new HexVector(-2, 0), "fenceN-S");
+        textures.put(new HexVector(-2, -1), "fenceN-SE");
 
+        textures.put(new HexVector(-1, 1.5f), "fenceNE-SW");
+        textures.put(new HexVector(-1, -1.5f), "fenceNW-SE");
 
-					tiles.add(new Tile(biome, q, r+oddCol));
-				}
-			}
-		}
+        // textures.put(new HexVector(2, 0), "fenceN-S");
+        textures.put(new HexVector(0, 2), "fenceSE-SW");
+        textures.put(new HexVector(0, -2), "fenceNW-NE");
+
+        textures.put(new HexVector(1, -1.5f), "fenceNE-SW");
+        textures.put(new HexVector(1, 1.5f), "fenceNW-SE");
+
+        textures.put(new HexVector(2, 1), "fenceNW-S");
+        // textures.put(new HexVector(2, 0), "fenceN-S");
+        textures.put(new HexVector(2, -1), "fenceN-SW");
+        StaticEntity building = new StaticEntity(col, row, 1, textures);
+
+        return building;
+
+    }
+
+    private void addTree(float col, float row) {
+        Map<HexVector, String> textures = new HashMap<HexVector, String>();
+        Tile t = GameManager.get().getWorld().getTile(col, row);
+        Tree tree = new Tree(t, true);
+        entities.add(tree);
+    }
+
+    // this get ran on first game tick so the world tiles exist.
+    public void createBuildings() {
+
+        Random random = new Random();
+        int tileCount = GameManager.get().getWorld().getTileMap().size();
+        // Generate some rocks to mine later
+        for (int i = 0; i < 200; i++) {
+            Tile t = GameManager.get().getWorld().getTile(random.nextInt(tileCount));
+            if (t != null) {
+                entities.add(new Rock(t, true));
+            }
+        }
+        entities.add(createBuilding2(-5, 0.5f));
+
+    }
+
+    @Override
+    protected void generateWorld(Random random) {
+        AbstractBiome biome = new ForestBiome();
+        for (int q = -1000; q < 1000; q++) {
+            for (int r = -1000; r < 1000; r++) {
+                if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= RADIUS) {
+
+                    int col = q;
+
+                    float oddCol = (col % 2 != 0 ? 0.5f : 0);
+
+                    int elevation = random.nextInt(2);
+
+                    int rand = random.nextInt(8);
+
+                    Tile tile = new Tile(q, r + oddCol);
+                    tiles.add(tile);
+                    biome.addTile(tile);
+                }
+            }
+        }
 
 		// Create the entities in the game
-		addEntity(new PlayerPeon(0f, 0f, 0.05f));
+//		addEntity(new MainCharacter(0f,
+//                0f, 0.05f, "Main Piece", 10));
 
-	}
+    }
 
-	@Override
-	public void onTick(long i) {
-		super.onTick(i);
+    @Override
+    public void onTick(long i) {
+        super.onTick(i);
 
-		for (AbstractEntity e : this.getEntities()) {
-			e.onTick(0);
-		}
+        for (AbstractEntity e : this.getEntities()) {
+            e.onTick(0);
+        }
 
-		if (notGenerated) {
-			createBuildings();
-			addTree(-1, -3.5f);
-			
-			notGenerated = false;
-		}
-	}
+        if (notGenerated) {
+            createBuildings();
+            addTree(-1, -3.5f);
+
+            notGenerated = false;
+        }
+    }
 
 }
 
@@ -157,5 +154,5 @@ public class TestWorld extends AbstractWorld {
  * System.out.println("south_east " +(firend.getValue())); break; case
  * Tile.south_west: System.out.println("south_west " + (firend.getValue()));
  * break; } } }
- * 
+ *
  */

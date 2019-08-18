@@ -42,12 +42,21 @@ public class PoisonousMushroom extends HealthResources implements Item {
     //private Integer amoutoffoodeffect;
 
     //How many PoisonousMushroom that players have;
-    private Integer NumberOfPoisonousMushroom;
+    //private Integer NumberOfPoisonousMushroom;
 
+    //whether or not the item impacts the player's food fullness
+    private Boolean hasFoodEffect;
+
+
+    //PoisonousMushroom could recover the food fullness, but deducting the
+    //healing power
     public PoisonousMushroom(){
-        this.biome = biome;
+
+        this.biome = "Forest";
         this.colour ="black white";
-        this.name ="PoisonousMushrrom";
+        this.name ="PoisonousMushroom";
+        this.hasFoodEffect = true;
+        this.foodValue = -20;
         //default constructor added for building inventory
     }
 
@@ -63,6 +72,16 @@ public class PoisonousMushroom extends HealthResources implements Item {
      */
     public String getBiome(){
         return biome;
+    }
+
+
+    /**
+     * Returns whether or not the item impacts the player's food fullness
+     *
+     * @return True if the item impacts on the player's food fullness, false otherwise
+     */
+    public Boolean hasFoodEffect() {
+        return hasFoodEffect;
     }
 
     /**
@@ -99,7 +118,7 @@ public class PoisonousMushroom extends HealthResources implements Item {
      * @return the integer of number of Poisonous Mushroom
      */
 
-    public Integer getNumberOfPoisonousMushroom(Integer numberOfPoisonousMushroom){
+    /*public Integer getNumberOfPoisonousMushroom(Integer numberOfPoisonousMushroom){
 
         NumberOfPoisonousMushroom = numberOfPoisonousMushroom;
 
@@ -107,6 +126,11 @@ public class PoisonousMushroom extends HealthResources implements Item {
             System.out.println("Out of Maximum number of PoisonousMushroom");
         }
         return NumberOfPoisonousMushroom;
+    }*/
+
+    @Override
+    public String toString() {
+        return "" + subtype + ":" + name;
     }
 
 

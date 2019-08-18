@@ -40,13 +40,20 @@ public class Apple extends HealthResources implements Item {
     //private Integer amoutoffoodeffect;
 
     //How many Apple that players have;
-    private Integer NumberOfApple;
+    //private Integer NumberOfApple;
+
+    //whether or not the item impacts the player's food fullness
+     private Boolean hasFoodEffect;
+
 
 
     public Apple(){
-        this.biome = biome;
+
+        this.biome = "Forest";
         this.name ="Apple";
         this.colour ="red";
+        this.hasFoodEffect = true;
+        this.foodValue = 25;
         //default constructor added for building inventory
     }
 
@@ -63,6 +70,15 @@ public class Apple extends HealthResources implements Item {
      */
     public String getBiome(){
         return biome;
+    }
+
+    /**
+     * Returns whether or not the item impacts the player's food fullness
+     *
+     * @return True if the item impacts on the player's food fullness, false otherwise
+     */
+    public Boolean hasFoodEffect() {
+        return hasFoodEffect;
     }
 
     /**
@@ -95,7 +111,7 @@ public class Apple extends HealthResources implements Item {
      * @return the integer of number of Apple
      */
 
-    public Integer getNumberOfApple(Integer numberOfApple){
+    /*public Integer getNumberOfApple(Integer numberOfApple){
 
         NumberOfApple = numberOfApple;
 
@@ -103,6 +119,11 @@ public class Apple extends HealthResources implements Item {
             System.out.println("Out of Maximum number of Apple");
         }
         return NumberOfApple;
+    }*/
+
+    @Override
+    public String toString() {
+        return "" + subtype + ":" + name;
     }
 
 

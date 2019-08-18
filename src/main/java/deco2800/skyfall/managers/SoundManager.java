@@ -1,7 +1,6 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -271,7 +270,7 @@ public class SoundManager extends AbstractManager {
      * Resets the clip to start time.
      */
     public static void resetClip() throws UnsupportedAudioFileException, IOException,
-            LineUnavailableException {
+    LineUnavailableException {
         audioInputStream = AudioSystem.getAudioInputStream(new File(audio).getAbsoluteFile());
         clip.open(audioInputStream);
         clip.loop(Clip.LOOP_CONTINUOUSLY);
