@@ -18,16 +18,29 @@ public class OceanBiome extends AbstractBiome {
 
 
     /**
-     * Method that will determine the textures of the forest biome textures
+     * Method that will determine the textures of the ocean biome textures
      *
      * @param random the RNG to use to generate the textures
      */
     @Override
     protected void setTileTextures(Random random) {
+        ArrayList<String> textures = new ArrayList<>();
         textures.add("water_0");
+        textures.add("water_3");
+        textures.add("water_1");
+        textures.add("water_2");
+
+        //Perlin noise generation
+        PerlinNoiseGenerator perlinNoise = new PerlinNoiseGenerator(random);
+        // perlinNoise.getOctavedPerlinNoiseGrid(getTiles(), 2, 30, 0.5);
+        perlinNoise.getOctavedPerlinNoiseGrid(getTiles(), 3, 80, 0.5);
+        //Normalising the values to 0-textures.size()
+        perlinNoise.normalisePerlinValues(getTiles(),textures.size());
+
+
         for (Tile tile : getTiles()) {
-            int randInt = random.nextInt(textures.size());
-            tile.setTexture(textures.get(randInt));
+            tile.setPerlinValue((tile.getPerlinValue() == textures.size()) ? 0 : tile.getPerlinValue());
+            tile.setTexture(textures.get((int) tile.getPerlinValue()));
         }
     }
 }

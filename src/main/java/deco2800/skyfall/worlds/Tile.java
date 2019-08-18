@@ -284,6 +284,10 @@ public class Tile{
 	}
 
 
+	/**
+	 * Returns the perlin value
+	 * @return The perlin value
+	 */
 	public double getPerlinValue() {
 		return perlinValue;
 	}

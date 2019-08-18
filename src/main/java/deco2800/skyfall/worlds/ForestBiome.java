@@ -8,7 +8,6 @@ import java.util.Random;
  * Forest Biome
  */
 public class ForestBiome extends AbstractBiome {
-    private ArrayList<String> textures = new ArrayList<>();
 
     /**
      * Constructor for a Biome
@@ -27,36 +26,22 @@ public class ForestBiome extends AbstractBiome {
      */
     @Override
     protected void setTileTextures(Random random) {
-        PerlinNoiseGenerator perlinNoise = new PerlinNoiseGenerator(random);
-        // perlinNoise.getOctavedPerlinNoiseGrid(getTiles(), 2, 30, 0.5);
-        perlinNoise.getOctavedPerlinNoiseGrid(getTiles(), 2, 15, 0.5);
-        perlinNoise.normalisePerlinValues(getTiles(),3);
-
+        ArrayList<String> textures = new ArrayList<>();
         textures.add("grass_0");
         textures.add("grass_1");
         textures.add("grass_2");
-//        textures.add("mountain_0");
-//        textures.add("water_0");
+
+        //Perlin noise generation
+        PerlinNoiseGenerator perlinNoise = new PerlinNoiseGenerator(random);
+        // perlinNoise.getOctavedPerlinNoiseGrid(getTiles(), 2, 30, 0.5);
+        perlinNoise.getOctavedPerlinNoiseGrid(getTiles(), 3, 30, 0.2);
+        //Normalising the values to 0-textures.size()-1
+        perlinNoise.normalisePerlinValues(getTiles(),textures.size());
+
 
         for (Tile tile : getTiles()) {
-//            int randInt = random.nextInt(textures.size());
-            switch ((int) tile.getPerlinValue()){
-                case 0:
-                    tile.setTexture("grass_0");
-                    break;
-                case 1:
-                    tile.setTexture("grass_1");
-                    break;
-//                case 2:
-                default:
-                    tile.setTexture("grass_2");
-                    break;
-//                case 3:
-//                    tile.setTexture("mountain_0");
-//                    break;
-//                default:
-//                    tile.setTexture("water_0");
-            }
+            tile.setPerlinValue((tile.getPerlinValue() == textures.size()) ? tile.getPerlinValue() - 1 : tile.getPerlinValue());
+            tile.setTexture(textures.get((int) tile.getPerlinValue()));
         }
     }
 }
