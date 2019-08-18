@@ -8,9 +8,14 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.TextureManager;
 
 
-public class Robot extends Enemy {
+public class Robot extends EnemyEntity {
     private TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
-
+    private static final transient float HEALTH = 20f;
+    private static final transient float ATTACK_RANGE = 1f;
+    private static final transient int ATTACK_SPEED = 1000;
+    private static final transient String BIOME="";
+    private boolean moving=false;
+    private static final transient String ENEMY_TYPE="robot";
     private String [] directions={"S","SE","NE","N","NW","SW"};
     //savage animation
     private Animation<TextureRegion> animation;
@@ -38,6 +43,21 @@ public class Robot extends Enemy {
     }
 
 
+    public String getEnemyType(){
+        return ENEMY_TYPE;
+    }
+
+
+
+    public boolean getMoving(){
+        return moving;
+    }
+
+    public String getBiome(){
+        return BIOME;
+    }
+
+
     /**
      * make an Animation
      */
@@ -53,7 +73,13 @@ public class Robot extends Enemy {
         return animation;
     }
 
-
+    /**
+     * @return string representation of this class including its enemy type, biome and x,y coordinates
+     */
+    @Override
+    public String toString() {
+        return String.format("%s at (%d, %d) %s biome", getEnemyType(), getCol(), getRow(),getBiome());
+    }
 
 
 
