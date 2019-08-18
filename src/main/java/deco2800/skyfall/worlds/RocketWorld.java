@@ -58,7 +58,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             // for more smooth looking polygons
             try {
                 WorldGenNode.calculateVertices(worldGenNodes);
-//            WorldGenNode.lloydRelaxation(worldGenNodes, 2);
+                WorldGenNode.lloydRelaxation(worldGenNodes, 2);
             } catch (WorldGenException e) {
                 worldGenNodes.clear();
                 continue;
