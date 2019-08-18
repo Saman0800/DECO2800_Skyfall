@@ -10,6 +10,7 @@ import deco2800.skyfall.util.HexVector;
 public class PlayerPeon extends Peon implements KeyDownObserver,
         KeyUpObserver, Tickable {
 
+    public SoundManager soundManager = GameManager.get().getManager(SoundManager.class);
     protected Vector2 direction;
     protected float currentSpeed;
 
@@ -151,6 +152,7 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
     public void notifyKeyDown ( int keycode){
         switch (keycode) {
             case Input.Keys.W:
+                System.out.println("yes");
                 MOVE_UP = true;
                 SoundManager.loopSound("people_walk_normal");
                 break;
