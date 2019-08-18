@@ -19,7 +19,7 @@ class TriangleSoup {
      * Constructor of the triangle soup class used to create a new triangle soup
      * instance.
      */
-    public TriangleSoup() {
+    TriangleSoup() {
         this.triangleSoup = new ArrayList<WorldGenTriangle>();
         this.borderNodes = new ArrayList<>();
     }
@@ -47,7 +47,7 @@ class TriangleSoup {
      *
      * @return The triangles from this triangle soup
      */
-    public List<WorldGenTriangle> getTriangles() {
+    List<WorldGenTriangle> getTriangles() {
         return this.triangleSoup;
     }
 
@@ -60,7 +60,7 @@ class TriangleSoup {
      * @return Returns the triangle from this triangle soup that contains the
      *         specified point or null
      */
-    public WorldGenTriangle findContainingTriangle(WorldGenNode point) {
+    WorldGenTriangle findContainingTriangle(WorldGenNode point) {
         for (WorldGenTriangle triangle : triangleSoup) {
             if (triangle.contains(point)) {
                 return triangle;
@@ -79,7 +79,7 @@ class TriangleSoup {
      * @return The triangles neighbor triangle sharing the same edge or null if
      *         no triangle exists
      */
-    public WorldGenTriangle findNeighbour(WorldGenTriangle triangle, WorldGenEdge edge) {
+    WorldGenTriangle findNeighbour(WorldGenTriangle triangle, WorldGenEdge edge) {
         for (WorldGenTriangle triangleFromSoup : triangleSoup) {
             if (triangleFromSoup.isNeighbour(edge) && triangleFromSoup != triangle) {
                 return triangleFromSoup;
@@ -97,7 +97,7 @@ class TriangleSoup {
      * @param edge The edge
      * @return Returns one triangle that shares the specified edge
      */
-    public WorldGenTriangle findOneTriangleSharing(WorldGenEdge edge) {
+    WorldGenTriangle findOneTriangleSharing(WorldGenEdge edge) {
         for (WorldGenTriangle triangle : triangleSoup) {
             if (triangle.isNeighbour(edge)) {
                 return triangle;
@@ -112,7 +112,7 @@ class TriangleSoup {
      * @param point The point
      * @return The edge from the triangle soup nearest to the specified point
      */
-    public WorldGenEdge findNearestEdge(WorldGenNode point) {
+    WorldGenEdge findNearestEdge(WorldGenNode point) {
         List<EdgeDistancePack> edgeList = new ArrayList<EdgeDistancePack>();
 
         for (WorldGenTriangle triangle : triangleSoup) {
@@ -132,7 +132,7 @@ class TriangleSoup {
      *
      * @param vertex The vertex
      */
-    public void removeTrianglesUsing(WorldGenNode vertex) {
+    void removeTrianglesUsing(WorldGenNode vertex) {
         List<WorldGenTriangle> trianglesToBeRemoved = new ArrayList<WorldGenTriangle>();
 
         for (WorldGenTriangle triangle : triangleSoup) {
@@ -148,11 +148,11 @@ class TriangleSoup {
      * This method was not taken from the source of the rest of this class
      *
      * @author Daniel Nathan
-     * @return the coordinates of the circumcentre
      */
-    public void findBorderNodes() {
+    void findBorderNodes() {
         for (WorldGenTriangle triangle : this.getTriangles()) {
-            WorldGenEdge edgeAB = new WorldGenEdge(triangle.a, triangle.b);
+            WorldGenEdge edgeAB = new WorldGenEdge(
+                    triangle.getA(), triangle.getB());
             // Indicates whether each node is a border node
             boolean[] isBorder = {false, false, false};
             // If there is no triangle on the other side of the edge, both nodes
@@ -161,12 +161,14 @@ class TriangleSoup {
                 isBorder[0] = true;
                 isBorder[1] = true;
             }
-            WorldGenEdge edgeAC = new WorldGenEdge(triangle.a, triangle.c);
+            WorldGenEdge edgeAC = new WorldGenEdge(
+                    triangle.getA(), triangle.getC());
             if (findNeighbour(triangle, edgeAC) == null) {
                 isBorder[0] = true;
                 isBorder[2] = true;
             }
-            WorldGenEdge edgeBC = new WorldGenEdge(triangle.b, triangle.c);
+            WorldGenEdge edgeBC = new WorldGenEdge(
+                    triangle.getB(), triangle.getC());
             if (findNeighbour(triangle, edgeBC) == null) {
                 isBorder[1] = true;
                 isBorder[2] = true;
@@ -174,13 +176,13 @@ class TriangleSoup {
 
             // Record the relevant nodes as borders
             if (isBorder[0]) {
-                this.borderNodes.add(triangle.a);
+                this.borderNodes.add(triangle.getA());
             }
             if (isBorder[1]) {
-                this.borderNodes.add(triangle.b);
+                this.borderNodes.add(triangle.getB());
             }
             if (isBorder[2]) {
-                this.borderNodes.add(triangle.c);
+                this.borderNodes.add(triangle.getC());
             }
         }
     }

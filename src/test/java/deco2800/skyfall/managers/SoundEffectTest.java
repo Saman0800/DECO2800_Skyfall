@@ -68,6 +68,14 @@ public class SoundEffectTest {
         }
     }
 
-
-
+    @Test
+    public void stopSoundEffect() {
+        try {
+            sound.playSound("people_walk_normal");
+            TimeUnit.SECONDS.sleep(1);
+            assertEquals(sound.stopSound("people_walk_normal"), false);
+        } catch (Exception e) {
+            //exception caught
+        }
+    }
 }
