@@ -8,8 +8,8 @@ package deco2800.skyfall.worlds.generation.delaunay;
  */
 class WorldGenEdge {
 
-    public WorldGenNode a;
-    public WorldGenNode b;
+    private WorldGenNode a;
+    private WorldGenNode b;
 
     /**
      * Constructor of the 2D edge class used to create a new edge instance from
@@ -18,9 +18,27 @@ class WorldGenEdge {
      * @param a The first vertex of the edge
      * @param b The second vertex of the edge
      */
-    public WorldGenEdge(WorldGenNode a, WorldGenNode b) {
+    WorldGenEdge(WorldGenNode a, WorldGenNode b) {
         this.a = a;
         this.b = b;
+    }
+
+    /**
+     * Return the first node of this edge
+     *
+     * @return the first node of this edge
+     */
+    public WorldGenNode getA() {
+        return this.a;
+    }
+
+    /**
+     * Return the second node of this edge
+     *
+     * @return the second node of this edge
+     */
+    public WorldGenNode getB() {
+        return this.b;
     }
 
 }

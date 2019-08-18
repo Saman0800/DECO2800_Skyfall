@@ -18,8 +18,6 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
     private boolean MOVE_RIGHT = false;
     private boolean MOVE_DOWN = false;
 
-    private Projectile hitBox;
-
     /**
      * PlayerPeon Constructor
      * @param row the row position in the world
@@ -31,7 +29,6 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
         super(row, col, speed, name, health);
         this.direction = new Vector2(row, col);
         this.direction.limit2(0.05f);
-        System.out.println(speed);
     }
 
     /**
@@ -89,7 +86,7 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
         HexVector position = this.getPosition();
 
         //Spawn projectile in front of character for now.
-        this.hitBox = new Projectile("slash",
+        Projectile hitBox = new Projectile("slash",
                 "test hitbox",
                 position.getCol() + 1,
                 position.getRow(),
@@ -99,14 +96,14 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
         GameManager manager = GameManager.get();
 
         //Add the projectile entity to the game world.
-        manager.getWorld().addEntity(this.hitBox);
+        manager.getWorld().addEntity(hitBox);
     }
 
     /**
      * Perform a special attack with the right click.
      */
     public void specialAttack() {
-        //TODO: release a more powerful attack.
+        //release a more powerful attack.
     }
 
     @Override
@@ -121,9 +118,6 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
         //System.out.println(screenX);
         //System.out.println(screenY);
 
-        // Comment out click to move controls when merging into master and
-        // uncomment below.
-
         if (button == 1) {
             this.attack();
         }
@@ -131,7 +125,6 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
 //            this.specialAttack();
 //        }
     }
-        //Click to move logic replaced by WASD controls.
 
     /**
      * Sets the Player's current movement speed.
@@ -152,15 +145,19 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
         switch (keycode) {
             case Input.Keys.W:
                 MOVE_UP = true;
+                SoundManager.loopSound("people_walk_normal");
                 break;
             case Input.Keys.A:
                 MOVE_LEFT = true;
+                SoundManager.loopSound("people_walk_normal");
                 break;
             case Input.Keys.S:
                 MOVE_DOWN = true;
+                SoundManager.loopSound("people_walk_normal");
                 break;
             case Input.Keys.D:
                 MOVE_RIGHT = true;
+                SoundManager.loopSound("people_walk_normal");
                 break;
         }
     }
@@ -174,15 +171,19 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
         switch (keycode) {
             case Input.Keys.W:
                 MOVE_UP = false;
+                SoundManager.stopSound("people_walk_normal");
                 break;
             case Input.Keys.A:
                 MOVE_LEFT = false;
+                SoundManager.stopSound("people_walk_normal");
                 break;
             case Input.Keys.S:
                 MOVE_DOWN = false;
+                SoundManager.stopSound("people_walk_normal");
                 break;
             case Input.Keys.D:
                 MOVE_RIGHT = false;
+                SoundManager.stopSound("people_walk_normal");
                 break;
         }
     }

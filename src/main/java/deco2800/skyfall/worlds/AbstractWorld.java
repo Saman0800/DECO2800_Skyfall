@@ -35,6 +35,8 @@ public abstract class AbstractWorld {
     protected int worldSize;
     protected int nodeSpacing;
 
+    private long seed;
+
     //List that contains the world biomes
     protected ArrayList<AbstractBiome> biomes;
 
@@ -46,6 +48,7 @@ public abstract class AbstractWorld {
 
     protected AbstractWorld(long seed, int worldSize, int nodeSpacing) {
         Random random = new Random(seed);
+        this.seed = seed;
 
         this.worldSize = worldSize;
         this.nodeSpacing = nodeSpacing;
@@ -274,31 +277,18 @@ public abstract class AbstractWorld {
         //Collision detection for entities
         for (AbstractEntity e1 : this.getEntities()) {
             e1.onTick(0);
-//            if (e1 instanceof Projectile) {
-//                break;
-//            }
 
             Collider c1 = e1.getCollider();
-            boolean collided = false;
             for (AbstractEntity e2 : this.getEntities()) {
                 Collider c2 = e2.getCollider();
-//                if (e2 instanceof Projectile) {
+
+//                if (e1 != e2 && c1.overlaps(c2)) {
+//                    //collision handler
+//                    this.handleCollision(e1, e2);
 //                    break;
 //                }
-//                if(c2 != null){
-//                    if (e1 != e2 && c1.overlaps(c2)) {
-//                        collided = true;
-//
-//                        //collision handler
-//                        this.handleCollision(e1, e2);
-//                        //System.out.println("Collision!");
-//
-//                        break;
-//                    }
-//                }
-
             }
-            //no collision
+            //no collision here
         }
     }
 
@@ -341,11 +331,10 @@ public abstract class AbstractWorld {
         return this.biomes;
     }
 
-    // e1 is the entity that created the collision
+
     public void handleCollision(AbstractEntity e1, AbstractEntity e2) {
         //TODO: implement proper game logic for collisions between different types of entities.
-        // i.e. if (e1 instanceof Projectile && e2 instanceof Enemy) {
-        // removeEntity(e2); removeEntity(e1); }
+
         if (e1 instanceof Projectile && !(e2 instanceof MainCharacter)) {
             removeEntity(e2);
         } else if (e2 instanceof Projectile && !(e1 instanceof MainCharacter)) {
@@ -368,5 +357,13 @@ public abstract class AbstractWorld {
             string.append(out);
         }
         return string.toString();
+    }
+
+    /**
+     * Returns the seed used in the world
+     * @return
+     */
+    public long getSeed() {
+        return seed;
     }
 }
