@@ -95,10 +95,7 @@ public class Peon extends AgentEntity implements Tickable {
 	 * @return true if character's health is less than or equal to 0, else false
 	 */
 	public boolean isDead() {
-		if (this.getHealth() <= 0) {
-			return true;
-		}
-		return false;
+		return this.getHealth() <= 0;
 	}
 
 	/**
