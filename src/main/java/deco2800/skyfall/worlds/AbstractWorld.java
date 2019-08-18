@@ -4,11 +4,11 @@ import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.worlds.delaunay.WorldGenNode;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

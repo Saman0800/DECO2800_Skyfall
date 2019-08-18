@@ -1,12 +1,14 @@
 package deco2800.skyfall.worlds;
 
-import deco2800.skyfall.util.Cube;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
-import org.junit.Before;
+
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.DesertBiome;
+import deco2800.skyfall.worlds.biomes.ForestBiome;
+import deco2800.skyfall.worlds.biomes.MountainBiome;
 import org.junit.Test;
 
 

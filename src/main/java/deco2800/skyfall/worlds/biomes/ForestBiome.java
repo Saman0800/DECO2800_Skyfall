@@ -1,6 +1,8 @@
-package deco2800.skyfall.worlds;
+package deco2800.skyfall.worlds.biomes;
 
-import java.lang.reflect.Array;
+import deco2800.skyfall.worlds.generation.PerlinNoiseGenerator;
+import deco2800.skyfall.worlds.Tile;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -25,7 +27,7 @@ public class ForestBiome extends AbstractBiome {
      * @param random the RNG to use to generate the textures
      */
     @Override
-    protected void setTileTextures(Random random) {
+    public void setTileTextures(Random random) {
         ArrayList<String> textures = new ArrayList<>();
         textures.add("grass_0");
         textures.add("grass_1");

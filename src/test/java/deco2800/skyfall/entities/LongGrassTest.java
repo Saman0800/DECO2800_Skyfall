@@ -7,8 +7,6 @@ import deco2800.skyfall.managers.OnScreenMessageManager;
 import deco2800.skyfall.worlds.TestWorld;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.worlds.AbstractBiome;
-import deco2800.skyfall.worlds.ForestBiome;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,4 +1,6 @@
-package deco2800.skyfall.worlds;
+package deco2800.skyfall.worlds.generation;
+
+import deco2800.skyfall.worlds.Tile;
 
 import java.util.ArrayList;
 import java.util.Random;

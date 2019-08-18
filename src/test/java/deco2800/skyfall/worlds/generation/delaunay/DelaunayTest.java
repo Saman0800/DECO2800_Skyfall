@@ -1,9 +1,8 @@
-package deco2800.skyfall.worlds.delaunay;
+package deco2800.skyfall.worlds.generation.delaunay;
 
-import deco2800.skyfall.util.Cube;
-import deco2800.skyfall.worlds.ForestBiome;
+import deco2800.skyfall.worlds.biomes.ForestBiome;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.delaunay.*;
+import deco2800.skyfall.worlds.generation.WorldGenException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

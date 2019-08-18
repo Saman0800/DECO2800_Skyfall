@@ -1,7 +1,7 @@
 package deco2800.skyfall.entities;
 
 import deco2800.skyfall.worlds.AbstractWorld;
-import deco2800.skyfall.worlds.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.managers.GameManager;
 

@@ -1,4 +1,4 @@
-package deco2800.skyfall.worlds.delaunay;
+package deco2800.skyfall.worlds.generation.delaunay;
 
 /**
  * Exception thrown when attempting to apply Delaunay Triangulation with less

@@ -1,4 +1,6 @@
-package deco2800.skyfall.worlds.delaunay;
+package deco2800.skyfall.worlds.generation.delaunay;
+
+import deco2800.skyfall.worlds.generation.WorldGenException;
 
 /**
  * An exception thrown when trying to find the circumcentre of three collinear

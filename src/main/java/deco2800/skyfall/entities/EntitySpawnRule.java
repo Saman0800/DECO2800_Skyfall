@@ -1,6 +1,6 @@
 package deco2800.skyfall.entities;
 
-import deco2800.skyfall.worlds.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
 
 /**
  * Used to set conditions about an entity template spawning distributions in EntitySpawnTable

@@ -1,4 +1,7 @@
-package deco2800.skyfall.worlds;
+package deco2800.skyfall.worlds.biomes;
+
+import deco2800.skyfall.worlds.generation.PerlinNoiseGenerator;
+import deco2800.skyfall.worlds.Tile;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -23,7 +26,7 @@ public class OceanBiome extends AbstractBiome {
      * @param random the RNG to use to generate the textures
      */
     @Override
-    protected void setTileTextures(Random random) {
+    public void setTileTextures(Random random) {
         ArrayList<String> textures = new ArrayList<>();
         textures.add("water_0");
         textures.add("water_3");

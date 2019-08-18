@@ -1,4 +1,4 @@
-package deco2800.skyfall.worlds.delaunay;
+package deco2800.skyfall.worlds.generation.delaunay;
 
 /**
  * An exception thrown when a set of coordinates does not have 2 dimensions

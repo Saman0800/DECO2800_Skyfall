@@ -12,10 +12,10 @@ import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.delaunay.InvalidCoordinatesException;
-import deco2800.skyfall.worlds.delaunay.NotEnoughPointsException;
-import deco2800.skyfall.worlds.delaunay.WorldGenException;
-import deco2800.skyfall.worlds.delaunay.WorldGenNode;
+import deco2800.skyfall.worlds.biomes.*;
+import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
+import deco2800.skyfall.worlds.generation.WorldGenException;
+import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 
 import java.util.ArrayList;
 import java.util.List;

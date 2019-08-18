@@ -1,4 +1,4 @@
-package deco2800.skyfall.worlds.delaunay;
+package deco2800.skyfall.worlds.generation.delaunay;
 
 import java.util.Arrays;
 

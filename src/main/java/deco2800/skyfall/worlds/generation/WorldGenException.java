@@ -1,4 +1,4 @@
-package deco2800.skyfall.worlds.delaunay;
+package deco2800.skyfall.worlds.generation;
 
 /**
  * An exception to be thrown when there is an issue with the set of

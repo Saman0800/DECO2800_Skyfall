@@ -1,4 +1,4 @@
-package deco2800.skyfall.worlds.delaunay;
+package deco2800.skyfall.worlds.generation.delaunay;
 
 /**
  * A class that contains a WorldGenEdge, and a distance to that edge from a

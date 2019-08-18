@@ -1,8 +1,9 @@
 package deco2800.skyfall.worlds;
 
-import deco2800.skyfall.worlds.delaunay.NotEnoughPointsException;
-import deco2800.skyfall.worlds.delaunay.WorldGenNode;
-import deco2800.skyfall.worlds.delaunay.InvalidCoordinatesException;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.generation.DeadEndGenerationException;
+import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
+import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 
 import java.util.*;
 import java.util.stream.Collectors;

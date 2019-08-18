@@ -1,4 +1,6 @@
-package deco2800.skyfall.worlds;
+package deco2800.skyfall.worlds.biomes;
+
+import deco2800.skyfall.worlds.Tile;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -69,7 +71,7 @@ public abstract class AbstractBiome {
      *
      * @param random the RNG to use to generate the textures
      */
-    protected abstract void setTileTextures(Random random);
+    public abstract void setTileTextures(Random random);
 
 
 

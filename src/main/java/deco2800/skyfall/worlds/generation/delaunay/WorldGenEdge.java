@@ -1,4 +1,4 @@
-package deco2800.skyfall.worlds.delaunay;
+package deco2800.skyfall.worlds.generation.delaunay;
 
 /**
  * A class representing the edge between two WorldGenNodes. Code is taken from
