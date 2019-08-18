@@ -14,101 +14,112 @@ public class SoundTest {
     String file ="resources/sounds/Forest Day.wav";
 
     @Test
-    public void exceptionTest() throws UnsupportedAudioFileException,
-            IOException, LineUnavailableException {
+    public void exceptionTest() {
         try {
+            // Test adding an incorrect file type to audio stream that throws exception
             SoundManager.backgroundGameMusic("resources/sounds/09-running-in-the-90-s.mp3");
         } catch (Exception e) {
-            //exception caught
+            // Exception caught
+            fail();
         }
     }
 
     @Test
-    public void playBGMTest() throws UnsupportedAudioFileException,
-            IOException, LineUnavailableException {
+    public void playBGMTest()  {
         try {
+            // Add correct file type
             SoundManager.backgroundGameMusic(file);
             SoundManager.play();
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(100);
+
+            // Test that clip is playing added file
             assertEquals(SoundManager.getClip().isRunning(), true);
         } catch (Exception e) {
-            //exception caught
         }
     }
 
     @Test
     public void pauseTest() {
         try {
+            // Add and play clip, then pause
             SoundManager.backgroundGameMusic(file);
             SoundManager.play();
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(100);
             SoundManager.pause();
+
+            // Test that clip is paused
             assertEquals(SoundManager.getClip().isRunning(), false);
         } catch (Exception e) {
-            //exception caught
         }
     }
 
     @Test
     public void resumeTest() {
         try {
+            // Pause and resume clip
             SoundManager.backgroundGameMusic(file);
             SoundManager.play();
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(100);
             SoundManager.pause();
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(100);
             SoundManager.resume();
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(100);
+
+            // Test that clip is resumed
             assertEquals(SoundManager.getClip().isRunning(), true);
-            //assertEquals(SoundManager.getClip().getFramePosition(), 84737);
         } catch (Exception e) {
-            //exception caught
         }
     }
 
     @Test
     public void resetClipTest() {
         try {
+
+            // Play, pause and then reset given clip
             SoundManager.backgroundGameMusic(file);
             SoundManager.play();
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(100);
             SoundManager.pause();
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(100);
             SoundManager.resetClip();
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(100);
             SoundManager.backgroundGameMusic(file);
+
+            // Test that current clip is reset to the start
             assertEquals(SoundManager.getClip().getLongFramePosition(),0);
         } catch (Exception e) {
-            //exception caught
         }
     }
 
     @Test
     public void muteTest() {
         try {
+
+            // Play and then mute given clip
             SoundManager.backgroundGameMusic(file);
             SoundManager.play();
-            TimeUnit.SECONDS.sleep(1);
             SoundManager.mute();
+
+            // Test that sound is muted
             assertEquals(SoundManager.muteVol.getValue(),true);
         } catch (Exception e) {
-            //exception caught
         }
     }
 
     @Test
     public void unmuteTest() {
         try {
+
+            // Play, mute and then unmute given clip
             SoundManager.backgroundGameMusic(file);
             SoundManager.play();
-            TimeUnit.SECONDS.sleep(1);
             SoundManager.mute();
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(100);
             SoundManager.unmute();
-            TimeUnit.SECONDS.sleep(1);
+
+            // Test that sound is unmuted
             assertEquals(SoundManager.muteVol.getValue(),false);
         } catch (Exception e) {
-            //exception caught
         }
     }
 
