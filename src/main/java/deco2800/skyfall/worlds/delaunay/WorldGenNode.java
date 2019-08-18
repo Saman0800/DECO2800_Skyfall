@@ -73,6 +73,13 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      */
     public double[] getCentroid() throws InvalidCoordinatesException {
         double[] centroid = {0, 0};
+        // If there are no vertices, return the same position this node is
+        // already in
+        if (this.vertices.size() == 0) {
+            centroid[0] = this.getX();
+            centroid[1] = this.getY();
+            return centroid;
+        }
         for (double[] vertex : this.vertices) {
             if (vertex.length != 2) {
                 throw new InvalidCoordinatesException();
@@ -419,7 +426,6 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
 
                 WorldGenTriangle first = triangleSoup.findOneTriangleSharing(edge);
                 WorldGenTriangle second = triangleSoup.findNeighbour(first, edge);
-
 
                 WorldGenNode firstNoneEdgeVertex = first.getNoneEdgeVertex(edge);
                 WorldGenNode secondNoneEdgeVertex = second.getNoneEdgeVertex(edge);
