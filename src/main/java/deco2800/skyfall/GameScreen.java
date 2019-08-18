@@ -21,10 +21,6 @@ import deco2800.skyfall.managers.SoundManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 public class GameScreen implements Screen,KeyDownObserver {
 	private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
@@ -76,6 +72,9 @@ public class GameScreen implements Screen,KeyDownObserver {
 		GameManager.get().setSkin(skin);
 		GameManager.get().setStage(stage);
 		GameManager.get().setCamera(camera);
+
+		/* Add inventory to game manager */
+		gameManager.addManager(new InventoryManager());
 
 		/* Play BGM */
 		try {

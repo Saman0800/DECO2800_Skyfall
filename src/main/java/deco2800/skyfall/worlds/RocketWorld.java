@@ -11,6 +11,7 @@ import deco2800.skyfall.entities.EntitySpawnTable;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
+import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.WorldUtil;
 
@@ -67,22 +68,13 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         player = new PlayerPeon(0f, 0f, 0.05f);
         addEntity(player);
 
-        GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
+        GameManager.getManagerFromInstance(InputManager.class)
+                .addTouchDownListener(this);
     }
 
     @Override
     public void onTick(long i) {
         super.onTick(i);
-
-        for (AbstractEntity e : this.getEntities()) {
-            e.onTick(0);
-
-            if (e instanceof Collectable) {
-                if (e.collidesWith(player)) {
-                    removeEntity(e);
-                }
-            }
-        }
 
         if (!generated) {
             Tile tile = getTile(1f, 2.5f);

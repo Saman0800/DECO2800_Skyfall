@@ -75,7 +75,7 @@ public class RockTest {
         assertEquals(rock1.getRenderOrder(), 2);
         assertEquals(rock1.getCol(), 0.0f, 0.0f);
         assertEquals(rock1.getRow(), 0.0f, 0.0f);
-        assertTrue(rock1.getObstructed());
+        assertTrue(rock1.isObstructed());
         assertEquals(rock1.getObjectName(), "rock");
     }
 

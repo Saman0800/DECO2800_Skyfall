@@ -77,7 +77,7 @@ public class TreeTest {
         assertEquals(tree1.getRenderOrder(), 5);
         assertEquals(tree1.getCol(), 0.0f, 0.0f);
         assertEquals(tree1.getRow(), 0.0f, 0.0f);
-        assertTrue(tree1.getObstructed());
+        assertTrue(tree1.isObstructed());
         // NOTE: may change in future
         assertEquals(tree1.getObjectName(), "staticEntityID");
     }

@@ -98,8 +98,20 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
      * A simple getter function to retrieve the obstruction value of this object
      * 
      * @return The obstruction value.
+     *
+     * @deprecated use {@link #isObstructed()}
      */
+    @Deprecated()
     public boolean getObstructed() {
+        return isObstructed();
+    }
+
+    /**
+     * A simple getter function to retrieve the obstruction value of this object
+     *
+     * @return The obstruction value.
+     */
+    public boolean isObstructed() {
         return this.obstructed;
     }
 
@@ -123,7 +135,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
      * @return A clone of the instance with only the tile position having changed.
      */
     public StaticEntity newInstance(Tile tile) {
-        return new StaticEntity(tile, this.getRenderOrder(), this.getTexture(), this.getObstructed());
+        return new StaticEntity(tile, this.getRenderOrder(), this.getTexture(), this.isObstructed());
     }
 
     /**
