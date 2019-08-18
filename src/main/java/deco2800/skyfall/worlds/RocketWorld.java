@@ -115,7 +115,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             // EntitySpawnTable rockSpawnRule = new EntitySpawnTable();
             for (AbstractBiome biome : biomes) {
                 if (!biome.getBiomeName().equals("ocean")) {
-                    EntitySpawnTable.spawnEntities(startRock, 0.2, biome, entitySeed);
+                    EntitySpawnTable.spawnEntities(startRock, 0.2, biome);
                 }
             }
         }

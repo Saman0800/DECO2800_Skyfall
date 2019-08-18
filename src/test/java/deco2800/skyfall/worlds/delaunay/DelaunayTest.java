@@ -191,7 +191,7 @@ public class DelaunayTest {
     }
 
     @Test
-    public void checkDistanceCalc() {
+    public void distanceCalcTest() {
         WorldGenNode node1 = new WorldGenNode(2, 5);
         WorldGenNode node2 = new WorldGenNode(-3.26, 1.00492);
 
@@ -210,5 +210,48 @@ public class DelaunayTest {
         assertEquals(0.99018, node2.yDistanceToTile(tile1), 0.00001);
         assertEquals(5.35270, node2.distanceToTile(tile2), 0.00001);
         assertEquals(0.24510, node2.yDistanceToTile(tile2), 0.00001);
+    }
+
+    @Test
+    public void nodeVectorAlgebraTest() {
+        WorldGenNode node1 = new WorldGenNode(2, 5);
+        WorldGenNode node2 = new WorldGenNode(-3.26, 1.00492);
+        double[] addCoords = {node1.add(node2).getX(), node1.add(node2).getY()};
+        double[] subCoords = {node1.subtract(node2).getX(),
+                node1.subtract(node2).getY()};
+        double[] scaleCoords = {node2.scalarMultiply(2.453).getX(),
+                node2.scalarMultiply(2.453).getY()};
+        double magnitude = node2.magnitude();
+        double dot = node1.dotProduct(node2);
+        double cross = node1.crossProduct(node2);
+        assertEquals(-1.26, addCoords[0], 0.00001);
+        assertEquals(6.00492, addCoords[1], 0.00001);
+        assertEquals(5.26, subCoords[0], 0.00001);
+        assertEquals(3.99508, subCoords[1], 0.00001);
+        assertEquals(-7.99678, scaleCoords[0], 0.00001);
+        assertEquals(2.46507, scaleCoords[1], 0.00001);
+        assertEquals(3.41137, magnitude, 0.00001);
+        assertEquals(-1.4954, dot, 0.00001);
+        assertEquals(18.30984, cross, 0.00001);
+    }
+
+    @Test
+    public void centroidTest() {
+        WorldGenNode node1 = new WorldGenNode(15.23, -42.72);
+
+        // Test with no vertices
+        assertEquals(15.23, node1.getCentroid()[0], 0.00001);
+        assertEquals(-42.72, node1.getCentroid()[1], 0.00001);
+
+        // Test with one vertex
+        node1.addVertex(new double[] {1, 1});
+        assertEquals(1, node1.getCentroid()[0], 0);
+        assertEquals(1, node1.getCentroid()[1], 0);
+
+        // Test with many vertices
+        node1.addVertex(new double[] {-5.2837, 3.5838});
+        node1.addVertex(new double[] {12.9318, 1.1243});
+        assertEquals(2.8827, node1.getCentroid()[0], 0.00001);
+        assertEquals(1.9027, node1.getCentroid()[1], 0.00001);
     }
 }
