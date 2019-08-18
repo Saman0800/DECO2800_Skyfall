@@ -6,7 +6,7 @@ import java.util.Random;
 public class Rock extends StaticEntity implements HasHealth {
     private int health = 100;
     private static final String ENTITY_ID_STRING = "rock";
-    private static Random randomGen = new Random();;
+    private static Random randomGen = new Random();
     private static int nextRock = 1;
 
     public Rock() {

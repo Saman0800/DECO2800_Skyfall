@@ -40,8 +40,8 @@ public class GameScreen implements Screen,KeyDownObserver {
 	 * Create a camera for panning and zooming.
 	 * Camera must be updated every render cycle.
 	 */
-	PotateCamera camera, cameraDebug;
-
+	PotateCamera camera;
+	PotateCamera cameraDebug;
 	public Stage stage = new Stage(new ExtendViewport(1280, 720));
 
 	long lastGameTick = 0;

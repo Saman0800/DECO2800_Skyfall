@@ -1,4 +1,0 @@
-{"entities": [{"objectName":"playerPeon","speed":0.05,"texture":"spacman_ded","entityID":1,"rowPos":0.0,"colPos":0.0}
-],"tiles": [{"obstructed":false,"index":-1,"tileID":1951,"rowPos":1.0,"colPos":1.0},
-{"obstructed":false,"index":-1,"tileID":1952,"rowPos":5.0,"colPos":4.0}
-]}
