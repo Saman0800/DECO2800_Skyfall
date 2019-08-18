@@ -36,12 +36,10 @@ public class SoundManager extends AbstractManager {
     /* Initialize a map to store all sound effects */
     private static Map<String, Sound> soundMap = new HashMap<>();
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SoundManager.class);
-
     /* Initialize a map to store all looped sound effects */
     private static Map<String, Sound> soundLoops = new HashMap<>();
 
-    private Music song;
+    private static final Logger LOGGER = LoggerFactory.getLogger(SoundManager.class);
 
 //    public void playSound(String soundName) {
 //        Sound sound = Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + soundName));
@@ -53,11 +51,16 @@ public class SoundManager extends AbstractManager {
      */
     public SoundManager() {
         LOGGER.info("soundManager song list");
-        song = null;
+
         try {
-            soundMap.put("menu", Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + "09-running-in-the-90-s.mp3")));
-            soundMap.put("pick_up", Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + "pick_up.wav")));
-            soundMap.put("people_walk_normal", Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + "People Walk-Normal.wav")));
+            soundMap.put("people_walk_normal", Gdx.audio.newSound
+                    (Gdx.files.internal("resources/sounds/" + "pick up.wav")));
+            soundMap.put("spider", Gdx.audio.newSound
+                    (Gdx.files.internal("resources/sounds/" + "spider.wav")));
+            soundMap.put("robot", Gdx.audio.newSound
+                    (Gdx.files.internal("resources/sounds/" + "robot.wav")));
+            soundMap.put("sword", Gdx.audio.newSound
+                    (Gdx.files.internal("resources/sounds/" + "sword.wav")));
         } catch(Exception e) {
             LOGGER.error("no song be found");
         }
@@ -72,31 +75,89 @@ public class SoundManager extends AbstractManager {
         return soundMap.containsKey(soundName);
     }
 
-
-    public void playSound(String soundName) {
-        Sound sound = soundMap.get(soundName);
-        sound.play(4);
-    }
-
     /**
-     * If the sound exists in the map, loop this sound
-     * @param soundName
+     * Plays a given sound if it exists in the HashMap.
+     * Returns true if sound is played.
+     *
+     * @param soundName Sound identifier/key
+     * @return true if sound is played
      */
-
-    public void loopSound(String soundName){
-        if (!soundMap.containsKey(soundName)){
-            LOGGER.error("Can't loop the sound", soundName);
+    public static boolean playSound(String soundName) {
+        if (soundMap.containsKey(soundName)) {
+            Sound sound = soundMap.get(soundName);
+            sound.play(1);
+            return true;
+        } else {
+            return false;
         }
-        Sound sound = soundMap.get(soundName);
-        sound.play(4);
-        soundLoops.put(soundName, soundMap.get(soundName));
     }
 
     /**
-     * Return the selected sound for corresponding action
+     * Loops a given sound if it exists in soundMap.
+     * Returns true if sound is looped.
+     *
+     * @param soundName Sound identifier/key
+     * @return true if sound is looped
      */
-    public  String getTheSound(String soundName){
-        return soundName;
+    public static void loopSound(String soundName){
+        if (soundMap.containsKey(soundName)) {
+            Sound sound = soundMap.get(soundName);
+            sound.loop(1);
+            //Add to the sounds which are being looped
+            soundLoops.put(soundName, soundMap.get(soundName));
+        } else {
+            LOGGER.info("There does not exist a {} sound", soundName);
+        }
+    }
+
+    /**
+     * Stop the sound.
+     * @param soundName Sound identifier/key
+     * @return
+     */
+    public static boolean stopSound(String soundName) {
+        if (soundMap.containsKey(soundName)) {
+            Sound sound = soundMap.get(soundName);
+            soundLoops.remove(soundName);
+            sound.stop();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Pauses a given sound if it exists in soundLoops.
+     *
+     * @param soundName Sound identifier/key
+     * @return true if sound is paused
+     */
+    public static boolean pauseSound(String soundName) {
+        if (soundLoops.containsKey(soundName)) {
+            //Access the originally placed sound
+            Sound sound = soundMap.get(soundName);
+            sound.pause();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Resumes a given sound if it exists in soundLoops.
+     *
+     * @param soundName Sound identifier/key
+     * @return true if sound is resumed
+     */
+    public static boolean resumeSound(String soundName) {
+        if (soundLoops.containsKey(soundName)) {
+            //Access the originally placed sound
+            Sound sound = soundMap.get(soundName);
+            sound.resume();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -109,22 +170,29 @@ public class SoundManager extends AbstractManager {
     }
 
     /**
-     * Play the sound
-     * @param soundName
+     * Return the selected sound for corresponding action
      */
-    public void playTheSound(String soundName) {
-        Sound sound = Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + soundName));
-        sound.play(1);
+    public Sound getTheSound(String soundName){
+        return soundMap.get(soundName);
     }
 
-    /**
-     * Pause the sound
-     * @param soundName
-     */
-    public void pauseTheSound(String soundName){
-        Sound sound = Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + soundName));
-        sound.stop();
-    }
+//    /**
+//     * Play the sound
+//     * @param soundName
+//     */
+//    public void playTheSound(String soundName) {
+//        Sound sound = Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + soundName));
+//        sound.play(1);
+//    }
+//
+//    /**
+//     * Pause the sound
+//     * @param soundName
+//     */
+//    public void pauseTheSound(String soundName){
+//        Sound sound = Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + soundName));
+//        sound.stop();
+//    }
 
 
 
