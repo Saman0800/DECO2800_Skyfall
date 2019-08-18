@@ -141,4 +141,32 @@ public class MainCharacterTest {
         assertEquals(testCharacter.getFoodLevel(), 0);
         assertTrue(testCharacter.isStarving());
     }
+
+    //TODO: change these tests as Animation System Changes
+    //These test abstract entity methods
+
+    /**
+     * Tests movingAnimation
+     */
+    @Test
+    public void setMovingAnimationTest() {
+        testCharacter.setMovingAnimation(AnimationRole.MOVE_NORTH);
+        assertEquals(AnimationRole.MOVE_NORTH, testCharacter.getMovingAnimation());
+
+        testCharacter.setMovingAnimation(AnimationRole.NULL);
+        assertEquals(AnimationRole.NULL, testCharacter.getMovingAnimation());
+
+    }
+    /**
+     * Set and get Animations
+     */
+    @Test
+    public void setAndGetAnimationTest() {
+        testCharacter.addAnimations(AnimationRole.MOVE_EAST, "right");
+        testCharacter.getAnimationName(AnimationRole.MOVE_EAST);
+    }
+
+
+
+
 }
