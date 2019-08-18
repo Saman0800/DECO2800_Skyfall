@@ -5,6 +5,7 @@ import deco2800.skyfall.worlds.AbstractBiome;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.managers.GameManager;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -40,7 +41,7 @@ public class EntitySpawnTable {
      * @param <T>    T must extend StaticEntity and have .newInstance inherited
      */
     public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntities(T entity, EntitySpawnRule rule,
-                                                                                       Random random) {
+                                                                                       Random r) {
         AbstractWorld world = GameManager.get().getWorld();
         List<Tile> allTiles = world.getTileMap();
         List<Tile> tiles = new ArrayList<>();

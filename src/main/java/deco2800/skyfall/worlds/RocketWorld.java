@@ -105,6 +105,9 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         super.onTick(i);
 
         if (!generated) {
+            Random random = new Random(entitySeed);
+            entitySeed = random.nextLong();
+
             Tile tile = getTile(1f, 2.5f);
             addEntity(new Tree(tile, true));
 
@@ -115,7 +118,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             // EntitySpawnTable rockSpawnRule = new EntitySpawnTable();
             for (AbstractBiome biome : biomes) {
                 if (!biome.getBiomeName().equals("ocean")) {
-                    EntitySpawnTable.spawnEntities(startRock, 0.2, biome);
+                    EntitySpawnTable.spawnEntities(startRock, 0.2, biome, random);
                 }
             }
         }
