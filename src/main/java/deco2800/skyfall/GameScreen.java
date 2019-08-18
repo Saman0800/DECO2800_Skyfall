@@ -16,9 +16,16 @@ import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.renderers.OverlayRenderer;
 import deco2800.skyfall.renderers.Renderer3D;
 import deco2800.skyfall.worlds.*;
+import deco2800.skyfall.managers.SoundManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.IOException;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class GameScreen implements Screen,KeyDownObserver {
 	private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
@@ -45,7 +52,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 	long lastGameTick = 0;
 	
 
-	public GameScreen(final SkyfallGame game, boolean isHost) {
+	public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
 		/* Create an example world for the engine */
 		this.game = game;
 
@@ -53,10 +60,10 @@ public class GameScreen implements Screen,KeyDownObserver {
 
 		// Create main world
 		if (!isHost) {
-			world = new ServerWorld();
+			world = new ServerWorld(seed);
 			GameManager.get().getManager(NetworkManager.class).connectToHost("localhost", "duck1234");
 		} else {
-			world = new RocketWorld();
+			world = new RocketWorld(seed);
 			GameManager.get().getManager(NetworkManager.class).startHosting("host");
 		}
 
@@ -70,7 +77,18 @@ public class GameScreen implements Screen,KeyDownObserver {
 		GameManager.get().setSkin(skin);
 		GameManager.get().setStage(stage);
 		GameManager.get().setCamera(camera);
-		
+
+		/* Add inventory to game manager */
+		gameManager.addManager(new InventoryManager());
+
+		/* Play BGM */
+		try {
+			SoundManager.backgroundGameMusic("resources/sounds/Forest Day.wav");
+			SoundManager.play();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		PathFindingService pathFindingService = new PathFindingService();
 		GameManager.get().addManager(pathFindingService);
 		
@@ -184,7 +202,9 @@ public class GameScreen implements Screen,KeyDownObserver {
 		}
 
 		if (keycode == Input.Keys.F5) {
-			world = new RocketWorld();
+			// Use a random seed for now
+			Random random = new Random();
+			world = new RocketWorld(random.nextLong());
 			AbstractEntity.resetID();
 			Tile.resetID();
 			GameManager gameManager = GameManager.get();
