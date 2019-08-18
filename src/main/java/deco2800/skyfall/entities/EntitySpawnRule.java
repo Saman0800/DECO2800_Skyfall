@@ -1,6 +1,8 @@
 package deco2800.skyfall.entities;
 
+import com.esotericsoftware.kryo.NotNull;
 import deco2800.skyfall.worlds.AbstractBiome;
+import jdk.nashorn.internal.ir.annotations.Immutable;
 
 /**
  * Used to set conditions about an entity template spawning distributions in EntitySpawnTable
