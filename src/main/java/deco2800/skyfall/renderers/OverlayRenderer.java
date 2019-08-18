@@ -119,8 +119,6 @@ public class OverlayRenderer implements Renderer {
 					}
 				}
 
-
-
 				GuiMaster.updateAll(1);
 				GuiMaster.renderAll(font, batch, camera, shapeRenderer);
 
