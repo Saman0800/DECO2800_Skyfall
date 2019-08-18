@@ -118,12 +118,16 @@ public class ConstructionManager extends AbstractManager {
 
     //Start of terrain Check
 
-    // terrain map is a collection of terrains with their building permission
+    // terrain map is a collection of terrains' building permission
     private TreeMap<String, Boolean> terrainMap = new TreeMap<String, Boolean>();
 
-    // load file of initial terrain permission into the terrain map
-    // file format as (texture name, boolean value) for one terrain
-    private void initializeTerrainMap(String fileBase) {
+    // load file of initial terrains' building permission into the terrain map
+    // file format as (texture name, boolean value) for one terrain type
+    private boolean initializeTerrainMap(String fileBase) {
+        if (fileBase == null) {
+            return false;
+        }
+
         try {
             File file = new File(fileBase);
             FileReader fr = new FileReader(file);
@@ -132,55 +136,40 @@ public class ConstructionManager extends AbstractManager {
 
             while ((line = br.readLine()) != null) {
                 String[] terrainInfo = line.split(",");
+                if (terrainInfo.length != 2) {
+                    throw new Exception("Incorrect file format");
+                }
                 String texture = terrainInfo[0];
                 String boolStr = terrainInfo[1];
                 boolean bool;
-
                 if (boolStr.equalsIgnoreCase("true")
                         || boolStr.equalsIgnoreCase("false")) {
                     bool = Boolean.parseBoolean(boolStr);
+                    this.terrainMap.put(texture, bool);
                 } else {
                     throw new Exception("Incorrect file format");
                 }
-
-                this.terrainMap.put(texture, bool);
             }
             br.close();
             fr.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
 
-    // update terrain building permission to allow/disallow building
-    public void updateTerrainMap(String texture, Boolean value) {
-        if (texture == null || value == null) {
-            return;
-        }
-        if (terrainMap.containsKey(texture)) {
-            terrainMap.put(texture, value);
-        }
-    }
-
-    // use terrain map to check if tile(s) is buildable or not
-    public boolean verifyTile(Tile ...tiles) {
-        for (Tile tile : tiles) {
-            if (tile == null) {
-                return false;
-            }
-            String texture = tile.getTextureName();
-            if (!terrainMap.containsKey(texture)) {
-                return false;
-            }
-            if (terrainMap.containsKey(texture) && (!terrainMap.get(texture))) {
-                return false;
-            }
-        }
         return true;
     }
 
-    // use terrain map to check if a collection of tiles is buildable or not
-    public boolean verifyRegion(List<Tile> tiles) {
+    // update terrain's building permission to allow/disallow building
+    public boolean updateTerrainMap(String texture, Boolean value) {
+        if (texture == null || value == null) {
+            return false;
+        }
+        this.terrainMap.put(texture, value);
+        return true;
+    }
+
+    // use terrain map to check if tile(s) is buildable or not
+    public boolean verifyTerrain(Tile ...tiles) {
         if (tiles == null) {
             return false;
         }
@@ -189,9 +178,6 @@ public class ConstructionManager extends AbstractManager {
                 return false;
             }
             String texture = tile.getTextureName();
-            if (!terrainMap.containsKey(texture)) {
-                return false;
-            }
             if (terrainMap.containsKey(texture) && (!terrainMap.get(texture))) {
                 return false;
             }
@@ -199,8 +185,11 @@ public class ConstructionManager extends AbstractManager {
         return true;
     }
 
-    // use tile class's biome method provided to know buildability
+    // inherit provided method inside tile's class to check if tile(s) is buildable or not
     public boolean verifyBiome(Tile ...tiles) {
+        if (tiles == null) {
+            return false;
+        }
         for (Tile tile : tiles) {
             if (tile == null) {
                 return false;
@@ -212,10 +201,10 @@ public class ConstructionManager extends AbstractManager {
         return true;
     }
 
-    // Non-empty entities in a tile can't be built and should be destroyed first
-    // check if a region on the world contains entities or not
+    // check if tile(s) on the world contains entities or not
+    // non-empty entities in tiles interfere building and should be destroyed first
     public boolean verifyEntity(AbstractWorld worldMap, Tile ...tiles) {
-        if (worldMap == null) {
+        if (worldMap == null || tiles == null) {
             return false;
         }
         for (Tile tile : tiles) {
@@ -233,27 +222,24 @@ public class ConstructionManager extends AbstractManager {
         return true;
     }
 
-    // check if a building could be located on a region or not
+    // check if a building could be located on tiles or not
     // use most left-bottom position of a building with its size to check permission
-    public boolean isBuildable(AbstractWorld worldMap, AbstractBuilding building, int xSize, int ySize) {
-        if (building == null || worldMap == null) {
+    public boolean isTilesBuildable(AbstractWorld worldMap, AbstractBuilding building) {
+        if (worldMap == null || building == null) {
             return false;
         }
 
-        float col = building.getCol();
-        float row = building.getRow();
+        float xPos = building.getXcoord();
+        float yPos = building.getYcoord();
+        float xSize = building.getXSize();
+        float ySize = building.getYSize();
         for (int i = 0; i < xSize; i++) {
             for (int j = 0; j < ySize; j++) {
-                Tile tile = worldMap.getTile(col + xSize, row + ySize);
+                Tile tile = worldMap.getTile(xPos + xSize, yPos + ySize);
                 if (tile == null) {
                     return false;
                 }
-                if (terrainMap.containsKey(tile.getTextureName())) {
-                    if (!verifyTile(tile) || !verifyBiome(tile) || !verifyEntity(worldMap, tile)) {
-                        return false;
-                    }
-                }
-                if (!verifyBiome(tile) || !verifyEntity(worldMap, tile)) {
+                if (!verifyTerrain(tile) || !verifyBiome(tile) || !verifyEntity(worldMap, tile)) {
                     return false;
                 }
             }
@@ -261,10 +247,10 @@ public class ConstructionManager extends AbstractManager {
         return true;
     }
 
-    // TODO: world placement of building
+    // TODO: building placement on world
     // place a building on the world
-    public boolean placeBuilding(AbstractWorld worldMap, AbstractEntity building) {
-        // wait for building class method to gain size and position
+    public boolean placeBuilding(AbstractWorld worldMap, AbstractBuilding building) {
+        // conflict with worldGen teams
         return true;
     }
 

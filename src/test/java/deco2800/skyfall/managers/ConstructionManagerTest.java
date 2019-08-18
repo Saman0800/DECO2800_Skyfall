@@ -21,12 +21,14 @@ public class ConstructionManagerTest {
 
     @Test
     public void verifyNullTest() {
-        Assert.assertEquals(false, this.cmgr.verifyTile(null));
-        Assert.assertEquals(false, this.cmgr.verifyRegion(null));
+        Assert.assertEquals(false, this.cmgr.verifyTerrain(null));
+        Assert.assertEquals(false, this.cmgr.verifyBiome(null));
+        Assert.assertEquals(false, this.cmgr.verifyEntity(null, null));
+        Assert.assertEquals(false, this.cmgr.isTilesBuildable(null, null));
     }
 
     @After
     public void cleanup() {
-        // something expected to be cleanup after test
+        this.cmgr = null;
     }
 }
