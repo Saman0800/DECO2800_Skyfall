@@ -19,11 +19,20 @@ public abstract class AbstractGui {
 
     final String hash;
 
+    /**
+     * The constructor of the AbstractGui
+     * @param hash the hash to be set in the GuiMaster
+     */
     AbstractGui(String hash) {
         this.hash = hash;
         this.parent = null;
     }
 
+    /**
+     * The constructor of the AbstractGui
+     * @param hash the hash to be set in the GuiMaster
+     * @param parent the parent of the gui element
+     */
     public AbstractGui(String hash, AbstractGui parent) {
         this.hash = hash;
         this.parent = parent;
@@ -57,18 +66,34 @@ public abstract class AbstractGui {
     abstract public void update(long timeDelta);
     abstract public void render(BitmapFont font, SpriteBatch batch, OrthographicCamera camera, ShapeRenderer shapeRenderer);
 
+    /**
+     * Renders all the children of the gui element
+     * @param font the font to be used
+     * @param batch the sprite batch to render to
+     * @param camera the camera to be used
+     * @param shapeRenderer the shape renderer
+     */
     protected void renderChildren(BitmapFont font, SpriteBatch batch, OrthographicCamera camera, ShapeRenderer shapeRenderer) {
         for (AbstractGui element : children) {
             element.render(font, batch, camera, shapeRenderer);
         }
     }
 
+    /**
+     * Updates all the children of the gui element
+     * @param timeDelta the time between the last update
+     *
+     */
     protected void updateChildren(long timeDelta) {
         for (AbstractGui element : children) {
             element.update(timeDelta);
         }
     }
 
+    /**
+     * Destroys the gui element and stops it from being drawn
+     *
+     */
     public void destroy(){
         if (parent == null) {
             GuiMaster.guiElementsList.remove(this);
