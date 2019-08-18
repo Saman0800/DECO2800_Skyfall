@@ -125,8 +125,8 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
             Tile tileRock = getTile(0.0f, 1.0f);
             Rock startRock = new Rock(tileRock, true);
-            // EntitySpawnTable rockSpawnRule = new EntitySpawnTable();
-            EntitySpawnTable.spawnEntities(startRock, 0.2, biome);
+//            EntitySpawnTable rockSpawnRule = new EntitySpawnTable();
+//            EntitySpawnTable.spawnEntities(startRock, 0.2, biome);
         }
     }
 
