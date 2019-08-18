@@ -6,6 +6,7 @@ import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.*;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.*;
+import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.*;
 
@@ -55,15 +56,28 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
 
-    // food is from 100 to 0;
+    /* food is from 100 to 0 and goes down as the Player does actions such as:
+     - Walking
+     - Combat
+     - Resource Collecting
+     Once the food level reaches 0, the Player begins to starve, and starts to
+     lose health points. Still unsure if I should implement time based starvation
+     where as time goes on, the Player loses hunger.
+     */
     private int foodLevel;
 
     // Textures for all 6 directions to correspond to movement of character
     private String[] textures;
 
+    /**
+     * The direction and speed of the MainCharacter
+     */
     protected Vector2 direction;
     protected float currentSpeed;
 
+    /**
+     * Helper bools to tell which direction the player intends to move
+     */
     private boolean MOVE_UP = false;
     private boolean MOVE_LEFT = false;
     private boolean MOVE_RIGHT = false;
@@ -81,7 +95,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Basic Main Character constructor
+     * Base Main Character constructor
      */
     public MainCharacter(float col, float row, float speed, String name,
                          int health) {
@@ -149,6 +163,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.inventories.inventoryAdd(item);
     }
 
+    /**
+     * Add weapon to weapons list
+     * @param item weapon to be added
+     */
     public void pickUpWeapon(String item) {
         weapons.add(item);
     }
@@ -163,6 +181,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
     }
 
+    /**
+     * Attempts to drop given item from inventory
+     * @param item item to be dropped from inventory
+     */
     public void dropInventory(String item) {
         this.inventories.inventoryDrop(item);
     }
@@ -193,6 +215,22 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     public int getFoodLevel(){
         return foodLevel;
+    }
+
+    /**
+     * Method for the MainCharacter to eat food and restore/decrease hunger level
+     * TODO: add hunger values to food items
+     * @param item the item to eat
+     */
+    private void eatFood(Item item) {
+        // int hungerValue = item.getFoodValue();
+        int hungerValue = 20;
+        if(item instanceof HealthResources) {
+            change_food(hungerValue);
+            inventories.inventoryDrop(item.getName());
+        } else {
+            System.out.println("Given item (" + item.getName() + ") is not edible!");
+        }
     }
 
     /**

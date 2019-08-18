@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.Stone;
 import org.junit.*;
@@ -64,6 +65,8 @@ public class MainCharacterTest {
         }
         // TODO writes tests with new InventoryManager
     }
+
+
 
     @Test
     /**
