@@ -39,15 +39,14 @@ public abstract class NaturalResources implements deco2800.skyfall.resources.Ite
      * Creates a new Natural Resource with the given position
      * @param position the tile which the item has been placed on
      */
-    // to be implemented by the world generation team
-/*    public NaturalResources(Tile position){
+    public NaturalResources(Tile position){
         this.name = null;
         this.carryable = true;
         this.subtype = "Natural Resource";
         this.position = position.getCoordinates();
         this.exchangeable = true;
 
-    }*/
+    }
 
     /**
      * Returns the name of the natural resource
@@ -110,6 +109,5 @@ public abstract class NaturalResources implements deco2800.skyfall.resources.Ite
     public String toString() {
         return "" + subtype + ":" + name;
     }
-
 
 }
