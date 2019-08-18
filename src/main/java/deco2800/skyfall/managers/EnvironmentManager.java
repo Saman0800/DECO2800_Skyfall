@@ -13,9 +13,6 @@ public class EnvironmentManager {
    //Day/Night tracker
    private boolean isDay;
 
-   //Biome the player is in
-   private String biome;
-
    /**
     * Constructor
     *
@@ -31,26 +28,6 @@ public class EnvironmentManager {
          isDay = false;
       } else {
          isDay = true;
-      }
-
-      //Set biome
-      setBiome();
-   }
-
-   /**
-    * Private helper function for constructor to set biome
-    */
-   private void setBiome() {
-      List<AbstractEntity> entities = GameManager.get().getWorld().getEntities();
-      AbstractEntity player;
-      for (int i = 0; i < entities.size(); i++) {
-         if (entities.get(i).getObjectName().equals("playerPeon")) {
-            player = entities.get(i);
-            Tile currentTile = GameManager.get().getWorld().getTile(player.getCol(), player.getRow());
-            if (currentTile != null) {
-               biome = currentTile.getBiome().getBiomeName();
-            }
-         }
       }
    }
 
@@ -74,6 +51,18 @@ public class EnvironmentManager {
       } else {
          hours = time;
       }
+      setDay();
+   }
+
+   /**
+    * Sets day/night tracker after updating time
+    */
+   private void setDay() {
+      if (hours > 12 && hours < 24) {
+         isDay = false;
+      } else {
+         isDay = true;
+      }
    }
 
    /**
@@ -85,15 +74,8 @@ public class EnvironmentManager {
    }
 
    /**
-    * Gets current biome player is in
-    *
-    * @return String Current biome of player, or null if player is moving between tiles
+    * TODO for sprint 2
     */
-   public String currentBiome() {
-      return biome;
-   }
-
-
    public void setBiomeMusic() {
       //get biome and play music accordingly
    }

@@ -48,11 +48,8 @@ public class GameScreen implements Screen,KeyDownObserver {
 
 	/**
 	 * Create an EnvironmentManager for ToD.
-	 * Store current player biome and day/night marker
 	 */
 	EnvironmentManager timeOfDay;
-	String biome;
-	Boolean daytime;
 
 	public GameScreen(final SkyfallGame game, boolean isHost) {
 		/* Create an example world for the engine */
@@ -139,10 +136,6 @@ public class GameScreen implements Screen,KeyDownObserver {
 			GameManager.get().onTick(0);
 			timeOfDay = new EnvironmentManager(lastGameTick);
 		}
-		if (!timeOfDay.currentBiome().equals(null) || !timeOfDay.currentBiome().equals(biome)) {
-			biome = timeOfDay.currentBiome();
-		}
-		daytime = timeOfDay.isDay();
 	}
 
 	/**
