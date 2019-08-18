@@ -3,6 +3,7 @@ package deco2800.skyfall.managers;
 import com.badlogic.gdx.graphics.Texture;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,6 +46,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("spacman_ded", new Texture("resources/spacman_ded.png"));
             textureMap.put("spacman_blue", new Texture("resources/spacman_blue.png"));
             textureMap.put("bowman", new Texture("resources/bowman.png"));
+            textureMap.put("main_piece", new Texture("resources" +
+                    "/Main_Character_F_Right.png"));
             textureMap.put("slash", new Texture("resources/slash_long.png"));
 
             //Tile textures
@@ -86,6 +89,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("fenceNW-NE", new Texture("resources/fence NW-NE.png"));
             textureMap.put("fenceSE-SW", new Texture("resources/fence SE-SW.png"));
             textureMap.put("fenceNW-S", new Texture("resources/fence NW-S.png"));
+            textureMap.put("mario_right", new Texture("resources/mario_texture1.png"));
+            textureMap.put("mario_left", new Texture("resources/mario_texture2.png"));
 
             textureMap.put("rock", new Texture("resources/rocks.png"));
             textureMap.put("rock1", new Texture("resources/world_details/rock1.png"));
@@ -105,8 +110,20 @@ public class TextureManager extends AbstractManager {
     public Texture getTexture(String id) {
         if (textureMap.containsKey(id)) {
             return textureMap.get(id);
-        } else {
-            // log.info("Texture map does not contain P{}, returning default texture.", id);
+        } else if (id.startsWith("__ANIMATION_")) {
+            System.out.println("Getting animation texture");
+            AnimationManager animationManager = GameManager.getManagerFromInstance(AnimationManager.class);
+            Texture texture = this.getTextureFromAnimation(id, animationManager);
+
+            if (texture != null) {
+                return texture;
+            } else {
+                System.out.println("Texture animation could not be found");
+                return textureMap.get("spacman_ded");
+            }
+
+        }else {
+            //log.info("Texture map does not contain P{}, returning default texture.", id);
             return textureMap.get("spacman_ded");
         }
 
@@ -134,4 +151,22 @@ public class TextureManager extends AbstractManager {
             textureMap.put(id, new Texture(filename));
         }
     }
+
+
+    private Texture getTextureFromAnimation(String id, AnimationManager animationManager) {
+        String id1 = id.replaceAll("__ANIMATION_", "");
+        String[] split = id1.split(":");
+        System.out.println(split[0] + " " + split[1]);
+        Texture texture = animationManager.
+                getKeyFrameFromAnimation(split[0],
+                        Integer.valueOf(split[1]));
+        if (texture == null) {
+            System.out.println("getTextureFromAnimation did not find texture");
+            return null;
+        }
+
+        textureMap.put(id, texture);
+        return texture;
+    }
+
 }
