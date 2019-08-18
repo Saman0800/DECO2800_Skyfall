@@ -18,8 +18,10 @@ public class Robot extends EnemyEntity {
     private static final transient String ENEMY_TYPE="robot";
     private String [] directions={"S","SE","NE","N","NW","SW"};
     //savage animation
-    private Animation<TextureRegion> animation;
-    private TextureRegion[] textureRegions;
+
+    public Robot(float row, float col, String texturename, int health, int armour, int damage) {
+        super(row, col, texturename, health, armour, damage);
+    }
 
     public Robot(float col, float row) {
         super(col,row);
@@ -27,22 +29,12 @@ public class Robot extends EnemyEntity {
         this.setObjectName("robot");
         this.setHeight(1);
         this.setHealth((int)HEALTH);
-        this.loadAnimationSource();
-        animation=new Animation<TextureRegion>(1/1f,textureRegions);
+        this.setLevel(2);
+        this.setSpeed(1);
+        this.setArmour(2);
+
     }
 
-    /**
-     * load png image from resources folder and save those images to TextureRegions array
-     */
-    private void loadAnimationSource(){
-        int index=0;
-        textureRegions=new TextureRegion[directions.length];
-        for(int i=0;i<directions.length;i++){
-            String textureName="robot"+directions[i];
-            TextureRegion tmeTextureRegion=new TextureRegion(textureManager.getTexture(textureName));
-            textureRegions[index++]=tmeTextureRegion;
-        }
-    }
 
 
     public String getEnemyType(){
@@ -60,13 +52,6 @@ public class Robot extends EnemyEntity {
     }
 
 
-    /**
-     *  To get the savage animation
-     * @return the animation of savage
-     */
-    public Animation getAnimation(){
-        return animation;
-    }
 
     /**
      * @return string representation of this class including its enemy type, biome and x,y coordinates
