@@ -267,8 +267,9 @@ public class ConstructionManager extends AbstractManager {
     //player inventory
     //Takes in a structure class and removes it's material cost from
     //the players inventory, no return
+    public void invRemove(AbstractBuilding building){
 
-//    public void invRemove(Structure building){ }
+    }
 }
 
 //class Structure
