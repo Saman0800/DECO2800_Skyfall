@@ -1,14 +1,9 @@
 package deco2800.skyfall.worlds;
 
-import com.badlogic.gdx.*;
 import deco2800.skyfall.entities.*;
-import deco2800.skyfall.managers.*;
-import deco2800.skyfall.observers.*;
-import deco2800.skyfall.util.*;
 import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.Harvestable;
-import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.Tree;
 import deco2800.skyfall.entities.Rock;
 import deco2800.skyfall.entities.EntitySpawnTable;
@@ -18,6 +13,7 @@ import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.biomes.*;
+import deco2800.skyfall.worlds.generation.BiomeGenerator;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;

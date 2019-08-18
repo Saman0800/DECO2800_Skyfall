@@ -1,7 +1,7 @@
-package deco2800.skyfall.worlds;
+package deco2800.skyfall.worlds.generation;
 
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import deco2800.skyfall.worlds.generation.DeadEndGenerationException;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 /**
  * Builds biomes from the nodes generated in the previous phase of the world generation.
  */
-class BiomeGenerator {
+public class BiomeGenerator {
     /** The `Random` instance being used for world generation. */
     private final Random random;
 
@@ -44,7 +44,7 @@ class BiomeGenerator {
      * @throws NotEnoughPointsException if there are not enough non-border nodes from which to form the biomes
      */
 
-    protected static void generateBiomes(List<WorldGenNode> nodes, Random random, int[] biomeSizes,
+    public static void generateBiomes(List<WorldGenNode> nodes, Random random, int[] biomeSizes,
                                          List<AbstractBiome> biomes) throws NotEnoughPointsException {
         BiomeGenerator biomeGenerator = new BiomeGenerator(nodes, random, biomeSizes, biomes);
         biomeGenerator.generateBiomesInternal();
@@ -131,8 +131,9 @@ class BiomeGenerator {
                 // Math.sqrt().
                 double centerDistanceSquared = Double.POSITIVE_INFINITY;
                 for (WorldGenNode node : nodes) {
-                    double[] centroid = node.getCentroid();
-                    double newCenterDistanceSquared = centroid[0] * centroid[0] + centroid[1] * centroid[1];
+                    double x = node.getX();
+                    double y = node.getY();
+                    double newCenterDistanceSquared = x * x + y * y;
                     if (newCenterDistanceSquared < centerDistanceSquared) {
                         centerDistanceSquared = newCenterDistanceSquared;
                         centerNode = node;
