@@ -7,7 +7,7 @@ package deco2800.skyfall.worlds.delaunay;
  *
  * @author Johannes Diemke
  */
-public class EdgeDistancePack implements Comparable<EdgeDistancePack> {
+class EdgeDistancePack implements Comparable<EdgeDistancePack> {
 
     public WorldGenEdge edge;
     public double distance;

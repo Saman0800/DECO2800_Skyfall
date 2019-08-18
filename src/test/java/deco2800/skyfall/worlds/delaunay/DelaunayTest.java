@@ -1,6 +1,8 @@
-package deco2800.skyfall.worlds;
+package deco2800.skyfall.worlds.delaunay;
 
 import deco2800.skyfall.util.Cube;
+import deco2800.skyfall.worlds.ForestBiome;
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.delaunay.*;
 import org.junit.After;
 import org.junit.Before;
@@ -111,11 +113,7 @@ public class DelaunayTest {
                     }
                 }
 
-                if (node.isBorderNode() && neighbour.isBorderNode()) {
-                    if (commonVertices == 0) {
-                        fail();
-                    }
-                } else if (commonVertices == 1) {
+                if (commonVertices == 0) {
                     fail();
                 }
             }
@@ -148,7 +146,7 @@ public class DelaunayTest {
 
                 int elevation = random.nextInt(2);
                 // String type = "grass_" + elevation;
-                Tile tile = new Tile(biome, q, r + oddCol);
+                Tile tile = new Tile(q, r + oddCol);
                 tiles.add(tile);
                 biome.addTile(tile);
             }
@@ -198,8 +196,8 @@ public class DelaunayTest {
         WorldGenNode node2 = new WorldGenNode(-3.26, 1.00492);
 
         ForestBiome biome = new ForestBiome();
-        Tile tile1 = new Tile(biome, 0, 2);
-        Tile tile2 = new Tile(biome, -1, 1.5f);
+        Tile tile1 = new Tile(0, 2);
+        Tile tile2 = new Tile(-1, 1.5f);
 
         // Expected values calculated using calculator
         assertEquals(13, node1.distanceToTile(tile1), 0);
@@ -212,112 +210,5 @@ public class DelaunayTest {
         assertEquals(0.99018, node2.yDistanceToTile(tile1), 0.00001);
         assertEquals(5.35270, node2.distanceToTile(tile2), 0.00001);
         assertEquals(0.24510, node2.yDistanceToTile(tile2), 0.00001);
-    }
-
-    @Test
-    public void getBoundaryIntersectionTest() {
-        int worldSize = 100;
-        // Check with straight lines (one for each boundary)
-        WorldGenNode node1 = new WorldGenNode(10, 10);
-        WorldGenNode node2 = new WorldGenNode(50, 10);
-        WorldGenNode node3 = new WorldGenNode(50, -90);
-        WorldGenNode node4 = new WorldGenNode(-20, -90);
-        WorldGenNode node5 = new WorldGenNode(-20, -60);
-
-        // Prevent the NotAdjacentException thrown by WorldGenNode.sharedVertex
-        // (that isn't being tested here)
-        double[] vertex = {0, 0};
-        try {
-            node1.addVertex(vertex);
-            node2.addVertex(vertex);
-            node3.addVertex(vertex);
-            node4.addVertex(vertex);
-            node5.addVertex(vertex);
-        } catch (InvalidCoordinatesException e) {
-            fail();
-        }
-
-        node1.addBorderNeighbour(node2);
-        node2.addBorderNeighbour(node1);
-        node2.addBorderNeighbour(node3);
-        node3.addBorderNeighbour(node2);
-        node3.addBorderNeighbour(node4);
-        node4.addBorderNeighbour(node3);
-        node4.addBorderNeighbour(node5);
-        node5.addBorderNeighbour(node4);
-
-        try {
-            double[] intersection1
-                    = node1.getBoundaryIntersection(node2, worldSize);
-            double[] intersection2
-                    = node2.getBoundaryIntersection(node3, worldSize);
-            double[] intersection3
-                    = node3.getBoundaryIntersection(node4, worldSize);
-            double[] intersection4
-                    = node4.getBoundaryIntersection(node5, worldSize);
-            assertEquals(30, intersection1[0], 0.00001);
-            assertEquals(worldSize, intersection1[1], 0.00001);
-            assertEquals(worldSize, intersection2[0], 0.00001);
-            assertEquals(-40, intersection2[1], 0.00001);
-            assertEquals(15, intersection3[0], 0.00001);
-            assertEquals(-1 * worldSize, intersection3[1], 0.00001);
-            assertEquals(-1 * worldSize, intersection4[0], 0.00001);
-            assertEquals(-75, intersection4[1], 0.00001);
-        } catch (NotAdjacentException | InvalidCoordinatesException e) {
-            fail();
-        }
-
-        // Test with random numbers
-        WorldGenNode node6 = new WorldGenNode(-68.38475, -37.19384);
-        WorldGenNode node7 = new WorldGenNode(-27.64838, 3.62727);
-        WorldGenNode node8 = new WorldGenNode(51.42736, 45.32892);
-        WorldGenNode node9 = new WorldGenNode(69.48293, 24.00128);
-        try {
-            node6.addVertex(vertex);
-            node7.addVertex(vertex);
-            node8.addVertex(vertex);
-            node9.addVertex(vertex);
-        } catch (InvalidCoordinatesException e) {
-            fail();
-        }
-        node5.addBorderNeighbour(node6);
-        node6.addBorderNeighbour(node5);
-        node6.addBorderNeighbour(node7);
-        node7.addBorderNeighbour(node6);
-        node7.addBorderNeighbour(node8);
-        node8.addBorderNeighbour(node7);
-        node8.addBorderNeighbour(node9);
-        node9.addBorderNeighbour(node8);
-        try {
-            double[] intersection1
-                    = node5.getBoundaryIntersection(node6, worldSize);
-            double[] intersection2
-                    = node6.getBoundaryIntersection(node7, worldSize);
-            double[] intersection3
-                    = node7.getBoundaryIntersection(node8, worldSize);
-            double[] intersection4
-                    = node8.getBoundaryIntersection(node9, worldSize);
-            assertEquals(-68.42123, intersection1[0], 0.00001);
-            assertEquals(-1 * worldSize, intersection1[1], 0.00001);
-            assertEquals(-1 * worldSize, intersection2[0], 0.00001);
-            assertEquals(35.09224, intersection2[1], 0.00001);
-            assertEquals(-27.93800, intersection3[0], 0.00001);
-            assertEquals(worldSize, intersection3[1], 0.00001);
-            assertEquals(worldSize, intersection4[0], 0.00001);
-            assertEquals(68.14301, intersection4[1], 0.00001);
-        } catch (NotAdjacentException | InvalidCoordinatesException e) {
-            fail();
-        }
-
-        // Check an exception is thrown with Nodes that are not border neighbours
-        try {
-            double[] intersection1
-                    = node1.getBoundaryIntersection(node9, worldSize);
-            fail();
-        } catch (InvalidCoordinatesException e) {
-            fail();
-        } catch (NotAdjacentException e) {
-            // do nothing
-        }
     }
 }
