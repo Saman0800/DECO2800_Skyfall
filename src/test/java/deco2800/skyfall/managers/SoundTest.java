@@ -12,6 +12,7 @@ import static org.junit.Assert.*;
 public class SoundTest {
 
     String file ="resources/sounds/Forest Day.wav";
+    SoundManager sound = new SoundManager();
 
     @Test
     public void exceptionTest() throws UnsupportedAudioFileException,
@@ -31,6 +32,29 @@ public class SoundTest {
             SoundManager.play();
             TimeUnit.SECONDS.sleep(1);
             assertEquals(SoundManager.getClip().isRunning(), true);
+        } catch (Exception e) {
+            //exception caught
+        }
+    }
+
+    @Test
+    public void playSoundEffect1(){
+        try {
+            sound.playSound("menu");
+            TimeUnit.SECONDS.sleep(1);
+            assertEquals(sound.soundInMap("menu"), true);
+        } catch (Exception e) {
+            //exception caught
+        }
+    }
+
+    @Test
+    public void playSoundEffectFOrPause2(){
+        try {
+            sound.playTheSound("09-running-in-the-90-s.mp3");
+            TimeUnit.SECONDS.sleep(1);
+            sound.pauseTheSound("09-running-in-the-90-s.mp3");
+            //assertEquals(SoundManager.getClip().isRunning(), false);
         } catch (Exception e) {
             //exception caught
         }

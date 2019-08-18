@@ -78,12 +78,12 @@ public class GameScreen implements Screen,KeyDownObserver {
 		GameManager.get().setCamera(camera);
 
 		/* Play BGM */
-		try {
-			SoundManager.backgroundGameMusic("resources/sounds/Forest Day.wav");
-			SoundManager.play();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			SoundManager.backgroundGameMusic("resources/sounds/Forest Day.wav");
+//			SoundManager.play();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 
 		PathFindingService pathFindingService = new PathFindingService();
 		GameManager.get().addManager(pathFindingService);
