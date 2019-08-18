@@ -17,16 +17,15 @@ public abstract class AbstractGui {
     protected Vector2 pos;
     protected Vector2 size;
 
-    public AbstractGui() {
+    final String hash;
+
+    AbstractGui(String hash) {
+        this.hash = hash;
         this.parent = null;
-        addToGuiMaster();
     }
 
-    private void addToGuiMaster() {
-        GuiMaster.getInstance().guiElements.add(this);
-    }
-
-    public AbstractGui(AbstractGui parent) {
+    public AbstractGui(String hash, AbstractGui parent) {
+        this.hash = hash;
         this.parent = parent;
         parent.children.add(this);
     }
@@ -72,7 +71,8 @@ public abstract class AbstractGui {
 
     public void destroy(){
         if (parent == null) {
-            GuiMaster.getInstance().guiElements.remove(this);
+            GuiMaster.guiElementsList.remove(this);
+            GuiMaster.guiElementsMap.remove(this.hash);
         } else {
             parent.children.remove(this);
         }

@@ -32,7 +32,6 @@ public class OverlayRenderer implements Renderer {
 
     long peakRAM = 0;
 
-		ScrollingTextBox testTutorialBox;
 		Tree testTutorialTree;
 		boolean testKilledTree = false;
 		SleepingBowMan testTutorialEnemy;
@@ -62,63 +61,68 @@ public class OverlayRenderer implements Renderer {
         	renderDebugText(batch, camera);
         }
 
-			List<AbstractEntity> entityList = GameManager.get().getWorld().getEntities();
+				List<AbstractEntity> entityList = GameManager.get().getWorld().getEntities();
 
-			if (firstTime && GameManager.get().isTutorial) {
-				testTutorialBox = new ScrollingTextBox();
-				testTutorialBox.setString("Good morning citizen 27720. I am " +
-						"the caretaker AI responsible for this cryopod " +
-						"facility. You may call me Karen. While thousand of " +
-						"years looking after what amounts to vegetables has " +
-						"made me \nsomewhat jaded, in accordance with " +
-						"protocol I must teach you the skills required to " +
-						"function properly. Please go murder that piece of " +
-						"flora over there and take its flesh.\nYou can do " +
-						"this by right clicking on it. If you wish to get " +
-						"closer to it before ending its existence, please " +
-						"left click on any tile to move to it.");
-				testTutorialBox.start();
-				firstTime = false;
-
-				for (AbstractEntity e : entityList) {
-					if (e instanceof Tree) {
-						testTutorialTree = (Tree) e;
+				if (GameManager.get().isTutorial) {
+					ScrollingTextBox testTutorialBox = GuiMaster.ScrollingTextBox("tutorialScrollingBox");
+					if (firstTime) {
+						testTutorialBox.setString("Good morning citizen 27720. I am " +
+								"the caretaker AI responsible for this cryopod " +
+								"facility. You may call me Karen. While thousand of " +
+								"years looking after what amounts to vegetables has " +
+								"made me somewhat jaded, in accordance with " +
+								"protocol I must teach you the skills required to " +
+								"function properly. Please go murder that piece of " +
+								"flora over there and take its flesh. You can do " +
+								"this by right clicking on it. If you wish to get " +
+								"closer to it before ending its existence, please " +
+								"left click on any tile to move to it.");
+						testTutorialBox.start();
 					}
-					if(e instanceof SleepingBowMan) {
-						testTutorialEnemy = (SleepingBowMan) e;
+					firstTime = false;
+
+					for (AbstractEntity e : entityList) {
+						if (e instanceof Tree) {
+							testTutorialTree = (Tree) e;
+						}
+						if(e instanceof SleepingBowMan) {
+							testTutorialEnemy = (SleepingBowMan) e;
+						}
+					}
+
+					if (!entityList.contains(testTutorialTree) && !testKilledTree) {
+						testKilledTree = true;
+						testTutorialBox.reset();
+						testTutorialBox.setString("Congratulations. You have " +
+								"successfully ended the life of a harmless, " +
+								"non-sentient life form. If we had more time I would " +
+								"enjoy testing your current emotional situation, " +
+								"however it seems that a still harmless, but " +
+								"far more sentient creature is currently immobile to " +
+								"your north. Please move your camera up by using " +
+								"the w key and end this creature in the same way" +
+								" you did the last.");
+						testTutorialBox.start();
+					}
+
+					if (!entityList.contains(testTutorialEnemy) && !testKilledEnemy && GameManager.get().isTutorial) {
+						testKilledEnemy = true;
+						testTutorialBox.reset();
+						testTutorialBox.setString("Now that nothing, no matter how " +
+								"harmless, can hurt your squishy body, please go collect " +
+								"the remnants of the first creature you slaughtered. This" +
+								" can be done by walking on top of it where it used to " +
+								"stand. With these materials you can now create morally" +
+								" questionable tools and building. Hooray. Please press " +
+								"(inventory key here) to begin this process.");
+						testTutorialBox.start();
 					}
 				}
-			}
-			if (!entityList.contains(testTutorialTree) && !testKilledTree && GameManager.get().isTutorial) {
-				testKilledTree = true;
-				testTutorialBox.reset();
-				testTutorialBox.setString("Congratulations. You have " +
-						"successfully ended the life of a harmless, " +
-						"non-sentient life form. If we had more time I would " +
-						"enjoy testing your current emotional situation, " +
-						"however it seems that a still \nharmless, but " +
-						"far more sentient creature is currently immobile to " +
-						"your north. Please move your camera up by using " +
-						"the w key and end this creature in the same way" +
-						" you did the last.");
-				testTutorialBox.start();
-			}
 
-		if (!entityList.contains(testTutorialEnemy) && !testKilledEnemy && GameManager.get().isTutorial) {
-			testKilledEnemy = true;
-			testTutorialBox.reset();
-			testTutorialBox.setString("Now that nothing, no matter how " +
-					"harmless, can hurt your squishy body, please go collect " +
-					"the remnants of the first creature you slaughtered. This" +
-					" can be done by walking on top of it where it used to " +
-					"stand. With these materials you can now create morally" +
-					" questionable tools and building. Hooray. Please press " +
-					"(inventory key here) to begin this process.");
-			testTutorialBox.start();
-		}
 
-			GuiMaster.getInstance().updateAll(1);
-        GuiMaster.getInstance().renderAll(font, batch, camera, shapeRenderer);
+
+				GuiMaster.updateAll(1);
+				GuiMaster.renderAll(font, batch, camera, shapeRenderer);
 
         int line = GameManager.get().getManager(OnScreenMessageManager.class).getMessages().size();
         for (String message : GameManager.get().getManager(OnScreenMessageManager.class).getMessages()) {
