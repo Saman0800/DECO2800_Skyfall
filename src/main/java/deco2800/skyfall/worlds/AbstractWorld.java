@@ -6,6 +6,8 @@ import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.delaunay.WorldGenNode;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +17,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.*;
+import java.io.FileWriter;
+
 
 /**
  * AbstractWorld is the Game AbstractWorld
@@ -28,6 +32,9 @@ public abstract class AbstractWorld {
     protected int width;
     protected int length;
 
+    protected int worldSize;
+    protected int nodeSpacing;
+
     //List that contains the world biomes
     protected ArrayList<AbstractBiome> biomes;
 
@@ -37,8 +44,11 @@ public abstract class AbstractWorld {
     protected List<AbstractEntity> entitiesToDelete = new CopyOnWriteArrayList<>();
     protected List<Tile> tilesToDelete = new CopyOnWriteArrayList<>();
 
-    protected AbstractWorld(long seed) {
+    protected AbstractWorld(long seed, int worldSize, int nodeSpacing) {
         Random random = new Random(seed);
+
+        this.worldSize = worldSize;
+        this.nodeSpacing = nodeSpacing;
 
     	tiles = new CopyOnWriteArrayList<>();
         worldGenNodes = new CopyOnWriteArrayList<>();
@@ -51,6 +61,14 @@ public abstract class AbstractWorld {
         generateNeighbours();
     	generateTileIndexes();
     	generateTileTypes(random);
+
+    	//Saving the world for test, and likely saving and loading later
+//    	try {
+//            saveWorld("ExampleWorldOutput.txt");
+//        } catch (IOException e){
+//    	    System.out.println("Could not save world");
+//        }
+
     }
     
     protected abstract void generateWorld(Random random);
@@ -333,4 +351,20 @@ public abstract class AbstractWorld {
         }
     }
 
+
+    public void saveWorld(String filename) throws IOException{
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+        writer.write(worldToString());
+        writer.close();
+    }
+
+    public String worldToString(){
+        StringBuilder string = new StringBuilder();
+        for (Tile tile : tiles){
+            String out = String.format("%f, %f, %s, %s\n", tile.getCol(), tile.getRow(),
+                    tile.getBiome().getBiomeName(), tile.getTextureName());
+            string.append(out);
+        }
+        return string.toString();
+    }
 }

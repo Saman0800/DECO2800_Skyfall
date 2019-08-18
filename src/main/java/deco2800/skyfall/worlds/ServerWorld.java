@@ -11,7 +11,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ServerWorld extends AbstractWorld {
 
     public ServerWorld(long seed) {
-        super(seed);
+        super(seed, 80, 5);
     }
 
     /**
