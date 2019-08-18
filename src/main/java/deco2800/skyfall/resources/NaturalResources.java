@@ -111,5 +111,4 @@ public abstract class NaturalResources implements Item {
         return "" + subtype + ":" + name;
     }
 
-
 }
