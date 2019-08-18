@@ -13,6 +13,16 @@ public class SoundEffectTest {
     SoundManager sound = new SoundManager();
 
     @Test
+    public void exceptionTest() throws UnsupportedAudioFileException,
+            IOException, LineUnavailableException {
+        try {
+            sound.playSound("people_walk_normal");
+        } catch (Exception e) {
+            e.getMessage();
+        }
+    }
+
+    @Test
     public void playSoundEffect() {
         try {
             sound.playSound("people_walk_normal");
