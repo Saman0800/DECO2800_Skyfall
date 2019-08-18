@@ -10,6 +10,8 @@ import java.util.AbstractList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.TreeMap;
+
+import deco2800.skyfall.entities.structures.AbstractBuilding;
 import deco2800.skyfall.worlds.AbstractWorld;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.entities.AbstractEntity;
@@ -35,6 +37,10 @@ public class ConstructionManager extends AbstractManager {
     }
 
     //Start of UI
+
+    //Called to either display or hide the build menu
+    //Sets up the menu the first time its called
+    //Updates the menu each time it is called
     public void displayWindow(){
         createWindow();
         setUpMenu();
@@ -43,7 +49,7 @@ public class ConstructionManager extends AbstractManager {
     }
 
     //Create UI Window
-    //Does nothing if window already created
+    //Does nothing if the window already created
     private void createWindow() {
         Stage stage = GameManager.get().getStage();
         if (!menuAdded) {
@@ -59,6 +65,7 @@ public class ConstructionManager extends AbstractManager {
     }
 
     //Set up window
+    //Does nothing if the window has already been set up
     private void setUpMenu() {
         if (!menuSetUp) {
             float width = GameManager.get().getStage().getWidth();
@@ -68,7 +75,7 @@ public class ConstructionManager extends AbstractManager {
             buildMenu.setWidth(3 * width / 4);
             buildMenu.setPosition(width / 8, height / 8);
 
-            //Add window components here: e.g. buttons, labels, etc
+            //TODO: Add window components here: e.g. buttons, labels, etc
             //example buildMenu.add(button1);
 
             System.out.println("Window set up");
@@ -81,7 +88,7 @@ public class ConstructionManager extends AbstractManager {
 
     //Called every time window is shown so that most accurate, up to date info is shown
     private void updateWindow() {
-        //Update window components here:
+        //TODO: Add update code
 
         System.out.println("Window updated");
     }
@@ -106,9 +113,11 @@ public class ConstructionManager extends AbstractManager {
         buildMenu.setVisible(false);
         System.out.println("Menu Hidden");
     }
+
     //End of UI
 
-    // TODO: check the buildability of tiles, in term of terrain, boime and entity
+    //Start of terrain Check
+
     // terrain map is a collection of terrains with their building permission
     private TreeMap<String, Boolean> terrainMap = new TreeMap<String, Boolean>();
 
@@ -226,7 +235,7 @@ public class ConstructionManager extends AbstractManager {
 
     // check if a building could be located on a region or not
     // use most left-bottom position of a building with its size to check permission
-    public boolean isBuildable(AbstractWorld worldMap, AbstractEntity building, int xSize, int ySize) {
+    public boolean isBuildable(AbstractWorld worldMap, AbstractBuilding building, int xSize, int ySize) {
         if (building == null || worldMap == null) {
             return false;
         }
