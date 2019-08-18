@@ -23,8 +23,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     // private CombatManager combatManager;
 
     // List of weapons for MainCharacter
-    // TODO replace List<String> with List<Weapon>
-    private List<String> weapons;
+    // TODO could probably turn this into a Map for next sprint for easier
+    //  manahement of number of each weapon
+    private List<Weapon> weapons;
 
     // Manager for all of MainCharacter's inventories
     public InventoryManager inventories; // maybe could be public?
@@ -119,22 +120,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         this.level = 1;
         this.foodLevel = 100;
-
-        //TODO: Remove this.
-        //this.configure_animations();
-    }
-
-    /*Tester*/
-    //TODO: change this to actual animations.
-    private void configure_animations() {
-        animations.put(AnimationRole.MOVE_NORTH, "mario_right");
-        animations.put(AnimationRole.MOVE_NORTH_EAST, "mario_right");
-        animations.put(AnimationRole.MOVE_NORTH_WEST, "mario_left");
-        animations.put(AnimationRole.MOVE_SOUTH, "mario_left");
-        animations.put(AnimationRole.MOVE_SOUTH_EAST, "mario_right");
-        animations.put(AnimationRole.MOVE_SOUTH_WEST, "mario_left");
-        animations.put(AnimationRole.MOVE_WEST, "mario_left");
-        animations.put(AnimationRole.MOVE_EAST, "mario_right");
     }
 
     /**
@@ -156,20 +141,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.setTexture(textures[2]);
     }
 
-    // TODO Replace all (String item) with (Weapon itme)
-    /**
-     * Adds item to player's collection
-     * @param item weapon being added
-     */
-    public void pickUpInventory(Item item) {
-        this.inventories.inventoryAdd(item);
-    }
-
     /**
      * Add weapon to weapons list
      * @param item weapon to be added
      */
-    public void pickUpWeapon(String item) {
+    public void pickUpWeapon(Weapon item) {
         weapons.add(item);
     }
 
@@ -177,10 +153,34 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Removes items from player's collection
      * @param item weapon being removed
      */
-    public void dropWeapon(String item) {
+    public void dropWeapon(Weapon item) {
         if (weapons.contains(item)) {
             weapons.remove(item);
         }
+    }
+
+    /**
+     * Get the weapons for the player
+     * @return weapons
+     */
+    public List<Weapon> getWeapons() {
+        return new ArrayList<>(weapons);
+    }
+
+    /**
+     * Deals damage to character from combat
+     * @param item weapon character is being hit by
+     */
+    public void weaponEffect(Weapon item) {
+        this.changeHealth(item.getDamage().intValue() * -1);
+    }
+
+    /**
+     * Add weapon to weapons list
+     * @param item weapon to be added
+     */
+    public void pickUpInventory(Item item) {
+        this.inventories.inventoryAdd(item);
     }
 
     /**
@@ -192,14 +192,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Change the player's appearance to the set texture
-     * @param texture the texture to set
-     */
-    public void changeTexture(String texture){
-        this.setTexture(texture);
-    }
-
-    /**
      * Change the hunger points value for the player
      * (+ve amount increases hunger points)
      * (-ve amount decreases hunger points)
@@ -207,8 +199,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     public void change_food(int amount){
         this.foodLevel += amount;
-        if(foodLevel>100) foodLevel = 100;
-        if(foodLevel<0) foodLevel = 0;
+        if (foodLevel > 100) {
+            foodLevel = 100;
+        }
+        if (foodLevel < 0) {
+            foodLevel = 0;
+        }
     }
 
     /**
@@ -226,13 +222,14 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     public void eatFood(Item item) {
         int amount = inventories.getAmount(item.getName());
-        if(amount > 0) {
-            if(item instanceof HealthResources) {
+        if (amount > 0) {
+            if (item instanceof HealthResources) {
                 int hungerValue = ((HealthResources) item).getFoodValue();
                 change_food(hungerValue);
                 dropInventory(item.getName());
             } else {
-                System.out.println("Given item (" + item.getName() + ") is not edible!");
+                System.out.println("Given item (" + item.getName() + ") is " +
+                        "not edible!");
             }
         } else {
             System.out.println("You don't have enough of the given item");
@@ -246,65 +243,20 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * See if the player is starving
      * @return true if hunger points is <= 0, else false
      */
-    public boolean isStarving(){
+    public boolean isStarving() {
         return foodLevel <= 0;
     }
 
     /**
-     * Get the weapons for the player
-     * @return weapons
+     * Set the players inventory to a predefined inventory
+     * e.g for loading player saves
+     * @param inventoryContents the save for the inventory
      */
-    public List<String> getWeapons() {
-        return new ArrayList<>(weapons);
+    public void setInventory(Map<String, List<Item>> inventoryContents,
+                             List<String> quickAccessContent) {
+        this.inventories = new InventoryManager(inventoryContents,
+                quickAccessContent);
     }
-
-    /*
-    Methods for actually interacting with weapons, e.g. damage, level-ups, etc.
-    Could also consider writing a WeaponManager similar to InventoryManger if
-    not already done for future sprints.
-    */
-
-    /* Pretty much all redundant because we have InventoryManager class */
-//    /**
-//     * Equips an item from the inventory list
-//     * Max no of equipped items is 5
-//     * @param item inventory being equipped
-//     */
-//    public void equipItem(String item, int index) {
-//        if (hotbar.size() == 5) {
-//            String item_to_replace = hotbar.get(index);
-//            hotbar.set(index, item);
-//            inventories.add(item_to_replace);
-//        }
-//    }
-//
-//    /**
-//     * Unequips an item
-//     * @param item inventory being unequipped
-//     */
-//    public void unequipItem(String item) {
-//        if(inventories.size() >= INVENTORY_MAX_CAPACITY) {
-//            hotbar.remove(item);
-//            inventories.add(item);
-//        }
-//    }
-//
-//    /**
-//     * Gets the player's currently equipped inventory, modification of the
-//     * returned list doesn't impact the internal class
-//     * @return a list of the player's equipped inventories
-//     */
-//    public List<String> getHotbar() {
-//        return new ArrayList<>(hotbar);
-//    }
-//
-//    /**
-//     * Gets the item currently equipped
-//     * @return the item currently equipped
-//     */
-//    public String getEquippedItem() {
-//        return this.hotbar.get(equipped_item);
-//    }
 
     /**
      * Change current level of character
@@ -325,20 +277,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Set the players inventory to a predefined inventory
-     * e.g for loading player saves
-     * @param inventoryContents the save for the inventory
+     * Change the player's appearance to the set texture
+     * @param texture the texture to set
      */
-    public void setInventory(Map<String, List<Item>> inventoryContents, List<String> quickAccessContent) {
-        this.inventories = new InventoryManager(inventoryContents, quickAccessContent);
+    public void changeTexture(String texture){
+        this.setTexture(texture);
     }
-
-    /*
-    Potential more methods and related attributes:
-    -record killed enemies
-    -interaction with worlds
-    -interaction with movement
-    */
 
     /**
      * Handles tick based stuff, e.g. movement
@@ -394,7 +338,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Sets the appropriate movement flags to true on keyDown
-     *
      * @param keycode the key being pressed
      */
     @Override
@@ -443,7 +386,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 break;
         }
     }
-}
 
     /*
     Potential more methods and related attributes for future sprints:
@@ -451,3 +393,4 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     -interaction with worlds
     -effects on MainCharacter with different Inventory and Weapon items
     */
+}

@@ -4,11 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.StaticEntity;
-import deco2800.skyfall.entities.Tree;
-import deco2800.skyfall.entities.PlayerPeon;
-import deco2800.skyfall.entities.Rock;
+import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.HexVector;
@@ -120,7 +116,8 @@ public class TestWorld extends AbstractWorld {
         }
 
 		// Create the entities in the game
-//		addEntity(new PlayerPeon(0f, 0f, 0.05f));
+//		addEntity(new MainCharacter(0f,
+//                0f, 0.05f, "Main Piece", 10));
 
     }
 

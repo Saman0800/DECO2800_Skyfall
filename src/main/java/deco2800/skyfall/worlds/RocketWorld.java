@@ -1,20 +1,10 @@
 package deco2800.skyfall.worlds;
 
-import com.badlogic.gdx.Gdx;
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.Collectable;
-import deco2800.skyfall.entities.Harvestable;
-import deco2800.skyfall.entities.PlayerPeon;
-import deco2800.skyfall.entities.Tree;
-import deco2800.skyfall.entities.Rock;
-import deco2800.skyfall.entities.EntitySpawnTable;
+import com.badlogic.gdx.*;
 import deco2800.skyfall.entities.*;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.InputManager;
-import deco2800.skyfall.observers.TouchDownObserver;
-import deco2800.skyfall.util.Collider;
-import deco2800.skyfall.util.Cube;
-import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.managers.*;
+import deco2800.skyfall.observers.*;
+import deco2800.skyfall.util.*;
 
 import java.util.List;
 import java.util.Random;
@@ -25,7 +15,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
     private static final int NODE_SPACING = 5;
 
     private boolean generated = false;
-    private PlayerPeon player;
+//    private PlayerPeon player;
 
     // Generating the biome
     private AbstractBiome biome;
@@ -66,14 +56,15 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         biome.setTileTextures();
 
         // Create the entities in the game
-        player = new PlayerPeon(0f, 0f, 0.05f);
-        addEntity(player);
+//        player = new PlayerPeon(0f, 0f, 0.05f);
+//        addEntity(player);
 
         GameManager.getManagerFromInstance(InputManager.class)
                 .addTouchDownListener(this);
-        MainCharacter testCharacter = new MainCharacter(0f, 0f, 0.05f, "Main " +
-                "Piece",
-                10);
+
+        // MainCharacter is now being put into the game instead of PlayerPeon
+        MainCharacter testCharacter = new MainCharacter(0f,
+                0f, 0.05f, "Main Piece", 10);
         addEntity(testCharacter);
 
         GameManager.getManagerFromInstance(InputManager.class)
