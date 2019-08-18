@@ -44,6 +44,8 @@ class BiomeGenerator {
      * object.
      *
      * @param nodes the nodes generated in the previous phase of the world generation
+     *
+     * @throws NotEnoughPointsException if there are not enough non-border nodes from which to form the biomes
      */
     private BiomeGenerator(List<WorldGenNode> nodes, Random random, int[] biomeSizes, List<AbstractBiome> realBiomes)
             throws NotEnoughPointsException {

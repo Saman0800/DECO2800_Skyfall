@@ -39,6 +39,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
     protected void generateWorld(Random random) {
         this.entitySeed = random.nextLong();
 
+        // World generation loop: restarts world generation if it reaches an unresolvable layout
         while (true) {
             int nodeCount = (int) Math.round(
                     Math.pow((float) WORLD_SIZE * 2 / (float) NODE_SPACING, 2));
@@ -59,7 +60,8 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
                 WorldGenNode.calculateVertices(worldGenNodes);
 //            WorldGenNode.lloydRelaxation(worldGenNodes, 2);
             } catch (WorldGenException e) {
-                // TODO handle this
+                worldGenNodes.clear();
+                continue;
             }
 
             for (int q = -1000; q < 1000; q++) {
@@ -86,7 +88,6 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             addBiome(new DesertBiome());
             addBiome(new MountainBiome());
             addBiome(new OceanBiome());
-
             try {
                 BiomeGenerator.generateBiomes(worldGenNodes, random, new int[] { 30, 20, 20 }, biomes);
                 break;
