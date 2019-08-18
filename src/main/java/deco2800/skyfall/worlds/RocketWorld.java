@@ -22,16 +22,13 @@ import java.util.List;
 import java.util.Random;
 
 public class RocketWorld extends AbstractWorld implements TouchDownObserver {
-    private static final int WORLD_SIZE = 100;
-    private static final int NODE_SPACING = 5;
-
     private boolean generated = false;
     private PlayerPeon player;
 
     long entitySeed;
 
-    public RocketWorld(long seed) {
-        super(seed);
+    public RocketWorld(long seed, int worldSize, int nodeSpacing) {
+        super(seed, worldSize, nodeSpacing);
     }
 
     @Override
@@ -45,14 +42,13 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             ArrayList<AbstractBiome> biomes = new ArrayList<>();
 
             int nodeCount = (int) Math.round(
-                    Math.pow((float) WORLD_SIZE * 2 / (float) NODE_SPACING, 2));
-
+                    Math.pow((float) worldSize * 2 / (float) nodeSpacing, 2));
             // TODO: if nodeCount is less than the number of biomes, throw an exception
 
             for (int i = 0; i < nodeCount; i++) {
                 // Sets coordinates to a random number from -WORLD_SIZE to WORLD_SIZE
-                float x = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
-                float y = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
+                float x = (float) (random.nextFloat() - 0.5) * 2 * worldSize;
+                float y = (float) (random.nextFloat() - 0.5) * 2 * worldSize;
                 worldGenNodes.add(new WorldGenNode(x, y));
             }
 
@@ -60,27 +56,23 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             // adjacencies can be calculated. Also apply Lloyd Relaxation twice
             // for more smooth looking polygons
             try {
-                WorldGenNode.calculateVertices(worldGenNodes, WORLD_SIZE);
-                WorldGenNode.lloydRelaxation(worldGenNodes, 2, WORLD_SIZE);
+                WorldGenNode.calculateVertices(worldGenNodes, worldSize);
+                WorldGenNode.lloydRelaxation(worldGenNodes, 2, worldSize);
             } catch (WorldGenException e) {
                 continue;
             }
 
-            for (int q = -WORLD_SIZE; q <= WORLD_SIZE; q++) {
-                for (int r = -WORLD_SIZE; r <= WORLD_SIZE; r++) {
-                     if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= WORLD_SIZE) {
+            for (int q = -worldSize; q <= worldSize; q++) {
+                for (int r = -worldSize; r <= worldSize; r++) {
+                    if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= worldSize) {
                         float oddCol = (q % 2 != 0 ? 0.5f : 0);
 
                         Tile tile = new Tile(q, r + oddCol);
                         tiles.add(tile);
-                     }
+                    }
                 }
             }
-            try {
-                WorldGenNode.assignNeighbours(worldGenNodes);
-            } catch (InvalidCoordinatesException e) {
-                throw new RuntimeException(e);
-            }
+            WorldGenNode.assignNeighbours(worldGenNodes);
             WorldGenNode.assignTiles(worldGenNodes, tiles);
 
             biomes.add(new ForestBiome());
