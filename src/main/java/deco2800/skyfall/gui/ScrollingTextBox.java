@@ -74,7 +74,7 @@ public final class ScrollingTextBox extends AbstractGui {
     public void render(BitmapFont font, SpriteBatch batch,
             OrthographicCamera camera, ShapeRenderer shapeRenderer) {
             batch.end();
-            shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+            shapeRenderer.setProjectionMatrix(camera.projection);
             Gdx.gl.glEnable(GL20.GL_BLEND);
             Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);

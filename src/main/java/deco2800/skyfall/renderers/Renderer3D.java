@@ -145,9 +145,7 @@ public class Renderer3D implements Renderer {
                     tex.getHeight() * WorldUtil.SCALE_Y);
         }
 
-	}	
-	
-	
+	}
 	
     /**
 	 * Render all the entities on in view, including movement tiles, and excluding undiscovered area.

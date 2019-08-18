@@ -84,6 +84,9 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
         Tile tile = getTile(clickedPosition[0], clickedPosition[1]);
 
+        if (tile == null) {
+            return;
+        }
         // todo: more efficient way to find entities
         for (AbstractEntity entity : getEntities()) {
             if (!tile.getCoordinates().equals(entity.getPosition())) {
