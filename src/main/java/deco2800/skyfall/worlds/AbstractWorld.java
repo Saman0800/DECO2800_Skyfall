@@ -285,16 +285,18 @@ public abstract class AbstractWorld {
 //                if (e2 instanceof Projectile) {
 //                    break;
 //                }
+//                if(c2 != null){
+//                    if (e1 != e2 && c1.overlaps(c2)) {
+//                        collided = true;
+//
+//                        //collision handler
+//                        this.handleCollision(e1, e2);
+//                        //System.out.println("Collision!");
+//
+//                        break;
+//                    }
+//                }
 
-                if (e1 != e2 && c1.overlaps(c2)) {
-                    collided = true;
-
-                    //collision handler
-                    this.handleCollision(e1, e2);
-                    //System.out.println("Collision!");
-
-                    break;
-                }
             }
             //no collision
         }
