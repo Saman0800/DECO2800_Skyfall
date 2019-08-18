@@ -22,6 +22,8 @@ import deco2800.skyfall.managers.EnvironmentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Random;
+
 public class GameScreen implements Screen,KeyDownObserver {
 	private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
 	@SuppressWarnings("unused")
@@ -51,7 +53,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 	 */
 	EnvironmentManager timeOfDay;
 
-	public GameScreen(final SkyfallGame game, boolean isHost) {
+	public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
 		/* Create an example world for the engine */
 		this.game = game;
 
@@ -59,10 +61,10 @@ public class GameScreen implements Screen,KeyDownObserver {
 
 		// Create main world
 		if (!isHost) {
-			world = new ServerWorld();
+			world = new ServerWorld(seed);
 			GameManager.get().getManager(NetworkManager.class).connectToHost("localhost", "duck1234");
 		} else {
-			world = new RocketWorld();
+			world = new RocketWorld(seed, 80, 5);
 			GameManager.get().getManager(NetworkManager.class).startHosting("host");
 		}
 
@@ -202,7 +204,9 @@ public class GameScreen implements Screen,KeyDownObserver {
 		}
 
 		if (keycode == Input.Keys.F5) {
-			world = new RocketWorld();
+			// Use a random seed for now
+			Random random = new Random();
+			world = new RocketWorld(random.nextLong(), 80, 5);
 			AbstractEntity.resetID();
 			Tile.resetID();
 			GameManager gameManager = GameManager.get();

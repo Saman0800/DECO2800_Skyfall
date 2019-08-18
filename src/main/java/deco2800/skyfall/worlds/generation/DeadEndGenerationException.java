@@ -1,3 +1,3 @@
-package deco2800.skyfall.worlds;
+package deco2800.skyfall.worlds.generation;
 
 public class DeadEndGenerationException extends Exception {}

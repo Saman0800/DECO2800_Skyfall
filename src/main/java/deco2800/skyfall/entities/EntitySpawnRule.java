@@ -1,7 +1,8 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import com.esotericsoftware.kryo.NotNull;
-import deco2800.skyfall.worlds.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import jdk.nashorn.internal.ir.annotations.Immutable;
 
 /**
