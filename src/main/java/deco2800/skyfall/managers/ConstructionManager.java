@@ -17,17 +17,19 @@ import deco2800.skyfall.entities.AbstractEntity;
 public class ConstructionManager extends AbstractManager {
     //This manager while control all features related to construction
 
-    //Is menu visible
+    //Is the menu visible
     private Boolean menuVisible;
-    //Has menu been created and added
+    //Has the menu been created and added
     private Boolean menuAdded;
     //Has the menu been set up
     private Boolean menuSetUp;
+
     private Window buildMenu;
 
     //Put window components here:
 
     public ConstructionManager() {
+        // Set all build menu properties to false
         menuVisible = false;
         menuAdded = false;
         menuSetUp = false;
@@ -35,9 +37,11 @@ public class ConstructionManager extends AbstractManager {
 
     //Start of UI
 
-    //Called to either display or hide the build menu
-    //Sets up the menu the first time its called
-    //Updates the menu each time it is called
+    /*
+    Called to alternate the display status of the build menu
+    Sets up the menu the first time its called
+    Updates the menu each time it is called
+    */
     public void displayWindow() {
         createWindow();
         setUpMenu();
@@ -55,9 +59,6 @@ public class ConstructionManager extends AbstractManager {
             hideBuildMenu();
             stage.addActor(buildMenu);
             menuAdded = true;
-            System.out.println("Menu Added");
-        } else {
-            System.out.println("Menu already added");
         }
     }
 
@@ -75,22 +76,17 @@ public class ConstructionManager extends AbstractManager {
             //TODO: Add window components here: e.g. buttons, labels, etc
             //example buildMenu.add(button1);
 
-            System.out.println("Window set up");
             menuSetUp = true;
-        } else {
-            System.out.println("Window already set up");
         }
-
     }
 
     //Called every time window is shown so that most accurate, up to date info is shown
     private void updateWindow() {
         //TODO: Add update code
 
-        System.out.println("Window updated");
     }
 
-    //Switches the menu on or odd
+    //Switches the menu on or off
     private void switchView() {
         if (menuVisible) {
             hideBuildMenu();
@@ -99,16 +95,16 @@ public class ConstructionManager extends AbstractManager {
         }
     }
 
+    // Shows the build menu
     private void showBuildMenu() {
         menuVisible = true;
         buildMenu.setVisible(true);
-        System.out.println("Menu Shown");
     }
 
+    // Hides the build menu
     private void hideBuildMenu() {
         menuVisible = false;
         buildMenu.setVisible(false);
-        System.out.println("Menu Hidden");
     }
 
     //End of UI
@@ -244,13 +240,9 @@ public class ConstructionManager extends AbstractManager {
         return true;
     }
 
-    // TODO: building placement on world
-    // place a building on the world
-    public boolean placeBuilding(AbstractWorld worldMap, AbstractBuilding building) {
-        // conflict with worldGen teams
-        return true;
-    }
+    // End of terrain check
 
+    // Start of inventory code
 
     /**
      * return a list of how much of each relevant resources the player owns
@@ -295,4 +287,6 @@ public class ConstructionManager extends AbstractManager {
             inventoryManager.inventoryDropMultiple(item, amount);
         }
     }
+
+    // End of inventory code
 }

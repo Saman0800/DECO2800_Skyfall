@@ -68,10 +68,13 @@ public class ConstructionManagerTest {
 
     @Test
     public void verifyNullTest() {
-        Assert.assertEquals(false, this.cmgr.verifyTerrain(null));
-        Assert.assertEquals(false, this.cmgr.verifyBiome(null));
-        Assert.assertEquals(false, this.cmgr.verifyEntity(null, null));
-        Assert.assertEquals(false, this.cmgr.isTilesBuildable(null, null));
+        AbstractWorld world = null;
+        Tile tile = null;
+        AbstractBuilding building = null;
+        Assert.assertEquals(false, this.cmgr.verifyTerrain(tile));
+        Assert.assertEquals(false, this.cmgr.verifyBiome(tile));
+        Assert.assertEquals(false, this.cmgr.verifyEntity(world, tile));
+        Assert.assertEquals(false, this.cmgr.isTilesBuildable(world, building));
     }
 
     @After
