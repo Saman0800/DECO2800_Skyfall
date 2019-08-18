@@ -35,6 +35,8 @@ public abstract class AbstractWorld {
     protected int worldSize;
     protected int nodeSpacing;
 
+    private long seed;
+
     //List that contains the world biomes
     protected ArrayList<AbstractBiome> biomes;
 
@@ -46,6 +48,7 @@ public abstract class AbstractWorld {
 
     protected AbstractWorld(long seed, int worldSize, int nodeSpacing) {
         Random random = new Random(seed);
+        this.seed = seed;
 
         this.worldSize = worldSize;
         this.nodeSpacing = nodeSpacing;
@@ -366,5 +369,13 @@ public abstract class AbstractWorld {
             string.append(out);
         }
         return string.toString();
+    }
+
+    /**
+     * Returns the seed used in the world
+     * @return
+     */
+    public long getSeed() {
+        return seed;
     }
 }
