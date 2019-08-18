@@ -1,11 +1,11 @@
 package deco2800.skyfall.worlds;
 
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.AgentEntity;
-import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 
+import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -26,15 +26,16 @@ public abstract class AbstractWorld {
     protected int length;
 
     protected CopyOnWriteArrayList<Tile> tiles;
+//    protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
 
     protected List<AbstractEntity> entitiesToDelete = new CopyOnWriteArrayList<>();
     protected List<Tile> tilesToDelete = new CopyOnWriteArrayList<>();
 
     protected AbstractWorld() {
     	tiles = new CopyOnWriteArrayList<Tile>();
-
+//        worldGenNodes = new CopyOnWriteArrayList<>();
     	generateWorld();
-    	generateNeighbours();
+        generateNeighbours();
     	generateTileIndexes();
     }
     
@@ -228,6 +229,34 @@ public abstract class AbstractWorld {
         for (Tile t : tilesToDelete) {
             tiles.remove(t);
         }
+
+        //Collision detection for entities
+        for (AbstractEntity e1 : this.getEntities()) {
+            e1.onTick(0);
+//            if (e1 instanceof Projectile) {
+//                break;
+//            }
+
+            Collider c1 = e1.getCollider();
+            boolean collided = false;
+            for (AbstractEntity e2 : this.getEntities()) {
+                Collider c2 = e2.getCollider();
+//                if (e2 instanceof Projectile) {
+//                    break;
+//                }
+
+                if (e1 != e2 && c1.overlaps(c2)) {
+                    collided = true;
+
+                    //collision handler
+                    this.handleCollision(e1, e2);
+                    //System.out.println("Collision!");
+
+                    break;
+                }
+            }
+            //no collision
+        }
     }
 
     public void deleteTile(int tileid) {
@@ -252,4 +281,17 @@ public abstract class AbstractWorld {
     public void queueTilesForDelete(List<Tile> tiles) {
         tilesToDelete.addAll(tiles);
     }
+
+    // e1 is the entity that created the collision
+    public void handleCollision(AbstractEntity e1, AbstractEntity e2) {
+        //TODO: implement proper game logic for collisions between different types of entities.
+        // i.e. if (e1 instanceof Projectile && e2 instanceof Enemy) {
+        // removeEntity(e2); removeEntity(e1); }
+        if (e1 instanceof Projectile && !(e2 instanceof PlayerPeon)) {
+            removeEntity(e2);
+        } else if (e2 instanceof Projectile && !(e1 instanceof PlayerPeon)) {
+            removeEntity(e1);
+        }
+    }
+
 }
