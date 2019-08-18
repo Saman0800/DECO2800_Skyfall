@@ -21,12 +21,14 @@ public class Robot extends EnemyEntity {
     private Animation<TextureRegion> animation;
     private TextureRegion[] textureRegions;
 
-
-    public Robot(float row, float col, String texturename, String ObjectName) {
-        super(row, col, texturename, ObjectName);
+    public Robot(float col, float row) {
+        super(col,row);
+        this.setTexture("robot");
+        this.setObjectName("robot");
+        this.setHeight(1);
+        this.setHealth((int)HEALTH);
         this.loadAnimationSource();
-        this.makeAimation();
-
+        animation=new Animation<TextureRegion>(1/1f,textureRegions);
     }
 
     /**
@@ -57,13 +59,6 @@ public class Robot extends EnemyEntity {
         return BIOME;
     }
 
-
-    /**
-     * make an Animation
-     */
-    private void makeAimation(){
-        animation=new Animation<TextureRegion>(1/1f,textureRegions);
-    }
 
     /**
      *  To get the savage animation

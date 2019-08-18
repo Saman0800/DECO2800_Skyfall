@@ -18,12 +18,16 @@ public class Spider extends EnemyEntity {
     //the animation resource
     private TextureAtlas textureAtlas;
 
-    public Spider(float row, float col, String textureName, String ObjectName) {
-        super(row, col, textureName, ObjectName);
+    public Spider(float col, float row) {
+        super(col, row);
+        this.setTexture("spider");
+        this.setObjectName("spider");
         this.setHeight(1);
+        this.setHealth((int)HEALTH);
         textureAtlas=new TextureAtlas(Gdx.files.internal("resources/spiderSheet/SpiderAnimation.atlas"));
         animation=new Animation<TextureRegion>(1f/1f,textureAtlas.getRegions());
     }
+
 
     /**
      * To get spider Animation

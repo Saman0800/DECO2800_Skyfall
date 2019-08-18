@@ -4,9 +4,12 @@ package deco2800.skyfall.entities;
 public abstract class EnemyEntity extends Peon {
     private int health;
     private int level;
-    private int speed;
+    private int moveSpeed;
 
-
+    public EnemyEntity(float col, float row){
+        this.setRow(row);
+        this.setCol(col);
+    }
     public EnemyEntity(float row, float col, String texturename, String ObjectName) {
         super(row, col, 0.2f);
         this.setTexture(texturename);
@@ -46,7 +49,7 @@ public abstract class EnemyEntity extends Peon {
     }
 
     public void setSpeed(int speed) {
-        this.speed = speed;
+        this.moveSpeed = speed;
     }
 
 }
