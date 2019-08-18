@@ -24,7 +24,6 @@ import java.util.Random;
 
 public class RocketWorld extends AbstractWorld implements TouchDownObserver {
     private boolean generated = false;
-//    private PlayerPeon player;
 
     long entitySeed;
 
