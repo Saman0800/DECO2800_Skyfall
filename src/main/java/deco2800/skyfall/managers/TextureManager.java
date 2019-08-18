@@ -53,6 +53,18 @@ public class TextureManager extends AbstractManager {
             textureMap.put("grass_0", new Texture("resources/grass_1.png"));            
             textureMap.put("grass_1", new Texture("resources/grass_2.png"));            
             textureMap.put("grass_2", new Texture("resources/grass_3.png"));
+            textureMap.put("spider", new Texture("resources/spider.png"));
+            textureMap.put("robot", new Texture("resources/robot.png"));
+
+            //EnemyEntity robot
+            textureMap.put("robotS", new Texture("resources/robotS.png"));
+            textureMap.put("robotSW", new Texture("resources/robotSW.png"));
+            textureMap.put("robotSE", new Texture("resources/robotSE.png"));
+            textureMap.put("robotN", new Texture("resources/robotN.png"));
+            textureMap.put("robotNE", new Texture("resources/robotNE.png"));
+            textureMap.put("robotNW", new Texture("resources/robotNW.png"));
+
+
             //TODO change these to something nicer, just temporary to test biome generation
             textureMap.put("water_0", new Texture("resources/water_1.png"));
             textureMap.put("desert_0", new Texture("resources/desert_1.png"));
