@@ -178,11 +178,9 @@ public class WorldGenTriangle {
     /**
      * Computes the closest point on the given edge to the specified point.
      *
-     * @param edge
-     *            The edge on which we search the closest point to the specified
-     *            point
-     * @param point
-     *            The point to which we search the closest point on the edge
+     * @param edge The edge on which we search the closest point to the
+     *             specified point
+     * @param point The point to which we search the closest point on the edge
      * @return The closest point on the given edge to the specified point
      */
     private WorldGenNode computeClosestPoint(WorldGenEdge edge, WorldGenNode point) {
