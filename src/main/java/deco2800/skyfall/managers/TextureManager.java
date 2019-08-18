@@ -29,9 +29,7 @@ public class TextureManager extends AbstractManager {
      */
     public static final int TILE_HEIGHT = 278;
 
-	
-	//private final Logger log = LoggerFactory.getLogger(TextureManager.class);
-
+    // private final Logger log = LoggerFactory.getLogger(TextureManager.class);
 
     /**
      * A HashMap of all textures with string keys
@@ -50,6 +48,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bowman", new Texture("resources/bowman.png"));
             textureMap.put("main_piece", new Texture("resources" +
                     "/Main_Character_F_Right.png"));
+            textureMap.put("slash", new Texture("resources/slash_long.png"));
 
             textureMap.put("grass_0", new Texture("resources/grass_1.png"));
             textureMap.put("grass_1", new Texture("resources/grass_2.png"));
