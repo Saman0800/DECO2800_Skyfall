@@ -60,8 +60,8 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             // adjacencies can be calculated. Also apply Lloyd Relaxation twice
             // for more smooth looking polygons
             try {
-                WorldGenNode.calculateVertices(worldGenNodes);
-                WorldGenNode.lloydRelaxation(worldGenNodes, 2);
+                WorldGenNode.calculateVertices(worldGenNodes, WORLD_SIZE);
+                WorldGenNode.lloydRelaxation(worldGenNodes, 2, WORLD_SIZE);
             } catch (WorldGenException e) {
                 continue;
             }

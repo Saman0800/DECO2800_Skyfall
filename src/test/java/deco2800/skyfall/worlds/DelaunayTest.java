@@ -35,11 +35,11 @@ public class DelaunayTest {
 
         WorldGenTriangle triangle1 = new WorldGenTriangle(node1, node2, node3);
         WorldGenTriangle triangle2 = new WorldGenTriangle(node4, node5, node6);
-        double[] circumcentre1 = {0, 0};
-        double[] circumcentre2 = {0, 0};
+        double[] circumcentre1 = { 0, 0 };
+        double[] circumcentre2 = { 0, 0 };
 
         // Test that the exception is not thrown when it shouldn't be
-        try{
+        try {
             circumcentre1 = triangle1.circumcentre();
             circumcentre2 = triangle2.circumcentre();
         } catch (CollinearPointsException e) {
@@ -57,8 +57,8 @@ public class DelaunayTest {
         WorldGenNode node8 = new WorldGenNode(5, 5);
         WorldGenTriangle triangle3 = new WorldGenTriangle(node1, node2, node7);
         WorldGenTriangle triangle4 = new WorldGenTriangle(node1, node5, node8);
-        double[] circumcentre3 = {0, 0};
-        double[] circumcentre4 = {0, 0};
+        double[] circumcentre3 = { 0, 0 };
+        double[] circumcentre4 = { 0, 0 };
 
         try {
             circumcentre3 = triangle3.circumcentre();
@@ -75,7 +75,7 @@ public class DelaunayTest {
     }
 
     @Test
-    public void testAllNeighboursShareAVertex() {
+    public void testAllNeighboursShareAVertex() throws WorldGenException {
 
         int nodeCount = 200;
         int worldSize = 500;
@@ -89,12 +89,8 @@ public class DelaunayTest {
             nodes.add(new WorldGenNode(x, y));
         }
 
-        try {
-            WorldGenNode.calculateVertices(nodes, worldSize);
-            WorldGenNode.assignNeighbours(nodes);
-        } catch (WorldGenException e) {
-            fail();
-        }
+        WorldGenNode.calculateVertices(nodes, worldSize);
+        WorldGenNode.assignNeighbours(nodes);
 
         for (WorldGenNode node : nodes) {
             assertNotEquals(0, node.getVertices().size());
@@ -111,13 +107,7 @@ public class DelaunayTest {
                     }
                 }
 
-                if (node.isBorderNode() && neighbour.isBorderNode()) {
-                    if (commonVertices == 0) {
-                        fail();
-                    }
-                } else if (commonVertices == 1) {
-                    fail();
-                }
+                assertNotEquals(0, commonVertices);
             }
         }
     }
@@ -148,7 +138,7 @@ public class DelaunayTest {
 
                 int elevation = random.nextInt(2);
                 // String type = "grass_" + elevation;
-                Tile tile = new Tile(biome, q, r + oddCol);
+                Tile tile = new Tile(q, r + oddCol);
                 tiles.add(tile);
                 biome.addTile(tile);
             }
@@ -198,8 +188,8 @@ public class DelaunayTest {
         WorldGenNode node2 = new WorldGenNode(-3.26, 1.00492);
 
         ForestBiome biome = new ForestBiome();
-        Tile tile1 = new Tile(biome, 0, 2);
-        Tile tile2 = new Tile(biome, -1, 1.5f);
+        Tile tile1 = new Tile(0, 2);
+        Tile tile2 = new Tile(-1, 1.5f);
 
         // Expected values calculated using calculator
         assertEquals(13, node1.distanceToTile(tile1), 0);
@@ -226,7 +216,7 @@ public class DelaunayTest {
 
         // Prevent the NotAdjacentException thrown by WorldGenNode.sharedVertex
         // (that isn't being tested here)
-        double[] vertex = {0, 0};
+        double[] vertex = { 0, 0 };
         try {
             node1.addVertex(vertex);
             node2.addVertex(vertex);
