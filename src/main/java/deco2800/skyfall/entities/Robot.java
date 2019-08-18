@@ -1,19 +1,12 @@
 package deco2800.skyfall.entities;
 
 
-import com.badlogic.gdx.graphics.g2d.Animation;
-
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.TextureManager;
-
 
 public class Robot extends EnemyEntity {
-    private TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
-    private static final transient float HEALTH = 20f;
+    private static final transient int HEALTH = 20;
     private static final transient float ATTACK_RANGE = 1f;
     private static final transient int ATTACK_SPEED = 1000;
-    private static final transient String BIOME="";
+    private static final transient String BIOME="forest";
     private boolean moving=false;
     private static final transient String ENEMY_TYPE="robot";
     private String [] directions={"S","SE","NE","N","NW","SW"};
@@ -28,7 +21,7 @@ public class Robot extends EnemyEntity {
         this.setTexture("robot");
         this.setObjectName("robot");
         this.setHeight(1);
-        this.setHealth((int)HEALTH);
+        this.setHealth(HEALTH);
         this.setLevel(2);
         this.setSpeed(1);
         this.setArmour(2);
@@ -58,7 +51,7 @@ public class Robot extends EnemyEntity {
      */
     @Override
     public String toString() {
-        return String.format("%s at (%d, %d) %s biome", getEnemyType(), getCol(), getRow(),getBiome());
+        return String.format("%s at (%d, %d) %s biome", getEnemyType(), (int)getCol(), (int)getRow(),getBiome());
     }
 
 

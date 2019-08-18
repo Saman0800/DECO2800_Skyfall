@@ -14,7 +14,7 @@ import java.util.Map;
 import static deco2800.skyfall.managers.GameManager.get;
 
 public class Spider extends EnemyEntity {
-    private static final transient float HEALTH = 10f;
+    private static final transient int HEALTH = 10;
     private static final transient float ATTACK_RANGE = 0.5f;
     private static final transient int ATTACK_SPEED = 2000;
     private static final transient String BIOME="forest";
@@ -36,12 +36,16 @@ public class Spider extends EnemyEntity {
         this.setTexture("spider");
         this.setObjectName("spider");
         this.setHeight(1);
-        this.setHealth((int)HEALTH);
+        this.setHealth(HEALTH);
         this.setLevel(1);
         this.setSpeed(1);
         this.setArmour(1);
     }
 
+
+    public Spider(float row, float col, String texturename, int health, int armour, int damage) {
+        super(row, col, texturename, health, armour, damage);
+    }
 
     /**
      * To get spider Animation
@@ -107,7 +111,7 @@ public class Spider extends EnemyEntity {
      */
     @Override
     public String toString() {
-        return String.format("%s at (%d, %d) %s biome", getEnemyType(), getCol(), getRow(),getBiome());
+        return String.format("%s at (%d, %d) %s biome", getEnemyType(),(int) getCol(),(int) getRow(),getBiome());
     }
 
 }
