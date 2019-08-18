@@ -115,6 +115,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         this.weapons = new ArrayList<>();
 
+        instantiateInventory();
+
         this.level = 1;
         this.foodLevel = 100;
 
@@ -222,14 +224,18 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * TODO: add hunger values to food items
      * @param item the item to eat
      */
-    private void eatFood(Item item) {
-        // int hungerValue = item.getFoodValue();
-        int hungerValue = 20;
-        if(item instanceof HealthResources) {
-            change_food(hungerValue);
-            inventories.inventoryDrop(item.getName());
+    public void eatFood(Item item) {
+        int amount = inventories.getAmount(item.getName());
+        if(amount > 0) {
+            if(item instanceof HealthResources) {
+                int hungerValue = ((HealthResources) item).getFoodValue();
+                change_food(hungerValue);
+                dropInventory(item.getName());
+            } else {
+                System.out.println("Given item (" + item.getName() + ") is not edible!");
+            }
         } else {
-            System.out.println("Given item (" + item.getName() + ") is not edible!");
+            System.out.println("You don't have enough of the given item");
         }
     }
 

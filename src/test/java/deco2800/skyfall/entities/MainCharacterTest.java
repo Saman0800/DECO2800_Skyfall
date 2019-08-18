@@ -2,8 +2,15 @@ package deco2800.skyfall.entities;
 
 import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.resources.items.Apple;
+import deco2800.skyfall.resources.items.PoisonousMushroom;
 import deco2800.skyfall.resources.items.Stone;
+import javafx.application.Application;
 import org.junit.*;
+
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNull;
+import static junit.framework.TestCase.assertTrue;
 
 public class MainCharacterTest {
 
@@ -81,5 +88,25 @@ public class MainCharacterTest {
 
         testCharacter.changeLevel(-4);
         Assert.assertEquals(testCharacter.getLevel(), 1);
+    }
+
+    @Test
+    public void foodTest() {
+        assertEquals(testCharacter.getFoodLevel(), 100);
+        Apple apple = new Apple();
+        testCharacter.pickUpInventory(apple);
+        testCharacter.eatFood(new Apple());
+        assertEquals(testCharacter.getFoodLevel(), 100);
+        testCharacter.pickUpInventory(new PoisonousMushroom());
+        testCharacter.eatFood(new PoisonousMushroom());
+        assertEquals(testCharacter.getFoodLevel(), 80);
+        testCharacter.eatFood(new PoisonousMushroom());
+        assertEquals(testCharacter.getFoodLevel(), 80);
+        for(int i = 0; i < 10; i++) {
+            testCharacter.pickUpInventory(new PoisonousMushroom());
+            testCharacter.eatFood(new PoisonousMushroom());
+        }
+        assertEquals(testCharacter.getFoodLevel(), 0);
+        assertTrue(testCharacter.isStarving());
     }
 }
