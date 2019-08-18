@@ -1,14 +1,9 @@
 package deco2800.skyfall.worlds;
 
-import com.badlogic.gdx.*;
 import deco2800.skyfall.entities.*;
-import deco2800.skyfall.managers.*;
-import deco2800.skyfall.observers.*;
-import deco2800.skyfall.util.*;
 import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.Harvestable;
-import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.Tree;
 import deco2800.skyfall.entities.Rock;
 import deco2800.skyfall.entities.EntitySpawnTable;
@@ -18,6 +13,7 @@ import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.biomes.*;
+import deco2800.skyfall.worlds.generation.BiomeGenerator;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
@@ -104,8 +100,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
                 .addTouchDownListener(this);
 
         // MainCharacter is now being put into the game instead of PlayerPeon
-        MainCharacter testCharacter = new MainCharacter(0f,
-                0f, 0.05f, "Main Piece", 10);
+        MainCharacter testCharacter = new MainCharacter(0f, 0f, 0.05f, "Main Piece", 10);
         addEntity(testCharacter);
 
         GameManager.getManagerFromInstance(InputManager.class)
@@ -117,6 +112,8 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         super.onTick(i);
 
         if (!generated) {
+            Random random = new Random(entitySeed);
+
             Tile tile = getTile(1f, 2.5f);
             addEntity(new Tree(tile, true));
 
@@ -124,8 +121,11 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
             Tile tileRock = getTile(0.0f, 1.0f);
             Rock startRock = new Rock(tileRock, true);
-//            EntitySpawnTable rockSpawnRule = new EntitySpawnTable();
-//            EntitySpawnTable.spawnEntities(startRock, 0.2, biome);
+
+            for (AbstractBiome biome : biomes) {
+                EntitySpawnTable rockSpawnRule = new EntitySpawnTable();
+                EntitySpawnTable.spawnEntities(startRock, 0.2, biome, random);
+            }
         }
     }
 
