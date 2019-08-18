@@ -160,22 +160,16 @@ class TriangleSoup {
             if (findNeighbour(triangle, edgeAB) == null) {
                 isBorder[0] = true;
                 isBorder[1] = true;
-                triangle.a.addBorderNeighbour(triangle.b);
-                triangle.b.addBorderNeighbour(triangle.a);
             }
             WorldGenEdge edgeAC = new WorldGenEdge(triangle.a, triangle.c);
             if (findNeighbour(triangle, edgeAC) == null) {
                 isBorder[0] = true;
                 isBorder[2] = true;
-                triangle.a.addBorderNeighbour(triangle.c);
-                triangle.c.addBorderNeighbour(triangle.a);
             }
             WorldGenEdge edgeBC = new WorldGenEdge(triangle.b, triangle.c);
             if (findNeighbour(triangle, edgeBC) == null) {
                 isBorder[1] = true;
                 isBorder[2] = true;
-                triangle.b.addBorderNeighbour(triangle.c);
-                triangle.c.addBorderNeighbour(triangle.b);
             }
 
             // Record the relevant nodes as borders

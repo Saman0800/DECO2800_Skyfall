@@ -6,7 +6,7 @@ package deco2800.skyfall.worlds.delaunay;
  *
  * @author Johannes Diemke
  */
-public class WorldGenEdge {
+class WorldGenEdge {
 
     public WorldGenNode a;
     public WorldGenNode b;

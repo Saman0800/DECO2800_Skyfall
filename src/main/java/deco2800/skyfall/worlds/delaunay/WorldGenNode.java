@@ -29,8 +29,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     // List of tiles that are within the polygon defined by this node
     private List<Tile> tiles;
 
-    // Any neighbours that share a border edge with this one
-    private List<WorldGenNode> borderNeighbours;
+    private boolean borderNode;
 
     /**
      * Constructor for a WorldGenNode
@@ -43,13 +42,13 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         this.neighbours = new ArrayList<>();
         this.vertices = new ArrayList<>();
         this.tiles = new ArrayList<>();
-        this.borderNeighbours = new ArrayList<>();
+        this.borderNode = false;
     }
 
     @Override
     public int compareTo(WorldGenNode other) {
         if (other == null) {
-            //TODO throw exception
+            throw new NullPointerException();
         }
         if (this.getY() == other.getY()) {
             if (this.getX() == other.getX()) {
@@ -121,13 +120,22 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      *                   the points enough, and too many iterations can
      *                   eliminate the randomness of the node placement
      */
-    public static void lloydRelaxation(List<WorldGenNode> nodes, int iterations, int worldSize)
-            throws WorldGenException {
+    public static void lloydRelaxation(List<WorldGenNode> nodes, int iterations,
+            int worldSize) throws WorldGenException {
         for (int i = 0; i < iterations; i++) {
             for (WorldGenNode node : nodes) {
-                double[] centroid;
-                centroid = node.getCentroid();
-                node.setCoords(centroid);
+                // Don't move border nodes
+                if (!node.isBorderNode()) {
+                    double[] centroid;
+                    centroid = node.getCentroid();
+                    node.setCoords(centroid);
+                }
+
+                // Remove info that may change when moving nodes
+                node.vertices.clear();
+                node.neighbours.clear();
+                node.tiles.clear();
+                node.borderNode = false;
             }
             // Reapply the Delaunay Triangulation
             calculateVertices(nodes, worldSize);
@@ -399,7 +407,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
             WorldGenTriangle triangle = triangleSoup.findContainingTriangle(nodes.get(i));
 
             if (triangle == null) {
-                /**
+                /*
                  * If no containing triangle exists, then the vertex is not
                  * inside a triangle (this can also happen due to numerical
                  * errors) and lies on an edge. In order to find this edge we
@@ -411,6 +419,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
 
                 WorldGenTriangle first = triangleSoup.findOneTriangleSharing(edge);
                 WorldGenTriangle second = triangleSoup.findNeighbour(first, edge);
+
 
                 WorldGenNode firstNoneEdgeVertex = first.getNoneEdgeVertex(edge);
                 WorldGenNode secondNoneEdgeVertex = second.getNoneEdgeVertex(edge);
@@ -522,180 +531,22 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         TriangleSoup triangleSoup = triangulate(nodes);
         for (WorldGenTriangle triangle : triangleSoup.getTriangles()) {
             double[] circumcentre = triangle.circumcentre();
-            // Don't count vertices outside the map
-            if (Math.abs(circumcentre[0]) <= worldSize && Math.abs(circumcentre[1]) <= worldSize) {
-                triangle.a.addVertex(circumcentre);
-                triangle.b.addVertex(circumcentre);
-                triangle.c.addVertex(circumcentre);
+            triangle.a.addVertex(circumcentre);
+            triangle.b.addVertex(circumcentre);
+            triangle.c.addVertex(circumcentre);
+
+            // Make sure all three are border nodes if circumcentre is outside
+            // world
+            if (Math.abs(circumcentre[0]) > worldSize && Math.abs(circumcentre[1]) > worldSize) {
+                triangle.a.setBorderNode(true);
+                triangle.b.setBorderNode(true);
+                triangle.c.setBorderNode(true);
             }
         }
-        List<WorldGenNode> borderNodes = triangleSoup.getBorderNodes();
-
-        // Add the corners as vertices to the nearest border node
-        for (int i = 0; i < 4; i++) {
-            // Assigns a different vertex for each iteration
-            // (bottom left, bottom right, top left, top right)
-            double[] vertex = {worldSize * ((i % 2) - 0.5) * 2,
-                    worldSize * (((i / 2) % 2) - 0.5) * 2};
-
-            double minDistance = -1;
-            int minDistanceIndex = 0;
-
-            // Find the closest border node
-            for (int j = 0; j < borderNodes.size(); j++) {
-                double distance = Math.pow(borderNodes.get(j).getX() - vertex[0], 2)
-                        + Math.pow(borderNodes.get(j).getY() - vertex[1], 2);
-                if (minDistance == -1 || distance < minDistance) {
-                    minDistance = distance;
-                    minDistanceIndex = i;
-                }
-            }
-
-            borderNodes.get(minDistanceIndex).addVertex(vertex);
-        }
-
-        // Add the border nodes
-        boolean backToStart = false;
-        // Start from an arbitrary border node
-        WorldGenNode firstBorderNode = triangleSoup.getBorderNodes().get(0);
-        WorldGenNode currentBorderNode = firstBorderNode;
-        WorldGenNode lastBorderNode = new WorldGenNode(0, 0);
-
-        do {
-            WorldGenNode nextBorderNode = new WorldGenNode(0, 0);
-            for (WorldGenNode node : currentBorderNode.getBorderNeighbours()) {
-                if (node != lastBorderNode) {
-                    nextBorderNode = node;
-                    break;
-                }
-            }
-
-            // TODO put in try catch
-            double[] boundaryIntersection = currentBorderNode
-                    .getBoundaryIntersection(nextBorderNode, worldSize);
-            currentBorderNode.addVertex(boundaryIntersection);
-            nextBorderNode.addVertex(boundaryIntersection);
-
-            // Move to the next set of nodes
-            lastBorderNode = currentBorderNode;
-            currentBorderNode = nextBorderNode;
-
-            // Exit loop after traversing the full border
-            if (currentBorderNode == firstBorderNode) {
-                backToStart = true;
-            }
-        } while (!backToStart);
     }
 
-    public double[] getBoundaryIntersection(WorldGenNode other, int worldSize)
-            throws InvalidCoordinatesException, NotAdjacentException {
-        // Only adjacent border nodes will have a boundary intersection
-        if (!this.getBorderNeighbours().contains(other)
-                || !other.getBorderNeighbours().contains(this)) {
-            throw new NotAdjacentException();
-        }
-
-        double[] coords = {0, 0};
-        double ax = this.getX();
-        double ay = this.getY();
-        double bx = other.getX();
-        double by = other.getY();
-
-        double[] midAB = {(ax + bx) / 2, (ay + by) / 2};
-
-        // If the gradient of the equidistant line is undefined
-        if (ay == by) {
-            coords[0] = midAB[0];
-            // If the top edge is closer
-            if (ay > 0) {
-                coords[1] = worldSize;
-            } else {
-                coords[1] = -1 * worldSize;
-            }
-            return coords;
-        }
-
-        // The normal line is horizontal
-        if (ax == bx) {
-            coords[1] = midAB[1];
-            if (ax > 0) {
-                coords[0] = worldSize;
-            } else {
-                coords[0] = -1 * worldSize;
-            }
-            return coords;
-        }
-
-        // Get gradient of the equidistant line
-        double normAB = (bx - ax) / (ay - by);
-
-        // y value of left boundary intersection, y of right, x of top, x of bottom
-        double[] intersectOtherCoord = {0, 0, 0, 0};
-        // Sub into y - y0 = m(x - x0)
-        intersectOtherCoord[0] = midAB[1] + normAB * (-1 * worldSize - midAB[0]);
-        intersectOtherCoord[1] = midAB[1] + normAB * (worldSize - midAB[0]);
-        intersectOtherCoord[2] = midAB[0] +  (worldSize - midAB[1]) / normAB;
-        intersectOtherCoord[3] = midAB[0] + (-1 * worldSize - midAB[1]) / normAB;
-
-        double minDistance = -1;
-        int minDistanceIndex = 0;
-        for (int i = 0; i < 4; i++) {
-            // Note: it is not necessary to check that the intersection is
-            // actually in the square
-            double distance = -1;
-            // If it is a horizontal boundary
-            switch (i) {
-                case 0:
-                    distance = Math.pow(ax - (-1 * worldSize), 2)
-                            + Math.pow(ay - intersectOtherCoord[0], 2);
-                    break;
-                case 1:
-                    distance = Math.pow(ax - worldSize, 2)
-                            + Math.pow(ay - intersectOtherCoord[1], 2);
-                    break;
-                case 2:
-                    distance = Math.pow(ax - intersectOtherCoord[2], 2)
-                            + Math.pow(ay - worldSize, 2);
-                    break;
-                case 3:
-                    distance = Math.pow(ax - intersectOtherCoord[3], 2)
-                            + Math.pow(ay - (-1 * worldSize), 2);
-                    break;
-                default:
-                    distance = -1;
-                }
-
-            if (distance != -1
-                    && (minDistance == -1 || distance < minDistance)) {
-                minDistance = distance;
-                minDistanceIndex = i;
-            }
-        }
-
-        switch (minDistanceIndex) {
-            case 0:
-                coords[0] = -1 * worldSize;
-                coords[1] = intersectOtherCoord[0];
-                break;
-            case 1:
-                coords[0] = worldSize;
-                coords[1] = intersectOtherCoord[1];
-                break;
-            case 2:
-                coords[0] = intersectOtherCoord[2];
-                coords[1] = worldSize;
-                break;
-            case 3:
-                coords[0] = intersectOtherCoord[3];
-                coords[1] = -1 * worldSize;
-                break;
-        }
-
-        return coords;
-    }
-
-    public void addBorderNeighbour(WorldGenNode neighbour) {
-        this.borderNeighbours.add(neighbour);
+    public void setBorderNode(boolean borderNode) {
+        this.borderNode = borderNode;
     }
 
     /* ------------------------------------------------------------------------
@@ -732,11 +583,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * @return whether or not this is a border node
      */
     public boolean isBorderNode() {
-        return this.borderNeighbours.size() != 0;
-    }
-
-    public List<WorldGenNode> getBorderNeighbours() {
-        return this.borderNeighbours;
+        return this.borderNode;
     }
 
 }

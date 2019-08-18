@@ -8,7 +8,7 @@ import java.util.Arrays;
  *
  * @author Johannes Diemke
  */
-public class WorldGenTriangle {
+class WorldGenTriangle {
 
     public WorldGenNode a;
     public WorldGenNode b;
