@@ -44,7 +44,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 	 */
 	PotateCamera camera;
 	PotateCamera cameraDebug;
-	public Stage stage = new Stage(new ExtendViewport(1280, 720));
+	private Stage stage = new Stage(new ExtendViewport(1280, 720));
 
 	long lastGameTick = 0;
 
