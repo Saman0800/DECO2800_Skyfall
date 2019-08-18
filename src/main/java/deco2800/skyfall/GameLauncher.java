@@ -25,7 +25,7 @@ public class GameLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1280;
 		config.height = 1000;
-		config.title = "DECO2800 2018: Skyfall";
+		config.title = "DECO2800 2019: Skyfall";
 		LwjglApplication app = new LwjglApplication(new SkyfallGame(), config);
 	}
 }
