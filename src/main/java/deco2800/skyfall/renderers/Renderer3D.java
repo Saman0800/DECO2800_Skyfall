@@ -360,7 +360,7 @@ public class Renderer3D implements Renderer {
             TextureRegion currentFrame = ani.getKeyFrame(time, false);
             float width = currentFrame.getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X;
 			float height = currentFrame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y;
-			int offset[] = aniLink.getOffset();
+			int[] offset = aniLink.getOffset();
 
 
             batch.draw(currentFrame ,entityWorldCoord[0]  + offset[0] ,entityWorldCoord[1] + offset[0], width,  height);

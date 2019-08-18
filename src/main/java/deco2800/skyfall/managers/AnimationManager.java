@@ -55,7 +55,7 @@ public class AnimationManager extends AbstractManager {
         int width =  tmpFrames[0].length;
         int size = height * width;
 
-        System.out.println("After split, Width: " + width + " Height: " +  height);
+        LOGGER.info("After split, Width: " + width + " Height: " +  height);
 
         TextureRegion[] animationFrames = new TextureRegion[size];
 
@@ -66,7 +66,7 @@ public class AnimationManager extends AbstractManager {
                 animationFrames[index++] = tmpFrames[i][j];
             }
         }
-
+        
         return animationFrames;
     }
 
@@ -84,14 +84,14 @@ public class AnimationManager extends AbstractManager {
             return;
         }
         Texture texture = textureManager.getTexture(textureName);
-        System.out.println("Texture has been fetched");
+        LOGGER.info("Texture has been fetched");
 
         TextureRegion[][] tmpFrames = TextureRegion.split(texture, tileWidth, tileHeight);
         //Assuming tmpFrames is a matrix;
         TextureRegion[] animationFrames = convert2DTo1D(tmpFrames);
         animationMap.put(animationName, new Animation<>(frameRate, animationFrames));
 
-        System.out.println("Object " + animationName + " has been generated");
+        LOGGER.info("Object " + animationName + " has been generated");
     }
 
 
@@ -123,11 +123,11 @@ public class AnimationManager extends AbstractManager {
         if (animation == null) {
             return null;
         }
-        TextureRegion region[] = animation.getKeyFrames();
-        System.out.println(region.length);
+        TextureRegion[] region = animation.getKeyFrames();
+
 
         if (region.length - 1 <= index) {
-            System.out.println("Index out of range");
+            LOGGER.error("Index out of range");
             return null;
         }
 
