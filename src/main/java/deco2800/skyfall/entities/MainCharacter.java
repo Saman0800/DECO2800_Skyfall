@@ -16,7 +16,7 @@ import java.util.*;
  * Main character in the game
  */
 public class MainCharacter extends Peon implements KeyDownObserver,
-        KeyUpObserver, Tickable {
+        KeyUpObserver,TouchDownObserver, Tickable {
 
     // Combat manager for MainCharacter
     // TODO should be ok once merged with combat
@@ -26,6 +26,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     // TODO could probably turn this into a Map for next sprint for easier
     //  manahement of number of each weapon
     private List<Weapon> weapons;
+
+    //Hitbox of melee.
+    private Projectile hitBox;
 
     // Manager for all of MainCharacter's inventories
     public InventoryManager inventories; // maybe could be public?
@@ -110,6 +113,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 .addKeyDownListener(this);
         GameManager.getManagerFromInstance(InputManager.class)
                 .addKeyUpListener(this);
+        GameManager.getManagerFromInstance(InputManager.class)
+                .addTouchDownListener(this);
 
         this.direction = new Vector2(row, col);
         this.direction.limit2(0.05f);
@@ -121,6 +126,28 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.level = 1;
         this.foodLevel = 100;
     }
+
+    /**
+     * Attack with the weapon the character has equip.
+     */
+    public void attack() {
+        //TODO: Need to calculate an angle that the character is facing.
+        HexVector position = this.getPosition();
+
+        //Spawn projectile in front of character for now.
+        this.hitBox = new Projectile("slash",
+                "test hitbox",
+                position.getCol() + 1,
+                position.getRow(),
+                1, 1);
+
+        //Get AbstractWorld from static class GameManager.
+        GameManager manager = GameManager.get();
+
+        //Add the projectile entity to the game world.
+        manager.getWorld().addEntity(this.hitBox);
+    }
+
 
     /**
      * Constructor with various textures
@@ -288,6 +315,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Handles tick based stuff, e.g. movement
      */
     private void updateMoveVector() {
+
         if (MOVE_UP){this.direction.add(0.0f, speed);}
         if (MOVE_LEFT){this.direction.sub(speed, 0.0f);}
         if (MOVE_DOWN){this.direction.sub(0.0f, speed);}
@@ -297,14 +325,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void notifyTouchDown(int screenX, int screenY, int pointer,
                                 int button) {
         // only allow left clicks to move player
-        if (button != 0) {
-//             Right click run animation.
-//            TODO: remove this.
-//            System.out.println("MainCharacter Added to Queue");
-//            toBeRun.add(new AnimationLinker(AnimationRole.COMBAT,
-//             "mario_right", this.getName(), new int[]{10, 10}));
-//            System.out.println("Right Click run Animation");
-            return;
+
+        if (button == 0) {
+            this.attack();
         }
     }
 
