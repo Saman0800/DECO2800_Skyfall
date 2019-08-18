@@ -4,6 +4,9 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Mountain biome
+ */
 public class MountainBiome extends AbstractBiome {
     private ArrayList<String> textures = new ArrayList<>();
     private Random randomGen;
