@@ -47,7 +47,7 @@ public class EntitySpawnTable {
         List<Tile> allTiles = world.getTileMap();
         List<Tile> tiles = new ArrayList<>();
 
-        //get list based on parameter
+        // get list based on parameter
         if (rule.getBiome() != "") {
             for (Tile tile : allTiles) {
                 if (tile.getBiome().getBiomeName() == rule.getBiome()) {
@@ -82,6 +82,9 @@ public class EntitySpawnTable {
         // place entity on random tiles
         for (int i = 0; i < toPlace; i++) {
             Tile tile = tiles.get(i);
+            if (tile.isObstructed()) {
+                continue;
+            }
             if (tile != null && r.nextDouble() < chance) {
                 placeEntity(entity, tile);
             }
@@ -94,8 +97,8 @@ public class EntitySpawnTable {
      * 
      * @param entity Entity to be copied and inserted
      * @param chance probability that the entity will be in a given tile
-     * @param <T> T must extend StaticEntity and have .newInstance inherited
-     * @param biome specified biome to spawn in, null for no specification
+     * @param <T>    T must extend StaticEntity and have .newInstance inherited
+     * @param biome  specified biome to spawn in, null for no specification
      */
     public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntities(T entity, double chance,
             B biome) {
