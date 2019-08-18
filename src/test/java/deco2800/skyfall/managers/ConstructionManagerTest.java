@@ -27,6 +27,11 @@ public class ConstructionManagerTest {
         Assert.assertEquals(false, this.cmgr.isTilesBuildable(null, null));
     }
 
+    @Test
+    public void testVerifyEntity(){
+        Assert.assertFalse(cmgr.verifyEntity(null, null));
+    }
+
     @After
     public void cleanup() {
         this.cmgr = null;
