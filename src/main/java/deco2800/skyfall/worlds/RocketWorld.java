@@ -1,8 +1,12 @@
 package deco2800.skyfall.worlds;
 
+import com.badlogic.gdx.*;
+import deco2800.skyfall.entities.*;
+import deco2800.skyfall.managers.*;
+import deco2800.skyfall.observers.*;
+import deco2800.skyfall.util.*;
 import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.Collectable;
 import deco2800.skyfall.entities.Harvestable;
 import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.Tree;
@@ -13,76 +17,104 @@ import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.biomes.*;
+import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
+import deco2800.skyfall.worlds.generation.WorldGenException;
+import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class RocketWorld extends AbstractWorld implements TouchDownObserver {
-    private static final int RADIUS = 4;
-    private static final int WORLD_SIZE = 10;
-    private static final int NODE_SPACING = 5;
-
     private boolean generated = false;
-    private PlayerPeon player;
 
-    // Generating the biome
-    private AbstractBiome biome;
+    long entitySeed;
+
+    public RocketWorld(long seed, int worldSize, int nodeSpacing) {
+        super(seed, worldSize, nodeSpacing);
+    }
 
     @Override
-    protected void generateWorld() {
+    protected void generateWorld(Random random) {
+        this.entitySeed = random.nextLong();
 
-        int nodeCount = (int) Math.round(Math.pow((float) WORLD_SIZE / (float) NODE_SPACING, 2));
+        // World generation loop: restarts world generation if it reaches an unresolvable layout
+        while (true) {
+            ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
+            ArrayList<Tile> tiles = new ArrayList<>();
+            ArrayList<AbstractBiome> biomes = new ArrayList<>();
 
-        // TODO: if nodeCount is less than the number of biomes, throw an exception
+            int nodeCount = (int) Math.round(
+                    Math.pow((float) worldSize * 2 / (float) nodeSpacing, 2));
+            // TODO: if nodeCount is less than the number of biomes, throw an exception
 
-        Random random = new Random();
+            for (int i = 0; i < nodeCount; i++) {
+                // Sets coordinates to a random number from -WORLD_SIZE to WORLD_SIZE
+                float x = (float) (random.nextFloat() - 0.5) * 2 * worldSize;
+                float y = (float) (random.nextFloat() - 0.5) * 2 * worldSize;
+                worldGenNodes.add(new WorldGenNode(x, y));
+            }
 
-        // for (int i = 0; i < nodeCount; i++) {
-        // float x = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
-        // float y = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
-        // worldGenNodes.add(new WorldGenNode(x, y));
-        // }
+            // Apply Delaunay triangulation to the nodes, so that vertices and
+            // adjacencies can be calculated. Also apply Lloyd Relaxation twice
+            // for more smooth looking polygons
+            try {
+                WorldGenNode.calculateVertices(worldGenNodes, worldSize);
+                WorldGenNode.lloydRelaxation(worldGenNodes, 2, worldSize);
+            } catch (WorldGenException e) {
+                continue;
+            }
 
-        // Create a new biome
-        biome = new MountainBiome();
+            for (int q = -worldSize; q <= worldSize; q++) {
+                for (int r = -worldSize; r <= worldSize; r++) {
+                    if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= worldSize) {
+                        float oddCol = (q % 2 != 0 ? 0.5f : 0);
 
-        for (int q = -1000; q < 1000; q++) {
-            for (int r = -1000; r < 1000; r++) {
-                if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= RADIUS) {
-                    float oddCol = (q % 2 != 0 ? 0.5f : 0);
-
-                    int elevation = random.nextInt(2);
-                    // String type = "grass_" + elevation;
-                    Tile tile = new Tile(biome, q, r + oddCol);
-                    tiles.add(tile);
-                    biome.addTile(tile);
+                        Tile tile = new Tile(q, r + oddCol);
+                        tiles.add(tile);
+                    }
                 }
             }
+            WorldGenNode.assignNeighbours(worldGenNodes);
+            WorldGenNode.assignTiles(worldGenNodes, tiles);
+
+            biomes.add(new ForestBiome());
+            biomes.add(new DesertBiome());
+            biomes.add(new MountainBiome());
+            biomes.add(new OceanBiome());
+            try {
+                BiomeGenerator.generateBiomes(worldGenNodes, random, new int[] { 30, 20, 20 }, biomes);
+            } catch (NotEnoughPointsException e) {
+                continue;
+            }
+
+            this.worldGenNodes.addAll(worldGenNodes);
+            this.tiles.addAll(tiles);
+            this.biomes.addAll(biomes);
+
+            break;
         }
 
-        // Setting all the textures
-        biome.setTileTextures();
-
         // Create the entities in the game
-        player = new PlayerPeon(0f, 0f, 0.05f);
-        addEntity(player);
+//        player = new PlayerPeon(0f, 0f, 0.05f);
+//        addEntity(player);
 
-        GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
+        GameManager.getManagerFromInstance(InputManager.class)
+                .addTouchDownListener(this);
+
+        // MainCharacter is now being put into the game instead of PlayerPeon
+        MainCharacter testCharacter = new MainCharacter(0f,
+                0f, 0.05f, "Main Piece", 10);
+        addEntity(testCharacter);
+
+        GameManager.getManagerFromInstance(InputManager.class)
+                .addTouchDownListener(this);
     }
 
     @Override
     public void onTick(long i) {
         super.onTick(i);
-
-        for (AbstractEntity e : this.getEntities()) {
-            e.onTick(0);
-
-            if (e instanceof Collectable) {
-                if (e.collidesWith(player)) {
-                    removeEntity(e);
-                }
-            }
-        }
 
         if (!generated) {
             Tile tile = getTile(1f, 2.5f);
@@ -92,8 +124,8 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
             Tile tileRock = getTile(0.0f, 1.0f);
             Rock startRock = new Rock(tileRock, true);
-            // EntitySpawnTable rockSpawnRule = new EntitySpawnTable();
-            EntitySpawnTable.spawnEntities(startRock, 0.2, biome);
+//            EntitySpawnTable rockSpawnRule = new EntitySpawnTable();
+//            EntitySpawnTable.spawnEntities(startRock, 0.2, biome);
         }
     }
 
