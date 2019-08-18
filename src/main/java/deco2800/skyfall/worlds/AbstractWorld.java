@@ -1,17 +1,24 @@
 package deco2800.skyfall.worlds;
 
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.AgentEntity;
-import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.*;
+import java.io.FileWriter;
+
 
 /**
  * AbstractWorld is the Game AbstractWorld
@@ -25,23 +32,57 @@ public abstract class AbstractWorld {
     protected int width;
     protected int length;
 
+    protected int worldSize;
+    protected int nodeSpacing;
+
+    //List that contains the world biomes
+    protected ArrayList<AbstractBiome> biomes;
+
     protected CopyOnWriteArrayList<Tile> tiles;
-//    protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
+    protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
 
     protected List<AbstractEntity> entitiesToDelete = new CopyOnWriteArrayList<>();
     protected List<Tile> tilesToDelete = new CopyOnWriteArrayList<>();
 
-    protected AbstractWorld() {
+    protected AbstractWorld(long seed, int worldSize, int nodeSpacing) {
+        Random random = new Random(seed);
+
+        this.worldSize = worldSize;
+        this.nodeSpacing = nodeSpacing;
+
+    	tiles = new CopyOnWriteArrayList<>();
+        worldGenNodes = new CopyOnWriteArrayList<>();
+
     	tiles = new CopyOnWriteArrayList<Tile>();
 //        worldGenNodes = new CopyOnWriteArrayList<>();
-    	generateWorld();
-    	generateNeighbours();
+        biomes = new ArrayList<>();
+
+    	generateWorld(random);
+        generateNeighbours();
     	generateTileIndexes();
+    	generateTileTypes(random);
+
+    	//Saving the world for test, and likely saving and loading later
+//    	try {
+//            saveWorld("ExampleWorldOutput.txt");
+//        } catch (IOException e){
+//    	    System.out.println("Could not save world");
+//        }
+
     }
     
-    
-    protected abstract void generateWorld();
-    
+    protected abstract void generateWorld(Random random);
+
+    /**
+     * Loops through all the biomes within the world and adds textures to the tiles which
+     * determine their properties
+     */
+    public void generateTileTypes(Random random) {
+        for (AbstractBiome biome : biomes){
+            biome.setTileTextures(random);
+        }
+    }
+
     public void generateNeighbours() {
     //multiply coords by 2 to remove floats
     	Map<Integer, Map<Integer, Tile>> tileMap = new HashMap<Integer, Map<Integer, Tile>>();
@@ -229,6 +270,34 @@ public abstract class AbstractWorld {
         for (Tile t : tilesToDelete) {
             tiles.remove(t);
         }
+
+        //Collision detection for entities
+        for (AbstractEntity e1 : this.getEntities()) {
+            e1.onTick(0);
+//            if (e1 instanceof Projectile) {
+//                break;
+//            }
+
+            Collider c1 = e1.getCollider();
+            boolean collided = false;
+            for (AbstractEntity e2 : this.getEntities()) {
+                Collider c2 = e2.getCollider();
+//                if (e2 instanceof Projectile) {
+//                    break;
+//                }
+
+                if (e1 != e2 && c1.overlaps(c2)) {
+                    collided = true;
+
+                    //collision handler
+                    this.handleCollision(e1, e2);
+                    //System.out.println("Collision!");
+
+                    break;
+                }
+            }
+            //no collision
+        }
     }
 
     public void deleteTile(int tileid) {
@@ -252,5 +321,50 @@ public abstract class AbstractWorld {
 
     public void queueTilesForDelete(List<Tile> tiles) {
         tilesToDelete.addAll(tiles);
+    }
+
+
+    /**
+     * Adds a biome to a world
+     * @param biome The biome getting added
+     */
+    public void addBiome(AbstractBiome biome){
+        this.biomes.add(biome);
+    }
+
+    /**
+     * Gets the list of biomes in a world
+     */
+    public ArrayList<AbstractBiome> getBiomes(){
+        return this.biomes;
+    }
+
+    // e1 is the entity that created the collision
+    public void handleCollision(AbstractEntity e1, AbstractEntity e2) {
+        //TODO: implement proper game logic for collisions between different types of entities.
+        // i.e. if (e1 instanceof Projectile && e2 instanceof Enemy) {
+        // removeEntity(e2); removeEntity(e1); }
+        if (e1 instanceof Projectile && !(e2 instanceof MainCharacter)) {
+            removeEntity(e2);
+        } else if (e2 instanceof Projectile && !(e1 instanceof MainCharacter)) {
+            removeEntity(e1);
+        }
+    }
+
+
+    public void saveWorld(String filename) throws IOException{
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+        writer.write(worldToString());
+        writer.close();
+    }
+
+    public String worldToString(){
+        StringBuilder string = new StringBuilder();
+        for (Tile tile : tiles){
+            String out = String.format("%f, %f, %s, %s\n", tile.getCol(), tile.getRow(),
+                    tile.getBiome().getBiomeName(), tile.getTextureName());
+            string.append(out);
+        }
+        return string.toString();
     }
 }
