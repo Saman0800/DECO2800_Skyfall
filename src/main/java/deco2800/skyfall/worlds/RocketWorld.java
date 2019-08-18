@@ -17,12 +17,11 @@ import deco2800.skyfall.worlds.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.delaunay.WorldGenException;
 import deco2800.skyfall.worlds.delaunay.WorldGenNode;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class RocketWorld extends AbstractWorld implements TouchDownObserver {
-    // private static final int RADIUS = 40;
-
     private boolean generated = false;
     private PlayerPeon player;
 
@@ -36,7 +35,12 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
     protected void generateWorld(Random random) {
         this.entitySeed = random.nextLong();
 
+        // World generation loop: restarts world generation if it reaches an unresolvable layout
         while (true) {
+            ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
+            ArrayList<Tile> tiles = new ArrayList<>();
+            ArrayList<AbstractBiome> biomes = new ArrayList<>();
+
             int nodeCount = (int) Math.round(
                     Math.pow((float) worldSize * 2 / (float) nodeSpacing, 2));
             // TODO: if nodeCount is less than the number of biomes, throw an exception
@@ -60,19 +64,15 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
             for (int q = -worldSize; q <= worldSize; q++) {
                 for (int r = -worldSize; r <= worldSize; r++) {
-                     if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= worldSize) {
+                    if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= worldSize) {
                         float oddCol = (q % 2 != 0 ? 0.5f : 0);
 
                         Tile tile = new Tile(q, r + oddCol);
                         tiles.add(tile);
-                     }
+                    }
                 }
             }
-            try {
-                WorldGenNode.assignNeighbours(worldGenNodes);
-            } catch (InvalidCoordinatesException e) {
-                throw new RuntimeException(e);
-            }
+            WorldGenNode.assignNeighbours(worldGenNodes);
             WorldGenNode.assignTiles(worldGenNodes, tiles);
 
             biomes.add(new ForestBiome());
