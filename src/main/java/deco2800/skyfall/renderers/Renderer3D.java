@@ -171,7 +171,13 @@ public class Renderer3D implements Renderer {
 				continue;
 			}
 
+            AnimationRole moveType = entity.getMovingAnimation();
 
+            if (moveType == AnimationRole.NULL) {
+			    renderAbstractEntity(batch, entity, entityWorldCoord, tex);
+			} else {
+                runMovementAnimations(batch, entity, entityWorldCoord, tex);
+            }
 
 
 			/* Draw Peon */
@@ -180,7 +186,8 @@ public class Renderer3D implements Renderer {
 				renderPeonMovementTiles(batch, camera, entity, entityWorldCoord);
 			 }
 			
-			if (entity instanceof StaticEntity) {	 				StaticEntity staticEntity = ((StaticEntity) entity);
+			if (entity instanceof StaticEntity) {
+			    StaticEntity staticEntity = ((StaticEntity) entity);
 				Set<HexVector> childrenPosns = staticEntity.getChildrenPositions();
 				for(HexVector childpos: childrenPosns) {
 					Texture childTex = staticEntity.getTexture(childpos);
@@ -206,7 +213,6 @@ public class Renderer3D implements Renderer {
 				}
 			}
             runAnimations(batch, entity, entityWorldCoord);
-            runMovementAnimations(batch, entity, entityWorldCoord, tex);
 		}
 
 		GameManager.get().setEntitiesRendered(entities.size() - entitiesSkipped);
@@ -299,32 +305,28 @@ public class Renderer3D implements Renderer {
 	 *            AnimationRole.NULL
      */
 	private void runMovementAnimations(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord, Texture tex) {
-		AnimationRole moveType = entity.getMovingAnimation();
+        AnimationRole moveType = entity.getMovingAnimation();
+        String animationName = entity.getAnimationName(moveType);
 
-		if (moveType == AnimationRole.NULL) {
-			renderAbstractEntity(batch, entity, entityWorldCoord, tex);
-		} else {
-			String animationName = entity.getAnimationName(moveType);
+        if (animationName == null) {
+            System.out.println("Could not find animation in entity" + entity.getObjectName());
+            renderAbstractEntity(batch, entity, entityWorldCoord, tex);
+        } else {
+            Animation<TextureRegion> runAnimation = animationManager.getAnimation(animationName);
 
-			if (animationName == null) {
-				System.out.println("Could not find animation in entity" + entity.getObjectName());
-				renderAbstractEntity(batch, entity, entityWorldCoord, tex);
-			} else {
-				Animation<TextureRegion> runAnimation = animationManager.getAnimation(animationName);
+            if (runAnimation == null) {
+                System.out.println("Could not find animation object in animationManager");
 
-				if (runAnimation == null) {
-					System.out.println("Could not find animation object in animationManager");
+                renderAbstractEntity(batch, entity, entityWorldCoord, tex);
+            } else {
+                TextureRegion frame = runAnimation.getKeyFrame(elapsedTime, true);
+                float width = frame.getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X;
+                float height = frame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y;
+                batch.draw(frame, entityWorldCoord[0] ,entityWorldCoord[1], width, height);
+            }
+        }
+    }
 
-					renderAbstractEntity(batch, entity, entityWorldCoord, tex);
-				} else {
-				    TextureRegion frame = runAnimation.getKeyFrame(elapsedTime, true);
-					float width = frame.getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X;
-					float height = frame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y;
-					batch.draw(frame, entityWorldCoord[0] ,entityWorldCoord[1], width, height);
-				}
-			}
-		}
-	}
 
 
     /**
