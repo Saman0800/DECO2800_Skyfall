@@ -3,8 +3,6 @@ package deco2800.skyfall.managers;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-//import deco2800.skyfall.managers.Manager;
-
 import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.worlds.AbstractWorld;
 
@@ -17,7 +15,10 @@ import java.util.List;
 
 public class GameManager {
 	//debug values stored here
-	public int entitiesRendered, entitiesCount, tilesRendered, tilesCount;
+	public int entitiesRendered;
+	public int entitiesCount;
+	public int tilesRendered;
+	public int tilesCount;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GameManager.class);
 

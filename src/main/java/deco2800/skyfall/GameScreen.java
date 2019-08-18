@@ -17,14 +17,12 @@ import deco2800.skyfall.renderers.OverlayRenderer;
 import deco2800.skyfall.renderers.Renderer3D;
 import deco2800.skyfall.worlds.*;
 import deco2800.skyfall.managers.SoundManager;
+import deco2800.skyfall.managers.EnvironmentManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import java.util.Random;
 
 public class GameScreen implements Screen,KeyDownObserver {
 	private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
@@ -44,14 +42,18 @@ public class GameScreen implements Screen,KeyDownObserver {
 	 * Create a camera for panning and zooming.
 	 * Camera must be updated every render cycle.
 	 */
-	PotateCamera camera, cameraDebug;
-
-	public Stage stage = new Stage(new ExtendViewport(1280, 720));
+	PotateCamera camera;
+	PotateCamera cameraDebug;
+	private Stage stage = new Stage(new ExtendViewport(1280, 720));
 
 	long lastGameTick = 0;
-	
 
-	public GameScreen(final SkyfallGame game, boolean isHost) {
+	/**
+	 * Create an EnvironmentManager for ToD.
+	 */
+	EnvironmentManager timeOfDay;
+
+	public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
 		/* Create an example world for the engine */
 		this.game = game;
 
@@ -59,10 +61,10 @@ public class GameScreen implements Screen,KeyDownObserver {
 
 		// Create main world
 		if (!isHost) {
-			world = new ServerWorld();
+			world = new ServerWorld(seed);
 			GameManager.get().getManager(NetworkManager.class).connectToHost("localhost", "duck1234");
 		} else {
-			world = new RocketWorld();
+			world = new RocketWorld(seed, 80, 5);
 			GameManager.get().getManager(NetworkManager.class).startHosting("host");
 		}
 
@@ -82,7 +84,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 
 		/* Play BGM */
 		try {
-			SoundManager.backgroundGameMusic("resources/sounds/Forest Day.wav");
+			SoundManager.backgroundGameMusic("resources/sounds/forest_day.wav");
 			SoundManager.play();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -137,6 +139,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 		if (System.currentTimeMillis() - lastGameTick > 20) {
 			lastGameTick = System.currentTimeMillis();
 			GameManager.get().onTick(0);
+			timeOfDay = new EnvironmentManager(lastGameTick);
 		}
 	}
 
@@ -201,14 +204,16 @@ public class GameScreen implements Screen,KeyDownObserver {
 		}
 
 		if (keycode == Input.Keys.F5) {
-			world = new RocketWorld();
+			// Use a random seed for now
+			Random random = new Random();
+			world = new RocketWorld(random.nextLong(), 80, 5);
 			AbstractEntity.resetID();
 			Tile.resetID();
 			GameManager gameManager = GameManager.get();
 			gameManager.setWorld(world);
 
 			// Add first peon to the world
-			world.addEntity(new Peon(0f, 0f, 0.05f));
+			world.addEntity(new Peon(0f, 0f, 0.05f, "Side Piece", 10));
 		}
 		
 		if (keycode == Input.Keys.F11) { // F11
@@ -250,19 +255,19 @@ public class GameScreen implements Screen,KeyDownObserver {
 				goFastSpeed *= goFastSpeed * goFastSpeed;
 			}
 			
-			if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+			if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 				camera.translate(-goFastSpeed, 0, 0);
 			}
 	
-			if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+			if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 				camera.translate(goFastSpeed, 0, 0);
 			}
 	
-			if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+			if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 				camera.translate(0, -goFastSpeed, 0);
 			}
 	
-			if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+			if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
 				camera.translate(0, goFastSpeed, 0);
 			}
 			
