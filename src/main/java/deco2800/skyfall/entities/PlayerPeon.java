@@ -145,15 +145,19 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
         switch (keycode) {
             case Input.Keys.W:
                 MOVE_UP = true;
+                SoundManager.loopSound("people_walk_normal");
                 break;
             case Input.Keys.A:
                 MOVE_LEFT = true;
+                SoundManager.loopSound("people_walk_normal");
                 break;
             case Input.Keys.S:
                 MOVE_DOWN = true;
+                SoundManager.loopSound("people_walk_normal");
                 break;
             case Input.Keys.D:
                 MOVE_RIGHT = true;
+                SoundManager.loopSound("people_walk_normal");
                 break;
         }
     }
@@ -167,15 +171,19 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
         switch (keycode) {
             case Input.Keys.W:
                 MOVE_UP = false;
+                SoundManager.stopSound("people_walk_normal");
                 break;
             case Input.Keys.A:
                 MOVE_LEFT = false;
+                SoundManager.stopSound("people_walk_normal");
                 break;
             case Input.Keys.S:
                 MOVE_DOWN = false;
+                SoundManager.stopSound("people_walk_normal");
                 break;
             case Input.Keys.D:
                 MOVE_RIGHT = false;
+                SoundManager.stopSound("people_walk_normal");
                 break;
         }
     }
