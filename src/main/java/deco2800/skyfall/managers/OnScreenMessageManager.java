@@ -65,8 +65,8 @@ public class OnScreenMessageManager extends AbstractManager implements KeyTypedO
 
 				} else	if (unsentMessage.startsWith("/1")) { // enable GOD mode
 					GameManager.get().getWorld().addEntity(new Peon(0f, 0f, 0.05f,"GOD",10000000));
-				} else if (unsentMessage.startsWith("/resources")) {
-					// Display resources in the console
+				} else if (unsentMessage.startsWith("/inventory")) {
+					// Display inventory in the console
 					this.addMessage(String.format(GameManager.getManagerFromInstance(InventoryManager.class).toString()));
 				} else {
 					GameManager.get().getManager(NetworkManager.class).sendChatMessage(unsentMessage);
