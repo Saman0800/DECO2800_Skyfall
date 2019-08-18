@@ -148,7 +148,6 @@ class TriangleSoup {
      * This method was not taken from the source of the rest of this class
      *
      * @author Daniel Nathan
-     * @return the coordinates of the circumcentre
      */
     public void findBorderNodes() {
         for (WorldGenTriangle triangle : this.getTriangles()) {

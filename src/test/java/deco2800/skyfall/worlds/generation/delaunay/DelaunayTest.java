@@ -6,6 +6,7 @@ import deco2800.skyfall.worlds.generation.WorldGenException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.internal.matchers.Not;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -25,7 +26,31 @@ public class DelaunayTest {
     }
 
     @Test
-    public void triangleCircumcircle() {
+    public void compareToTest() {
+        WorldGenNode node1 = new WorldGenNode(0, 0);
+        WorldGenNode node2 = new WorldGenNode(1, 0);
+        WorldGenNode node3 = new WorldGenNode(0, 1);
+        WorldGenNode node4 = new WorldGenNode(1, 1);
+        WorldGenNode node5 = new WorldGenNode(1, 1);
+
+        try {
+            node1.compareTo(null);
+            fail();
+        } catch (NullPointerException e) {
+            // do nothing
+        }
+
+        assertEquals(-1, node1.compareTo(node2));
+        assertEquals(1, node2.compareTo(node1));
+        assertEquals(-1, node2.compareTo(node3));
+        assertEquals(1, node3.compareTo(node2));
+        assertEquals(-1, node3.compareTo(node4));
+        assertEquals(1, node4.compareTo(node3));
+        assertEquals(0, node4.compareTo(node5));
+    }
+
+    @Test
+    public void triangleCircumcircleTest() {
         WorldGenNode node1 = new WorldGenNode(0, 0);
         WorldGenNode node2 = new WorldGenNode(1, 0);
         WorldGenNode node3 = new WorldGenNode(0, 1);
@@ -252,5 +277,49 @@ public class DelaunayTest {
         node1.addVertex(new double[] {12.9318, 1.1243});
         assertEquals(2.8827, node1.getCentroid()[0], 0.00001);
         assertEquals(1.9027, node1.getCentroid()[1], 0.00001);
+    }
+
+    @Test
+    public void triangulatePointsTest() {
+        List<WorldGenNode> nodes = new ArrayList<>();
+        // No nodes
+        try {
+            WorldGenNode.triangulate(nodes);
+            fail();
+        } catch (NotEnoughPointsException e) {
+            // do nothing
+        }
+
+        // 2 nodes
+        nodes.add(new WorldGenNode(-1, 0));
+        nodes.add(new WorldGenNode(1, 0));
+        try {
+            WorldGenNode.triangulate(nodes);
+            fail();
+        } catch (NotEnoughPointsException e) {
+            // do nothing
+        }
+
+        // 3 nodes
+        nodes.add(new WorldGenNode(0, 1));
+        try {
+            WorldGenNode.triangulate(nodes);
+        } catch (NotEnoughPointsException e) {
+            fail();
+        }
+
+        // Reset node values
+        nodes.clear();
+        nodes.add(new WorldGenNode(-1, 0));
+        nodes.add(new WorldGenNode(1, 0));
+        nodes.add(new WorldGenNode(0, 1));
+        nodes.add(new WorldGenNode(0, -0.5));
+        nodes.add(new WorldGenNode(0, 0));
+        // Check that it works correctly when a node is on an edge
+        try {
+            WorldGenNode.triangulate(nodes);
+        } catch (Exception e) {
+            fail();
+        }
     }
 }
