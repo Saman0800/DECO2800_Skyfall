@@ -11,39 +11,51 @@ import java.util.stream.Collectors;
  * Builds biomes from the nodes generated in the previous phase of the world generation.
  */
 class BiomeGenerator {
-    // The `Random` instance being used for world generation.
+    /** The `Random` instance being used for world generation. */
     private final Random random;
 
-    // The number of nodes to be generated in each biome.
+    /** The number of nodes to be generated in each biome. */
     private final int[] biomeSizes;
 
-    // The nodes generated in the previous phase of the world generation.
+    /** The nodes generated in the previous phase of the world generation. */
     private final List<WorldGenNode> nodes;
-    // The nodes that have already been assigned to
+    /** The nodes that have already been assigned to */
     private HashSet<WorldGenNode> usedNodes;
-    // The nodes that are currently adjacent to a free node.
+    /** The nodes that are currently adjacent to a free node. */
     private ArrayList<WorldGenNode> borderNodes;
 
-    // The biomes generated during the generation process.
+    /** The biomes generated during the generation process. */
     private ArrayList<BiomeInProgress> biomes;
-    // The actual biomes to fill after generation.
+    /** The actual biomes to fill after generation. */
     private final List<AbstractBiome> realBiomes;
 
+    /** A map from a WorldGenNode to the BiomeInProgress that contains it. */
     private HashMap<WorldGenNode, BiomeInProgress> nodesBiomes;
 
-    public static void generateBiomes(List<WorldGenNode> nodes, Random random, int[] biomeSizes,
-                                      List<AbstractBiome> biomes) throws NotEnoughPointsException {
+    /**
+     * Generates biomes and populates the provided {@link AbstractBiome} instances with tiles.
+     *
+     * @param nodes      the nodes generated in the previous phase of the world generation
+     * @param random     the random number generator used for deterministic generation
+     * @param biomeSizes the number of nodes for each of the biomes (except ocean)
+     * @param biomes     the biomes to populate (ocean must be last)
+     *
+     * @throws NotEnoughPointsException if there are not enough non-border nodes from which to form the biomes
+     */
+
+    protected static void generateBiomes(List<WorldGenNode> nodes, Random random, int[] biomeSizes,
+                                         List<AbstractBiome> biomes) throws NotEnoughPointsException {
         BiomeGenerator biomeGenerator = new BiomeGenerator(nodes, random, biomeSizes, biomes);
         biomeGenerator.generateBiomesInternal();
     }
 
     /**
      * Creates a {@code BiomeGenerator} for a list of nodes (but does not start the generation).
-     * <p>
-     * Behaviour is not defined if any of the arguments are externally modified in the duration of the lifetime of this
-     * object.
      *
-     * @param nodes the nodes generated in the previous phase of the world generation
+     * @param nodes      the nodes generated in the previous phase of the world generation
+     * @param random     the random number generator used for deterministic generation
+     * @param biomeSizes the number of nodes for each of the biomes (except ocean)
+     * @param realBiomes the biomes to populate (ocean must be last)
      *
      * @throws NotEnoughPointsException if there are not enough non-border nodes from which to form the biomes
      */
@@ -101,6 +113,11 @@ class BiomeGenerator {
         }
     }
 
+    /**
+     * Spawns and expands the biomes to meet the required number of nodes.
+     *
+     * @throws DeadEndGenerationException if a biome which needs to grow has no border nodes
+     */
     private void growBiomes() throws DeadEndGenerationException {
         for (int biomeID = 0; biomeID < biomeSizes.length; biomeID++) {
             BiomeInProgress biome = new BiomeInProgress(biomeID);
@@ -113,15 +130,11 @@ class BiomeGenerator {
                 // Math.sqrt().
                 double centerDistanceSquared = Double.POSITIVE_INFINITY;
                 for (WorldGenNode node : nodes) {
-                    try {
-                        double[] centroid = node.getCentroid();
-                        double newCenterDistanceSquared = centroid[0] * centroid[0] + centroid[1] * centroid[1];
-                        if (newCenterDistanceSquared < centerDistanceSquared) {
-                            centerDistanceSquared = newCenterDistanceSquared;
-                            centerNode = node;
-                        }
-                    } catch (InvalidCoordinatesException e) {
-                        // TODO handle this
+                    double[] centroid = node.getCentroid();
+                    double newCenterDistanceSquared = centroid[0] * centroid[0] + centroid[1] * centroid[1];
+                    if (newCenterDistanceSquared < centerDistanceSquared) {
+                        centerDistanceSquared = newCenterDistanceSquared;
+                        centerNode = node;
                     }
                 }
                 biome.addNode(centerNode);
@@ -139,10 +152,12 @@ class BiomeGenerator {
         }
     }
 
+    /**
+     * Grows the ocean biome from the outside of the world.
+     */
     private void growOcean() {
         // All nodes on the outer edge of the map are ocean nodes.
         // Since the id is `biomeSizes.length`,
-        // TODO Check that id being biomeSizes.length can never cause an IndexOutOfBoundsException.
         BiomeInProgress ocean = new BiomeInProgress(biomeSizes.length);
         biomes.add(ocean);
         for (WorldGenNode node : nodes) {
@@ -153,14 +168,13 @@ class BiomeGenerator {
         ocean.floodGrowBiome();
     }
 
+    /**
+     * Fills in unassigned nodes within the continent with adjacent biomes.
+     */
     private void fillGaps() {
         while (!borderNodes.isEmpty()) {
             WorldGenNode growFrom = borderNodes.get(random.nextInt(borderNodes.size()));
-
-            // TODO Sort this out.
-            @SuppressWarnings("OptionalGetWithoutIsPresent")
-            BiomeInProgress expandingBiome =
-                    biomes.stream().filter(biome -> biome.nodes.contains(growFrom)).findFirst().get();
+            BiomeInProgress expandingBiome = nodesBiomes.get(growFrom);
 
             // Pick a node adjacent to the border node to grow to.
             ArrayList<WorldGenNode> growToCandidates = growFrom.getNeighbours().stream()
@@ -178,6 +192,9 @@ class BiomeGenerator {
         }
     }
 
+    /**
+     * Adds the tiles from the {@code BiomeInProgress}es to the {@code Biome}s provided.
+     */
     private void populateRealBiomes() {
         for (int i = 0; i < biomes.size(); i++) {
             BiomeInProgress biome = biomes.get(i);
@@ -190,15 +207,23 @@ class BiomeGenerator {
         }
     }
 
-    /*
-     * Is the node adjacent to any free nodes?
+    /**
+     * Returns whether the node is adjacent to any free nodes.
+     *
+     * @param node the node to check
+     *
+     * @return whether the node is adjacent to any free nodes
      */
     private boolean nodeIsBorder(WorldGenNode node) {
         return node.getNeighbours().stream().anyMatch(this::nodeIsFree);
     }
 
-    /*
-     * Is the node free to be expanded into?
+    /**
+     * Returns whether the node is free to be expanded into.
+     *
+     * @param node the node to check
+     *
+     * @return whether the node is free to be expanded into.
      */
     private boolean nodeIsFree(WorldGenNode node) {
         return !node.isBorderNode() && !usedNodes.contains(node);
@@ -209,20 +234,25 @@ class BiomeGenerator {
      * because it contains extra data that is not needed after the generation process.
      */
     private class BiomeInProgress {
-        // The ID of the biome.
+        /** The ID of the biome. */
         int id;
 
-        // The nodes contained within this biome.
+        /** The nodes contained within this biome. */
         ArrayList<WorldGenNode> nodes;
 
-        // The nodes on the border of the biome (for growing).
+        /** The nodes on the border of the biome (for growing). */
         ArrayList<WorldGenNode> borderNodes;
 
-        // The tiles contained within this biome.
+        /** The tiles contained within this biome. */
         ArrayList<Tile> tiles;
-        // The tiles on the border of the biome (for edge fuzzing/noise).
+        /** The tiles on the border of the biome (for edge fuzzing/noise). */
         ArrayList<Tile> edgeTiles;
 
+        /**
+         * Constructs a new {@code BiomeInProgress} with the specified id.
+         *
+         * @param id the id of the biome (to check the biome size)
+         */
         BiomeInProgress(int id) {
             this.id = id;
 
@@ -232,6 +262,8 @@ class BiomeGenerator {
 
         /**
          * Expands the biome outwards randomly until it is the required size.
+         *
+         * @throws DeadEndGenerationException if a biome which needs to grow has no border nodes
          */
         void growBiome() throws DeadEndGenerationException {
             for (int remainingNodes = biomeSizes[id] - nodes.size(); remainingNodes > 0; remainingNodes--) {
@@ -252,6 +284,9 @@ class BiomeGenerator {
             }
         }
 
+        /**
+         * Expands a biome to fill all contiguous nodes that are not already used.
+         */
         void floodGrowBiome() {
             while (borderNodes.size() > 0) {
                 // It doesn't matter which node is grown from.
@@ -265,7 +300,11 @@ class BiomeGenerator {
             }
         }
 
-        // Adds the node to the nodes and updates the border-node states of nodes accordingly.
+        /**
+         * Adds the node to the nodes and updates the border-node states of nodes accordingly.
+         *
+         * @param node the node to add to the biome
+         */
         private void addNode(WorldGenNode node) {
             // Add the new node to the nodes in this biome
             nodes.add(node);
@@ -286,15 +325,6 @@ class BiomeGenerator {
                 borderNodes.add(node);
                 BiomeGenerator.this.borderNodes.add(node);
             }
-        }
-
-        void calculateTiles() {
-            tiles = new ArrayList<>();
-            for (WorldGenNode node : nodes) {
-                tiles.addAll(node.getTiles());
-            }
-
-            // TODO Calculate edge tiles.
         }
     }
 }

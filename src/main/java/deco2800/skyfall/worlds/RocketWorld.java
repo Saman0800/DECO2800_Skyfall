@@ -17,12 +17,11 @@ import deco2800.skyfall.worlds.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.delaunay.WorldGenException;
 import deco2800.skyfall.worlds.delaunay.WorldGenNode;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class RocketWorld extends AbstractWorld implements TouchDownObserver {
-    // private static final int RADIUS = 40;
-    private static final int RADIUS = 80;
     private static final int WORLD_SIZE = 100;
     private static final int NODE_SPACING = 5;
 
@@ -41,6 +40,10 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
         // World generation loop: restarts world generation if it reaches an unresolvable layout
         while (true) {
+            ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
+            ArrayList<Tile> tiles = new ArrayList<>();
+            ArrayList<AbstractBiome> biomes = new ArrayList<>();
+
             int nodeCount = (int) Math.round(
                     Math.pow((float) WORLD_SIZE * 2 / (float) NODE_SPACING, 2));
 
@@ -60,21 +63,17 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
                 WorldGenNode.calculateVertices(worldGenNodes, WORLD_SIZE);
                 WorldGenNode.lloydRelaxation(worldGenNodes, 2, WORLD_SIZE);
             } catch (WorldGenException e) {
-                worldGenNodes.clear();
                 continue;
             }
 
-            for (int q = -1000; q < 1000; q++) {
-                for (int r = -1000; r < 1000; r++) {
-                    if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= RADIUS) {
+            for (int q = -WORLD_SIZE; q <= WORLD_SIZE; q++) {
+                for (int r = -WORLD_SIZE; r <= WORLD_SIZE; r++) {
+                     if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= WORLD_SIZE) {
                         float oddCol = (q % 2 != 0 ? 0.5f : 0);
 
-                        int elevation = random.nextInt(2);
-                        // String type = "grass_" + elevation;
                         Tile tile = new Tile(q, r + oddCol);
                         tiles.add(tile);
-                        // biome.addTile(tile);
-                    }
+                     }
                 }
             }
             try {
@@ -84,18 +83,21 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             }
             WorldGenNode.assignTiles(worldGenNodes, tiles);
 
-            addBiome(new ForestBiome());
-            addBiome(new DesertBiome());
-            addBiome(new MountainBiome());
-            addBiome(new OceanBiome());
+            biomes.add(new ForestBiome());
+            biomes.add(new DesertBiome());
+            biomes.add(new MountainBiome());
+            biomes.add(new OceanBiome());
             try {
                 BiomeGenerator.generateBiomes(worldGenNodes, random, new int[] { 30, 20, 20 }, biomes);
-                break;
             } catch (NotEnoughPointsException e) {
-                biomes.clear();
-                tiles.clear();
-                worldGenNodes.clear();
+                continue;
             }
+
+            this.worldGenNodes.addAll(worldGenNodes);
+            this.tiles.addAll(tiles);
+            this.biomes.addAll(biomes);
+
+            break;
         }
 
         // Create the entities in the game
