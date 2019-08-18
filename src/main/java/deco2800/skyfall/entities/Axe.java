@@ -10,7 +10,7 @@ public class Axe extends MeleeWeapon {
     @Override
     public Number getDurability() {
         return 10;
-    };
+    }
 
     /**
      * Get attack rate of the weapon
@@ -20,7 +20,7 @@ public class Axe extends MeleeWeapon {
     @Override
     public Number getAttackRate() {
         return 4;
-    };
+    }
 
     /**
      * Get damage of the weapon
@@ -29,7 +29,7 @@ public class Axe extends MeleeWeapon {
     @Override
     public Number getDamage() {
         return 4;
-    };
+    }
 
     /**
      * Return the name of the weapon

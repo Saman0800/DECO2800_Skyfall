@@ -73,7 +73,7 @@ public class SaveLoadTest {
         saveTileMap.add(new Tile(col_two, row_two));
         w.setTileMap(saveTileMap);
 
-        newEntities.put(0, new PlayerPeon(1, 1, 1));
+        newEntities.put(0, new PlayerPeon(1, 1, 1, "test", 10));
         
         List<AbstractEntity> testEntities = new ArrayList<>(w.getEntities());        
         deco2800.skyfall.managers.DatabaseManager.saveWorld(w);

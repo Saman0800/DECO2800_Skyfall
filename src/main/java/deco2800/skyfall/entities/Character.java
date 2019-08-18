@@ -8,7 +8,6 @@ import deco2800.skyfall.tasks.*;
  * enemies) to inherit from.
  */
 public abstract class Character extends AgentEntity {
-
     protected transient AbstractTask task;
 
     // Name of the character
@@ -17,11 +16,8 @@ public abstract class Character extends AgentEntity {
     // Health of the character
     private int health;
 
-    public Character(float col, float row, String name, int health) {
+    public Character(float row, float col, float speed, String name, int health) {
         super(col, row, 3, 2f);
-
-        setName(name);
-        this.health = health;
 
         // Might not need below, because this is abstract class
         this.setTexture("character");
