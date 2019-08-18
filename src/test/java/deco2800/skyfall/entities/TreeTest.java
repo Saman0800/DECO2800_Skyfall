@@ -6,8 +6,6 @@ import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.OnScreenMessageManager;
 import deco2800.skyfall.worlds.TestWorld;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.AbstractBiome;
-import deco2800.skyfall.worlds.ForestBiome;
 import deco2800.skyfall.util.HexVector;
 
 import org.junit.Before;
@@ -38,7 +36,7 @@ public class TreeTest {
 
     @Before
     public void Setup() {
-        w = new TestWorld();
+        w = new TestWorld(0);
 
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
@@ -59,8 +57,7 @@ public class TreeTest {
     public void TestConstruction() {
         // Populate the world with tiles
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        AbstractBiome biome = new ForestBiome();
-        Tile tile1 = new Tile(biome, 0.0f, 0.0f);
+        Tile tile1 = new Tile(0.0f, 0.0f);
         tileMap.add(tile1);
         w.setTileMap(tileMap);
 
@@ -86,11 +83,10 @@ public class TreeTest {
     public void TestAddedFunctions() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
         // Populate world with tiles
-        AbstractBiome biome = new ForestBiome();
-        Tile tile1 = new Tile(biome, 0.0f, 0.0f);
-        Tile tile2 = new Tile(biome, 0.0f, 1.0f);
-        Tile tile3 = new Tile(biome, 1.0f, -0.5f);
-        Tile tile4 = new Tile(biome, 1.0f, 0.5f);
+        Tile tile1 = new Tile(0.0f, 0.0f);
+        Tile tile2 = new Tile(0.0f, 1.0f);
+        Tile tile3 = new Tile(1.0f, -0.5f);
+        Tile tile4 = new Tile(1.0f, 0.5f);
         tileMap.add(tile1);
         tileMap.add(tile2);
         tileMap.add(tile4);
@@ -118,11 +114,10 @@ public class TreeTest {
     public void TestHarvest() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
         // Populate world with tiles
-        AbstractBiome biome = new ForestBiome();
-        Tile tile1 = new Tile(biome, 0.0f, 0.0f);
-        Tile tile2 = new Tile(biome, 0.0f, 1.0f);
-        Tile tile3 = new Tile(biome, 1.0f, -0.5f);
-        Tile tile4 = new Tile(biome, 1.0f, 0.5f);
+        Tile tile1 = new Tile(0.0f, 0.0f);
+        Tile tile2 = new Tile(0.0f, 1.0f);
+        Tile tile3 = new Tile(1.0f, -0.5f);
+        Tile tile4 = new Tile(1.0f, 0.5f);
         tileMap.add(tile1);
         tileMap.add(tile2);
         tileMap.add(tile4);

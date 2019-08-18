@@ -5,6 +5,8 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.ForestBiome;
 
 public class EntitySpawnRuleTest {
     @Test
@@ -19,6 +21,16 @@ public class EntitySpawnRuleTest {
 
         rule.setMax(100);
         assertEquals(rule.getMax(), 100);
+
+        ForestBiome biome = new ForestBiome();
+        rule.setBiome(biome);
+        assertEquals(rule.getBiome(), "forest");
+        //test null biome
+        rule.setBiome((AbstractBiome)null);
+        assertEquals(rule.getBiome(), "");
+        //test setting biome name with string
+        rule.setBiome(biome.getBiomeName());
+        assertEquals(rule.getBiome(), "forest");
     }
 
     @Test
