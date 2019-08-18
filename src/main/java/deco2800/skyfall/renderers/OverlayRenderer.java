@@ -105,5 +105,7 @@ public class OverlayRenderer implements Renderer {
 				String.format("Messages Sent: %d", GameManager.get().getManager(NetworkManager.class).getMessagesSent()));
 		debugLine(batch, camera, line++,
 				String.format("Username: %s", GameManager.get().getManager(NetworkManager.class).getUsername()));
+		debugLine(batch, camera, line++, String.format("World seed %d", GameManager.get().getWorld().getSeed()));
+
 	}
 }

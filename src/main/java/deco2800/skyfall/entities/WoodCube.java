@@ -27,7 +27,7 @@ public class WoodCube extends AbstractEntity implements Collectable {
     @Override
     public boolean collidesWith(AbstractEntity entity) {
         // TODO: you will want to make collisions more generic and manageable
-        if (entity instanceof PlayerPeon) {
+        if (entity instanceof MainCharacter) {
             return entity.getPosition().getInt().equals(getPosition().getInt());
         }
 

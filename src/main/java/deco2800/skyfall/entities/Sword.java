@@ -10,7 +10,7 @@ public class Sword extends MeleeWeapon {
     @Override
     public Number getDurability() {
         return 6;
-    };
+    }
 
     /**
      * Get attack rate of the weapon
@@ -20,7 +20,7 @@ public class Sword extends MeleeWeapon {
     @Override
     public Number getAttackRate() {
         return 5;
-    };
+    }
 
     /**
      * Get damage of the weapon
@@ -29,7 +29,7 @@ public class Sword extends MeleeWeapon {
     @Override
     public Number getDamage() {
         return 3;
-    };
+    }
 
     /**
      * Return the name of the weapon

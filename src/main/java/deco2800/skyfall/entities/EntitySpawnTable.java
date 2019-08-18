@@ -1,7 +1,7 @@
 package deco2800.skyfall.entities;
 
 import deco2800.skyfall.worlds.AbstractWorld;
-import deco2800.skyfall.worlds.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.managers.GameManager;
 
@@ -19,7 +19,7 @@ public class EntitySpawnTable {
     /**
      * Simple static method for placing static items. Takes the given entity and
      * places a deep copy within the world at a given tile
-     * 
+     *
      * @param tile   The tile the new entity will occupy
      * @param entity The entity to be deep copied
      * @param <T>    T must extend StaticEntity and have .newInstance inherited
@@ -33,16 +33,15 @@ public class EntitySpawnTable {
 
     /**
      * Randomly distributes an entity with a given spawn rule
-     * 
+     *
      * @param entity The entity to copied and distributed
      * @param rule   A spawn rule, which specifies how the entity will be
      *               distributed example rules are chance, min/max, next to, a
      *               combination of these, e.g.
      * @param <T>    T must extend StaticEntity and have .newInstance inherited
      */
-    public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntities(T entity, EntitySpawnRule rule) {
-        Random r = new Random();
-
+    public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntities(T entity, EntitySpawnRule rule,
+                                                                                       Random r) {
         AbstractWorld world = GameManager.get().getWorld();
         List<Tile> allTiles = world.getTileMap();
         List<Tile> tiles = new ArrayList<>();
@@ -94,16 +93,16 @@ public class EntitySpawnTable {
     /**
      * Does entity placing with a simple probability, with no need for a
      * EntitySpawnRule
-     * 
+     *
      * @param entity Entity to be copied and inserted
      * @param chance probability that the entity will be in a given tile
      * @param <T>    T must extend StaticEntity and have .newInstance inherited
      * @param biome  specified biome to spawn in, null for no specification
      */
     public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntities(T entity, double chance,
-            B biome) {
+            B biome, Random random) {
         EntitySpawnRule spawnRule = new EntitySpawnRule(chance);
         spawnRule.setBiome(biome);
-        spawnEntities(entity, spawnRule);
+        spawnEntities(entity, spawnRule, random);
     }
 }

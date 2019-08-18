@@ -1,7 +1,5 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.physics.box2d.Box2D;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.Collider;
 
@@ -17,11 +15,6 @@ public class Projectile extends AbstractEntity {
      * How many game ticks all projectiles survive for before being removed.
      */
     public static final int LIFE_TIME_TICKS = 20;
-
-    /**
-     * Collider of this object.
-     */
-    private Collider collider;
 
     /**
      * The amount of damage this projectile deals.
