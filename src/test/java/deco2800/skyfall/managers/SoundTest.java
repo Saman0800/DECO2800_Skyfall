@@ -79,6 +79,9 @@ public class SoundTest {
             TimeUnit.SECONDS.sleep(1);
             SoundManager.backgroundGameMusic(file);
             assertEquals(SoundManager.getClip().getLongFramePosition(), 0);
+
+            // Test that current clip is reset to the start
+            assertEquals(SoundManager.getClip().getLongFramePosition(),0);
         } catch (Exception e) {
             //exception caught
         }
@@ -92,6 +95,9 @@ public class SoundTest {
             TimeUnit.SECONDS.sleep(1);
             SoundManager.mute();
             assertEquals(SoundManager.muteVol.getValue(), true);
+
+            // Test that sound is muted
+            assertEquals(SoundManager.muteVol.getValue(),true);
         } catch (Exception e) {
             //exception caught
         }
@@ -108,6 +114,9 @@ public class SoundTest {
             SoundManager.unmute();
             TimeUnit.SECONDS.sleep(1);
             assertEquals(SoundManager.muteVol.getValue(), false);
+
+            // Test that sound is unmuted
+            assertEquals(SoundManager.muteVol.getValue(),false);
         } catch (Exception e) {
             //exception caught
         }
