@@ -3,6 +3,7 @@ package deco2800.skyfall.entities.structures;
 
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.managers.ConstructionManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
@@ -12,39 +13,38 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-public class House extends StaticEntity {
+public class House extends AbstractBuilding {
 
     private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
 
     private static final String ENTITY_ID_STRING = "HouseID";
     private int renderOrder;
     private int maxHealth = 10;
-    private int currentHealth = 5;
+    private int currentHealth;
     //Build time in seconds.
     private int buildTime = 10;
     //Currently just uses basic X/Y coords, will be changed at a later date.
     private int sizeX = 1;
     private int sizeY = 1;
+    private HexVector coords;
     private String texture = "house1";
-    private boolean obstructed;
+    ConstructionManager permissions = new ConstructionManager();
 
 
     @Expose
     public Map<HexVector, String> children;
 
-    /**
-    Setting up the default constructor
-     */
-    public House(){
-        super();
-    }
 
     public House(Tile tile, int renderOrder) {
+        super(tile.getRow(), tile.getCol());
         this.setTexture(texture);
 
         this.setObjectName(ENTITY_ID_STRING);
-
         this.renderOrder = renderOrder;
+        this.currentHealth = maxHealth;
+
+
+        //Call Construction Permissions here
 
         children = new HashMap<>();
         children.put(tile.getCoordinates(), texture);
@@ -52,27 +52,42 @@ public class House extends StaticEntity {
             log.debug(tile.getCoordinates() + "%s Is Invalid:");
             return;
         }
-
-        tile.setParent(this);
-        this.currentHealth = maxHealth;
-
     }
 
+    public House(float x, float y, int renderOrder) {
+        super(x, y);
+        this.setTexture(texture);
 
-
-
-
-
-
-
-
-
-
-
-    public House(float x, float y) {
+        this.setObjectName(ENTITY_ID_STRING);
+        this.renderOrder = renderOrder;
         this.currentHealth = maxHealth;
-        this.setTexture("house1");
+
+
+        //Call Construction Permissions here
+
+        children = new HashMap<>();
+        coords = new HexVector(x, y);
+        children.put(coords, texture);
+        if (!WorldUtil.validColRow(coords)) {
+            log.debug(coords + "%s Is Invalid:");
+            return;
+        }
     }
+
+    /**
+     * Will link to Construction Manager Permissions but for now will be true
+     */
+    public boolean permissions(){
+        return true;
+    }
+
+    /**
+     * Will place the building in the world
+     */
+    public void placeBuilding(){
+        //next sprint
+    }
+
     /**
      * @return - Health of the House
      */
