@@ -1,54 +1,51 @@
 package deco2800.skyfall.entities.structures;
 
 import com.google.gson.annotations.Expose;
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.managers.ConstructionManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.AbstractWorld;
 import deco2800.skyfall.worlds.Tile;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-/**
- * Walls that the player can place. Walls are stationary buildings that
- * impede all land units. Walls block projectiles.
- */
-public class WallBuilding extends AbstractBuilding {
+public class StorageUnit extends AbstractBuilding {
+
 
     private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
 
-    private static final String ENTITY_ID_STRING = "WallID";
+    private static final String ENTITY_ID_STRING = "StorageUnitID";
     private int renderOrder;
-
     private int maxHealth = 5;
     private int currentHealth;
-
+    //Build time in seconds.
+    private int buildTime = 6;
+    //Currently just uses basic X/Y coords, will be changed at a later date.
+    private int sizeX = 2;
+    private int sizeY = 2;
     private HexVector coords;
-    private String texture = "fence_bottom_left";
-
+    private String texture = "storage_unit";
     ConstructionManager permissions = new ConstructionManager();
+
 
     @Expose
     public Map<HexVector, String> children;
 
-    /**
-     * Tile constructor
-     * @param tile - Tile building is one
-     * @param renderOrder - Render order of building
-     */
-    public WallBuilding(Tile tile, int renderOrder) {
+
+    public StorageUnit(Tile tile, int renderOrder) {
         super(tile.getRow(), tile.getCol());
         this.setTexture(texture);
 
         this.setObjectName(ENTITY_ID_STRING);
         this.renderOrder = renderOrder;
         this.currentHealth = maxHealth;
+
+
+        //Call Construction Permissions here but for now just do basic checking
 
         children = new HashMap<>();
         children.put(tile.getCoordinates(), texture);
@@ -58,33 +55,16 @@ public class WallBuilding extends AbstractBuilding {
         }
     }
 
-    /**
-     * Default constructor
-     * @param x - X coordinate
-     * @param y - Y coordinate
-     */
-    public WallBuilding(float x, float y) {
+    public StorageUnit(float x, float y, int renderOrder) {
         super(x, y);
-        this.currentHealth = maxHealth;
-        //Ignore that the fence is using a building image.
         this.setTexture(texture);
 
         this.setObjectName(ENTITY_ID_STRING);
-        //this.renderOrder = renderOrder;
-        //Build time in seconds.
-        int constructionTime = 3;
-        //Building size
-        int xSize = 1;
-        int ySize = 1;
-        //Cost of building
-        //String: Name of item, can access using item.getName();
-        //Integer: The number of that type of item
-        TreeMap<String, Integer> constructionCost = new TreeMap<>();
+        this.renderOrder = renderOrder;
+        this.currentHealth = maxHealth;
 
-        this.setXSize(xSize);
-        this.setYSize(ySize);
-        this.setBuildTime(constructionTime);
-        this.setCost(constructionCost);
+
+        //Call Construction Permissions here
 
         children = new HashMap<>();
         coords = new HexVector(x, y);
@@ -96,7 +76,21 @@ public class WallBuilding extends AbstractBuilding {
     }
 
     /**
-     * @return - Health of the fence
+     * Will link to Construction Manager Permissions but for now will be true
+     */
+    public boolean permissions(){
+        return true;
+    }
+
+    /**
+     * Will place the building in the world
+     */
+    public void placeBuilding(){
+        //next sprint
+    }
+
+    /**
+     * @return - Health of the House
      */
     public int getMaxHealth() {return this.maxHealth;}
 
@@ -105,6 +99,20 @@ public class WallBuilding extends AbstractBuilding {
      */
     public int getCurrentHealth() {return this.currentHealth;}
 
+    /**
+     * @return - Build time
+     */
+    public int getBuildTime() {return this.buildTime;}
+
+    /**
+     * @return - X length
+     */
+    public int getXSize() {return this.sizeX;}
+
+    /**
+     * @return - Y length
+     */
+    public int getYSize() {return this.sizeY;}
 
     /**
      * @param newMaxHealth - New max health
@@ -121,15 +129,28 @@ public class WallBuilding extends AbstractBuilding {
      */
     public void takeDamage(int damage) {
         if((currentHealth - damage) > 0) {
-            currentHealth = currentHealth - damage;
+            currentHealth = currentHealth = damage;
         } else {
             currentHealth = 0;
         }
     }
+
+    /**
+     * @param newXSize - New X length
+     */
+    public void setXSize(int newXSize) {this.sizeX = newXSize;}
+
+    /**
+     * @param newYSize - New Y length
+     */
+    public void setYSize(int newYSize) {this.sizeY = newYSize;}
 
     @Override
     public void onTick(long i) {
         //Functionality.
     }
 
+
+
 }
+

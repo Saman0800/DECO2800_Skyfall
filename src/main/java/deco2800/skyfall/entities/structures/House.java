@@ -22,7 +22,7 @@ public class House extends AbstractBuilding {
     private int maxHealth = 10;
     private int currentHealth;
     //Build time in seconds.
-    private int buildTime = 10;
+    private int buildTime = 7;
     //Currently just uses basic X/Y coords, will be changed at a later date.
     private int sizeX = 1;
     private int sizeY = 1;
@@ -44,7 +44,7 @@ public class House extends AbstractBuilding {
         this.currentHealth = maxHealth;
 
 
-        //Call Construction Permissions here
+        //Call Construction Permissions here but for now just do basic checking
 
         children = new HashMap<>();
         children.put(tile.getCoordinates(), texture);

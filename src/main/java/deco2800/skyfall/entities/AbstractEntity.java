@@ -325,8 +325,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	}
 
 
-
-
     //Used for managing animations
     public void setMovingAnimation(AnimationRole movingAnimation) {
         this.movingAnimation = movingAnimation;
@@ -365,7 +363,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	public Queue<AnimationLinker> getToBeRun() {
 		return toBeRun;
 	}
-
 
 }
 
