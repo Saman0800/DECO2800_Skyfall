@@ -36,6 +36,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
     public StaticEntity(Tile tile, int renderOrder, String texture, boolean obstructed) {
         super(tile.getCol(), tile.getRow(), renderOrder);
         this.setObjectName(ENTITY_ID_STRING);
+        this.setTexture(texture);
 
         this.renderOrder = renderOrder;
         this.obstructed = obstructed;
@@ -56,6 +57,8 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         this.setObjectName(ENTITY_ID_STRING);
 
         Tile center = GameManager.get().getWorld().getTile(this.getPosition());
+        this.renderOrder = renderOrder;
+        this.obstructed = true;
 
         if (center == null) {
             log.debug("Center is null");
@@ -96,8 +99,20 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
      * A simple getter function to retrieve the obstruction value of this object
      * 
      * @return The obstruction value.
+     *
+     * @deprecated use {@link #isObstructed()}
      */
+    @Deprecated()
     public boolean getObstructed() {
+        return isObstructed();
+    }
+
+    /**
+     * A simple getter function to retrieve the obstruction value of this object
+     *
+     * @return The obstruction value.
+     */
+    public boolean isObstructed() {
         return this.obstructed;
     }
 
@@ -121,7 +136,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
      * @return A clone of the instance with only the tile position having changed.
      */
     public StaticEntity newInstance(Tile tile) {
-        return new StaticEntity(tile, this.getRenderOrder(), this.getTexture(), this.getObstructed());
+        return new StaticEntity(tile, this.getRenderOrder(), this.getTexture(), this.isObstructed());
     }
 
     /**

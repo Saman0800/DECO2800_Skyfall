@@ -55,14 +55,16 @@ public class MainMenuScreen implements Screen {
         connectToServerButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen(new SkyfallGame(), false));
+                // TODO Accept user-provided seed or generate random seed.
+                game.setScreen(new GameScreen(new SkyfallGame(), 0, false));
             }
         });
 
         newGameBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen(new SkyfallGame(), true));
+                // TODO Accept user-provided seed or generate random seed.
+                game.setScreen(new GameScreen(new SkyfallGame(), 0, true));
             }
         });
     }

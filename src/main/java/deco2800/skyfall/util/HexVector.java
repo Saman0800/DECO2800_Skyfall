@@ -3,6 +3,7 @@ package deco2800.skyfall.util;
 public class HexVector {
 	private float col;
     private float row;
+    private double angle;
 
     /**
      * Constructor for a HexVector
@@ -95,7 +96,7 @@ public class HexVector {
         
         double deltaCol = this.col - point.col;
         double deltaRow = this.row - point.row;
-        double angle;
+
 
         angle = Math.atan2(deltaRow, deltaCol) + Math.PI;
 
@@ -152,4 +153,7 @@ public class HexVector {
 		return new HexVector(col,row);
 	}
 
+    public double getAngle() {
+        return angle;
+    }
 }

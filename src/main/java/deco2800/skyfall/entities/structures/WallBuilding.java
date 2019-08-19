@@ -1,5 +1,7 @@
 package deco2800.skyfall.entities.structures;
 
+import java.util.TreeMap;
+
 /**
  * Walls that the player can place. Walls are stationary buildings that
  * impede all land units. Walls block projectiles.
@@ -8,17 +10,27 @@ public class WallBuilding extends AbstractBuilding {
 
     private int maxHealth = 5;
     private int currentHealth;
-    //Build time in seconds.
-    private int buildTime = 3;
-    //Currently just uses basic X/Y coords, will be changed at a later date.
-    private int sizeX = 1;
-    private int sizeY = 1;
 
     public WallBuilding(float x, float y) {
         super(x, y);
         this.currentHealth = maxHealth;
         //Ignore that the fence is using a building image.
         this.setTexture("buildingA");
+
+        //Build time in seconds.
+        int constructionTime = 3;
+        //Building size
+        int xSize = 1;
+        int ySize = 1;
+        //Cost of building
+        //String: Name of item, can access using item.getName();
+        //Integer: The number of that type of item
+        TreeMap<String, Integer> constructionCost = new TreeMap<String, Integer>();
+
+        this.setXSize(xSize);
+        this.setYSize(ySize);
+        this.setBuildTime(constructionTime);
+        this.setCost(constructionCost);
     }
     /**
      * @return - Health of the fence
@@ -30,20 +42,6 @@ public class WallBuilding extends AbstractBuilding {
      */
     public int getCurrentHealth() {return this.currentHealth;}
 
-    /**
-     * @return - Build time
-     */
-    public int getBuildTime() {return this.buildTime;}
-
-    /**
-     * @return - X length
-     */
-    public int getXSize() {return this.sizeX;}
-
-    /**
-     * @return - Y length
-     */
-    public int getYSize() {return this.sizeY;}
 
     /**
      * @param newMaxHealth - New max health
@@ -65,16 +63,6 @@ public class WallBuilding extends AbstractBuilding {
             currentHealth = 0;
         }
     }
-
-    /**
-     * @param newXSize - New X length
-     */
-    public void setXSize(int newXSize) {this.sizeX = newXSize;}
-
-    /**
-     * @param newYSize - New Y length
-     */
-    public void setYSize(int newYSize) {this.sizeY = newYSize;}
 
     @Override
     public void onTick(long i) {
