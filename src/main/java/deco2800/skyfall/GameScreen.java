@@ -18,6 +18,8 @@ import deco2800.skyfall.renderers.Renderer3D;
 import deco2800.skyfall.worlds.*;
 import deco2800.skyfall.managers.SoundManager;
 
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +51,8 @@ public class GameScreen implements Screen,KeyDownObserver {
 	public Stage stage = new Stage(new ExtendViewport(1280, 720));
 
 	long lastGameTick = 0;
+
+	ShaderProgram shaderProgram;
 	
 
 	public GameScreen(final SkyfallGame game, boolean isHost) {
@@ -95,6 +99,58 @@ public class GameScreen implements Screen,KeyDownObserver {
 		Gdx.input.setInputProcessor(multiplexer);
 		
 		GameManager.get().getManager(KeyboardManager.class).registerForKeyDown(this);
+
+		String vertexShader =
+				"#version 330 core\n"+
+			"attribute vec4 a_position;\n"+
+		"attribute vec4 a_color;\n"+
+		"attribute vec2 a_texCoord0;\n"+
+
+		"uniform mat4 u_projTrans;\n"+
+
+		"varying vec4 v_color;\n"+
+		"varying vec2 v_texCoords;\n"+
+
+		"out vec2 oPosition;\n"+
+
+		"void main() {\n"+
+		"v_color = a_color;\n"+
+		"v_texCoords = a_texCoord0;\n"+
+		"gl_Position = u_projTrans * a_position;\n"+
+		"oPosition = a_position.xy;\n"+
+		"};\n";
+		String fragmentShader =
+				"#version 330 core\n"+
+		"#ifdef GL_ES\n"+
+		"precision mediump float;\n"+
+		"#endif\n"+
+
+		"in vec2 oPosition;\n"+
+
+		"varying vec4 v_color;\n"+
+		"varying vec2 v_texCoords;\n"+
+		"uniform sampler2D u_texture;\n"+
+		"uniform mat4 u_projTrans;\n"+
+
+		"void main() {\n"+
+		"	vec4 colora = texture(u_texture, v_texCoords).rgba;\n"+
+		"	if (colora.w < 0.2) {discard;};\n"+
+		"	vec3 color = colora.xyz;\n"+
+		"	float gray = (color.r + color.g + color.b) / 3.0;\n"+
+		"	vec3 grayscale = 0.5*color+ 0.5*vec3(oPosition/100, 1.0);\n"+
+		"	vec3 ambient = 0.2*color;\n"+
+		"	float dStr = clamp((1 - length(oPosition)/200), 1.0, 0.0);\n"+
+		"	vec3 direct = dStr*vec3(1.0, 0.729, 0.33)*color;\n"+
+		"	gl_FragColor = vec4(ambient + direct, 1.0);\n"+
+		"}";
+
+		shaderProgram = new ShaderProgram(vertexShader,fragmentShader);
+		shaderProgram.pedantic=false;
+		for (int i = 0; i < 20; i++) {
+			System.out.print("-");
+		}
+		System.out.print("\n");
+		System.out.print(shaderProgram.getLog());
 	}
 
 	/**
@@ -141,6 +197,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 	 * Use the selected renderer to render objects onto the map
 	 */
 	private void rerenderMapObjects(SpriteBatch batch, OrthographicCamera camera) {
+		batch.setShader(shaderProgram);
 		renderer.render(batch, camera);
 	}
 
