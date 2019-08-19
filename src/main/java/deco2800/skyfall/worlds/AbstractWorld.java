@@ -277,9 +277,14 @@ public abstract class AbstractWorld {
         //Collision detection for entities
         for (AbstractEntity e1 : this.getEntities()) {
             e1.onTick(0);
-
+            if (e1.getCollider() == null) {
+                break;
+            }
             Collider c1 = e1.getCollider();
             for (AbstractEntity e2 : this.getEntities()) {
+                if (e2.getCollider() == null) {
+                    break;
+                }
                 Collider c2 = e2.getCollider();
 
                 if (e1 != e2 && c1.overlaps(c2)) {
@@ -288,7 +293,7 @@ public abstract class AbstractWorld {
                     }
                     //collision handler
                     this.handleCollision(e1, e2);
-                    //break;
+                    break;
                 }
             }
             //no collision here
@@ -338,16 +343,15 @@ public abstract class AbstractWorld {
     public void handleCollision(AbstractEntity e1, AbstractEntity e2) {
         //TODO: implement proper game logic for collisions between different types of entities.
 
-        if (e1 instanceof Projectile && e2 instanceof Tree) {
+        if (e1 instanceof Projectile && e2 instanceof EnemyEntity) {
             removeEntity(e2);
 
-        } else if (e2 instanceof Projectile && e1 instanceof Tree) {
+        } else if (e2 instanceof Projectile && e1 instanceof EnemyEntity) {
             removeEntity(e1);
         } else {
             return;
         }
     }
-
 
     public void saveWorld(String filename) throws IOException{
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(filename))){
