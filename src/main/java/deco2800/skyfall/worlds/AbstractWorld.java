@@ -35,6 +35,8 @@ public abstract class AbstractWorld {
     protected int worldSize;
     protected int nodeSpacing;
 
+    private long seed;
+
     //List that contains the world biomes
     protected ArrayList<AbstractBiome> biomes;
 
@@ -46,6 +48,7 @@ public abstract class AbstractWorld {
 
     protected AbstractWorld(long seed, int worldSize, int nodeSpacing) {
         Random random = new Random(seed);
+        this.seed = seed;
 
         this.worldSize = worldSize;
         this.nodeSpacing = nodeSpacing;
@@ -85,7 +88,7 @@ public abstract class AbstractWorld {
 
     public void generateNeighbours() {
     //multiply coords by 2 to remove floats
-    	Map<Integer, Map<Integer, Tile>> tileMap = new HashMap<Integer, Map<Integer, Tile>>();
+    	Map<Integer, Map<Integer, Tile>> tileMap = new HashMap<>();
 		Map<Integer, Tile> columnMap;
 		for(Tile tile : tiles) {
 			columnMap = tileMap.getOrDefault((int)tile.getCol()*2, new HashMap<Integer, Tile>());
@@ -327,7 +330,7 @@ public abstract class AbstractWorld {
     /**
      * Gets the list of biomes in a world
      */
-    public ArrayList<AbstractBiome> getBiomes(){
+    public List<AbstractBiome> getBiomes(){
         return this.biomes;
     }
 
@@ -343,18 +346,13 @@ public abstract class AbstractWorld {
         } else {
             return;
         }
-//        if (e1 instanceof Projectile && !(e2 instanceof MainCharacter)) {
-//            removeEntity(e2);
-//        } else if (e2 instanceof Projectile && !(e1 instanceof MainCharacter)) {
-//            removeEntity(e1);
-//        }
     }
 
 
     public void saveWorld(String filename) throws IOException{
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-        writer.write(worldToString());
-        writer.close();
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(filename))){
+            writer.write(worldToString());
+        }
     }
 
     public String worldToString(){
@@ -365,5 +363,13 @@ public abstract class AbstractWorld {
             string.append(out);
         }
         return string.toString();
+    }
+
+    /**
+     * Returns the seed used in the world
+     * @return
+     */
+    public long getSeed() {
+        return seed;
     }
 }

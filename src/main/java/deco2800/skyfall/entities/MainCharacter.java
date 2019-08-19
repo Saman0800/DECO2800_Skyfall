@@ -345,6 +345,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 //         this.direction.y - this.getRow());
 //        System.out.printf("%s%n", this.currentSpeed);
 //        TODO: Check direction for animation here
+
+        //Displays or hides the build menu when "b" is clicked
+        if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+            GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
+        }
     }
 
     @Override

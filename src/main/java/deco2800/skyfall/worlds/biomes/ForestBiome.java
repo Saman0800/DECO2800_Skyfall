@@ -29,15 +29,20 @@ public class ForestBiome extends AbstractBiome {
     @Override
     public void setTileTextures(Random random) {
         ArrayList<String> textures = new ArrayList<>();
-        textures.add("grass_0");
-        textures.add("grass_1");
-        textures.add("grass_2");
+//        textures.add("grass_0");
+//        textures.add("grass_1");
+//        textures.add("grass_2");
+        textures.add("grass_3");
+        textures.add("grass_4");
+        textures.add("grass_5");
+        textures.add("grass_6");
+//        textures.add("grass_4");
 
         //Perlin noise generation
         PerlinNoiseGenerator perlinNoise = new PerlinNoiseGenerator(random);
         // perlinNoise.getOctavedPerlinNoiseGrid(getTiles(), 2, 30, 0.5);
-        perlinNoise.getOctavedPerlinNoiseGrid(getTiles(), 3, 30, 0.2);
-        //Normalising the values to 0-textures.size()-1
+        perlinNoise.getOctavedPerlinNoiseGrid(getTiles(), 2, 60, 0.2);
+        //Normalising the values to 0-textures.size()
         perlinNoise.normalisePerlinValues(getTiles(),textures.size());
 
 

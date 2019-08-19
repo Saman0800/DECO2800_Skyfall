@@ -53,15 +53,46 @@ public class TextureManager extends AbstractManager {
             textureMap.put("grass_0", new Texture("resources/tile_textures/grass_0.png"));
             textureMap.put("grass_1", new Texture("resources/tile_textures/grass_1.png"));
             textureMap.put("grass_2", new Texture("resources/tile_textures/grass_2.png"));
+            textureMap.put("grass_3", new Texture("resources/tile_textures/grass_3.png"));
+            textureMap.put("grass_4", new Texture("resources/tile_textures/grass_4.png"));
+            textureMap.put("grass_5", new Texture("resources/tile_textures/grass_5.png"));
+            textureMap.put("grass_6", new Texture("resources/tile_textures/grass_6.png"));
+            textureMap.put("spider", new Texture("resources/spider.png"));
+            textureMap.put("robot", new Texture("resources/robot.png"));
+
+            //EnemyEntity robot
+            textureMap.put("robotS", new Texture("resources/robotS.png"));
+            textureMap.put("robotSW", new Texture("resources/robotSW.png"));
+            textureMap.put("robotSE", new Texture("resources/robotSE.png"));
+            textureMap.put("robotN", new Texture("resources/robotN.png"));
+            textureMap.put("robotNE", new Texture("resources/robotNE.png"));
+            textureMap.put("robotNW", new Texture("resources/robotNW.png"));
+
 
             textureMap.put("water_0", new Texture("resources/tile_textures/water_0.png"));
             textureMap.put("water_1", new Texture("resources/tile_textures/water_1.png"));
             textureMap.put("water_2", new Texture("resources/tile_textures/water_2.png"));
             textureMap.put("water_3", new Texture("resources/tile_textures/water_3.png"));
+            textureMap.put("water_4", new Texture("resources/tile_textures/water_4.png"));
+            textureMap.put("water_5", new Texture("resources/tile_textures/water_5.png"));
+            textureMap.put("water_6", new Texture("resources/tile_textures/water_6.png"));
 
             textureMap.put("desert_0", new Texture("resources/tile_textures/desert_0.png"));
+            textureMap.put("desert_1", new Texture("resources/tile_textures/desert_1.png"));
+            textureMap.put("desert_2", new Texture("resources/tile_textures/desert_2.png"));
+            textureMap.put("desert_3", new Texture("resources/tile_textures/desert_3.png"));
 
             textureMap.put("mountain_0", new Texture("resources/tile_textures/mountain_0.png"));
+            textureMap.put("mountain_1", new Texture("resources/tile_textures/mountain_1.png"));
+            textureMap.put("mountain_2", new Texture("resources/tile_textures/mountain_2.png"));
+            textureMap.put("mountain_3", new Texture("resources/tile_textures/mountain_3.png"));
+            textureMap.put("mountain_4", new Texture("resources/tile_textures/mountain_4.png"));
+            textureMap.put("mountain_5", new Texture("resources/tile_textures/mountain_5.png"));
+
+            //Tile textures that have undecided biome type
+            textureMap.put("random_0", new Texture("resources/tile_textures/random_0.png"));
+            textureMap.put("random_1", new Texture("resources/tile_textures/random_1.png"));
+
 
 
             textureMap.put("grass_tuff", new Texture("resources/world_details/grass1.png"));
@@ -95,6 +126,18 @@ public class TextureManager extends AbstractManager {
             textureMap.put("rock1", new Texture("resources/world_details/rock1.png"));
             textureMap.put("rock2", new Texture("resources/world_details/rock2.png"));
             textureMap.put("rock3", new Texture("resources/world_details/rock3.png"));
+
+            textureMap.put("house1", new Texture("resources/world_structures/house1.png"));
+            textureMap.put("storage_unit", new Texture("resources/world_structures/storage_unit.png"));
+            textureMap.put("town_centre", new Texture("resources/world_structures/town_centre.png"));
+            textureMap.put("fence_bottom_left", new Texture("resources/world_structures/fence_bottom_left.png"));
+            textureMap.put("fence_bottom_right", new Texture("resources/world_structures/fence_bottom_right.png"));
+            textureMap.put("fence_left_left", new Texture("resources/world_structures/fence_left_left.png"));
+            textureMap.put("fence_right_right", new Texture("resources/world_structures/fence_right_right.png"));
+            textureMap.put("fence_top_left", new Texture("resources/world_structures/fence_top_left.png"));
+            textureMap.put("fence_top_right", new Texture("resources/world_structures/fence_top_right.png"));
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
