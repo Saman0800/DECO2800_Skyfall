@@ -40,6 +40,7 @@ public class GameManager {
 
 	// The UI skin being used by the game for libGDX elements.
 	private Skin skin;
+
     // Showing if the game is paused.
     private static boolean paused = false;
 

@@ -63,7 +63,6 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 GameManager.get().isTutorial = true;
-                game.setScreen(new GameScreen(new SkyfallGame(), 0, true));
                 // TODO Accept user-provided seed or generate random seed.
                 game.setScreen(new GameScreen(new SkyfallGame(), 3, true));
             }
@@ -84,8 +83,7 @@ public class MainMenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 GameManager.get().isTutorial = false;
                 // TODO Accept user-provided seed or generate random seed.
-                game.setScreen(new GameScreen(new SkyfallGame(), 0, false));
-                game.setScreen(new GameScreen(new SkyfallGame(), 3, true));
+                game.setScreen(new GameScreen(new SkyfallGame(), 3, false));
             }
         });
     }
