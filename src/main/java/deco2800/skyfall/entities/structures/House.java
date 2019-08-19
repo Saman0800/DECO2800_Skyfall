@@ -1,10 +1,23 @@
 package deco2800.skyfall.entities.structures;
 
 
-import deco2800.skyfall.entities.AgentEntity;
+import com.google.gson.annotations.Expose;
+import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.Tile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class House extends AbstractBuilding  {
+import java.util.HashMap;
+import java.util.Map;
 
+public class House extends StaticEntity {
+
+    private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
+
+    private static final String ENTITY_ID_STRING = "HouseID";
+    private int renderOrder;
     private int maxHealth = 10;
     private int currentHealth = 5;
     //Build time in seconds.
@@ -12,9 +25,51 @@ public class House extends AbstractBuilding  {
     //Currently just uses basic X/Y coords, will be changed at a later date.
     private int sizeX = 1;
     private int sizeY = 1;
+    private String texture = "house1";
+    private boolean obstructed;
+
+
+    @Expose
+    public Map<HexVector, String> children;
+
+    /**
+    Setting up the default constructor
+     */
+    public House(){
+        super();
+    }
+
+    public House(Tile tile, int renderOrder) {
+        this.setTexture(texture);
+
+        this.setObjectName(ENTITY_ID_STRING);
+
+        this.renderOrder = renderOrder;
+
+        children = new HashMap<>();
+        children.put(tile.getCoordinates(), texture);
+        if (!WorldUtil.validColRow(tile.getCoordinates())) {
+            log.debug(tile.getCoordinates() + "%s Is Invalid:");
+            return;
+        }
+
+        tile.setParent(this);
+        this.currentHealth = maxHealth;
+
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     public House(float x, float y) {
-        super(x, y);
         this.currentHealth = maxHealth;
         this.setTexture("house1");
     }
