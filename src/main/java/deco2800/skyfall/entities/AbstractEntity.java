@@ -187,6 +187,12 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		return this.renderOrder - otherEntity.getRenderOrder();
 	}
 
+	/**
+	 * Creates a new Collider object at (x,y) coordinates with size xLength x
+	 * yLength.
+	 * Called by all constructors in this class such that no AbstractEntity
+	 * in the game has a Collider set to null.
+	 */
 	public void setCollider() {
 		float[] coords = WorldUtil.colRowToWorldCords(position.getCol(), position.getRow());
 		//TODO: length and width of collider to be determined by actual size of texture
