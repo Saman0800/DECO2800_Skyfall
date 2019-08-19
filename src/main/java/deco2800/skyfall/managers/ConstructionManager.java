@@ -146,11 +146,10 @@ public class ConstructionManager extends AbstractManager {
             return false;
         }
 
-        File file = new File(fileBase);
-
-        try (FileReader fr = new FileReader(file);
-             BufferedReader br = new BufferedReader(fr);
-        ) {
+        try {
+            File file = new File(fileBase);
+            FileReader fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
             String line;
 
             while ((line = br.readLine()) != null) {
@@ -169,6 +168,7 @@ public class ConstructionManager extends AbstractManager {
                     throw new IOException("Incorrect file format");
                 }
             }
+            br.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
