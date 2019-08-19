@@ -110,7 +110,6 @@ public class TownCentreBuilding extends AbstractBuilding {
         } else {
             currentHealth = 0;
         }
->>>>>>> building_design
     }
 
     @Override
