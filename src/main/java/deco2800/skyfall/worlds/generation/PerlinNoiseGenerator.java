@@ -2,7 +2,7 @@ package deco2800.skyfall.worlds.generation;
 
 import deco2800.skyfall.worlds.Tile;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -131,10 +131,10 @@ public class PerlinNoiseGenerator {
      * @param tiles A list of tiles where each tile in it will receive a noise value
      * @param period The period which determines how long it takes to fade between values
      */
-    public void setPerlinValues(ArrayList<Tile> tiles, double period){
+    public void setPerlinValues(List<Tile> tiles, double period){
 
 
-        if (tiles.size() > 0){
+        if (!tiles.isEmpty()){
 
             double lowestCol = tiles.get(0).getCol();
             double lowestRow = tiles.get(0).getRow();
@@ -169,7 +169,7 @@ public class PerlinNoiseGenerator {
      * @param attenuation This allows grid sizes to have an effect on the noise, a larger value results
      *                    in smaller grids having a large impact on the noise
      */
-    public void getOctavedPerlinNoiseGrid(ArrayList<Tile> tiles,int octaves, double startPeriod, double attenuation){
+    public void getOctavedPerlinNoiseGrid(List<Tile> tiles,int octaves, double startPeriod, double attenuation){
         for (int octave = 0; octave < octaves; octave++){
             double period = startPeriod * Math.pow(0.5, octave);
             double octaveAttenutation = Math.pow(attenuation, octave);
@@ -184,7 +184,11 @@ public class PerlinNoiseGenerator {
                 maxValue += Math.pow(attenuation, octave);
         }
         for (Tile tile: tiles){
-            tile.setPerlinValue(tile.getPerlinValue()/maxValue);
+            if (maxValue == 0){
+                tile.setPerlinValue(0);
+            } else {
+                tile.setPerlinValue(tile.getPerlinValue() / maxValue);
+            }
         }
 
     }
@@ -194,7 +198,7 @@ public class PerlinNoiseGenerator {
      * These ints can then be used to determine the tile texture
      * @param numOfTextures The number of textures that are used in that biome
      */
-    public void normalisePerlinValues(ArrayList<Tile> tiles, int numOfTextures){
+    public void normalisePerlinValues(List<Tile> tiles, int numOfTextures){
         double minPerlinValue = tiles.get(0).getPerlinValue();
         double maxPerlinValue = tiles.get(0).getPerlinValue();
         for (Tile tile : tiles){

@@ -1,9 +1,11 @@
 package deco2800.skyfall.managers;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +40,8 @@ public class AnimationManager extends AbstractManager {
                 "mario_right", 100, 138, DEFAULT_FRAME_RATE);
         this.generateAnimationObject("mario_left",
                 "mario_left", 100, 138, DEFAULT_FRAME_RATE);
+        this.generateAnimationObject("spider_defence","resources/spiderSheet/SpiderAnimation.atlas",1.0f);
+        this.generateAnimationObject("robot_defence","resources/robotSheet/robotAnimation.atlas",1.0f);
     }
 
 
@@ -94,6 +98,12 @@ public class AnimationManager extends AbstractManager {
         LOGGER.info("Object " + animationName + " has been generated");
     }
 
+    public void generateAnimationObject(String animationName,String atlasPath,float frameRate){
+        TextureAtlas textureAtlas=new TextureAtlas(Gdx.files.internal(atlasPath));
+        LOGGER.info("textureAtlas file has been fetched");
+        animationMap.put(animationName, new Animation<TextureRegion>(frameRate,textureAtlas.getRegions()));
+        LOGGER.info("Object " + animationName + " has been generated");
+    }
 
     /**
      * Gets an animation object
