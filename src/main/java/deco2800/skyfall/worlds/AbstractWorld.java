@@ -344,9 +344,9 @@ public abstract class AbstractWorld {
 
 
     public void saveWorld(String filename) throws IOException{
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-        writer.write(worldToString());
-        writer.close();
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(filename))){
+            writer.write(worldToString());
+        }
     }
 
     public String worldToString(){

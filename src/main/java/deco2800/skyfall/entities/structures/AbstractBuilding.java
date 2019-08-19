@@ -5,6 +5,7 @@ import deco2800.skyfall.entities.AbstractEntity;
 
 import deco2800.skyfall.worlds.AbstractWorld;
 
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -21,7 +22,7 @@ public abstract class AbstractBuilding extends AbstractEntity {
 
     private int buildTime;
 
-    private TreeMap<String, Integer> buildCost = new TreeMap<>();
+    private Map<String, Integer> buildCost = new TreeMap<>();
 
     /**
      *
@@ -57,14 +58,14 @@ public abstract class AbstractBuilding extends AbstractEntity {
     /**
      * @return - cost of building the building
      */
-    public TreeMap<String, Integer> getCost(){
+    public Map<String, Integer> getCost(){
         return buildCost;
     }
 
     /**
      * @param newCost set the cost of building
      */
-    public void setCost(TreeMap<String, Integer> newCost){
+    public void setCost(Map<String, Integer> newCost){
         this.buildCost = newCost;
     }
 

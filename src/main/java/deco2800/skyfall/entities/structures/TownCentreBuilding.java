@@ -16,7 +16,7 @@ public class TownCentreBuilding extends AbstractBuilding {
         int xSize = 3;
         int ySize = 3;
 
-        TreeMap<String, Integer> constructionCost = new TreeMap<String, Integer>();
+        TreeMap<String, Integer> constructionCost = new TreeMap<>();
     }
 
     @Override
