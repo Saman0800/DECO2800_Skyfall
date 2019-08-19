@@ -139,7 +139,11 @@ public class BiomeGenerator {
                         centerNode = node;
                     }
                 }
-                biome.addNode(centerNode);
+
+                if (centerNode != null) {
+                    biome.addNode(centerNode);
+                }
+
             } else {
                 // Pick a random point on the border to start the next biome from.
                 WorldGenNode node = borderNodes.get(random.nextInt(borderNodes.size()));
@@ -290,7 +294,7 @@ public class BiomeGenerator {
          * Expands a biome to fill all contiguous nodes that are not already used.
          */
         void floodGrowBiome() {
-            while (borderNodes.size() > 0) {
+            while (!borderNodes.isEmpty()) {
                 // It doesn't matter which node is grown from.
                 WorldGenNode growFrom = borderNodes.get(0);
 

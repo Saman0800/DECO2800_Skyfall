@@ -35,6 +35,8 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
 
     public int foodValue;
 
+    //TODO: look into public int healthValue;
+
 
 
     public HealthResources(){

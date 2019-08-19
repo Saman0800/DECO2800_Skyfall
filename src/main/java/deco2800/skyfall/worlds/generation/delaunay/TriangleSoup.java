@@ -20,7 +20,7 @@ class TriangleSoup {
      * instance.
      */
     TriangleSoup() {
-        this.triangleSoup = new ArrayList<WorldGenTriangle>();
+        this.triangleSoup = new ArrayList<>();
         this.borderNodes = new ArrayList<>();
     }
 
@@ -113,7 +113,7 @@ class TriangleSoup {
      * @return The edge from the triangle soup nearest to the specified point
      */
     WorldGenEdge findNearestEdge(WorldGenNode point) {
-        List<EdgeDistancePack> edgeList = new ArrayList<EdgeDistancePack>();
+        List<EdgeDistancePack> edgeList = new ArrayList<>();
 
         for (WorldGenTriangle triangle : triangleSoup) {
             edgeList.add(triangle.findNearestEdge(point));
