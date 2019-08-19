@@ -108,6 +108,11 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
                 0f, 0.05f, "Main Piece", 10);
         addEntity(testCharacter);
 
+        Tile tile = getTile(1f, 2.5f);
+        addEntity(new Tree(tile, true));
+
+//
+
         GameManager.getManagerFromInstance(InputManager.class)
                 .addTouchDownListener(this);
     }
@@ -117,13 +122,14 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         super.onTick(i);
 
         if (!generated) {
-            Tile tile = getTile(1f, 2.5f);
-            addEntity(new Tree(tile, true));
+//            Tile tile = getTile(1f, 2.5f);
+//            addEntity(new Tree(tile, true));
 
             generated = true;
 
-            Tile tileRock = getTile(0.0f, 1.0f);
-            Rock startRock = new Rock(tileRock, true);
+//            Tile tileRock = getTile(0.0f, 1.0f);
+//            Rock startRock = new Rock(tileRock, true);
+
 //            EntitySpawnTable rockSpawnRule = new EntitySpawnTable();
 //            EntitySpawnTable.spawnEntities(startRock, 0.2, biome);
         }
