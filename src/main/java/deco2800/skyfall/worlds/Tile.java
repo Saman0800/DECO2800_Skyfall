@@ -67,7 +67,7 @@ public class Tile{
 
     public Tile(float col, float row) {
         coords = new HexVector(col, row);
-        this.neighbours = new HashMap<Integer,Tile>();
+        this.neighbours = new HashMap<>();
         this.tileID = Tile.getNextID();
     }
 

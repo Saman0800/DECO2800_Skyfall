@@ -146,10 +146,10 @@ public class ConstructionManager extends AbstractManager {
             return false;
         }
 
-        try {
-            File file = new File(fileBase);
-            FileReader fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
+        File file = new File(fileBase);
+        try (FileReader fr = new FileReader(file);
+             BufferedReader br = new BufferedReader(fr);) {
+
             String line;
 
             while ((line = br.readLine()) != null) {
@@ -179,7 +179,7 @@ public class ConstructionManager extends AbstractManager {
      * Update a terrain's building permission to allow/disallow building.
      *
      * @param texture - a terrain's texture name on tile
-     * @param value - boolean value to allow/disallow building for the terrain
+     * @param value   - boolean value to allow/disallow building for the terrain
      * @return true if a terrain building permission is updated, otherwise false
      */
     public boolean updateTerrainMap(String texture, Boolean value) {
@@ -239,7 +239,7 @@ public class ConstructionManager extends AbstractManager {
      * Non-empty entities in tiles interfere building and should be destroyed first.
      *
      * @param worldMap - a game's world
-     * @param tiles - tiles that will be checked if contain entities
+     * @param tiles    - tiles that will be checked if contain entities
      * @return true if empty entities on tiles, otherwise false
      */
     public boolean verifyEntity(AbstractWorld worldMap, Tile... tiles) {

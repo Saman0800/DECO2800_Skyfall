@@ -294,7 +294,7 @@ public class BiomeGenerator {
          * Expands a biome to fill all contiguous nodes that are not already used.
          */
         void floodGrowBiome() {
-            while (borderNodes.size() > 0) {
+            while (!borderNodes.isEmpty()) {
                 // It doesn't matter which node is grown from.
                 WorldGenNode growFrom = borderNodes.get(0);
 

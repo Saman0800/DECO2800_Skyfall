@@ -25,7 +25,7 @@ public class WallBuilding extends AbstractBuilding {
         //Cost of building
         //String: Name of item, can access using item.getName();
         //Integer: The number of that type of item
-        TreeMap<String, Integer> constructionCost = new TreeMap<String, Integer>();
+        TreeMap<String, Integer> constructionCost = new TreeMap<>();
 
         this.setXSize(xSize);
         this.setYSize(ySize);
