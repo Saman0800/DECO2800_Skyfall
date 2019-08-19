@@ -53,7 +53,7 @@ public class Berry extends HealthResources implements Item {
         this.name ="Berry";
         this.hasFoodEffect = true;
         this.foodValue = 20;
-        this.healthValue = 5;
+        //TODO: look into this.healthValue = 5;
         //default constructor added for building inventory
     }
 
