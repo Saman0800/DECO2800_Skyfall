@@ -282,11 +282,11 @@ public abstract class AbstractWorld {
             for (AbstractEntity e2 : this.getEntities()) {
                 Collider c2 = e2.getCollider();
 
-                if (e1 != e2 && c1.overlaps(c2)) {
-                    //collision handler
-                    this.handleCollision(e1, e2);
-                    break;
-                }
+//                if (e1 != e2 && c1.overlaps(c2)) {
+//                    //collision handler
+//                    this.handleCollision(e1, e2);
+//                    break;
+//                }
             }
             //no collision here
         }
