@@ -22,7 +22,7 @@ public class House extends AbstractBuilding {
     private int maxHealth = 10;
     private int currentHealth;
     //Build time in seconds.
-    private int buildTime = 10;
+    private int buildTime = 7;
     //Currently just uses basic X/Y coords, will be changed at a later date.
     private int sizeX = 1;
     private int sizeY = 1;

@@ -20,13 +20,13 @@ public class StorageUnit extends AbstractBuilding {
 
     private static final String ENTITY_ID_STRING = "StorageUnitID";
     private int renderOrder;
-    private int maxHealth = 10;
+    private int maxHealth = 5;
     private int currentHealth;
     //Build time in seconds.
-    private int buildTime = 10;
+    private int buildTime = 6;
     //Currently just uses basic X/Y coords, will be changed at a later date.
-    private int sizeX = 1;
-    private int sizeY = 1;
+    private int sizeX = 2;
+    private int sizeY = 2;
     private HexVector coords;
     private String texture = "storage_unit";
     ConstructionManager permissions = new ConstructionManager();
