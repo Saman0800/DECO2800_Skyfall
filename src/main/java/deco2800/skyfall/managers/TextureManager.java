@@ -88,6 +88,9 @@ public class TextureManager extends AbstractManager {
             textureMap.put("mountain_3", new Texture("resources/tile_textures/mountain_3.png"));
             textureMap.put("mountain_4", new Texture("resources/tile_textures/mountain_4.png"));
             textureMap.put("mountain_5", new Texture("resources/tile_textures/mountain_5.png"));
+            textureMap.put("mountain_6", new Texture("resources/tile_textures/mountain_6.png"));
+            textureMap.put("mountain_7", new Texture("resources/tile_textures/mountain_7.png"));
+            textureMap.put("mountain_8", new Texture("resources/tile_textures/mountain_8.png"));
 
             //Tile textures that have undecided biome type
             textureMap.put("random_0", new Texture("resources/tile_textures/random_0.png"));
