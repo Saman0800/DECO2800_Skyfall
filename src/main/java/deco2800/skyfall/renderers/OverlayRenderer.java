@@ -3,7 +3,6 @@ package deco2800.skyfall.renderers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.FPSLogger;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,8 +17,6 @@ import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.OnScreenMessageManager;
 import deco2800.skyfall.managers.PathFindingService;
 import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.TutorialWorld;
 import java.util.List;
 
 public class OverlayRenderer implements Renderer {
@@ -105,7 +102,7 @@ public class OverlayRenderer implements Renderer {
 						testTutorialBox.start();
 					}
 
-					if (!entityList.contains(testTutorialEnemy) && !testKilledEnemy && GameManager.get().isTutorial) {
+					if (!entityList.contains(testTutorialEnemy) && !testKilledEnemy) {
 						testKilledEnemy = true;
 						testTutorialBox.reset();
 						testTutorialBox.setString("Now that nothing, no matter how " +
