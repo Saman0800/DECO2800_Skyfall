@@ -45,6 +45,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("spacman_ded", new Texture("resources/spacman_ded.png"));
             textureMap.put("spacman_blue", new Texture("resources/spacman_blue.png"));
             textureMap.put("bowman", new Texture("resources/bowman.png"));
+            textureMap.put("dialogue_text_background", new Texture("resources/dialogue_text_background.png"));
             textureMap.put("main_piece", new Texture("resources" +
                     "/Main_Character_F_Right.png"));
             textureMap.put("slash", new Texture("resources/slash_long.png"));
@@ -88,6 +89,9 @@ public class TextureManager extends AbstractManager {
             textureMap.put("mountain_3", new Texture("resources/tile_textures/mountain_3.png"));
             textureMap.put("mountain_4", new Texture("resources/tile_textures/mountain_4.png"));
             textureMap.put("mountain_5", new Texture("resources/tile_textures/mountain_5.png"));
+            textureMap.put("mountain_6", new Texture("resources/tile_textures/mountain_6.png"));
+            textureMap.put("mountain_7", new Texture("resources/tile_textures/mountain_7.png"));
+            textureMap.put("mountain_8", new Texture("resources/tile_textures/mountain_8.png"));
 
             //Tile textures that have undecided biome type
             textureMap.put("random_0", new Texture("resources/tile_textures/random_0.png"));
@@ -101,6 +105,10 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("selection", new Texture("resources/blue_selection.png"));
             textureMap.put("path", new Texture("resources/yellow_selection.png"));
+
+            // Portrait of the tutorial AI, replace later with custom art
+            textureMap.put("Karen", new Texture("resources/Karen(replace)" +
+                    ".png"));
 
             textureMap.put("buildingB", new Texture("resources/building3x2.png"));
 
@@ -126,6 +134,21 @@ public class TextureManager extends AbstractManager {
             textureMap.put("rock1", new Texture("resources/world_details/rock1.png"));
             textureMap.put("rock2", new Texture("resources/world_details/rock2.png"));
             textureMap.put("rock3", new Texture("resources/world_details/rock3.png"));
+            
+            textureMap.put("pop up screen", new Texture("resources/pop_up_screen_background.png"));
+            textureMap.put("game menu bar", new Texture("resources/pop_up_screen_title_background.png"));
+
+            textureMap.put("pause", new Texture("resources/pause_icon.png"));
+            textureMap.put("settings", new Texture("resources/settings.png"));
+            textureMap.put("info", new Texture("resources/information.png"));
+            textureMap.put("select-character", new Texture("resources/character_selection.png"));
+
+            textureMap.put("resume", new Texture("resources/resume.png"));
+            textureMap.put("goHome", new Texture("resources/home.png"));
+            textureMap.put("reset", new Texture("resources/reset_game.png"));
+
+            textureMap.put("radar", new Texture("resources/radar.png"));
+            textureMap.put("build", new Texture("resources/build.png"));
 
             textureMap.put("house1", new Texture("resources/world_structures/house1.png"));
             textureMap.put("storage_unit", new Texture("resources/world_structures/storage_unit.png"));

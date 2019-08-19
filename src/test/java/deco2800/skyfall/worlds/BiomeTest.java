@@ -63,7 +63,7 @@ public class BiomeTest {
 
                 mountainBiome.setTileTextures(new Random(0));
                 for (Tile tile : mountainBiome.getTiles()){
-                        assertEquals("mountain_1", tile.getTextureName());
+                        assertEquals("mountain_7", tile.getTextureName());
                 }
 
 
