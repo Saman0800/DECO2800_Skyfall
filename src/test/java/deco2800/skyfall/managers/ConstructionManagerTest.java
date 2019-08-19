@@ -2,6 +2,7 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.structures.AbstractBuilding;
 import deco2800.skyfall.entities.structures.WallBuilding;
+import deco2800.skyfall.worlds.RocketWorld;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,14 +68,70 @@ public class ConstructionManagerTest {
     }
 
     @Test
+    public void updateTerrainTest() {
+        String terrain;
+        boolean bool;
+
+        terrain = "River";
+        bool = false;
+        Assert.assertTrue(this.cmgr.updateTerrainMap(terrain, bool));
+
+        terrain = null;
+        bool = true;
+        Assert.assertFalse(this.cmgr.updateTerrainMap(terrain, bool));
+    }
+
+    @Test
     public void verifyNullTest() {
         AbstractWorld world = null;
         Tile tile = null;
         AbstractBuilding building = null;
-        Assert.assertEquals(false, this.cmgr.verifyTerrain(tile));
-        Assert.assertEquals(false, this.cmgr.verifyBiome(tile));
-        Assert.assertEquals(false, this.cmgr.verifyEntity(world, tile));
-        Assert.assertEquals(false, this.cmgr.isTilesBuildable(world, building));
+        Assert.assertFalse(this.cmgr.verifyTerrain(tile));
+        Assert.assertFalse(this.cmgr.verifyBiome(tile));
+        Assert.assertFalse(this.cmgr.verifyEntity(world, tile));
+        Assert.assertFalse(this.cmgr.isTilesBuildable(world, building));
+    }
+
+    @Test
+    public void emptyTerrainTest() {
+        String terrain = "";
+        boolean bool = false;
+        Tile tile = new Tile(1,1);
+
+        tile.setTexture(terrain);
+        this.cmgr.updateTerrainMap(terrain, bool);
+
+        Assert.assertFalse(this.cmgr.verifyTerrain(tile));
+    }
+
+    @Test
+    public void existTerrainTest() {
+        String terrain = "River";
+        boolean bool = false;
+        Tile tile = new Tile(1,1);
+
+        tile.setTexture(terrain);
+        this.cmgr.updateTerrainMap(terrain, bool);
+
+        Assert.assertFalse(this.cmgr.verifyTerrain(tile));
+    }
+
+    @Test
+    public void verifyBoimeTest() {
+        Tile tile = new Tile(1,1);
+        tile.setIsBuildable(false);
+        Assert.assertFalse(this.cmgr.verifyBiome(tile));
+        tile.setIsBuildable(true);
+        Assert.assertTrue(this.cmgr.verifyBiome(tile));
+    }
+
+    @Test
+    public void verifyEntityTest() {
+        AbstractWorld world = new RocketWorld(3, 30,5);
+        Tile tile = world.getTile(10,10);
+        if (world.getEntities().size() == 0) {
+            Assert.assertTrue(this.cmgr.verifyEntity(world, tile));
+        }
     }
 
     @After

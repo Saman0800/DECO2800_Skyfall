@@ -4,6 +4,7 @@ import deco2800.skyfall.worlds.Tile;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -49,7 +50,7 @@ public abstract class AbstractBiome {
      * 
      * @return An ArrayList of all the tiles within a biome
      */
-    public ArrayList<Tile> getTiles() {
+    public List<Tile> getTiles() {
         return tiles;
     }
 

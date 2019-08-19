@@ -370,6 +370,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     @Override
     public void notifyKeyDown(int keycode) {
+        //player cant move when paused
+        if (GameManager.getPaused()) {
+            return;
+        }
         switch (keycode) {
             case Input.Keys.W:
                 MOVE_UP = true;
