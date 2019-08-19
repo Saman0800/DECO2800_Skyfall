@@ -600,6 +600,14 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     public static void calculateVertices(List<WorldGenNode> nodes,
             int worldSize) throws WorldGenException {
         TriangleSoup triangleSoup = triangulate(nodes);
+
+        // Throw an exception if there aren't any border nodes as a fail safe
+        // (Other parts of the world generation algorithm relies on there being
+        // some)
+        if (triangleSoup.getBorderNodes().size() == 0) {
+            throw new WorldGenException();
+        }
+
         for (WorldGenTriangle triangle : triangleSoup.getTriangles()) {
             double[] circumcentre = triangle.circumcentre();
             triangle.getA().addVertex(circumcentre);

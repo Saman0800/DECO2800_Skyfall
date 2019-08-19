@@ -12,12 +12,10 @@ import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
 import deco2800.skyfall.tasks.AbstractTask;
 import deco2800.skyfall.tasks.MovementTask;
 import deco2800.skyfall.util.HexVector;
@@ -41,13 +39,12 @@ public class Renderer3D implements Renderer {
 	private static final String TEXTURE_SELECTION = "selection";
 	private static final String TEXTURE_DESTINATION = "selection";
 	private static final String TEXTURE_PATH = "path";
-
+	private float elapsedTime=0f;
 	private int tilesSkipped = 0;
 
 	private TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
     private AnimationManager animationManager = GameManager.getManagerFromInstance(AnimationManager.class);
 
-	private float elapsedTime = 0;
 	/**
 	 * Renders onto a batch, given a renderables with entities It is expected
 	 * that AbstractWorld contains some entities and a Map to read tiles from
@@ -87,8 +84,22 @@ public class Renderer3D implements Renderer {
 
 		batch.end();
 	}
-	
-	
+
+	/**
+	 *	Render an animation
+	 * @param batch the sprite batch.
+	 * @param camera the camera.
+	 * @param animation the animation need to rend
+	 * @param x animation x coordinate
+	 * @param y	animation y coordinate
+	 */
+	private void renderAnimation(SpriteBatch batch, OrthographicCamera camera, Animation<TextureRegion> animation,Float x,Float y){
+		elapsedTime+= Gdx.graphics.getDeltaTime();
+		batch.draw(animation.getKeyFrame(elapsedTime,true),x,y,
+				animation.getKeyFrame(elapsedTime,true).getRegionWidth()* WorldUtil.SCALE_X,
+				animation.getKeyFrame(elapsedTime,true).getRegionHeight()* WorldUtil.SCALE_Y );
+	}
+
 	/**
 	 * Render a single tile.
 	 * @param batch the sprite batch.
@@ -153,10 +164,97 @@ public class Renderer3D implements Renderer {
                     tex.getHeight() * WorldUtil.SCALE_Y);
         }
 
-	}	
-	
-	
-	
+	}
+
+	/**
+	 *  Robot animation
+	 * @param batch SpriteBatch
+	 * @param camera camera
+	 * @param entity entity
+	 * @param playerPeon Player peon
+	 */
+	private void robotAnimation(SpriteBatch batch, OrthographicCamera camera,AbstractEntity entity,MainCharacter playerPeon){
+		//if the distance between player peon and Robot is greater than 2 then Robot do defence animation
+		//(distance^2=(Robot col -Robot col)^2 +(Robot row -Robot row))
+		if(entity instanceof Robot && playerPeon!=null){
+			Robot robot=(Robot) entity;
+			float colDistance=playerPeon.getCol()-robot.getCol();
+			float rowDistance=playerPeon.getRow()-robot.getRow();
+			if((colDistance*colDistance+rowDistance*rowDistance)<4){
+				float[] tileWorldCord = WorldUtil.colRowToWorldCords(robot.getCol(), robot.getRow());
+				renderAnimation(batch,camera,animationManager.getAnimation("robot_defence"),tileWorldCord[0],tileWorldCord[1]);
+			}else{
+				Texture savageTexture = textureManager.getTexture(robot.getTexture());
+				float[] savageCoord = WorldUtil.colRowToWorldCords(robot.getCol(), robot.getRow());
+				renderAbstractEntity(batch, robot, savageCoord, savageTexture);
+			}
+
+
+		}
+	}
+
+	/**
+	 * skip draw enemy entities
+	 * @param batch the spriteBatch
+	 * @param entity AbstractEntity
+	 * @param entityWorldCoord coordinate of entity world
+	 * @param tex texture of entity
+	 */
+	private void skipDrawingEnemy(SpriteBatch batch,AbstractEntity entity,float[] entityWorldCoord,Texture tex){
+		//if the entity is spider of savage then not drawing
+		if(entity instanceof Spider || entity instanceof Robot){
+
+		}else{
+			renderAbstractEntity(batch, entity, entityWorldCoord, tex);
+		}
+	}
+
+
+	/**
+	 * Spider defence Animation
+	 * @param batch the sprite batch
+	 * @param camera the camera.
+	 * @param entity AbstractEntity
+	 * @param playerPeon playerPeon
+	 */
+	private void spiderAnimation(SpriteBatch batch, OrthographicCamera camera,AbstractEntity entity,MainCharacter playerPeon){
+
+		//if the distance between player peon and spider is greater than 2 then spider do defence animation
+		//(distance^2=(player col -spider col)^2 +(spider row -spider row))
+		if (entity instanceof Spider && playerPeon!=null){
+			Spider spider=(Spider) entity;
+			float colDistance=playerPeon.getCol()-spider.getCol();
+			float rowDistance=playerPeon.getRow()-spider.getRow();
+			if((colDistance*colDistance+rowDistance*rowDistance)<4){
+				float[] tileWorldCord = WorldUtil.colRowToWorldCords(spider.getCol(), spider.getRow());
+
+				renderAnimation(batch,camera,animationManager.getAnimation("spider_defence"),tileWorldCord[0],tileWorldCord[1]);
+			}else{
+				//draw spider texture when distance greater than 2
+				Texture spiderTexture = textureManager.getTexture(spider.getTexture());
+				float[] spiderCoord = WorldUtil.colRowToWorldCords(spider.getCol(), spider.getRow());
+				renderAbstractEntity(batch, spider, spiderCoord, spiderTexture);
+			}
+		}
+
+	}
+
+	/**
+	 * To find playerPeon
+	 * @param entities	AbstractEntity
+	 * @return entity playerPeon
+	 */
+	private MainCharacter findPlayerPeon(List<AbstractEntity> entities){
+		//find playerPeon in the entities list
+		MainCharacter mainCharacter=null;
+		//iterate abstract entity to find Player peon
+		for(AbstractEntity e: entities){
+			if(e instanceof MainCharacter){
+				mainCharacter=(MainCharacter) e;
+			}
+		}
+		return  mainCharacter;
+	}
     /**
 	 * Render all the entities on in view, including movement tiles, and excluding undiscovered area.
 	 * @param batch the sprite batch.
@@ -164,25 +262,28 @@ public class Renderer3D implements Renderer {
 	 */
 	private void renderAbstractEntities(SpriteBatch batch, OrthographicCamera camera) {
 		List<AbstractEntity> entities = GameManager.get().getWorld().getSortedEntities();
+		MainCharacter playerPeon=findPlayerPeon(entities);
+
 		int entitiesSkipped = 0;
 		logger.debug("NUMBER OF ENTITIES IN ENTITY RENDER LIST: {}", entities.size());
 		for (AbstractEntity entity : entities) {
 			Texture tex = textureManager.getTexture(entity.getTexture());
-      		//System.out.println("Renderer3D " + entity.getTexture() + " " + tex.getHeight() + " " + tex.getWidth());
 			float[] entityWorldCoord = WorldUtil.colRowToWorldCords(entity.getCol(), entity.getRow());
 			// If it's offscreen
 			if (WorldUtil.areCoordinatesOffScreen(entityWorldCoord[0], entityWorldCoord[1], camera)) {
 				entitiesSkipped++;
 				continue;
 			}
+			skipDrawingEnemy(batch,entity,entityWorldCoord,tex);
 
             AnimationRole moveType = entity.getMovingAnimation();
 
             if (moveType == AnimationRole.NULL) {
-			    renderAbstractEntity(batch, entity, entityWorldCoord, tex);
+				skipDrawingEnemy(batch, entity, entityWorldCoord, tex);
 			} else {
                 runMovementAnimations(batch, entity, entityWorldCoord, tex);
             }
+
 
 
 			/* Draw Peon */
@@ -190,6 +291,8 @@ public class Renderer3D implements Renderer {
 			if (entity instanceof Peon && GameManager.get().showPath) {
 				renderPeonMovementTiles(batch, camera, entity, entityWorldCoord);
 			 }
+			spiderAnimation(batch,camera,entity,playerPeon);
+			robotAnimation(batch,camera,entity,playerPeon);
 			
 			if (entity instanceof StaticEntity) {
 			    StaticEntity staticEntity = ((StaticEntity) entity);
@@ -223,7 +326,6 @@ public class Renderer3D implements Renderer {
 		GameManager.get().setEntitiesRendered(entities.size() - entitiesSkipped);
 		GameManager.get().setEntitiesCount(entities.size());
 	}
-
 
 	private void renderAbstractEntity(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCord, Texture tex) {
         float x = entityWorldCord[0];
