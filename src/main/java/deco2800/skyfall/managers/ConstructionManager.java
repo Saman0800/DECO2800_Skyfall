@@ -14,22 +14,29 @@ import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.entities.AbstractEntity;
 
 
+/**
+ * Managers the construction process
+ * Only a single instance should exist
+ * Sets all build properties to false as nothing has been set ip yet
+ */
 public class ConstructionManager extends AbstractManager {
     //This manager while control all features related to construction
 
-    //Is the menu visible
+    /**
+     * Stores the current status of the build menu
+     */
     private Boolean menuVisible;
-    //Has the menu been created and added
     private Boolean menuAdded;
-    //Has the menu been set up
     private Boolean menuSetUp;
 
+    /**
+     * The menu through which the building process will be handled
+     */
     private Window buildMenu;
 
-    //Put window components here:
+    //TODO: Put window components here:
 
     public ConstructionManager() {
-        // Set all build menu properties to false
         menuVisible = false;
         menuAdded = false;
         menuSetUp = false;
@@ -49,8 +56,10 @@ public class ConstructionManager extends AbstractManager {
         switchView();
     }
 
-    //Create UI Window
-    //Does nothing if the window already created
+    /**
+     * Creates and sets up the build menu
+     * Does nothing after it has been called once
+     */
     private void createWindow() {
         Stage stage = GameManager.get().getStage();
         if (!menuAdded) {
@@ -62,8 +71,10 @@ public class ConstructionManager extends AbstractManager {
         }
     }
 
-    //Set up window
-    //Does nothing if the window has already been set up
+    /**
+     * Add components (such as buttons) to the build menu
+     * Does nothing after it has been called once
+     */
     private void setUpMenu() {
         if (!menuSetUp) {
             float width = GameManager.get().getStage().getWidth();
@@ -80,13 +91,19 @@ public class ConstructionManager extends AbstractManager {
         }
     }
 
-    //Called every time window is shown so that most accurate, up to date info is shown
+    /**
+     * Updates the information shown within the build menu
+     */
     private void updateWindow() {
         //TODO: Add update code
 
     }
 
-    //Switches the menu on or off
+    /**
+     * Alternates current display state of the build menu
+     * If the window is currently visible its hidden
+     * If the window is currently hidden its displayed
+     */
     private void switchView() {
         if (menuVisible) {
             hideBuildMenu();
@@ -95,13 +112,17 @@ public class ConstructionManager extends AbstractManager {
         }
     }
 
-    // Shows the build menu
+    /**
+     * Displays the build menu
+     */
     private void showBuildMenu() {
         menuVisible = true;
         buildMenu.setVisible(true);
     }
 
-    // Hides the build menu
+    /**
+     * Hides the build menu
+     */
     private void hideBuildMenu() {
         menuVisible = false;
         buildMenu.setVisible(false);
