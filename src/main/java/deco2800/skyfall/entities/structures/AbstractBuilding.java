@@ -1,8 +1,6 @@
 package deco2800.skyfall.entities.structures;
 
 import deco2800.skyfall.entities.AbstractEntity;
-
-
 import deco2800.skyfall.worlds.AbstractWorld;
 
 import java.util.Map;
