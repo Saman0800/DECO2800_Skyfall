@@ -1,7 +1,7 @@
 package deco2800.skyfall.entities.structures;
 
-
 import com.google.gson.annotations.Expose;
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.managers.ConstructionManager;
 import deco2800.skyfall.util.HexVector;
@@ -13,11 +13,12 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-public class House extends AbstractBuilding {
+public class StorageUnit extends AbstractBuilding {
+
 
     private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
 
-    private static final String ENTITY_ID_STRING = "HouseID";
+    private static final String ENTITY_ID_STRING = "StorageUnitID";
     private int renderOrder;
     private int maxHealth = 10;
     private int currentHealth;
@@ -27,7 +28,7 @@ public class House extends AbstractBuilding {
     private int sizeX = 1;
     private int sizeY = 1;
     private HexVector coords;
-    private String texture = "house1";
+    private String texture = "storage_unit";
     ConstructionManager permissions = new ConstructionManager();
 
 
@@ -35,7 +36,7 @@ public class House extends AbstractBuilding {
     public Map<HexVector, String> children;
 
 
-    public House(Tile tile, int renderOrder) {
+    public StorageUnit(Tile tile, int renderOrder) {
         super(tile.getRow(), tile.getCol());
         this.setTexture(texture);
 
@@ -54,7 +55,7 @@ public class House extends AbstractBuilding {
         }
     }
 
-    public House(float x, float y, int renderOrder) {
+    public StorageUnit(float x, float y, int renderOrder) {
         super(x, y);
         this.setTexture(texture);
 
@@ -151,9 +152,5 @@ public class House extends AbstractBuilding {
 
 
 
-
-
-
-
-
 }
+

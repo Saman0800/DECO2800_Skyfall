@@ -118,10 +118,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("fence_top_right", new Texture("resources/world_structures/fence_top_right.png"));
 
 
-
-
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
