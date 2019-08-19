@@ -28,7 +28,6 @@ public abstract class AbstractBuilding extends AbstractEntity {
     @Expose
     public Map<HexVector, String> children;
 
-
     private float xcoord;
     private float ycoord;
 
