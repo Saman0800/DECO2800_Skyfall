@@ -130,13 +130,18 @@ public class ConstructionManager extends AbstractManager {
 
     //End of UI
 
-    //Start of terrain Check
+    // Start of buildability on tiles check
 
     // terrain map is a collection of terrains' building permission
     private TreeMap<String, Boolean> terrainMap = new TreeMap<String, Boolean>();
 
-    // load file of initial terrains' building permission into the terrain map
-    // file format as (texture name, boolean value) for one terrain type
+    /**
+     * Load a file of initial terrains' building permission into the terrain map, while
+     * the file format as (texture name, boolean value) for one terrain type.
+     *
+     * @param fileBase - a file's name
+     * @return true if file is successfully loaded, otherwise false
+     */
     private boolean initializeTerrainMap(String fileBase) {
         if (fileBase == null) {
             return false;
@@ -173,7 +178,13 @@ public class ConstructionManager extends AbstractManager {
         return true;
     }
 
-    // update terrain's building permission to allow/disallow building
+    /**
+     * Update a terrain's building permission to allow/disallow building.
+     *
+     * @param texture - a terrain's texture name on tile
+     * @param value - boolean value to allow/disallow building for the terrain
+     * @return true if a terrain building permission is updated, otherwise false
+     */
     public boolean updateTerrainMap(String texture, Boolean value) {
         if (texture == null || value == null) {
             return false;
@@ -182,7 +193,13 @@ public class ConstructionManager extends AbstractManager {
         return true;
     }
 
-    // use terrain map to check if tile(s) is buildable or not
+    /**
+     * Use terrain map to check if tile(s) is buildable or not.
+     * Note that if terrain type is not in the terrain map, the check will be skipped.
+     *
+     * @param tiles - tiles that will be checked their terrain type
+     * @return true if tile's terrain type allow building, otherwise false
+     */
     public boolean verifyTerrain(Tile... tiles) {
         if (tiles == null) {
             return false;
@@ -199,7 +216,12 @@ public class ConstructionManager extends AbstractManager {
         return true;
     }
 
-    // inherit provided method inside tile's class to check if tile(s) is buildable or not
+    /**
+     * Inherit provided method inside tile's class to check if tile(s) is buildable or not.
+     *
+     * @param tiles - tiles that will be checked their biome type
+     * @return true if tile's biome type allow building, otherwise false
+     */
     public boolean verifyBiome(Tile... tiles) {
         if (tiles == null) {
             return false;
@@ -215,8 +237,14 @@ public class ConstructionManager extends AbstractManager {
         return true;
     }
 
-    // check if tile(s) on the world contains entities or not
-    // non-empty entities in tiles interfere building and should be destroyed first
+    /**
+     * Check if tile(s) on the world contains entities or not.
+     * Non-empty entities in tiles interfere building and should be destroyed first.
+     *
+     * @param worldMap - a game's world
+     * @param tiles - tiles that will be checked if contain entities
+     * @return true if empty entities on tiles, otherwise false
+     */
     public boolean verifyEntity(AbstractWorld worldMap, Tile... tiles) {
         if (worldMap == null || tiles == null) {
             return false;
@@ -236,8 +264,15 @@ public class ConstructionManager extends AbstractManager {
         return true;
     }
 
-    // check if a building could be located on tiles or not
-    // use most left-bottom position of a building with its size to check permission
+    /**
+     * Check if a building could be located on tiles or not, while the process includes
+     * terrain, biome and entity check.
+     * Use most left-bottom position of a building with its size to check permission.
+     *
+     * @param worldMap - a game's world
+     * @param building - a construction object
+     * @return true if a building is buildable on tiles, otherwise false
+     */
     public boolean isTilesBuildable(AbstractWorld worldMap, AbstractBuilding building) {
         if (worldMap == null || building == null) {
             return false;
@@ -261,7 +296,7 @@ public class ConstructionManager extends AbstractManager {
         return true;
     }
 
-    // End of terrain check
+    // End of buildability on tiles check
 
     // Start of inventory code
 
