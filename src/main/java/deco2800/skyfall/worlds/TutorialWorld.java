@@ -1,23 +1,28 @@
 package deco2800.skyfall.worlds;
 
-import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.gui.GuiMaster;
 import deco2800.skyfall.gui.ScrollingTextBox;
 import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
-import deco2800.skyfall.util.Cube;
-import deco2800.skyfall.util.WorldUtil;
-
-import javax.swing.*;
 import java.util.List;
-import java.util.Random;
 
+/**
+ * This is a tutorial world created to help the player understand the world
+ * and the mechanics of the game.
+ */
 public class TutorialWorld extends RocketWorld implements TouchDownObserver {
+    // Variables used for the event triggers used in the tutorial
     boolean firstTime = true;
     boolean testKilledTree = false;
     Tree testTutorialTree;
+
+    /**
+     * Constructs a tutorial world using the Rocket World constructor
+     * @param seed The random seed that identifies the world
+     * @param worldSize The size of the world
+     * @param nodeSpacing The distance between the nodes
+     */
     public TutorialWorld(long seed, int worldSize, int nodeSpacing) {
         super(seed, worldSize, nodeSpacing);
     }
@@ -30,6 +35,7 @@ public class TutorialWorld extends RocketWorld implements TouchDownObserver {
 
         ScrollingTextBox testTutorialBox = GuiMaster.ScrollingTextBox("tutorialScrollingBox");
         if (firstTime) {
+            // Flavour text for the tutorial
             testTutorialBox.setString("Good morning citizen 27720. I am " +
                     "the caretaker AI responsible for this cryopod " +
                     "facility. You may call me Karen. While thousand of " +
@@ -49,9 +55,6 @@ public class TutorialWorld extends RocketWorld implements TouchDownObserver {
                 if (e instanceof Tree) {
                     testTutorialTree = (Tree) e;
                 }
-						/*if(e instanceof SleepingBowMan) {
-							testTutorialEnemy = (SleepingBowMan) e;
-						}*/
             }
 
             if (!entityList.contains(testTutorialTree) && !testKilledTree) {
@@ -64,14 +67,10 @@ public class TutorialWorld extends RocketWorld implements TouchDownObserver {
 								/*, however it seems that a still harmless, but " +
 								"far more sentient creature is currently immobile to " +
 								"your north. Please move your camera up by using " +
-								"the w key and end this creature in the same way" +
-								" you did the last."*/);
+								"the up arrow key and end this creature in the
+								same way you did the last."*/);
                 testTutorialBox.start();
             }
-
-
-
-
 
 					/*if (!entityList.contains(testTutorialEnemy) && !testKilledEnemy) {
 						testKilledEnemy = true;

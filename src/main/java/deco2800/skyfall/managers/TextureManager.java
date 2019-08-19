@@ -82,7 +82,8 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("selection", new Texture("resources/blue_selection.png"));
             textureMap.put("path", new Texture("resources/yellow_selection.png"));
-            
+
+            // Portrait of the tutorial AI, replace later with custom art
             textureMap.put("Karen", new Texture("resources/Karen(replace)" +
                     ".png"));
 
