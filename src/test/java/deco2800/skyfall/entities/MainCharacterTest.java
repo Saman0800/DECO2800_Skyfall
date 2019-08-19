@@ -6,26 +6,35 @@ import deco2800.skyfall.resources.items.Apple;
 import deco2800.skyfall.resources.items.PoisonousMushroom;
 import deco2800.skyfall.resources.items.Stone;
 
-import org.junit.*;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.After;
 
 public class MainCharacterTest {
 
+    private MainCharacter testCharacter;
+    private Weapon sword;
+    private Weapon spear;
+    private Weapon bow;
+    private Weapon axe;
+
     // MainCharacter being used for testing
-    private MainCharacter testCharacter = new MainCharacter(0f, 0f,
-            0.05f, "Main Piece", 10);
+    @Before
+    public void setup() {
+        testCharacter = new MainCharacter(0f, 0f,
+                0.05f, "Main Piece", 10);
 
-    // Weapons being used for testing
-    private Weapon sword = new Weapon("sword", "melee",
-            "slash", 3, 5, 6);
-    private Weapon spear = new Weapon("spear", "range",
-            "splash", 5, 4, 7);
-    private Weapon bow = new Weapon("bow", "range",
-            "splash", 4, 3, 10);
-    private Weapon axe = new Weapon("axe", "melee",
-            "slash", 4, 4, 10);
-
+        // Weapons being used for testing
+        sword = new Weapon("sword", "melee",
+                "slash", 3, 5, 6);
+        spear = new Weapon("spear", "range",
+                "splash", 5, 4, 7);
+        bow = new Weapon("bow", "range",
+                "splash", 4, 3, 10);
+        axe = new Weapon("axe", "melee",
+                "slash", 4, 4, 10);
+    }
     @Test
     /**
      * Test getters and setters from Peon super Character class
@@ -125,22 +134,28 @@ public class MainCharacterTest {
      * Test main character is interacting correctly with basic food action
      */
     public void foodTest() {
-        assertEquals(testCharacter.getFoodLevel(), 100);
+        Assert.assertEquals(100,testCharacter.getFoodLevel());
+
         Apple apple = new Apple();
         testCharacter.pickUpInventory(apple);
         testCharacter.eatFood(new Apple());
-        assertEquals(testCharacter.getFoodLevel(), 100);
+        Assert.assertEquals(100, testCharacter.getFoodLevel());
+
         testCharacter.pickUpInventory(new PoisonousMushroom());
         testCharacter.eatFood(new PoisonousMushroom());
-        assertEquals(testCharacter.getFoodLevel(), 80);
+        Assert.assertEquals(80, testCharacter.getFoodLevel());
+
+        testCharacter.pickUpInventory(new PoisonousMushroom());
         testCharacter.eatFood(new PoisonousMushroom());
-        assertEquals(testCharacter.getFoodLevel(), 80);
+        Assert.assertEquals(60, testCharacter.getFoodLevel());
+
         for (int i = 0; i < 10; i++) {
             testCharacter.pickUpInventory(new PoisonousMushroom());
             testCharacter.eatFood(new PoisonousMushroom());
         }
-        assertEquals(testCharacter.getFoodLevel(), 0);
-        assertTrue(testCharacter.isStarving());
+
+        Assert.assertEquals(0, testCharacter.getFoodLevel());
+        Assert.assertTrue(testCharacter.isStarving());
     }
 
     //TODO: change these tests as Animation System Changes
@@ -151,10 +166,10 @@ public class MainCharacterTest {
     @Test
     public void setMovingAnimationTest() {
         testCharacter.setMovingAnimation(AnimationRole.MOVE_NORTH);
-        assertEquals(AnimationRole.MOVE_NORTH, testCharacter.getMovingAnimation());
+        Assert.assertEquals(AnimationRole.MOVE_NORTH, testCharacter.getMovingAnimation());
 
         testCharacter.setMovingAnimation(AnimationRole.NULL);
-        assertEquals(AnimationRole.NULL, testCharacter.getMovingAnimation());
+        Assert.assertEquals(AnimationRole.NULL, testCharacter.getMovingAnimation());
 
     }
 
@@ -165,5 +180,14 @@ public class MainCharacterTest {
     public void setAndGetAnimationTest() {
         testCharacter.addAnimations(AnimationRole.MOVE_EAST, "right");
         testCharacter.getAnimationName(AnimationRole.MOVE_EAST);
+    }
+
+    @After
+    public void cleanup() {
+        testCharacter = null;
+        sword = null;
+        spear = null;
+        bow = null;
+        axe = null;
     }
 }

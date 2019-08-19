@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * have a natural looking shape. To see how they are being used, this class is
  * inspired by
  * <a href="http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/?fbclid=IwAR30I7ILTznH6YzYYqZfjIE3vcqPsed85ta9bohPZWi74SfWMwWpD8AVddQ#source">
- *     This</a>
+ * This</a>
  */
 public class WorldGenNode implements Comparable<WorldGenNode> {
 
@@ -74,7 +74,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      *
      * @return The approximate centroid of the polygon defined by this node
      * @throws InvalidCoordinatesException if any vertex's coordinates are not
-     *         2 dimensional
+     *                                     2 dimensional
      */
     public double[] getCentroid() throws InvalidCoordinatesException {
         double[] centroid = {0, 0};
@@ -121,25 +121,25 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     /**
      * Uses a variation of Lloyd's Algorithm to make a list of nodes more evenly
      * spread apart.
-     *
+     * <p>
      * For info on what Lloyd's Algorithm is, see
      * <a href="https://en.wikipedia.org/wiki/Lloyd%27s_algorithm">
-     *     the Wikipedia page</a>
-     *
+     * the Wikipedia page</a>
+     * <p>
      * One key simplification from the method described on Wikipedia used here
      * is approximating the centroid as the average position of the vertices of
      * the polygon, rather than integrating to calculate the exact centroid.
      *
-     * @param nodes The list of nodes to apply the Lloyd's Algorithm
+     * @param nodes      The list of nodes to apply the Lloyd's Algorithm
      * @param iterations The number of times to apply the algorithm. Too few
      *                   iterations can result in the algorithm not evening out
      *                   the points enough, and too many iterations can
      *                   eliminate the randomness of the node placement
      * @throws WorldGenException if there is an exception thrown when trying
-     *         to run Lloyd Relaxation
+     *                           to run Lloyd Relaxation
      */
     public static void lloydRelaxation(List<WorldGenNode> nodes, int iterations,
-            int worldSize) throws WorldGenException {
+                                       int worldSize) throws WorldGenException {
         for (int i = 0; i < iterations; i++) {
             for (WorldGenNode node : nodes) {
                 // Don't move border nodes
@@ -166,7 +166,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      *
      * @param nodes the list of nodes to assign neighbours
      * @throws InvalidCoordinatesException if any nodes have a vertex whose
-     *         coordinates are not 2 dimensional
+     *                                     coordinates are not 2 dimensional
      */
     public static void assignNeighbours(List<WorldGenNode> nodes)
             throws InvalidCoordinatesException {
@@ -184,11 +184,12 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     /**
      * Determines if two nodes are adjacent. Two nodes are deemed to be adjacent
      * if they share a vertex
+     *
      * @param a The first node
      * @param b The second node
      * @return True if the nodes share a vertex, false otherwise
      * @throws InvalidCoordinatesException if one of the WorldGenNodes has
-     *         invalid coordinates
+     *                                     invalid coordinates
      */
     public static boolean isAdjacent(WorldGenNode a, WorldGenNode b)
             throws InvalidCoordinatesException {
@@ -207,10 +208,10 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * @param a the first node
      * @param b the second node
      * @return the coordinates of the first shared vertex found between the
-     *         nodes
+     * nodes
      * @throws InvalidCoordinatesException if one of the nodes has a vertex
-     *         whose coordinates are not 2 dimensions
-     * @throws NotAdjacentException if the nodes don't have a common vertex
+     *                                     whose coordinates are not 2 dimensions
+     * @throws NotAdjacentException        if the nodes don't have a common vertex
      */
     public static double[] sharedVertex(WorldGenNode a, WorldGenNode b)
             throws InvalidCoordinatesException, NotAdjacentException {
@@ -330,7 +331,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     }
 
     private static int binarySearch(double toFind, List<WorldGenNode> nodes,
-            int start, int end) {
+                                    int start, int end) {
         double tolerance = 0.0001f;
         int middle = (end + start) / 2;
         double middleValue = nodes.get(middle).getY();
@@ -407,13 +408,13 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     /**
      * Apply Delaunay Triangulation to a set of nodes
      * Code adapted from <a href="https://github.com/jdiemke/delaunay-triangulator/blob/master/library/src/main/java/io/github/jdiemke/triangulation/DelaunayTriangulator.java">
-     *     Johannes Dieme's Implementation</a>
+     * Johannes Dieme's Implementation</a>
      *
-     * @author Johannes Diemke
      * @throws NotEnoughPointsException Thrown when the point set contains less
-     *         than three points
+     *                                  than three points
+     * @author Johannes Diemke
      */
-     static TriangleSoup triangulate(List<WorldGenNode> nodes)
+    static TriangleSoup triangulate(List<WorldGenNode> nodes)
             throws NotEnoughPointsException {
         TriangleSoup triangleSoup = new TriangleSoup();
 
@@ -534,44 +535,42 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     /**
      * This method legalizes edges by recursively flipping all illegal edges.
      * Code adapted from <a href="https://github.com/jdiemke/delaunay-triangulator/blob/master/library/src/main/java/io/github/jdiemke/triangulation/DelaunayTriangulator.java">
-     *      Johannes Dieme's Implementation</a>
+     * Johannes Dieme's Implementation</a>
      *
-     * @author Johannes Diemke
-     * @param triangle The triangle
-     * @param edge The edge to be legalized
+     * @param triangle  The triangle
+     * @param edge      The edge to be legalized
      * @param newVertex The new vertex
+     * @author Johannes Diemke
      */
     private static void legalizeEdge(WorldGenTriangle triangle,
-            WorldGenEdge edge, WorldGenNode newVertex,
-            TriangleSoup triangleSoup) {
+                                     WorldGenEdge edge, WorldGenNode newVertex,
+                                     TriangleSoup triangleSoup) {
 
         WorldGenTriangle neighbourTriangle
                 = triangleSoup.findNeighbour(triangle, edge);
 
         // If the triangle has a neighbor, then legalize the edge
-        if (neighbourTriangle != null) {
-            if (neighbourTriangle.isPointInCircumcircle(newVertex)) {
-                triangleSoup.remove(triangle);
-                triangleSoup.remove(neighbourTriangle);
+        if (neighbourTriangle != null && neighbourTriangle.isPointInCircumcircle(newVertex)) {
+            triangleSoup.remove(triangle);
+            triangleSoup.remove(neighbourTriangle);
 
-                WorldGenNode noneEdgeVertex =
-                        neighbourTriangle.getNoneEdgeVertex(edge);
+            WorldGenNode noneEdgeVertex =
+                    neighbourTriangle.getNoneEdgeVertex(edge);
 
-                WorldGenTriangle firstTriangle =
-                        new WorldGenTriangle(noneEdgeVertex, edge.getA(),
-                                newVertex);
-                WorldGenTriangle secondTriangle =
-                        new WorldGenTriangle(noneEdgeVertex, edge.getB(),
-                                newVertex);
+            WorldGenTriangle firstTriangle =
+                    new WorldGenTriangle(noneEdgeVertex, edge.getA(),
+                            newVertex);
+            WorldGenTriangle secondTriangle =
+                    new WorldGenTriangle(noneEdgeVertex, edge.getB(),
+                            newVertex);
 
-                triangleSoup.add(firstTriangle);
-                triangleSoup.add(secondTriangle);
+            triangleSoup.add(firstTriangle);
+            triangleSoup.add(secondTriangle);
 
-                legalizeEdge(firstTriangle, new WorldGenEdge(
-                        noneEdgeVertex, edge.getA()), newVertex, triangleSoup);
-                legalizeEdge(secondTriangle, new WorldGenEdge(
-                        noneEdgeVertex, edge.getB()), newVertex, triangleSoup);
-            }
+            legalizeEdge(firstTriangle, new WorldGenEdge(
+                    noneEdgeVertex, edge.getA()), newVertex, triangleSoup);
+            legalizeEdge(secondTriangle, new WorldGenEdge(
+                    noneEdgeVertex, edge.getB()), newVertex, triangleSoup);
         }
     }
 
@@ -580,7 +579,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      *
      * @param vertex the vertex to add
      * @throws InvalidCoordinatesException if the vertex's coordinates are not 2
-     *         dimensional
+     *                                     dimensional
      */
     public void addVertex(double[] vertex) throws InvalidCoordinatesException {
         if (vertex.length != 2) {
@@ -595,10 +594,10 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      *
      * @param nodes The nodes to perform the algorithm with
      * @throws WorldGenException if there is an exception thrown when trying
-     *         to triangulate the nodes
+     *                           to triangulate the nodes
      */
     public static void calculateVertices(List<WorldGenNode> nodes,
-            int worldSize) throws WorldGenException {
+                                         int worldSize) throws WorldGenException {
         TriangleSoup triangleSoup = triangulate(nodes);
 
         // Throw an exception if there aren't any border nodes as a fail safe
