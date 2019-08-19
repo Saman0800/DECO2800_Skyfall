@@ -185,7 +185,11 @@ public class PerlinNoiseGenerator {
                 maxValue += Math.pow(attenuation, octave);
         }
         for (Tile tile: tiles){
-            tile.setPerlinValue(tile.getPerlinValue()/maxValue);
+            if (maxValue == 0){
+                tile.setPerlinValue(0);
+            } else {
+                tile.setPerlinValue(tile.getPerlinValue() / maxValue);
+            }
         }
 
     }
