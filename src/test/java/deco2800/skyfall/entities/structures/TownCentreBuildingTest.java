@@ -44,5 +44,9 @@ public class TownCentreBuildingTest {
 
     @Test
     public void takeDamage() {
+        townTest.takeDamage(15);
+        assertEquals(townTest.getCurrentHealth(), 65);
+        townTest.takeDamage(100);
+        assertEquals(townTest.getCurrentHealth(), 0);
     }
 }

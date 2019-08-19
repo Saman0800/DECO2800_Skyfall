@@ -1,8 +1,19 @@
 package deco2800.skyfall.entities.structures;
 
+import com.google.gson.annotations.Expose;
+import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.managers.ConstructionManager;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.AbstractWorld;
+import deco2800.skyfall.worlds.Tile;
+import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Walls that the player can place. Walls are stationary buildings that
@@ -10,15 +21,56 @@ import java.util.TreeMap;
  */
 public class WallBuilding extends AbstractBuilding {
 
+    private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
+
+    private static final String ENTITY_ID_STRING = "WallID";
+    private int renderOrder;
+
     private int maxHealth = 5;
     private int currentHealth;
 
+    private HexVector coords;
+    private String texture = "fence_bottom_left";
+
+    ConstructionManager permissions = new ConstructionManager();
+
+    @Expose
+    public Map<HexVector, String> children;
+
+    /**
+     * Tile constructor
+     * @param tile - Tile building is one
+     * @param renderOrder - Render order of building
+     */
+    public WallBuilding(Tile tile, int renderOrder) {
+        super(tile.getRow(), tile.getCol());
+        this.setTexture(texture);
+
+        this.setObjectName(ENTITY_ID_STRING);
+        this.renderOrder = renderOrder;
+        this.currentHealth = maxHealth;
+
+        children = new HashMap<>();
+        children.put(tile.getCoordinates(), texture);
+        if (!WorldUtil.validColRow(tile.getCoordinates())) {
+            log.debug(tile.getCoordinates() + "%s Is Invalid:");
+            return;
+        }
+    }
+
+    /**
+     * Default constructor
+     * @param x - X coordinate
+     * @param y - Y coordinate
+     */
     public WallBuilding(float x, float y) {
         super(x, y);
         this.currentHealth = maxHealth;
         //Ignore that the fence is using a building image.
-        this.setTexture("buildingA");
+        this.setTexture(texture);
 
+        this.setObjectName(ENTITY_ID_STRING);
+        //this.renderOrder = renderOrder;
         //Build time in seconds.
         int constructionTime = 3;
         //Building size
@@ -33,6 +85,14 @@ public class WallBuilding extends AbstractBuilding {
         this.setYSize(ySize);
         this.setBuildTime(constructionTime);
         this.setCost(constructionCost);
+
+        children = new HashMap<>();
+        coords = new HexVector(x, y);
+        children.put(coords, texture);
+        if (!WorldUtil.validColRow(coords)) {
+            log.debug(coords + "%s Is Invalid:");
+            return;
+        }
     }
 
     /**
