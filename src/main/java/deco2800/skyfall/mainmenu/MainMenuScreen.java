@@ -56,7 +56,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // TODO Accept user-provided seed or generate random seed.
-                game.setScreen(new GameScreen(new SkyfallGame(), 0, false));
+                game.setScreen(new GameScreen(new SkyfallGame(), 3, false));
             }
         });
 
@@ -64,7 +64,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // TODO Accept user-provided seed or generate random seed.
-                game.setScreen(new GameScreen(new SkyfallGame(), 0, true));
+                game.setScreen(new GameScreen(new SkyfallGame(), 3, true));
             }
         });
     }

@@ -111,22 +111,22 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
     public void onTick(long i) {
         super.onTick(i);
 
-        if (!generated) {
-            Random random = new Random(entitySeed);
-
-            Tile tile = getTile(1f, 2.5f);
-            addEntity(new Tree(tile, true));
-
-            generated = true;
-
-            Tile tileRock = getTile(0.0f, 1.0f);
-            Rock startRock = new Rock(tileRock, true);
-
-            for (AbstractBiome biome : biomes) {
-                EntitySpawnTable rockSpawnRule = new EntitySpawnTable();
-                EntitySpawnTable.spawnEntities(startRock, 0.2, biome, random);
-            }
-        }
+//        if (!generated) {
+//            Random random = new Random(entitySeed);
+//
+//            Tile tile = getTile(1f, 2.5f);
+//            addEntity(new Tree(tile, true));
+//
+//            generated = true;
+//
+//            Tile tileRock = getTile(0.0f, 1.0f);
+//            Rock startRock = new Rock(tileRock, true);
+//
+//            for (AbstractBiome biome : biomes) {
+//                EntitySpawnTable rockSpawnRule = new EntitySpawnTable();
+//                EntitySpawnTable.spawnEntities(startRock, 0.2, biome, random);
+//            }
+//        }
     }
 
     @Override

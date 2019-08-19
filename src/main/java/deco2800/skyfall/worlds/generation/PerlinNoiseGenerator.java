@@ -150,9 +150,8 @@ public class PerlinNoiseGenerator {
             double[][][] gradientVectors = getGradientVectors((int) Math.ceil(highestRow - lowestRow)
                 , (int) Math.ceil(highestCol - lowestCol), period);
             for (Tile tile : tiles){
-                tile.setPerlinValue(getPerlinValue((tile.getRow() - lowestRow) , (tile.getCol() - lowestCol), gradientVectors,period));
-//                tile.setPerlinValue((getPerlinValue((tile.getRow() - lowestRow) , (tile.getCol() - lowestCol), gradientVectors,period)+
-//                    getPerlinValue((tile.getRow() - lowestRow + period/2) , (tile.getCol() - lowestCol + period/2), gradientVectors,period))/2);
+                tile.setPerlinValue(getPerlinValue((tile.getRow() - lowestRow) , (tile.getCol() - lowestCol),
+                    gradientVectors,period));
             }
 
 

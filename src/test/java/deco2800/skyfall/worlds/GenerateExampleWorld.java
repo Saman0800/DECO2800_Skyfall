@@ -3,9 +3,9 @@ package deco2800.skyfall.worlds;
 import java.io.IOException;
 
 /**
- * Creates the example world for testing, use because the algorithm has a lot of slight changes
- * Should only be run when the algorithm has been changed to generate a new world
- * The world should be first checked in the actual game to see if it looks correct
+ * Creates the example world for testing, used because the algorithm has a lot of slight changes.
+ * This should only be run when a change in the world gen algorithm has been made and also only after checking the
+ * actual world by playing the game.
  */
 public class GenerateExampleWorld {
     public static void main(String[] args){
