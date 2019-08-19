@@ -2,6 +2,8 @@ package deco2800.skyfall.worlds;
 
 import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.gui.GuiMaster;
+import deco2800.skyfall.gui.ScrollingTextBox;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
@@ -12,94 +14,76 @@ import javax.swing.*;
 import java.util.List;
 import java.util.Random;
 
-public class TutorialWorld extends AbstractWorld implements TouchDownObserver {
-    private static final int RADIUS = 50;
-
-    private boolean generated = false;
-    private PlayerPeon player;
-
-    Tree testTutorialTree;
+public class TutorialWorld extends RocketWorld implements TouchDownObserver {
+    boolean firstTime = true;
     boolean testKilledTree = false;
-
-    @Override
-    protected void generateWorld() {
-        Random random = new Random();
-        for (int q = -1000; q < 1000; q++) {
-            for (int r = -1000; r < 1000; r++) {
-                if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= RADIUS) {
-                    float oddCol = (q % 2 != 0 ? 0.5f : 0);
-
-                    int elevation = random.nextInt(2);
-                    String type = "grass_" + elevation;
-
-                    tiles.add(new Tile(type, q, r + oddCol));
-                }
-            }
-        }
-
-        // Create the entities in the game
-        player = new PlayerPeon(0f, 0f, 0.05f);
-        addEntity(player);
-
-        SleepingBowMan bowMan = new SleepingBowMan(0f, 6.5f);
-        addEntity(bowMan);
-
-        GameManager.getManagerFromInstance(InputManager.class)
-                .addTouchDownListener(this);
+    Tree testTutorialTree;
+    public TutorialWorld(long seed, int worldSize, int nodeSpacing) {
+        super(seed, worldSize, nodeSpacing);
     }
 
     @Override
     public void onTick(long i) {
         super.onTick(i);
 
-        for (AbstractEntity e : this.getEntities()) {
-            e.onTick(0);
+        List<AbstractEntity> entityList = GameManager.get().getWorld().getEntities();
 
-            if (e instanceof Collectable) {
-                if (e.collidesWith(player)) {
-                    removeEntity(e);
+        ScrollingTextBox testTutorialBox = GuiMaster.ScrollingTextBox("tutorialScrollingBox");
+        if (firstTime) {
+            testTutorialBox.setString("Good morning citizen 27720. I am " +
+                    "the caretaker AI responsible for this cryopod " +
+                    "facility. You may call me Karen. While thousand of " +
+                    "years looking after what amounts to vegetables has " +
+                    "made me somewhat jaded, in accordance with " +
+                    "protocol I must teach you the skills required to " +
+                    "function properly. Please go murder that piece of " +
+                    "flora over there and take its flesh. You can do " +
+                    "this by right clicking on it. If you wish to get " +
+                    "closer to it before ending its existence, please " +
+                    "use the wasd keys to move.");
+            testTutorialBox.start();
+        }
+        firstTime = false;
+
+            for (AbstractEntity e : entityList) {
+                if (e instanceof Tree) {
+                    testTutorialTree = (Tree) e;
                 }
-            }
-        }
-
-        if (!generated) {
-            Tile tile = getTile(1f, 2.5f);
-            addEntity(new Tree(tile, true));
-
-            generated = true;
-        }
-    }
-
-    @Override
-    public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
-        // only allow right clicks to collect resources
-        if (button != 1) {
-            return;
-        }
-
-        float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
-        float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
-
-        Tile tile = getTile(clickedPosition[0], clickedPosition[1]);
-
-        if (tile == null) {
-            return;
-        }
-
-        // todo: more efficient way to find entities
-        for (AbstractEntity entity : getEntities()) {
-            if (!tile.getCoordinates().equals(entity.getPosition())) {
-                continue;
+						/*if(e instanceof SleepingBowMan) {
+							testTutorialEnemy = (SleepingBowMan) e;
+						}*/
             }
 
-            if (entity instanceof Harvestable) {
-                removeEntity(entity);
-                List<AbstractEntity> drops = ((Harvestable) entity).harvest(tile);
-
-                for (AbstractEntity drop : drops) {
-                    addEntity(drop);
-                }
+            if (!entityList.contains(testTutorialTree) && !testKilledTree) {
+                testKilledTree = true;
+                testTutorialBox.reset();
+                testTutorialBox.setString("Congratulations. You have " +
+                                "successfully ended the life of a harmless, " +
+                                "non-sentient life form. You monster. If we had more " +
+                                "time I would enjoy testing your current emotional situation."
+								/*, however it seems that a still harmless, but " +
+								"far more sentient creature is currently immobile to " +
+								"your north. Please move your camera up by using " +
+								"the w key and end this creature in the same way" +
+								" you did the last."*/);
+                testTutorialBox.start();
             }
-        }
+
+
+
+
+
+					/*if (!entityList.contains(testTutorialEnemy) && !testKilledEnemy) {
+						testKilledEnemy = true;
+						testTutorialBox.reset();
+						testTutorialBox.setString("Now that nothing, no matter how " +
+								"harmless, can hurt your squishy body, please go collect " +
+								"the remnants of the first creature you slaughtered. This" +
+								" can be done by walking on top of it where it used to " +
+								"stand. With these materials you can now create morally" +
+								" questionable tools and building. Hooray. Please press " +
+								"(inventory key here) to begin this process.");
+						testTutorialBox.start();
+					}*/
     }
 }

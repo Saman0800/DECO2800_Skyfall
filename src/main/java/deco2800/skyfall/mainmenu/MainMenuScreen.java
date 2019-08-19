@@ -14,10 +14,6 @@ import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.SkyfallGame;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.TextureManager;
-import deco2800.skyfall.worlds.TutorialWorld;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class MainMenuScreen implements Screen {
     final SkyfallGame game;
@@ -29,6 +25,7 @@ public class MainMenuScreen implements Screen {
 
     /**
      * The constructor of the MainMenuScreen
+     *
      * @param game the Iguana Chase Game to run
      */
     public MainMenuScreen(final SkyfallGame game) {
@@ -41,10 +38,10 @@ public class MainMenuScreen implements Screen {
         background.setFillParent(true);
         stage.addActor(background);
 
-//        Label logo = new Label("BIG PHARMA", skin);
-//        logo.setFontScale(5.0f);
-//        logo.setPosition(1280/2 - 225, 720/2 + 100);
-//        stage.addActor(logo);
+        // Label logo = new Label("BIG PHARMA", skin);
+        // logo.setFontScale(5.0f);
+        // logo.setPosition(1280/2 - 225, 720/2 + 100);
+        // stage.addActor(logo);
 
         Button newGameBtn = new TextButton("SINGLE PLAYER", skin, "main_menu");
         newGameBtn.setPosition(10, MIN_HEIGHT - 100);
@@ -58,37 +55,40 @@ public class MainMenuScreen implements Screen {
         tutorialButton.setPosition(10, MIN_HEIGHT - 150);
         stage.addActor(tutorialButton);
 
-//        Button startServerButton = new TextButton("START SERVER", skin, "main_menu");
-//        startServerButton.setPosition(10, 0);
-//        stage.addActor(startServerButton);
+        //Button startServerButton = new TextButton("START SERVER", skin, "main_menu");
+        //startServerButton.setPosition(10, 0);
+        //stage.addActor(startServerButton);
 
         tutorialButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen(new SkyfallGame(), true));
-                GameManager.get().setWorld(new TutorialWorld());
                 GameManager.get().isTutorial = true;
-            }
-        });
-
-        connectToServerButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen(new SkyfallGame(), false));
-                GameManager.get().isTutorial = false;
+                game.setScreen(new GameScreen(new SkyfallGame(), 0, true));
             }
         });
 
         newGameBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen(new SkyfallGame(), true));
                 GameManager.get().isTutorial = false;
+                // TODO Accept user-provided seed or generate random seed.
+                game.setScreen(new GameScreen(new SkyfallGame(), 0, true));
+
+            }
+        });
+
+        connectToServerButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                GameManager.get().isTutorial = false;
+                // TODO Accept user-provided seed or generate random seed.
+                game.setScreen(new GameScreen(new SkyfallGame(), 0, false));
+
             }
         });
     }
-    
-   /**
+
+    /**
      * Begins things that need to begin when shown
      */
     public void show() {
@@ -118,18 +118,20 @@ public class MainMenuScreen implements Screen {
 
     /**
      * Resizes the main menu stage to a new width and height
-     * @param width the new width for the menu stage
+     *
+     * @param width  the new width for the menu stage
      * @param height the new width for the menu stage
      */
-    public void resize (int width, int height) {
+    public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
     }
 
     /**
      * Renders the menu
+     *
      * @param delta
      */
-    public void render (float delta) {
+    public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 

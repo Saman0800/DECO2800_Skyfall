@@ -158,8 +158,9 @@ public final class DatabaseManager extends AbstractManager {
             reader.beginArray();
             while (reader.hasNext()) {
             	reader.beginObject();
-                
-                Tile tile = new Tile("textureName", 0,0);
+
+            	// TODO This looks broken.
+                Tile tile = new Tile(0,0);
                 while (reader.hasNext()) {
                     checkBasicTileSettings(tile,reader.nextName(),reader);
                 }
@@ -228,7 +229,7 @@ public final class DatabaseManager extends AbstractManager {
             
             for (String s:Arrays.asList("playerPeon")){
                 if (entityObjectName.startsWith(s)){
-                     PlayerPeon create = new PlayerPeon(1,1,1);
+                     PlayerPeon create = new PlayerPeon(1,1,1,"playerPeon",10);
                      create.setObjectName(entityObjectName); 
                      return (AbstractEntity) create;
                 }

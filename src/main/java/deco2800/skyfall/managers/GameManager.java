@@ -3,8 +3,6 @@ package deco2800.skyfall.managers;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-//import deco2800.skyfall.managers.Manager;
-
 import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.worlds.AbstractWorld;
 
@@ -17,7 +15,10 @@ import java.util.List;
 
 public class GameManager {
 	//debug values stored here
-	public int entitiesRendered, entitiesCount, tilesRendered, tilesCount;
+	public int entitiesRendered;
+	public int entitiesCount;
+	public int tilesRendered;
+	public int tilesCount;
 
 	public boolean isTutorial = false;
 
@@ -39,8 +40,6 @@ public class GameManager {
 
 	// The UI skin being used by the game for libGDX elements.
 	private Skin skin;
-	
-
 
 	public float fps = 0;
 

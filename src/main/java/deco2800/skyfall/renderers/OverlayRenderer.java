@@ -20,19 +20,12 @@ import deco2800.skyfall.util.WorldUtil;
 import java.util.List;
 
 public class OverlayRenderer implements Renderer {
-	
     BitmapFont font;
     ShapeRenderer shapeRenderer;
-    boolean firstTime = true;
      
     FPSLogger fpsLogger = new FPSLogger();
 
     long peakRAM = 0;
-
-		Tree testTutorialTree;
-		boolean testKilledTree = false;
-		SleepingBowMan testTutorialEnemy;
-		boolean testKilledEnemy = false;
 
 
     /**
@@ -52,69 +45,10 @@ public class OverlayRenderer implements Renderer {
         }
            
         batch.begin();
-        
 
         if( GameManager.get().debugMode) {
         	renderDebugText(batch, camera);
         }
-
-				List<AbstractEntity> entityList = GameManager.get().getWorld().getEntities();
-
-				if (GameManager.get().isTutorial) {
-					ScrollingTextBox testTutorialBox = GuiMaster.ScrollingTextBox("tutorialScrollingBox");
-					if (firstTime) {
-						testTutorialBox.setString("Good morning citizen 27720. I am " +
-								"the caretaker AI responsible for this cryopod " +
-								"facility. You may call me Karen. While thousand of " +
-								"years looking after what amounts to vegetables has " +
-								"made me somewhat jaded, in accordance with " +
-								"protocol I must teach you the skills required to " +
-								"function properly. Please go murder that piece of " +
-								"flora over there and take its flesh. You can do " +
-								"this by right clicking on it. If you wish to get " +
-								"closer to it before ending its existence, please " +
-								"left click on any tile to move to it.");
-						testTutorialBox.start();
-					}
-					firstTime = false;
-
-					for (AbstractEntity e : entityList) {
-						if (e instanceof Tree) {
-							testTutorialTree = (Tree) e;
-						}
-						if(e instanceof SleepingBowMan) {
-							testTutorialEnemy = (SleepingBowMan) e;
-						}
-					}
-
-					if (!entityList.contains(testTutorialTree) && !testKilledTree) {
-						testKilledTree = true;
-						testTutorialBox.reset();
-						testTutorialBox.setString("Congratulations. You have " +
-								"successfully ended the life of a harmless, " +
-								"non-sentient life form. If we had more time I would " +
-								"enjoy testing your current emotional situation, " +
-								"however it seems that a still harmless, but " +
-								"far more sentient creature is currently immobile to " +
-								"your north. Please move your camera up by using " +
-								"the w key and end this creature in the same way" +
-								" you did the last.");
-						testTutorialBox.start();
-					}
-
-					if (!entityList.contains(testTutorialEnemy) && !testKilledEnemy) {
-						testKilledEnemy = true;
-						testTutorialBox.reset();
-						testTutorialBox.setString("Now that nothing, no matter how " +
-								"harmless, can hurt your squishy body, please go collect " +
-								"the remnants of the first creature you slaughtered. This" +
-								" can be done by walking on top of it where it used to " +
-								"stand. With these materials you can now create morally" +
-								" questionable tools and building. Hooray. Please press " +
-								"(inventory key here) to begin this process.");
-						testTutorialBox.start();
-					}
-				}
 
 				GuiMaster.updateAll(1);
 				GuiMaster.renderAll(font, batch, camera, shapeRenderer);
@@ -123,8 +57,6 @@ public class OverlayRenderer implements Renderer {
         for (String message : GameManager.get().getManager(OnScreenMessageManager.class).getMessages()) {
             chatLine(batch, camera, line--, message);
         }
-
-
 
         if (GameManager.get().getManager(OnScreenMessageManager.class).isTyping()) {
             chatLine(batch, camera, 0, GameManager.get().getManager(OnScreenMessageManager.class).getUnsentMessage());
@@ -180,5 +112,7 @@ public class OverlayRenderer implements Renderer {
 				String.format("Messages Sent: %d", GameManager.get().getManager(NetworkManager.class).getMessagesSent()));
 		debugLine(batch, camera, line++,
 				String.format("Username: %s", GameManager.get().getManager(NetworkManager.class).getUsername()));
+		debugLine(batch, camera, line++, String.format("World seed %d", GameManager.get().getWorld().getSeed()));
+
 	}
 }

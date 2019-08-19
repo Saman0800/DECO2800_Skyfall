@@ -11,15 +11,17 @@ public class BowMan extends AgentEntity {
     protected transient AbstractTask task;
 
     public BowMan(float col, float row) {
-        super(col, row, 2, 1f);
+        super(col, row, 2, 0.05f);
 
-        this.setTexture("bowman");
+        this.setTexture("spacman_blue");
         this.setHeight(1);
-        this.setObjectName("BowMan");
+        this.setObjectName("spacman_blue");
     }
 
     @Override
     public void onTick(long i) {
+        this.updateCollider();
+
         if(task != null && task.isAlive()) {
             if(task.isComplete()) {
                 this.task = GameManager.getManagerFromInstance(TaskPool.class).getTask(this);
