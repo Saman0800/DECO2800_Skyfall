@@ -1,7 +1,16 @@
 package deco2800.skyfall.entities.structures;
 
-//Needs to extend this to render buildings
+import com.google.gson.annotations.Expose;
 import deco2800.skyfall.entities.AbstractEntity;
+
+import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.util.HexVector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+
+import deco2800.skyfall.worlds.AbstractWorld;
 
 import java.util.TreeMap;
 
@@ -10,6 +19,15 @@ import java.util.TreeMap;
  * by the player.
  */
 public abstract class AbstractBuilding extends AbstractEntity {
+
+    private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
+
+    private static final String ENTITY_ID_STRING = "staticEntityID";
+    private int renderOrder;
+
+    @Expose
+    public Map<HexVector, String> children;
+
 
     private float xcoord;
     private float ycoord;
@@ -30,6 +48,27 @@ public abstract class AbstractBuilding extends AbstractEntity {
         this.xcoord = x;
         this.ycoord = y;
     }
+
+    /**
+     * @param x - X coordinate
+     * @param y - Y coordinate
+     * @param height - Render height
+     * @param world - World to place building in
+     */
+    public void placeBuilding(float x, float y, int height, AbstractWorld world) {
+        //Construction_Permissions
+        setPosition(x, y, height);
+        world.addEntity(this);
+    }
+
+    /**
+     * @param world - World to remove building from
+     */
+    public void removeBuilding(AbstractWorld world) {
+        world.removeEntity(this);
+    }
+
+    //Interaction method (onTick)
 
     /**
      * @return - cost of building the building
@@ -100,14 +139,5 @@ public abstract class AbstractBuilding extends AbstractEntity {
      * @return - Build time
      */
     public int getBuildTime() {return this.buildTime;}
-
-    //place method
-    public void placeBuilding(float x, float y, int height) {
-        setPosition(x, y, height);
-    }
-
-    //remove method
-
-    //Interaction method
 
 }
