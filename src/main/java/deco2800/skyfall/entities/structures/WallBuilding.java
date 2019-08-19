@@ -1,5 +1,7 @@
 package deco2800.skyfall.entities.structures;
 
+import deco2800.skyfall.worlds.AbstractWorld;
+
 import java.util.TreeMap;
 
 /**
@@ -32,6 +34,7 @@ public class WallBuilding extends AbstractBuilding {
         this.setBuildTime(constructionTime);
         this.setCost(constructionCost);
     }
+
     /**
      * @return - Health of the fence
      */
