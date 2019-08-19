@@ -255,6 +255,7 @@ public class Tile{
 	 */
 	private boolean checkIsBuildable(String texture){
 		ArrayList<String> buildables = new ArrayList<>();
+		//List of buildable tiles
 		buildables.add("water");
 		buildables.add("sand");
 		for (String obstructable : buildables){
