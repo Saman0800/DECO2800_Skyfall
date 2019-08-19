@@ -10,8 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-
-    public class GameMenuManager {
+/**
+ * Managers the menu bar during the game
+ */
+public class GameMenuManager {
 
         private Table pauseTable = null;
 
@@ -19,6 +21,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
         public GameMenuManager() {
         }
 
+        /**
+         * Display menu bar at the bottom of the game
+         *
+         * @param stage Current stage
+         */
         private void showMenu(Stage stage){
 
             Image menuBar = new Image(GameManager.get().getManager(TextureManager.class).getTexture("game menu bar"));
@@ -27,7 +34,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
             stage.addActor(menuBar);
         }
 
-        private void showButtons(Stage stage) {
+    /**
+     * Display buttons in the menu bar
+     *
+     * @param stage Current stage
+     */
+    private void showButtons(Stage stage) {
             int height;
             height = 75;
             ImageButton pause = new ImageButton(new TextureRegionDrawable((new TextureRegion(GameManager.get().getManager(TextureManager.class).getTexture("pause")))));
@@ -74,11 +86,18 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
             stage.addActor(radar);
         }
 
-        private Table getPauseTable() {
+    /**
+     * Getter of pause pop up table
+     * @return
+     */
+    private Table getPauseTable() {
             return pauseTable;
         }
 
-        private void setPauseTable() {
+    /**
+     * Sets the pause pop up table
+     */
+    private void setPauseTable() {
             Table pauseTable = new Table();
             pauseTable.setSize(500, 500*1346/1862);
             pauseTable.setPosition(Gdx.graphics.getWidth()/2 - 200, Gdx.graphics.getHeight()/2 - 90);
@@ -126,12 +145,20 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
             this.pauseTable = pauseTable;
         }
 
-        private void pause() {
+    /**
+     * Pauses the game
+     */
+    private void pause() {
             GameManager.setPaused(true);
         }
 
 
-        public void show(Stage stage) {
+    /**
+     * Display eveything created
+     *
+     * @param stage current stage
+     */
+    public void show(Stage stage) {
             showMenu(stage);
             showButtons(stage);
         }

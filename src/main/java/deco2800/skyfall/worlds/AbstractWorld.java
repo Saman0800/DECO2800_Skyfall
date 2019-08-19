@@ -88,7 +88,7 @@ public abstract class AbstractWorld {
 
     public void generateNeighbours() {
     //multiply coords by 2 to remove floats
-    	Map<Integer, Map<Integer, Tile>> tileMap = new HashMap<Integer, Map<Integer, Tile>>();
+    	Map<Integer, Map<Integer, Tile>> tileMap = new HashMap<>();
 		Map<Integer, Tile> columnMap;
 		for(Tile tile : tiles) {
 			columnMap = tileMap.getOrDefault((int)tile.getCol()*2, new HashMap<Integer, Tile>());
@@ -327,7 +327,7 @@ public abstract class AbstractWorld {
     /**
      * Gets the list of biomes in a world
      */
-    public ArrayList<AbstractBiome> getBiomes(){
+    public List<AbstractBiome> getBiomes(){
         return this.biomes;
     }
 
@@ -344,9 +344,9 @@ public abstract class AbstractWorld {
 
 
     public void saveWorld(String filename) throws IOException{
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-        writer.write(worldToString());
-        writer.close();
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(filename))){
+            writer.write(worldToString());
+        }
     }
 
     public String worldToString(){

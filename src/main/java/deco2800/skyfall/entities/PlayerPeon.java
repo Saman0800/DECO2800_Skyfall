@@ -76,6 +76,10 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
                 this.task = null;
             }
         }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+            GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
+        }
     }
 
     /**
