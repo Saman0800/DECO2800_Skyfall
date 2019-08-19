@@ -85,7 +85,6 @@ public class ConstructionManager extends AbstractManager {
             buildMenu.setPosition(width / 8, height / 8);
 
             //TODO: Add window components here: e.g. buttons, labels, etc
-            //example buildMenu.add(button1);
 
             menuSetUp = true;
         }
@@ -133,7 +132,7 @@ public class ConstructionManager extends AbstractManager {
     //Start of terrain Check
 
     // terrain map is a collection of terrains' building permission
-    private TreeMap<String, Boolean> terrainMap = new TreeMap<String, Boolean>();
+    private TreeMap<String, Boolean> terrainMap = new TreeMap<>();
 
     // load file of initial terrains' building permission into the terrain map
     // file format as (texture name, boolean value) for one terrain type
@@ -152,7 +151,7 @@ public class ConstructionManager extends AbstractManager {
             while ((line = br.readLine()) != null) {
                 String[] terrainInfo = line.split(",");
                 if (terrainInfo.length != 2) {
-                    throw new Exception("Incorrect file format");
+                    throw new IOException("Incorrect file format");
                 }
                 String texture = terrainInfo[0];
                 String boolStr = terrainInfo[1];
@@ -162,7 +161,7 @@ public class ConstructionManager extends AbstractManager {
                     bool = Boolean.parseBoolean(boolStr);
                     this.terrainMap.put(texture, bool);
                 } else {
-                    throw new Exception("Incorrect file format");
+                    throw new IOException("Incorrect file format");
                 }
             }
         } catch (Exception e) {
@@ -273,13 +272,13 @@ public class ConstructionManager extends AbstractManager {
      */
     public Boolean invCheck(AbstractBuilding building, InventoryManager inventoryManager) {
 
-        TreeMap<String, Integer> buildingCost = building.getCost();
+        Map<String, Integer> buildingCost = building.getCost();
 
         for (Map.Entry<String, Integer> entry : buildingCost.entrySet()) {
 
             String item = entry.getKey();
             Integer value = entry.getValue();
-//          System.out.println(item + " => " + value);
+            // System.out.println(item + " => " + value);
 
             if (value.intValue() > inventoryManager.getAmount(item)) {
                 return false;
@@ -298,7 +297,7 @@ public class ConstructionManager extends AbstractManager {
      * @pre: Assume that building has been verified against inventoryAmount in inventoryManager
      */
     public void invRemove(AbstractBuilding building, InventoryManager inventoryManager) {
-        TreeMap<String, Integer> buildingCost = building.getCost();
+        Map<String, Integer> buildingCost = building.getCost();
         for (Map.Entry<String, Integer> entry : buildingCost.entrySet()) {
 
             String item = entry.getKey();

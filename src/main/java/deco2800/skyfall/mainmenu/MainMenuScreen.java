@@ -23,6 +23,7 @@ public class MainMenuScreen implements Screen {
 
     /**
      * The constructor of the MainMenuScreen
+     *
      * @param game the Iguana Chase Game to run
      */
     public MainMenuScreen(final SkyfallGame game) {
@@ -35,10 +36,10 @@ public class MainMenuScreen implements Screen {
         background.setFillParent(true);
         stage.addActor(background);
 
-//        Label logo = new Label("BIG PHARMA", skin);
-//        logo.setFontScale(5.0f);
-//        logo.setPosition(1280/2 - 225, 720/2 + 100);
-//        stage.addActor(logo);
+        // Label logo = new Label("BIG PHARMA", skin);
+        // logo.setFontScale(5.0f);
+        // logo.setPosition(1280/2 - 225, 720/2 + 100);
+        // stage.addActor(logo);
 
         Button newGameBtn = new TextButton("SINGLE PLAYER", skin, "main_menu");
         newGameBtn.setPosition(10, MIN_HEIGHT - 100);
@@ -48,9 +49,9 @@ public class MainMenuScreen implements Screen {
         connectToServerButton.setPosition(10, MIN_HEIGHT - 50);
         stage.addActor(connectToServerButton);
 
-//        Button startServerButton = new TextButton("START SERVER", skin, "main_menu");
-//        startServerButton.setPosition(10, 0);
-//        stage.addActor(startServerButton);
+        // Button startServerButton = new TextButton("START SERVER", skin, "main_menu");
+        // startServerButton.setPosition(10, 0);
+        // stage.addActor(startServerButton);
 
         connectToServerButton.addListener(new ClickListener() {
             @Override
@@ -68,8 +69,8 @@ public class MainMenuScreen implements Screen {
             }
         });
     }
-    
-   /**
+
+    /**
      * Begins things that need to begin when shown
      */
     public void show() {
@@ -99,18 +100,20 @@ public class MainMenuScreen implements Screen {
 
     /**
      * Resizes the main menu stage to a new width and height
-     * @param width the new width for the menu stage
+     *
+     * @param width  the new width for the menu stage
      * @param height the new width for the menu stage
      */
-    public void resize (int width, int height) {
+    public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
     }
 
     /**
      * Renders the menu
+     *
      * @param delta
      */
-    public void render (float delta) {
+    public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 
