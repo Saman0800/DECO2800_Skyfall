@@ -56,7 +56,8 @@ public class PoisonousMushroom extends HealthResources implements Item {
         this.colour ="black white";
         this.name ="PoisonousMushroom";
         this.hasFoodEffect = true;
-        this.foodValue = -20;
+        this.foodValue = 40;
+        this.healthValue = -20;
         //default constructor added for building inventory
     }
 

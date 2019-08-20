@@ -52,7 +52,8 @@ public class Berry extends HealthResources implements Item {
         this.colour ="wine red";
         this.name ="Berry";
         this.hasFoodEffect = true;
-        this.foodValue = 20;
+        this.foodValue = 10;
+        this.healthValue = 5;
         //default constructor added for building inventory
     }
 
