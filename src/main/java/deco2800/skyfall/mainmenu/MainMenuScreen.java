@@ -5,6 +5,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
@@ -49,23 +51,39 @@ public class MainMenuScreen implements Screen {
         connectToServerButton.setPosition(10, MIN_HEIGHT - 50);
         stage.addActor(connectToServerButton);
 
-        // Button startServerButton = new TextButton("START SERVER", skin, "main_menu");
-        // startServerButton.setPosition(10, 0);
-        // stage.addActor(startServerButton);
+        Button tutorialButton = new TextButton("TUTORIAL", skin, "main_menu");
+        tutorialButton.setPosition(10, MIN_HEIGHT - 150);
+        stage.addActor(tutorialButton);
 
-        connectToServerButton.addListener(new ClickListener() {
+        //Button startServerButton = new TextButton("START SERVER", skin, "main_menu");
+        //startServerButton.setPosition(10, 0);
+        //stage.addActor(startServerButton);
+
+        tutorialButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                GameManager.get().isTutorial = true;
                 // TODO Accept user-provided seed or generate random seed.
-                game.setScreen(new GameScreen(new SkyfallGame(), 3, false));
+                game.setScreen(new GameScreen(new SkyfallGame(), 3, true));
             }
         });
 
         newGameBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                GameManager.get().isTutorial = false;
                 // TODO Accept user-provided seed or generate random seed.
-                game.setScreen(new GameScreen(new SkyfallGame(), 3, true));
+                game.setScreen(new GameScreen(new SkyfallGame(), 0, true));
+
+            }
+        });
+
+        connectToServerButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                GameManager.get().isTutorial = false;
+                // TODO Accept user-provided seed or generate random seed.
+                game.setScreen(new GameScreen(new SkyfallGame(), 3, false));
             }
         });
     }

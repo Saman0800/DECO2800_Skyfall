@@ -35,7 +35,7 @@ public class Collider {
      *            The yLength (in y).
      */
     public Collider(float x, float y, float xLength, float yLength) {
-        //LOGGER.info("Creating a collider at {},{}", x, y);
+        //LOGGER.info("Creating a collider at {}, {}", x, y);
         this.x = x;
         this.y = y;
         this.xLength = xLength;

@@ -337,6 +337,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     @Override
     public void onTick(long i) {
         updateMoveVector();
+        this.updateCollider();
         this.setCurrentSpeed(this.direction.len());
         this.moveTowards(new HexVector(this.direction.x, this.direction.y));
 //        System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction,
@@ -370,6 +371,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     @Override
     public void notifyKeyDown(int keycode) {
+        //player cant move when paused
+        if (GameManager.getPaused()) {
+            return;
+        }
         switch (keycode) {
             case Input.Keys.W:
                 MOVE_UP = true;

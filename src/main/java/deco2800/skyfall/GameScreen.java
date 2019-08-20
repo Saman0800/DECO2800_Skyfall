@@ -64,7 +64,11 @@ public class GameScreen implements Screen,KeyDownObserver {
 			world = new ServerWorld(seed);
 			GameManager.get().getManager(NetworkManager.class).connectToHost("localhost", "duck1234");
 		} else {
-			world = new RocketWorld(seed, 80, 5);
+			if (GameManager.get().isTutorial) {
+				world = new TutorialWorld(seed, 80, 5);
+			} else {
+				world = new RocketWorld(seed, 80, 5);
+			}
 			GameManager.get().getManager(NetworkManager.class).startHosting("host");
 		}
 
@@ -90,7 +94,9 @@ public class GameScreen implements Screen,KeyDownObserver {
 			e.printStackTrace();
 		}
 
-		PathFindingService pathFindingService = new PathFindingService();
+        new GameMenuManager().show(stage);
+
+        PathFindingService pathFindingService = new PathFindingService();
 		GameManager.get().addManager(pathFindingService);
 		
 		InputMultiplexer multiplexer = new InputMultiplexer();
@@ -102,6 +108,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 		GameManager.get().getManager(KeyboardManager.class).registerForKeyDown(this);
 	}
 
+
 	/**
 	 * Renderer thread
 	 * Must update all displayed elements using a Renderer
@@ -109,7 +116,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 	@Override
 	public void render(float delta) {
 		handleRenderables();
-		
+
 		moveCamera();
 			
 		cameraDebug.position.set(camera.position);

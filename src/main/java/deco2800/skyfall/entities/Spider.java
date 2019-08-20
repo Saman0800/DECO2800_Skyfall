@@ -77,6 +77,7 @@ public class Spider extends EnemyEntity {
      */
     @Override
     public void onTick(long i) {
+        super.onTick(i);
 //        if (task != null && task.isAlive()) {
 //            task.onTick(i);
 //
