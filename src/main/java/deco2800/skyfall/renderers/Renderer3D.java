@@ -279,6 +279,13 @@ public class Renderer3D implements Renderer {
         int entitiesSkipped = 0;
         logger.debug("NUMBER OF ENTITIES IN ENTITY RENDER LIST: {}", entities.size());
         for (AbstractEntity entity : entities) {
+            Texture tex = textureManager.getTexture(entity.getTexture());
+            float[] entityWorldCoord = WorldUtil.colRowToWorldCords(entity.getCol(), entity.getRow());
+            // If it's offscreen
+            if (WorldUtil.areCoordinatesOffScreen(entityWorldCoord[0], entityWorldCoord[1], camera)) {
+                entitiesSkipped++;
+                continue;
+            }
 
             if (entity instanceof StaticEntity) {
                 StaticEntity staticEntity = ((StaticEntity) entity);
@@ -306,13 +313,6 @@ public class Renderer3D implements Renderer {
                             childTex.getHeight() * WorldUtil.SCALE_Y);
                 }
             } else {
-                Texture tex = textureManager.getTexture(entity.getTexture());
-                float[] entityWorldCoord = WorldUtil.colRowToWorldCords(entity.getCol(), entity.getRow());
-                // If it's offscreen
-                if (WorldUtil.areCoordinatesOffScreen(entityWorldCoord[0], entityWorldCoord[1], camera)) {
-                    entitiesSkipped++;
-                    continue;
-                }
                 skipDrawingEnemy(batch, entity, entityWorldCoord, tex);
 
                 AnimationRole moveType = entity.getMovingAnimation();
