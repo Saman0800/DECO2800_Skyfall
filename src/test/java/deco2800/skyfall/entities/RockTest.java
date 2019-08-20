@@ -34,7 +34,7 @@ public class RockTest {
 
     @Before
     public void Setup() {
-        w = new TestWorld();
+        w = new TestWorld(0);
 
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
@@ -55,7 +55,7 @@ public class RockTest {
     public void TestConstruction() {
         // Populate the world with tiles
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        Tile tile1 = new Tile("grass_1_0", 0.0f, 0.0f);
+        Tile tile1 = new Tile(0.0f, 0.0f);
         tileMap.add(tile1);
         w.setTileMap(tileMap);
 
@@ -70,9 +70,9 @@ public class RockTest {
         assertTrue(rock1.equals(rock1));
         assertTrue(rock1.getPosition().equals(new HexVector(0.0f, 0.0f)));
         assertEquals(rock1.getRenderOrder(), 2);
-        assertEquals(rock1.getCol(), 0.0f, 0.001f);
-        assertEquals(rock1.getRow(), 0.0f, 0.001f);
-        assertTrue(rock1.getObstructed());
+        assertEquals(rock1.getCol(), 0.0f, 0.0f);
+        assertEquals(rock1.getRow(), 0.0f, 0.0f);
+        assertTrue(rock1.isObstructed());
         assertEquals(rock1.getObjectName(), "rock");
     }
 
@@ -80,10 +80,10 @@ public class RockTest {
     public void TestAddedFunctions() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
         // Populate world with tiles
-        Tile tile1 = new Tile("grass_1_0", 0.0f, 0.0f);
-        Tile tile2 = new Tile("grass_1_0", 0.0f, 1.0f);
-        Tile tile3 = new Tile("grass_1_0", 1.0f, -0.5f);
-        Tile tile4 = new Tile("grass_1_0", 1.0f, 0.5f);
+        Tile tile1 = new Tile(0.0f, 0.0f);
+        Tile tile2 = new Tile(0.0f, 1.0f);
+        Tile tile3 = new Tile(1.0f, -0.5f);
+        Tile tile4 = new Tile(1.0f, 0.5f);
         tileMap.add(tile1);
         tileMap.add(tile2);
         tileMap.add(tile4);

@@ -3,8 +3,6 @@ package deco2800.skyfall.managers;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-//import deco2800.skyfall.managers.Manager;
-
 import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.worlds.AbstractWorld;
 
@@ -17,7 +15,12 @@ import java.util.List;
 
 public class GameManager {
 	//debug values stored here
-	public int entitiesRendered, entitiesCount, tilesRendered, tilesCount;
+	public int entitiesRendered;
+	public int entitiesCount;
+	public int tilesRendered;
+	public int tilesCount;
+
+	public boolean isTutorial = false;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GameManager.class);
 
@@ -37,8 +40,9 @@ public class GameManager {
 
 	// The UI skin being used by the game for libGDX elements.
 	private Skin skin;
-	
 
+    // Showing if the game is paused.
+    private static boolean paused = false;
 
 	public float fps = 0;
 
@@ -267,7 +271,22 @@ public class GameManager {
 		}
 		gameWorld.onTick(0);
 	}
-	
-	
+
+    /**
+     * Pause or resume the game.
+     *
+     * @param pause
+     */
+    public static void setPaused(boolean pause) {
+        paused = pause;
+    }
+
+    /**
+     * Get if the game is paused
+     * @return paused
+     */
+    public static boolean getPaused() {
+        return paused;
+    }
 
 }

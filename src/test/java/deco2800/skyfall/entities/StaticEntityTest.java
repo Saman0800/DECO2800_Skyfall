@@ -35,7 +35,7 @@ public class StaticEntityTest {
 
     @Before
     public void Setup() {
-        w = new TestWorld();
+        w = new TestWorld(0);
 
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
@@ -55,7 +55,7 @@ public class StaticEntityTest {
     @Test
     public void SetPropertiesTileConstructor() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        Tile tile1 = new Tile("grass_1_0", 0.0f, 0.0f);
+        Tile tile1 = new Tile(0.0f, 0.0f);
         tileMap.add(tile1);
         w.setTileMap(tileMap);
 
@@ -68,61 +68,48 @@ public class StaticEntityTest {
         assertEquals(rock1.getRenderOrder(), 2);
         assertEquals(rock1.getCol(), 0.0f, 0.001f);
         assertEquals(rock1.getRow(), 0.0f, 0.001f);
-        assertTrue(rock1.getObstructed());
+        assertTrue(rock1.isObstructed());
         assertEquals(rock1.getObjectName(), "staticEntityID");
     }
 
     @Test
     public void SetPropertiesRowColConstructor() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        // Populate world with tiles
-        Tile tile1 = new Tile("grass_1_0", 0.0f, 0.0f);
-        Tile tile2 = new Tile("grass_1_0", 0.0f, 1.0f);
-        Tile tile3 = new Tile("grass_1_0", 1.0f, -0.5f);
-        Tile tile4 = new Tile("grass_1_0", 1.0f, 0.5f);
+        Tile tile1 = new Tile(0.0f, 0.0f);
         tileMap.add(tile1);
-        tileMap.add(tile2);
-        tileMap.add(tile4);
-        tileMap.add(tile3);
-        tileMap.add(new Tile("grass_1_0", -1.0f, 0.5f));
-        tileMap.add(new Tile("grass_1_0", -1.0f, -0.5f));
-        tileMap.add(new Tile("grass_1_0", 0.0f, -1.f));
         w.setTileMap(tileMap);
 
         Map<HexVector, String> texture = new HashMap<>();
-        texture.put(new HexVector(0.0f, 0.0f), "tree");
-        texture.put(new HexVector(1.0f, -0.5f), "tree");
-
-        StaticEntity tree1 = new StaticEntity(0.0f, 1.0f, 2, texture);
-        w.addEntity(tree1);
+        texture.put(new HexVector(0.0f, 0.0f), "rock");
+        StaticEntity rock1 = new StaticEntity(0.0f, 0.0f, 2, texture);
+        w.addEntity(rock1);
 
         // Check that the various properties of this static entity have been
         // set correctly
-        assertTrue(tree1.equals(tree1));
-        assertTrue(tree1.getPosition().equals(new HexVector(0.0f, 1.0f)));
-        assertEquals(tree1.getRenderOrder(), 2);
-        assertEquals(tree1.getCol(), 0.0f, 0.0f);
-        assertEquals(tree1.getRow(), 1.0f, 0.0f);
-        assertTrue(tree1.getObstructed());
-        assertEquals(tree1.getObjectName(), "staticEntityID");
-        assertEquals(tree1.getTextures(), Collections.unmodifiableMap(texture));
+        assertTrue(rock1.equals(rock1));
+        assertTrue(rock1.getPosition().equals(new HexVector(0.0f, 0.0f)));
+        assertEquals(rock1.getRenderOrder(), 2);
+        assertEquals(rock1.getCol(), 0.0f, 0.0f);
+        assertEquals(rock1.getRow(), 0.0f, 0.0f);
+        assertTrue(rock1.isObstructed());
+        assertEquals(rock1.getObjectName(), "staticEntityID");
     }
 
     @Test
-    public void PlaceDownTestTileConstructor() {
+    public void PlaceDownTest() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
         // Populate world with tiles
-        Tile tile1 = new Tile("grass_1_0", 0.0f, 0.0f);
-        Tile tile2 = new Tile("grass_1_0", 0.0f, 1.0f);
-        Tile tile3 = new Tile("grass_1_0", 1.0f, -0.5f);
-        Tile tile4 = new Tile("grass_1_0", 1.0f, 0.5f);
+        Tile tile1 = new Tile(0.0f, 0.0f);
+        Tile tile2 = new Tile(0.0f, 1.0f);
+        Tile tile3 = new Tile(1.0f, -0.5f);
+        Tile tile4 = new Tile(1.0f, 0.5f);
         tileMap.add(tile1);
         tileMap.add(tile2);
         tileMap.add(tile4);
         tileMap.add(tile3);
-        tileMap.add(new Tile("grass_1_0", -1.0f, 0.5f));
-        tileMap.add(new Tile("grass_1_0", -1.0f, -0.5f));
-        tileMap.add(new Tile("grass_1_0", 0.0f, -1.f));
+        tileMap.add(new Tile(-1.0f, 0.5f));
+        tileMap.add(new Tile(-1.0f, -0.5f));
+        tileMap.add(new Tile(0.0f, -1.f));
         w.setTileMap(tileMap);
 
         // Just check that the tiles have indeed been placed into the world
@@ -132,6 +119,10 @@ public class StaticEntityTest {
         StaticEntity rock1 = new StaticEntity(tile1, 2, "rock", true);
 
         w.addEntity(rock1);
+        Map<HexVector, String> texture = new HashMap<>();
+        texture.put(new HexVector(0.0f, 0.0f), "rock");
+        texture.put(new HexVector(1.0f, -0.5f), "rock");
+        w.addEntity(new StaticEntity(0.0f, 1.0f, 2, texture));
 
         // Check that the static entity has been placed down on the tile
         assertTrue("Tile has had a static entity placed on it with the tile construct"
@@ -139,66 +130,19 @@ public class StaticEntityTest {
         assertTrue("Tile has had a static entity placed on it with the tile construct"
                 + " thus the tile should be obstructed", tile1.isObstructed());
 
-        assertFalse("Nothing placed on tile yet, should not have parent.", tile3.hasParent());
-        assertFalse("Nothing placed on tile yet, should not be obstructed.", tile3.isObstructed());
-
-        // Now that we have made a duplicate rock on tile 3 we expect that tile
-        // 3 would have a parent and is obstructed.
-        StaticEntity rock2 = rock1.newInstance(tile3);
-        assertTrue(rock2.getPosition().equals(new HexVector(1.0f, -0.5f)));
-        assertEquals(rock2.getRenderOrder(), 2);
-        assertEquals(rock2.getCol(), 1.0f, 0.001f);
-        assertEquals(rock2.getRow(), -0.5f, 0.001f);
-        assertTrue(rock2.getObstructed());
-        assertEquals(rock2.getObjectName(), "staticEntityID");
-
-        assertTrue("New instance of static item not found.", tile3.hasParent());
-        assertTrue("New instance of static item not found.", tile3.isObstructed());
-    }
-
-    @Test
-    public void PlaceDownTestRowColConstructor() {
-        CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        // Populate world with tiles
-        Tile tile1 = new Tile("grass_1_0", 0.0f, 0.0f);
-        Tile tile2 = new Tile("grass_1_0", 0.0f, 1.0f);
-        Tile tile3 = new Tile("grass_1_0", 1.0f, -0.5f);
-        Tile tile4 = new Tile("grass_1_0", 1.0f, 0.5f);
-        tileMap.add(tile1);
-        tileMap.add(tile2);
-        tileMap.add(tile4);
-        tileMap.add(tile3);
-        tileMap.add(new Tile("grass_1_0", -1.0f, 0.5f));
-        tileMap.add(new Tile("grass_1_0", -1.0f, -0.5f));
-        tileMap.add(new Tile("grass_1_0", 0.0f, -1.f));
-        w.setTileMap(tileMap);
-
-        Map<HexVector, String> texture = new HashMap<>();
-        texture.put(new HexVector(0.0f, 0.0f), "tree");
-        texture.put(new HexVector(1.0f, -0.5f), "tree");
-
-        StaticEntity tree1 = new StaticEntity(0.0f, 1.0f, 2, texture);
-        w.addEntity(tree1);
-
         // Likewise for a static entity that occupies more than one tile
         assertTrue("Tile has had static entity placed on it. Thus the tile should be obstructed.",
                 tile2.isObstructed());
         assertTrue("Tile has had static entity placed on it. Thus the tile should be obstructed.",
                 tile4.isObstructed());
 
-        StaticEntity tree2 = tree1.newInstance(0.0f, 0.0f);
-        // StaticEntity tree2 = new StaticEntity(0.0f, 0.0f, 2, texture);
-        assertTrue("Tile has had static entity placed on it. Thus the tile should be obstructed.",
-                tile1.isObstructed());
-        assertTrue("Tile has had static entity placed on it. Thus the tile should be obstructed.",
-                tile3.isObstructed());
-        // Check various properties of the duplicated tree
-        assertTrue(tree2.getPosition().equals(new HexVector(0.0f, 0.0f)));
-        assertEquals(tree2.getRenderOrder(), 2);
-        assertEquals(tree2.getCol(), 0.0f, 0.0f);
-        assertEquals(tree2.getRow(), 0.0f, 0.0f);
-        assertTrue(tree2.getObstructed());
-        assertEquals(tree2.getObjectName(), "staticEntityID");
-        assertEquals(tree2.getTextures(), Collections.unmodifiableMap(texture));
+        assertFalse("Nothing placed on tile yet, should not have parent.", tile3.hasParent());
+        assertFalse("Nothing placed on tile yet, should not be obstructed.", tile3.isObstructed());
+
+        // Now that we have made a duplicate rock on tile 3 we expect that tile
+        // 3 would have a parent and is obstructed.
+        rock1.newInstance(tile3);
+        assertTrue("New instance of static item not found.", tile3.hasParent());
+        assertTrue("New instance of static item not found.", tile3.isObstructed());
     }
 }

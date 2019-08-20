@@ -28,7 +28,7 @@ public class LongGrass extends StaticEntity {
      */
     @Override
     public LongGrass newInstance(Tile tile) {
-        return new LongGrass(tile, this.getObstructed());
+        return new LongGrass(tile, this.isObstructed());
     }
 
 }

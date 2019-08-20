@@ -36,7 +36,7 @@ public class TreeTest {
 
     @Before
     public void Setup() {
-        w = new TestWorld();
+        w = new TestWorld(0);
 
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
@@ -44,7 +44,7 @@ public class TreeTest {
         when(GameManager.get()).thenReturn(mockGM);
         when(mockGM.getWorld()).thenReturn(w);
 
-        // mocked imput manager
+        // mocked input manager
         InputManager Im = new InputManager();
 
         OnScreenMessageManager mockOSMM = mock(OnScreenMessageManager.class);
@@ -57,7 +57,7 @@ public class TreeTest {
     public void TestConstruction() {
         // Populate the world with tiles
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        Tile tile1 = new Tile("grass_1_0", 0.0f, 0.0f);
+        Tile tile1 = new Tile(0.0f, 0.0f);
         tileMap.add(tile1);
         w.setTileMap(tileMap);
 
@@ -74,7 +74,7 @@ public class TreeTest {
         assertEquals(tree1.getRenderOrder(), 5);
         assertEquals(tree1.getCol(), 0.0f, 0.0f);
         assertEquals(tree1.getRow(), 0.0f, 0.0f);
-        assertTrue(tree1.getObstructed());
+        assertTrue(tree1.isObstructed());
         // NOTE: may change in future
         assertEquals(tree1.getObjectName(), "staticEntityID");
     }
@@ -83,10 +83,10 @@ public class TreeTest {
     public void TestAddedFunctions() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
         // Populate world with tiles
-        Tile tile1 = new Tile("grass_1_0", 0.0f, 0.0f);
-        Tile tile2 = new Tile("grass_1_0", 0.0f, 1.0f);
-        Tile tile3 = new Tile("grass_1_0", 1.0f, -0.5f);
-        Tile tile4 = new Tile("grass_1_0", 1.0f, 0.5f);
+        Tile tile1 = new Tile(0.0f, 0.0f);
+        Tile tile2 = new Tile(0.0f, 1.0f);
+        Tile tile3 = new Tile(1.0f, -0.5f);
+        Tile tile4 = new Tile(1.0f, 0.5f);
         tileMap.add(tile1);
         tileMap.add(tile2);
         tileMap.add(tile4);
@@ -114,10 +114,10 @@ public class TreeTest {
     public void TestHarvest() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
         // Populate world with tiles
-        Tile tile1 = new Tile("grass_1_0", 0.0f, 0.0f);
-        Tile tile2 = new Tile("grass_1_0", 0.0f, 1.0f);
-        Tile tile3 = new Tile("grass_1_0", 1.0f, -0.5f);
-        Tile tile4 = new Tile("grass_1_0", 1.0f, 0.5f);
+        Tile tile1 = new Tile(0.0f, 0.0f);
+        Tile tile2 = new Tile(0.0f, 1.0f);
+        Tile tile3 = new Tile(1.0f, -0.5f);
+        Tile tile4 = new Tile(1.0f, 0.5f);
         tileMap.add(tile1);
         tileMap.add(tile2);
         tileMap.add(tile4);
@@ -132,7 +132,7 @@ public class TreeTest {
         assertTrue("Unexpected drop size.", 15 >= drops.size());
 
         // Check that the drops are instance of Woodblocks
-        if (0 <= drops.size()) {
+        if (0 < drops.size()) {
             AbstractEntity dropItem = drops.get(0);
             assertTrue("Incorrect instance type for tree drop", dropItem instanceof WoodCube);
         }

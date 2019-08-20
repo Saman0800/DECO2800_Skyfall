@@ -33,8 +33,7 @@ public class LongGrassTest {
 
     @Before
     public void Setup() {
-        w = new TestWorld();
-
+        w = new TestWorld(0);
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
 
@@ -54,7 +53,7 @@ public class LongGrassTest {
     public void TestConstruction() {
         // Populate the world with tiles
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        Tile tile1 = new Tile("grass_1_0", 0.0f, 0.0f);
+        Tile tile1 = new Tile(0.0f, 0.0f);
         tileMap.add(tile1);
         w.setTileMap(tileMap);
 
@@ -71,7 +70,7 @@ public class LongGrassTest {
         assertEquals(longGrass1.getRenderOrder(), 2);
         assertEquals(longGrass1.getCol(), 0.0f, 0.0f);
         assertEquals(longGrass1.getRow(), 0.0f, 0.0f);
-        assertTrue(longGrass1.getObstructed());
+        assertTrue(longGrass1.isObstructed());
         assertEquals(longGrass1.getObjectName(), "long_grass");
     }
 
@@ -79,10 +78,10 @@ public class LongGrassTest {
     public void TestAddedFunctions() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
         // Populate world with tiles
-        Tile tile1 = new Tile("grass_1_0", 0.0f, 0.0f);
-        Tile tile2 = new Tile("grass_1_0", 0.0f, 1.0f);
-        Tile tile3 = new Tile("grass_1_0", 1.0f, -0.5f);
-        Tile tile4 = new Tile("grass_1_0", 1.0f, 0.5f);
+        Tile tile1 = new Tile(0.0f, 0.0f);
+        Tile tile2 = new Tile(0.0f, 1.0f);
+        Tile tile3 = new Tile(1.0f, -0.5f);
+        Tile tile4 = new Tile(1.0f, 0.5f);
         tileMap.add(tile1);
         tileMap.add(tile2);
         tileMap.add(tile4);

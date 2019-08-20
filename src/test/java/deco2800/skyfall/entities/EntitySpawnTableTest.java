@@ -1,5 +1,8 @@
 package deco2800.skyfall.entities;
+
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.ForestBiome;
 import deco2800.skyfall.worlds.TestWorld;
 
 import deco2800.skyfall.worlds.Tile;
@@ -11,6 +14,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.junit.Assert.assertEquals;
@@ -25,22 +29,28 @@ public class EntitySpawnTableTest {
 
     private TestWorld testWorld = null;
 
-    //size of test world
+    // size of test world
     final int worldSize = 100;
 
-    //create a mock game manager for successful .getWorld()
+    // create a mock game manager for successful .getWorld()
     @Mock
     private GameManager mockGM;
 
+    AbstractBiome biome;
+
     @Before
     public void createTestEnvironment() {
-        testWorld = new TestWorld();
+        testWorld = new TestWorld(0);
 
-        //create tile map, add tiles and push to testWorld
+        biome = new ForestBiome();
+
+        // create tile map, add tiles and push to testWorld
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
 
         for (int i = 0; i < worldSize; i++) {
-            tileMap.add(new Tile("grass_1_0", 1.0f*i, 0.0f));
+            Tile tile = new Tile(1.0f * i, 0.0f);
+            tileMap.add(tile);
+            biome.addTile(tile);
         }
 
         testWorld.setTileMap(tileMap);
@@ -48,30 +58,29 @@ public class EntitySpawnTableTest {
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
 
-        //required for proper EntitySpawnTable.placeEntity
+        // required for proper EntitySpawnTable.placeEntity
         when(GameManager.get()).thenReturn(mockGM);
         when(mockGM.getWorld()).thenReturn(testWorld);
     }
 
-    //tests the place method
+    // tests the place method
     @Test
     public void testPlaceEntity() {
-        Tile tile = new Tile("grass_1_0", 0.0f, 0.0f);
+        Tile tile = new Tile(0.0f, 0.0f);
         Rock rock = new Rock();
 
-        //check tile has no rock
+        // check tile has no rock
         assertTrue(!tile.hasParent());
 
-        //place
+        // place
         EntitySpawnTable.placeEntity(rock, tile);
 
-        //has the rock
+        // has the rock
         assertTrue(tile.hasParent());
 
     }
 
-
-    //simple method to count number of static entities on world
+    // simple method to count number of static entities on world
     private int countWorldEntities() {
         int count = 0;
         for (Tile tile : testWorld.getTileMap()) {
@@ -84,18 +93,18 @@ public class EntitySpawnTableTest {
 
     @Test
     public void testDirectPlace() {
-        //check if construction was valid
+        // check if construction was valid
         assertEquals(worldSize, testWorld.getTileMap().size());
 
-        //count before spawning
+        // count before spawning
         assertEquals(0, countWorldEntities());
 
-        //check basic spawnEntities
+        // check basic spawnEntities
         final double chance = 0.5;
         Rock rock = new Rock();
-        EntitySpawnTable.spawnEntities(rock, chance);
+        EntitySpawnTable.spawnEntities(rock, chance, biome, new Random());
 
-        //count after spawning
-        assertTrue(countWorldEntities()>0);
+        // count after spawning
+        assertTrue(countWorldEntities() > 0);
     }
 }
