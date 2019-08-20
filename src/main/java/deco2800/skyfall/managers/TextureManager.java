@@ -3,7 +3,6 @@ package deco2800.skyfall.managers;
 import com.badlogic.gdx.graphics.Texture;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,9 +28,7 @@ public class TextureManager extends AbstractManager {
      */
     public static final int TILE_HEIGHT = 278;
 
-	
-	//private final Logger log = LoggerFactory.getLogger(TextureManager.class);
-
+    // private final Logger log = LoggerFactory.getLogger(TextureManager.class);
 
     /**
      * A HashMap of all textures with string keys
@@ -50,15 +47,24 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bowman", new Texture("resources/bowman.png"));
             textureMap.put("main_piece", new Texture("resources" +
                     "/Main_Character_F_Right.png"));
+            textureMap.put("slash", new Texture("resources/slash_long.png"));
 
-            textureMap.put("grass_0", new Texture("resources/grass_1.png"));
-            textureMap.put("grass_1", new Texture("resources/grass_2.png"));
-            textureMap.put("grass_2", new Texture("resources/grass_3.png"));
+            //Tile textures
+            textureMap.put("grass_0", new Texture("resources/tile_textures/grass_0.png"));
+            textureMap.put("grass_1", new Texture("resources/tile_textures/grass_1.png"));
+            textureMap.put("grass_2", new Texture("resources/tile_textures/grass_2.png"));
+
+            textureMap.put("water_0", new Texture("resources/tile_textures/water_0.png"));
+            textureMap.put("water_1", new Texture("resources/tile_textures/water_1.png"));
+            textureMap.put("water_2", new Texture("resources/tile_textures/water_2.png"));
+            textureMap.put("water_3", new Texture("resources/tile_textures/water_3.png"));
+
+            textureMap.put("desert_0", new Texture("resources/tile_textures/desert_0.png"));
+
+            textureMap.put("mountain_0", new Texture("resources/tile_textures/mountain_0.png"));
+
+
             textureMap.put("grass_tuff", new Texture("resources/world_details/grass1.png"));
-            // TODO change these to something nicer, just temporary to test biome generation
-            textureMap.put("water_0", new Texture("resources/water_1.png"));
-            textureMap.put("desert_0", new Texture("resources/desert_1.png"));
-            textureMap.put("mountain_0", new Texture("resources/mountain_1.png"));
 
             textureMap.put("woodcube", new Texture("resources/woodcube.png"));
 

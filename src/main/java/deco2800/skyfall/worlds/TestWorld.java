@@ -4,14 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.StaticEntity;
-import deco2800.skyfall.entities.Tree;
-import deco2800.skyfall.entities.PlayerPeon;
-import deco2800.skyfall.entities.Rock;
+import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.ForestBiome;
 
 @SuppressWarnings("unused")
 public class TestWorld extends AbstractWorld {
@@ -25,8 +23,8 @@ public class TestWorld extends AbstractWorld {
 
     private static int RADIUS = 25;
 
-    public TestWorld() {
-        super();
+    public TestWorld(long seed) {
+        super(seed, 5, 5);
     }
 
     // 5 tile building
@@ -99,8 +97,7 @@ public class TestWorld extends AbstractWorld {
     }
 
     @Override
-    protected void generateWorld() {
-        Random random = new Random();
+    protected void generateWorld(Random random) {
         AbstractBiome biome = new ForestBiome();
         for (int q = -1000; q < 1000; q++) {
             for (int r = -1000; r < 1000; r++) {
@@ -114,13 +111,16 @@ public class TestWorld extends AbstractWorld {
 
                     int rand = random.nextInt(8);
 
-                    tiles.add(new Tile(biome, q, r + oddCol));
+                    Tile tile = new Tile(q, r + oddCol);
+                    tiles.add(tile);
+                    biome.addTile(tile);
                 }
             }
         }
 
 		// Create the entities in the game
-//		addEntity(new PlayerPeon(0f, 0f, 0.05f));
+//		addEntity(new MainCharacter(0f,
+//                0f, 0.05f, "Main Piece", 10));
 
     }
 
@@ -154,5 +154,5 @@ public class TestWorld extends AbstractWorld {
  * System.out.println("south_east " +(firend.getValue())); break; case
  * Tile.south_west: System.out.println("south_west " + (firend.getValue()));
  * break; } } }
- * 
+ *
  */

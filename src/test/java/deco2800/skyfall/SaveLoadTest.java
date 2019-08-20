@@ -5,8 +5,6 @@ import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.OnScreenMessageManager;
-import deco2800.skyfall.worlds.AbstractBiome;
-import deco2800.skyfall.worlds.ForestBiome;
 import deco2800.skyfall.worlds.TestWorld;
 import deco2800.skyfall.worlds.Tile;
 import org.junit.Before;
@@ -39,7 +37,7 @@ public class SaveLoadTest {
     
     @Before
     public void Setup() {
-        w = new TestWorld();
+        w = new TestWorld(0);
         
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
@@ -71,9 +69,8 @@ public class SaveLoadTest {
         float row_one = 1.0f;
         float col_two = 4.0f;
         float row_two = 5.0f;
-        AbstractBiome biome = new ForestBiome();
-        saveTileMap.add(new Tile(biome, col_one, row_one));
-        saveTileMap.add(new Tile(biome, col_two, row_two));
+        saveTileMap.add(new Tile(col_one, row_one));
+        saveTileMap.add(new Tile(col_two, row_two));
         w.setTileMap(saveTileMap);
 
         newEntities.put(0, new PlayerPeon(1, 1, 1, "test", 10));
@@ -82,7 +79,7 @@ public class SaveLoadTest {
         deco2800.skyfall.managers.DatabaseManager.saveWorld(w);
         
         
-        TestWorld q = new TestWorld();
+        TestWorld q = new TestWorld(0);
         deco2800.skyfall.managers.DatabaseManager.loadWorld(q);
 
         

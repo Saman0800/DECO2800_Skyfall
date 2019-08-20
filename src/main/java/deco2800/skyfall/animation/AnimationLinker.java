@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  */
 public class AnimationLinker {
 
-    private int offset[];
+    private int[] offset;
     private AnimationRole type;
     private String animationName;
     private Animation<TextureRegion> animation;
@@ -30,7 +30,7 @@ public class AnimationLinker {
      * @param offset Position to display animation relative to the entity. Needs
      *               to be of length 2. Only first 2 values are used.
      */
-    public AnimationLinker(AnimationRole type, String animationName, int offset[]) {
+    public AnimationLinker(AnimationRole type, String animationName, int[] offset) {
             this.type = type;
         this.animationName = animationName;
 
