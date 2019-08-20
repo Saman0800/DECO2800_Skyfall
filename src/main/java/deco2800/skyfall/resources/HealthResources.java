@@ -34,6 +34,7 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
     private Boolean exchangeable;
 
     public int foodValue;
+    public int healthValue;
 
 
 
@@ -158,7 +159,9 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
     public int getFoodValue() {
         return foodValue;
     }
-
+    public int getHealthValue(){
+        return healthValue;
+    }
 
     /**
      * Creates a string representation of the health resource in the format:
