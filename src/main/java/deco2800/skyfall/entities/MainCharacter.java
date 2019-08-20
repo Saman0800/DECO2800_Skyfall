@@ -152,15 +152,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
 
-    // TODO Replace all (String item) with (Weapon itme)
-    /**
-     * Adds item to player's collection
-     * @param item weapon being added
-     */
-    public void pickUpInventory(Item item) {
-        this.inventories.inventoryAdd(item);
-    }
-
     /**
      * Add weapon to weapons list
      * @param item weapon to be added
