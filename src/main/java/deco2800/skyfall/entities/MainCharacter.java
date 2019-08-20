@@ -26,6 +26,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     // TODO replace List<String> with List<Weapon>
     private List<String> weapons;
 
+    // Character stats for attack and defence modifiers
+    private CharacterStats stats;
+
     // Manager for all of MainCharacter's inventories
     public InventoryManager inventories; // maybe could be public?
 
@@ -155,6 +158,14 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.textures = textures;
         this.setTexture(textures[2]);
     }
+
+    public MainCharacter(float col, float row, float speed, String name,
+                         int health, String[] textures, CharacterStats stats) {
+        this(row, col, speed, name, health, textures);
+
+        this.stats = stats;
+    }
+
 
     // TODO Replace all (String item) with (Weapon itme)
     /**
