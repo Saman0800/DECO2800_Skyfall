@@ -1,7 +1,6 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.math.Vector2;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.*;
 import deco2800.skyfall.managers.*;
@@ -16,7 +15,7 @@ import java.util.*;
  * Main character in the game
  */
 public class MainCharacter extends Peon implements KeyDownObserver,
-        KeyUpObserver,TouchDownObserver, Tickable {
+        KeyUpObserver, TouchDownObserver, Tickable {
 
     // Combat manager for MainCharacter
     // TODO should be ok once merged with combat
@@ -90,6 +89,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     private float acceleration;
 
+    private float maxSpeed;
+
     /**
      * Private helper method to instantiate inventory for Main Character
      * constructor
@@ -135,7 +136,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         xVel = 0;
         yVel = 0;
 
-        acceleration = 1f;
+        acceleration = 0.01f;
+        maxSpeed = 0.7f;
     }
 
     /**
@@ -162,8 +164,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Constructor with various textures
+     *
      * @param textures A array of length 6 with string names corresponding to
-     *                different orientation
+     *                 different orientation
      *                 0 = North
      *                 1 = North-East
      *                 2 = South-East
@@ -181,6 +184,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Add weapon to weapons list
+     *
      * @param item weapon to be added
      */
     public void pickUpWeapon(Weapon item) {
@@ -189,6 +193,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Removes items from player's collection
+     *
      * @param item weapon being removed
      */
     public void dropWeapon(Weapon item) {
@@ -199,6 +204,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Get the weapons for the player
+     *
      * @return weapons
      */
     public List<Weapon> getWeapons() {
@@ -207,6 +213,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Deals damage to character from combat
+     *
      * @param item weapon character is being hit by
      */
     public void weaponEffect(Weapon item) {
@@ -215,6 +222,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Add weapon to weapons list
+     *
      * @param item weapon to be added
      */
     public void pickUpInventory(Item item) {
@@ -223,6 +231,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Attempts to drop given item from inventory
+     *
      * @param item item to be dropped from inventory
      */
     public void dropInventory(String item) {
@@ -233,9 +242,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Change the hunger points value for the player
      * (+ve amount increases hunger points)
      * (-ve amount decreases hunger points)
+     *
      * @param amount the amount to change it by
      */
-    public void change_food(int amount){
+    public void change_food(int amount) {
         this.foodLevel += amount;
         if (foodLevel > 100) {
             foodLevel = 100;
@@ -247,15 +257,17 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Get how many hunger points the player has
+     *
      * @return The number of hunger points the player has
      */
-    public int getFoodLevel(){
+    public int getFoodLevel() {
         return foodLevel;
     }
 
     /**
      * Method for the MainCharacter to eat food and restore/decrease hunger level
      * TODO: add hunger values to food items
+     *
      * @param item the item to eat
      */
     public void eatFood(Item item) {
@@ -277,8 +289,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Gets the player's weapons, modification of the returned list
      * doesn't impact the internal class
-     * @return a list of the player's weapons
-     * See if the player is starving
+     *
      * @return true if hunger points is <= 0, else false
      */
     public boolean isStarving() {
@@ -288,6 +299,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Set the players inventory to a predefined inventory
      * e.g for loading player saves
+     *
      * @param inventoryContents the save for the inventory
      */
     public void setInventory(Map<String, List<Item>> inventoryContents,
@@ -298,6 +310,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Change current level of character
+     *
      * @param change amount being added or subtracted
      */
     public void changeLevel(int change) {
@@ -308,6 +321,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Gets the current level of character
+     *
      * @return level of character
      */
     public int getLevel() {
@@ -316,9 +330,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Change the player's appearance to the set texture
+     *
      * @param texture the texture to set
      */
-    public void changeTexture(String texture){
+    public void changeTexture(String texture) {
         this.setTexture(texture);
     }
 
@@ -356,6 +371,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Sets the appropriate movement flags to true on keyDown
+     *
      * @param keycode the key being pressed
      */
     @Override
@@ -386,12 +402,13 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Sets the appropriate movement flags to false on keyUp
+     *
      * @param keycode the key being released
      */
     @Override
     public void notifyKeyUp(int keycode) {
         movingAnimation = AnimationRole.NULL;
-        switch(keycode){
+        switch (keycode) {
             case Input.Keys.W:
                 yInput -= 1;
                 //System.out.println("y-1");
@@ -418,30 +435,75 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     -effects on MainCharacter with different Inventory and Weapon items
     */
 
-    public void updatePosition(){
+    /**
+     * Moves the player based on current key inputs
+     */
+    public void updatePosition() {
+        // Gets current position
         float xPos = position.getCol();
         float yPos = position.getRow();
 
+
+        // Calculates velocity in x direction
         if (xInput != 0) {
             xVel += xInput * acceleration;
+        } else if (yInput != 0) {
+            xVel *= 0.8;
         } else {
             xVel = 0;
         }
 
+        // Calculates velocity in y direction
         if (yInput != 0) {
             yVel += yInput * acceleration;
+        } else if (xInput != 0) {
+            yVel *= 0.8;
         } else {
             yVel = 0;
         }
-        
+
+        // Applied velocity limit
+        if (xVel > maxSpeed) {
+            xVel = maxSpeed;
+        }
+
+        if (xVel < -maxSpeed) {
+            xVel = -maxSpeed;
+        }
+
+        if (yVel > maxSpeed) {
+            yVel = maxSpeed;
+        }
+
+        if (yVel < -maxSpeed) {
+            yVel = -maxSpeed;
+        }
+
+        // Calculates new x and y positions
         xPos += xVel + xInput * acceleration * 0.5;
         yPos += yVel + yInput * acceleration * 0.5;
 
-        System.out.println(yInput);
-        System.out.println(yVel);
-        System.out.println(yPos);
+        // Calculates destination vector
+        HexVector destination = new HexVector(xPos, yPos);
 
-        this.moveTowards(new HexVector(xPos, yPos));
+        // Calculates speed to destination
+        double vel = Math.sqrt((xVel * xVel) + (yVel * yVel));
+
+        // Moves the player to new location
+        position.moveToward(destination, vel);
     }
 
+    /**
+     * @return the direction the player wishes to travel in
+     */
+    public double getInputDirection() {
+        return Math.atan2(yInput, xInput);
+    }
+
+    /**
+     * @return the direction the player is currently moving
+     */
+    public double getMovementDirection() {
+        return Math.atan2(yVel, xVel);
+    }
 }
