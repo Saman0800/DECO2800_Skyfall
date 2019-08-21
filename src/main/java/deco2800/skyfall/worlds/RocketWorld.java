@@ -71,8 +71,14 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
                     }
                 }
             }
-            WorldGenNode.assignNeighbours(worldGenNodes);
-            WorldGenNode.assignTiles(worldGenNodes, tiles);
+
+            try {
+                WorldGenNode.assignTiles(worldGenNodes, tiles);
+                WorldGenNode.removeZeroTileNodes(worldGenNodes, worldSize);
+                WorldGenNode.assignNeighbours(worldGenNodes);
+            } catch (WorldGenException e) {
+                continue;
+            }
 
             biomes.add(new ForestBiome());
             biomes.add(new DesertBiome());

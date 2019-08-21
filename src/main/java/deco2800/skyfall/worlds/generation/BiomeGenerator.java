@@ -2,6 +2,7 @@ package deco2800.skyfall.worlds.generation;
 
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.LakeBiome;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 
@@ -63,9 +64,9 @@ public class BiomeGenerator {
     private BiomeGenerator(List<WorldGenNode> nodes, Random random, int[] biomeSizes, List<AbstractBiome> realBiomes)
             throws NotEnoughPointsException {
         Objects.requireNonNull(nodes, "nodes must not be null");
-        Objects.requireNonNull(nodes, "random must not be null");
-        Objects.requireNonNull(nodes, "biomeSizes must not be null");
-        Objects.requireNonNull(nodes, "realBiomes must not be null");
+        Objects.requireNonNull(random, "random must not be null");
+        Objects.requireNonNull(biomeSizes, "biomeSizes must not be null");
+        Objects.requireNonNull(realBiomes, "realBiomes must not be null");
         for (AbstractBiome realBiome : realBiomes) {
             Objects.requireNonNull(realBiome, "Elements of realBiome must not be null");
         }
@@ -104,6 +105,8 @@ public class BiomeGenerator {
                 // TODO Remove.
                 assert borderNodes.stream().allMatch(this::nodeIsBorder);
                 growOcean();
+                // TODO pass parameters for generate lakes into the instance of this class
+                generateLakes(2, 3);
                 fillGaps();
                 populateRealBiomes();
 
@@ -195,6 +198,67 @@ public class BiomeGenerator {
     }
 
     /**
+     * Randomly places lakes in landlocked nodes
+     */
+    private void generateLakes(int lakeSize, int noLakes) throws DeadEndGenerationException {
+        /* TODO
+         * 1. Lakes can grow in ocean
+         * 2. Textures
+         */
+        List<WorldGenNode> chosenNodes = new ArrayList<>();
+        for (int i = 0; i < noLakes; i++) {
+            List<WorldGenNode> nodes = new ArrayList<>();
+            while (true) {
+                int randomIndex = random.nextInt(usedNodes.size());
+                int index = 0;
+                WorldGenNode chosenNode = null;
+                for (WorldGenNode usedNode : usedNodes) {
+                    if (index == randomIndex) {
+                        chosenNode = usedNode;
+                        break;
+                    }
+                    index++;
+                }
+                if (!validLakeNode(chosenNode)) {
+                    continue;
+                }
+                nodes.clear();
+                nodes.add(chosenNode);
+
+                for (int j = 1; j < lakeSize; j++) {
+                    ArrayList<WorldGenNode> growToCandidates = new ArrayList<>();
+                    for (WorldGenNode node : nodes) {
+                        for (WorldGenNode neighbour : node.getNeighbours()) {
+                            if (validLakeNode(neighbour) && !nodes.contains(neighbour)) {
+                                growToCandidates.add(neighbour);
+                            }
+                        }
+                    }
+                    if (growToCandidates.size() == 0) {
+                        break;
+                    }
+                    WorldGenNode newNode = growToCandidates.get(random.nextInt(growToCandidates.size()));
+                    nodes.add(newNode);
+                }
+
+                //findLakeLocation(nodes, nodes.get(0), lakeSize);
+
+                if (nodes.size() < lakeSize) {
+                    continue;
+                }
+                break;
+            }
+            BiomeInProgress lake = new BiomeInProgress(biomes.size() + 1);
+            biomes.add(lake);
+            realBiomes.add(new LakeBiome());
+            System.out.println("Biome id: " + biomes.size() + " num nodes: " + nodes.size());
+            for (WorldGenNode node : nodes) {
+                lake.addNode(node);
+            }
+        }
+    }
+
+    /**
      * Adds the tiles from the {@code BiomeInProgress}es to the {@code Biome}s provided.
      */
     private void populateRealBiomes() {
@@ -229,6 +293,17 @@ public class BiomeGenerator {
      */
     private boolean nodeIsFree(WorldGenNode node) {
         return !node.isBorderNode() && !usedNodes.contains(node);
+    }
+
+    /**
+     * Returns whether the node is a valid lake node
+     *
+     * @param node the node to check
+     *
+     * @return whether the node is a valid lake node
+     */
+    private boolean validLakeNode(WorldGenNode node) {
+        return !node.isBorderNode() && usedNodes.contains(node);
     }
 
     /**

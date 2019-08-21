@@ -4,6 +4,7 @@ import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.generation.WorldGenException;
 
 import java.lang.Comparable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -623,6 +624,30 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
                 triangle.getC().setBorderNode(true);
             }
         }
+    }
+
+    // TODO implement this
+    public static void removeZeroTileNodes(List<WorldGenNode> nodes, int worldSize) throws WorldGenException {
+        // Set up iterator to allow nodes to be removed while looping through them
+        Iterator<WorldGenNode> nodesIter = nodes.iterator();
+        System.out.println(nodes.size());
+
+        while (nodesIter.hasNext()) {
+            WorldGenNode node = nodesIter.next();
+            if (node.getTiles().size() == 0) {
+                // Remove all nodes with no associated tiles
+                nodesIter.remove();
+            }
+        }
+        System.out.println(nodes.size());
+        for (WorldGenNode node : nodes) {
+            // Clear all properties that may change with removing 0 tile nodes
+            node.vertices.clear();
+            node.neighbours.clear();
+            node.borderNode = false;
+        }
+        // Recalculate neighbours, borderNodes etc.
+        calculateVertices(nodes, worldSize);
     }
 
     /* ------------------------------------------------------------------------
