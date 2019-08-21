@@ -28,17 +28,18 @@ public class OceanBiome extends AbstractBiome {
     @Override
     public void setTileTextures(Random random) {
         ArrayList<String> textures = new ArrayList<>();
+        textures.add("water_6");
         textures.add("water_4");
         textures.add("water_5");
-        textures.add("water_6");
+
 
 //        //Perlin noise generation
-        new TileNoiseGenerator(getTiles(), random, 4, 40,1, textures.size());
+        new TileNoiseGenerator(getTiles(), random, 4, 40,0.7, Tile::setPerlinValue);
 
 
         for (Tile tile : getTiles()) {
-            tile.setPerlinValue((tile.getPerlinValue() == textures.size()) ? 0 : tile.getPerlinValue());
-            tile.setTexture(textures.get((int) tile.getPerlinValue()));
+            int perlinValue = (int) Math.floor(tile.getPerlinValue() * textures.size());
+            tile.setTexture(textures.get(perlinValue < textures.size() ? perlinValue : textures.size() - 1));
         }
     }
 }

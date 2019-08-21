@@ -36,12 +36,12 @@ public class MountainBiome extends AbstractBiome {
 //        textures.add("mountain_6");
 
         //Perlin noise generation
-        new TileNoiseGenerator(getTiles(), random, 4, 30,0.2, textures.size());
+        new TileNoiseGenerator(getTiles(), random, 4, 10,0.2, Tile::setPerlinValue);
 
 
         for (Tile tile : getTiles()) {
-            tile.setPerlinValue((tile.getPerlinValue() == textures.size()) ? tile.getPerlinValue() - 1 : tile.getPerlinValue());
-            tile.setTexture(textures.get((int) tile.getPerlinValue()));
+            int perlinValue = (int) Math.floor(tile.getPerlinValue() * textures.size());
+            tile.setTexture(textures.get(perlinValue < textures.size() ? perlinValue : textures.size() - 1));
         }
     }
 

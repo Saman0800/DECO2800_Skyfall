@@ -3,6 +3,7 @@ package deco2800.skyfall.worlds.generation.perlinnoise;
 import deco2800.skyfall.worlds.Tile;
 import java.util.List;
 import java.util.Random;
+import java.util.function.BiConsumer;
 
 /**
  * Used to generate noise values for biomes
@@ -46,19 +47,16 @@ public class TileNoiseGenerator {
      * @param startPeriod The initial period, the higher this value the longer it will take to go from one value to
      *                    another value
      * @param attenuation The weight of the octaves, the higher this values the more chaotic the land will be
-     * @param normaliseRange The upper bound to the normalised values, going from 0 - normaliseRange
      */
-    public TileNoiseGenerator(List<Tile> tiles, Random random,int octaves,  double startPeriod, double attenuation,
-            int normaliseRange){
+    public TileNoiseGenerator(List<Tile> tiles, Random random,int octaves,  double startPeriod, double attenuation, BiConsumer<Tile, Double> setter){
         this.tiles = tiles;
         this.random = random;
         this.startPeriod = startPeriod;
         this.attenuation = attenuation;
         this.octaves = octaves;
-        this.normaliseRange = normaliseRange;
         setWidthAndHeight();
-        setTilesNoiseValues();
-        normaliseTileNoiseValues();
+        setTilesNoiseValues(setter);
+        fadeNoiseValues();
     }
 
     /**
@@ -86,28 +84,19 @@ public class TileNoiseGenerator {
     /**
      * Assigns each tile a perlin noise value
      */
-    public void setTilesNoiseValues(){
+    public void setTilesNoiseValues(BiConsumer<Tile, Double> setter){
         NoiseGenerator noiseGenerator = new NoiseGenerator(random, width, height, octaves, startPeriod, attenuation);
         for (Tile tile : tiles){
-            tile.setPerlinValue(noiseGenerator.getOctavedPerlinValue(tile.getRow() - lowestRow, tile.getCol() - lowestCol));
+            setter.accept(tile, noiseGenerator.getOctavedPerlinValue(tile.getRow() - lowestRow, tile.getCol() - lowestCol));
         }
     }
 
     /**
-     * Normalises the perlin noise value for each tile going from 0 - normaliseRange
+     * Applies fading the the tile values to smooth out the transitions
      */
-    public void normaliseTileNoiseValues(){
-
-        double minPerlinValue = tiles.get(0).getPerlinValue();
-        double maxPerlinValue = tiles.get(0).getPerlinValue();
-        for (Tile tile : tiles){
-            minPerlinValue = Math.min(tile.getPerlinValue(), minPerlinValue);
-            maxPerlinValue = Math.max(tile.getPerlinValue(), maxPerlinValue);
-        }
-        for (Tile tile : tiles){
-            tile.setPerlinValue(tile.getPerlinValue() - minPerlinValue);
-            tile.setPerlinValue(Math.floor(tile.getPerlinValue()/(maxPerlinValue-minPerlinValue)*(normaliseRange)));
+    public void fadeNoiseValues(){
+        for (Tile tile : tiles) {
+            tile.setPerlinValue(NoiseGenerator.fade(NoiseGenerator.fade(tile.getPerlinValue())));
         }
     }
-
 }

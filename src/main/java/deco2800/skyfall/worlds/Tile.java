@@ -119,8 +119,10 @@ public class Tile{
     }
 
 	public String toString() {
-		return String.format("[%.0f, %.1f: %d]", coords.getCol(), coords.getRow(), index);
+		//return String.format("[%.0f, %.1f: %d]", coords.getCol(), coords.getRow(), index);
+		return String.format("%f", getPerlinValue());
 	}
+
 
 
 	public StaticEntity getParent() {

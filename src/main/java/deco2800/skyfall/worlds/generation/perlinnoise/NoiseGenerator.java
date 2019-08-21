@@ -5,8 +5,12 @@ import java.util.Random;
 
 /**
  * Used to allow for generation of perlin noise value for coordinates
+ * Implementation inspired by
+ * <a>https://longwelwind.net/2017/02/09/perlin-noise.html</a>
  */
 public class NoiseGenerator {
+
+    private static final double NORMALISATION_VALUE = Math.sqrt(2);
 
     //The random given, allows for seeding
     private Random random;
@@ -95,7 +99,7 @@ public class NoiseGenerator {
      * @param x The value to be smoothed
      * @return The smoothed value
      */
-    public double fade(double x) {
+    public static double fade(double x) {
         return 6 * Math.pow(x, 5) - 15 * Math.pow(x, 4) + 10 * Math.pow(x, 3);
     }
 
@@ -105,7 +109,7 @@ public class NoiseGenerator {
      * @return A random gradient vector with x as first value and y as second value
      */
     public double[] randomVector() {
-        double angle = random.nextDouble();
+        double angle = random.nextDouble() * 2 * Math.PI;
         double[] gradientVector = new double[2];
         gradientVector[0] = Math.cos(angle);
         gradientVector[1] = Math.sin(angle);
@@ -172,7 +176,7 @@ public class NoiseGenerator {
 
             double finalLerp = lerp(topLerp, bottomLerp, yRel);
 
-            return finalLerp/(Math.sqrt(2)/2);
+            return (finalLerp * NORMALISATION_VALUE + 1) / 2;
         } catch (RuntimeException e){
             throw e;
         }
@@ -190,11 +194,13 @@ public class NoiseGenerator {
         double perlinValue = 0;
         double period = startPeriod;
         double octaveAttenuation = attenuation;
+        double attenuationSum = 0;
         for (int octave = 0; octave < octaves; octave++){
+            attenuationSum += octaveAttenuation;
             perlinValue += getPerlinValue(x,y,gradientVectorSets.get(octave), period) * octaveAttenuation;
             period *= 0.5;
             octaveAttenuation *= attenuation;
         }
-        return perlinValue;
+        return perlinValue / attenuationSum;
     }
 }
