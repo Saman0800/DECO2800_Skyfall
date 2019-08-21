@@ -13,6 +13,9 @@ public class EnvironmentManager {
    //Day/Night tracker
    private boolean isDay;
 
+   //Biome player is currently in
+   private String biome;
+
    /**
     * Constructor
     *
@@ -29,6 +32,35 @@ public class EnvironmentManager {
       } else {
          isDay = true;
       }
+   }
+
+   /**
+    * Private helper function for constructor to set biome
+    */
+   private void setBiome() {
+      List<AbstractEntity> entities = GameManager.get().getWorld().getEntities();
+      AbstractEntity player;
+      for (int i = 0; i < entities.size(); i++) {
+         if (entities.get(i).getObjectName().equals("playerPeon")) {
+            player = entities.get(i);
+            Tile currentTile = GameManager.get().getWorld().getTile(player.getCol(), player.getRow());
+            //If player coords don't match tile coords, currentTile returns null
+            //eg if player isn't exactly in the middle of a tile (walking between tiles), coords don't match
+            //So below if statement is needed
+            if (currentTile != null) {
+               biome = currentTile.getBiome().getBiomeName();
+            }
+         }
+      }
+   }
+
+   /**
+    * Gets current biome player is in
+    *
+    * @return String Current biome of player, or null if player is moving between tiles
+    */
+   public String currentBiome() {
+      return biome;
    }
 
    /**
