@@ -76,16 +76,19 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * The direction and speed of the MainCharacter
      */
-    protected Vector2 direction;
-    protected float currentSpeed;
+    //protected Vector2 direction;
+    //protected float currentSpeed;
 
     /**
      * Helper bools to tell which direction the player intends to move
      */
-    private boolean MOVE_UP = false;
-    private boolean MOVE_LEFT = false;
-    private boolean MOVE_RIGHT = false;
-    private boolean MOVE_DOWN = false;
+    private int xInput;
+    private int yInput;
+
+    private float xVel;
+    private float yVel;
+
+    private float acceleration;
 
     /**
      * Private helper method to instantiate inventory for Main Character
@@ -116,8 +119,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         GameManager.getManagerFromInstance(InputManager.class)
                 .addTouchDownListener(this);
 
-        this.direction = new Vector2(row, col);
-        this.direction.limit2(0.05f);
+        //this.direction = new Vector2(row, col);
+        //this.direction.limit2(0.05f);
 
         this.weapons = new ArrayList<>();
 
@@ -125,6 +128,14 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         this.level = 1;
         this.foodLevel = 100;
+
+        xInput = 0;
+        yInput = 0;
+
+        xVel = 0;
+        yVel = 0;
+
+        acceleration = 1f;
     }
 
     /**
@@ -311,17 +322,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.setTexture(texture);
     }
 
-    /**
-     * Handles tick based stuff, e.g. movement
-     */
-    private void updateMoveVector() {
-
-        if (MOVE_UP){this.direction.add(0.0f, speed);}
-        if (MOVE_LEFT){this.direction.sub(speed, 0.0f);}
-        if (MOVE_DOWN){this.direction.sub(0.0f, speed);}
-        if (MOVE_RIGHT){this.direction.add(speed, 0.0f);}
-    }
-
     public void notifyTouchDown(int screenX, int screenY, int pointer,
                                 int button) {
         // only allow left clicks to move player
@@ -336,10 +336,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     @Override
     public void onTick(long i) {
-        updateMoveVector();
+        this.updatePosition();
         this.updateCollider();
-        this.setCurrentSpeed(this.direction.len());
-        this.moveTowards(new HexVector(this.direction.x, this.direction.y));
+
+
+        //this.setCurrentSpeed(this.direction.len());
+        //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
 //        System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction,
 //         this.getPosition(), this.direction.x - this.getCol(),
 //         this.direction.y - this.getRow());
@@ -350,19 +352,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
         }
-    }
-
-    @Override
-    public void moveTowards(HexVector destination) {
-        position.moveToward(destination, this.currentSpeed);
-    }
-
-    /**
-     * Sets the Player's current movement speed.
-     * @param cSpeed the speed for the player to currently move at.
-     */
-    private void setCurrentSpeed(float cSpeed){
-        this.currentSpeed = cSpeed;
     }
 
     /**
@@ -377,16 +366,20 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
         switch (keycode) {
             case Input.Keys.W:
-                MOVE_UP = true;
+                yInput += 1;
+                //System.out.println("y+1");
                 break;
             case Input.Keys.A:
-                MOVE_LEFT = true;
+                xInput += -1;
+                //System.out.println("x-1");
                 break;
             case Input.Keys.S:
-                MOVE_DOWN = true;
+                yInput += -1;
+                //System.out.println("y-1");
                 break;
             case Input.Keys.D:
-                MOVE_RIGHT = true;
+                xInput += 1;
+                //System.out.println("x+1");
                 break;
         }
     }
@@ -400,16 +393,20 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         movingAnimation = AnimationRole.NULL;
         switch(keycode){
             case Input.Keys.W:
-                MOVE_UP = false;
+                yInput -= 1;
+                //System.out.println("y-1");
                 break;
             case Input.Keys.A:
-                MOVE_LEFT = false;
+                xInput -= -1;
+                //System.out.println("x+1");
                 break;
             case Input.Keys.S:
-                MOVE_DOWN = false;
+                yInput -= -1;
+                //System.out.println("y+1");
                 break;
             case Input.Keys.D:
-                MOVE_RIGHT = false;
+                xInput -= 1;
+                //System.out.println("x-1");
                 break;
         }
     }
@@ -420,4 +417,31 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     -interaction with worlds
     -effects on MainCharacter with different Inventory and Weapon items
     */
+
+    public void updatePosition(){
+        float xPos = position.getCol();
+        float yPos = position.getRow();
+
+        if (xInput != 0) {
+            xVel += xInput * acceleration;
+        } else {
+            xVel = 0;
+        }
+
+        if (yInput != 0) {
+            yVel += yInput * acceleration;
+        } else {
+            yVel = 0;
+        }
+        
+        xPos += xVel + xInput * acceleration * 0.5;
+        yPos += yVel + yInput * acceleration * 0.5;
+
+        System.out.println(yInput);
+        System.out.println(yVel);
+        System.out.println(yPos);
+
+        this.moveTowards(new HexVector(xPos, yPos));
+    }
+
 }
