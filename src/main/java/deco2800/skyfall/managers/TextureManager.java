@@ -174,14 +174,14 @@ public class TextureManager extends AbstractManager {
         if (textureMap.containsKey(id)) {
             return textureMap.get(id);
         } else if (id.startsWith("__ANIMATION_")) {
-            System.out.println("Getting animation texture");
+//            System.out.println("Getting animation texture");
             AnimationManager animationManager = GameManager.getManagerFromInstance(AnimationManager.class);
             Texture texture = this.getTextureFromAnimation(id, animationManager);
 
             if (texture != null) {
                 return texture;
             } else {
-                System.out.println("Texture animation could not be found");
+//                System.out.println("Texture animation could not be found");
                 return textureMap.get("spacman_ded");
             }
 
