@@ -6,6 +6,7 @@ import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.Harvestable;
 import deco2800.skyfall.entities.Tree;
 import deco2800.skyfall.entities.Rock;
+import deco2800.skyfall.entities.LongGrass;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
@@ -34,14 +35,14 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
     protected void generateWorld(Random random) {
         this.entitySeed = random.nextLong();
 
-        // World generation loop: restarts world generation if it reaches an unresolvable layout
+        // World generation loop: restarts world generation if it reaches an
+        // unresolvable layout
         while (true) {
             ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
             ArrayList<Tile> tiles = new ArrayList<>();
             ArrayList<AbstractBiome> biomes = new ArrayList<>();
 
-            int nodeCount = (int) Math.round(
-                    Math.pow((float) worldSize * 2 / (float) nodeSpacing, 2));
+            int nodeCount = (int) Math.round(Math.pow((float) worldSize * 2 / (float) nodeSpacing, 2));
             // TODO: if nodeCount is less than the number of biomes, throw an exception
 
             for (int i = 0; i < nodeCount; i++) {
@@ -92,19 +93,18 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         }
 
         // Create the entities in the game
-//        player = new PlayerPeon(0f, 0f, 0.05f);
-//        addEntity(player);
+        // player = new PlayerPeon(0f, 0f, 0.05f);
+        // addEntity(player);
 
-        GameManager.getManagerFromInstance(InputManager.class)
-                .addTouchDownListener(this);
+        GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
 
         // MainCharacter is now being put into the game instead of PlayerPeon
         MainCharacter testCharacter = new MainCharacter(0f, 0f, 0.05f, "Main Piece", 10);
         addEntity(testCharacter);
 
-        EnemyEntity spider=new Spider(-4f,1f);
+        EnemyEntity spider = new Spider(-4f, 1f);
         addEntity(spider);
-        EnemyEntity robot=new Robot(-4f,-2f);
+        EnemyEntity robot = new Robot(-4f, -2f);
         addEntity(robot);
 
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
@@ -124,10 +124,19 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
             Tile tileRock = getTile(0.0f, 1.0f);
             Rock startRock = new Rock(tileRock, true);
+            LongGrass startGrass = new LongGrass(tileRock, true);
 
             for (AbstractBiome biome : biomes) {
-                EntitySpawnTable rockSpawnRule = new EntitySpawnTable();
-                EntitySpawnTable.spawnEntities(startRock, 0.2, biome, random);
+
+                switch (biome.getBiomeName()) {
+                case "forest":
+                    EntitySpawnTable.spawnEntities(startGrass, 0.2, biome, random);
+                    break;
+
+                case "mountain":
+                    EntitySpawnTable.spawnEntities(startRock, 0.2, biome, random);
+                    break;
+                }
             }
         }
     }
