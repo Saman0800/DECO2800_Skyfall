@@ -96,7 +96,16 @@ public class RockTest {
         rock1.setHealth(5);
         assertEquals("Unexpected health value for Rock.", rock1.getHealth(), 5);
 
-        rock1.newInstance(tile2);
+        Rock rock2 = rock1.newInstance(tile2);
+        // check various properties of this new rock
+        assertTrue(rock2.getPosition().equals(new HexVector(0.0f, 1.0f)));
+        assertEquals(rock2.getRenderOrder(), 2);
+        assertEquals(rock2.getCol(), 0.0f, 0.001f);
+        assertEquals(rock2.getRow(), 1.0f, 0.001f);
+        assertTrue(rock2.getObstructed());
+        String rockObjectName = "rock";
+        assertEquals("Rock id was " + rock2.getObjectName() + " but expected " + rockObjectName, rockObjectName,
+                rock2.getObjectName());
 
         // Check that the Overwritten newInstance method is working as expected
         // Check that the static entity has been placed down on the tile

@@ -54,6 +54,8 @@ public class Robot extends EnemyEntity {
         return String.format("%s at (%d, %d) %s biome", getEnemyType(), (int)getCol(), (int)getRow(),getBiome());
     }
 
-
-
+    @Override
+    public void onTick(long i) {
+        super.onTick(i);
+    }
 }

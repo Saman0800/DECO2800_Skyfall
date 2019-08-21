@@ -80,10 +80,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		this.setObjectName(ENTITY_ID_STRING);
 		this.renderOrder = renderOrder;
         animations = new HashMap<>();
-
-		float[] coords = WorldUtil.colRowToWorldCords(col, row);
-		//TODO: length and width of collider to be determined by actual size of texture
-		this.collider = new Collider(coords[0], coords[1], 100, 100);
+		this.setCollider();
 	}
 
 	public AbstractEntity() {
@@ -92,10 +89,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		this.rowRenderLength = 1f;
 		this.setObjectName(ENTITY_ID_STRING);
         animations = new HashMap<>();
+        this.setCollider();
     }
-
-
-
 
 	/**
 	 * Constructor for an abstract entity
@@ -112,6 +107,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		this.colRenderLength = colRenderLength;
 		this.rowRenderLength = rowRenderLength;
 		this.entityID = AbstractEntity.getNextID();
+		this.setCollider();
 	}
 
 	/**
@@ -189,6 +185,18 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	@Override 
 	public int compareTo(AbstractEntity otherEntity) {
 		return this.renderOrder - otherEntity.getRenderOrder();
+	}
+
+	/**
+	 * Creates a new Collider object at (x,y) coordinates with size xLength x
+	 * yLength.
+	 * Called by all constructors in this class such that no AbstractEntity
+	 * in the game has a Collider set to null.
+	 */
+	public void setCollider() {
+		float[] coords = WorldUtil.colRowToWorldCords(position.getCol(), position.getRow());
+		//TODO: length and width of collider to be determined by actual size of texture
+		this.collider = new Collider(coords[0], coords[1], 100, 100);
 	}
 
 	/**

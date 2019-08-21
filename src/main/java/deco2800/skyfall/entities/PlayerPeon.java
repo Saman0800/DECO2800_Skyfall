@@ -122,6 +122,11 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
         //System.out.println(screenX);
         //System.out.println(screenY);
 
+        // cant move when click game menu
+        if (screenX > 185 && screenX < 1095 && screenY > 615) {
+            return;
+        }
+
         if (button == 1) {
             this.attack();
         }
@@ -146,6 +151,11 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
      */
     @Override
     public void notifyKeyDown ( int keycode){
+        // if game is paused, no sound
+        if (GameManager.getPaused()) {
+            return;
+        }
+
         switch (keycode) {
             case Input.Keys.W:
                 MOVE_UP = true;
