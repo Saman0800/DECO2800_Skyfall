@@ -1,8 +1,8 @@
 package deco2800.skyfall.worlds.biomes;
 
-import deco2800.skyfall.worlds.generation.PerlinNoiseGenerator;
 import deco2800.skyfall.worlds.Tile;
 
+import deco2800.skyfall.worlds.generation.perlinnoise.TileNoiseGenerator;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -32,12 +32,8 @@ public class OceanBiome extends AbstractBiome {
         textures.add("water_5");
         textures.add("water_6");
 
-        //Perlin noise generation
-        PerlinNoiseGenerator perlinNoise = new PerlinNoiseGenerator(random);
-        // perlinNoise.getOctavedPerlinNoiseGrid(getTiles(), 2, 30, 0.5);
-        perlinNoise.getOctavedPerlinNoiseGrid(getTiles(), 3, 160, 0.5);
-        //Normalising the values to 0-textures.size()
-        perlinNoise.normalisePerlinValues(getTiles(),textures.size());
+//        //Perlin noise generation
+        new TileNoiseGenerator(getTiles(), random, 4, 40,1, textures.size());
 
 
         for (Tile tile : getTiles()) {

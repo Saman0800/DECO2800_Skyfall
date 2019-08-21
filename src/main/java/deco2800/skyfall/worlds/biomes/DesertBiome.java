@@ -2,7 +2,7 @@ package deco2800.skyfall.worlds.biomes;
 
 import deco2800.skyfall.worlds.Tile;
 
-import deco2800.skyfall.worlds.generation.PerlinNoiseGenerator;
+import deco2800.skyfall.worlds.generation.perlinnoise.TileNoiseGenerator;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -34,11 +34,7 @@ public class DesertBiome extends AbstractBiome {
         textures.add("desert_2");
 
         //Perlin noise generation
-        PerlinNoiseGenerator perlinNoise = new PerlinNoiseGenerator(random);
-        // perlinNoise.getOctavedPerlinNoiseGrid(getTiles(), 2, 30, 0.5);
-        perlinNoise.getOctavedPerlinNoiseGrid(getTiles(), 2, 10, 0.2);
-        //Normalising the values to 0-textures.size()
-        perlinNoise.normalisePerlinValues(getTiles(),textures.size());
+        new TileNoiseGenerator(getTiles(), random, 2, 10,0.2, textures.size());
 
 
         for (Tile tile : getTiles()) {

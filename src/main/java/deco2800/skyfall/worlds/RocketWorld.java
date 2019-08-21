@@ -79,7 +79,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             biomes.add(new MountainBiome());
             biomes.add(new OceanBiome());
             try {
-                BiomeGenerator.generateBiomes(worldGenNodes, random, new int[] { 30, 20, 20 }, biomes);
+                BiomeGenerator.generateBiomes(worldGenNodes, random, new int[] { 20, 10, 10 }, biomes);
             } catch (NotEnoughPointsException e) {
                 continue;
             }
