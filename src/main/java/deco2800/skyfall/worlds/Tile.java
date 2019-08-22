@@ -13,9 +13,11 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
 
 public class Tile{
 	private static int nextID = 0;
+	private double perlinValue;
 
 
 	private static int getNextID() {
@@ -59,22 +61,14 @@ public class Tile{
     @Expose
     private int tileID = 0;
 
-    public Tile(AbstractBiome biome) {
-        this(biome, 0, 0);
-    }
-
-    public Tile(AbstractBiome biome, float col, float row) {
-        coords = new HexVector(col, row);
-        this.neighbours = new HashMap<Integer,Tile>();
-        this.tileID = Tile.getNextID();
-        this.biome = biome;
-
-        //Default add the tile to the biome it gives it
-        biome.addTile(this);
-    }
-
     public Tile() {
-		this.neighbours = new HashMap<Integer,Tile>();
+        this(0, 0);
+    }
+
+    public Tile(float col, float row) {
+        coords = new HexVector(col, row);
+        this.neighbours = new HashMap<>();
+        this.tileID = Tile.getNextID();
     }
 
     public float getCol() {
@@ -125,8 +119,11 @@ public class Tile{
     }
 
 	public String toString() {
-		return String.format("[%.0f, %.1f: %d]", coords.getCol(), coords.getRow(), index);
+		//return String.format("[%.0f, %.1f: %d]", coords.getCol(), coords.getRow(), index);
+		return String.format("%f", getPerlinValue());
 	}
+
+
 
 	public StaticEntity getParent() {
 		return parent;
@@ -253,8 +250,14 @@ public class Tile{
     	this.isBuildable = isBuildable;
 	}
 
+	/**
+	 * Checks whether a tile is able to built on depending on the texture name
+	 * @param texture The texture being checked
+	 * @return False if the tile can not be built on, and true if it can
+	 */
 	private boolean checkIsBuildable(String texture){
 		ArrayList<String> buildables = new ArrayList<>();
+		//List of buildable tiles
 		buildables.add("water");
 		buildables.add("sand");
 		for (String obstructable : buildables){
@@ -265,8 +268,32 @@ public class Tile{
 		return false;
 	}
 
+	/**
+	 * Gets the reference to the biome the tile is in
+	 * @return An AbstractBiome representing the biome the tile is in
+	 */
 	public AbstractBiome getBiome(){
 		return biome;
 	}
 
+	public void setBiome(AbstractBiome biome) {
+		this.biome = biome;
+	}
+
+	/**
+	 * Sets the perlin noise value
+	 * @param perlinValue The noise value
+	 */
+	public void setPerlinValue(double perlinValue) {
+		this.perlinValue = perlinValue;
+	}
+
+
+	/**
+	 * Returns the perlin value
+	 * @return The perlin value
+	 */
+	public double getPerlinValue() {
+		return perlinValue;
+	}
 }

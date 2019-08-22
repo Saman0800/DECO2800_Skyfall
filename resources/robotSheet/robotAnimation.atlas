@@ -1,0 +1,52 @@
+
+robotAnimation.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robotS
+  rotate: false
+  xy: 0, 0
+  size: 519, 800
+  orig: 519, 800
+  offset: 0, 0
+  index: -1
+robotN
+  rotate: false
+  xy: 521, 0
+  size: 516, 800
+  orig: 516, 800
+  offset: 0, 0
+  index: -1
+robotSW
+  rotate: false
+  xy: 1039, 0
+  size: 410, 800
+  orig: 410, 800
+  offset: 0, 0
+  index: -1
+robotNW
+  rotate: false
+  xy: 1451, 0
+  size: 364, 800
+  orig: 364, 800
+  offset: 0, 0
+  index: -1
+
+robotAnimation2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robotNE
+  rotate: false
+  xy: 0, 0
+  size: 358, 800
+  orig: 358, 800
+  offset: 0, 0
+  index: -1
+robotSE
+  rotate: false
+  xy: 360, 0
+  size: 357, 800
+  orig: 357, 800
+  offset: 0, 0
+  index: -1

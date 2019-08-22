@@ -6,8 +6,6 @@ import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.OnScreenMessageManager;
 import deco2800.skyfall.worlds.TestWorld;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.AbstractBiome;
-import deco2800.skyfall.worlds.ForestBiome;
 import deco2800.skyfall.util.HexVector;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +34,7 @@ public class RockTest {
 
     @Before
     public void Setup() {
-        w = new TestWorld();
+        w = new TestWorld(0);
 
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
@@ -57,8 +55,7 @@ public class RockTest {
     public void TestConstruction() {
         // Populate the world with tiles
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        AbstractBiome biome = new ForestBiome();
-        Tile tile1 = new Tile(biome, 0.0f, 0.0f);
+        Tile tile1 = new Tile(0.0f, 0.0f);
         tileMap.add(tile1);
         w.setTileMap(tileMap);
 
@@ -83,11 +80,10 @@ public class RockTest {
     public void TestAddedFunctions() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
         // Populate world with tiles
-        AbstractBiome biome = new ForestBiome();
-        Tile tile1 = new Tile(biome, 0.0f, 0.0f);
-        Tile tile2 = new Tile(biome, 0.0f, 1.0f);
-        Tile tile3 = new Tile(biome, 1.0f, -0.5f);
-        Tile tile4 = new Tile(biome, 1.0f, 0.5f);
+        Tile tile1 = new Tile(0.0f, 0.0f);
+        Tile tile2 = new Tile(0.0f, 1.0f);
+        Tile tile3 = new Tile(1.0f, -0.5f);
+        Tile tile4 = new Tile(1.0f, 0.5f);
         tileMap.add(tile1);
         tileMap.add(tile2);
         tileMap.add(tile4);
@@ -100,7 +96,16 @@ public class RockTest {
         rock1.setHealth(5);
         assertEquals("Unexpected health value for Rock.", rock1.getHealth(), 5);
 
-        rock1.newInstance(tile2);
+        Rock rock2 = rock1.newInstance(tile2);
+        // check various properties of this new rock
+        assertTrue(rock2.getPosition().equals(new HexVector(0.0f, 1.0f)));
+        assertEquals(rock2.getRenderOrder(), 2);
+        assertEquals(rock2.getCol(), 0.0f, 0.001f);
+        assertEquals(rock2.getRow(), 1.0f, 0.001f);
+        assertTrue(rock2.getObstructed());
+        String rockObjectName = "rock";
+        assertEquals("Rock id was " + rock2.getObjectName() + " but expected " + rockObjectName, rockObjectName,
+                rock2.getObjectName());
 
         // Check that the Overwritten newInstance method is working as expected
         // Check that the static entity has been placed down on the tile

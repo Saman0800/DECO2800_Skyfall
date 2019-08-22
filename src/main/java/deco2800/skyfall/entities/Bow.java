@@ -10,7 +10,7 @@ public class Bow extends RangeWeapon {
     @Override
     public Number getDurability() {
         return 10;
-    };
+    }
 
     /**
      * Get attack rate of the weapon
@@ -20,7 +20,7 @@ public class Bow extends RangeWeapon {
     @Override
     public Number getAttackRate() {
         return 3;
-    };
+    }
 
     /**
      * Get damage of the weapon
@@ -29,8 +29,7 @@ public class Bow extends RangeWeapon {
     @Override
     public Number getDamage() {
         return 4;
-    };
-
+    }
     /**
      * Return the name of the weapon
      * @return a string "bow"

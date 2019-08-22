@@ -83,7 +83,7 @@ public class Aloe_VeraTest{
      */
     @Test
     public void getBiome() {
-        assertEquals("Forest", aloe_vera.getBiome());
+        assertEquals("Desert", aloe_vera.getBiome());
     }
 
 }

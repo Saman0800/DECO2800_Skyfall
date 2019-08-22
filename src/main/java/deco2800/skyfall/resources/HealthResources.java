@@ -33,6 +33,10 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
     //Items could change or not e.g. coins, items
     private Boolean exchangeable;
 
+    public int foodValue;
+
+    //TODO: look into public int healthValue;
+
 
 
     public HealthResources(){
@@ -151,6 +155,10 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
     @Override
     public HexVector getCoords() {
         return position;
+    }
+
+    public int getFoodValue() {
+        return foodValue;
     }
 
 
