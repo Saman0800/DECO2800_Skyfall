@@ -34,6 +34,8 @@ public class BiomeGenerator {
     /** A map from a WorldGenNode to the BiomeInProgress that contains it. */
     private HashMap<WorldGenNode, BiomeInProgress> nodesBiomes;
 
+    private WorldGenNode centerNode;
+
     /**
      * Generates biomes and populates the provided {@link AbstractBiome} instances with tiles.
      *
@@ -88,6 +90,25 @@ public class BiomeGenerator {
         this.random = random;
         this.biomeSizes = biomeSizes;
         this.realBiomes = realBiomes;
+        this.centerNode = calculateCenterNode();
+    }
+
+    private WorldGenNode calculateCenterNode() {
+        // Start the first biome at the node closest to the centre.
+        WorldGenNode centerNode = null;
+        // Keep track of the squared distance, because it saves calls to the relatively expensive
+        // Math.sqrt().
+        double centerDistanceSquared = Double.POSITIVE_INFINITY;
+        for (WorldGenNode node : nodes) {
+            double x = node.getX();
+            double y = node.getY();
+            double newCenterDistanceSquared = x * x + y * y;
+            if (newCenterDistanceSquared < centerDistanceSquared) {
+                centerDistanceSquared = newCenterDistanceSquared;
+                centerNode = node;
+            }
+        }
+        return centerNode;
     }
 
     /**
@@ -105,9 +126,9 @@ public class BiomeGenerator {
                 // TODO Remove.
                 assert borderNodes.stream().allMatch(this::nodeIsBorder);
                 growOcean();
-                // TODO pass parameters for generate lakes into the instance of this class
-                generateLakes(2, 3);
                 fillGaps();
+                // TODO pass parameters for generate lakes into the instance of this class
+                generateLakes(3, 3);
                 populateRealBiomes();
 
                 return;
@@ -128,20 +149,6 @@ public class BiomeGenerator {
             biomes.add(biome);
 
             if (biomeID == 0) {
-                // Start the first biome at the node closest to the centre.
-                WorldGenNode centerNode = null;
-                // Keep track of the squared distance, because it saves calls to the relatively expensive
-                // Math.sqrt().
-                double centerDistanceSquared = Double.POSITIVE_INFINITY;
-                for (WorldGenNode node : nodes) {
-                    double x = node.getX();
-                    double y = node.getY();
-                    double newCenterDistanceSquared = x * x + y * y;
-                    if (newCenterDistanceSquared < centerDistanceSquared) {
-                        centerDistanceSquared = newCenterDistanceSquared;
-                        centerNode = node;
-                    }
-                }
                 biome.addNode(centerNode);
             } else {
                 // Pick a random point on the border to start the next biome from.
@@ -163,7 +170,7 @@ public class BiomeGenerator {
     private void growOcean() {
         // All nodes on the outer edge of the map are ocean nodes.
         // Since the id is `biomeSizes.length`,
-        BiomeInProgress ocean = new BiomeInProgress(biomeSizes.length);
+        BiomeInProgress ocean = new BiomeInProgress(biomeSizes.length + 3);
         biomes.add(ocean);
         for (WorldGenNode node : nodes) {
             if (node.isBorderNode()) {
@@ -201,14 +208,16 @@ public class BiomeGenerator {
      * Randomly places lakes in landlocked nodes
      */
     private void generateLakes(int lakeSize, int noLakes) throws DeadEndGenerationException {
-        /* TODO
-         * 1. Lakes can grow in ocean
-         * 2. Textures
-         */
         List<WorldGenNode> chosenNodes = new ArrayList<>();
         for (int i = 0; i < noLakes; i++) {
             List<WorldGenNode> nodes = new ArrayList<>();
+            int attempts = 0;
             while (true) {
+                attempts++;
+                // TODO implement something better than this
+                if (attempts > 100) {
+                    throw new DeadEndGenerationException();
+                }
                 int randomIndex = random.nextInt(usedNodes.size());
                 int index = 0;
                 WorldGenNode chosenNode = null;
@@ -303,7 +312,25 @@ public class BiomeGenerator {
      * @return whether the node is a valid lake node
      */
     private boolean validLakeNode(WorldGenNode node) {
-        return !node.isBorderNode() && usedNodes.contains(node);
+        if (node == centerNode) {
+            return false;
+        }
+        List<WorldGenNode> neighbours = node.getNeighbours();
+        int containingBiomeIndex = 0;
+        for (int i = 0; i < biomes.size(); i++) {
+            String biomeName = realBiomes.get(i).getBiomeName();
+            boolean invalidBiome = (biomeName.equals("ocean") || biomeName.equals("lake"));
+            if (biomes.get(i).nodes.contains(node) && invalidBiome) {
+                return false;
+            }
+            for (WorldGenNode nodeToTest : neighbours) {
+                if (biomes.get(i).nodes.contains(nodeToTest) && invalidBiome) {
+                    return false;
+                }
+            }
+        }
+        return true;
+        //return !node.isBorderNode() && usedNodes.contains(node);
     }
 
     /**

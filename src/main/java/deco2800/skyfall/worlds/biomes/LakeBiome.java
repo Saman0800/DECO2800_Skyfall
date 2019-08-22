@@ -26,10 +26,10 @@ public class LakeBiome extends AbstractBiome {
     public void setTileTextures(Random random) {
         // TODO see if different textures should be used to the ocean
         ArrayList<String> textures = new ArrayList<>();
-        textures.add("water_3");
-        textures.add("mountain_0");
-        textures.add("grass_1");
-        textures.add("desert_0");
+        //textures.add("water_3");
+        //textures.add("water_0");
+        textures.add("water_1");
+        textures.add("water_2");
 
         //Perlin noise generation
         PerlinNoiseGenerator perlinNoise = new PerlinNoiseGenerator(random);
