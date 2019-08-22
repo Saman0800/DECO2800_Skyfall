@@ -1,5 +1,10 @@
 package deco2800.skyfall.managers;
 
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.worlds.Tile;
+
+import java.util.List;
+
 public class EnvironmentManager {
 
    //Hours in a game day
