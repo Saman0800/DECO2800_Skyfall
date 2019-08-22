@@ -36,6 +36,9 @@ public class BiomeGenerator {
 
     private WorldGenNode centerNode;
 
+    private int noLakes;
+    private int lakeSize;
+
     /**
      * Generates biomes and populates the provided {@link AbstractBiome} instances with tiles.
      *
@@ -48,8 +51,8 @@ public class BiomeGenerator {
      */
 
     public static void generateBiomes(List<WorldGenNode> nodes, Random random, int[] biomeSizes,
-                                      List<AbstractBiome> biomes) throws NotEnoughPointsException {
-        BiomeGenerator biomeGenerator = new BiomeGenerator(nodes, random, biomeSizes, biomes);
+                                      List<AbstractBiome> biomes, int noLakes, int lakeSize) throws NotEnoughPointsException {
+        BiomeGenerator biomeGenerator = new BiomeGenerator(nodes, random, biomeSizes, biomes, noLakes, lakeSize);
         biomeGenerator.generateBiomesInternal();
     }
 
@@ -63,7 +66,7 @@ public class BiomeGenerator {
      *
      * @throws NotEnoughPointsException if there are not enough non-border nodes from which to form the biomes
      */
-    private BiomeGenerator(List<WorldGenNode> nodes, Random random, int[] biomeSizes, List<AbstractBiome> realBiomes)
+    private BiomeGenerator(List<WorldGenNode> nodes, Random random, int[] biomeSizes, List<AbstractBiome> realBiomes, int noLakes, int lakeSize)
             throws NotEnoughPointsException {
         Objects.requireNonNull(nodes, "nodes must not be null");
         Objects.requireNonNull(random, "random must not be null");
@@ -91,6 +94,8 @@ public class BiomeGenerator {
         this.biomeSizes = biomeSizes;
         this.realBiomes = realBiomes;
         this.centerNode = calculateCenterNode();
+        this.noLakes = noLakes;
+        this.lakeSize = lakeSize;
     }
 
     private WorldGenNode calculateCenterNode() {
@@ -128,7 +133,8 @@ public class BiomeGenerator {
                 growOcean();
                 fillGaps();
                 // TODO pass parameters for generate lakes into the instance of this class
-                generateLakes(3, 3);
+                // TODO remove lake nodes from other biomes
+                generateLakes(lakeSize, noLakes);
                 populateRealBiomes();
 
                 return;
@@ -208,14 +214,16 @@ public class BiomeGenerator {
      * Randomly places lakes in landlocked nodes
      */
     private void generateLakes(int lakeSize, int noLakes) throws DeadEndGenerationException {
-        List<WorldGenNode> chosenNodes = new ArrayList<>();
+        List<List<WorldGenNode>> chosenNodes = new ArrayList<>();
+        List<WorldGenNode> tempLakeNodes = new ArrayList<>();
+        List<BiomeInProgress> lakesFound = new ArrayList<>();
         for (int i = 0; i < noLakes; i++) {
-            List<WorldGenNode> nodes = new ArrayList<>();
+            List<WorldGenNode> nodesFound = new ArrayList<>();
             int attempts = 0;
             while (true) {
                 attempts++;
                 // TODO implement something better than this
-                if (attempts > 100) {
+                if (attempts > usedNodes.size()) {
                     throw new DeadEndGenerationException();
                 }
                 int randomIndex = random.nextInt(usedNodes.size());
@@ -228,17 +236,20 @@ public class BiomeGenerator {
                     }
                     index++;
                 }
-                if (!validLakeNode(chosenNode)) {
+                boolean valid = true;
+
+                if (!validLakeNode(chosenNode, tempLakeNodes)) {
                     continue;
                 }
-                nodes.clear();
-                nodes.add(chosenNode);
+
+                nodesFound.clear();
+                nodesFound.add(chosenNode);
 
                 for (int j = 1; j < lakeSize; j++) {
                     ArrayList<WorldGenNode> growToCandidates = new ArrayList<>();
-                    for (WorldGenNode node : nodes) {
+                    for (WorldGenNode node : nodesFound) {
                         for (WorldGenNode neighbour : node.getNeighbours()) {
-                            if (validLakeNode(neighbour) && !nodes.contains(neighbour)) {
+                            if (validLakeNode(neighbour, tempLakeNodes) && !nodesFound.contains(neighbour)) {
                                 growToCandidates.add(neighbour);
                             }
                         }
@@ -247,21 +258,33 @@ public class BiomeGenerator {
                         break;
                     }
                     WorldGenNode newNode = growToCandidates.get(random.nextInt(growToCandidates.size()));
-                    nodes.add(newNode);
+                    nodesFound.add(newNode);
                 }
 
                 //findLakeLocation(nodes, nodes.get(0), lakeSize);
 
-                if (nodes.size() < lakeSize) {
+                if (nodesFound.size() < lakeSize) {
                     continue;
                 }
                 break;
             }
-            BiomeInProgress lake = new BiomeInProgress(biomes.size() + 1);
+            for (WorldGenNode nodeFound : nodesFound) {
+                for (WorldGenNode neighbour : nodeFound.getNeighbours()) {
+                    if (tempLakeNodes.contains(neighbour)) {
+                        System.out.println("There are adjacent lakes");
+                    }
+                }
+            }
+
+            lakesFound.add(new BiomeInProgress(biomes.size() + 1 + i));
+            chosenNodes.add(nodesFound);
+            tempLakeNodes.addAll(nodesFound);
+        }
+        for (int i = 0; i < lakesFound.size(); i++) {
+            BiomeInProgress lake = lakesFound.get(i);
             biomes.add(lake);
             realBiomes.add(new LakeBiome());
-            System.out.println("Biome id: " + biomes.size() + " num nodes: " + nodes.size());
-            for (WorldGenNode node : nodes) {
+            for (WorldGenNode node : chosenNodes.get(i)) {
                 lake.addNode(node);
             }
         }
@@ -311,11 +334,16 @@ public class BiomeGenerator {
      *
      * @return whether the node is a valid lake node
      */
-    private boolean validLakeNode(WorldGenNode node) {
-        if (node == centerNode) {
+    private boolean validLakeNode(WorldGenNode node, List<WorldGenNode> tempLakeNodes) {
+        if (node == centerNode || tempLakeNodes.contains(node)) {
             return false;
         }
         List<WorldGenNode> neighbours = node.getNeighbours();
+        for (WorldGenNode neighbour : neighbours) {
+            if (tempLakeNodes.contains(neighbour)) {
+                return false;
+            }
+        }
         int containingBiomeIndex = 0;
         for (int i = 0; i < biomes.size(); i++) {
             String biomeName = realBiomes.get(i).getBiomeName();

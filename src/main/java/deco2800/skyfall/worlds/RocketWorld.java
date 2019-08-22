@@ -63,12 +63,12 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
             for (int q = -worldSize; q <= worldSize; q++) {
                 for (int r = -worldSize; r <= worldSize; r++) {
-                    if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= worldSize) {
+                    //if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= worldSize) {
                         float oddCol = (q % 2 != 0 ? 0.5f : 0);
 
                         Tile tile = new Tile(q, r + oddCol);
                         tiles.add(tile);
-                    }
+                    //}
                 }
             }
 
@@ -84,8 +84,9 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             biomes.add(new DesertBiome());
             biomes.add(new MountainBiome());
             biomes.add(new OceanBiome());
+
             try {
-                BiomeGenerator.generateBiomes(worldGenNodes, random, new int[] { 20, 10, 10 }, biomes);
+                BiomeGenerator.generateBiomes(worldGenNodes, random, new int[] { 20, 10, 10 }, biomes, 2, 3);
             } catch (NotEnoughPointsException e) {
                 continue;
             }

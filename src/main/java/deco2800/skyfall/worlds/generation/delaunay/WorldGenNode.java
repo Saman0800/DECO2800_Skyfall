@@ -605,7 +605,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         // (Other parts of the world generation algorithm relies on there being
         // some)
         if (triangleSoup.getBorderNodes().size() == 0) {
-            throw new WorldGenException();
+            throw new WorldGenException("No border nodes");
         }
 
         for (WorldGenTriangle triangle : triangleSoup.getTriangles()) {
@@ -625,11 +625,9 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         }
     }
 
-    // TODO implement this
     public static void removeZeroTileNodes(List<WorldGenNode> nodes, int worldSize) throws WorldGenException {
         // Set up iterator to allow nodes to be removed while looping through them
         Iterator<WorldGenNode> nodesIter = nodes.iterator();
-        System.out.println(nodes.size());
 
         while (nodesIter.hasNext()) {
             WorldGenNode node = nodesIter.next();
@@ -638,7 +636,6 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
                 nodesIter.remove();
             }
         }
-        System.out.println(nodes.size());
         for (WorldGenNode node : nodes) {
             // Clear all properties that may change with removing 0 tile nodes
             node.vertices.clear();

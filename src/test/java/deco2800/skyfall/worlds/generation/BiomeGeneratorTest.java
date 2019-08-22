@@ -65,6 +65,7 @@ public class BiomeGeneratorTest {
                         tiles.add(tile);
                     }
                 }
+
                 generateTileNeighbours(tiles);
 
                 // Creates and stores tiles at the exact locations of nodes, ensuring that every node has a tile in it
@@ -76,8 +77,13 @@ public class BiomeGeneratorTest {
                     tiles.add(tile);
                 }
 
-                WorldGenNode.assignNeighbours(worldGenNodes);
-                WorldGenNode.assignTiles(worldGenNodes, tiles);
+                try {
+                    WorldGenNode.assignTiles(worldGenNodes, tiles);
+                    WorldGenNode.removeZeroTileNodes(worldGenNodes, WORLD_SIZE);
+                    WorldGenNode.assignNeighbours(worldGenNodes);
+                } catch (WorldGenException e) {
+                    continue;
+                }
 
                 ArrayList<AbstractBiome> biomes = new ArrayList<>(NODE_COUNTS.length + 1);
                 for (int j = 0; j < NODE_COUNTS.length; j++) {
@@ -86,7 +92,7 @@ public class BiomeGeneratorTest {
                 biomes.add(new OceanBiome());
 
                 try {
-                    BiomeGenerator.generateBiomes(worldGenNodes, random, NODE_COUNTS, biomes);
+                    BiomeGenerator.generateBiomes(worldGenNodes, random, NODE_COUNTS, biomes, 0, 0);
                 } catch (NotEnoughPointsException e) {
                     continue;
                 }
