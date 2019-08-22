@@ -31,7 +31,7 @@ public class TestWorld extends AbstractWorld {
     private StaticEntity createBuilding1(float col, float row) {
         StaticEntity building;
 
-        Map<HexVector, String> textures = new HashMap<HexVector, String>();
+        Map<HexVector, String> textures = new HashMap<>();
 
         textures.put(new HexVector(1, -0.5f), "spacman_ded");
         textures.put(new HexVector(-1, -0.5f), "spacman_ded");
@@ -45,9 +45,9 @@ public class TestWorld extends AbstractWorld {
 
     // building with a fence
     private StaticEntity createBuilding2(float col, float row) {
-        Map<HexVector, String> textures = new HashMap<HexVector, String>();
+        Map<HexVector, String> textures = new HashMap<>();
 
-        textures = new HashMap<HexVector, String>();
+        textures = new HashMap<>();
         textures.put(new HexVector(0, 0), "buildingA");
 
         textures.put(new HexVector(-2, 1), "fenceNE-S");
@@ -74,7 +74,7 @@ public class TestWorld extends AbstractWorld {
     }
 
     private void addTree(float col, float row) {
-        Map<HexVector, String> textures = new HashMap<HexVector, String>();
+        Map<HexVector, String> textures = new HashMap<>();
         Tile t = GameManager.get().getWorld().getTile(col, row);
         Tree tree = new Tree(t, true);
         entities.add(tree);

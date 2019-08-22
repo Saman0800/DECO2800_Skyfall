@@ -337,6 +337,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     @Override
     public void onTick(long i) {
         updateMoveVector();
+        this.updateCollider();
         this.setCurrentSpeed(this.direction.len());
         this.moveTowards(new HexVector(this.direction.x, this.direction.y));
 //        System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction,
@@ -344,6 +345,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 //         this.direction.y - this.getRow());
 //        System.out.printf("%s%n", this.currentSpeed);
 //        TODO: Check direction for animation here
+
+        //Displays or hides the build menu when "b" is clicked
+        if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+            GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
+        }
     }
 
     @Override
@@ -365,6 +371,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     @Override
     public void notifyKeyDown(int keycode) {
+        //player cant move when paused
+        if (GameManager.getPaused()) {
+            return;
+        }
         switch (keycode) {
             case Input.Keys.W:
                 MOVE_UP = true;

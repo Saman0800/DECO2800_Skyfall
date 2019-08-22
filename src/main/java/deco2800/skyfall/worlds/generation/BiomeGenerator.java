@@ -48,7 +48,7 @@ public class BiomeGenerator {
      */
 
     public static void generateBiomes(List<WorldGenNode> nodes, Random random, int[] biomeSizes,
-                                         List<AbstractBiome> biomes) throws NotEnoughPointsException {
+                                      List<AbstractBiome> biomes) throws NotEnoughPointsException {
         BiomeGenerator biomeGenerator = new BiomeGenerator(nodes, random, biomeSizes, biomes);
         biomeGenerator.generateBiomesInternal();
     }
@@ -170,7 +170,7 @@ public class BiomeGenerator {
     private void growOcean() {
         // All nodes on the outer edge of the map are ocean nodes.
         // Since the id is `biomeSizes.length`,
-        BiomeInProgress ocean = new BiomeInProgress(biomeSizes.length + 3);
+        BiomeInProgress ocean = new BiomeInProgress(biomeSizes.length);
         biomes.add(ocean);
         for (WorldGenNode node : nodes) {
             if (node.isBorderNode()) {
@@ -392,7 +392,7 @@ public class BiomeGenerator {
          * Expands a biome to fill all contiguous nodes that are not already used.
          */
         void floodGrowBiome() {
-            while (borderNodes.size() > 0) {
+            while (!borderNodes.isEmpty()) {
                 // It doesn't matter which node is grown from.
                 WorldGenNode growFrom = borderNodes.get(0);
 

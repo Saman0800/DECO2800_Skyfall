@@ -67,6 +67,7 @@ public class Projectile extends AbstractEntity {
      */
     @Override
     public void onTick(long tick) {
+        this.updateCollider();
 
         //Each game tick add to counter.
         this.ticksAliveFor++;

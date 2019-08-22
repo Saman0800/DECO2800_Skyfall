@@ -88,7 +88,7 @@ public abstract class AbstractWorld {
 
     public void generateNeighbours() {
     //multiply coords by 2 to remove floats
-    	Map<Integer, Map<Integer, Tile>> tileMap = new HashMap<Integer, Map<Integer, Tile>>();
+    	Map<Integer, Map<Integer, Tile>> tileMap = new HashMap<>();
 		Map<Integer, Tile> columnMap;
 		for(Tile tile : tiles) {
 			columnMap = tileMap.getOrDefault((int)tile.getCol()*2, new HashMap<Integer, Tile>());
@@ -277,16 +277,24 @@ public abstract class AbstractWorld {
         //Collision detection for entities
         for (AbstractEntity e1 : this.getEntities()) {
             e1.onTick(0);
-
+            if (e1.getCollider() == null) {
+                break;
+            }
             Collider c1 = e1.getCollider();
             for (AbstractEntity e2 : this.getEntities()) {
+                if (e2.getCollider() == null) {
+                    break;
+                }
                 Collider c2 = e2.getCollider();
 
-//                if (e1 != e2 && c1.overlaps(c2)) {
-//                    //collision handler
-//                    this.handleCollision(e1, e2);
-//                    break;
-//                }
+                if (e1 != e2 && c1.overlaps(c2)) {
+                    if (e1 instanceof MainCharacter || e2 instanceof MainCharacter) {
+                        break;
+                    }
+                    //collision handler
+                    this.handleCollision(e1, e2);
+                    break;
+                }
             }
             //no collision here
         }
@@ -327,7 +335,7 @@ public abstract class AbstractWorld {
     /**
      * Gets the list of biomes in a world
      */
-    public ArrayList<AbstractBiome> getBiomes(){
+    public List<AbstractBiome> getBiomes(){
         return this.biomes;
     }
 
@@ -335,18 +343,20 @@ public abstract class AbstractWorld {
     public void handleCollision(AbstractEntity e1, AbstractEntity e2) {
         //TODO: implement proper game logic for collisions between different types of entities.
 
-        if (e1 instanceof Projectile && !(e2 instanceof MainCharacter)) {
+        if (e1 instanceof Projectile && e2 instanceof EnemyEntity) {
             removeEntity(e2);
-        } else if (e2 instanceof Projectile && !(e1 instanceof MainCharacter)) {
+
+        } else if (e2 instanceof Projectile && e1 instanceof EnemyEntity) {
             removeEntity(e1);
+        } else {
+            return;
         }
     }
 
-
     public void saveWorld(String filename) throws IOException{
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-        writer.write(worldToString());
-        writer.close();
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(filename))){
+            writer.write(worldToString());
+        }
     }
 
     public String worldToString(){

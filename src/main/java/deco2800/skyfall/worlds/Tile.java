@@ -67,7 +67,7 @@ public class Tile{
 
     public Tile(float col, float row) {
         coords = new HexVector(col, row);
-        this.neighbours = new HashMap<Integer,Tile>();
+        this.neighbours = new HashMap<>();
         this.tileID = Tile.getNextID();
     }
 
@@ -119,8 +119,10 @@ public class Tile{
     }
 
 	public String toString() {
-		return String.format("[%.0f, %.1f: %d]", coords.getCol(), coords.getRow(), index);
+		//return String.format("[%.0f, %.1f: %d]", coords.getCol(), coords.getRow(), index);
+		return String.format("%f", getPerlinValue());
 	}
+
 
 
 	public StaticEntity getParent() {
@@ -255,6 +257,7 @@ public class Tile{
 	 */
 	private boolean checkIsBuildable(String texture){
 		ArrayList<String> buildables = new ArrayList<>();
+		//List of buildable tiles
 		buildables.add("water");
 		buildables.add("sand");
 		for (String obstructable : buildables){

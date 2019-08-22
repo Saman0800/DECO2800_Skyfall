@@ -85,7 +85,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             biomes.add(new MountainBiome());
             biomes.add(new OceanBiome());
             try {
-                BiomeGenerator.generateBiomes(worldGenNodes, random, new int[] { 30, 20, 20 }, biomes);
+                BiomeGenerator.generateBiomes(worldGenNodes, random, new int[] { 20, 10, 10 }, biomes);
             } catch (NotEnoughPointsException e) {
                 continue;
             }
@@ -150,6 +150,9 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
         Tile tile = getTile(clickedPosition[0], clickedPosition[1]);
 
+        if (tile == null) {
+            return;
+        }
         // todo: more efficient way to find entities
         for (AbstractEntity entity : getEntities()) {
             if (!tile.getCoordinates().equals(entity.getPosition())) {

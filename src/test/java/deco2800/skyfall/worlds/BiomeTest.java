@@ -47,23 +47,23 @@ public class BiomeTest {
 
                 desertBiome.setTileTextures(new Random(0));
                 for (Tile tile : desertBiome.getTiles()){
-                        assertEquals("desert_0", tile.getTextureName());
+                        assertEquals("desert_1", tile.getTextureName());
                 }
 
                 forestBiome.setTileTextures(new Random(0));
                 //Implement test for seeding
                 for (Tile tile : forestBiome.getTiles()){
-                        assertEquals("grass_0", tile.getTextureName());
+                        assertEquals("grass_5", tile.getTextureName());
                 }
                 forestBiome.setTileTextures(new Random(2));
                 //Implement test for seeding
                 for (Tile tile : forestBiome.getTiles()){
-                        assertEquals("grass_0", tile.getTextureName());
+                        assertEquals("grass_5", tile.getTextureName());
                 }
 
                 mountainBiome.setTileTextures(new Random(0));
                 for (Tile tile : mountainBiome.getTiles()){
-                        assertEquals("mountain_0", tile.getTextureName());
+                        assertEquals("mountain_8", tile.getTextureName());
                 }
 
 

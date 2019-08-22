@@ -2,6 +2,7 @@ package deco2800.skyfall.worlds.biomes;
 
 import deco2800.skyfall.worlds.Tile;
 
+import deco2800.skyfall.worlds.generation.perlinnoise.TileNoiseGenerator;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -19,20 +20,26 @@ public class DesertBiome extends AbstractBiome {
     }
 
 
-    //TODO implement algorithm ? That determines the ground patterns
-    //TODO add seeding to the random generation so it can be tested
     //Likes grouped with likes
     /**
-     * Method that will determine the textures of the forest biome textures
+     * Method that will determine the textures of the desert biome textures
      *
      * @param random the RNG to use to generate the textures
      */
     @Override
     public void setTileTextures(Random random) {
-        textures.add("desert_0");
+        ArrayList<String> textures = new ArrayList<>();
+        textures.add("desert_3");
+        textures.add("desert_1");
+        textures.add("desert_2");
+
+        //Perlin noise generation
+        new TileNoiseGenerator(getTiles(), random, 4, 5,0.5,  Tile::setPerlinValue);
+
+
         for (Tile tile : getTiles()) {
-            int randInt = random.nextInt(textures.size());
-            tile.setTexture(textures.get(randInt));
+            int perlinValue = (int) Math.floor(tile.getPerlinValue() * textures.size());
+            tile.setTexture(textures.get(perlinValue < textures.size() ? perlinValue : textures.size() - 1));
         }
     }
 }

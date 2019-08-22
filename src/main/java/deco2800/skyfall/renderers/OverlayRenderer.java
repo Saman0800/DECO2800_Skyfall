@@ -7,14 +7,17 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import deco2800.skyfall.gui.GuiMaster;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.OnScreenMessageManager;
 import deco2800.skyfall.managers.PathFindingService;
 import deco2800.skyfall.util.WorldUtil;
 
+/**
+ * Renderer that handles the overlay for the game
+ */
 public class OverlayRenderer implements Renderer {
-	
     BitmapFont font;
     ShapeRenderer shapeRenderer;
      
@@ -40,11 +43,13 @@ public class OverlayRenderer implements Renderer {
         }
            
         batch.begin();
-        
-        
+
         if( GameManager.get().debugMode) {
         	renderDebugText(batch, camera);
         }
+
+				GuiMaster.updateAll(1);
+				GuiMaster.renderAll(font, batch, camera, shapeRenderer);
 
         int line = GameManager.get().getManager(OnScreenMessageManager.class).getMessages().size();
         for (String message : GameManager.get().getManager(OnScreenMessageManager.class).getMessages()) {
@@ -72,6 +77,11 @@ public class OverlayRenderer implements Renderer {
 				camera.position.y - camera.viewportHeight / 2 + line * 25 + 25);
 	}
 
+	/**
+	 * Renders the debug information in the top left
+	 * @param batch Batch to render onto
+	 * @param camera Camera to render onto
+	 */
 	private void renderDebugText(SpriteBatch batch, Camera camera) {
 		int line = 0; // Set this to set the line number you want to debug message to
 		debugLine(batch, camera, line++, "== Game Info ==");
