@@ -15,6 +15,8 @@ public class InventoryManager extends TickableManager {
     //Maximum size of quick access inventory
     private static final int QA_MAX_SIZE = 6;
 
+    public boolean HAS_QUICK_ACCESS = true;
+
     @Override
     public void onTick(long i) {
         // TODO Auto-generated method stub
@@ -34,6 +36,10 @@ public class InventoryManager extends TickableManager {
         this.inventoryAdd(new Stone());
         this.inventoryAdd(new Wood());
         this.inventoryAdd(new Wood());
+    }
+
+    public void initInventory(Map<String, List<Item>> inventory) {
+        this.inventory = inventory;
     }
 
 
