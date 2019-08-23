@@ -129,7 +129,7 @@ public class StorageUnit extends AbstractBuilding {
      */
     public void takeDamage(int damage) {
         if((currentHealth - damage) > 0) {
-            currentHealth = currentHealth = damage;
+            currentHealth = currentHealth - damage;
         } else {
             currentHealth = 0;
         }
