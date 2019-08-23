@@ -1,5 +1,6 @@
 package deco2800.skyfall.worlds.generation.perlinnoise;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -48,6 +49,9 @@ public class NoiseGenerator {
         this.random = random;
         this.width = width;
         this.height = height;
+        if (octaves < 1){
+            throw new IllegalArgumentException("The octaves must be greater than 1");
+        }
         this.octaves = octaves;
         this.startPeriod = startPeriod;
         this.attenuation = attenuation;
@@ -203,4 +207,15 @@ public class NoiseGenerator {
         }
         return perlinValue / attenuationSum;
     }
+
+
+//    public static double multipleFade(int numOfTimes, double value){
+//
+//        for (int i = 0; i < numOfTimes; i++){
+//
+//        }
+//    }
+
+
+
 }

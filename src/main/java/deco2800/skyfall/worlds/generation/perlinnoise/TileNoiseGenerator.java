@@ -1,9 +1,11 @@
 package deco2800.skyfall.worlds.generation.perlinnoise;
 
 import deco2800.skyfall.worlds.Tile;
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Random;
 import java.util.function.BiConsumer;
+import java.util.stream.DoubleStream;
 
 /**
  * Used to generate noise values for biomes
@@ -19,7 +21,7 @@ public class TileNoiseGenerator {
      *  normaliseRange - The integer range that the values will be normalised to, from 0 - normaliseRange,
      *  this allows the noise values which are doubles to be much more easily used
      */
-    private int height, width, octaves, normaliseRange;
+    private int height, width, octaves;
     /**
      * lowestRow - The lowestRow position that occurs amongst the given tiles
      * lowestCol - The lowestCol position that occurs amongst the given tiles
@@ -47,6 +49,7 @@ public class TileNoiseGenerator {
      * @param startPeriod The initial period, the higher this value the longer it will take to go from one value to
      *                    another value
      * @param attenuation The weight of the octaves, the higher this values the more chaotic the land will be
+     * @param setter A function that sets a perlin value within a tile
      */
     public TileNoiseGenerator(List<Tile> tiles, Random random,int octaves,  double startPeriod, double attenuation, BiConsumer<Tile, Double> setter){
         this.tiles = tiles;
@@ -54,6 +57,9 @@ public class TileNoiseGenerator {
         this.startPeriod = startPeriod;
         this.attenuation = attenuation;
         this.octaves = octaves;
+        if (octaves < 1){
+            throw new IllegalArgumentException("The octaves must be greater than 1");
+        }
         setWidthAndHeight();
         setTilesNoiseValues(setter);
         fadeNoiseValues();
@@ -64,8 +70,8 @@ public class TileNoiseGenerator {
      */
     public void setWidthAndHeight(){
 
-        double lowestCol = tiles.get(0).getCol();
-        double lowestRow = tiles.get(0).getRow();
+        lowestCol = tiles.get(0).getCol();
+        lowestRow = tiles.get(0).getRow();
         double highestCol = tiles.get(0).getCol();
         double highestRow = tiles.get(0).getRow();
         for (Tile tile : tiles){
@@ -77,8 +83,6 @@ public class TileNoiseGenerator {
 
         height = (int) Math.ceil(highestCol - lowestCol);
         width = (int) Math.ceil(highestRow - lowestRow);
-        this.lowestCol = lowestCol;
-        this.lowestRow = lowestRow;
     }
 
     /**
@@ -92,11 +96,11 @@ public class TileNoiseGenerator {
     }
 
     /**
-     * Applies fading the the tile values to smooth out the transitions
+     * Applies fading to the tile values to smooth out the transitions between tiles
      */
     public void fadeNoiseValues(){
         for (Tile tile : tiles) {
-            tile.setPerlinValue(NoiseGenerator.fade(NoiseGenerator.fade(tile.getPerlinValue())));
+            tile.setPerlinValue(NoiseGenerator.fade(NoiseGenerator.fade(NoiseGenerator.fade(tile.getPerlinValue()))));
         }
     }
 }

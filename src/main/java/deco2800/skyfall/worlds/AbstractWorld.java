@@ -34,6 +34,9 @@ public abstract class AbstractWorld {
 
     protected int worldSize;
     protected int nodeSpacing;
+    protected int[] biomeSizes;
+    protected int numOfLakes;
+    protected int lakeSize;
 
     private long seed;
 
@@ -46,9 +49,12 @@ public abstract class AbstractWorld {
     protected List<AbstractEntity> entitiesToDelete = new CopyOnWriteArrayList<>();
     protected List<Tile> tilesToDelete = new CopyOnWriteArrayList<>();
 
-    protected AbstractWorld(long seed, int worldSize, int nodeSpacing) {
+    protected AbstractWorld(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int lakeSize) {
         Random random = new Random(seed);
         this.seed = seed;
+        this.biomeSizes = biomeSizes;
+        this.numOfLakes = numOfLakes;
+        this.lakeSize = lakeSize;
 
         this.worldSize = worldSize;
         this.nodeSpacing = nodeSpacing;

@@ -31,6 +31,7 @@ public class DesertBiome extends AbstractBiome {
         ArrayList<String> textures = new ArrayList<>();
         textures.add("desert_3");
         textures.add("desert_1");
+//        textures.add("desert_4");
         textures.add("desert_2");
 
         //Perlin noise generation

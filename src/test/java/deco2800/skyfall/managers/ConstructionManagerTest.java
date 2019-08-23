@@ -127,7 +127,7 @@ public class ConstructionManagerTest {
 
     @Test
     public void verifyEntityTest() {
-        AbstractWorld world = new RocketWorld(1, 30,5);
+        AbstractWorld world = new RocketWorld(1, 30,5, new int[] {20,10,10}, 0,0 );
         Tile tile = world.getTile(10,10);
         if (world.getEntities().size() == 0) {
             Assert.assertTrue(this.cmgr.verifyEntity(world, tile));

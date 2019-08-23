@@ -26,8 +26,8 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
     long entitySeed;
 
-    public RocketWorld(long seed, int worldSize, int nodeSpacing) {
-        super(seed, worldSize, nodeSpacing);
+    public RocketWorld(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int lakeSize ) {
+        super(seed, worldSize, nodeSpacing, biomeSizes, numOfLakes, lakeSize);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             biomes.add(new OceanBiome());
 
             try {
-                BiomeGenerator.generateBiomes(worldGenNodes, random, new int[] { 20, 10, 10 }, biomes, 2, 3);
+                BiomeGenerator.generateBiomes(worldGenNodes, random, biomeSizes, biomes, numOfLakes, lakeSize);
             } catch (NotEnoughPointsException e) {
                 continue;
             }
