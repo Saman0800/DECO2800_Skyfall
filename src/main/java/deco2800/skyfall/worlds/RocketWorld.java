@@ -7,6 +7,7 @@ import deco2800.skyfall.entities.Harvestable;
 import deco2800.skyfall.entities.Tree;
 import deco2800.skyfall.entities.Rock;
 import deco2800.skyfall.entities.LongGrass;
+import deco2800.skyfall.entities.EntitySpawnRule;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
@@ -124,17 +125,36 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
             Tile tileRock = getTile(0.0f, 1.0f);
             Rock startRock = new Rock(tileRock, true);
+            Tree startTree = new Tree(tileRock, true);
             LongGrass startGrass = new LongGrass(tileRock, true);
 
             for (AbstractBiome biome : biomes) {
 
                 switch (biome.getBiomeName()) {
                 case "forest":
-                    EntitySpawnTable.spawnEntities(startGrass, 0.05);
+
+                    // Create a new perlin noise map
+                    SpawnControl pieceWise = x -> {
+                        if ((0 < x) && (x <= 0.5)) {
+                            return 0;
+                        } else if ((0.5 < x) && (x <= 0.8)) {
+                            return 0.05;
+                        } else {
+                            return 0.4;
+                        }
+                    };
+
+                    // EntitySpawnRule newRule = EntitySpawnRule(0.1);
+                    EntitySpawnRule treeRule = new EntitySpawnRule(biome, true, pieceWise);
+                    EntitySpawnTable.spawnEntities(startTree, treeRule);
+
+                    EntitySpawnRule grassRule = new EntitySpawnRule(0.05, biome);
+                    EntitySpawnTable.spawnEntities(startGrass, grassRule);
                     break;
 
                 case "mountain":
-                    EntitySpawnTable.spawnEntities(startRock, 0.05);
+                    EntitySpawnRule rockRule = new EntitySpawnRule(0.05, biome);
+                    EntitySpawnTable.spawnEntities(startRock, rockRule);
                     break;
                 }
             }

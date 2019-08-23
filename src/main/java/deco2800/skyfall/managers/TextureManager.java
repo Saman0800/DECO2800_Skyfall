@@ -134,6 +134,10 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bush2", new Texture("resources/world_details/bush2.png"));
             textureMap.put("bush3", new Texture("resources/world_details/bush3.png"));
 
+            textureMap.put("tree1", new Texture("resources/world_details/tree1.png"));
+            textureMap.put("tree2", new Texture("resources/world_details/tree2.png"));
+            textureMap.put("tree3", new Texture("resources/world_details/tree3.png"));
+
             textureMap.put("pop up screen", new Texture("resources/pop_up_screen_background.png"));
             textureMap.put("game menu bar", new Texture("resources/pop_up_screen_title_background.png"));
 
@@ -174,14 +178,14 @@ public class TextureManager extends AbstractManager {
         if (textureMap.containsKey(id)) {
             return textureMap.get(id);
         } else if (id.startsWith("__ANIMATION_")) {
-//            System.out.println("Getting animation texture");
+            // System.out.println("Getting animation texture");
             AnimationManager animationManager = GameManager.getManagerFromInstance(AnimationManager.class);
             Texture texture = this.getTextureFromAnimation(id, animationManager);
 
             if (texture != null) {
                 return texture;
             } else {
-//                System.out.println("Texture animation could not be found");
+                // System.out.println("Texture animation could not be found");
                 return textureMap.get("spacman_ded");
             }
 

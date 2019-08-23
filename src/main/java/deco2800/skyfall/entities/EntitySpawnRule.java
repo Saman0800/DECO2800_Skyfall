@@ -60,6 +60,11 @@ public class EntitySpawnRule {
         setMax(max);
     }
 
+    public EntitySpawnRule(double chance, AbstractBiome biome) {
+        this.chance = chance;
+        this.biome = biome;
+    }
+
     public EntitySpawnRule(double chance, int min, int max, AbstractBiome biome) {
         this(chance, min, max);
         this.biome = biome;
