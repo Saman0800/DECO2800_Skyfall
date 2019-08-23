@@ -4,6 +4,7 @@ import deco2800.skyfall.worlds.AbstractWorld;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.managers.GameManager;
+import java.util.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +33,113 @@ public class EntitySpawnTable {
         world.addEntity((T) entity.newInstance(tile));
     }
 
+    public static <T extends StaticEntity> void spawnUniform(T entity, EntitySpawnRule rule) {
+
+        AbstractWorld world = GameManager.get().getWorld();
+        List<Tile> tiles = null;
+        Random rand = new Random();
+
+        if (rule.getBiome() != null) {
+            tiles = rule.getBiome().getTiles();
+        } else {
+            tiles = world.getTileMap();
+        }
+
+        if (tiles == null) {
+            return;
+        }
+
+        // randomize tile order
+        Collections.shuffle(tiles, rand);
+        int max = rule.getMax();
+        int min = rule.getMin();
+        double chance = rule.getChance();
+
+        Iterator<Tile> tileItr = tiles.iterator();
+
+        // Try and place down the minimum number of elements
+        int placedDown = 0;
+
+        while (tileItr.hasNext() && (placedDown < min)) {
+            Tile nextTile = tileItr.next();
+            if (nextTile.isObstructed()) {
+                continue;
+            }
+            world.addEntity((T) entity.newInstance(nextTile));
+            placedDown++;
+        }
+
+        // Try to place down the remainder of the tiles up to max tiles
+        while (tileItr.hasNext() && (placedDown < max)) {
+            Tile nextTile = tileItr.next();
+            if (nextTile.isObstructed()) {
+                continue;
+            }
+
+            if ((rand.nextDouble() < chance)) {
+                world.addEntity((T) entity.newInstance(nextTile));
+                placedDown++;
+            }
+        }
+
+        return;
+    }
+
+    public static <T extends StaticEntity> void spawnPerlin(T entity, EntitySpawnRule rule) {
+        AbstractWorld world = GameManager.get().getWorld();
+        List<Tile> tiles = null;
+        Random rand = new Random();
+
+        if (rule.getBiome() != null) {
+            tiles = rule.getBiome().getTiles();
+        } else {
+            tiles = world.getTileMap();
+        }
+
+        if (tiles == null) {
+            return;
+        }
+
+        // randomize tile order
+        Collections.shuffle(tiles, rand);
+        int max = rule.getMax();
+        int min = rule.getMin();
+
+        Iterator<Tile> tileItr = tiles.iterator();
+
+        // Try and place down the minimum number of elements
+        int placedDown = 0;
+
+        while (tileItr.hasNext() && (placedDown < min)) {
+            Tile nextTile = tileItr.next();
+            if (nextTile.isObstructed()) {
+                continue;
+            }
+            world.addEntity((T) entity.newInstance(nextTile));
+            placedDown++;
+        }
+
+        // Try to place down the remainder of the tiles up to max tiles
+        while (tileItr.hasNext() && (placedDown < max)) {
+            Tile nextTile = tileItr.next();
+
+            if (nextTile.isObstructed()) {
+                continue;
+            }
+
+            // Get the perlin noise value of the tile and apply the perlin map
+            SpawnControl perlinMap = rule.getAdjustMap();
+            double adjustedProb = perlinMap.probabilityMap(nextTile.getPerlinValue());
+
+            if (rand.nextDouble() < adjustedProb) {
+                world.addEntity((T) entity.newInstance(nextTile));
+                placedDown++;
+            }
+        }
+
+        return;
+    }
+
     /**
      * Randomly distributes an entity with a given spawn rule
      *
@@ -41,54 +149,15 @@ public class EntitySpawnTable {
      *               combination of these, e.g.
      * @param <T>    T must extend StaticEntity and have .newInstance inherited
      */
-    public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntities(T entity, EntitySpawnRule rule,
-                                                                                       Random r) {
-        AbstractWorld world = GameManager.get().getWorld();
-        List<Tile> allTiles = world.getTileMap();
-        List<Tile> tiles = new ArrayList<>();
+    public static <T extends StaticEntity> void spawnEntities(T entity, EntitySpawnRule rule) {
 
-        // get list based on parameter
-        if (rule.getBiome() != "") {
-            for (Tile tile : allTiles) {
-                if (tile.getBiome().getBiomeName() == rule.getBiome()) {
-                    tiles.add(tile);
-                }
-            }
-
+        if (rule.getUsePerlin()) {
+            spawnPerlin(entity, rule);
         } else {
-            tiles = allTiles;
+            spawnUniform(entity, rule);
         }
 
-        // randomise tile order
-        Collections.shuffle(tiles, r);
-
-        int max = rule.getMax();
-        int min = rule.getMin();
-        double chance = rule.getChance();
-
-        // generate the number of tiles of this ent to place based on rule
-        int toPlace = (chance < 0) ?
-        // probability is determined by min max
-                r.nextInt(max - min + 1) + min
-                // direct determine number of tiles
-                : (int) (chance * tiles.size());
-
-        // ensure min max is enforced
-        toPlace = java.lang.Math.max(min, toPlace);
-        toPlace = java.lang.Math.min(max, toPlace);
-        // ensure number of tiles to place isn't more than the world contains
-        toPlace = java.lang.Math.min(tiles.size(), toPlace);
-
-        // place entity on random tiles
-        for (int i = 0; i < toPlace; i++) {
-            Tile tile = tiles.get(i);
-            if (tile.isObstructed()) {
-                continue;
-            }
-            if (tile != null && r.nextDouble() < chance) {
-                placeEntity(entity, tile);
-            }
-        }
+        return;
     }
 
     /**
@@ -100,10 +169,8 @@ public class EntitySpawnTable {
      * @param <T>    T must extend StaticEntity and have .newInstance inherited
      * @param biome  specified biome to spawn in, null for no specification
      */
-    public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntities(T entity, double chance,
-            B biome, Random random) {
+    public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntities(T entity, double chance) {
         EntitySpawnRule spawnRule = new EntitySpawnRule(chance);
-        spawnRule.setBiome(biome);
-        spawnEntities(entity, spawnRule, random);
+        spawnEntities(entity, spawnRule);
     }
 }

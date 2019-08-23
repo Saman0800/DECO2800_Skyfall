@@ -130,11 +130,11 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
                 switch (biome.getBiomeName()) {
                 case "forest":
-                    EntitySpawnTable.spawnEntities(startGrass, 0.2, biome, random);
+                    EntitySpawnTable.spawnEntities(startGrass, 0.05);
                     break;
 
                 case "mountain":
-                    EntitySpawnTable.spawnEntities(startRock, 0.2, biome, random);
+                    EntitySpawnTable.spawnEntities(startRock, 0.05);
                     break;
                 }
             }
