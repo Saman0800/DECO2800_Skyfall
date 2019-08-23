@@ -94,7 +94,8 @@ public class GameScreen implements Screen,KeyDownObserver {
 			e.printStackTrace();
 		}
 
-        new GameMenuManager().show(stage);
+        GameMenuManager gameMenuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+		gameMenuManager.addStage(stage);
 
         PathFindingService pathFindingService = new PathFindingService();
 		GameManager.get().addManager(pathFindingService);
