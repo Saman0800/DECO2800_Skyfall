@@ -53,14 +53,15 @@ public class GameMenuManager extends TickableManager {
     private void showButtons(Stage stage) {
             int height;
             height = 75;
-            ImageButton pause = new ImageButton(new TextureRegionDrawable((new TextureRegion(textureManager.getTexture("pause")))));
+            ImageButton pause = new ImageButton(generateTextureRegionDrawableObject("pause"));
+
             pause.setSize(height, height*146/207);
             pause.setPosition(208, 115);
             stage.addActor(pause);
-
             pause.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
+
                     if (pauseTable == null) {
                         setPauseTable();
                         stage.addActor(pauseTable);
@@ -71,27 +72,27 @@ public class GameMenuManager extends TickableManager {
                 }
             });
 
-            ImageButton selectCharacter = new ImageButton(new TextureRegionDrawable((new TextureRegion(textureManager.getTexture("select-character")))));
+            ImageButton selectCharacter = new ImageButton(generateTextureRegionDrawableObject("select-character"));
             selectCharacter.setSize(height, height*146/207);
             selectCharacter.setPosition(208,41*1000/800);
             stage.addActor(selectCharacter);
 
-            ImageButton info = new ImageButton(new TextureRegionDrawable((new TextureRegion(textureManager.getTexture("info")))));
+            ImageButton info = new ImageButton(generateTextureRegionDrawableObject("info"));
             info.setSize(height, height*146/207);
             info.setPosition(992,115);
             stage.addActor(info);
 
-            ImageButton settings = new ImageButton(new TextureRegionDrawable((new TextureRegion(textureManager.getTexture("settings")))));
+            ImageButton settings = new ImageButton(generateTextureRegionDrawableObject("settings"));
             settings.setSize(height, height*146/207);
             settings.setPosition(992,41*1000/800);
             stage.addActor(settings);
 
-            ImageButton build = new ImageButton(new TextureRegionDrawable((new TextureRegion(textureManager.getTexture("build")))));
+            ImageButton build = new ImageButton(generateTextureRegionDrawableObject("build"));
             build.setSize(219*0.55f, 207*0.55f);
             build.setPosition(300, 41*1000/800);
             stage.addActor(build);
 
-            ImageButton radar = new ImageButton(new TextureRegionDrawable((new TextureRegion(textureManager.getTexture("radar")))));
+            ImageButton radar = new ImageButton(generateTextureRegionDrawableObject("radar"));
             radar.setSize(219*0.55f, 207*0.55f);
             radar.setPosition(440, 41*1000/800);
             stage.addActor(radar);
@@ -112,16 +113,16 @@ public class GameMenuManager extends TickableManager {
             Table pauseTable = new Table();
             pauseTable.setSize(500, 500*1346/1862);
             pauseTable.setPosition(Gdx.graphics.getWidth()/2 - 200, Gdx.graphics.getHeight()/2 - 90);
-            pauseTable.setBackground(new TextureRegionDrawable((new TextureRegion(textureManager.getTexture("pop up screen")))));
+            pauseTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
 
 
 //        Table infoBar = new Table();
-            Image infoBar = new Image(new TextureRegionDrawable((new TextureRegion(textureManager.getTexture("game menu bar")))));
+            Image infoBar = new Image(generateTextureRegionDrawableObject("game menu bar"));
             infoBar.setSize(475, 475*188/1756);
-//        infoBar.setBackground(new TextureRegionDrawable((new TextureRegion(textureManager.getTexture("game menu bar")))));
+//        infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar")))));
 
             Table buttons = new Table();
-            ImageButton toHome = new ImageButton(new TextureRegionDrawable((new TextureRegion(textureManager.getTexture("goHome")))));
+            ImageButton toHome = new ImageButton(generateTextureRegionDrawableObject("goHome"));
 //        toHome.setSize(200, 200*263/264);
             toHome.addListener(new ClickListener() {
                 @Override
@@ -130,7 +131,7 @@ public class GameMenuManager extends TickableManager {
                 }
             });
 
-            ImageButton resume = new ImageButton(new TextureRegionDrawable((new TextureRegion(textureManager.getTexture("resume")))));
+            ImageButton resume = new ImageButton(generateTextureRegionDrawableObject("resume"));
             resume.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -140,7 +141,7 @@ public class GameMenuManager extends TickableManager {
             });
 
 //        resume.setSize(300, 300*409/410);
-            ImageButton reset = new ImageButton(new TextureRegionDrawable((new TextureRegion(textureManager.getTexture("reset")))));
+            ImageButton reset = new ImageButton(generateTextureRegionDrawableObject("reset"));
 //        reset.setSize(200, 200*263/264);
 
             buttons.add(toHome).width(100).padRight(10).padLeft(50).padBottom(300);
