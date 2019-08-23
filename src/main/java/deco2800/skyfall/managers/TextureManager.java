@@ -160,7 +160,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("fence_top_left", new Texture("resources/world_structures/fence_top_left.png"));
             textureMap.put("fence_top_right", new Texture("resources/world_structures/fence_top_right.png"));
 
-
+            textureMap.put("big_circle", new Texture("resources/circle.png"));
+            textureMap.put("inner_circle", new Texture("resources/green_circle.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }

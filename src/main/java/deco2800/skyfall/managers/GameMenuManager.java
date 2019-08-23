@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import deco2800.skyfall.entities.MainCharacter;
 
 
 /**
@@ -17,9 +18,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 public class GameMenuManager extends TickableManager {
 
         private Table pauseTable = null;
-        private TextureManager textureManager;
+        private static TextureManager textureManager;
         private Stage stage;
-        // default constructor
+        private MainCharacter mainCharacter;
+
+    // default constructor
         public GameMenuManager() {
             textureManager = GameManager.get().getManager(TextureManager.class);
             stage = null;
@@ -165,10 +168,17 @@ public class GameMenuManager extends TickableManager {
 
     }
 
+    public static TextureRegionDrawable generateTextureRegionDrawableObject(String sName) {
+        return new TextureRegionDrawable((new TextureRegion(textureManager.getTexture(sName))));
+    }
+
+    public void addMainCharacter(MainCharacter mainCharacter) {
+        this.mainCharacter = mainCharacter;
+    }
     /**
      * Display eveything created
      *
-     * @param stage current stage
+     *
      */
     public void show() {
             showMenu(stage);

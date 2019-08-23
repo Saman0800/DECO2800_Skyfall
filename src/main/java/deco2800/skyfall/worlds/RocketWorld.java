@@ -7,6 +7,7 @@ import deco2800.skyfall.entities.Harvestable;
 import deco2800.skyfall.entities.Tree;
 import deco2800.skyfall.entities.Rock;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.util.Cube;
@@ -101,6 +102,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         // MainCharacter is now being put into the game instead of PlayerPeon
         MainCharacter testCharacter = new MainCharacter(0f, 0f, 0.05f, "Main Piece", 10);
         addEntity(testCharacter);
+        GameManager.getManagerFromInstance(GameMenuManager.class).addMainCharacter(testCharacter);
 
         EnemyEntity spider=new Spider(-4f,1f);
         addEntity(spider);
