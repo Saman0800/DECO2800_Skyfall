@@ -21,16 +21,15 @@ public class AnimationLinker {
     private static AnimationManager animationManager = GameManager.get().getManager(AnimationManager.class);
     private final Logger logger = LoggerFactory.getLogger(AnimationLinker.class);
     private boolean isCompleted = false;
-
-
+    private Direction direction;
+    private boolean looper;
     /**
      * Construct
      * @param type Animation Type
      * @param animationName The name of the animation name
-     * @param offset Position to display animation relative to the entity. Needs
-     *               to be of length 2. Only first 2 values are used.
+     * @param direction Direction the animation is in
      */
-    public AnimationLinker(AnimationRole type, String animationName, int[] offset) {
+    public AnimationLinker(AnimationRole type, String animationName, Direction direction, boolean looper) {
             this.type = type;
         this.animationName = animationName;
 
@@ -38,14 +37,11 @@ public class AnimationLinker {
         if (animation == null) {
             logger.error(animationName + " for entity" + "not found.");
         }
-        if (offset.length != 2) {
-            logger.error(animationName + " for entity " + ": incorrect offset specified. Must of length 2");
 
-        }
         this.startingTime = 0f;
         this.offset = new int[2];
-        this.offset[0] = offset[0];
-        this.offset[1] = offset[1];
+        this.looper = looper;
+        this.direction = direction;
     }
      /**
       * Increments the internal animation time
@@ -55,6 +51,9 @@ public class AnimationLinker {
         this.startingTime += incr;
     }
 
+    public void resetStartingTime() {
+        this.startingTime = 0f;
+    }
 
     /*GETTERS AND SETTERS*/
 

@@ -315,12 +315,13 @@ public class Renderer3D implements Renderer {
             } else {
                 skipDrawingEnemy(batch, entity, entityWorldCoord, tex);
 
-                AnimationRole moveType = entity.getMovingAnimation();
+                AnimationRole moveType = entity.getCurrentState();
 
                 if (moveType == AnimationRole.NULL) {
                     skipDrawingEnemy(batch, entity, entityWorldCoord, tex);
                 } else {
-                    runMovementAnimations(batch, entity, entityWorldCoord, tex);
+                    //runMovementAnimations(batch, entity, entityWorldCoord, tex);
+                    runAnimation(batch, entity, entityWorldCoord);
                 }
 
                 /* Draw Peon */
@@ -330,7 +331,6 @@ public class Renderer3D implements Renderer {
                 }
                 spiderAnimation(batch, camera, entity, playerPeon);
                 robotAnimation(batch, camera, entity, playerPeon);
-                runAnimations(batch, entity, entityWorldCoord);
             }
 
         }
@@ -418,39 +418,6 @@ public class Renderer3D implements Renderer {
         }
     }
 
-    /**
-     * Runs the movement animations for the current entity. If NULL draws the static
-     * texture gotten by Entity.getTexture().
-     * 
-     * @param batch            Sprite batch to draw onto
-     * @param entity           Entity who the animation is associate with
-     * @param entityWorldCoord Where on the game screen the entity is
-     * @param tex              Texture to draw if animation does not exist or is in
-     *                         state AnimationRole.NULL
-     */
-    private void runMovementAnimations(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord,
-            Texture tex) {
-        AnimationRole moveType = entity.getMovingAnimation();
-        String animationName = entity.getAnimationName(moveType);
-
-        if (animationName == null) {
-//            System.out.println("Could not find animation in entity" + entity.getObjectName());
-            renderAbstractEntity(batch, entity, entityWorldCoord, tex);
-        } else {
-            Animation<TextureRegion> runAnimation = animationManager.getAnimation(animationName);
-
-            if (runAnimation == null) {
-                System.out.println("Could not find animation object in animationManager");
-
-                renderAbstractEntity(batch, entity, entityWorldCoord, tex);
-            } else {
-                TextureRegion frame = runAnimation.getKeyFrame(elapsedTime, true);
-                float width = frame.getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X;
-                float height = frame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y;
-                batch.draw(frame, entityWorldCoord[0], entityWorldCoord[1], width, height);
-            }
-        }
-    }
 
     /**
      * Runs all other non-looping animations for the entity
@@ -459,26 +426,31 @@ public class Renderer3D implements Renderer {
      * @param entity           Current entity
      * @param entityWorldCoord Where to draw.
      */
-    private void runAnimations(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord) {
-        Queue<AnimationLinker> q = entity.getToBeRun();
-        int queueSize = q.size();
-        if (queueSize == 0) {
-            return;
-        }
+    private void runAnimation(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord) {
+        //Queue<AnimationLinker> q = entity.getToBeRun();
+          //final AnimationRole[] loopingTypes = new AnimationRole[] {AnimationRole.MOVE};
 
-        for (int i = 0; i < queueSize; i++) {
-            AnimationLinker aniLink = q.remove();
+            AnimationLinker aniLink = entity.getToBeRun();
+            if (aniLink == null) {
+                return;
+            }
+
             Animation<TextureRegion> ani = aniLink.getAnimation();
             float time = aniLink.getStartingTime();
 
             if (ani == null) {
                 System.out.println("Animation is null");
-                continue;
+                return;
             }
 
             if (ani.isAnimationFinished(time)) {
                 System.out.println("Animation is done");
-                continue;
+                aniLink.resetStartingTime();
+
+                if (!(entity.getCurrentState() == AnimationRole.MOVE)) {
+                    entity.setGetToBeRunToNull();
+                }
+                return;
             }
 
             TextureRegion currentFrame = ani.getKeyFrame(time, false);
@@ -488,7 +460,7 @@ public class Renderer3D implements Renderer {
 
             batch.draw(currentFrame, entityWorldCoord[0] + offset[0], entityWorldCoord[1] + offset[0], width, height);
             aniLink.incrTime(Gdx.graphics.getDeltaTime());
-            q.add(aniLink);
-        }
+
+
     }
 }

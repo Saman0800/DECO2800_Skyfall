@@ -4,6 +4,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.renderers.Renderable;
@@ -49,24 +50,27 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
 	/** Whether an entity should trigger a collision when */
 	private boolean collidable = true; 
-	
+
 	private int renderOrder = 0;
 
 	//For animations
 	/**
 	 * Maps animations roles to animation names
 	 */
-    protected Map<AnimationRole, String> animations;
+    protected Map<AnimationRole, Map<Direction, AnimationLinker>> animations;
 	/**
 	 * Current direction that the entity is moving, set in MainCharacter or
 	 * Movement Task.
 	 */
-	protected AnimationRole movingAnimation = AnimationRole.NULL;
+	//protected AnimationRole movingAnimation = AnimationRole.NULL;
 	/**
 	 * Non-looping animations to keep track of run by the Renderer3D associated
 	 * to this entity
 	 */
-	protected Queue<AnimationLinker> toBeRun = new PriorityQueue<>();
+	private AnimationLinker toBeRun = null;
+	private Direction currentDirection = Direction.NULL;
+	private AnimationRole currentState = AnimationRole.NULL;
+
 	/**
 	 * Constructor for an abstract entity
 	 * @param col the col position on the world
@@ -333,22 +337,29 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	}
 
 
-    //Used for managing animations
-    public void setMovingAnimation(AnimationRole movingAnimation) {
-        this.movingAnimation = movingAnimation;
-    }
+//    //Used for managing animations
+//    public void setMovingAnimation(AnimationRole movingAnimation) {
+//        this.movingAnimation = movingAnimation;
+//    }
 
-    public void addAnimations(AnimationRole role, String animationID) {
-        animations.put(role, animationID);
-    }
+//    public void addAnimations(AnimationRole role, String animationID) {
+//        animations.put(role, animationID);
+//    }
 
     /**
 	 * Current moving state of Entity
 	 * @return animation role.
 	 */
-	public AnimationRole getMovingAnimation() {
-        return movingAnimation;
-    }
+//	public AnimationRole getMovingAnimation() {
+//        return movingAnimation;
+//    }
+	/**
+	 * Getter for the animation queue
+	 * @return Reference to queue.
+	 */
+//	public Queue<AnimationLinker> getToBeRun() {
+//		return toBeRun;
+//	}
 
 	/**
 	 * Gets the associate animation with an animation role
@@ -356,21 +367,47 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 * @return animation name
 	 */
 
-	public String getAnimationName(AnimationRole type) {
+	private AnimationLinker getAnimationLinker(AnimationRole type, Direction direction) {
 	    if (animations.containsKey(type)) {
-            String aniName = animations.get(type);
-            return aniName;
+			Map<Direction, AnimationLinker> role = animations.get(type);
+			return role.containsKey(direction) ?  role.get(direction) :  null;
+
         }
-	        return null;
+        return null;
     }
 
-	/**
-	 * Getter for the animation queue
-	 * @return Reference to queue.
-	 */
-	public Queue<AnimationLinker> getToBeRun() {
+	public AnimationLinker getToBeRun() {
 		return toBeRun;
 	}
+
+	public void setGetToBeRunToNull() {
+		toBeRun = null;
+	}
+	//public void setToBeRun(AnimationLinker toBeRun) {
+	//	this.toBeRun = toBeRun;
+	//}
+
+	public Direction getCurrentDirection() {
+		return currentDirection;
+	}
+
+
+	public AnimationRole getCurrentState() {
+		return currentState;
+	}
+
+	public void setCurrentDirection(Direction currentDirection) {
+		this.currentDirection = currentDirection;
+		toBeRun = getAnimationLinker(this.currentState, this.currentDirection);
+	}
+
+
+	public void setCurrentState(AnimationRole currentState) {
+		this.currentState = currentState;
+		toBeRun = getAnimationLinker(this.currentState, this.currentDirection);
+	}
+
+
 
 }
 
