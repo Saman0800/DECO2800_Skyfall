@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.gui.HealthCircle;
 
 
 /**
@@ -21,7 +22,7 @@ public class GameMenuManager extends TickableManager {
         private static TextureManager textureManager;
         private Stage stage;
         private MainCharacter mainCharacter;
-
+        private HealthCircle healthCircle;
     // default constructor
         public GameMenuManager() {
             textureManager = GameManager.get().getManager(TextureManager.class);
@@ -30,7 +31,7 @@ public class GameMenuManager extends TickableManager {
 
         public void addStage(Stage stage) {
             this.stage = stage;
-            this.show();
+
 
         }
         /**
@@ -96,6 +97,11 @@ public class GameMenuManager extends TickableManager {
             radar.setSize(219*0.55f, 207*0.55f);
             radar.setPosition(440, 41*1000/800);
             stage.addActor(radar);
+
+            healthCircle = new HealthCircle(stage,
+                "big_circle",
+                "inner_circle",
+                    mainCharacter);
         }
 
     /**
@@ -174,7 +180,12 @@ public class GameMenuManager extends TickableManager {
     }
 
     public void addMainCharacter(MainCharacter mainCharacter) {
+        if (stage == null) {
+            System.out.println("Please set stage before adding character");
+            return;
+        }
         this.mainCharacter = mainCharacter;
+
     }
     /**
      * Display eveything created

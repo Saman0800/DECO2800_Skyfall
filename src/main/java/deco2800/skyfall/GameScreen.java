@@ -59,6 +59,8 @@ public class GameScreen implements Screen,KeyDownObserver {
 
 		GameManager gameManager = GameManager.get();
 
+		GameMenuManager gameMenuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+		gameMenuManager.addStage(stage);
 		// Create main world
 		if (!isHost) {
 			world = new ServerWorld(seed);
@@ -94,8 +96,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 			e.printStackTrace();
 		}
 
-        GameMenuManager gameMenuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
-		gameMenuManager.addStage(stage);
+        gameMenuManager.show();
 
         PathFindingService pathFindingService = new PathFindingService();
 		GameManager.get().addManager(pathFindingService);
