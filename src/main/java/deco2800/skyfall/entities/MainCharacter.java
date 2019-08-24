@@ -436,7 +436,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         // for all of the gold pieces in the pouch
         for (GoldPiece goldPiece : goldPouch.keySet()) {
-            Integer value = goldPouch.getValue();
+            Integer value = goldPiece.getValue();
             // map the destinations with their costs
             stopCosts.put(destination, entry.getCost());
         }

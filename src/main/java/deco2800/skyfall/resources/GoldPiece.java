@@ -26,7 +26,7 @@ public class GoldPiece {
     /**
      *
      */
-    public Integer getValue(GoldPiece g){
+    public Integer getValue(){
         return this.value;
     }
 }
