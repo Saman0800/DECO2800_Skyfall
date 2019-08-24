@@ -8,6 +8,7 @@ import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.*;
@@ -134,9 +135,8 @@ public class BiomeGeneratorTest {
         biomeNodesList = null;
     }
 
-    // This test almost always passes, but can fail due to issue #99.
-    /*
     @Test
+    @Ignore("This test almost always passes, but can fail due to issue #99.")
     public void testTileContiguity() {
         for (ArrayList<AbstractBiome> biomes : biomeLists) {
             for (AbstractBiome biome : biomes) {
@@ -163,7 +163,6 @@ public class BiomeGeneratorTest {
             }
         }
     }
-    */
 
     @Test
     public void testNodeContiguity() {
