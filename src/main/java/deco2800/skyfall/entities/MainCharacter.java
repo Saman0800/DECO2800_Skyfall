@@ -144,7 +144,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         //Make projectile move toward the angle
         //Spawn projectile in front of character for now.
-        this.hitBox = new Projectile(mousePosition,"slash",
+        this.hitBox = new Projectile(mousePosition,"arcane",
                 "test hitbox",
                 position.getCol() + 1,
                 position.getRow(),

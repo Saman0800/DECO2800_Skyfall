@@ -34,8 +34,14 @@ public class Projectile extends AgentEntity {
      */
     private long ticksAliveFor = 0;
 
+    /**
+     *
+     */
     private HexVector movementPosition;
 
+    /**
+     *
+     */
     private AbstractTask task;
 
     /**
@@ -59,8 +65,8 @@ public class Projectile extends AgentEntity {
         this.setTexture(textureName);
         this.setObjectName(objectName);
 
-        //Move toward position.
-        this.task = new MovementTask(this, movementPosition);
+        //TODO rotate sprite in angle facing.
+        //this.getPosition()
     }
 
     /**
@@ -89,15 +95,9 @@ public class Projectile extends AgentEntity {
             GameManager.get().getWorld().removeEntity(this);
         }
 
-
         //TODO add forward movement task on each tick.
         //this.setPosition(this.position.getCol()+0.1f,this.position.getRow(),1);
         position.moveToward(movementPosition,1);
 
-
     }
-
-
-
-
 }
