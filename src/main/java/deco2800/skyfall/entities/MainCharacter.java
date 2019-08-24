@@ -469,4 +469,25 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
     }
 
+    /**
+     * Returns the types of GoldPieces in the pouch and how many of each type
+     * exist
+     * @return The contents of the Main Character's gold pouch
+     */
+    public HashMap<Integer, Integer> getGoldPouch() {
+        return new HashMap<>(goldPouch);
+    }
+
+    /**
+     * Returns the sum of the gold piece values in the Gold Pouch
+     * @return The total value of the Gold Pouch
+     */
+    public Integer getGoldPouchTotalValue(){
+        Integer totalValue = 0;
+        for (Integer goldValue : goldPouch.keySet()) {
+            totalValue += goldValue * goldPouch.get(goldValue);
+        }
+
+        return totalValue;
+    }
 }
