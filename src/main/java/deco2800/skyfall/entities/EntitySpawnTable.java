@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.Date;
 
 /**
  * Manages spawn tabling (randomly placing items into the world) Uses
@@ -33,108 +34,57 @@ public class EntitySpawnTable {
         world.addEntity((T) entity.newInstance(tile));
     }
 
-    public static <T extends StaticEntity> void spawnUniform(T entity, EntitySpawnRule rule) {
+    /**
+     * Places down a entity uniformly into the world.
+     * 
+     * @param <T>      T must extend StaticEntity and have .newInstance inherited
+     * @param entity   The entity to duplicate onto the tile
+     * @param rule     The EntitySpawn that holds the characteristics of the
+     *                 placement of the static entity
+     * @param nextTile The tile on which to place the static entity
+     * @param randGen  A random number generator that will create a random number
+     *                 that is compared to the uniform probability.
+     */
+    public static <T extends StaticEntity> void placeUniform(T entity, EntitySpawnRule rule, Tile nextTile,
+            Random randGen) {
 
         AbstractWorld world = GameManager.get().getWorld();
-        List<Tile> tiles = null;
-        Random rand = new Random();
-
-        if (rule.getBiome() != null) {
-            tiles = rule.getBiome().getTiles();
-        } else {
-            tiles = world.getTileMap();
-        }
-
-        if (tiles == null) {
-            return;
-        }
-
-        // randomize tile order
-        Collections.shuffle(tiles, rand);
-        int max = rule.getMax();
-        int min = rule.getMin();
         double chance = rule.getChance();
 
-        Iterator<Tile> tileItr = tiles.iterator();
-
-        // Try and place down the minimum number of elements
-        int placedDown = 0;
-
-        while (tileItr.hasNext() && (placedDown < min)) {
-            Tile nextTile = tileItr.next();
-            if (nextTile.isObstructed()) {
-                continue;
-            }
-            world.addEntity((T) entity.newInstance(nextTile));
-            placedDown++;
-        }
-
-        // Try to place down the remainder of the tiles up to max tiles
-        while (tileItr.hasNext() && (placedDown < max)) {
-            Tile nextTile = tileItr.next();
-            if (nextTile.isObstructed()) {
-                continue;
-            }
-
-            if ((rand.nextDouble() < chance)) {
-                world.addEntity((T) entity.newInstance(nextTile));
-                placedDown++;
-            }
+        if ((randGen.nextDouble() < chance)) {
+            T newEntity = (T) entity.newInstance(nextTile);
+            int renderOrder = (int) (nextTile.getRow() * -2.0);
+            newEntity.setRenderOrder(renderOrder);
+            world.addEntity((T) newEntity);
         }
 
         return;
     }
 
-    public static <T extends StaticEntity> void spawnPerlin(T entity, EntitySpawnRule rule) {
+    /**
+     * Places down a entity using a the perlin noise value of the tile.
+     * 
+     * @param <T>      T must extend StaticEntity and have .newInstance inherited
+     * @param entity   The entity to duplicate onto the tile
+     * @param rule     The EntitySpawn that holds the characteristics of the
+     *                 placement of the static entity
+     * @param nextTile The tile on which to place the static entity
+     * @param randGen  A random number generator that will create a random number
+     *                 that is compared to the adjusted probability.
+     */
+    public static <T extends StaticEntity> void placePerlin(T entity, EntitySpawnRule rule, Tile nextTile,
+            Random randGen) {
+
+        // Get the perlin noise value of the tile and apply the perlin map
         AbstractWorld world = GameManager.get().getWorld();
-        List<Tile> tiles = null;
-        Random rand = new Random();
+        SpawnControl perlinMap = rule.getAdjustMap();
+        double adjustedProb = perlinMap.probabilityMap(nextTile.getPerlinValue());
 
-        if (rule.getBiome() != null) {
-            tiles = rule.getBiome().getTiles();
-        } else {
-            tiles = world.getTileMap();
-        }
-
-        if (tiles == null) {
-            return;
-        }
-
-        // randomize tile order
-        Collections.shuffle(tiles, rand);
-        int max = rule.getMax();
-        int min = rule.getMin();
-
-        Iterator<Tile> tileItr = tiles.iterator();
-
-        // Try and place down the minimum number of elements
-        int placedDown = 0;
-
-        while (tileItr.hasNext() && (placedDown < min)) {
-            Tile nextTile = tileItr.next();
-            if (nextTile.isObstructed()) {
-                continue;
-            }
-            world.addEntity((T) entity.newInstance(nextTile));
-            placedDown++;
-        }
-
-        // Try to place down the remainder of the tiles up to max tiles
-        while (tileItr.hasNext() && (placedDown < max)) {
-            Tile nextTile = tileItr.next();
-
-            if (nextTile.isObstructed()) {
-                continue;
-            }
-
-            // Get the perlin noise value of the tile and apply the perlin map
-            SpawnControl perlinMap = rule.getAdjustMap();
-            double adjustedProb = perlinMap.probabilityMap(nextTile.getPerlinValue());
-
-            if (rand.nextDouble() < adjustedProb) {
-                world.addEntity((T) entity.newInstance(nextTile));
-                placedDown++;
-            }
+        if (randGen.nextDouble() < adjustedProb) {
+            T newEntity = (T) entity.newInstance(nextTile);
+            int renderOrder = (int) (nextTile.getRow() * -2.0);
+            newEntity.setRenderOrder(renderOrder);
+            world.addEntity((T) newEntity);
         }
 
         return;
@@ -151,10 +101,55 @@ public class EntitySpawnTable {
      */
     public static <T extends StaticEntity> void spawnEntities(T entity, EntitySpawnRule rule) {
 
-        if (rule.getUsePerlin()) {
-            spawnPerlin(entity, rule);
+        AbstractWorld world = GameManager.get().getWorld();
+        List<Tile> tiles = null;
+        // Use the current time as a seed
+        Random rand = new Random((new Date()).getTime());
+
+        if (rule.getBiome() != null) {
+            tiles = rule.getBiome().getTiles();
         } else {
-            spawnUniform(entity, rule);
+            tiles = world.getTileMap();
+        }
+
+        if (tiles == null) {
+            return;
+        }
+
+        // randomize tile order
+        Collections.shuffle(tiles, rand);
+        int max = rule.getMax();
+        int min = rule.getMin();
+
+        Iterator<Tile> tileItr = tiles.iterator();
+
+        // Try and place down the minimum number of elements
+        int placedDown = 0;
+
+        while (tileItr.hasNext() && (placedDown < min)) {
+            Tile nextTile = tileItr.next();
+            if (nextTile.isObstructed()) {
+                continue;
+            }
+            world.addEntity((T) entity.newInstance(nextTile));
+            placedDown++;
+        }
+
+        // Try to place down the remainder of the tiles up to max tiles
+        while (tileItr.hasNext() && (placedDown < max)) {
+            Tile nextTile = tileItr.next();
+
+            if (nextTile.isObstructed()) {
+                continue;
+            }
+
+            if (rule.getUsePerlin()) {
+                placePerlin(entity, rule, nextTile, rand);
+            } else {
+                placeUniform(entity, rule, nextTile, rand);
+            }
+
+            placedDown++;
         }
 
         return;
