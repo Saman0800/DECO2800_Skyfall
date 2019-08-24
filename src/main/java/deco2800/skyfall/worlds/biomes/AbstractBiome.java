@@ -52,6 +52,9 @@ public abstract class AbstractBiome {
      * @param tile The tile to be added
      */
     public void addTile(Tile tile) {
+        if (tile.getBiome() != null) {
+            tile.getBiome().tiles.remove(tile);
+        }
         tiles.add(tile);
         tile.setBiome(this);
     }

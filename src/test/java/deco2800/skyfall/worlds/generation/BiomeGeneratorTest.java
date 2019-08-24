@@ -78,7 +78,7 @@ public class BiomeGeneratorTest {
                 }
 
                 try {
-                    WorldGenNode.assignTiles(worldGenNodes, tiles);
+                    WorldGenNode.assignTiles(worldGenNodes, tiles, random);
                     WorldGenNode.removeZeroTileNodes(worldGenNodes, WORLD_SIZE);
                     WorldGenNode.assignNeighbours(worldGenNodes);
                 } catch (WorldGenException e) {

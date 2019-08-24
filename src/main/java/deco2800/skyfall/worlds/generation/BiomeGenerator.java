@@ -51,7 +51,8 @@ public class BiomeGenerator {
      */
 
     public static void generateBiomes(List<WorldGenNode> nodes, Random random, int[] biomeSizes,
-                                      List<AbstractBiome> biomes, int noLakes, int lakeSize) throws NotEnoughPointsException {
+                                      List<AbstractBiome> biomes, int noLakes, int lakeSize)
+            throws NotEnoughPointsException {
         BiomeGenerator biomeGenerator = new BiomeGenerator(nodes, random, biomeSizes, biomes, noLakes, lakeSize);
         biomeGenerator.generateBiomesInternal();
     }
@@ -66,7 +67,8 @@ public class BiomeGenerator {
      *
      * @throws NotEnoughPointsException if there are not enough non-border nodes from which to form the biomes
      */
-    private BiomeGenerator(List<WorldGenNode> nodes, Random random, int[] biomeSizes, List<AbstractBiome> realBiomes, int noLakes, int lakeSize)
+    private BiomeGenerator(List<WorldGenNode> nodes, Random random, int[] biomeSizes, List<AbstractBiome> realBiomes,
+                           int noLakes, int lakeSize)
             throws NotEnoughPointsException {
         Objects.requireNonNull(nodes, "nodes must not be null");
         Objects.requireNonNull(random, "random must not be null");
@@ -137,11 +139,47 @@ public class BiomeGenerator {
                 generateLakes(lakeSize, noLakes);
                 populateRealBiomes();
 
+//                generateEdgeNoise();
+
                 return;
             } catch (DeadEndGenerationException ignored) {
                 // If the generation reached a dead-end, try again.
             }
         }
+    }
+
+//    private void generateEdgeNoise() {
+//        ArrayList<Tile> borderTiles = new ArrayList<>();
+//        for (AbstractBiome biome : realBiomes) {
+//            biome.getTiles().stream()
+//                    .filter(BiomeGenerator::tileIsBorder)
+//                    .collect(Collectors.toCollection(() -> borderTiles));
+//        }
+//
+//        for (int i = 0; i < 10000 && !borderTiles.isEmpty(); i++) {
+//            int randomIndex = random.nextInt(borderTiles.size());
+//            Tile tile = borderTiles.get(randomIndex);
+//
+//            int randomNeighbourIndex = random.nextInt(6);
+//            tile.getNeighbour(randomNeighbourIndex).getBiome().addTile(tile);
+//
+//            if (!tileIsBorder(tile)) {
+//                borderTiles.remove(tile);
+//            }
+//            for (Tile neighbour : tile.getNeighbours().values()) {
+//                if (tileIsBorder(neighbour)) {
+//                    if (!borderTiles.contains(neighbour)) {
+//                        borderTiles.add(neighbour);
+//                    }
+//                } else {
+//                    borderTiles.remove(neighbour);
+//                }
+//            }
+//        }
+//    }
+
+    private static boolean tileIsBorder(Tile tile) {
+        return tile.getNeighbours().values().stream().anyMatch(neighbour -> neighbour.getBiome() != tile.getBiome());
     }
 
     /**
@@ -226,17 +264,18 @@ public class BiomeGenerator {
                 if (attempts > usedNodes.size()) {
                     throw new DeadEndGenerationException();
                 }
-                int randomIndex = random.nextInt(usedNodes.size());
-                int index = 0;
-                WorldGenNode chosenNode = null;
-                for (WorldGenNode usedNode : usedNodes) {
-                    if (index == randomIndex) {
-                        chosenNode = usedNode;
-                        break;
-                    }
-                    index++;
-                }
-                boolean valid = true;
+                // int randomIndex = random.nextInt(usedNodes.size());
+                // int index = 0;
+                // WorldGenNode chosenNode = null;
+                // for (WorldGenNode usedNode : usedNodes) {
+                //     if (index == randomIndex) {
+                //         chosenNode = usedNode;
+                //         break;
+                //     }
+                //     index++;
+                // }
+                int randomIndex = random.nextInt(nodes.size());
+                WorldGenNode chosenNode = nodes.get(randomIndex);
 
                 if (!validLakeNode(chosenNode, tempLakeNodes)) {
                     continue;

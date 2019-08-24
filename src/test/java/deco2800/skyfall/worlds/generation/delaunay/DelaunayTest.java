@@ -176,7 +176,7 @@ public class DelaunayTest {
             }
         }
 
-        WorldGenNode.assignTiles(nodes, tiles);
+        WorldGenNode.assignTiles(nodes, tiles, random);
 
         // Check that nodes are sorted
         for (int i = 0; i < nodes.size() - 1; i++) {

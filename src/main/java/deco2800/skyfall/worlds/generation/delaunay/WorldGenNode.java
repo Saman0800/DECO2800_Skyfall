@@ -2,16 +2,18 @@ package deco2800.skyfall.worlds.generation.delaunay;
 
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.generation.WorldGenException;
+import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
+import deco2800.skyfall.worlds.generation.perlinnoise.TileNoiseGenerator;
 
 import java.lang.Comparable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
- * A class used in the world generation procedure to help the world and biomes
- * have a natural looking shape. To see how they are being used, this class is
- * inspired by
+ * A class used in the world generation procedure to help the world and biomes have a natural looking shape. To see how
+ * they are being used, this class is inspired by
  * <a href="http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/?fbclid=IwAR30I7ILTznH6YzYYqZfjIE3vcqPsed85ta9bohPZWi74SfWMwWpD8AVddQ#source">
  * This</a>
  */
@@ -69,16 +71,15 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     }
 
     /**
-     * Calculates the approximate centroid of the polygon defined by this node.
-     * The centroid is approximated as the average position of the vertices of
-     * the polygon, rather than integrating to calculate the exact centroid
+     * Calculates the approximate centroid of the polygon defined by this node. The centroid is approximated as the
+     * average position of the vertices of the polygon, rather than integrating to calculate the exact centroid
      *
      * @return The approximate centroid of the polygon defined by this node
-     * @throws InvalidCoordinatesException if any vertex's coordinates are not
-     *                                     2 dimensional
+     *
+     * @throws InvalidCoordinatesException if any vertex's coordinates are not 2 dimensional
      */
     public double[] getCentroid() throws InvalidCoordinatesException {
-        double[] centroid = {0, 0};
+        double[] centroid = { 0, 0 };
         // If there are no vertices, return the same position this node is
         // already in
         if (this.vertices.size() == 0) {
@@ -120,24 +121,21 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     }
 
     /**
-     * Uses a variation of Lloyd's Algorithm to make a list of nodes more evenly
-     * spread apart.
+     * Uses a variation of Lloyd's Algorithm to make a list of nodes more evenly spread apart.
      * <p>
      * For info on what Lloyd's Algorithm is, see
      * <a href="https://en.wikipedia.org/wiki/Lloyd%27s_algorithm">
      * the Wikipedia page</a>
      * <p>
-     * One key simplification from the method described on Wikipedia used here
-     * is approximating the centroid as the average position of the vertices of
-     * the polygon, rather than integrating to calculate the exact centroid.
+     * One key simplification from the method described on Wikipedia used here is approximating the centroid as the
+     * average position of the vertices of the polygon, rather than integrating to calculate the exact centroid.
      *
      * @param nodes      The list of nodes to apply the Lloyd's Algorithm
-     * @param iterations The number of times to apply the algorithm. Too few
-     *                   iterations can result in the algorithm not evening out
-     *                   the points enough, and too many iterations can
-     *                   eliminate the randomness of the node placement
-     * @throws WorldGenException if there is an exception thrown when trying
-     *                           to run Lloyd Relaxation
+     * @param iterations The number of times to apply the algorithm. Too few iterations can result in the algorithm not
+     *                   evening out the points enough, and too many iterations can eliminate the randomness of the node
+     *                   placement
+     *
+     * @throws WorldGenException if there is an exception thrown when trying to run Lloyd Relaxation
      */
     public static void lloydRelaxation(List<WorldGenNode> nodes, int iterations,
                                        int worldSize) throws WorldGenException {
@@ -162,12 +160,11 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     }
 
     /**
-     * Finds which nodes are neighbours, and assigns them to each other's list
-     * of neighbours
+     * Finds which nodes are neighbours, and assigns them to each other's list of neighbours
      *
      * @param nodes the list of nodes to assign neighbours
-     * @throws InvalidCoordinatesException if any nodes have a vertex whose
-     *                                     coordinates are not 2 dimensional
+     *
+     * @throws InvalidCoordinatesException if any nodes have a vertex whose coordinates are not 2 dimensional
      */
     public static void assignNeighbours(List<WorldGenNode> nodes)
             throws InvalidCoordinatesException {
@@ -183,14 +180,14 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     }
 
     /**
-     * Determines if two nodes are adjacent. Two nodes are deemed to be adjacent
-     * if they share a vertex
+     * Determines if two nodes are adjacent. Two nodes are deemed to be adjacent if they share a vertex
      *
      * @param a The first node
      * @param b The second node
+     *
      * @return True if the nodes share a vertex, false otherwise
-     * @throws InvalidCoordinatesException if one of the WorldGenNodes has
-     *                                     invalid coordinates
+     *
+     * @throws InvalidCoordinatesException if one of the WorldGenNodes has invalid coordinates
      */
     public static boolean isAdjacent(WorldGenNode a, WorldGenNode b)
             throws InvalidCoordinatesException {
@@ -208,10 +205,10 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      *
      * @param a the first node
      * @param b the second node
-     * @return the coordinates of the first shared vertex found between the
-     * nodes
-     * @throws InvalidCoordinatesException if one of the nodes has a vertex
-     *                                     whose coordinates are not 2 dimensions
+     *
+     * @return the coordinates of the first shared vertex found between the nodes
+     *
+     * @throws InvalidCoordinatesException if one of the nodes has a vertex whose coordinates are not 2 dimensions
      * @throws NotAdjacentException        if the nodes don't have a common vertex
      */
     public static double[] sharedVertex(WorldGenNode a, WorldGenNode b)
@@ -242,22 +239,43 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * @param nodes The list of nodes that can be assigned to
      * @param tiles The list of tiles to assign
      */
-    public static void assignTiles(List<WorldGenNode> nodes, List<Tile> tiles) {
+    public static void assignTiles(List<WorldGenNode> nodes, List<Tile> tiles, Random random) {
+        float minX = Float.POSITIVE_INFINITY;
+        float maxX = Float.NEGATIVE_INFINITY;
+        float minY = Float.POSITIVE_INFINITY;
+        float maxY = Float.NEGATIVE_INFINITY;
+        for (Tile tile : tiles) {
+            minX = Math.min(tile.getCol(), minX);
+            maxX = Math.max(tile.getCol(), maxX);
+            minY = Math.min(tile.getRow(), minY);
+            maxY = Math.max(tile.getRow(), maxY);
+        }
+        int width = (int) Math.ceil(maxX - minX);
+        int height = (int) Math.ceil(maxY - minY);
+        NoiseGenerator xGen = new NoiseGenerator(random, width, height, 5, 30, 1.1);
+        NoiseGenerator yGen = new NoiseGenerator(random, width, height, 5, 30, 1.1);
 
         // Ensure nodes are stored in order of Y value
         nodes.sort(Comparable::compareTo);
         for (Tile tile : tiles) {
             // Y coordinate of the tile
-            float tileY = tile.getCoordinates().getRow();
+            double tileX =
+                    tile.getCol() + xGen.getOctavedPerlinValue(tile.getCol() - minX, tile.getRow() - minY) * 16 - 8;
+            // float tileY = tile.getCoordinates().getRow();
+            double tileY =
+                    tile.getRow() + yGen.getOctavedPerlinValue(tile.getCol() - minX, tile.getRow() - minY) * 16 - 8;
+            // double tileX = tile.getCol();
+            // double tileY = tile.getRow();
             // Find the index of the node with the node with one of the nearest
             // Y values (note, if there is no node with the exact Y value, it)
             // Can choose the node on either side, not the strictly closest one
             int nearestIndex = binarySearch((double) tileY, nodes, 0,
-                    nodes.size() - 1);
+                                            nodes.size() - 1);
             boolean lowerLimitFound = false;
             boolean upperLimitFound = false;
             // Store the minimum distance to a node, and the index of that node
-            double minDistance = nodes.get(nearestIndex).distanceToTile(tile);
+            // double minDistance = nodes.get(nearestIndex).distanceToTile(tile);
+            double minDistance = nodes.get(nearestIndex).distanceTo(tileX, tileY);
             int minDistanceIndex = nearestIndex;
             int iterations = 1;
             // Starting from the initial index, this loop checks the 1st node on
@@ -275,7 +293,8 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
                 }
 
                 if (!lowerLimitFound) {
-                    double distance = nodes.get(lower).distanceToTile(tile);
+                    // double distance = nodes.get(lower).distanceToTile(tile);
+                    double distance = nodes.get(lower).distanceTo(tileX, tileY);
                     // Update the closest node if necessary
                     if (distance < minDistance) {
                         minDistance = distance;
@@ -285,17 +304,20 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
                     // y value, if the difference in y value is greater than the
                     // smallest distance to a node, all future nodes in that
                     // direction will be further away
-                    if (nodes.get(lower).yDistanceToTile(tile) > minDistance) {
+                    // if (nodes.get(lower).yDistanceToTile(tile) > minDistance) {
+                    if (nodes.get(lower).yDistanceTo(tileY) > minDistance) {
                         lowerLimitFound = true;
                     }
                 }
                 if (!upperLimitFound) {
-                    double distance = nodes.get(upper).distanceToTile(tile);
+                    // double distance = nodes.get(upper).distanceToTile(tile);
+                    double distance = nodes.get(upper).distanceTo(tileX, tileY);
                     if (distance < minDistance) {
                         minDistance = distance;
                         minDistanceIndex = upper;
                     }
-                    if (nodes.get(upper).yDistanceToTile(tile) > minDistance) {
+                    // if (nodes.get(upper).yDistanceToTile(tile) > minDistance) {
+                    if (nodes.get(upper).yDistanceTo(tileY) > minDistance) {
                         upperLimitFound = true;
                     }
                 }
@@ -310,25 +332,36 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * Returns the square of the distance to the tile
      *
      * @param tile The tile to find the distance to
+     *
      * @return The square of the distance
      */
     public double distanceToTile(Tile tile) {
-        double[] tileCoords = {tile.getCoordinates().getCol(),
-                tile.getCoordinates().getRow()};
+        double[] tileCoords = { tile.getCoordinates().getCol(),
+                                tile.getCoordinates().getRow() };
         return (Math.pow(this.getX() - tileCoords[0], 2)
                 + Math.pow(this.getY() - tileCoords[1], 2));
     }
 
+    public double distanceTo(double x, double y) {
+        return (Math.pow(this.getX() - x, 2)
+                + Math.pow(this.getY() - y, 2));
+    }
+
     /**
-     * Returns the square of the difference in y value between this node and the
-     * tile
+     * Returns the square of the difference in y value between this node and the tile
      *
      * @param tile The tile to find the distance to
+     *
      * @return The square of the difference in y value
      */
     public double yDistanceToTile(Tile tile) {
         return Math.pow(Math.abs(
                 this.getY() - tile.getCoordinates().getRow()), 2);
+    }
+
+    public double yDistanceTo(double y) {
+        return Math.pow(Math.abs(
+                this.getY() - y), 2);
     }
 
     private static int binarySearch(double toFind, List<WorldGenNode> nodes,
@@ -349,28 +382,31 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * Adds the position of this node with another node world gen nodes
      *
      * @param other the other node
+     *
      * @return a new node with the added coordinates
      */
     public WorldGenNode add(WorldGenNode other) {
         return new WorldGenNode(this.x + other.getX(),
-                this.y + other.getY());
+                                this.y + other.getY());
     }
 
     /**
      * Subtracts the position of another node from this one
      *
      * @param other the other node
+     *
      * @return a new node with the subtracted coordinates
      */
     public WorldGenNode subtract(WorldGenNode other) {
         return new WorldGenNode(this.x - other.getX(),
-                this.y - other.getY());
+                                this.y - other.getY());
     }
 
     /**
      * Multiplies the node's coordinates by a scalar
      *
      * @param scaleFactor the scalar multiple
+     *
      * @return a new node with the multiplied coordinates
      */
     public WorldGenNode scalarMultiply(double scaleFactor) {
@@ -381,6 +417,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * Gets the dot product of the coordinates of this node and another
      *
      * @param other the other node
+     *
      * @return the dot product of the coordinates
      */
     public double dotProduct(WorldGenNode other) {
@@ -391,6 +428,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * Gets the k component of the cross product of this node and another
      *
      * @param other the other node
+     *
      * @return the k component of the cross product
      */
     public double crossProduct(WorldGenNode other) {
@@ -407,12 +445,10 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     }
 
     /**
-     * Apply Delaunay Triangulation to a set of nodes
-     * Code adapted from <a href="https://github.com/jdiemke/delaunay-triangulator/blob/master/library/src/main/java/io/github/jdiemke/triangulation/DelaunayTriangulator.java">
+     * Apply Delaunay Triangulation to a set of nodes Code adapted from <a href="https://github.com/jdiemke/delaunay-triangulator/blob/master/library/src/main/java/io/github/jdiemke/triangulation/DelaunayTriangulator.java">
      * Johannes Dieme's Implementation</a>
      *
-     * @throws NotEnoughPointsException Thrown when the point set contains less
-     *                                  than three points
+     * @throws NotEnoughPointsException Thrown when the point set contains less than three points
      * @author Johannes Diemke
      */
     static TriangleSoup triangulate(List<WorldGenNode> nodes)
@@ -487,13 +523,13 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
                 triangleSoup.add(triangle4);
 
                 legalizeEdge(triangle1, new WorldGenEdge(edge.getA(),
-                        firstNoneEdgeVertex), nodes.get(i), triangleSoup);
+                                                         firstNoneEdgeVertex), nodes.get(i), triangleSoup);
                 legalizeEdge(triangle2, new WorldGenEdge(edge.getB(),
-                        firstNoneEdgeVertex), nodes.get(i), triangleSoup);
+                                                         firstNoneEdgeVertex), nodes.get(i), triangleSoup);
                 legalizeEdge(triangle3, new WorldGenEdge(edge.getA(),
-                        secondNoneEdgeVertex), nodes.get(i), triangleSoup);
+                                                         secondNoneEdgeVertex), nodes.get(i), triangleSoup);
                 legalizeEdge(triangle4, new WorldGenEdge(edge.getB(),
-                        secondNoneEdgeVertex), nodes.get(i), triangleSoup);
+                                                         secondNoneEdgeVertex), nodes.get(i), triangleSoup);
             } else {
                 // The vertex is inside a triangle.
                 WorldGenNode a = triangle.getA();
@@ -514,11 +550,11 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
                 triangleSoup.add(third);
 
                 legalizeEdge(first, new WorldGenEdge(a, b), nodes.get(i),
-                        triangleSoup);
+                             triangleSoup);
                 legalizeEdge(second, new WorldGenEdge(b, c), nodes.get(i),
-                        triangleSoup);
+                             triangleSoup);
                 legalizeEdge(third, new WorldGenEdge(c, a), nodes.get(i),
-                        triangleSoup);
+                             triangleSoup);
             }
         }
 
@@ -534,13 +570,14 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     }
 
     /**
-     * This method legalizes edges by recursively flipping all illegal edges.
-     * Code adapted from <a href="https://github.com/jdiemke/delaunay-triangulator/blob/master/library/src/main/java/io/github/jdiemke/triangulation/DelaunayTriangulator.java">
+     * This method legalizes edges by recursively flipping all illegal edges. Code adapted from <a
+     * href="https://github.com/jdiemke/delaunay-triangulator/blob/master/library/src/main/java/io/github/jdiemke/triangulation/DelaunayTriangulator.java">
      * Johannes Dieme's Implementation</a>
      *
      * @param triangle  The triangle
      * @param edge      The edge to be legalized
      * @param newVertex The new vertex
+     *
      * @author Johannes Diemke
      */
     private static void legalizeEdge(WorldGenTriangle triangle,
@@ -560,10 +597,10 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
 
             WorldGenTriangle firstTriangle =
                     new WorldGenTriangle(noneEdgeVertex, edge.getA(),
-                            newVertex);
+                                         newVertex);
             WorldGenTriangle secondTriangle =
                     new WorldGenTriangle(noneEdgeVertex, edge.getB(),
-                            newVertex);
+                                         newVertex);
 
             triangleSoup.add(firstTriangle);
             triangleSoup.add(secondTriangle);
@@ -579,8 +616,8 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * Adds a vertex to the list of vertices for a node
      *
      * @param vertex the vertex to add
-     * @throws InvalidCoordinatesException if the vertex's coordinates are not 2
-     *                                     dimensional
+     *
+     * @throws InvalidCoordinatesException if the vertex's coordinates are not 2 dimensional
      */
     public void addVertex(double[] vertex) throws InvalidCoordinatesException {
         if (vertex.length != 2) {
@@ -590,12 +627,11 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     }
 
     /**
-     * Calculates the vertices of each node by converting the Delaunay
-     * Triangulation to its equivalent Voronoi Graph
+     * Calculates the vertices of each node by converting the Delaunay Triangulation to its equivalent Voronoi Graph
      *
      * @param nodes The nodes to perform the algorithm with
-     * @throws WorldGenException if there is an exception thrown when trying
-     *                           to triangulate the nodes
+     *
+     * @throws WorldGenException if there is an exception thrown when trying to triangulate the nodes
      */
     public static void calculateVertices(List<WorldGenNode> nodes,
                                          int worldSize) throws WorldGenException {
@@ -627,15 +663,9 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
 
     public static void removeZeroTileNodes(List<WorldGenNode> nodes, int worldSize) throws WorldGenException {
         // Set up iterator to allow nodes to be removed while looping through them
-        Iterator<WorldGenNode> nodesIter = nodes.iterator();
 
-        while (nodesIter.hasNext()) {
-            WorldGenNode node = nodesIter.next();
-            if (node.getTiles().size() == 0) {
-                // Remove all nodes with no associated tiles
-                nodesIter.remove();
-            }
-        }
+        // Remove all nodes with no associated tiles
+        nodes.removeIf(node -> node.getTiles().isEmpty());
         for (WorldGenNode node : nodes) {
             // Clear all properties that may change with removing 0 tile nodes
             node.vertices.clear();

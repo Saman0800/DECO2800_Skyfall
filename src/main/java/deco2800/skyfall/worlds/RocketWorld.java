@@ -71,9 +71,10 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
                     //}
                 }
             }
+            // generateNeighbours(tile);
 
             try {
-                WorldGenNode.assignTiles(worldGenNodes, tiles);
+                WorldGenNode.assignTiles(worldGenNodes, tiles, random);
                 WorldGenNode.removeZeroTileNodes(worldGenNodes, worldSize);
                 WorldGenNode.assignNeighbours(worldGenNodes);
             } catch (WorldGenException e) {
@@ -134,7 +135,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
             for (AbstractBiome biome : biomes) {
                 EntitySpawnTable rockSpawnRule = new EntitySpawnTable();
-                EntitySpawnTable.spawnEntities(startRock, 0.2, biome, random);
+                // EntitySpawnTable.spawnEntities(startRock, 0.2, biome, random);
             }
         }
     }
