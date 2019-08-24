@@ -6,6 +6,7 @@ import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.*;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.*;
+import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.*;
@@ -43,6 +44,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private int equipped_item;
     private final int INVENTORY_MAX_CAPACITY = 20;
     private final int HOTBAR_MAX_CAPACITY = 5;
+
+    // The "wallet" which stores the character's gold pieces
+    private HashMap<GoldPiece, Integer> goldPouch;
 
     /*
     Potential future implementations
@@ -125,6 +129,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         this.level = 1;
         this.foodLevel = 100;
+
+        // create a new goldPouch object
+        this.goldPouch = new HashMap<>();
+        GoldPiece initialPiece = new GoldPiece(100);
     }
 
     /**

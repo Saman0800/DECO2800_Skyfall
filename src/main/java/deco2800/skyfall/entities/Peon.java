@@ -21,6 +21,8 @@ public class Peon extends AgentEntity implements Tickable {
 	// Boolean of whether character is dead
 	private boolean is_dead;
 
+
+
 	/**
 	 * Constructor with no parameters
 	 */

@@ -48,14 +48,11 @@ public class Aloe_Vera extends HealthResources implements Item {
         this.biome = "Desert";
         this.name = "Aloe_Vera";
         this.colour = "green";
-<<<<<<< HEAD
         // As Aloe_Vera is a medicine, therefore it only increase the healthvalue and does not affect the foodvalue
         this.foodValue = 0;
         //TODO: look into this.healthValue = 40;
-=======
         this.foodValue = 0;
         this.healthValue = 40;
->>>>>>> 713f2f4de5ec9be3db0e81cef7f46266f38d2a8f
         //this.hasFoodEffect = true;
         //default constructor added for building inventory
     }

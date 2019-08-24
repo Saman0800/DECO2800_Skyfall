@@ -54,11 +54,8 @@ public class Apple extends HealthResources implements Item {
         this.colour ="red";
         this.hasFoodEffect = true;
         this.foodValue = 25;
-<<<<<<< HEAD
         //TODO: look into this.healthValue = 5;
-=======
         this.healthValue = 10;
->>>>>>> 713f2f4de5ec9be3db0e81cef7f46266f38d2a8f
         //default constructor added for building inventory
     }
 
