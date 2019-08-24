@@ -16,7 +16,7 @@ public class OceanBiome extends AbstractBiome {
      * Constructor for a Biome
      */
     public OceanBiome() {
-        super("ocean");
+        super("ocean", null);
     }
 
 

@@ -16,7 +16,7 @@ public class MountainBiome extends AbstractBiome {
      * Constructor for a Biome
      */
     public MountainBiome() {
-        super("mountain");
+        super("mountain", null);
     }
 
 

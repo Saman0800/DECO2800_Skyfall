@@ -15,7 +15,7 @@ public class ForestBiome extends AbstractBiome {
      * Constructor for a Biome
      */
     public ForestBiome() {
-        super("forest");
+        super("forest", null);
     }
 
     /**

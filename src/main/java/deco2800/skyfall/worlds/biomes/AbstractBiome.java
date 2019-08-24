@@ -15,6 +15,8 @@ public abstract class AbstractBiome {
     private String biomeName;
     // The tiles the biome contains
     private ArrayList<Tile> tiles;
+    // The biome this is contained in if it's a sub-biome (e.g. a lake)
+    private AbstractBiome parentBiome;
 
 
     /**
@@ -22,9 +24,10 @@ public abstract class AbstractBiome {
      *
      * @param biomeName The biome name
      */
-    public AbstractBiome(String biomeName) {
+    public AbstractBiome(String biomeName, AbstractBiome parentBiome) {
         // this(biomeName, new ArrayList<>());
         this.biomeName = biomeName;
+        this.parentBiome = parentBiome;
         tiles = new ArrayList<>();
     }
 
@@ -54,6 +57,15 @@ public abstract class AbstractBiome {
     public void addTile(Tile tile) {
         tiles.add(tile);
         tile.setBiome(this);
+    }
+
+    /**
+     * Gets the parent biome of this biome
+     *
+     * @return the parent biome of this biome
+     */
+    public AbstractBiome getParentBiome() {
+        return parentBiome;
     }
 
     /**

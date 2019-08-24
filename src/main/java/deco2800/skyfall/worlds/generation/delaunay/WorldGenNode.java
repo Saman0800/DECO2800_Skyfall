@@ -3,7 +3,6 @@ package deco2800.skyfall.worlds.generation.delaunay;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.generation.WorldGenException;
 
-import java.lang.Comparable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
@@ -333,7 +332,6 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
 
     private static int binarySearch(double toFind, List<WorldGenNode> nodes,
                                     int start, int end) {
-        double tolerance = 0.0001f;
         int middle = (end + start) / 2;
         double middleValue = nodes.get(middle).getY();
         if (middleValue == toFind || start >= end) {

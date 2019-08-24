@@ -132,8 +132,6 @@ public class BiomeGenerator {
                 assert borderNodes.stream().allMatch(this::nodeIsBorder);
                 growOcean();
                 fillGaps();
-                // TODO pass parameters for generate lakes into the instance of this class
-                // TODO remove lake nodes from other biomes
                 generateLakes(lakeSize, noLakes);
                 populateRealBiomes();
 
@@ -215,6 +213,7 @@ public class BiomeGenerator {
      */
     private void generateLakes(int lakeSize, int noLakes) throws DeadEndGenerationException {
         List<List<WorldGenNode>> chosenNodes = new ArrayList<>();
+        List<BiomeInProgress> maxNodesBiomes = new ArrayList<>();
         List<WorldGenNode> tempLakeNodes = new ArrayList<>();
         List<BiomeInProgress> lakesFound = new ArrayList<>();
         for (int i = 0; i < noLakes; i++) {
@@ -263,13 +262,38 @@ public class BiomeGenerator {
             lakesFound.add(new BiomeInProgress(biomes.size() + 1 + i));
             chosenNodes.add(nodesFound);
             tempLakeNodes.addAll(nodesFound);
+
+            // Calculates how many nodes from each biome contribute to the lake
+            // To determine the lake's parent biome
+            HashMap<BiomeInProgress, Integer> nodesInBiome = new HashMap<>();
+            for (WorldGenNode node : nodesFound) {
+                BiomeInProgress biome = nodesBiomes.get(node);
+                if (!nodesInBiome.containsKey(biome)) {
+                    nodesInBiome.put(biome, 1);
+                } else {
+                    nodesInBiome.put(biome, nodesInBiome.get(biome) + 1);
+                }
+            }
+
+            BiomeInProgress maxNodesBiome = null;
+            for (BiomeInProgress biome : nodesInBiome.keySet()) {
+                if (maxNodesBiome == null || nodesInBiome.get(biome) > nodesInBiome.get(maxNodesBiome)) {
+                    maxNodesBiome = biome;
+                }
+            }
+
+            maxNodesBiomes.add(maxNodesBiome);
+
         }
         for (int i = 0; i < lakesFound.size(); i++) {
             BiomeInProgress lake = lakesFound.get(i);
             biomes.add(lake);
-            realBiomes.add(new LakeBiome());
-            for (WorldGenNode nodes : chosenNodes.get(i)) {
-                lake.addNode(nodes);
+            // Add the lake to the list of real biomes
+            realBiomes.add(new LakeBiome(realBiomes.get(maxNodesBiomes.get(i).id)));
+            for (WorldGenNode node : chosenNodes.get(i)) {
+                // Update the biomeInProgress that the node is in
+                nodesBiomes.get(node).nodes.remove(node);
+                lake.addNode(node);
             }
         }
     }
