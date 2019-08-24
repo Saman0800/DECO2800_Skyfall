@@ -430,4 +430,16 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     -interaction with worlds
     -effects on MainCharacter with different Inventory and Weapon items
     */
+
+    public void addGold(GoldPiece gold, Integer count){
+        ArrayList<GoldPiece> currentGoldPieces = new ArrayList<>();
+
+        // for all of the gold pieces in the pouch
+        for (GoldPiece goldPiece : goldPouch.keySet()) {
+            Integer value = goldPouch.getValue();
+            // map the destinations with their costs
+            stopCosts.put(destination, entry.getCost());
+        }
+
+    }
 }

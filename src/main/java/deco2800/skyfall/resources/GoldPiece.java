@@ -20,5 +20,13 @@ public class GoldPiece {
             System.out.println("Invalid piece of gold");
         }
 
+
+
+    }
+    /**
+     *
+     */
+    public Integer getValue(GoldPiece g){
+        return this.value;
     }
 }
