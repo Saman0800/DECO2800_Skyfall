@@ -9,6 +9,7 @@ import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.DesertBiome;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
 import deco2800.skyfall.worlds.biomes.MountainBiome;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -17,6 +18,8 @@ public class BiomeTest {
         private AbstractBiome mountainBiome = new MountainBiome();
         private AbstractBiome desertBiome = new DesertBiome();
 
+        @Test
+        @Ignore
         public void testBiomesTiles(){
                 //Testing the forest biome
                 ArrayList<AbstractBiome> biomes = new ArrayList<>();

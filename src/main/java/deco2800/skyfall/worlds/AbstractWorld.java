@@ -70,14 +70,6 @@ public abstract class AbstractWorld {
         generateNeighbours();
     	generateTileIndexes();
     	generateTileTypes(random);
-
-    	//Saving the world for test, and likely saving and loading later
-//    	try {
-//            saveWorld("ExampleWorldOutput.txt");
-//        } catch (IOException e){
-//    	    System.out.println("Could not save world");
-//        }
-
     }
     
     protected abstract void generateWorld(Random random);

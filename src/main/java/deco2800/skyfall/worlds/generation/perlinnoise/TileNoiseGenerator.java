@@ -56,13 +56,15 @@ public class TileNoiseGenerator {
         this.random = random;
         this.startPeriod = startPeriod;
         this.attenuation = attenuation;
-        this.octaves = octaves;
         if (octaves < 1){
-            throw new IllegalArgumentException("The octaves must be greater than 1");
+            throw new IllegalArgumentException("The octaves must be greater than 0");
         }
+        this.octaves = octaves;
+        long startTime = System.nanoTime();
         setWidthAndHeight();
         setTilesNoiseValues(setter);
         fadeNoiseValues();
+        System.out.println("Time took : " + (System.nanoTime() - startTime)/1000000);
     }
 
     /**

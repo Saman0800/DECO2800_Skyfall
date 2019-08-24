@@ -50,7 +50,13 @@ public class NoiseGenerator {
         this.width = width;
         this.height = height;
         if (octaves < 1){
-            throw new IllegalArgumentException("The octaves must be greater than 1");
+            throw new IllegalArgumentException("The number of octaves must be greater than 0");
+        }
+        if (attenuation <= 0){
+            throw new IllegalArgumentException("Attenuation must be greater than 0");
+        }
+        if (startPeriod <= 0){
+            throw new IllegalArgumentException("The startPeriod must be greater than 0");
         }
         this.octaves = octaves;
         this.startPeriod = startPeriod;

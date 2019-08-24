@@ -30,12 +30,12 @@ public class DesertBiome extends AbstractBiome {
     public void setTileTextures(Random random) {
         ArrayList<String> textures = new ArrayList<>();
         textures.add("desert_3");
+        textures.add("desert_2");
         textures.add("desert_1");
 //        textures.add("desert_4");
-        textures.add("desert_2");
 
         //Perlin noise generation
-        new TileNoiseGenerator(getTiles(), random, 4, 5,0.5,  Tile::setPerlinValue);
+        new TileNoiseGenerator(getTiles(), random, 4, 30,0.5,  Tile::setPerlinValue);
 
 
         for (Tile tile : getTiles()) {
