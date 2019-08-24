@@ -132,7 +132,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         // create a new goldPouch object
         this.goldPouch = new HashMap<>();
+        // create the starting gold pouch with 1 x 100G
         GoldPiece initialPiece = new GoldPiece(100);
+        this.addGold(initialPiece, 1);
     }
 
     /**
@@ -462,7 +464,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         // if this gold value does not exist in the pouch
         if (!(goldPouch.containsKey(goldValue))){
             return;
-        } else if (goldPouch.get(goldValue) >= 1) {
+        } else if (goldPouch.get(goldValue) > 1) {
             goldPouch.put(goldValue, goldPouch.get(goldValue) - 1);
         } else {
             goldPouch.remove(goldValue);
