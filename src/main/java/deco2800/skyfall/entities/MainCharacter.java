@@ -46,7 +46,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private final int HOTBAR_MAX_CAPACITY = 5;
 
     // The "wallet" which stores the character's gold pieces
-    private HashMap<GoldPiece, Integer> goldPouch;
+    private HashMap<Integer, Integer> goldPouch;
 
     /*
     Potential future implementations
@@ -431,15 +431,24 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     -effects on MainCharacter with different Inventory and Weapon items
     */
 
+    /**
+     * Adds a piece of gold to the Gold Pouch
+     * @param gold The piece of gold to be added to the pouch
+     * @param count How many of that piece of gold should be added
+     */
     public void addGold(GoldPiece gold, Integer count){
-        ArrayList<GoldPiece> currentGoldPieces = new ArrayList<>();
 
-        // for all of the gold pieces in the pouch
-        for (GoldPiece goldPiece : goldPouch.keySet()) {
-            Integer value = goldPiece.getValue();
-            // map the destinations with their costs
-            stopCosts.put(destination, entry.getCost());
+        // store the gold's value (5G, 10G etc) as a variable
+        Integer goldValue = gold.getValue();
+
+        // if this gold value already exists in the pouch
+        if (goldPouch.containsKey(goldValue)){
+            // add this piece to the already existing list of pieces
+            goldPouch.put(goldValue, goldPouch.get(goldValue) + count);
+        } else {
+            goldPouch.put(goldValue, count);
         }
 
     }
+
 }
