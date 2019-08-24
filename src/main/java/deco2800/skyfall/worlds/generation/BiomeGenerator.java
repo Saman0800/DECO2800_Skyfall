@@ -134,52 +134,14 @@ public class BiomeGenerator {
                 assert borderNodes.stream().allMatch(this::nodeIsBorder);
                 growOcean();
                 fillGaps();
-                // TODO pass parameters for generate lakes into the instance of this class
-                // TODO remove lake nodes from other biomes
                 generateLakes(lakeSize, noLakes);
                 populateRealBiomes();
-
-//                generateEdgeNoise();
 
                 return;
             } catch (DeadEndGenerationException ignored) {
                 // If the generation reached a dead-end, try again.
             }
         }
-    }
-
-//    private void generateEdgeNoise() {
-//        ArrayList<Tile> borderTiles = new ArrayList<>();
-//        for (AbstractBiome biome : realBiomes) {
-//            biome.getTiles().stream()
-//                    .filter(BiomeGenerator::tileIsBorder)
-//                    .collect(Collectors.toCollection(() -> borderTiles));
-//        }
-//
-//        for (int i = 0; i < 10000 && !borderTiles.isEmpty(); i++) {
-//            int randomIndex = random.nextInt(borderTiles.size());
-//            Tile tile = borderTiles.get(randomIndex);
-//
-//            int randomNeighbourIndex = random.nextInt(6);
-//            tile.getNeighbour(randomNeighbourIndex).getBiome().addTile(tile);
-//
-//            if (!tileIsBorder(tile)) {
-//                borderTiles.remove(tile);
-//            }
-//            for (Tile neighbour : tile.getNeighbours().values()) {
-//                if (tileIsBorder(neighbour)) {
-//                    if (!borderTiles.contains(neighbour)) {
-//                        borderTiles.add(neighbour);
-//                    }
-//                } else {
-//                    borderTiles.remove(neighbour);
-//                }
-//            }
-//        }
-//    }
-
-    private static boolean tileIsBorder(Tile tile) {
-        return tile.getNeighbours().values().stream().anyMatch(neighbour -> neighbour.getBiome() != tile.getBiome());
     }
 
     /**
@@ -253,6 +215,7 @@ public class BiomeGenerator {
      */
     private void generateLakes(int lakeSize, int noLakes) throws DeadEndGenerationException {
         List<List<WorldGenNode>> chosenNodes = new ArrayList<>();
+        List<BiomeInProgress> maxNodesBiomes = new ArrayList<>();
         List<WorldGenNode> tempLakeNodes = new ArrayList<>();
         List<BiomeInProgress> lakesFound = new ArrayList<>();
         for (int i = 0; i < noLakes; i++) {
@@ -264,19 +227,9 @@ public class BiomeGenerator {
                 if (attempts > usedNodes.size()) {
                     throw new DeadEndGenerationException();
                 }
-                // int randomIndex = random.nextInt(usedNodes.size());
-                // int index = 0;
-                // WorldGenNode chosenNode = null;
-                // for (WorldGenNode usedNode : usedNodes) {
-                //     if (index == randomIndex) {
-                //         chosenNode = usedNode;
-                //         break;
-                //     }
-                //     index++;
-                // }
-                int randomIndex = random.nextInt(nodes.size());
-                WorldGenNode chosenNode = nodes.get(randomIndex);
-
+                int randomIndex = random.nextInt(usedNodes.size());
+                int index = 0;
+                WorldGenNode chosenNode = nodes.get(random.nextInt(nodes.size()));
                 if (!validLakeNode(chosenNode, tempLakeNodes)) {
                     continue;
                 }
@@ -307,23 +260,41 @@ public class BiomeGenerator {
                 }
                 break;
             }
-            for (WorldGenNode nodeFound : nodesFound) {
-                for (WorldGenNode neighbour : nodeFound.getNeighbours()) {
-                    if (tempLakeNodes.contains(neighbour)) {
-                        System.out.println("There are adjacent lakes");
-                    }
-                }
-            }
 
             lakesFound.add(new BiomeInProgress(biomes.size() + 1 + i));
             chosenNodes.add(nodesFound);
             tempLakeNodes.addAll(nodesFound);
+
+            // Calculates how many nodes from each biome contribute to the lake
+            // To determine the lake's parent biome
+            HashMap<BiomeInProgress, Integer> nodesInBiome = new HashMap<>();
+            for (WorldGenNode node : nodesFound) {
+                BiomeInProgress biome = nodesBiomes.get(node);
+                if (!nodesInBiome.containsKey(biome)) {
+                    nodesInBiome.put(biome, 1);
+                } else {
+                    nodesInBiome.put(biome, nodesInBiome.get(biome) + 1);
+                }
+            }
+
+            BiomeInProgress maxNodesBiome = null;
+            for (BiomeInProgress biome : nodesInBiome.keySet()) {
+                if (maxNodesBiome == null || nodesInBiome.get(biome) > nodesInBiome.get(maxNodesBiome)) {
+                    maxNodesBiome = biome;
+                }
+            }
+
+            maxNodesBiomes.add(maxNodesBiome);
+
         }
         for (int i = 0; i < lakesFound.size(); i++) {
             BiomeInProgress lake = lakesFound.get(i);
             biomes.add(lake);
-            realBiomes.add(new LakeBiome());
+            // Add the lake to the list of real biomes
+            realBiomes.add(new LakeBiome(realBiomes.get(maxNodesBiomes.get(i).id)));
             for (WorldGenNode node : chosenNodes.get(i)) {
+                // Update the biomeInProgress that the node is in
+                nodesBiomes.get(node).nodes.remove(node);
                 lake.addNode(node);
             }
         }

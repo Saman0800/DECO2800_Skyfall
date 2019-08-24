@@ -12,8 +12,8 @@ public class LakeBiome extends AbstractBiome {
     /**
      * Constructor for a Biome
      */
-    public LakeBiome() {
-        super("lake");
+    public LakeBiome(AbstractBiome parentBiome) {
+        super("lake", parentBiome);
     }
 
 
