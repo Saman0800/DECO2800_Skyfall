@@ -8,6 +8,7 @@ import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.*;
 import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.tasks.MovementTask;
 import deco2800.skyfall.util.*;
 
 import java.util.*;
@@ -130,12 +131,20 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Attack with the weapon the character has equip.
      */
-    public void attack() {
+    public void attack(HexVector mousePosition) {
         //TODO: Need to calculate an angle that the character is facing.
         HexVector position = this.getPosition();
 
+        //Calculate angle.
+        Vector2 mouseVector = new Vector2(mousePosition.getCol(),mousePosition.getRow());
+        Vector2 charVector = new Vector2(position.getCol(),position.getRow());
+
+        float angleOfAttack = charVector.angle(mouseVector);
+        System.out.println("Angle of attack: " + angleOfAttack);
+
+        //Make projectile move toward the angle
         //Spawn projectile in front of character for now.
-        this.hitBox = new Projectile("slash",
+        this.hitBox = new Projectile(mousePosition,"slash",
                 "test hitbox",
                 position.getCol() + 1,
                 position.getRow(),
@@ -327,7 +336,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         // only allow left clicks to move player
 
         if (button == 0) {
-            this.attack();
+
+            float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
+            float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
+
+            HexVector mousePos = new HexVector(clickedPosition[0],clickedPosition[1]);
+            this.attack(mousePos);
         }
     }
 
@@ -354,6 +368,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     @Override
     public void moveTowards(HexVector destination) {
+        System.out.println(this.currentSpeed);
         position.moveToward(destination, this.currentSpeed);
     }
 

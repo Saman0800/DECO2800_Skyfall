@@ -1,7 +1,10 @@
 package deco2800.skyfall.entities;
 
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.tasks.AbstractTask;
+import deco2800.skyfall.tasks.MovementTask;
 import deco2800.skyfall.util.Collider;
+import deco2800.skyfall.util.HexVector;
 
 /**
  * An entity that is shot from a weapon.
@@ -9,7 +12,7 @@ import deco2800.skyfall.util.Collider;
  *
  * E.g. a bow shoots an arrow.
  */
-public class Projectile extends AbstractEntity {
+public class Projectile extends AgentEntity {
 
     /**
      * How many game ticks all projectiles survive for before being removed.
@@ -31,6 +34,10 @@ public class Projectile extends AbstractEntity {
      */
     private long ticksAliveFor = 0;
 
+    private HexVector movementPosition;
+
+    private AbstractTask task;
+
     /**
      * Construct a new projectile.
      * @param textureName The name of the texture to render.
@@ -40,15 +47,20 @@ public class Projectile extends AbstractEntity {
      * @param damage The damage this projectile will deal on hit.
      * @param speed How fast this projectile is travelling.
      */
-    public Projectile(String textureName, String objectName, float col, float row, int damage, float speed) {
+    public Projectile(HexVector movementPosition,String textureName, String objectName,
+                      float col, float row, int damage, float speed) {
 
-        super(col,row,3);
+        super(col,row,3,speed);
 
         this.damage = damage;
         this.speed = speed;
+        this.movementPosition = movementPosition;
 
         this.setTexture(textureName);
         this.setObjectName(objectName);
+
+        //Move toward position.
+        this.task = new MovementTask(this, movementPosition);
     }
 
     /**
@@ -77,9 +89,22 @@ public class Projectile extends AbstractEntity {
             GameManager.get().getWorld().removeEntity(this);
         }
 
+        if (task != null && task.isAlive()) {
+            task.onTick(tick);
+
+            if (task.isComplete()) {
+                this.task = null;
+            }
+        }
+
+
         //TODO add forward movement task on each tick.
-        this.setPosition(this.position.getCol()+0.1f,this.position.getRow(),1);
+        //this.setPosition(this.position.getCol()+0.1f,this.position.getRow(),1);
+        //position.moveToward(movementPosition,0.1);
+
+
     }
+
 
 
 

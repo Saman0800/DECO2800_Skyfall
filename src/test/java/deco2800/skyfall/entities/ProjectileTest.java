@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.util.HexVector;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,7 +17,7 @@ public class ProjectileTest  {
     /**
      * Create a new Projectile.
      */
-    private Projectile projectile = new Projectile("slash",
+    private Projectile projectile = new Projectile(new HexVector(),"slash",
             "projectileTest",1,1,1,1);
 
 
