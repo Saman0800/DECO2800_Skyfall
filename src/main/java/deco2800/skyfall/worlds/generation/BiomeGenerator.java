@@ -228,16 +228,7 @@ public class BiomeGenerator {
                 }
                 int randomIndex = random.nextInt(usedNodes.size());
                 int index = 0;
-                WorldGenNode chosenNode = null;
-                for (WorldGenNode usedNode : usedNodes) {
-                    if (index == randomIndex) {
-                        chosenNode = usedNode;
-                        break;
-                    }
-                    index++;
-                }
-                boolean valid = true;
-
+                WorldGenNode chosenNode = nodes.get(random.nextInt(nodes.size()));
                 if (!validLakeNode(chosenNode, tempLakeNodes)) {
                     continue;
                 }
@@ -268,13 +259,6 @@ public class BiomeGenerator {
                 }
                 break;
             }
-            for (WorldGenNode nodeFound : nodesFound) {
-                for (WorldGenNode neighbour : nodeFound.getNeighbours()) {
-                    if (tempLakeNodes.contains(neighbour)) {
-                        System.out.println("There are adjacent lakes");
-                    }
-                }
-            }
 
             lakesFound.add(new BiomeInProgress(biomes.size() + 1 + i));
             chosenNodes.add(nodesFound);
@@ -284,8 +268,8 @@ public class BiomeGenerator {
             BiomeInProgress lake = lakesFound.get(i);
             biomes.add(lake);
             realBiomes.add(new LakeBiome());
-            for (WorldGenNode node : chosenNodes.get(i)) {
-                lake.addNode(node);
+            for (WorldGenNode nodes : chosenNodes.get(i)) {
+                lake.addNode(nodes);
             }
         }
     }
