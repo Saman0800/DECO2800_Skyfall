@@ -89,18 +89,10 @@ public class Projectile extends AgentEntity {
             GameManager.get().getWorld().removeEntity(this);
         }
 
-        if (task != null && task.isAlive()) {
-            task.onTick(tick);
-
-            if (task.isComplete()) {
-                this.task = null;
-            }
-        }
-
 
         //TODO add forward movement task on each tick.
         //this.setPosition(this.position.getCol()+0.1f,this.position.getRow(),1);
-        //position.moveToward(movementPosition,0.1);
+        position.moveToward(movementPosition,1);
 
 
     }
