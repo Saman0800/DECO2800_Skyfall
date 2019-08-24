@@ -15,24 +15,25 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
  */
 public class GameMenuManager {
 
-        private Table pauseTable = null;
+    private Table pauseTable = null;
 
-        // default constructor
-        public GameMenuManager() {
-        }
+    private Table inventoryTable = null;
 
-        /**
-         * Display menu bar at the bottom of the game
-         *
-         * @param stage Current stage
-         */
-        private void showMenu(Stage stage){
+    // default constructor
+    public GameMenuManager() {
+    }
 
-            Image menuBar = new Image(GameManager.get().getManager(TextureManager.class).getTexture("game menu bar"));
-            menuBar.setSize(910, 170);
-            menuBar.setPosition(185, 20);
-            stage.addActor(menuBar);
-        }
+    /**
+     * Display menu bar at the bottom of the game
+     *
+     * @param stage Current stage
+     */
+    private void showMenu(Stage stage){
+        Image menuBar = new Image(GameManager.get().getManager(TextureManager.class).getTexture("game menu bar"));
+        menuBar.setSize(910, 170);
+        menuBar.setPosition(185, 20);
+        stage.addActor(menuBar);
+    }
 
     /**
      * Display buttons in the menu bar
@@ -59,6 +60,26 @@ public class GameMenuManager {
                     pause();
                 }
             });
+
+
+            //Temporary inventory button using pause button texture
+            ImageButton inventoryButton = new ImageButton(new TextureRegionDrawable((new TextureRegion(GameManager.get().getManager(TextureManager.class).getTexture("pause")))));
+            inventoryButton.setSize(height, height*146/207);
+            inventoryButton.setPosition(900, 115);
+            stage.addActor(inventoryButton);
+
+            inventoryButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    if (inventoryTable == null) {
+                        setInventoryTable();
+                        stage.addActor(inventoryTable);
+                    } else {
+                        inventoryTable.setVisible(true);
+                    }
+                }
+            });
+
 
             ImageButton selectCharacter = new ImageButton(new TextureRegionDrawable((new TextureRegion(GameManager.get().getManager(TextureManager.class).getTexture("select-character")))));
             selectCharacter.setSize(height, height*146/207);
@@ -93,6 +114,7 @@ public class GameMenuManager {
     private Table getPauseTable() {
             return pauseTable;
         }
+
 
     /**
      * Sets the pause pop up table
@@ -144,6 +166,25 @@ public class GameMenuManager {
 
             this.pauseTable = pauseTable;
         }
+
+
+
+    private void setInventoryTable(){
+        //Create inventory table and set size/background etc.
+        Table inventoryTable = new Table();
+        inventoryTable.setSize(500, 500*1346/1862);
+        inventoryTable.setPosition(Gdx.graphics.getWidth()/2 - 200, Gdx.graphics.getHeight()/2 - 90);
+        inventoryTable.setBackground(new TextureRegionDrawable((new TextureRegion(GameManager.get().getManager(TextureManager.class).getTexture("pop up screen")))));
+
+        Image infoBar = new Image(new TextureRegionDrawable((new TextureRegion(GameManager.get().getManager(TextureManager.class).getTexture("game menu bar")))));
+        infoBar.setSize(475, 475*188/1756);
+
+        Table bar = new Table();
+        bar.addActor(infoBar);
+        inventoryTable.add(bar).width(475).padTop(450).colspan(3).fillX();
+
+        this.inventoryTable = inventoryTable;
+    }
 
     /**
      * Pauses the game
