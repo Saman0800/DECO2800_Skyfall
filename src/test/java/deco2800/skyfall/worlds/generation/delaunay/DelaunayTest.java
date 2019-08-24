@@ -149,8 +149,9 @@ public class DelaunayTest {
     public void assignTilesTest() {
         // Keep these parameters small or this test will take a LONG time
         // (method has O(nodeCount*worldSize^2) time complexity)
-        int nodeCount = 5;
+        int nodeSpacing = 27;
         int worldSize = 30;
+        int nodeCount = (int) Math.round(Math.pow((float) worldSize * 2 / (float) nodeSpacing, 2));
         Random random = new Random();
 
         List<WorldGenNode> nodes = new ArrayList<>();
@@ -179,7 +180,7 @@ public class DelaunayTest {
 
         long noiseSeed = random.nextLong();
         Random noiseRandom1 = new Random(noiseSeed);
-        WorldGenNode.assignTiles(nodes, tiles, noiseRandom1);
+        WorldGenNode.assignTiles(nodes, tiles, noiseRandom1, nodeSpacing);
 
         Random noiseRandom2 = new Random(noiseSeed);
         float minX = Float.POSITIVE_INFINITY;
@@ -194,8 +195,11 @@ public class DelaunayTest {
         }
         int width = (int) Math.ceil(maxX - minX);
         int height = (int) Math.ceil(maxY - minY);
-        NoiseGenerator xGen = new NoiseGenerator(noiseRandom2, width, height, 5, 30, 1.1);
-        NoiseGenerator yGen = new NoiseGenerator(noiseRandom2, width, height, 5, 30, 1.1);
+        int startPeriod = nodeSpacing * 2;
+        int octaves = (int) Math.ceil(Math.log(startPeriod) / Math.log(2));
+        double attenuation = Math.pow(1.5, 1 / octaves);
+        NoiseGenerator xGen = new NoiseGenerator(noiseRandom2, width, height, octaves, startPeriod, attenuation);
+        NoiseGenerator yGen = new NoiseGenerator(noiseRandom2, width, height, octaves, startPeriod, attenuation);
 
         // Check that nodes are sorted
         for (int i = 0; i < nodes.size() - 1; i++) {
@@ -209,9 +213,13 @@ public class DelaunayTest {
             int index = 0;
 
             double tileX = tile.getCol() +
-                    xGen.getOctavedPerlinValue(tile.getCol() + worldSize, tile.getRow() + worldSize) * 16 - 8;
+                    xGen.getOctavedPerlinValue(tile.getCol() + worldSize, tile.getRow() + worldSize) *
+                            (double) nodeSpacing - (double) nodeSpacing / 2;
+            ;
             double tileY = tile.getRow() +
-                    yGen.getOctavedPerlinValue(tile.getCol() + worldSize, tile.getRow() + worldSize) * 16 - 8;
+                    yGen.getOctavedPerlinValue(tile.getCol() + worldSize, tile.getRow() + worldSize) *
+                            (double) nodeSpacing - (double) nodeSpacing / 2;
+            ;
 
             // Find the closest node
             for (int i = 0; i < nodes.size(); i++) {

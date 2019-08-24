@@ -74,7 +74,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             // generateNeighbours(tile);
 
             try {
-                WorldGenNode.assignTiles(worldGenNodes, tiles, random);
+                WorldGenNode.assignTiles(worldGenNodes, tiles, random, nodeSpacing);
                 WorldGenNode.removeZeroTileNodes(worldGenNodes, worldSize);
                 WorldGenNode.assignNeighbours(worldGenNodes);
             } catch (WorldGenException e) {

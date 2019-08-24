@@ -238,7 +238,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * @param nodes The list of nodes that can be assigned to
      * @param tiles The list of tiles to assign
      */
-    public static void assignTiles(List<WorldGenNode> nodes, List<Tile> tiles, Random random) {
+    public static void assignTiles(List<WorldGenNode> nodes, List<Tile> tiles, Random random, int nodeSpacing) {
         float minX = Float.POSITIVE_INFINITY;
         float maxX = Float.NEGATIVE_INFINITY;
         float minY = Float.POSITIVE_INFINITY;
@@ -251,20 +251,25 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         }
         int width = (int) Math.ceil(maxX - minX);
         int height = (int) Math.ceil(maxY - minY);
-        NoiseGenerator xGen = new NoiseGenerator(random, width, height, 5, 30, 1.1);
-        NoiseGenerator yGen = new NoiseGenerator(random, width, height, 5, 30, 1.1);
+
+        int startPeriod = nodeSpacing * 2;
+        int octaves = (int) Math.ceil(Math.log(startPeriod) / Math.log(2));
+        double attenuation = Math.pow(1.5, 1 / octaves);
+
+        NoiseGenerator xGen = new NoiseGenerator(random, width, height, octaves, startPeriod, attenuation);
+        NoiseGenerator yGen = new NoiseGenerator(random, width, height, octaves, startPeriod, attenuation);
 
         // Ensure nodes are stored in order of Y value
         nodes.sort(Comparable::compareTo);
         for (Tile tile : tiles) {
-            // Y coordinate of the tile
+            // Offset the position of tiles used to calculate the nodes using
+            // Perlin noise to add noise to the edges.
             double tileX =
-                    tile.getCol() + xGen.getOctavedPerlinValue(tile.getCol() - minX, tile.getRow() - minY) * 16 - 8;
-            // float tileY = tile.getCoordinates().getRow();
+                    tile.getCol() + xGen.getOctavedPerlinValue(tile.getCol() - minX, tile.getRow() - minY) *
+                            (double) nodeSpacing - (double) nodeSpacing / 2;
             double tileY =
-                    tile.getRow() + yGen.getOctavedPerlinValue(tile.getCol() - minX, tile.getRow() - minY) * 16 - 8;
-            // double tileX = tile.getCol();
-            // double tileY = tile.getRow();
+                    tile.getRow() + yGen.getOctavedPerlinValue(tile.getCol() - minX, tile.getRow() - minY) *
+                            (double) nodeSpacing - (double) nodeSpacing / 2;
             // Find the index of the node with the node with one of the nearest
             // Y values (note, if there is no node with the exact Y value, it)
             // Can choose the node on either side, not the strictly closest one
