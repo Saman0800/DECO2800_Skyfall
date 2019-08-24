@@ -18,12 +18,14 @@ import deco2800.skyfall.gui.HealthCircle;
  */
 public class GameMenuManager extends TickableManager {
 
+
         private Table pauseTable = null;
         private static TextureManager textureManager;
         private Stage stage;
         private MainCharacter mainCharacter;
         private HealthCircle healthCircle;
-    // default constructor
+    private Table inventoryTable = null;
+
         public GameMenuManager() {
             textureManager = GameManager.get().getManager(TextureManager.class);
             stage = null;
@@ -45,6 +47,9 @@ public class GameMenuManager extends TickableManager {
             menuBar.setPosition(185, 20);
             stage.addActor(menuBar);
         }
+
+
+
 
     /**
      * Display buttons in the menu bar
@@ -72,6 +77,25 @@ public class GameMenuManager extends TickableManager {
                     pause();
                 }
             });
+
+            //Temporary inventory button using pause button texture
+            ImageButton inventoryButton = new ImageButton(generateTextureRegionDrawableObject("pause"));
+            inventoryButton.setSize(height, height*146/207);
+            inventoryButton.setPosition(900, 115);
+            stage.addActor(inventoryButton);
+
+            inventoryButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    if (inventoryTable == null) {
+                        setInventoryTable();
+                        stage.addActor(inventoryTable);
+                    } else {
+                        inventoryTable.setVisible(true);
+                    }
+                }
+            });
+
 
             ImageButton selectCharacter = new ImageButton(generateTextureRegionDrawableObject("select-character"));
             selectCharacter.setSize(height, height*146/207);
@@ -111,6 +135,7 @@ public class GameMenuManager extends TickableManager {
     private Table getPauseTable() {
             return pauseTable;
         }
+
 
     /**
      * Sets the pause pop up table
@@ -162,6 +187,25 @@ public class GameMenuManager extends TickableManager {
 
             this.pauseTable = pauseTable;
         }
+
+
+
+    private void setInventoryTable(){
+        //Create inventory table and set size/background etc.
+        Table inventoryTable = new Table();
+        inventoryTable.setSize(500, 500*1346/1862);
+        inventoryTable.setPosition(Gdx.graphics.getWidth()/2 - 200, Gdx.graphics.getHeight()/2 - 90);
+        inventoryTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
+
+        Image infoBar = new Image(generateTextureRegionDrawableObject("game menu bar"));
+        infoBar.setSize(475, 475*188/1756);
+
+        Table bar = new Table();
+        bar.addActor(infoBar);
+        inventoryTable.add(bar).width(475).padTop(450).colspan(3).fillX();
+
+        this.inventoryTable = inventoryTable;
+    }
 
     /**
      * Pauses the game
