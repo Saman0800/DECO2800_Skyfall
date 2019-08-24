@@ -3,6 +3,7 @@ package deco2800.skyfall.worlds.generation.delaunay;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.generation.WorldGenException;
+import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,11 +62,11 @@ public class DelaunayTest {
 
         WorldGenTriangle triangle1 = new WorldGenTriangle(node1, node2, node3);
         WorldGenTriangle triangle2 = new WorldGenTriangle(node4, node5, node6);
-        double[] circumcentre1 = {0, 0};
-        double[] circumcentre2 = {0, 0};
+        double[] circumcentre1 = { 0, 0 };
+        double[] circumcentre2 = { 0, 0 };
 
         // Test that the exception is not thrown when it shouldn't be
-        try{
+        try {
             circumcentre1 = triangle1.circumcentre();
             circumcentre2 = triangle2.circumcentre();
         } catch (CollinearPointsException e) {
@@ -83,8 +84,8 @@ public class DelaunayTest {
         WorldGenNode node8 = new WorldGenNode(5, 5);
         WorldGenTriangle triangle3 = new WorldGenTriangle(node1, node2, node7);
         WorldGenTriangle triangle4 = new WorldGenTriangle(node1, node5, node8);
-        double[] circumcentre3 = {0, 0};
-        double[] circumcentre4 = {0, 0};
+        double[] circumcentre3 = { 0, 0 };
+        double[] circumcentre4 = { 0, 0 };
 
         try {
             circumcentre3 = triangle3.circumcentre();
@@ -164,8 +165,8 @@ public class DelaunayTest {
         ForestBiome biome = new ForestBiome();
 
         // Fill world with tiles
-        for (int q = -1 * worldSize; q < worldSize; q++) {
-            for (int r = -1 * worldSize; r < worldSize; r++) {
+        for (int q = -worldSize; q < worldSize; q++) {
+            for (int r = -worldSize; r < worldSize; r++) {
                 float oddCol = (q % 2 != 0 ? 0.5f : 0);
 
                 int elevation = random.nextInt(2);
@@ -176,7 +177,25 @@ public class DelaunayTest {
             }
         }
 
-        WorldGenNode.assignTiles(nodes, tiles, random);
+        long noiseSeed = random.nextLong();
+        Random noiseRandom1 = new Random(noiseSeed);
+        WorldGenNode.assignTiles(nodes, tiles, noiseRandom1);
+
+        Random noiseRandom2 = new Random(noiseSeed);
+        float minX = Float.POSITIVE_INFINITY;
+        float maxX = Float.NEGATIVE_INFINITY;
+        float minY = Float.POSITIVE_INFINITY;
+        float maxY = Float.NEGATIVE_INFINITY;
+        for (Tile tile : tiles) {
+            minX = Math.min(tile.getCol(), minX);
+            maxX = Math.max(tile.getCol(), maxX);
+            minY = Math.min(tile.getRow(), minY);
+            maxY = Math.max(tile.getRow(), maxY);
+        }
+        int width = (int) Math.ceil(maxX - minX);
+        int height = (int) Math.ceil(maxY - minY);
+        NoiseGenerator xGen = new NoiseGenerator(noiseRandom2, width, height, 5, 30, 1.1);
+        NoiseGenerator yGen = new NoiseGenerator(noiseRandom2, width, height, 5, 30, 1.1);
 
         // Check that nodes are sorted
         for (int i = 0; i < nodes.size() - 1; i++) {
@@ -186,15 +205,18 @@ public class DelaunayTest {
         }
 
         for (Tile tile : tiles) {
-            double minDistanceToNode = -1;
+            double minDistanceToNode = Double.POSITIVE_INFINITY;
             int index = 0;
+
+            double tileX = tile.getCol() +
+                    xGen.getOctavedPerlinValue(tile.getCol() + worldSize, tile.getRow() + worldSize) * 16 - 8;
+            double tileY = tile.getRow() +
+                    yGen.getOctavedPerlinValue(tile.getCol() + worldSize, tile.getRow() + worldSize) * 16 - 8;
 
             // Find the closest node
             for (int i = 0; i < nodes.size(); i++) {
-                double distance = nodes.get(i).distanceToTile(tile);
-                if (minDistanceToNode == -1) {
-                    minDistanceToNode = distance;
-                } else if (minDistanceToNode > distance) {
+                double distance = nodes.get(i).distanceTo(tileX, tileY);
+                if (minDistanceToNode > distance) {
                     minDistanceToNode = distance;
                     index = i;
                 }
@@ -202,13 +224,11 @@ public class DelaunayTest {
 
             // Check that the tile is in the list of tiles for that node, and no
             // other node
-            for (int i = 0; i < nodes.size(); i++) {
-                if (nodes.get(i) != nodes.get(index)) {
-                    if (nodes.get(i).getTiles().contains(tile)) {
-                        fail();
-                    }
-                } else if (!nodes.get(i).getTiles().contains(tile)) {
-                    fail();
+            for (WorldGenNode node : nodes) {
+                if (node == nodes.get(index)) {
+                    assertTrue(node.getTiles().contains(tile));
+                } else {
+                    assertFalse(node.getTiles().contains(tile));
                 }
             }
         }
@@ -240,11 +260,11 @@ public class DelaunayTest {
     public void nodeVectorAlgebraTest() {
         WorldGenNode node1 = new WorldGenNode(2, 5);
         WorldGenNode node2 = new WorldGenNode(-3.26, 1.00492);
-        double[] addCoords = {node1.add(node2).getX(), node1.add(node2).getY()};
-        double[] subCoords = {node1.subtract(node2).getX(),
-                node1.subtract(node2).getY()};
-        double[] scaleCoords = {node2.scalarMultiply(2.453).getX(),
-                node2.scalarMultiply(2.453).getY()};
+        double[] addCoords = { node1.add(node2).getX(), node1.add(node2).getY() };
+        double[] subCoords = { node1.subtract(node2).getX(),
+                               node1.subtract(node2).getY() };
+        double[] scaleCoords = { node2.scalarMultiply(2.453).getX(),
+                                 node2.scalarMultiply(2.453).getY() };
         double magnitude = node2.magnitude();
         double dot = node1.dotProduct(node2);
         double cross = node1.crossProduct(node2);
@@ -268,13 +288,13 @@ public class DelaunayTest {
         assertEquals(-42.72, node1.getCentroid()[1], 0.00001);
 
         // Test with one vertex
-        node1.addVertex(new double[] {1, 1});
+        node1.addVertex(new double[] { 1, 1 });
         assertEquals(1, node1.getCentroid()[0], 0);
         assertEquals(1, node1.getCentroid()[1], 0);
 
         // Test with many vertices
-        node1.addVertex(new double[] {-5.2837, 3.5838});
-        node1.addVertex(new double[] {12.9318, 1.1243});
+        node1.addVertex(new double[] { -5.2837, 3.5838 });
+        node1.addVertex(new double[] { 12.9318, 1.1243 });
         assertEquals(2.8827, node1.getCentroid()[0], 0.00001);
         assertEquals(1.9027, node1.getCentroid()[1], 0.00001);
     }
