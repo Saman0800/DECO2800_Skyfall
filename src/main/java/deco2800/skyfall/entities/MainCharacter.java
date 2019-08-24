@@ -252,7 +252,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         if (amount > 0) {
             if (item instanceof HealthResources) {
                 int hungerValue = ((HealthResources) item).getFoodValue();
+                int healthValue = ((HealthResources) item).getHealthValue();
                 change_food(hungerValue);
+                changeHealth(healthValue);
                 dropInventory(item.getName());
             } else {
                 System.out.println("Given item (" + item.getName() + ") is " +
