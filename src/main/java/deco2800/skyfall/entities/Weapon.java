@@ -15,12 +15,12 @@ public class Weapon implements Item, IWeapon {
     private float damage;
     private float durability;
 
-
     public Weapon() {
         //TODO: Decide if want to have setters for instance variables.
     }
 
-    public Weapon(String name, String weaponType, String damageType, float damage, float attackRate, float durability) {
+    public Weapon(String name, String weaponType, String damageType,
+                  float damage, float attackRate, float durability) {
 
         System.out.println("Constructing new Weapon class.");
 
@@ -61,6 +61,4 @@ public class Weapon implements Item, IWeapon {
     public Number getDamage() {
         return this.damage;
     }
-
-
 }

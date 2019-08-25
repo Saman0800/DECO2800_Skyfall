@@ -16,12 +16,20 @@ public class WeaponManager extends TickableManager {
     private static final int MAX_EQUIPPED = 3;
 
     /**
-     * Creates a new Weapon Manager and adds default items to the weapons map.
-     * Also initialises an empty equipped weapons list.
+     * Creates a new Weapon Manager and adds default items to the weapons map
+     * Also initialises an empty equipped weapons list
      */
     public WeaponManager() {
         this.weapons = new HashMap<>();
         this.equipped = new ArrayList<>();
+    }
+
+    /**
+     * Creates a new Weapon Manager from a given weapons map and equipped list
+     */
+    public WeaponManager(Map<Weapon, Integer> weapons, List<Weapon> equipped) {
+        this.weapons = weapons;
+        this.equipped = equipped;
     }
 
     /**
@@ -130,6 +138,15 @@ public class WeaponManager extends TickableManager {
     }
 
     /**
+     * Checks whether if item is in equipped list
+     * @param item to check
+     * @return true if item is equipped, false otherwise
+     */
+    public boolean isEquipped(Weapon item) {
+        return equipped.contains(item);
+    }
+
+    /**
      * Gets the number of weapons currently equipped
      * @return number of items in equipped list
      */
@@ -148,7 +165,30 @@ public class WeaponManager extends TickableManager {
 
     @Override
     public String toString() {
-        return weapons.toString() + " " + equipped.toString();
+        List<String> weaponsNames = new ArrayList<>();
+        List<Integer> weaponsAmounts = new ArrayList<>(weapons.values());
+        Map<String, Integer> weaponString = new HashMap<>();
+        StringBuilder equippedString = new StringBuilder();
+
+        for (Weapon weapon: weapons.keySet()) {
+            weaponsNames.add(weapon.getName());
+        }
+
+        for (int i = 0; i < weaponsAmounts.size(); i++) {
+            weaponString.put(weaponsNames.get(i), weaponsAmounts.get(i));
+        }
+
+        for (int i = 0; i < MAX_EQUIPPED; i++) {
+            equippedString.append(equipped.get(i).getName());
+            if (i < MAX_EQUIPPED - 1){
+                equippedString.append(", ");
+            } else {
+                equippedString.append(".");
+            }
+        }
+
+        return "Weapons: " + weaponString.toString() + "\n" +
+                "Equipped: " + equippedString.toString();
     }
 
     @Override
