@@ -162,6 +162,15 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("big_circle", new Texture("resources/circle.png"));
             textureMap.put("inner_circle", new Texture("resources/green_circle.png"));
+
+            Texture banner = new Texture("resources/inventory_banner.png");
+            banner.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Nearest);
+            textureMap.put("inventory_banner", banner);
+
+            textureMap.put("Stone", new Texture("resources/temp_stone.png"));
+            textureMap.put("Wood", new Texture("resources/temp_wood.png"));
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }

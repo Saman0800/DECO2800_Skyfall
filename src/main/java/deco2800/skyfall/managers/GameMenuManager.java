@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gui.HealthCircle;
+import java.util.*;
 
 
 /**
@@ -24,10 +25,13 @@ public class GameMenuManager extends TickableManager {
         private Stage stage;
         private MainCharacter mainCharacter;
         private HealthCircle healthCircle;
+        private InventoryManager inventory;
+
     private Table inventoryTable = null;
 
         public GameMenuManager() {
             textureManager = GameManager.get().getManager(TextureManager.class);
+            inventory = GameManager.get().getManager(InventoryManager.class);
             stage = null;
         }
 
@@ -43,7 +47,7 @@ public class GameMenuManager extends TickableManager {
          */
         private void showMenu(Stage stage){
             Image menuBar = new Image(textureManager.getTexture("game menu bar"));
-            menuBar.setSize(910, 170);
+            menuBar.setSize(910, 140);
             menuBar.setPosition(185, 20);
             stage.addActor(menuBar);
         }
@@ -58,11 +62,11 @@ public class GameMenuManager extends TickableManager {
      */
     private void showButtons(Stage stage) {
             int height;
-            height = 75;
+            height = 65;
             ImageButton pause = new ImageButton(generateTextureRegionDrawableObject("pause"));
 
             pause.setSize(height, height*146/207);
-            pause.setPosition(208, 115);
+            pause.setPosition(208, 105);
             stage.addActor(pause);
             pause.addListener(new ClickListener() {
                 @Override
@@ -81,7 +85,7 @@ public class GameMenuManager extends TickableManager {
             //Temporary inventory button using pause button texture
             ImageButton inventoryButton = new ImageButton(generateTextureRegionDrawableObject("pause"));
             inventoryButton.setSize(height, height*146/207);
-            inventoryButton.setPosition(900, 115);
+            inventoryButton.setPosition(900, 105);
             stage.addActor(inventoryButton);
 
             inventoryButton.addListener(new ClickListener() {
@@ -99,27 +103,27 @@ public class GameMenuManager extends TickableManager {
 
             ImageButton selectCharacter = new ImageButton(generateTextureRegionDrawableObject("select-character"));
             selectCharacter.setSize(height, height*146/207);
-            selectCharacter.setPosition(208,41*1000/800);
+            selectCharacter.setPosition(208,30*1000/800);
             stage.addActor(selectCharacter);
 
             ImageButton info = new ImageButton(generateTextureRegionDrawableObject("info"));
             info.setSize(height, height*146/207);
-            info.setPosition(992,115);
+            info.setPosition(992,105);
             stage.addActor(info);
 
             ImageButton settings = new ImageButton(generateTextureRegionDrawableObject("settings"));
             settings.setSize(height, height*146/207);
-            settings.setPosition(992,41*1000/800);
+            settings.setPosition(992,30*1000/800);
             stage.addActor(settings);
 
             ImageButton build = new ImageButton(generateTextureRegionDrawableObject("build"));
             build.setSize(219*0.55f, 207*0.55f);
-            build.setPosition(300, 41*1000/800);
+            build.setPosition(300, 30*1000/800);
             stage.addActor(build);
 
             ImageButton radar = new ImageButton(generateTextureRegionDrawableObject("radar"));
             radar.setSize(219*0.55f, 207*0.55f);
-            radar.setPosition(440, 41*1000/800);
+            radar.setPosition(440, 30*1000/800);
             stage.addActor(radar);
 
             healthCircle = new HealthCircle(stage,
@@ -191,18 +195,28 @@ public class GameMenuManager extends TickableManager {
 
 
     private void setInventoryTable(){
-        //Create inventory table and set size/background etc.
         Table inventoryTable = new Table();
-        inventoryTable.setSize(500, 500*1346/1862);
-        inventoryTable.setPosition(Gdx.graphics.getWidth()/2 - 200, Gdx.graphics.getHeight()/2 - 90);
+        inventoryTable.setSize(910, 700*1346/1862);
+        inventoryTable.setPosition(185, Gdx.graphics.getHeight()/2 - 150);
         inventoryTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
 
-        Image infoBar = new Image(generateTextureRegionDrawableObject("game menu bar"));
-        infoBar.setSize(475, 475*188/1756);
+        Image infoBar = new Image(generateTextureRegionDrawableObject("inventory_banner"));
+        infoBar.setSize(650, 55);
+        infoBar.setPosition(75, 185);
 
         Table bar = new Table();
         bar.addActor(infoBar);
-        inventoryTable.add(bar).width(475).padTop(450).colspan(3).fillX();
+        inventoryTable.add(bar).width(800).colspan(3).fillX();
+
+        Map<String, Integer> inventoryAmounts = inventory.getInventoryAmounts();
+
+        for (Map.Entry<String, Integer> entry : inventoryAmounts.entrySet()) {
+            Image icon = new Image(generateTextureRegionDrawableObject(entry.getKey()));
+            icon.setSize(50, 50);
+            icon.setPosition(50, 50);
+            bar.addActor(icon);
+        }
+
 
         this.inventoryTable = inventoryTable;
     }
@@ -216,7 +230,7 @@ public class GameMenuManager extends TickableManager {
 
     @Override
     public void onTick(long i) {
-
+        inventory = GameManager.get().getManager(InventoryManager.class);
     }
 
     public static TextureRegionDrawable generateTextureRegionDrawableObject(String sName) {
