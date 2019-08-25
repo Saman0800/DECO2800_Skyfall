@@ -5,9 +5,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import deco2800.skyfall.entities.MainCharacter;
@@ -83,7 +81,7 @@ public class GameMenuManager extends TickableManager {
             });
 
             //Temporary inventory button using pause button texture
-            ImageButton inventoryButton = new ImageButton(generateTextureRegionDrawableObject("pause"));
+            ImageButton inventoryButton = new ImageButton(generateTextureRegionDrawableObject("inv_button"));
             inventoryButton.setSize(height, height*146/207);
             inventoryButton.setPosition(900, 105);
             stage.addActor(inventoryButton);
@@ -195,28 +193,62 @@ public class GameMenuManager extends TickableManager {
 
 
     private void setInventoryTable(){
+
+        //split into set and update
+
         Table inventoryTable = new Table();
-        inventoryTable.setSize(910, 700*1346/1862);
+        inventoryTable.setSize(910, 510);
         inventoryTable.setPosition(185, Gdx.graphics.getHeight()/2 - 150);
         inventoryTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
+
+        ImageButton exit = new ImageButton(generateTextureRegionDrawableObject("exit"));
+        exit.setSize(40, 40);
+        exit.setPosition(800, 200);
+
+        exit.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                inventoryTable.setVisible(false);
+            }
+        });
+
 
         Image infoBar = new Image(generateTextureRegionDrawableObject("inventory_banner"));
         infoBar.setSize(650, 55);
         infoBar.setPosition(75, 185);
 
-        Table bar = new Table();
-        bar.addActor(infoBar);
-        inventoryTable.add(bar).width(800).colspan(3).fillX();
+        Table infoPanel = new Table();
+        infoPanel.setSize(410, 400);
+        infoPanel.setPosition(-30, -232);
+        infoPanel.setBackground(generateTextureRegionDrawableObject("info_panel"));
+
+
+
+        Table resourcePanel = new Table();
+        resourcePanel.setSize(410, 400);
+        resourcePanel.setPosition(420, -232);
+        resourcePanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
+
+
 
         Map<String, Integer> inventoryAmounts = inventory.getInventoryAmounts();
+
+        int count = 1;
 
         for (Map.Entry<String, Integer> entry : inventoryAmounts.entrySet()) {
             Image icon = new Image(generateTextureRegionDrawableObject(entry.getKey()));
             icon.setSize(50, 50);
-            icon.setPosition(50, 50);
-            bar.addActor(icon);
+            icon.setPosition(count * 70, 300);
+            resourcePanel.addActor(icon);
+            count ++;
         }
 
+        Table content = new Table();
+        content.addActor(infoBar);
+        content.addActor(infoPanel);
+        content.addActor(resourcePanel);
+        content.addActor(exit);
+        inventoryTable.add(content).width(800).colspan(3).fillX();
 
         this.inventoryTable = inventoryTable;
     }

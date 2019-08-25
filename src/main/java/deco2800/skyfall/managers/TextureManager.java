@@ -169,6 +169,11 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("Stone", new Texture("resources/temp_stone.png"));
             textureMap.put("Wood", new Texture("resources/temp_wood.png"));
+            textureMap.put("menu_panel", new Texture("resources/menu_panel.png"));
+            textureMap.put("info_panel", new Texture("resources/info_panel.png"));
+            textureMap.put("exit", new Texture("resources/exit.png"));
+            textureMap.put("inv_button", new Texture("resources/inv_button.png"));
+
 
 
         } catch (Exception e) {
