@@ -397,7 +397,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     @Override
     public void notifyKeyUp(int keycode) {
-        movingAnimation = AnimationRole.NULL;
+        //movingAnimation = AnimationRole.NULL;
         switch(keycode){
             case Input.Keys.W:
                 MOVE_UP = false;
