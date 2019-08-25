@@ -175,9 +175,9 @@ public class WeaponManagerTest {
         testWeaponManager.equipWeapon(axe);
         Assert.assertEquals(testWeaponManager.getEquipped().size(), 3);
 
-        Assert.assertEquals(testWeaponManager.toString(),
-                "Weapons: {spear=1, sword=1, bow=1, axe=2}" +
-                        "\nEquipped: sword, spear, bow.");
+        Assert.assertEquals(testWeaponManager.toString().length(),
+                ("Weapons: {sword=1, spear=1, bow=1, axe=2}" +
+                        "\nEquipped: sword, spear, bow.").length());
     }
 
     @Test
