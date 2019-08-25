@@ -239,10 +239,9 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * @param tiles The list of tiles to assign
      */
     public static void assignTiles(List<WorldGenNode> nodes, List<Tile> tiles, Random random, int nodeSpacing) {
-
         int startPeriod = nodeSpacing * 2;
         int octaves = (int) Math.ceil(Math.log(startPeriod) / Math.log(2));
-        double attenuation = Math.pow(1.5, 1d / octaves);
+        double attenuation = Math.pow(1.3, 1d / octaves);
 
         NoiseGenerator xGen = new NoiseGenerator(random, octaves, startPeriod, attenuation);
         NoiseGenerator yGen = new NoiseGenerator(random,  octaves, startPeriod, attenuation);
@@ -261,8 +260,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
             // Find the index of the node with the node with one of the nearest
             // Y values (note, if there is no node with the exact Y value, it)
             // Can choose the node on either side, not the strictly closest one
-            int nearestIndex = binarySearch((double) tileY, nodes, 0,
-                                            nodes.size() - 1);
+            int nearestIndex = binarySearch(tileY, nodes, 0, nodes.size() - 1);
             boolean lowerLimitFound = false;
             boolean upperLimitFound = false;
             // Store the minimum distance to a node, and the index of that node

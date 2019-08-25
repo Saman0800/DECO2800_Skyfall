@@ -332,12 +332,10 @@ public class BiomeGenerator {
         // TODO Deal with sub-biomes.
 
         HashSet<Tile> removedTiles = new HashSet<>();
-        // ArrayList<Tile> borderTiles = new ArrayList<>();
 
         for (AbstractBiome biome : realBiomes) {
             HashSet<Tile> biomeUncheckedTiles = new HashSet<>(biome.getTiles());
             ArrayList<Tile> mainClusterTiles = new ArrayList<>();
-            // ArrayList<Tile> mainClusterBorderTiles = new ArrayList<>();
             int mainClusterSize = 0;
 
             while (!biomeUncheckedTiles.isEmpty()) {
@@ -348,7 +346,6 @@ public class BiomeGenerator {
 
                 ArrayDeque<Tile> clusterCheckQueue = new ArrayDeque<>();
                 ArrayList<Tile> clusterTiles = new ArrayList<>();
-                // ArrayList<Tile> clusterBorderTiles = new ArrayList<>();
 
                 // Just take some unchecked tile.
                 Tile clusterStart = biomeUncheckedTiles.iterator().next();
@@ -362,17 +359,13 @@ public class BiomeGenerator {
                     clusterTiles.add(expandFrom);
                     clusterSize++;
 
-                    boolean addedToBorder = false;
                     for (Tile neighbour : expandFrom.getNeighbours().values()) {
                         if (neighbour.getBiome() == biome) {
                             if (biomeUncheckedTiles.contains(neighbour)) {
                                 clusterCheckQueue.add(neighbour);
                                 biomeUncheckedTiles.remove(neighbour);
                             }
-                        } /*else if (!addedToBorder) {
-                            clusterBorderTiles.add(expandFrom);
-                            addedToBorder = true;
-                        }*/
+                        }
                     }
                 }
 
@@ -380,7 +373,6 @@ public class BiomeGenerator {
                     removedTiles.addAll(mainClusterTiles);
 
                     mainClusterTiles = clusterTiles;
-                    // mainClusterBorderTiles = clusterBorderTiles;
                     mainClusterSize = clusterSize;
                 } else {
                     removedTiles.addAll(clusterTiles);
@@ -390,11 +382,8 @@ public class BiomeGenerator {
             if (mainClusterSize < biome.getTiles().size() * CONTIGUOUS_TILE_RETENTION_THRESHOLD) {
                 throw new DeadEndGenerationException();
             }
-
-            //borderTiles.addAll(mainClusterBorderTiles);
         }
 
-        // borderTiles.removeIf(tile -> tile.getNeighbours().values().stream().noneMatch(removedTiles::contains));
         ArrayList<Tile> borderTiles = new ArrayList<>();
         for (Tile tile : removedTiles) {
             for (Tile neighbour : tile.getNeighbours().values()) {
