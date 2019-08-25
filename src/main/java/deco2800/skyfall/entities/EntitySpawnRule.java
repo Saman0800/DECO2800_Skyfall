@@ -24,6 +24,12 @@ public class EntitySpawnRule {
     private AbstractBiome biome = null;
     // The default spawn controller is just an identity map
     private SpawnControl map = (double x) -> x;
+    // A boolean value that if true limits the amount of entities spawning
+    // next to each other.
+    private boolean limitAdjacent = false;
+    // A parameter to adjust spawning of adjacent entities when limitAdjacent
+    // is set to true
+    private double limitAdjacentValue = 4.0;
 
     /**
      * Sets spawn rule based on chance. This distributes the entities in a uniform
@@ -36,7 +42,7 @@ public class EntitySpawnRule {
     }
 
     /**
-     * creates spawn rule based on min max distribution will be ~U(min, max)
+     * Creates spawn rule based on min max distribution will be ~U(min, max)
      * 
      * @param min minimum number of entities to spawn into the world inclusive
      * @param max maximum number of entities to spawn into the world inclusive
@@ -48,7 +54,7 @@ public class EntitySpawnRule {
     }
 
     /**
-     * creates spawn rule based on chance, but will strictly enforce min and max
+     * Creates spawn rule based on chance, but will strictly enforce min and max
      * values probability will be but guaranteed at least min and no more than max
      * 
      * @param min minimum number of entities to spawn into the world inclusive
@@ -60,6 +66,12 @@ public class EntitySpawnRule {
         setMax(max);
     }
 
+    /**
+     * A constructor for the EntitySpawnRule.
+     * 
+     * @param chance The chance that a tile will uniformly be placed on a tile.
+     * @param biome  The biome the tile will be placed in.
+     */
     public EntitySpawnRule(double chance, AbstractBiome biome) {
         this.chance = chance;
         this.biome = biome;
@@ -70,11 +82,29 @@ public class EntitySpawnRule {
         this.biome = biome;
     }
 
+    /**
+     * A constructor for the EntitySpawnRule.
+     * 
+     * @param biome     The biome the tile will be placed in.
+     * @param usePerlin A boolean value to dictate if the perlin noise value of the
+     *                  tile is to used to determine the likeliness of a entity to
+     *                  be placed down on a tile.
+     */
     public EntitySpawnRule(AbstractBiome biome, boolean usePerlin) {
         this.biome = biome;
         this.usePerlin = usePerlin;
     }
 
+    /**
+     * A constructor for the EntitySpawnRule.
+     * 
+     * @param biome     The biome the tile will be placed in.
+     * @param usePerlin A boolean value to dictate if the perlin noise value of the
+     *                  tile is to used to determine the likeliness of a entity to
+     *                  be placed down on a tile.
+     * @param map       A lambda experssion to adjust the perlin noise value when
+     *                  using it as the likeliness to spawn an entity
+     */
     public EntitySpawnRule(AbstractBiome biome, boolean usePerlin, SpawnControl map) {
         this(biome, usePerlin);
         this.map = map;
@@ -116,7 +146,7 @@ public class EntitySpawnRule {
     }
 
     /**
-     * @param min This minimum is inclusive and stricty enforced
+     * @param min This minimum is inclusive and strictly enforced
      */
     public void setMin(int min) {
         this.min = min;
@@ -131,7 +161,7 @@ public class EntitySpawnRule {
     }
 
     /**
-     * @param max This maximum is inclusive and stricty enforced
+     * @param max This maximum is inclusive and strictly enforced
      */
     public void setMax(int max) {
         this.max = max;
@@ -147,5 +177,21 @@ public class EntitySpawnRule {
 
     public SpawnControl getAdjustMap() {
         return this.map;
+    }
+
+    public boolean getLimitAdjacent() {
+        return this.limitAdjacent;
+    }
+
+    public void setLimitAdjacent(boolean limitAdjacent) {
+        this.limitAdjacent = limitAdjacent;
+    }
+
+    public double getLimitAdjacentValue() {
+        return this.limitAdjacentValue;
+    }
+
+    public void setLimitAdjacentValue(double limitAdjacentValue) {
+        this.limitAdjacentValue = limitAdjacentValue;
     }
 }

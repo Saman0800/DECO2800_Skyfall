@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Date;
 
+import java.lang.Math;
+
 /**
  * Manages spawn tabling (randomly placing items into the world) Uses
  * EntitySpawnRule for precise spawning however, simpler methods exist that will
@@ -35,6 +37,24 @@ public class EntitySpawnTable {
     }
 
     /**
+     * Adjusts the chance of an entity spawning based on the number of neighbors the
+     * tile already has.
+     * 
+     * @param rule          The EntitySpawn that holds the characteristics of the
+     *                      placement of the static entity
+     * @param tile          The tile the new entity will occupy
+     * @param currentChance The current chance the entity has of spawning on the
+     *                      tile
+     */
+    private static double adjustChanceAdjacent(EntitySpawnRule rule, Tile nextTile, double currentChance) {
+
+        double adjustmentFactor = Math.pow(rule.getLimitAdjacentValue(), (double) nextTile.getNeighbourObstructCount());
+
+        return currentChance / adjustmentFactor;
+
+    }
+
+    /**
      * Places down a entity uniformly into the world.
      * 
      * @param <T>      T must extend StaticEntity and have .newInstance inherited
@@ -50,6 +70,10 @@ public class EntitySpawnTable {
 
         AbstractWorld world = GameManager.get().getWorld();
         double chance = rule.getChance();
+
+        if (rule.getLimitAdjacent()) {
+            chance = adjustChanceAdjacent(rule, nextTile, chance);
+        }
 
         if ((randGen.nextDouble() < chance)) {
             T newEntity = (T) entity.newInstance(nextTile);
@@ -79,6 +103,10 @@ public class EntitySpawnTable {
         AbstractWorld world = GameManager.get().getWorld();
         SpawnControl perlinMap = rule.getAdjustMap();
         double adjustedProb = perlinMap.probabilityMap(nextTile.getPerlinValue());
+
+        if (rule.getLimitAdjacent()) {
+            adjustedProb = adjustChanceAdjacent(rule, nextTile, adjustedProb);
+        }
 
         if (randGen.nextDouble() < adjustedProb) {
             T newEntity = (T) entity.newInstance(nextTile);

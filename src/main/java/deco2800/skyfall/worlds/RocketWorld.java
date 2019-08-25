@@ -146,6 +146,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
                     // EntitySpawnRule newRule = EntitySpawnRule(0.1);
                     EntitySpawnRule treeRule = new EntitySpawnRule(biome, true, pieceWise);
+                    treeRule.setLimitAdjacent(true);
                     EntitySpawnTable.spawnEntities(startTree, treeRule);
 
                     EntitySpawnRule grassRule = new EntitySpawnRule(0.05, biome);
