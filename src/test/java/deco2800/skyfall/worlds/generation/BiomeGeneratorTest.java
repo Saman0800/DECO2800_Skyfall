@@ -34,12 +34,12 @@ public class BiomeGeneratorTest {
         biomeNodesList = new ArrayList<>(TEST_COUNT);
 
         for (int i = 0; i < TEST_COUNT; i++) {
-            outer: while (true) {
+            while (true) {
                 ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
 
                 int nodeCount = Math.round((float) WORLD_SIZE * WORLD_SIZE * 4 / NODE_SPACING / NODE_SPACING);
 
-                for (int k = 0; k < nodeCount; k++) {
+                for (int j = 0; j < nodeCount; j++) {
                     // Sets coordinates to a random number from -WORLD_SIZE to WORLD_SIZE
                     float x = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
                     float y = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
@@ -68,15 +68,6 @@ public class BiomeGeneratorTest {
 
                 generateTileNeighbours(tiles);
 
-                // Creates and stores tiles at the exact locations of nodes, ensuring that every node has a tile in it
-                // by which to identify its biome.
-                HashSet<Tile> nodePointTiles = new HashSet<>();
-                for (WorldGenNode node : worldGenNodes) {
-                    Tile tile = new Tile((float) node.getX(), (float) node.getY());
-                    nodePointTiles.add(tile);
-                    tiles.add(tile);
-                }
-
                 try {
                     WorldGenNode.assignTiles(worldGenNodes, tiles, random, NODE_SPACING);
                     WorldGenNode.removeZeroTileNodes(worldGenNodes, WORLD_SIZE);
@@ -99,25 +90,12 @@ public class BiomeGeneratorTest {
 
                 // Determine which nodes are in which biomes by checking a single tile inside each node and getting its
                 // biome.
-                ArrayList<ArrayList<WorldGenNode>> biomeNodes = new ArrayList<>();
+                ArrayList<ArrayList<WorldGenNode>> biomeNodes = new ArrayList<>(NODE_COUNTS.length + 1);
                 for (int j = 0; j < NODE_COUNTS.length + 1; j++) {
                     biomeNodes.add(new ArrayList<>());
                 }
                 for (WorldGenNode node : worldGenNodes) {
-                    List<Tile> nodeTiles = node.getTiles();
-                    // This should basically never happen, but it's probably possible for the imprecision of floating-
-                    // point numbers to cause no tiles to be in a node, despite the existance of nodePointTiles. Restart if
-                    // this happens.
-                    if (nodeTiles.size() == 0) {
-                        continue outer;
-                    }
-                    // Add the node to the corresponding biome node list.
-                    biomeNodes.get(biomes.indexOf(nodeTiles.get(0).getBiome())).add(node);
-                    nodeTiles.removeIf(nodePointTiles::contains);
-                }
-
-                for (AbstractBiome biome : biomes) {
-                    biome.getTiles().removeIf(nodePointTiles::contains);
+                    biomeNodes.get(biomes.indexOf(node.getTiles().get(0).getBiome())).add(node);
                 }
 
                 biomeLists.add(biomes);
@@ -135,7 +113,7 @@ public class BiomeGeneratorTest {
     }
 
     @Test
-    @Ignore("This test almost always passes, but can fail due to issue #99.")
+    // @Ignore("This test almost always passes, but can fail due to issue #99.")
     public void testTileContiguity() {
         for (ArrayList<AbstractBiome> biomes : biomeLists) {
             for (AbstractBiome biome : biomes) {

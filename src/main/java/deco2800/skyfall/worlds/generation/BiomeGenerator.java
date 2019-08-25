@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
  * Builds biomes from the nodes generated in the previous phase of the world generation.
  */
 public class BiomeGenerator {
+    private static final double CONTIGUOUS_TILE_RETENTION_THRESHOLD = 0.75;
+
     /** The `Random` instance being used for world generation. */
     private final Random random;
 
@@ -55,6 +57,7 @@ public class BiomeGenerator {
             throws NotEnoughPointsException, DeadEndGenerationException {
         BiomeGenerator biomeGenerator = new BiomeGenerator(nodes, random, biomeSizes, biomes, noLakes, lakeSize);
         biomeGenerator.generateBiomesInternal();
+
     }
 
     /**
@@ -136,6 +139,7 @@ public class BiomeGenerator {
                 fillGaps();
                 generateLakes(lakeSize, noLakes);
                 populateRealBiomes();
+                ensureContiguity();
 
                 return;
             } catch (DeadEndGenerationException e) {
@@ -319,6 +323,114 @@ public class BiomeGenerator {
     }
 
     /**
+     * Ensures that biomes are contiguous. For small non-contiguous groups of tiles, they are just removed, but for
+     * large groups, the generation must be restarted, as the biome size could lose too many tiles.
+     *
+     * @throws DeadEndGenerationException if too many tiles from a biome are lost
+     */
+    private void ensureContiguity() throws DeadEndGenerationException {
+        // TODO Deal with sub-biomes.
+
+        HashSet<Tile> removedTiles = new HashSet<>();
+        // ArrayList<Tile> borderTiles = new ArrayList<>();
+
+        for (AbstractBiome biome : realBiomes) {
+            HashSet<Tile> biomeUncheckedTiles = new HashSet<>(biome.getTiles());
+            ArrayList<Tile> mainClusterTiles = new ArrayList<>();
+            // ArrayList<Tile> mainClusterBorderTiles = new ArrayList<>();
+            int mainClusterSize = 0;
+
+            while (!biomeUncheckedTiles.isEmpty()) {
+                if (biomeUncheckedTiles.size() < mainClusterSize) {
+                    removedTiles.addAll(biomeUncheckedTiles);
+                    break;
+                }
+
+                ArrayDeque<Tile> clusterCheckQueue = new ArrayDeque<>();
+                ArrayList<Tile> clusterTiles = new ArrayList<>();
+                // ArrayList<Tile> clusterBorderTiles = new ArrayList<>();
+
+                // Just take some unchecked tile.
+                Tile clusterStart = biomeUncheckedTiles.iterator().next();
+                biomeUncheckedTiles.remove(clusterStart);
+
+                clusterCheckQueue.add(clusterStart);
+                int clusterSize = 0;
+
+                while (!clusterCheckQueue.isEmpty()) {
+                    Tile expandFrom = clusterCheckQueue.remove();
+                    clusterTiles.add(expandFrom);
+                    clusterSize++;
+
+                    boolean addedToBorder = false;
+                    for (Tile neighbour : expandFrom.getNeighbours().values()) {
+                        if (neighbour.getBiome() == biome) {
+                            if (biomeUncheckedTiles.contains(neighbour)) {
+                                clusterCheckQueue.add(neighbour);
+                                biomeUncheckedTiles.remove(neighbour);
+                            }
+                        } /*else if (!addedToBorder) {
+                            clusterBorderTiles.add(expandFrom);
+                            addedToBorder = true;
+                        }*/
+                    }
+                }
+
+                if (clusterSize > mainClusterSize) {
+                    removedTiles.addAll(mainClusterTiles);
+
+                    mainClusterTiles = clusterTiles;
+                    // mainClusterBorderTiles = clusterBorderTiles;
+                    mainClusterSize = clusterSize;
+                } else {
+                    removedTiles.addAll(clusterTiles);
+                }
+            }
+
+            if (mainClusterSize < biome.getTiles().size() * CONTIGUOUS_TILE_RETENTION_THRESHOLD) {
+                throw new DeadEndGenerationException();
+            }
+
+            //borderTiles.addAll(mainClusterBorderTiles);
+        }
+
+        // borderTiles.removeIf(tile -> tile.getNeighbours().values().stream().noneMatch(removedTiles::contains));
+        ArrayList<Tile> borderTiles = new ArrayList<>();
+        for (Tile tile : removedTiles) {
+            for (Tile neighbour : tile.getNeighbours().values()) {
+                if (!removedTiles.contains(neighbour) && !borderTiles.contains(neighbour)) {
+                    borderTiles.add(neighbour);
+                }
+            }
+        }
+
+        while (!removedTiles.isEmpty()) {
+            Tile expandFrom = borderTiles.get(random.nextInt(borderTiles.size()));
+            ArrayList<Tile> expandToCandidates = expandFrom.getNeighbours().values().stream()
+                    .filter(removedTiles::contains)
+                    .collect(Collectors.toCollection(ArrayList::new));
+            // TODO `expandToCandidates` can be empty; fix this.
+            Tile expandTo = expandToCandidates.get(random.nextInt(expandToCandidates.size()));
+
+            expandFrom.getBiome().addTile(expandTo);
+            removedTiles.remove(expandTo);
+
+            if (expandTo.getNeighbours().values().stream().anyMatch(removedTiles::contains)) {
+                borderTiles.add(expandTo);
+            }
+
+            for (Tile neighbour : expandTo.getNeighbours().values()) {
+                if (neighbour.getNeighbours().values().stream().noneMatch(removedTiles::contains)) {
+                    borderTiles.remove(neighbour);
+                }
+            }
+        }
+
+        // TODO Remove.
+        assert borderTiles.isEmpty();
+    }
+
+    /**
      * Returns whether the node is adjacent to any free nodes.
      *
      * @param node the node to check
@@ -387,11 +499,6 @@ public class BiomeGenerator {
 
         /** The nodes on the border of the biome (for growing). */
         ArrayList<WorldGenNode> borderNodes;
-
-        /** The tiles contained within this biome. */
-        ArrayList<Tile> tiles;
-        /** The tiles on the border of the biome (for edge fuzzing/noise). */
-        ArrayList<Tile> edgeTiles;
 
         /**
          * Constructs a new {@code BiomeInProgress} with the specified id.

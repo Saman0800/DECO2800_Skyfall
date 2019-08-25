@@ -87,7 +87,12 @@ public abstract class AbstractWorld {
         }
     }
 
+    // TODO Fix this.
     public void generateNeighbours() {
+        generateNeighbours(tiles);
+    }
+
+    public void generateNeighbours(List<Tile> tiles) {
     //multiply coords by 2 to remove floats
     	Map<Integer, Map<Integer, Tile>> tileMap = new HashMap<>();
 		Map<Integer, Tile> columnMap;
