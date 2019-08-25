@@ -61,7 +61,6 @@ public class TextureManager extends AbstractManager {
                 if (direc.isDirectory()){
                     for (File file : direc.listFiles()){
                         String path = String.format("resources/tile_textures/%s/%s", direc.getName(), file.getName());
-                        System.out.println(path);
                         textureMap.put(file.getName().substring(0, file.getName().length()-4), new Texture(path));
                     }
                 }
@@ -140,9 +139,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("fence_top_left", new Texture("resources/world_structures/fence_top_left.png"));
             textureMap.put("fence_top_right", new Texture("resources/world_structures/fence_top_right.png"));
 
-            for (String key : textureMap.keySet()){
-                System.out.println(key + " " + textureMap.get(key));
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
