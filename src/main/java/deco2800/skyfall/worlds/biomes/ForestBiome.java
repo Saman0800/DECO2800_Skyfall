@@ -38,10 +38,9 @@ public class ForestBiome extends AbstractBiome {
         //Perlin noise generation
         new TileNoiseGenerator(getTiles(), random, 6, 20,0.4, Tile::setPerlinValue);
 
-
         for (Tile tile : getTiles()) {
-
-            int perlinValue = (int) Math.floor(tile.getPerlinValue() * textures.size());
+            int perlinValue = (int) Math.floor(tile.getPerlinValue() * textures.size() + 1e-5);
+            System.out.println(perlinValue);
             tile.setTexture(textures.get(perlinValue < textures.size() ? perlinValue : textures.size() - 1));
 
         }

@@ -11,7 +11,7 @@ import java.util.Random;
  */
 public class NoiseGenerator {
 
-    private static final double NORMALISATION_VALUE = Math.sqrt(2);
+    private static final double NORMALISATION_VALUE = 1;
 
     //The random given, allows for seeding
     private Random random;
@@ -31,6 +31,9 @@ public class NoiseGenerator {
     /** Stores the gradient vectors for the octaves **/
     private ArrayList<double[][][]> gradientVectorSets;
 
+    //
+    private static int[] permutation = { 6, 7, 11, 14, 0, 9, 15, 2, 5, 13, 4, 3, 1, 8, 12, 10 , 6, 7, 11, 14, 0, 9, 15,
+        2, 5, 13, 4, 3, 1, 8, 12, 10};
 
     /**
      * The Constructor used to create a perlin noise generator
@@ -62,33 +65,8 @@ public class NoiseGenerator {
         this.startPeriod = startPeriod;
         this.attenuation = attenuation;
         this.gradientVectorSets = new ArrayList<>();
-        precomputeGradientVectors();
     }
 
-
-    /**
-     * Computes the gradient vectors for each octave
-     */
-    public void precomputeGradientVectors(){
-        for (int octave = 0; octave < octaves; octave++){
-            double period = startPeriod * Math.pow(0.5, octave);
-            gradientVectorSets.add(getGradientVectors(period));
-        }
-    }
-
-
-    /**
-     * Calculates the dot product
-     *
-     * @param x1 Value in vector 1
-     * @param y1 value in vector 1
-     * @param x2 value in vector 2
-     * @param y2 value in vector 2
-     * @return The dot product of two vectors
-     */
-    public double dot(double x1, double y1, double x2, double y2) {
-        return x1 * x2 + y1 * y2;
-    }
 
 
     /**
@@ -113,83 +91,56 @@ public class NoiseGenerator {
         return 6 * Math.pow(x, 5) - 15 * Math.pow(x, 4) + 10 * Math.pow(x, 3);
     }
 
-    /**
-     * Returns a random gradient vector with length 1
-     *
-     * @return A random gradient vector with x as first value and y as second value
-     */
-    public double[] randomVector() {
-        double angle = random.nextDouble() * 2 * Math.PI;
-        double[] gradientVector = new double[2];
-        gradientVector[0] = Math.cos(angle);
-        gradientVector[1] = Math.sin(angle);
-        return gradientVector;
-    }
-
-
-    /**
-     * Creates a 2D array of gradient vectors
-     * More information about this can be found at
-     * <a>https://flafla2.github.io/2014/08/09/perlinnoise.html</a>
-     * @param period The period, a higher values results in slower fading of values,
-     * @return A grid of gradient vectors
-     */
-    public double[][][] getGradientVectors(double period){
-        int gridWidth = (int) Math.ceil(width/period) + 2;
-        int gridHeight = (int) Math.ceil(height/period) + 2;
-
-        double[][][] grid = new double[gridHeight][gridWidth][];
-
-        for (int y = 0; y < gridHeight; y++){
-            for (int x = 0; x < gridWidth; x++){
-                grid[y][x] = randomVector();
-            }
-        }
-        return grid;
-    }
-
 
     /**
      * Gets a perlin value at a certain point
      * @param x The x value
      * @param y The y value
-     * @param gradientVectors A array of gradient vectors calculated with getGradientVectors
      * @param period The period that determines how long it takes to fade between values,
      *               a higher period is a longer fade
      * @return A noise value at the certain point
      */
-    public double getPerlinValue(double x, double y, double[][][] gradientVectors, double period){
-        double xRel = x / period;
-        int xInt = (int) Math.floor(xRel);
-        xRel -= xInt;
+    public double getPerlinValue(double x, double y,  double period){
+//        double xRel = x / period;
+//        int xInt = (int) Math.floor(xRel);
+//        xRel -= xInt;
+        int xInt = (int) Math.floor(x/period) & 15;
+        double xRel = x/period - Math.floor(x/period);
 
-        double yRel = y / period;
-        int yInt = (int) Math.floor(yRel);
-        yRel -= yInt;
+//        double yRel = y / period;
+//        int yInt = (int) Math.floor(yRel);
+//        yRel -= yInt;
+        int yInt = (int) Math.floor(y/period) & 15;
+        double yRel = y/period - Math.floor(y/period);
 
         yRel = fade(yRel);
         xRel = fade(xRel);
 
         try {
-            double[] topLeftGradient = gradientVectors[yInt][xInt];
-            double[] topRightGradient = gradientVectors[yInt][xInt + 1];
-            double[] bottomLeftGradient = gradientVectors[yInt + 1][xInt];
-            double[] bottomRightGradient = gradientVectors[yInt+1][xInt+1];
+            int xy = permutation[permutation[xInt] + yInt];
+            int xpy = permutation[permutation[xInt+1] + yInt];
+            int xyp = permutation[permutation[xInt] + yInt + 1];
+            int xpyp = permutation[permutation[xInt+1] + yInt+1];
 
-            double topLeftContribution = dot(topLeftGradient[0], topLeftGradient[1], xRel, yRel);
-            double topRightContribution = dot(topRightGradient[0], topRightGradient[1], xRel - 1, yRel);
-            double bottomLeftContribution = dot(bottomLeftGradient[0], bottomLeftGradient[1], xRel , yRel - 1);
-            double bottomRightContribution = dot(bottomRightGradient[0], bottomRightGradient[1] , xRel - 1, yRel -1);
+            double xyGrad = determineGradientVector(xRel, yRel, xy);
+            double xpyGrad = determineGradientVector(1 - xRel, yRel, xpy);
+            double xypGrad = determineGradientVector(xRel, 1 - yRel, xyp);
+            double xpypGrad = determineGradientVector(1 - xRel, 1 - yRel, xpyp);
 
-            double topLerp = lerp(topLeftContribution, topRightContribution, xRel);
-            double bottomLerp = lerp(bottomLeftContribution, bottomRightContribution, xRel);
+            double topLerp = lerp(xyGrad, xpyGrad, xRel);
+            double bottomLerp = lerp(xypGrad, xpypGrad, xRel);
 
             double finalLerp = lerp(topLerp, bottomLerp, yRel);
+            double normlerp =  (finalLerp * NORMALISATION_VALUE + 1) / 2;
 
-            return (finalLerp * NORMALISATION_VALUE + 1) / 2;
+            return normlerp;
         } catch (RuntimeException e){
             throw e;
         }
+    }
+
+    private double determineGradientVector(double x, double y, int hash) {
+        return (((1 & hash) != 0) ? x : -x) + (((2 & hash) != 0) ? y : -y);
     }
 
 
@@ -207,21 +158,11 @@ public class NoiseGenerator {
         double attenuationSum = 0;
         for (int octave = 0; octave < octaves; octave++){
             attenuationSum += octaveAttenuation;
-            perlinValue += getPerlinValue(x,y,gradientVectorSets.get(octave), period) * octaveAttenuation;
+            perlinValue += getPerlinValue(x,y, period) * octaveAttenuation;
             period *= 0.5;
             octaveAttenuation *= attenuation;
         }
         return perlinValue / attenuationSum;
     }
-
-
-//    public static double multipleFade(int numOfTimes, double value){
-//
-//        for (int i = 0; i < numOfTimes; i++){
-//
-//        }
-//    }
-
-
 
 }
