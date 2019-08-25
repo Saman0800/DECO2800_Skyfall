@@ -135,6 +135,20 @@ public class MainCharacterTest {
         Assert.assertTrue(testCharacter.isStarving());
     }
 
+    @Test
+    /**
+     * Test that the item properly switches.
+     */
+    public void switchItemTest() {
+        Assert.assertEquals(1,testCharacter.getItemSlotSelected());
+        testCharacter.switchItem(9);
+        Assert.assertEquals(2,testCharacter.getItemSlotSelected());
+        testCharacter.switchItem(10);
+        Assert.assertEquals(3,testCharacter.getItemSlotSelected());
+        testCharacter.switchItem(8);
+        Assert.assertEquals(1,testCharacter.getItemSlotSelected());
+    }
+
     /**
      * Tests movingAnimation
      */

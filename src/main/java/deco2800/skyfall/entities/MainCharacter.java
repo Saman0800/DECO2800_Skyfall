@@ -69,6 +69,15 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private boolean MOVE_DOWN = false;
 
     /**
+     * Used for combat testing melee/range weapons.
+     * What number item slot the player has pressed.
+     * TODO: remove or integrate into item system.
+     * e.g. 1 = test range weapon
+     *      2 = test melee weapon
+     */
+    private int itemSlotSelected = 1;
+
+    /**
      * Private helper method to instantiate inventory and weapon managers for
      * Main Character constructor
      */
@@ -123,6 +132,28 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         this.textures = textures;
         this.setTexture(textures[2]);
+    }
+
+    /**
+     * Switch the item the MainCharacter has equip.
+     * @param keyCode Keycode the player has pressed.
+     */
+    protected void switchItem(int keyCode) {
+
+        //If key is in range of 1-9, accept the input.
+        if (keyCode >= 8 && keyCode <= 16) {
+            int keyNumber = Integer.parseInt(Input.Keys.toString(keyCode));
+            this.itemSlotSelected = keyNumber;
+            System.out.println("Switched to item: " + keyNumber);
+        }
+    }
+
+    /**
+     * Return the currently selected item slot.
+     * @return The item slot the MainCharacter has equip.
+     */
+    public int getItemSlotSelected() {
+        return this.itemSlotSelected;
     }
 
     /**
@@ -425,6 +456,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 break;
             case Input.Keys.D:
                 MOVE_RIGHT = true;
+                break;
+            default:
+                switchItem(keycode);
                 break;
         }
     }
