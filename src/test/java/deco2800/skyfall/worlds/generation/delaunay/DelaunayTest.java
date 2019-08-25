@@ -106,7 +106,7 @@ public class DelaunayTest {
 
         int nodeCount = 200;
         int worldSize = 500;
-        Random random = new Random();
+        Random random = new Random(0);
 
         List<WorldGenNode> nodes = new ArrayList<>();
         for (int i = 0; i < nodeCount; i++) {
@@ -151,8 +151,8 @@ public class DelaunayTest {
         // (method has O(nodeCount*worldSize^2) time complexity)
         int nodeSpacing = 27;
         int worldSize = 30;
-        int nodeCount = Math.round((float) worldSize * worldSize * 4 / nodeSpacing * nodeSpacing);
-        Random random = new Random();
+        int nodeCount = Math.round((float) worldSize * worldSize * 4 / nodeSpacing / nodeSpacing);
+        Random random = new Random(0);
 
         List<WorldGenNode> nodes = new ArrayList<>();
         List<Tile> tiles = new ArrayList<>();
@@ -183,27 +183,15 @@ public class DelaunayTest {
         WorldGenNode.assignTiles(nodes, tiles, noiseRandom1, nodeSpacing);
 
         Random noiseRandom2 = new Random(noiseSeed);
-        float minX = Float.POSITIVE_INFINITY;
-        float maxX = Float.NEGATIVE_INFINITY;
-        float minY = Float.POSITIVE_INFINITY;
-        float maxY = Float.NEGATIVE_INFINITY;
-        for (Tile tile : tiles) {
-            minX = Math.min(tile.getCol(), minX);
-            maxX = Math.max(tile.getCol(), maxX);
-            minY = Math.min(tile.getRow(), minY);
-            maxY = Math.max(tile.getRow(), maxY);
-        }
         int startPeriod = nodeSpacing * 2;
         int octaves = (int) Math.ceil(Math.log(startPeriod) / Math.log(2));
-        double attenuation = Math.pow(1.5, 1 / octaves);
+        double attenuation = Math.pow(1.5, 1d / octaves);
         NoiseGenerator xGen = new NoiseGenerator(noiseRandom2, octaves, startPeriod, attenuation);
         NoiseGenerator yGen = new NoiseGenerator(noiseRandom2, octaves, startPeriod, attenuation);
 
         // Check that nodes are sorted
         for (int i = 0; i < nodes.size() - 1; i++) {
-            if (nodes.get(i).getY() > nodes.get(i + 1).getY()) {
-                fail();
-            }
+            assertTrue(nodes.get(i).getY() <= nodes.get(i + 1).getY());
         }
 
         for (Tile tile : tiles) {
@@ -211,13 +199,11 @@ public class DelaunayTest {
             int index = 0;
 
             double tileX = tile.getCol() +
-                    xGen.getOctavedPerlinValue(tile.getCol() + worldSize, tile.getRow() + worldSize) *
+                    xGen.getOctavedPerlinValue(tile.getCol(), tile.getRow()) *
                             (double) nodeSpacing - (double) nodeSpacing / 2;
-            ;
             double tileY = tile.getRow() +
-                    yGen.getOctavedPerlinValue(tile.getCol() + worldSize, tile.getRow() + worldSize) *
+                    yGen.getOctavedPerlinValue(tile.getCol(), tile.getRow()) *
                             (double) nodeSpacing - (double) nodeSpacing / 2;
-            ;
 
             // Find the closest node
             for (int i = 0; i < nodes.size(); i++) {

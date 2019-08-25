@@ -13,6 +13,7 @@ import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.biomes.*;
 import deco2800.skyfall.worlds.generation.BiomeGenerator;
+import deco2800.skyfall.worlds.generation.DeadEndGenerationException;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
@@ -87,7 +88,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
             try {
                 BiomeGenerator.generateBiomes(worldGenNodes, random, biomeSizes, biomes, numOfLakes, lakeSize);
-            } catch (NotEnoughPointsException e) {
+            } catch (NotEnoughPointsException | DeadEndGenerationException e) {
                 continue;
             }
 

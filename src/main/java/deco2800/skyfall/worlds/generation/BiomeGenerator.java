@@ -52,7 +52,7 @@ public class BiomeGenerator {
 
     public static void generateBiomes(List<WorldGenNode> nodes, Random random, int[] biomeSizes,
                                       List<AbstractBiome> biomes, int noLakes, int lakeSize)
-            throws NotEnoughPointsException {
+            throws NotEnoughPointsException, DeadEndGenerationException {
         BiomeGenerator biomeGenerator = new BiomeGenerator(nodes, random, biomeSizes, biomes, noLakes, lakeSize);
         biomeGenerator.generateBiomesInternal();
     }
@@ -121,8 +121,8 @@ public class BiomeGenerator {
     /**
      * Runs the generation process.
      */
-    private void generateBiomesInternal() {
-        while (true) {
+    private void generateBiomesInternal() throws DeadEndGenerationException {
+        for (int i = 0;; i++) {
             try {
                 biomes = new ArrayList<>(biomeSizes.length + 1);
                 usedNodes = new HashSet<>(nodes.size());
@@ -138,8 +138,11 @@ public class BiomeGenerator {
                 populateRealBiomes();
 
                 return;
-            } catch (DeadEndGenerationException ignored) {
+            } catch (DeadEndGenerationException e) {
                 // If the generation reached a dead-end, try again.
+                if (i >= 5) {
+                    throw e;
+                }
             }
         }
     }

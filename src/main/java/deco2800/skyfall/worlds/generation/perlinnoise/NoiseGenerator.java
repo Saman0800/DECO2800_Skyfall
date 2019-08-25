@@ -23,23 +23,20 @@ public class NoiseGenerator {
     private int  octaves;
     /**
      * startPeriod - The initial period, determines how long it takes to transition from one value to another
-     * attenuation - Determines how important the octaves are, the higher this value the more sporatic the generated
+     * attenuation - Determines how important the octaves are, the higher this value the more sporadic the generated
      * values will be
      */
     private double startPeriod, attenuation;
     /** Stores the gradient vectors for the octaves **/
 
-    //TODO randomise the order of this each time
     private int[] permutation = new int[512];
-
-
 
     /**
      * The Constructor used to create a perlin noise generator
      * @param random The random number generator, allows for seeding
      * @param octaves The number of sets of perlin values that will be generated and than combined. The higher the value
      *                The more small details and anomlies in the world there will and there more perceived realism
-     *                world will have, as it will have small bits of chaos
+     *                world will have, as it will have small bits of chaos.
      * @param startPeriod The intial period, the higher the value the longer it will take to go from one value to another
      * @param attenuation The weight of the octaves, the higher the value the more sporatic the land will be when there
      *                    are many octaves
@@ -76,7 +73,6 @@ public class NoiseGenerator {
         this.octaves = octaves;
         this.startPeriod = startPeriod;
         this.attenuation = attenuation;
-
     }
 
 
@@ -100,7 +96,6 @@ public class NoiseGenerator {
      * @return The smoothed value
      */
     public static double fade(double x) {
-        // return 6 * Math.pow(x, 5) - 15 * Math.pow(x, 4) + 10 * Math.pow(x, 3);
         return x * x * x * (x * (x * 6 - 15) + 10);
     }
 
@@ -113,7 +108,7 @@ public class NoiseGenerator {
      *               a higher period is a longer fade
      * @return A noise value at the certain point
      */
-    public double getPerlinValue(double x, double y,  double period){
+    public double getPerlinValue(double x, double y, double period){
         int xInt = (int) Math.floor(x/period) & 255;
         double xRel = x/period - Math.floor(x/period);
 
@@ -167,6 +162,10 @@ public class NoiseGenerator {
             perlinValue += getPerlinValue(x,y, period) * octaveAttenuation;
             period *= 0.5;
             octaveAttenuation *= attenuation;
+        }
+        if (attenuationSum <= 0){
+            throw new IllegalStateException("Some input value has caused the attenuationSum to be less or equal to zero,"
+                + " this was likely caused by attenuation or number of octaves being an invalid value.");
         }
         return perlinValue / attenuationSum;
     }

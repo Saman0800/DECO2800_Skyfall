@@ -66,11 +66,13 @@ public abstract class AbstractWorld {
 //        worldGenNodes = new CopyOnWriteArrayList<>();
         biomes = new ArrayList<>();
 
+        long startTime = System.nanoTime();
     	generateWorld(random);
         generateNeighbours();
     	generateTileIndexes();
 
     	generateTileTypes(random);
+    	System.out.println((System.nanoTime()-startTime)/1000000);
     }
     
     protected abstract void generateWorld(Random random);

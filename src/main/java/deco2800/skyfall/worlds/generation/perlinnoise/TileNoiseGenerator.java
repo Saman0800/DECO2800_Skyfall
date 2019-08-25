@@ -57,8 +57,6 @@ public class TileNoiseGenerator {
         fadeNoiseValues();
     }
 
-
-
     /**
      * Assigns each tile a perlin noise value
      */

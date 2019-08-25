@@ -28,7 +28,7 @@ public class BiomeGeneratorTest {
 
     @BeforeClass
     public static void setup() {
-        Random random = new Random();
+        Random random = new Random(0);
 
         biomeLists = new ArrayList<>(TEST_COUNT);
         biomeNodesList = new ArrayList<>(TEST_COUNT);
@@ -37,7 +37,7 @@ public class BiomeGeneratorTest {
             outer: while (true) {
                 ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
 
-                int nodeCount = Math.round((float) WORLD_SIZE * WORLD_SIZE * 4 / NODE_SPACING * NODE_SPACING);
+                int nodeCount = Math.round((float) WORLD_SIZE * WORLD_SIZE * 4 / NODE_SPACING / NODE_SPACING);
 
                 for (int k = 0; k < nodeCount; k++) {
                     // Sets coordinates to a random number from -WORLD_SIZE to WORLD_SIZE
@@ -93,7 +93,7 @@ public class BiomeGeneratorTest {
 
                 try {
                     BiomeGenerator.generateBiomes(worldGenNodes, random, NODE_COUNTS, biomes, 0, 0);
-                } catch (NotEnoughPointsException e) {
+                } catch (NotEnoughPointsException | DeadEndGenerationException e) {
                     continue;
                 }
 
