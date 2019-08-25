@@ -3,6 +3,7 @@ package deco2800.skyfall.worlds.generation.perlinnoise;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Used to allow for generation of perlin noise value for coordinates
@@ -16,12 +17,10 @@ public class NoiseGenerator {
     //The random given, allows for seeding
     private Random random;
     /**
-     * Width - The width of the generation
-     * Height - The height of the generation
      * octaves - The number of octaves generated and then combined, the higher the value the more
      * sporatic the noise values will be
      */
-    private int width, height, octaves;
+    private int  octaves;
     /**
      * startPeriod - The initial period, determines how long it takes to transition from one value to another
      * attenuation - Determines how important the octaves are, the higher this value the more sporatic the generated
@@ -29,17 +28,15 @@ public class NoiseGenerator {
      */
     private double startPeriod, attenuation;
     /** Stores the gradient vectors for the octaves **/
-    private ArrayList<double[][][]> gradientVectorSets;
 
-    //
-    private static int[] permutation = { 6, 7, 11, 14, 0, 9, 15, 2, 5, 13, 4, 3, 1, 8, 12, 10 , 6, 7, 11, 14, 0, 9, 15,
-        2, 5, 13, 4, 3, 1, 8, 12, 10};
+    //TODO randomise the order of this each time
+    private int[] permutation = new int[512];
+
+
 
     /**
      * The Constructor used to create a perlin noise generator
      * @param random The random number generator, allows for seeding
-     * @param width The width of the set of perlin values generated
-     * @param height The height of the set of perlin values generated
      * @param octaves The number of sets of perlin values that will be generated and than combined. The higher the value
      *                The more small details and anomlies in the world there will and there more perceived realism
      *                world will have, as it will have small bits of chaos
@@ -47,11 +44,8 @@ public class NoiseGenerator {
      * @param attenuation The weight of the octaves, the higher the value the more sporatic the land will be when there
      *                    are many octaves
      */
-    public NoiseGenerator(Random random, int width, int height, int octaves, double startPeriod,
-        double attenuation) {
+    public NoiseGenerator(Random random,   int octaves, double startPeriod, double attenuation) {
         this.random = random;
-        this.width = width;
-        this.height = height;
         if (octaves < 1){
             throw new IllegalArgumentException("The number of octaves must be greater than 0");
         }
@@ -61,10 +55,28 @@ public class NoiseGenerator {
         if (startPeriod <= 0){
             throw new IllegalArgumentException("The startPeriod must be greater than 0");
         }
+
+        //Adding 0 to 15 to the permutation array
+        for (int i = 0; i < 256; i++) {
+            permutation[i] = i;
+        }
+
+        //Shuffling the permutation array
+        for (int i = 0; i < permutation.length/2; i++){
+            int rand = random.nextInt(permutation.length/2 - i);
+            int temp = permutation[i];
+            permutation[i] = permutation[i + rand];
+            permutation[i + rand] = temp;
+        }
+
+        //Doubling the array
+        System.arraycopy(permutation, 0, permutation, permutation.length/2, permutation.length/2);
+
+
         this.octaves = octaves;
         this.startPeriod = startPeriod;
         this.attenuation = attenuation;
-        this.gradientVectorSets = new ArrayList<>();
+
     }
 
 
@@ -101,16 +113,10 @@ public class NoiseGenerator {
      * @return A noise value at the certain point
      */
     public double getPerlinValue(double x, double y,  double period){
-//        double xRel = x / period;
-//        int xInt = (int) Math.floor(xRel);
-//        xRel -= xInt;
-        int xInt = (int) Math.floor(x/period) & 15;
+        int xInt = (int) Math.floor(x/period) & 255;
         double xRel = x/period - Math.floor(x/period);
 
-//        double yRel = y / period;
-//        int yInt = (int) Math.floor(yRel);
-//        yRel -= yInt;
-        int yInt = (int) Math.floor(y/period) & 15;
+        int yInt = (int) Math.floor(y/period) & 255;
         double yRel = y/period - Math.floor(y/period);
 
         yRel = fade(yRel);

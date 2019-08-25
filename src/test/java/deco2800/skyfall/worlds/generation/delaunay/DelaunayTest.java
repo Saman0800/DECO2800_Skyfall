@@ -193,13 +193,11 @@ public class DelaunayTest {
             minY = Math.min(tile.getRow(), minY);
             maxY = Math.max(tile.getRow(), maxY);
         }
-        int width = (int) Math.ceil(maxX - minX);
-        int height = (int) Math.ceil(maxY - minY);
         int startPeriod = nodeSpacing * 2;
         int octaves = (int) Math.ceil(Math.log(startPeriod) / Math.log(2));
         double attenuation = Math.pow(1.5, 1 / octaves);
-        NoiseGenerator xGen = new NoiseGenerator(noiseRandom2, width, height, octaves, startPeriod, attenuation);
-        NoiseGenerator yGen = new NoiseGenerator(noiseRandom2, width, height, octaves, startPeriod, attenuation);
+        NoiseGenerator xGen = new NoiseGenerator(noiseRandom2, octaves, startPeriod, attenuation);
+        NoiseGenerator yGen = new NoiseGenerator(noiseRandom2, octaves, startPeriod, attenuation);
 
         // Check that nodes are sorted
         for (int i = 0; i < nodes.size() - 1; i++) {

@@ -96,10 +96,6 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             this.tiles.addAll(tiles);
             this.biomes.addAll(biomes);
 
-            System.out.println(tiles.size());
-            for (AbstractBiome biome : biomes) {
-                System.out.println(biome.getTiles().size());
-            }
 
             break;
         }

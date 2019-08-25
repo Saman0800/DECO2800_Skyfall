@@ -256,8 +256,8 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         int octaves = (int) Math.ceil(Math.log(startPeriod) / Math.log(2));
         double attenuation = Math.pow(1.5, 1 / octaves);
 
-        NoiseGenerator xGen = new NoiseGenerator(random, width, height, octaves, startPeriod, attenuation);
-        NoiseGenerator yGen = new NoiseGenerator(random, width, height, octaves, startPeriod, attenuation);
+        NoiseGenerator xGen = new NoiseGenerator(random, octaves, startPeriod, attenuation);
+        NoiseGenerator yGen = new NoiseGenerator(random,  octaves, startPeriod, attenuation);
 
         // Ensure nodes are stored in order of Y value
         nodes.sort(Comparable::compareTo);

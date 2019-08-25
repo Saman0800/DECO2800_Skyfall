@@ -21,7 +21,7 @@ public class TileNoiseGenerator {
      *  normaliseRange - The integer range that the values will be normalised to, from 0 - normaliseRange,
      *  this allows the noise values which are doubles to be much more easily used
      */
-    private int height, width, octaves;
+    private int  octaves;
     /**
      * lowestRow - The lowestRow position that occurs amongst the given tiles
      * lowestCol - The lowestCol position that occurs amongst the given tiles
@@ -60,11 +60,9 @@ public class TileNoiseGenerator {
             throw new IllegalArgumentException("The octaves must be greater than 0");
         }
         this.octaves = octaves;
-        long startTime = System.nanoTime();
         setWidthAndHeight();
         setTilesNoiseValues(setter);
         fadeNoiseValues();
-        System.out.println("Time took : " + (System.nanoTime() - startTime)/1000000);
     }
 
     /**
@@ -82,16 +80,13 @@ public class TileNoiseGenerator {
             highestCol = Math.max(highestCol, tile.getCol());
             highestRow = Math.max(highestRow, tile.getRow());
         }
-
-        height = (int) Math.ceil(highestCol - lowestCol);
-        width = (int) Math.ceil(highestRow - lowestRow);
     }
 
     /**
      * Assigns each tile a perlin noise value
      */
     public void setTilesNoiseValues(BiConsumer<Tile, Double> setter){
-        NoiseGenerator noiseGenerator = new NoiseGenerator(random, width, height, octaves, startPeriod, attenuation);
+        NoiseGenerator noiseGenerator = new NoiseGenerator(random,  octaves, startPeriod, attenuation);
         for (Tile tile : tiles){
             setter.accept(tile, noiseGenerator.getOctavedPerlinValue(tile.getRow() - lowestRow, tile.getCol() - lowestCol));
         }
