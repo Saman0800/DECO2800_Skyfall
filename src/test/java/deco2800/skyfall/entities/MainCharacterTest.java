@@ -13,28 +13,26 @@ import org.junit.After;
 
 public class MainCharacterTest {
 
-    private MainCharacter testCharacter;
-    private Weapon sword;
-    private Weapon spear;
-    private Weapon bow;
-    private Weapon axe;
-
     // MainCharacter being used for testing
+    private MainCharacter testCharacter;
+
     @Before
+    /**
+     * Sets up all variables to be used for testing
+     */
     public void setup() {
         testCharacter = new MainCharacter(0f, 0f,
                 0.05f, "Main Piece", 10);
-
-        // Weapons being used for testing
-        sword = new Weapon("sword", "melee",
-                "slash", 3, 5, 6);
-        spear = new Weapon("spear", "range",
-                "splash", 5, 4, 7);
-        bow = new Weapon("bow", "range",
-                "splash", 4, 3, 10);
-        axe = new Weapon("axe", "melee",
-                "slash", 4, 4, 10);
     }
+
+    @After
+    /**
+     * Sets up all variables to be null after esting
+     */
+    public void tearDown() {
+        testCharacter = null;
+    }
+
     @Test
     /**
      * Test getters and setters from Peon super Character class
@@ -49,27 +47,6 @@ public class MainCharacterTest {
         testCharacter.changeHealth(5);
         Assert.assertEquals(testCharacter.getHealth(), 15);
         testCharacter.changeHealth(-20);
-        Assert.assertEquals(testCharacter.getHealth(), 0);
-        Assert.assertTrue(testCharacter.isDead());
-    }
-
-    @Test
-    /**
-     * Test main character is interacting correctly with basic weapon action
-     */
-    public void weaponTest() {
-        Assert.assertEquals(testCharacter.getWeapons().size(), 0);
-        testCharacter.pickUpWeapon(sword);
-        testCharacter.pickUpWeapon(spear);
-        Assert.assertEquals(testCharacter.getWeapons().size(), 2);
-        testCharacter.dropWeapon(axe);
-        testCharacter.dropWeapon(sword);
-        testCharacter.pickUpWeapon(bow);
-        Assert.assertEquals(testCharacter.getWeapons().size(), 2);
-
-        testCharacter.weaponEffect(sword);
-        testCharacter.weaponEffect(spear);
-        testCharacter.weaponEffect(axe);
         Assert.assertEquals(testCharacter.getHealth(), 0);
         Assert.assertTrue(testCharacter.isDead());
     }
@@ -103,19 +80,19 @@ public class MainCharacterTest {
      * Test main character is interacting correctly with basic inventory action
      */
     public void inventoryTest() {
-        Assert.assertEquals((int)testCharacter.inventories
+        Assert.assertEquals((int)testCharacter.getInventoryManager()
                 .getAmount("Stone"), 2);
-        Assert.assertEquals((int)testCharacter.inventories
+        Assert.assertEquals((int)testCharacter.getInventoryManager()
                 .getAmount("Wood"), 2);
         Stone stone = new Stone();
         testCharacter.pickUpInventory(stone);
-        Assert.assertEquals((int)testCharacter.inventories
+        Assert.assertEquals((int)testCharacter.getInventoryManager()
                 .getAmount("Stone"), 3);
         testCharacter.dropInventory("Stone");
-        Assert.assertEquals((int)testCharacter.inventories
+        Assert.assertEquals((int)testCharacter.getInventoryManager()
                 .getAmount("Stone"), 2);
         pickUpInventoryMultiple(stone, 500);
-        Assert.assertEquals((int)testCharacter.inventories
+        Assert.assertEquals((int)testCharacter.getInventoryManager()
                 .getAmount("Stone"), 502);
         /* Had to change inventory method inventoryDropMultiple
             -   if(amount == num)
@@ -123,9 +100,9 @@ public class MainCharacterTest {
             -   if(amount.equals(num)
             for this to work
         */
-        testCharacter.inventories
+        testCharacter.getInventoryManager()
                 .inventoryDropMultiple("Stone",502);
-        Assert.assertEquals((int)testCharacter.inventories
+        Assert.assertEquals((int)testCharacter.getInventoryManager()
                 .getAmount("Stone"), 0);
     }
 
@@ -158,18 +135,18 @@ public class MainCharacterTest {
         Assert.assertTrue(testCharacter.isStarving());
     }
 
-    //TODO: change these tests as Animation System Changes
-    //These test abstract entity methods
     /**
      * Tests movingAnimation
      */
     @Test
     public void setMovingAnimationTest() {
         testCharacter.setMovingAnimation(AnimationRole.MOVE_NORTH);
-        Assert.assertEquals(AnimationRole.MOVE_NORTH, testCharacter.getMovingAnimation());
+        Assert.assertEquals(AnimationRole.MOVE_NORTH,
+                testCharacter.getMovingAnimation());
 
         testCharacter.setMovingAnimation(AnimationRole.NULL);
-        Assert.assertEquals(AnimationRole.NULL, testCharacter.getMovingAnimation());
+        Assert.assertEquals(AnimationRole.NULL,
+                testCharacter.getMovingAnimation());
 
     }
 
@@ -178,16 +155,8 @@ public class MainCharacterTest {
      */
     @Test
     public void setAndGetAnimationTest() {
-        testCharacter.addAnimations(AnimationRole.MOVE_EAST, "right");
+        testCharacter.addAnimations(AnimationRole.MOVE_EAST,
+                "right");
         testCharacter.getAnimationName(AnimationRole.MOVE_EAST);
-    }
-
-    @After
-    public void cleanup() {
-        testCharacter = null;
-        sword = null;
-        spear = null;
-        bow = null;
-        axe = null;
     }
 }
