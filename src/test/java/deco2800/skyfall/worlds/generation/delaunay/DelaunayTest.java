@@ -151,7 +151,7 @@ public class DelaunayTest {
         // (method has O(nodeCount*worldSize^2) time complexity)
         int nodeSpacing = 27;
         int worldSize = 30;
-        int nodeCount = (int) Math.round(Math.pow((float) worldSize * 2 / (float) nodeSpacing, 2));
+        int nodeCount = Math.round((float) worldSize * worldSize * 4 / nodeSpacing * nodeSpacing);
         Random random = new Random();
 
         List<WorldGenNode> nodes = new ArrayList<>();

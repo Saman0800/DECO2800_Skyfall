@@ -37,8 +37,7 @@ public class BiomeGeneratorTest {
             outer: while (true) {
                 ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
 
-                int nodeCount = (int) Math.round(
-                        Math.pow((float) WORLD_SIZE * 2 / (float) NODE_SPACING, 2));
+                int nodeCount = Math.round((float) WORLD_SIZE * WORLD_SIZE * 4 / NODE_SPACING * NODE_SPACING);
 
                 for (int k = 0; k < nodeCount; k++) {
                     // Sets coordinates to a random number from -WORLD_SIZE to WORLD_SIZE

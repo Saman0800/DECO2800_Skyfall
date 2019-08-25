@@ -13,20 +13,13 @@ import java.util.stream.DoubleStream;
 public class TileNoiseGenerator {
     /** List of the tiles that will have a noise value generated for them **/
     private List<Tile> tiles;
+
     /**
-     *  height - The height of the biome
-     *  width - The width of the biome
      *  octaves - The number of octaves that will be generated, the higher the value the more slight chaos that will introduced,
      *  this will simulate more realistic terrain.
-     *  normaliseRange - The integer range that the values will be normalised to, from 0 - normaliseRange,
-     *  this allows the noise values which are doubles to be much more easily used
      */
     private int  octaves;
-    /**
-     * lowestRow - The lowestRow position that occurs amongst the given tiles
-     * lowestCol - The lowestCol position that occurs amongst the given tiles
-     */
-    private double lowestRow, lowestCol;
+
     /**
      * startPeriod - The initial period, the higher this value the longer it will take to go from one value to another
      * , this results in textures occurring for larger periods when the value is larger
@@ -60,27 +53,11 @@ public class TileNoiseGenerator {
             throw new IllegalArgumentException("The octaves must be greater than 0");
         }
         this.octaves = octaves;
-        setWidthAndHeight();
         setTilesNoiseValues(setter);
         fadeNoiseValues();
     }
 
-    /**
-     * Finds the width,height, lowestCol, and lowestRow values
-     */
-    public void setWidthAndHeight(){
 
-        lowestCol = tiles.get(0).getCol();
-        lowestRow = tiles.get(0).getRow();
-        double highestCol = tiles.get(0).getCol();
-        double highestRow = tiles.get(0).getRow();
-        for (Tile tile : tiles){
-            lowestCol = Math.min(lowestCol, tile.getCol());
-            lowestRow = Math.min(lowestRow, tile.getRow());
-            highestCol = Math.max(highestCol, tile.getCol());
-            highestRow = Math.max(highestRow, tile.getRow());
-        }
-    }
 
     /**
      * Assigns each tile a perlin noise value
@@ -88,7 +65,7 @@ public class TileNoiseGenerator {
     public void setTilesNoiseValues(BiConsumer<Tile, Double> setter){
         NoiseGenerator noiseGenerator = new NoiseGenerator(random,  octaves, startPeriod, attenuation);
         for (Tile tile : tiles){
-            setter.accept(tile, noiseGenerator.getOctavedPerlinValue(tile.getRow() - lowestRow, tile.getCol() - lowestCol));
+            setter.accept(tile, noiseGenerator.getOctavedPerlinValue(tile.getRow() , tile.getCol()));
         }
     }
 

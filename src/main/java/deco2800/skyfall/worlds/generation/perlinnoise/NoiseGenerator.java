@@ -100,7 +100,8 @@ public class NoiseGenerator {
      * @return The smoothed value
      */
     public static double fade(double x) {
-        return 6 * Math.pow(x, 5) - 15 * Math.pow(x, 4) + 10 * Math.pow(x, 3);
+        // return 6 * Math.pow(x, 5) - 15 * Math.pow(x, 4) + 10 * Math.pow(x, 3);
+        return x * x * x * (x * (x * 6 - 15) + 10);
     }
 
 
@@ -137,9 +138,8 @@ public class NoiseGenerator {
             double bottomLerp = lerp(xypGrad, xpypGrad, xRel);
 
             double finalLerp = lerp(topLerp, bottomLerp, yRel);
-            double normlerp =  (finalLerp * NORMALISATION_VALUE + 1) / 2;
 
-            return normlerp;
+            return (finalLerp * NORMALISATION_VALUE + 1) / 2;
         } catch (RuntimeException e){
             throw e;
         }

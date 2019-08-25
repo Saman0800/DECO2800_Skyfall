@@ -69,6 +69,7 @@ public abstract class AbstractWorld {
     	generateWorld(random);
         generateNeighbours();
     	generateTileIndexes();
+
     	generateTileTypes(random);
     }
     

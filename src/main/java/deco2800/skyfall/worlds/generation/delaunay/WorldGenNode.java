@@ -239,18 +239,6 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * @param tiles The list of tiles to assign
      */
     public static void assignTiles(List<WorldGenNode> nodes, List<Tile> tiles, Random random, int nodeSpacing) {
-        float minX = Float.POSITIVE_INFINITY;
-        float maxX = Float.NEGATIVE_INFINITY;
-        float minY = Float.POSITIVE_INFINITY;
-        float maxY = Float.NEGATIVE_INFINITY;
-        for (Tile tile : tiles) {
-            minX = Math.min(tile.getCol(), minX);
-            maxX = Math.max(tile.getCol(), maxX);
-            minY = Math.min(tile.getRow(), minY);
-            maxY = Math.max(tile.getRow(), maxY);
-        }
-        int width = (int) Math.ceil(maxX - minX);
-        int height = (int) Math.ceil(maxY - minY);
 
         int startPeriod = nodeSpacing * 2;
         int octaves = (int) Math.ceil(Math.log(startPeriod) / Math.log(2));
@@ -265,10 +253,10 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
             // Offset the position of tiles used to calculate the nodes using
             // Perlin noise to add noise to the edges.
             double tileX =
-                    tile.getCol() + xGen.getOctavedPerlinValue(tile.getCol() - minX, tile.getRow() - minY) *
+                    tile.getCol() + xGen.getOctavedPerlinValue(tile.getCol() , tile.getRow()) *
                             (double) nodeSpacing - (double) nodeSpacing / 2;
             double tileY =
-                    tile.getRow() + yGen.getOctavedPerlinValue(tile.getCol() - minX, tile.getRow() - minY) *
+                    tile.getRow() + yGen.getOctavedPerlinValue(tile.getCol() , tile.getRow()) *
                             (double) nodeSpacing - (double) nodeSpacing / 2;
             // Find the index of the node with the node with one of the nearest
             // Y values (note, if there is no node with the exact Y value, it)
@@ -342,13 +330,13 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     public double distanceToTile(Tile tile) {
         double[] tileCoords = { tile.getCoordinates().getCol(),
                                 tile.getCoordinates().getRow() };
-        return (Math.pow(this.getX() - tileCoords[0], 2)
-                + Math.pow(this.getY() - tileCoords[1], 2));
+        return (this.getX() - tileCoords[0]) * (this.getX() - tileCoords[0])
+                + (this.getY() - tileCoords[1]) * (this.getY() - tileCoords[1]);
     }
 
     public double distanceTo(double x, double y) {
-        return (Math.pow(this.getX() - x, 2)
-                + Math.pow(this.getY() - y, 2));
+        return (this.getX() - x) * (this.getX() - x)
+                + (this.getY() - y) * (this.getY() - y);
     }
 
     /**
@@ -359,13 +347,11 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * @return The square of the difference in y value
      */
     public double yDistanceToTile(Tile tile) {
-        return Math.pow(Math.abs(
-                this.getY() - tile.getCoordinates().getRow()), 2);
+        return (this.getY() - tile.getCoordinates().getRow()) * (this.getY() - tile.getCoordinates().getRow());
     }
 
     public double yDistanceTo(double y) {
-        return Math.pow(Math.abs(
-                this.getY() - y), 2);
+        return (this.getY() - y) * (this.getY() - y);
     }
 
     private static int binarySearch(double toFind, List<WorldGenNode> nodes,
@@ -444,7 +430,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * @return the distance of this node from the origin
      */
     public double magnitude() {
-        return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+        return Math.sqrt(this.x * this.x + this.y * this.y);
     }
 
     /**
