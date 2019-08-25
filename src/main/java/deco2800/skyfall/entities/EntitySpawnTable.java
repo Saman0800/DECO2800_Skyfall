@@ -15,6 +15,7 @@ import java.util.Random;
  * EntitySpawnRule for precise spawning however, simpler methods exist that will
  * handle this for you
  */
+@SuppressWarnings("unchecked")
 public class EntitySpawnTable {
     /**
      * Simple static method for placing static items. Takes the given entity and
