@@ -1,6 +1,5 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.physics.box2d.World;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
@@ -58,6 +57,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 * Maps animations roles to animation names
 	 */
     protected Map<AnimationRole, Map<Direction, AnimationLinker>> animations;
+
+    protected Map<Direction, String> defaultDirectionTextures = new HashMap<>();
 	/**
 	 * Current direction that the entity is moving, set in MainCharacter or
 	 * Movement Task.
@@ -68,7 +69,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 * to this entity
 	 */
 	private AnimationLinker toBeRun = null;
-	private Direction currentDirection = Direction.NULL;
+	private Direction currentDirection = Direction.EAST;
 	private AnimationRole currentState = AnimationRole.NULL;
 
 	/**
@@ -342,9 +343,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 //        this.movingAnimation = movingAnimation;
 //    }
 
-//    public void addAnimations(AnimationRole role, String animationID) {
-//        animations.put(role, animationID);
-//    }
+
 
     /**
 	 * Current moving state of Entity
@@ -369,9 +368,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
 	private AnimationLinker getAnimationLinker(AnimationRole type, Direction direction) {
 	    if (animations.containsKey(type)) {
-			Map<Direction, AnimationLinker> role = animations.get(type);
-			return role.containsKey(direction) ?  role.get(direction) :  null;
-
+			Map<Direction, AnimationLinker> roleMap = animations.get(type);
+			return roleMap.getOrDefault((direction), null);
         }
         return null;
     }
@@ -407,8 +405,15 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		toBeRun = getAnimationLinker(this.currentState, this.currentDirection);
 	}
 
+    protected void addAnimations(AnimationRole role, Direction currentDirection, AnimationLinker animationLinker) {
+	    animations.putIfAbsent(role, new HashMap<>());
+        Map<Direction, AnimationLinker> direction = animations.get(role);
+        direction.put(currentDirection, animationLinker);
+    }
 
-
+    public String getDefaultTexture() {
+        return defaultDirectionTextures.getOrDefault(currentDirection, "Not Found");
+    }
 }
 
 

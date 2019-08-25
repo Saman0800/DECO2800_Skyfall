@@ -22,14 +22,14 @@ public class AnimationLinker {
     private final Logger logger = LoggerFactory.getLogger(AnimationLinker.class);
     private boolean isCompleted = false;
     private Direction direction;
-    private boolean looper;
+    private boolean looping;
     /**
      * Construct
      * @param type Animation Type
      * @param animationName The name of the animation name
      * @param direction Direction the animation is in
      */
-    public AnimationLinker(AnimationRole type, String animationName, Direction direction, boolean looper) {
+    public AnimationLinker(String animationName, AnimationRole type, Direction direction, boolean looping) {
             this.type = type;
         this.animationName = animationName;
 
@@ -40,7 +40,7 @@ public class AnimationLinker {
 
         this.startingTime = 0f;
         this.offset = new int[2];
-        this.looper = looper;
+        this.looping = looping;
         this.direction = direction;
     }
      /**

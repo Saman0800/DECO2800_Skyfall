@@ -6,8 +6,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.*;
 import org.slf4j.Logger;
@@ -313,14 +315,11 @@ public class Renderer3D implements Renderer {
                             childTex.getHeight() * WorldUtil.SCALE_Y);
                 }
             } else {
-                skipDrawingEnemy(batch, entity, entityWorldCoord, tex);
+                //skipDrawingEnemy(batch, entity, entityWorldCoord, tex);
 
-                AnimationRole moveType = entity.getCurrentState();
-
-                if (moveType == AnimationRole.NULL) {
+                if (!(entity instanceof Animatable)) {
                     skipDrawingEnemy(batch, entity, entityWorldCoord, tex);
                 } else {
-                    //runMovementAnimations(batch, entity, entityWorldCoord, tex);
                     runAnimation(batch, entity, entityWorldCoord);
                 }
 
@@ -427,11 +426,21 @@ public class Renderer3D implements Renderer {
      * @param entityWorldCoord Where to draw.
      */
     private void runAnimation(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord) {
-        //Queue<AnimationLinker> q = entity.getToBeRun();
-          //final AnimationRole[] loopingTypes = new AnimationRole[] {AnimationRole.MOVE};
+
+            if (entity.getCurrentState() == AnimationRole.NULL) {
+                String directionTexture = entity.getDefaultTexture();
+                if (directionTexture != "Not Found") {
+                    renderAbstractEntity(batch, entity, entityWorldCoord, textureManager.getTexture(directionTexture));
+                    return;
+                } else {
+                    renderAbstractEntity(batch, entity, entityWorldCoord, textureManager.getTexture(entity.getTexture()));
+                    return;
+                }
+            }
 
             AnimationLinker aniLink = entity.getToBeRun();
             if (aniLink == null) {
+                System.out.println("AnimationLinker is null");
                 return;
             }
 

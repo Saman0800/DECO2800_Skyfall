@@ -16,7 +16,7 @@ import java.util.*;
  * Main character in the game
  */
 public class MainCharacter extends Peon implements KeyDownObserver,
-        KeyUpObserver,TouchDownObserver, Tickable {
+        KeyUpObserver,TouchDownObserver, Tickable, Animatable {
 
     // Combat manager for MainCharacter
     // TODO should be ok once merged with combat
@@ -125,6 +125,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         this.level = 1;
         this.foodLevel = 100;
+
+        this.configureAnimations();
+        System.out.println("Setting direction textures");
+        this.setDirectionTextures();
     }
 
     /**
@@ -380,12 +384,16 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 MOVE_UP = true;
                 break;
             case Input.Keys.A:
+                this.setCurrentState(AnimationRole.MOVE);
+                this.setCurrentDirection(Direction.WEST);
                 MOVE_LEFT = true;
                 break;
             case Input.Keys.S:
                 MOVE_DOWN = true;
                 break;
             case Input.Keys.D:
+                this.setCurrentState(AnimationRole.MOVE);
+                this.setCurrentDirection(Direction.EAST);
                 MOVE_RIGHT = true;
                 break;
         }
@@ -403,15 +411,32 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 MOVE_UP = false;
                 break;
             case Input.Keys.A:
+                this.setCurrentState(AnimationRole.NULL);
                 MOVE_LEFT = false;
                 break;
             case Input.Keys.S:
                 MOVE_DOWN = false;
                 break;
             case Input.Keys.D:
+                this.setCurrentState(AnimationRole.NULL);
                 MOVE_RIGHT = false;
                 break;
         }
+    }
+
+    @Override
+    public void configureAnimations() {
+        this.addAnimations(AnimationRole.MOVE, Direction.EAST,
+                new AnimationLinker("mario_right", AnimationRole.MOVE, Direction.EAST, true));
+
+        this.addAnimations(AnimationRole.MOVE, Direction.WEST,
+                new AnimationLinker("mario_left", AnimationRole.MOVE, Direction.WEST, true));
+    }
+
+    @Override
+    public void setDirectionTextures() {
+        defaultDirectionTextures.put(Direction.EAST, "__ANIMATION_mario_right:1");
+        defaultDirectionTextures.put(Direction.WEST, "__ANIMATION_mario_left:1");
     }
 
     /*
