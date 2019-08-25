@@ -18,7 +18,7 @@ public class ProjectileTest  {
      * Create a new Projectile.
      */
     private Projectile projectile = new Projectile(new HexVector(),"slash",
-            "projectileTest",1,1,1,1);
+            "projectileTest",1,1,1,1,1);
 
 
     /**
@@ -38,12 +38,23 @@ public class ProjectileTest  {
     }
 
     /**
+     * Test the projectile range is correctly set.
+     */
+    @Test
+    public void testProjectileRange() {
+        assertEquals(projectile.getRange(),1);
+    }
+
+    /**
      * Test the position of the projectile is correct.
      */
     @Test
     public void testProjectilePosition() {
-        assertThat("", projectile.getCol(), is(equalTo(1f)));
-        assertThat("", projectile.getRow(), is(equalTo(1f)));
+        System.out.println(projectile.getCol());
+        System.out.println(projectile.getRow());
+
+        assertThat("", projectile.getCol(), is(equalTo(0.29289323f)));
+        assertThat("", projectile.getRow(), is(equalTo(0.29289323f)));
     }
 
 }

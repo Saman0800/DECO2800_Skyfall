@@ -139,7 +139,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @param keyCode Keycode the player has pressed.
      */
     protected void switchItem(int keyCode) {
-
         //If key is in range of 1-9, accept the input.
         if (keyCode >= 8 && keyCode <= 16) {
             int keyNumber = Integer.parseInt(Input.Keys.toString(keyCode));
@@ -160,24 +159,19 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Attack with the weapon the character has equip.
      */
     public void attack(HexVector mousePosition) {
-        // TODO: Need to calculate an angle that the character is facing.
         HexVector position = this.getPosition();
-
-        // Calculate angle.
-        Vector2 mouseVector = new Vector2(mousePosition.getCol(),
-                mousePosition.getRow());
-        Vector2 charVector = new Vector2(position.getCol(), position.getRow());
-
-        float angleOfAttack = charVector.angle(mouseVector);
-        System.out.println("Angle of attack: " + angleOfAttack);
 
         // Make projectile move toward the angle
         // Spawn projectile in front of character for now.
-        this.hitBox = new Projectile(mousePosition,"arcane",
+
+        this.hitBox = new Projectile(mousePosition,
+                this.itemSlotSelected == 1 ? "arcane" : "slash",
                 "test hitbox",
                 position.getCol() + 1,
                 position.getRow(),
-                1, 1);
+                1,
+                1,
+                this.itemSlotSelected == 1 ? 1 : 0);
 
         // Get AbstractWorld from static class GameManager.
         GameManager manager = GameManager.get();
@@ -422,7 +416,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     @Override
     public void moveTowards(HexVector destination) {
-        System.out.println(this.currentSpeed);
         position.moveToward(destination, this.currentSpeed);
     }
 

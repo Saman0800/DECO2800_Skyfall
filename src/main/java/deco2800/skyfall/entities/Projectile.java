@@ -39,10 +39,11 @@ public class Projectile extends AgentEntity {
      */
     private HexVector movementPosition;
 
+
     /**
-     *
+     * How far this projectile will travel.
      */
-    private AbstractTask task;
+    private int range;
 
     /**
      * Construct a new projectile.
@@ -54,19 +55,22 @@ public class Projectile extends AgentEntity {
      * @param speed How fast this projectile is travelling.
      */
     public Projectile(HexVector movementPosition,String textureName, String objectName,
-                      float col, float row, int damage, float speed) {
+                      float col, float row, int damage, float speed, int range) {
 
         super(col,row,3,speed);
 
         this.damage = damage;
         this.speed = speed;
         this.movementPosition = movementPosition;
+        this.range = range;
 
         this.setTexture(textureName);
         this.setObjectName(objectName);
 
-        //TODO rotate sprite in angle facing.
-        //this.getPosition()
+        //Position the projectile correctly.
+        position.moveToward(movementPosition,speed);
+
+        //TODO: rotate sprite in angle facing.
     }
 
     /**
@@ -77,6 +81,13 @@ public class Projectile extends AgentEntity {
         return this.damage;
     }
 
+    /**
+     * Get the range this projectile will travel.
+     * @return The range this projectile will travel.
+     */
+    public int getRange() {
+        return this.range;
+    }
 
     /**
      * Checks how long the projectile has been alive
@@ -95,9 +106,10 @@ public class Projectile extends AgentEntity {
             GameManager.get().getWorld().removeEntity(this);
         }
 
-        //TODO add forward movement task on each tick.
-        //this.setPosition(this.position.getCol()+0.1f,this.position.getRow(),1);
-        position.moveToward(movementPosition,1);
+        //TODO: Move to range max.
+        if (this.range >= 1) {
+            position.moveToward(movementPosition,speed);
+        }
 
     }
 }
