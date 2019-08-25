@@ -1,6 +1,7 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -26,8 +27,8 @@ public class GameMenuManager extends TickableManager {
         private MainCharacter mainCharacter;
         private HealthCircle healthCircle;
         private InventoryManager inventory;
+        private Table inventoryTable = null;
 
-    private Table inventoryTable = null;
 
         public GameMenuManager() {
             textureManager = GameManager.get().getManager(TextureManager.class);
@@ -37,9 +38,8 @@ public class GameMenuManager extends TickableManager {
 
         public void addStage(Stage stage) {
             this.stage = stage;
-
-
         }
+
         /**
          * Display menu bar at the bottom of the game
          *
@@ -230,7 +230,13 @@ public class GameMenuManager extends TickableManager {
 
     @Override
     public void onTick(long i) {
+
         inventory = GameManager.get().getManager(InventoryManager.class);
+
+        if (healthCircle != null) {
+            healthCircle.update();
+        }
+
     }
 
     public static TextureRegionDrawable generateTextureRegionDrawableObject(String sName) {
