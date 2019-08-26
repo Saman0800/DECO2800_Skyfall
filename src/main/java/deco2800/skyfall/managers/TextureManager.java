@@ -49,7 +49,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("main_piece", new Texture("resources" +
                     "/Main_Character_F_Right.png"));
             textureMap.put("slash", new Texture("resources/slash_long.png"));
-
+            textureMap.put("arcane",new Texture("resources/Arcane_Effect_1.png"));
             //Tile textures
             textureMap.put("grass_0", new Texture("resources/tile_textures/grass_0.png"));
             textureMap.put("grass_1", new Texture("resources/tile_textures/grass_1.png"));

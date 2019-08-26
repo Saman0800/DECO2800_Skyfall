@@ -16,7 +16,6 @@ import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.renderers.OverlayRenderer;
 import deco2800.skyfall.renderers.Renderer3D;
 import deco2800.skyfall.worlds.*;
-import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.managers.EnvironmentManager;
 
 import org.slf4j.Logger;
@@ -88,8 +87,8 @@ public class GameScreen implements Screen,KeyDownObserver {
 
 		/* Play BGM */
 		try {
-			SoundManager.backgroundGameMusic("resources/sounds/forest_day.wav");
-			SoundManager.play();
+			BGMManager.BGMManager("resources/sounds/forest_day.wav");
+			BGMManager.play();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
