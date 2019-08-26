@@ -2,6 +2,7 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.worlds.Tile;
+import org.lwjgl.Sys;
 
 import java.util.List;
 
@@ -16,22 +17,18 @@ public class EnvironmentManager {
    //Biome player is currently in
    private String biome;
 
+   //Time to display on screen
+   long displayHours;
+
+   // Time of day: AM or PM
+   private String TOD;
+
    /**
     * Constructor
     *
     */
-   public EnvironmentManager(long i) {
-
-      //Each day cycle goes for approx 24 minutes
-      long time = (i / 60000);
-      hours = time % 24;
-
-      //Set Day/Night tracker
-      if (hours > 12 && hours < 24) {
-         isDay = false;
-      } else {
-         isDay = true;
-      }
+   public EnvironmentManager() {
+      // Constructor details here
    }
 
    /**
@@ -60,6 +57,7 @@ public class EnvironmentManager {
     * @return String Current biome of player, or null if player is moving between tiles
     */
    public String currentBiome() {
+      System.out.println(biome);
       return biome;
    }
 
@@ -75,15 +73,29 @@ public class EnvironmentManager {
    /**
     * Sets the time of day in game
     *
-    * @param time The time of day to be set
+    * @param i The time of day to be set
     */
-   public void setTime(long time) {
-      if (time > 24) {
-         hours = 24;
+   public void setTime(long i) {
+      //Each day cycle goes for approx 24 minutes
+      long time = (i / 60000);
+      hours = time % 24;
+
+      // Set hours to be displayed
+      if (hours > 12 && hours < 24) {
+         displayHours = hours - 12;
+         TOD = "pm";
+      } else if (hours == 24) {
+         displayHours = hours - 12;
+         TOD = "am";
+      } else if (hours == 12) {
+         displayHours = hours;
+         TOD = "pm";
       } else {
-         hours = time;
+         displayHours = hours;
+         TOD = "am";
       }
-      setDay();
+
+      //System.out.println(displayHours + TOD);
    }
 
    /**

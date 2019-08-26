@@ -47,6 +47,8 @@ public class GameScreen implements Screen,KeyDownObserver {
 
 	long lastGameTick = 0;
 
+	EnvironmentManager environmentManager = new EnvironmentManager();
+
 	/**
 	 * Create an EnvironmentManager for ToD.
 	 */
@@ -139,14 +141,16 @@ public class GameScreen implements Screen,KeyDownObserver {
 		stage.act(delta);
 		stage.draw();
 		batch.dispose();
+
 	}
 
 	private void handleRenderables() {
 		if (System.currentTimeMillis() - lastGameTick > 20) {
 			lastGameTick = System.currentTimeMillis();
 			GameManager.get().onTick(0);
-			timeOfDay = new EnvironmentManager(lastGameTick);
 		}
+
+		environmentManager.setTime(lastGameTick);
 	}
 
 	/**
