@@ -510,6 +510,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         xPos += xVel + xInput * acceleration * 0.5;
         yPos += yVel + yInput * acceleration * 0.5;
 
+        // Calculates speed to destination
+        vel = Math.sqrt((xVel * xVel) + (yVel * yVel));
+
         // Calculates velocity in x direction
         if (xInput != 0) {
             xVel += xInput * acceleration;
@@ -536,28 +539,17 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             yVel = 0;
         }
 
-        // Applied velocity limit
-        if (xVel > maxSpeed) {
-            xVel = maxSpeed;
-        }
+        // caps the velocity
+        if (vel > maxSpeed) {
+            xVel /= vel;
+            yVel /= vel;
 
-        if (xVel < -maxSpeed) {
-            xVel = -maxSpeed;
-        }
-
-        if (yVel > maxSpeed) {
-            yVel = maxSpeed;
-        }
-
-        if (yVel < -maxSpeed) {
-            yVel = -maxSpeed;
+            xVel *= maxSpeed;
+            yVel *= maxSpeed;
         }
 
         // Calculates destination vector
         HexVector destination = new HexVector(xPos, yPos);
-
-        // Calculates speed to destination
-        vel = Math.sqrt((xVel * xVel) + (yVel * yVel));
 
         // Moves the player to new location
         position.moveToward(destination, vel);
