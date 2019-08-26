@@ -43,21 +43,82 @@ public class Enemy extends AgentEntity implements ICombatEntity {
     private String[] statusIndicators;
 
     /**
-     * Construct a new enemy class.
+     * Construct a new enemy instance.
+     *
      * @param col The column to spawn the enemy.
      * @param row The row to spawn the enemy.
+     * @param texture The texture the enemy should be rendered with.
+     * @param damage The amount of damage the enemy deals.
+     * @param health The amount of health the enemy has.
+     * @param armour The amount of armour the enemy has.
      */
-    public Enemy(float col, float row) {
+    public Enemy(float col, float row, String texture, int damage, int health,
+                 int armour) {
+
         super(col, row, 2, 0.2f);
 
-        this.setTexture("bowman");
+        this.damage = damage;
+        this.health = health;
+        this.armour = armour;
+
+        this.setTexture(texture);
         this.setHeight(1);
-        this.setObjectName("BowMan");
+        this.setObjectName("enemy");
     }
 
     /**
-     * Perform damage calculate damage
-     * @param damage
+     * Return the armour this enemy has.
+     * @return The amount of armour this enemy has.
+     */
+    @Override
+    public int getArmour() {
+        return this.armour;
+    }
+
+    @Override
+    public int getDamage() {
+        return this.damage;
+    }
+
+    /**
+     * Return a list of resistance attributes.
+     * @return A list of resistance attributes.
+     */
+    @Override
+    public int[] getResistanceAttributes() {
+        return this.resistanceAttributes;
+    }
+
+    /**
+     * Return a list of status indicators.
+     * @return A list of status indicators.
+     */
+    @Override
+    public String[] getStatusIndicators() {
+        return this.statusIndicators;
+    }
+
+    /**
+     * Return the health this enemy has.
+     * @return The health this enemy has.
+     */
+    @Override
+    public int getHealth() {
+        return this.health;
+    }
+
+    /**
+     * Set the amount of health the enemy has.
+     * @param health The amount of health to set the enemy.
+     */
+    @Override
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    /**
+     * Perform damage calculation.
+     * @param damage The damage to deal.
      */
     @Override
     public void takeDamage(int damage) {
@@ -85,50 +146,6 @@ public class Enemy extends AgentEntity implements ICombatEntity {
         return true;
     }
 
-    /**
-     * Return the armour this enemy has.
-     * @return The amount of armour this enemy has.
-     */
-    @Override
-    public int getArmour() {
-        return this.armour;
-    }
-
-    /**
-     * Return a list of resistance attributes.
-     * @return A list of resistance attributes.
-     */
-    @Override
-    public int[] getResistanceAttributes() {
-        return this.resistanceAttributes;
-    }
-
-    /**
-     * Return a list of status indicators.
-     * @return A list of status indicators.
-     */
-    @Override
-    public String[] statusIndicators() {
-        return this.statusIndicators;
-    }
-
-    /**
-     * Return the health this enemy has.
-     * @return The health this enemy has.
-     */
-    @Override
-    public int getHealth() {
-        return this.health;
-    }
-
-    /**
-     * Set the amount of health the enemy has.
-     * @param health The amount of health to set the enemy.
-     */
-    @Override
-    public void setHealth(int health) {
-        this.health = health;
-    }
 
     /**
      * On tick perform a task.

@@ -13,9 +13,9 @@ public class BowMan extends AgentEntity {
     public BowMan(float col, float row) {
         super(col, row, 2, 0.05f);
 
-        this.setTexture("bowman");
+        this.setTexture("spacman_blue");
         this.setHeight(1);
-        this.setObjectName("BowMan");
+        this.setObjectName("spacman_blue");
     }
 
     @Override

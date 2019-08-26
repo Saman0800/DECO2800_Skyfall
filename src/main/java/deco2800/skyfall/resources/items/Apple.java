@@ -53,6 +53,8 @@ public class Apple extends HealthResources implements Item {
         this.name ="Apple";
         this.colour ="red";
         this.hasFoodEffect = true;
+        this.foodValue = 25;
+        //TODO: look into this.healthValue = 5;
         //default constructor added for building inventory
     }
 

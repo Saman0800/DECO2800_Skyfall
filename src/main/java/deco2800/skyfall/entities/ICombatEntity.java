@@ -31,6 +31,13 @@ public interface ICombatEntity extends HasHealth {
     int getArmour();
 
     /**
+     * Get the amount of damage this entity deals.
+     *
+     * @return The damage this entity deals.
+     */
+    int getDamage();
+
+    /**
      * Get an array of the resistance attributes.
      *
      * @return A array containing the resistance attributes of the combat entity.
@@ -43,7 +50,7 @@ public interface ICombatEntity extends HasHealth {
      *
      * @return An array of status indicators.
      */
-    String[] statusIndicators();
+    String[] getStatusIndicators();
 
 }
 
