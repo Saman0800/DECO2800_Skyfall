@@ -119,6 +119,7 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
     public void takeDamage(int damage) {
         //TODO: perform damage calculation factoring in status indicators, armour and resistance attributes.
         this.health -= damage;
+        System.out.println("Enemy took " + damage + " damage.");
     }
 
     /**

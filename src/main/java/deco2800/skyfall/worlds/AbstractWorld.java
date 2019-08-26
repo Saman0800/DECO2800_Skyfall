@@ -343,13 +343,20 @@ public abstract class AbstractWorld {
     public void handleCollision(AbstractEntity e1, AbstractEntity e2) {
         //TODO: implement proper game logic for collisions between different types of entities.
 
+        //TODO: this needs to be internalized into classes for cleaner code.
         if (e1 instanceof Projectile && e2 instanceof EnemyEntity) {
-            removeEntity(e2);
+            Projectile projectile = (Projectile) e1;
+            EnemyEntity enemy = (EnemyEntity) e2;
+
+            enemy.takeDamage(projectile.getDamage());
+            projectile.destroy();
 
         } else if (e2 instanceof Projectile && e1 instanceof EnemyEntity) {
-            removeEntity(e1);
-        } else {
-            return;
+            Projectile projectile = (Projectile) e2;
+            EnemyEntity enemy = (EnemyEntity) e1;
+
+            enemy.takeDamage(projectile.getDamage());
+            projectile.destroy();
         }
     }
 
