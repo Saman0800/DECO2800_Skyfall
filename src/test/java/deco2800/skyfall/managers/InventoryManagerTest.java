@@ -33,9 +33,11 @@ public class InventoryManagerTest {
     public void inventoryDefaultConstructorTest(){
         InventoryManager inv = new InventoryManager();
 
-        assertEquals(2, inv.getInventoryContents().size());
+        assertEquals(4, inv.getInventoryContents().size());
         assertEquals(2, inv.getAmount("Stone"));
         assertEquals(2, inv.getAmount("Wood"));
+        assertEquals(1, inv.getAmount("Sand"));
+        assertEquals(1, inv.getAmount("Vine"));
 
     }
 
