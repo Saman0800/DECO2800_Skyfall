@@ -471,6 +471,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     @Override
     public void notifyKeyUp(int keycode) {
         movingAnimation = AnimationRole.NULL;
+        // Player cant move when paused
+        if (GameManager.getPaused()) {
+            return;
+        }
         switch (keycode) {
             case Input.Keys.W:
                 yInput -= 1;
@@ -604,7 +608,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         if (direction <= 22.5 || direction >= 337.5){
             return "North";
-        } else if (22.5f <= direction && direction <= 67.5){
+        } else if (22.5 <= direction && direction <= 67.5){
             return "North-East";
         } else if (67.5 <= direction && direction <= 112.5){
             return "East";
