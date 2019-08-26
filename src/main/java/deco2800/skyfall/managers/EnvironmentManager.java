@@ -95,18 +95,7 @@ public class EnvironmentManager {
          TOD = "am";
       }
 
-      //System.out.println(displayHours + TOD);
-   }
-
-   /**
-    * Sets day/night tracker after updating time
-    */
-   private void setDay() {
-      if (hours > 12 && hours < 24) {
-         isDay = false;
-      } else {
-         isDay = true;
-      }
+      System.out.println(displayHours + TOD);
    }
 
    /**
@@ -114,6 +103,12 @@ public class EnvironmentManager {
     * @return boolean True if it is day, False if night
     */
    public boolean isDay() {
+      if (hours > 12 && hours < 24) {
+         isDay = false;
+      } else {
+         isDay = true;
+      }
+
       return isDay;
    }
 
