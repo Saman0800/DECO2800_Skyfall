@@ -213,7 +213,8 @@ public class GameScreen implements Screen,KeyDownObserver {
 		if (keycode == Input.Keys.F5) {
 			// Use a random seed for now
 			Random random = new Random();
-			world = new RocketWorld(random.nextLong(), 200, 15, new int[] {70,70,70}, 3, 2);
+			// world = new RocketWorld(random.nextLong(), 200, 15, new int[] {70,70,70}, 3, 2);
+			world = new RocketWorld(random.nextLong(), 300, 15, new int[] {70,70,70}, 3, 2);
 			AbstractEntity.resetID();
 			Tile.resetID();
 			GameManager gameManager = GameManager.get();

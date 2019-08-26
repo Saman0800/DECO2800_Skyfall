@@ -170,7 +170,6 @@ public class DelaunayTest {
             for (int r = -worldSize; r < worldSize; r++) {
                 float oddCol = (q % 2 != 0 ? 0.5f : 0);
 
-                int elevation = random.nextInt(2);
                 // String type = "grass_" + elevation;
                 Tile tile = new Tile(q, r + oddCol);
                 tiles.add(tile);
@@ -184,7 +183,7 @@ public class DelaunayTest {
 
         Random noiseRandom2 = new Random(noiseSeed);
         int startPeriod = nodeSpacing * 2;
-        int octaves = (int) Math.ceil(Math.log(startPeriod) / Math.log(2));
+        int octaves = Math.max((int) Math.ceil(Math.log(startPeriod) / Math.log(2)) - 1, 1);
         double attenuation = Math.pow(1.5, 1d / octaves);
         NoiseGenerator xGen = new NoiseGenerator(noiseRandom2, octaves, startPeriod, attenuation);
         NoiseGenerator yGen = new NoiseGenerator(noiseRandom2, octaves, startPeriod, attenuation);

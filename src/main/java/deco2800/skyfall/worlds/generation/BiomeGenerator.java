@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
  * Builds biomes from the nodes generated in the previous phase of the world generation.
  */
 public class BiomeGenerator {
+    /** The fraction of the original number of tiles that must remain in each biome after contiguity processing */
     private static final double CONTIGUOUS_TILE_RETENTION_THRESHOLD = 0.75;
 
     /** The `Random` instance being used for world generation. */
@@ -125,7 +126,7 @@ public class BiomeGenerator {
      * Runs the generation process.
      */
     private void generateBiomesInternal() throws DeadEndGenerationException {
-        for (int i = 0;; i++) {
+        for (int i = 0; ; i++) {
             try {
                 biomes = new ArrayList<>(biomeSizes.length + 1);
                 usedNodes = new HashSet<>(nodes.size());
@@ -330,6 +331,7 @@ public class BiomeGenerator {
      */
     private void ensureContiguity() throws DeadEndGenerationException {
         // TODO Deal with sub-biomes.
+        // TODO Add comments.
 
         HashSet<Tile> removedTiles = new HashSet<>();
 
@@ -347,8 +349,8 @@ public class BiomeGenerator {
                 ArrayDeque<Tile> clusterCheckQueue = new ArrayDeque<>();
                 ArrayList<Tile> clusterTiles = new ArrayList<>();
 
-                // Just take some unchecked tile.
-                Tile clusterStart = biomeUncheckedTiles.iterator().next();
+                Tile clusterStart = biome.getTiles().stream().filter(biomeUncheckedTiles::contains).findFirst()
+                        .orElseThrow(IllegalStateException::new);
                 biomeUncheckedTiles.remove(clusterStart);
 
                 clusterCheckQueue.add(clusterStart);
@@ -398,25 +400,18 @@ public class BiomeGenerator {
             ArrayList<Tile> expandToCandidates = expandFrom.getNeighbours().values().stream()
                     .filter(removedTiles::contains)
                     .collect(Collectors.toCollection(ArrayList::new));
-            // TODO `expandToCandidates` can be empty; fix this.
             Tile expandTo = expandToCandidates.get(random.nextInt(expandToCandidates.size()));
-
             expandFrom.getBiome().addTile(expandTo);
             removedTiles.remove(expandTo);
-
             if (expandTo.getNeighbours().values().stream().anyMatch(removedTiles::contains)) {
                 borderTiles.add(expandTo);
             }
-
             for (Tile neighbour : expandTo.getNeighbours().values()) {
                 if (neighbour.getNeighbours().values().stream().noneMatch(removedTiles::contains)) {
                     borderTiles.remove(neighbour);
                 }
             }
         }
-
-        // TODO Remove.
-        assert borderTiles.isEmpty();
     }
 
     /**

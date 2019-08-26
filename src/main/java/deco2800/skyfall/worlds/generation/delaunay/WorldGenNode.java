@@ -190,13 +190,14 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      */
     public static boolean isAdjacent(WorldGenNode a, WorldGenNode b)
             throws InvalidCoordinatesException {
-        try {
-            sharedVertex(a, b);
-            // Return true if there wasn't a NotAdjacentException
-            return true;
-        } catch (NotAdjacentException e) {
-            return false;
-        }
+        // try {
+        //     sharedVertex(a, b);
+        //     // Return true if there wasn't a NotAdjacentException
+        //     return true;
+        // } catch (NotAdjacentException e) {
+        //     return false;
+        // }
+        return sharedVertex(a, b) != null;
     }
 
     /**
@@ -211,7 +212,8 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * @throws NotAdjacentException        if the nodes don't have a common vertex
      */
     public static double[] sharedVertex(WorldGenNode a, WorldGenNode b)
-            throws InvalidCoordinatesException, NotAdjacentException {
+            // throws InvalidCoordinatesException, NotAdjacentException {
+            throws InvalidCoordinatesException {
         // Compare each vertex of one with each vertex of the other
         for (double[] vertexA : a.getVertices()) {
             if (vertexA.length != 2) {
@@ -229,7 +231,8 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
             }
         }
         // Indicate that the points are not adjacent
-        throw new NotAdjacentException();
+        // throw new NotAdjacentException();
+        return null;
     }
 
     /**
@@ -240,8 +243,9 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      */
     public static void assignTiles(List<WorldGenNode> nodes, List<Tile> tiles, Random random, int nodeSpacing) {
         int startPeriod = nodeSpacing * 2;
-        int octaves = (int) Math.ceil(Math.log(startPeriod) / Math.log(2));
-        double attenuation = Math.pow(1.3, 1d / octaves);
+        // TODO Fix possible divide-by-zero.
+        int octaves = Math.max((int) Math.ceil(Math.log(startPeriod) / Math.log(2)) - 1, 1);
+        double attenuation = Math.pow(1.5, 1d / octaves);
 
         NoiseGenerator xGen = new NoiseGenerator(random, octaves, startPeriod, attenuation);
         NoiseGenerator yGen = new NoiseGenerator(random,  octaves, startPeriod, attenuation);
