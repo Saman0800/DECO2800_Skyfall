@@ -95,7 +95,7 @@ public class EnvironmentManager {
          TOD = "am";
       }
 
-      System.out.println(displayHours + TOD);
+      //System.out.println(displayHours + TOD);
    }
 
    /**
