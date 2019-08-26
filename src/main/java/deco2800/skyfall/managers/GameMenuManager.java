@@ -95,6 +95,8 @@ public class GameMenuManager extends TickableManager {
                     } else {
                         inventoryTable.setVisible(true);
                     }
+
+                    GameManager.setPaused(true);
                 }
             });
 
@@ -208,6 +210,7 @@ public class GameMenuManager extends TickableManager {
         exit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                GameManager.setPaused(false);
                 inventoryTable.setVisible(false);
             }
         });
@@ -233,15 +236,27 @@ public class GameMenuManager extends TickableManager {
 
         Map<String, Integer> inventoryAmounts = inventory.getInventoryAmounts();
 
-        int count = 1;
+        int count = 0;
+        int xpos = 20;
+        int ypos = 280;
 
         for (Map.Entry<String, Integer> entry : inventoryAmounts.entrySet()) {
-            Image icon = new Image(generateTextureRegionDrawableObject(entry.getKey()));
-            icon.setSize(50, 50);
-            icon.setPosition(count * 70, 300);
+
+            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey()));
+            icon.setSize(100, 100);
+            icon.setPosition(xpos + count*130, ypos);
             resourcePanel.addActor(icon);
+
+            System.out.println(entry.getValue());
+
             count ++;
+
+            if((count)%3 == 0){
+                ypos -= 120;
+                count = 0;
+            }
         }
+
 
         Table content = new Table();
         content.addActor(infoBar);
