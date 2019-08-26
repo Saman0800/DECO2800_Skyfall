@@ -364,18 +364,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Set the players inventory to a predefined inventory
-     * e.g for loading player saves
-     *
-     * @param inventoryContents the save for the inventory
-     */
-    public void setInventory(Map<String, List<Item>> inventoryContents,
-                             List<String> quickAccessContent) {
-        this.inventories = new InventoryManager(inventoryContents,
-                quickAccessContent);
-    }
-
-    /**
      * Change current level of character
      *
      * @param change amount being added or subtracted
