@@ -434,7 +434,7 @@ public class Renderer3D implements Renderer {
         String animationName = entity.getAnimationName(moveType);
 
         if (animationName == null) {
-            System.out.println("Could not find animation in entity" + entity.getObjectName());
+//            System.out.println("Could not find animation in entity" + entity.getObjectName());
             renderAbstractEntity(batch, entity, entityWorldCoord, tex);
         } else {
             Animation<TextureRegion> runAnimation = animationManager.getAnimation(animationName);

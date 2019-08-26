@@ -2,7 +2,7 @@ package deco2800.skyfall.worlds.biomes;
 
 import deco2800.skyfall.worlds.Tile;
 
-import deco2800.skyfall.worlds.generation.PerlinNoiseGenerator;
+import deco2800.skyfall.worlds.generation.perlinnoise.TileNoiseGenerator;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -36,16 +36,12 @@ public class MountainBiome extends AbstractBiome {
 //        textures.add("mountain_6");
 
         //Perlin noise generation
-        PerlinNoiseGenerator perlinNoise = new PerlinNoiseGenerator(random);
-        // perlinNoise.getOctavedPerlinNoiseGrid(getTiles(), 2, 30, 0.5);
-        perlinNoise.getOctavedPerlinNoiseGrid(getTiles(), 4, 30, 0.2);
-        //Normalising the values to 0-textures.size()
-        perlinNoise.normalisePerlinValues(getTiles(),textures.size());
+        new TileNoiseGenerator(getTiles(), random, 4, 10,0.2, Tile::setPerlinValue);
 
 
         for (Tile tile : getTiles()) {
-            tile.setPerlinValue((tile.getPerlinValue() == textures.size()) ? tile.getPerlinValue() - 1 : tile.getPerlinValue());
-            tile.setTexture(textures.get((int) tile.getPerlinValue()));
+            int perlinValue = (int) Math.floor(tile.getPerlinValue() * textures.size());
+            tile.setTexture(textures.get(perlinValue < textures.size() ? perlinValue : textures.size() - 1));
         }
     }
 
