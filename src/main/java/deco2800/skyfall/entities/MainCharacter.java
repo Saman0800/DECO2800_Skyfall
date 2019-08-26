@@ -587,7 +587,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      *
      * @return the player direction (units: degrees)
      */
-    public int getPlayerDirectionAngle() {
+    public double getPlayerDirectionAngle() {
         double val = 0;
         if (xInput != 0 || yInput != 0) {
             val = Math.atan2(yInput, xInput);
@@ -598,7 +598,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         if (val < 0){
             val += 360;
         }
-        return (int) val;
+        return val;
     }
 
     /**
@@ -608,23 +608,23 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @return new texture to use
      */
     public String getPlayerDirectionCardinal(){
-        float direction = getPlayerDirectionAngle();
+        double direction = getPlayerDirectionAngle();
 
-        if (-22 <= direction && direction <= 23){
+        if (direction <= 22.5 || direction >= 337.5){
             return "North";
-        } else if (24 <= direction && direction <= 68){
+        } else if (22.5f <= direction && direction <= 67.5){
             return "North-East";
-        } else if (69 <= direction && direction <= 113){
+        } else if (67.5 <= direction && direction <= 112.5){
             return "East";
-        } else if (114 <= direction && direction <= 158) {
+        } else if (112.5 <= direction && direction <= 157.5) {
             return "South-East";
-        } else if (159 <= direction && direction <= 203) {
+        } else if (157.5 <= direction && direction <= 202.5) {
             return "South";
-        } else if (204 <= direction && direction <= 248) {
+        } else if (202.5 <= direction && direction <= 247.5) {
             return "South-West";
-        } else if (249 <= direction && direction <= 293) {
+        } else if (247.5 <= direction && direction <= 292.5) {
             return "West";
-        } else if (294 <= direction && direction <= 338) {
+        } else if (292.5 <= direction && direction <= 337.5) {
             return "North-West";
         }
 
