@@ -50,7 +50,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("main_piece", new Texture("resources" +
                     "/Main_Character_F_Right.png"));
             textureMap.put("slash", new Texture("resources/slash_long.png"));
-
+            textureMap.put("arcane",new Texture("resources/Arcane_Effect_1.png"));
             //Tile textures
             //Goes through all the folders with tile_textures and adds the tile name to the textures, it removes
             //the last 4 characters to get the name of the file.
