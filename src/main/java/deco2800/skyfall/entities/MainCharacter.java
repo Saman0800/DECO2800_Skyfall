@@ -16,7 +16,7 @@ import java.util.*;
  * Main character in the game
  */
 public class MainCharacter extends Peon implements KeyDownObserver,
-        KeyUpObserver,TouchDownObserver, Tickable, Animatable {
+        KeyUpObserver,TouchDownObserver, Tickable { //, Animatable {
 
     // Combat manager for MainCharacter
     // TODO should be ok once merged with combat
@@ -126,9 +126,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.level = 1;
         this.foodLevel = 100;
 
-        this.configureAnimations();
-        System.out.println("Setting direction textures");
-        this.setDirectionTextures();
+        //this.configureAnimations();
+        //this.setDirectionTextures();
     }
 
     /**
@@ -424,20 +423,20 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
     }
 
-    @Override
-    public void configureAnimations() {
-        this.addAnimations(AnimationRole.MOVE, Direction.EAST,
-                new AnimationLinker("mario_right", AnimationRole.MOVE, Direction.EAST, true));
+    //@Override
+    //public void configureAnimations() {
+        //this.addAnimations(AnimationRole.MOVE, Direction.EAST,
+                //new AnimationLinker("mario_right", AnimationRole.MOVE, Direction.EAST, true));
 
-        this.addAnimations(AnimationRole.MOVE, Direction.WEST,
-                new AnimationLinker("mario_left", AnimationRole.MOVE, Direction.WEST, true));
-    }
-
-    @Override
-    public void setDirectionTextures() {
-        defaultDirectionTextures.put(Direction.EAST, "__ANIMATION_mario_right:1");
-        defaultDirectionTextures.put(Direction.WEST, "__ANIMATION_mario_left:1");
-    }
+        //this.addAnimations(AnimationRole.MOVE, Direction.WEST,
+                //new AnimationLinker("mario_left", AnimationRole.MOVE, Direction.WEST, true));
+   // }
+   //
+    //@Override
+    //public void setDirectionTextures() {
+        //defaultDirectionTextures.put(Direction.EAST, "__ANIMATION_mario_right:1");
+        //defaultDirectionTextures.put(Direction.WEST, "__ANIMATION_mario_left:1");
+    //}
 
     /*
     Potential more methods and related attributes for future sprints:

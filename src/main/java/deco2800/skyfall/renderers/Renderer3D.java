@@ -89,7 +89,7 @@ public class Renderer3D implements Renderer {
 
     /**
      * Render an animation
-     * 
+     *
      * @param batch     the sprite batch.
      * @param camera    the camera.
      * @param animation the animation need to rend
@@ -170,86 +170,6 @@ public class Renderer3D implements Renderer {
     }
 
     /**
-     * Robot animation
-     * 
-     * @param batch      SpriteBatch
-     * @param camera     camera
-     * @param entity     entity
-     * @param playerPeon Player peon
-     */
-    private void robotAnimation(SpriteBatch batch, OrthographicCamera camera, AbstractEntity entity,
-            MainCharacter playerPeon) {
-        // if the distance between player peon and Robot is greater than 2 then Robot do
-        // defence animation
-        // (distance^2=(Robot col -Robot col)^2 +(Robot row -Robot row))
-        if (entity instanceof Robot && playerPeon != null) {
-            Robot robot = (Robot) entity;
-            float colDistance = playerPeon.getCol() - robot.getCol();
-            float rowDistance = playerPeon.getRow() - robot.getRow();
-            if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
-                float[] tileWorldCord = WorldUtil.colRowToWorldCords(robot.getCol(), robot.getRow());
-                renderAnimation(batch, camera, animationManager.getAnimation("robot_defence"), tileWorldCord[0],
-                        tileWorldCord[1]);
-            } else {
-                Texture savageTexture = textureManager.getTexture(robot.getTexture());
-                float[] savageCoord = WorldUtil.colRowToWorldCords(robot.getCol(), robot.getRow());
-                renderAbstractEntity(batch, robot, savageCoord, savageTexture);
-            }
-
-        }
-    }
-
-    /**
-     * skip draw enemy entities
-     * 
-     * @param batch            the spriteBatch
-     * @param entity           AbstractEntity
-     * @param entityWorldCoord coordinate of entity world
-     * @param tex              texture of entity
-     */
-    private void skipDrawingEnemy(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord, Texture tex) {
-        // if the entity is spider of savage then not drawing
-        if (entity instanceof Spider || entity instanceof Robot) {
-
-        } else {
-            renderAbstractEntity(batch, entity, entityWorldCoord, tex);
-        }
-    }
-
-    /**
-     * Spider defence Animation
-     * 
-     * @param batch      the sprite batch
-     * @param camera     the camera.
-     * @param entity     AbstractEntity
-     * @param playerPeon playerPeon
-     */
-    private void spiderAnimation(SpriteBatch batch, OrthographicCamera camera, AbstractEntity entity,
-            MainCharacter playerPeon) {
-
-        // if the distance between player peon and spider is greater than 2 then spider
-        // do defence animation
-        // (distance^2=(player col -spider col)^2 +(spider row -spider row))
-        if (entity instanceof Spider && playerPeon != null) {
-            Spider spider = (Spider) entity;
-            float colDistance = playerPeon.getCol() - spider.getCol();
-            float rowDistance = playerPeon.getRow() - spider.getRow();
-            if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
-                float[] tileWorldCord = WorldUtil.colRowToWorldCords(spider.getCol(), spider.getRow());
-
-                renderAnimation(batch, camera, animationManager.getAnimation("spider_defence"), tileWorldCord[0],
-                        tileWorldCord[1]);
-            } else {
-                // draw spider texture when distance greater than 2
-                Texture spiderTexture = textureManager.getTexture(spider.getTexture());
-                float[] spiderCoord = WorldUtil.colRowToWorldCords(spider.getCol(), spider.getRow());
-                renderAbstractEntity(batch, spider, spiderCoord, spiderTexture);
-            }
-        }
-
-    }
-
-    /**
      * To find playerPeon
      * 
      * @param entities AbstractEntity
@@ -315,10 +235,8 @@ public class Renderer3D implements Renderer {
                             childTex.getHeight() * WorldUtil.SCALE_Y);
                 }
             } else {
-                //skipDrawingEnemy(batch, entity, entityWorldCoord, tex);
-
                 if (!(entity instanceof Animatable)) {
-                    skipDrawingEnemy(batch, entity, entityWorldCoord, tex);
+                    renderAbstractEntity(batch, entity, entityWorldCoord, tex);
                 } else {
                     runAnimation(batch, entity, entityWorldCoord);
                 }
@@ -328,8 +246,6 @@ public class Renderer3D implements Renderer {
                 if (entity instanceof Peon && GameManager.get().showPath) {
                     renderPeonMovementTiles(batch, camera, entity, entityWorldCoord);
                 }
-                spiderAnimation(batch, camera, entity, playerPeon);
-                robotAnimation(batch, camera, entity, playerPeon);
             }
 
         }
@@ -429,7 +345,7 @@ public class Renderer3D implements Renderer {
 
             if (entity.getCurrentState() == AnimationRole.NULL) {
                 String directionTexture = entity.getDefaultTexture();
-                if (directionTexture != "Not Found") {
+                if (directionTexture.equals("Not Found")) {
                     renderAbstractEntity(batch, entity, entityWorldCoord, textureManager.getTexture(directionTexture));
                     return;
                 } else {

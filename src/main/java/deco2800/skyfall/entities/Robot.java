@@ -1,8 +1,12 @@
 package deco2800.skyfall.entities;
 
 
+import deco2800.skyfall.animation.Animatable;
+import deco2800.skyfall.animation.AnimationLinker;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
 
-public class Robot extends EnemyEntity {
+public class Robot extends EnemyEntity implements Animatable {
     private static final transient int HEALTH = 20;
     private static final transient float ATTACK_RANGE = 1f;
     private static final transient int ATTACK_SPEED = 1000;
@@ -11,12 +15,12 @@ public class Robot extends EnemyEntity {
     private static final transient String ENEMY_TYPE="robot";
     private String [] directions={"S","SE","NE","N","NW","SW"};
     //savage animation
-
+    private MainCharacter mc;
     public Robot(float row, float col, String texturename, int health, int armour, int damage) {
         super(row, col, texturename, health, armour, damage);
     }
 
-    public Robot(float col, float row) {
+    public Robot(float col, float row, MainCharacter mc) {
         super(col,row);
         this.setTexture("robot");
         this.setObjectName("robot");
@@ -25,7 +29,9 @@ public class Robot extends EnemyEntity {
         this.setLevel(2);
         this.setSpeed(1);
         this.setArmour(2);
-
+        this.mc = mc;
+        this.configureAnimations();
+        this.setDirectionTextures();
     }
 
 
@@ -57,5 +63,31 @@ public class Robot extends EnemyEntity {
     @Override
     public void onTick(long i) {
         super.onTick(i);
+        if (mc != null) {
+            float colDistance = mc.getCol() - this.getCol();
+            float rowDistance = mc.getRow() - this.getRow();
+
+            if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
+                this.setCurrentState(AnimationRole.DEFENCE);
+            } else {
+                this.setCurrentState(AnimationRole.NULL);
+            }
+        } else {
+            System.out.println("Mc is null");
+        }
+
+    }
+
+    @Override
+    public void configureAnimations() {
+        this.addAnimations(
+            AnimationRole.DEFENCE,
+            Direction.DEFAULT,
+            new AnimationLinker("robot_defence", AnimationRole.MOVE, Direction.DEFAULT, true));
+    }
+
+    @Override
+    public void setDirectionTextures() {
+
     }
 }

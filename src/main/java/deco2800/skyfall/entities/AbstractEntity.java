@@ -369,8 +369,9 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	private AnimationLinker getAnimationLinker(AnimationRole type, Direction direction) {
 	    if (animations.containsKey(type)) {
 			Map<Direction, AnimationLinker> roleMap = animations.get(type);
-			return roleMap.getOrDefault((direction), null);
+			return roleMap.getOrDefault(direction, roleMap.getOrDefault(Direction.DEFAULT,null));
         }
+
         return null;
     }
 
