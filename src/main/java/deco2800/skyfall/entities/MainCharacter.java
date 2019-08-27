@@ -8,6 +8,8 @@ import deco2800.skyfall.observers.*;
 import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.*;
+import deco2800.skyfall.worlds.Tile;
+import org.lwjgl.Sys;
 
 import java.util.*;
 
@@ -414,7 +416,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.updatePosition();
         this.updateCollider();
 
-
         //this.setCurrentSpeed(this.direction.len());
         //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
 //        System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction,
@@ -514,8 +515,17 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         xPos += xVel + xInput * acceleration * 0.5;
         yPos += yVel + yInput * acceleration * 0.5;
 
+        // Get the friction for the tile
+        Tile currentTile =
+                GameManager.get().getWorld().getTile((float)Math.floor(xPos),
+                        (float)Math.floor(yPos));
+        float friction = 0.6f;
+        if (currentTile != null && currentTile.getTextureName() != null) {
+            friction = Tile.getFriction(currentTile.getTextureName());
+        }
+        System.out.println(friction);
         // Calculates speed to destination
-        vel = Math.sqrt((xVel * xVel) + (yVel * yVel));
+        vel = friction*Math.sqrt((xVel * xVel) + (yVel * yVel));
 
         // Calculates velocity in x direction
         if (xInput != 0) {
@@ -571,7 +581,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             velHistoryY.set(1, (int) (yVel * 100));
         }
 
-        System.out.println(getPlayerDirectionCardinal());
+        //System.out.println(getPlayerDirectionCardinal());
     }
 
     /**

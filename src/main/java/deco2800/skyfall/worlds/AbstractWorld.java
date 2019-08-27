@@ -160,10 +160,10 @@ public abstract class AbstractWorld {
     public void initialiseFrictionmap(){
         frictionMap = new HashMap<>();
         frictionMap.put("grass", 0.6f);
-        frictionMap.put("water", 0.6f);
-        frictionMap.put("rock", 0.6f);
-        frictionMap.put("mountain", 0.6f);
-        frictionMap.put("ice", 0.6f);
+        frictionMap.put("water", 0.2f);
+        frictionMap.put("rock", 0.3f);
+        frictionMap.put("mountain", 0.4f);
+        frictionMap.put("ice", 0.8f);
         this.frictionMap.putAll(frictionMap);
     }
     
