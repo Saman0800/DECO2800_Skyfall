@@ -643,7 +643,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
 
             // Make sure all three are border nodes if circumcentre is outside
             // world
-            if (Math.abs(circumcentre[0]) > worldSize && Math.abs(
+            if (Math.abs(circumcentre[0]) > worldSize || Math.abs(
                     circumcentre[1]) > worldSize) {
                 triangle.getA().setBorderNode(true);
                 triangle.getB().setBorderNode(true);

@@ -66,7 +66,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 			if (GameManager.get().isTutorial) {
 				world = new TutorialWorld(seed, 80, 5);
 			} else {
-				world = new RocketWorld(seed, 300, 15, new int[] {70, 40, 40}, 2, 5);
+				world = new RocketWorld(seed, 300, 30, new int[] {70, 70, 70}, 2, 5);
 			}
 			GameManager.get().getManager(NetworkManager.class).startHosting("host");
 		}
@@ -213,7 +213,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 			// Use a random seed for now
 			Random random = new Random();
 			// world = new RocketWorld(random.nextLong(), 200, 15, new int[] {70,70,70}, 3, 2);
-			world = new RocketWorld(random.nextLong(), 300, 15, new int[] {70, 40, 40}, 2, 5);
+			world = new RocketWorld(random.nextLong(), 150, 15, new int[] {70, 70, 70}, 2, 5);
 			AbstractEntity.resetID();
 			Tile.resetID();
 			GameManager gameManager = GameManager.get();
