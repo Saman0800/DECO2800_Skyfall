@@ -77,12 +77,14 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private ArrayList<Integer> velHistoryX;
     private ArrayList<Integer> velHistoryY;
 
+    private boolean isMoving;
+
     /**
      * Used for combat testing melee/range weapons.
      * What number item slot the player has pressed.
      * TODO: remove or integrate into item system.
      * e.g. 1 = test range weapon
-     *      2 = test melee weapon
+     * 2 = test melee weapon
      */
     private int itemSlotSelected = 1;
 
@@ -133,6 +135,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         vel = 0;
         velHistoryX = new ArrayList<>();
         velHistoryY = new ArrayList<>();
+
+        isMoving = false;
     }
 
     /**
@@ -157,6 +161,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Switch the item the MainCharacter has equip.
+     *
      * @param keyCode Keycode the player has pressed.
      */
     protected void switchItem(int keyCode) {
@@ -170,6 +175,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Return the currently selected item slot.
+     *
      * @return The item slot the MainCharacter has equip.
      */
     public int getItemSlotSelected() {
@@ -230,6 +236,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Attempts to equip a weapon from the weapons map
+     *
      * @param item weapon being equipped
      */
     public void equipWeapon(Weapon item) {
@@ -238,6 +245,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Attempts to unequip a weapon and return it to the weapons map
+     *
      * @param item weapon being unequipped
      */
     public void unequipWeapon(Weapon item) {
@@ -247,6 +255,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Get a copy of the equipped weapons list
      * Modifying the returned list shouldn't affect the internal state of class
+     *
      * @return equipped list
      */
     public List<Weapon> getEquipped() {
@@ -256,6 +265,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Gets the weapon manager of the character, so it can only be modified
      * this way, prevents having it being a public variable
+     *
      * @return the weapon manager of character
      */
     public WeaponManager getWeaponManager() {
@@ -274,6 +284,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Set the players inventory to a predefined inventory
      * e.g for loading player saves
+     *
      * @param inventoryContents the save for the inventory
      */
     public void setInventory(Map<String, List<Item>> inventoryContents,
@@ -303,6 +314,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Gets the inventory manager of the character, so it can only be modified
      * this way, prevents having it being a public variable
+     *
      * @return the inventory manager of character
      */
     public InventoryManager getInventoryManager() {
@@ -337,6 +349,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Method for the MainCharacter to eat food and restore/decrease hunger level
+     *
      * @param item the item to eat
      */
     public void eatFood(Item item) {
@@ -357,6 +370,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * See if the player is starving
+     *
      * @return true if hunger points is <= 0, else false
      */
     public boolean isStarving() {
@@ -396,7 +410,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                                 int button) {
         if (button == 0) {
             float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(),
-                            Gdx.input.getY());
+                    Gdx.input.getY());
             float[] clickedPosition =
                     WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 
@@ -413,6 +427,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void onTick(long i) {
         this.updatePosition();
         this.updateCollider();
+
+        this.movementSound();
 
 
         //this.setCurrentSpeed(this.direction.len());
@@ -521,6 +537,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         if (xInput != 0) {
             xVel += xInput * acceleration;
             // Prevents sliding
+
             if (xVel / Math.abs(xVel) != xInput) {
                 xVel = 0;
             }
@@ -571,7 +588,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             velHistoryY.set(1, (int) (yVel * 100));
         }
 
-        System.out.println(getPlayerDirectionCardinal());
+        //System.out.println(getPlayerDirectionCardinal());
     }
 
     /**
@@ -591,7 +608,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             val = Math.atan2(velHistoryY.get(0), velHistoryX.get(0));
         }
         val = val * -180 / Math.PI + 90;
-        if (val < 0){
+        if (val < 0) {
             val += 360;
         }
         return val;
@@ -603,14 +620,14 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      *
      * @return new texture to use
      */
-    public String getPlayerDirectionCardinal(){
+    public String getPlayerDirectionCardinal() {
         double direction = getPlayerDirectionAngle();
 
-        if (direction <= 22.5 || direction >= 337.5){
+        if (direction <= 22.5 || direction >= 337.5) {
             return "North";
-        } else if (22.5 <= direction && direction <= 67.5){
+        } else if (22.5 <= direction && direction <= 67.5) {
             return "North-East";
-        } else if (67.5 <= direction && direction <= 112.5){
+        } else if (67.5 <= direction && direction <= 112.5) {
             return "East";
         } else if (112.5 <= direction && direction <= 157.5) {
             return "South-East";
@@ -635,7 +652,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      *
      * @return list of players velocity properties
      */
-    public List getVelocity(){
+    public List getVelocity() {
         ArrayList<Float> velocity = new ArrayList<>();
         velocity.add(xVel);
         velocity.add(yVel);
@@ -649,7 +666,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      *
      * @param newAcceleration: the new acceleration for the player
      */
-    public void setAcceleration(float newAcceleration){
+    public void setAcceleration(float newAcceleration) {
         this.acceleration = newAcceleration;
     }
 
@@ -658,7 +675,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      *
      * @param newMaxSpeed: the new max speed of the player
      */
-    public void setMaxSpeed(float newMaxSpeed){
+    public void setMaxSpeed(float newMaxSpeed) {
         this.maxSpeed = newMaxSpeed;
     }
 
@@ -667,7 +684,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      *
      * @return the players acceleration
      */
-    public float getAcceleration(){
+    public float getAcceleration() {
         return this.acceleration;
     }
 
@@ -676,7 +693,23 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      *
      * @return the players max speed
      */
-    public float getMaxSpeed(){
+    public float getMaxSpeed() {
         return this.maxSpeed;
+    }
+
+    public void movementSound() {
+        if (!isMoving && vel != 0) {
+            //Runs when the player starts moving
+            isMoving = true;
+            System.out.println("Start Playing");
+            //TODO: Play movement sound
+        }
+
+        if (isMoving && vel == 0) {
+            //Runs when the player stops moving
+            isMoving = false;
+            System.out.println("Stop Playing");
+            //TODO: Stop Player movement
+        }
     }
 }
