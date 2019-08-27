@@ -123,7 +123,21 @@ public class Tile{
 		return String.format("%f", getPerlinValue());
 	}
 
-
+	public static float getFriction(String tileType){
+    	Map<String, Float> frictionMap =
+				GameManager.get().getWorld().frictionMap;
+    	if(tileType.contains("ice")){
+			return frictionMap.get("ice");
+		}else if(tileType.contains("sand")){
+			return frictionMap.get("sand");
+		}else if(tileType.contains("mountain")){
+			return frictionMap.get("mountain");
+		}else if(tileType.contains("water")){
+			return frictionMap.get("water");
+		}else{
+			return frictionMap.get("grass");
+		}
+	}
 
 	public StaticEntity getParent() {
 		return parent;
