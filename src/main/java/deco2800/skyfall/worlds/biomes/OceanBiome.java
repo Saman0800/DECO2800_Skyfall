@@ -35,7 +35,6 @@ public class OceanBiome extends AbstractBiome {
         textures.add("water_9");
         textures.add("water_8");
 
-
         // Perlin noise generation
         new TileNoiseGenerator(getTiles(), random, 5, 160, 0.9, Tile::setPerlinValue);
 

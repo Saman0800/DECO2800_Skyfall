@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Texture manager acts as a cache between the file system and the renderers.
@@ -57,9 +58,10 @@ public class TextureManager extends AbstractManager {
             //Using this means that each tile texture should be given a unique name as otherwise it will get
             //overridden in the texture hashmap .
             File [] files = new File("resources/tile_textures").listFiles();
+            assert files != null;
             for (File direc : files){
                 if (direc.isDirectory()){
-                    for (File file : direc.listFiles()){
+                    for (File file : Objects.requireNonNull(direc.listFiles())){
                         String path = String.format("resources/tile_textures/%s/%s", direc.getName(), file.getName());
                         textureMap.put(file.getName().substring(0, file.getName().length()-4), new Texture(path));
                     }
