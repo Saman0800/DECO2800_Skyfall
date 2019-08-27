@@ -183,6 +183,13 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
         return "" + subtype + ":" + name;
     }
 
-
+    /**
+     * Returns the item description
+     * @return the item description
+     */
+    @Override
+    public String getDescription() {
+        return "This item increases or decreases a player's health.";
+    }
 
 }
