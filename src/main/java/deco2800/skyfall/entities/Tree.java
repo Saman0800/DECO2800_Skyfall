@@ -18,12 +18,14 @@ public class Tree extends StaticEntity implements Tickable, Harvestable {
         super(col, row, renderOrder, texture);
         LOG.info("Making a tree at {}, {}", col, row);
         this.setTexture("tree_cubeH1A0");
-        this.woodAmount =15;
     }
 
     public Tree(Tile tile, boolean obstructed) {
         super(tile, 5, "tree", obstructed);
+        this.woodAmount =15;
+
     }
+
 
     /**
      * The newInstance method implemented for the Tree class to allow for item

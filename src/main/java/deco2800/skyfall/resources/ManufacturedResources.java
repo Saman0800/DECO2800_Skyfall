@@ -27,10 +27,8 @@ public abstract class ManufacturedResources implements Item {
      * Creates a default manufactured resource .
      * @param owner the resource owner.
      * @param position the Hexvector position of the manufactured resource.
-     * @param name the name of the manufactured resource.
      */
-    public ManufacturedResources(AgentEntity owner, HexVector position, String name) {
-        this.name = name;
+    public ManufacturedResources(AgentEntity owner, HexVector position) {
         this.owner = owner;
         this.position = position;
         this.carryable = true;

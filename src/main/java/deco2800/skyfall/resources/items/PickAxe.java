@@ -17,10 +17,9 @@ public class PickAxe extends ManufacturedResources implements Item {
      *
      * @param owner the owner of the inventory.
      * @param position the position of the Pick Axe.
-     * @param name the name of the item which is Pick Axe.
      */
-    public PickAxe (AgentEntity owner, HexVector position, String name) {
-        super(owner, position, name);
+    public PickAxe (AgentEntity owner, HexVector position) {
+        super(owner, position);
         this.name="Pick Axe";
     }
 
@@ -78,14 +77,17 @@ public class PickAxe extends ManufacturedResources implements Item {
      * @param rockToFarm the rock to be farmed
      */
     public void farmRock(Rock rockToFarm) {
-        int i;
 
         //temporary  inventory. this will change to the player inventory later.
         InventoryManager ownerInventory = new InventoryManager();
 
-        for (i = 0; i < rockToFarm.getHealth()/10; i++) {
+        if (rockToFarm.getHealth()==0){
+            System.out.println("This rock has no more stone");
+        }
+
+        else {
             ownerInventory.inventoryAdd(new Stone());
-            rockToFarm.setHealth(rockToFarm.getHeight()-10);
+            rockToFarm.setHealth(rockToFarm.getHealth()-10);
         }
 
     }

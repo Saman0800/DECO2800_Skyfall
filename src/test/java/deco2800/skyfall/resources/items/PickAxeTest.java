@@ -22,7 +22,7 @@ public class PickAxeTest {
 
     @Before
     public void setUp()  {
-        pickAxe = new PickAxe(owner,position, "Pick Axe" );
+        pickAxe = new PickAxe(owner,position);
         rockToFarm = new Rock();
     }
 
@@ -60,6 +60,9 @@ public class PickAxeTest {
 
     @Test
     public void farmRock() {
+        pickAxe.farmRock(rockToFarm);
+
+        assertEquals(90,rockToFarm.getHealth());
 
     }
 }

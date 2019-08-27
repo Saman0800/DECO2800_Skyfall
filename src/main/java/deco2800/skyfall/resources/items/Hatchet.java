@@ -1,11 +1,16 @@
 package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.entities.AgentEntity;
+import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.Tree;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.managers.InventoryManager;
+import org.lwjgl.Sys;
+
+import java.lang.Math;
+
 
 
 /***
@@ -18,10 +23,9 @@ public class Hatchet extends ManufacturedResources implements Item {
      *
      * @param owner the owner of the inventory.
      * @param position the position of the Hatchet.
-     * @param name the name of the item which is Hatchet.
      */
-    public Hatchet(AgentEntity owner, HexVector position, String name) {
-        super(owner, position, name);
+    public Hatchet(PlayerPeon owner, HexVector position) {
+        super(owner, position);
         this.name="Hatchet";
     }
 
@@ -84,16 +88,15 @@ public class Hatchet extends ManufacturedResources implements Item {
      * wood to that inventory. decreased the woodAmount of a tree.
      * @param treeToFarm the tree to be farmed
      */
-    public void farmTree(Tree treeToFarm) {
-        int i;
+    public void farmTree(Tree treeToFarm, InventoryManager ownerInventory) {
 
-        //temporary  inventory. this will change to the player inventory later.
-        InventoryManager ownerInventory = new InventoryManager();
+        if (treeToFarm.getWoodAmount() == 0) {
+            System.out.println("This tree has no more wood");
 
-        for (i = 0; i < treeToFarm.getWoodAmount(); i++) {
+        } else {
             ownerInventory.inventoryAdd(new Wood());
             treeToFarm.decreaseWoodAmount();
         }
-
     }
+
 }
