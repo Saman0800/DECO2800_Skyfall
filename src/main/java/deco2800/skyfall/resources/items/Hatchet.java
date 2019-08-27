@@ -96,4 +96,14 @@ public class Hatchet extends ManufacturedResources implements Item {
         }
 
     }
+
+    /**
+     * Returns the item description
+     * @return the item description
+     */
+    @Override
+    public String getDescription() {
+        return "This item is similar to an axe. It can be used to " +
+                "cut down trees and retrieve wood.";
+    }
 }

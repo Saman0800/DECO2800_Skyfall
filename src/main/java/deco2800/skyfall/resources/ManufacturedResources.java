@@ -74,6 +74,7 @@ public abstract class ManufacturedResources implements Item {
         return "" + subtype + ":" + name;
     }
 
+
 }
 
 

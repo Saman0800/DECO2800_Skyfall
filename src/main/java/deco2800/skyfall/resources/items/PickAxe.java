@@ -89,4 +89,14 @@ public class PickAxe extends ManufacturedResources implements Item {
         }
 
     }
+
+    /**
+     * Returns the item description
+     * @return the item description
+     */
+    @Override
+    public String getDescription() {
+        return "This item can be constructed using stone and wood. " +
+                "It can farm stone from biomes.";
+    }
 }
