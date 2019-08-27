@@ -13,16 +13,21 @@ import java.util.Random;
 
 public class Tree extends StaticEntity implements Tickable, Harvestable {
     private static final Logger LOG = LoggerFactory.getLogger(Tree.class);
-    private int woodAmount; //amount of wood that each tree has
+    private int woodAmount; // amount of wood that each tree has
+
+    private static Random randomGen = new Random();
+    private static int nextRock = 1;
+
     public Tree(float col, float row, int renderOrder, Map<HexVector, String> texture) {
         super(col, row, renderOrder, texture);
         LOG.info("Making a tree at {}, {}", col, row);
         this.setTexture("tree_cubeH1A0");
-        this.woodAmount =15;
+        this.woodAmount = 15;
     }
 
     public Tree(Tile tile, boolean obstructed) {
-        super(tile, 5, "tree", obstructed);
+        super(tile, 5, "tree" + nextRock, obstructed);
+        nextRock = randomGen.nextInt(3) + 1;
     }
 
     /**
@@ -92,16 +97,17 @@ public class Tree extends StaticEntity implements Tickable, Harvestable {
 
     /***
      * A getter method to for woodAmount.
+     * 
      * @return woodAmount.
      */
-    public int getWoodAmount(){
+    public int getWoodAmount() {
         return woodAmount;
     }
 
     /***
      * A method to decrease wood.
      */
-    public void decreaseWoodAmount(){
+    public void decreaseWoodAmount() {
         woodAmount--;
     }
 
