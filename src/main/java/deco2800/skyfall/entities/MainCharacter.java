@@ -525,27 +525,33 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         float xPos = position.getCol();
         float yPos = position.getRow();
 
-        // Calculates new x and y positions
-        xPos += xVel + xInput * acceleration * 0.5;
-        yPos += yVel + yInput * acceleration * 0.5;
-
-        // Get the friction for the tile
-        Tile currentTile =
-                GameManager.get().getWorld().getTile((float)Math.floor(xPos),
-                        (float)Math.floor(yPos));
-        float friction = 0.6f;
-        if (currentTile != null && currentTile.getTextureName() != null) {
-            friction = Tile.getFriction(currentTile.getTextureName());
+        //Returns tile at left arm (our perspective) of the player
+        float tileCol = (float) Math.round(xPos);
+        float tileRow = (float) Math.round(yPos);
+        if (tileCol % 2 != 0){
+            tileRow += 0.5f;
         }
-        System.out.println(friction);
-        // Calculates speed to destination
-        vel = friction*Math.sqrt((xVel * xVel) + (yVel * yVel));
+
+        //Determined friction scaling factor to apply based on current tile
+        float friction;
+        Tile currentTile = GameManager.get().getWorld().getTile(tileCol,tileRow);
+        if(currentTile != null && currentTile.getTexture() != null){
+            //Tile specific friction
+            friction = Tile.getFriction(currentTile.getTextureName());
+            System.out.println(friction);
+        }else{
+            //Default friction
+            friction = 1f;
+        }
+
+        // Calculates new x and y positions
+        xPos += xVel + xInput * acceleration * 0.5 * friction;
+        yPos += yVel + yInput * acceleration * 0.5 * friction;
 
         // Calculates velocity in x direction
         if (xInput != 0) {
-            xVel += xInput * acceleration;
+            xVel += xInput * acceleration * friction;
             // Prevents sliding
-
             if (xVel / Math.abs(xVel) != xInput) {
                 xVel = 0;
             }
@@ -557,7 +563,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         // Calculates velocity in y direction
         if (yInput != 0) {
-            yVel += yInput * acceleration;
+            yVel += yInput * acceleration * friction;
             // Prevents sliding
             if (yVel / Math.abs(yVel) != yInput) {
                 yVel = 0;
@@ -577,6 +583,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             yVel *= maxSpeed;
         }
 
+        // Calculates speed to destination
+        vel = Math.sqrt((xVel * xVel) + (yVel * yVel));
+
         // Calculates destination vector
         HexVector destination = new HexVector(xPos, yPos);
 
@@ -595,8 +604,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             velHistoryY.set(0, velHistoryY.get(1));
             velHistoryY.set(1, (int) (yVel * 100));
         }
-
-        //System.out.println(getPlayerDirectionCardinal());
     }
 
     /**
@@ -709,14 +716,14 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         if (!isMoving && vel != 0) {
             //Runs when the player starts moving
             isMoving = true;
-            System.out.println("Start Playing");
+            //System.out.println("Start Playing");
             //TODO: Play movement sound
         }
 
         if (isMoving && vel == 0) {
             //Runs when the player stops moving
             isMoving = false;
-            System.out.println("Stop Playing");
+            //System.out.println("Stop Playing");
             //TODO: Stop Player movement
         }
     }
