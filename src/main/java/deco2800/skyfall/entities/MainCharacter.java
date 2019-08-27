@@ -74,6 +74,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     // Textures for all 6 directions to correspond to movement of character
     private String[] textures;
 
+    // A goldPouch to store the character's gold pieces.
     private HashMap<Integer, Integer> goldPouch;
 
     /**
@@ -148,7 +149,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 "test hitbox",
                 position.getCol() + 1,
                 position.getRow(),
-                1, 1)*/;
+                1, 1);*/
 
         //Get AbstractWorld from static class GameManager.
         GameManager manager = GameManager.get();
