@@ -111,22 +111,36 @@ public class Tile {
         neighbours.remove(direction);
     }
 
+	public static float getFriction(String tileType){
+    	Map<String, Float> frictionMap =
+				GameManager.get().getWorld().frictionMap;
+    	if(tileType.contains("ice")){
+			return frictionMap.get("ice");
+		}else if(tileType.contains("sand")){
+			return frictionMap.get("sand");
+		}else if(tileType.contains("mountain")){
+			return frictionMap.get("mountain");
+		}else if(tileType.contains("water")){
+			return frictionMap.get("water");
+		}else{
+			return frictionMap.get("grass");
+		}
+	}
     public Map<Integer, Tile> getNeighbours() {
         return neighbours;
     }
 
+	public StaticEntity getParent() {
+		return parent;
+	}
+	
+	public boolean hasParent() {
+		return parent != null;
+	}
     public String toString() {
         // return String.format("[%.0f, %.1f: %d]", coords.getCol(), coords.getRow(),
         // index);
         return String.format("%f", getPerlinValue());
-    }
-
-    public StaticEntity getParent() {
-        return parent;
-    }
-
-    public boolean hasParent() {
-        return parent != null;
     }
 
     public void setParent(StaticEntity parent) {
