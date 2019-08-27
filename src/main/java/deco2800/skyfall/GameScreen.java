@@ -16,7 +16,6 @@ import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.renderers.OverlayRenderer;
 import deco2800.skyfall.renderers.Renderer3D;
 import deco2800.skyfall.worlds.*;
-import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.managers.EnvironmentManager;
 
 import org.slf4j.Logger;
@@ -67,7 +66,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 			if (GameManager.get().isTutorial) {
 				world = new TutorialWorld(seed, 80, 5);
 			} else {
-				world = new RocketWorld(seed, 80, 5);
+				world = new RocketWorld(seed, 200, 15, new int[] {90,70,70}, 2, 5);
 			}
 			GameManager.get().getManager(NetworkManager.class).startHosting("host");
 		}
@@ -88,8 +87,8 @@ public class GameScreen implements Screen,KeyDownObserver {
 
 		/* Play BGM */
 		try {
-			SoundManager.backgroundGameMusic("resources/sounds/forest_day.wav");
-			SoundManager.play();
+			BGMManager.BGMManager("resources/sounds/forest_day.wav");
+			BGMManager.play();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -98,13 +97,13 @@ public class GameScreen implements Screen,KeyDownObserver {
 
         PathFindingService pathFindingService = new PathFindingService();
 		GameManager.get().addManager(pathFindingService);
-		
+
 		InputMultiplexer multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(stage);
 		multiplexer.addProcessor(GameManager.get().getManager(KeyboardManager.class));
 		multiplexer.addProcessor(GameManager.get().getManager(InputManager.class));
 		Gdx.input.setInputProcessor(multiplexer);
-		
+
 		GameManager.get().getManager(KeyboardManager.class).registerForKeyDown(this);
 	}
 
@@ -118,24 +117,24 @@ public class GameScreen implements Screen,KeyDownObserver {
 		handleRenderables();
 
 		moveCamera();
-			
+
 		cameraDebug.position.set(camera.position);
 		cameraDebug.update();
 		camera.update();
 
 		SpriteBatch batchDebug = new SpriteBatch();
 		batchDebug.setProjectionMatrix(cameraDebug.combined);
-		
+
 		SpriteBatch batch = new SpriteBatch();
 		batch.setProjectionMatrix(camera.combined);
-		
+
 		// Clear the entire display as we are using lazy rendering
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		rerenderMapObjects(batch, camera);
 		rendererDebug.render(batchDebug, cameraDebug);
-		
+
 		/* Refresh the experience UI for if information was updated */
 		stage.act(delta);
 		stage.draw();
@@ -174,10 +173,10 @@ public class GameScreen implements Screen,KeyDownObserver {
 		camera.viewportWidth = width;
 		camera.viewportHeight = height;
 		camera.update();
-		
+
 		cameraDebug.viewportWidth = width;
 		cameraDebug.viewportHeight = height;
-		cameraDebug.update();		
+		cameraDebug.update();
 	}
 
 	@Override
@@ -194,7 +193,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 	public void hide() {
 		//do nothing
 	}
-	
+
 	/**
 	 * Disposes of assets etc when the rendering system is stopped.
 	 */
@@ -213,7 +212,8 @@ public class GameScreen implements Screen,KeyDownObserver {
 		if (keycode == Input.Keys.F5) {
 			// Use a random seed for now
 			Random random = new Random();
-			world = new RocketWorld(random.nextLong(), 80, 5);
+			// world = new RocketWorld(random.nextLong(), 200, 15, new int[] {70,70,70}, 3, 2);
+			world = new RocketWorld(random.nextLong(), 300, 15, new int[] {70,70,70}, 3, 2);
 			AbstractEntity.resetID();
 			Tile.resetID();
 			GameManager gameManager = GameManager.get();
@@ -222,13 +222,13 @@ public class GameScreen implements Screen,KeyDownObserver {
 			// Add first peon to the world
 			world.addEntity(new Peon(0f, 0f, 0.05f, "Side Piece", 10));
 		}
-		
+
 		if (keycode == Input.Keys.F11) { // F11
 			GameManager.get().showCoords = !GameManager.get().showCoords;
 			LOG.info("Show coords is now {}", GameManager.get().showCoords);
 		}
-		
-		
+
+
 		if (keycode == Input.Keys.C) { // F11
 			GameManager.get().showCoords = !GameManager.get().showCoords;
 			LOG.info("Show coords is now {}", GameManager.get().showCoords);
@@ -249,46 +249,46 @@ public class GameScreen implements Screen,KeyDownObserver {
 			DatabaseManager.loadWorld(null);
 		}
 	}
-	
+
 	public void moveCamera() {
 	//timmeh to fix hack.  // fps is not updated cycle by cycle
 		float normilisedGameSpeed = (60.0f/Gdx.graphics.getFramesPerSecond());
-				
+
 		int goFastSpeed = (int) (5 * normilisedGameSpeed *camera.zoom);
-		
+
 		if (!camera.isPotate()) {
-			
+
 			if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
 				goFastSpeed *= goFastSpeed * goFastSpeed;
 			}
-			
+
 			if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 				camera.translate(-goFastSpeed, 0, 0);
 			}
-	
+
 			if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 				camera.translate(goFastSpeed, 0, 0);
 			}
-	
+
 			if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 				camera.translate(0, -goFastSpeed, 0);
 			}
-	
+
 			if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
 				camera.translate(0, goFastSpeed, 0);
 			}
-			
+
 			if (Gdx.input.isKeyPressed(Input.Keys.EQUALS)) {
 				camera.zoom *=1-0.01*normilisedGameSpeed;
 				if (camera.zoom < 0.5) {
 					camera.zoom = 0.5f;
 				}
 			}
-			
+
 			if (Gdx.input.isKeyPressed(Input.Keys.MINUS)) {
 				camera.zoom *=1+0.01*normilisedGameSpeed;
 			}
 		}
-		
+
 	}
 }
