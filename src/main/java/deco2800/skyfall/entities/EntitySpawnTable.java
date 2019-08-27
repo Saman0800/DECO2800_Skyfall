@@ -66,9 +66,8 @@ public class EntitySpawnTable {
      *                 that is compared to the uniform probability.
      */
     public static <T extends StaticEntity> void placeUniform(T entity, EntitySpawnRule rule, Tile nextTile,
-            Random randGen) {
+            Random randGen, AbstractWorld world) {
 
-        AbstractWorld world = GameManager.get().getWorld();
         double chance = rule.getChance();
 
         if (rule.getLimitAdjacent()) {
@@ -97,10 +96,9 @@ public class EntitySpawnTable {
      *                 that is compared to the adjusted probability.
      */
     public static <T extends StaticEntity> void placePerlin(T entity, EntitySpawnRule rule, Tile nextTile,
-            Random randGen) {
+            Random randGen, AbstractWorld world) {
 
         // Get the perlin noise value of the tile and apply the perlin map
-        AbstractWorld world = GameManager.get().getWorld();
         SpawnControl perlinMap = rule.getAdjustMap();
         double adjustedProb = perlinMap.probabilityMap(nextTile.getPerlinValue());
 
@@ -127,9 +125,8 @@ public class EntitySpawnTable {
      *               combination of these, e.g.
      * @param <T>    T must extend StaticEntity and have .newInstance inherited
      */
-    public static <T extends StaticEntity> void spawnEntities(T entity, EntitySpawnRule rule) {
+    public static <T extends StaticEntity> void spawnEntities(T entity, EntitySpawnRule rule, AbstractWorld world) {
 
-        AbstractWorld world = GameManager.get().getWorld();
         List<Tile> tiles = null;
         // Use the current time as a seed
         Random rand = new Random((new Date()).getTime());
@@ -172,9 +169,9 @@ public class EntitySpawnTable {
             }
 
             if (rule.getUsePerlin()) {
-                placePerlin(entity, rule, nextTile, rand);
+                placePerlin(entity, rule, nextTile, rand, world);
             } else {
-                placeUniform(entity, rule, nextTile, rand);
+                placeUniform(entity, rule, nextTile, rand, world);
             }
 
             placedDown++;
@@ -192,8 +189,9 @@ public class EntitySpawnTable {
      * @param <T>    T must extend StaticEntity and have .newInstance inherited
      * @param biome  specified biome to spawn in, null for no specification
      */
-    public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntities(T entity, double chance) {
+    public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntities(T entity, double chance,
+            AbstractWorld world) {
         EntitySpawnRule spawnRule = new EntitySpawnRule(chance);
-        spawnEntities(entity, spawnRule);
+        spawnEntities(entity, spawnRule, world);
     }
 }

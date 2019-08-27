@@ -97,7 +97,8 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         // player = new PlayerPeon(0f, 0f, 0.05f);
         // addEntity(player);
 
-        GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
+        // Generate items that will be present on game start up
+        generateStartEntities();
 
         // MainCharacter is now being put into the game instead of PlayerPeon
         MainCharacter testCharacter = new MainCharacter(0f, 0f, 0.05f, "Main Piece", 10);
@@ -111,54 +112,52 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
     }
 
+    protected void generateStartEntities() {
+
+        Tile tileRock = getTile(0.0f, 1.0f);
+        Rock startRock = new Rock(tileRock, true);
+        Tree startTree = new Tree(tileRock, true);
+        LongGrass startGrass = new LongGrass(tileRock, true);
+
+        for (AbstractBiome biome : this.getBiomes()) {
+
+            switch (biome.getBiomeName()) {
+            case "forest":
+
+                // Create a new perlin noise map
+                SpawnControl pieceWise = x -> {
+                    if ((0 < x) && (x <= 0.5)) {
+                        return 0;
+                    } else if ((0.5 < x) && (x <= 0.8)) {
+                        return 0.05;
+                    } else {
+                        return 0.4;
+                    }
+                };
+
+                // EntitySpawnRule newRule = EntitySpawnRule(0.1);
+                EntitySpawnRule treeRule = new EntitySpawnRule(biome, true, pieceWise);
+                treeRule.setLimitAdjacent(true);
+                EntitySpawnTable.spawnEntities(startTree, treeRule, this);
+
+                EntitySpawnRule grassRule = new EntitySpawnRule(0.05, biome);
+                EntitySpawnTable.spawnEntities(startGrass, grassRule, this);
+                break;
+
+            case "mountain":
+                EntitySpawnRule rockRule = new EntitySpawnRule(0.05, biome);
+                EntitySpawnTable.spawnEntities(startRock, rockRule, this);
+                break;
+            }
+        }
+    }
+
     @Override
     public void onTick(long i) {
         super.onTick(i);
 
         if (!generated) {
-            Random random = new Random(entitySeed);
-
-            Tile tile = getTile(1f, 2.5f);
-            addEntity(new Tree(tile, true));
-
             generated = true;
-
-            Tile tileRock = getTile(0.0f, 1.0f);
-            Rock startRock = new Rock(tileRock, true);
-            Tree startTree = new Tree(tileRock, true);
-            LongGrass startGrass = new LongGrass(tileRock, true);
-
-            for (AbstractBiome biome : biomes) {
-
-                switch (biome.getBiomeName()) {
-                case "forest":
-
-                    // Create a new perlin noise map
-                    SpawnControl pieceWise = x -> {
-                        if ((0 < x) && (x <= 0.5)) {
-                            return 0;
-                        } else if ((0.5 < x) && (x <= 0.8)) {
-                            return 0.05;
-                        } else {
-                            return 0.4;
-                        }
-                    };
-
-                    // EntitySpawnRule newRule = EntitySpawnRule(0.1);
-                    EntitySpawnRule treeRule = new EntitySpawnRule(biome, true, pieceWise);
-                    treeRule.setLimitAdjacent(true);
-                    EntitySpawnTable.spawnEntities(startTree, treeRule);
-
-                    EntitySpawnRule grassRule = new EntitySpawnRule(0.05, biome);
-                    EntitySpawnTable.spawnEntities(startGrass, grassRule);
-                    break;
-
-                case "mountain":
-                    EntitySpawnRule rockRule = new EntitySpawnRule(0.05, biome);
-                    EntitySpawnTable.spawnEntities(startRock, rockRule);
-                    break;
-                }
-            }
         }
     }
 
