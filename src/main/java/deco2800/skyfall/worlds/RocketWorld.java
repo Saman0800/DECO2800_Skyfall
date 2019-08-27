@@ -13,6 +13,7 @@ import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.biomes.*;
 import deco2800.skyfall.worlds.generation.BiomeGenerator;
+import deco2800.skyfall.worlds.generation.DeadEndGenerationException;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
@@ -26,13 +27,14 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
     long entitySeed;
 
-    public RocketWorld(long seed, int worldSize, int nodeSpacing) {
-        super(seed, worldSize, nodeSpacing);
+    public RocketWorld(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int lakeSize ) {
+        super(seed, worldSize, nodeSpacing, biomeSizes, numOfLakes, lakeSize);
     }
 
     @Override
     protected void generateWorld(Random random) {
         this.entitySeed = random.nextLong();
+
 
         // World generation loop: restarts world generation if it reaches an unresolvable layout
         while (true) {
@@ -40,8 +42,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             ArrayList<Tile> tiles = new ArrayList<>();
             ArrayList<AbstractBiome> biomes = new ArrayList<>();
 
-            int nodeCount = (int) Math.round(
-                    Math.pow((float) worldSize * 2 / (float) nodeSpacing, 2));
+            int nodeCount = Math.round((float) worldSize * worldSize * 4 / nodeSpacing / nodeSpacing);
             // TODO: if nodeCount is less than the number of biomes, throw an exception
 
             for (int i = 0; i < nodeCount; i++) {
@@ -63,30 +64,39 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
             for (int q = -worldSize; q <= worldSize; q++) {
                 for (int r = -worldSize; r <= worldSize; r++) {
-                    if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= worldSize) {
+                    //if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= worldSize) {
                         float oddCol = (q % 2 != 0 ? 0.5f : 0);
 
                         Tile tile = new Tile(q, r + oddCol);
                         tiles.add(tile);
-                    }
+                    //}
                 }
             }
-            WorldGenNode.assignNeighbours(worldGenNodes);
-            WorldGenNode.assignTiles(worldGenNodes, tiles);
+            // TODO Fix this.
+            generateNeighbours(tiles);
 
+            try {
+                WorldGenNode.assignTiles(worldGenNodes, tiles, random, nodeSpacing);
+                WorldGenNode.removeZeroTileNodes(worldGenNodes, worldSize);
+                WorldGenNode.assignNeighbours(worldGenNodes);
+            } catch (WorldGenException e) {
+                continue;
+            }
             biomes.add(new ForestBiome());
             biomes.add(new DesertBiome());
             biomes.add(new MountainBiome());
             biomes.add(new OceanBiome());
+
             try {
-                BiomeGenerator.generateBiomes(worldGenNodes, random, new int[] { 20, 10, 10 }, biomes);
-            } catch (NotEnoughPointsException e) {
+                BiomeGenerator.generateBiomes(worldGenNodes, random, biomeSizes, biomes, numOfLakes, lakeSize);
+            } catch (NotEnoughPointsException | DeadEndGenerationException e) {
                 continue;
             }
 
             this.worldGenNodes.addAll(worldGenNodes);
             this.tiles.addAll(tiles);
             this.biomes.addAll(biomes);
+
 
             break;
         }
@@ -127,7 +137,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
             for (AbstractBiome biome : biomes) {
                 EntitySpawnTable rockSpawnRule = new EntitySpawnTable();
-                EntitySpawnTable.spawnEntities(startRock, 0.2, biome, random);
+                // EntitySpawnTable.spawnEntities(startRock, 0.2, biome, random);
             }
         }
     }
