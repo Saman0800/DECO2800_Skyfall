@@ -9,7 +9,6 @@ import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.Tile;
-import org.lwjgl.Sys;
 
 import java.util.*;
 
@@ -458,19 +457,15 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         switch (keycode) {
             case Input.Keys.W:
                 yInput += 1;
-                //System.out.println("y+1");
                 break;
             case Input.Keys.A:
                 xInput += -1;
-                //System.out.println("x-1");
                 break;
             case Input.Keys.S:
                 yInput += -1;
-                //System.out.println("y-1");
                 break;
             case Input.Keys.D:
                 xInput += 1;
-                //System.out.println("x+1");
                 break;
             default:
                 switchItem(keycode);
@@ -493,19 +488,15 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         switch (keycode) {
             case Input.Keys.W:
                 yInput -= 1;
-                //System.out.println("y-1");
                 break;
             case Input.Keys.A:
                 xInput -= -1;
-                //System.out.println("x+1");
                 break;
             case Input.Keys.S:
                 yInput -= -1;
-                //System.out.println("y+1");
                 break;
             case Input.Keys.D:
                 xInput -= 1;
-                //System.out.println("x-1");
                 break;
         }
     }
@@ -538,7 +529,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         if(currentTile != null && currentTile.getTexture() != null){
             //Tile specific friction
             friction = Tile.getFriction(currentTile.getTextureName());
-            System.out.println(friction);
         }else{
             //Default friction
             friction = 1f;
@@ -616,7 +606,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @return the player direction (units: degrees)
      */
     public double getPlayerDirectionAngle() {
-        double val = 0;
+        double val;
         if (xInput != 0 || yInput != 0) {
             val = Math.atan2(yInput, xInput);
         } else {

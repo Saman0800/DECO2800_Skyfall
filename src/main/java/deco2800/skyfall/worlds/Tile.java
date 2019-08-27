@@ -143,14 +143,6 @@ public class Tile {
         return String.format("%f", getPerlinValue());
     }
 
-    public StaticEntity getParent() {
-        return parent;
-    }
-
-    public boolean hasParent() {
-        return parent != null;
-    }
-
     public void setParent(StaticEntity parent) {
         this.parent = parent;
     }
