@@ -15,39 +15,25 @@ public abstract class AbstractBiome {
     private String biomeName;
     // The tiles the biome contains
     private ArrayList<Tile> tiles;
+    // The biome this is contained in if it's a sub-biome (e.g. a lake)
+    private AbstractBiome parentBiome;
 
-    // /**
-    // * Constructor that creates biome with biome name and a list of tiles the
-    // biome has
-    // * @param biomeName The name of the biome
-    // * @param tiles The tiles in the biome
-    // */
-    // public AbstractBiome(String biomeName, ArrayList<Tile> tiles){
-    // this.tiles = tiles;
-    // this.biomeName = biomeName;
-    // }
-    //
 
     /**
      * Constructor for a Biome
      *
      * @param biomeName The biome name
      */
-    public AbstractBiome(String biomeName) {
+    public AbstractBiome(String biomeName, AbstractBiome parentBiome) {
         // this(biomeName, new ArrayList<>());
         this.biomeName = biomeName;
+        this.parentBiome = parentBiome;
         tiles = new ArrayList<>();
     }
 
     /**
-     * Returns all the tiles within a biome <<<<<<<
-     * HEAD:src/main/java/deco2800/skyfall/worlds/AbstractBiome.java
-     * 
-     * =======
+     * Returns all the tiles within a biome
      *
-     * >>>>>>>
-     * 97079179fa237a4c9d60cf87e0aa82db9dc53796:src/main/java/deco2800/skyfall/worlds/biomes/AbstractBiome.java
-     * 
      * @return An ArrayList of all the tiles within a biome
      */
     public List<Tile> getTiles() {
@@ -55,14 +41,8 @@ public abstract class AbstractBiome {
     }
 
     /**
-     * Gets the biomes name <<<<<<<
-     * HEAD:src/main/java/deco2800/skyfall/worlds/AbstractBiome.java
-     * 
-     * =======
+     * Gets the biomes name
      *
-     * >>>>>>>
-     * 97079179fa237a4c9d60cf87e0aa82db9dc53796:src/main/java/deco2800/skyfall/worlds/biomes/AbstractBiome.java
-     * 
      * @return The biome name
      */
     public String getBiomeName() {
@@ -70,19 +50,25 @@ public abstract class AbstractBiome {
     }
 
     /**
-     * Adds a tile to a biome <<<<<<<
-     * HEAD:src/main/java/deco2800/skyfall/worlds/AbstractBiome.java
-     * 
-     * =======
+     * Adds a tile to a biome
      *
-     * >>>>>>>
-     * 97079179fa237a4c9d60cf87e0aa82db9dc53796:src/main/java/deco2800/skyfall/worlds/biomes/AbstractBiome.java
-     * 
      * @param tile The tile to be added
      */
     public void addTile(Tile tile) {
+        if (tile.getBiome() != null) {
+            tile.getBiome().tiles.remove(tile);
+        }
         tiles.add(tile);
         tile.setBiome(this);
+    }
+
+    /**
+     * Gets the parent biome of this biome
+     *
+     * @return the parent biome of this biome
+     */
+    public AbstractBiome getParentBiome() {
+        return parentBiome;
     }
 
     /**
