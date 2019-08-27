@@ -2,6 +2,7 @@ package deco2800.skyfall.entities;
 
 import deco2800.skyfall.worlds.AbstractWorld;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.managers.GameManager;
 import java.util.*;
@@ -48,7 +49,7 @@ public class EntitySpawnTable {
      */
     private static double adjustChanceAdjacent(EntitySpawnRule rule, Tile nextTile, double currentChance) {
 
-        double adjustmentFactor = Math.pow(rule.getLimitAdjacentValue(), (double) nextTile.getNeighbourObstructCount());
+        double adjustmentFactor = Math.pow(rule.getLimitAdjacentValue(), (double) nextTile.getNeighbours().size());
 
         return currentChance / adjustmentFactor;
 
@@ -96,11 +97,11 @@ public class EntitySpawnTable {
      *                 that is compared to the adjusted probability.
      */
     public static <T extends StaticEntity> void placePerlin(T entity, EntitySpawnRule rule, Tile nextTile,
-            Random randGen, AbstractWorld world) {
+            Random randGen, AbstractWorld world, double perlinValue) {
 
         // Get the perlin noise value of the tile and apply the perlin map
         SpawnControl perlinMap = rule.getAdjustMap();
-        double adjustedProb = perlinMap.probabilityMap(nextTile.getPerlinValue());
+        double adjustedProb = perlinMap.probabilityMap(perlinValue);
 
         if (rule.getLimitAdjacent()) {
             adjustedProb = adjustChanceAdjacent(rule, nextTile, adjustedProb);
@@ -168,8 +169,10 @@ public class EntitySpawnTable {
                 continue;
             }
 
+            double noise = rule.getNoiseGenerator().getOctavedPerlinValue(nextTile.getRow(), nextTile.getCol());
+
             if (rule.getUsePerlin()) {
-                placePerlin(entity, rule, nextTile, rand, world);
+                placePerlin(entity, rule, nextTile, rand, world, noise);
             } else {
                 placeUniform(entity, rule, nextTile, rand, world);
             }

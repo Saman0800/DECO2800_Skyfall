@@ -1,6 +1,10 @@
 package deco2800.skyfall.entities;
 
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
+
+import java.util.Random;
+
 import com.esotericsoftware.kryo.NotNull;
 import jdk.nashorn.internal.ir.annotations.Immutable;
 
@@ -19,11 +23,13 @@ public class EntitySpawnRule {
     // Determines if we are using the perlin noise value to use as a probability
     // when placing down tiles
     private boolean usePerlin = false;
+    // A default noise generator
+    NoiseGenerator noiseGenerator = new NoiseGenerator(new Random(), 2, 2.0, 0.3);
     // An adjustment factor to use
     // The biome name, for no biome, default for no selection is ""
     private AbstractBiome biome = null;
-    // The default spawn controller is just an identity map
-    private SpawnControl map = (double x) -> x;
+    // The default spawn controller is just a cubic function
+    private SpawnControl map = (double x) -> x * x * x;
     // A boolean value that if true limits the amount of entities spawning
     // next to each other.
     private boolean limitAdjacent = false;
@@ -193,5 +199,13 @@ public class EntitySpawnRule {
 
     public void setLimitAdjacentValue(double limitAdjacentValue) {
         this.limitAdjacentValue = limitAdjacentValue;
+    }
+
+    public NoiseGenerator getNoiseGenerator() {
+        return this.noiseGenerator;
+    }
+
+    public void setNoiseGenerator(NoiseGenerator noiseGen) {
+        this.noiseGenerator = noiseGen;
     }
 }

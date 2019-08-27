@@ -107,18 +107,6 @@ public class Tile {
         return neighbours.get(direction);
     }
 
-    public int getNeighbourObstructCount() {
-        int obstructCount = 0;
-
-        for (Entry<Integer, Tile> neighbourHash : neighbours.entrySet()) {
-            if (neighbourHash.getValue().isObstructed()) {
-                obstructCount++;
-            }
-        }
-
-        return obstructCount;
-    }
-
     public void removeNeighbour(int direction) {
         neighbours.remove(direction);
     }

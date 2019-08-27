@@ -1,7 +1,6 @@
 package deco2800.skyfall.managers;
 
 import org.junit.Test;
-import org.mockito.internal.matchers.Null;
 
 import javax.sound.sampled.*;
 import java.io.*;
@@ -10,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 
-public class SoundTest {
+public class BGMManagerTest {
 
     String file = "resources/sounds/Forest Day.wav";
 
@@ -18,7 +17,7 @@ public class SoundTest {
     public void exceptionTest() throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
         try {
-            SoundManager.backgroundGameMusic("resources/sounds/09-running-in-the-90-s.mp3");
+            BGMManager.BGMManager("resources/sounds/09-running-in-the-90-s.mp3");
         } catch (Exception e) {
             //exception caught
         }
@@ -28,10 +27,10 @@ public class SoundTest {
     public void playBGMTest() throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
         try {
-            SoundManager.backgroundGameMusic(file);
-            SoundManager.play();
+            BGMManager.BGMManager(file);
+            BGMManager.play();
             TimeUnit.SECONDS.sleep(1);
-            assertEquals(SoundManager.getClip().isRunning(), true);
+            assertEquals(BGMManager.getClip().isRunning(), true);
         } catch (Exception e) {
             //exception caught
         }
@@ -40,11 +39,11 @@ public class SoundTest {
     @Test
     public void pauseTest() {
         try {
-            SoundManager.backgroundGameMusic(file);
-            SoundManager.play();
+            BGMManager.BGMManager(file);
+            BGMManager.play();
             TimeUnit.SECONDS.sleep(1);
-            SoundManager.pause();
-            assertEquals(SoundManager.getClip().isRunning(), false);
+            BGMManager.pause();
+            assertEquals(BGMManager.getClip().isRunning(), false);
         } catch (Exception e) {
             //exception caught
         }
@@ -53,14 +52,14 @@ public class SoundTest {
     @Test
     public void resumeTest() {
         try {
-            SoundManager.backgroundGameMusic(file);
-            SoundManager.play();
+            BGMManager.BGMManager(file);
+            BGMManager.play();
             TimeUnit.SECONDS.sleep(1);
-            SoundManager.pause();
+            BGMManager.pause();
             TimeUnit.SECONDS.sleep(1);
-            SoundManager.resume();
+            BGMManager.resume();
             TimeUnit.SECONDS.sleep(1);
-            assertEquals(SoundManager.getClip().isRunning(), true);
+            assertEquals(BGMManager.getClip().isRunning(), true);
             //assertEquals(SoundManager.getClip().getFramePosition(), 84737);
         } catch (Exception e) {
             //exception caught
@@ -70,18 +69,18 @@ public class SoundTest {
     @Test
     public void resetClipTest() {
         try {
-            SoundManager.backgroundGameMusic(file);
-            SoundManager.play();
+            BGMManager.BGMManager(file);
+            BGMManager.play();
             TimeUnit.SECONDS.sleep(1);
-            SoundManager.pause();
+            BGMManager.pause();
             TimeUnit.SECONDS.sleep(1);
-            SoundManager.resetClip();
+            BGMManager.resetClip();
             TimeUnit.SECONDS.sleep(1);
-            SoundManager.backgroundGameMusic(file);
-            assertEquals(SoundManager.getClip().getLongFramePosition(), 0);
+            BGMManager.BGMManager(file);
+            assertEquals(BGMManager.getClip().getLongFramePosition(), 0);
 
             // Test that current clip is reset to the start
-            assertEquals(SoundManager.getClip().getLongFramePosition(),0);
+            assertEquals(BGMManager.getClip().getLongFramePosition(),0);
         } catch (Exception e) {
             //exception caught
         }
@@ -90,14 +89,14 @@ public class SoundTest {
     @Test
     public void muteTest() {
         try {
-            SoundManager.backgroundGameMusic(file);
-            SoundManager.play();
+            BGMManager.BGMManager(file);
+            BGMManager.play();
             TimeUnit.SECONDS.sleep(1);
-            SoundManager.mute();
-            assertEquals(SoundManager.muteVol.getValue(), true);
+            BGMManager.mute();
+            assertEquals(BGMManager.muteVol.getValue(), true);
 
             // Test that sound is muted
-            assertEquals(SoundManager.muteVol.getValue(),true);
+            assertEquals(BGMManager.muteVol.getValue(),true);
         } catch (Exception e) {
             //exception caught
         }
@@ -106,17 +105,17 @@ public class SoundTest {
     @Test
     public void unmuteTest() {
         try {
-            SoundManager.backgroundGameMusic(file);
-            SoundManager.play();
+            BGMManager.BGMManager(file);
+            BGMManager.play();
             TimeUnit.SECONDS.sleep(1);
-            SoundManager.mute();
+            BGMManager.mute();
             TimeUnit.SECONDS.sleep(1);
-            SoundManager.unmute();
+            BGMManager.unmute();
             TimeUnit.SECONDS.sleep(1);
-            assertEquals(SoundManager.muteVol.getValue(), false);
+            assertEquals(BGMManager.muteVol.getValue(), false);
 
             // Test that sound is unmuted
-            assertEquals(SoundManager.muteVol.getValue(),false);
+            assertEquals(BGMManager.muteVol.getValue(),false);
         } catch (Exception e) {
             //exception caught
         }
@@ -125,16 +124,16 @@ public class SoundTest {
     @Test
     public void getVolumeTest() {
         try {
-            SoundManager.backgroundGameMusic(file);
-            SoundManager.play();
+            BGMManager.BGMManager(file);
+            BGMManager.play();
 
             // Test Minimum (0)
-            SoundManager.setVolume(0);
-            assertEquals(0, SoundManager.getVolume(), 0.01);
+            BGMManager.setVolume(0);
+            assertEquals(0, BGMManager.getVolume(), 0.01);
 
             // Test Maximum (100)
-            SoundManager.setVolume(100);
-            assertEquals(100, SoundManager.getVolume(), 0.01);
+            BGMManager.setVolume(100);
+            assertEquals(100, BGMManager.getVolume(), 0.01);
 
         } catch (Exception e) {
         }
@@ -143,26 +142,26 @@ public class SoundTest {
     @Test
     public void setVolumeTest() {
         try {
-            SoundManager.backgroundGameMusic(file);
-            SoundManager.play();
+            BGMManager.BGMManager(file);
+            BGMManager.play();
 
             // Test Minimum (0)
-            SoundManager.setVolume(0);
-            assertEquals(0, SoundManager.getVolume(), 0.01);
+            BGMManager.setVolume(0);
+            assertEquals(0, BGMManager.getVolume(), 0.01);
 
             // Test Maximum (100)
-            SoundManager.setVolume(100);
-            assertEquals(100, SoundManager.getVolume(), 0.01);
+            BGMManager.setVolume(100);
+            assertEquals(100, BGMManager.getVolume(), 0.01);
 
             // Test whether exceptions are thrown (x > MAX).
             try {
-                SoundManager.setVolume(1000);
+                BGMManager.setVolume(1000);
                 fail();
             } catch (IndexOutOfBoundsException e) { }
 
             // Test whether exceptions are thrown (x > MAX).
             try {
-                SoundManager.setVolume(-1);
+                BGMManager.setVolume(-1);
                 fail();
             } catch (IndexOutOfBoundsException e) { }
 
@@ -172,7 +171,7 @@ public class SoundTest {
 //    @Test
 //    public void stopTest(){
 //        try {
-//            SoundManager.backgroundGameMusic(file);
+//            SoundManager.BGMManager(file);
 //            SoundManager.play();
 //            SoundManager.stop();
 //            assertEquals(SoundManager.getClip().isRunning(), false); // assert false

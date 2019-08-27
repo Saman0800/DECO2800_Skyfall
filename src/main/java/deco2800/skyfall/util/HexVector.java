@@ -87,7 +87,7 @@ public class HexVector {
     }
 
     private float distanceAsCartesian(HexVector point) {
-        return (float) Math.sqrt(Math.pow(point.col - col, 2) + Math.pow(point.row - row, 2));
+        return (float) Math.sqrt((point.col - col) * (point.col - col) +  (point.row - row) * (point.row-row));
     }
 
     public void moveToward(HexVector point, double distance) {

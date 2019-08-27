@@ -102,7 +102,7 @@ public class EntitySpawnTableTest {
         // check basic spawnEntities
         final double chance = 0.9;
         Rock rock = new Rock();
-        EntitySpawnTable.spawnEntities(rock, chance);
+        EntitySpawnTable.spawnEntities(rock, chance, testWorld);
 
         // count after spawning
         assertTrue(countWorldEntities() > 0);

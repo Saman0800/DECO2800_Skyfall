@@ -16,7 +16,6 @@ import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.renderers.OverlayRenderer;
 import deco2800.skyfall.renderers.Renderer3D;
 import deco2800.skyfall.worlds.*;
-import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.managers.EnvironmentManager;
 
 import org.slf4j.Logger;
@@ -66,7 +65,7 @@ public class GameScreen implements Screen, KeyDownObserver {
             if (GameManager.get().isTutorial) {
                 world = new TutorialWorld(seed, 80, 5);
             } else {
-                world = new RocketWorld(seed, 80, 5);
+                world = new RocketWorld(seed, 200, 15, new int[] { 90, 70, 70 }, 2, 5);
             }
             GameManager.get().getManager(NetworkManager.class).startHosting("host");
         }
@@ -87,8 +86,8 @@ public class GameScreen implements Screen, KeyDownObserver {
 
         /* Play BGM */
         try {
-            SoundManager.backgroundGameMusic("resources/sounds/forest_day.wav");
-            SoundManager.play();
+            BGMManager.BGMManager("resources/sounds/forest_day.wav");
+            BGMManager.play();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -210,7 +209,9 @@ public class GameScreen implements Screen, KeyDownObserver {
         if (keycode == Input.Keys.F5) {
             // Use a random seed for now
             Random random = new Random();
-            world = new RocketWorld(random.nextLong(), 300, 15);
+            // world = new RocketWorld(random.nextLong(), 200, 15, new int[] {70,70,70}, 3,
+            // 2);
+            world = new RocketWorld(random.nextLong(), 300, 15, new int[] { 70, 70, 70 }, 3, 2);
             AbstractEntity.resetID();
             Tile.resetID();
             GameManager gameManager = GameManager.get();
