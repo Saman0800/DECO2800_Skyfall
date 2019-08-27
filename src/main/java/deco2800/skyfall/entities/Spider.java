@@ -49,7 +49,18 @@ public class Spider extends EnemyEntity implements Animatable {
         this.setDirectionTextures();
     }
 
-
+    public Spider(float col, float row) {
+        super(col, row);
+        this.originalCol=col;
+        this.orriginalRow=row;
+        this.setTexture("spider");
+        this.setObjectName("spider");
+        this.setHeight(1);
+        this.setHealth(HEALTH);
+        this.setLevel(1);
+        this.setSpeed(1);
+        this.setArmour(1);
+    }
     public Spider(float row, float col, String texturename, int health, int armour, int damage) {
         super(row, col, texturename, health, armour, damage);
     }

@@ -34,7 +34,16 @@ public class Robot extends EnemyEntity implements Animatable {
         this.setDirectionTextures();
     }
 
-
+    public Robot(float col, float row) {
+        super(col,row);
+        this.setTexture("robot");
+        this.setObjectName("robot");
+        this.setHeight(1);
+        this.setHealth(HEALTH);
+        this.setLevel(2);
+        this.setSpeed(1);
+        this.setArmour(2);
+    }
 
     public String getEnemyType(){
         return ENEMY_TYPE;
