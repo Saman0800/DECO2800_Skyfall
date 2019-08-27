@@ -440,6 +440,7 @@ public class BiomeGenerator {
      * Returns whether the node is a valid lake node
      *
      * @param node the node to check
+     * @param tempLakeNodes the nodes that have already been assigned as lakes
      *
      * @return whether the node is a valid lake node
      */
@@ -453,7 +454,6 @@ public class BiomeGenerator {
                 return false;
             }
         }
-        int containingBiomeIndex = 0;
         for (int i = 0; i < biomes.size(); i++) {
             String biomeName = realBiomes.get(i).getBiomeName();
             boolean invalidBiome = (biomeName.equals("ocean") || biomeName.equals("lake"));
@@ -467,7 +467,6 @@ public class BiomeGenerator {
             }
         }
         return true;
-        //return !node.isBorderNode() && usedNodes.contains(node);
     }
 
     /**
