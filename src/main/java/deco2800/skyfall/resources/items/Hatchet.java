@@ -1,6 +1,7 @@
 package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.entities.AgentEntity;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.Tree;
 import deco2800.skyfall.resources.ManufacturedResources;
@@ -24,7 +25,7 @@ public class Hatchet extends ManufacturedResources implements Item {
      * @param owner the owner of the inventory.
      * @param position the position of the Hatchet.
      */
-    public Hatchet(PlayerPeon owner, HexVector position) {
+    public Hatchet(MainCharacter owner, HexVector position) {
         super(owner, position);
         this.name="Hatchet";
     }
@@ -88,13 +89,14 @@ public class Hatchet extends ManufacturedResources implements Item {
      * wood to that inventory. decreased the woodAmount of a tree.
      * @param treeToFarm the tree to be farmed
      */
-    public void farmTree(Tree treeToFarm, InventoryManager ownerInventory) {
+    public void farmTree(Tree treeToFarm) {
+
 
         if (treeToFarm.getWoodAmount() == 0) {
             System.out.println("This tree has no more wood");
 
         } else {
-            ownerInventory.inventoryAdd(new Wood());
+            owner.getInventories().inventoryAdd(new Wood());
             treeToFarm.decreaseWoodAmount();
         }
     }

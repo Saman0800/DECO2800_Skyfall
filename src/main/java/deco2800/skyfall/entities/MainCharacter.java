@@ -102,6 +102,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.equipped_item = 0;
     }
 
+
+
+
+
+
     /**
      * Base Main Character constructor
      */
@@ -491,5 +496,13 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
 
         return totalValue;
+    }
+
+    /**
+     * A getter method for Inventories
+     * @return The main charachter's inventory
+     */
+    public InventoryManager getInventories(){
+        return this.inventories;
     }
 }

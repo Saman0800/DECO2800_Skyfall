@@ -1,6 +1,7 @@
 package deco2800.skyfall.resources;
 
 import deco2800.skyfall.entities.AgentEntity;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.util.HexVector;
 
 /**
@@ -21,14 +22,14 @@ public abstract class ManufacturedResources implements Item {
     public HexVector position;
 
     // an AngnetEntity instance representing the owner of the resource.
-    protected AgentEntity owner;
+    protected MainCharacter owner;
 
     /***
      * Creates a default manufactured resource .
      * @param owner the resource owner.
      * @param position the Hexvector position of the manufactured resource.
      */
-    public ManufacturedResources(AgentEntity owner, HexVector position) {
+    public ManufacturedResources(MainCharacter owner, HexVector position) {
         this.owner = owner;
         this.position = position;
         this.carryable = true;
