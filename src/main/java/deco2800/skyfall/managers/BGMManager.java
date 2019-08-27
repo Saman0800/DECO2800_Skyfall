@@ -25,12 +25,15 @@ public class BGMManager extends AbstractManager {
     /* Boolean mute control */
     public static BooleanControl muteVol;
 
+    EnvironmentManager environmentManager;
+
     /**
      * Initialises the Audio Input Stream and allows clip to loop continuously.
      * @param file is the name of the audio intended to be played.
      */
     public static void BGMManager(String file) throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
+
         try {
             //Set current audio to equal file
             audio = file;
@@ -159,5 +162,6 @@ public class BGMManager extends AbstractManager {
             }
         } catch (NullPointerException | IllegalArgumentException ex) { }
     }
+
 
 }

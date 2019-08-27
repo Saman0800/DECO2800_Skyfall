@@ -1,12 +1,13 @@
 package deco2800.skyfall.managers;
 
+import deco2800.skyfall.Tickable;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.worlds.Tile;
 import org.lwjgl.Sys;
 
 import java.util.List;
 
-public class EnvironmentManager {
+public class EnvironmentManager extends TickableManager {
 
    //Hours in a game day
    private long hours;
@@ -41,11 +42,13 @@ public class EnvironmentManager {
          if (entities.get(i).getObjectName().equals("playerPeon")) {
             player = entities.get(i);
             Tile currentTile = GameManager.get().getWorld().getTile(player.getCol(), player.getRow());
-            //If player coords don't match tile coords, currentTile returns null
-            //eg if player isn't exactly in the middle of a tile (walking between tiles), coords don't match
-            //So below if statement is needed
+            // If player coords don't match tile coords, currentTile returns null
+            // eg if player isn't exactly in the middle of a tile (walking between tiles), coords don't match
+            // So below if statement is needed
             if (currentTile != null) {
                biome = currentTile.getBiome().getBiomeName();
+            } else {
+               // do nothing
             }
          }
       }
@@ -95,7 +98,7 @@ public class EnvironmentManager {
          TOD = "am";
       }
 
-      //System.out.println(displayHours + TOD);
+      System.out.println(displayHours + TOD);
    }
 
    /**
@@ -112,11 +115,14 @@ public class EnvironmentManager {
       return isDay;
    }
 
-   /**
-    * TODO for sprint 2
-    */
-   public void setBiomeMusic() {
-      //get biome and play music accordingly
+   @Override
+   public void onTick(long i) {
+      long time = i;
+      if (System.currentTimeMillis() - time > 20) {
+         time = System.currentTimeMillis();
+      }
+      setTime(time);
+      setBiome();
    }
    
 }

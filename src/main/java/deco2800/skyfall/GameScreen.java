@@ -47,12 +47,9 @@ public class GameScreen implements Screen,KeyDownObserver {
 
 	long lastGameTick = 0;
 
-	EnvironmentManager environmentManager = new EnvironmentManager();
-
 	/**
 	 * Create an EnvironmentManager for ToD.
 	 */
-	EnvironmentManager timeOfDay;
 
 	public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
 		/* Create an example world for the engine */
@@ -87,13 +84,8 @@ public class GameScreen implements Screen,KeyDownObserver {
 		/* Add inventory to game manager */
 		gameManager.addManager(new InventoryManager());
 
-		/* Play BGM */
-		try {
-			BGMManager.BGMManager("resources/sounds/forest_day.wav");
-			BGMManager.play();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		/* Add environment to game manager */
+		gameManager.addManager(new EnvironmentManager());
 
         new GameMenuManager().show(stage);
 
@@ -141,7 +133,6 @@ public class GameScreen implements Screen,KeyDownObserver {
 		stage.act(delta);
 		stage.draw();
 		batch.dispose();
-
 	}
 
 	private void handleRenderables() {
@@ -150,7 +141,6 @@ public class GameScreen implements Screen,KeyDownObserver {
 			GameManager.get().onTick(0);
 		}
 
-		environmentManager.setTime(lastGameTick);
 	}
 
 	/**
