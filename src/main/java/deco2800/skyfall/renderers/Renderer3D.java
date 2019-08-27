@@ -345,7 +345,7 @@ public class Renderer3D implements Renderer {
 
             if (entity.getCurrentState() == AnimationRole.NULL) {
                 String directionTexture = entity.getDefaultTexture();
-                if (directionTexture.equals("Not Found")) {
+                if (!directionTexture.equals("Not Found")) {
                     renderAbstractEntity(batch, entity, entityWorldCoord, textureManager.getTexture(directionTexture));
                     return;
                 } else {
