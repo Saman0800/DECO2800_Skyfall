@@ -1,6 +1,7 @@
 package deco2800.skyfall.util;
 
 import deco2800.skyfall.entities.structures.AbstractBuilding;
+import deco2800.skyfall.worlds.Tile;
 
 import java.util.HashMap;
 
@@ -17,8 +18,9 @@ public class ConstructionPermissions {
      *
      * @return boolean - true if the building can be created, false otherwise.
      */
-     public boolean BuildingCreation(AbstractBuilding building){
-         // Should I use wildcards or something here??
+     public <T extends AbstractBuilding> boolean BuildingCreation( T bulding, Tile tile){
+
+         // Should I use wildcards or something here?
          return true;
     }
 

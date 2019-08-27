@@ -30,6 +30,7 @@ public class StorageUnit extends AbstractBuilding {
     private HexVector coords;
     private String texture = "storage_unit";
     ConstructionManager permissions = new ConstructionManager();
+    //Inventory manager for a storage unit!
 
 
     @Expose
@@ -112,7 +113,9 @@ public class StorageUnit extends AbstractBuilding {
     /**
      * @return - Y length
      */
-    public int getYSize() {return this.sizeY;}
+    public int getYSize() {
+        return this.sizeY;
+    }
 
     /**
      * @param newMaxHealth - New max health
