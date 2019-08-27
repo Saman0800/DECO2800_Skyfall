@@ -12,10 +12,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
 
-import java.util.HashMap;
-
 public class MainCharacterTest {
 
+    private GoldPiece goldpiece;
     private MainCharacter testCharacter;
     private Weapon sword;
     private Weapon spear;
@@ -55,9 +54,6 @@ public class MainCharacterTest {
         testCharacter.changeHealth(-20);
         Assert.assertEquals(testCharacter.getHealth(), 0);
         Assert.assertTrue(testCharacter.isDead());
-
-        // ensure the initial value of the goldPouch is set to 100
-        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(100));
     }
 
     @Test
@@ -150,19 +146,19 @@ public class MainCharacterTest {
 
         testCharacter.pickUpInventory(new PoisonousMushroom());
         testCharacter.eatFood(new PoisonousMushroom());
-        //Assert.assertEquals(80, testCharacter.getFoodLevel());
+        Assert.assertEquals(80, testCharacter.getFoodLevel());
 
         testCharacter.pickUpInventory(new PoisonousMushroom());
-        //testCharacter.eatFood(new PoisonousMushroom());
-        //Assert.assertEquals(60, testCharacter.getFoodLevel());
+        testCharacter.eatFood(new PoisonousMushroom());
+        Assert.assertEquals(60, testCharacter.getFoodLevel());
 
         for (int i = 0; i < 10; i++) {
             testCharacter.pickUpInventory(new PoisonousMushroom());
             testCharacter.eatFood(new PoisonousMushroom());
         }
 
-        //Assert.assertEquals(0, testCharacter.getFoodLevel());
-       // Assert.assertTrue(testCharacter.isStarving());
+        Assert.assertEquals(0, testCharacter.getFoodLevel());
+        Assert.assertTrue(testCharacter.isStarving());
     }
 
     //TODO: change these tests as Animation System Changes

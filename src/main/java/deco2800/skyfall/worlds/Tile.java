@@ -39,15 +39,15 @@ public class Tile{
 
 	@Expose
     private boolean obstructed = false;
-    
-    
+
+
     public static final int NORTH = 0;
     public static final int NORTH_EAST = 1;
     public static final int SOUTH_EAST = 2;
     public static final int SOUTH = 3;
     public static final int SOUTH_WEST = 4;
     public static final int NORTH_WEST = 5;
-    
+
     static final int[] NORTHS = {NORTH_WEST, NORTH, NORTH_EAST};
     static final int[] SOUTHS = {SOUTH_WEST, SOUTH, SOUTH_EAST};
 
@@ -78,11 +78,11 @@ public class Tile{
     public float getRow() {
         return coords.getRow();
     }
-    
+
     public HexVector getCoordinates() {
     	return new HexVector(coords);
     }
-    
+
     public String getTextureName() {
         return this.texture;
     }
@@ -90,16 +90,16 @@ public class Tile{
     public Texture getTexture() {
         return GameManager.get().getManager(TextureManager.class).getTexture(this.texture);
     }
-    
+
 
     public void addNeighbour(int direction, Tile neighbour) {
     	neighbours.put(direction, neighbour);
     }
-    
+
     public static int opposite(int dir) {
     	return (dir + 3) % 6;
     }
-    
+
 	public void removeReferanceFromNeighbours() {
 		 for(Entry<Integer, Tile> neighbourHash : neighbours.entrySet()) {
 			 neighbourHash.getValue().getNeighbours().remove(Tile.opposite(neighbourHash.getKey()));
@@ -109,11 +109,11 @@ public class Tile{
 	public Tile getNeighbour(int direction) {
 		return neighbours.get(direction);
 	}
-    
+
     public void removeNeighbour(int direction) {
     	neighbours.remove(direction);
     }
-    
+
     public Map<Integer,Tile> getNeighbours() {
     	return neighbours;
     }
@@ -128,7 +128,7 @@ public class Tile{
 	public StaticEntity getParent() {
 		return parent;
 	}
-	
+
 	public boolean hasParent() {
 		return parent != null;
 	}
@@ -138,7 +138,7 @@ public class Tile{
 	}
 
 	public void setTexture(String texture) {
-        setObstructed(checkObstructed(texture));
+		setObstructed(checkObstructed(texture));
 		setIsBuildable(checkIsBuildable(texture));
 		this.texture = texture;
 	}
@@ -161,12 +161,12 @@ public class Tile{
 		this.removeReferanceFromNeighbours();
 		GameManager.get().getWorld().getTileMap().remove(this);
 	}
-	
+
 	public int calculateIndex() {
 		if(index != -1) {
 			return index;
 		}
-		
+
 		int max = index;
 		for(int north : NORTHS) {
 			if(neighbours.containsKey(north)) {
@@ -186,7 +186,7 @@ public class Tile{
 	}
 
 	public void setIndex(Integer indexValue) {
-		this.index = indexValue;		
+		this.index = indexValue;
 	}
 
 	/**

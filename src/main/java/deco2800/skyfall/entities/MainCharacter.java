@@ -45,9 +45,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private final int INVENTORY_MAX_CAPACITY = 20;
     private final int HOTBAR_MAX_CAPACITY = 5;
 
-    // The "wallet" which stores the character's gold pieces
-    private HashMap<Integer, Integer> goldPouch;
-
     /*
     Potential future implementations
 
@@ -76,6 +73,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     // Textures for all 6 directions to correspond to movement of character
     private String[] textures;
+
+    private HashMap<Integer, Integer> goldPouch;
 
     /**
      * The direction and speed of the MainCharacter
@@ -144,12 +143,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         //TODO: Need to calculate an angle that the character is facing.
         HexVector position = this.getPosition();
 
-        //Spawn projectile in front of character for now.
+/*        //Spawn projectile in front of character for now.
         this.hitBox = new Projectile("slash",
                 "test hitbox",
                 position.getCol() + 1,
                 position.getRow(),
-                1, 1);
+                1, 1)*/;
 
         //Get AbstractWorld from static class GameManager.
         GameManager manager = GameManager.get();
@@ -262,9 +261,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         if (amount > 0) {
             if (item instanceof HealthResources) {
                 int hungerValue = ((HealthResources) item).getFoodValue();
-                int healthValue = ((HealthResources) item).getHealthValue();
                 change_food(hungerValue);
-                changeHealth(healthValue);
                 dropInventory(item.getName());
             } else {
                 System.out.println("Given item (" + item.getName() + ") is " +
