@@ -22,7 +22,7 @@ public class ChestManagerTest {
     public void testRandomLoot() {
         for (int i = 0; i < 50; i ++) {
             Map<String, List<Item>> loot = ChestManager.generateRandomLoot(
-                    100, LootRarity.values()[i % 5]);
+                    10, LootRarity.values()[i % 5]);
             ChestManager test = new ChestManager(loot);
             System.out.println(LootRarity.values()[i % 5] + ": " + test.toString());
         }
