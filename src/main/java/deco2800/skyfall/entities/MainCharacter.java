@@ -30,6 +30,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     // Hotbar of inventories
     private List<Item> hotbar;
 
+    public static final String WALK_NORMAL = "people_walk_normal";
+
+    private SoundManager soundManager = GameManager.get()
+            .getManager(SoundManager.class);
+
     // The index of the item selected to be used in the hotbar
     // ie. [sword][gun][apple]
     // if selecting sword then equipped_item = 0,
@@ -708,6 +713,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             isMoving = true;
             //System.out.println("Start Playing");
             //TODO: Play movement sound
+            SoundManager.loopSound(WALK_NORMAL);
         }
 
         if (isMoving && vel == 0) {
@@ -715,6 +721,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             isMoving = false;
             //System.out.println("Stop Playing");
             //TODO: Stop Player movement
+            SoundManager.stopSound(WALK_NORMAL);
         }
     }
 }
