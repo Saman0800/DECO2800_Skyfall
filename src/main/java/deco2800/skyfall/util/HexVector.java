@@ -105,6 +105,7 @@ public class HexVector {
 
         double xShift = Math.cos(angle) * distance;
         double yShift = Math.sin(angle) * distance;
+        
 
         this.col += xShift;
         this.row += yShift;

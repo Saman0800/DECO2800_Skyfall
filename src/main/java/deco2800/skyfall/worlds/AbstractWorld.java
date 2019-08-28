@@ -42,6 +42,7 @@ public abstract class AbstractWorld {
 
     //List that contains the world biomes
     protected ArrayList<AbstractBiome> biomes;
+    protected Map<String, Float> frictionMap;
 
     protected CopyOnWriteArrayList<Tile> tiles;
     protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
@@ -72,6 +73,15 @@ public abstract class AbstractWorld {
     	generateTileIndexes();
 
     	generateTileTypes(random);
+    	initialiseFrictionmap();
+
+    	//Saving the world for test, and likely saving and loading later
+//    	try {
+//            saveWorld("ExampleWorldOutput.txt");
+//        } catch (IOException e){
+//    	    System.out.println("Could not save world");
+//        }
+
     	System.out.println((System.nanoTime()-startTime)/1000000);
     }
     
@@ -159,6 +169,16 @@ public abstract class AbstractWorld {
      */
     public List<AbstractEntity> getEntities() {
         return new CopyOnWriteArrayList<>(this.entities);
+    }
+
+    public void initialiseFrictionmap(){
+        frictionMap = new HashMap<>();
+        frictionMap.put("grass", 0.6f);
+        frictionMap.put("water", 0.2f);
+        frictionMap.put("rock", 0.3f);
+        frictionMap.put("mountain", 0.4f);
+        frictionMap.put("ice", 0.8f);
+        this.frictionMap.putAll(frictionMap);
     }
     
     /**
