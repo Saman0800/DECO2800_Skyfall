@@ -307,7 +307,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Method for the MainCharacter to eat food and restore/decrease hunger level
+     * Method for the MainCharacter to eat food and restore/decrease hunger
+     * level
      * @param item the item to eat
      */
     public void eatFood(Item item) {

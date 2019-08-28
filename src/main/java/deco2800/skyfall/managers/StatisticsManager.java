@@ -6,7 +6,7 @@ import java.util.*;
 
 // TODO Figure out why "Cannot access MainCharacter"
 
-public class StatisticsManager {
+public class StatisticsManager  extends TickableManager {
 
     // Character of which the statistics manager is being used for
     private MainCharacter character;
@@ -14,40 +14,82 @@ public class StatisticsManager {
     // Map recording kills of different enemies
     private Map<EnemyEntity, Integer> kills;
 
+    // Amount of experience the character has from doing various things in
+    // the game, when character gets enough experience they'll level up
+    private int experience;
+
+    // The amount of experience needed to level up
+    private int experienceCap;
+
     // Number of times main character has been killed
     private int deaths;
 
+    // Amount of in-game currency owned by the character
+    private int money;
+
     public StatisticsManager(MainCharacter character) {
 //        this.character = character;
-        this.kills = new TreeMap<>();
+        this.kills = new HashMap<>();
+        this.experience = 0;
+        this.experienceCap = 20;
         this.deaths = 0;
+        this.money = 0;
     }
 
     /**
-     * Level up by 2 every 10 kills for the character
+     * Increases experience of character due to certain achievements such as
+     * collecting weapons, inventory and getting kills
      */
-    public void killsLevelUp() {
-        if (this.getKills() % 10 == 0) {
-//            this.character.changeLevel(2);
-        }
-    }
-
-    /**
-     * Lose level for every 5 deaths
-     */
-    public void deathLoseLevel() {
-        if (deaths != 0 && deaths % 5 == 0) {
-//            this.character.changeLevel(-2);
-        }
-    }
-
-    /**
-     * Levels up every time character picks up 10 weapons
-     */
-    public void weaponLevelUp() {
+    public void gainExperience() {
 //        if (this.character.getWeaponManager().getNumWeapons % 10 == 0) {
-//            this.character.changeLevel(2);
+//            experience += 10;
 //        }
+
+//        if (this.character.getInventoryManager.getTotalAmount() % 10 == 0) {
+//            experience += 10;
+//        }
+
+        if (this.getKills() % 10 == 0) {
+            experience += 10;
+        }
+    }
+
+    /**
+     * Decreases experience of character due sustained deaths
+     */
+    public void loseExperience() {
+        if (deaths != 0 && deaths % 5 == 0) {
+            experience -= 5;
+        }
+    }
+
+    /**
+     * Gets the current experience gained by the character
+     * @return current experience of the character
+     */
+    public int getExperience() {
+        return this.experience;
+    }
+
+    /**
+     * Level ups up if experience has reached experienceCap
+     */
+    public void LevelUp() {
+        if (this.getExperience() >= experienceCap) {
+            this.experience -= experienceCap;
+            experienceCap += 20;
+//            this.character.changeLevel(1);
+        }
+    }
+
+    /**
+     * Lose level if experience is less than 0
+     */
+    public void loseLevel() {
+        if (getExperience() < 0) {
+            this.experience = 0;
+//            this.character.changeLevel(-1);
+        }
     }
 
     /**
@@ -91,6 +133,37 @@ public class StatisticsManager {
      */
     public int getHealth() {
 //        return this.character.getHealth();
-        return 0;
+        return 10;
+    }
+
+    /**
+     * Gets the level of character
+     * @return level of character
+     */
+    public int getLevel() {
+//        return this.character.getLevel();
+        return 1;
+    }
+
+
+    /**
+     * Gets the amount of times the character has dies
+     * @return the amount of deaths of the character
+     */
+    public int getDeaths() {
+        return this.deaths;
+    }
+
+    /**
+     * Gets the amount of money the character has
+     * @return the amount of money the character has
+     */
+    public int getMoney() {
+        return this.money;
+    }
+
+    @Override
+    public void onTick(long i) {
+        // Auto-generated method stub
     }
 }
