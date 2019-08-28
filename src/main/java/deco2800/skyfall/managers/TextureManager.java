@@ -7,13 +7,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Texture manager acts as a cache between the file system and the renderers.
- * This allows all textures to be read into memory at the start of the game
- * saving file reads from being completed during rendering.
+ * Texture manager acts as a cache between the file system and the renderers. This allows all textures to be read into
+ * memory at the start of the game saving file reads from being completed during rendering.
  * <p>
- * With this in mind don't load textures you're not going to use. Textures that
- * are not used should probably (at some point) be removed from the list and
- * then read from disk when needed again using some type of reference counting
+ * With this in mind don't load textures you're not going to use. Textures that are not used should probably (at some
+ * point) be removed from the list and then read from disk when needed again using some type of reference counting
  *
  * @Author Tim Hadwen
  */
@@ -37,8 +35,7 @@ public class TextureManager extends AbstractManager {
     private Map<String, Texture> textureMap = new HashMap<>();
 
     /**
-     * Constructor Currently loads up all the textures but probably
-     * shouldn't/doesn't need to.
+     * Constructor Currently loads up all the textures but probably shouldn't/doesn't need to.
      */
     public TextureManager() {
         try {
@@ -48,20 +45,23 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bowman", new Texture("resources/bowman.png"));
             textureMap.put("dialogue_text_background", new Texture("resources/dialogue_text_background.png"));
             textureMap.put("main_piece", new Texture("resources" +
-                    "/Main_Character_F_Right.png"));
+                                                             "/Main_Character_F_Right.png"));
             textureMap.put("slash", new Texture("resources/slash_long.png"));
-            textureMap.put("arcane",new Texture("resources/Arcane_Effect_1.png"));
+            textureMap.put("arcane", new Texture("resources/Arcane_Effect_1.png"));
             //Tile textures
             //Goes through all the folders with tile_textures and adds the tile name to the textures, it removes
             //the last 4 characters to get the name of the file.
             //Using this means that each tile texture should be given a unique name as otherwise it will get
             //overridden in the texture hashmap .
-            File [] files = new File("resources/tile_textures").listFiles();
-            for (File direc : files){
-                if (direc.isDirectory()){
-                    for (File file : direc.listFiles()){
-                        String path = String.format("resources/tile_textures/%s/%s", direc.getName(), file.getName());
-                        textureMap.put(file.getName().substring(0, file.getName().length()-4), new Texture(path));
+            File[] files = new File("resources/tile_textures").listFiles();
+            for (File direc : files) {
+                if (direc.isDirectory()) {
+                    for (File file : direc.listFiles()) {
+                        if (file.getName().toLowerCase().endsWith(".png")) {
+                            String path =
+                                    String.format("resources/tile_textures/%s/%s", direc.getName(), file.getName());
+                            textureMap.put(file.getName().substring(0, file.getName().length() - 4), new Texture(path));
+                        }
                     }
                 }
             }
@@ -77,7 +77,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("robot", new Texture("resources/robot.png"));
 
 
-
             textureMap.put("grass_tuff", new Texture("resources/world_details/grass1.png"));
 
             textureMap.put("woodcube", new Texture("resources/woodcube.png"));
@@ -87,7 +86,7 @@ public class TextureManager extends AbstractManager {
 
             // Portrait of the tutorial AI, replace later with custom art
             textureMap.put("Karen", new Texture("resources/Karen(replace)" +
-                    ".png"));
+                                                        ".png"));
 
             textureMap.put("buildingB", new Texture("resources/building3x2.png"));
 
@@ -113,7 +112,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("rock1", new Texture("resources/world_details/rock1.png"));
             textureMap.put("rock2", new Texture("resources/world_details/rock2.png"));
             textureMap.put("rock3", new Texture("resources/world_details/rock3.png"));
-            
+
             textureMap.put("pop up screen", new Texture("resources/pop_up_screen_background.png"));
             textureMap.put("game menu bar", new Texture("resources/pop_up_screen_title_background.png"));
 
@@ -148,6 +147,7 @@ public class TextureManager extends AbstractManager {
      * Gets a texture object for a given string id
      *
      * @param id Texture identifier
+     *
      * @return Texture for given id
      */
     public Texture getTexture(String id) {
@@ -165,7 +165,7 @@ public class TextureManager extends AbstractManager {
                 return textureMap.get("spacman_ded");
             }
 
-        }else {
+        } else {
             //log.info("Texture map does not contain P{}, returning default texture.", id);
             return textureMap.get("spacman_ded");
         }
@@ -176,6 +176,7 @@ public class TextureManager extends AbstractManager {
      * Checks whether or not a texture is available.
      *
      * @param id Texture identifier
+     *
      * @return If texture is available or not.
      */
     public boolean hasTexture(String id) {
@@ -202,7 +203,7 @@ public class TextureManager extends AbstractManager {
         System.out.println(split[0] + " " + split[1]);
         Texture texture = animationManager.
                 getKeyFrameFromAnimation(split[0],
-                        Integer.valueOf(split[1]));
+                                         Integer.valueOf(split[1]));
         if (texture == null) {
             System.out.println("getTextureFromAnimation did not find texture");
             return null;
