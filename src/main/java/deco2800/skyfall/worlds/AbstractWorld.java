@@ -34,11 +34,15 @@ public abstract class AbstractWorld {
 
     protected int worldSize;
     protected int nodeSpacing;
+    protected int[] biomeSizes;
+    protected int numOfLakes;
+    protected int lakeSize;
 
     private long seed;
 
     //List that contains the world biomes
     protected ArrayList<AbstractBiome> biomes;
+    protected Map<String, Float> frictionMap;
 
     protected CopyOnWriteArrayList<Tile> tiles;
     protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
@@ -46,9 +50,12 @@ public abstract class AbstractWorld {
     protected List<AbstractEntity> entitiesToDelete = new CopyOnWriteArrayList<>();
     protected List<Tile> tilesToDelete = new CopyOnWriteArrayList<>();
 
-    protected AbstractWorld(long seed, int worldSize, int nodeSpacing) {
+    protected AbstractWorld(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int lakeSize) {
         Random random = new Random(seed);
         this.seed = seed;
+        this.biomeSizes = biomeSizes;
+        this.numOfLakes = numOfLakes;
+        this.lakeSize = lakeSize;
 
         this.worldSize = worldSize;
         this.nodeSpacing = nodeSpacing;
@@ -60,10 +67,13 @@ public abstract class AbstractWorld {
 //        worldGenNodes = new CopyOnWriteArrayList<>();
         biomes = new ArrayList<>();
 
+        long startTime = System.nanoTime();
     	generateWorld(random);
         generateNeighbours();
     	generateTileIndexes();
+
     	generateTileTypes(random);
+    	initialiseFrictionmap();
 
     	//Saving the world for test, and likely saving and loading later
 //    	try {
@@ -72,6 +82,7 @@ public abstract class AbstractWorld {
 //    	    System.out.println("Could not save world");
 //        }
 
+    	System.out.println((System.nanoTime()-startTime)/1000000);
     }
     
     protected abstract void generateWorld(Random random);
@@ -86,7 +97,12 @@ public abstract class AbstractWorld {
         }
     }
 
+    // TODO Fix this.
     public void generateNeighbours() {
+        generateNeighbours(tiles);
+    }
+
+    public void generateNeighbours(List<Tile> tiles) {
     //multiply coords by 2 to remove floats
     	Map<Integer, Map<Integer, Tile>> tileMap = new HashMap<>();
 		Map<Integer, Tile> columnMap;
@@ -153,6 +169,16 @@ public abstract class AbstractWorld {
      */
     public List<AbstractEntity> getEntities() {
         return new CopyOnWriteArrayList<>(this.entities);
+    }
+
+    public void initialiseFrictionmap(){
+        frictionMap = new HashMap<>();
+        frictionMap.put("grass", 0.6f);
+        frictionMap.put("water", 0.2f);
+        frictionMap.put("rock", 0.3f);
+        frictionMap.put("mountain", 0.4f);
+        frictionMap.put("ice", 0.8f);
+        this.frictionMap.putAll(frictionMap);
     }
     
     /**

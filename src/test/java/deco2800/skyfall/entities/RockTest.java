@@ -102,7 +102,7 @@ public class RockTest {
         assertEquals(rock2.getRenderOrder(), 2);
         assertEquals(rock2.getCol(), 0.0f, 0.001f);
         assertEquals(rock2.getRow(), 1.0f, 0.001f);
-        assertTrue(rock2.getObstructed());
+        assertTrue(rock2.isObstructed());
         String rockObjectName = "rock";
         assertEquals("Rock id was " + rock2.getObjectName() + " but expected " + rockObjectName, rockObjectName,
                 rock2.getObjectName());

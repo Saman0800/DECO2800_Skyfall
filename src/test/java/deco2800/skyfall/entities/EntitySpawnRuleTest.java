@@ -22,15 +22,15 @@ public class EntitySpawnRuleTest {
         rule.setMax(100);
         assertEquals(rule.getMax(), 100);
 
-        ForestBiome biome = new ForestBiome();
-        rule.setBiome(biome);
-        assertEquals(rule.getBiome(), "forest");
-        // test null biome
-        rule.setBiome((AbstractBiome) null);
-        assertEquals(rule.getBiome(), "");
-        // test setting biome name with string
-        rule.setBiome(biome.getBiomeName());
-        assertEquals(rule.getBiome(), "forest");
+        // ForestBiome biome = new ForestBiome();
+        // rule.setBiome(biome);
+        // assertEquals(rule.getBiome(), "forest");
+        // // test null biome
+        // rule.setBiome((AbstractBiome) null);
+        // assertEquals(rule.getBiome(), "");
+        // // test setting biome name with string
+        // rule.setBiome(biome.getBiomeName());
+        // assertEquals(rule.getBiome(), "forest");
     }
 
     @Test
