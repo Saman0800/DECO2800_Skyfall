@@ -18,11 +18,11 @@ import java.util.Map;
  */
 public class AnimationManager extends AbstractManager {
 
-    private TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
+    private TextureManager textureManager;
     /**
      * Maps Animation Name to the Animation object
      */
-    private Map<String, Animation<TextureRegion>> animationMap = new HashMap<>();
+    private Map<String, Animation<TextureRegion>> animationMap ;
     /**
      * For logging error msgs.
      */
@@ -34,6 +34,8 @@ public class AnimationManager extends AbstractManager {
      * shouldn't/doesn't need to.
      */
     public AnimationManager() {
+        textureManager = GameManager.getManagerFromInstance(TextureManager.class);
+        animationMap = new HashMap<>();
         final float DEFAULT_FRAME_RATE  = 1f/4f;
         //These are simply test objects.
         this.generateAnimationObject("mario_right",
@@ -44,7 +46,9 @@ public class AnimationManager extends AbstractManager {
         this.generateAnimationObject("robot_defence","resources/robotSheet/robotAnimation.atlas",1.0f);
     }
 
+    public AnimationManager(boolean test) {
 
+    }
     /*
         For animation could separated into different file later.
      */
@@ -83,7 +87,7 @@ public class AnimationManager extends AbstractManager {
      * @param frameRate Framerate of the generate animation object
      */
     public void generateAnimationObject(String animationName, String textureName, int tileWidth, int tileHeight, float frameRate) {
-        if (animationMap.containsKey(animationName)) {
+        if (!textureManager.hasTexture(textureName)) {
             LOGGER.error("Texture:" + textureName + "not found.");
             return;
         }
@@ -135,8 +139,7 @@ public class AnimationManager extends AbstractManager {
         }
         TextureRegion[] region = animation.getKeyFrames();
 
-
-        if (region.length - 1 <= index) {
+        if (region.length  <= index) {
             LOGGER.error("Index out of range");
             return null;
         }

@@ -167,6 +167,13 @@ public class TextureManager extends AbstractManager {
     }
 
     /**
+     * Used for testing only.
+     * @param test
+     */
+    public TextureManager(boolean test) {
+
+    }
+    /**
      * Gets a texture object for a given string id
      *
      * @param id Texture identifier

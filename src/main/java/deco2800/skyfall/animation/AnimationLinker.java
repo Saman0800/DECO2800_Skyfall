@@ -32,9 +32,14 @@ public class AnimationLinker {
     public AnimationLinker(String animationName, AnimationRole type, Direction direction, boolean looping) {
             this.type = type;
         this.animationName = animationName;
+        try {
+            this.animation = animationManager.getAnimation(animationName);
+        } catch (Exception e) {
+            logger.error("BAD! Could not find ANIMATION MANAGER");
+            this.animation = null;
+        }
 
-        this.animation = animationManager.getAnimation(animationName);
-        if (animation == null) {
+        if (this.animation == null) {
             logger.error(animationName + " for entity" + "not found.");
         }
 
