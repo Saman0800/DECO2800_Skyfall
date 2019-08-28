@@ -42,6 +42,7 @@ public abstract class AbstractWorld {
 
     //List that contains the world biomes
     protected ArrayList<AbstractBiome> biomes;
+    protected Map<String, Float> frictionMap;
 
     protected CopyOnWriteArrayList<Tile> tiles;
     protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
@@ -72,6 +73,15 @@ public abstract class AbstractWorld {
     	generateTileIndexes();
 
     	generateTileTypes(random);
+    	initialiseFrictionmap();
+
+    	//Saving the world for test, and likely saving and loading later
+//    	try {
+//            saveWorld("ExampleWorldOutput.txt");
+//        } catch (IOException e){
+//    	    System.out.println("Could not save world");
+//        }
+
     	System.out.println((System.nanoTime()-startTime)/1000000);
     }
     
@@ -159,6 +169,16 @@ public abstract class AbstractWorld {
      */
     public List<AbstractEntity> getEntities() {
         return new CopyOnWriteArrayList<>(this.entities);
+    }
+
+    public void initialiseFrictionmap(){
+        frictionMap = new HashMap<>();
+        frictionMap.put("grass", 0.6f);
+        frictionMap.put("water", 0.2f);
+        frictionMap.put("rock", 0.3f);
+        frictionMap.put("mountain", 0.4f);
+        frictionMap.put("ice", 0.8f);
+        this.frictionMap.putAll(frictionMap);
     }
     
     /**
@@ -349,13 +369,20 @@ public abstract class AbstractWorld {
     public void handleCollision(AbstractEntity e1, AbstractEntity e2) {
         //TODO: implement proper game logic for collisions between different types of entities.
 
+        //TODO: this needs to be internalized into classes for cleaner code.
         if (e1 instanceof Projectile && e2 instanceof EnemyEntity) {
-            removeEntity(e2);
+            Projectile projectile = (Projectile) e1;
+            EnemyEntity enemy = (EnemyEntity) e2;
+
+            enemy.takeDamage(projectile.getDamage());
+            projectile.destroy();
 
         } else if (e2 instanceof Projectile && e1 instanceof EnemyEntity) {
-            removeEntity(e1);
-        } else {
-            return;
+            Projectile projectile = (Projectile) e2;
+            EnemyEntity enemy = (EnemyEntity) e1;
+
+            enemy.takeDamage(projectile.getDamage());
+            projectile.destroy();
         }
     }
 
