@@ -128,5 +128,14 @@ public class Apple extends HealthResources implements Item {
         return "" + subtype + ":" + name;
     }
 
+    /**
+     * Returns the item description
+     * @return the item description
+     */
+    @Override
+    public String getDescription() {
+        return "This item can be used to satisfy the Main Character's hunger.";
+    }
+
 
 }
