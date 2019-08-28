@@ -36,6 +36,9 @@ public abstract class ManufacturedResources implements Item {
         this.subtype = "Manufactured Resource";
     }
 
+    public ManufacturedResources(){
+        this.subtype= "Manufactured Resource";
+    }
     /**
      * Returns whether or not the item can be stored in the inventory
      * @return True if the item can be added to the inventory, false

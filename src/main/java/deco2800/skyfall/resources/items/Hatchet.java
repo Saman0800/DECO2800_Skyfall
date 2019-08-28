@@ -30,6 +30,10 @@ public class Hatchet extends ManufacturedResources implements Item {
         this.name="Hatchet";
     }
 
+    public Hatchet(){
+        this.name="Hatchet";
+    }
+
     /**
      * A getter method for the name of the item
      * @return The name of the item
@@ -91,13 +95,17 @@ public class Hatchet extends ManufacturedResources implements Item {
      */
     public void farmTree(Tree treeToFarm) {
 
+        if (owner.distance(treeToFarm) <= 2) {
 
-        if (treeToFarm.getWoodAmount() == 0) {
-            System.out.println("This tree has no more wood");
+            if (treeToFarm.getWoodAmount() == 0) {
+                System.out.println("This tree has no more wood");
 
+            } else {
+                owner.getInventories().inventoryAdd(new Wood());
+                treeToFarm.decreaseWoodAmount();
+            }
         } else {
-            owner.getInventories().inventoryAdd(new Wood());
-            treeToFarm.decreaseWoodAmount();
+            System.out.println("No Trees in the vicinity");
         }
     }
 
