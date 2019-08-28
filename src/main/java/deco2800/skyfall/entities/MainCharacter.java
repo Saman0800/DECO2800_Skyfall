@@ -171,7 +171,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @param keyCode Keycode the player has pressed.
      */
     protected void switchItem(int keyCode) {
-        //If key is in range of 1-9, accept the input.
+        // If key is in range of 1-9, accept the input.
         if (keyCode >= 8 && keyCode <= 16) {
             int keyNumber = Integer.parseInt(Input.Keys.toString(keyCode));
             this.itemSlotSelected = keyNumber;
@@ -384,13 +384,13 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Change current level of character
-     *
+     * Change current level of character and increases health by 10
      * @param change amount being added or subtracted
      */
     public void changeLevel(int change) {
         if (level + change >= 1) {
             this.level += change;
+            this.changeHealth(10);
         }
     }
 
