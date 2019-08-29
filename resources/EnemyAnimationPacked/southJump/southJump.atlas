@@ -1,0 +1,240 @@
+
+southJump.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+jump0001
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+jump0002
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+southJump2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+jump0003
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+jump0004
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+southJump3.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+jump0005
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+jump0006
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+southJump4.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+jump0007
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+jump0008
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+southJump5.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+jump0009
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+jump0010
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+southJump6.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+jump0011
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+jump0012
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+southJump7.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+jump0013
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+jump0014
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+southJump8.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+jump0015
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+jump0016
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+southJump9.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+jump0017
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+jump0018
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+southJump10.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+jump0019
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+jump0020
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+southJump11.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+jump0021
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+jump0022
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+southJump12.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+jump0023
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+jump0024
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+southJump13.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+jump0025
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
