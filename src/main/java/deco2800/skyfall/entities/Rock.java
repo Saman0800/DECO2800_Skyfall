@@ -7,7 +7,8 @@ public class Rock extends StaticEntity implements HasHealth {
     private int health = 100;
     private static final String ENTITY_ID_STRING = "rock";
 
-    // TODO Remove this and replace the Random instance with the seeded Random as a parameter.
+    // TODO Remove this and replace the Random instance with the seeded Random as a
+    // parameter.
 
     private static Random randomGen = new Random();
     private static int nextRock = 1;
@@ -24,7 +25,7 @@ public class Rock extends StaticEntity implements HasHealth {
 
     @Override
     public void onTick(long i) {
-
+        // Do nothing on tick
     }
 
     @Override
