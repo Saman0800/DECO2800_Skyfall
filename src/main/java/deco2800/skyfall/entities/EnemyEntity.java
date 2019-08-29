@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities;
 
 
+import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.tasks.AbstractTask;
 
 public abstract class EnemyEntity extends Peon implements ICombatEntity{
@@ -48,6 +49,8 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
                 this.task = null;
             }
         }
+
+//        GameManager.get().getWorld().getPlayer();
     }
 
     /**
