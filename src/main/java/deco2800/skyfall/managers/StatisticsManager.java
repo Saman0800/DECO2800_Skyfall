@@ -4,12 +4,10 @@ import deco2800.skyfall.entities.*;
 
 import java.util.*;
 
-// TODO Figure out why "Cannot access MainCharacter"
-
 public class StatisticsManager  extends TickableManager {
 
     // Character of which the statistics manager is being used for
-    private MainCharacter character;
+    public MainCharacter character;
 
     // Map recording kills of different enemies
     private Map<EnemyEntity, Integer> kills;
@@ -28,7 +26,7 @@ public class StatisticsManager  extends TickableManager {
     private int money;
 
     public StatisticsManager(MainCharacter character) {
-//        this.character = character;
+        this.character = character;
         this.kills = new HashMap<>();
         this.experience = 0;
         this.experienceCap = 20;
@@ -38,18 +36,22 @@ public class StatisticsManager  extends TickableManager {
 
     /**
      * Increases experience of character due to certain achievements such as
-     * collecting weapons, inventory and getting kills
+     * collecting weapons, inventory, money and getting kills
      */
     public void gainExperience() {
-//        if (this.character.getWeaponManager().getNumWeapons % 10 == 0) {
-//            experience += 10;
-//        }
+        if (this.character.getWeaponManager().getNumWeapons() % 10 == 0) {
+            experience += 10;
+        }
 
-//        if (this.character.getInventoryManager.getTotalAmount() % 10 == 0) {
-//            experience += 10;
-//        }
+        if (this.character.getInventoryManager().getTotalAmount() % 10 == 0) {
+            experience += 10;
+        }
 
         if (this.getKills() % 10 == 0) {
+            experience += 10;
+        }
+
+        if (this.getMoney() % 20 == 0) {
             experience += 10;
         }
     }
@@ -58,7 +60,7 @@ public class StatisticsManager  extends TickableManager {
      * Decreases experience of character due sustained deaths
      */
     public void loseExperience() {
-        if (deaths != 0 && deaths % 5 == 0) {
+        if (this.getDeaths() != 0 && this.getDeaths() % 5 == 0) {
             experience -= 5;
         }
     }
@@ -78,7 +80,7 @@ public class StatisticsManager  extends TickableManager {
         if (this.getExperience() >= experienceCap) {
             this.experience -= experienceCap;
             experienceCap += 20;
-//            this.character.changeLevel(1);
+            this.character.changeLevel(1);
         }
     }
 
@@ -88,7 +90,7 @@ public class StatisticsManager  extends TickableManager {
     public void loseLevel() {
         if (getExperience() < 0) {
             this.experience = 0;
-//            this.character.changeLevel(-1);
+            this.character.changeLevel(-1);
         }
     }
 
@@ -132,8 +134,7 @@ public class StatisticsManager  extends TickableManager {
      * @return health of character
      */
     public int getHealth() {
-//        return this.character.getHealth();
-        return 10;
+        return this.character.getHealth();
     }
 
     /**
@@ -141,10 +142,8 @@ public class StatisticsManager  extends TickableManager {
      * @return level of character
      */
     public int getLevel() {
-//        return this.character.getLevel();
-        return 1;
+        return this.character.getLevel();
     }
-
 
     /**
      * Gets the amount of times the character has dies
