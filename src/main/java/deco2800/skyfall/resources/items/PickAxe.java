@@ -2,6 +2,7 @@ package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.Rock;
+import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
@@ -100,7 +101,9 @@ public class PickAxe extends ManufacturedResources implements Item {
     public void farmRock(Rock rockToFarm) {
 
         if (rockToFarm.getHealth()==0){
-            System.out.println("This rock has no more stone/metal");
+            System.out.println("This rock has nothing left to offer");
+            GameManager.get().getWorld().removeEntity(rockToFarm);
+
         }
 
         else {
