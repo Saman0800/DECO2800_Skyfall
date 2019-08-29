@@ -1,5 +1,6 @@
 package deco2800.skyfall.managers;
 
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.*;
 import java.util.*;
@@ -36,6 +37,8 @@ public class InventoryManager extends TickableManager {
         this.inventoryAdd(new Stone());
         this.inventoryAdd(new Wood());
         this.inventoryAdd(new Wood());
+        this.inventoryAdd(new Hatchet());
+        this.quickAccessAdd("Hatchet");
     }
 
     public void initInventory(Map<String, List<Item>> inventory) {

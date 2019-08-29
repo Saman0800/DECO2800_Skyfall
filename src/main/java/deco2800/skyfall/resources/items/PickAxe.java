@@ -83,7 +83,7 @@ public class PickAxe extends ManufacturedResources implements Item {
         }
 
         else {
-            owner.getInventories().inventoryAdd(new Stone());
+            owner.getInventoryManager().inventoryAdd(new Stone());
             rockToFarm.setHealth(rockToFarm.getHealth()-10);
         }
 

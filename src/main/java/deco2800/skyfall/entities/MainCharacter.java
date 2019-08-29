@@ -8,8 +8,12 @@ import deco2800.skyfall.observers.*;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.util.*;
+import deco2800.skyfall.worlds.AbstractWorld;
+import deco2800.skyfall.worlds.RocketWorld;
 import deco2800.skyfall.worlds.Tile;
+import org.lwjgl.Sys;
 
 import java.util.*;
 
@@ -510,6 +514,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             case Input.Keys.D:
                 xInput += 1;
                 break;
+            case Input.Keys.H:
+                useHatchet();
+                break;
+
         }
     }
 
@@ -539,6 +547,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             case Input.Keys.D:
                 xInput -= 1;
                 break;
+            case Input.Keys.H:
+                break;
+
         }
     }
 
@@ -609,13 +620,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         return totalValue;
     }
 
-    /**
-     * A getter method for Inventories
-     * @return The main charachter's inventory
-     */
-    public InventoryManager getInventories() {
-        return this.inventories;
-    }
 
     /**
      * Moves the player based on current key inputs
@@ -828,4 +832,33 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             SoundManager.stopSound(WALK_NORMAL);
         }
     }
+
+
+    /***
+     * This method enables the Main character to use Hatchet. The player's
+     * distance from the tree should not be more than 2.5.Every time a
+     * wood is collected a message is printed.
+     *
+     */
+    public void useHatchet(){
+
+        if (this.inventories.getQuickAccess().containsKey("Hatchet")) {
+            Hatchet playerHatchet = new Hatchet(this);
+
+            for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+
+                if (entity instanceof Tree) {
+
+                    if ( this.getPosition().distance(entity.getPosition()) <= 2.5 ) {
+                        playerHatchet.farmTree((Tree) entity);
+                        System.out.println(this.inventories.toString());
+                    }
+                }
+            }
+
+        } else{
+            System.out.println("No Hatchet in Quick Access");
+        }
+    }
+
 }
