@@ -1,11 +1,17 @@
 package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.entities.AgentEntity;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.Tree;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.managers.InventoryManager;
+import org.lwjgl.Sys;
+
+import java.lang.Math;
+
 
 
 /***
@@ -18,10 +24,13 @@ public class Hatchet extends ManufacturedResources implements Item {
      *
      * @param owner the owner of the inventory.
      * @param position the position of the Hatchet.
-     * @param name the name of the item which is Hatchet.
      */
-    public Hatchet(AgentEntity owner, HexVector position, String name) {
-        super(owner, position, name);
+    public Hatchet(MainCharacter owner, HexVector position) {
+        super(owner, position);
+        this.name="Hatchet";
+    }
+
+    public Hatchet(){
         this.name="Hatchet";
     }
 
@@ -85,15 +94,28 @@ public class Hatchet extends ManufacturedResources implements Item {
      * @param treeToFarm the tree to be farmed
      */
     public void farmTree(Tree treeToFarm) {
-        int i;
 
-        //temporary  inventory. this will change to the player inventory later.
-        InventoryManager ownerInventory = new InventoryManager();
+        if (owner.distance(treeToFarm) <= 2) {
 
-        for (i = 0; i < treeToFarm.getWoodAmount(); i++) {
-            ownerInventory.inventoryAdd(new Wood());
-            treeToFarm.decreaseWoodAmount();
+            if (treeToFarm.getWoodAmount() == 0) {
+                System.out.println("This tree has no more wood");
+
+            } else {
+                owner.getInventories().inventoryAdd(new Wood());
+                treeToFarm.decreaseWoodAmount();
+            }
+        } else {
+            System.out.println("No Trees in the vicinity");
         }
+    }
 
+    /**
+     * Returns the item description
+     * @return the item description
+     */
+    @Override
+    public String getDescription() {
+        return "This item is similar to an axe. It can be used to " +
+                "cut down trees and retrieve wood.";
     }
 }

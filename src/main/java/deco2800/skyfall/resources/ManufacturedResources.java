@@ -1,6 +1,7 @@
 package deco2800.skyfall.resources;
 
 import deco2800.skyfall.entities.AgentEntity;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.util.HexVector;
 
 /**
@@ -21,22 +22,23 @@ public abstract class ManufacturedResources implements Item {
     public HexVector position;
 
     // an AngnetEntity instance representing the owner of the resource.
-    protected AgentEntity owner;
+    protected MainCharacter owner;
 
     /***
      * Creates a default manufactured resource .
      * @param owner the resource owner.
      * @param position the Hexvector position of the manufactured resource.
-     * @param name the name of the manufactured resource.
      */
-    public ManufacturedResources(AgentEntity owner, HexVector position, String name) {
-        this.name = name;
+    public ManufacturedResources(MainCharacter owner, HexVector position) {
         this.owner = owner;
         this.position = position;
         this.carryable = true;
         this.subtype = "Manufactured Resource";
     }
 
+    public ManufacturedResources(){
+        this.subtype= "Manufactured Resource";
+    }
     /**
      * Returns whether or not the item can be stored in the inventory
      * @return True if the item can be added to the inventory, false
@@ -72,6 +74,16 @@ public abstract class ManufacturedResources implements Item {
     @Override
     public String toString() {
         return "" + subtype + ":" + name;
+    }
+
+    /**
+     * Returns the item description
+     * @return the item description
+     */
+    @Override
+    public String getDescription() {
+        return "This item can be used to retrieve natural " +
+                "resources from the world.";
     }
 
 }

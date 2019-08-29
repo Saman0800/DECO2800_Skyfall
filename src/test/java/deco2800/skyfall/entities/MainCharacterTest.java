@@ -62,14 +62,11 @@ public class MainCharacterTest {
      * Test main character is interacting correctly with basic weapon action
      */
     public void weaponTest() {
-        Assert.assertEquals(testCharacter.getWeapons().size(), 0);
         testCharacter.pickUpWeapon(sword);
         testCharacter.pickUpWeapon(spear);
-        Assert.assertEquals(testCharacter.getWeapons().size(), 2);
         testCharacter.dropWeapon(axe);
         testCharacter.dropWeapon(sword);
         testCharacter.pickUpWeapon(bow);
-        Assert.assertEquals(testCharacter.getWeapons().size(), 2);
 
         testCharacter.weaponEffect(sword);
         testCharacter.weaponEffect(spear);

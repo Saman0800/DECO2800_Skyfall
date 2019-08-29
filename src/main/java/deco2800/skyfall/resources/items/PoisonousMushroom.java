@@ -138,6 +138,14 @@ public class PoisonousMushroom extends HealthResources implements Item {
     }
 
 
+    /**
+     * Returns the item description
+     * @return the item description
+     */
+    @Override
+    public String getDescription() {
+        return "This item reduces the main character's health.";
+    }
 
 
 

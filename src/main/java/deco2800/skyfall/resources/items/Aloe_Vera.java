@@ -108,7 +108,13 @@ public class Aloe_Vera extends HealthResources implements Item {
         return "" + subtype + ":" + name;
     }
 
-
-
+    /**
+     * Returns the item description
+     * @return the item description
+     */
+    @Override
+    public String getDescription() {
+        return "This item can be used to heal the Main Character.";
+    }
 }
 

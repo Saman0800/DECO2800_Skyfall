@@ -1,11 +1,11 @@
 package deco2800.skyfall.resources.items;
 
-import deco2800.skyfall.entities.AgentEntity;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.Rock;
+import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.managers.InventoryManager;
 
 /***
  * A Pick Axe item. Pick Axe is a manufacturd resource. It can harvest a rock.
@@ -17,10 +17,9 @@ public class PickAxe extends ManufacturedResources implements Item {
      *
      * @param owner the owner of the inventory.
      * @param position the position of the Pick Axe.
-     * @param name the name of the item which is Pick Axe.
      */
-    public PickAxe (AgentEntity owner, HexVector position, String name) {
-        super(owner, position, name);
+    public PickAxe (MainCharacter owner, HexVector position) {
+        super(owner, position);
         this.name="Pick Axe";
     }
 
@@ -78,15 +77,25 @@ public class PickAxe extends ManufacturedResources implements Item {
      * @param rockToFarm the rock to be farmed
      */
     public void farmRock(Rock rockToFarm) {
-        int i;
 
-        //temporary  inventory. this will change to the player inventory later.
-        InventoryManager ownerInventory = new InventoryManager();
-
-        for (i = 0; i < rockToFarm.getHealth()/10; i++) {
-            ownerInventory.inventoryAdd(new Stone());
-            rockToFarm.setHealth(rockToFarm.getHeight()-10);
+        if (rockToFarm.getHealth()==0){
+            System.out.println("This rock has no more stone");
         }
 
+        else {
+            owner.getInventories().inventoryAdd(new Stone());
+            rockToFarm.setHealth(rockToFarm.getHealth()-10);
+        }
+
+    }
+
+    /**
+     * Returns the item description
+     * @return the item description
+     */
+    @Override
+    public String getDescription() {
+        return "This item can be constructed using stone and wood. " +
+                "It can farm stone from biomes.";
     }
 }
