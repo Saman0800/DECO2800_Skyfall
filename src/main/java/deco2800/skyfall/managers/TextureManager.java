@@ -36,7 +36,8 @@ public class TextureManager extends AbstractManager {
     private Map<String, Texture> textureMap = new HashMap<>();
 
     /**
-     * Constructor Currently loads up all the textures but probably shouldn't/doesn't need to.
+     * Constructor Currently loads up all the textures but probably
+     * shouldn't/doesn't need to.
      */
     public TextureManager() {
         try {
@@ -45,8 +46,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("spacman_blue", new Texture("resources/spacman_blue.png"));
             textureMap.put("bowman", new Texture("resources/bowman.png"));
             textureMap.put("dialogue_text_background", new Texture("resources/dialogue_text_background.png"));
-            textureMap.put("main_piece", new Texture("resources" +
-                                                             "/Main_Character_F_Right.png"));
+            textureMap.put("main_piece", new Texture("resources" + "/Main_Character_F_Right.png"));
             textureMap.put("slash", new Texture("resources/slash_long.png"));
             textureMap.put("arcane", new Texture("resources/Arcane_Effect_1.png"));
             //Tile textures
@@ -70,7 +70,7 @@ public class TextureManager extends AbstractManager {
                 }
             }
 
-            //EnemyEntity robot
+            // EnemyEntity robot
             textureMap.put("robotS", new Texture("resources/robotS.png"));
             textureMap.put("robotSW", new Texture("resources/robotSW.png"));
             textureMap.put("robotSE", new Texture("resources/robotSE.png"));
@@ -89,8 +89,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("path", new Texture("resources/yellow_selection.png"));
 
             // Portrait of the tutorial AI, replace later with custom art
-            textureMap.put("Karen", new Texture("resources/Karen(replace)" +
-                                                        ".png"));
+            textureMap.put("Karen", new Texture("resources/Karen(replace)" + ".png"));
 
             textureMap.put("buildingB", new Texture("resources/building3x2.png"));
 
@@ -116,6 +115,14 @@ public class TextureManager extends AbstractManager {
             textureMap.put("rock1", new Texture("resources/world_details/rock1.png"));
             textureMap.put("rock2", new Texture("resources/world_details/rock2.png"));
             textureMap.put("rock3", new Texture("resources/world_details/rock3.png"));
+
+            textureMap.put("bush1", new Texture("resources/world_details/bush1.png"));
+            textureMap.put("bush2", new Texture("resources/world_details/bush2.png"));
+            textureMap.put("bush3", new Texture("resources/world_details/bush3.png"));
+
+            textureMap.put("tree1", new Texture("resources/world_details/tree1.png"));
+            textureMap.put("tree2", new Texture("resources/world_details/tree2.png"));
+            textureMap.put("tree3", new Texture("resources/world_details/tree3.png"));
 
             textureMap.put("pop up screen", new Texture("resources/pop_up_screen_background.png"));
             textureMap.put("game menu bar", new Texture("resources/pop_up_screen_title_background.png"));
