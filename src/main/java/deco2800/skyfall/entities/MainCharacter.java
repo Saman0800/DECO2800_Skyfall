@@ -44,6 +44,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     private int itemSlotSelected;
 
+    //List of blueprints that the player has learned.
+    private List<String> bluePrintsLearned;
+
     public static final String WALK_NORMAL = "people_walk_normal";
 
     private SoundManager soundManager = GameManager.get()
@@ -845,7 +848,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * This method enables the Main character to use Hatchet. The player's
      * distance from the tree should not be more than 2.5.Every time a
      * wood is collected a message is printed.
-     * This method will be changed later for to increase efficiency.
+     * This method will be changed later to increase efficiency.
      */
     public void useHatchet(){
 
@@ -872,7 +875,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * This method enables the Main character to use Hatchet. The player's
      * distance from the tree should not be more than 2.5.Every time a
      * wood is collected a message is printed.
-     * This method will be changed later for to increase efficiency.
+     * This method will be changed later to increase efficiency.
      */
     public void usePickAxe(){
 
@@ -895,6 +898,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
     }
 
-
-
+    /***
+     * A getter method for the blueprints that the player has learned.
+     * @return the learned blueprints list
+     */
+    public List<String> getBluePrintsLearned() {
+        return this.bluePrintsLearned;
+    }
 }

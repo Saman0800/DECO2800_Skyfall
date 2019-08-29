@@ -6,6 +6,7 @@ import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.Apple;
 import deco2800.skyfall.resources.items.PoisonousMushroom;
 import deco2800.skyfall.resources.items.Stone;
+import deco2800.skyfall.worlds.Tile;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,6 +21,10 @@ public class MainCharacterTest {
     private Weapon spear;
     private Weapon bow;
     private Weapon axe;
+    private Tree testTree;
+    private Rock testRock;
+    private Tile testTile;
+
 
 
     // MainCharacter being used for testing
@@ -37,6 +42,13 @@ public class MainCharacterTest {
                 "splash", 4, 3, 10);
         axe = new Weapon("axe", "melee",
                 "slash", 4, 4, 10);
+
+        testTile = new Tile(0f,0f);
+        testTree = new Tree(testTile,true);
+        testRock = new Rock(testTile,true);
+
+
+
     }
     @Test
     /**
@@ -287,6 +299,13 @@ public class MainCharacterTest {
 
         // ensure all the pieces have been added
         Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(280));
+
+    }
+
+    @Test
+    public void useHatchetTest(){
+
+
 
     }
 
