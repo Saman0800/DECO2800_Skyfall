@@ -69,6 +69,7 @@ public class EntitySpawnTable {
     public static <T extends StaticEntity> void placeUniform(T entity, EntitySpawnRule rule, Tile nextTile,
             Random randGen, AbstractWorld world) {
 
+        // Get the uniform chance from the rule
         double chance = rule.getChance();
 
         if (rule.getLimitAdjacent()) {
@@ -97,11 +98,12 @@ public class EntitySpawnTable {
      *                 that is compared to the adjusted probability.
      */
     public static <T extends StaticEntity> void placePerlin(T entity, EntitySpawnRule rule, Tile nextTile,
-            Random randGen, AbstractWorld world, double perlinValue) {
+            Random randGen, AbstractWorld world) {
 
         // Get the perlin noise value of the tile and apply the perlin map
+        double noise = rule.getNoiseGenerator().getOctavedPerlinValue(nextTile.getRow(), nextTile.getCol());
         SpawnControl perlinMap = rule.getAdjustMap();
-        double adjustedProb = perlinMap.probabilityMap(perlinValue);
+        double adjustedProb = perlinMap.probabilityMap(noise);
 
         if (rule.getLimitAdjacent()) {
             adjustedProb = adjustChanceAdjacent(rule, nextTile, adjustedProb);
@@ -152,7 +154,7 @@ public class EntitySpawnTable {
         // Try and place down the minimum number of elements
         int placedDown = 0;
 
-        while (tileItr.hasNext() && (placedDown < min)) {
+        while (tileItr.hasNext() && (placedDown <= min)) {
             Tile nextTile = tileItr.next();
             if (nextTile.isObstructed()) {
                 continue;
@@ -169,10 +171,9 @@ public class EntitySpawnTable {
                 continue;
             }
 
-            double noise = rule.getNoiseGenerator().getOctavedPerlinValue(nextTile.getRow(), nextTile.getCol());
-
+            // Check if we are using perlin or uniform placement.
             if (rule.getUsePerlin()) {
-                placePerlin(entity, rule, nextTile, rand, world, noise);
+                placePerlin(entity, rule, nextTile, rand, world);
             } else {
                 placeUniform(entity, rule, nextTile, rand, world);
             }
