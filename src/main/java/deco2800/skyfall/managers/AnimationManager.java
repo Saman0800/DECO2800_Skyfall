@@ -42,6 +42,12 @@ public class AnimationManager extends AbstractManager {
                 "mario_left", 100, 138, DEFAULT_FRAME_RATE);
         this.generateAnimationObject("spider_defence","resources/spiderSheet/SpiderAnimation.atlas",1.0f);
         this.generateAnimationObject("robot_defence","resources/robotSheet/robotAnimation.atlas",1.0f);
+        this.generateAnimationObject("stoneJNE","resources/EnemyAnimationPacked/northEastJump/northEastJump.atlas",0.1f);
+        this.generateAnimationObject("stoneJN","resources/EnemyAnimationPacked/northJump/northJump.atlas",0.1f);
+        this.generateAnimationObject("stoneJNW","resources/EnemyAnimationPacked/northWestJump/northWestJump.atlas",0.1f);
+        this.generateAnimationObject("stoneJS","resources/EnemyAnimationPacked/southJump/southJump.atlas",0.1f);
+        this.generateAnimationObject("stoneJSW","resources/EnemyAnimationPacked/southWestJump/southWestJump.atlas",0.1f);
+        this.generateAnimationObject("stoneJSE","resources/EnemyAnimationPacked/southEastJump/southEastJump.atlas",0.1f);
     }
 
 
