@@ -1,5 +1,6 @@
 package deco2800.skyfall.worlds;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -7,6 +8,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import static org.junit.Assert.assertEquals;
 
@@ -30,5 +33,23 @@ public class WholeWorldTest {
         } catch (IOException e){
             throw new RuntimeException(e);
         }
+    }
+
+    @Test
+    public void testFrictionMap(){
+        AbstractWorld world = new RocketWorld(0, 10, 1, new int[] {20,10,10},
+                3,2);
+        Map<String, Float> frictionMap = world.frictionMap;
+
+        Map<String, Float> expectedFrictionMap = new HashMap<>();
+        frictionMap.put("grass", 0.6f);
+        frictionMap.put("forest", 0.6f);
+        frictionMap.put("water", 0.2f);
+        frictionMap.put("mountain", 0.4f);
+        frictionMap.put("desert", 0.5f);
+        frictionMap.put("ice", 0.8f);
+        expectedFrictionMap.putAll(frictionMap);
+
+        Assert.assertEquals(expectedFrictionMap, frictionMap);
     }
 }

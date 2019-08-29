@@ -171,12 +171,17 @@ public abstract class AbstractWorld {
         return new CopyOnWriteArrayList<>(this.entities);
     }
 
+    /**
+     * Creates a friction map that assigns a friction to every tile type
+     */
     public void initialiseFrictionmap(){
+        // Hard coded map, should change when tile can return its type
         frictionMap = new HashMap<>();
         frictionMap.put("grass", 0.6f);
+        frictionMap.put("forest", 0.6f);
         frictionMap.put("water", 0.2f);
-        frictionMap.put("rock", 0.3f);
         frictionMap.put("mountain", 0.4f);
+        frictionMap.put("desert", 0.5f);
         frictionMap.put("ice", 0.8f);
         this.frictionMap.putAll(frictionMap);
     }

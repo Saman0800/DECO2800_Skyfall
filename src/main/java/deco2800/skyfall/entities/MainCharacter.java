@@ -9,6 +9,7 @@ import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.Tile;
+import org.lwjgl.Sys;
 
 import java.util.*;
 
@@ -564,17 +565,18 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             yVel = 0;
         }
 
-        // caps the velocity
-        if (vel > maxSpeed) {
+        // caps the velocity depending on the friction of the current tile
+        float maxTileSpeed = maxSpeed * friction;
+        if (vel > maxTileSpeed) {
             xVel /= vel;
             yVel /= vel;
 
-            xVel *= maxSpeed;
-            yVel *= maxSpeed;
+            xVel *= maxTileSpeed;
+            yVel *= maxTileSpeed;
         }
 
         // Calculates speed to destination
-        vel = Math.sqrt((xVel * xVel) + (yVel * yVel));
+        vel = friction * Math.sqrt((xVel * xVel) + (yVel * yVel));
 
         // Calculates destination vector
         HexVector destination = new HexVector(xPos, yPos);
