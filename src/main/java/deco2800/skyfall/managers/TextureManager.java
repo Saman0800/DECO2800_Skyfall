@@ -67,8 +67,7 @@ public class TextureManager extends AbstractManager {
             }
 
             //EnemyEntity robot
-            textureMap.put("robotS", new Texture("resources/robotS.png"));
-            textureMap.put("robotSW", new Texture("resources/robotSW.png"));
+            textureMap.put("enemyStone", new Texture("resources/enemyStone.png"));
             textureMap.put("robotSE", new Texture("resources/robotSE.png"));
             textureMap.put("robotN", new Texture("resources/robotN.png"));
             textureMap.put("robotNE", new Texture("resources/robotNE.png"));
