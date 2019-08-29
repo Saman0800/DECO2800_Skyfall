@@ -3,6 +3,7 @@ package deco2800.skyfall.managers;
 import com.badlogic.gdx.graphics.Texture;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,12 +55,15 @@ public class TextureManager extends AbstractManager {
             //Using this means that each tile texture should be given a unique name as otherwise it will get
             //overridden in the texture hashmap .
             File[] files = new File("resources/tile_textures").listFiles();
+            if (files == null) {
+                throw new FileNotFoundException();
+            }
             for (File direc : files) {
                 if (direc.isDirectory()) {
                     for (File file : direc.listFiles()) {
                         if (file.getName().toLowerCase().endsWith(".png")) {
                             String path =
-                                    String.format("resources/tile_textures/%s/%s", direc.getName(), file.getName());
+                                String.format("resources/tile_textures/%s/%s", direc.getName(), file.getName());
                             textureMap.put(file.getName().substring(0, file.getName().length() - 4), new Texture(path));
                         }
                     }

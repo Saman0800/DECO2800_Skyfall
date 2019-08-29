@@ -28,11 +28,11 @@ public class LakeBiome extends AbstractBiome {
         ArrayList<String> textures = new ArrayList<>();
         //textures.add("water_3");
         //textures.add("water_0");
-        textures.add("water_4");
-        textures.add("water_5");
+        textures.add("lake_1");
+        textures.add("lake_2");
 
         //Perlin noise generation
-        new TileNoiseGenerator(getTiles(), random, 8, 5,0.7, Tile::setPerlinValue);
+        new TileNoiseGenerator(getTiles(), random, 3, 40,0.7, Tile::setPerlinValue);
 
         for (Tile tile : getTiles()) {
             int perlinValue = (int) Math.floor(tile.getPerlinValue() * textures.size());
