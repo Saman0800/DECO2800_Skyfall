@@ -9,6 +9,7 @@ import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.Hatchet;
+import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.AbstractWorld;
 import deco2800.skyfall.worlds.RocketWorld;
@@ -517,6 +518,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             case Input.Keys.H:
                 useHatchet();
                 break;
+            case Input.Keys.P:
+                usePickAxe();
+                break;
+
 
         }
     }
@@ -548,6 +553,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 xInput -= 1;
                 break;
             case Input.Keys.H:
+                break;
+            case Input.Keys.P:
                 break;
 
         }
@@ -860,5 +867,34 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             System.out.println("No Hatchet in Quick Access");
         }
     }
+
+    /***
+     * This method enables the Main character to use Hatchet. The player's
+     * distance from the tree should not be more than 2.5.Every time a
+     * wood is collected a message is printed.
+     *
+     */
+    public void usePickAxe(){
+
+        if (this.inventories.getQuickAccess().containsKey("Pick Axe")) {
+            PickAxe playerPickAxe = new PickAxe(this);
+
+            for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+
+                if (entity instanceof Rock) {
+
+                    if ( this.getPosition().distance(entity.getPosition()) <= 2.5 ) {
+                        playerPickAxe.farmRock((Rock) entity);
+                        System.out.println(this.inventories.toString());
+                    }
+                }
+            }
+
+        } else{
+            System.out.println("No PickAxe in Quick Access");
+        }
+    }
+
+
 
 }

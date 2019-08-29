@@ -23,6 +23,27 @@ public class PickAxe extends ManufacturedResources implements Item {
         this.name="Pick Axe";
     }
 
+    /***
+     * Create a Pick Axe with only one owner parameter.
+     *
+     * @param owner the owner of the inventory.
+     */
+    public PickAxe (MainCharacter owner) {
+        super(owner);
+        this.name="Pick Axe";
+    }
+
+    /***
+     * Create a Pick Axe no parameter.
+     */
+    public PickAxe () {
+        this.name="Pick Axe";
+    }
+
+
+
+
+
     /**
      * A getter method for the name of the item
      * @return The name of the item
@@ -73,17 +94,25 @@ public class PickAxe extends ManufacturedResources implements Item {
 
     /**
      * Harvests a rock. Currently making an inventory and adding the collected
-     * rock to that inventory. Decreases the rock health.
+     * rock and metal to that inventory. Decreases the rock health.
      * @param rockToFarm the rock to be farmed
      */
     public void farmRock(Rock rockToFarm) {
 
         if (rockToFarm.getHealth()==0){
-            System.out.println("This rock has no more stone");
+            System.out.println("This rock has no more stone/metal");
         }
 
         else {
             owner.getInventoryManager().inventoryAdd(new Stone());
+
+            //lowering the possibility of gaining metal
+            double x = (int)(Math.random()*((1-0)+1));
+
+                if (x==1) {
+                    owner.getInventoryManager().inventoryAdd(new Metal());
+            }
+
             rockToFarm.setHealth(rockToFarm.getHealth()-10);
         }
 

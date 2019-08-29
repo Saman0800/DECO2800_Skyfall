@@ -127,6 +127,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         Rock startRock = new Rock(tileRock, true);
         Tree startTree = new Tree(tileRock, true);
         addEntity(startTree);
+        addEntity(startRock);
         LongGrass startGrass = new LongGrass(tileRock, true);
 
         for (AbstractBiome biome : this.getBiomes()) {
