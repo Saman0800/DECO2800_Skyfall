@@ -30,12 +30,9 @@ public class House extends AbstractBuilding {
     private String texture = "house1";
     ConstructionManager permissions = new ConstructionManager();
 
-    private BuildingType type = BuildingType.HOUSE;
-
 
     @Expose
     public Map<HexVector, String> children;
-
 
     public House(Tile tile, int renderOrder) {
         super(tile.getRow(), tile.getCol());

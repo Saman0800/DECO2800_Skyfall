@@ -27,7 +27,7 @@ public class TownCentreBuilding extends AbstractBuilding {
     private int currentHealth;
 
     private HexVector coords;
-    private String texture = "fence_bottom_left";
+    private String texture = "town_centre";
 
     ConstructionManager permissions = new ConstructionManager();
 
