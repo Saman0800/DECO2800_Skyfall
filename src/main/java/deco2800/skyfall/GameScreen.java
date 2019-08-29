@@ -52,6 +52,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 	 * Create an EnvironmentManager for ToD.
 	 */
 	EnvironmentManager timeOfDay;
+	public static boolean isPaused = false;
 
 	public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
 		/* Create an example world for the engine */
@@ -117,30 +118,42 @@ public class GameScreen implements Screen,KeyDownObserver {
 	 */
 	@Override
 	public void render(float delta) {
-		handleRenderables();
 
-		moveCamera();
-			
-		cameraDebug.position.set(camera.position);
-		cameraDebug.update();
-		camera.update();
+        if (!isPaused) {
+            moveCamera();
+            handleRenderables();
+            cameraDebug.position.set(camera.position);
+            cameraDebug.update();
+            camera.update();
+        } else {
+            stage.draw();
+            pause();
+        }
+
+
 
 		SpriteBatch batchDebug = new SpriteBatch();
 		batchDebug.setProjectionMatrix(cameraDebug.combined);
-		
+
 		SpriteBatch batch = new SpriteBatch();
 		batch.setProjectionMatrix(camera.combined);
 		
 		// Clear the entire display as we are using lazy rendering
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		rerenderMapObjects(batch, camera);
-		rendererDebug.render(batchDebug, cameraDebug);
+
+		if (!isPaused) {
+            Gdx.gl.glClearColor(0, 0, 0, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            rerenderMapObjects(batch, camera);
+            rendererDebug.render(batchDebug, cameraDebug);
+            stage.act(delta);
+            stage.draw();
+
+        }
+
 		
 		/* Refresh the experience UI for if information was updated */
-		stage.act(delta);
-		stage.draw();
+
 		batch.dispose();
 	}
 

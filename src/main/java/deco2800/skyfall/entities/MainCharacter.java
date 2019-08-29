@@ -2,6 +2,7 @@ package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.Vector2;
+import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.*;
 import deco2800.skyfall.managers.*;
@@ -325,7 +326,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void notifyTouchDown(int screenX, int screenY, int pointer,
                                 int button) {
         // only allow left clicks to move player
-
+        if (GameScreen.isPaused) {
+            return;
+        }
         if (button == 0) {
             this.attack();
         }
