@@ -82,23 +82,6 @@ public class EnvironmentManager extends TickableManager {
       //Each day cycle goes for approx 24 minutes
       long time = (i / 60000);
       hours = time % 24;
-
-      // Set hours to be displayed
-      if (hours > 12 && hours < 24) {
-         displayHours = hours - 12;
-         TOD = "pm";
-      } else if (hours == 24) {
-         displayHours = hours - 12;
-         TOD = "am";
-      } else if (hours == 12) {
-         displayHours = hours;
-         TOD = "pm";
-      } else {
-         displayHours = hours;
-         TOD = "am";
-      }
-
-      System.out.println(displayHours + TOD);
    }
 
    /**
@@ -115,6 +98,34 @@ public class EnvironmentManager extends TickableManager {
       return isDay;
    }
 
+   /**
+    * Returns whether it is day or not
+    * @return am or pm depending on TOD
+    */
+   public String getTOD() {
+      // Set hours to be displayed
+      if (hours > 12 && hours < 24) {
+         displayHours = hours - 12;
+         TOD = "pm";
+      } else if (hours == 24) {
+         displayHours = hours - 12;
+         TOD = "am";
+      } else if (hours == 12) {
+         displayHours = hours;
+         TOD = "pm";
+      } else {
+         displayHours = hours;
+         TOD = "am";
+      }
+
+      return Long.toString(displayHours) + TOD;
+   }
+
+   /**
+    * On tick method for ticking managers with the TickableManager interface
+    *
+    * @param i
+    */
    @Override
    public void onTick(long i) {
       long time = i;
@@ -123,6 +134,7 @@ public class EnvironmentManager extends TickableManager {
       }
       setTime(time);
       setBiome();
+      currentBiome();
    }
    
 }
