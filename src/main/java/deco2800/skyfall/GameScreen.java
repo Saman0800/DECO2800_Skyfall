@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
+import deco2800.skyfall.GameMenu.GameMenuScreen;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.Peon;
 import deco2800.skyfall.handlers.KeyboardManager;
@@ -61,7 +62,9 @@ public class GameScreen implements Screen,KeyDownObserver {
 		GameManager gameManager = GameManager.get();
 
 		GameMenuManager gameMenuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
-		gameMenuManager.addStage(stage);
+		gameMenuManager.setStage(stage);
+		gameMenuManager.setSkin(gameManager.getSkin());
+
 		// Create main world
 		if (!isHost) {
 			world = new ServerWorld(seed);
@@ -97,7 +100,8 @@ public class GameScreen implements Screen,KeyDownObserver {
 			e.printStackTrace();
 		}
 
-        gameMenuManager.show();
+        GameMenuScreen gamemenuScreen = new GameMenuScreen(gameMenuManager);
+		gamemenuScreen.show();
 
         PathFindingService pathFindingService = new PathFindingService();
 		GameManager.get().addManager(pathFindingService);
@@ -131,25 +135,29 @@ public class GameScreen implements Screen,KeyDownObserver {
         }
 
 
+        SpriteBatch batchDebug = new SpriteBatch();
+        batchDebug.setProjectionMatrix(cameraDebug.combined);
 
-		SpriteBatch batchDebug = new SpriteBatch();
-		batchDebug.setProjectionMatrix(cameraDebug.combined);
+        SpriteBatch batch = new SpriteBatch();
+        batch.setProjectionMatrix(camera.combined);
 
-		SpriteBatch batch = new SpriteBatch();
-		batch.setProjectionMatrix(camera.combined);
-		
-		// Clear the entire display as we are using lazy rendering
+        // Clear the entire display as we are using lazy rendering
 
 
-		if (!isPaused) {
-            Gdx.gl.glClearColor(0, 0, 0, 1);
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-            rerenderMapObjects(batch, camera);
-            rendererDebug.render(batchDebug, cameraDebug);
-            stage.act(delta);
-            stage.draw();
+//        Gdx.gl.glClearColor(0, 0, 0, 1);
+//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+//        rerenderMapObjects(batch, camera);
 
+        if (!isPaused) {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        rerenderMapObjects(batch, camera);
+        rendererDebug.render(batchDebug, cameraDebug);
+        stage.act(delta);
+        stage.draw();
         }
+//        stage.act(delta);
+//        stage.draw();
 
 		
 		/* Refresh the experience UI for if information was updated */
