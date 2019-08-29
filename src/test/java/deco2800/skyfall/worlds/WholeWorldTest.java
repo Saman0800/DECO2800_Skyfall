@@ -42,12 +42,12 @@ public class WholeWorldTest {
         Map<String, Float> frictionMap = world.frictionMap;
 
         Map<String, Float> expectedFrictionMap = new HashMap<>();
-        frictionMap.put("grass", 0.6f);
-        frictionMap.put("forest", 0.6f);
-        frictionMap.put("water", 0.2f);
-        frictionMap.put("mountain", 0.4f);
-        frictionMap.put("desert", 0.5f);
-        frictionMap.put("ice", 0.8f);
+        frictionMap.put("grass", 0.8f);
+        frictionMap.put("forest", 0.76f);
+        frictionMap.put("water", 0.4f);
+        frictionMap.put("mountain", 0.67f);
+        frictionMap.put("desert", 0.59f);
+        frictionMap.put("ice", 1f);
         expectedFrictionMap.putAll(frictionMap);
 
         Assert.assertEquals(expectedFrictionMap, frictionMap);

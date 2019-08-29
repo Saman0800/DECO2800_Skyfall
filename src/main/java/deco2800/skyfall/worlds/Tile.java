@@ -116,20 +116,20 @@ public class Tile {
      * @param tileType The type of the tile
      * @return The friction value for the tile
      */
-	public static float getFriction(String tileType){
+	public static float getFriction(String tileType) {
 	    //Gets the friction map for the world
     	Map<String, Float> frictionMap =
 				GameManager.get().getWorld().frictionMap;
     	// Checks the type of the tile
-    	if(tileType.contains("ice")){
+    	if(tileType.contains("ice")) {
 			return frictionMap.get("ice");
-		}else if(tileType.contains("desert")){
+		}else if(tileType.contains("desert")) {
 			return frictionMap.get("desert");
-		}else if(tileType.contains("mountain")){
+		}else if(tileType.contains("mountain")) {
 			return frictionMap.get("mountain");
-		}else if(tileType.contains("water")){
+		}else if(tileType.contains("water")) {
 			return frictionMap.get("water");
-		}else if(tileType.contains("forest")){
+		}else if(tileType.contains("forest")) {
     	    return frictionMap.get("forest");
     	}else{
 			return frictionMap.get("grass");

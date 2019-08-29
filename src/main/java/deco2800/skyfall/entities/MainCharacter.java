@@ -80,6 +80,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private ArrayList<Integer> velHistoryY;
 
     private boolean isMoving;
+    private boolean canSwim;
 
     /**
      * Used for combat testing melee/range weapons.
@@ -139,6 +140,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         velHistoryY = new ArrayList<>();
 
         isMoving = false;
+        canSwim = true;
     }
 
     /**
@@ -379,6 +381,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         return foodLevel <= 0;
     }
 
+    public void changeSwimming(boolean swimmingAbility) {
+        this.canSwim = swimmingAbility;
+    }
+
     /**
      * Change current level of character
      *
@@ -510,6 +516,86 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     */
 
     /**
+     * Gets the tile at a position.
+     * @param xPos The x position
+     * @param yPos The y position
+     * @return The Tile at that position
+     */
+    public Tile getTile(float xPos, float yPos) {
+        //Returns tile at left arm (our perspective) of the player
+        float tileCol = (float) Math.round(xPos);
+        float tileRow = (float) Math.round(yPos);
+        if (tileCol % 2 != 0) {
+            tileRow += 0.5f;
+        }
+        return GameManager.get().getWorld().getTile(tileCol,
+                tileRow);
+    }
+
+    /**
+     * Records the player velocity history
+     * @param xVel The x velocity
+     * @param yVel The y velocity
+     */
+    public void recordVelHistory(float xVel, float yVel) {
+        if (velHistoryX.size() < 2 || velHistoryY.size() < 2) {
+            velHistoryX.add((int) (xVel * 100));
+            velHistoryY.add((int) (yVel * 100));
+        } else if (velHistoryX.get(1) != (int) (xVel * 100) ||
+                velHistoryY.get(1) != (int) (yVel * 100)) {
+            velHistoryX.set(0, velHistoryX.get(1));
+            velHistoryX.set(1, (int) (xVel * 100));
+
+            velHistoryY.set(0, velHistoryY.get(1));
+            velHistoryY.set(1, (int) (yVel * 100));
+        }
+    }
+
+    /**
+     * Calculates the velocity of the player
+     * @param mainInput Input being checked
+     * @param altInput Input not being checked
+     * @param vel Velocity to calculate
+     * @param friction Friction value
+     * @return The new velocity
+     */
+    public float calVelocity(int mainInput, int altInput, float vel,
+                            float friction) {
+        if (mainInput != 0) {
+            vel += mainInput * acceleration * friction;
+            // Prevents sliding
+            if (vel / Math.abs(vel) != mainInput) {
+                vel = 0;
+            }
+        } else if (altInput != 0) {
+            vel *= 0.8;
+        } else {
+            vel = 0;
+        }
+        return vel;
+    }
+
+    /**
+     * Finds the next position to move to and moves there
+     * @param position The current position
+     * @param destination The new position
+     * @param nextTile The tile that will be moved to
+     */
+    public void findNewPosition(HexVector position, HexVector destination,
+                                Tile nextTile) {
+        if(nextTile == null) {
+            // Prevents the player from walking into the void
+            position.moveToward(destination, 0);
+        }else if(nextTile.getTextureName().contains("water") && !canSwim) {
+            // Prevents the player back if they try to enter water when they
+            // can't swim
+            position.moveToward(destination, 0);
+        }else {
+            position.moveToward(destination, vel);
+        }
+    }
+
+    /**
      * Moves the player based on current key inputs
      */
     public void updatePosition() {
@@ -517,17 +603,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         float xPos = position.getCol();
         float yPos = position.getRow();
 
-        //Returns tile at left arm (our perspective) of the player
-        float tileCol = (float) Math.round(xPos);
-        float tileRow = (float) Math.round(yPos);
-        if (tileCol % 2 != 0){
-            tileRow += 0.5f;
-        }
+        // Gets the tile the player is standing on
+        Tile currentTile = getTile(xPos,yPos);
 
         //Determined friction scaling factor to apply based on current tile
         float friction;
-        Tile currentTile = GameManager.get().getWorld().getTile(tileCol,tileRow);
-        if(currentTile != null && currentTile.getTexture() != null){
+        if(currentTile != null && currentTile.getTexture() != null) {
             //Tile specific friction
             friction = Tile.getFriction(currentTile.getTextureName());
         }else{
@@ -539,31 +620,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         xPos += xVel + xInput * acceleration * 0.5 * friction;
         yPos += yVel + yInput * acceleration * 0.5 * friction;
 
-        // Calculates velocity in x direction
-        if (xInput != 0) {
-            xVel += xInput * acceleration * friction;
-            // Prevents sliding
-            if (xVel / Math.abs(xVel) != xInput) {
-                xVel = 0;
-            }
-        } else if (yInput != 0) {
-            xVel *= 0.8;
-        } else {
-            xVel = 0;
-        }
-
-        // Calculates velocity in y direction
-        if (yInput != 0) {
-            yVel += yInput * acceleration * friction;
-            // Prevents sliding
-            if (yVel / Math.abs(yVel) != yInput) {
-                yVel = 0;
-            }
-        } else if (xInput != 0) {
-            yVel *= 0.8;
-        } else {
-            yVel = 0;
-        }
+        // Calculates velocity in x and y directions
+        xVel = calVelocity(xInput, yInput, xVel, friction);
+        yVel = calVelocity(yInput, xInput, yVel, friction);
 
         // caps the velocity depending on the friction of the current tile
         float maxTileSpeed = maxSpeed * friction;
@@ -581,21 +640,17 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         // Calculates destination vector
         HexVector destination = new HexVector(xPos, yPos);
 
+        // Next tile the player will move to
+        Tile nextTile = getTile(xPos, yPos);
+
+        // Method to take away the player's ability to swim
+        changeSwimming(false);
+
         // Moves the player to new location
-        position.moveToward(destination, vel);
+        findNewPosition(position, destination, nextTile);
 
         //Records velocity history in x direction
-        if (velHistoryX.size() < 2 || velHistoryY.size() < 2) {
-            velHistoryX.add((int) (xVel * 100));
-            velHistoryY.add((int) (yVel * 100));
-        } else if (velHistoryX.get(1) != (int) (xVel * 100) ||
-                velHistoryY.get(1) != (int) (yVel * 100)) {
-            velHistoryX.set(0, velHistoryX.get(1));
-            velHistoryX.set(1, (int) (xVel * 100));
-
-            velHistoryY.set(0, velHistoryY.get(1));
-            velHistoryY.set(1, (int) (yVel * 100));
-        }
+        recordVelHistory(xVel,yVel);
     }
 
     /**

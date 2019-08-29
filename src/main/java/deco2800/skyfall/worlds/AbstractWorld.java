@@ -92,7 +92,7 @@ public abstract class AbstractWorld {
      * determine their properties
      */
     public void generateTileTypes(Random random) {
-        for (AbstractBiome biome : biomes){
+        for (AbstractBiome biome : biomes) {
             biome.setTileTextures(random);
         }
     }
@@ -174,15 +174,15 @@ public abstract class AbstractWorld {
     /**
      * Creates a friction map that assigns a friction to every tile type
      */
-    public void initialiseFrictionmap(){
+    public void initialiseFrictionmap() {
         // Hard coded map, should change when tile can return its type
         frictionMap = new HashMap<>();
-        frictionMap.put("grass", 0.6f);
-        frictionMap.put("forest", 0.6f);
-        frictionMap.put("water", 0.2f);
-        frictionMap.put("mountain", 0.4f);
-        frictionMap.put("desert", 0.5f);
-        frictionMap.put("ice", 0.8f);
+        frictionMap.put("grass", 0.8f);
+        frictionMap.put("forest", 0.76f);
+        frictionMap.put("water", 0.4f);
+        frictionMap.put("mountain", 0.67f);
+        frictionMap.put("desert", 0.59f);
+        frictionMap.put("ice", 1f);
         this.frictionMap.putAll(frictionMap);
     }
     
@@ -190,7 +190,7 @@ public abstract class AbstractWorld {
      *  Returns a list of entities in this world, ordered by their render level 
      *  @return all entities in the world 
      */
-    public List<AbstractEntity> getSortedEntities(){
+    public List<AbstractEntity> getSortedEntities() {
 		List<AbstractEntity> e = new CopyOnWriteArrayList<>(this.entities);
     	Collections.sort(e);
 		return e;
@@ -201,7 +201,7 @@ public abstract class AbstractWorld {
      *  Returns a list of entities in this world, ordered by their render level 
      *  @return all entities in the world 
      */
-    public List<AgentEntity> getSortedAgentEntities(){
+    public List<AgentEntity> getSortedAgentEntities() {
         List<AgentEntity> e = this.entities
             .stream()
             .filter(p -> p instanceof AgentEntity)
@@ -359,14 +359,14 @@ public abstract class AbstractWorld {
      * Adds a biome to a world
      * @param biome The biome getting added
      */
-    public void addBiome(AbstractBiome biome){
+    public void addBiome(AbstractBiome biome) {
         this.biomes.add(biome);
     }
 
     /**
      * Gets the list of biomes in a world
      */
-    public List<AbstractBiome> getBiomes(){
+    public List<AbstractBiome> getBiomes() {
         return this.biomes;
     }
 
@@ -385,14 +385,15 @@ public abstract class AbstractWorld {
     }
 
     public void saveWorld(String filename) throws IOException{
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(filename))){
+        try(BufferedWriter writer =
+                    new BufferedWriter(new FileWriter(filename))) {
             writer.write(worldToString());
         }
     }
 
-    public String worldToString(){
+    public String worldToString() {
         StringBuilder string = new StringBuilder();
-        for (Tile tile : tiles){
+        for (Tile tile : tiles) {
             String out = String.format("%f, %f, %s, %s\n", tile.getCol(), tile.getRow(),
                     tile.getBiome().getBiomeName(), tile.getTextureName());
             string.append(out);
