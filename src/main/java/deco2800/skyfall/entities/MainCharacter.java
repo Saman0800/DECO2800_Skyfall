@@ -845,7 +845,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * This method enables the Main character to use Hatchet. The player's
      * distance from the tree should not be more than 2.5.Every time a
      * wood is collected a message is printed.
-     *
+     * This method will be changed later for to increase efficiency.
      */
     public void useHatchet(){
 
@@ -872,7 +872,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * This method enables the Main character to use Hatchet. The player's
      * distance from the tree should not be more than 2.5.Every time a
      * wood is collected a message is printed.
-     *
+     * This method will be changed later for to increase efficiency.
      */
     public void usePickAxe(){
 
