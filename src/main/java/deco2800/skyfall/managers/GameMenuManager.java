@@ -1,5 +1,6 @@
 package deco2800.skyfall.managers;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -8,8 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gui.HealthCircle;
+import deco2800.skyfall.gui.SettingsTable;
+
 import java.util.*;
 
 
@@ -24,13 +28,15 @@ public class GameMenuManager extends TickableManager {
         private Stage stage;
         private MainCharacter mainCharacter;
         private HealthCircle healthCircle;
+        private SettingsTable settingsTable;
         private InventoryManager inventory;
         private Table inventoryTable = null;
-
+        private SoundManager soundManager;
 
         public GameMenuManager() {
             textureManager = GameManager.get().getManager(TextureManager.class);
             inventory = GameManager.get().getManager(InventoryManager.class);
+            soundManager = GameManager.get().getManager(SoundManager.class);
             stage = null;
         }
 
@@ -76,7 +82,9 @@ public class GameMenuManager extends TickableManager {
                     } else {
                         pauseTable.setVisible(true);
                     }
+                    GameScreen.isPaused = true;
                     pause();
+
                 }
             });
 
@@ -95,7 +103,7 @@ public class GameMenuManager extends TickableManager {
                     } else {
                         inventoryTable.setVisible(true);
                     }
-
+                    GameScreen.isPaused = true;
                     GameManager.setPaused(true);
                 }
             });
@@ -172,6 +180,7 @@ public class GameMenuManager extends TickableManager {
                 public void clicked(InputEvent event, float x, float y) {
                     GameManager.setPaused(false);
                     pauseTable.setVisible(false);
+                    GameScreen.isPaused = false;
                 }
             });
 
@@ -190,7 +199,7 @@ public class GameMenuManager extends TickableManager {
             pauseTable.add(buttons);
 
             this.pauseTable = pauseTable;
-        }
+    }
 
 
 
@@ -212,6 +221,8 @@ public class GameMenuManager extends TickableManager {
             public void clicked(InputEvent event, float x, float y) {
                 GameManager.setPaused(false);
                 inventoryTable.setVisible(false);
+                System.out.println("False");
+                GameScreen.isPaused = false;
             }
         });
 
