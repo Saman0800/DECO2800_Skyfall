@@ -207,7 +207,7 @@ public class Renderer3D implements Renderer {
      */
     private void skipDrawingEnemy(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord, Texture tex) {
         // if the entity is spider of savage then not drawing
-        if (entity instanceof Spider || entity instanceof Robot) {
+        if (entity instanceof Spider || entity instanceof Robot || entity instanceof Stone) {
 
         } else {
             renderAbstractEntity(batch, entity, entityWorldCoord, tex);
@@ -242,6 +242,38 @@ public class Renderer3D implements Renderer {
                 Texture spiderTexture = textureManager.getTexture(spider.getTexture());
                 float[] spiderCoord = WorldUtil.colRowToWorldCords(spider.getCol(), spider.getRow());
                 renderAbstractEntity(batch, spider, spiderCoord, spiderTexture);
+            }
+        }
+
+    }
+
+    /**
+     * Spider defence Animation
+     *
+     * @param batch      the sprite batch
+     * @param camera     the camera.
+     * @param entity     AbstractEntity
+     * @param playerPeon playerPeon
+     */
+    private void stoneAnimation(SpriteBatch batch, OrthographicCamera camera, AbstractEntity entity,
+                                 MainCharacter playerPeon) {
+
+        // if the distance between player peon and spider is greater than 2 then spider
+        // do defence animation
+        // (distance^2=(player col -spider col)^2 +(spider row -spider row))
+        if (entity instanceof Stone && playerPeon != null) {
+            Stone stone = (Stone) entity;
+            float colDistance = playerPeon.getCol() - stone.getCol();
+            float rowDistance = playerPeon.getRow() - stone.getRow();
+            if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
+                float[] tileWorldCord = WorldUtil.colRowToWorldCords(stone.getCol(), stone.getRow());
+                renderAnimation(batch, camera, animationManager.getAnimation("stoneJNE"), tileWorldCord[0],
+                        tileWorldCord[1]);
+            } else {
+                // draw spider texture when distance greater than 2
+                Texture stoneTexture = textureManager.getTexture(stone.getTexture());
+                float[] spiderCoord = WorldUtil.colRowToWorldCords(stone.getCol(), stone.getRow());
+                renderAbstractEntity(batch, stone, spiderCoord, stoneTexture);
             }
         }
 
@@ -330,6 +362,7 @@ public class Renderer3D implements Renderer {
                 }
                 spiderAnimation(batch, camera, entity, playerPeon);
                 robotAnimation(batch, camera, entity, playerPeon);
+                stoneAnimation(batch, camera, entity, playerPeon);
                 runAnimations(batch, entity, entityWorldCoord);
             }
 
