@@ -151,8 +151,8 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
                     return x * x * x;
                 };
 
-                // EntitySpawnRule treeRule = new EntitySpawnRule(biome, true, cubic);
-                // EntitySpawnTable.spawnEntities(startTree, treeRule, world);
+                EntitySpawnRule treeRule = new EntitySpawnRule(biome, true, cubic);
+                EntitySpawnTable.spawnEntities(startTree, treeRule, world);
             }
         }
     }
