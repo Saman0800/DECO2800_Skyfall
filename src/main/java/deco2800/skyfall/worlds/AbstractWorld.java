@@ -304,6 +304,13 @@ public abstract class AbstractWorld {
 
         // Collision detection for entities
         for (AbstractEntity e1 : this.getEntities()) {
+
+            if (e1 instanceof StaticEntity) {
+                // Static entities can't move into other entities. Only worry
+                // about entities that can move themselves into other entities
+                continue;
+            }
+
             e1.onTick(0);
             if (e1.getCollider() == null) {
                 break;
@@ -371,7 +378,7 @@ public abstract class AbstractWorld {
         // TODO: implement proper game logic for collisions between different types of
         // entities.
 
-        //TODO: this needs to be internalized into classes for cleaner code.
+        // TODO: this needs to be internalized into classes for cleaner code.
         if (e1 instanceof Projectile && e2 instanceof EnemyEntity) {
             Projectile projectile = (Projectile) e1;
             EnemyEntity enemy = (EnemyEntity) e2;
