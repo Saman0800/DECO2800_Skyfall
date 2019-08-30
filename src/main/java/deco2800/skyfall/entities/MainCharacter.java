@@ -47,7 +47,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private int itemSlotSelected;
 
     //List of blueprints that the player has learned.
-    private List<String> bluePrintsLearned;
+    private List<String> blueprintsLearned;
 
     public static final String WALK_NORMAL = "people_walk_normal";
 
@@ -505,6 +505,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     @Override
     public void notifyKeyDown(int keycode) {
+        GoldPiece g = new GoldPiece(5);
         //player cant move when paused
         if (GameManager.getPaused()) {
             return;
@@ -527,6 +528,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 break;
             case Input.Keys.P:
                 usePickAxe();
+                break;
+            case Input.Keys.G:
+                addClosestGoldPiece();
+                break;
+            case Input.Keys.M:
+                getGoldPouchTotalValue();
                 break;
 
 
@@ -562,6 +569,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             case Input.Keys.H:
                 break;
             case Input.Keys.P:
+                break;
+            case Input.Keys.G:
+                break;
+            case Input.Keys.M:
                 break;
 
         }
@@ -630,9 +641,29 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         for (Integer goldValue : goldPouch.keySet()) {
             totalValue += goldValue * goldPouch.get(goldValue);
         }
-
+        System.out.println("The total value of your Gold Pouch is: " + totalValue + "G");
         return totalValue;
     }
+
+    /**
+     * If the player is within 2m of a gold piece and presses G, it will
+     * be added to their Gold Pouch.
+     *
+     */
+    public void addClosestGoldPiece(){
+        for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+                if (entity instanceof GoldPiece) {
+                    if ( this.getPosition().distance(entity.getPosition()) <= 2 ) {
+                        this.addGold((GoldPiece) entity, 1);
+                        System.out.println(this.inventories.toString());
+                    }
+                }
+
+        }
+        System.out.println("Sorry, you are not close enough to a gold piece!");
+
+    }
+
 
 
     /**
@@ -906,7 +937,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * A getter method for the blueprints that the player has learned.
      * @return the learned blueprints list
      */
-    public List<String> getBluePrintsLearned() {
-        return this.bluePrintsLearned;
+    public List<String> getBlueprintsLearned() {
+        return this.blueprintsLearned;
     }
+
+
 }

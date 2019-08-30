@@ -4,15 +4,22 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.Rock;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
+import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.resources.Item;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /***
  * A Pick Axe item. Pick Axe is a manufacturd resource. It can harvest a rock.
  */
-public class PickAxe extends ManufacturedResources implements Item {
+public class PickAxe extends ManufacturedResources implements Item ,Blueprint{
 
+    private Map<String, Integer> allRequirements;
+    private  boolean blueprintLearned=false;
     /***
      * Create a Pick Axe with the name Pick Axe.
      *
@@ -40,10 +47,6 @@ public class PickAxe extends ManufacturedResources implements Item {
     public PickAxe () {
         this.name="Pick Axe";
     }
-
-
-
-
 
     /**
      * A getter method for the name of the item
@@ -129,5 +132,65 @@ public class PickAxe extends ManufacturedResources implements Item {
     public String getDescription() {
         return "This item can be constructed using stone and wood. " +
                 "It can farm stone from biomes.";
+    }
+
+    /**
+     * Returns the number of wood required for the item.
+     *
+     * @return The name of the item
+     */
+    @Override
+    public int getRequiredWood() {
+        return 50;
+    }
+
+    /**
+     * Returns the number of stones required for the item.
+     *
+     * @return The name of the item
+     */
+    @Override
+    public int getRequiredStone() {
+        return 0;
+    }
+
+    /**
+     * Returns the number of metal required for the item.
+     *
+     * @return The name of the item
+     */
+    @Override
+    public int getRequiredMetal() {
+        return 0;
+    }
+
+    /**
+     * Returns a map of the name of the required resource and
+     * the required number of each resource to create the item.
+     *
+     * @return a hashamp of the required resources and their number.
+     */
+    @Override
+    public Map<String, Integer> getAllRequirements() {
+        allRequirements = new HashMap<>();
+        allRequirements.put("Wood",50);
+        allRequirements.put("Stone",0);
+        allRequirements.put("Metal",0);
+        return allRequirements;
+    }
+
+    /**
+     * to check if the player is able to access the blueprint
+     *
+     * @return true if the player is allowed to learn the blueprint.
+     */
+    @Override
+    public boolean bluePrintLearned() {
+
+        return blueprintLearned;
+    }
+
+    public void toggleBlueprintLearned(){
+        blueprintLearned =true;
     }
 }
