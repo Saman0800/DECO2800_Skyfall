@@ -292,7 +292,6 @@ public abstract class AbstractWorld {
                     break;
                 }
                 Collider c2 = e2.getCollider();
-
                 if (e1 != e2 && c1.overlaps(c2)) {
                     if (e1 instanceof MainCharacter || e2 instanceof MainCharacter) {
                         break;
@@ -350,10 +349,20 @@ public abstract class AbstractWorld {
         //TODO: implement proper game logic for collisions between different types of entities.
 
         if (e1 instanceof Projectile && e2 instanceof EnemyEntity) {
-            removeEntity(e2);
+            if(((EnemyEntity) e2).getHealth()>0){
+                ((EnemyEntity) e2).takeDamage(((Projectile) e1).getDamage());
+            }else{
+                removeEntity(e2);
+            }
+
 
         } else if (e2 instanceof Projectile && e1 instanceof EnemyEntity) {
-            removeEntity(e1);
+            if(((EnemyEntity) e1).getHealth()>0){
+                ((EnemyEntity) e1).takeDamage(((EnemyEntity) e1).getDamage());
+            }else{
+                removeEntity(e1);
+            }
+
         } else {
             return;
         }
