@@ -52,6 +52,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     private int foodLevel;
 
+    // The accumulated food tick to tick
+    private float foodAccum;
+
     // Textures for all 6 directions to correspond to movement of character
     private String[] textures;
 
@@ -81,6 +84,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     private boolean isMoving;
     private boolean canSwim;
+    private boolean isSprinting;
 
     /**
      * Used for combat testing melee/range weapons.
@@ -127,6 +131,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         this.level = 1;
         this.foodLevel = 100;
+        foodAccum = 0.f;
 
         //Initialises the players velocity properties
         xInput = 0;
@@ -141,6 +146,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         isMoving = false;
         canSwim = true;
+        isSprinting = false;
     }
 
     /**
@@ -448,6 +454,24 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             GameManager.getManagerFromInstance(ConstructionManager.class)
                     .displayWindow();
         }
+
+        // Do hunger stuff here
+        if (isMoving) {
+            if (isSprinting) {
+                foodAccum += 0.1f;
+            } else {
+                foodAccum += 0.01f;
+            }
+        } else {
+            foodAccum += 0.001f;
+        }
+
+        while(foodAccum >= 1.f) {
+            change_food(-1);
+            foodAccum -= 1.f;
+        }
+
+        System.out.println(foodLevel);
     }
 
     /**
@@ -475,6 +499,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 xInput += 1;
                 break;
             case Input.Keys.SHIFT_LEFT:
+                isSprinting = true;
                 maxSpeed *= 2.f;
                 break;
             default:
@@ -509,6 +534,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 xInput -= 1;
                 break;
             case Input.Keys.SHIFT_LEFT:
+                isSprinting = false;
                 maxSpeed /= 2.f;
                 break;
         }
