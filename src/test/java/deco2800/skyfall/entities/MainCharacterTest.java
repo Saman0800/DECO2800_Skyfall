@@ -8,6 +8,7 @@ import deco2800.skyfall.resources.items.PoisonousMushroom;
 import deco2800.skyfall.resources.items.Stone;
 import deco2800.skyfall.worlds.Tile;
 
+import deco2800.skyfall.util.Collider;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -316,5 +317,17 @@ public class MainCharacterTest {
         spear = null;
         bow = null;
         axe = null;
+    }
+
+    @Test
+    public void testCollision() {
+        WoodCube woodCube = new WoodCube(50,50);
+        Collider c1 = woodCube.getCollider();
+        Collider c2 = testCharacter.getCollider();
+        if (c1.overlaps(c2)) {
+            System.out.println("COLLISION");
+        } else {
+            System.out.println("NO COLLISION");
+        }
     }
 }
