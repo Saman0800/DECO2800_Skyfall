@@ -42,8 +42,8 @@ public class AnimationManager extends AbstractManager {
 //                "mario_right", 100, 138, DEFAULT_FRAME_RATE);
 //        this.generateAnimationObject("mario_left",
 //                "mario_left", 100, 138, DEFAULT_FRAME_RATE);
-        this.generateAnimationObject("spider_defence","resources/spiderSheet/SpiderAnimation.atlas",1.0f);
-        this.generateAnimationObject("robot_defence","resources/robotSheet/robotAnimation.atlas",1.0f);
+        this.generateAnimationObject("spider_defence","resources/spiderSheet/SpiderAnimation.atlas",DEFAULT_FRAME_RATE);
+        this.generateAnimationObject("robot_defence","resources/robotSheet/robotAnimation.atlas",DEFAULT_FRAME_RATE);
     }
 
     public AnimationManager(boolean test) {
