@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities;
 
 
+import deco2800.skyfall.managers.GameManager;
 
 public class Robot extends EnemyEntity {
     private static final transient int HEALTH = 20;
@@ -56,6 +57,9 @@ public class Robot extends EnemyEntity {
 
     @Override
     public void onTick(long i) {
+        if(this.isDead()==true){
+            GameManager.get().getWorld().removeEntity(this);
+        }
         super.onTick(i);
     }
 }

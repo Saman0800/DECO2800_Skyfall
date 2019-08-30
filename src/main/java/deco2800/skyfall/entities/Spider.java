@@ -67,6 +67,9 @@ public class Spider extends EnemyEntity {
      */
     @Override
     public void onTick(long i) {
+        if(this.isDead()==true){
+            GameManager.get().getWorld().removeEntity(this);
+        }
         if (period<=30){
             period++;
         }else{
