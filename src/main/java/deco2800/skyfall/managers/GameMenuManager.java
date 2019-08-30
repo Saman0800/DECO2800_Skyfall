@@ -1,7 +1,9 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import deco2800.skyfall.GameScreen;
@@ -59,7 +61,7 @@ public class GameMenuManager extends TickableManager {
     }
 
 
-    public void pause() {
+    private void pause() {
         GameManager.setPaused(true);
     }
 
@@ -69,7 +71,7 @@ public class GameMenuManager extends TickableManager {
         exit(table);
     }
 
-    public void exit(PopUpTable table) {
+    private void exit(PopUpTable table) {
         table.setVisible(false);
         table.getExit().setVisible(false);
         PopUpTable.setOpened(null);

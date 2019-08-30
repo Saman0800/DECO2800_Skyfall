@@ -144,19 +144,15 @@ public class GameScreen implements Screen, KeyDownObserver {
 
         // Clear the entire display as we are using lazy rendering
 
-
-//        Gdx.gl.glClearColor(0, 0, 0, 1);
-//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-//        rerenderMapObjects(batch, camera);
-
-        if (!isPaused) {
+        // Commented out by Cyrus
+//        if (!isPaused) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         rerenderMapObjects(batch, camera);
         rendererDebug.render(batchDebug, cameraDebug);
         stage.act(delta);
         stage.draw();
-        }
+//        }
 //        stage.act(delta);
 //        stage.draw();
 
