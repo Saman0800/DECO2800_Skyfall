@@ -1,9 +1,6 @@
 package deco2800.skyfall.entities;
 
 import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.tasks.AbstractTask;
-import deco2800.skyfall.tasks.MovementTask;
-import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 
 /**

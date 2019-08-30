@@ -21,9 +21,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     // Weapon Manager for MainCharacter
     private WeaponManager weapons;
 
-    // Hitbox of melee.
-    private Projectile hitBox;
-
     // Manager for all of MainCharacter's inventories
     private InventoryManager inventories;
 
@@ -195,7 +192,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         // Make projectile move toward the angle
         // Spawn projectile in front of character for now.
 
-        this.hitBox = new Projectile(mousePosition,
+        Projectile projectile = new Projectile(mousePosition,
                 "arcane",
                 "test hitbox",
                 position.getCol() + 1,
@@ -208,13 +205,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         GameManager manager = GameManager.get();
 
         // Add the projectile entity to the game world.
-        manager.getWorld().addEntity(this.hitBox);
+        manager.getWorld().addEntity(projectile);
     }
 
     /**
      * Add weapon to weapons list
-     * @param item weapon to be added
-     */
+     * @param item weapon to be addeda
     public void pickUpWeapon(Weapon item) {
         weapons.pickUpWeapon(item);
     }
