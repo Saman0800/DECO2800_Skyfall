@@ -457,6 +457,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 xInput += 1;
                 //System.out.println("x+1");
                 break;
+            case Input.Keys.SHIFT_LEFT:
+                maxSpeed *= 2.f;
+                break;
             default:
                 switchItem(keycode);
                 break;
@@ -491,6 +494,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             case Input.Keys.D:
                 xInput -= 1;
                 //System.out.println("x-1");
+                break;
+            case Input.Keys.SHIFT_LEFT:
+                maxSpeed /= 2.f;
                 break;
         }
     }

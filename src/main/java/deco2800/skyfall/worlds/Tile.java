@@ -40,7 +40,6 @@ public class Tile{
 	@Expose
     private boolean obstructed = false;
     
-    
     public static final int NORTH = 0;
     public static final int NORTH_EAST = 1;
     public static final int SOUTH_EAST = 2;

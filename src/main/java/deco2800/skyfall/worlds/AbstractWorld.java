@@ -219,7 +219,6 @@ public abstract class AbstractWorld {
         return tiles;
     }
     
-    
     public Tile getTile(float col, float row) {
     	return getTile(new HexVector(col,row));
     }
