@@ -8,6 +8,8 @@ import deco2800.skyfall.observers.*;
 import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.*;
+import deco2800.skyfall.worlds.Tile;
+import org.lwjgl.Sys;
 
 import java.util.*;
 
@@ -77,12 +79,15 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private ArrayList<Integer> velHistoryX;
     private ArrayList<Integer> velHistoryY;
 
+    private boolean isMoving;
+    private boolean canSwim;
+
     /**
      * Used for combat testing melee/range weapons.
      * What number item slot the player has pressed.
      * TODO: remove or integrate into item system.
      * e.g. 1 = test range weapon
-     *      2 = test melee weapon
+     * 2 = test melee weapon
      */
     private int itemSlotSelected = 1;
 
@@ -128,11 +133,14 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         yInput = 0;
         xVel = 0;
         yVel = 0;
-        setAcceleration(0.01f);
-        setMaxSpeed(0.7f);
+        setAcceleration(0.02f);
+        setMaxSpeed(0.3f);
         vel = 0;
         velHistoryX = new ArrayList<>();
         velHistoryY = new ArrayList<>();
+
+        isMoving = false;
+        canSwim = true;
     }
 
     /**
@@ -157,6 +165,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Switch the item the MainCharacter has equip.
+     *
      * @param keyCode Keycode the player has pressed.
      */
     protected void switchItem(int keyCode) {
@@ -170,6 +179,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Return the currently selected item slot.
+     *
      * @return The item slot the MainCharacter has equip.
      */
     public int getItemSlotSelected() {
@@ -230,6 +240,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Attempts to equip a weapon from the weapons map
+     *
      * @param item weapon being equipped
      */
     public void equipWeapon(Weapon item) {
@@ -238,6 +249,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Attempts to unequip a weapon and return it to the weapons map
+     *
      * @param item weapon being unequipped
      */
     public void unequipWeapon(Weapon item) {
@@ -247,6 +259,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Get a copy of the equipped weapons list
      * Modifying the returned list shouldn't affect the internal state of class
+     *
      * @return equipped list
      */
     public List<Weapon> getEquipped() {
@@ -256,6 +269,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Gets the weapon manager of the character, so it can only be modified
      * this way, prevents having it being a public variable
+     *
      * @return the weapon manager of character
      */
     public WeaponManager getWeaponManager() {
@@ -274,6 +288,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Set the players inventory to a predefined inventory
      * e.g for loading player saves
+     *
      * @param inventoryContents the save for the inventory
      */
     public void setInventory(Map<String, List<Item>> inventoryContents,
@@ -303,6 +318,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Gets the inventory manager of the character, so it can only be modified
      * this way, prevents having it being a public variable
+     *
      * @return the inventory manager of character
      */
     public InventoryManager getInventoryManager() {
@@ -337,6 +353,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Method for the MainCharacter to eat food and restore/decrease hunger level
+     *
      * @param item the item to eat
      */
     public void eatFood(Item item) {
@@ -357,10 +374,15 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * See if the player is starving
+     *
      * @return true if hunger points is <= 0, else false
      */
     public boolean isStarving() {
         return foodLevel <= 0;
+    }
+
+    public void changeSwimming(boolean swimmingAbility) {
+        this.canSwim = swimmingAbility;
     }
 
     /**
@@ -396,7 +418,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                                 int button) {
         if (button == 0) {
             float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(),
-                            Gdx.input.getY());
+                    Gdx.input.getY());
             float[] clickedPosition =
                     WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 
@@ -413,8 +435,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void onTick(long i) {
         this.updatePosition();
         this.updateCollider();
-
-
+        this.movementSound();
         //this.setCurrentSpeed(this.direction.len());
         //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
 //        System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction,
@@ -443,19 +464,15 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         switch (keycode) {
             case Input.Keys.W:
                 yInput += 1;
-                //System.out.println("y+1");
                 break;
             case Input.Keys.A:
                 xInput += -1;
-                //System.out.println("x-1");
                 break;
             case Input.Keys.S:
                 yInput += -1;
-                //System.out.println("y-1");
                 break;
             case Input.Keys.D:
                 xInput += 1;
-                //System.out.println("x+1");
                 break;
             case Input.Keys.SHIFT_LEFT:
                 maxSpeed *= 2.f;
@@ -481,19 +498,15 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         switch (keycode) {
             case Input.Keys.W:
                 yInput -= 1;
-                //System.out.println("y-1");
                 break;
             case Input.Keys.A:
                 xInput -= -1;
-                //System.out.println("x+1");
                 break;
             case Input.Keys.S:
                 yInput -= -1;
-                //System.out.println("y+1");
                 break;
             case Input.Keys.D:
                 xInput -= 1;
-                //System.out.println("x-1");
                 break;
             case Input.Keys.SHIFT_LEFT:
                 maxSpeed /= 2.f;
@@ -509,62 +522,28 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     */
 
     /**
-     * Moves the player based on current key inputs
+     * Gets the tile at a position.
+     * @param xPos The x position
+     * @param yPos The y position
+     * @return The Tile at that position
      */
-    public void updatePosition() {
-        // Gets current position
-        float xPos = position.getCol();
-        float yPos = position.getRow();
-
-        // Calculates new x and y positions
-        xPos += xVel + xInput * acceleration * 0.5;
-        yPos += yVel + yInput * acceleration * 0.5;
-
-        // Calculates speed to destination
-        vel = Math.sqrt((xVel * xVel) + (yVel * yVel));
-
-        // Calculates velocity in x direction
-        if (xInput != 0) {
-            xVel += xInput * acceleration;
-            // Prevents sliding
-            if (xVel / Math.abs(xVel) != xInput) {
-                xVel = 0;
-            }
-        } else if (yInput != 0) {
-            xVel *= 0.8;
-        } else {
-            xVel = 0;
+    public Tile getTile(float xPos, float yPos) {
+        //Returns tile at left arm (our perspective) of the player
+        float tileCol = (float) Math.round(xPos);
+        float tileRow = (float) Math.round(yPos);
+        if (tileCol % 2 != 0) {
+            tileRow += 0.5f;
         }
+        return GameManager.get().getWorld().getTile(tileCol,
+                tileRow);
+    }
 
-        // Calculates velocity in y direction
-        if (yInput != 0) {
-            yVel += yInput * acceleration;
-            // Prevents sliding
-            if (yVel / Math.abs(yVel) != yInput) {
-                yVel = 0;
-            }
-        } else if (xInput != 0) {
-            yVel *= 0.8;
-        } else {
-            yVel = 0;
-        }
-
-        // caps the velocity
-        if (vel > maxSpeed) {
-            xVel /= vel;
-            yVel /= vel;
-
-            xVel *= maxSpeed;
-            yVel *= maxSpeed;
-        }
-
-        // Calculates destination vector
-        HexVector destination = new HexVector(xPos, yPos);
-
-        // Moves the player to new location
-        position.moveToward(destination, vel);
-
-        //Records velocity history in x direction
+    /**
+     * Records the player velocity history
+     * @param xVel The x velocity
+     * @param yVel The y velocity
+     */
+    public void recordVelHistory(float xVel, float yVel) {
         if (velHistoryX.size() < 2 || velHistoryY.size() < 2) {
             velHistoryX.add((int) (xVel * 100));
             velHistoryY.add((int) (yVel * 100));
@@ -576,8 +555,108 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             velHistoryY.set(0, velHistoryY.get(1));
             velHistoryY.set(1, (int) (yVel * 100));
         }
+    }
 
-        System.out.println(getPlayerDirectionCardinal());
+    /**
+     * Calculates the velocity of the player
+     * @param mainInput Input being checked
+     * @param altInput Input not being checked
+     * @param vel Velocity to calculate
+     * @param friction Friction value
+     * @return The new velocity
+     */
+    public float calVelocity(int mainInput, int altInput, float vel,
+                            float friction) {
+        if (mainInput != 0) {
+            vel += mainInput * acceleration * friction;
+            // Prevents sliding
+            if (vel / Math.abs(vel) != mainInput) {
+                vel = 0;
+            }
+        } else if (altInput != 0) {
+            vel *= 0.8;
+        } else {
+            vel = 0;
+        }
+        return vel;
+    }
+
+    /**
+     * Finds the next position to move to and moves there
+     * @param position The current position
+     * @param destination The new position
+     * @param nextTile The tile that will be moved to
+     */
+    public void findNewPosition(HexVector position, HexVector destination,
+                                Tile nextTile) {
+        if(nextTile == null) {
+            // Prevents the player from walking into the void
+            position.moveToward(destination, 0);
+        }else if(nextTile.getTextureName().contains("water") && !canSwim) {
+            // Prevents the player back if they try to enter water when they
+            // can't swim
+            position.moveToward(destination, 0);
+        }else {
+            position.moveToward(destination, vel);
+        }
+    }
+
+    /**
+     * Moves the player based on current key inputs
+     */
+    public void updatePosition() {
+        // Gets current position
+        float xPos = position.getCol();
+        float yPos = position.getRow();
+
+        // Gets the tile the player is standing on
+        Tile currentTile = getTile(xPos,yPos);
+
+        //Determined friction scaling factor to apply based on current tile
+        float friction;
+        if(currentTile != null && currentTile.getTexture() != null) {
+            //Tile specific friction
+            friction = Tile.getFriction(currentTile.getTextureName());
+        }else{
+            //Default friction
+            friction = 1f;
+        }
+
+        // Calculates new x and y positions
+        xPos += xVel + xInput * acceleration * 0.5 * friction;
+        yPos += yVel + yInput * acceleration * 0.5 * friction;
+
+        // Calculates velocity in x and y directions
+        xVel = calVelocity(xInput, yInput, xVel, friction);
+        yVel = calVelocity(yInput, xInput, yVel, friction);
+
+        // caps the velocity depending on the friction of the current tile
+        float maxTileSpeed = maxSpeed * friction;
+        if (vel > maxTileSpeed) {
+            xVel /= vel;
+            yVel /= vel;
+
+            xVel *= maxTileSpeed;
+            yVel *= maxTileSpeed;
+        }
+
+        // Calculates speed to destination
+        vel = friction * Math.sqrt((xVel * xVel) + (yVel * yVel));
+
+        // Calculates destination vector
+        HexVector destination = new HexVector(xPos, yPos);
+
+        // Next tile the player will move to
+        Tile nextTile = getTile(xPos, yPos);
+
+        // Method to take away the player's ability to swim
+        changeSwimming(false);
+
+        // Moves the player to new location
+        findNewPosition(position, destination, nextTile);
+
+        //Records velocity history in x direction
+        recordVelHistory(xVel,yVel);
     }
 
     /**
@@ -590,14 +669,14 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @return the player direction (units: degrees)
      */
     public double getPlayerDirectionAngle() {
-        double val = 0;
+        double val;
         if (xInput != 0 || yInput != 0) {
             val = Math.atan2(yInput, xInput);
         } else {
             val = Math.atan2(velHistoryY.get(0), velHistoryX.get(0));
         }
         val = val * -180 / Math.PI + 90;
-        if (val < 0){
+        if (val < 0) {
             val += 360;
         }
         return val;
@@ -609,14 +688,14 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      *
      * @return new texture to use
      */
-    public String getPlayerDirectionCardinal(){
+    public String getPlayerDirectionCardinal() {
         double direction = getPlayerDirectionAngle();
 
-        if (direction <= 22.5 || direction >= 337.5){
+        if (direction <= 22.5 || direction >= 337.5) {
             return "North";
-        } else if (22.5 <= direction && direction <= 67.5){
+        } else if (22.5 <= direction && direction <= 67.5) {
             return "North-East";
-        } else if (67.5 <= direction && direction <= 112.5){
+        } else if (67.5 <= direction && direction <= 112.5) {
             return "East";
         } else if (112.5 <= direction && direction <= 157.5) {
             return "South-East";
@@ -641,7 +720,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      *
      * @return list of players velocity properties
      */
-    public List getVelocity(){
+    public List getVelocity() {
         ArrayList<Float> velocity = new ArrayList<>();
         velocity.add(xVel);
         velocity.add(yVel);
@@ -655,7 +734,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      *
      * @param newAcceleration: the new acceleration for the player
      */
-    public void setAcceleration(float newAcceleration){
+    public void setAcceleration(float newAcceleration) {
         this.acceleration = newAcceleration;
     }
 
@@ -664,7 +743,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      *
      * @param newMaxSpeed: the new max speed of the player
      */
-    public void setMaxSpeed(float newMaxSpeed){
+    public void setMaxSpeed(float newMaxSpeed) {
         this.maxSpeed = newMaxSpeed;
     }
 
@@ -673,7 +752,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      *
      * @return the players acceleration
      */
-    public float getAcceleration(){
+    public float getAcceleration() {
         return this.acceleration;
     }
 
@@ -682,7 +761,23 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      *
      * @return the players max speed
      */
-    public float getMaxSpeed(){
+    public float getMaxSpeed() {
         return this.maxSpeed;
+    }
+
+    public void movementSound() {
+        if (!isMoving && vel != 0) {
+            //Runs when the player starts moving
+            isMoving = true;
+            //System.out.println("Start Playing");
+            //TODO: Play movement sound
+        }
+
+        if (isMoving && vel == 0) {
+            //Runs when the player stops moving
+            isMoving = false;
+            //System.out.println("Stop Playing");
+            //TODO: Stop Player movement
+        }
     }
 }
