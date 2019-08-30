@@ -29,6 +29,7 @@ public class GameMenuScreen {
     private InventoryManager inventory;
     private HealthCircle healthCircle;
     private MainCharacter mainCharacter;
+    private Table resourcePanel;
 
     public GameMenuScreen(GameMenuManager gameMenuManager) {
         this.gameMenuManager = gameMenuManager;
@@ -255,6 +256,9 @@ public class GameMenuScreen {
             setExitButton(inventoryTable);
             stage.addActor(inventoryTable);
             stage.addActor(inventoryTable.getExit());
+        } else{
+            inventoryTable.removeActor(resourcePanel);
+            updateInventoryTable();
         }
         return inventoryTable;
     }
@@ -274,13 +278,25 @@ public class GameMenuScreen {
         infoPanel.setPosition(-30, -232);
         infoPanel.setBackground(generateTextureRegionDrawableObject("info_panel"));
 
-
-        Table resourcePanel = new Table();
+        resourcePanel = new Table();
         resourcePanel.setSize(410, 400);
         resourcePanel.setPosition(420, -232);
         resourcePanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
 
-        Map<String, Integer> inventoryAmounts = inventory.getInventoryAmounts();
+        updateInventoryTable();
+
+        Table content = new Table();
+        content.addActor(infoBar);
+        content.addActor(infoPanel);
+        content.addActor(resourcePanel);
+        inventoryTable.add(content).width(800).colspan(3).fillX();
+
+        this.inventoryTable = inventoryTable;
+    }
+
+
+    private void updateInventoryTable(){
+        Map<String, Integer> inventoryAmounts = gameMenuManager.getInventory().getInventoryAmounts();
 
         int count = 0;
         int xpos = 20;
@@ -291,9 +307,12 @@ public class GameMenuScreen {
             ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey()));
             icon.setSize(100, 100);
             icon.setPosition(xpos + count * 130, ypos);
+
             resourcePanel.addActor(icon);
 
-            System.out.println(entry.getValue());
+            Label num = new Label(entry.getValue().toString(), skin, "WASD");
+            num.setPosition(xpos + 85 + count * 130, ypos + 75);
+            resourcePanel.addActor(num);
 
             count++;
 
@@ -303,15 +322,8 @@ public class GameMenuScreen {
             }
         }
 
-        Table content = new Table();
-        content.addActor(infoBar);
-        content.addActor(infoPanel);
-        content.addActor(resourcePanel);
-//        content.addActor(exit);
-        inventoryTable.add(content).width(800).colspan(3).fillX();
-
-        this.inventoryTable = inventoryTable;
     }
+
 
     private PopUpTable getSettingsTable() {
         if (settingsTable == null) {

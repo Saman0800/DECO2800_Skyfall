@@ -16,6 +16,8 @@ import deco2800.skyfall.gamemenu.PopUpTable;
  */
 public class GameMenuManager extends TickableManager {
 
+
+
     private static TextureManager textureManager;
     private Stage stage;
     private MainCharacter mainCharacter;
@@ -34,6 +36,19 @@ public class GameMenuManager extends TickableManager {
         stage = null;
         skin = null;
         characters = new MainCharacter[NUMBEROFCHARACTERS];
+    }
+
+    @Override
+    public void onTick(long i) {
+
+        inventory = GameManager.get().getManager(InventoryManager.class);
+
+        if (healthCircle != null) {
+            healthCircle.update();
+        }
+
+
+
     }
 
     public InventoryManager getInventory() {
@@ -91,16 +106,6 @@ public class GameMenuManager extends TickableManager {
         System.out.println("opened " + table.name);
     }
 
-    @Override
-    public void onTick(long i) {
-
-        inventory = GameManager.get().getManager(InventoryManager.class);
-
-        if (healthCircle != null) {
-            healthCircle.update();
-        }
-
-    }
 
     public static TextureRegionDrawable generateTextureRegionDrawableObject(String sName) {
         return new TextureRegionDrawable((new TextureRegion(textureManager.getTexture(sName))));
@@ -118,6 +123,7 @@ public class GameMenuManager extends TickableManager {
     public MainCharacter getMainCharacter() {
         return mainCharacter;
     }
+
 
     public void addHealthCircle(HealthCircle hc) {
         this.healthCircle = hc;
