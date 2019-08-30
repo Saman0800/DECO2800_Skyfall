@@ -21,7 +21,10 @@ public class GameMenuScreen {
     private Skin skin;
     private static TextureManager textureManager;
     private GameMenuManager gameMenuManager;
-    private PopUpTable pauseTable, helpTable, inventoryTable;
+    private PopUpTable pauseTable;
+    private PopUpTable helpTable;
+    private PopUpTable inventoryTable;
+    private PopUpTable settingsTable;
     private InventoryManager inventory;
     private HealthCircle healthCircle;
     private MainCharacter mainCharacter;
@@ -98,6 +101,13 @@ public class GameMenuScreen {
         settings.setSize(width, width * 146 / 207f);
         settings.setPosition(992, 30 * 1000 / 800f);
         stage.addActor(settings);
+
+        settings.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameMenuManager.open(getSettingsTable());
+            }
+        });
 
         ImageButton build = new ImageButton(generateTextureRegionDrawableObject("build"));
         build.setSize(219 * 0.55f, 207 * 0.55f);
@@ -293,6 +303,35 @@ public class GameMenuScreen {
         inventoryTable.add(content).width(800).colspan(3).fillX();
 
         this.inventoryTable = inventoryTable;
+    }
+
+    private PopUpTable getSettingsTable() {
+        if (settingsTable == null) {
+            setSettingsTable();
+            setExitButton(settingsTable);
+            stage.addActor(settingsTable);
+            stage.addActor(settingsTable.getExit());
+        }
+        return settingsTable;
+    }
+
+    private void setSettingsTable() {
+
+        //split into set and update
+
+        PopUpTable settingsTable = new PopUpTable(910, 510, "settings");
+
+        Table infoBar = new Table();
+        infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
+
+        Label text = new Label("SETTINGS", skin, "default");
+        infoBar.add(text);
+
+        settingsTable.add(infoBar).width(550).height(475 * 188f / 1756).padTop(20).colspan(3);
+        settingsTable.row().padTop(20);
+
+
+        this.settingsTable = settingsTable;
     }
 
     private void setExitButton(PopUpTable table) {

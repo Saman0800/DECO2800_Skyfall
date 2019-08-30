@@ -20,7 +20,6 @@ public class GameMenuManager extends TickableManager {
     private Stage stage;
     private MainCharacter mainCharacter;
     private HealthCircle healthCircle;
-    private SettingsTable settingsTable;
     private InventoryManager inventory;
     private SoundManager soundManager;
     private Skin skin;

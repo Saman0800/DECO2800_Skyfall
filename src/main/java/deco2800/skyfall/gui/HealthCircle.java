@@ -46,13 +46,13 @@ public class HealthCircle {
         stage.addActor(smaller_circle);
         stage.addActor(label);
         //Testing functionality
-        smaller_circle.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                mc.changeHealth(-1);
-                updateInnerCircle();
-            }
-        });
+//        smaller_circle.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                mc.changeHealth(-1);
+//                updateInnerCircle();
+//            }
+//        });
 
     }
 
