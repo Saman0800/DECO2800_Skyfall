@@ -145,7 +145,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         velHistoryY = new ArrayList<>();
 
         isMoving = false;
-        setScale(0.5f);
         setDirectionTextures();
     }
 

@@ -242,8 +242,8 @@ public class Renderer3D implements Renderer {
         float x = entityWorldCord[0];
         float y = entityWorldCord[1];
 
-        float width = tex.getWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X * entity.getScale();
-        float height = tex.getHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y * entity.getScale();
+        float width = tex.getWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X;
+        float height = tex.getHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y;
         batch.draw(tex, x, y, width, height);
     }
 
