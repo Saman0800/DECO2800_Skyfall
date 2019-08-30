@@ -45,7 +45,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private int itemSlotSelected;
 
     //List of blueprints that the player has learned.
-    private List<String> bluePrintsLearned;
+    private List<String> blueprintsLearned;
 
     public static final String WALK_NORMAL = "people_walk_normal";
 
@@ -902,7 +902,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * A getter method for the blueprints that the player has learned.
      * @return the learned blueprints list
      */
-    public List<String> getBluePrintsLearned() {
-        return this.bluePrintsLearned;
+    public List<String> getBlueprintsLearned() {
+        return this.blueprintsLearned;
     }
+
+
 }
