@@ -13,7 +13,6 @@ public class Robot extends EnemyEntity implements Animatable {
     private static final transient String BIOME="forest";
     private boolean moving=false;
     private static final transient String ENEMY_TYPE="robot";
-    private String [] directions={"S","SE","NE","N","NW","SW"};
     //savage animation
     private MainCharacter mc;
     public Robot(float row, float col, String texturename, int health, int armour, int damage) {
@@ -92,7 +91,9 @@ public class Robot extends EnemyEntity implements Animatable {
         this.addAnimations(
             AnimationRole.DEFENCE,
             Direction.DEFAULT,
-            new AnimationLinker("robot_defence", AnimationRole.MOVE, Direction.DEFAULT, true));
+            new AnimationLinker("robot_defence",
+                    AnimationRole.MOVE, Direction.DEFAULT,
+                    true, true));
     }
 
     @Override

@@ -141,7 +141,9 @@ public class Spider extends EnemyEntity implements Animatable {
         this.addAnimations(
                 AnimationRole.DEFENCE,
                 Direction.DEFAULT,
-                new AnimationLinker("spider_defence", AnimationRole.MOVE, Direction.DEFAULT, true));
+                new AnimationLinker("spider_defence",
+                        AnimationRole.MOVE, Direction.DEFAULT,
+                        true, true));
     }
 
     @Override
