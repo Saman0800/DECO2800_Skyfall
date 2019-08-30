@@ -43,10 +43,16 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     //List of blueprints that the player has learned.
     private List<String> blueprintsLearned;
 
+    //The name of the item to be created.
+    private String itemToCreate;
+
     public static final String WALK_NORMAL = "people_walk_normal";
 
     private SoundManager soundManager = GameManager.get()
             .getManager(SoundManager.class);
+
+    //The pick Axe that is going to be created
+    private Hatchet hatchetToCreate;
 
     // The index of the item selected to be used in the hotbar
     // ie. [sword][gun][apple]
@@ -599,6 +605,85 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     */
 
     /**
+     * Adds a piece of gold to the Gold Pouch
+     * @param gold The piece of gold to be added to the pouch
+     * @param count How many of that piece of gold should be added
+     */
+    public void addGold(GoldPiece gold, Integer count){
+
+        // store the gold's value (5G, 10G etc) as a variable
+        Integer goldValue = gold.getValue();
+
+        // if this gold value already exists in the pouch
+        if (goldPouch.containsKey(goldValue)){
+            // add this piece to the already existing list of pieces
+            goldPouch.put(goldValue, goldPouch.get(goldValue) + count);
+        } else {
+            goldPouch.put(goldValue, count);
+        }
+
+    }
+
+    /**
+     * Removes one instance of a gold piece in the pouch.
+     * @param gold The gold piece to be removed from the pouch.
+     */
+    public void removeGold(GoldPiece gold){
+        // store the gold's value (5G, 10G etc) as a variable
+        Integer goldValue = gold.getValue();
+
+        // if this gold value does not exist in the pouch
+        if (!(goldPouch.containsKey(goldValue))){
+            return;
+        } else if (goldPouch.get(goldValue) > 1) {
+            goldPouch.put(goldValue, goldPouch.get(goldValue) - 1);
+        } else {
+            goldPouch.remove(goldValue);
+        }
+    }
+
+    /**
+     * Returns the types of GoldPieces in the pouch and how many of each type
+     * exist
+     * @return The contents of the Main Character's gold pouch
+     */
+    public HashMap<Integer, Integer> getGoldPouch() {
+        return new HashMap<>(goldPouch);
+    }
+
+    /**
+     * Returns the sum of the gold piece values in the Gold Pouch
+     * @return The total value of the Gold Pouch
+     */
+    public Integer getGoldPouchTotalValue(){
+        Integer totalValue = 0;
+        for (Integer goldValue : goldPouch.keySet()) {
+            totalValue += goldValue * goldPouch.get(goldValue);
+        }
+        System.out.println("The total value of your Gold Pouch is: " + totalValue + "G");
+        return totalValue;
+    }
+
+    /**
+     * If the player is within 2m of a gold piece and presses G, it will
+     * be added to their Gold Pouch.
+     *
+     */
+    public void addClosestGoldPiece(){
+        for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+                if (entity instanceof GoldPiece) {
+                    if ( this.getPosition().distance(entity.getPosition()) <= 2 ) {
+                        this.addGold((GoldPiece) entity, 1);
+                        System.out.println(this.inventories.toString());
+                    }
+                }
+
+        }
+        System.out.println("Sorry, you are not close enough to a gold piece!");
+
+    }
+
+    /**
      * Moves the player based on current key inputs
      */
     public void updatePosition() {
@@ -810,87 +895,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
     }
 
-    /**
-     * Adds a piece of gold to the Gold Pouch
-     * @param gold The piece of gold to be added to the pouch
-     * @param count How many of that piece of gold should be added
-     */
-    public void addGold(GoldPiece gold, Integer count){
-
-        // store the gold's value (5G, 10G etc) as a variable
-        Integer goldValue = gold.getValue();
-
-        // if this gold value already exists in the pouch
-        if (goldPouch.containsKey(goldValue)){
-            // add this piece to the already existing list of pieces
-            goldPouch.put(goldValue, goldPouch.get(goldValue) + count);
-        } else {
-            goldPouch.put(goldValue, count);
-        }
-
-    }
-
-    /**
-     * Removes one instance of a gold piece in the pouch.
-     * @param gold The gold piece to be removed from the pouch.
-     */
-    public void removeGold(GoldPiece gold){
-        // store the gold's value (5G, 10G etc) as a variable
-        Integer goldValue = gold.getValue();
-
-        // if this gold value does not exist in the pouch
-        if (!(goldPouch.containsKey(goldValue))){
-            return;
-        } else if (goldPouch.get(goldValue) > 1) {
-            goldPouch.put(goldValue, goldPouch.get(goldValue) - 1);
-        } else {
-            goldPouch.remove(goldValue);
-        }
-    }
-
-    /**
-     * Returns the types of GoldPieces in the pouch and how many of each type
-     * exist
-     * @return The contents of the Main Character's gold pouch
-     */
-    public HashMap<Integer, Integer> getGoldPouch() {
-        return new HashMap<>(goldPouch);
-    }
-
-    /**
-     * Returns the sum of the gold piece values in the Gold Pouch
-     * @return The total value of the Gold Pouch
-     */
-    public Integer getGoldPouchTotalValue(){
-        Integer totalValue = 0;
-        for (Integer goldValue : goldPouch.keySet()) {
-            totalValue += goldValue * goldPouch.get(goldValue);
-        }
-        System.out.println("The total value of your Gold Pouch is: " + totalValue + "G");
-        return totalValue;
-    }
-
-    /**
-     * If the player is within 2m of a gold piece and presses G, it will
-     * be added to their Gold Pouch.
-     *
-     */
-    public void addClosestGoldPiece(){
-        for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
-                if (entity instanceof GoldPiece) {
-                    if ( this.getPosition().distance(entity.getPosition()) <= 2 ) {
-                        this.addGold((GoldPiece) entity, 1);
-                        System.out.println(this.inventories.toString());
-                    }
-                }
-
-        }
-        System.out.println("Sorry, you are not close enough to a gold piece!");
-
-    }
-
-
-
     /***
      * This method enables the Main character to use Hatchet. The player's
      * distance from the tree should not be more than 2.5.Every time a
@@ -906,7 +910,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
                 if (entity instanceof Tree) {
 
-                    if ( this.getPosition().distance(entity.getPosition()) <= 2.5 ) {
+                    if ( this.getPosition().distance(entity.getPosition()) <= 0.5 ) {
                         playerHatchet.farmTree((Tree) entity);
                         System.out.println(this.inventories.toString());
                     }
@@ -933,7 +937,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
                 if (entity instanceof Rock) {
 
-                    if ( this.getPosition().distance(entity.getPosition()) <= 2.5 ) {
+                    if ( this.getPosition().distance(entity.getPosition()) <= 0.5 ) {
                         playerPickAxe.farmRock((Rock) entity);
                         System.out.println(this.inventories.toString());
                     }
@@ -953,5 +957,54 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         return this.blueprintsLearned;
     }
 
+    /***
+     * A getter method to get the Item to be created.
+     * @return the item to create.
+     */
+    public String getItemToCreate() {
+        return itemToCreate;
+    }
+
+    /***
+     * A Setter method to get the Item to be created.
+     * @param itemToCreate the item to be created.
+     */
+    public void setItemToCreate(String itemToCreate) {
+        this.itemToCreate = itemToCreate;
+    }
+
+    /***
+     * Creates a Hatchet. Checks if required resources are in the inventory.
+     * if yes, created a hatchet, and deducts the required resource from
+     * inventory
+     */
+    public void createHatchet(){
+
+        if (getItemToCreate()=="Hatchet") {
+            hatchetToCreate = new Hatchet();
+
+            if (hatchetToCreate.getRequiredMetal() < inventories.getAmount
+                    ("Metal")) {
+                System.out.println("You don't have enough Metal");
+
+            } else if (hatchetToCreate.getRequiredWood() < inventories.getAmount
+                    ("Wood")) {
+                System.out.println("You don't have enough Wood");
+
+            } else if (hatchetToCreate.getRequiredStone() < inventories.getAmount
+                    ("Stone")) {
+                System.out.println("You don't have enough Stone");
+
+            } else {
+                inventories.inventoryAdd(hatchetToCreate);
+                inventories.inventoryDropMultiple("Metal",
+                        hatchetToCreate.getRequiredMetal());
+                inventories.inventoryDropMultiple("Stone",
+                        hatchetToCreate.getRequiredStone());
+                inventories.inventoryDropMultiple("Wood",
+                        hatchetToCreate.getRequiredWood());
+            }
+        }
+    }
 
 }
