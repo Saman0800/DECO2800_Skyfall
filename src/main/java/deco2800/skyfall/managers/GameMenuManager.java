@@ -1,16 +1,14 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gui.HealthCircle;
 import deco2800.skyfall.gui.SettingsTable;
-import deco2800.skyfall.GameMenu.PopUpTable;
+import deco2800.skyfall.gamemenu.PopUpTable;
 
 
 /**
