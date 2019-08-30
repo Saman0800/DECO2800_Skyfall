@@ -114,7 +114,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         // MainCharacter is now being put into the game instead of PlayerPeon
         MainCharacter testCharacter = new MainCharacter(0f, 0f, 0.05f, "Main Piece", 10);
         addEntity(testCharacter);
-        GameManager.getManagerFromInstance(GameMenuManager.class).addMainCharacter(testCharacter);
+        GameManager.getManagerFromInstance(GameMenuManager.class).setMainCharacter(testCharacter);
 
         EnemyEntity spider=new Spider(-4f,1f);
         addEntity(spider);
