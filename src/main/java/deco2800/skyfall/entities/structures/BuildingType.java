@@ -23,5 +23,30 @@ public enum BuildingType {
         this.texture = texture;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public int getSizeX() {
+        return sizeX;
+    }
+
+    public int getSizeY() {
+        return sizeY;
+    }
+
+    public int getBuildTime() {
+        return buildTime;
+    }
+
+    public String getTexture() {
+        return texture;
+    }
+
+
 }
 
