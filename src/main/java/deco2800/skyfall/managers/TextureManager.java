@@ -68,13 +68,15 @@ public class TextureManager extends AbstractManager {
 
             //EnemyEntity robot
             textureMap.put("enemyStone", new Texture("resources/enemyStone.png"));
-            textureMap.put("robotSE", new Texture("resources/robotSE.png"));
-            textureMap.put("robotN", new Texture("resources/robotN.png"));
-            textureMap.put("robotNE", new Texture("resources/robotNE.png"));
-            textureMap.put("robotNW", new Texture("resources/robotNW.png"));
             textureMap.put("spider", new Texture("resources/spider.png"));
             textureMap.put("robot", new Texture("resources/robot.png"));
-
+            textureMap.put("stoneRS", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/stoneRS.png"));
+            textureMap.put("stoneRSE", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/stoneRSE.png"));
+            textureMap.put("stoneRSW", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/stoneRSW.png"));
+            textureMap.put("stoneRNE", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/stoneRNE.png"));
+            textureMap.put("stoneRNW", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/stoneRNW.png"));
+            textureMap.put("stoneRN", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/stoneRN.png"));
+            textureMap.put("stoneDead", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/Dead.png"));
 
 
             textureMap.put("grass_tuff", new Texture("resources/world_details/grass1.png"));
