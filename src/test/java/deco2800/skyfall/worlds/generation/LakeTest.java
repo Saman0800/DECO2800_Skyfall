@@ -4,6 +4,7 @@ import deco2800.skyfall.worlds.biomes.*;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
+import deco2800.skyfall.worlds.generation.delaunay.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import org.junit.After;
 import org.junit.Before;
@@ -67,17 +68,20 @@ public class LakeTest {
             biomes.add(new MountainBiome());
             biomes.add(new OceanBiome());
 
+            // TODO this
+            List<VoronoiEdge> edges = new ArrayList<>();
+
             try {
                 WorldGenNode.assignTiles(nodes, tiles, random, WORLD_SIZE);
                 WorldGenNode.removeZeroTileNodes(nodes, WORLD_SIZE);
-                WorldGenNode.assignNeighbours(nodes);
+                WorldGenNode.assignNeighbours(nodes, edges);
             } catch (WorldGenException e) {
                 continue;
             }
 
 
             try {
-                BiomeGenerator.generateBiomes(nodes, random, NODE_COUNTS, biomes, LAKE_COUNT, LAKE_SIZE);
+                BiomeGenerator.generateBiomes(nodes, edges, random, NODE_COUNTS, biomes, LAKE_COUNT, LAKE_SIZE);
             } catch (DeadEndGenerationException e) {
                 continue;
             }

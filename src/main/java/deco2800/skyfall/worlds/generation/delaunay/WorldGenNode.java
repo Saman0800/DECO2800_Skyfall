@@ -4,11 +4,9 @@ import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import deco2800.skyfall.worlds.generation.perlinnoise.TileNoiseGenerator;
+import org.lwjgl.Sys;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 /**
  * A class used in the world generation procedure to help the world and biomes have a natural looking shape. To see how
@@ -165,14 +163,46 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      *
      * @throws InvalidCoordinatesException if any nodes have a vertex whose coordinates are not 2 dimensional
      */
-    public static void assignNeighbours(List<WorldGenNode> nodes)
+    public static void assignNeighbours(List<WorldGenNode> nodes, List<VoronoiEdge> edges)
             throws InvalidCoordinatesException {
         // Compare each node with each other node
         for (int i = 0; i < nodes.size(); i++) {
             for (int j = i + 1; j < nodes.size(); j++) {
+                /*
                 if (isAdjacent(nodes.get(i), nodes.get(j))) {
                     nodes.get(i).assignNeighbour(nodes.get(j));
                     nodes.get(j).assignNeighbour(nodes.get(i));
+                    count1++;
+                }
+                */
+                double[] vertexA = sharedVertex(nodes.get(i), nodes.get(j), null);
+                if (vertexA == null) {
+                    continue;
+                }
+                nodes.get(i).assignNeighbour(nodes.get(j));
+                nodes.get(j).assignNeighbour(nodes.get(i));
+                double[] vertexB = sharedVertex(nodes.get(i), nodes.get(j), vertexA);
+                if (vertexB != null) {
+                    VoronoiEdge edge = new VoronoiEdge(vertexA, vertexB);
+                    edges.add(edge);
+                    edge.addEdgeNode(nodes.get(i));
+                    edge.addEdgeNode(nodes.get(j));
+
+                    // Find the end nodes of the edge (it is arbitrary which
+                    // edge node is used for this
+                    for (WorldGenNode neighbour : nodes.get(i).getNeighbours()) {
+                        // Don't add the other edge node as an end node
+                        if (neighbour == nodes.get(j)) {
+                            continue;
+                        }
+
+                        for (double[] nodeVertex : neighbour.getVertices()) {
+                            if (Arrays.equals(vertexA, nodeVertex) || Arrays.equals(vertexB, nodeVertex)) {
+                                edge.addEndNode(neighbour);
+                                break;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -190,14 +220,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      */
     public static boolean isAdjacent(WorldGenNode a, WorldGenNode b)
             throws InvalidCoordinatesException {
-        // try {
-        //     sharedVertex(a, b);
-        //     // Return true if there wasn't a NotAdjacentException
-        //     return true;
-        // } catch (NotAdjacentException e) {
-        //     return false;
-        // }
-        return sharedVertex(a, b) != null;
+        return sharedVertex(a, b, null) != null;
     }
 
     /**
@@ -205,14 +228,14 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      *
      * @param a the first node
      * @param b the second node
+     * @param alreadyFoundVertex a vertex to be ignored when checking
      *
      * @return the coordinates of the first shared vertex found between the nodes
+     *         not including alreadyFoundVertex, null if there isn't one
      *
      * @throws InvalidCoordinatesException if one of the nodes has a vertex whose coordinates are not 2 dimensions
-     * @throws NotAdjacentException        if the nodes don't have a common vertex
      */
-    public static double[] sharedVertex(WorldGenNode a, WorldGenNode b)
-            // throws InvalidCoordinatesException, NotAdjacentException {
+    public static double[] sharedVertex(WorldGenNode a, WorldGenNode b, double[] alreadyFoundVertex)
             throws InvalidCoordinatesException {
         // Compare each vertex of one with each vertex of the other
         for (double[] vertexA : a.getVertices()) {
@@ -225,13 +248,11 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
                 }
                 // If the vertices are sufficiently close (ie the nodes share at
                 // least one vertex
-                if (vertexA[0] == vertexB[0] && vertexA[1] == vertexB[1]) {
+                if (Arrays.equals(vertexA, vertexB) && !Arrays.equals(vertexA, alreadyFoundVertex)) {
                     return vertexA;
                 }
             }
         }
-        // Indicate that the points are not adjacent
-        // throw new NotAdjacentException();
         return null;
     }
 
@@ -249,7 +270,6 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
 
         NoiseGenerator xGen = new NoiseGenerator(random, octaves, startPeriod, attenuation);
         NoiseGenerator yGen = new NoiseGenerator(random,  octaves, startPeriod, attenuation);
-
         // Ensure nodes are stored in order of Y value
         nodes.sort(Comparable::compareTo);
         for (Tile tile : tiles) {
@@ -631,6 +651,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         // Throw an exception if there aren't any border nodes as a fail safe
         // (Other parts of the world generation algorithm relies on there being
         // some)
+        // TODO remove
         if (triangleSoup.getBorderNodes().size() == 0) {
             throw new WorldGenException("No border nodes");
         }

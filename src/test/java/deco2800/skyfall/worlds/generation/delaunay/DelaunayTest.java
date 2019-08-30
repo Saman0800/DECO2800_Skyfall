@@ -7,8 +7,8 @@ import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.internal.matchers.Not;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
@@ -118,7 +118,7 @@ public class DelaunayTest {
 
         try {
             WorldGenNode.calculateVertices(nodes, worldSize);
-            WorldGenNode.assignNeighbours(nodes);
+            WorldGenNode.assignNeighbours(nodes, new ArrayList<>());
         } catch (WorldGenException e) {
             fail();
         }
@@ -332,5 +332,31 @@ public class DelaunayTest {
         } catch (Exception e) {
             fail();
         }
+    }
+
+    @Test
+    public void sharedVertexTest() {
+        WorldGenNode node1 = new WorldGenNode(0, 0);
+        WorldGenNode node2 = new WorldGenNode(1, 1);
+        WorldGenNode node3 = new WorldGenNode(-1, -1);
+
+        node1.addVertex(new double[] {2, 2});
+        node2.addVertex(new double[] {2, 2});
+        node1.addVertex(new double[] {2, 3});
+        node2.addVertex(new double[] {2, 3});
+        node1.addVertex(new double[] {-2, 2});
+        node2.addVertex(new double[] {2, -2});
+        node3.addVertex(new double[] {-2, -2});
+
+        assertNull(WorldGenNode.sharedVertex(node1, node3, null));
+        assertNull(WorldGenNode.sharedVertex(node2, node3, null));
+        double[] sharedVertex1 = WorldGenNode.sharedVertex(node1, node2, null);
+        assertNotNull(sharedVertex1);
+        double[] sharedVertex2 = WorldGenNode.sharedVertex(node1, node2, sharedVertex1);
+        assertNotNull(sharedVertex2);
+        assertFalse(Arrays.equals(sharedVertex1, sharedVertex2));
+        double[] sharedVertex3 = WorldGenNode.sharedVertex(node1, node2, sharedVertex2);
+        assertNotNull(sharedVertex3);
+        assertTrue(Arrays.equals(sharedVertex3, sharedVertex1));
     }
 }

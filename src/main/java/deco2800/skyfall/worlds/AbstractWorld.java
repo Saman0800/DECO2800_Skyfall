@@ -5,6 +5,7 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.generation.delaunay.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 
 import java.io.BufferedWriter;
@@ -45,6 +46,7 @@ public abstract class AbstractWorld {
 
     protected CopyOnWriteArrayList<Tile> tiles;
     protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
+    protected CopyOnWriteArrayList<VoronoiEdge> voronoiEdges;
 
     protected List<AbstractEntity> entitiesToDelete = new CopyOnWriteArrayList<>();
     protected List<Tile> tilesToDelete = new CopyOnWriteArrayList<>();
@@ -63,7 +65,7 @@ public abstract class AbstractWorld {
         worldGenNodes = new CopyOnWriteArrayList<>();
 
     	tiles = new CopyOnWriteArrayList<Tile>();
-//        worldGenNodes = new CopyOnWriteArrayList<>();
+    	voronoiEdges = new CopyOnWriteArrayList<>();
         biomes = new ArrayList<>();
 
         long startTime = System.nanoTime();

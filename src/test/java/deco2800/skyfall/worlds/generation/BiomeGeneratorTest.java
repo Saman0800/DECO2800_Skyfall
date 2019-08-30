@@ -5,6 +5,7 @@ import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
 import deco2800.skyfall.worlds.biomes.OceanBiome;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
+import deco2800.skyfall.worlds.generation.delaunay.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -67,11 +68,13 @@ public class BiomeGeneratorTest {
                 }
 
                 generateTileNeighbours(tiles);
+                // TODO this
+                List<VoronoiEdge> edges = new ArrayList<>();
 
                 try {
                     WorldGenNode.assignTiles(worldGenNodes, tiles, random, NODE_SPACING);
                     WorldGenNode.removeZeroTileNodes(worldGenNodes, WORLD_SIZE);
-                    WorldGenNode.assignNeighbours(worldGenNodes);
+                    WorldGenNode.assignNeighbours(worldGenNodes, edges);
                 } catch (WorldGenException e) {
                     continue;
                 }
@@ -83,7 +86,7 @@ public class BiomeGeneratorTest {
                 biomes.add(new OceanBiome());
 
                 try {
-                    BiomeGenerator.generateBiomes(worldGenNodes, random, NODE_COUNTS, biomes, 0, 0);
+                    BiomeGenerator.generateBiomes(worldGenNodes, edges, random, NODE_COUNTS, biomes, 0, 0);
                 } catch (NotEnoughPointsException | DeadEndGenerationException e) {
                     continue;
                 }

@@ -16,6 +16,7 @@ import deco2800.skyfall.worlds.generation.BiomeGenerator;
 import deco2800.skyfall.worlds.generation.DeadEndGenerationException;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.WorldGenException;
+import deco2800.skyfall.worlds.generation.delaunay.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
             ArrayList<Tile> tiles = new ArrayList<>();
             ArrayList<AbstractBiome> biomes = new ArrayList<>();
+            ArrayList<VoronoiEdge> voronoiEdges = new ArrayList<>();
 
             int nodeCount = Math.round((float) worldSize * worldSize * 4 / nodeSpacing / nodeSpacing);
             // TODO: if nodeCount is less than the number of biomes, throw an exception
@@ -78,7 +80,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             try {
                 WorldGenNode.assignTiles(worldGenNodes, tiles, random, nodeSpacing);
                 WorldGenNode.removeZeroTileNodes(worldGenNodes, worldSize);
-                WorldGenNode.assignNeighbours(worldGenNodes);
+                WorldGenNode.assignNeighbours(worldGenNodes, voronoiEdges);
             } catch (WorldGenException e) {
                 continue;
             }
@@ -87,13 +89,17 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             biomes.add(new MountainBiome());
             biomes.add(new OceanBiome());
 
+            VoronoiEdge.assignTiles(voronoiEdges, tiles);
+            VoronoiEdge.assignNeighbours(voronoiEdges);
+
             try {
-                BiomeGenerator.generateBiomes(worldGenNodes, random, biomeSizes, biomes, numOfLakes, lakeSize);
+                BiomeGenerator.generateBiomes(worldGenNodes, voronoiEdges, random, biomeSizes, biomes, numOfLakes, lakeSize);
             } catch (NotEnoughPointsException | DeadEndGenerationException e) {
                 continue;
             }
 
             this.worldGenNodes.addAll(worldGenNodes);
+            this.voronoiEdges.addAll(voronoiEdges);
             this.tiles.addAll(tiles);
             this.biomes.addAll(biomes);
 
