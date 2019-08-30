@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import java.io.*;
 import java.util.*;
 
+import deco2800.skyfall.buildings.BuildingFactory;
+import deco2800.skyfall.buildings.BuildingWidgets;
 import deco2800.skyfall.entities.structures.AbstractBuilding;
 import deco2800.skyfall.worlds.AbstractWorld;
 import deco2800.skyfall.worlds.Tile;
@@ -21,6 +23,9 @@ import deco2800.skyfall.entities.AbstractEntity;
  */
 public class ConstructionManager extends AbstractManager {
     //This manager while control all features related to construction
+
+    private BuildingWidgets buildingWidgets;
+    private BuildingFactory buildingFactory;
 
     /**
      * Stores the current status of the build menu
@@ -40,6 +45,12 @@ public class ConstructionManager extends AbstractManager {
         menuVisible = false;
         menuAdded = false;
         menuSetUp = false;
+
+        /* set Skin for testing, remove it later */
+        GameManager.get().setSkin(new Skin(Gdx.files.internal("asserts/skin_for_test/uiskin.json")));
+        buildingWidgets = BuildingWidgets.get();
+        buildingFactory = new BuildingFactory();
+        GameManager.get().getWorld().addEntity(buildingFactory.createHouse(2f, 1f));
     }
 
     //Start of UI
