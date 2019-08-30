@@ -114,7 +114,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         // MainCharacter is now being put into the game instead of PlayerPeon
         MainCharacter testCharacter = new MainCharacter(0f, 0f, 0.05f, "Main Piece", 10);
         addEntity(testCharacter);
-        GameManager.getManagerFromInstance(GameMenuManager.class).addMainCharacter(testCharacter);
+        GameManager.getManagerFromInstance(GameMenuManager.class).setMainCharacter(testCharacter);
 
         EnemyEntity spider = new Spider(-4f, 1f);
         addEntity(spider);
@@ -129,6 +129,8 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         Tile tileRock = getTile(0.0f, 1.0f);
         Rock startRock = new Rock(tileRock, true);
         Tree startTree = new Tree(tileRock, true);
+        addEntity(startTree);
+        addEntity(startRock);
         LongGrass startGrass = new LongGrass(tileRock, true);
 
         for (AbstractBiome biome : this.getBiomes()) {

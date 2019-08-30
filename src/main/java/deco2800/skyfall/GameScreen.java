@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
+import deco2800.skyfall.gamemenu.GameMenuScreen;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.Peon;
 import deco2800.skyfall.handlers.KeyboardManager;
@@ -23,43 +24,44 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 
+public class GameScreen implements Screen, KeyDownObserver {
+    private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
+    @SuppressWarnings("unused")
+    private final SkyfallGame game;
+    /**
+     * Set the renderer. 3D is for Isometric worlds Check the documentation for each
+     * renderer to see how it handles WorldEntity coordinates
+     */
+    Renderer3D renderer = new Renderer3D();
+    OverlayRenderer rendererDebug = new OverlayRenderer();
+    AbstractWorld world;
+    static Skin skin;
 
-public class GameScreen implements Screen,KeyDownObserver {
-	private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
-	@SuppressWarnings("unused")
-	private final SkyfallGame game;
-	/**
-	 * Set the renderer.
-	 * 3D is for Isometric worlds
-	 * Check the documentation for each renderer to see how it handles WorldEntity coordinates
-	 */
-	Renderer3D renderer = new Renderer3D();
-	OverlayRenderer rendererDebug = new OverlayRenderer();
-	AbstractWorld world;
-	static Skin skin;
+    /**
+     * Create a camera for panning and zooming. Camera must be updated every render
+     * cycle.
+     */
+    PotateCamera camera;
+    PotateCamera cameraDebug;
+    private Stage stage = new Stage(new ExtendViewport(1280, 720));
 
-	/**
-	 * Create a camera for panning and zooming.
-	 * Camera must be updated every render cycle.
-	 */
-	PotateCamera camera;
-	PotateCamera cameraDebug;
-	private Stage stage = new Stage(new ExtendViewport(1280, 720));
-
-	long lastGameTick = 0;
+    long lastGameTick = 0;
 
 	/**
 	 * Create an EnvironmentManager for ToD.
 	 */
 	EnvironmentManager timeOfDay;
+	public static boolean isPaused = false;
 
-	public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
-		/* Create an example world for the engine */
-		this.game = game;
+    public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
+        /* Create an example world for the engine */
+        this.game = game;
 
-		GameManager gameManager = GameManager.get();
+        GameManager gameManager = GameManager.get();
 
 		GameMenuManager gameMenuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+		gameMenuManager.setStage(stage);
+		gameMenuManager.setSkin(gameManager.getSkin());
 
 		// Create main world
 		if (!isHost) {
@@ -69,27 +71,29 @@ public class GameScreen implements Screen,KeyDownObserver {
 			if (GameManager.get().isTutorial) {
 				world = new TutorialWorld(seed, 80, 5);
 			} else {
-                world = new RocketWorld(seed, 200, 15, new int[] { 90, 70, 70 }, 2, 5);
+                Random random = new Random();
+                // world = new RocketWorld(random.nextLong(), 200, 15, new int[] {70,70,70}, 3,
+                // 2);
+                world = new RocketWorld(random.nextLong(), 300, 15, new int[] { 70, 70, 70 }, 3, 2);
 			}
 			GameManager.get().getManager(NetworkManager.class).startHosting("host");
 		}
 
-		gameManager.setWorld(world);
+        gameManager.setWorld(world);
 
-		// Add first peon to the world
-		camera = new PotateCamera(1920, 1080);
-		cameraDebug = new PotateCamera(1920, 1080);
+        // Add first peon to the world
+        camera = new PotateCamera(1920, 1080);
+        cameraDebug = new PotateCamera(1920, 1080);
 
-		/* Add the window to the stage */
-		GameManager.get().setSkin(skin);
-		GameManager.get().setStage(stage);
-		GameManager.get().setCamera(camera);
+        /* Add the window to the stage */
+        GameManager.get().setSkin(skin);
+        GameManager.get().setStage(stage);
+        GameManager.get().setCamera(camera);
 
-		/* Add inventory to game manager */
-		gameManager.addManager(new InventoryManager());
+        /* Add inventory to game manager */
+        gameManager.addManager(new InventoryManager());
 
-		/* Play BGM */
-
+        /* Play BGM */
         try {
             BGMManager.BGMManager("resources/sounds/forest_day.wav");
             BGMManager.play();
@@ -97,7 +101,8 @@ public class GameScreen implements Screen,KeyDownObserver {
             e.printStackTrace();
         }
 
-        //gameMenuManager.show();
+        GameMenuScreen gamemenuScreen = new GameMenuScreen(gameMenuManager);
+		gamemenuScreen.show();
 
         PathFindingService pathFindingService = new PathFindingService();
         GameManager.get().addManager(pathFindingService);
@@ -111,18 +116,25 @@ public class GameScreen implements Screen,KeyDownObserver {
         GameManager.get().getManager(KeyboardManager.class).registerForKeyDown(this);
     }
 
-    /**
-     * Renderer thread Must update all displayed elements using a Renderer
-     */
-    @Override
-    public void render(float delta) {
-        handleRenderables();
 
-        moveCamera();
+	/**
+	 * Renderer thread
+	 * Must update all displayed elements using a Renderer
+	 */
+	@Override
+	public void render(float delta) {
 
-        cameraDebug.position.set(camera.position);
-        cameraDebug.update();
-        camera.update();
+        if (!isPaused) {
+            moveCamera();
+            handleRenderables();
+            cameraDebug.position.set(camera.position);
+            cameraDebug.update();
+            camera.update();
+        } else {
+            stage.draw();
+            pause();
+        }
+
 
         SpriteBatch batchDebug = new SpriteBatch();
         batchDebug.setProjectionMatrix(cameraDebug.combined);
@@ -131,17 +143,24 @@ public class GameScreen implements Screen,KeyDownObserver {
         batch.setProjectionMatrix(camera.combined);
 
         // Clear the entire display as we are using lazy rendering
+
+        // Commented out by Cyrus
+//        if (!isPaused) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         rerenderMapObjects(batch, camera);
         rendererDebug.render(batchDebug, cameraDebug);
-
-        /* Refresh the experience UI for if information was updated */
         stage.act(delta);
         stage.draw();
-        batch.dispose();
-    }
+//        }
+//        stage.act(delta);
+//        stage.draw();
+
+
+		/* Refresh the experience UI for if information was updated */
+
+		batch.dispose();
+	}
 
     private void handleRenderables() {
         if (System.currentTimeMillis() - lastGameTick > 20) {

@@ -55,6 +55,7 @@ public class Apple extends HealthResources implements Item {
         this.hasFoodEffect = true;
         this.foodValue = 25;
         //TODO: look into this.healthValue = 5;
+        this.healthValue = 10;
         //default constructor added for building inventory
     }
 
@@ -125,6 +126,15 @@ public class Apple extends HealthResources implements Item {
     @Override
     public String toString() {
         return "" + subtype + ":" + name;
+    }
+
+    /**
+     * Returns the item description
+     * @return the item description
+     */
+    @Override
+    public String getDescription() {
+        return "This item can be used to satisfy the Main Character's hunger.";
     }
 
 

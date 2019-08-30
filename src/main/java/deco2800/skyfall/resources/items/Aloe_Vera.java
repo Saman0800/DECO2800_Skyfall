@@ -51,6 +51,8 @@ public class Aloe_Vera extends HealthResources implements Item {
         // As Aloe_Vera is a medicine, therefore it only increase the healthvalue and does not affect the foodvalue
         this.foodValue = 0;
         //TODO: look into this.healthValue = 40;
+        this.foodValue = 0;
+        this.healthValue = 40;
         //this.hasFoodEffect = true;
         //default constructor added for building inventory
     }
@@ -106,7 +108,13 @@ public class Aloe_Vera extends HealthResources implements Item {
         return "" + subtype + ":" + name;
     }
 
-
-
+    /**
+     * Returns the item description
+     * @return the item description
+     */
+    @Override
+    public String getDescription() {
+        return "This item can be used to heal the Main Character.";
+    }
 }
 

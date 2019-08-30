@@ -145,8 +145,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("fence_top_left", new Texture("resources/world_structures/fence_top_left.png"));
             textureMap.put("fence_top_right", new Texture("resources/world_structures/fence_top_right.png"));
 
-            textureMap.put("big_circle", new Texture("resources/circle.png"));
-            textureMap.put("inner_circle", new Texture("resources/green_circle.png"));
+            textureMap.put("big_circle", new Texture("resources/OrangeCircle.png"));
+            textureMap.put("inner_circle", new Texture("resources/RedCircle.png"));
 
             Texture banner = new Texture("resources/inventory_banner.png");
             banner.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Nearest);
@@ -157,9 +157,11 @@ public class TextureManager extends AbstractManager {
             textureMap.put("menu_panel", new Texture("resources/menu_panel.png"));
             textureMap.put("info_panel", new Texture("resources/info_panel.png"));
             textureMap.put("exit", new Texture("resources/exit.png"));
+            textureMap.put("exitButton", new Texture("resources/exit_button.png"));
             textureMap.put("inv_button", new Texture("resources/inv_button.png"));
             textureMap.put("Vine", new Texture("resources/temp_vine.png"));
             textureMap.put("Sand", new Texture("resources/temp_sand.png"));
+
 
 
         } catch (Exception e) {
