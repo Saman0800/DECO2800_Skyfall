@@ -53,6 +53,8 @@ public class GameScreen implements Screen,KeyDownObserver {
 	long lastGameTick = 0;
 
 	ShaderProgram shaderProgram;
+
+	float testVal = 0.0f;
 	
 
 	public GameScreen(final SkyfallGame game, boolean isHost) {
@@ -132,6 +134,8 @@ public class GameScreen implements Screen,KeyDownObserver {
 		"uniform sampler2D u_texture;\n"+
 		"uniform mat4 u_projTrans;\n"+
 
+		"uniform float testunif;\n"+
+
 		"void main() {\n"+
 		"	vec4 colora = texture(u_texture, v_texCoords).rgba;\n"+
 		"	if (colora.w < 0.2) {discard;};\n"+
@@ -141,7 +145,8 @@ public class GameScreen implements Screen,KeyDownObserver {
 		"	vec3 ambient = 0.2*color;\n"+
 		"	float dStr = clamp((1 - length(oPosition)/200), 1.0, 0.0);\n"+
 		"	vec3 direct = dStr*vec3(1.0, 0.729, 0.33)*color;\n"+
-		"	gl_FragColor = vec4(ambient + direct, 1.0);\n"+
+		"	vec4 temp = vec4(ambient + direct, 1.0);\n"+
+		"	gl_FragColor = vec4(testunif, 0, 0, temp.w);\n"+
 		"}";
 
 		shaderProgram = new ShaderProgram(vertexShader,fragmentShader);
@@ -151,6 +156,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 		}
 		System.out.print("\n");
 		System.out.print(shaderProgram.getLog());
+		System.out.print("\n");
 	}
 
 	/**
@@ -169,6 +175,9 @@ public class GameScreen implements Screen,KeyDownObserver {
 
 		SpriteBatch batchDebug = new SpriteBatch();
 		batchDebug.setProjectionMatrix(cameraDebug.combined);
+
+		shaderProgram.begin();
+		shaderProgram.setUniformf("testunif", 0.0f);
 		
 		SpriteBatch batch = new SpriteBatch();
 		batch.setProjectionMatrix(camera.combined);
@@ -184,6 +193,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 		stage.act(delta);
 		stage.draw();
 		batch.dispose();
+		shaderProgram.end();
 	}
 
 	private void handleRenderables() {
@@ -198,6 +208,16 @@ public class GameScreen implements Screen,KeyDownObserver {
 	 */
 	private void rerenderMapObjects(SpriteBatch batch, OrthographicCamera camera) {
 		batch.setShader(shaderProgram);
+		testVal = testVal+0.05f;
+		if (testVal > 5) {
+			System.out.print(testVal);
+			System.out.print("\n");
+			shaderProgram.setUniformf("testunif", 0.95f);
+
+		} else {
+			shaderProgram.setUniformf("testunif", 0.5f);
+		}
+
 		renderer.render(batch, camera);
 	}
 
