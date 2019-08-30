@@ -13,7 +13,7 @@ public class WeaponManager extends TickableManager {
     private List<Weapon> equipped;
 
     // Maximum number of equipped weapons
-    private static final int MAX_EQUIPPED = 3;
+    private static final int MAX_EQUIPPED = 2;
 
     /**
      * Creates a new Weapon Manager and adds default items to the weapons map

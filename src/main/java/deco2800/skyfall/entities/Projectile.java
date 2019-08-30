@@ -103,7 +103,7 @@ public class Projectile extends AgentEntity {
 
         //If this projectile has been alive for longer than the set number of ticks, remove it from the world.
         if (this.ticksAliveFor > LIFE_TIME_TICKS) {
-            GameManager.get().getWorld().removeEntity(this);
+            this.destroy();
         }
 
         //TODO: Move to range max.
@@ -111,5 +111,12 @@ public class Projectile extends AgentEntity {
             position.moveToward(movementPosition,speed);
         }
 
+    }
+
+    /**
+     * Remove the projectile from the game world.
+     */
+    public void destroy() {
+        GameManager.get().getWorld().removeEntity(this);
     }
 }
