@@ -196,12 +196,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         // Spawn projectile in front of character for now.
 
         this.hitBox = new Projectile(mousePosition,
-                this.itemSlotSelected == 1 ? "arcane" : "slash",
+                "arcane",
                 "test hitbox",
                 position.getCol() + 1,
                 position.getRow(),
                 1,
-                1,
+                0.1f,
                 this.itemSlotSelected == 1 ? 1 : 0);
 
         // Get AbstractWorld from static class GameManager.

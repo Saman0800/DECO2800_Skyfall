@@ -312,6 +312,8 @@ public abstract class AbstractWorld {
             }
 
             e1.onTick(0);
+
+
             if (e1.getCollider() == null) {
                 break;
             }
