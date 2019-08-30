@@ -108,7 +108,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * e.g. 1 = test range weapon
      * 2 = test melee weapon
      */
-    private int itemSlotSelected = 1;
 
     /**
      * Private helper method to instantiate inventory and weapon managers for
@@ -547,11 +546,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             case Input.Keys.M:
                 getGoldPouchTotalValue();
                 break;
-            default:
+            /*default:
                 switchItem(keycode);
                 xInput += 1;
                 break;
-
+            */
         }
     }
 
@@ -890,219 +889,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     }
 
-
-
-    /**
-     * Moves the player based on current key inputs
-     */
-    public void updatePosition() {
-        // Gets current position
-        float xPos = position.getCol();
-        float yPos = position.getRow();
-
-        //Returns tile at left arm (our perspective) of the player
-        float tileCol = (float) Math.round(xPos);
-        float tileRow = (float) Math.round(yPos);
-        if (tileCol % 2 != 0){
-            tileRow += 0.5f;
-        }
-
-        //Determined friction scaling factor to apply based on current tile
-        float friction;
-        Tile currentTile = GameManager.get().getWorld().getTile(tileCol,tileRow);
-        if(currentTile != null && currentTile.getTexture() != null){
-            //Tile specific friction
-            friction = Tile.getFriction(currentTile.getTextureName());
-        }else{
-            //Default friction
-            friction = 1f;
-        }
-
-        // Calculates new x and y positions
-        xPos += xVel + xInput * acceleration * 0.5 * friction;
-        yPos += yVel + yInput * acceleration * 0.5 * friction;
-
-        // Calculates velocity in x direction
-        if (xInput != 0) {
-            xVel += xInput * acceleration * friction;
-            // Prevents sliding
-            if (xVel / Math.abs(xVel) != xInput) {
-                xVel = 0;
-            }
-        } else if (yInput != 0) {
-            xVel *= 0.8;
-        } else {
-            xVel = 0;
-        }
-
-        // Calculates velocity in y direction
-        if (yInput != 0) {
-            yVel += yInput * acceleration * friction;
-            // Prevents sliding
-            if (yVel / Math.abs(yVel) != yInput) {
-                yVel = 0;
-            }
-        } else if (xInput != 0) {
-            yVel *= 0.8;
-        } else {
-            yVel = 0;
-        }
-
-        // caps the velocity
-        if (vel > maxSpeed) {
-            xVel /= vel;
-            yVel /= vel;
-
-            xVel *= maxSpeed;
-            yVel *= maxSpeed;
-        }
-
-        // Calculates speed to destination
-        vel = Math.sqrt((xVel * xVel) + (yVel * yVel));
-
-        // Calculates destination vector
-        HexVector destination = new HexVector(xPos, yPos);
-
-        // Moves the player to new location
-        position.moveToward(destination, vel);
-
-        //Records velocity history in x direction
-        if (velHistoryX.size() < 2 || velHistoryY.size() < 2) {
-            velHistoryX.add((int) (xVel * 100));
-            velHistoryY.add((int) (yVel * 100));
-        } else if (velHistoryX.get(1) != (int) (xVel * 100) ||
-                velHistoryY.get(1) != (int) (yVel * 100)) {
-            velHistoryX.set(0, velHistoryX.get(1));
-            velHistoryX.set(1, (int) (xVel * 100));
-
-            velHistoryY.set(0, velHistoryY.get(1));
-            velHistoryY.set(1, (int) (yVel * 100));
-        }
-    }
-
-    /**
-     * Gets the direction the player is currently facing
-     * North: 0 deg
-     * East: 90 deg
-     * South: 180 deg
-     * West: 270 deg
-     *
-     * @return the player direction (units: degrees)
-     */
-    public double getPlayerDirectionAngle() {
-        double val;
-        if (xInput != 0 || yInput != 0) {
-            val = Math.atan2(yInput, xInput);
-        } else {
-            val = Math.atan2(velHistoryY.get(0), velHistoryX.get(0));
-        }
-        val = val * -180 / Math.PI + 90;
-        if (val < 0) {
-            val += 360;
-        }
-        return val;
-    }
-
-    /**
-     * Converts the current players direction into a cardinal direction
-     * North, South-West, etc.
-     *
-     * @return new texture to use
-     */
-    public String getPlayerDirectionCardinal() {
-        double direction = getPlayerDirectionAngle();
-
-        if (direction <= 22.5 || direction >= 337.5) {
-            return "North";
-        } else if (22.5 <= direction && direction <= 67.5) {
-            return "North-East";
-        } else if (67.5 <= direction && direction <= 112.5) {
-            return "East";
-        } else if (112.5 <= direction && direction <= 157.5) {
-            return "South-East";
-        } else if (157.5 <= direction && direction <= 202.5) {
-            return "South";
-        } else if (202.5 <= direction && direction <= 247.5) {
-            return "South-West";
-        } else if (247.5 <= direction && direction <= 292.5) {
-            return "West";
-        } else if (292.5 <= direction && direction <= 337.5) {
-            return "North-West";
-        }
-
-        return "Invalid";
-    }
-
-    /**
-     * Gets a list of the players current velocity
-     * 0: x velocity
-     * 1: y velocity
-     * 2: net velocity
-     *
-     * @return list of players velocity properties
-     */
-    public List getVelocity() {
-        ArrayList<Float> velocity = new ArrayList<>();
-        velocity.add(xVel);
-        velocity.add(yVel);
-        velocity.add((float) vel);
-
-        return velocity;
-    }
-
-    /**
-     * Sets the players acceleration
-     *
-     * @param newAcceleration: the new acceleration for the player
-     */
-    public void setAcceleration(float newAcceleration) {
-        this.acceleration = newAcceleration;
-    }
-
-    /**
-     * Sets the players max speed
-     *
-     * @param newMaxSpeed: the new max speed of the player
-     */
-    public void setMaxSpeed(float newMaxSpeed) {
-        this.maxSpeed = newMaxSpeed;
-    }
-
-    /**
-     * Gets the players current acceleration
-     *
-     * @return the players acceleration
-     */
-    public float getAcceleration() {
-        return this.acceleration;
-    }
-
-    /**
-     * Gets the plays current max speed
-     *
-     * @return the players max speed
-     */
-    public float getMaxSpeed() {
-        return this.maxSpeed;
-    }
-
-    public void movementSound() {
-        if (!isMoving && vel != 0) {
-            //Runs when the player starts moving
-            isMoving = true;
-            //System.out.println("Start Playing");
-            //TODO: Play movement sound
-            SoundManager.loopSound(WALK_NORMAL);
-        }
-
-        if (isMoving && vel == 0) {
-            //Runs when the player stops moving
-            isMoving = false;
-            //System.out.println("Stop Playing");
-            //TODO: Stop Player movement
-            SoundManager.stopSound(WALK_NORMAL);
-        }
-    }
 
 
     /***

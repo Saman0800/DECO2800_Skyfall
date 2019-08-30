@@ -26,11 +26,6 @@ public class MainCharacterTest {
     private Rock testRock;
     private Tile testTile;
 
-
-
-    // MainCharacter being used for testing
-    private MainCharacter testCharacter;
-
     @Before
     /**
      * Sets up all variables to be used for testing
