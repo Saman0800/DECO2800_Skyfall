@@ -210,6 +210,7 @@ public class InventoryManager extends TickableManager {
             if (pos.size() == 0) {
                 positions.put(name, new Tuple(0, 0));
                 inventory.put(name, itemsList);
+                return true;
             } else {
                 for (int i = 0; i < ROWS; i++) {
                     for (int j = 0; j < COLS; j++) {
