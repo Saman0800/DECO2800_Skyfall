@@ -25,6 +25,7 @@ public class GameMenuScreen {
     private PopUpTable helpTable;
     private PopUpTable inventoryTable;
     private PopUpTable settingsTable;
+    private PopUpTable playerSelect;
     private InventoryManager inventory;
     private HealthCircle healthCircle;
     private MainCharacter mainCharacter;
@@ -84,6 +85,13 @@ public class GameMenuScreen {
         selectCharacter.setSize(width, width * 146 / 207f);
         selectCharacter.setPosition(208, 30 * 1000 / 800f);
         stage.addActor(selectCharacter);
+
+        selectCharacter.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameMenuManager.open(getPlayerSelect());
+            }
+        });
 
         ImageButton info = new ImageButton(generateTextureRegionDrawableObject("info"));
         info.setSize(width, width * 146 / 207f);
@@ -332,6 +340,33 @@ public class GameMenuScreen {
 
 
         this.settingsTable = settingsTable;
+    }
+
+    private PopUpTable getPlayerSelect() {
+        if (playerSelect == null) {
+            setPlayerSelect();
+            setExitButton(playerSelect);
+            stage.addActor(playerSelect);
+            stage.addActor(playerSelect.getExit());
+        }
+        return playerSelect;
+    }
+
+
+    private void setPlayerSelect() {
+        PopUpTable playerSelect = new PopUpTable(600, 600 * 1346 / 1862f, "s");
+
+        Table infoBar = new Table();
+        infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
+
+        Label text = new Label("PLAYER SELECT", skin, "default");
+        infoBar.add(text);
+
+        playerSelect.add(infoBar).width(550).height(550 * 188f / 1756).padTop(20).colspan(1);
+        playerSelect.row();
+
+
+        this.playerSelect = playerSelect;
     }
 
     private void setExitButton(PopUpTable table) {

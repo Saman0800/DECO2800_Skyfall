@@ -27,7 +27,7 @@ public class PopUpTable extends Table {
     private void setPopUpTable() {
         setSize(width, height);
         setPosition(Gdx.graphics.getWidth()/2f - getWidth()/2,
-                Gdx.graphics.getHeight() / 2f - getHeight()/2);
+                (Gdx.graphics.getHeight() + 160) / 2f - getHeight()/2);
         setBackground(generateTextureRegionDrawableObject("pop up screen"));
     }
 

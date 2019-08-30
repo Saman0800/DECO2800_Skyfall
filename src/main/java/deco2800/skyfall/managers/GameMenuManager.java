@@ -23,7 +23,9 @@ public class GameMenuManager extends TickableManager {
     private InventoryManager inventory;
     private SoundManager soundManager;
     private Skin skin;
+    private MainCharacter[] characters;
 
+    private static final int NUMBEROFCHARACTERS = 10;
 
     public GameMenuManager() {
         textureManager = GameManager.get().getManager(TextureManager.class);
@@ -31,6 +33,7 @@ public class GameMenuManager extends TickableManager {
         soundManager = GameManager.get().getManager(SoundManager.class);
         stage = null;
         skin = null;
+        characters = new MainCharacter[NUMBEROFCHARACTERS];
     }
 
     public InventoryManager getInventory() {
@@ -103,7 +106,7 @@ public class GameMenuManager extends TickableManager {
         return new TextureRegionDrawable((new TextureRegion(textureManager.getTexture(sName))));
     }
 
-    public void addMainCharacter(MainCharacter mainCharacter) {
+    public void setMainCharacter(MainCharacter mainCharacter) {
         if (stage == null) {
             System.out.println("Please set stage before adding character");
             return;
