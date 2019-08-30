@@ -151,7 +151,7 @@ public class PickAxe extends ManufacturedResources implements Item ,Blueprint{
      */
     @Override
     public int getRequiredStone() {
-        return 0;
+        return 30;
     }
 
     /**
@@ -161,7 +161,7 @@ public class PickAxe extends ManufacturedResources implements Item ,Blueprint{
      */
     @Override
     public int getRequiredMetal() {
-        return 0;
+        return 10;
     }
 
     /**
@@ -172,25 +172,14 @@ public class PickAxe extends ManufacturedResources implements Item ,Blueprint{
      */
     @Override
     public Map<String, Integer> getAllRequirements() {
+
         allRequirements = new HashMap<>();
         allRequirements.put("Wood",50);
-        allRequirements.put("Stone",0);
-        allRequirements.put("Metal",0);
+        allRequirements.put("Stone",30);
+        allRequirements.put("Metal",10);
+
         return allRequirements;
     }
 
-    /**
-     * to check if the player is able to access the blueprint
-     *
-     * @return true if the player is allowed to learn the blueprint.
-     */
-    @Override
-    public boolean bluePrintLearned() {
 
-        return blueprintLearned;
-    }
-
-    public void toggleBlueprintLearned(){
-        blueprintLearned =true;
-    }
 }
