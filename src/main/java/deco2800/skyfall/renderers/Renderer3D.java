@@ -207,7 +207,7 @@ public class Renderer3D implements Renderer {
      */
     private void skipDrawingEnemy(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord, Texture tex) {
         // if the entity is spider of savage then not drawing
-        if (entity instanceof Spider || entity instanceof Robot || entity instanceof Stone) {
+        if (entity instanceof EnemyEntity) {
 
         } else {
             renderAbstractEntity(batch, entity, entityWorldCoord, tex);
@@ -228,13 +228,13 @@ public class Renderer3D implements Renderer {
         // if the distance between player peon and spider is greater than 2 then spider
         // do defence animation
         // (distance^2=(player col -spider col)^2 +(spider row -spider row))
+
         if (entity instanceof Spider && playerPeon != null) {
-            Spider spider = (Spider) entity;
+            Spider spider= (Spider) entity;
             float colDistance = playerPeon.getCol() - spider.getCol();
             float rowDistance = playerPeon.getRow() - spider.getRow();
             if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
                 float[] tileWorldCord = WorldUtil.colRowToWorldCords(spider.getCol(), spider.getRow());
-
                 renderAnimation(batch, camera, animationManager.getAnimation("spider_defence"), tileWorldCord[0],
                         tileWorldCord[1]);
             } else {
@@ -258,24 +258,45 @@ public class Renderer3D implements Renderer {
     private void stoneAnimation(SpriteBatch batch, OrthographicCamera camera, AbstractEntity entity,
                                  MainCharacter playerPeon) {
 
-        // if the distance between player peon and spider is greater than 2 then spider
-        // do defence animation
-        // (distance^2=(player col -spider col)^2 +(spider row -spider row))
         if (entity instanceof Stone && playerPeon != null) {
             Stone stone = (Stone) entity;
-            float colDistance = playerPeon.getCol() - stone.getCol();
-            float rowDistance = playerPeon.getRow() - stone.getRow();
-            if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
-                float[] tileWorldCord = WorldUtil.colRowToWorldCords(stone.getCol(), stone.getRow());
-                renderAnimation(batch, camera, animationManager.getAnimation("stoneJNE"), tileWorldCord[0],
-                        tileWorldCord[1]);
-            } else {
-                // draw spider texture when distance greater than 2
+            if (stone.isDead()==true){
                 Texture stoneTexture = textureManager.getTexture(stone.getTexture());
                 float[] spiderCoord = WorldUtil.colRowToWorldCords(stone.getCol(), stone.getRow());
                 renderAbstractEntity(batch, stone, spiderCoord, stoneTexture);
+            }else{
+                float colDistance = playerPeon.getCol() - stone.getCol();
+                float rowDistance = playerPeon.getRow() - stone.getRow();
+                if ((colDistance * colDistance + rowDistance * rowDistance) < 4 ||stone.isAttacked()==true) {
+                    stone.setAttacking(true);
+                    stone.attackPlayer(playerPeon);
+                    float[] tileWorldCord = WorldUtil.colRowToWorldCords(stone.getCol(), stone.getRow());
+                    Animation animation=null;
+                    if(stone.getMovingDirection().equals("N")|| stone.getMovingDirection().equals("NE")){
+                        animation=animationManager.getAnimation("stoneJ"+stone.getMovingDirection());
+                    }else {
+                        animation=animationManager.getAnimation("stoneA"+stone.getMovingDirection());
+                    }
+                    renderAnimation(batch, camera, animation, tileWorldCord[0],
+                            tileWorldCord[1]);
+                    Texture stoneTexture = textureManager.getTexture("stoneR"+stone.getMovingDirection());
+                    if(stone.isAttacked()==true){
+                        renderAbstractEntity(batch, stone, tileWorldCord, stoneTexture);
+                        renderAbstractEntity(batch, stone, tileWorldCord, stoneTexture);
+                        renderAbstractEntity(batch, stone, tileWorldCord, stoneTexture);
+
+                    }
+
+                } else {
+                    stone.setAttacking(false);
+                    float[] tileWorldCord = WorldUtil.colRowToWorldCords(stone.getCol(), stone.getRow());
+                    renderAnimation(batch, camera, animationManager.getAnimation("stoneJ"+stone.getMovingDirection()), tileWorldCord[0],
+                            tileWorldCord[1]);
+
+                }
             }
-        }
+            }
+
 
     }
 
@@ -367,6 +388,7 @@ public class Renderer3D implements Renderer {
             }
 
         }
+
 
         GameManager.get().setEntitiesRendered(entities.size() - entitiesSkipped);
         GameManager.get().setEntitiesCount(entities.size());
