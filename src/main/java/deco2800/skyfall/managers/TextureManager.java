@@ -47,7 +47,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("spacman_blue", new Texture("resources/spacman_blue.png"));
             textureMap.put("bowman", new Texture("resources/bowman.png"));
             textureMap.put("dialogue_text_background", new Texture("resources/dialogue_text_background.png"));
-            textureMap.put("main_piece", new Texture("resources" + "/Main_Character_F_Right.png"));
             textureMap.put("slash", new Texture("resources/slash_long.png"));
             textureMap.put("arcane", new Texture("resources/Arcane_Effect_1.png"));
             // Tile textures
@@ -104,8 +103,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("fenceNW-NE", new Texture("resources/fence NW-NE.png"));
             textureMap.put("fenceSE-SW", new Texture("resources/fence SE-SW.png"));
             textureMap.put("fenceNW-S", new Texture("resources/fence NW-S.png"));
-            textureMap.put("mario_right", new Texture("resources/mario_texture1.png"));
-            textureMap.put("mario_left", new Texture("resources/mario_texture2.png"));
 
             textureMap.put("rock", new Texture("resources/rocks.png"));
             textureMap.put("rock1", new Texture("resources/world_details/rock1.png"));
@@ -145,6 +142,14 @@ public class TextureManager extends AbstractManager {
             textureMap.put("fence_top_left", new Texture("resources/world_structures/fence_top_left.png"));
             textureMap.put("fence_top_right", new Texture("resources/world_structures/fence_top_right.png"));
 
+            textureMap.put("MainCharacterN", new Texture("resources/Main_Character_Back.png"));
+            textureMap.put("MainCharacterNE", new Texture("resources/Main_Character_B_Right.png"));
+            textureMap.put("MainCharacterE", new Texture("resources/Main_Character_Right.png"));
+            textureMap.put("MainCharacterSE", new Texture("resources/Main_Character_F_Right.png"));
+            textureMap.put("MainCharacterS", new Texture("resources/Main_Character_Front.png"));
+            textureMap.put("MainCharacterSW",new Texture( "resources/Main_Character_F_Left.png"));
+            textureMap.put("MainCharacterW", new Texture("resources/Main_Character_Left.png"));
+            textureMap.put("MainCharacterNW",new Texture( "resources/Main_Character_B_Left.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }

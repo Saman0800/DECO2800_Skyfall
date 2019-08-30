@@ -16,7 +16,7 @@ import java.util.*;
  * Main character in the game
  */
 public class MainCharacter extends Peon implements KeyDownObserver,
-        KeyUpObserver,TouchDownObserver, Tickable { //, Animatable {
+        KeyUpObserver,TouchDownObserver, Tickable , Animatable {
 
 
     // Weapon Manager for MainCharacter
@@ -113,7 +113,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public MainCharacter(float col, float row, float speed, String name,
                          int health) {
         super(row, col, speed, name, health);
-        this.setTexture("main_piece");
+        this.setTexture("MainCharacterE");
         this.setHeight(1);
         this.setObjectName("MainPiece");
 
@@ -145,6 +145,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         velHistoryY = new ArrayList<>();
 
         isMoving = false;
+        setScale(0.5f);
+        setDirectionTextures();
     }
 
     /**
@@ -443,7 +445,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 //         this.direction.y - this.getRow());
 //        System.out.printf("%s%n", this.currentSpeed);
 //        TODO: Check direction for animation here
-
+        this.getPlayerDirectionCardinal();
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             GameManager.getManagerFromInstance(ConstructionManager.class)
                     .displayWindow();
@@ -651,20 +653,28 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         double direction = getPlayerDirectionAngle();
 
         if (direction <= 22.5 || direction >= 337.5) {
+            setCurrentDirection(Direction.NORTH);
             return "North";
         } else if (22.5 <= direction && direction <= 67.5) {
+            setCurrentDirection(Direction.NORTH_EAST);
             return "North-East";
         } else if (67.5 <= direction && direction <= 112.5) {
+            setCurrentDirection(Direction.EAST);
             return "East";
         } else if (112.5 <= direction && direction <= 157.5) {
+            setCurrentDirection(Direction.SOUTH_EAST);
             return "South-East";
         } else if (157.5 <= direction && direction <= 202.5) {
+            setCurrentDirection(Direction.SOUTH);
             return "South";
         } else if (202.5 <= direction && direction <= 247.5) {
+            setCurrentDirection(Direction.SOUTH_WEST);
             return "South-West";
         } else if (247.5 <= direction && direction <= 292.5) {
+            setCurrentDirection(Direction.WEST);
             return "West";
         } else if (292.5 <= direction && direction <= 337.5) {
+            setCurrentDirection(Direction.NORTH_WEST);
             return "North-West";
         }
 
@@ -740,5 +750,22 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             //TODO: Stop Player movement
             SoundManager.stopSound(WALK_NORMAL);
         }
+    }
+
+    @Override
+    public void configureAnimations() {
+
+    }
+
+    @Override
+    public void setDirectionTextures() {
+        defaultDirectionTextures.put(Direction.EAST, "MainCharacterE");
+        defaultDirectionTextures.put(Direction.NORTH, "MainCharacterN");
+        defaultDirectionTextures.put(Direction.WEST, "MainCharacterW");
+        defaultDirectionTextures.put(Direction.SOUTH, "MainCharacterS");
+        defaultDirectionTextures.put(Direction.NORTH_EAST, "MainCharacterNE");
+        defaultDirectionTextures.put(Direction.NORTH_WEST, "MainCharacterNW");
+        defaultDirectionTextures.put(Direction.SOUTH_EAST, "MainCharacterSE");
+        defaultDirectionTextures.put(Direction.SOUTH_WEST, "MainCharacterSW");
     }
 }

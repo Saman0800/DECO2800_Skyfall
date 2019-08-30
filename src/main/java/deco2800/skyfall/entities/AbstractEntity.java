@@ -40,6 +40,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	private int height;
 	private float colRenderLength;
 	private float rowRenderLength;
+	private float scale = 1;
 
 	@Expose
 	private String texture = "error_box";
@@ -414,6 +415,14 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     public String getDefaultTexture() {
         return defaultDirectionTextures.getOrDefault(currentDirection, "Not Found");
+    }
+
+    public float getScale() {
+        return scale;
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
     }
 }
 

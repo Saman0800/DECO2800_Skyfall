@@ -88,23 +88,6 @@ public class Renderer3D implements Renderer {
     }
 
     /**
-     * Render an animation
-     *
-     * @param batch     the sprite batch.
-     * @param camera    the camera.
-     * @param animation the animation need to rend
-     * @param x         animation x coordinate
-     * @param y         animation y coordinate
-     */
-    private void renderAnimation(SpriteBatch batch, OrthographicCamera camera, Animation<TextureRegion> animation,
-            Float x, Float y) {
-        elapsedTime += Gdx.graphics.getDeltaTime();
-        batch.draw(animation.getKeyFrame(elapsedTime, true), x, y,
-                animation.getKeyFrame(elapsedTime, true).getRegionWidth() * WorldUtil.SCALE_X,
-                animation.getKeyFrame(elapsedTime, true).getRegionHeight() * WorldUtil.SCALE_Y);
-    }
-
-    /**
      * Render a single tile.
      * 
      * @param batch            the sprite batch.
@@ -259,8 +242,8 @@ public class Renderer3D implements Renderer {
         float x = entityWorldCord[0];
         float y = entityWorldCord[1];
 
-        float width = tex.getWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X;
-        float height = tex.getHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y;
+        float width = tex.getWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X * entity.getScale();
+        float height = tex.getHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y * entity.getScale();
         batch.draw(tex, x, y, width, height);
     }
 
@@ -357,7 +340,7 @@ public class Renderer3D implements Renderer {
 
             AnimationLinker aniLink = entity.getToBeRun();
             if (aniLink == null) {
-                System.out.println("AnimationLinker is null");
+                //System.out.println("AnimationLinker is null");
                 return;
             }
 
@@ -365,12 +348,12 @@ public class Renderer3D implements Renderer {
             float time = aniLink.getStartingTime();
 
             if (ani == null) {
-                System.out.println("Animation is null");
+                //System.out.println("Animation is null");
                 return;
             }
 
             if (ani.isAnimationFinished(time)) {
-                System.out.println("Animation is done");
+                //System.out.println("Animation is done");
                 aniLink.resetStartingTime();
 
                 if (!(entity.getCurrentState() == AnimationRole.MOVE)) {
