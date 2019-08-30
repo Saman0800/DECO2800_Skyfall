@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities;
 
 
+import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.tasks.AbstractTask;
 
 public abstract class EnemyEntity extends Peon implements ICombatEntity{
@@ -119,6 +120,12 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
     public void takeDamage(int damage) {
         //TODO: perform damage calculation factoring in status indicators, armour and resistance attributes.
         this.health -= damage;
+        System.out.println("Enemy took " + damage + " damage.");
+        System.out.println("Enemy has " + this.health + " health remaining.");
+        //If the health of this enemy is <= 0, remove it from the game world.
+        if (this.health <= 0) {
+            this.destroy();
+        }
     }
 
     /**
@@ -179,4 +186,11 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
         this.armour=armour;
     }
 
+    /**
+     * Remove this enemy from the game world.
+     */
+    private void destroy() {
+        GameManager.get().getWorld().removeEntity(this);
+        System.out.println("Enemy destroyed.");
+    }
 }
