@@ -987,9 +987,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 inventories.inventoryDropMultiple("Metal",
                         hatchetToCreate.getRequiredMetal());
                 inventories.inventoryDropMultiple("Stone",
-                        hatchetToCreate.getRequiredMetal());
+                        hatchetToCreate.getRequiredStone());
                 inventories.inventoryDropMultiple("Wood",
-                        hatchetToCreate.getRequiredMetal());
+                        hatchetToCreate.getRequiredWood());
             }
         }
     }
