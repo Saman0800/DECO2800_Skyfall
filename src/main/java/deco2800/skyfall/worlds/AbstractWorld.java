@@ -351,16 +351,18 @@ public abstract class AbstractWorld {
         if (e1 instanceof Projectile && e2 instanceof EnemyEntity) {
             if(((EnemyEntity) e2).getHealth()>0){
                 ((EnemyEntity) e2).takeDamage(((Projectile) e1).getDamage());
+                ((EnemyEntity) e2).setAttacked(true);
             }else{
-                removeEntity(e2);
+                ((EnemyEntity) e2).setDead(true);
             }
 
 
         } else if (e2 instanceof Projectile && e1 instanceof EnemyEntity) {
             if(((EnemyEntity) e1).getHealth()>0){
                 ((EnemyEntity) e1).takeDamage(((EnemyEntity) e1).getDamage());
+                ((EnemyEntity) e1).setAttacked(true);
             }else{
-                removeEntity(e1);
+                ((EnemyEntity) e1).setDead(true);
             }
 
         } else {
