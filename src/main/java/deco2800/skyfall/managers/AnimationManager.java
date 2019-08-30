@@ -42,12 +42,26 @@ public class AnimationManager extends AbstractManager {
                 "mario_left", 100, 138, DEFAULT_FRAME_RATE);
         this.generateAnimationObject("spider_defence","resources/spiderSheet/SpiderAnimation.atlas",1.0f);
         this.generateAnimationObject("robot_defence","resources/robotSheet/robotAnimation.atlas",1.0f);
-        this.generateAnimationObject("stoneJNE","resources/EnemyAnimationPacked/northEastJump/northEastJump.atlas",0.1f);
-        this.generateAnimationObject("stoneJN","resources/EnemyAnimationPacked/northJump/northJump.atlas",0.1f);
-        this.generateAnimationObject("stoneJNW","resources/EnemyAnimationPacked/northWestJump/northWestJump.atlas",0.1f);
-        this.generateAnimationObject("stoneJS","resources/EnemyAnimationPacked/southJump/southJump.atlas",0.1f);
-        this.generateAnimationObject("stoneJSW","resources/EnemyAnimationPacked/southWestJump/southWestJump.atlas",0.1f);
-        this.generateAnimationObject("stoneJSE","resources/EnemyAnimationPacked/southEastJump/southEastJump.atlas",0.1f);
+//        this.generateAnimationObject("stoneJNE","resources/EnemyAnimationPacked/northEastJump/northEastJump.atlas",0.2f);
+//        this.generateAnimationObject("stoneJN","resources/EnemyAnimationPacked/northJump/northJump.atlas",0.2f);
+//        this.generateAnimationObject("stoneJNW","resources/EnemyAnimationPacked/northWestJump/northWestJump.atlas",0.2f);
+//        this.generateAnimationObject("stoneJS","resources/EnemyAnimationPacked/southJump/southJump.atlas",0.2f);
+//        this.generateAnimationObject("stoneJSW","resources/EnemyAnimationPacked/southWestJump/southWestJump.atlas",0.2f);
+//        this.generateAnimationObject("stoneJSE","resources/EnemyAnimationPacked/southEastJump/southEastJump.atlas",0.2f);
+        this.generateAnimationObject("stoneJNE","resources/EnemyAnimationPacked/northEastJump/stoneJNE.atlas",0.2f);
+        this.generateAnimationObject("stoneJN","resources/EnemyAnimationPacked/northJump/stoneJN.atlas",0.2f);
+        this.generateAnimationObject("stoneJNW","resources/EnemyAnimationPacked/northWestJump/stoneJNW.atlas",0.2f);
+        this.generateAnimationObject("stoneJS","resources/EnemyAnimationPacked/southJump/stoneJS.atlas",0.2f);
+        this.generateAnimationObject("stoneJSW","resources/EnemyAnimationPacked/southWestJump/stoneJSW.atlas",0.2f);
+        this.generateAnimationObject("stoneJSE","resources/EnemyAnimationPacked/southEastJump/stoneJSE.atlas",0.2f);
+        this.generateAnimationObject("stoneANW","resources/EnemyAnimationPacked/attackAnimation/" +
+                "stoneAttackNorthWest/stoneANW.atlas",0.2f);
+        this.generateAnimationObject("stoneAS","resources/EnemyAnimationPacked/attackAnimation/" +
+                "stoneAttackSouth/stoneAS.atlas",0.2f);
+        this.generateAnimationObject("stoneASE","resources/EnemyAnimationPacked/attackAnimation/" +
+                "stoneAttackSouthEast/stoneASE.atlas",0.2f);
+        this.generateAnimationObject("stoneASW","resources/EnemyAnimationPacked/attackAnimation/" +
+                "stoneAttackSouthWest/stoneASW.atlas",0.2f);
     }
 
 
