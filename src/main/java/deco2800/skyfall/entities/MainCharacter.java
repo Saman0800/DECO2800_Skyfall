@@ -470,8 +470,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             change_food(-1);
             foodAccum -= 1.f;
         }
-
-        System.out.println(foodLevel);
     }
 
     /**
