@@ -33,14 +33,7 @@ public class MainCharacterTest {
     public void setup() {
         testCharacter = new MainCharacter(0f, 0f,
                 0.05f, "Main Piece", 10);
-    }
 
-    @After
-    /**
-     * Sets up all variables to be null after esting
-     */
-    public void tearDown() {
-        testCharacter = null;
         // Weapons being used for testing
         sword = new Weapon("sword", "melee",
                 "slash", 3, 5, 6);
@@ -54,9 +47,14 @@ public class MainCharacterTest {
         testTile = new Tile(0f,0f);
         testTree = new Tree(testTile,true);
         testRock = new Rock(testTile,true);
+    }
 
-
-
+    @After
+    /**
+     * Sets up all variables to be null after esting
+     */
+    public void tearDown() {
+        testCharacter = null;
     }
 
     @Test
@@ -184,7 +182,7 @@ public class MainCharacterTest {
      * Test that the item properly switches.
      */
     public void switchItemTest() {
-        Assert.assertEquals(1,testCharacter.getItemSlotSelected());
+        Assert.assertEquals(0,testCharacter.getItemSlotSelected());
         testCharacter.switchItem(9);
         Assert.assertEquals(2,testCharacter.getItemSlotSelected());
         testCharacter.switchItem(10);
