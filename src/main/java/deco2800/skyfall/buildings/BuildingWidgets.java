@@ -3,15 +3,11 @@ package deco2800.skyfall.buildings;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.structures.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
@@ -25,9 +21,17 @@ public class BuildingWidgets implements TouchDownObserver {
     private Skin skin;
     private AbstractWorld world;
     private Table menu;
-    private TextField buildingName;
+    private Label label;
     private TextButton updateBtn;
     private TextButton destroyBtn;
+
+    // return an instance of building widgets
+    public static BuildingWidgets get() {
+        if (instance == null) {
+            return new BuildingWidgets();
+        }
+        return instance;
+    }
 
     // private constructor to enforce use of get()
     private BuildingWidgets() {
@@ -36,14 +40,14 @@ public class BuildingWidgets implements TouchDownObserver {
         this.world = GameManager.get().getWorld();
 
         this.menu = new Table();
-        this.buildingName = new TextField("Name", this.skin);
+        this.label = new Label("Name", this.skin);
         this.updateBtn = new TextButton("Update", this.skin);
         this.destroyBtn = new TextButton("Destroy", this.skin);
 
         this.menu.setVisible(false);
         this.menu.align(Align.left|Align.top);
 
-        this.menu.add(buildingName).padBottom(3);
+        this.menu.add(label).padBottom(3);
         this.menu.row();
         this.menu.add(updateBtn).padBottom(3);
         this.menu.row();
@@ -51,14 +55,6 @@ public class BuildingWidgets implements TouchDownObserver {
 
         this.stage.addActor(this.menu);
         GameManager.get().getManager(InputManager.class).addTouchDownListener(this);
-    }
-
-    // return an instance of building widgets
-    public static BuildingWidgets get() {
-        if (instance == null) {
-            return new BuildingWidgets();
-        }
-        return instance;
     }
 
     private void updateBuilding(BuildingEntity building) {
@@ -70,10 +66,10 @@ public class BuildingWidgets implements TouchDownObserver {
     }
 
     private void setWidgets(BuildingEntity building) {
-        float[] wCords = WorldUtil.colRowToWorldCords(building.getCol(),
-                building.getRow() + (float)building.getWidth());
-        this.buildingName.setText(building.getTexture());
-        this.menu.setPosition(wCords[0], wCords[1] + this.menu.getHeight());
+        float[] wCords = WorldUtil.colRowToWorldCords(building.getCol(), building.getRow());
+        this.label.setText(building.getTexture());
+        this.menu.setPosition(wCords[0] + (float)Gdx.graphics.getWidth()/2,
+                wCords[1] + (float)Gdx.graphics.getHeight()/2);
         this.updateBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

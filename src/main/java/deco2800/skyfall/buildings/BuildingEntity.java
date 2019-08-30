@@ -11,6 +11,7 @@ import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.entities.AbstractEntity;
 
+/* This class is a base class for all building entity classes */
 public class BuildingEntity extends AbstractEntity {
 
     private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);
@@ -64,6 +65,13 @@ public class BuildingEntity extends AbstractEntity {
         level = 1;
         updatable = false;
         currentHealth = getInitialHealth();
+    }
+
+    @Override
+    public void onTick(long i) {
+        // building utility method here (if provided)
+        // building animation here (e.g. show build time left)
+        // do nothing so far
     }
 
     /* ------------------------------------------------------------------------
@@ -134,12 +142,5 @@ public class BuildingEntity extends AbstractEntity {
 
     public int getCurrentHealth() {
         return this.currentHealth;
-    }
-
-    @Override
-    public void onTick(long i) {
-        // building utility method here
-        // building animation here (e.g. show build time left)
-        // do nothing so far
     }
 }

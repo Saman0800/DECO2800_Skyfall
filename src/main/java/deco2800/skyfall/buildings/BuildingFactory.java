@@ -2,7 +2,7 @@ package deco2800.skyfall.buildings;
 
 public class BuildingFactory {
 
-    // contains buildings currently buildable
+    // building labels that a factory contains so far
     enum Buildings {
         House,
         StorageUnit,
