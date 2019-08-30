@@ -111,10 +111,14 @@ public class GameMenuManager extends TickableManager {
         }
         this.mainCharacter = mainCharacter;
 
-    }
+}
 
     public MainCharacter getMainCharacter() {
         return mainCharacter;
+    }
+
+    public void addHealthCircle(HealthCircle hc) {
+        this.healthCircle = hc;
     }
 }
 
