@@ -1,7 +1,10 @@
 package deco2800.skyfall.entities;
 
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.tasks.AbstractTask;
+import deco2800.skyfall.tasks.MovementTask;
 import deco2800.skyfall.util.Collider;
+import deco2800.skyfall.util.HexVector;
 
 /**
  * An entity that is shot from a weapon.
@@ -9,7 +12,7 @@ import deco2800.skyfall.util.Collider;
  *
  * E.g. a bow shoots an arrow.
  */
-public class Projectile extends AbstractEntity {
+public class Projectile extends AgentEntity {
 
     /**
      * How many game ticks all projectiles survive for before being removed.
@@ -32,6 +35,17 @@ public class Projectile extends AbstractEntity {
     private long ticksAliveFor = 0;
 
     /**
+     *
+     */
+    private HexVector movementPosition;
+
+
+    /**
+     * How far this projectile will travel.
+     */
+    private int range;
+
+    /**
      * Construct a new projectile.
      * @param textureName The name of the texture to render.
      * @param objectName The name to call this object.
@@ -40,15 +54,23 @@ public class Projectile extends AbstractEntity {
      * @param damage The damage this projectile will deal on hit.
      * @param speed How fast this projectile is travelling.
      */
-    public Projectile(String textureName, String objectName, float col, float row, int damage, float speed) {
+    public Projectile(HexVector movementPosition,String textureName, String objectName,
+                      float col, float row, int damage, float speed, int range) {
 
-        super(col,row,3);
+        super(col,row,3,speed);
 
         this.damage = damage;
         this.speed = speed;
+        this.movementPosition = movementPosition;
+        this.range = range;
 
         this.setTexture(textureName);
         this.setObjectName(objectName);
+
+        //Position the projectile correctly.
+        position.moveToward(movementPosition,speed);
+
+        //TODO: rotate sprite in angle facing.
     }
 
     /**
@@ -59,6 +81,13 @@ public class Projectile extends AbstractEntity {
         return this.damage;
     }
 
+    /**
+     * Get the range this projectile will travel.
+     * @return The range this projectile will travel.
+     */
+    public int getRange() {
+        return this.range;
+    }
 
     /**
      * Checks how long the projectile has been alive
@@ -74,13 +103,20 @@ public class Projectile extends AbstractEntity {
 
         //If this projectile has been alive for longer than the set number of ticks, remove it from the world.
         if (this.ticksAliveFor > LIFE_TIME_TICKS) {
-            GameManager.get().getWorld().removeEntity(this);
+            this.destroy();
         }
 
-        //TODO add forward movement task on each tick.
-        this.setPosition(this.position.getCol()+0.1f,this.position.getRow(),1);
+        //TODO: Move to range max.
+        if (this.range >= 1) {
+            position.moveToward(movementPosition,speed);
+        }
+
     }
 
-
-
+    /**
+     * Remove the projectile from the game world.
+     */
+    public void destroy() {
+        GameManager.get().getWorld().removeEntity(this);
+    }
 }
