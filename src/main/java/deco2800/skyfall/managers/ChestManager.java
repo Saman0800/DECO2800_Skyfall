@@ -14,8 +14,6 @@ import java.util.Map;
  */
 public class ChestManager extends InventoryManager {
 
-    private final int CHEST_MAX_SIZE = 50;
-
     /**
      * Generates a random assortment of loot based on the rarity given
      * @param amount how much loot you want to generate
@@ -70,7 +68,6 @@ public class ChestManager extends InventoryManager {
     public ChestManager() {
         initInventory(new HashMap<>());
         HAS_QUICK_ACCESS = false;
-        setInvMaxSize(CHEST_MAX_SIZE);
     }
 
     /**

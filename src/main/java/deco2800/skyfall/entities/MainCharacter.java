@@ -24,22 +24,16 @@ import java.util.*;
  * Main character in the game
  */
 public class MainCharacter extends Peon implements KeyDownObserver,
-        KeyUpObserver,TouchDownObserver, Tickable {
+        KeyUpObserver, TouchDownObserver, Tickable {
 
-    // Combat manager for MainCharacter
-    // TODO should be ok once merged with combat
-    // private CombatManager combatManager;
+    // Weapon Manager for MainCharacter
+    private WeaponManager weapons;
 
-    // List of weapons for MainCharacter
-    // TODO could probably turn this into a Map for next sprint for easier
-    //  manahement of number of each weapon
-    private List<Weapon> weapons;
-
-    //Hitbox of melee.
+    // Hitbox of melee.
     private Projectile hitBox;
 
     // Manager for all of MainCharacter's inventories
-    public InventoryManager inventories; // maybe could be public?
+    private InventoryManager inventories;
 
     // Hotbar of inventories
     private List<Item> hotbar;
@@ -49,10 +43,16 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     //List of blueprints that the player has learned.
     private List<String> blueprintsLearned;
 
+    //The name of the item to be created.
+    private String itemToCreate;
+
     public static final String WALK_NORMAL = "people_walk_normal";
 
     private SoundManager soundManager = GameManager.get()
             .getManager(SoundManager.class);
+
+    //The pick Axe that is going to be created
+    private Hatchet hatchetToCreate;
 
     // The index of the item selected to be used in the hotbar
     // ie. [sword][gun][apple]
@@ -62,29 +62,16 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private final int INVENTORY_MAX_CAPACITY = 20;
     private final int HOTBAR_MAX_CAPACITY = 5;
 
-    /*
-    Potential future implementations
-
-    // This is equipped items like rings, armour etc.
-    private List<InventoryItem> misc;
-
-    // These are status effects (ie. poison, regen, weakness)
-    private List<StatusEffect> statusEffects;
-
-    // These are player attributes ie. combat strength
-    private List<Attributes> attributes;
-    */
-
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
 
-    /* food is from 100 to 0 and goes down as the Player does actions such as:
+    /* Food is from 100 to 0 and goes down as the Player does actions such as:
      - Walking
      - Combat
      - Resource Collecting
      Once the food level reaches 0, the Player begins to starve, and starts to
-     lose health points. Still unsure if I should implement time based starvation
-     where as time goes on, the Player loses hunger.
+     lose health points. Still unsure if I should implement time based
+     starvation where as time goes on, the Player loses hunger.
      */
     private int foodLevel;
 
@@ -100,7 +87,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     //protected Vector2 direction;
     //protected float currentSpeed;
 
-    /**
+    /*
      * Helper bools to tell which direction the player intends to move
      */
     private int xInput;
@@ -121,19 +108,23 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private boolean isMoving;
 
     /**
-     * Private helper method to instantiate inventory for Main Character
-     * constructor
      * Used for combat testing melee/range weapons.
      * What number item slot the player has pressed.
      * TODO: remove or integrate into item system.
      * e.g. 1 = test range weapon
      * 2 = test melee weapon
      */
-    private void instantiateInventory() {
-        this.inventories = new InventoryManager();
 
+    /**
+     * Private helper method to instantiate inventory and weapon managers for
+     * Main Character constructor
+     */
+    private void instantiateManagers() {
+        this.inventories = new InventoryManager();
         this.hotbar = new ArrayList<>();
         this.equipped_item = 0;
+
+        this.weapons = new WeaponManager();
     }
 
 
@@ -147,7 +138,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public MainCharacter(float col, float row, float speed, String name,
                          int health) {
         super(row, col, speed, name, health);
-        //TODO: Change this to properly.
         this.setTexture("main_piece");
         this.setHeight(1);
         this.setObjectName("MainPiece");
@@ -162,9 +152,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         //this.direction = new Vector2(row, col);
         //this.direction.limit2(0.05f);
 
-        this.weapons = new ArrayList<>();
-
-        instantiateInventory();
+        instantiateManagers();
 
         this.level = 1;
         this.foodLevel = 100;
@@ -202,13 +190,19 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 position.getRow(),
                 1, 1);*/
 
-        //Get AbstractWorld from static class GameManager.
-        GameManager manager = GameManager.get();
+        //Initialises the players velocity properties
+        xInput = 0;
+        yInput = 0;
+        xVel = 0;
+        yVel = 0;
+        setAcceleration(0.01f);
+        setMaxSpeed(0.7f);
+        vel = 0;
+        velHistoryX = new ArrayList<>();
+        velHistoryY = new ArrayList<>();
 
-        //Add the projectile entity to the game world.
-        manager.getWorld().addEntity(this.hitBox);
+        isMoving = false;
     }
-
 
     /**
      * Constructor with various textures
@@ -263,7 +257,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         // Spawn projectile in front of character for now.
 
         this.hitBox = new Projectile(mousePosition,
-                this.itemSlotSelected == 1 ? "arcane" : "slash",
+                this.itemSlotSelected == 1 ? "slash" : "arcane",
                 "test hitbox",
                 position.getCol() + 1,
                 position.getRow(),
@@ -284,7 +278,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @param item weapon to be added
      */
     public void pickUpWeapon(Weapon item) {
-        weapons.add(item);
+        weapons.pickUpWeapon(item);
     }
 
     /**
@@ -293,9 +287,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @param item weapon being removed
      */
     public void dropWeapon(Weapon item) {
-        if (weapons.contains(item)) {
-            weapons.remove(item);
-        }
+        weapons.dropWeapon(item);
     }
 
 
@@ -303,12 +295,49 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
 
     /**
+     * Get the weapons for the player
+     *
+     * @return weapons
+     */
+    public Map<Weapon, Integer> getWeapons() {
+        return weapons.getWeapons();
+    }
+
+    /**
+     * Attempts to equip a weapon from the weapons map
+     *
+     * @param item weapon being equipped
+     */
+    public void equipWeapon(Weapon item) {
+        weapons.equipWeapon(item);
+    }
+
+    /**
+     * Attempts to unequip a weapon and return it to the weapons map
+     *
+     * @param item weapon being unequipped
+     */
+    public void unequipWeapon(Weapon item) {
+        weapons.unequipWeapon(item);
+    }
+
+    /**
+     * Get a copy of the equipped weapons list
+     * Modifying the returned list shouldn't affect the internal state of class
+     *
+     * @return equipped list
+     */
+    public List<Weapon> getEquipped() {
+        return weapons.getEquipped();
+    }
+
+    /**
      * Gets the weapon manager of the character, so it can only be modified
      * this way, prevents having it being a public variable
      *
      * @return the weapon manager of character
      */
-    public List<Weapon> getWeaponManager() {
+    public WeaponManager getWeaponManager() {
         return this.weapons;
     }
 
@@ -409,9 +438,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Gets the player's weapons, modification of the returned list
-     * doesn't impact the internal class
-     * @return a list of the player's weapons
      * See if the player is starving
      *
      * @return true if hunger points is <= 0, else false
@@ -449,11 +475,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.setTexture(texture);
     }
 
-    /**
-     * Handles tick based stuff, e.g. movement
-     */
-
-
     public void notifyTouchDown(int screenX, int screenY, int pointer,
                                 int button) {
         // only allow left clicks to move player
@@ -461,7 +482,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             return;
         }
         if (button == 0) {
-            this.attack();
             float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
             float[] clickedPosition =
@@ -480,7 +500,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void onTick(long i) {
         this.updatePosition();
         this.updateCollider();
-
         this.movementSound();
         //this.setCurrentSpeed(this.direction.len());
         //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
@@ -490,13 +509,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 //        System.out.printf("%s%n", this.currentSpeed);
 //        TODO: Check direction for animation here
 
-        //Displays or hides the build menu when "b" is clicked
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-            GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
+            GameManager.getManagerFromInstance(ConstructionManager.class)
+                    .displayWindow();
         }
     }
-
-
 
     /**
      * Sets the appropriate movement flags to true on keyDown
@@ -535,8 +552,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             case Input.Keys.M:
                 getGoldPouchTotalValue();
                 break;
-
-
+            /*default:
+                switchItem(keycode);
+                xInput += 1;
+                break;
+            */
         }
     }
 
@@ -548,7 +568,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     @Override
     public void notifyKeyUp(int keycode) {
         movingAnimation = AnimationRole.NULL;
-
         // Player cant move when paused
         if (GameManager.getPaused()) {
             return;
@@ -663,8 +682,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         System.out.println("Sorry, you are not close enough to a gold piece!");
 
     }
-
-
 
     /**
      * Moves the player based on current key inputs
@@ -878,7 +895,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
     }
 
-
     /***
      * This method enables the Main character to use Hatchet. The player's
      * distance from the tree should not be more than 2.5.Every time a
@@ -894,7 +910,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
                 if (entity instanceof Tree) {
 
-                    if ( this.getPosition().distance(entity.getPosition()) <= 2.5 ) {
+                    if ( this.getPosition().distance(entity.getPosition()) <= 0.5 ) {
                         playerHatchet.farmTree((Tree) entity);
                         System.out.println(this.inventories.toString());
                     }
@@ -921,7 +937,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
                 if (entity instanceof Rock) {
 
-                    if ( this.getPosition().distance(entity.getPosition()) <= 2.5 ) {
+                    if ( this.getPosition().distance(entity.getPosition()) <= 0.5 ) {
                         playerPickAxe.farmRock((Rock) entity);
                         System.out.println(this.inventories.toString());
                     }
@@ -941,5 +957,54 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         return this.blueprintsLearned;
     }
 
+    /***
+     * A getter method to get the Item to be created.
+     * @return the item to create.
+     */
+    public String getItemToCreate() {
+        return itemToCreate;
+    }
+
+    /***
+     * A Setter method to get the Item to be created.
+     * @param itemToCreate the item to be created.
+     */
+    public void setItemToCreate(String itemToCreate) {
+        this.itemToCreate = itemToCreate;
+    }
+
+    /***
+     * Creates a Hatchet. Checks if required resources are in the inventory.
+     * if yes, created a hatchet, and deducts the required resource from
+     * inventory
+     */
+    public void createHatchet(){
+
+        if (getItemToCreate()=="Hatchet") {
+            hatchetToCreate = new Hatchet();
+
+            if (hatchetToCreate.getRequiredMetal() < inventories.getAmount
+                    ("Metal")) {
+                System.out.println("You don't have enough Metal");
+
+            } else if (hatchetToCreate.getRequiredWood() < inventories.getAmount
+                    ("Wood")) {
+                System.out.println("You don't have enough Wood");
+
+            } else if (hatchetToCreate.getRequiredStone() < inventories.getAmount
+                    ("Stone")) {
+                System.out.println("You don't have enough Stone");
+
+            } else {
+                inventories.inventoryAdd(hatchetToCreate);
+                inventories.inventoryDropMultiple("Metal",
+                        hatchetToCreate.getRequiredMetal());
+                inventories.inventoryDropMultiple("Stone",
+                        hatchetToCreate.getRequiredStone());
+                inventories.inventoryDropMultiple("Wood",
+                        hatchetToCreate.getRequiredWood());
+            }
+        }
+    }
 
 }

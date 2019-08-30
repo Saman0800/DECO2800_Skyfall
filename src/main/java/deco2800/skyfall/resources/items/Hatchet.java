@@ -12,13 +12,17 @@ import deco2800.skyfall.managers.InventoryManager;
 import org.lwjgl.Sys;
 
 import java.lang.Math;
-
+import java.util.HashMap;
+import java.util.Map;
 
 
 /***
  * A Hatchet item. Hatchet is a manufacturd resource. It can harvest a tree.
  */
 public class Hatchet extends ManufacturedResources implements Item {
+
+    private Map<String, Integer> allRequirements;
+    private  boolean blueprintLearned=false;
 
     /***
      * Create a Hatecht with the name Hatchet
@@ -111,7 +115,7 @@ public class Hatchet extends ManufacturedResources implements Item {
      */
     public void farmTree(Tree treeToFarm) {
 
-        if (owner.distance(treeToFarm) <= 2.5) {
+        if (owner.distance(treeToFarm) <= 0.5) {
 
             if (treeToFarm.getWoodAmount() == 0) {
                 System.out.println("This tree has no more wood");
@@ -137,4 +141,59 @@ public class Hatchet extends ManufacturedResources implements Item {
         return "This item is similar to an axe. It can be used to " +
                 "cut down trees and retrieve wood.";
     }
+
+    @Override
+    public int getRequiredWood() {
+        return 25;
+    }
+
+    /**
+     * Returns the number of stones required for the item.
+     *
+     * @return The name of the item
+     */
+    @Override
+    public int getRequiredStone() {
+        return 10;
+    }
+
+    /**
+     * Returns the number of metal required for the item.
+     *
+     * @return The name of the item
+     */
+    @Override
+    public int getRequiredMetal() {
+        return 0;
+    }
+
+    /**
+     * Returns a map of the name of the required resource and
+     * the required number of each resource to create the item.
+     *
+     * @return a hashamp of the required resources and their number.
+     */
+    @Override
+    public Map<String, Integer> getAllRequirements() {
+
+        allRequirements = new HashMap<>();
+        allRequirements.put("Wood",25);
+        allRequirements.put("Stone",10);
+        allRequirements.put("Metal",0);
+
+        return allRequirements;
+    }
+
+    /**
+     * a getter method to check if a player has learned the blueprint
+     *
+     * @return true if the player has learned the blueprint.
+     */
+    @Override
+    public boolean isBlueprintLearned() {
+
+        return blueprintLearned;
+    }
+
+
 }

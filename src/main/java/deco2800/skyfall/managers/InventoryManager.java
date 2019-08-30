@@ -19,8 +19,6 @@ public class InventoryManager extends TickableManager {
 
     public boolean HAS_QUICK_ACCESS = true;
 
-    private int invMaxSize;
-
     public static final int COLS = 4;
     public static final int ROWS = 3;
 
@@ -31,16 +29,12 @@ public class InventoryManager extends TickableManager {
         // TODO Auto-generated method stub
     }
 
-    private final int INV_MAX_SIZE = 100;
-
     /***
      * Creates Inventory Manager and adds default items to the inventory (2x Stone, 2x Wood),
      * as well as initialises an empty quick access inventory.
      */
     public InventoryManager(){
-        this.inventory = new HashMap<>();
-        this.quickAccess = new ArrayList<>();
-        positions = new HashMap<>();
+        initInventory(new HashMap<>());
 
         //Add default items to inventory
         this.inventoryAdd(new Stone());
@@ -51,18 +45,12 @@ public class InventoryManager extends TickableManager {
         this.inventoryAdd(new PickAxe());
         this.quickAccessAdd("Hatchet");
         this.quickAccessAdd("Pick Axe");
-
-        this.positions.put("Stone", new Tuple(0, 0));
-        this.positions.put("Wood", new Tuple(1, 0));
-        this.positions.put("Hatchet", new Tuple(2, 0));
-        this.positions.put("Pick Axe", new Tuple(3, 0));
-
-        setInvMaxSize(INV_MAX_SIZE);
-
     }
 
     public void initInventory(Map<String, List<Item>> inventory) {
         this.inventory = inventory;
+        quickAccess = new ArrayList<>();
+        positions = new HashMap<>();
         List<String> items = new ArrayList<>();
         for(Map.Entry<String, List<Item>> e : inventory.entrySet()) {
             items.add(e.getKey());
@@ -92,16 +80,11 @@ public class InventoryManager extends TickableManager {
      */
 
     public InventoryManager(Map<String, List<Item>> inventoryContents, List<String> quickAccessContents){
-        this.inventory = new HashMap<>();
-        this.quickAccess = new ArrayList<>();
-
-        this.inventory.putAll(inventoryContents);
+        initInventory(inventoryContents);
 
         for (String quickAccessContent : quickAccessContents) {
             this.quickAccessAdd(quickAccessContent);
         }
-
-        setInvMaxSize(INV_MAX_SIZE);
     }
 
 
@@ -186,11 +169,6 @@ public class InventoryManager extends TickableManager {
 
     }
 
-    public int getInvMaxSize() {
-        return invMaxSize;
-    }
-
-
     /***
      * Get the full inventory as a string.
      * @return a string representation of the inventory.
@@ -225,20 +203,26 @@ public class InventoryManager extends TickableManager {
             List<Item> itemsList = new ArrayList<>();
             itemsList.add(item);
             List<Tuple> pos = new ArrayList<>();
-            for (Map.Entry<String, Tuple> entry : positions.entrySet()) {
+            for (Map.Entry<String, Tuple> entry : this.positions.entrySet()) {
                 pos.add(entry.getValue());
             }
-            for (int i = 0; i < ROWS; i++) {
-                for (int j = 0; j < COLS; j++) {
-                    for (Tuple t : pos) {
-                        if (!(t.getX() == j && t.getY() == i)) {
-                            positions.put(item.getName(), new Tuple(j, i));
-                            this.inventory.put(name, itemsList);
+
+            if (pos.size() == 0) {
+                positions.put(name, new Tuple(0, 0));
+                inventory.put(name, itemsList);
+                return true;
+            } else {
+                for (int i = 0; i < ROWS; i++) {
+                    for (int j = 0; j < COLS; j++) {
+                        if (!pos.contains(new Tuple(j, i))) {
+                            positions.put(name, new Tuple(j, i));
+                            inventory.put(name, itemsList);
                             return true;
                         }
                     }
                 }
             }
+
             System.out.println("Not enough space in inventory");
             return false;
         }
@@ -320,9 +304,5 @@ public class InventoryManager extends TickableManager {
         this.inventory.remove(itemName);
         this.quickAccessRemove((itemName));
         this.positions.remove(itemName);
-    }
-
-    public void setInvMaxSize(int invMaxSize) {
-        this.invMaxSize = invMaxSize;
     }
 }

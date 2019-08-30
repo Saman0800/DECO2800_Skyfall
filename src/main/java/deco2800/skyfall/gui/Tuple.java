@@ -36,4 +36,14 @@ public class Tuple {
     public String toString() {
         return String.format("(%d, %d)", getX(), getY());
     }
+
+    @Override
+    public boolean equals(Object obj) {
+       if (obj instanceof Tuple) {
+           Tuple t = (Tuple) obj;
+           return t.getX() == getX() && t.getY() == getY();
+       }
+       return false;
+    }
+
 }
