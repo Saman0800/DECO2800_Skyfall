@@ -15,6 +15,10 @@ import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.AbstractWorld;
 import deco2800.skyfall.worlds.Tile;
 
+/**
+ *  A BuildingWidgets is a UI widgets for existing building entities, and provides some handling
+ *  methods shown on the screen to the existing building entities.
+ */
 public class BuildingWidgets implements TouchDownObserver {
     private static BuildingWidgets instance = null;
     private Stage stage;
@@ -25,6 +29,10 @@ public class BuildingWidgets implements TouchDownObserver {
     private TextButton updateBtn;
     private TextButton destroyBtn;
 
+    /**
+     * Returns an instance of the building widgets.
+     * @return the building widgets
+     */
     // return an instance of building widgets
     public static BuildingWidgets get() {
         if (instance == null) {
@@ -33,7 +41,9 @@ public class BuildingWidgets implements TouchDownObserver {
         return instance;
     }
 
-    // private constructor to enforce use of get()
+    /**
+     * Private constructor to enforce use of get().
+     */
     private BuildingWidgets() {
         this.stage = GameManager.get().getStage();
         this.skin = GameManager.get().getSkin();
@@ -57,14 +67,26 @@ public class BuildingWidgets implements TouchDownObserver {
         GameManager.get().getManager(InputManager.class).addTouchDownListener(this);
     }
 
+    /**
+     * Updates the building object when update button is clicked.
+     * @param building a building is selected on the world
+     */
     private void updateBuilding(BuildingEntity building) {
         // TODO: check if building is updatable then update the building
     }
 
+    /**
+     * Destroys the building object when destroy button is clicked.
+     * @param building a building is selected on the world
+     */
     private void destroyBuilding(BuildingEntity building) {
         this.world.removeEntity(building);
     }
 
+    /**
+     * Sets up a widget with specific information of a selected building and its position, then showing it.
+     * @param building a building is selected on the world
+     */
     private void setWidgets(BuildingEntity building) {
         float[] wCords = WorldUtil.colRowToWorldCords(building.getCol(), building.getRow());
         this.label.setText(building.getTexture());
@@ -86,6 +108,14 @@ public class BuildingWidgets implements TouchDownObserver {
         });
     }
 
+    /**
+     * Runs the method when right button of a mouse is clicked on the world. Used to check and get a specific
+     * building object on the mouse's position.
+     * @param screenX screen X coordinate
+     * @param screenY screen Y coordinate
+     * @param pointer index or order of touch down event
+     * @param button mouse button of left (0) or right (1)
+     */
     @Override
     public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
         // only allow right click to handle buildings
