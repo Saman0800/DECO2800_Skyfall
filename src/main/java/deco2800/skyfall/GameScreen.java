@@ -84,6 +84,9 @@ public class GameScreen implements Screen, KeyDownObserver {
         /* Add inventory to game manager */
         gameManager.addManager(new InventoryManager());
 
+        /* Add construction manager to game manger */
+        gameManager.addManager(new ConstructionManager());
+
         /* Play BGM */
         try {
             BGMManager.BGMManager("resources/sounds/forest_day.wav");

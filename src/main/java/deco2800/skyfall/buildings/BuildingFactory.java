@@ -15,7 +15,7 @@ public class BuildingFactory {
     }
 
     public BuildingEntity createHouse(float col, float row) {
-        BuildingEntity house = new BuildingEntity(col, row, 3);
+        BuildingEntity house = new BuildingEntity(col, row, 2);
         house.setObjectName("House" + house.getEntityID());
         house.setTexture("house1");
         house.setInitialHealth(10);
@@ -25,7 +25,7 @@ public class BuildingFactory {
     }
 
     public BuildingEntity createStorageUnit(float col, float row) {
-        BuildingEntity storage = new BuildingEntity(col, row, 3);
+        BuildingEntity storage = new BuildingEntity(col, row, 2);
         storage.setObjectName("StorageUnit" + storage.getEntityID());
         storage.setTexture("storage_unit");
         storage.setInitialHealth(5);

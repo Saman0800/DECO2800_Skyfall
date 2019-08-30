@@ -46,8 +46,11 @@ public class ConstructionManager extends AbstractManager {
         menuAdded = false;
         menuSetUp = false;
 
+        /* set Skin for testing, remove it later */
+        GameManager.get().setSkin(new Skin(Gdx.files.internal("asserts/skin_for_test/uiskin.json")));
         buildingWidgets = BuildingWidgets.get();
         buildingFactory = new BuildingFactory();
+        GameManager.get().getWorld().addEntity(buildingFactory.createHouse(2f, 1f));
     }
 
     //Start of UI

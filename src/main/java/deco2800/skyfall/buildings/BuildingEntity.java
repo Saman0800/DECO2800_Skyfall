@@ -3,6 +3,7 @@ package deco2800.skyfall.buildings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -34,7 +35,22 @@ public class BuildingEntity extends AbstractEntity {
         if (!WorldUtil.validColRow(new HexVector(col, row))) {
             log.debug("Invalid position");
         }
+        setDefault();
+    }
 
+    public BuildingEntity(float col, float row, int renderOrder, float colRenderLength, float rowRenderLength) {
+        super(col, row, renderOrder, colRenderLength, rowRenderLength);
+        this.setObjectName(ENTITY_ID_STRING);
+        this.setRenderOrder(renderOrder);
+        this.animations = new HashMap<>();
+
+        if (!WorldUtil.validColRow(new HexVector(col, row))) {
+            log.debug("Invalid position");
+        }
+        setDefault();
+    }
+
+    private void setDefault() {
         // default consistent information of the building type
         setTexture("error_build");
         setBuildTime(1);
@@ -49,6 +65,10 @@ public class BuildingEntity extends AbstractEntity {
         updatable = false;
         currentHealth = getInitialHealth();
     }
+
+    /* ------------------------------------------------------------------------
+     * 				GETTERS AND SETTERS BELOW THIS COMMENT.
+     * ------------------------------------------------------------------------ */
 
     public void setBuildTime(int time) {
         buildTime = time;
