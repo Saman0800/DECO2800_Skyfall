@@ -10,7 +10,6 @@ import java.util.Random;
  * Desert Biome
  */
 public class DesertBiome extends AbstractBiome {
-    private ArrayList<String> textures = new ArrayList<>();
 
     /**
      * Constructor for a Biome

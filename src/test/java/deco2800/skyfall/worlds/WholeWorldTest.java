@@ -15,7 +15,8 @@ public class WholeWorldTest {
     @Test
     public void worldTest(){
 //        AbstractWorld world = new RocketWorld(0, 10, 1, new int[] {20,10,10}, 3,2);
-        AbstractWorld world = new RocketWorld(0, 30, 5, new int[] {20,10,10}, 2,5);
+//        AbstractWorld world = new RocketWorld(0, 30, 5, new int[] {10,10,10,10,10}, 2,5);
+        AbstractWorld world = new RocketWorld(0, 30, 5, new int[] {5,5,5,5,5}, 2,5);
         try {
             BufferedReader reader = new BufferedReader(new FileReader("src/test/java/deco2800/skyfall/worlds/ExampleWorldOutput.txt"));
 //            String content = new Scanner(new File("src/test/java/deco2800/skyfall/worlds/ExampleWorldOutput.txt")).useDelimiter().next();

@@ -88,6 +88,8 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             biomes.add(new ForestBiome());
             biomes.add(new DesertBiome());
             biomes.add(new MountainBiome());
+            biomes.add(new SwampBiome());
+            biomes.add(new VolcanicMountainsBiome());
             biomes.add(new OceanBiome());
 
             try {
