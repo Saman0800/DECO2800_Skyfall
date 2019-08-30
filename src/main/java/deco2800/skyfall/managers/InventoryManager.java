@@ -1,6 +1,7 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.gui.Tuple;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.*;
 import java.util.*;
@@ -46,9 +47,15 @@ public class InventoryManager extends TickableManager {
         this.inventoryAdd(new Stone());
         this.inventoryAdd(new Wood());
         this.inventoryAdd(new Wood());
+        this.inventoryAdd(new Hatchet());
+        this.inventoryAdd(new PickAxe());
+        this.quickAccessAdd("Hatchet");
+        this.quickAccessAdd("Pick Axe");
 
         this.positions.put("Stone", new Tuple(0, 0));
         this.positions.put("Wood", new Tuple(1, 0));
+        this.positions.put("Hatchet", new Tuple(2, 0));
+        this.positions.put("Pick Axe", new Tuple(3, 0));
 
         setInvMaxSize(INV_MAX_SIZE);
 
@@ -87,8 +94,8 @@ public class InventoryManager extends TickableManager {
     public InventoryManager(Map<String, List<Item>> inventoryContents, List<String> quickAccessContents){
         this.inventory = new HashMap<>();
         this.quickAccess = new ArrayList<>();
-        positions = new HashMap<>();
-        initInventory(inventoryContents);
+
+        this.inventory.putAll(inventoryContents);
 
         for (String quickAccessContent : quickAccessContents) {
             this.quickAccessAdd(quickAccessContent);

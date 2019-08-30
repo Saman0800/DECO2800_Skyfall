@@ -36,6 +36,11 @@ public abstract class ManufacturedResources implements Item {
         this.subtype = "Manufactured Resource";
     }
 
+    public ManufacturedResources(MainCharacter owner){
+        this.owner = owner;
+        this.subtype= "Manufactured Resource";
+    }
+
     public ManufacturedResources(){
         this.subtype= "Manufactured Resource";
     }

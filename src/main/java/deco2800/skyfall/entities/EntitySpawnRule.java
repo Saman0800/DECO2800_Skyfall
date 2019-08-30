@@ -41,7 +41,7 @@ public class EntitySpawnRule {
      * be used to dictate the probability of an entity spawn on a tile. If no noise
      * generator is provided this will become the default noise generator.
      */
-    NoiseGenerator noiseGenerator = new NoiseGenerator(new Random(), 2, 2.0, 0.3);
+    NoiseGenerator noiseGenerator = new NoiseGenerator(new Random(), 5, 20, 0.4);
 
     /**
      * The biome in which the entities are to spawn. If no biome is specified then

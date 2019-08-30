@@ -4,6 +4,7 @@ import deco2800.skyfall.entities.AgentEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.Tree;
+import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.resources.Item;
@@ -30,6 +31,20 @@ public class Hatchet extends ManufacturedResources implements Item {
         this.name="Hatchet";
     }
 
+    /***
+     * Create a Hatecht with the name Hatchet
+     *
+     * @param owner the owner of the inventory.
+     */
+
+    public Hatchet(MainCharacter owner){
+        super(owner);
+        this.name="Hatchet";
+    }
+
+    /***
+     * Create a Hatecht with the name Hatchet with no parameters.
+     */
     public Hatchet(){
         this.name="Hatchet";
     }
@@ -89,23 +104,27 @@ public class Hatchet extends ManufacturedResources implements Item {
     }
 
     /**
-     * Harvests a tree. Currently making an inventory and adding the collected
-     * wood to that inventory. decreased the woodAmount of a tree.
+     * Harvests a tree. and adding the collected
+     * wood to the owner inventory. decreased the woodAmount of a tree. Once
+     * a tree has no more wood, removes the tree from the world.
      * @param treeToFarm the tree to be farmed
      */
     public void farmTree(Tree treeToFarm) {
 
-        if (owner.distance(treeToFarm) <= 2) {
+        if (owner.distance(treeToFarm) <= 2.5) {
 
             if (treeToFarm.getWoodAmount() == 0) {
                 System.out.println("This tree has no more wood");
+                GameManager.get().getWorld().removeEntity(treeToFarm);
 
             } else {
-                owner.getInventories().inventoryAdd(new Wood());
+                owner.getInventoryManager().inventoryAdd(new Wood());
                 treeToFarm.decreaseWoodAmount();
+                System.out.println("wood added");
             }
         } else {
             System.out.println("No Trees in the vicinity");
+
         }
     }
 
