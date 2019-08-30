@@ -36,8 +36,6 @@ public class InventoryManagerTest {
         assertEquals(4, inv.getInventoryContents().size());
         assertEquals(2, inv.getAmount("Stone"));
         assertEquals(2, inv.getAmount("Wood"));
-        assertEquals(1, inv.getAmount("Sand"));
-        assertEquals(1, inv.getAmount("Vine"));
 
     }
 
@@ -91,7 +89,8 @@ public class InventoryManagerTest {
         assertEquals(0, test.getInventoryAmounts().size());
         assertEquals(0,test.getAmount("Stone"));
 
-        test.inventoryAdd(new Wood());
+        Wood wood = new Wood();
+        test.inventoryAdd(wood);
         test.inventoryAdd(new Wood());
         test.inventoryAdd(new Vine());
         test.inventoryAdd(new Stone());
