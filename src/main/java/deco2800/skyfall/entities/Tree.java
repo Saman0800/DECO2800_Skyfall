@@ -23,7 +23,6 @@ public class Tree extends StaticEntity implements Tickable, Harvestable {
         LOG.info("Making a tree at {}, {}", col, row);
         this.setTexture("tree_cubeH1A0");
         this.woodAmount = 15;
-
     }
 
     public Tree(Tile tile, boolean obstructed) {
@@ -100,7 +99,7 @@ public class Tree extends StaticEntity implements Tickable, Harvestable {
 
     /***
      * A getter method to for woodAmount.
-     * 
+     *
      * @return woodAmount.
      */
     public int getWoodAmount() {

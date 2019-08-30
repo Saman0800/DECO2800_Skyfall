@@ -24,22 +24,16 @@ import java.util.*;
  * Main character in the game
  */
 public class MainCharacter extends Peon implements KeyDownObserver,
-        KeyUpObserver,TouchDownObserver, Tickable {
+        KeyUpObserver, TouchDownObserver, Tickable {
 
-    // Combat manager for MainCharacter
-    // TODO should be ok once merged with combat
-    // private CombatManager combatManager;
+    // Weapon Manager for MainCharacter
+    private WeaponManager weapons;
 
-    // List of weapons for MainCharacter
-    // TODO could probably turn this into a Map for next sprint for easier
-    //  manahement of number of each weapon
-    private List<Weapon> weapons;
-
-    //Hitbox of melee.
+    // Hitbox of melee.
     private Projectile hitBox;
 
     // Manager for all of MainCharacter's inventories
-    public InventoryManager inventories; // maybe could be public?
+    private InventoryManager inventories;
 
     // Hotbar of inventories
     private List<Item> hotbar;
@@ -62,29 +56,16 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private final int INVENTORY_MAX_CAPACITY = 20;
     private final int HOTBAR_MAX_CAPACITY = 5;
 
-    /*
-    Potential future implementations
-
-    // This is equipped items like rings, armour etc.
-    private List<InventoryItem> misc;
-
-    // These are status effects (ie. poison, regen, weakness)
-    private List<StatusEffect> statusEffects;
-
-    // These are player attributes ie. combat strength
-    private List<Attributes> attributes;
-    */
-
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
 
-    /* food is from 100 to 0 and goes down as the Player does actions such as:
+    /* Food is from 100 to 0 and goes down as the Player does actions such as:
      - Walking
      - Combat
      - Resource Collecting
      Once the food level reaches 0, the Player begins to starve, and starts to
-     lose health points. Still unsure if I should implement time based starvation
-     where as time goes on, the Player loses hunger.
+     lose health points. Still unsure if I should implement time based
+     starvation where as time goes on, the Player loses hunger.
      */
     private int foodLevel;
 
@@ -100,7 +81,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     //protected Vector2 direction;
     //protected float currentSpeed;
 
-    /**
+    /*
      * Helper bools to tell which direction the player intends to move
      */
     private int xInput;
@@ -121,19 +102,24 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private boolean isMoving;
 
     /**
-     * Private helper method to instantiate inventory for Main Character
-     * constructor
      * Used for combat testing melee/range weapons.
      * What number item slot the player has pressed.
      * TODO: remove or integrate into item system.
      * e.g. 1 = test range weapon
      * 2 = test melee weapon
      */
-    private void instantiateInventory() {
-        this.inventories = new InventoryManager();
+    private int itemSlotSelected = 1;
 
+    /**
+     * Private helper method to instantiate inventory and weapon managers for
+     * Main Character constructor
+     */
+    private void instantiateManagers() {
+        this.inventories = new InventoryManager();
         this.hotbar = new ArrayList<>();
         this.equipped_item = 0;
+
+        this.weapons = new WeaponManager();
     }
 
 
@@ -147,7 +133,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public MainCharacter(float col, float row, float speed, String name,
                          int health) {
         super(row, col, speed, name, health);
-        //TODO: Change this to properly.
         this.setTexture("main_piece");
         this.setHeight(1);
         this.setObjectName("MainPiece");
@@ -162,9 +147,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         //this.direction = new Vector2(row, col);
         //this.direction.limit2(0.05f);
 
-        this.weapons = new ArrayList<>();
-
-        instantiateInventory();
+        instantiateManagers();
 
         this.level = 1;
         this.foodLevel = 100;
@@ -202,13 +185,19 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 position.getRow(),
                 1, 1);*/
 
-        //Get AbstractWorld from static class GameManager.
-        GameManager manager = GameManager.get();
+        //Initialises the players velocity properties
+        xInput = 0;
+        yInput = 0;
+        xVel = 0;
+        yVel = 0;
+        setAcceleration(0.01f);
+        setMaxSpeed(0.7f);
+        vel = 0;
+        velHistoryX = new ArrayList<>();
+        velHistoryY = new ArrayList<>();
 
-        //Add the projectile entity to the game world.
-        manager.getWorld().addEntity(this.hitBox);
+        isMoving = false;
     }
-
 
     /**
      * Constructor with various textures
@@ -284,7 +273,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @param item weapon to be added
      */
     public void pickUpWeapon(Weapon item) {
-        weapons.add(item);
+        weapons.pickUpWeapon(item);
     }
 
     /**
@@ -293,9 +282,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @param item weapon being removed
      */
     public void dropWeapon(Weapon item) {
-        if (weapons.contains(item)) {
-            weapons.remove(item);
-        }
+        weapons.dropWeapon(item);
     }
 
 
@@ -303,12 +290,49 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
 
     /**
+     * Get the weapons for the player
+     *
+     * @return weapons
+     */
+    public Map<Weapon, Integer> getWeapons() {
+        return weapons.getWeapons();
+    }
+
+    /**
+     * Attempts to equip a weapon from the weapons map
+     *
+     * @param item weapon being equipped
+     */
+    public void equipWeapon(Weapon item) {
+        weapons.equipWeapon(item);
+    }
+
+    /**
+     * Attempts to unequip a weapon and return it to the weapons map
+     *
+     * @param item weapon being unequipped
+     */
+    public void unequipWeapon(Weapon item) {
+        weapons.unequipWeapon(item);
+    }
+
+    /**
+     * Get a copy of the equipped weapons list
+     * Modifying the returned list shouldn't affect the internal state of class
+     *
+     * @return equipped list
+     */
+    public List<Weapon> getEquipped() {
+        return weapons.getEquipped();
+    }
+
+    /**
      * Gets the weapon manager of the character, so it can only be modified
      * this way, prevents having it being a public variable
      *
      * @return the weapon manager of character
      */
-    public List<Weapon> getWeaponManager() {
+    public WeaponManager getWeaponManager() {
         return this.weapons;
     }
 
@@ -409,9 +433,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Gets the player's weapons, modification of the returned list
-     * doesn't impact the internal class
-     * @return a list of the player's weapons
      * See if the player is starving
      *
      * @return true if hunger points is <= 0, else false
@@ -449,11 +470,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.setTexture(texture);
     }
 
-    /**
-     * Handles tick based stuff, e.g. movement
-     */
-
-
     public void notifyTouchDown(int screenX, int screenY, int pointer,
                                 int button) {
         // only allow left clicks to move player
@@ -461,7 +477,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             return;
         }
         if (button == 0) {
-            this.attack();
             float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
             float[] clickedPosition =
@@ -480,7 +495,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void onTick(long i) {
         this.updatePosition();
         this.updateCollider();
-
         this.movementSound();
         //this.setCurrentSpeed(this.direction.len());
         //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
@@ -490,13 +504,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 //        System.out.printf("%s%n", this.currentSpeed);
 //        TODO: Check direction for animation here
 
-        //Displays or hides the build menu when "b" is clicked
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-            GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
+            GameManager.getManagerFromInstance(ConstructionManager.class)
+                    .displayWindow();
         }
     }
-
-
 
     /**
      * Sets the appropriate movement flags to true on keyDown
@@ -535,7 +547,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             case Input.Keys.M:
                 getGoldPouchTotalValue();
                 break;
-
+            default:
+                switchItem(keycode);
+                xInput += 1;
+                break;
 
         }
     }
@@ -548,7 +563,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     @Override
     public void notifyKeyUp(int keycode) {
         movingAnimation = AnimationRole.NULL;
-
         // Player cant move when paused
         if (GameManager.getPaused()) {
             return;
@@ -584,6 +598,218 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     -interaction with worlds
     -effects on MainCharacter with different Inventory and Weapon items
     */
+
+    /**
+     * Moves the player based on current key inputs
+     */
+    public void updatePosition() {
+        // Gets current position
+        float xPos = position.getCol();
+        float yPos = position.getRow();
+
+        //Returns tile at left arm (our perspective) of the player
+        float tileCol = (float) Math.round(xPos);
+        float tileRow = (float) Math.round(yPos);
+        if (tileCol % 2 != 0){
+            tileRow += 0.5f;
+        }
+
+        //Determined friction scaling factor to apply based on current tile
+        float friction;
+        Tile currentTile = GameManager.get().getWorld().getTile(tileCol,tileRow);
+        if(currentTile != null && currentTile.getTexture() != null){
+            //Tile specific friction
+            friction = Tile.getFriction(currentTile.getTextureName());
+        }else{
+            //Default friction
+            friction = 1f;
+        }
+
+        // Calculates new x and y positions
+        xPos += xVel + xInput * acceleration * 0.5 * friction;
+        yPos += yVel + yInput * acceleration * 0.5 * friction;
+
+        // Calculates velocity in x direction
+        if (xInput != 0) {
+            xVel += xInput * acceleration * friction;
+            // Prevents sliding
+            if (xVel / Math.abs(xVel) != xInput) {
+                xVel = 0;
+            }
+        } else if (yInput != 0) {
+            xVel *= 0.8;
+        } else {
+            xVel = 0;
+        }
+
+        // Calculates velocity in y direction
+        if (yInput != 0) {
+            yVel += yInput * acceleration * friction;
+            // Prevents sliding
+            if (yVel / Math.abs(yVel) != yInput) {
+                yVel = 0;
+            }
+        } else if (xInput != 0) {
+            yVel *= 0.8;
+        } else {
+            yVel = 0;
+        }
+
+        // caps the velocity
+        if (vel > maxSpeed) {
+            xVel /= vel;
+            yVel /= vel;
+
+            xVel *= maxSpeed;
+            yVel *= maxSpeed;
+        }
+
+        // Calculates speed to destination
+        vel = Math.sqrt((xVel * xVel) + (yVel * yVel));
+
+        // Calculates destination vector
+        HexVector destination = new HexVector(xPos, yPos);
+
+        // Moves the player to new location
+        position.moveToward(destination, vel);
+
+        //Records velocity history in x direction
+        if (velHistoryX.size() < 2 || velHistoryY.size() < 2) {
+            velHistoryX.add((int) (xVel * 100));
+            velHistoryY.add((int) (yVel * 100));
+        } else if (velHistoryX.get(1) != (int) (xVel * 100) ||
+                velHistoryY.get(1) != (int) (yVel * 100)) {
+            velHistoryX.set(0, velHistoryX.get(1));
+            velHistoryX.set(1, (int) (xVel * 100));
+
+            velHistoryY.set(0, velHistoryY.get(1));
+            velHistoryY.set(1, (int) (yVel * 100));
+        }
+    }
+
+    /**
+     * Gets the direction the player is currently facing
+     * North: 0 deg
+     * East: 90 deg
+     * South: 180 deg
+     * West: 270 deg
+     *
+     * @return the player direction (units: degrees)
+     */
+    public double getPlayerDirectionAngle() {
+        double val;
+        if (xInput != 0 || yInput != 0) {
+            val = Math.atan2(yInput, xInput);
+        } else {
+            val = Math.atan2(velHistoryY.get(0), velHistoryX.get(0));
+        }
+        val = val * -180 / Math.PI + 90;
+        if (val < 0) {
+            val += 360;
+        }
+        return val;
+    }
+
+    /**
+     * Converts the current players direction into a cardinal direction
+     * North, South-West, etc.
+     *
+     * @return new texture to use
+     */
+    public String getPlayerDirectionCardinal() {
+        double direction = getPlayerDirectionAngle();
+
+        if (direction <= 22.5 || direction >= 337.5) {
+            return "North";
+        } else if (22.5 <= direction && direction <= 67.5) {
+            return "North-East";
+        } else if (67.5 <= direction && direction <= 112.5) {
+            return "East";
+        } else if (112.5 <= direction && direction <= 157.5) {
+            return "South-East";
+        } else if (157.5 <= direction && direction <= 202.5) {
+            return "South";
+        } else if (202.5 <= direction && direction <= 247.5) {
+            return "South-West";
+        } else if (247.5 <= direction && direction <= 292.5) {
+            return "West";
+        } else if (292.5 <= direction && direction <= 337.5) {
+            return "North-West";
+        }
+
+        return "Invalid";
+    }
+
+    /**
+     * Gets a list of the players current velocity
+     * 0: x velocity
+     * 1: y velocity
+     * 2: net velocity
+     *
+     * @return list of players velocity properties
+     */
+    public List getVelocity() {
+        ArrayList<Float> velocity = new ArrayList<>();
+        velocity.add(xVel);
+        velocity.add(yVel);
+        velocity.add((float) vel);
+
+        return velocity;
+    }
+
+    /**
+     * Sets the players acceleration
+     *
+     * @param newAcceleration: the new acceleration for the player
+     */
+    public void setAcceleration(float newAcceleration) {
+        this.acceleration = newAcceleration;
+    }
+
+    /**
+     * Sets the players max speed
+     *
+     * @param newMaxSpeed: the new max speed of the player
+     */
+    public void setMaxSpeed(float newMaxSpeed) {
+        this.maxSpeed = newMaxSpeed;
+    }
+
+    /**
+     * Gets the players current acceleration
+     *
+     * @return the players acceleration
+     */
+    public float getAcceleration() {
+        return this.acceleration;
+    }
+
+    /**
+     * Gets the plays current max speed
+     *
+     * @return the players max speed
+     */
+    public float getMaxSpeed() {
+        return this.maxSpeed;
+    }
+
+    public void movementSound() {
+        if (!isMoving && vel != 0) {
+            //Runs when the player starts moving
+            isMoving = true;
+            //System.out.println("Start Playing");
+            //TODO: Play movement sound
+            SoundManager.loopSound(WALK_NORMAL);
+        }
+
+        if (isMoving && vel == 0) {
+            //Runs when the player stops moving
+            isMoving = false;
+            //System.out.println("Stop Playing");
+            //TODO: Stop Player movement
+            SoundManager.stopSound(WALK_NORMAL);
+        }
+    }
 
     /**
      * Adds a piece of gold to the Gold Pouch
