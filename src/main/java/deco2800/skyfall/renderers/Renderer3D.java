@@ -276,10 +276,14 @@ public class Renderer3D implements Renderer {
         List<AbstractEntity> entities = GameManager.get().getWorld().getSortedEntities();
         MainCharacter playerPeon = findPlayerPeon(entities);
 
+        // We get the tile height and width. NOTE: This assumes that the width and
+        // height of each tile is constant
+        int w = GameManager.get().getWorld().getTile(0).getTexture().getWidth();
+        int h = GameManager.get().getWorld().getTile(0).getTexture().getHeight();
+
         int entitiesSkipped = 0;
         logger.debug("NUMBER OF ENTITIES IN ENTITY RENDER LIST: {}", entities.size());
         for (AbstractEntity entity : entities) {
-            Texture tex = textureManager.getTexture(entity.getTexture());
             float[] entityWorldCoord = WorldUtil.colRowToWorldCords(entity.getCol(), entity.getRow());
             // If it's offscreen
             if (WorldUtil.areCoordinatesOffScreen(entityWorldCoord[0], entityWorldCoord[1], camera)) {
@@ -287,6 +291,7 @@ public class Renderer3D implements Renderer {
                 continue;
             }
 
+            Texture tex = textureManager.getTexture(entity.getTexture());
             if (entity instanceof StaticEntity) {
                 StaticEntity staticEntity = ((StaticEntity) entity);
                 Set<HexVector> childrenPosns = staticEntity.getChildrenPositions();
@@ -301,10 +306,6 @@ public class Renderer3D implements Renderer {
                     // top of the tile centre
                     // think of a massive tree with the tree trunk at the centre of the tile
                     // and it's branches and leaves over surrounding tiles
-
-                    // We get the tile height and width :
-                    int w = GameManager.get().getWorld().getTile(childpos).getTexture().getWidth();
-                    int h = GameManager.get().getWorld().getTile(childpos).getTexture().getHeight();
 
                     int drawX = (int) (childWorldCoord[0] + (w - childTex.getWidth()) / 2 * WorldUtil.SCALE_X);
                     int drawY = (int) (childWorldCoord[1] + (h - childTex.getHeight()) / 2 * WorldUtil.SCALE_Y);
@@ -434,7 +435,8 @@ public class Renderer3D implements Renderer {
         String animationName = entity.getAnimationName(moveType);
 
         if (animationName == null) {
-//            System.out.println("Could not find animation in entity" + entity.getObjectName());
+            // System.out.println("Could not find animation in entity" +
+            // entity.getObjectName());
             renderAbstractEntity(batch, entity, entityWorldCoord, tex);
         } else {
             Animation<TextureRegion> runAnimation = animationManager.getAnimation(animationName);
