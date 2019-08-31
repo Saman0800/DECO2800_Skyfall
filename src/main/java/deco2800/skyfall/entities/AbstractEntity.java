@@ -421,13 +421,19 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
     /**
-     * Gets tge default direction texture
+     * Gets the default direction texture
      * @return Texture name of the direction texture
      */
     public String getDefaultTexture() {
         return defaultDirectionTextures.getOrDefault(getCurrentDirection(), "Not Found");
     }
 
+
+    /**
+     * How much to scale the texture by.
+     * Used in MainCharacter to scale down the texture
+     * @return Scale multiplicative factor.
+     */
     public float getScale() {
         return scale;
     }
