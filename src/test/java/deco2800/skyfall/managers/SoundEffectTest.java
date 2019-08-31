@@ -45,7 +45,6 @@ public class SoundEffectTest {
         s.playSound("stoneWalk");
     }
 
-
     /**
      *  Tests sounds loaded correctly from constructor. All sounds are loaded
      *  the same way, so tests the first.
@@ -87,23 +86,14 @@ public class SoundEffectTest {
     }
 
     @Test
-    public void playSoundEffect() {
-        try {
-            sound.playSound("people_walk_normal");
+    public void testPause() {
+        try{
+            SoundManager.playSound("people_walk_normal");
             TimeUnit.SECONDS.sleep(1);
-        } catch (Exception e) {
-            //exception caught
-        }
-    }
-
-    @Test
-    public void stopSoundEffect() {
-        try {
-            sound.playSound("people_walk_normal");
-            TimeUnit.SECONDS.sleep(1);
-            assertEquals(sound.stopSound("people_walk_normal"), true);
-        } catch (Exception e) {
-            //exception caught
+            SoundManager.pauseSound("people_walk_normal");
+            assertEquals(SoundManager.playSound("people_walk_normal"), false);
+        } catch (Exception e){
+            // exception caught
         }
     }
     
