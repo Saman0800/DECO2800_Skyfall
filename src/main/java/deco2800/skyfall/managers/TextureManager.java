@@ -148,10 +148,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("big_circle", new Texture("resources/OrangeCircle.png"));
             textureMap.put("inner_circle", new Texture("resources/RedCircle.png"));
 
-            Texture banner = new Texture("resources/inventory_banner.png");
-            banner.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Nearest);
-            textureMap.put("inventory_banner", banner);
 
+            textureMap.put("inventory_banner", new Texture("resources/inventory_banner.png"));
             textureMap.put("Stone", new Texture("resources/temp_stone.png"));
             textureMap.put("Wood", new Texture("resources/temp_wood.png"));
             textureMap.put("menu_panel", new Texture("resources/menu_panel.png"));

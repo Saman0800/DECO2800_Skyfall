@@ -29,9 +29,16 @@ public class GameMenuScreen {
     private HealthCircle healthCircle;
     private MainCharacter mainCharacter;
 
+    //Inventory Manager instance in game
     private InventoryManager inventory;
+
+    //Table in inventory popup containing resource icons
     private Table resourcePanel;
+
+    //Table in hot bar containing quick access resources
     private Table quickAccessPanel;
+
+    //Inventory pop up
     private PopUpTable inventoryTable;
 
     public GameMenuScreen(GameMenuManager gameMenuManager) {
@@ -245,6 +252,10 @@ public class GameMenuScreen {
         table.row().padTop(15);
     }
 
+    /***
+     * Updates and returns current state of the inventory table.
+     * @return inventoryTable
+     */
     private PopUpTable getInventoryTable() {
         if (inventoryTable == null) {
             setInventoryTable();
@@ -259,6 +270,9 @@ public class GameMenuScreen {
         return inventoryTable;
     }
 
+    /***
+     * Sets all images and buttons in the inventory table.
+     */
     private void setInventoryTable() {
         PopUpTable inventoryTable = new PopUpTable(910, 510, "i");
         inventoryTable.setName("inventoryTable");
@@ -282,7 +296,9 @@ public class GameMenuScreen {
         this.inventoryTable = inventoryTable;
     }
 
-
+    /***
+     * Updates the resources panel to display the current inventory contents.
+     */
     private void updateResourcePanel(){
         resourcePanel = new Table();
         resourcePanel.setName("resourcePanel");
@@ -319,6 +335,9 @@ public class GameMenuScreen {
 
     }
 
+    /***
+     * Sets the quick access panel and inventory button displayed on the game's hot bar.
+     */
     private void setQuickAccessPanel(){
         //Set Quick Access Panel
         quickAccessPanel = new Table();
@@ -348,6 +367,10 @@ public class GameMenuScreen {
         });
     }
 
+    /***
+     * Updates the quick access inventory display to show the current contents
+     * of the quick access inventory.
+     */
     private void updateQuickAccess(){
         Map<String, Integer> quickAccess = gameMenuManager.getInventory().getQuickAccess();
 
