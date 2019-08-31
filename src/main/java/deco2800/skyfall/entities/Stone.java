@@ -9,21 +9,41 @@ import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 
 public class Stone extends EnemyEntity implements Animatable {
-    private static final transient int HEALTH = 5;
+    private static final transient int HEALTH = 30;
+
+    //the speed in normal situation
     private static final transient float NORMALSPEED = 0.01f;
+
+    //the movement speed in angry situation
     private static final transient float ARGRYSPEED = 0.03f;
+
+    //combat range
     private static final transient float ATTACK_RANGE = 3f;
+
+    //frequency of attack
     private static final transient int ATTACK_FREQUENCY = 50;
     private static final transient String BIOME = "forest";
     private boolean moving = false;
     private float originalCol;
     private float orriginalRow;
     private Direction movingDirection;
-    private boolean moved = false;
+
     private static final transient String ENEMY_TYPE = "stone";
     private boolean attacking=false;
     private MainCharacter mc;
 
+    //if the enemy is attacked by player or the player closed enough to the enemy
+    //than the enemy my will be in angry situation
+    private int angerTimeAccount=0;
+
+    //a routine for destination
+    private HexVector destination=null;
+
+    //target position
+    private float[] targetPosition=null;
+
+    //world coordinate of this enemy
+    private float[] orginalPosition = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
 
 
     public Stone(float col, float row, MainCharacter mc) {
@@ -49,33 +69,27 @@ public class Stone extends EnemyEntity implements Animatable {
     }
 
 
+    /**
+     * get enemy type
+     * @return enemy type
+     */
     public String getEnemyType() {
         return ENEMY_TYPE;
     }
 
-    /**
-     * To determine whether this enemy can move
-     *
-     * @return boolean value moving
-     */
-    public boolean getMoving() {
-        return moving;
-    }
 
     public String getBiome() {
         return BIOME;
     }
 
-    int period = 0;
-
-
-
-    private int angerTimeAccount=0;
+    // to account attack time
+    private int period = 0;
     /**
      * Handles tick based stuff, e.g. movement
      */
     @Override
     public void onTick(long i) {
+        this.setCollider();
         if(!attacking){
             randomMoving();
             movingDirection=movementDirection(this.position.getAngle());
@@ -119,9 +133,9 @@ public class Stone extends EnemyEntity implements Animatable {
         this.attacking = attacking;
     }
 
-    HexVector destination=null;
-    float[] targetPosition=null;
-    float[] orginalPosition = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
+    /**
+     * under normal situation the enemy will random wandering in 100 radius circle
+     */
     private void randomMoving() {
         if(moving==false){
             targetPosition =new float[2];
@@ -137,6 +151,11 @@ public class Stone extends EnemyEntity implements Animatable {
         this.position.moveToward(destination,this.getSpeed());
 
     }
+
+    /**
+     * if the player is close enough then the enemy will attack player
+     * @param player Main character
+     */
     public void attackPlayer(MainCharacter player){
         this.setSpeed(ARGRYSPEED);
         destination=new HexVector(player.getCol(),player.getRow());
@@ -153,6 +172,11 @@ public class Stone extends EnemyEntity implements Animatable {
         }
     }
 
+    /**
+     * get movement direction
+     * @param angle the angle between to tile
+     * @return direction
+     */
     public Direction movementDirection(double angle){
         angle=Math.toDegrees(angle-Math.PI);
         if (angle<0){
@@ -188,7 +212,12 @@ public class Stone extends EnemyEntity implements Animatable {
         return movingDirection;
     }
 
+    //to count dead time
     int time=0;
+
+    /**
+     * if this enemy is dead then will show dead texture for a while
+     */
     private void stoneDead(){
         this.moving=true;
         this.destination=new HexVector(this.getCol(),this.getRow());
@@ -205,7 +234,9 @@ public class Stone extends EnemyEntity implements Animatable {
     }
 
 
-
+    /**
+     * add stone animations
+     */
     @Override
     public void configureAnimations() {
         this.addAnimations(
