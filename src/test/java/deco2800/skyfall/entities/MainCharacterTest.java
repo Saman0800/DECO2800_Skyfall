@@ -26,10 +26,10 @@ public class MainCharacterTest {
     private Rock testRock;
     private Tile testTile;
 
-
-
-    // MainCharacter being used for testing
     @Before
+    /**
+     * Sets up all variables to be used for testing
+     */
     public void setup() {
         testCharacter = new MainCharacter(0f, 0f,
                 0.05f, "Main Piece", 10);
@@ -47,10 +47,16 @@ public class MainCharacterTest {
         testTile = new Tile(0f,0f);
         testTree = new Tree(testTile,true);
         testRock = new Rock(testTile,true);
-
-
-
     }
+
+    @After
+    /**
+     * Sets up all variables to be null after esting
+     */
+    public void tearDown() {
+        testCharacter = null;
+    }
+
     @Test
     /**
      * Test getters and setters from Peon super Character class
@@ -116,19 +122,19 @@ public class MainCharacterTest {
      * Test main character is interacting correctly with basic inventory action
      */
     public void inventoryTest() {
-        Assert.assertEquals((int)testCharacter.inventories
+        Assert.assertEquals((int)testCharacter.getInventoryManager()
                 .getAmount("Stone"), 2);
-        Assert.assertEquals((int)testCharacter.inventories
+        Assert.assertEquals((int)testCharacter.getInventoryManager()
                 .getAmount("Wood"), 2);
         Stone stone = new Stone();
         testCharacter.pickUpInventory(stone);
-        Assert.assertEquals((int)testCharacter.inventories
+        Assert.assertEquals((int)testCharacter.getInventoryManager()
                 .getAmount("Stone"), 3);
         testCharacter.dropInventory("Stone");
-        Assert.assertEquals((int)testCharacter.inventories
+        Assert.assertEquals((int)testCharacter.getInventoryManager()
                 .getAmount("Stone"), 2);
         pickUpInventoryMultiple(stone, 500);
-        Assert.assertEquals((int)testCharacter.inventories
+        Assert.assertEquals((int)testCharacter.getInventoryManager()
                 .getAmount("Stone"), 502);
         /* Had to change inventory method inventoryDropMultiple
             -   if(amount == num)
@@ -136,9 +142,9 @@ public class MainCharacterTest {
             -   if(amount.equals(num)
             for this to work
         */
-        testCharacter.inventories
+        testCharacter.getInventoryManager()
                 .inventoryDropMultiple("Stone",502);
-        Assert.assertEquals((int)testCharacter.inventories
+        Assert.assertEquals((int)testCharacter.getInventoryManager()
                 .getAmount("Stone"), 0);
     }
 
@@ -171,18 +177,32 @@ public class MainCharacterTest {
         Assert.assertTrue(testCharacter.isStarving());
     }
 
-    //TODO: change these tests as Animation System Changes
-    //These test abstract entity methods
+    @Test
+    /**
+     * Test that the item properly switches.
+     */
+    public void switchItemTest() {
+        Assert.assertEquals(0,testCharacter.getItemSlotSelected());
+        testCharacter.switchItem(9);
+        Assert.assertEquals(2,testCharacter.getItemSlotSelected());
+        testCharacter.switchItem(10);
+        Assert.assertEquals(3,testCharacter.getItemSlotSelected());
+        testCharacter.switchItem(8);
+        Assert.assertEquals(1,testCharacter.getItemSlotSelected());
+    }
+
     /**
      * Tests movingAnimation
      */
     @Test
     public void setMovingAnimationTest() {
         testCharacter.setMovingAnimation(AnimationRole.MOVE_NORTH);
-        Assert.assertEquals(AnimationRole.MOVE_NORTH, testCharacter.getMovingAnimation());
+        Assert.assertEquals(AnimationRole.MOVE_NORTH,
+                testCharacter.getMovingAnimation());
 
         testCharacter.setMovingAnimation(AnimationRole.NULL);
-        Assert.assertEquals(AnimationRole.NULL, testCharacter.getMovingAnimation());
+        Assert.assertEquals(AnimationRole.NULL,
+                testCharacter.getMovingAnimation());
 
     }
 
@@ -191,7 +211,8 @@ public class MainCharacterTest {
      */
     @Test
     public void setAndGetAnimationTest() {
-        testCharacter.addAnimations(AnimationRole.MOVE_EAST, "right");
+        testCharacter.addAnimations(AnimationRole.MOVE_EAST,
+                "right");
         testCharacter.getAnimationName(AnimationRole.MOVE_EAST);
     }
 

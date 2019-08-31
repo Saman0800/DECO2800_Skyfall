@@ -34,10 +34,17 @@ public interface Blueprint {
     Map<String,Integer> getAllRequirements();
 
     /**
-     * to check if the player is able to access the blueprint
-     * @return true if the player is allowed to learn the blueprint.
+     * a getter method to check if a player has learned the blueprint
+     *
+     * @return true if the player has learned the blueprint.
      */
-    boolean bluePrintLearned();
+    boolean isBlueprintLearned();
+
+    /**
+     * changes the boolean blueprintLearned to true.
+     */
+    void toggleBlueprintLearned();
+
 
 
 

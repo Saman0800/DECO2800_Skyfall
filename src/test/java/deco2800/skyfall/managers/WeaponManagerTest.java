@@ -180,11 +180,11 @@ public class WeaponManagerTest {
                         "\nEquipped: sword, spear, bow.").length());
     }
 
-    //@Test
+    @Test
     /**
      * Test main character is interacting correctly with its weapon manager
      */
- /*   public void characterWeaponTest() {
+    public void characterWeaponTest() {
         Assert.assertEquals(testCharacter.getWeapons().size(), 0);
         testCharacter.pickUpWeapon(sword);
         testCharacter.pickUpWeapon(spear);
@@ -222,5 +222,5 @@ public class WeaponManagerTest {
         testCharacter.weaponEffect(axe);
         Assert.assertEquals(testCharacter.getHealth(), 0);
         Assert.assertTrue(testCharacter.isDead());
-    }*/
+    }
 }
