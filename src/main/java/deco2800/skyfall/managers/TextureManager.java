@@ -49,7 +49,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("dialogue_text_background", new Texture("resources/dialogue_text_background.png"));
             textureMap.put("main_piece", new Texture("resources" + "/Main_Character_F_Right.png"));
 
-            textureMap.put("arcane", new Texture("resources/Arcane_Effect_1.png"));
+            textureMap.put("arcane", new Texture("resources/projectile.png"));
             // Tile textures
             // Goes through all the folders with tile_textures and adds the tile name to the
             // textures, it removes
