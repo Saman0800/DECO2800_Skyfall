@@ -108,7 +108,8 @@ public class GameScreen implements Screen,KeyDownObserver {
     }
 
     /**
-     * Renderer thread Must update all displayed elements using a Renderer
+     * Renderer thread
+     * Must update all displayed elements using a Renderer
      */
     @Override
     public void render(float delta) {

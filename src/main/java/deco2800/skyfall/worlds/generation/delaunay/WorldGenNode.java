@@ -336,6 +336,14 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
                 + (this.getY() - tileCoords[1]) * (this.getY() - tileCoords[1]);
     }
 
+    /**
+     * Returns the square of the distance to the tile
+     *
+     * @param x the x-coordinate of the point to find the distance to
+     * @param y the y-coordinate of the point to find the distance to
+     *
+     * @return The square of the distance
+     */
     public double distanceTo(double x, double y) {
         return (this.getX() - x) * (this.getX() - x)
                 + (this.getY() - y) * (this.getY() - y);

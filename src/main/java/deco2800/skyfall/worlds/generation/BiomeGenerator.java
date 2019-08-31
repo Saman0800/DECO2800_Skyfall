@@ -71,8 +71,7 @@ public class BiomeGenerator {
      * @throws NotEnoughPointsException if there are not enough non-border nodes from which to form the biomes
      */
     private BiomeGenerator(List<WorldGenNode> nodes, Random random, int[] biomeSizes, List<AbstractBiome> realBiomes,
-                           int noLakes, int lakeSize)
-            throws NotEnoughPointsException {
+                           int noLakes, int lakeSize) throws NotEnoughPointsException {
         Objects.requireNonNull(nodes, "nodes must not be null");
         Objects.requireNonNull(random, "random must not be null");
         Objects.requireNonNull(biomeSizes, "biomeSizes must not be null");
@@ -103,6 +102,11 @@ public class BiomeGenerator {
         this.lakeSize = lakeSize;
     }
 
+    /**
+     * Calculates and returns the node which contains the point (0, 0).
+     *
+     * @return the node which contains (0, 0)
+     */
     private WorldGenNode calculateCenterNode() {
         // Start the first biome at the node closest to the centre.
         WorldGenNode centerNode = null;
@@ -133,8 +137,6 @@ public class BiomeGenerator {
                 nodesBiomes = new HashMap<>();
 
                 growBiomes();
-                // TODO Remove.
-                assert borderNodes.stream().allMatch(this::nodeIsBorder);
                 growOcean();
                 fillGaps();
                 generateLakes(lakeSize, noLakes);
@@ -165,7 +167,7 @@ public class BiomeGenerator {
                 biome.addNode(centerNode);
             } else {
                 // Pick a random point on the border to start the next biome from.
-                WorldGenNode node = borderNodes.get(random.nextInt(borderNodes.size()));
+                WorldGenNode node = selectWeightedRandomNode(borderNodes, random);
                 ArrayList<WorldGenNode> startNodeCandidates = node.getNeighbours().stream()
                         .filter(BiomeGenerator.this::nodeIsFree)
                         .collect(Collectors.toCollection(ArrayList::new));
@@ -378,7 +380,7 @@ public class BiomeGenerator {
                     }
                 }
 
-                // Keep the biggest cluster of tiles and mark the tile frome the other cluster to be removed.
+                // Keep the biggest cluster of tiles and mark the tile from the other cluster to be removed.
                 if (clusterTiles.size() > mainClusterTiles.size()) {
                     removedTiles.addAll(mainClusterTiles);
                     mainClusterTiles = clusterTiles;
@@ -479,6 +481,27 @@ public class BiomeGenerator {
             }
         }
         return true;
+    }
+
+    /**
+     * Selects a random node from the provided list weighted towards nodes closer to (0, 0).
+     *
+     * @param nodes  the nodes from which to select
+     * @param random the RNG used for the selection
+     *
+     * @return a random node from the provided list
+     */
+    private static WorldGenNode selectWeightedRandomNode(List<WorldGenNode> nodes, Random random) {
+        double sum = nodes.stream().mapToDouble(node -> Math.pow(0.99, node.distanceTo(0, 0))).sum();
+        double target = random.nextDouble() * sum;
+
+        for (WorldGenNode node : nodes) {
+            sum -= Math.pow(0.99, node.distanceTo(0, 0));
+            if (sum < target) {
+                return node;
+            }
+        }
+        return nodes.get(nodes.size() - 1);
     }
 
     /**
