@@ -143,8 +143,8 @@ public class BiomeGenerator {
                 fillGaps();
                 generateLakes(lakeSize, noLakes);
                 populateRealBiomes();
-                generateRivers(1, 5, random, voronoiEdges);
                 ensureContiguity();
+                generateRivers(4, 2, random, voronoiEdges);
 
                 return;
             } catch (DeadEndGenerationException e) {
@@ -311,6 +311,22 @@ public class BiomeGenerator {
         }
     }
 
+    /**
+     * Note: If the river width is not 0 there is a chance a river will terminate
+     * when meeting another river instead of passing through it. Currently this
+     * is being treated as "it's not a bug it's a feature," as it still looks normal and
+     * natural (arguably more natural than if the bug was fixed). I'm guessing
+     * the cause is that to get the biome of the adjacent nodes, it gets the
+     * biome of node.getTiles().get(0), which can be a lake if some of the tiles
+     * have already been overwritten by rivers. This method is still deterministic
+     * for a constant riverWidth
+     *
+     * @param noRivers
+     * @param riverWidth
+     * @param random
+     * @param edges
+     * @throws DeadEndGenerationException
+     */
     private void generateRivers(int noRivers, int riverWidth, Random random, List<VoronoiEdge> edges)
             throws DeadEndGenerationException {
         List<BiomeInProgress> lakes = new ArrayList<>();
@@ -327,12 +343,18 @@ public class BiomeGenerator {
         for (int i = 0; i < noRivers; i++) {
             // Choose a random lake
             BiomeInProgress chosenLake = lakes.get(random.nextInt(lakes.size()));
+
             // Which node is added to the lake first is already random, so choose
             // the first one found
             VoronoiEdge startingEdge = null;
             double[] startingVertex = null;
-            for (WorldGenNode node : chosenLake.nodes) {
-                // A river cannot start from the middle of a lake
+            int attempts = 0;
+            while (true) {
+                if (attempts > chosenLake.nodes.size() * 2) {
+                    throw new DeadEndGenerationException();
+                }
+                WorldGenNode node = chosenLake.nodes.get(random.nextInt(chosenLake.nodes.size()));
+                attempts++;
                 if (!hasNeighbourOfDifferentBiome(node, chosenLake)) {
                     continue;
                 }
@@ -346,23 +368,68 @@ public class BiomeGenerator {
                 } else {
                     startingVertex = startingEdge.getB();
                 }
+                break;
             }
-            if (startingEdge == null) {
-                throw new DeadEndGenerationException();
-            }
+
             // TODO provide parameter for maxTimesOnNode
             List<VoronoiEdge> riverEdges = VoronoiEdge.generatePath(edges, startingEdge, startingVertex, random, 2);
+
             AbstractBiome river = new LakeBiome(realBiomes.get(0));
+            List<Tile> riverTiles = new ArrayList<>();
             for (VoronoiEdge riverEdge : riverEdges) {
-                //System.out.println(riverEdge.getA()[0] + " " + riverEdge.getA()[1] + " " + riverEdge.getB()[0] + " " + riverEdge.getB()[1]);
-                //riverTiles.addAll(riverEdge.getTiles());
-                //System.out.println(riverEdge.getTiles().size());
-                for (Tile tile : riverEdge.getTiles()) {
-                    //System.out.println(tile.getCol() + " " + tile.getRow());
-                    //tile.setTexture("water_4");
-                    river.addTile(tile);
-                }
+                riverTiles.addAll(riverEdge.getTiles());
             }
+
+            // This commented out code is an unsuccessful attempt to add noise
+            // to the rivers (it would replace the for loop after this)
+            /*
+            int expandCount = 0;
+            double expValue = Math.exp(riverWidth);
+            double scaleFactor = expValue / (expValue - 2);
+            while (true) {
+
+                double expValue2 = Math.exp(riverWidth - expandCount);
+                double expandProbability = expValue2 / (scaleFactor + expValue2) * (expValue + scaleFactor) / expValue;
+
+                List<Tile> newTiles = new ArrayList<>();
+                for (Tile tile : riverTiles) {
+                    for (Integer neighbourID : tile.getNeighbours().keySet()) {
+                        Tile neighbour = tile.getNeighbours().get(neighbourID);
+                        if (!neighbour.getBiome().getBiomeName().equals("ocean") &&
+                                !neighbour.getBiome().getBiomeName().equals("lake") &&
+                                !riverTiles.contains(neighbour) && random.nextDouble() < expandProbability) {
+                            newTiles.add(neighbour);
+                        }
+                    }
+                }
+                if (newTiles.size() == 0) {
+                    break;
+                }
+                riverTiles.addAll(newTiles);
+                expandCount++;
+            }
+            */
+
+            for (int j = 0; j < riverWidth; j++) {
+                List<Tile> newTiles = new ArrayList<>();
+                for (Tile tile : riverTiles) {
+                    for (Integer neighbourID : tile.getNeighbours().keySet()) {
+                        Tile neighbour = tile.getNeighbours().get(neighbourID);
+                        if (!neighbour.getBiome().getBiomeName().equals("ocean") &&
+                                !neighbour.getBiome().getBiomeName().equals("lake") &&
+                                !riverTiles.contains(neighbour)) {
+                            newTiles.add(neighbour);
+                        }
+                    }
+                }
+                riverTiles.addAll(newTiles);
+            }
+
+
+            for (Tile tile : riverTiles) {
+                river.addTile(tile);
+            }
+
             realBiomes.add(river);
         }
     }

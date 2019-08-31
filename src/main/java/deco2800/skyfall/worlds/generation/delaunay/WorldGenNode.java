@@ -190,6 +190,9 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
 
                     // Find the end nodes of the edge (it is arbitrary which
                     // edge node is used for this
+                    // TODO move this in to a separate method for after all
+                    // TODO node neighbours have been assigned
+                    /*
                     for (WorldGenNode neighbour : nodes.get(i).getNeighbours()) {
                         // Don't add the other edge node as an end node
                         if (neighbour == nodes.get(j)) {
@@ -202,7 +205,8 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
                                 break;
                             }
                         }
-                    }
+                    }*/
+
                 }
             }
         }

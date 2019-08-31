@@ -9,21 +9,36 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * A class to represent an edge of a polygon in a Voronoi Diagram
+ */
 public class VoronoiEdge {
 
     // The coordinates of the two endpoints of the edge
     private double[] pointA;
     private double[] pointB;
 
+    // The edges that share the respective vertex
     private List<VoronoiEdge> pointANeighbours;
     private List<VoronoiEdge> pointBNeighbours;
 
+    // The nodes on either side of the edge (ie they share 2 vertices with the
+    // line)
     private List<WorldGenNode> edgeNodes;
+
+    // The nodes on the end points of the line (ie they share 1 vertex with the
+    // line)
     private List<WorldGenNode> endNodes;
 
     // The tiles that this edge passes through
     private List<Tile> tiles;
 
+    /**
+     * Constructor for a VoronoiEdge
+     *
+     * @param pointA The first vertex of the edge
+     * @param pointB The second vertex of the edge
+     */
     public VoronoiEdge(double[] pointA, double[] pointB) {
         this.pointA = pointA;
         this.pointB = pointB;
@@ -65,6 +80,10 @@ public class VoronoiEdge {
         List<VoronoiEdge> path = new ArrayList<>();
         List<List<WorldGenNode>> previousNodes = new ArrayList<>(maxTimesOnNode);
         double[] vertex = startVertex;
+
+        path.add(edge);
+        previousNodes.add(edge.getEdgeNodes());
+
         while (true) {
             double[] other = edge.otherVertex(vertex);
             boolean validNeighbour = false;
@@ -80,6 +99,7 @@ public class VoronoiEdge {
                     tempEdges.remove(neighbour);
                     continue;
                 }
+
                 path.add(neighbour);
 
                 if (path.size() == 1) {
@@ -114,6 +134,16 @@ public class VoronoiEdge {
                             return path;
                         }
                     }
+                    for (WorldGenNode node : neighbour.edgeNodes) {
+                        if (node == null) {
+                            return path;
+                        }
+                        String biomeName = node.getTiles().get(0).getBiome().getBiomeName();
+                        // If the new edge ends with the ocean or a lake
+                        if (biomeName.equals("ocean") || biomeName.equals("lake")) {
+                            return path;
+                        }
+                    }
                 }
 
                 validNeighbour = true;
@@ -135,7 +165,7 @@ public class VoronoiEdge {
         // between them is 1/3.
         final double MIN_SQUARE_DISTANCE = 1f / 3f;
         final double MIN_DISTANCE = Math.sqrt(MIN_SQUARE_DISTANCE);
-        // TODO make this more efficient (e.g. by sorting tiles first
+        // TODO make this more efficient (e.g. by sorting tiles first)
         for (Tile tile : tiles) {
             for (VoronoiEdge edge : edges) {
                 // If the edge is horizontal
@@ -170,10 +200,6 @@ public class VoronoiEdge {
         }
     }
 
-    public List<Tile> getIntersectingTiles() {
-        return null;
-    }
-
     /**
      * Gets the edged that are adjacent to this edge via the given vertex
      * @param vertex
@@ -192,6 +218,24 @@ public class VoronoiEdge {
     public static void assignNeighbours(List<VoronoiEdge> edges) {
         // TODO find a way to do this while assigning node neighbours
         for (int i = 0; i < edges.size(); i++) {
+
+            // Choose an arbitrary edge node
+            WorldGenNode node = edges.get(i).getEdgeNodes().get(0);
+            // Assign the end nodes of the edge
+            for (WorldGenNode neighbour : node.getNeighbours()) {
+                // Don't add the other edge node as an end node
+                if (edges.get(i).getEdgeNodes().contains(neighbour)) {
+                    continue;
+                }
+
+                for (double[] nodeVertex : neighbour.getVertices()) {
+                    if (Arrays.equals(edges.get(i).getA(), nodeVertex) || Arrays.equals(edges.get(i).getB(), nodeVertex)) {
+                        edges.get(i).addEndNode(neighbour);
+                        break;
+                    }
+                }
+            }
+
             for (int j = i + 1; j < edges.size(); j++) {
                 VoronoiEdge edgeA = edges.get(i);
                 VoronoiEdge edgeB = edges.get(j);
