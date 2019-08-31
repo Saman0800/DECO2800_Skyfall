@@ -6,6 +6,8 @@ import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.Harvestable;
 import deco2800.skyfall.entities.Tree;
 import deco2800.skyfall.entities.Rock;
+import deco2800.skyfall.entities.LongGrass;
+import deco2800.skyfall.entities.EntitySpawnRule;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
@@ -27,7 +29,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
     long entitySeed;
 
-    public RocketWorld(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int lakeSize ) {
+    public RocketWorld(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int lakeSize) {
         super(seed, worldSize, nodeSpacing, biomeSizes, numOfLakes, lakeSize);
     }
 
@@ -35,8 +37,8 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
     protected void generateWorld(Random random) {
         this.entitySeed = random.nextLong();
 
-
-        // World generation loop: restarts world generation if it reaches an unresolvable layout
+        // World generation loop: restarts world generation if it reaches an
+        // unresolvable layout
         while (true) {
             ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
             ArrayList<Tile> tiles = new ArrayList<>();
@@ -64,12 +66,13 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
             for (int q = -worldSize; q <= worldSize; q++) {
                 for (int r = -worldSize; r <= worldSize; r++) {
-                    //if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= worldSize) {
-                        float oddCol = (q % 2 != 0 ? 0.5f : 0);
+                    // if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <=
+                    // worldSize) {
+                    float oddCol = (q % 2 != 0 ? 0.5f : 0);
 
-                        Tile tile = new Tile(q, r + oddCol);
-                        tiles.add(tile);
-                    //}
+                    Tile tile = new Tile(q, r + oddCol);
+                    tiles.add(tile);
+                    // }
                 }
             }
             // TODO Fix this.
@@ -97,28 +100,61 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             this.tiles.addAll(tiles);
             this.biomes.addAll(biomes);
 
-
             break;
         }
 
         // Create the entities in the game
-//        player = new PlayerPeon(0f, 0f, 0.05f);
-//        addEntity(player);
+        // player = new PlayerPeon(0f, 0f, 0.05f);
+        // addEntity(player);
 
-        GameManager.getManagerFromInstance(InputManager.class)
-                .addTouchDownListener(this);
+        // Generate items that will be present on game start up
+        generateStartEntities(this);
 
         // MainCharacter is now being put into the game instead of PlayerPeon
         MainCharacter testCharacter = new MainCharacter(0f, 0f, 0.05f, "Main Piece", 10);
         addEntity(testCharacter);
 
-        EnemyEntity spider=new Spider(-4f,1f);
+        EnemyEntity spider=new Spider(-4f,1f, testCharacter);
         addEntity(spider);
-        EnemyEntity robot=new Robot(-4f,-2f);
+        EnemyEntity robot=new Robot(-4f,-2f, testCharacter);
         addEntity(robot);
-        EnemyEntity stone=new Stone(-6f,1f);
+        EnemyEntity stone=new Stone(-6f,1f,testCharacter);
         addEntity(stone);
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
+    }
+
+    protected void generateStartEntities(AbstractWorld world) {
+
+        Tile tileRock = getTile(0.0f, 1.0f);
+        Rock startRock = new Rock(tileRock, true);
+        Tree startTree = new Tree(tileRock, true);
+        LongGrass startGrass = new LongGrass(tileRock, true);
+
+        for (AbstractBiome biome : this.getBiomes()) {
+
+            switch (biome.getBiomeName()) {
+            case "forest":
+
+                // Create a new perlin noise map
+                SpawnControl pieceWise = x -> {
+                    if ((0 < x) && (x <= 0.5)) {
+                        return 0;
+                    } else if ((0.5 < x) && (x <= 0.8)) {
+                        return 0.05;
+                    } else {
+                        return 0.4;
+                    }
+                };
+
+                // Create a new perlin noise map
+                SpawnControl cubic = x -> {
+                    return x * x * x;
+                };
+
+                EntitySpawnRule treeRule = new EntitySpawnRule(biome, true, cubic);
+                EntitySpawnTable.spawnEntities(startTree, treeRule, world);
+            }
+        }
     }
 
     @Override
@@ -126,20 +162,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         super.onTick(i);
 
         if (!generated) {
-            Random random = new Random(entitySeed);
-
-            Tile tile = getTile(1f, 2.5f);
-            addEntity(new Tree(tile, true));
-
             generated = true;
-
-            Tile tileRock = getTile(0.0f, 1.0f);
-            Rock startRock = new Rock(tileRock, true);
-
-            for (AbstractBiome biome : biomes) {
-                EntitySpawnTable rockSpawnRule = new EntitySpawnTable();
-                // EntitySpawnTable.spawnEntities(startRock, 0.2, biome, random);
-            }
         }
     }
 
