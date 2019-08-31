@@ -33,6 +33,8 @@ public class Renderer3D implements Renderer {
     @SuppressWarnings("unused")
     private final Logger logger = LoggerFactory.getLogger(Renderer3D.class);
 
+    SoundManager sound = new SoundManager();
+
     BitmapFont font;
 
     // mouse cursor
@@ -237,11 +239,15 @@ public class Renderer3D implements Renderer {
 
                 renderAnimation(batch, camera, animationManager.getAnimation("spider_defence"), tileWorldCord[0],
                         tileWorldCord[1]);
+                //TODO: Start spider sounds within the range
+                sound.loopSound("spider");
             } else {
                 // draw spider texture when distance greater than 2
                 Texture spiderTexture = textureManager.getTexture(spider.getTexture());
                 float[] spiderCoord = WorldUtil.colRowToWorldCords(spider.getCol(), spider.getRow());
                 renderAbstractEntity(batch, spider, spiderCoord, spiderTexture);
+                //TODO: Stop spider sounds out of the limited range
+                sound.stopSound("spider");
             }
         }
 
