@@ -97,6 +97,7 @@ public class SoundEffectTest {
         }
     }
 
+    /*
     @Test
     public void playSoundEffect() {
         try {
@@ -118,5 +119,7 @@ public class SoundEffectTest {
             //exception caught
         }
     }
+
+     */
     
 }
