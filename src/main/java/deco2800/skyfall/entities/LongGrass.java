@@ -1,18 +1,22 @@
 package deco2800.skyfall.entities;
 
 import deco2800.skyfall.worlds.Tile;
+import java.util.Random;
 
 public class LongGrass extends StaticEntity {
 
     private static final String ENTITY_ID_STRING = "long_grass";
+    private static Random randomGen = new Random();
+    private static int nextRock = 1;
 
     public LongGrass() {
         this.setObjectName(ENTITY_ID_STRING);
     }
 
     public LongGrass(Tile tile, boolean obstructed) {
-        super(tile, 2, "long_grass", obstructed);
+        super(tile, 2, "bush" + nextRock, obstructed);
         this.setObjectName(ENTITY_ID_STRING);
+        nextRock = randomGen.nextInt(3) + 1;
     }
 
     @Override

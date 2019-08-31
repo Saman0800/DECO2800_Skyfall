@@ -14,8 +14,8 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
     //The level of Enemy
     private int level;
 
-    //movement speed
-    private int moveSpeed;
+
+    private boolean isAttacked=false;
 
     //A list of status indicators the enemy has.
     //Stun, sleep, paralyze... etc.
@@ -42,6 +42,7 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
 
     public void onTick(long i) {
         this.updateCollider();
+
         if (task != null && task.isAlive()) {
             task.onTick(i);
 
@@ -115,6 +116,10 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
         return this.damage;
     }
 
+    public void setDamage(int damage){
+        this.damage=damage;
+    }
+
     /**
      * Damage taken
      * @param damage hero danage
@@ -122,6 +127,12 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
     public void takeDamage(int damage) {
         //TODO: perform damage calculation factoring in status indicators, armour and resistance attributes.
         this.health -= damage;
+        System.out.println("Enemy took " + damage + " damage.");
+        System.out.println("Enemy has " + this.health + " health remaining.");
+        //If the health of this enemy is <= 0, remove it from the game world.
+        if (this.health <= 0) {
+            this.destroy();
+        }
     }
 
     /**
@@ -157,21 +168,12 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
     }
 
 
-    /**
-     * To get enemy movement speed
-     * @return
-     */
-    @Override
-    public float getSpeed() {
-        return moveSpeed;
+    public boolean isAttacked() {
+        return isAttacked;
     }
 
-    /**
-     * To set enemy movement speed
-     * @param speed the enemy movement speed
-     */
-    public void setSpeed(int speed) {
-        this.moveSpeed = speed;
+    public void setAttacked(boolean attacked) {
+        isAttacked = attacked;
     }
 
     /**
@@ -183,5 +185,15 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
     }
 
 
+
+
+
+    /**
+     * Remove this enemy from the game world.
+     */
+    private void destroy() {
+        this.setDead(true);
+        System.out.println("Enemy destroyed.");
+    }
 
 }
