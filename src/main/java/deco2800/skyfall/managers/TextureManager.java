@@ -49,7 +49,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("main_piece", new Texture("resources" +
                     "/Main_Character_F_Right.png"));
             textureMap.put("slash", new Texture("resources/slash_long.png"));
-
+            textureMap.put("arcane",new Texture("resources/Arcane_Effect_1.png"));
             //Tile textures
             textureMap.put("grass_0", new Texture("resources/tile_textures/grass_0.png"));
             textureMap.put("grass_1", new Texture("resources/tile_textures/grass_1.png"));
@@ -176,14 +176,14 @@ public class TextureManager extends AbstractManager {
         if (textureMap.containsKey(id)) {
             return textureMap.get(id);
         } else if (id.startsWith("__ANIMATION_")) {
-            System.out.println("Getting animation texture");
+//            System.out.println("Getting animation texture");
             AnimationManager animationManager = GameManager.getManagerFromInstance(AnimationManager.class);
             Texture texture = this.getTextureFromAnimation(id, animationManager);
 
             if (texture != null) {
                 return texture;
             } else {
-                System.out.println("Texture animation could not be found");
+//                System.out.println("Texture animation could not be found");
                 return textureMap.get("spacman_ded");
             }
 

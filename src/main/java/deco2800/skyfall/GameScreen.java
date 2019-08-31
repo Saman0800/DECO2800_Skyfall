@@ -16,7 +16,6 @@ import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.renderers.OverlayRenderer;
 import deco2800.skyfall.renderers.Renderer3D;
 import deco2800.skyfall.worlds.*;
-import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.managers.EnvironmentManager;
 
 import org.slf4j.Logger;
@@ -47,11 +46,6 @@ public class GameScreen implements Screen,KeyDownObserver {
 	private Stage stage = new Stage(new ExtendViewport(1280, 720));
 
 	long lastGameTick = 0;
-
-	/**
-	 * Create an EnvironmentManager for ToD.
-	 */
-	EnvironmentManager timeOfDay;
 
 	public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
 		/* Create an example world for the engine */
@@ -86,13 +80,11 @@ public class GameScreen implements Screen,KeyDownObserver {
 		/* Add inventory to game manager */
 		gameManager.addManager(new InventoryManager());
 
-		/* Play BGM */
-		try {
-			SoundManager.backgroundGameMusic("resources/sounds/forest_day.wav");
-			SoundManager.play();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		/* Add environment to game manager */
+		gameManager.addManager(new EnvironmentManager());
+
+		/* Add BGM to game manager */
+		gameManager.addManager(new BGMManager());
 
         new GameMenuManager().show(stage);
 
@@ -146,8 +138,8 @@ public class GameScreen implements Screen,KeyDownObserver {
 		if (System.currentTimeMillis() - lastGameTick > 20) {
 			lastGameTick = System.currentTimeMillis();
 			GameManager.get().onTick(0);
-			timeOfDay = new EnvironmentManager(lastGameTick);
 		}
+
 	}
 
 	/**

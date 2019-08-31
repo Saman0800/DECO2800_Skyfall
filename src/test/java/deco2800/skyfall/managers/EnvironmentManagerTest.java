@@ -10,19 +10,19 @@ import static org.junit.Assert.*;
 public class EnvironmentManagerTest {
 
     //Test manager
-    EnvironmentManager manager = new EnvironmentManager(0);
+    EnvironmentManager manager = new EnvironmentManager();
 
     @Test
-    public void setTime() {
-        manager.setTime(12);
-        assertEquals(12, manager.getTime());
+    public void setTimeTest() {
+        manager.setTime(100000);
+        assertEquals(1, manager.getTime());
     }
 
     @Test
-    public void isDay() {
-        manager.setTime(4);
+    public void isDayTest() {
+        manager.setTime(100000);
         assertTrue(manager.isDay());
-        manager.setTime(15);
+        manager.setTime(1000000);
         assertFalse(manager.isDay());
     }
 }

@@ -45,7 +45,7 @@ public class BiomeGenerator {
      */
 
     public static void generateBiomes(List<WorldGenNode> nodes, Random random, int[] biomeSizes,
-                                         List<AbstractBiome> biomes) throws NotEnoughPointsException {
+                                      List<AbstractBiome> biomes) throws NotEnoughPointsException {
         BiomeGenerator biomeGenerator = new BiomeGenerator(nodes, random, biomeSizes, biomes);
         biomeGenerator.generateBiomesInternal();
     }
@@ -139,11 +139,10 @@ public class BiomeGenerator {
                         centerNode = node;
                     }
                 }
-
-                if (centerNode != null) {
-                    biome.addNode(centerNode);
-                }
-
+                // `centerNode` should never be null by this point, but in case it is, it's better to throw an exception
+                // here. (Definitely don't wrap this in an if statement, as this may just put the code into an infinite
+                // loop instead of providing meaningful feedback.)
+                biome.addNode(Objects.requireNonNull(centerNode));
             } else {
                 // Pick a random point on the border to start the next biome from.
                 WorldGenNode node = borderNodes.get(random.nextInt(borderNodes.size()));
