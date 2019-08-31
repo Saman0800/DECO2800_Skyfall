@@ -1,5 +1,6 @@
 package deco2800.skyfall.managers;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import javax.sound.sampled.*;
@@ -13,7 +14,7 @@ public class BGMManagerTest {
 
     String file = "resources/sounds/Forest Day.wav";
 
-    BGMManager bgmManager = new BGMManager();
+    BGMManager bgmManager = new BGMManager(); // Don't think this is necessary, can simply call BGMManager.x
 
     @Test
     public void exceptionTest() throws UnsupportedAudioFileException,
@@ -173,12 +174,12 @@ public class BGMManagerTest {
     public void stopBGMTest() throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
         try {
-            bgmManager.initClip(file);
-            bgmManager.play();
-            bgmManager.stop();
-            assertFalse(bgmManager.getClip().isRunning());
+            BGMManager.initClip(file);
+            BGMManager.play();
+            BGMManager.stop();
+            assertFalse(BGMManager.getClip().isRunning());
         } catch (Exception e) {
-            //exception caught
+            // Exception caught
         }
     }
 }

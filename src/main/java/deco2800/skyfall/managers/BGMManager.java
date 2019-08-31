@@ -164,7 +164,6 @@ public class BGMManager extends AbstractManager {
             if (!(x > volume.getMaximum()) && !(x < volume.getMinimum())) {
                 volume.setValue(x);
             } else {
-                System.out.println("Value is too high/low. Pls don't.");
                 throw new IndexOutOfBoundsException();
             }
         } catch (NullPointerException | IllegalArgumentException ex) { }
