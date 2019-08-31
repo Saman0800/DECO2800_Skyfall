@@ -50,7 +50,6 @@ public class ConstructionManager extends AbstractManager {
         buildingFactory = new BuildingFactory();
 
         // testing requirements, removed later
-        GameManager.get().setSkin(new Skin(Gdx.files.internal("asserts/skin_for_test/uiskin.json")));
         GameManager.get().getWorld().addEntity(buildingFactory.createHouse(2f, 1f));
     }
 

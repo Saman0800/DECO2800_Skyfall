@@ -49,6 +49,9 @@ public class BuildingWidgets implements TouchDownObserver {
         this.skin = GameManager.get().getSkin();
         this.world = GameManager.get().getWorld();
 
+        // using a skin for test, removed it later
+        this.skin = new Skin(Gdx.files.internal("asserts/skin_for_test/uiskin.json"));
+
         this.menu = new Table();
         this.label = new Label("Name", this.skin);
         this.updateBtn = new TextButton("Update", this.skin);
@@ -56,7 +59,6 @@ public class BuildingWidgets implements TouchDownObserver {
 
         this.menu.setVisible(false);
         this.menu.align(Align.left|Align.top);
-
         this.menu.add(label).padBottom(3);
         this.menu.row();
         this.menu.add(updateBtn).padBottom(3);
@@ -90,8 +92,8 @@ public class BuildingWidgets implements TouchDownObserver {
     private void setWidgets(BuildingEntity building) {
         float[] wCords = WorldUtil.colRowToWorldCords(building.getCol(), building.getRow());
         this.label.setText(building.getTexture());
-        this.menu.setPosition(wCords[0] + (float)Gdx.graphics.getWidth()/2,
-                wCords[1] + (float)Gdx.graphics.getHeight()/2);
+        this.menu.setPosition(this.stage.getWidth()/2 + wCords[0] - GameManager.get().getCamera().position.x,
+                this.stage.getHeight()/2 + wCords[1] - GameManager.get().getCamera().position.y);
         this.updateBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -130,6 +132,9 @@ public class BuildingWidgets implements TouchDownObserver {
             return;
         }
 
+        // hide the building widget initially
+        this.menu.setVisible(false);
+
         for (AbstractEntity entity : this.world.getEntities()) {
             if (!tile.getCoordinates().equals(entity.getPosition())) {
                 continue;
@@ -140,8 +145,6 @@ public class BuildingWidgets implements TouchDownObserver {
                 this.menu.setVisible(true);
                 break;
             }
-            // hide the building widget if entity is not a building
-            this.menu.setVisible(false);
         }
     }
 }
