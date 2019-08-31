@@ -510,20 +510,20 @@ public class BiomeGenerator {
      */
     private class BiomeInProgress {
         /** The ID of the biome. */
-        int id;
+        private int id;
 
         /** The nodes contained within this biome. */
-        ArrayList<WorldGenNode> nodes;
+        private ArrayList<WorldGenNode> nodes;
 
         /** The nodes on the border of the biome (for growing). */
-        ArrayList<WorldGenNode> borderNodes;
+        private ArrayList<WorldGenNode> borderNodes;
 
         /**
          * Constructs a new {@code BiomeInProgress} with the specified id.
          *
          * @param id the id of the biome (to check the biome size)
          */
-        BiomeInProgress(int id) {
+        private BiomeInProgress(int id) {
             this.id = id;
 
             nodes = new ArrayList<>();
@@ -535,7 +535,7 @@ public class BiomeGenerator {
          *
          * @throws DeadEndGenerationException if a biome which needs to grow has no border nodes
          */
-        void growBiome() throws DeadEndGenerationException {
+        private void growBiome() throws DeadEndGenerationException {
             for (int remainingNodes = biomeSizes[id] - nodes.size(); remainingNodes > 0; remainingNodes--) {
                 if (borderNodes.isEmpty()) {
                     throw new DeadEndGenerationException();
@@ -557,7 +557,7 @@ public class BiomeGenerator {
         /**
          * Expands a biome to fill all contiguous nodes that are not already used.
          */
-        void floodGrowBiome() {
+        private void floodGrowBiome() {
             while (!borderNodes.isEmpty()) {
                 // It doesn't matter which node is grown from.
                 WorldGenNode growFrom = borderNodes.get(0);
