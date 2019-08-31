@@ -20,35 +20,22 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
     // the co-ordinates of the tile the item has been placed on
     private HexVector position;
 
-    //How many amount of healing power could be recovered
-    //private Integer AmountOfHealingPower;
-
-    //How many amount of healing will be deducted if have a poison
-    //private Integer HealingDeducted;
-
-
-    //if and only if the items deduct the HP of player
-    //private Boolean notHealingPower;
-
     //Items could change or not e.g. coins, items
     private Boolean exchangeable;
 
     public int foodValue;
     public int healthValue;
 
-    //TODO: look into public int healthValue;
 
 
 
     public HealthResources(){
-        //Added this default constructor to resolve an issue in apple class - Kathryn
         //this.name = name;
         this.carryable = true;
         this.subtype = "Health Resource";
         this.hasHealingPower = true;
         //Do we need a new type like FoodResources? and hasFoodEffect may false in here as medicine may not affect the food fullness
 
-        //this.notHealingPower=false;
         this.exchangeable = true;
 
     }
@@ -65,7 +52,8 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
         this.carryable = true;
         this.subtype = "Health Resource";
         this.hasHealingPower = true;
-        //Do we need a new type like FoodResources? and hasFoodEffect may false in here as medicine may not affect the food fullness
+        //Do we need a new type like FoodResources?
+        // and hasFoodEffect may false in here as medicine may not affect the food fullness
 
         //this.notHealingPower=false;
         this.exchangeable = true;
@@ -124,17 +112,6 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
 
 
      */
-
-
-    /**public Boolean getNotHealingPower() {
-     * return notHealingPower;
-     * }*/
-
-
-    //public Boolean getNotHealingPower() {
-        //return notHealingPower;
-    //}
-
 
 
 
