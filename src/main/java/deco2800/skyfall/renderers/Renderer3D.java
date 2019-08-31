@@ -238,6 +238,14 @@ public class Renderer3D implements Renderer {
         GameManager.get().setEntitiesCount(entities.size());
     }
 
+    /**
+     *
+     * @param batch The sprite batch.
+     * @param entity The entity that will be drawn
+     * @param entityWorldCord The coordinates to render at
+     * @param tex The texture to render it as
+     */
+
     private void renderAbstractEntity(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCord, Texture tex) {
         float x = entityWorldCord[0];
         float y = entityWorldCord[1];
@@ -317,6 +325,15 @@ public class Renderer3D implements Renderer {
         }
     }
 
+    /**
+     * Render the default sprite for an entity, used if the state is NULL
+     * and the Animatable interface has been implemented. If a directional
+     * texture cannot be found then the default entity texture is render(i.e
+     * the one given into its constructor)
+     * @param batch The sprite batch.
+     * @param entity The entity that will be drawn
+     * @param entityWorldCoord The coordinates to render at
+     */
     private void renderDefaultSprite(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord) {
         String directionTexture = entity.getDefaultTexture();
 
@@ -330,7 +347,8 @@ public class Renderer3D implements Renderer {
 
 
     /**
-     * Runs all other non-looping animations for the entity
+     * Runs an animation for the entity if it is applicable if there is
+     * no animation to be run or it cannot be found a default texture is run
      * 
      * @param batch            Sprite batch to draw onto
      * @param entity           Current entity
