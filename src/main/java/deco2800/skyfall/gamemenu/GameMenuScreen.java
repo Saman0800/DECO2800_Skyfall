@@ -301,12 +301,40 @@ public class GameMenuScreen {
     /***
      * Updates the resources panel to display the current inventory contents.
      */
-    private void updateResourcePanel() {
+    private void updateResourcePanel(){
         resourcePanel = new Table();
         resourcePanel.setName("resourcePanel");
         resourcePanel.setSize(410, 400);
         resourcePanel.setPosition(475, 18);
         resourcePanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
+
+        Map<String, Integer> inventoryAmounts = gameMenuManager.getInventory().getInventoryAmounts();
+
+        int count = 0;
+        int xpos = 20;
+        int ypos = 280;
+
+        for (Map.Entry<String, Integer> entry : inventoryAmounts.entrySet()) {
+
+            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey()));
+            icon.setName("icon");
+            icon.setSize(100, 100);
+            icon.setPosition(xpos + count * 130, ypos);
+
+            resourcePanel.addActor(icon);
+
+            Label num = new Label(entry.getValue().toString(), skin, "WASD");
+            num.setPosition(xpos + 85 + count * 130, ypos + 75);
+            resourcePanel.addActor(num);
+
+            count++;
+
+            if ((count) % 3 == 0) {
+                ypos -= 120;
+                count = 0;
+            }
+        }
+
     }
 
     private void updateInventoryTable() {
@@ -398,7 +426,6 @@ public class GameMenuScreen {
 
         }
     }
-
 
     private PopUpTable getSettingsTable() {
         if (settingsTable == null) {
@@ -549,3 +576,13 @@ public class GameMenuScreen {
         showMenu();
     }
 }
+
+
+
+
+
+
+
+
+
+
