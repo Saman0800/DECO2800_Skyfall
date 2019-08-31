@@ -23,20 +23,24 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
     //Items could change or not e.g. coins, items
     private Boolean exchangeable;
 
+    // the value of the piece of food
     public int foodValue;
+
+    // the healing ability of the health item
     public int healthValue;
 
 
-
-
+    /**
+     * Creates a default health resource.
+     */
     public HealthResources(){
-        //this.name = name;
+        this.name = null;
         this.carryable = true;
         this.subtype = "Health Resource";
-        this.hasHealingPower = true;
-        //Do we need a new type like FoodResources? and hasFoodEffect may false in here as medicine may not affect the food fullness
-
         this.exchangeable = true;
+        this.hasHealingPower = true;
+        //Do we need a new type like FoodResources? and hasFoodEffect may false
+        // in here as medicine may not affect the food fullness
 
     }
 
@@ -54,8 +58,6 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
         this.hasHealingPower = true;
         //Do we need a new type like FoodResources?
         // and hasFoodEffect may false in here as medicine may not affect the food fullness
-
-        //this.notHealingPower=false;
         this.exchangeable = true;
 
         this.position = position.getCoordinates();
