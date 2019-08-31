@@ -47,8 +47,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("spacman_blue", new Texture("resources/spacman_blue.png"));
             textureMap.put("bowman", new Texture("resources/bowman.png"));
             textureMap.put("dialogue_text_background", new Texture("resources/dialogue_text_background.png"));
-            textureMap.put("main_piece", new Texture("resources" + "/Main_Character_F_Right.png"));
-
             textureMap.put("arcane", new Texture("resources/Arcane_Effect_1.png"));
             // Tile textures
             // Goes through all the folders with tile_textures and adds the tile name to the
@@ -104,8 +102,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("fenceNW-NE", new Texture("resources/fence NW-NE.png"));
             textureMap.put("fenceSE-SW", new Texture("resources/fence SE-SW.png"));
             textureMap.put("fenceNW-S", new Texture("resources/fence NW-S.png"));
-            textureMap.put("mario_right", new Texture("resources/mario_texture1.png"));
-            textureMap.put("mario_left", new Texture("resources/mario_texture2.png"));
 
             textureMap.put("rock", new Texture("resources/rocks.png"));
             textureMap.put("rock1", new Texture("resources/world_details/rock1.png"));
@@ -145,11 +141,29 @@ public class TextureManager extends AbstractManager {
             textureMap.put("fence_top_left", new Texture("resources/world_structures/fence_top_left.png"));
             textureMap.put("fence_top_right", new Texture("resources/world_structures/fence_top_right.png"));
 
+            textureMap.put("MainCharacterN_Anim", new Texture("resources/Main_Character_Back_Anim.png"));
+            textureMap.put("MainCharacterNE_Anim", new Texture("resources/Main_Character_B_Right_Anim.png"));
+            textureMap.put("MainCharacterE_Anim", new Texture("resources/Main_Character_Right_Anim.png"));
+            textureMap.put("MainCharacterSE_Anim", new Texture("resources/Main_Character_F_Right_Anim.png"));
+            textureMap.put("MainCharacterS_Anim", new Texture("resources/Main_Character_Front_Anim.png"));
+            textureMap.put("MainCharacterSW_Anim",new Texture( "resources/Main_Character_F_Left_Anim.png"));
+            textureMap.put("MainCharacterW_Anim", new Texture("resources/Main_Character_Left_Anim.png"));
+            textureMap.put("MainCharacterNW_Anim",new Texture( "resources/Main_Character_B_Left_Anim.png"));
+
+      System.out.println("ALL TEXTURES LOADED SUCCESSFULLY");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Used for testing only.
+     * @param test
+     */
+    public TextureManager(boolean test) {
+
+    }
     /**
      * Gets a texture object for a given string id
      *

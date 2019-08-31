@@ -16,7 +16,8 @@ import java.util.*;
  * Main character in the game
  */
 public class MainCharacter extends Peon implements KeyDownObserver,
-        KeyUpObserver, TouchDownObserver, Tickable {
+        KeyUpObserver,TouchDownObserver, Tickable , Animatable {
+
 
     // Weapon Manager for MainCharacter
     private WeaponManager weapons;
@@ -109,7 +110,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public MainCharacter(float col, float row, float speed, String name,
                          int health) {
         super(row, col, speed, name, health);
-        this.setTexture("main_piece");
+        this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
         this.setHeight(1);
         this.setObjectName("MainPiece");
 
@@ -128,6 +129,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.level = 1;
         this.foodLevel = 100;
 
+
         //Initialises the players velocity properties
         xInput = 0;
         yInput = 0;
@@ -140,6 +142,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         velHistoryY = new ArrayList<>();
 
         isMoving = false;
+        this.scale = 0.4f;
+        setDirectionTextures();
+        configureAnimations();
     }
 
     /**
@@ -418,7 +423,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 //         this.direction.y - this.getRow());
 //        System.out.printf("%s%n", this.currentSpeed);
 //        TODO: Check direction for animation here
-
+        this.updateAnimation();
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             GameManager.getManagerFromInstance(ConstructionManager.class)
                     .displayWindow();
@@ -476,7 +481,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     @Override
     public void notifyKeyUp(int keycode) {
-        movingAnimation = AnimationRole.NULL;
         // Player cant move when paused
         if (GameManager.getPaused()) {
             return;
@@ -495,6 +499,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 xInput -= 1;
                 break;
         }
+
     }
 
     /*
@@ -623,22 +628,29 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     public String getPlayerDirectionCardinal() {
         double direction = getPlayerDirectionAngle();
-
         if (direction <= 22.5 || direction >= 337.5) {
+            setCurrentDirection(Direction.NORTH);
             return "North";
         } else if (22.5 <= direction && direction <= 67.5) {
+            setCurrentDirection(Direction.NORTH_EAST);
             return "North-East";
         } else if (67.5 <= direction && direction <= 112.5) {
+            setCurrentDirection(Direction.EAST);
             return "East";
         } else if (112.5 <= direction && direction <= 157.5) {
+            setCurrentDirection(Direction.SOUTH_EAST);
             return "South-East";
         } else if (157.5 <= direction && direction <= 202.5) {
+            setCurrentDirection(Direction.SOUTH);
             return "South";
         } else if (202.5 <= direction && direction <= 247.5) {
+            setCurrentDirection(Direction.SOUTH_WEST);
             return "South-West";
         } else if (247.5 <= direction && direction <= 292.5) {
+            setCurrentDirection(Direction.WEST);
             return "West";
         } else if (292.5 <= direction && direction <= 337.5) {
+            setCurrentDirection(Direction.NORTH_WEST);
             return "North-West";
         }
 
@@ -653,7 +665,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      *
      * @return list of players velocity properties
      */
-    public List getVelocity() {
+    public List<Float> getVelocity() {
         ArrayList<Float> velocity = new ArrayList<>();
         velocity.add(xVel);
         velocity.add(yVel);
@@ -714,5 +726,63 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             //TODO: Stop Player movement
             SoundManager.stopSound(WALK_NORMAL);
         }
+    }
+
+    @Override
+    public void configureAnimations() {
+        addAnimations(AnimationRole.MOVE, Direction.NORTH_WEST,
+                new AnimationLinker("MainCharacterNW_Anim",
+                AnimationRole.MOVE, Direction.NORTH_WEST, true ,true));
+
+        addAnimations(AnimationRole.MOVE, Direction.NORTH_EAST,
+                new AnimationLinker("MainCharacterNE_Anim",
+                        AnimationRole.MOVE, Direction.NORTH_WEST, true ,true));
+
+        addAnimations(AnimationRole.MOVE, Direction.SOUTH_WEST,
+                new AnimationLinker("MainCharacterSW_Anim",
+                        AnimationRole.MOVE, Direction.SOUTH_WEST, true ,true));
+
+        addAnimations(AnimationRole.MOVE, Direction.SOUTH_EAST,
+                new AnimationLinker("MainCharacterSE_Anim",
+                        AnimationRole.MOVE, Direction.SOUTH_EAST, true ,true));
+
+        addAnimations(AnimationRole.MOVE, Direction.EAST,
+                new AnimationLinker("MainCharacterE_Anim",
+                        AnimationRole.MOVE, Direction.EAST, true ,true));
+        addAnimations(AnimationRole.MOVE, Direction.NORTH,
+                new AnimationLinker("MainCharacterN_Anim",
+                        AnimationRole.MOVE, Direction.NORTH, true ,true));
+
+        addAnimations(AnimationRole.MOVE, Direction.WEST,
+                new AnimationLinker("MainCharacterW_Anim",
+                        AnimationRole.MOVE, Direction.WEST, true ,true));
+
+        addAnimations(AnimationRole.MOVE, Direction.SOUTH,
+                new AnimationLinker("MainCharacterS_Anim",
+                        AnimationRole.MOVE, Direction.SOUTH, true ,true));
+    }
+
+    @Override
+    public void setDirectionTextures() {
+        defaultDirectionTextures.put(Direction.EAST, "__ANIMATION_MainCharacterE_Anim:0");
+        defaultDirectionTextures.put(Direction.NORTH, "__ANIMATION_MainCharacterN_Anim:0");
+        defaultDirectionTextures.put(Direction.WEST, "__ANIMATION_MainCharacterW_Anim:0");
+        defaultDirectionTextures.put(Direction.SOUTH, "__ANIMATION_MainCharacterS_Anim:0");
+        defaultDirectionTextures.put(Direction.NORTH_EAST, "__ANIMATION_MainCharacterNE_Anim:0");
+        defaultDirectionTextures.put(Direction.NORTH_WEST, "__ANIMATION_MainCharacterNW_Anim:0");
+        defaultDirectionTextures.put(Direction.SOUTH_EAST, "__ANIMATION_MainCharacterSE_Anim:0");
+        defaultDirectionTextures.put(Direction.SOUTH_WEST, "__ANIMATION_MainCharacterSW_Anim:0");
+    }
+
+    private void updateAnimation() {
+       getPlayerDirectionCardinal();
+       List<Float> vel = getVelocity();
+
+       if (vel.get(2) == 0f) {
+           setCurrentState(AnimationRole.NULL);
+       } else {
+           setCurrentState(AnimationRole.MOVE);
+       }
+
     }
 }
