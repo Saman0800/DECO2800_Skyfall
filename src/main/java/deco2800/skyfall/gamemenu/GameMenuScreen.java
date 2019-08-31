@@ -258,73 +258,44 @@ public class GameMenuScreen {
             stage.addActor(inventoryTable);
             stage.addActor(inventoryTable.getExit());
         } else{
-//
-//            for (Actor actor : inventoryTable.getChildren()){
-//                if(actor.getName() == "icon"){
-//                    System.out.println("CLOSE");
-//                    actor.remove();
-//                }
-//            }
-
-//            for(Actor actor : stage.getActors()) {
-//                if((actor.getName() == "inventoryTable") && (actor instanceof Table)){
-//                    inventoryTable.getChildren();
-//                }
-//                if(actor.getName().equals("resourcePanel")){
-//                    System.out.println("YES");
-//                }
-                //actor.addAction(Actions.removeActor());
-            //}
-
-            for(Actor actor : stage.getActors()){
-                if(actor.getName() == "icon"){
-                    System.out.println("thank god");
-                }
-                if(actor.getName() == "resourcePanel"){
-                    System.out.println("EVEN BETTER");
-                }
-            }
             inventoryTable.removeActor(resourcePanel);
             updateInventoryTable();
+            inventoryTable.addActor(resourcePanel);
         }
         return inventoryTable;
     }
 
     private void setInventoryTable() {
-
-        //split into set and update
-
         PopUpTable inventoryTable = new PopUpTable(910, 510, "i");
         inventoryTable.setName("inventoryTable");
 
         Image infoBar = new Image(generateTextureRegionDrawableObject("inventory_banner"));
         infoBar.setSize(650, 55);
-        infoBar.setPosition(75, 185);
+        infoBar.setPosition(130, 435);
 
         Table infoPanel = new Table();
         infoPanel.setSize(410, 400);
-        infoPanel.setPosition(-30, -232);
+        infoPanel.setPosition(25, 18);
         infoPanel.setBackground(generateTextureRegionDrawableObject("info_panel"));
 
-        resourcePanel = new Table();
-        resourcePanel.setName("resourcePanel");
-        resourcePanel.setSize(410, 400);
-        resourcePanel.setPosition(420, -232);
-        resourcePanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
 
         updateInventoryTable();
 
-        Table content = new Table();
-        content.addActor(infoBar);
-        content.addActor(infoPanel);
-        content.addActor(resourcePanel);
-        inventoryTable.add(content).width(800).colspan(3).fillX();
+        inventoryTable.addActor(infoBar);
+        inventoryTable.addActor(infoPanel);
+        inventoryTable.addActor(this.resourcePanel);
 
         this.inventoryTable = inventoryTable;
     }
 
 
     private void updateInventoryTable(){
+        resourcePanel = new Table();
+        resourcePanel.setName("resourcePanel");
+        resourcePanel.setSize(410, 400);
+        resourcePanel.setPosition(475, 18);
+        resourcePanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
+
         Map<String, Integer> inventoryAmounts = gameMenuManager.getInventory().getInventoryAmounts();
 
         int count = 0;
