@@ -71,7 +71,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	private AnimationLinker toBeRun = null;
 	private Direction currentDirection = Direction.EAST;
 	private AnimationRole currentState = AnimationRole.NULL;
-
+	protected float scale = 1f;
 	/**
 	 * Constructor for an abstract entity
 	 * @param col the col position on the world
@@ -416,6 +416,9 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         return defaultDirectionTextures.getOrDefault(currentDirection, "Not Found");
     }
 
+    public float getScale() {
+        return scale;
+    }
 }
 
 

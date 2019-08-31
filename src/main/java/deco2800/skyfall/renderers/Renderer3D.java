@@ -242,8 +242,8 @@ public class Renderer3D implements Renderer {
         float x = entityWorldCord[0];
         float y = entityWorldCord[1];
 
-        float width = tex.getWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X;
-        float height = tex.getHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y;
+        float width = tex.getWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X * entity.getScale();
+        float height = tex.getHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y * entity.getScale();
         batch.draw(tex, x, y, width, height);
     }
 
@@ -369,8 +369,8 @@ public class Renderer3D implements Renderer {
             }
 
             TextureRegion currentFrame = ani.getKeyFrame(time, false);
-            float width = currentFrame.getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X;
-            float height = currentFrame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y;
+            float width = currentFrame.getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X * entity.getScale() ;
+            float height = currentFrame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y * entity.getScale();
             int[] offset = aniLink.getOffset();
 
             batch.draw(currentFrame, entityWorldCoord[0] + offset[0], entityWorldCoord[1] + offset[0], width, height);
