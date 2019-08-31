@@ -47,10 +47,6 @@ public class GameScreen implements Screen,KeyDownObserver {
 
 	long lastGameTick = 0;
 
-	/**
-	 * Create an EnvironmentManager for ToD.
-	 */
-
 	public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
 		/* Create an example world for the engine */
 		this.game = game;
@@ -86,6 +82,9 @@ public class GameScreen implements Screen,KeyDownObserver {
 
 		/* Add environment to game manager */
 		gameManager.addManager(new EnvironmentManager());
+
+		/* Add BGM to game manager */
+		gameManager.addManager(new BGMManager());
 
         new GameMenuManager().show(stage);
 

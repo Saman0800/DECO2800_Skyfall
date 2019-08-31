@@ -1,9 +1,8 @@
 package deco2800.skyfall.managers;
 
-import deco2800.skyfall.Tickable;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.worlds.Tile;
-import org.lwjgl.Sys;
+import java.util.concurrent.TimeUnit;
 
 import java.util.List;
 
@@ -12,24 +11,46 @@ public class EnvironmentManager extends TickableManager {
    //Hours in a game day
    private long hours;
 
-   //Day/Night tracker
+   // Seconds in a game day
+   private long  minutes;
+
+   // Seasons in game
+   private String season;
+
+   // Month in game
+   private long month;
+
+   // Seasons in game
+   private long day;
+
+   // Day/Night tracker
    private boolean isDay;
 
-   //Biome player is currently in
+   // Biome player is currently in
    private String biome;
 
-   //Time to display on screen
+   // Time to display on screen
    long displayHours;
 
    // Time of day: AM or PM
    private String TOD;
+
+   // Music filename
+   private String file;
+
+   // Current music file being played
+   private String currentFile;
+
+   // Background Music Manager
+   private BGMManager bgmManager;
 
    /**
     * Constructor
     *
     */
    public EnvironmentManager() {
-      // Constructor details here
+      file = "resources/sounds/forest_day.wav";
+      currentFile = "resources/sounds/forest_night.wav";
    }
 
    /**
@@ -60,7 +81,6 @@ public class EnvironmentManager extends TickableManager {
     * @return String Current biome of player, or null if player is moving between tiles
     */
    public String currentBiome() {
-      System.out.println(biome);
       return biome;
    }
 
@@ -80,8 +100,12 @@ public class EnvironmentManager extends TickableManager {
     */
    public void setTime(long i) {
       //Each day cycle goes for approx 24 minutes
-      long time = (i / 60000);
-      hours = time % 24;
+      long timeHours = (i / 60000);
+      hours = timeHours % 24;
+
+      //Each minute equals one second
+      long timeMins = (i / 1000);
+      minutes = timeMins % 60;
    }
 
    /**
@@ -118,7 +142,96 @@ public class EnvironmentManager extends TickableManager {
          TOD = "am";
       }
 
-      return Long.toString(displayHours) + TOD;
+      if (minutes < 10) {
+         return Long.toString(displayHours) + ":" + "0" + Long.toString(minutes) + TOD;
+      }
+
+      return Long.toString(displayHours) + ":" + Long.toString(minutes) + TOD;
+   }
+
+   /**
+    * Sets the season in game, starting with summer.
+    *
+    */
+   public void setMonth(long i) {
+      //Each month goes for approx 30 days
+      long timeMonth = (i/60000)/730;
+      month = timeMonth % 12;
+   }
+
+   /**
+    * Gets time of day in game
+    *
+    * @return String The month
+    */
+   public String getSeason() {
+      String seasonString;
+
+      switch (((int) month)) {
+         case 1:  seasonString = "Summer";
+            break;
+         case 2:  seasonString = "Summer";
+            break;
+         case 3:  seasonString = "Autumn";
+            break;
+         case 4:  seasonString = "Autumn";
+            break;
+         case 5:  seasonString = "Autumn";
+            break;
+         case 6:  seasonString = "Winter";
+            break;
+         case 7:  seasonString = "Winter";
+            break;
+         case 8:  seasonString = "Winter";
+            break;
+         case 9:  seasonString = "Spring";
+            break;
+         case 10: seasonString = "Spring";
+            break;
+         case 11: seasonString = "Spring";
+            break;
+         case 12: seasonString = "Summer";
+            break;
+         default: seasonString = "Invalid season";
+            break;
+      }
+
+      return seasonString;
+   }
+
+   public void setTODMusic () {
+
+      String[] arrOfStr = file.split("_", 4);
+
+      // Check time of day and change files accordingly
+      if(isDay() == true) {
+         file = "resources/sounds/forest_" + arrOfStr[1];
+
+      } else {
+         arrOfStr[1] = "night.wav";
+         file = "resources/sounds/forest_" + arrOfStr[1];
+      }
+
+      if (!(file.contains(currentFile))) {
+
+         try {
+            bgmManager.stop();
+         } catch (Exception e) {
+            // Exception caught, if any
+         }
+
+         currentFile = file;
+
+         System.out.println("hi");
+         // Play BGM
+         try {
+            bgmManager.BGMManager(currentFile);
+            bgmManager.play();
+         } catch (Exception e) {
+            // Exception caught, if any
+         }
+      }
+
    }
 
    /**
@@ -129,12 +242,17 @@ public class EnvironmentManager extends TickableManager {
    @Override
    public void onTick(long i) {
       long time = i;
+
       if (System.currentTimeMillis() - time > 20) {
          time = System.currentTimeMillis();
       }
+
+      // Set the TOD and month in game
       setTime(time);
-      setBiome();
-      currentBiome();
+      setMonth(time);
+
+      //Set Background music
+      setTODMusic();
    }
    
 }

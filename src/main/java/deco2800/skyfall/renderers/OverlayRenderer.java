@@ -102,7 +102,14 @@ public class OverlayRenderer implements Renderer {
 				String.format("Time: %s",
 						GameManager.get().getManager(EnvironmentManager.class).getTOD()));
 
+		// Display current month in game
+		debugLine(batch, camera, line++,
+				String.format("Season: %s",
+						GameManager.get().getManager(EnvironmentManager.class).getSeason()));
+
 		line++;
+
+
 
 		debugLine(batch, camera, line++, "PathfindingService");
 		debugLine(batch, camera, line++, GameManager.get().getManager(PathFindingService.class).toString());
