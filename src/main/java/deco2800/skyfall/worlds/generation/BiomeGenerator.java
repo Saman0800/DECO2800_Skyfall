@@ -330,7 +330,6 @@ public class BiomeGenerator {
      * @throws DeadEndGenerationException if too many tiles from a biome are lost
      */
     private void ensureContiguity() throws DeadEndGenerationException {
-        // TODO Add comments.
         // TODO Optimise search using border nodes only.
 
         HashSet<Tile> removedTiles = new HashSet<>();

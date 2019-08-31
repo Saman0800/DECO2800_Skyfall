@@ -245,7 +245,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         int startPeriod = nodeSpacing * 2;
         // TODO Fix possible divide-by-zero.
         int octaves = Math.max((int) Math.ceil(Math.log(startPeriod) / Math.log(2)) - 1, 1);
-        double attenuation = Math.pow(1.5, 1d / octaves);
+        double attenuation = Math.pow(0.9, 1d / octaves);
 
         NoiseGenerator xGen = new NoiseGenerator(random, octaves, startPeriod, attenuation);
         NoiseGenerator yGen = new NoiseGenerator(random,  octaves, startPeriod, attenuation);
