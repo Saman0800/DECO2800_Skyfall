@@ -114,23 +114,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * e.g. 1 = test range weapon
      * 2 = test melee weapon
      */
-
-    /**
-     * Private helper method to instantiate inventory and weapon managers for
-     * Main Character constructor
-     */
-    private void instantiateManagers() {
-        this.inventories = new InventoryManager();
-        this.hotbar = new ArrayList<>();
-        this.equipped_item = 0;
-
-        this.weapons = new WeaponManager();
-    }
-
-
-
-
-
+    
 
     /**
      * Base Main Character constructor
@@ -152,8 +136,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         //this.direction = new Vector2(row, col);
         //this.direction.limit2(0.05f);
 
-        instantiateManagers();
+        this.weapons = GameManager.getManagerFromInstance(WeaponManager.class);
+        this.inventories = GameManager.getManagerFromInstance(InventoryManager.class);
 
+        this.equipped_item = 0;
         this.level = 1;
         this.foodLevel = 100;
 
