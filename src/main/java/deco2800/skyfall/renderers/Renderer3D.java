@@ -35,6 +35,8 @@ public class Renderer3D implements Renderer {
     @SuppressWarnings("unused")
     private final Logger logger = LoggerFactory.getLogger(Renderer3D.class);
 
+    SoundManager sound = new SoundManager();
+
     BitmapFont font;
 
     // mouse cursor
@@ -181,13 +183,14 @@ public class Renderer3D implements Renderer {
         List<AbstractEntity> entities = GameManager.get().getWorld().getSortedEntities();
         MainCharacter playerPeon = findPlayerPeon(entities);
 
-        // We get the tile height and width. NOTE: This assumes that the width and
-        // height of each tile is constant
-        int w = GameManager.get().getWorld().getTile(0).getTexture().getWidth();
-        int h = GameManager.get().getWorld().getTile(0).getTexture().getHeight();
-
         int entitiesSkipped = 0;
         logger.debug("NUMBER OF ENTITIES IN ENTITY RENDER LIST: {}", entities.size());
+
+        // We get the tile height and width. NOTE: This assumes that the width and
+        // height of each tile is constant
+        int w = TextureManager.TILE_WIDTH;
+        int h = TextureManager.TILE_HEIGHT;
+
         for (AbstractEntity entity : entities) {
             float[] entityWorldCoord = WorldUtil.colRowToWorldCords(entity.getCol(), entity.getRow());
             // If it's offscreen
@@ -202,7 +205,6 @@ public class Renderer3D implements Renderer {
                 Set<HexVector> childrenPosns = staticEntity.getChildrenPositions();
                 for (HexVector childpos : childrenPosns) {
                     Texture childTex = staticEntity.getTexture(childpos);
-
                     float[] childWorldCoord = WorldUtil.colRowToWorldCords(childpos.getCol(), childpos.getRow());
 
                     // time for some funky math: we want to render the entity at the centre of the
