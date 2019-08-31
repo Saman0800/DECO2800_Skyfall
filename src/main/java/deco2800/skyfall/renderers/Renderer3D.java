@@ -153,84 +153,6 @@ public class Renderer3D implements Renderer {
     }
 
 
-    /**
-     * Render an animation
-     *
-     * @param batch     the sprite batch.
-     * @param camera    the camera.
-     * @param animation the animation need to rend
-     * @param x         animation x coordinate
-     * @param y         animation y coordinate
-     */
-    private void renderAnimation(SpriteBatch batch, OrthographicCamera camera, Animation<TextureRegion> animation,
-                                 Float x, Float y) {
-        elapsedTime += Gdx.graphics.getDeltaTime();
-        batch.draw(animation.getKeyFrame(elapsedTime, true), x, y,
-                animation.getKeyFrame(elapsedTime, true).getRegionWidth() * WorldUtil.SCALE_X,
-                animation.getKeyFrame(elapsedTime, true).getRegionHeight() * WorldUtil.SCALE_Y);
-    }
-
-    private void stoneAnimation(SpriteBatch batch, OrthographicCamera camera, AbstractEntity entity,
-                                 MainCharacter playerPeon) {
-
-//        if (entity instanceof Stone && playerPeon != null) {
-//            Stone stone = (Stone) entity;
-//            if (stone.isDead()==true){
-//                Texture stoneTexture = textureManager.getTexture(stone.getTexture());
-//                float[] spiderCoord = WorldUtil.colRowToWorldCords(stone.getCol(), stone.getRow());
-//                renderAbstractEntity(batch, stone, spiderCoord, stoneTexture);
-//            }else{
-//                float colDistance = playerPeon.getCol() - stone.getCol();
-//                float rowDistance = playerPeon.getRow() - stone.getRow();
-//                if ((colDistance * colDistance + rowDistance * rowDistance) < 4 ||stone.isAttacked()==true) {
-//                    stone.setAttacking(true);
-//                    stone.attackPlayer(playerPeon);
-//                    float[] tileWorldCord = WorldUtil.colRowToWorldCords(stone.getCol(), stone.getRow());
-//                    Animation animation=null;
-//                    if(stone.getMovingDirection().equals("N")|| stone.getMovingDirection().equals("NE")){
-//                        animation=animationManager.getAnimation("stoneJ"+stone.getMovingDirection());
-//                    }else {
-//                        animation=animationManager.getAnimation("stoneA"+stone.getMovingDirection());
-//                    }
-//                    renderAnimation(batch, camera, animation, tileWorldCord[0],
-//                            tileWorldCord[1]);
-//                    Texture stoneTexture = textureManager.getTexture("stoneR"+stone.getMovingDirection());
-//                    if(stone.isAttacked()==true){
-//                        renderAbstractEntity(batch, stone, tileWorldCord, stoneTexture);
-//                        renderAbstractEntity(batch, stone, tileWorldCord, stoneTexture);
-//                        renderAbstractEntity(batch, stone, tileWorldCord, stoneTexture);
-//
-//                    }
-//
-//                } else {
-//                    stone.setAttacking(false);
-//                    float[] tileWorldCord = WorldUtil.colRowToWorldCords(stone.getCol(), stone.getRow());
-//                    renderAnimation(batch, camera, animationManager.getAnimation("stoneJ"+stone.getMovingDirection()), tileWorldCord[0],
-//                            tileWorldCord[1]);
-//
-//                }
-//            }
-//            }
-
-
-    }
-
-    /**
-     * 
-     * @param entities AbstractEntity
-     * @return entity playerPeon
-     */
-    private MainCharacter findPlayerPeon(List<AbstractEntity> entities) {
-        // find playerPeon in the entities list
-        MainCharacter mainCharacter = null;
-        // iterate abstract entity to find Player peon
-        for (AbstractEntity e : entities) {
-            if (e instanceof MainCharacter) {
-                mainCharacter = (MainCharacter) e;
-            }
-        }
-        return mainCharacter;
-    }
 
     /**
      * Render all the entities on in view, including movement tiles, and excluding
@@ -241,7 +163,6 @@ public class Renderer3D implements Renderer {
      */
     private void renderAbstractEntities(SpriteBatch batch, OrthographicCamera camera) {
         List<AbstractEntity> entities = GameManager.get().getWorld().getSortedEntities();
-        MainCharacter playerPeon = findPlayerPeon(entities);
 
         // We get the tile height and width. NOTE: This assumes that the width and
         // height of each tile is constant
@@ -419,7 +340,6 @@ public class Renderer3D implements Renderer {
 
             if (ani.isAnimationFinished(time) && entity.getCurrentState()==AnimationRole.NULL) {
                 //System.out.println("Animation is done");
-//                System.out.println("hello");
                 aniLink.resetStartingTime();
 
                 if (!(entity.getCurrentState() == AnimationRole.MOVE)) {
