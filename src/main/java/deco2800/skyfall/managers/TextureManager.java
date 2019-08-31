@@ -165,6 +165,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("Pick Axe", new Texture("resources/temp_pickaxe.png"));
             textureMap.put("Hatchet", new Texture("resources/temp_hatchet.png"));
             textureMap.put("Select", new Texture("resources/item_selected.png"));
+            textureMap.put("quick_access_panel", new Texture("quick_access_panel.png"));
 
 
 

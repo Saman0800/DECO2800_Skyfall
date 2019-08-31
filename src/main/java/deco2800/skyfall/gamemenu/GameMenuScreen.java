@@ -31,6 +31,7 @@ public class GameMenuScreen {
     private HealthCircle healthCircle;
     private MainCharacter mainCharacter;
     private Table resourcePanel;
+    private Table quickAccessPanel;
 
     public GameMenuScreen(GameMenuManager gameMenuManager) {
         this.gameMenuManager = gameMenuManager;
@@ -70,10 +71,16 @@ public class GameMenuScreen {
             }
         });
 
-        //Temporary inventory button using pause button texture
+        quickAccessPanel = new Table();
+        quickAccessPanel.setBackground(generateTextureRegionDrawableObject("quick_access_panel"));
+        quickAccessPanel.setSize(450, 207 * 0.55f);
+        quickAccessPanel.setPosition(560, 30 * 1000 / 800f);
+        stage.addActor(quickAccessPanel);
+
         ImageButton inventoryButton = new ImageButton(generateTextureRegionDrawableObject("inv_button"));
-        inventoryButton.setSize(width, width * 146 / 207f);
-        inventoryButton.setPosition(900, 105);
+        inventoryButton.setSize(50, 50 * 146 / 207f);
+        inventoryButton.setPosition(950, 78);
+        updateQuickAccess();
         stage.addActor(inventoryButton);
 
         inventoryButton.addListener(new ClickListener() {
@@ -97,7 +104,7 @@ public class GameMenuScreen {
 
         ImageButton info = new ImageButton(generateTextureRegionDrawableObject("info"));
         info.setSize(width, width * 146 / 207f);
-        info.setPosition(992, 105);
+        info.setPosition(1015, 105);
         stage.addActor(info);
 
         info.addListener(new ClickListener() {
@@ -109,7 +116,7 @@ public class GameMenuScreen {
 
         ImageButton settings = new ImageButton(generateTextureRegionDrawableObject("settings"));
         settings.setSize(width, width * 146 / 207f);
-        settings.setPosition(992, 30 * 1000 / 800f);
+        settings.setPosition(1015, 30 * 1000 / 800f);
         stage.addActor(settings);
 
         settings.addListener(new ClickListener() {
@@ -128,6 +135,7 @@ public class GameMenuScreen {
         radar.setSize(219 * 0.55f, 207 * 0.55f);
         radar.setPosition(440, 30 * 1000 / 800f);
         stage.addActor(radar);
+
 
         this.healthCircle = new HealthCircle(stage,
                 "big_circle",
@@ -323,6 +331,30 @@ public class GameMenuScreen {
             }
         }
 
+    }
+
+    private void updateQuickAccess(){
+        Map<String, Integer> quickAccess = gameMenuManager.getInventory().getQuickAccess();
+
+        int count = 0;
+        int xpos = 15;
+        int ypos = 28;
+
+        for (Map.Entry<String, Integer> entry : quickAccess.entrySet()) {
+
+            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey()));
+            icon.setSize(60, 60);
+            icon.setPosition(xpos + 68*count, ypos);
+
+            quickAccessPanel.addActor(icon);
+
+            Label num = new Label(entry.getValue().toString(), skin, "WASD");
+            num.setPosition(xpos + 50 + 64*count, ypos + 40);
+            quickAccessPanel.addActor(num);
+
+            count++;
+
+        }
     }
 
 
