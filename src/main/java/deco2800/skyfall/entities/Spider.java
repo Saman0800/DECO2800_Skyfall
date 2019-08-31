@@ -52,6 +52,7 @@ public class Spider extends EnemyEntity {
     /**
      * To determine whether this enemy can move
      * @return boolean value moving
+     *
      */
     public boolean getMoving(){
         return moving;

@@ -48,6 +48,16 @@ public class AnimationManager extends AbstractManager {
         this.generateAnimationObject("stoneJS","resources/EnemyAnimationPacked/southJump/southJump.atlas",0.1f);
         this.generateAnimationObject("stoneJSW","resources/EnemyAnimationPacked/southWestJump/southWestJump.atlas",0.1f);
         this.generateAnimationObject("stoneJSE","resources/EnemyAnimationPacked/southEastJump/southEastJump.atlas",0.1f);
+        this.generateAnimationObject("stoneJSE","resources/EnemyAnimationPacked/southEastJump/southEastJump.atlas",0.1f);
+        //Treeman animation
+        this.generateAnimationObject("TreemanEastAttack","resources/EnemyAnimationPacked/eastAttack/eastAttack.atlas",0.1f);
+        this.generateAnimationObject("TreemanNorthAttack","resources/EnemyAnimationPacked/northAttack/northAttack.atlas",0.1f);
+        this.generateAnimationObject("TreemanSouthAttack","resources/EnemyAnimationPacked/southAttack/southAttack.atlas",0.1f);
+        this.generateAnimationObject("TreemanSouthEastAttack","resources/EnemyAnimationPacked/southEastAttack/southEastAttack.atlas",0.1f);
+        this.generateAnimationObject("TreemanSouthWestAttack","resources/EnemyAnimationPacked/southWeatAttack/southWestAttack.atlas",0.1f);
+        this.generateAnimationObject("TreemanWestAttack","resources/EnemyAnimationPacked/westAttack/westAttack.atlas",0.1f);
+
+
     }
 
 

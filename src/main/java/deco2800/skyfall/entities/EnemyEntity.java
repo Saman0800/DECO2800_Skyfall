@@ -182,4 +182,6 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
         this.armour=armour;
     }
 
+
+
 }

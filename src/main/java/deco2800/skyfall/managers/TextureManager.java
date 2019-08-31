@@ -72,12 +72,11 @@ public class TextureManager extends AbstractManager {
             textureMap.put("robotN", new Texture("resources/robotN.png"));
             textureMap.put("robotNE", new Texture("resources/robotNE.png"));
             textureMap.put("robotNW", new Texture("resources/robotNW.png"));
-            textureMap.put("spider", new Texture("resources/spider.png"));
             textureMap.put("robot", new Texture("resources/robot.png"));
-
-
-
+            textureMap.put("spider", new Texture("resources/spider.png"));
             textureMap.put("grass_tuff", new Texture("resources/world_details/grass1.png"));
+            //enemyTreeman
+            textureMap.put("enemyTreeman", new Texture("resources/enemyTreeman.gif"));
 
             textureMap.put("woodcube", new Texture("resources/woodcube.png"));
 
