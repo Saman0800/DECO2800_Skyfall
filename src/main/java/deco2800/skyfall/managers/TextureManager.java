@@ -48,7 +48,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bowman", new Texture("resources/bowman.png"));
             textureMap.put("dialogue_text_background", new Texture("resources/dialogue_text_background.png"));
             textureMap.put("main_piece", new Texture("resources" + "/Main_Character_F_Right.png"));
-            textureMap.put("slash", new Texture("resources/slash_long.png"));
+
             textureMap.put("arcane", new Texture("resources/Arcane_Effect_1.png"));
             // Tile textures
             // Goes through all the folders with tile_textures and adds the tile name to the
@@ -152,10 +152,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("big_circle", new Texture("resources/OrangeCircle.png"));
             textureMap.put("inner_circle", new Texture("resources/RedCircle.png"));
 
-            Texture banner = new Texture("resources/inventory_banner.png");
-            banner.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Nearest);
-            textureMap.put("inventory_banner", banner);
 
+            textureMap.put("inventory_banner", new Texture("resources/inventory_banner.png"));
             textureMap.put("Stone", new Texture("resources/temp_stone.png"));
             textureMap.put("Wood", new Texture("resources/temp_wood.png"));
             textureMap.put("menu_panel", new Texture("resources/menu_panel.png"));
@@ -169,6 +167,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("Pick Axe", new Texture("resources/temp_pickaxe.png"));
             textureMap.put("Hatchet", new Texture("resources/temp_hatchet.png"));
             textureMap.put("Select", new Texture("resources/item_selected.png"));
+            textureMap.put("quick_access_panel", new Texture("quick_access_panel.png"));
 
 
 
