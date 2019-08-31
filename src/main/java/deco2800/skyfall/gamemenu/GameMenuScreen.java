@@ -1,9 +1,11 @@
 package deco2800.skyfall.gamemenu;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gui.HealthCircle;
@@ -30,6 +32,7 @@ public class GameMenuScreen {
     private HealthCircle healthCircle;
     private MainCharacter mainCharacter;
     private Table resourcePanel;
+    public static int currentCharacter;
 
     public GameMenuScreen(GameMenuManager gameMenuManager) {
         this.gameMenuManager = gameMenuManager;
@@ -234,7 +237,7 @@ public class GameMenuScreen {
         space.setAlignment(Align.center);
         helpTable.add(space).height(50).padLeft(25).fillX().colspan(2).expandY();
         Label spaceDescription = new Label("Description", skin, "WASD");
-        helpTable.add(spaceDescription).width(spaceDescription.getWidth()*2).height(50).left().expandX().padLeft(20);
+        helpTable.add(spaceDescription).width(spaceDescription.getWidth() * 2).height(50).left().expandX().padLeft(20);
         helpTable.row().padTop(15);
 
         this.helpTable = helpTable;
@@ -245,7 +248,7 @@ public class GameMenuScreen {
         table.add(label).width(50).height(50).padLeft(25);
         label.setAlignment(Align.center);
         Label desc = new Label(description, skin, "WASD");
-        table.add(desc).width(desc.getWidth()*2).height(50).left().padLeft(20);
+        table.add(desc).width(desc.getWidth() * 2).height(50).left().padLeft(20);
         table.add().expandX().fillX();
         table.row().padTop(15);
     }
@@ -256,7 +259,7 @@ public class GameMenuScreen {
             setExitButton(inventoryTable);
             stage.addActor(inventoryTable);
             stage.addActor(inventoryTable.getExit());
-        } else{
+        } else {
             inventoryTable.removeActor(resourcePanel);
             updateInventoryTable();
         }
@@ -295,7 +298,7 @@ public class GameMenuScreen {
     }
 
 
-    private void updateInventoryTable(){
+    private void updateInventoryTable() {
         Map<String, Integer> inventoryAmounts = gameMenuManager.getInventory().getInventoryAmounts();
 
         int count = 0;
@@ -350,7 +353,6 @@ public class GameMenuScreen {
         settingsTable.add(infoBar).width(550).height(475 * 188f / 1756).padTop(20).colspan(3);
         settingsTable.row().padTop(20);
 
-
         this.settingsTable = settingsTable;
     }
 
@@ -366,19 +368,96 @@ public class GameMenuScreen {
 
 
     private void setPlayerSelect() {
-        PopUpTable playerSelect = new PopUpTable(600, 600 * 1346 / 1862f, "s");
-
+        PopUpTable playerSelect = new PopUpTable(600, 600f * 1346 / 1862, "playerSelect");
+//        playerSelect.setDebug(true);
         Table infoBar = new Table();
         infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
 
         Label text = new Label("PLAYER SELECT", skin, "default");
         infoBar.add(text);
 
-        playerSelect.add(infoBar).width(550).height(550 * 188f / 1756).padTop(20).colspan(1);
+        playerSelect.add(infoBar).width(550).height(550f * 180 / 1756).padTop(20).colspan(5).padBottom(20);
         playerSelect.row();
 
+        int arrowWidth = 60;
+
+        //height = width
+        ImageButton leftArrow = new ImageButton(generateTextureRegionDrawableObject("left_arrow"));
+
+        playerSelect.add(leftArrow).width(arrowWidth).height(arrowWidth).expandY();
+
+        Table characterTables[] = new Table[3];
+
+        for (int i = 0; i < 3; i++) {
+            Table characterTable = new Table();
+//            characterTable.setDebug(true);
+            characterTables[i] = characterTable;
+        }
+
+        float characterTableWidth = (550 - arrowWidth * 2) / 3f;
+
+        updateCharacters(characterTables, characterTableWidth);
+
+        for (int i = 0; i < 3; i++) {
+            playerSelect.add(characterTables[i]).width(characterTableWidth).height(600f * 1346 / 1862 - 550f * 180 / 1756 - 40 - 30 - 200f*138/478).spaceLeft(5).spaceRight(5);
+        }
+
+        ImageButton rightArrow = new ImageButton(generateTextureRegionDrawableObject("right_arrow"));
+        playerSelect.add(rightArrow).width(arrowWidth).height(arrowWidth).expandY();
+
+        rightArrow.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                currentCharacter = (currentCharacter + 1) % gameMenuManager.NUMBEROFCHARACTERS;
+                updateCharacters(characterTables, characterTableWidth);
+            }
+        });
+
+        leftArrow.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                currentCharacter = (currentCharacter + gameMenuManager.NUMBEROFCHARACTERS - 1) % gameMenuManager.NUMBEROFCHARACTERS;
+                updateCharacters(characterTables, characterTableWidth);
+            }
+        });
+
+        playerSelect.row().padTop(20).padBottom(10);
+
+        ImageButton select = new ImageButton(generateTextureRegionDrawableObject("select"));
+        playerSelect.add(select).width(200).height(200 * select.getHeight() /select.getWidth()).expandX().colspan(5);
+
+        select.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String texture = gameMenuManager.getCharacters()[currentCharacter];
+                if (texture != null) {
+                    mainCharacter.changeTexture(texture);
+                    gameMenuManager.resume(playerSelect);
+                }
+            }
+        });
 
         this.playerSelect = playerSelect;
+    }
+
+    private void updateCharacters(Table characterTables[], float characterTableWidth) {
+        for (int i = currentCharacter; i < currentCharacter + 3; i++) {
+            Table characterTable = characterTables[i - currentCharacter];
+            characterTable.clearChildren();
+            Label characterName = new Label("CHARACTER\nNAME", skin, "WASD");
+            characterName.setAlignment(Align.center);
+            characterTable.add(characterName).top();
+            characterTable.row();
+            String texture = gameMenuManager.getCharacters()[(i + gameMenuManager.NUMBEROFCHARACTERS - 1) % gameMenuManager.NUMBEROFCHARACTERS];
+            try {
+                TextureRegionDrawable characterTexture = generateTextureRegionDrawableObject(texture);
+                Image character = new Image(characterTexture);
+                characterTable.add(character).expandY().width(characterTableWidth * 0.8f).height(characterTableWidth * 0.8f * character.getHeight() / character.getWidth());
+            } catch (NullPointerException e) {
+                characterTable.add().expandY();
+                //DO NOTHING
+            }
+        }
     }
 
     private void setExitButton(PopUpTable table) {
@@ -390,7 +469,6 @@ public class GameMenuScreen {
             }
         });
     }
-
 
     /**
      * Display eveything created

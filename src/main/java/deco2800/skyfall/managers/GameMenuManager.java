@@ -1,11 +1,13 @@
 package deco2800.skyfall.managers;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.gamemenu.GameMenuScreen;
 import deco2800.skyfall.gui.HealthCircle;
 import deco2800.skyfall.gui.SettingsTable;
 import deco2800.skyfall.gamemenu.PopUpTable;
@@ -25,9 +27,9 @@ public class GameMenuManager extends TickableManager {
     private InventoryManager inventory;
     private SoundManager soundManager;
     private Skin skin;
-    private MainCharacter[] characters;
+    private String[] characters;
 
-    private static final int NUMBEROFCHARACTERS = 10;
+    public static final int NUMBEROFCHARACTERS = 5;
 
     public GameMenuManager() {
         textureManager = GameManager.get().getManager(TextureManager.class);
@@ -35,7 +37,14 @@ public class GameMenuManager extends TickableManager {
         soundManager = GameManager.get().getManager(SoundManager.class);
         stage = null;
         skin = null;
-        characters = new MainCharacter[NUMBEROFCHARACTERS];
+        characters = new String[NUMBEROFCHARACTERS];
+        // testing
+        characters[0] = "main_piece";
+        characters[1] = "bowman";
+        characters[2] = "robot";
+        characters[3] = "spider";
+        characters[4] = "spacman_ded";
+        GameMenuScreen.currentCharacter = 0;
     }
 
     @Override
@@ -127,6 +136,10 @@ public class GameMenuManager extends TickableManager {
 
     public void addHealthCircle(HealthCircle hc) {
         this.healthCircle = hc;
+    }
+
+    public String[] getCharacters() {
+        return characters;
     }
 }
 

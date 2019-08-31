@@ -135,6 +135,10 @@ public class TextureManager extends AbstractManager {
             textureMap.put("radar", new Texture("resources/radar.png"));
             textureMap.put("build", new Texture("resources/build.png"));
 
+            textureMap.put("left_arrow", new Texture("resources/left_arrow.png"));
+            textureMap.put("right_arrow", new Texture("resources/right_arrow.png"));
+            textureMap.put("select", new Texture("resources/select_button.png"));
+
             textureMap.put("house1", new Texture("resources/world_structures/house1.png"));
             textureMap.put("storage_unit", new Texture("resources/world_structures/storage_unit.png"));
             textureMap.put("town_centre", new Texture("resources/world_structures/town_centre.png"));
