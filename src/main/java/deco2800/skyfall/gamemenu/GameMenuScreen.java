@@ -1,5 +1,6 @@
 package deco2800.skyfall.gamemenu;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -257,6 +258,32 @@ public class GameMenuScreen {
             stage.addActor(inventoryTable);
             stage.addActor(inventoryTable.getExit());
         } else{
+//
+//            for (Actor actor : inventoryTable.getChildren()){
+//                if(actor.getName() == "icon"){
+//                    System.out.println("CLOSE");
+//                    actor.remove();
+//                }
+//            }
+
+//            for(Actor actor : stage.getActors()) {
+//                if((actor.getName() == "inventoryTable") && (actor instanceof Table)){
+//                    inventoryTable.getChildren();
+//                }
+//                if(actor.getName().equals("resourcePanel")){
+//                    System.out.println("YES");
+//                }
+                //actor.addAction(Actions.removeActor());
+            //}
+
+            for(Actor actor : stage.getActors()){
+                if(actor.getName() == "icon"){
+                    System.out.println("thank god");
+                }
+                if(actor.getName() == "resourcePanel"){
+                    System.out.println("EVEN BETTER");
+                }
+            }
             inventoryTable.removeActor(resourcePanel);
             updateInventoryTable();
         }
@@ -268,6 +295,7 @@ public class GameMenuScreen {
         //split into set and update
 
         PopUpTable inventoryTable = new PopUpTable(910, 510, "i");
+        inventoryTable.setName("inventoryTable");
 
         Image infoBar = new Image(generateTextureRegionDrawableObject("inventory_banner"));
         infoBar.setSize(650, 55);
@@ -279,6 +307,7 @@ public class GameMenuScreen {
         infoPanel.setBackground(generateTextureRegionDrawableObject("info_panel"));
 
         resourcePanel = new Table();
+        resourcePanel.setName("resourcePanel");
         resourcePanel.setSize(410, 400);
         resourcePanel.setPosition(420, -232);
         resourcePanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
@@ -305,6 +334,7 @@ public class GameMenuScreen {
         for (Map.Entry<String, Integer> entry : inventoryAmounts.entrySet()) {
 
             ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey()));
+            icon.setName("icon");
             icon.setSize(100, 100);
             icon.setPosition(xpos + count * 130, ypos);
 
