@@ -184,6 +184,10 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
         this.armour=armour;
     }
 
+
+
+
+
     /**
      * Remove this enemy from the game world.
      */
@@ -191,4 +195,5 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
         this.setDead(true);
         System.out.println("Enemy destroyed.");
     }
+
 }

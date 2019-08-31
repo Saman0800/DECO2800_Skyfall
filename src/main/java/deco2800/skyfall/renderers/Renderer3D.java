@@ -154,6 +154,79 @@ public class Renderer3D implements Renderer {
 
 
     /**
+     * Robot animation
+     * 
+     * @param batch      SpriteBatch
+     * @param camera     camera
+     * @param entity     entity
+     * @param playerPeon Player peon
+     */
+    private void robotAnimation(SpriteBatch batch, OrthographicCamera camera, AbstractEntity entity,
+            MainCharacter playerPeon) {
+        // if the distance between player peon and Robot is greater than 2 then Robot do
+        // defence animation
+        // (distance^2=(Robot col -Robot col)^2 +(Robot row -Robot row))
+        if (entity instanceof Robot && playerPeon != null) {
+            Robot robot = (Robot) entity;
+            float colDistance = playerPeon.getCol() - robot.getCol();
+            float rowDistance = playerPeon.getRow() - robot.getRow();
+            if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
+                float[] tileWorldCord = WorldUtil.colRowToWorldCords(robot.getCol(), robot.getRow());
+                renderAnimation(batch, camera, animationManager.getAnimation("robot_defence"), tileWorldCord[0],
+                        tileWorldCord[1]);
+            } else {
+                Texture robotTexture = textureManager.getTexture(robot.getTexture());
+                float[] robotCoord = WorldUtil.colRowToWorldCords(robot.getCol(), robot.getRow());
+                renderAbstractEntity(batch, robot, robotCoord, robotTexture);
+
+            }
+
+        }
+    }
+
+    //New feature for Treeman
+    private void treemanAnimation(SpriteBatch batch, OrthographicCamera camera, AbstractEntity entity,
+                                MainCharacter playerPeon){
+        if (entity instanceof Treeman && playerPeon != null) {
+            Treeman treeman = (Treeman) entity;
+            //If the treeman dead
+            if(treeman.getHealth() <= 0){
+                Texture deadTexture = textureManager.getTexture("treeman2");//need the dead image of treeman
+                float[] treeCoord = WorldUtil.colRowToWorldCords(treeman.getCol(), treeman.getRow());
+                renderAbstractEntity(batch, treeman, treeCoord, deadTexture);
+            }else{
+                Texture liveTexture = textureManager.getTexture("enemyTreeman");
+                float[] treeCoord = WorldUtil.colRowToWorldCords(treeman.getCol(), treeman.getRow());
+                renderAbstractEntity(batch, treeman, treeCoord, liveTexture);
+                float colDistance = playerPeon.getCol() - treeman.getCol();
+                float rowDistance = playerPeon.getRow() - treeman.getRow();
+                if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
+                    float[] tileWorldCord = WorldUtil.colRowToWorldCords(treeman.getCol(), treeman.getRow());
+                    renderAnimation(batch, camera, animationManager.getAnimation("TreemanEastAttack"), tileWorldCord[0],
+                            tileWorldCord[1]);
+                }
+            }
+        }
+    }
+
+    /**
+     * skip draw enemy entities
+     * 
+     * @param batch            the spriteBatch
+     * @param entity           AbstractEntity
+     * @param entityWorldCoord coordinate of entity world
+     * @param tex              texture of entity
+     */
+    private void skipDrawingEnemy(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord, Texture tex) {
+        // if the entity is spider of savage then not drawing
+        if (entity instanceof Spider || entity instanceof Robot || entity instanceof Stone || entity instanceof Treeman) {
+
+        } else {
+            renderAbstractEntity(batch, entity, entityWorldCoord, tex);
+        }
+    }
+
+    /**
      * Render an animation
      *
      * @param batch     the sprite batch.

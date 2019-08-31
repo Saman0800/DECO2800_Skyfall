@@ -278,3 +278,4 @@ public class Stone extends EnemyEntity implements Animatable {
     public void setDirectionTextures() {
     }
 }
+
