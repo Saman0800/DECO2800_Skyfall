@@ -1,9 +1,9 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.physics.box2d.World;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.renderers.Renderable;
@@ -49,24 +49,34 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
 	/** Whether an entity should trigger a collision when */
 	private boolean collidable = true; 
-	
+
 	private int renderOrder = 0;
 
 	//For animations
 	/**
 	 * Maps animations roles to animation names
 	 */
-    protected Map<AnimationRole, String> animations;
+    protected Map<AnimationRole, Map<Direction, AnimationLinker>> animations;
+
+    protected Map<Direction, String> defaultDirectionTextures = new HashMap<>();
 	/**
 	 * Current direction that the entity is moving, set in MainCharacter or
 	 * Movement Task.
 	 */
-	protected AnimationRole movingAnimation = AnimationRole.NULL;
+	//protected AnimationRole movingAnimation = AnimationRole.NULL;
 	/**
-	 * Non-looping animations to keep track of run by the Renderer3D associated
-	 * to this entity
+     * The animation to be run
 	 */
-	protected Queue<AnimationLinker> toBeRun = new PriorityQueue<>();
+	private AnimationLinker toBeRun = null;
+    /**
+     * The current direction to that the entity is facing
+     */
+	private Direction currentDirection = Direction.EAST;
+    /**
+     * The current state of the entity
+     */
+	private AnimationRole currentState = AnimationRole.NULL;
+	protected float scale = 1f;
 	/**
 	 * Constructor for an abstract entity
 	 * @param col the col position on the world
@@ -332,46 +342,101 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		GameManager.get().getWorld().getEntities().remove(this);
 	}
 
-
-    //Used for managing animations
-    public void setMovingAnimation(AnimationRole movingAnimation) {
-        this.movingAnimation = movingAnimation;
-    }
-
-    public void addAnimations(AnimationRole role, String animationID) {
-        animations.put(role, animationID);
-    }
-
-    /**
-	 * Current moving state of Entity
-	 * @return animation role.
-	 */
-	public AnimationRole getMovingAnimation() {
-        return movingAnimation;
-    }
-
 	/**
 	 * Gets the associate animation with an animation role
 	 * @param type Animation role to get animation for
 	 * @return animation name
 	 */
 
-	public String getAnimationName(AnimationRole type) {
+	private AnimationLinker getAnimationLinker(AnimationRole type, Direction direction) {
 	    if (animations.containsKey(type)) {
-            String aniName = animations.get(type);
-            return aniName;
+			Map<Direction, AnimationLinker> roleMap = animations.get(type);
+			return roleMap.getOrDefault(direction, roleMap.getOrDefault(Direction.DEFAULT,null));
         }
-	        return null;
+
+        return null;
     }
 
-	/**
-	 * Getter for the animation queue
-	 * @return Reference to queue.
-	 */
-	public Queue<AnimationLinker> getToBeRun() {
+    /**
+     * Gets the current animation to be run
+     * @return
+     */
+	public AnimationLinker getToBeRun() {
 		return toBeRun;
 	}
 
+    /**
+     * Sets the current animation to be run to null
+     */
+	public void setGetToBeRunToNull() {
+		toBeRun = null;
+	}
+
+    /**
+     * The current direction that the object is facing
+     * @return Direction that the entity is facing
+     */
+	public Direction getCurrentDirection() {
+		return currentDirection;
+	}
+
+    /**
+     * The current state of the object
+     * @return The state of the object
+     */
+	public AnimationRole getCurrentState() {
+		return currentState;
+	}
+
+    /**
+     * Set the current direction and also updates the animation to be run
+     * variable
+     * @param currentDirection new direction that the entity is facing
+     */
+	public void setCurrentDirection(Direction currentDirection) {
+		this.currentDirection = currentDirection;
+		toBeRun = getAnimationLinker(this.currentState, this.currentDirection);
+	}
+
+    /**
+     * Set the current state and also updates the animation to be run
+     * variable
+     * @param currentState new direction that the entity is facing
+     */
+	public void setCurrentState(AnimationRole currentState) {
+		this.currentState = currentState;
+		toBeRun = getAnimationLinker(this.currentState, this.currentDirection);
+	}
+
+    /**
+     * Adds an animation to the animation map
+     * @param role State
+     * @param currentDirection Direction
+     * @param animationLinker Animation object
+     */
+    protected void addAnimations(AnimationRole role, Direction currentDirection, AnimationLinker animationLinker) {
+	    animations.putIfAbsent(role, new HashMap<>());
+        Map<Direction, AnimationLinker> direction = animations.get(role);
+        direction.put(currentDirection, animationLinker);
+    }
+
+    /**
+     * Gets the default direction texture
+     * @return Texture name of the direction texture
+     */
+    public String getDefaultTexture() {
+        return defaultDirectionTextures.getOrDefault(getCurrentDirection(), "Not Found");
+    }
+
+
+    /**
+     * How much to scale the texture by.
+     * Used in MainCharacter to scale down the texture
+     * @return Scale multiplicative factor.
+     */
+    public float getScale() {
+        return scale;
+    }
 }
 
 
