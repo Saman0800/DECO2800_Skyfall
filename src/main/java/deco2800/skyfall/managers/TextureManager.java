@@ -150,8 +150,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("MainCharacterW_Anim", new Texture("resources/Main_Character_Left_Anim.png"));
             textureMap.put("MainCharacterNW_Anim",new Texture( "resources/Main_Character_B_Left_Anim.png"));
 
-      System.out.println("ALL TEXTURES LOADED SUCCESSFULLY");
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -165,7 +163,9 @@ public class TextureManager extends AbstractManager {
 
     }
     /**
-     * Gets a texture object for a given string id
+     * Gets a texture object for a given string id, if
+     * the string id starts with __ANIMATION it will try and retrieve a
+     * sprite from an animation.
      *
      * @param id Texture identifier
      * @return Texture for given id
@@ -215,6 +215,13 @@ public class TextureManager extends AbstractManager {
         }
     }
 
+
+    /**
+     * Gets a texture from an animation.
+     * @param id The string id of the form __ANIMATION_<animation_name>:<index>
+     * @param animationManager The animation manager
+     * @return
+     */
     private Texture getTextureFromAnimation(String id, AnimationManager animationManager) {
         String id1 = id.replaceAll("__ANIMATION_", "");
         String[] split = id1.split(":");

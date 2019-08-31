@@ -342,29 +342,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		GameManager.get().getWorld().getEntities().remove(this);
 	}
 
-
-//    //Used for managing animations
-//    public void setMovingAnimation(AnimationRole movingAnimation) {
-//        this.movingAnimation = movingAnimation;
-//    }
-
-
-
-    /**
-	 * Current moving state of Entity
-	 * @return animation role.
-	 */
-//	public AnimationRole getMovingAnimation() {
-//        return movingAnimation;
-//    }
-	/**
-	 * Getter for the animation queue
-	 * @return Reference to queue.
-	 */
-//	public Queue<AnimationLinker> getToBeRun() {
-//		return toBeRun;
-//	}
-
 	/**
 	 * Gets the associate animation with an animation role
 	 * @param type Animation role to get animation for
