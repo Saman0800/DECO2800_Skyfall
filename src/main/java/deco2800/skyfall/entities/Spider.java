@@ -76,7 +76,6 @@ public class Spider extends EnemyEntity implements Animatable {
     /**
      * To determine whether this enemy can move
      * @return boolean value moving
-     *
      */
     public boolean getMoving(){
         return moving;

@@ -120,10 +120,8 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         addEntity(robot);
         EnemyEntity stone=new Stone(-6f,1f,testCharacter);
         addEntity(stone);
-
-        //EnemyEntity treeman=new Treeman(2f,2f);
-        //addEntity(treeman);
-
+        EnemyEntity flower=new Flower(-5f,3f,testCharacter);
+        addEntity(flower);
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
     }
 

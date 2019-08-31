@@ -43,24 +43,6 @@ public class AnimationManager extends AbstractManager {
         this.generateAnimationObject("mario_left",
                 "mario_left", 100, 138, DEFAULT_FRAME_RATE);
 
-        this.generateAnimationObject("spider_defence","resources/spiderSheet/SpiderAnimation.atlas",1.0f);
-        this.generateAnimationObject("robot_defence","resources/robotSheet/robotAnimation.atlas",1.0f);
-        this.generateAnimationObject("stoneJNE","resources/EnemyAnimationPacked/northEastJump/northEastJump.atlas",0.1f);
-        this.generateAnimationObject("stoneJN","resources/EnemyAnimationPacked/northJump/northJump.atlas",0.1f);
-        this.generateAnimationObject("stoneJNW","resources/EnemyAnimationPacked/northWestJump/northWestJump.atlas",0.1f);
-        this.generateAnimationObject("stoneJS","resources/EnemyAnimationPacked/southJump/southJump.atlas",0.1f);
-        this.generateAnimationObject("stoneJSW","resources/EnemyAnimationPacked/southWestJump/southWestJump.atlas",0.1f);
-        this.generateAnimationObject("stoneJSE","resources/EnemyAnimationPacked/southEastJump/southEastJump.atlas",0.1f);
-        this.generateAnimationObject("stoneJSE","resources/EnemyAnimationPacked/southEastJump/southEastJump.atlas",0.1f);
-        //Treeman animation
-        this.generateAnimationObject("TreemanEastAttack","resources/EnemyAnimationPacked/eastAttack/eastAttack.atlas",0.1f);
-        this.generateAnimationObject("TreemanNorthAttack","resources/EnemyAnimationPacked/northAttack/northAttack.atlas",0.1f);
-        this.generateAnimationObject("TreemanSouthAttack","resources/EnemyAnimationPacked/southAttack/southAttack.atlas",0.1f);
-        this.generateAnimationObject("TreemanSouthEastAttack","resources/EnemyAnimationPacked/southEastAttack/southEastAttack.atlas",0.1f);
-        this.generateAnimationObject("TreemanSouthWestAttack","resources/EnemyAnimationPacked/southWeatAttack/southWestAttack.atlas",0.1f);
-        this.generateAnimationObject("TreemanWestAttack","resources/EnemyAnimationPacked/westAttack/westAttack.atlas",0.1f);
-
-
 
         this.generateAnimationObject("spider_defence","resources/spiderSheet/SpiderAnimation.atlas",DEFAULT_FRAME_RATE);
         this.generateAnimationObject("robot_defence","resources/robotSheet/robotAnimation.atlas",DEFAULT_FRAME_RATE);
@@ -78,7 +60,7 @@ public class AnimationManager extends AbstractManager {
                 "stoneAttackSouthEast/stoneASE.atlas",0.2f);
         this.generateAnimationObject("stoneASW","resources/EnemyAnimationPacked/attackAnimation/" +
                 "stoneAttackSouthWest/stoneASW.atlas",0.2f);
-
+        //        this.generateAnimationObject("flower_defence","resources/enemyFlowerSheet/flower.atlas",0.2f);
     }
 
     public AnimationManager(boolean test) {
