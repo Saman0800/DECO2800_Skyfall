@@ -193,7 +193,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         // Spawn projectile in front of character for now.
 
         Projectile projectile = new Projectile(mousePosition,
-                "arcane",
+                this.itemSlotSelected == 1 ? "range_test":"melee_test",
                 "test hitbox",
                 position.getCol() + 1,
                 position.getRow(),
