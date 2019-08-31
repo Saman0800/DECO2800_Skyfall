@@ -97,6 +97,9 @@ public class RockTest {
         assertEquals("Unexpected health value for Rock.", rock1.getHealth(), 5);
 
         Rock rock2 = rock1.newInstance(tile2);
+
+        assertFalse(rock1.equals(rock2));
+
         // check various properties of this new rock
         assertTrue(rock2.getPosition().equals(new HexVector(0.0f, 1.0f)));
         assertEquals(rock2.getRenderOrder(), 2);
@@ -118,5 +121,21 @@ public class RockTest {
         assertFalse("Unexpected rock placement.", tile3.isObstructed());
         assertFalse("Unexpected rock placement.", tile4.hasParent());
         assertFalse("Unexpected rock placement.", tile4.isObstructed());
+    }
+
+    @Test
+    public void TestGetandSet() {
+        CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
+        // Populate world with tiles
+        Tile tile1 = new Tile(0.0f, 0.0f);
+        Tile tile2 = new Tile(0.0f, 1.0f);
+        tileMap.add(tile1);
+        tileMap.add(tile2);
+        w.setTileMap(tileMap);
+
+        Rock rock1 = new Rock(tile1, true);
+
+        rock1.setHealth(3);
+        assertEquals(3, rock1.getHealth());
     }
 }

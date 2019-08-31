@@ -26,6 +26,7 @@ public class BiomeGeneratorTest {
     private static ArrayList<ArrayList<ArrayList<WorldGenNode>>> biomeNodesList;
     private static ArrayList<ArrayList<AbstractBiome>> biomeLists;
 
+    // TODO Fix this to account for `biomes` being modified in `generateBiomes()`.
     @BeforeClass
     public static void setup() {
         Random random = new Random(0);

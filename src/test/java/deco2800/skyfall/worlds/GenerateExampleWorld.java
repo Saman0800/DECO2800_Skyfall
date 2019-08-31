@@ -10,9 +10,11 @@ import java.io.IOException;
 public class GenerateExampleWorld {
     public static void main(String[] args){
 
-        AbstractWorld world = new RocketWorld(0, 10, 1, new int[] {20,10,10}, 3,2);
-
-    	try {
+//        AbstractWorld world = new RocketWorld(0, 10, 1, new int[] {20,10,10}, 3,2);
+//        AbstractWorld world = new RocketWorld(0, 30, 5, new int[] {20,10,10}, 2,5);
+//        AbstractWorld world = new RocketWorld(0, 30, 5, new int[] {10,10,10,10,10}, 2,5);
+        AbstractWorld world = new RocketWorld(0, 30, 5, new int[] {5,5,5,5,5}, 2,5);
+        try {
             world.saveWorld("src/test/java/deco2800/skyfall/worlds/ExampleWorldOutput.txt");
         } catch (IOException e){
     	    System.out.println("Could not save world");
