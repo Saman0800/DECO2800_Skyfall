@@ -59,8 +59,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     // if selecting sword then equipped_item = 0,
     // if selecting gun the equipped_item = 1
     private int equipped_item;
-    private final int INVENTORY_MAX_CAPACITY = 20;
-    private final int HOTBAR_MAX_CAPACITY = 5;
+    private static final int INVENTORY_MAX_CAPACITY = 20;
+    private static final int HOTBAR_MAX_CAPACITY = 5;
 
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
