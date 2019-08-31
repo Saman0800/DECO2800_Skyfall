@@ -733,7 +733,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Sets the movement animations.
+     * Sets the  animations.
      */
     @Override
     public void configureAnimations() {
