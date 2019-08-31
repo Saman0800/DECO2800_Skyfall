@@ -477,7 +477,7 @@ public class GameMenuScreen {
         ImageButton rightArrow = new ImageButton(generateTextureRegionDrawableObject("right_arrow"));
         playerSelect.add(rightArrow).width(arrowWidth).height(arrowWidth).expandY();
 
-        rightArrow.addListener(new ClickListener() {
+        leftArrow.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 currentCharacter = (currentCharacter + 1) % gameMenuManager.NUMBEROFCHARACTERS;
@@ -485,7 +485,7 @@ public class GameMenuScreen {
             }
         });
 
-        leftArrow.addListener(new ClickListener() {
+        rightArrow.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 currentCharacter = (currentCharacter + gameMenuManager.NUMBEROFCHARACTERS - 1) % gameMenuManager.NUMBEROFCHARACTERS;
