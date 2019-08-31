@@ -377,7 +377,7 @@ public class Renderer3D implements Renderer {
             if (ani.isAnimationFinished(time)) {
                 aniLink.resetStartingTime();
 
-                if (!(entity.getCurrentState() == AnimationRole.MOVE)) {
+                if (!aniLink.isLooping()) {
                     entity.setGetToBeRunToNull();
                 }
                 renderDefaultSprite(batch, entity, entityWorldCoord);

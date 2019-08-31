@@ -218,10 +218,10 @@ public class TextureManager extends AbstractManager {
     private Texture getTextureFromAnimation(String id, AnimationManager animationManager) {
         String id1 = id.replaceAll("__ANIMATION_", "");
         String[] split = id1.split(":");
-        System.out.println(split[0] + " " + split[1]);
+        //System.out.println(split[0] + " " + split[1]);
         Texture texture = animationManager.getKeyFrameFromAnimation(split[0], Integer.valueOf(split[1]));
         if (texture == null) {
-            System.out.println("getTextureFromAnimation did not find texture");
+            //System.out.println("getTextureFromAnimation did not find texture");
             return null;
         }
 

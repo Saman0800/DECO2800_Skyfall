@@ -732,6 +732,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
     }
 
+    /**
+     * Sets the movement animations.
+     */
     @Override
     public void configureAnimations() {
         addAnimations(AnimationRole.MOVE, Direction.NORTH_WEST,
@@ -766,6 +769,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                         AnimationRole.MOVE, Direction.SOUTH, true ,true));
     }
 
+    /**
+     * Sets default direction textures uses the get index for Animation feature
+     * as described in the animation documentation section 4.
+     */
     @Override
     public void setDirectionTextures() {
         defaultDirectionTextures.put(Direction.EAST, "__ANIMATION_MainCharacterE_Anim:0");
@@ -778,6 +785,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         defaultDirectionTextures.put(Direction.SOUTH_WEST, "__ANIMATION_MainCharacterSW_Anim:0");
     }
 
+    /**
+     * If the animation is moving sets the animation state to be Move
+     * else NULL. Also sets the direction
+     */
     private void updateAnimation() {
        getPlayerDirectionCardinal();
        List<Float> vel = getVelocity();

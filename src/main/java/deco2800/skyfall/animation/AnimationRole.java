@@ -1,9 +1,9 @@
 package deco2800.skyfall.animation;
 
 public enum AnimationRole {
-    /*
-        Roles for animations.
-     */
+    /**
+     *   Current Roles for animations.
+     **/
     MOVE,
     MELEE,
     DEFENCE,

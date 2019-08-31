@@ -65,11 +65,16 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 */
 	//protected AnimationRole movingAnimation = AnimationRole.NULL;
 	/**
-	 * Non-looping animations to keep track of run by the Renderer3D associated
-	 * to this entity
+     * The animation to be run
 	 */
 	private AnimationLinker toBeRun = null;
+    /**
+     * The current direction to that the entity is facing
+     */
 	private Direction currentDirection = Direction.EAST;
+    /**
+     * The current state of the entity
+     */
 	private AnimationRole currentState = AnimationRole.NULL;
 	protected float scale = 1f;
 	/**
@@ -375,45 +380,75 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         return null;
     }
 
+    /**
+     * Gets the current animation to be run
+     * @return
+     */
 	public AnimationLinker getToBeRun() {
 		return toBeRun;
 	}
 
+    /**
+     * Sets the current animation to be run to null
+     */
 	public void setGetToBeRunToNull() {
 		toBeRun = null;
 	}
-	//public void setToBeRun(AnimationLinker toBeRun) {
-	//	this.toBeRun = toBeRun;
-	//}
 
+    /**
+     * The current direction that the object is facing
+     * @return Direction that the entity is facing
+     */
 	public Direction getCurrentDirection() {
 		return currentDirection;
 	}
 
-
+    /**
+     * The current state of the object
+     * @return The state of the object
+     */
 	public AnimationRole getCurrentState() {
 		return currentState;
 	}
 
+    /**
+     * Set the current direction and also updates the animation to be run
+     * variable
+     * @param currentDirection new direction that the entity is facing
+     */
 	public void setCurrentDirection(Direction currentDirection) {
 		this.currentDirection = currentDirection;
 		toBeRun = getAnimationLinker(this.currentState, this.currentDirection);
 	}
 
-
+    /**
+     * Set the current state and also updates the animation to be run
+     * variable
+     * @param currentState new direction that the entity is facing
+     */
 	public void setCurrentState(AnimationRole currentState) {
 		this.currentState = currentState;
 		toBeRun = getAnimationLinker(this.currentState, this.currentDirection);
 	}
 
+    /**
+     * Adds an animation to the animation map
+     * @param role State
+     * @param currentDirection Direction
+     * @param animationLinker Animation object
+     */
     protected void addAnimations(AnimationRole role, Direction currentDirection, AnimationLinker animationLinker) {
 	    animations.putIfAbsent(role, new HashMap<>());
         Map<Direction, AnimationLinker> direction = animations.get(role);
         direction.put(currentDirection, animationLinker);
     }
 
+    /**
+     * Gets tge default direction texture
+     * @return Texture name of the direction texture
+     */
     public String getDefaultTexture() {
-        return defaultDirectionTextures.getOrDefault(currentDirection, "Not Found");
+        return defaultDirectionTextures.getOrDefault(getCurrentDirection(), "Not Found");
     }
 
     public float getScale() {
