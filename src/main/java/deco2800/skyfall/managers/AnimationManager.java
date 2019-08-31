@@ -18,11 +18,11 @@ import java.util.Map;
  */
 public class AnimationManager extends AbstractManager {
 
-    private TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
+    private TextureManager textureManager;
     /**
      * Maps Animation Name to the Animation object
      */
-    private Map<String, Animation<TextureRegion>> animationMap = new HashMap<>();
+    private Map<String, Animation<TextureRegion>> animationMap ;
     /**
      * For logging error msgs.
      */
@@ -34,20 +34,16 @@ public class AnimationManager extends AbstractManager {
      * shouldn't/doesn't need to.
      */
     public AnimationManager() {
+        textureManager = GameManager.getManagerFromInstance(TextureManager.class);
+        animationMap = new HashMap<>();
         final float DEFAULT_FRAME_RATE  = 1f/4f;
         //These are simply test objects.
         this.generateAnimationObject("mario_right",
                 "mario_right", 100, 138, DEFAULT_FRAME_RATE);
         this.generateAnimationObject("mario_left",
                 "mario_left", 100, 138, DEFAULT_FRAME_RATE);
-        this.generateAnimationObject("spider_defence","resources/spiderSheet/SpiderAnimation.atlas",1.0f);
-        this.generateAnimationObject("robot_defence","resources/robotSheet/robotAnimation.atlas",1.0f);
-//        this.generateAnimationObject("stoneJNE","resources/EnemyAnimationPacked/northEastJump/northEastJump.atlas",0.2f);
-//        this.generateAnimationObject("stoneJN","resources/EnemyAnimationPacked/northJump/northJump.atlas",0.2f);
-//        this.generateAnimationObject("stoneJNW","resources/EnemyAnimationPacked/northWestJump/northWestJump.atlas",0.2f);
-//        this.generateAnimationObject("stoneJS","resources/EnemyAnimationPacked/southJump/southJump.atlas",0.2f);
-//        this.generateAnimationObject("stoneJSW","resources/EnemyAnimationPacked/southWestJump/southWestJump.atlas",0.2f);
-//        this.generateAnimationObject("stoneJSE","resources/EnemyAnimationPacked/southEastJump/southEastJump.atlas",0.2f);
+        this.generateAnimationObject("spider_defence","resources/spiderSheet/SpiderAnimation.atlas",DEFAULT_FRAME_RATE);
+        this.generateAnimationObject("robot_defence","resources/robotSheet/robotAnimation.atlas",DEFAULT_FRAME_RATE);
         this.generateAnimationObject("stoneJNE","resources/EnemyAnimationPacked/northEastJump/stoneJNE.atlas",0.2f);
         this.generateAnimationObject("stoneJN","resources/EnemyAnimationPacked/northJump/stoneJN.atlas",0.2f);
         this.generateAnimationObject("stoneJNW","resources/EnemyAnimationPacked/northWestJump/stoneJNW.atlas",0.2f);
@@ -64,7 +60,9 @@ public class AnimationManager extends AbstractManager {
                 "stoneAttackSouthWest/stoneASW.atlas",0.2f);
     }
 
+    public AnimationManager(boolean test) {
 
+    }
     /*
         For animation could separated into different file later.
      */
@@ -103,7 +101,7 @@ public class AnimationManager extends AbstractManager {
      * @param frameRate Framerate of the generate animation object
      */
     public void generateAnimationObject(String animationName, String textureName, int tileWidth, int tileHeight, float frameRate) {
-        if (animationMap.containsKey(animationName)) {
+        if (!textureManager.hasTexture(textureName)) {
             LOGGER.error("Texture:" + textureName + "not found.");
             return;
         }
@@ -155,8 +153,7 @@ public class AnimationManager extends AbstractManager {
         }
         TextureRegion[] region = animation.getKeyFrames();
 
-
-        if (region.length - 1 <= index) {
+        if (region.length  <= index) {
             LOGGER.error("Index out of range");
             return null;
         }
