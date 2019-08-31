@@ -21,7 +21,6 @@ public class SoundEffectTest {
 
     String path = "resources/sounds/";
 
-
     /**
      *  To test whether the file path is correct, whether the selected audio can be opened
      *  whether new-added sound is in the map in the form of (soundName, fileName)
@@ -51,8 +50,8 @@ public class SoundEffectTest {
     }
 
     /**
-     *  Tests sounds loaded correctly from constructor. All sounds are loaded
-     *  the same way, so tests the first.
+     * Tests sounds loaded correctly from constructor. All sounds are loaded
+     * the same way, so tests the first.
      */
     @Test
     public void testHasSound() {
@@ -92,7 +91,7 @@ public class SoundEffectTest {
 
     @Test
     public void testPause() {
-        try{
+        try {
             SoundManager.playSound("people_walk_normal");
             TimeUnit.SECONDS.sleep(1);
             SoundManager.pauseSound("people_walk_normal");
@@ -103,3 +102,4 @@ public class SoundEffectTest {
     }
     
 }
+
