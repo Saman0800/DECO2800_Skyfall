@@ -21,6 +21,11 @@ public class SoundEffectTest {
 
     String path = "resources/sounds/";
 
+
+    /**
+     *  To test whether the file path is correct, whether the selected audio can be opened
+     *  whether new-added sound is in the map in the form of (soundName, fileName)
+     */
     @Test
     public void mockTestSound() {
         Gdx.audio = mock(Audio.class);
