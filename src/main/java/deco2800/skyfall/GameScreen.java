@@ -23,11 +23,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 
-public class GameScreen implements Screen, KeyDownObserver {
-    private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
-    @SuppressWarnings("unused")
-    private final SkyfallGame game;
-    /**
+public class GameScreen implements Screen,KeyDownObserver {
+	private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
+	@SuppressWarnings("unused")
+	private final SkyfallGame game;
+	/**
      * Set the renderer. 3D is for Isometric worlds Check the documentation for each
      * renderer to see how it handles WorldEntity coordinates
      */

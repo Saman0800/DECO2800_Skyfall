@@ -58,7 +58,6 @@ public class BiomeGenerator {
             throws NotEnoughPointsException, DeadEndGenerationException {
         BiomeGenerator biomeGenerator = new BiomeGenerator(nodes, random, biomeSizes, biomes, noLakes, lakeSize);
         biomeGenerator.generateBiomesInternal();
-
     }
 
     /**
@@ -128,7 +127,7 @@ public class BiomeGenerator {
     private void generateBiomesInternal() throws DeadEndGenerationException {
         for (int i = 0; ; i++) {
             try {
-                biomes = new ArrayList<>(biomeSizes.length + 1);
+                biomes = new ArrayList<>(biomeSizes.length + noLakes + 1);
                 usedNodes = new HashSet<>(nodes.size());
                 borderNodes = new ArrayList<>();
                 nodesBiomes = new HashMap<>();
@@ -275,6 +274,7 @@ public class BiomeGenerator {
 
             // Calculates how many nodes from each biome contribute to the lake
             // To determine the lake's parent biome
+            // TODO Make this deterministic (don't loop through a HashMap).
             HashMap<BiomeInProgress, Integer> nodesInBiome = new HashMap<>();
             for (WorldGenNode node : nodesFound) {
                 BiomeInProgress biome = nodesBiomes.get(node);
@@ -330,62 +330,70 @@ public class BiomeGenerator {
      * @throws DeadEndGenerationException if too many tiles from a biome are lost
      */
     private void ensureContiguity() throws DeadEndGenerationException {
-        // TODO Deal with sub-biomes.
         // TODO Add comments.
+        // TODO Optimise search using border nodes only.
 
         HashSet<Tile> removedTiles = new HashSet<>();
 
         for (AbstractBiome biome : realBiomes) {
-            HashSet<Tile> biomeUncheckedTiles = new HashSet<>(biome.getTiles());
+            // HashSet<Tile> biomeUncheckedTiles = new HashSet<>(biome.getTiles());
+            HashSet<Tile> biomeUncheckedTiles = biome.getDescendantBiomes().stream()
+                    .flatMap(descendant -> descendant.getTiles().stream())
+                    .collect(Collectors.toCollection(HashSet::new));
             ArrayList<Tile> mainClusterTiles = new ArrayList<>();
-            int mainClusterSize = 0;
 
             while (!biomeUncheckedTiles.isEmpty()) {
-                if (biomeUncheckedTiles.size() < mainClusterSize) {
+                // If there are fewer remaining tiles in the biome than the main cluster, than the largest cluster must
+                // already be found, so break early.
+                if (biomeUncheckedTiles.size() <= mainClusterTiles.size()) {
                     removedTiles.addAll(biomeUncheckedTiles);
                     break;
                 }
 
+                // The tiles to be checked.
                 ArrayDeque<Tile> clusterCheckQueue = new ArrayDeque<>();
+                // The tiles known to be in the cluster.
                 ArrayList<Tile> clusterTiles = new ArrayList<>();
 
+                // Get the first tile from the biome that hasn't been checked. Note that you can't just take a tile from
+                // the unchecked tiles directly because the ordering is not deterministic, so it would break seeding.
                 Tile clusterStart = biome.getTiles().stream().filter(biomeUncheckedTiles::contains).findFirst()
                         .orElseThrow(IllegalStateException::new);
                 biomeUncheckedTiles.remove(clusterStart);
 
                 clusterCheckQueue.add(clusterStart);
-                int clusterSize = 0;
 
                 while (!clusterCheckQueue.isEmpty()) {
                     Tile expandFrom = clusterCheckQueue.remove();
-                    clusterTiles.add(expandFrom);
-                    clusterSize++;
+                    // Don't add tiles from sub-biomes to this cluster's tiles.
+                    if (expandFrom.getBiome() == biome) {
+                        clusterTiles.add(expandFrom);
+                    }
 
+                    // Expand the cluster to adjacent tiles in the same biome.
                     for (Tile neighbour : expandFrom.getNeighbours().values()) {
-                        if (neighbour.getBiome() == biome) {
-                            if (biomeUncheckedTiles.contains(neighbour)) {
-                                clusterCheckQueue.add(neighbour);
-                                biomeUncheckedTiles.remove(neighbour);
-                            }
+                        if (biomeUncheckedTiles.contains(neighbour) && neighbour.getBiome().isDescendedFrom(biome)) {
+                            clusterCheckQueue.add(neighbour);
+                            biomeUncheckedTiles.remove(neighbour);
                         }
                     }
                 }
 
-                if (clusterSize > mainClusterSize) {
+                // Keep the biggest cluster of tiles and mark the tile frome the other cluster to be removed.
+                if (clusterTiles.size() > mainClusterTiles.size()) {
                     removedTiles.addAll(mainClusterTiles);
-
                     mainClusterTiles = clusterTiles;
-                    mainClusterSize = clusterSize;
                 } else {
                     removedTiles.addAll(clusterTiles);
                 }
             }
 
-            if (mainClusterSize < biome.getTiles().size() * CONTIGUOUS_TILE_RETENTION_THRESHOLD) {
+            if (mainClusterTiles.size() < biome.getTiles().size() * CONTIGUOUS_TILE_RETENTION_THRESHOLD) {
                 throw new DeadEndGenerationException();
             }
         }
 
+        // Find the border tiles to expand from.
         ArrayList<Tile> borderTiles = new ArrayList<>();
         for (Tile tile : removedTiles) {
             for (Tile neighbour : tile.getNeighbours().values()) {
@@ -394,7 +402,12 @@ public class BiomeGenerator {
                 }
             }
         }
+        // Sort this list to make the algorithm deterministic (so it doesn't rely on the order of the `HashSet`).
+        borderTiles.sort((a, b) -> (int) Math.floor(a.getCol()) == (int) Math.floor(b.getCol())
+                                   ? (int) Math.floor(a.getRow()) - (int) Math.floor(b.getRow())
+                                   : (int) Math.floor(a.getCol()) - (int) Math.floor(b.getCol()));
 
+        // Expand outwards from the border tiles into the non-contiguous tiles.
         while (!removedTiles.isEmpty()) {
             Tile expandFrom = borderTiles.get(random.nextInt(borderTiles.size()));
             ArrayList<Tile> expandToCandidates = expandFrom.getNeighbours().values().stream()
@@ -439,7 +452,7 @@ public class BiomeGenerator {
     /**
      * Returns whether the node is a valid lake node
      *
-     * @param node the node to check
+     * @param node          the node to check
      * @param tempLakeNodes the nodes that have already been assigned as lakes
      *
      * @return whether the node is a valid lake node
