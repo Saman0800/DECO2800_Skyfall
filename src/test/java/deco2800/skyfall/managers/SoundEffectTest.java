@@ -100,6 +100,6 @@ public class SoundEffectTest {
             // exception caught
         }
     }
-    
+
 }
 
