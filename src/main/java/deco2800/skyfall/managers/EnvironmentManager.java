@@ -2,7 +2,6 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.worlds.Tile;
-import java.util.concurrent.TimeUnit;
 
 import java.util.List;
 
@@ -199,8 +198,11 @@ public class EnvironmentManager extends TickableManager {
       return seasonString;
    }
 
-   public void setTODMusic () {
-
+   /**
+    * Sets the filename in game
+    *
+    */
+   public void setFilename() {
       String[] arrOfStr = file.split("_", 4);
 
       // Check time of day and change files accordingly
@@ -211,9 +213,18 @@ public class EnvironmentManager extends TickableManager {
          arrOfStr[1] = "night.wav";
          file = "resources/sounds/forest_" + arrOfStr[1];
       }
+   }
+
+   /**
+    * Sets the music in game
+    *
+    */
+   public void setTODMusic () {
 
       if (!(file.contains(currentFile))) {
+         setFilename();
 
+         // Stop current music
          try {
             bgmManager.stop();
          } catch (Exception e) {
@@ -222,15 +233,16 @@ public class EnvironmentManager extends TickableManager {
 
          currentFile = file;
 
-         System.out.println("hi");
          // Play BGM
          try {
-            bgmManager.BGMManager(currentFile);
+            bgmManager.initClip(currentFile);
             bgmManager.play();
          } catch (Exception e) {
             // Exception caught, if any
          }
       }
+
+      setFilename();
 
    }
 

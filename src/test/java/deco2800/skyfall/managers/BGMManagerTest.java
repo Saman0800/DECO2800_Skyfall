@@ -17,7 +17,7 @@ public class BGMManagerTest {
     public void exceptionTest() throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
         try {
-            BGMManager.BGMManager("resources/sounds/09-running-in-the-90-s.mp3");
+            BGMManager.initClip("resources/sounds/09-running-in-the-90-s.mp3");
         } catch (Exception e) {
             //exception caught
         }
@@ -27,7 +27,7 @@ public class BGMManagerTest {
     public void playBGMTest() throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
         try {
-            BGMManager.BGMManager(file);
+            BGMManager.initClip(file);
             BGMManager.play();
             TimeUnit.SECONDS.sleep(1);
             assertEquals(BGMManager.getClip().isRunning(), true);
@@ -39,7 +39,7 @@ public class BGMManagerTest {
     @Test
     public void pauseTest() {
         try {
-            BGMManager.BGMManager(file);
+            BGMManager.initClip(file);
             BGMManager.play();
             TimeUnit.SECONDS.sleep(1);
             BGMManager.pause();
@@ -52,7 +52,7 @@ public class BGMManagerTest {
     @Test
     public void resumeTest() {
         try {
-            BGMManager.BGMManager(file);
+            BGMManager.initClip(file);
             BGMManager.play();
             TimeUnit.SECONDS.sleep(1);
             BGMManager.pause();
@@ -69,14 +69,14 @@ public class BGMManagerTest {
     @Test
     public void resetClipTest() {
         try {
-            BGMManager.BGMManager(file);
+            BGMManager.initClip(file);
             BGMManager.play();
             TimeUnit.SECONDS.sleep(1);
             BGMManager.pause();
             TimeUnit.SECONDS.sleep(1);
             BGMManager.resetClip();
             TimeUnit.SECONDS.sleep(1);
-            BGMManager.BGMManager(file);
+            BGMManager.initClip(file);
             assertEquals(BGMManager.getClip().getLongFramePosition(), 0);
 
             // Test that current clip is reset to the start
@@ -89,7 +89,7 @@ public class BGMManagerTest {
     @Test
     public void muteTest() {
         try {
-            BGMManager.BGMManager(file);
+            BGMManager.initClip(file);
             BGMManager.play();
             TimeUnit.SECONDS.sleep(1);
             BGMManager.mute();
@@ -105,7 +105,7 @@ public class BGMManagerTest {
     @Test
     public void unmuteTest() {
         try {
-            BGMManager.BGMManager(file);
+            BGMManager.initClip(file);
             BGMManager.play();
             TimeUnit.SECONDS.sleep(1);
             BGMManager.mute();
@@ -124,7 +124,7 @@ public class BGMManagerTest {
     @Test
     public void getVolumeTest() {
         try {
-            BGMManager.BGMManager(file);
+            BGMManager.initClip(file);
             BGMManager.play();
 
             // Test Minimum (0)
@@ -142,7 +142,7 @@ public class BGMManagerTest {
     @Test
     public void setVolumeTest() {
         try {
-            BGMManager.BGMManager(file);
+            BGMManager.initClip(file);
             BGMManager.play();
 
             // Test Minimum (0)
@@ -171,7 +171,7 @@ public class BGMManagerTest {
 //    @Test
 //    public void stopTest(){
 //        try {
-//            SoundManager.BGMManager(file);
+//            SoundManager.initClip(file);
 //            SoundManager.play();
 //            SoundManager.stop();
 //            assertEquals(SoundManager.getClip().isRunning(), false); // assert false

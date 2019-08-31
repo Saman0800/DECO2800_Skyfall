@@ -28,10 +28,17 @@ public class BGMManager extends AbstractManager {
     EnvironmentManager environmentManager;
 
     /**
+     * Background music constructor
+     */
+    public static void BGMManager() {
+        // Set parameters here
+    }
+
+    /**
      * Initialises the Audio Input Stream and allows clip to loop continuously.
      * @param file is the name of the audio intended to be played.
      */
-    public static void BGMManager(String file) throws UnsupportedAudioFileException,
+    public static void initClip(String file) throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
 
         try {
