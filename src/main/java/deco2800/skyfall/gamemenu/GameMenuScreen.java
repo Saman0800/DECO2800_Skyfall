@@ -24,14 +24,15 @@ public class GameMenuScreen {
     private GameMenuManager gameMenuManager;
     private PopUpTable pauseTable;
     private PopUpTable helpTable;
-    private PopUpTable inventoryTable;
     private PopUpTable settingsTable;
     private PopUpTable playerSelect;
-    private InventoryManager inventory;
     private HealthCircle healthCircle;
     private MainCharacter mainCharacter;
+
+    private InventoryManager inventory;
     private Table resourcePanel;
     private Table quickAccessPanel;
+    private PopUpTable inventoryTable;
 
     public GameMenuScreen(GameMenuManager gameMenuManager) {
         this.gameMenuManager = gameMenuManager;
@@ -71,24 +72,9 @@ public class GameMenuScreen {
             }
         });
 
-        quickAccessPanel = new Table();
-        quickAccessPanel.setBackground(generateTextureRegionDrawableObject("quick_access_panel"));
-        quickAccessPanel.setSize(450, 207 * 0.55f);
-        quickAccessPanel.setPosition(560, 30 * 1000 / 800f);
-        stage.addActor(quickAccessPanel);
+        //Set quick access panel with inventory button
+        setQuickAccessPanel();
 
-        ImageButton inventoryButton = new ImageButton(generateTextureRegionDrawableObject("inv_button"));
-        inventoryButton.setSize(50, 50 * 146 / 207f);
-        inventoryButton.setPosition(950, 78);
-        updateQuickAccess();
-        stage.addActor(inventoryButton);
-
-        inventoryButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                gameMenuManager.open(getInventoryTable());
-            }
-        });
 
         ImageButton selectCharacter = new ImageButton(generateTextureRegionDrawableObject("select-character"));
         selectCharacter.setSize(width, width * 146 / 207f);
@@ -267,7 +253,7 @@ public class GameMenuScreen {
             stage.addActor(inventoryTable.getExit());
         } else{
             inventoryTable.removeActor(resourcePanel);
-            updateInventoryTable();
+            updateResourcePanel();
             inventoryTable.addActor(resourcePanel);
         }
         return inventoryTable;
@@ -287,7 +273,7 @@ public class GameMenuScreen {
         infoPanel.setBackground(generateTextureRegionDrawableObject("info_panel"));
 
 
-        updateInventoryTable();
+        updateResourcePanel();
 
         inventoryTable.addActor(infoBar);
         inventoryTable.addActor(infoPanel);
@@ -297,7 +283,7 @@ public class GameMenuScreen {
     }
 
 
-    private void updateInventoryTable(){
+    private void updateResourcePanel(){
         resourcePanel = new Table();
         resourcePanel.setName("resourcePanel");
         resourcePanel.setSize(410, 400);
@@ -331,6 +317,35 @@ public class GameMenuScreen {
             }
         }
 
+    }
+
+    private void setQuickAccessPanel(){
+        //Set Quick Access Panel
+        quickAccessPanel = new Table();
+        quickAccessPanel.setBackground(generateTextureRegionDrawableObject("quick_access_panel"));
+        quickAccessPanel.setSize(450, 207 * 0.55f);
+        quickAccessPanel.setPosition(560, 30 * 1000 / 800f);
+
+        //Populate quick access GUI with resources
+        updateQuickAccess();
+
+        stage.addActor(quickAccessPanel);
+
+
+        //Set open inventory button icon in quick access
+        ImageButton inventoryButton = new ImageButton(generateTextureRegionDrawableObject("inv_button"));
+        inventoryButton.setSize(50, 50 * 146 / 207f);
+        inventoryButton.setPosition(950, 78);
+
+        stage.addActor(inventoryButton);
+
+        //Add inventory button listener
+        inventoryButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameMenuManager.open(getInventoryTable());
+            }
+        });
     }
 
     private void updateQuickAccess(){
