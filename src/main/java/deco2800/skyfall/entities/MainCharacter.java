@@ -113,7 +113,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public MainCharacter(float col, float row, float speed, String name,
                          int health) {
         super(row, col, speed, name, health);
-        this.setTexture("MainCharacterE");
+        this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
         this.setHeight(1);
         this.setObjectName("MainPiece");
 
@@ -146,6 +146,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         isMoving = false;
         setDirectionTextures();
+        configureAnimations();
     }
 
     /**
@@ -444,7 +445,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 //         this.direction.y - this.getRow());
 //        System.out.printf("%s%n", this.currentSpeed);
 //        TODO: Check direction for animation here
-        this.getPlayerDirectionCardinal();
+        this.updateAnimation();
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             GameManager.getManagerFromInstance(ConstructionManager.class)
                     .displayWindow();
@@ -508,21 +509,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
 
     }
-
-    //@Override
-    //public void configureAnimations() {
-        //this.addAnimations(AnimationRole.MOVE, Direction.EAST,
-                //new AnimationLinker("mario_right", AnimationRole.MOVE, Direction.EAST, true));
-
-        //this.addAnimations(AnimationRole.MOVE, Direction.WEST,
-                //new AnimationLinker("mario_left", AnimationRole.MOVE, Direction.WEST, true));
-   // }
-   //
-    //@Override
-    //public void setDirectionTextures() {
-        //defaultDirectionTextures.put(Direction.EAST, "__ANIMATION_mario_right:1");
-        //defaultDirectionTextures.put(Direction.WEST, "__ANIMATION_mario_left:1");
-    //}
 
     /*
     Potential more methods and related attributes for future sprints:
@@ -650,7 +636,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     public String getPlayerDirectionCardinal() {
         double direction = getPlayerDirectionAngle();
-
         if (direction <= 22.5 || direction >= 337.5) {
             setCurrentDirection(Direction.NORTH);
             return "North";
@@ -688,7 +673,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      *
      * @return list of players velocity properties
      */
-    public List getVelocity() {
+    public List<Float> getVelocity() {
         ArrayList<Float> velocity = new ArrayList<>();
         velocity.add(xVel);
         velocity.add(yVel);
@@ -753,18 +738,59 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     @Override
     public void configureAnimations() {
+        addAnimations(AnimationRole.MOVE, Direction.NORTH_WEST,
+                new AnimationLinker("MainCharacterNW_Anim",
+                AnimationRole.MOVE, Direction.NORTH_WEST, true ,true));
 
+        addAnimations(AnimationRole.MOVE, Direction.NORTH_EAST,
+                new AnimationLinker("MainCharacterNE_Anim",
+                        AnimationRole.MOVE, Direction.NORTH_WEST, true ,true));
+
+        addAnimations(AnimationRole.MOVE, Direction.SOUTH_WEST,
+                new AnimationLinker("MainCharacterSW_Anim",
+                        AnimationRole.MOVE, Direction.SOUTH_WEST, true ,true));
+
+        addAnimations(AnimationRole.MOVE, Direction.SOUTH_EAST,
+                new AnimationLinker("MainCharacterSE_Anim",
+                        AnimationRole.MOVE, Direction.SOUTH_EAST, true ,true));
+
+        addAnimations(AnimationRole.MOVE, Direction.EAST,
+                new AnimationLinker("MainCharacterE_Anim",
+                        AnimationRole.MOVE, Direction.EAST, true ,true));
+        addAnimations(AnimationRole.MOVE, Direction.NORTH,
+                new AnimationLinker("MainCharacterN_Anim",
+                        AnimationRole.MOVE, Direction.NORTH, true ,true));
+
+        addAnimations(AnimationRole.MOVE, Direction.WEST,
+                new AnimationLinker("MainCharacterW_Anim",
+                        AnimationRole.MOVE, Direction.WEST, true ,true));
+
+        addAnimations(AnimationRole.MOVE, Direction.SOUTH,
+                new AnimationLinker("MainCharacterS_Anim",
+                        AnimationRole.MOVE, Direction.SOUTH, true ,true));
     }
 
     @Override
     public void setDirectionTextures() {
-        defaultDirectionTextures.put(Direction.EAST, "MainCharacterE");
-        defaultDirectionTextures.put(Direction.NORTH, "MainCharacterN");
-        defaultDirectionTextures.put(Direction.WEST, "MainCharacterW");
-        defaultDirectionTextures.put(Direction.SOUTH, "MainCharacterS");
-        defaultDirectionTextures.put(Direction.NORTH_EAST, "MainCharacterNE");
-        defaultDirectionTextures.put(Direction.NORTH_WEST, "MainCharacterNW");
-        defaultDirectionTextures.put(Direction.SOUTH_EAST, "MainCharacterSE");
-        defaultDirectionTextures.put(Direction.SOUTH_WEST, "MainCharacterSW");
+        defaultDirectionTextures.put(Direction.EAST, "__ANIMATION_MainCharacterE_Anim:0");
+        defaultDirectionTextures.put(Direction.NORTH, "__ANIMATION_MainCharacterN_Anim:0");
+        defaultDirectionTextures.put(Direction.WEST, "__ANIMATION_MainCharacterW_Anim:0");
+        defaultDirectionTextures.put(Direction.SOUTH, "__ANIMATION_MainCharacterS_Anim:0");
+        defaultDirectionTextures.put(Direction.NORTH_EAST, "__ANIMATION_MainCharacterNE_Anim:0");
+        defaultDirectionTextures.put(Direction.NORTH_WEST, "__ANIMATION_MainCharacterNW_Anim:0");
+        defaultDirectionTextures.put(Direction.SOUTH_EAST, "__ANIMATION_MainCharacterSE_Anim:0");
+        defaultDirectionTextures.put(Direction.SOUTH_WEST, "__ANIMATION_MainCharacterSW_Anim:0");
+    }
+
+    private void updateAnimation() {
+       getPlayerDirectionCardinal();
+       List<Float> vel = getVelocity();
+
+       if (vel.get(2) == 0f) {
+           setCurrentState(AnimationRole.NULL);
+       } else {
+           setCurrentState(AnimationRole.MOVE);
+       }
+
     }
 }

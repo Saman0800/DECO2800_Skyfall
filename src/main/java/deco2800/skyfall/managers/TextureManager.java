@@ -142,14 +142,17 @@ public class TextureManager extends AbstractManager {
             textureMap.put("fence_top_left", new Texture("resources/world_structures/fence_top_left.png"));
             textureMap.put("fence_top_right", new Texture("resources/world_structures/fence_top_right.png"));
 
-            textureMap.put("MainCharacterN", new Texture("resources/Main_Character_Back.png"));
-            textureMap.put("MainCharacterNE", new Texture("resources/Main_Character_B_Right.png"));
-            textureMap.put("MainCharacterE", new Texture("resources/Main_Character_Right.png"));
-            textureMap.put("MainCharacterSE", new Texture("resources/Main_Character_F_Right.png"));
-            textureMap.put("MainCharacterS", new Texture("resources/Main_Character_Front.png"));
-            textureMap.put("MainCharacterSW",new Texture( "resources/Main_Character_F_Left.png"));
-            textureMap.put("MainCharacterW", new Texture("resources/Main_Character_Left.png"));
-            textureMap.put("MainCharacterNW",new Texture( "resources/Main_Character_B_Left.png"));
+            textureMap.put("MainCharacterN_Anim", new Texture("resources/Main_Character_Back_Anim.png"));
+            textureMap.put("MainCharacterNE_Anim", new Texture("resources/Main_Character_B_Right_Anim.png"));
+            textureMap.put("MainCharacterE_Anim", new Texture("resources/Main_Character_Right_Anim.png"));
+            textureMap.put("MainCharacterSE_Anim", new Texture("resources/Main_Character_F_Right_Anim.png"));
+            textureMap.put("MainCharacterS_Anim", new Texture("resources/Main_Character_Front_Anim.png"));
+            textureMap.put("MainCharacterSW_Anim",new Texture( "resources/Main_Character_F_Left_Anim.png"));
+            textureMap.put("MainCharacterW_Anim", new Texture("resources/Main_Character_Left_Anim.png"));
+            textureMap.put("MainCharacterNW_Anim",new Texture( "resources/Main_Character_B_Left_Anim.png"));
+
+      System.out.println("ALL TEXTURES LOADED SUCCESSFULLY");
+
         } catch (Exception e) {
             e.printStackTrace();
         }

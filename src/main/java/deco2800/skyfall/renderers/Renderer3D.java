@@ -317,6 +317,17 @@ public class Renderer3D implements Renderer {
         }
     }
 
+    private void renderDefaultSprite(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord) {
+        String directionTexture = entity.getDefaultTexture();
+
+        if (!directionTexture.equals("Not Found")) {
+            renderAbstractEntity(batch, entity, entityWorldCoord, textureManager.getTexture(directionTexture));
+
+        } else {
+            renderAbstractEntity(batch, entity, entityWorldCoord, textureManager.getTexture(entity.getTexture()));
+        }
+    }
+
 
     /**
      * Runs all other non-looping animations for the entity
@@ -326,21 +337,14 @@ public class Renderer3D implements Renderer {
      * @param entityWorldCoord Where to draw.
      */
     private void runAnimation(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord) {
-
             if (entity.getCurrentState() == AnimationRole.NULL) {
-                String directionTexture = entity.getDefaultTexture();
-                if (!directionTexture.equals("Not Found")) {
-                    renderAbstractEntity(batch, entity, entityWorldCoord, textureManager.getTexture(directionTexture));
-                    return;
-                } else {
-                    renderAbstractEntity(batch, entity, entityWorldCoord, textureManager.getTexture(entity.getTexture()));
-                    return;
-                }
+                renderDefaultSprite(batch, entity, entityWorldCoord);
             }
 
             AnimationLinker aniLink = entity.getToBeRun();
             if (aniLink == null) {
                 //System.out.println("AnimationLinker is null");
+                renderDefaultSprite(batch, entity, entityWorldCoord);
                 return;
             }
 
@@ -349,16 +353,18 @@ public class Renderer3D implements Renderer {
 
             if (ani == null) {
                 //System.out.println("Animation is null");
+                renderDefaultSprite(batch, entity, entityWorldCoord);
                 return;
             }
 
             if (ani.isAnimationFinished(time)) {
-                //System.out.println("Animation is done");
+                System.out.println("Animation is done");
                 aniLink.resetStartingTime();
 
                 if (!(entity.getCurrentState() == AnimationRole.MOVE)) {
                     entity.setGetToBeRunToNull();
                 }
+                renderDefaultSprite(batch, entity, entityWorldCoord);
                 return;
             }
 

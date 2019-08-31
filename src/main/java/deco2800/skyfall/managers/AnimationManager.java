@@ -36,6 +36,7 @@ public class AnimationManager extends AbstractManager {
     public AnimationManager() {
         textureManager = GameManager.getManagerFromInstance(TextureManager.class);
         animationMap = new HashMap<>();
+
         final float DEFAULT_FRAME_RATE  = 1f/4f;
         //These are simply test objects.
 //        this.generateAnimationObject("mario_right",
@@ -44,6 +45,40 @@ public class AnimationManager extends AbstractManager {
 //                "mario_left", 100, 138, DEFAULT_FRAME_RATE);
         this.generateAnimationObject("spider_defence","resources/spiderSheet/SpiderAnimation.atlas",DEFAULT_FRAME_RATE);
         this.generateAnimationObject("robot_defence","resources/robotSheet/robotAnimation.atlas",DEFAULT_FRAME_RATE);
+
+        this.generateAnimationObject("MainCharacterN_Anim",
+                "MainCharacterN_Anim",
+                729, 1134, 0.2f);
+
+        this.generateAnimationObject("MainCharacterNE_Anim",
+                "MainCharacterNE_Anim",
+                740, 1143, 0.2f);
+
+        this.generateAnimationObject("MainCharacterE_Anim",
+                "MainCharacterE_Anim",
+                714, 1125, 0.2f);
+
+        this.generateAnimationObject("MainCharacterSE_Anim",
+                "MainCharacterSE_Anim",
+                729, 1128, 0.2f);
+
+        this.generateAnimationObject("MainCharacterS_Anim",
+                "MainCharacterS_Anim",
+                729, 1134, 0.2f);
+
+        this.generateAnimationObject("MainCharacterSW_Anim",
+                "MainCharacterSW_Anim",
+                729, 1129, 0.2f);
+
+        this.generateAnimationObject("MainCharacterW_Anim",
+                "MainCharacterW_Anim",
+                714, 1125, 0.2f);
+
+        this.generateAnimationObject("MainCharacterNW_Anim",
+                "MainCharacterNW_Anim",
+                743, 1147, 0.2f);
+
+            System.out.println("All animations in game");
     }
 
     public AnimationManager(boolean test) {
@@ -92,7 +127,7 @@ public class AnimationManager extends AbstractManager {
             return;
         }
         Texture texture = textureManager.getTexture(textureName);
-        LOGGER.info("Texture has been fetched");
+        LOGGER.info("Texture has been fetched " + textureName);
 
         TextureRegion[][] tmpFrames = TextureRegion.split(texture, tileWidth, tileHeight);
         //Assuming tmpFrames is a matrix;
