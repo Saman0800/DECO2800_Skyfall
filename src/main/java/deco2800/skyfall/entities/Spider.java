@@ -103,9 +103,11 @@ public class Spider extends EnemyEntity implements Animatable {
             float rowDistance = mc.getRow() - this.getRow();
 
             if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
+                //TODO: Play the spider sound when the player touches the dangerous range.
                 sound.loopSound("spider");
                 this.setCurrentState(AnimationRole.DEFENCE);
             } else {
+                //TODO: Stop the spider sound when the player touches the dangerous range.
                 sound.stopSound("spider");
                 this.setCurrentState(AnimationRole.NULL);
             }

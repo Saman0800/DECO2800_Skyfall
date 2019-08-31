@@ -5,6 +5,7 @@ import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.managers.SoundManager;
 
 public class Robot extends EnemyEntity implements Animatable {
     private static final transient int HEALTH = 20;
@@ -15,6 +16,7 @@ public class Robot extends EnemyEntity implements Animatable {
     private static final transient String ENEMY_TYPE="robot";
     //savage animation
     private MainCharacter mc;
+    SoundManager sound = new SoundManager();
     public Robot(float row, float col, String texturename, int health, int armour, int damage) {
         super(row, col, texturename, health, armour, damage);
     }
@@ -77,8 +79,12 @@ public class Robot extends EnemyEntity implements Animatable {
 
             if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
                 this.setCurrentState(AnimationRole.DEFENCE);
+                //TODO: Play the robot sound when the player touches the dangerous range.
+                sound.loopSound("robot");
             } else {
                 this.setCurrentState(AnimationRole.NULL);
+                //TODO: Stop the robot sound when the player leaves the dangerous range.
+                sound.stopSound("robot");
             }
         } else {
             System.out.println("Mc is null");
