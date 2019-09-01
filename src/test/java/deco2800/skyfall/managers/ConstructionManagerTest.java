@@ -2,7 +2,9 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.structures.AbstractBuilding;
 import deco2800.skyfall.entities.structures.WallBuilding;
-import deco2800.skyfall.worlds.RocketWorld;
+import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.world.WorldBuilder;
+import deco2800.skyfall.worlds.world.WorldDirector;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -125,7 +127,9 @@ public class ConstructionManagerTest {
 
     @Test
     public void verifyEntityTest() {
-        World world = new RocketWorld(1, 30,5, new int[] {10,10,10,10,10}, 0, 0 );
+        WorldBuilder worldBuilder = new WorldBuilder();
+        WorldDirector.constructTestWorld(worldBuilder);
+        World world = worldBuilder.getWorld();
         Tile tile = world.getTile(10,10);
         if (world.getEntities().size() == 0) {
             Assert.assertTrue(this.cmgr.verifyEntity(world, tile));

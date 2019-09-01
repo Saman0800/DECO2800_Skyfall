@@ -11,6 +11,7 @@ import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.OceanBiome;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -52,6 +53,10 @@ public class WorldBuilder implements WorldBuilderInterface{
 
     private int riverSize;
 
+
+    //Determines whether static entities are on
+    private boolean staticEntities;
+
     public WorldBuilder(){
         numOfLakes = 0;
         seed = 0;
@@ -61,6 +66,7 @@ public class WorldBuilder implements WorldBuilderInterface{
         entities = new CopyOnWriteArrayList<>();
         biomes = new ArrayList<>();
         type = "single_player";
+        staticEntities = false;
     }
 
 
@@ -110,6 +116,10 @@ public class WorldBuilder implements WorldBuilderInterface{
         riverSize = size;
     }
 
+    public void setStaticEntities(boolean staticEntities){
+        this.staticEntities = staticEntities;
+    }
+
 
     protected void generateStartEntities(World world) {
 
@@ -151,25 +161,32 @@ public class WorldBuilder implements WorldBuilderInterface{
         int[] biomeSizesArray = biomeSizes.stream().mapToInt(biomeSize -> biomeSize).toArray();
         int[] lakeSizesArray = lakeSizes.stream().mapToInt(lakeSize -> lakeSize).toArray();
 
+        World world;
+
         switch (type){
             case "single_player":
-                World world =  new World(seed, worldSize, nodeSpacing, biomeSizesArray,numOfLakes,lakeSizesArray, biomes,
+                 world =  new World(seed, worldSize, nodeSpacing, biomeSizesArray,numOfLakes,lakeSizesArray, biomes,
                     entities, rivers, riverSize);
-                generateStartEntities(world);
-                return world;
-
+                 break;
             case "tutorial":
-                return new TutorialWorld(seed, worldSize, nodeSpacing, biomeSizesArray,numOfLakes,lakeSizesArray, biomes,
+                world =  new TutorialWorld(seed, worldSize, nodeSpacing, biomeSizesArray,numOfLakes,lakeSizesArray, biomes,
                     entities, rivers, riverSize);
+                break;
             case "test":
-                return new TestWorld(seed, worldSize, nodeSpacing, biomeSizesArray,numOfLakes,lakeSizesArray, biomes,
+                world =  new TestWorld(seed, worldSize, nodeSpacing, biomeSizesArray,numOfLakes,lakeSizesArray, biomes,
                     entities, rivers, riverSize);
+                break;
             case "server":
-                return new ServerWorld(seed, worldSize, nodeSpacing, biomeSizesArray,numOfLakes,lakeSizesArray, biomes,
+                world =  new ServerWorld(seed, worldSize, nodeSpacing, biomeSizesArray,numOfLakes,lakeSizesArray, biomes,
                     entities, rivers, riverSize);
-
+                break;
+            default:
+                throw new IllegalArgumentException("The world type is not valid");
         }
 
-        return null;
+        if (staticEntities){
+            generateStartEntities(world);
+        }
+        return world;
     }
 }

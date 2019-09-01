@@ -7,6 +7,9 @@ import deco2800.skyfall.managers.OnScreenMessageManager;
 import deco2800.skyfall.worlds.world.TestWorld;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.world.WorldBuilder;
+import deco2800.skyfall.worlds.world.WorldDirector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,14 +30,17 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ GameManager.class, DatabaseManager.class, PlayerPeon.class })
 public class RockTest {
-    private TestWorld w = null;
+    private World w = null;
 
     @Mock
     private GameManager mockGM;
 
     @Before
     public void Setup() {
-        w = new TestWorld(0);
+
+        WorldBuilder worldBuilder = new WorldBuilder();
+        WorldDirector.constructTestWorld(worldBuilder);
+        w = worldBuilder.getWorld();
 
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);

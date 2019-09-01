@@ -7,6 +7,9 @@ import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.OnScreenMessageManager;
 import deco2800.skyfall.worlds.world.TestWorld;
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.world.WorldBuilder;
+import deco2800.skyfall.worlds.world.WorldDirector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +32,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({GameManager.class, DatabaseManager.class, PlayerPeon.class})
 public class SaveLoadTest {
-    private TestWorld w = null;
+    private World w = null;
    
     @Mock
     private GameManager mockGM;
@@ -37,8 +40,10 @@ public class SaveLoadTest {
     
     @Before
     public void Setup() {
-        w = new TestWorld(0);
-        
+        WorldBuilder worldBuilder = new WorldBuilder();
+        WorldDirector.constructTestWorld(worldBuilder);
+        w = worldBuilder.getWorld();
+
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
         
@@ -79,7 +84,9 @@ public class SaveLoadTest {
         deco2800.skyfall.managers.DatabaseManager.saveWorld(w);
         
         
-        TestWorld q = new TestWorld(0);
+        WorldBuilder worldBuilder = new WorldBuilder();
+        WorldDirector.constructServerWorld(worldBuilder);
+        World q = worldBuilder.getWorld();
         deco2800.skyfall.managers.DatabaseManager.loadWorld(q);
 
         

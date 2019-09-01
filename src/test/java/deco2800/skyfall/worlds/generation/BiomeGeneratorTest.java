@@ -21,7 +21,7 @@ public class BiomeGeneratorTest {
     private static final int WORLD_SIZE = 80;
     private static final int NODE_SPACING = 5;
 
-    private static final int LAKE_SIZE = 0;
+    private static final int[] LAKE_SIZES = new int[0];
     private static final int LAKE_COUNT = 0;
 
     private static final int RIVER_WIDTH = 0;
@@ -95,7 +95,8 @@ public class BiomeGeneratorTest {
                 VoronoiEdge.assignNeighbours(edges);
 
                 try {
-                    BiomeGenerator.generateBiomes(worldGenNodes, edges, random, NODE_COUNTS, biomes, LAKE_COUNT, LAKE_SIZE, RIVER_COUNT, RIVER_WIDTH);
+                    BiomeGenerator biomeGenerator = new BiomeGenerator(worldGenNodes, edges, random, NODE_COUNTS, biomes, LAKE_COUNT, LAKE_SIZES, RIVER_COUNT, RIVER_WIDTH);
+                    biomeGenerator.generateBiomes();
                 } catch (NotEnoughPointsException | DeadEndGenerationException e) {
                     continue;
                 }
