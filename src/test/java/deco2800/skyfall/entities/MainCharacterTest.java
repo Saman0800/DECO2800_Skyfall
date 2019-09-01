@@ -2,31 +2,24 @@ package deco2800.skyfall.entities;
 
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.resources.GoldPiece;
-
-import deco2800.skyfall.animation.Direction;
-
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.resources.items.*;
 import deco2800.skyfall.resources.items.Stone;
-import deco2800.skyfall.worlds.AbstractWorld;
-import deco2800.skyfall.worlds.RocketWorld;
-import deco2800.skyfall.worlds.Tile;
-
+import deco2800.skyfall.resources.items.*;
 import deco2800.skyfall.util.Collider;
-import deco2800.skyfall.util.Vector2;
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.world.WorldBuilder;
+import deco2800.skyfall.worlds.world.WorldDirector;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.After;
-import org.mockito.Mockito;
 
 import java.util.HashMap;
-import java.util.Map;
-
-import java.util.Random;
 
 public class MainCharacterTest {
 
@@ -42,7 +35,7 @@ public class MainCharacterTest {
     private InventoryManager inventoryManager;
     private Hatchet testHatchet;
     private PickAxe testPickaxe;
-    private AbstractWorld testWorld;
+    private World testWorld;
 
     // A hashmap for testing player's animations
     private HashMap testMap = new HashMap();
@@ -427,7 +420,9 @@ public class MainCharacterTest {
     @Test
     public void useHatchetTest(){
         GameManager gameManager = GameManager.get();
-        testWorld= new RocketWorld(4, 300, 15, new int[] { 70, 70, 70 }, 3, 2);
+        WorldBuilder builder = new WorldBuilder();
+        WorldDirector.constructTestWorld(builder);
+        testWorld= builder.getWorld();
         gameManager.setWorld(testWorld);
         testHatchet = new Hatchet(testCharacter);
         testCharacter.getInventoryManager().inventoryAdd(testHatchet);
@@ -445,7 +440,9 @@ public class MainCharacterTest {
     @Test
     public void usePickAxeTest() {
         GameManager gameManager = GameManager.get();
-        testWorld= new RocketWorld(4, 300, 15, new int[] { 70, 70, 70 }, 3, 2);
+        WorldBuilder builder = new WorldBuilder();
+        WorldDirector.constructTestWorld(builder);
+        testWorld= builder.getWorld();
         gameManager.setWorld(testWorld);
         testWorld.addEntity(testCharacter);
         testWorld.addEntity(testRock);
