@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameMenuManager;
 
-public class HealthCircle {
+    public class HealthCircle{
     private MainCharacter mainCharacter;
     private float currentHealth;
     private int newHealth; // maybe for animating it down.

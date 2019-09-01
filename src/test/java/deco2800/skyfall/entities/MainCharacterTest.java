@@ -3,6 +3,7 @@ package deco2800.skyfall.entities;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.resources.GoldPiece;
@@ -18,9 +19,19 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.HashMap;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({GameManager.class, DatabaseManager.class, PlayerPeon.class})
 public class MainCharacterTest {
 
     private GoldPiece goldpiece;
@@ -35,7 +46,9 @@ public class MainCharacterTest {
     private InventoryManager inventoryManager;
     private Hatchet testHatchet;
     private PickAxe testPickaxe;
-    private World testWorld;
+    private World w =null;
+    @Mock
+    private GameManager mockGM;
 
     // A hashmap for testing player's animations
     private HashMap testMap = new HashMap();
@@ -63,6 +76,20 @@ public class MainCharacterTest {
         testRock = new Rock(testTile,true);
 
         inventoryManager = GameManager.get().getManagerFromInstance(InventoryManager.class);
+
+        WorldBuilder builder = new WorldBuilder();
+        WorldDirector.constructTestWorld(builder);
+        w = builder.getWorld();
+
+        mockGM = mock(GameManager.class);
+        mockStatic(GameManager.class);
+
+
+        when(GameManager.get()).thenReturn(mockGM);
+        when(mockGM.getWorld()).thenReturn(w);
+
+
+
     }
 
     @After
@@ -419,15 +446,10 @@ public class MainCharacterTest {
 
     @Test
     public void useHatchetTest(){
-        GameManager gameManager = GameManager.get();
-        WorldBuilder builder = new WorldBuilder();
-        WorldDirector.constructTestWorld(builder);
-        testWorld= builder.getWorld();
-        gameManager.setWorld(testWorld);
-        testHatchet = new Hatchet(testCharacter);
-        testCharacter.getInventoryManager().inventoryAdd(testHatchet);
-        testWorld.addEntity(testCharacter);
-        testWorld.addEntity(testTree);
+
+        mockGM.setWorld(w);
+        w.addEntity(testCharacter);
+        w.addEntity(testTree);
         testCharacter.setCol(1f);
         testCharacter.setRow(1f);
         testTree.setCol(1f);
@@ -439,13 +461,10 @@ public class MainCharacterTest {
 
     @Test
     public void usePickAxeTest() {
-        GameManager gameManager = GameManager.get();
-        WorldBuilder builder = new WorldBuilder();
-        WorldDirector.constructTestWorld(builder);
-        testWorld= builder.getWorld();
-        gameManager.setWorld(testWorld);
-        testWorld.addEntity(testCharacter);
-        testWorld.addEntity(testRock);
+
+        mockGM.setWorld(w);
+        w.addEntity(testCharacter);
+        w.addEntity(testRock);
         testCharacter.setCol(1f);
         testCharacter.setRow(1f);
         testRock.setCol(1f);
@@ -454,9 +473,7 @@ public class MainCharacterTest {
         testCharacter.usePickAxe();
         Assert.assertEquals(currentStone+1,testCharacter.getInventoryManager().getAmount("Stone"));
 
-
     }
-
 
     @After
     public void cleanup() {
