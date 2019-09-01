@@ -93,6 +93,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         new GameMenuManager().show(stage);
 
         PathFindingService pathFindingService = new PathFindingService();
+
         GameManager.get().addManager(pathFindingService);
 
         InputMultiplexer multiplexer = new InputMultiplexer();

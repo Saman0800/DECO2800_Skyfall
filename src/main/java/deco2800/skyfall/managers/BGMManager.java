@@ -133,10 +133,10 @@ public class BGMManager extends AbstractManager {
     }
 
     /**
-     * Unmutes the clip.
+     * Un-mutes the clip.
      */
-    public static void unmute () {
-        //Set mute value to true
+    public static void unmute() {
+        //Set mute value to false
         muteVol = (BooleanControl) clip.getControl(BooleanControl.Type.MUTE);
         muteVol.setValue(false);
     }
@@ -168,6 +168,4 @@ public class BGMManager extends AbstractManager {
             }
         } catch (NullPointerException | IllegalArgumentException ex) { }
     }
-
-
 }
