@@ -50,6 +50,8 @@ public class Peon extends AgentEntity implements Tickable {
 		} else {
 			this.health = health;
 		}
+
+		this.deaths = 0;
 	}
 
 	/**
