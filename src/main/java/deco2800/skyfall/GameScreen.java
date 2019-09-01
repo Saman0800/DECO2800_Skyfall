@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
+import deco2800.skyfall.gamemenu.GameMenuScreen;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.Peon;
 import deco2800.skyfall.handlers.KeyboardManager;
@@ -46,10 +47,11 @@ public class GameScreen implements Screen, KeyDownObserver {
 
     long lastGameTick = 0;
 
-    /**
-     * Create an EnvironmentManager for ToD.
-     */
-    EnvironmentManager timeOfDay;
+	/**
+	 * Create an EnvironmentManager for ToD.
+	 */
+	EnvironmentManager timeOfDay;
+	public static boolean isPaused = false;
 
     public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
         /* Create an example world for the engine */
@@ -57,18 +59,25 @@ public class GameScreen implements Screen, KeyDownObserver {
 
         GameManager gameManager = GameManager.get();
 
-        // Create main world
-        if (!isHost) {
-            world = new ServerWorld(seed);
-            GameManager.get().getManager(NetworkManager.class).connectToHost("localhost", "duck1234");
-        } else {
-            if (GameManager.get().isTutorial) {
-                world = new TutorialWorld(seed, 80, 5);
-            } else {
-                world = new RocketWorld(seed, 200, 15, new int[] { 90, 70, 70 }, 2, 5);
-            }
-            GameManager.get().getManager(NetworkManager.class).startHosting("host");
-        }
+		GameMenuManager gameMenuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+		gameMenuManager.setStage(stage);
+		gameMenuManager.setSkin(gameManager.getSkin());
+
+		// Create main world
+		if (!isHost) {
+			world = new ServerWorld(seed);
+			GameManager.get().getManager(NetworkManager.class).connectToHost("localhost", "duck1234");
+		} else {
+			if (GameManager.get().isTutorial) {
+				world = new TutorialWorld(seed, 80, 5);
+			} else {
+                Random random = new Random();
+                // world = new RocketWorld(random.nextLong(), 200, 15, new int[] {70,70,70}, 3,
+                // 2);
+                world = new RocketWorld(random.nextLong(), 300, 15, new int[] { 70, 70, 70 }, 3, 2);
+			}
+			GameManager.get().getManager(NetworkManager.class).startHosting("host");
+		}
 
         gameManager.setWorld(world);
 
@@ -92,7 +101,8 @@ public class GameScreen implements Screen, KeyDownObserver {
             e.printStackTrace();
         }
 
-        new GameMenuManager().show(stage);
+        GameMenuScreen gamemenuScreen = new GameMenuScreen(gameMenuManager);
+		gamemenuScreen.show();
 
         PathFindingService pathFindingService = new PathFindingService();
         GameManager.get().addManager(pathFindingService);
@@ -106,18 +116,25 @@ public class GameScreen implements Screen, KeyDownObserver {
         GameManager.get().getManager(KeyboardManager.class).registerForKeyDown(this);
     }
 
-    /**
-     * Renderer thread Must update all displayed elements using a Renderer
-     */
-    @Override
-    public void render(float delta) {
-        handleRenderables();
 
-        moveCamera();
+	/**
+	 * Renderer thread
+	 * Must update all displayed elements using a Renderer
+	 */
+	@Override
+	public void render(float delta) {
 
-        cameraDebug.position.set(camera.position);
-        cameraDebug.update();
-        camera.update();
+        if (!isPaused) {
+            moveCamera();
+            handleRenderables();
+            cameraDebug.position.set(camera.position);
+            cameraDebug.update();
+            camera.update();
+        } else {
+            stage.draw();
+            pause();
+        }
+
 
         SpriteBatch batchDebug = new SpriteBatch();
         batchDebug.setProjectionMatrix(cameraDebug.combined);
@@ -126,17 +143,24 @@ public class GameScreen implements Screen, KeyDownObserver {
         batch.setProjectionMatrix(camera.combined);
 
         // Clear the entire display as we are using lazy rendering
+
+        // Commented out by Cyrus
+//        if (!isPaused) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         rerenderMapObjects(batch, camera);
         rendererDebug.render(batchDebug, cameraDebug);
-
-        /* Refresh the experience UI for if information was updated */
         stage.act(delta);
         stage.draw();
-        batch.dispose();
-    }
+//        }
+//        stage.act(delta);
+//        stage.draw();
+
+
+		/* Refresh the experience UI for if information was updated */
+
+		batch.dispose();
+	}
 
     private void handleRenderables() {
         if (System.currentTimeMillis() - lastGameTick > 20) {
