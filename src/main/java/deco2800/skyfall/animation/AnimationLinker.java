@@ -50,7 +50,6 @@ public class AnimationLinker {
     public void incrTime(float incr) {
         this.startingTime += incr;
     }
-
     public void resetStartingTime() {
         this.startingTime = 0f;
     }

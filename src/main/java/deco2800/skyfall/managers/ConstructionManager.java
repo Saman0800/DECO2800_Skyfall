@@ -1,19 +1,25 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 
 import java.io.*;
 import java.util.*;
 
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.buildings.BuildingWidgets;
 import deco2800.skyfall.entities.structures.AbstractBuilding;
 import deco2800.skyfall.worlds.AbstractWorld;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.entities.AbstractEntity;
+
+import javax.swing.*;
 
 
 /**
@@ -46,11 +52,12 @@ public class ConstructionManager extends AbstractManager {
         menuAdded = false;
         menuSetUp = false;
 
-        buildingWidgets = BuildingWidgets.get();
         buildingFactory = new BuildingFactory();
-
-        // testing requirements, removed later
-        GameManager.get().getWorld().addEntity(buildingFactory.createHouse(2f, 1f));
+        try {
+            buildingWidgets = BuildingWidgets.get();
+        } catch (Exception e) {
+            // fail to instantiate a widget here
+        }
     }
 
     //Start of UI
@@ -98,6 +105,61 @@ public class ConstructionManager extends AbstractManager {
             //TODO: Add window components here: e.g. buttons, labels, etc
 
             menuSetUp = true;
+
+            Skin skin = new Skin(Gdx.files.internal("resources/uiskin.skin"));
+
+            //to be improved when building factory has been created
+            TextButton building1 = new TextButton("Building 1", skin);
+            TextButton building2 = new TextButton("Building 2", skin);
+            TextButton building3 = new TextButton("Building 3", skin);
+            TextButton building4 = new TextButton("Building 4", skin);
+            ImageIcon a = new ImageIcon("resources/world_structures/house1.png");
+            Image b = new Image();
+
+
+
+            building1.setBounds(50, 450, 140, 40);
+            building2.setBounds(50, 350, 140, 40);
+            building3.setBounds(50, 250, 140, 40);
+            building4.setBounds(50, 150, 140, 40);
+
+
+            buildMenu.addActor(building1);
+            buildMenu.addActor(building2);
+            buildMenu.addActor(building3);
+            buildMenu.addActor(building4);
+
+            building1.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y){
+                    //call build function for specific building
+
+                }
+            });
+
+            building2.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y){
+                    //call build function for specific building
+
+                }
+            });
+
+            building3.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y){
+                    //call build function for specific building
+
+                }
+            });
+
+            building4.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y){
+                    //call build function for specific building
+
+                }
+            });
         }
     }
 

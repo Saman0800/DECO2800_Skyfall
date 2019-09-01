@@ -33,7 +33,6 @@ public class BuildingWidgets implements TouchDownObserver {
      * Returns an instance of the building widgets.
      * @return the building widgets
      */
-    // return an instance of building widgets
     public static BuildingWidgets get() {
         if (instance == null) {
             return new BuildingWidgets();
@@ -50,7 +49,7 @@ public class BuildingWidgets implements TouchDownObserver {
         this.world = GameManager.get().getWorld();
 
         // using a skin for test, removed it later
-        this.skin = new Skin(Gdx.files.internal("asserts/skin_for_test/uiskin.json"));
+        this.skin = new Skin(Gdx.files.internal("/asserts/skin_for_test/uiskin.json"));
 
         this.menu = new Table();
         this.label = new Label("Name", this.skin);
