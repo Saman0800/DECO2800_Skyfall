@@ -84,17 +84,16 @@ public class GameScreen implements Screen, KeyDownObserver {
         /* Add inventory to game manager */
         gameManager.addManager(new InventoryManager());
 
-        /* Play BGM */
-        try {
-            BGMManager.BGMManager("resources/sounds/forest_day.wav");
-            BGMManager.play();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		/* Add environment to game manager */
+		gameManager.addManager(new EnvironmentManager());
+
+		/* Add BGM to game manager */
+		gameManager.addManager(new BGMManager());
 
         new GameMenuManager().show(stage);
 
         PathFindingService pathFindingService = new PathFindingService();
+
         GameManager.get().addManager(pathFindingService);
 
         InputMultiplexer multiplexer = new InputMultiplexer();
@@ -142,7 +141,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         if (System.currentTimeMillis() - lastGameTick > 20) {
             lastGameTick = System.currentTimeMillis();
             GameManager.get().onTick(0);
-            timeOfDay = new EnvironmentManager(lastGameTick);
         }
     }
 
