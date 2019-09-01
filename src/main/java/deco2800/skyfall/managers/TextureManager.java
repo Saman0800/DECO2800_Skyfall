@@ -79,6 +79,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("stoneRN", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/stoneRN.png"));
             textureMap.put("stoneDead", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/Dead.png"));
 //            textureMap.put("flowerDead", new Texture("resources/flowerDead.png"));
+            textureMap.put("enemyTreeman", new Texture("resources/enemyTreemanSheet/enemyTreeman1.png"));
 
             textureMap.put("grass_tuff", new Texture("resources/world_details/grass1.png"));
 
