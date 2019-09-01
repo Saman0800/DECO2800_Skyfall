@@ -172,7 +172,9 @@ public class Stone extends EnemyEntity implements Animatable {
                 period++;
             }else{
                 period=0;
-                player.changeHealth(-this.getDamage());
+                player.setHurt(true);
+                player.hurt(this.getDamage());
+
             }
 
         }
