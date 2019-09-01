@@ -32,6 +32,7 @@ public class BiomeGeneratorTest {
     private static ArrayList<WorldGenNode> worldGenNodes;
     private static HashMap<WorldGenNode, AbstractBiome> nodeBiomes;
 
+    // TODO Fix this to account for `biomes` being modified in `generateBiomes()`.
     @BeforeClass
     public static void setup() {
         Random random = new Random(0);

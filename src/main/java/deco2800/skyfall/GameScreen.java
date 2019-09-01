@@ -23,11 +23,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 
-public class GameScreen implements Screen, KeyDownObserver {
-    private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
-    @SuppressWarnings("unused")
-    private final SkyfallGame game;
-    /**
+public class GameScreen implements Screen,KeyDownObserver {
+	private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
+	@SuppressWarnings("unused")
+	private final SkyfallGame game;
+	/**
      * Set the renderer. 3D is for Isometric worlds Check the documentation for each
      * renderer to see how it handles WorldEntity coordinates
      */
@@ -65,8 +65,7 @@ public class GameScreen implements Screen, KeyDownObserver {
             if (GameManager.get().isTutorial) {
                 world = new TutorialWorld(seed, 80, 5);
             } else {
-               // world = new RocketWorld(seed, 300, 30, new int[] { 30, 30, 30, 30, 30}, 2, 5);
-                world = new RocketWorld(seed, 300, 30, new int[] { 30, 30, 30, 30, 30}, 2, 5, 2, 2);
+                world = new RocketWorld(seed, 300, 30, new int[] { 30, 30, 30, 30, 30}, 2, 5);
 //                 world = new RocketWorld(0, 10, 1, new int[] {20,10,10}, 3,2);
 			}
 			GameManager.get().getManager(NetworkManager.class).startHosting("host");
@@ -109,7 +108,8 @@ public class GameScreen implements Screen, KeyDownObserver {
     }
 
     /**
-     * Renderer thread Must update all displayed elements using a Renderer
+     * Renderer thread
+     * Must update all displayed elements using a Renderer
      */
     @Override
     public void render(float delta) {

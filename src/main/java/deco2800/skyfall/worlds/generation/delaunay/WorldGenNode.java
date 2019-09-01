@@ -244,7 +244,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         int startPeriod = nodeSpacing * 2;
         // TODO Fix possible divide-by-zero.
         int octaves = Math.max((int) Math.ceil(Math.log(startPeriod) / Math.log(2)) - 1, 1);
-        double attenuation = Math.pow(1.5, 1d / octaves);
+        double attenuation = Math.pow(0.9, 1d / octaves);
 
         NoiseGenerator xGen = new NoiseGenerator(random, octaves, startPeriod, attenuation);
         NoiseGenerator yGen = new NoiseGenerator(random,  octaves, startPeriod, attenuation);
@@ -334,6 +334,14 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
                 + (this.getY() - tileCoords[1]) * (this.getY() - tileCoords[1]);
     }
 
+    /**
+     * Returns the square of the distance to the tile
+     *
+     * @param x the x-coordinate of the point to find the distance to
+     * @param y the y-coordinate of the point to find the distance to
+     *
+     * @return The square of the distance
+     */
     public double distanceTo(double x, double y) {
         return (this.getX() - x) * (this.getX() - x)
                 + (this.getY() - y) * (this.getY() - y);
