@@ -4,6 +4,8 @@ import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import deco2800.skyfall.entities.Spider;
+import deco2800.skyfall.entities.Stone;
 import org.junit.Test;
 
 import javax.sound.sampled.LineUnavailableException;

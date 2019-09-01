@@ -114,8 +114,6 @@ public class OverlayRenderer implements Renderer {
 
 		line++;
 
-
-
 		debugLine(batch, camera, line++, "PathfindingService");
 		debugLine(batch, camera, line++, GameManager.get().getManager(PathFindingService.class).toString());
 

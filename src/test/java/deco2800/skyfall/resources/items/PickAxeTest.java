@@ -1,6 +1,7 @@
 package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.entities.AgentEntity;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.Rock;
 import deco2800.skyfall.entities.Tree;
 import deco2800.skyfall.managers.InventoryManager;
@@ -15,15 +16,20 @@ import static org.junit.Assert.*;
 public class PickAxeTest {
 
     private PickAxe pickAxe;
-    private AgentEntity owner;
+    private MainCharacter owner;
     private HexVector position;
     private Rock rockToFarm;
     private InventoryManager ownerInventory;
+    private Tile testTile;
+
 
     @Before
     public void setUp()  {
-        pickAxe = new PickAxe(owner,position, "Pick Axe" );
-        rockToFarm = new Rock();
+        owner = new MainCharacter(1f,1f,0.05f,"player", 100);
+        position = new HexVector(1f,1f);
+        pickAxe = new PickAxe(owner,position);
+        testTile = new Tile(1f,1f);
+        rockToFarm = new Rock(testTile,true);
     }
 
     @After
@@ -44,6 +50,8 @@ public class PickAxeTest {
 
     @Test
     public void getCoords() {
+        assertEquals(1f, position.getCol(),0);
+        assertEquals(1f,position.getRow(),0);
     }
 
     @Test
@@ -60,6 +68,9 @@ public class PickAxeTest {
 
     @Test
     public void farmRock() {
+        pickAxe.farmRock(rockToFarm);
+        assertEquals(90,rockToFarm.getHealth());
 
     }
+
 }
