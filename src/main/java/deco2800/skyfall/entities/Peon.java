@@ -21,8 +21,6 @@ public class Peon extends AgentEntity implements Tickable {
 	// Boolean of whether character is dead
 	private int deaths;
 
-
-
 	/**
 	 * Constructor with no parameters
 	 */
@@ -77,10 +75,12 @@ public class Peon extends AgentEntity implements Tickable {
 	 * @param amount change being made to player's health
 	 */
 	public void changeHealth(int amount) {
+		int currentHealth = this.getHealth();
+
 		this.health += amount;
 
 		if (this.isDead()) {
-			this.health = 0;
+			this.health = currentHealth;
 			this.deaths += 1;
 		}
 	}
@@ -101,7 +101,9 @@ public class Peon extends AgentEntity implements Tickable {
 		return this.getHealth() <= 0;
 	}
 
-
+	/**
+	 * Sets character to be dead
+	 */
 	public boolean setDead(boolean is_dead) {
 		return is_dead;
 	}

@@ -526,7 +526,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void changeLevel(int change) {
         if (level + change >= 1) {
             this.level += change;
-            this.changeHealth(10);
+            this.changeHealth(change * 10);
         }
     }
 
@@ -1006,8 +1006,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 }
             }
 
-        } else{
-            logger.info("No Hatchet in Quick Access");
         }
     }
 
@@ -1032,8 +1030,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                     }
                 }
             }
-        } else{
-            logger.info("No PickAxe in Quick Access");
+
         }
     }
 
