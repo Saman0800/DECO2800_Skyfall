@@ -1,5 +1,6 @@
 package deco2800.skyfall.managers;
 
+import deco2800.skyfall.buildings.BuildingEntity;
 import deco2800.skyfall.entities.structures.House;
 import deco2800.skyfall.entities.structures.TownCentreBuilding;
 import org.junit.Assert;
@@ -113,7 +114,7 @@ public class ConstructionManagerTest {
     public void verifyNullTest() {
         AbstractWorld world = null;
         Tile tile = null;
-        AbstractBuilding building = null;
+        BuildingEntity building = null;
         Assert.assertFalse(this.cmgr.verifyTerrain(tile));
         Assert.assertFalse(this.cmgr.verifyBiome(tile));
         Assert.assertFalse(this.cmgr.verifyEntity(world, tile));
