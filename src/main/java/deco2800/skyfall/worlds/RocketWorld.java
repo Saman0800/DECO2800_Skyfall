@@ -9,6 +9,7 @@ import deco2800.skyfall.entities.Rock;
 import deco2800.skyfall.entities.LongGrass;
 import deco2800.skyfall.entities.EntitySpawnRule;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.util.Cube;
@@ -113,12 +114,16 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         // MainCharacter is now being put into the game instead of PlayerPeon
         MainCharacter testCharacter = new MainCharacter(0f, 0f, 0.05f, "Main Piece", 10);
         addEntity(testCharacter);
+        GameManager.getManagerFromInstance(GameMenuManager.class).setMainCharacter(testCharacter);
 
         EnemyEntity spider=new Spider(-4f,1f, testCharacter);
         addEntity(spider);
         EnemyEntity robot=new Robot(-4f,-2f, testCharacter);
         addEntity(robot);
-
+        EnemyEntity stone=new Stone(-6f,1f,testCharacter);
+        addEntity(stone);
+//        EnemyEntity flower=new Flower(-5f,3f,testCharacter);
+//        addEntity(flower);
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
     }
 
@@ -127,6 +132,8 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         Tile tileRock = getTile(0.0f, 1.0f);
         Rock startRock = new Rock(tileRock, true);
         Tree startTree = new Tree(tileRock, true);
+        addEntity(startTree);
+        addEntity(startRock);
         LongGrass startGrass = new LongGrass(tileRock, true);
 
         for (AbstractBiome biome : this.getBiomes()) {

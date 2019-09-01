@@ -39,13 +39,29 @@ public class AnimationManager extends AbstractManager {
 
         final float DEFAULT_FRAME_RATE  = 1f/4f;
         //These are simply test objects.
-//        this.generateAnimationObject("mario_right",
-//                "mario_right", 100, 138, DEFAULT_FRAME_RATE);
-//        this.generateAnimationObject("mario_left",
-//                "mario_left", 100, 138, DEFAULT_FRAME_RATE);
+        this.generateAnimationObject("mario_right",
+                "mario_right", 100, 138, DEFAULT_FRAME_RATE);
+        this.generateAnimationObject("mario_left",
+                "mario_left", 100, 138, DEFAULT_FRAME_RATE);
+
+
         this.generateAnimationObject("spider_defence","resources/spiderSheet/SpiderAnimation.atlas",DEFAULT_FRAME_RATE);
         this.generateAnimationObject("robot_defence","resources/robotSheet/robotAnimation.atlas",DEFAULT_FRAME_RATE);
-
+        this.generateAnimationObject("stoneJNE","resources/EnemyAnimationPacked/northEastJump/stoneJNE.atlas",0.2f);
+        this.generateAnimationObject("stoneJN","resources/EnemyAnimationPacked/northJump/stoneJN.atlas",0.2f);
+        this.generateAnimationObject("stoneJNW","resources/EnemyAnimationPacked/northWestJump/stoneJNW.atlas",0.2f);
+        this.generateAnimationObject("stoneJS","resources/EnemyAnimationPacked/southJump/stoneJS.atlas",0.2f);
+        this.generateAnimationObject("stoneJSW","resources/EnemyAnimationPacked/southWestJump/stoneJSW.atlas",0.2f);
+        this.generateAnimationObject("stoneJSE","resources/EnemyAnimationPacked/southEastJump/stoneJSE.atlas",0.2f);
+        this.generateAnimationObject("stoneANW","resources/EnemyAnimationPacked/attackAnimation/" +
+                "stoneAttackNorthWest/stoneANW.atlas",0.2f);
+        this.generateAnimationObject("stoneAS","resources/EnemyAnimationPacked/attackAnimation/" +
+                "stoneAttackSouth/stoneAS.atlas",0.2f);
+        this.generateAnimationObject("stoneASE","resources/EnemyAnimationPacked/attackAnimation/" +
+                "stoneAttackSouthEast/stoneASE.atlas",0.2f);
+        this.generateAnimationObject("stoneASW","resources/EnemyAnimationPacked/attackAnimation/" +
+                "stoneAttackSouthWest/stoneASW.atlas",0.2f);
+        //        this.generateAnimationObject("flower_defence","resources/enemyFlowerSheet/flower.atlas",0.2f);
         this.generateAnimationObject("MainCharacterN_Anim",
                 "MainCharacterN_Anim",
                 729, 1134, 0.2f);

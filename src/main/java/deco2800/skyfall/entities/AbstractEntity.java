@@ -58,12 +58,10 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 */
     protected Map<AnimationRole, Map<Direction, AnimationLinker>> animations;
 
-    protected Map<Direction, String> defaultDirectionTextures = new HashMap<>();
 	/**
-	 * Current direction that the entity is moving, set in MainCharacter or
-	 * Movement Task.
+	 * Default textures in each direction
 	 */
-	//protected AnimationRole movingAnimation = AnimationRole.NULL;
+	protected Map<Direction, String> defaultDirectionTextures = new HashMap<>();
 	/**
      * The animation to be run
 	 */
