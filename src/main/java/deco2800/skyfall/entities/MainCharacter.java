@@ -108,6 +108,21 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private int itemSlotSelected = 1;
 
     /**
+     * How long does MainCharacter hurt status lasts,
+     */
+    private long hurtTime = 500;
+
+    /**
+     * How long does MainCharacter take to recover,
+     */
+    private long recoverTime = 3000;
+
+    /**
+     * Check whether MainCharacter is hurt.
+     */
+    private boolean isHurt = false;
+
+    /**
      * Private helper method to instantiate inventory and weapon managers for
      * Main Character constructor
      */
@@ -250,7 +265,107 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Add weapon to weapons list
+     * Player takes damage from other entities/ by starving.
+     *
+     * @param damage Amount of damage player has taken
+     */
+    public void hurt(int damage) {
+        // hurtTime < System.currentTimeMillis() &&
+        if (this.getHealth() >= 0) {
+            this.changeHealth(-damage);
+            isHurt = true;
+            // TODO: add hurt animation here
+
+            if (this.getHealth() <= 0) {
+                kill();
+            } else {
+                hurtTime = System.currentTimeMillis() + recoverTime;
+
+                HexVector bounceBack = new HexVector();
+
+                /*
+                switch (getPlayerDirectionCardinal()) {
+                    case "North":
+                        bounceBack = new HexVector(this.direction.getX(), this.direction.getY() - 1);
+                        break;
+                    case "North-East":
+                        bounceBack = new HexVector(this.direction.getX() - 1, this.direction.getY() - 1);
+                        break;
+                    case "East":
+                        bounceBack = new HexVector(this.direction.getX() - 1, this.direction.getY());
+                        break;
+                    case "South-East":
+                        bounceBack = new HexVector(this.direction.getX() - 1, this.direction.getY() + 1);
+                        break;
+                    case "South":
+                        bounceBack = new HexVector(this.direction.getX(), this.direction.getY() + 1);
+                        break;
+                    case "South-West":
+                        bounceBack = new HexVector(this.direction.getX() + 1, this.direction.getY() + 1);
+                        break;
+                    case "West":
+                        bounceBack = new HexVector(this.direction.getX() + 1, this.direction.getY());
+                        break;
+                    case "North-West":
+                        bounceBack = new HexVector(this.direction.getX() + 1, this.direction.getY() - 1);
+                        break;
+                }
+
+                position.moveToward(bounceBack, 0.5f);
+
+                /* AS.PlayOneShot(hurtSound);
+                while(hurtTime < System.currentTimeMillis()) {
+                    vel = 0;
+                    anim.SetBool("Invincible", true);
+                    rb2d.AddForce(new com.badlogic.gdx.math.Vector2(hurtForce.x*forceDir,hurtForce.y));
+                }
+                */
+
+                /*
+                synchronized (lock) {
+                    this.wait(hurtTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                */
+                // recover();
+           }
+        }
+    }
+
+    /**
+     * Player recovers from being attacked. It removes player 's
+     * hurt effect (e.g. sprite flashing in red), in hurt().
+     */
+    void recover () {
+        isHurt = false;
+        // controller.enabled = true;
+    }
+
+    /**
+     * Kills the player. and notifying the game that the player
+     * has died and cannot do any actions in game anymore.
+     */
+    void kill () {
+        // stop player controls
+        vel = 0;
+
+        // set health to 0.
+        changeHealth(0);
+
+        // AS.PlayOneShot(dieSound);
+        GameManager.setPaused(true);
+    }
+
+    /**
+     * @return if player is in the state of "hurt".
+     */
+    public boolean IsHurt() {
+        return isHurt;
+    }
+
+    /**
+     *  Add weapon to weapons list
      * @param item weapon to be added
      *
      */
@@ -975,6 +1090,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     @Override
     public void configureAnimations() {
+
+        // Walk animation
         addAnimations(AnimationRole.MOVE, Direction.NORTH_WEST,
                 new AnimationLinker("MainCharacterNW_Anim",
                 AnimationRole.MOVE, Direction.NORTH_WEST, true,
@@ -1011,8 +1128,18 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         addAnimations(AnimationRole.MOVE, Direction.SOUTH,
                 new AnimationLinker("MainCharacterS_Anim",
-                        AnimationRole.MOVE, Direction.SOUTH, true,
-                        true));
+                        AnimationRole.MOVE, Direction.SOUTH, true ,true));
+
+        // Hurt animation
+        addAnimations(AnimationRole.HURT, Direction.DEFAULT,
+                new AnimationLinker("MainCharacter_Hurt_E_Anim",
+                        AnimationRole.HURT, Direction.DEFAULT, false ,true));
+
+        // Dead animation
+        addAnimations(AnimationRole.DEAD, Direction.DEFAULT,
+                new AnimationLinker("MainCharacter_Dead_E_Anim",
+                        AnimationRole.DEAD, Direction.DEFAULT, false ,true));
+
     }
 
     /**
@@ -1052,5 +1179,14 @@ public class MainCharacter extends Peon implements KeyDownObserver,
        } else {
            setCurrentState(AnimationRole.MOVE);
        }
+
+       /*
+       //TODO: Detect whether player is hurt by an enemy,
+       if(isHurt == true && this.getHealth() != 0) {
+           setCurrentState(AnimationRole.HURT);
+       } else if(this.getHealth() <= 0) {
+           setCurrentState(AnimationRole.DEAD);
+       }
+       */
     }
 }
