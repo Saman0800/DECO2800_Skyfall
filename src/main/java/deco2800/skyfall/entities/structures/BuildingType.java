@@ -7,14 +7,14 @@ import java.util.Map;
 
 
 /**
- *
+ * A BuildingTime Enum outlines all of the building types available in the skyfall game as well as their set values/attributes
  */
 public enum BuildingType {
 
     HOUSE("House", 10, 1, 1, 7, "house1"),
     STORAGE_UNIT("StorageUnit", 5, 2, 2, 6, "storage_unit"),
     TOWNCENTRE("TownCentre", 80, 3, 3, 0, "town_centre"),
-    WALL("Wall", 5, 1, 1, 3, "fence_bottom_left");
+    WALL("Fence", 5, 1, 1, 3, "fenceN-S");
 
 
     private String name;
@@ -45,7 +45,7 @@ public enum BuildingType {
                 buildingTextures = initialiseTownCentreTextures();
                 break;
             case "Wall":
-                buildingTextures = initialiseWallTextures();
+                buildingTextures = initialiseFenceTextures();
                 break;
         }
     }
@@ -79,7 +79,7 @@ public enum BuildingType {
      */
     public List<String> initialiseTownCentreTextures() {
         List<String> townCentreTextures = new ArrayList<String>();
-        townCentreTextures.add("storage_unit");
+        townCentreTextures.add("town_centre");
         return townCentreTextures;
     }
 
@@ -88,10 +88,19 @@ public enum BuildingType {
      *
      * @return the Wall textures
      */
-    public List<String> initialiseWallTextures() {
-        List<String> wallTextures = new ArrayList<String>();
-        wallTextures.add("storage_unit");
-        return wallTextures;
+    public List<String> initialiseFenceTextures() {
+        List<String> fenceTextures = new ArrayList<String>();
+        fenceTextures.add("fenceN-S");
+        fenceTextures.add("fenceNE-SW");
+        fenceTextures.add("fenceNW-SE");
+        fenceTextures.add("fenceNE-S");
+        fenceTextures.add("fenceNE-SE");
+        fenceTextures.add("fenceN-SE");
+        fenceTextures.add("fenceN-SW");
+        fenceTextures.add("fenceNW-NE");
+        fenceTextures.add("fenceSE-SW");
+        fenceTextures.add("fenceNW-S");
+        return fenceTextures;
     }
 
 
