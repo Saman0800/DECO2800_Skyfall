@@ -86,12 +86,12 @@ import deco2800.skyfall.managers.GameMenuManager;
     }
 
     /**
-     * Updates the health circle and the position if the scren has been resized
+     * Updates the health circle and the position if the screen has been resized
      */
     public void update() {
         newHealth = mainCharacter.getHealth();
         updateWithViewportChanges();
-        if (!((currentHealth - newHealth) >= 0)) {
+        if ((currentHealth - newHealth) >= 0) {
             updateInnerCircle();
         }
     }

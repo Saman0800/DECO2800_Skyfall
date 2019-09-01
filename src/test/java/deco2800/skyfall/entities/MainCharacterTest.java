@@ -9,16 +9,24 @@ import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.animation.Direction;
 
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.resources.items.Apple;
-import deco2800.skyfall.resources.items.PoisonousMushroom;
+import deco2800.skyfall.resources.items.*;
 import deco2800.skyfall.resources.items.Stone;
+import deco2800.skyfall.worlds.AbstractWorld;
+import deco2800.skyfall.worlds.RocketWorld;
 import deco2800.skyfall.worlds.Tile;
 
 import deco2800.skyfall.util.Collider;
+import deco2800.skyfall.util.Vector2;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
+import org.mockito.Mockito;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import java.util.Random;
 
 public class MainCharacterTest {
 
@@ -32,6 +40,12 @@ public class MainCharacterTest {
     private Rock testRock;
     private Tile testTile;
     private InventoryManager inventoryManager;
+    private Hatchet testHatchet;
+    private PickAxe testPickaxe;
+    private AbstractWorld testWorld;
+
+    // A hashmap for testing player's animations
+    private HashMap testMap = new HashMap();
 
     @Before
     /**
@@ -80,8 +94,8 @@ public class MainCharacterTest {
         testCharacter.changeHealth(5);
         Assert.assertEquals(testCharacter.getHealth(), 15);
         testCharacter.changeHealth(-20);
-        Assert.assertEquals(testCharacter.getHealth(), 0);
-        Assert.assertTrue(testCharacter.isDead());
+        Assert.assertEquals(testCharacter.getHealth(), 15);
+        Assert.assertEquals(testCharacter.getDeaths(), 1);
     }
 
     @Test
@@ -98,8 +112,8 @@ public class MainCharacterTest {
         testCharacter.weaponEffect(sword);
         testCharacter.weaponEffect(spear);
         testCharacter.weaponEffect(axe);
-        Assert.assertEquals(testCharacter.getHealth(), 0);
-        Assert.assertTrue(testCharacter.isDead());
+        Assert.assertEquals(testCharacter.getHealth(), 2);
+        Assert.assertEquals(testCharacter.getDeaths(), 1);
     }
 
     @Test
@@ -221,8 +235,63 @@ public class MainCharacterTest {
         Assert.assertEquals(testCharacter.getCurrentState(), AnimationRole.NULL);
     }
 
-
     @Test
+    public void setAndGetAnimationTest() {
+        // testCharacter.addAnimations(AnimationRole.MOVE_EAST, "right");
+        //testCharacter.getAnimationName(AnimationRole.MOVE_EAST);
+    }
+
+    /**
+     * Test hurt effect
+     */
+    @Test
+    public void hurtTest() {
+        // Reduce health by input damage test
+        testCharacter.hurt(3);
+        Assert.assertEquals(7, testCharacter.getHealth());
+
+        // Character bounce back test
+        // Assert.assertEquals(, testCharacter.getCol());
+
+        // "Hurt" animation test
+        AnimationLinker animationLinker = new AnimationLinker("MainCharacter_Hurt_E_Anim",
+                AnimationRole.HURT, Direction.DEFAULT, false ,true);
+        testMap.put(Direction.DEFAULT, animationLinker);
+        testCharacter.addAnimations(AnimationRole.HURT, Direction.DEFAULT, animationLinker);
+        Assert.assertEquals(testMap, testCharacter.animations.get(AnimationRole.HURT));
+    }
+
+    /**
+     * Test recover effect
+     */
+    @Test
+    public void recoverTest() {
+        // Set the health status of player from hurt back to normal
+        // so that the effect (e.g. sprite flashing in red) will disappear
+        // after recovering.
+        testCharacter.recover();
+        Assert.assertFalse(testCharacter.IsHurt());
+    }
+
+    /**
+     * Test kill effect
+     */
+    @Test
+    public void killTest() {
+        // Test if hurt() can trigger Peon.changeHealth() when
+        // the damage taken can make player's health below 0.
+        testCharacter.hurt(10);
+
+        Assert.assertEquals(1, testCharacter.getDeaths());
+
+        // "Kill" animation test
+        AnimationLinker animationLinker = new AnimationLinker("MainCharacter_Dead_E_Anim",
+                AnimationRole.DEAD, Direction.DEFAULT, false, true);
+        testMap.put(Direction.DEFAULT, animationLinker);
+        testCharacter.addAnimations(AnimationRole.DEAD, Direction.DEFAULT, animationLinker);
+        Assert.assertEquals(testMap, testCharacter.animations.get(AnimationRole.DEAD));
+    }
+
     public void movementAnimationsExist() {
         testCharacter.setCurrentState(AnimationRole.MOVE);
         testCharacter.setCurrentDirection(Direction.EAST);
@@ -230,7 +299,6 @@ public class MainCharacterTest {
         AnimationLinker al = testCharacter.getToBeRun();
         Assert.assertEquals(al.getAnimationName(), "MainCharacterE_Anim");
         Assert.assertEquals(al.getType(), AnimationRole.MOVE);
-
     }
 
     @Test
@@ -246,7 +314,6 @@ public class MainCharacterTest {
         testCharacter.setCurrentDirection(Direction.NORTH);
         s = testCharacter.getDefaultTexture();
         Assert.assertEquals(s, "__ANIMATION_MainCharacterN_Anim:0");
-
     }
 
     @Test
@@ -359,10 +426,40 @@ public class MainCharacterTest {
 
     @Test
     public void useHatchetTest(){
+        GameManager gameManager = GameManager.get();
+        testWorld= new RocketWorld(4, 300, 15, new int[] { 70, 70, 70 }, 3, 2);
+        gameManager.setWorld(testWorld);
+        testHatchet = new Hatchet(testCharacter);
+        testCharacter.getInventoryManager().inventoryAdd(testHatchet);
+        testWorld.addEntity(testCharacter);
+        testWorld.addEntity(testTree);
+        testCharacter.setCol(1f);
+        testCharacter.setRow(1f);
+        testTree.setCol(1f);
+        testTree.setRow(1f);
+        int currentWood = testCharacter.getInventoryManager().getAmount("Wood");
+        testCharacter.useHatchet();
+        Assert.assertEquals(currentWood+1,testCharacter.getInventoryManager().getAmount("Wood"));
+    }
 
+    @Test
+    public void usePickAxeTest() {
+        GameManager gameManager = GameManager.get();
+        testWorld= new RocketWorld(4, 300, 15, new int[] { 70, 70, 70 }, 3, 2);
+        gameManager.setWorld(testWorld);
+        testWorld.addEntity(testCharacter);
+        testWorld.addEntity(testRock);
+        testCharacter.setCol(1f);
+        testCharacter.setRow(1f);
+        testRock.setCol(1f);
+        testRock.setRow(1f);
+        int currentStone = testCharacter.getInventoryManager().getAmount("Stone");
+        testCharacter.usePickAxe();
+        Assert.assertEquals(currentStone+1,testCharacter.getInventoryManager().getAmount("Stone"));
 
 
     }
+
 
     @After
     public void cleanup() {
@@ -384,4 +481,5 @@ public class MainCharacterTest {
             System.out.println("NO COLLISION");
         }
     }
+
 }

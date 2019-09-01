@@ -110,9 +110,8 @@ public class Stone extends EnemyEntity implements Animatable {
             this.stoneDead();
         } else {
             this.angryAttacking();
+
         }
-
-
     }
 
 
@@ -124,6 +123,8 @@ public class Stone extends EnemyEntity implements Animatable {
     private void setAttacking(boolean attacking) {
         this.attacking = attacking;
     }
+    
+
 
     private void angryAttacking() {
         float colDistance = mc.getCol() - this.getCol();
@@ -189,7 +190,8 @@ public class Stone extends EnemyEntity implements Animatable {
                 period++;
             } else {
                 period = 0;
-                player.changeHealth(-this.getDamage());
+                player.setHurt(true);
+                player.hurt(this.getDamage());
             }
 
         }

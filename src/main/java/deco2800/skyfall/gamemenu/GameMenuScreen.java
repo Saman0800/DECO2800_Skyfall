@@ -26,7 +26,6 @@ public class GameMenuScreen {
     private PopUpTable helpTable;
     private PopUpTable settingsTable;
     private PopUpTable playerSelect;
-    private HealthCircle healthCircle;
     private MainCharacter mainCharacter;
 
     //Inventory Manager instance in game
@@ -131,12 +130,12 @@ public class GameMenuScreen {
         stage.addActor(radar);
 
 
-        this.healthCircle = new HealthCircle(stage,
+        HealthCircle healthCircle = new HealthCircle(stage,
                 "big_circle",
                 "inner_circle",
                 mainCharacter);
 
-        gameMenuManager.addHealthCircle(this.healthCircle);
+        gameMenuManager.addHealthCircle(healthCircle);
     }
 
     /**
@@ -490,7 +489,7 @@ public class GameMenuScreen {
 
         playerSelect.add(leftArrow).width(arrowWidth).height(arrowWidth).expandY();
 
-        Table characterTables[] = new Table[3];
+        Table[] characterTables = new Table[3];
 
         for (int i = 0; i < 3; i++) {
             Table characterTable = new Table();
@@ -544,7 +543,7 @@ public class GameMenuScreen {
         this.playerSelect = playerSelect;
     }
 
-    private void updateCharacters(Table characterTables[], float characterTableWidth) {
+    private void updateCharacters(Table[] characterTables, float characterTableWidth) {
         for (int i = currentCharacter; i < currentCharacter + 3; i++) {
             Table characterTable = characterTables[i - currentCharacter];
             characterTable.clearChildren();

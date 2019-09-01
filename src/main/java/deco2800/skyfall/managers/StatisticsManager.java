@@ -7,10 +7,10 @@ import java.util.*;
 public class StatisticsManager  extends TickableManager {
 
     // Character of which the statistics manager is being used for
-    public MainCharacter character;
+    private MainCharacter character;
 
     // Map recording kills of different enemies
-    private Map<EnemyEntity, Integer> kills;
+    private Map<Enemy, Integer> kills;
 
     // Amount of experience the character has from doing various things in
     // the game, when character gets enough experience they'll level up
@@ -18,9 +18,6 @@ public class StatisticsManager  extends TickableManager {
 
     // The amount of experience needed to level up
     private int experienceCap;
-
-    // Number of times main character has been killed
-    private int deaths;
 
     // Amount of in-game currency owned by the character
     private int money;
@@ -30,8 +27,15 @@ public class StatisticsManager  extends TickableManager {
         this.kills = new HashMap<>();
         this.experience = 0;
         this.experienceCap = 20;
-        this.deaths = 0;
         this.money = 0;
+    }
+
+    /**
+     * Gets the character for the statistics manager
+     * @return the character being managed
+     */
+    public MainCharacter getCharacter() {
+        return this.character;
     }
 
     /**
@@ -39,19 +43,21 @@ public class StatisticsManager  extends TickableManager {
      * collecting weapons, inventory, money and getting kills
      */
     public void gainExperience() {
-        if (this.character.getWeaponManager().getNumWeapons() % 10 == 0) {
+        if ((this.character.getWeaponManager().getNumWeapons() - 2)
+                % 10 == 0) {
             experience += 10;
         }
 
-        if (this.character.getInventoryManager().getTotalAmount() % 10 == 0) {
+        if ((this.character.getInventoryManager().getTotalAmount() - 4)
+                % 10 == 0) {
             experience += 10;
         }
 
-        if (this.getKills() % 10 == 0) {
+        if (this.getKills() != 0 && this.getKills() % 10 == 0) {
             experience += 10;
         }
 
-        if (this.getMoney() % 20 == 0) {
+        if (this.getMoney() != 0 && this.getMoney() % 10 == 0) {
             experience += 10;
         }
     }
@@ -74,9 +80,17 @@ public class StatisticsManager  extends TickableManager {
     }
 
     /**
+     * Gets the amount of experience needed to level up
+     * @return amount of experience needed to level up
+     */
+    public int getExperienceCap() {
+        return this.experienceCap;
+    }
+
+    /**
      * Level ups up if experience has reached experienceCap
      */
-    public void LevelUp() {
+    public void levelUp() {
         if (this.getExperience() >= experienceCap) {
             this.experience -= experienceCap;
             experienceCap += 20;
@@ -113,7 +127,7 @@ public class StatisticsManager  extends TickableManager {
      * @param enemy enemy being queried
      * @return number of killed enemy
      */
-    public int getAmountKilled(EnemyEntity enemy) {
+    public int getAmountKilled(Enemy enemy) {
         return kills.get(enemy);
     }
 
@@ -121,7 +135,7 @@ public class StatisticsManager  extends TickableManager {
      * Add a killed enemy to the map
      * @param enemy enemy being recorded
      */
-    public void recordKill(EnemyEntity enemy) {
+    public void recordKill(Enemy enemy) {
         if (!kills.containsKey(enemy)) {
             kills.put(enemy, 1);
         } else {
@@ -150,7 +164,7 @@ public class StatisticsManager  extends TickableManager {
      * @return the amount of deaths of the character
      */
     public int getDeaths() {
-        return this.deaths;
+        return this.character.getDeaths();
     }
 
     /**

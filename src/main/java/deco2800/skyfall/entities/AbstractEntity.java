@@ -214,7 +214,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      */
 	public boolean collidesWith(AbstractEntity entity) {
 		//TODO: Implement this.
-		return false;
+		return this.collider.overlaps(entity.collider);
 	}
 
 	@Override
