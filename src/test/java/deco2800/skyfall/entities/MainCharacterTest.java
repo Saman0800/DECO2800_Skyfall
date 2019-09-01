@@ -2,6 +2,8 @@ package deco2800.skyfall.entities;
 
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.resources.GoldPiece;
 
 import deco2800.skyfall.animation.Direction;
@@ -29,6 +31,7 @@ public class MainCharacterTest {
     private Tree testTree;
     private Rock testRock;
     private Tile testTile;
+    private InventoryManager inventoryManager;
 
     @Before
     /**
@@ -51,6 +54,8 @@ public class MainCharacterTest {
         testTile = new Tile(0f,0f);
         testTree = new Tree(testTile,true);
         testRock = new Rock(testTile,true);
+
+        inventoryManager = GameManager.get().getManagerFromInstance(InventoryManager.class);
     }
 
     @After
@@ -124,36 +129,36 @@ public class MainCharacterTest {
 
     //LEAVE COMMENTED! As discussed on Gitlab ticket #197, after fixing an issue with the MainCharacter inventory this
     //causes issues with gradle that need to be fixed.
-//    @Test
-//    /**
-//     * Test main character is interacting correctly with basic inventory action
-//     */
-//    public void inventoryTest() {
-//        Assert.assertEquals((int)testCharacter.getInventoryManager()
-//                .getAmount("Stone"), 2);
-//        Assert.assertEquals((int)testCharacter.getInventoryManager()
-//                .getAmount("Wood"), 2);
-//        Stone stone = new Stone();
-//        testCharacter.pickUpInventory(stone);
-//        Assert.assertEquals((int)testCharacter.getInventoryManager()
-//                .getAmount("Stone"), 3);
-//        testCharacter.dropInventory("Stone");
-//        Assert.assertEquals((int)testCharacter.getInventoryManager()
-//                .getAmount("Stone"), 2);
-//        pickUpInventoryMultiple(stone, 500);
-//        Assert.assertEquals((int)testCharacter.getInventoryManager()
-//                .getAmount("Stone"), 502);
-//        /* Had to change inventory method inventoryDropMultiple
-//            -   if(amount == num)
-//            to:
-//            -   if(amount.equals(num)
-//            for this to work
-//        */
-//        testCharacter.getInventoryManager()
-//                .inventoryDropMultiple("Stone",502);
-//        Assert.assertEquals((int)testCharacter.getInventoryManager()
-//                .getAmount("Stone"), 0);
-//    }
+    @Test
+    /**
+     * Test main character is interacting correctly with basic inventory action
+     */
+    public void inventoryTest() {
+        Assert.assertEquals((int)testCharacter.getInventoryManager()
+                .getAmount("Stone"), inventoryManager.getAmount("Stone"));
+        Assert.assertEquals((int)testCharacter.getInventoryManager()
+                .getAmount("Wood"), inventoryManager.getAmount("Wood"));
+        Stone stone = new Stone();
+        testCharacter.pickUpInventory(stone);
+        Assert.assertEquals((int)testCharacter.getInventoryManager()
+                .getAmount("Stone"), inventoryManager.getAmount("Stone"));
+        testCharacter.dropInventory("Stone");
+        Assert.assertEquals((int)testCharacter.getInventoryManager()
+                .getAmount("Stone"), inventoryManager.getAmount("Stone"));
+        pickUpInventoryMultiple(stone, 500);
+        Assert.assertEquals((int)testCharacter.getInventoryManager()
+                .getAmount("Stone"), inventoryManager.getAmount("Stone"));
+        /* Had to change inventory method inventoryDropMultiple
+            -   if(amount == num)
+            to:
+            -   if(amount.equals(num)
+            for this to work
+        */
+        testCharacter.getInventoryManager()
+                .inventoryDropMultiple("Stone",inventoryManager.getAmount("Stone"));
+        Assert.assertEquals((int)testCharacter.getInventoryManager()
+                .getAmount("Stone"), inventoryManager.getAmount("Stone"));
+    }
 
     @Test
     /**
