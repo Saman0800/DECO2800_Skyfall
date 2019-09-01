@@ -114,9 +114,9 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         MainCharacter testCharacter = new MainCharacter(0f, 0f, 0.05f, "Main Piece", 10);
         addEntity(testCharacter);
 
-        EnemyEntity spider=new Spider(-4f,1f, testCharacter);
+        EnemyEntity spider = new Spider(-4f,1f, testCharacter);
         addEntity(spider);
-        EnemyEntity robot=new Robot(-4f,-2f, testCharacter);
+        EnemyEntity robot = new Robot(-4f,-2f, testCharacter);
         addEntity(robot);
 
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);

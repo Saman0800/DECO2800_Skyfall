@@ -7,5 +7,8 @@ public enum AnimationRole {
     MOVE,
     MELEE,
     DEFENCE,
+    ATTACK,
+    HURT,
+    DEAD,
     NULL
 }

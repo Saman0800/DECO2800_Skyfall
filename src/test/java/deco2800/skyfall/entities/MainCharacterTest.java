@@ -1,20 +1,29 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.Apple;
 import deco2800.skyfall.resources.items.PoisonousMushroom;
 import deco2800.skyfall.resources.items.Stone;
 
+import deco2800.skyfall.util.Vector2;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MainCharacterTest {
 
     // MainCharacter being used for testing
     private MainCharacter testCharacter;
+
+    // A hashmap for testing player's animations
+    private HashMap testMap = new HashMap();
 
     @Before
     /**
@@ -167,8 +176,65 @@ public class MainCharacterTest {
      */
     @Test
     public void setAndGetAnimationTest() {
-        //testCharacter.addAnimations(AnimationRole.MOVE_EAST, "right");
+        // testCharacter.addAnimations(AnimationRole.MOVE_EAST, "right");
         //testCharacter.getAnimationName(AnimationRole.MOVE_EAST);
+    }
 
+    /**
+     * Test hurt effect
+     */
+    @Test
+    public void hurtTest() {
+        // testCharacter.direction = new Vector2(20, 0);
+        // Set player's health back to 10.
+        testCharacter.changeHealth(3);
+
+        // Check if the hurt() is called.
+        testCharacter.hurt(3);
+        Assert.assertTrue(testCharacter.IsHurt());
+
+        // Reduce health by input damage test
+        testCharacter.changeHealth(-3);
+        Assert.assertEquals(7, testCharacter.getHealth());
+
+        // Character bounce back test
+        // Assert.assertEquals(, testCharacter.getCol());
+
+        // "Hurt" animation test
+        AnimationLinker animationLinker = new AnimationLinker("MainCharacter_Hurt_E_Anim",
+                AnimationRole.HURT, Direction.EAST, false ,true);
+        testMap.put(Direction.EAST, animationLinker);
+        testCharacter.addAnimations(AnimationRole.HURT, Direction.EAST, animationLinker);
+        Assert.assertEquals(testMap, testCharacter.animations.get(AnimationRole.HURT));
+    }
+
+    /**
+     * Test recover effect
+     */
+    @Test
+    public void recoverTest() {
+        // Set the health status of player from hurt back to normal
+        // so that the effect (e.g. sprite flashing in red) will disappear
+        // after recovering.
+        testCharacter.recover();
+        Assert.assertFalse(testCharacter.IsHurt());
+    }
+
+    /**
+     * Test kill effect
+     */
+    @Test
+    public void killTest() {
+        // Test if hurt() can initiate kill() when
+        // the damage taken can make player's health below 0.
+        testCharacter.hurt(testCharacter.getHealth());
+        Assert.assertTrue(testCharacter.isDead());
+
+        // "Kill" animation test
+        AnimationLinker animationLinker = new AnimationLinker("MainCharacter_Dead_E_Anim",
+                AnimationRole.DEAD, Direction.EAST, false ,true);
+        testMap.put(Direction.EAST, animationLinker);
+        testCharacter.addAnimations(AnimationRole.DEAD, Direction.EAST, animationLinker);
+        Assert.assertEquals(testMap, testCharacter.animations.get(AnimationRole.DEAD));
     }
 }
