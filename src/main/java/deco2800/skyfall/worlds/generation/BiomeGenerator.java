@@ -144,14 +144,18 @@ public class BiomeGenerator implements BiomeGeneratorInterface{
      */
     public void generateBiomes() throws DeadEndGenerationException {
         for (int i = 0; ; i++) {
+            boolean biomesInitialised = false;
             try {
                 biomes = new ArrayList<>(biomeSizes.length + noLakes + 1);
                 usedNodes = new HashSet<>(nodes.size());
                 borderNodes = new ArrayList<>();
                 nodesBiomes = new HashMap<>();
+
                 growBiomes();
                 growOcean();
                 fillGaps();
+
+                biomesInitialised = true;
                 generateLakes(lakeSizes, noLakes);
                 populateRealBiomes();
                 ensureContiguity();
@@ -159,10 +163,18 @@ public class BiomeGenerator implements BiomeGeneratorInterface{
 
                 return;
             } catch (DeadEndGenerationException e) {
-                // Remove any lakes and rivers added
-                while (realBiomes.size() > biomeSizes.length + 1) {
-                    realBiomes.remove(biomeSizes.length + 1);
-                    biomes.remove(biomeSizes.length + 1);
+                if (biomesInitialised) {
+                    // Remove tiles from the biomes so they can be reassigned on the next iteration.
+                    for (AbstractBiome biome : realBiomes) {
+                        for (Tile tile : biome.getTiles()) {
+                            tile.setBiome(null);
+                        }
+                        biome.getTiles().clear();
+                    }
+                    // Remove all biomes that were added to the list during generation.
+                    while (realBiomes.size() > biomeSizes.length + 1) {
+                        realBiomes.remove(biomeSizes.length + 1);
+                    }
                 }
 
                 // If the generation reached a dead-end, try again.
@@ -194,6 +206,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface{
                 WorldGenNode startNode = startNodeCandidates.get(random.nextInt(startNodeCandidates.size()));
                 biome.addNode(startNode);
             }
+
             biome.growBiome();
         }
     }
