@@ -345,8 +345,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                     nodesFound.add(newNode);
                 }
 
-                //findLakeLocation(nodes, nodes.get(0), lakeSize);
-
                 if (nodesFound.size() < lakeSizes[i]) {
                     continue;
                 }
@@ -407,7 +405,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      *
      * @param noRivers   The number of rivers to generate
      * @param riverWidth The width of the rivers (the number of tiles wide is 2 * riverWidth + 1)
-     * @param random     The random seed to generate the rivers with
      * @param edges      A list of edges that a river can use
      *
      * @throws DeadEndGenerationException If not enough valid rivers can be found

@@ -172,6 +172,24 @@ public class LakeAndRiverTest {
         }
     }
 
+    @Test
+    public void correctNumberTest() {
+        for (List<AbstractBiome> biomes : biomeLists) {
+            int noLakes = 0;
+            int noRivers = 0;
+            for (AbstractBiome biome : biomes) {
+                if (biome.getBiomeName().equals("lake")) {
+                    noLakes++;
+                }
+                if (biome.getBiomeName().equals("river")) {
+                    noRivers++;
+                }
+            }
+            assertEquals(LAKE_COUNT, noLakes);
+            assertEquals(RIVER_COUNT, noRivers);
+        }
+    }
+
     // Adapted from AbstractWorld.generateNeighbours().
     private static void generateTileNeighbours(List<Tile> tiles) {
         //multiply coords by 2 to remove floats

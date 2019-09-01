@@ -265,8 +265,8 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
             int nearestIndex = binarySearch(tileY, nodes, 0, nodes.size() - 1);
             boolean lowerLimitFound = false;
             boolean upperLimitFound = false;
+
             // Store the minimum distance to a node, and the index of that node
-            // double minDistance = nodes.get(nearestIndex).distanceToTile(tile);
             double minDistance = nodes.get(nearestIndex).distanceTo(tileX, tileY);
             int minDistanceIndex = nearestIndex;
             int iterations = 1;
@@ -285,7 +285,6 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
                 }
 
                 if (!lowerLimitFound) {
-                    // double distance = nodes.get(lower).distanceToTile(tile);
                     double distance = nodes.get(lower).distanceTo(tileX, tileY);
                     // Update the closest node if necessary
                     if (distance < minDistance) {
@@ -296,19 +295,16 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
                     // y value, if the difference in y value is greater than the
                     // smallest distance to a node, all future nodes in that
                     // direction will be further away
-                    // if (nodes.get(lower).yDistanceToTile(tile) > minDistance) {
                     if (nodes.get(lower).yDistanceTo(tileY) > minDistance) {
                         lowerLimitFound = true;
                     }
                 }
                 if (!upperLimitFound) {
-                    // double distance = nodes.get(upper).distanceToTile(tile);
                     double distance = nodes.get(upper).distanceTo(tileX, tileY);
                     if (distance < minDistance) {
                         minDistance = distance;
                         minDistanceIndex = upper;
                     }
-                    // if (nodes.get(upper).yDistanceToTile(tile) > minDistance) {
                     if (nodes.get(upper).yDistanceTo(tileY) > minDistance) {
                         upperLimitFound = true;
                     }
