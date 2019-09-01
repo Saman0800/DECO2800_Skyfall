@@ -414,4 +414,29 @@ public class ConstructionManager extends AbstractManager {
     }
 
     // End of inventory code
+
+    /**
+     *
+     * @param buildings
+     */
+    public boolean mergeBuilding(AbstractBuilding[] buildings, InventoryManager inventoryManager) {
+
+        if (buildings.length == 0) return false;
+        String className = buildings[0].getClass().getName();
+        for (int i = 0; i < buildings.length; i++) {
+
+            if (buildings[i].getClass().getName() != className) {
+                return false;
+            }
+
+            if (i != 0) {
+                invRemove(buildings[i], inventoryManager);
+            }
+        }
+
+        buildings[0].placeBuilding(buildings[0].getXcoord(), buildings[0].getYcoord(),
+                buildings.length, GameManager.get().getWorld());
+
+        return true;
+    }
 }
