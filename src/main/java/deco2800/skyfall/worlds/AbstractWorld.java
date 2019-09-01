@@ -165,7 +165,7 @@ public abstract class AbstractWorld {
 
     /**
      * Returns a list of entities in this world
-     * 
+     *
      * @return All Entities in the world
      */
     public List<AbstractEntity> getEntities() {
@@ -184,7 +184,7 @@ public abstract class AbstractWorld {
 
     /**
      * Returns a list of entities in this world, ordered by their render level
-     * 
+     *
      * @return all entities in the world
      */
     public List<AbstractEntity> getSortedEntities() {
@@ -194,7 +194,7 @@ public abstract class AbstractWorld {
 
     /**
      * Returns a list of entities in this world, ordered by their render level
-     * 
+     *
      * @return all entities in the world
      */
     public List<AgentEntity> getSortedAgentEntities() {
@@ -207,7 +207,7 @@ public abstract class AbstractWorld {
 
     /**
      * Adds an entity to the world
-     * 
+     *
      * @param entity the entity to add
      */
     public void addEntity(AbstractEntity entity) {
@@ -218,7 +218,7 @@ public abstract class AbstractWorld {
 
     /**
      * Removes an entity from the world
-     * 
+     *
      * @param entity the entity to remove
      */
     public void removeEntity(AbstractEntity entity) {
@@ -312,6 +312,8 @@ public abstract class AbstractWorld {
             }
 
             e1.onTick(0);
+
+
             if (e1.getCollider() == null) {
                 break;
             }
@@ -360,7 +362,7 @@ public abstract class AbstractWorld {
 
     /**
      * Adds a biome to a world
-     * 
+     *
      * @param biome The biome getting added
      */
     public void addBiome(AbstractBiome biome) {
@@ -413,7 +415,7 @@ public abstract class AbstractWorld {
 
     /**
      * Returns the seed used in the world
-     * 
+     *
      * @return
      */
     public long getSeed() {

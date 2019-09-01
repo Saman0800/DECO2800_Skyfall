@@ -1,6 +1,8 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.Apple;
 import deco2800.skyfall.resources.items.PoisonousMushroom;
@@ -135,20 +137,8 @@ public class MainCharacterTest {
         Assert.assertTrue(testCharacter.isStarving());
     }
 
-    @Test
-    /**
-     * Test that the item properly switches.
-     */
-    public void switchItemTest() {
-        Assert.assertEquals(1,testCharacter.getItemSlotSelected());
-        testCharacter.switchItem(9);
-        Assert.assertEquals(2,testCharacter.getItemSlotSelected());
-        testCharacter.switchItem(10);
-        Assert.assertEquals(3,testCharacter.getItemSlotSelected());
-        testCharacter.switchItem(8);
-        Assert.assertEquals(1,testCharacter.getItemSlotSelected());
-    }
-
+    //TODO: change these tests as Animation System Changes
+    //These test abstract entity methods
     /**
      * Tests movingAnimation
      */
@@ -165,12 +155,65 @@ public class MainCharacterTest {
     }
 
     /**
-     * Set and get Animations
+     * Test that the item properly switches.
      */
+    public void switchItemTest() {
+        Assert.assertEquals(1,testCharacter.getItemSlotSelected());
+        testCharacter.switchItem(9);
+        Assert.assertEquals(2,testCharacter.getItemSlotSelected());
+        testCharacter.switchItem(10);
+        Assert.assertEquals(3,testCharacter.getItemSlotSelected());
+        testCharacter.switchItem(8);
+        Assert.assertEquals(1,testCharacter.getItemSlotSelected());
+    }
+
     @Test
+    public void directionCheck() {
+        testCharacter.setCurrentDirection(Direction.EAST);
+        Assert.assertEquals(testCharacter.getCurrentDirection(), Direction.EAST);
+
+        testCharacter.setCurrentDirection(Direction.WEST);
+        Assert.assertEquals(testCharacter.getCurrentDirection(), Direction.WEST);
     public void setAndGetAnimationTest() {
         testCharacter.addAnimations(AnimationRole.MOVE_EAST,
                 "right");
         testCharacter.getAnimationName(AnimationRole.MOVE_EAST);
+    }
+
+    @Test
+    public void roleCheck() {
+        testCharacter.setCurrentState(AnimationRole.MOVE);
+        Assert.assertEquals(testCharacter.getCurrentState(), AnimationRole.MOVE);
+
+        testCharacter.setCurrentState(AnimationRole.NULL);
+        Assert.assertEquals(testCharacter.getCurrentState(), AnimationRole.NULL);
+    }
+
+
+    @Test
+    public void movementAnimationsExist() {
+        testCharacter.setCurrentState(AnimationRole.MOVE);
+        testCharacter.setCurrentDirection(Direction.EAST);
+
+        AnimationLinker al = testCharacter.getToBeRun();
+        Assert.assertEquals(al.getAnimationName(), "MainCharacterE_Anim");
+        Assert.assertEquals(al.getType(), AnimationRole.MOVE);
+
+    }
+
+    @Test
+    public void directionTexturesExist() {
+        testCharacter.setCurrentDirection(Direction.EAST);
+        String s = testCharacter.getDefaultTexture();
+        Assert.assertEquals(s, "__ANIMATION_MainCharacterE_Anim:0");
+
+        testCharacter.setCurrentDirection(Direction.WEST);
+        s = testCharacter.getDefaultTexture();
+        Assert.assertEquals(s, "__ANIMATION_MainCharacterW_Anim:0");
+
+        testCharacter.setCurrentDirection(Direction.NORTH);
+        s = testCharacter.getDefaultTexture();
+        Assert.assertEquals(s, "__ANIMATION_MainCharacterN_Anim:0");
+
     }
 }
