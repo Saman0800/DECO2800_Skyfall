@@ -1,0 +1,221 @@
+
+EnemyStone.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+qian-jump/jump0001
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+qian-jump/jump0002
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+EnemyStone2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+qian-jump/jump0003
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+qian-jump/jump0004
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+EnemyStone3.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+qian-jump/jump0005
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+qian-jump/jump0006
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+EnemyStone4.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+qian-jump/jump0007
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+qian-jump/jump0008
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+EnemyStone5.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+qian-jump/jump0009
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+qian-jump/jump0010
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+EnemyStone6.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+qian-jump/jump0011
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+qian-jump/jump0012
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+EnemyStone7.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+qian-jump/jump0013
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+qian-jump/jump0014
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+EnemyStone8.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+qian-jump/jump0015
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+qian-jump/jump0016
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+EnemyStone9.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+qian-jump/jump0017
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+qian-jump/jump0018
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+EnemyStone10.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+qian-jump/jump0019
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+qian-jump/jump0020
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+EnemyStone11.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+qian-jump/jump0021
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+qian-jump/jump0022
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+EnemyStone12.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+qian-jump/jump0023
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1

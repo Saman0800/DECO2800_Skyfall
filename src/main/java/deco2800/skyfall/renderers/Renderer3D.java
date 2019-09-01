@@ -154,23 +154,7 @@ public class Renderer3D implements Renderer {
 
     }
 
-    /**
-     * To find playerPeon
-     * 
-     * @param entities AbstractEntity
-     * @return entity playerPeon
-     */
-    private MainCharacter findPlayerPeon(List<AbstractEntity> entities) {
-        // find playerPeon in the entities list
-        MainCharacter mainCharacter = null;
-        // iterate abstract entity to find Player peon
-        for (AbstractEntity e : entities) {
-            if (e instanceof MainCharacter) {
-                mainCharacter = (MainCharacter) e;
-            }
-        }
-        return mainCharacter;
-    }
+
 
     /**
      * Render all the entities on in view, including movement tiles, and excluding
@@ -181,7 +165,6 @@ public class Renderer3D implements Renderer {
      */
     private void renderAbstractEntities(SpriteBatch batch, OrthographicCamera camera) {
         List<AbstractEntity> entities = GameManager.get().getWorld().getSortedEntities();
-        MainCharacter playerPeon = findPlayerPeon(entities);
 
         int entitiesSkipped = 0;
         logger.debug("NUMBER OF ENTITIES IN ENTITY RENDER LIST: {}", entities.size());
@@ -232,9 +215,12 @@ public class Renderer3D implements Renderer {
                 if (entity instanceof Peon && GameManager.get().showPath) {
                     renderPeonMovementTiles(batch, camera, entity, entityWorldCoord);
                 }
+
+
             }
 
         }
+
 
         GameManager.get().setEntitiesRendered(entities.size() - entitiesSkipped);
         GameManager.get().setEntitiesCount(entities.size());
@@ -376,7 +362,8 @@ public class Renderer3D implements Renderer {
                 return;
             }
 
-            if (ani.isAnimationFinished(time)) {
+            if (ani.isAnimationFinished(time) && entity.getCurrentState()==AnimationRole.NULL) {
+                //System.out.println("Animation is done");
                 aniLink.resetStartingTime();
 
                 if (!aniLink.isLooping()) {
@@ -386,14 +373,12 @@ public class Renderer3D implements Renderer {
                 return;
             }
 
-            TextureRegion currentFrame = ani.getKeyFrame(time, false);
+            TextureRegion currentFrame = ani.getKeyFrame(time, true);
             float width = currentFrame.getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X * entity.getScale() ;
             float height = currentFrame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y * entity.getScale();
             int[] offset = aniLink.getOffset();
 
             batch.draw(currentFrame, entityWorldCoord[0] + offset[0], entityWorldCoord[1] + offset[0], width, height);
             aniLink.incrTime(Gdx.graphics.getDeltaTime());
-
-
     }
 }
