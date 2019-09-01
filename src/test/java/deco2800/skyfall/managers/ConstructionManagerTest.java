@@ -1,27 +1,30 @@
 package deco2800.skyfall.managers;
 
-import deco2800.skyfall.entities.structures.AbstractBuilding;
-import deco2800.skyfall.entities.structures.WallBuilding;
-import deco2800.skyfall.worlds.RocketWorld;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
 
-import deco2800.skyfall.managers.ConstructionManager;
+import deco2800.skyfall.entities.structures.AbstractBuilding;
+import deco2800.skyfall.entities.structures.WallBuilding;
+import deco2800.skyfall.worlds.TestWorld;
 import deco2800.skyfall.worlds.AbstractWorld;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.worlds.RocketWorld;
 
 import java.util.TreeMap;
 
 //Add all tests related to the construction manager
 public class ConstructionManagerTest {
+    private GameManager gm;
     private ConstructionManager cmgr;
 
     @Before
     public void setup() {
+        this.gm = GameManager.get();
         this.cmgr = new ConstructionManager();
+        gm.setWorld(new TestWorld(1));
     }
 
     @Test
