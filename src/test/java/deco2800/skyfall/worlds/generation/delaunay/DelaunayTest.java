@@ -362,6 +362,7 @@ public class DelaunayTest {
 
     @Test
     public void removeZeroTileNodesTest() {
+        Random random = new Random(0);
         List<Tile> tiles = new ArrayList<>();
         for (int q = -5; q <= 5; q++) {
             for (int r = -5; r <= 5; r++) {
@@ -375,11 +376,11 @@ public class DelaunayTest {
         List<WorldGenNode> nodes = new ArrayList<>();
         WorldGenNode nodeToRemove = new WorldGenNode(0.5, 0.5);
         nodes.add(nodeToRemove);
-        nodes.add(new WorldGenNode(1, 1));
-        nodes.add(new WorldGenNode(0, 0));
-        nodes.add(new WorldGenNode(0.1, 0.9));
-        nodes.add(new WorldGenNode(0.95, 0.3));
-        WorldGenNode.assignTiles(nodes, tiles, new Random(), 1);
+        nodes.add(new WorldGenNode(0.6, 0.6));
+        nodes.add(new WorldGenNode(0.4, 0.4));
+        nodes.add(new WorldGenNode(0.55, 0.45));
+        nodes.add(new WorldGenNode(0.5, 0.6));
+        WorldGenNode.assignTiles(nodes, tiles, random, 1);
         try {
             WorldGenNode.removeZeroTileNodes(nodes, 5);
         } catch  (WorldGenException e) {
