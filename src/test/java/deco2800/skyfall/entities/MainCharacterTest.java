@@ -202,9 +202,9 @@ public class MainCharacterTest {
 
         // "Hurt" animation test
         AnimationLinker animationLinker = new AnimationLinker("MainCharacter_Hurt_E_Anim",
-                AnimationRole.HURT, Direction.EAST, false ,true);
-        testMap.put(Direction.EAST, animationLinker);
-        testCharacter.addAnimations(AnimationRole.HURT, Direction.EAST, animationLinker);
+                AnimationRole.HURT, Direction.DEFAULT, false ,true);
+        testMap.put(Direction.DEFAULT, animationLinker);
+        testCharacter.addAnimations(AnimationRole.HURT, Direction.DEFAULT, animationLinker);
         Assert.assertEquals(testMap, testCharacter.animations.get(AnimationRole.HURT));
     }
 
@@ -232,9 +232,9 @@ public class MainCharacterTest {
 
         // "Kill" animation test
         AnimationLinker animationLinker = new AnimationLinker("MainCharacter_Dead_E_Anim",
-                AnimationRole.DEAD, Direction.EAST, false ,true);
-        testMap.put(Direction.EAST, animationLinker);
-        testCharacter.addAnimations(AnimationRole.DEAD, Direction.EAST, animationLinker);
+                AnimationRole.DEAD, Direction.DEFAULT, false ,true);
+        testMap.put(Direction.DEFAULT, animationLinker);
+        testCharacter.addAnimations(AnimationRole.DEAD, Direction.DEFAULT, animationLinker);
         Assert.assertEquals(testMap, testCharacter.animations.get(AnimationRole.DEAD));
     }
 }

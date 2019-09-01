@@ -881,13 +881,14 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                         AnimationRole.MOVE, Direction.SOUTH, true ,true));
 
         // Hurt animation
-        addAnimations(AnimationRole.HURT, Direction.EAST,
+        addAnimations(AnimationRole.HURT, Direction.DEFAULT,
                 new AnimationLinker("MainCharacter_Hurt_E_Anim",
-                        AnimationRole.HURT, Direction.EAST, false ,true));
+                        AnimationRole.HURT, Direction.DEFAULT, false ,true));
 
-        addAnimations(AnimationRole.DEAD, Direction.EAST,
+        // Dead animation
+        addAnimations(AnimationRole.DEAD, Direction.DEFAULT,
                 new AnimationLinker("MainCharacter_Dead_E_Anim",
-                        AnimationRole.DEAD, Direction.EAST, false ,true));
+                        AnimationRole.DEAD, Direction.DEFAULT, false ,true));
     }
 
     @Override
@@ -900,7 +901,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         defaultDirectionTextures.put(Direction.NORTH_WEST, "__ANIMATION_MainCharacterNW_Anim:0");
         defaultDirectionTextures.put(Direction.SOUTH_EAST, "__ANIMATION_MainCharacterSE_Anim:0");
         defaultDirectionTextures.put(Direction.SOUTH_WEST, "__ANIMATION_MainCharacterSW_Anim:0");
-
     }
 
     private void updateAnimation() {
@@ -913,12 +913,14 @@ public class MainCharacter extends Peon implements KeyDownObserver,
            setCurrentState(AnimationRole.MOVE);
        }
 
+       /*
        //TODO: Detect whether player is hurt by an enemy,
        if(isHurt == true && this.getHealth() != 0) {
            setCurrentState(AnimationRole.HURT);
        } else if(this.getHealth() <= 0) {
            setCurrentState(AnimationRole.DEAD);
        }
+       */
 
     }
 }
