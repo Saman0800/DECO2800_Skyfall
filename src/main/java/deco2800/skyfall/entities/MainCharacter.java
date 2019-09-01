@@ -122,6 +122,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private boolean isHurt = false;
 
     /**
+     * Check whether MainCharacter is attacking.
+     */
+    private boolean isAttacking = false;
+
+    /**
      * Private helper method to instantiate inventory and weapon managers for
      * Main Character constructor
      */
@@ -244,6 +249,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     public void attack(HexVector mousePosition) {
         HexVector position = this.getPosition();
+        setAttacking(true);
+        setCurrentState(AnimationRole.DEAD);
 
         // Make projectile move toward the angle
         // Spawn projectile in front of character for now.
@@ -262,6 +269,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         // Add the projectile entity to the game world.
         manager.getWorld().addEntity(projectile);
+    }
+
+    public void setAttacking(boolean isAttacking) {
+        this.isAttacking = isAttacking;
     }
 
     /**
@@ -312,8 +323,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 rb2d.AddForce(new com.badlogic.gdx.math.Vector2(hurtForce.x*forceDir,hurtForce.y));
             }
             */
-
-            recover();
+           // recover();
        }
     }
 
@@ -322,7 +332,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * hurt effect (e.g. sprite flashing in red), in hurt().
      */
     void recover () {
-        isHurt = false;
+        setHurt(false);
         // controller.enabled = true;
     }
 
@@ -420,7 +430,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     public void weaponEffect(Weapon item) {
         this.changeHealth(item.getDamage().intValue() * -1);
-        isHurt = true;
     }
 
     /**
@@ -584,6 +593,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             GameManager.getManagerFromInstance(ConstructionManager.class)
                     .displayWindow();
         }
+
     }
 
     /**
@@ -1131,6 +1141,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 new AnimationLinker("MainCharacterS_Anim",
                         AnimationRole.MOVE, Direction.SOUTH, true ,true));
 
+        // Attack animation
+        addAnimations(AnimationRole.ATTACK, Direction.DEFAULT,
+                new AnimationLinker("MainCharacter_Attack_E_Anim",
+                        AnimationRole.ATTACK, Direction.DEFAULT, false ,true));
+
         // Hurt animation
         addAnimations(AnimationRole.HURT, Direction.DEFAULT,
                 new AnimationLinker("MainCharacter_Hurt_E_Anim",
@@ -1140,7 +1155,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         addAnimations(AnimationRole.DEAD, Direction.DEFAULT,
                 new AnimationLinker("MainCharacter_Dead_E_Anim",
                         AnimationRole.DEAD, Direction.DEFAULT, false ,true));
-
     }
 
     /**
@@ -1175,9 +1189,16 @@ public class MainCharacter extends Peon implements KeyDownObserver,
        getPlayerDirectionCardinal();
        List<Float> vel = getVelocity();
 
+       /*
+        if(isAttacking) {
+            setCurrentState(AnimationRole.ATTACK);
+           // System.out.println(isAttacking);
+        }
+       */
+
         if(isDead()) {
             setCurrentState(AnimationRole.DEAD);
-        } else if(isHurt && this.getHealth() >= 0) {
+        } else if(isHurt) {
             setCurrentState(AnimationRole.HURT);
         } else {
             if (vel.get(2) == 0f) {
