@@ -87,6 +87,7 @@ public class Treeman extends EnemyEntity implements Animatable {
         this.setArmour(5);
     }
 
+
     /**
      * get enemy type
      * @return enemy type
