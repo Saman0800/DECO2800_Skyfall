@@ -323,7 +323,6 @@ public abstract class AbstractWorld {
                     break;
                 }
                 Collider c2 = e2.getCollider();
-
                 if (e1 != e2 && c1.overlaps(c2)) {
                     if (e1 instanceof MainCharacter || e2 instanceof MainCharacter) {
                         break;
@@ -382,18 +381,25 @@ public abstract class AbstractWorld {
 
         // TODO: this needs to be internalized into classes for cleaner code.
         if (e1 instanceof Projectile && e2 instanceof EnemyEntity) {
-            Projectile projectile = (Projectile) e1;
-            EnemyEntity enemy = (EnemyEntity) e2;
+            if(((EnemyEntity) e2).getHealth()>0){
+                ((EnemyEntity) e2).takeDamage(((Projectile) e1).getDamage());
+                ((EnemyEntity) e2).setAttacked(true);
+                ((Projectile) e1).destroy();
+            }else{
+                ((EnemyEntity) e2).setDead(true);
+            }
 
-            enemy.takeDamage(projectile.getDamage());
-            projectile.destroy();
 
         } else if (e2 instanceof Projectile && e1 instanceof EnemyEntity) {
-            Projectile projectile = (Projectile) e2;
-            EnemyEntity enemy = (EnemyEntity) e1;
+            if(((EnemyEntity) e1).getHealth()>0){
+                ((EnemyEntity) e1).takeDamage(((EnemyEntity) e1).getDamage());
+                ((EnemyEntity) e1).setAttacked(true);
+                ((Projectile) e2).destroy();
+            }else{
+                ((EnemyEntity) e1).setDead(true);
+            }
 
-            enemy.takeDamage(projectile.getDamage());
-            projectile.destroy();
+
         }
     }
 

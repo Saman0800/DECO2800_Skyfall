@@ -99,6 +99,11 @@ public class Peon extends AgentEntity implements Tickable {
 		return this.getHealth() <= 0;
 	}
 
+
+	public boolean setDead(boolean is_dead) {
+		return is_dead;
+	}
+
 	/**
 	 * Gets the number of times the character has died
 	 * @return amount of deaths of character
