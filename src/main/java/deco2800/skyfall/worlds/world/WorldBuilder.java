@@ -179,13 +179,9 @@ public class WorldBuilder implements WorldBuilderInterface{
         Tree startTree = new Tree(tileRock, true);
 
         for (AbstractBiome biome : world.getBiomes()) {
-
             switch (biome.getBiomeName()) {
                 case "forest":
-
-                    // Create a new perlin noise map
                     SpawnControl cubic = x -> x * x * x;
-
                     EntitySpawnRule treeRule = new EntitySpawnRule(biome, true, cubic);
                     EntitySpawnTable.spawnEntities(startTree, treeRule, world);
             }
@@ -201,9 +197,6 @@ public class WorldBuilder implements WorldBuilderInterface{
         //Converting the ArrayLists to arrays
         int[] biomeSizesArray = biomeSizes.stream().mapToInt(biomeSize -> biomeSize).toArray();
         int[] lakeSizesArray = lakeSizes.stream().mapToInt(lakeSize -> lakeSize).toArray();
-
-
-
 
         World world;
 
