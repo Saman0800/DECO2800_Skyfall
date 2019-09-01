@@ -227,7 +227,7 @@ public class WeaponManagerTest {
         testCharacter.weaponEffect(spear);
         Assert.assertEquals(testCharacter.getHealth(), 2);
         testCharacter.weaponEffect(axe);
-        Assert.assertEquals(testCharacter.getHealth(), 0);
-        Assert.assertTrue(testCharacter.isDead());
+        Assert.assertEquals(testCharacter.getHealth(), 10);
+        Assert.assertEquals(testCharacter.getDeaths(), 1);
     }
 }

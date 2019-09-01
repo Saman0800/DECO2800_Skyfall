@@ -18,6 +18,7 @@ public class Robot extends EnemyEntity implements Animatable {
     private static final transient String ENEMY_TYPE="robot";
     //savage animation
     private MainCharacter mc;
+
     //Insert SoundManager class
     private SoundManager sound = new SoundManager();
     public Robot(float row, float col, String texturename, int health, int armour, int damage) {

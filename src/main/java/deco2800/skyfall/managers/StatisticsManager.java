@@ -7,7 +7,7 @@ import java.util.*;
 public class StatisticsManager  extends TickableManager {
 
     // Character of which the statistics manager is being used for
-    public MainCharacter character;
+    private MainCharacter character;
 
     // Map recording kills of different enemies
     private Map<EnemyEntity, Integer> kills;
@@ -51,7 +51,7 @@ public class StatisticsManager  extends TickableManager {
             experience += 10;
         }
 
-        if (this.getMoney() % 20 == 0) {
+        if (this.getMoney() % 10 == 0) {
             experience += 10;
         }
     }
@@ -71,6 +71,14 @@ public class StatisticsManager  extends TickableManager {
      */
     public int getExperience() {
         return this.experience;
+    }
+
+    /**
+     * Gets the amount of experience needed to level up
+     * @return amount of experience needed to level up
+     */
+    public int getExperienceCap() {
+        return this.experienceCap;
     }
 
     /**
@@ -150,7 +158,7 @@ public class StatisticsManager  extends TickableManager {
      * @return the amount of deaths of the character
      */
     public int getDeaths() {
-        return this.deaths;
+        return this.character.getDeaths();
     }
 
     /**

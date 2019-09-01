@@ -94,7 +94,15 @@ public class AnimationManager extends AbstractManager {
                 "MainCharacterNW_Anim",
                 743, 1147, 0.2f);
 
-            System.out.println("All animations in game");
+        this.generateAnimationObject("MainCharacter_Hurt_E_Anim",
+                "MainCharacter_Hurt_E_Anim",
+                746, 1032, 0.2f);
+
+        this.generateAnimationObject("MainCharacter_Dead_E_Anim",
+                "MainCharacter_Dead_E_Anim",
+                746, 1032, 0.2f);
+
+        System.out.println("All animations in game");
     }
 
     /**

@@ -15,10 +15,15 @@ import deco2800.skyfall.resources.items.Stone;
 import deco2800.skyfall.worlds.Tile;
 
 import deco2800.skyfall.util.Collider;
+import deco2800.skyfall.util.Vector2;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
+import org.mockito.Mockito;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainCharacterTest {
 
@@ -32,6 +37,9 @@ public class MainCharacterTest {
     private Rock testRock;
     private Tile testTile;
     private InventoryManager inventoryManager;
+
+    // A hashmap for testing player's animations
+    private HashMap testMap = new HashMap();
 
     @Before
     /**
@@ -80,8 +88,8 @@ public class MainCharacterTest {
         testCharacter.changeHealth(5);
         Assert.assertEquals(testCharacter.getHealth(), 15);
         testCharacter.changeHealth(-20);
-        Assert.assertEquals(testCharacter.getHealth(), 0);
-        Assert.assertTrue(testCharacter.isDead());
+        Assert.assertEquals(testCharacter.getHealth(), 10);
+        Assert.assertEquals(testCharacter.getDeaths(), 1);
     }
 
     @Test
@@ -98,8 +106,8 @@ public class MainCharacterTest {
         testCharacter.weaponEffect(sword);
         testCharacter.weaponEffect(spear);
         testCharacter.weaponEffect(axe);
-        Assert.assertEquals(testCharacter.getHealth(), 0);
-        Assert.assertTrue(testCharacter.isDead());
+        Assert.assertEquals(10, testCharacter.getHealth());
+        Assert.assertEquals(1, testCharacter.getDeaths());
     }
 
     @Test
@@ -221,8 +229,73 @@ public class MainCharacterTest {
         Assert.assertEquals(testCharacter.getCurrentState(), AnimationRole.NULL);
     }
 
-
     @Test
+    public void setAndGetAnimationTest() {
+        // testCharacter.addAnimations(AnimationRole.MOVE_EAST, "right");
+        //testCharacter.getAnimationName(AnimationRole.MOVE_EAST);
+    }
+
+    /**
+     * Test hurt effect
+     */
+    @Test
+    public void hurtTest() {
+        // testCharacter.direction = new Vector2(20, 0);
+        // Set player's health back to 10.
+        testCharacter.changeHealth(3);
+
+        // Check if the hurt() is called.
+        testCharacter.hurt(sword);
+        Assert.assertTrue(testCharacter.IsHurt());
+
+        // Reduce health by input damage test
+        testCharacter.changeHealth(-3);
+        Assert.assertEquals(7, testCharacter.getHealth());
+
+        // Character bounce back test
+        // Assert.assertEquals(, testCharacter.getCol());
+
+        // "Hurt" animation test
+        AnimationLinker animationLinker = new AnimationLinker("MainCharacter_Hurt_E_Anim",
+                AnimationRole.HURT, Direction.DEFAULT, false ,true);
+        testMap.put(Direction.DEFAULT, animationLinker);
+        testCharacter.addAnimations(AnimationRole.HURT, Direction.DEFAULT, animationLinker);
+        Assert.assertEquals(testMap, testCharacter.animations.get(AnimationRole.HURT));
+    }
+
+    /**
+     * Test recover effect
+     */
+    @Test
+    public void recoverTest() {
+        // Set the health status of player from hurt back to normal
+        // so that the effect (e.g. sprite flashing in red) will disappear
+        // after recovering.
+        testCharacter.recover();
+        Assert.assertFalse(testCharacter.IsHurt());
+    }
+
+    /**
+     * Test kill effect
+     */
+    @Test
+    public void killTest() {
+        // Test if hurt() can trigger Peon.changeHealth() when
+        // the damage taken can make player's health below 0.
+        testCharacter.hurt(bow);
+        testCharacter.hurt(bow);
+        testCharacter.hurt(bow);
+        // player death + 1
+        Assert.assertEquals(1, testCharacter.getDeaths());
+
+        // "Kill" animation test
+        AnimationLinker animationLinker = new AnimationLinker("MainCharacter_Dead_E_Anim",
+                AnimationRole.DEAD, Direction.DEFAULT, false, true);
+        testMap.put(Direction.DEFAULT, animationLinker);
+        testCharacter.addAnimations(AnimationRole.DEAD, Direction.DEFAULT, animationLinker);
+        Assert.assertEquals(testMap, testCharacter.animations.get(AnimationRole.DEAD));
+    }
+
     public void movementAnimationsExist() {
         testCharacter.setCurrentState(AnimationRole.MOVE);
         testCharacter.setCurrentDirection(Direction.EAST);
@@ -230,7 +303,6 @@ public class MainCharacterTest {
         AnimationLinker al = testCharacter.getToBeRun();
         Assert.assertEquals(al.getAnimationName(), "MainCharacterE_Anim");
         Assert.assertEquals(al.getType(), AnimationRole.MOVE);
-
     }
 
     @Test
@@ -246,7 +318,6 @@ public class MainCharacterTest {
         testCharacter.setCurrentDirection(Direction.NORTH);
         s = testCharacter.getDefaultTexture();
         Assert.assertEquals(s, "__ANIMATION_MainCharacterN_Anim:0");
-
     }
 
     @Test
