@@ -1,10 +1,12 @@
 package deco2800.skyfall.entities;
 
 
+
 import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.managers.GameManager;
 
 public class Robot extends EnemyEntity implements Animatable {
     private static final transient int HEALTH = 20;
@@ -70,6 +72,9 @@ public class Robot extends EnemyEntity implements Animatable {
 
     @Override
     public void onTick(long i) {
+        if(this.isDead()==true){
+            GameManager.get().getWorld().removeEntity(this);
+        }
         super.onTick(i);
         if (mc != null) {
             float colDistance = mc.getCol() - this.getCol();

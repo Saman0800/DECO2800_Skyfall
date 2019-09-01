@@ -1,0 +1,76 @@
+
+stoneAS.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+??????-20001
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+??????-20002
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+stoneAS2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+??????-20003
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+??????-20004
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+stoneAS3.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+??????-20005
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+??????-20006
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+stoneAS4.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+??????-20007
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+??????-20008
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
