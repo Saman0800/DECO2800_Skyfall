@@ -13,10 +13,9 @@ import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.util.*;
-import deco2800.skyfall.worlds.AbstractWorld;
-import deco2800.skyfall.worlds.RocketWorld;
 import deco2800.skyfall.worlds.Tile;
-import org.lwjgl.Sys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +25,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class MainCharacter extends Peon implements KeyDownObserver,
         KeyUpObserver,TouchDownObserver, Tickable , Animatable {
+
+    private final Logger logger = LoggerFactory.getLogger(MainCharacter.class);
 
     // Weapon Manager for MainCharacter
     private WeaponManager weapons;
@@ -146,9 +147,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         GameManager.getManagerFromInstance(InputManager.class)
                 .addTouchDownListener(this);
 
-        //this.direction = new Vector2(row, col);
-        //this.direction.limit2(0.05f);
-
         this.weapons = GameManager.getManagerFromInstance(WeaponManager.class);
         this.inventories = GameManager.getManagerFromInstance(InventoryManager.class);
 
@@ -174,7 +172,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         isMoving = false;
 
-        //TODO: Need to calculate an angle that the character is facing.
         HexVector position = this.getPosition();
 
 /*        //Spawn projectile in front of character for now.
@@ -230,7 +227,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         if (keyCode >= 8 && keyCode <= 16) {
             int keyNumber = Integer.parseInt(Input.Keys.toString(keyCode));
             this.itemSlotSelected = keyNumber;
-            System.out.println("Switched to item: " + keyNumber);
+            logger.info("Switched to item: " + keyNumber);
         }
     }
 
@@ -499,11 +496,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 change_food(hungerValue);
                 dropInventory(item.getName());
             } else {
-                System.out.println("Given item (" + item.getName() + ") is " +
-                        "not edible!");
+                logger.info("Given item (" + item.getName() + ") is " + "not edible!");
             }
         } else {
-            System.out.println("You don't have enough of the given item");
+           logger.info("You don't have enough of the given item");
         }
     }
 
@@ -575,6 +571,13 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.updatePosition();
         this.updateCollider();
         this.movementSound();
+
+        //this.setCurrentSpeed(this.direction.len());
+        //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
+//        System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction,
+//         this.getPosition(), this.direction.x - this.getCol(),
+//         this.direction.y - this.getRow());
+//        System.out.printf("%s%n", this.currentSpeed);
 
         this.updateAnimation();
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
@@ -734,7 +737,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         for (Integer goldValue : goldPouch.keySet()) {
             totalValue += goldValue * goldPouch.get(goldValue);
         }
-        System.out.println("The total value of your Gold Pouch is: " + totalValue + "G");
+        logger.info("The total value of your Gold Pouch is: " + totalValue + "G");
         return totalValue;
     }
 
@@ -748,12 +751,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 if (entity instanceof GoldPiece) {
                     if ( this.getPosition().distance(entity.getPosition()) <= 2 ) {
                         this.addGold((GoldPiece) entity, 1);
-                        System.out.println(this.inventories.toString());
+                        logger.info(this.inventories.toString());
                     }
                 }
 
         }
-        System.out.println("Sorry, you are not close enough to a gold piece!");
+        logger.info("Sorry, you are not close enough to a gold piece!");
 
     }
 
@@ -874,29 +877,29 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @return new texture to use
      */
     public String getPlayerDirectionCardinal() {
-        double direction = getPlayerDirectionAngle();
-        if (direction <= 22.5 || direction >= 337.5) {
+        double playerDirectionAngle = getPlayerDirectionAngle();
+        if (playerDirectionAngle <= 22.5 || playerDirectionAngle >= 337.5) {
             setCurrentDirection(Direction.NORTH);
             return "North";
-        } else if (22.5 <= direction && direction <= 67.5) {
+        } else if (22.5 <= playerDirectionAngle && playerDirectionAngle <= 67.5) {
             setCurrentDirection(Direction.NORTH_EAST);
             return "North-East";
-        } else if (67.5 <= direction && direction <= 112.5) {
+        } else if (67.5 <= playerDirectionAngle && playerDirectionAngle <= 112.5) {
             setCurrentDirection(Direction.EAST);
             return "East";
-        } else if (112.5 <= direction && direction <= 157.5) {
+        } else if (112.5 <= playerDirectionAngle && playerDirectionAngle <= 157.5) {
             setCurrentDirection(Direction.SOUTH_EAST);
             return "South-East";
-        } else if (157.5 <= direction && direction <= 202.5) {
+        } else if (157.5 <= playerDirectionAngle && playerDirectionAngle <= 202.5) {
             setCurrentDirection(Direction.SOUTH);
             return "South";
-        } else if (202.5 <= direction && direction <= 247.5) {
+        } else if (202.5 <= playerDirectionAngle && playerDirectionAngle <= 247.5) {
             setCurrentDirection(Direction.SOUTH_WEST);
             return "South-West";
-        } else if (247.5 <= direction && direction <= 292.5) {
+        } else if (247.5 <= playerDirectionAngle && playerDirectionAngle <= 292.5) {
             setCurrentDirection(Direction.WEST);
             return "West";
-        } else if (292.5 <= direction && direction <= 337.5) {
+        } else if (292.5 <= playerDirectionAngle && playerDirectionAngle <= 337.5) {
             setCurrentDirection(Direction.NORTH_WEST);
             return "North-West";
         }
@@ -957,6 +960,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             // Runs when the player starts moving
             isMoving = true;
 
+            //logger.info("Start Playing");
+            //TODO: Play movement sound
             SoundManager.loopSound(WALK_NORMAL);
         }
 
@@ -964,6 +969,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             // Runs when the player stops moving
             isMoving = false;
 
+            //logger.info("Stop Playing");
+            //TODO: Stop Player movement
             SoundManager.stopSound(WALK_NORMAL);
         }
     }
@@ -985,13 +992,13 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
                     if ( this.getPosition().distance(entity.getPosition()) <= 0.5 ) {
                         playerHatchet.farmTree((Tree) entity);
-                        System.out.println(this.inventories.toString());
+                        logger.info(this.inventories.toString());
                     }
                 }
             }
 
         } else{
-            System.out.println("No Hatchet in Quick Access");
+            logger.info("No Hatchet in Quick Access");
         }
     }
 
@@ -1012,12 +1019,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
                     if ( this.getPosition().distance(entity.getPosition()) <= 0.5 ) {
                         playerPickAxe.farmRock((Rock) entity);
-                        System.out.println(this.inventories.toString());
+                        logger.info(this.inventories.toString());
                     }
                 }
             }
         } else{
-            System.out.println("No PickAxe in Quick Access");
+            logger.info("No PickAxe in Quick Access");
         }
     }
 
@@ -1057,15 +1064,15 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
             if (hatchetToCreate.getRequiredMetal() < inventories.getAmount
                     ("Metal")) {
-                System.out.println("You don't have enough Metal");
+                logger.info("You don't have enough Metal");
 
             } else if (hatchetToCreate.getRequiredWood() < inventories.getAmount
                     ("Wood")) {
-                System.out.println("You don't have enough Wood");
+                logger.info("You don't have enough Wood");
 
             } else if (hatchetToCreate.getRequiredStone() < inventories.getAmount
                     ("Stone")) {
-                System.out.println("You don't have enough Stone");
+                logger.info("You don't have enough Stone");
 
             } else {
                 inventories.inventoryAdd(hatchetToCreate);

@@ -18,7 +18,6 @@ public class AnimationLinker {
     private String animationName;
     private Animation<TextureRegion> animation;
     private float startingTime;
-    private AnimationManager animationManager;
     private final Logger logger = LoggerFactory.getLogger(AnimationLinker.class);
     private boolean isCompleted = false;
     private Direction direction;
@@ -34,7 +33,7 @@ public class AnimationLinker {
     public AnimationLinker(String animationName, AnimationRole type,
                Direction direction, boolean looping, boolean fetchAnimation) {
         if (fetchAnimation) {
-            getAnimation(animationName, type, direction);
+            getAnimation(animationName);
         }
         this.type = type;
         this.direction = direction;
@@ -59,7 +58,6 @@ public class AnimationLinker {
     public String getAnimationName() {
         return animationName;
     }
-
     public AnimationRole getType() {
         return type;
     }
@@ -96,11 +94,10 @@ public class AnimationLinker {
     /**
      * Gets the animation from the animation manager.
      * @param animationName The animation name as registered in the animation manager
-     * @param type The type of animation role
-     * @param direction The cardinal direction
      */
-    private void getAnimation(String animationName, AnimationRole type, Direction direction) {
-        animationManager = GameManager.get().getManager(AnimationManager.class);
+    private void getAnimation(String animationName) {
+        AnimationManager animationManager =
+                GameManager.get().getManager(AnimationManager.class);
         try {
             this.animation = animationManager.getAnimation(animationName);
         } catch (Exception e) {
