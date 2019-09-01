@@ -9,6 +9,7 @@ import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.tasks.MovementTask;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
@@ -31,6 +32,9 @@ public class Spider extends EnemyEntity implements Animatable {
 
     //savage animation
     private Animation<TextureRegion> animation;
+
+    //Insert SoundManager class
+    private SoundManager sound = new SoundManager();
 
     //the animation resource
     private TextureAtlas textureAtlas;
@@ -100,8 +104,10 @@ public class Spider extends EnemyEntity implements Animatable {
             float rowDistance = mc.getRow() - this.getRow();
 
             if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
+                sound.loopSound("spider");
                 this.setCurrentState(AnimationRole.DEFENCE);
             } else {
+                sound.stopSound("spider");
                 this.setCurrentState(AnimationRole.NULL);
             }
         } else {

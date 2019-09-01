@@ -5,6 +5,7 @@ import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 
@@ -45,6 +46,8 @@ public class Stone extends EnemyEntity implements Animatable {
     //world coordinate of this enemy
     private float[] orginalPosition = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
 
+    //Insert SoundManager class
+    private SoundManager sound = new SoundManager();
 
     public Stone(float col, float row, MainCharacter mc) {
         super(col, row);
@@ -138,6 +141,7 @@ public class Stone extends EnemyEntity implements Animatable {
      */
     private void randomMoving() {
         if(moving==false){
+            sound.loopSound("stoneWalk");
             targetPosition =new float[2];
             targetPosition[0]=(float) (Math.random() * 100 + orginalPosition[0]);
             targetPosition[1]=(float) (Math.random() * 100 + orginalPosition[1]);
@@ -146,6 +150,7 @@ public class Stone extends EnemyEntity implements Animatable {
             moving=true;
         }
         if(destination.getCol()==this.getCol() && destination.getRow()==this.getRow()){
+            sound.stopSound("stoneWalk");
             moving=false;
         }
         this.position.moveToward(destination,this.getSpeed());
@@ -222,13 +227,14 @@ public class Stone extends EnemyEntity implements Animatable {
         this.moving=true;
         this.destination=new HexVector(this.getCol(),this.getRow());
         if(time<=100){
+            sound.loopSound("stoneDie");
             time++;
             setCurrentState(AnimationRole.NULL);
             this.setTexture("stoneDead");
             this.setObjectName("stoneDead");
         }else{
             GameManager.get().getWorld().removeEntity(this);
-
+            sound.stopSound("stoneDie");
         }
 
     }
