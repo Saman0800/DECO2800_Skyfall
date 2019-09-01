@@ -168,9 +168,6 @@ public class StatisticsManagerTest {
         this.pickUpInventory();
 
         testManager.gainExperience();
-
-        Assert.assertEquals(testManager.getExperience(), 30);
-
         testManager.levelUp();
 
         Assert.assertEquals(testManager.getLevel(), 2);
