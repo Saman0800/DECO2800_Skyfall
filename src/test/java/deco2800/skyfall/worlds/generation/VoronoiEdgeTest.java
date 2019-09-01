@@ -1,8 +1,9 @@
-package deco2800.skyfall.worlds.generation.delaunay;
+package deco2800.skyfall.worlds.generation;
 
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.WorldGenException;
+import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -141,5 +142,58 @@ public class VoronoiEdgeTest {
         assertEquals(1, edge3.getVertexSharingEdges(point1).size());
         assertTrue(edge3.getVertexSharingEdges(point1).contains(edge1));
         assertTrue(edge1.getVertexSharingEdges(point1).contains(edge3));
+    }
+
+    @Test public void assignTilesTest() {
+        List<Tile> tiles = new ArrayList<>();
+        for (int q = -5; q <= 5; q++) {
+            for (int r = -5; r <= 5; r++) {
+                float oddCol = (q % 2 != 0 ? 0.5f : 0);
+
+                Tile tile = new Tile(q, r + oddCol);
+                tiles.add(tile);
+            }
+        }
+
+        // Vertical edge
+        VoronoiEdge edge1 = new VoronoiEdge(new double[] {4.2, 3.4}, new double[] {4.2, -2.7});
+        VoronoiEdge edge2 = new VoronoiEdge(new double[] {-3.6, 3.4}, new double[] {1.4, 1.1});
+        // Very close to the edge of the map
+        VoronoiEdge edge3 = new VoronoiEdge(new double[] {-4.99, -2}, new double[] {4.99, -2.7});
+        VoronoiEdge edge4 = new VoronoiEdge(new double[] {-4, -4}, new double[] {-2, -2});
+
+        List<VoronoiEdge> edges = new ArrayList<>();
+        edges.add(edge1);
+        edges.add(edge2);
+        edges.add(edge3);
+        edges.add(edge4);
+        VoronoiEdge.assignTiles(edges, tiles, 5);
+
+        for (Tile tile : tiles) {
+            // Check the vertical edge
+            if (tile.getCol() == 4 && tile.getRow() <= 3 && tile.getRow() >= -3) {
+                assertTrue(edge1.getTiles().contains(tile));
+            } else {
+                assertFalse(edge1.getTiles().contains(tile));
+            }
+
+            // Check that the line of tiles terminates at the vertices
+            if (tile.getCol() == -2 && tile.getRow() == -2) {
+                assertTrue(edge4.getTiles().contains(tile));
+            }
+            if (tile.getCol() == -1 && tile.getRow() == -1) {
+                assertFalse(edge4.getTiles().contains(tile));
+            }
+
+            // For the others check an arbitrary point on the line, and an arbitrary point off the line
+            if (tile.getCol() == -1 && tile.getRow() == 2) {
+                assertTrue(edge2.getTiles().contains(tile));
+                assertFalse(edge3.getTiles().contains(tile));
+            }
+            if (tile.getCol() == 3 && tile.getRow() == -3) {
+                assertTrue(edge3.getTiles().contains(tile));
+                assertFalse(edge2.getTiles().contains(tile));
+            }
+        }
     }
 }

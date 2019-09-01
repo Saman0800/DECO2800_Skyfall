@@ -30,13 +30,14 @@ public class BiomeGeneratorTest {
     private static final int LAKE_COUNT = 2;
 
     // Rivers split biomes and break contiguity so they must be disabled for these tests.
-    private static final int RIVER_WIDTH = 0;
-    private static final int RIVER_COUNT = 0;
+    private static final int RIVER_WIDTH = 1;
+    private static final int RIVER_COUNT = 1;
 
     private static ArrayList<ArrayList<ArrayList<WorldGenNode>>> biomeNodesList;
     private static ArrayList<ArrayList<AbstractBiome>> biomeLists;
     private static ArrayList<ArrayList<WorldGenNode>> worldGenNodesList;
     private static ArrayList<HashMap<WorldGenNode, AbstractBiome>> nodesBiomesList;
+    private static List<Tile> originTiles;
 
     @BeforeClass
     public static void setup() {
@@ -46,6 +47,7 @@ public class BiomeGeneratorTest {
         biomeLists = new ArrayList<>(TEST_COUNT);
         worldGenNodesList = new ArrayList<>();
         nodesBiomesList = new ArrayList<>();
+        originTiles = new ArrayList<>();
 
         for (int i = 0; i < TEST_COUNT; i++) {
             while (true) {
@@ -78,6 +80,9 @@ public class BiomeGeneratorTest {
 
                         Tile tile = new Tile(q, r + oddCol);
                         tiles.add(tile);
+                        if (q == 0 && r == 0) {
+                            originTiles.add(tile);
+                        }
                     }
                 }
 
@@ -265,6 +270,14 @@ public class BiomeGeneratorTest {
                     assertNotNull(biome.getParentBiome());
                 }
             }
+        }
+    }
+
+    @Test
+    public void noWaterOnOriginTile() {
+        for (Tile tile : originTiles) {
+            assertFalse(tile.getBiome().getBiomeName().equals("lake")
+                    || tile.getBiome().getBiomeName().equals("river"));
         }
     }
 
