@@ -35,8 +35,8 @@ public class TutorialWorld extends World implements TouchDownObserver {
      * @param riverWidth The size of all the rivers
      */
     public TutorialWorld(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int[] lakeSizes,
-        ArrayList<AbstractBiome> biomes, CopyOnWriteArrayList<AbstractEntity> entities, int noRivers, int riverWidth) {
-        super(seed, worldSize, nodeSpacing, biomeSizes, numOfLakes, lakeSizes, biomes, entities, noRivers, riverWidth);
+        ArrayList<AbstractBiome> biomes, CopyOnWriteArrayList<AbstractEntity> entities, int noRivers, int riverWidth, int beachSize) {
+        super(seed, worldSize, nodeSpacing, biomeSizes, numOfLakes, lakeSizes, biomes, entities, noRivers, riverWidth, beachSize);
     }
 
     @Override

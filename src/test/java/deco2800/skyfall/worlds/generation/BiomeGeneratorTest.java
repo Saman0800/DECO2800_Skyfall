@@ -11,6 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.lang.reflect.Array;
 import java.rmi.activation.UnknownGroupException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -41,7 +42,7 @@ public class BiomeGeneratorTest {
 
     @BeforeClass
     public static void setup() {
-        Random random = new Random(3);
+        Random random = new Random(0);
 
         biomeNodesList = new ArrayList<>(TEST_COUNT);
         biomeLists = new ArrayList<>(TEST_COUNT);
@@ -106,12 +107,10 @@ public class BiomeGeneratorTest {
                 VoronoiEdge.assignTiles(edges, tiles, WORLD_SIZE);
                 VoronoiEdge.assignNeighbours(edges);
 
-                biomes.add(new OceanBiome());
-
                 try {
                     BiomeGenerator biomeGenerator =
                             new BiomeGenerator(worldGenNodes, edges, random, NODE_COUNTS, biomes, LAKE_COUNT,
-                                               LAKE_SIZES, RIVER_COUNT, RIVER_WIDTH);
+                                               LAKE_SIZES, RIVER_COUNT, RIVER_WIDTH, 0);
                     biomeGenerator.generateBiomes();
                 } catch (NotEnoughPointsException | DeadEndGenerationException e) {
                     continue;
@@ -119,9 +118,8 @@ public class BiomeGeneratorTest {
 
                 // Determine which nodes are in which biomes by checking a single tile inside each node and getting its
                 // biome.
-                ArrayList<ArrayList<WorldGenNode>> biomeNodes =
-                        new ArrayList<>(NODE_COUNTS.length + 1 + LAKE_COUNT + RIVER_COUNT);
-                for (int j = 0; j < NODE_COUNTS.length + 1 + LAKE_COUNT + RIVER_COUNT; j++) {
+                ArrayList<ArrayList<WorldGenNode>> biomeNodes = new ArrayList<>(biomes.size());
+                for (int j = 0; j < biomes.size(); j++) {
                     biomeNodes.add(new ArrayList<>());
                 }
 
@@ -158,13 +156,14 @@ public class BiomeGeneratorTest {
         for (ArrayList<AbstractBiome> biomes : biomeLists) {
             for (AbstractBiome biome : biomes) {
                 // HashSet<Tile> tilesToFind = new HashSet<>(biome.getTiles());
-                HashSet<Tile> tilesToFind =
+                ArrayList<Tile> descendantTiles =
                         biome.getDescendantBiomes().stream().flatMap(descendant -> descendant.getTiles().stream())
-                                .collect(Collectors.toCollection(HashSet::new));
+                                .collect(Collectors.toCollection(ArrayList::new));
+                HashSet<Tile> tilesToFind = new HashSet<>(descendantTiles);
 
                 ArrayDeque<Tile> borderTiles = new ArrayDeque<>();
 
-                Tile startTile = biome.getTiles().get(0);
+                Tile startTile = descendantTiles.get(0);
                 tilesToFind.remove(startTile);
                 borderTiles.add(startTile);
 

@@ -104,12 +104,10 @@ public class LakeAndRiverTest {
                 VoronoiEdge.assignTiles(edges, tiles, WORLD_SIZE);
                 VoronoiEdge.assignNeighbours(edges);
 
-                biomes.add(new OceanBiome());
-
                 try {
                     BiomeGenerator biomeGenerator =
                             new BiomeGenerator(worldGenNodes, edges, random, NODE_COUNTS, biomes, LAKE_COUNT,
-                                    LAKE_SIZES, RIVER_COUNT, RIVER_WIDTH);
+                                    LAKE_SIZES, RIVER_COUNT, RIVER_WIDTH, 0);
                     biomeGenerator.generateBiomes();
                 } catch (NotEnoughPointsException | DeadEndGenerationException e) {
                     continue;

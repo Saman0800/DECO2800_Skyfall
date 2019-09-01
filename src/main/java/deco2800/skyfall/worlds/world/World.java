@@ -69,6 +69,9 @@ public class World implements TouchDownObserver {
     //The width of all the rivers
     protected int riverWidth;
 
+    //The width of the beach
+    protected int beachWidth;
+
     //The seed of the world, using with the random number generator to create deterministic worlds
     private long seed;
 
@@ -102,7 +105,7 @@ public class World implements TouchDownObserver {
      * @param riverWidth The width of the rivers in terms of nodes
      */
     public World(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int[] lakeSizes,
-                ArrayList<AbstractBiome> biomes, CopyOnWriteArrayList<AbstractEntity> entities, int noRivers, int riverWidth) {
+                ArrayList<AbstractBiome> biomes, CopyOnWriteArrayList<AbstractEntity> entities, int noRivers, int riverWidth, int beachWidth) {
 
         random = new Random(seed);
         this.seed = seed;
@@ -113,6 +116,7 @@ public class World implements TouchDownObserver {
         this.entities = entities;
         this.noRivers = noRivers;
         this.riverWidth = riverWidth;
+        this.beachWidth = beachWidth;
 
         this.worldSize = worldSize;
         this.nodeSpacing = nodeSpacing;
@@ -124,9 +128,9 @@ public class World implements TouchDownObserver {
     	voronoiEdges = new CopyOnWriteArrayList<>();
 
         generateWorld(random);
+        generateTileTypes(random);
         generateNeighbours();
         generateTileIndexes();
-        generateTileTypes(random);
         initialiseFrictionmap();
     }
 
@@ -215,7 +219,7 @@ public class World implements TouchDownObserver {
 
 
             try {
-                BiomeGenerator biomeGenerator = new BiomeGenerator(worldGenNodes, voronoiEdges, random, biomeSizes, biomes, numOfLakes, lakeSizes, noRivers, riverWidth);
+                BiomeGenerator biomeGenerator = new BiomeGenerator(worldGenNodes, voronoiEdges, random, biomeSizes, biomes, numOfLakes, lakeSizes, noRivers, riverWidth, beachWidth);
                 biomeGenerator.generateBiomes();
             } catch (NotEnoughPointsException | DeadEndGenerationException e) {
                  throw e;
