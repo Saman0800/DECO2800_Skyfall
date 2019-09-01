@@ -342,7 +342,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     void kill () {
         // stop player controls
-        vel = 0;
+        setMaxSpeed(0);
 
         // set health to 0.
         changeHealth(0);
