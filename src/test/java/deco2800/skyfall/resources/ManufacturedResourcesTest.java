@@ -1,6 +1,8 @@
 package deco2800.skyfall.resources;
 
 import deco2800.skyfall.entities.AgentEntity;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.resources.items.*;
 import deco2800.skyfall.util.HexVector;
 import org.junit.After;
@@ -12,15 +14,15 @@ import static org.junit.Assert.*;
 public class ManufacturedResourcesTest {
     private ManufacturedResources hatchet;
     private ManufacturedResources pickAxe;
-    private AgentEntity testOwner;
+    private MainCharacter testOwner;
     private HexVector testPosition;
 
     @Before
     public void setUp() throws Exception {
 
 
-        hatchet = new Hatchet(testOwner,testPosition,"Hatchet");
-        pickAxe = new PickAxe(testOwner,testPosition, "pick Axe");
+        hatchet = new Hatchet(testOwner,testPosition);
+        pickAxe = new PickAxe(testOwner,testPosition);
 
     }
 

@@ -40,6 +40,7 @@ public class WeaponManager extends TickableManager {
         if (weapons.containsKey(item)) {
             weapons.replace(item, weapons.get(item),
                     weapons.get(item) + 1);
+
         } else {
             weapons.put(item, 1);
         }
