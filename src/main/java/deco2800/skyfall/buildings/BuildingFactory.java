@@ -9,6 +9,10 @@ import deco2800.skyfall.entities.structures.BuildingType;
  */
 public class BuildingFactory {
 
+
+
+
+
     /**
      * Get the number of buildings that a factory could build.
      * @return the number of building entities
