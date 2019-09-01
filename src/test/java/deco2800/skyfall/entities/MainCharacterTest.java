@@ -9,9 +9,10 @@ import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.animation.Direction;
 
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.resources.items.Apple;
-import deco2800.skyfall.resources.items.PoisonousMushroom;
+import deco2800.skyfall.resources.items.*;
 import deco2800.skyfall.resources.items.Stone;
+import deco2800.skyfall.worlds.AbstractWorld;
+import deco2800.skyfall.worlds.RocketWorld;
 import deco2800.skyfall.worlds.Tile;
 
 import deco2800.skyfall.util.Collider;
@@ -25,6 +26,8 @@ import org.mockito.Mockito;
 import java.util.HashMap;
 import java.util.Map;
 
+import java.util.Random;
+
 public class MainCharacterTest {
 
     private GoldPiece goldpiece;
@@ -37,6 +40,9 @@ public class MainCharacterTest {
     private Rock testRock;
     private Tile testTile;
     private InventoryManager inventoryManager;
+    private Hatchet testHatchet;
+    private PickAxe testPickaxe;
+    private AbstractWorld testWorld;
 
     // A hashmap for testing player's animations
     private HashMap testMap = new HashMap();
@@ -64,8 +70,6 @@ public class MainCharacterTest {
         testRock = new Rock(testTile,true);
 
         inventoryManager = GameManager.get().getManagerFromInstance(InventoryManager.class);
-
-
     }
 
     @After
@@ -90,7 +94,7 @@ public class MainCharacterTest {
         testCharacter.changeHealth(5);
         Assert.assertEquals(testCharacter.getHealth(), 15);
         testCharacter.changeHealth(-20);
-        Assert.assertEquals(testCharacter.getHealth(), 0);
+        Assert.assertEquals(testCharacter.getHealth(), 15);
         Assert.assertEquals(testCharacter.getDeaths(), 1);
     }
 
@@ -108,8 +112,8 @@ public class MainCharacterTest {
         testCharacter.weaponEffect(sword);
         testCharacter.weaponEffect(spear);
         testCharacter.weaponEffect(axe);
-        Assert.assertEquals(0, testCharacter.getHealth());
-        Assert.assertEquals(1, testCharacter.getDeaths());
+        Assert.assertEquals(testCharacter.getHealth(), 2);
+        Assert.assertEquals(testCharacter.getDeaths(), 1);
     }
 
     @Test
@@ -277,8 +281,8 @@ public class MainCharacterTest {
         // Test if hurt() can trigger Peon.changeHealth() when
         // the damage taken can make player's health below 0.
         testCharacter.hurt(10);
-        // player death + 1 = 2, since it has died in another test before
-        Assert.assertEquals(2, testCharacter.getDeaths());
+
+        Assert.assertEquals(1, testCharacter.getDeaths());
 
         // "Kill" animation test
         AnimationLinker animationLinker = new AnimationLinker("MainCharacter_Dead_E_Anim",
@@ -422,10 +426,40 @@ public class MainCharacterTest {
 
     @Test
     public void useHatchetTest(){
+        GameManager gameManager = GameManager.get();
+        testWorld= new RocketWorld(4, 300, 15, new int[] { 70, 70, 70 }, 3, 2);
+        gameManager.setWorld(testWorld);
+        testHatchet = new Hatchet(testCharacter);
+        testCharacter.getInventoryManager().inventoryAdd(testHatchet);
+        testWorld.addEntity(testCharacter);
+        testWorld.addEntity(testTree);
+        testCharacter.setCol(1f);
+        testCharacter.setRow(1f);
+        testTree.setCol(1f);
+        testTree.setRow(1f);
+        int currentWood = testCharacter.getInventoryManager().getAmount("Wood");
+        testCharacter.useHatchet();
+        Assert.assertEquals(currentWood+1,testCharacter.getInventoryManager().getAmount("Wood"));
+    }
 
+    @Test
+    public void usePickAxeTest() {
+        GameManager gameManager = GameManager.get();
+        testWorld= new RocketWorld(4, 300, 15, new int[] { 70, 70, 70 }, 3, 2);
+        gameManager.setWorld(testWorld);
+        testWorld.addEntity(testCharacter);
+        testWorld.addEntity(testRock);
+        testCharacter.setCol(1f);
+        testCharacter.setRow(1f);
+        testRock.setCol(1f);
+        testRock.setRow(1f);
+        int currentStone = testCharacter.getInventoryManager().getAmount("Stone");
+        testCharacter.usePickAxe();
+        Assert.assertEquals(currentStone+1,testCharacter.getInventoryManager().getAmount("Stone"));
 
 
     }
+
 
     @After
     public void cleanup() {
@@ -447,4 +481,5 @@ public class MainCharacterTest {
             System.out.println("NO COLLISION");
         }
     }
+
 }

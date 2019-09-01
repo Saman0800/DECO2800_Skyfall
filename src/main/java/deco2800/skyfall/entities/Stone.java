@@ -104,12 +104,12 @@ public class Stone extends EnemyEntity implements Animatable {
             angerTimeAccount=0;
             this.setAttacked(false);
         }
-        if(isDead()==true){
+        if(isDead()){
             this.stoneDead();
         }else {
             float colDistance = mc.getCol() - this.getCol();
             float rowDistance = mc.getRow() - this.getRow();
-            if ((colDistance * colDistance + rowDistance * rowDistance) < 4 ||this.isAttacked()==true) {
+            if ((colDistance * colDistance + rowDistance * rowDistance) < 4 ||this.isAttacked()) {
                 this.setAttacking(true);
                 this.attackPlayer(mc);
                 if(this.getMovingDirection()==Direction.NORTH|| this.getMovingDirection()==Direction.NORTH_EAST){
@@ -140,7 +140,7 @@ public class Stone extends EnemyEntity implements Animatable {
      * under normal situation the enemy will random wandering in 100 radius circle
      */
     private void randomMoving() {
-        if(moving==false){
+        if(!moving){
             sound.loopSound("stoneWalk");
             targetPosition =new float[2];
             targetPosition[0]=(float) (Math.random() * 100 + orginalPosition[0]);
