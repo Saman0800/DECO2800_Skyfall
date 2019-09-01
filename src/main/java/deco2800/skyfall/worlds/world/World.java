@@ -128,9 +128,9 @@ public class World implements TouchDownObserver {
     	voronoiEdges = new CopyOnWriteArrayList<>();
 
         generateWorld(random);
+        generateTileTypes(random);
         generateNeighbours();
         generateTileIndexes();
-        generateTileTypes(random);
         initialiseFrictionmap();
     }
 

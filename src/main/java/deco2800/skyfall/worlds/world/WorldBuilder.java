@@ -9,9 +9,6 @@ import deco2800.skyfall.entities.SpawnControl;
 import deco2800.skyfall.entities.Tree;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import deco2800.skyfall.worlds.biomes.OceanBiome;
-import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -84,7 +81,6 @@ public class WorldBuilder implements WorldBuilderInterface{
     @Override
     public void addEntity(AbstractEntity entity) {
         entities.add(entity);
-        System.out.println(entities);
     }
 
 
@@ -180,9 +176,7 @@ public class WorldBuilder implements WorldBuilderInterface{
     protected void generateStartEntities(World world) {
 
         Tile tileRock = world.getTile(0.0f, 1.0f);
-        Rock startRock = new Rock(tileRock, true);
         Tree startTree = new Tree(tileRock, true);
-        LongGrass startGrass = new LongGrass(tileRock, true);
 
         for (AbstractBiome biome : world.getBiomes()) {
 
@@ -190,20 +184,7 @@ public class WorldBuilder implements WorldBuilderInterface{
                 case "forest":
 
                     // Create a new perlin noise map
-                    SpawnControl pieceWise = x -> {
-                        if ((0 < x) && (x <= 0.5)) {
-                            return 0;
-                        } else if ((0.5 < x) && (x <= 0.8)) {
-                            return 0.05;
-                        } else {
-                            return 0.4;
-                        }
-                    };
-
-                    // Create a new perlin noise map
-                    SpawnControl cubic = x -> {
-                        return x * x * x;
-                    };
+                    SpawnControl cubic = x -> x * x * x;
 
                     EntitySpawnRule treeRule = new EntitySpawnRule(biome, true, cubic);
                     EntitySpawnTable.spawnEntities(startTree, treeRule, world);
@@ -220,6 +201,9 @@ public class WorldBuilder implements WorldBuilderInterface{
         //Converting the ArrayLists to arrays
         int[] biomeSizesArray = biomeSizes.stream().mapToInt(biomeSize -> biomeSize).toArray();
         int[] lakeSizesArray = lakeSizes.stream().mapToInt(lakeSize -> lakeSize).toArray();
+
+
+
 
         World world;
 

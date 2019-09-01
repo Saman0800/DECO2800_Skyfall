@@ -35,6 +35,7 @@ public class WorldBuilderTest {
         builder.addRiver();
         builder.addEntity(new Robot(0,0));
         builder.setStaticEntities(true);
+        builder.setBeachSize(1);
 
 
         //Testing the builder methods
@@ -46,7 +47,9 @@ public class WorldBuilderTest {
         assertEquals(2, world.nodeSpacing);
         assertEquals(20, world.worldSize);
 
-        assertEquals(4, world.getBiomes().size());
+        assertEquals(1, world.beachWidth);
+
+        assertEquals(5, world.getBiomes().size());
         assertTrue(world.getBiomes().get(0) instanceof ForestBiome);
 
         assertEquals(2, world.riverWidth);

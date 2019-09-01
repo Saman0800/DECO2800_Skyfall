@@ -17,8 +17,10 @@ public class WholeWorldTest {
     public void worldTest(){
         WorldBuilder worldBuilder = new WorldBuilder();
         WorldDirector.constructTestWorld(worldBuilder);
+        worldBuilder.setType("single_player");
         worldBuilder.setStaticEntities(false);
         World world = worldBuilder.getWorld();
+
         try {
             BufferedReader reader = new BufferedReader(new FileReader("src/test/java/deco2800/skyfall/worlds/ExampleWorldOutput.txt"));
 //            String content = new Scanner(new File("src/test/java/deco2800/skyfall/worlds/ExampleWorldOutput.txt")).useDelimiter().next();
