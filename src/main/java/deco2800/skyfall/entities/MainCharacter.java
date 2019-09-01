@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.math.Vector2;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.*;
 import deco2800.skyfall.managers.*;
@@ -8,7 +9,6 @@ import deco2800.skyfall.observers.*;
 import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.*;
-import deco2800.skyfall.worlds.Tile;
 
 import java.util.*;
 
@@ -16,22 +16,19 @@ import java.util.*;
  * Main character in the game
  */
 public class MainCharacter extends Peon implements KeyDownObserver,
-        KeyUpObserver,TouchDownObserver, Tickable , Animatable {
-
+        KeyUpObserver, TouchDownObserver, Tickable {
 
     // Weapon Manager for MainCharacter
     private WeaponManager weapons;
+
+    // Hitbox of melee.
+    private Projectile hitBox;
 
     // Manager for all of MainCharacter's inventories
     private InventoryManager inventories;
 
     // Hotbar of inventories
     private List<Item> hotbar;
-
-    public static final String WALK_NORMAL = "people_walk_normal";
-
-    private SoundManager soundManager = GameManager.get()
-            .getManager(SoundManager.class);
 
     // The index of the item selected to be used in the hotbar
     // ie. [sword][gun][apple]
@@ -66,29 +63,17 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /*
      * Helper bools to tell which direction the player intends to move
      */
-    private int xInput;
-    private int yInput;
-
-    private float xVel;
-    private float yVel;
-
-    private float acceleration;
-
-    private float maxSpeed;
-
-    private double vel;
-
-    private ArrayList<Integer> velHistoryX;
-    private ArrayList<Integer> velHistoryY;
-
-    private boolean isMoving;
+    private boolean MOVE_UP = false;
+    private boolean MOVE_LEFT = false;
+    private boolean MOVE_RIGHT = false;
+    private boolean MOVE_DOWN = false;
 
     /**
      * Used for combat testing melee/range weapons.
      * What number item slot the player has pressed.
      * TODO: remove or integrate into item system.
      * e.g. 1 = test range weapon
-     * 2 = test melee weapon
+     *      2 = test melee weapon
      */
     private int itemSlotSelected = 1;
 
@@ -110,7 +95,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public MainCharacter(float col, float row, float speed, String name,
                          int health) {
         super(row, col, speed, name, health);
-        this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
+        this.setTexture("main_piece");
         this.setHeight(1);
         this.setObjectName("MainPiece");
 
@@ -121,37 +106,19 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         GameManager.getManagerFromInstance(InputManager.class)
                 .addTouchDownListener(this);
 
-        //this.direction = new Vector2(row, col);
-        //this.direction.limit2(0.05f);
+        this.direction = new Vector2(row, col);
+        this.direction.limit2(0.05f);
 
         instantiateManagers();
 
         this.level = 1;
         this.foodLevel = 100;
-
-
-        //Initialises the players velocity properties
-        xInput = 0;
-        yInput = 0;
-        xVel = 0;
-        yVel = 0;
-        setAcceleration(0.01f);
-        setMaxSpeed(0.7f);
-        vel = 0;
-        velHistoryX = new ArrayList<>();
-        velHistoryY = new ArrayList<>();
-
-        isMoving = false;
-        this.scale = 0.4f;
-        setDirectionTextures();
-        configureAnimations();
     }
 
     /**
      * Constructor with various textures
-     *
      * @param textures A array of length 6 with string names corresponding to
-     *                 different orientation
+     *                different orientation
      *                 0 = North
      *                 1 = North-East
      *                 2 = South-East
@@ -172,7 +139,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @param keyCode Keycode the player has pressed.
      */
     protected void switchItem(int keyCode) {
-        // If key is in range of 1-9, accept the input.
+        //If key is in range of 1-9, accept the input.
         if (keyCode >= 8 && keyCode <= 16) {
             int keyNumber = Integer.parseInt(Input.Keys.toString(keyCode));
             this.itemSlotSelected = keyNumber;
@@ -197,26 +164,25 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         // Make projectile move toward the angle
         // Spawn projectile in front of character for now.
 
-        Projectile projectile = new Projectile(mousePosition,
-                this.itemSlotSelected == 1 ? "range_test":"melee_test",
+        this.hitBox = new Projectile(mousePosition,
+                this.itemSlotSelected == 1 ? "arcane" : "slash",
                 "test hitbox",
                 position.getCol() + 1,
                 position.getRow(),
                 1,
-                0.1f,
+                1,
                 this.itemSlotSelected == 1 ? 1 : 0);
 
         // Get AbstractWorld from static class GameManager.
         GameManager manager = GameManager.get();
 
         // Add the projectile entity to the game world.
-        manager.getWorld().addEntity(projectile);
+        manager.getWorld().addEntity(this.hitBox);
     }
 
     /**
      * Add weapon to weapons list
-     * @param item weapon to be addeda
-     *
+     * @param item weapon to be added
      */
     public void pickUpWeapon(Weapon item) {
         weapons.pickUpWeapon(item);
@@ -341,8 +307,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Method for the MainCharacter to eat food and restore/decrease hunger
-     * level
+     * Method for the MainCharacter to eat food and restore/decrease hunger level
      * @param item the item to eat
      */
     public void eatFood(Item item) {
@@ -370,13 +335,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Change current level of character and increases health by 10
+     * Change current level of character
      * @param change amount being added or subtracted
      */
     public void changeLevel(int change) {
         if (level + change >= 1) {
             this.level += change;
-            this.changeHealth(10);
         }
     }
 
@@ -396,11 +360,32 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.setTexture(texture);
     }
 
+    /**
+     * Updates the move vector for character
+     */
+    private void updateMoveVector() {
+        if (MOVE_UP) {
+            this.direction.add(0.0f, speed);
+        }
+        if (MOVE_LEFT) {
+            this.direction.sub(speed, 0.0f);
+        }
+        if (MOVE_DOWN) {
+            this.direction.sub(0.0f, speed);
+        }
+        if (MOVE_RIGHT) {
+            this.direction.add(speed, 0.0f);
+        }
+    }
+
+    /**
+     * Handles mouse click events
+     */
     public void notifyTouchDown(int screenX, int screenY, int pointer,
                                 int button) {
         if (button == 0) {
             float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(),
-                    Gdx.input.getY());
+                            Gdx.input.getY());
             float[] clickedPosition =
                     WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 
@@ -415,17 +400,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     @Override
     public void onTick(long i) {
-        this.updatePosition();
+        updateMoveVector();
         this.updateCollider();
-        this.movementSound();
-        //this.setCurrentSpeed(this.direction.len());
-        //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
-//        System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction,
-//         this.getPosition(), this.direction.x - this.getCol(),
-//         this.direction.y - this.getRow());
-//        System.out.printf("%s%n", this.currentSpeed);
-//        TODO: Check direction for animation here
-        this.updateAnimation();
+        this.setCurrentSpeed(this.direction.len());
+        this.moveTowards(new HexVector(this.direction.x, this.direction.y));
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             GameManager.getManagerFromInstance(ConstructionManager.class)
                     .displayWindow();
@@ -460,16 +439,16 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
         switch (keycode) {
             case Input.Keys.W:
-                yInput += 1;
+                MOVE_UP = true;
                 break;
             case Input.Keys.A:
-                xInput += -1;
+                MOVE_LEFT = true;
                 break;
             case Input.Keys.S:
-                yInput += -1;
+                MOVE_DOWN = true;
                 break;
             case Input.Keys.D:
-                xInput += 1;
+                MOVE_RIGHT = true;
                 break;
             default:
                 switchItem(keycode);
@@ -483,319 +462,20 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     @Override
     public void notifyKeyUp(int keycode) {
-        // Player cant move when paused
-        if (GameManager.getPaused()) {
-            return;
-        }
-        switch (keycode) {
+        movingAnimation = AnimationRole.NULL;
+        switch(keycode) {
             case Input.Keys.W:
-                yInput -= 1;
+                MOVE_UP = false;
                 break;
             case Input.Keys.A:
-                xInput -= -1;
+                MOVE_LEFT = false;
                 break;
             case Input.Keys.S:
-                yInput -= -1;
+                MOVE_DOWN = false;
                 break;
             case Input.Keys.D:
-                xInput -= 1;
+                MOVE_RIGHT = false;
                 break;
         }
-
-    }
-
-    /*
-    Potential more methods and related attributes for future sprints:
-    -record killed enemies
-    -interaction with worlds
-    -effects on MainCharacter with different Inventory and Weapon items
-    */
-
-    /**
-     * Moves the player based on current key inputs
-     */
-    public void updatePosition() {
-        // Gets current position
-        float xPos = position.getCol();
-        float yPos = position.getRow();
-
-        //Returns tile at left arm (our perspective) of the player
-        float tileCol = (float) Math.round(xPos);
-        float tileRow = (float) Math.round(yPos);
-        if (tileCol % 2 != 0){
-            tileRow += 0.5f;
-        }
-
-        //Determined friction scaling factor to apply based on current tile
-        float friction;
-        Tile currentTile = GameManager.get().getWorld().getTile(tileCol,tileRow);
-        if(currentTile != null && currentTile.getTexture() != null){
-            //Tile specific friction
-            friction = Tile.getFriction(currentTile.getTextureName());
-        }else{
-            //Default friction
-            friction = 1f;
-        }
-
-        // Calculates new x and y positions
-        xPos += xVel + xInput * acceleration * 0.5 * friction;
-        yPos += yVel + yInput * acceleration * 0.5 * friction;
-
-        // Calculates velocity in x direction
-        if (xInput != 0) {
-            xVel += xInput * acceleration * friction;
-            // Prevents sliding
-            if (xVel / Math.abs(xVel) != xInput) {
-                xVel = 0;
-            }
-        } else if (yInput != 0) {
-            xVel *= 0.8;
-        } else {
-            xVel = 0;
-        }
-
-        // Calculates velocity in y direction
-        if (yInput != 0) {
-            yVel += yInput * acceleration * friction;
-            // Prevents sliding
-            if (yVel / Math.abs(yVel) != yInput) {
-                yVel = 0;
-            }
-        } else if (xInput != 0) {
-            yVel *= 0.8;
-        } else {
-            yVel = 0;
-        }
-
-        // caps the velocity
-        if (vel > maxSpeed) {
-            xVel /= vel;
-            yVel /= vel;
-
-            xVel *= maxSpeed;
-            yVel *= maxSpeed;
-        }
-
-        // Calculates speed to destination
-        vel = Math.sqrt((xVel * xVel) + (yVel * yVel));
-
-        // Calculates destination vector
-        HexVector destination = new HexVector(xPos, yPos);
-
-        // Moves the player to new location
-        position.moveToward(destination, vel);
-
-        //Records velocity history in x direction
-        if (velHistoryX.size() < 2 || velHistoryY.size() < 2) {
-            velHistoryX.add((int) (xVel * 100));
-            velHistoryY.add((int) (yVel * 100));
-        } else if (velHistoryX.get(1) != (int) (xVel * 100) ||
-                velHistoryY.get(1) != (int) (yVel * 100)) {
-            velHistoryX.set(0, velHistoryX.get(1));
-            velHistoryX.set(1, (int) (xVel * 100));
-
-            velHistoryY.set(0, velHistoryY.get(1));
-            velHistoryY.set(1, (int) (yVel * 100));
-        }
-    }
-
-    /**
-     * Gets the direction the player is currently facing
-     * North: 0 deg
-     * East: 90 deg
-     * South: 180 deg
-     * West: 270 deg
-     *
-     * @return the player direction (units: degrees)
-     */
-    public double getPlayerDirectionAngle() {
-        double val;
-        if (xInput != 0 || yInput != 0) {
-            val = Math.atan2(yInput, xInput);
-        } else {
-            val = Math.atan2(velHistoryY.get(0), velHistoryX.get(0));
-        }
-        val = val * -180 / Math.PI + 90;
-        if (val < 0) {
-            val += 360;
-        }
-        return val;
-    }
-
-    /**
-     * Converts the current players direction into a cardinal direction
-     * North, South-West, etc.
-     *
-     * @return new texture to use
-     */
-    public String getPlayerDirectionCardinal() {
-        double direction = getPlayerDirectionAngle();
-        if (direction <= 22.5 || direction >= 337.5) {
-            setCurrentDirection(Direction.NORTH);
-            return "North";
-        } else if (22.5 <= direction && direction <= 67.5) {
-            setCurrentDirection(Direction.NORTH_EAST);
-            return "North-East";
-        } else if (67.5 <= direction && direction <= 112.5) {
-            setCurrentDirection(Direction.EAST);
-            return "East";
-        } else if (112.5 <= direction && direction <= 157.5) {
-            setCurrentDirection(Direction.SOUTH_EAST);
-            return "South-East";
-        } else if (157.5 <= direction && direction <= 202.5) {
-            setCurrentDirection(Direction.SOUTH);
-            return "South";
-        } else if (202.5 <= direction && direction <= 247.5) {
-            setCurrentDirection(Direction.SOUTH_WEST);
-            return "South-West";
-        } else if (247.5 <= direction && direction <= 292.5) {
-            setCurrentDirection(Direction.WEST);
-            return "West";
-        } else if (292.5 <= direction && direction <= 337.5) {
-            setCurrentDirection(Direction.NORTH_WEST);
-            return "North-West";
-        }
-
-        return "Invalid";
-    }
-
-    /**
-     * Gets a list of the players current velocity
-     * 0: x velocity
-     * 1: y velocity
-     * 2: net velocity
-     *
-     * @return list of players velocity properties
-     */
-    public List<Float> getVelocity() {
-        ArrayList<Float> velocity = new ArrayList<>();
-        velocity.add(xVel);
-        velocity.add(yVel);
-        velocity.add((float) vel);
-
-        return velocity;
-    }
-
-    /**
-     * Sets the players acceleration
-     *
-     * @param newAcceleration: the new acceleration for the player
-     */
-    public void setAcceleration(float newAcceleration) {
-        this.acceleration = newAcceleration;
-    }
-
-    /**
-     * Sets the players max speed
-     *
-     * @param newMaxSpeed: the new max speed of the player
-     */
-    public void setMaxSpeed(float newMaxSpeed) {
-        this.maxSpeed = newMaxSpeed;
-    }
-
-    /**
-     * Gets the players current acceleration
-     *
-     * @return the players acceleration
-     */
-    public float getAcceleration() {
-        return this.acceleration;
-    }
-
-    /**
-     * Gets the plays current max speed
-     *
-     * @return the players max speed
-     */
-    public float getMaxSpeed() {
-        return this.maxSpeed;
-    }
-
-    public void movementSound() {
-        if (!isMoving && vel != 0) {
-            //Runs when the player starts moving
-            isMoving = true;
-            //System.out.println("Start Playing");
-            //TODO: Play movement sound
-            SoundManager.loopSound(WALK_NORMAL);
-        }
-
-        if (isMoving && vel == 0) {
-            //Runs when the player stops moving
-            isMoving = false;
-            //System.out.println("Stop Playing");
-            //TODO: Stop Player movement
-            SoundManager.stopSound(WALK_NORMAL);
-        }
-    }
-
-    /**
-     * Sets the  animations.
-     */
-    @Override
-    public void configureAnimations() {
-        addAnimations(AnimationRole.MOVE, Direction.NORTH_WEST,
-                new AnimationLinker("MainCharacterNW_Anim",
-                AnimationRole.MOVE, Direction.NORTH_WEST, true ,true));
-
-        addAnimations(AnimationRole.MOVE, Direction.NORTH_EAST,
-                new AnimationLinker("MainCharacterNE_Anim",
-                        AnimationRole.MOVE, Direction.NORTH_WEST, true ,true));
-
-        addAnimations(AnimationRole.MOVE, Direction.SOUTH_WEST,
-                new AnimationLinker("MainCharacterSW_Anim",
-                        AnimationRole.MOVE, Direction.SOUTH_WEST, true ,true));
-
-        addAnimations(AnimationRole.MOVE, Direction.SOUTH_EAST,
-                new AnimationLinker("MainCharacterSE_Anim",
-                        AnimationRole.MOVE, Direction.SOUTH_EAST, true ,true));
-
-        addAnimations(AnimationRole.MOVE, Direction.EAST,
-                new AnimationLinker("MainCharacterE_Anim",
-                        AnimationRole.MOVE, Direction.EAST, true ,true));
-        addAnimations(AnimationRole.MOVE, Direction.NORTH,
-                new AnimationLinker("MainCharacterN_Anim",
-                        AnimationRole.MOVE, Direction.NORTH, true ,true));
-
-        addAnimations(AnimationRole.MOVE, Direction.WEST,
-                new AnimationLinker("MainCharacterW_Anim",
-                        AnimationRole.MOVE, Direction.WEST, true ,true));
-
-        addAnimations(AnimationRole.MOVE, Direction.SOUTH,
-                new AnimationLinker("MainCharacterS_Anim",
-                        AnimationRole.MOVE, Direction.SOUTH, true ,true));
-    }
-
-    /**
-     * Sets default direction textures uses the get index for Animation feature
-     * as described in the animation documentation section 4.
-     */
-    @Override
-    public void setDirectionTextures() {
-        defaultDirectionTextures.put(Direction.EAST, "__ANIMATION_MainCharacterE_Anim:0");
-        defaultDirectionTextures.put(Direction.NORTH, "__ANIMATION_MainCharacterN_Anim:0");
-        defaultDirectionTextures.put(Direction.WEST, "__ANIMATION_MainCharacterW_Anim:0");
-        defaultDirectionTextures.put(Direction.SOUTH, "__ANIMATION_MainCharacterS_Anim:0");
-        defaultDirectionTextures.put(Direction.NORTH_EAST, "__ANIMATION_MainCharacterNE_Anim:0");
-        defaultDirectionTextures.put(Direction.NORTH_WEST, "__ANIMATION_MainCharacterNW_Anim:0");
-        defaultDirectionTextures.put(Direction.SOUTH_EAST, "__ANIMATION_MainCharacterSE_Anim:0");
-        defaultDirectionTextures.put(Direction.SOUTH_WEST, "__ANIMATION_MainCharacterSW_Anim:0");
-    }
-
-    /**
-     * If the animation is moving sets the animation state to be Move
-     * else NULL. Also sets the direction
-     */
-    private void updateAnimation() {
-       getPlayerDirectionCardinal();
-       List<Float> vel = getVelocity();
-
-       if (vel.get(2) == 0f) {
-           setCurrentState(AnimationRole.NULL);
-       } else {
-           setCurrentState(AnimationRole.MOVE);
-       }
-
     }
 }

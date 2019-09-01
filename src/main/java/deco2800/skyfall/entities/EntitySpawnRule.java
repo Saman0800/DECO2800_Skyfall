@@ -1,78 +1,27 @@
 package deco2800.skyfall.entities;
 
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
-
-import java.util.Random;
-
 import com.esotericsoftware.kryo.NotNull;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import jdk.nashorn.internal.ir.annotations.Immutable;
 
 /**
- * Used to set conditions about an entity template spawning distributions in
- * EntitySpawnTable Example conditions include probability, min to max, must be
- * beside another, and which biomes the entities are to be placed in.
+ * Used to set conditions about an entity template spawning distributions in EntitySpawnTable
+ * Example conditions include probablity, min to max, must be beside another, which biomes
+ * Combinations of these are also possible
  */
 public class EntitySpawnRule {
-    /**
-     * If a uniform mode is used, the chance parameter indicates the probability
-     * that the entity will be place on a tile without any biases for biome type.
-     */
-    private double chance = 0.1;
-
-    /**
-     * The minimum number of items that need to be spawned within the world.
-     */
-    private int min = 1;
-
-    /**
-     * The maximum number of items that need to be spawned within the world.
-     */
+    //chance to spawn in tile, value of zero represents uninitialised
+    private double chance = 0;
+    //minimum number to spawn
+    private int min = 0;
+    //maximum number to spawn
     private int max = Integer.MAX_VALUE;
+    //The biome name, for no biome, default for no selection is ""
+    private String biome = "";
 
     /**
-     * Determines if we are using a perlin noise value to use as a probability when
-     * placing down tiles
-     */
-    private boolean usePerlin = false;
-
-    /**
-     * If the usePerlin parameter is set to true then a perlin noise generator will
-     * be used to dictate the probability of an entity spawn on a tile. If no noise
-     * generator is provided this will become the default noise generator.
-     */
-    NoiseGenerator noiseGenerator = new NoiseGenerator(new Random(), 5, 20, 0.4);
-
-    /**
-     * The biome in which the entities are to spawn. If no biome is specified then
-     * the entity will spawn in every biome.
-     */
-    private AbstractBiome biome = null;
-
-    /**
-     * A lambda expression can be used to adjust the probabilities of the noise
-     * generator. If no map is provided on instantion a default cubic function will
-     * be used.
-     */
-    private SpawnControl map = (double x) -> x * x * x;
-
-    /**
-     * A boolean value that if true limits the amount of entities spawning next to
-     * each other.
-     */
-    private boolean limitAdjacent = false;
-
-    /**
-     * A parameter to adjust spawning of adjacent entities when limitAdjacent is set
-     * to true. The larger the value the less likely it is for entities to spawn
-     * next to each other.
-     */
-    private double limitAdjacentValue = 4.0;
-
-    /**
-     * Sets spawn rule based on chance. This distributes the entities in a uniform
-     * manner.
-     * 
+     * sets spawn rule based on chance
      * @param chance The likelihood of spawning an ent in a given tile of the world
      */
     public EntitySpawnRule(double chance) {
@@ -80,220 +29,86 @@ public class EntitySpawnRule {
     }
 
     /**
-     * Creates spawn rule based on min max distribution will be ~U(min, max)
-     * 
+     * creates spawn rule based on min max
+     * distribution will be ~U(min, max)
      * @param min minimum number of entities to spawn into the world inclusive
      * @param max maximum number of entities to spawn into the world inclusive
      */
     public EntitySpawnRule(int min, int max) {
-        setChance(-1); // entity spawn handler will deal with this
+        setChance(-1); //entity spawn handler will deal with this
         setMin(min);
         setMax(max);
     }
 
     /**
-     * Creates spawn rule based on chance, but will strictly enforce min and max
-     * values probability will be but guaranteed at least min and no more than max
-     * 
+     * creates spawn rule based on chance, but will strictly enforce min and max values
+     * probability will be but guaranteed at least min and no more than max
      * @param min minimum number of entities to spawn into the world inclusive
      * @param max maximum number of entities to spawn into the world inclusive
      */
     public EntitySpawnRule(double chance, int min, int max) {
-        setChance(chance); // entity spawn handler will deal with this
+        setChance(chance); //entity spawn handler will deal with this
         setMin(min);
         setMax(max);
     }
 
     /**
-     * A constructor for the EntitySpawnRule.
-     * 
-     * @param chance The chance that a tile will uniformly be placed on a tile.
-     * @param biome  The biome the tile will be placed in.
-     */
-    public EntitySpawnRule(double chance, AbstractBiome biome) {
-        this.chance = chance;
-        this.biome = biome;
-    }
-
-    public EntitySpawnRule(double chance, int min, int max, AbstractBiome biome) {
-        this(chance, min, max);
-        this.biome = biome;
-    }
-
-    /**
-     * A constructor for the EntitySpawnRule.
-     * 
-     * @param biome     The biome the tile will be placed in.
-     * @param usePerlin A boolean value to dictate if the perlin noise value of the
-     *                  tile is to used to determine the likeliness of a entity to
-     *                  be placed down on a tile.
-     */
-    public EntitySpawnRule(AbstractBiome biome, boolean usePerlin) {
-        this.biome = biome;
-        this.usePerlin = usePerlin;
-    }
-
-    /**
-     * A constructor for the EntitySpawnRule.
-     * 
-     * @param biome     The biome the tile will be placed in.
-     * @param usePerlin A boolean value to dictate if the perlin noise value of the
-     *                  tile is to used to determine the likeliness of a entity to
-     *                  be placed down on a tile.
-     * @param map       A lambda experssion to adjust the perlin noise value when
-     *                  using it as the likeliness to spawn an entity
-     */
-    public EntitySpawnRule(AbstractBiome biome, boolean usePerlin, SpawnControl map) {
-        this(biome, usePerlin);
-        this.map = map;
-    }
-
-    /**
-     * A constructor for the EntitySpawnRule.
-     * 
-     * @param min       minimum number of entities to spawn into the world inclusive
-     * @param max       maximum number of entities to spawn into the world inclusive
-     * @param biome     The biome the tile will be placed in.
-     * @param usePerlin A boolean value to dictate if the perlin noise value of the
-     *                  tile is to used to determine the likeliness of a entity to
-     *                  be placed down on a tile.
-     */
-    public EntitySpawnRule(int min, int max, AbstractBiome biome, boolean usePerlin) {
-        this(biome, usePerlin);
-        setMin(min);
-        setMax(max);
-    }
-
-    /**
-     * A constructor for the EntitySpawnRule.
-     * 
-     * @param min       minimum number of entities to spawn into the world inclusive
-     * @param max       maximum number of entities to spawn into the world inclusive
-     * @param biome     The biome the tile will be placed in.
-     * @param usePerlin A boolean value to dictate if the perlin noise value of the
-     *                  tile is to used to determine the likeliness of a entity to
-     *                  be placed down on a tile.
-     * @param map       A lambda experssion to adjust the perlin noise value when
-     *                  using it as the likeliness to spawn an entity
-     */
-    public EntitySpawnRule(int min, int max, AbstractBiome biome, boolean usePerlin, SpawnControl map) {
-        this(min, max, biome, usePerlin);
-        this.map = map;
-    }
-
-    /**
-     * @return get chance of the spawn rule, a value of -1 is returned when other
-     *         spawn rules are
+     * @return get chance of the spawn rule, a value of -1 is returned when other spawn rules are
      */
     public double getChance() {
         return chance;
     }
 
     /**
-     * @param chance sets chance, negative values will cause other parameters to
-     *               determine distribution
+     * @param chance sets chance, negative values will cause other parameters to determine distribution
      */
     public void setChance(double chance) {
         this.chance = chance;
     }
 
     /**
-     * @return returns inclusive minimum number of entities this rule will allow to
-     *         spawn
+     * @return returns inclusive minimum number of entities this rule will allow to spawn
      */
     public int getMin() {
         return min;
     }
 
     /**
-     * @param min This minimum is inclusive and strictly enforced
+     * @param min This minimum is inclusive and stricty enforced
      */
     public void setMin(int min) {
         this.min = min;
     }
 
     /**
-     * @return returns inclusive maximum number of entities this rule will allow to
-     *         spawn
+     * @return returns inclusive maximum number of entities this rule will allow to spawn
      */
     public int getMax() {
         return max;
     }
 
     /**
-     * @param max This maximum is inclusive and strictly enforced
+     * @param max This maximum is inclusive and stricty enforced
      */
     public void setMax(int max) {
         this.max = max;
     }
 
     /**
-     * @return Returns the biome for this spawn rule
+     * @param biomeName the name of the biome, less safe than directly passing biome
      */
-    public AbstractBiome getBiome() {
+    public void setBiome(String biomeName) {
+        biome = biomeName;
+    }
+
+    /**
+     * @param biome object the name of the biome, pretty safe, can be null for no biome
+     */
+    public <B extends AbstractBiome> void setBiome(B biome) {
+        this.biome = biome != null? biome.getBiomeName() : "";
+    }
+
+    public String getBiome() {
         return biome;
-    }
-
-    /**
-     * @return Returns true if perlin noise is being used as placement probabilites
-     */
-    public boolean getUsePerlin() {
-        return this.usePerlin;
-    }
-
-    /**
-     * @return Returns the map used to adjust the perlin noise probabilites.
-     */
-    public SpawnControl getAdjustMap() {
-        return this.map;
-    }
-
-    /**
-     * @return Returns true if adjacent spawn is being limited.
-     */
-    public boolean getLimitAdjacent() {
-        return this.limitAdjacent;
-    }
-
-    /**
-     * Sets the adjacency limiting value for the rule.
-     * 
-     * @param limitAdjacent A boolean value that dictates if adjacency limiting is
-     *                      to be used or not.
-     */
-    public void setLimitAdjacent(boolean limitAdjacent) {
-        this.limitAdjacent = limitAdjacent;
-    }
-
-    /**
-     * @return Returns the current adjacent limiting value.
-     */
-    public double getLimitAdjacentValue() {
-        return this.limitAdjacentValue;
-    }
-
-    /**
-     * @param limitAdjacentValue The new limiting value. The larger the value the
-     *                           less likely it is for entities to spawn next to
-     *                           each other.
-     */
-    public void setLimitAdjacentValue(double limitAdjacentValue) {
-        this.limitAdjacentValue = limitAdjacentValue;
-    }
-
-    /**
-     * @return Returns the current generator used to create noise values.
-     */
-    public NoiseGenerator getNoiseGenerator() {
-        return this.noiseGenerator;
-    }
-
-    /**
-     * Sets a new noise generator to create probabilities.
-     * 
-     * @param noiseGen The new noise generator to create probabilities.
-     */
-    public void setNoiseGenerator(NoiseGenerator noiseGen) {
-        this.noiseGenerator = noiseGen;
     }
 }

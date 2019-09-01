@@ -99,10 +99,6 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         return this.renderOrder;
     }
 
-    public void setRenderorder(int renderOrder) {
-        this.renderOrder = renderOrder;
-    }
-
     /**
      * A simple getter function to retrieve the obstruction value of this object
      * 

@@ -147,7 +147,7 @@ public class Collider {
      * @return the diagonal distance of the Collider
      */
     public float distance(Collider o) {
-        return (float)(Math.sqrt((o.x - this.x) * (o.x - this.x) + (o.y - this.y) * (o.y - this.y)));
+        return (float)(Math.sqrt(Math.pow(o.x - this.x, 2) + Math.pow(o.y - this.y, 2)));
     }
 
 }

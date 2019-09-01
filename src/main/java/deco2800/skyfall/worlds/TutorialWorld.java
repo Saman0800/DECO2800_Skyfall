@@ -24,8 +24,7 @@ public class TutorialWorld extends RocketWorld implements TouchDownObserver {
      * @param nodeSpacing The distance between the nodes
      */
     public TutorialWorld(long seed, int worldSize, int nodeSpacing) {
-        //TODO Don't know whether these values should be variable
-        super(seed, worldSize, nodeSpacing, new int[] {40,30,30}, 0, 0);
+        super(seed, worldSize, nodeSpacing);
     }
 
     @Override

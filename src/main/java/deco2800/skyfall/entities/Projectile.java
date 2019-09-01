@@ -1,6 +1,9 @@
 package deco2800.skyfall.entities;
 
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.tasks.AbstractTask;
+import deco2800.skyfall.tasks.MovementTask;
+import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 
 /**
@@ -14,7 +17,7 @@ public class Projectile extends AgentEntity {
     /**
      * How many game ticks all projectiles survive for before being removed.
      */
-    public static final int LIFE_TIME_TICKS = 40;
+    public static final int LIFE_TIME_TICKS = 20;
 
     /**
      * The amount of damage this projectile deals.
@@ -100,7 +103,7 @@ public class Projectile extends AgentEntity {
 
         //If this projectile has been alive for longer than the set number of ticks, remove it from the world.
         if (this.ticksAliveFor > LIFE_TIME_TICKS) {
-            this.destroy();
+            GameManager.get().getWorld().removeEntity(this);
         }
 
         //TODO: Move to range max.
@@ -108,12 +111,5 @@ public class Projectile extends AgentEntity {
             position.moveToward(movementPosition,speed);
         }
 
-    }
-
-    /**
-     * Remove the projectile from the game world.
-     */
-    public void destroy() {
-        GameManager.get().getWorld().removeEntity(this);
     }
 }

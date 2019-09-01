@@ -200,7 +200,7 @@ public class Box3D {
 	 * @return the diagonal distance of the Box3D
      */
 	public float distance(Box3D o) {
-		return (float)(Math.sqrt((o.x - this.x) * (o.x - this.x) + (o.y - this.y) * (o.y - this.y) + (o.z - this.z) * (o.z - this.z)));
+		return (float)(Math.sqrt(Math.pow(o.x - this.x, 2) + Math.pow(o.y - this.y, 2) + Math.pow(o.z - this.z, 2)));
 	}
 
 }

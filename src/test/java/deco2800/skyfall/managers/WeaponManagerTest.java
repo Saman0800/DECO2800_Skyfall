@@ -137,22 +137,20 @@ public class WeaponManagerTest {
         Assert.assertEquals(testWeaponManager.getNumEquipped(), 2);
         testWeaponManager.pickUpWeapon(bow);
         testWeaponManager.equipWeapon(bow);
-        Assert.assertFalse(testWeaponManager.isEquipped(bow));
-        Assert.assertEquals(testWeaponManager.getNumEquipped(), 2);
-        Assert.assertEquals(testWeaponManager.getWeaponAmount(bow), 1);
+        Assert.assertTrue(testWeaponManager.isEquipped(bow));
+        Assert.assertEquals(testWeaponManager.getNumEquipped(), 3);
+        Assert.assertEquals(testWeaponManager.getWeaponAmount(bow), 0);
 
         testWeaponManager.pickUpWeapon(axe);
         testWeaponManager.equipWeapon(axe);
         Assert.assertFalse(testWeaponManager.isEquipped(axe));
-        Assert.assertEquals(testWeaponManager.getNumEquipped(), 2);
+        Assert.assertEquals(testWeaponManager.getNumEquipped(), 3);
         testWeaponManager.unequipWeapon(spear);
-        testWeaponManager.unequipWeapon(sword);
         testWeaponManager.equipWeapon(axe);
         Assert.assertFalse(testWeaponManager.isEquipped(spear));
-        Assert.assertFalse(testWeaponManager.isEquipped(sword));
         Assert.assertTrue(testWeaponManager.isEquipped(axe));
 
-        Assert.assertEquals(testWeaponManager.getNumWeapons(), 5);
+        Assert.assertEquals(testWeaponManager.getNumWeapons(), 3);
     }
 
     @Test
@@ -175,11 +173,11 @@ public class WeaponManagerTest {
         testWeaponManager.equipWeapon(spear);
         testWeaponManager.equipWeapon(bow);
         testWeaponManager.equipWeapon(axe);
-        Assert.assertEquals(testWeaponManager.getEquipped().size(), 2);
+        Assert.assertEquals(testWeaponManager.getEquipped().size(), 3);
 
         Assert.assertEquals(testWeaponManager.toString().length(),
                 ("Weapons: {sword=1, spear=1, bow=1, axe=2}" +
-                        "\nEquipped: sword, spear.").length());
+                        "\nEquipped: sword, spear, bow.").length());
     }
 
     @Test

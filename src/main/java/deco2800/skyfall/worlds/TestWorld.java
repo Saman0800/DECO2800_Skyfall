@@ -24,7 +24,7 @@ public class TestWorld extends AbstractWorld {
     private static int RADIUS = 25;
 
     public TestWorld(long seed) {
-        super(seed, 5, 5, new int[] {10,10,10}, 3, 3);
+        super(seed, 5, 5);
     }
 
     // 5 tile building

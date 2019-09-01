@@ -8,7 +8,6 @@ import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.*;
@@ -28,18 +27,19 @@ public class BiomeGeneratorTest {
 
     @BeforeClass
     public static void setup() {
-        Random random = new Random(0);
+        Random random = new Random();
 
         biomeLists = new ArrayList<>(TEST_COUNT);
         biomeNodesList = new ArrayList<>(TEST_COUNT);
 
         for (int i = 0; i < TEST_COUNT; i++) {
-            while (true) {
+            outer: while (true) {
                 ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
 
-                int nodeCount = Math.round((float) WORLD_SIZE * WORLD_SIZE * 4 / NODE_SPACING / NODE_SPACING);
+                int nodeCount = (int) Math.round(
+                        Math.pow((float) WORLD_SIZE * 2 / (float) NODE_SPACING, 2));
 
-                for (int j = 0; j < nodeCount; j++) {
+                for (int k = 0; k < nodeCount; k++) {
                     // Sets coordinates to a random number from -WORLD_SIZE to WORLD_SIZE
                     float x = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
                     float y = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
@@ -65,16 +65,19 @@ public class BiomeGeneratorTest {
                         tiles.add(tile);
                     }
                 }
-
                 generateTileNeighbours(tiles);
 
-                try {
-                    WorldGenNode.assignTiles(worldGenNodes, tiles, random, NODE_SPACING);
-                    WorldGenNode.removeZeroTileNodes(worldGenNodes, WORLD_SIZE);
-                    WorldGenNode.assignNeighbours(worldGenNodes);
-                } catch (WorldGenException e) {
-                    continue;
+                // Creates and stores tiles at the exact locations of nodes, ensuring that every node has a tile in it
+                // by which to identify its biome.
+                HashSet<Tile> nodePointTiles = new HashSet<>();
+                for (WorldGenNode node : worldGenNodes) {
+                    Tile tile = new Tile((float) node.getX(), (float) node.getY());
+                    nodePointTiles.add(tile);
+                    tiles.add(tile);
                 }
+
+                WorldGenNode.assignNeighbours(worldGenNodes);
+                WorldGenNode.assignTiles(worldGenNodes, tiles);
 
                 ArrayList<AbstractBiome> biomes = new ArrayList<>(NODE_COUNTS.length + 1);
                 for (int j = 0; j < NODE_COUNTS.length; j++) {
@@ -83,19 +86,32 @@ public class BiomeGeneratorTest {
                 biomes.add(new OceanBiome());
 
                 try {
-                    BiomeGenerator.generateBiomes(worldGenNodes, random, NODE_COUNTS, biomes, 0, 0);
-                } catch (NotEnoughPointsException | DeadEndGenerationException e) {
+                    BiomeGenerator.generateBiomes(worldGenNodes, random, NODE_COUNTS, biomes);
+                } catch (NotEnoughPointsException e) {
                     continue;
                 }
 
                 // Determine which nodes are in which biomes by checking a single tile inside each node and getting its
                 // biome.
-                ArrayList<ArrayList<WorldGenNode>> biomeNodes = new ArrayList<>(NODE_COUNTS.length + 1);
+                ArrayList<ArrayList<WorldGenNode>> biomeNodes = new ArrayList<>();
                 for (int j = 0; j < NODE_COUNTS.length + 1; j++) {
                     biomeNodes.add(new ArrayList<>());
                 }
                 for (WorldGenNode node : worldGenNodes) {
-                    biomeNodes.get(biomes.indexOf(node.getTiles().get(0).getBiome())).add(node);
+                    List<Tile> nodeTiles = node.getTiles();
+                    // This should basically never happen, but it's probably possible for the imprecision of floating-
+                    // point numbers to cause no tiles to be in a node, despite the existance of nodePointTiles. Restart if
+                    // this happens.
+                    if (nodeTiles.size() == 0) {
+                        continue outer;
+                    }
+                    // Add the node to the corresponding biome node list.
+                    biomeNodes.get(biomes.indexOf(nodeTiles.get(0).getBiome())).add(node);
+                    nodeTiles.removeIf(nodePointTiles::contains);
+                }
+
+                for (AbstractBiome biome : biomes) {
+                    biome.getTiles().removeIf(nodePointTiles::contains);
                 }
 
                 biomeLists.add(biomes);
@@ -112,8 +128,9 @@ public class BiomeGeneratorTest {
         biomeNodesList = null;
     }
 
+    // This test almost always passes, but can fail due to issue #99.
+    /*
     @Test
-    // @Ignore("This test almost always passes, but can fail due to issue #99.")
     public void testTileContiguity() {
         for (ArrayList<AbstractBiome> biomes : biomeLists) {
             for (AbstractBiome biome : biomes) {
@@ -140,6 +157,7 @@ public class BiomeGeneratorTest {
             }
         }
     }
+    */
 
     @Test
     public void testNodeContiguity() {

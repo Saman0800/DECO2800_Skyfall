@@ -82,24 +82,17 @@ public class StaticEntityTest {
         Map<HexVector, String> texture = new HashMap<>();
         texture.put(new HexVector(0.0f, 0.0f), "rock");
         StaticEntity rock1 = new StaticEntity(0.0f, 0.0f, 2, texture);
-
         w.addEntity(rock1);
 
         // Check that the various properties of this static entity have been
         // set correctly
         assertTrue(rock1.equals(rock1));
-        assertTrue(rock1.getTextures().equals(texture));
         assertTrue(rock1.getPosition().equals(new HexVector(0.0f, 0.0f)));
         assertEquals(rock1.getRenderOrder(), 2);
         assertEquals(rock1.getCol(), 0.0f, 0.0f);
         assertEquals(rock1.getRow(), 0.0f, 0.0f);
         assertTrue(rock1.isObstructed());
         assertEquals(rock1.getObjectName(), "staticEntityID");
-
-        Set<HexVector> childPos = new HashSet<HexVector>();
-        childPos.add(new HexVector(0.0f, 0.0f));
-
-        assertEquals(childPos, rock1.getChildrenPositions());
     }
 
     @Test
@@ -151,22 +144,5 @@ public class StaticEntityTest {
         rock1.newInstance(tile3);
         assertTrue("New instance of static item not found.", tile3.hasParent());
         assertTrue("New instance of static item not found.", tile3.isObstructed());
-    }
-
-    @Test
-    public void NewInstanceTest() {
-        CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        // Populate world with tiles
-        Tile tile1 = new Tile(0.0f, 0.0f);
-        Tile tile2 = new Tile(0.0f, 1.0f);
-        tileMap.add(tile1);
-        tileMap.add(tile2);
-        w.setTileMap(tileMap);
-
-        StaticEntity rock1 = new StaticEntity(tile1, 2, "rock", true);
-        StaticEntity rock2 = rock1.newInstance(tile2);
-
-        assertTrue(tile2.isObstructed());
-        assertFalse(rock1.equals(rock2));
     }
 }

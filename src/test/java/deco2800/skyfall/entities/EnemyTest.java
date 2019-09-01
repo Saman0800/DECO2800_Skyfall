@@ -7,7 +7,6 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 /**
  * Enemy class test suite.
@@ -44,20 +43,6 @@ public class EnemyTest {
     }
 
     /**
-     * Test that health can be set.
-     */
-    @Test
-    public void testSetHealth() {
-        assertEquals(enemy.getHealth(),100);
-        enemy.setHealth(50);
-        assertEquals(enemy.getHealth(),50);
-        enemy.setHealth(-1);
-        assertEquals(enemy.getHealth(),-1);
-        enemy.setHealth(100);
-        assertEquals(enemy.getHealth(),100);
-    }
-
-    /**
      * Test the armour is set.
      */
     @Test
@@ -79,25 +64,6 @@ public class EnemyTest {
     @Test
     public void testCanDealDamage() {
         assertTrue(enemy.canDealDamage());
-    }
-
-    /**
-     * Test dealing damage with a mock enemy object.
-     */
-    @Test
-    public void testDealDamage() {
-
-        Enemy testEnemy = mock(Enemy.class);
-
-        //Return true that the mock enemy can deal damage, and that it deals 1 damage.
-        when(testEnemy.canDealDamage()).thenReturn(true);
-        when(testEnemy.getDamage()).thenReturn(1);
-
-        doCallRealMethod().when(testEnemy).dealDamage(enemy);
-        testEnemy.dealDamage(enemy);
-
-        //Ensure 1 damage has been dealt.
-        assertEquals(enemy.getHealth(),99);
     }
 
     /**

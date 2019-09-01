@@ -16,7 +16,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.*;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -70,7 +70,6 @@ public class TreeTest {
         // Check that the various properties of this static entity have been
         // set correctly
         assertTrue(tree1.equals(tree1));
-        assertFalse(tree1.equals(null));
         assertTrue(tree1.getPosition().equals(new HexVector(0.0f, 0.0f)));
         assertEquals(tree1.getRenderOrder(), 5);
         assertEquals(tree1.getCol(), 0.0f, 0.0f);
@@ -81,7 +80,7 @@ public class TreeTest {
     }
 
     @Test
-    public void TestnewInstance() {
+    public void TestAddedFunctions() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
         // Populate world with tiles
         Tile tile1 = new Tile(0.0f, 0.0f);
@@ -95,9 +94,8 @@ public class TreeTest {
         w.setTileMap(tileMap);
 
         Tree tree1 = new Tree(tile1, true);
-        Tree tree2 = tree1.newInstance(tile2);
 
-        assertFalse("Duplicated tree on the same position", tree1.equals(tree2));
+        tree1.newInstance(tile2);
 
         // Check that the Overwritten newInstance method is working as expected
         // Check that the static entity has been placed down on the tile
@@ -138,46 +136,5 @@ public class TreeTest {
             AbstractEntity dropItem = drops.get(0);
             assertTrue("Incorrect instance type for tree drop", dropItem instanceof WoodCube);
         }
-    }
-
-    @Test
-    public void TestHashCode() {
-        CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        Tile tile1 = new Tile(0.0f, 0.0f);
-        tileMap.add(tile1);
-        w.setTileMap(tileMap);
-
-        Tree tree1 = new Tree(tile1, true);
-
-        // Calculate the expected hash code
-        float result = 1;
-        final float prime = 31;
-        result = (result + tree1.getCol()) * prime;
-        result = (result + tree1.getRow()) * prime;
-        result = (result + tree1.getHeight()) * prime;
-
-        assertTrue("Unexpected hashcode for tree.", tree1.hashCode() == result);
-    }
-
-    @Test
-    public void TestWoodAmount() {
-        CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        Tile tile1 = new Tile(0.0f, 0.0f);
-        Tile tile2 = new Tile(0.0f, 0.5f);
-        tileMap.add(tile1);
-        tileMap.add(tile2);
-        w.setTileMap(tileMap);
-
-        Map<HexVector, String> texture = new HashMap<>();
-        texture.put(new HexVector(0.0f, 0.0f), "tree");
-
-        Tree tree1 = new Tree(tile1, true);
-        Tree tree2 = new Tree(0.0f, 0.5f, 2, texture);
-
-        assertEquals(0, tree1.getWoodAmount());
-
-        assertEquals(15, tree2.getWoodAmount());
-        tree2.decreaseWoodAmount();
-        assertEquals(14, tree2.getWoodAmount());
     }
 }

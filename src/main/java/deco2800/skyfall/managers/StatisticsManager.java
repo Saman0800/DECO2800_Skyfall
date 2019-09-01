@@ -43,11 +43,9 @@ public class StatisticsManager  extends TickableManager {
             experience += 10;
         }
 
-
-        if (this.character.getInventoryManager().getTotalAmount() % 10 == 0) {
-            experience += 10;
-        }
-
+//        if (this.character.getInventoryManager().getTotalAmount() % 10 == 0) {
+//            experience += 10;
+//        }
 
         if (this.getKills() % 10 == 0) {
             experience += 10;
