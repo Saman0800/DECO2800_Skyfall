@@ -63,7 +63,12 @@ public class AnimationManager extends AbstractManager {
                 "stoneAttackSouthWest/stoneASW.atlas",0.2f);
         this.generateAnimationObject("flower_defence","resources/enemyFlowerSheet/flower.atlas",0.2f);
 
+
         this.generateAnimationObject("treeman_defence","resources/enemyTreemanSheet/TreemanAttack.atlas",0.2f);
+
+
+        this.generateAnimationObject("flower_melee","resources/enemyFlowerMelee/FlowerMelee.atlas",0.2f);
+        this.generateAnimationObject("flower_close","resources/enemyFlowerClose/FlowerClose.atlas",0.2f);
 
         this.generateAnimationObject("MainCharacterN_Anim",
                 "MainCharacterN_Anim",

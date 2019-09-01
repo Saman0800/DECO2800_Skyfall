@@ -70,26 +70,70 @@ public class Flower extends EnemyEntity implements Animatable {
         return String.format("%s at (%d, %d) %s biome", getEnemyType(), (int)getCol(), (int)getRow(),getBiome());
     }
 
+    private boolean mcnear = false;
+    private boolean mcleave = false;
+    private int time1 =0;
+    private int time2 = 0;
+    private int time3 = 0;
     @Override
     public void onTick(long i) {
-        if(this.isDead()==true){
+        if (this.isDead()) {
             this.flowerDead();
-        }
-        super.onTick(i);
-        if (mc != null) {
-            float colDistance = mc.getCol() - this.getCol();
-            float rowDistance = mc.getRow() - this.getRow();
+        } else {
+            super.onTick(i);
+            if (mc != null) {
+                float colDistance = mc.getCol() - this.getCol();
+                float rowDistance = mc.getRow() - this.getRow();
 
-            if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
-                this.setCurrentState(AnimationRole.DEFENCE);
+                if ((colDistance * colDistance + rowDistance * rowDistance) < 4 || mcnear) {
+                    mcnear = true;
+                    //flower open
+                    if(time1<=135) {
+                        time1++;
+                        this.setCurrentState(AnimationRole.DEFENCE);
+                    }
+                    else {
+                        //flower melee
+                        if (time2 <= 120) {
+                            time2++;
+                            this.setCurrentState(AnimationRole.MELEE);
+                        }
+                        else {
+                            //flower close if there is no play near it.
+                            if((colDistance * colDistance + rowDistance * rowDistance) < 4 && !mcleave) {
+                                time2 = 0;
+                            }
+                            else{
+                                mcleave = true;
+                                if (time3 <= 135 ) {
+                                    time3++;
+                                    this.setCurrentState(AnimationRole.MOVE);
+                                }
+                                else{
+                                    this.setCurrentState(AnimationRole.NULL);
+                                    mcnear = false;
+                                    mcleave = false;
+                                    time1 = 0;
+                                    time2 = 0;
+                                    time3 = 0;
+                                }
+
+                            }
+                        }
+                        }
+                    }
+
+                else {
+                        this.setCurrentState(AnimationRole.NULL);
+
+
+                }
 
             } else {
-                this.setCurrentState(AnimationRole.NULL);
+                System.out.println("Mc is null");
             }
-        } else {
-            System.out.println("Mc is null");
-        }
 
+        }
     }
 
     int time=0;
@@ -112,8 +156,21 @@ public class Flower extends EnemyEntity implements Animatable {
                 AnimationRole.DEFENCE,
                 Direction.DEFAULT,
                 new AnimationLinker("flower_defence",
+                        AnimationRole.MELEE, Direction.DEFAULT,
+                        true, true));
+        this.addAnimations(
+                AnimationRole.MELEE,
+                Direction.DEFAULT,
+                new AnimationLinker("flower_melee",
+                        AnimationRole.MELEE, Direction.DEFAULT,
+                        true, true));
+        this.addAnimations(
+                AnimationRole.MOVE,
+                Direction.DEFAULT,
+                new AnimationLinker("flower_close",
                         AnimationRole.MOVE, Direction.DEFAULT,
                         true, true));
+
     }
 
     @Override
