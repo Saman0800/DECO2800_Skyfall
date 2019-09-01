@@ -1,6 +1,7 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.worlds.Tile;
 
 import java.util.List;
@@ -59,9 +60,9 @@ public class EnvironmentManager extends TickableManager {
       List<AbstractEntity> entities = GameManager.get().getWorld().getEntities();
       AbstractEntity player;
       for (int i = 0; i < entities.size(); i++) {
-         if (entities.get(i).getObjectName().equals("playerPeon")) {
+         if (entities.get(i) instanceof MainCharacter) {
             player = entities.get(i);
-            Tile currentTile = GameManager.get().getWorld().getTile(player.getCol(), player.getRow());
+            Tile currentTile = GameManager.get().getWorld().getTile(Math.round(player.getCol()), Math.round(player.getRow()));
             // If player coords don't match tile coords, currentTile returns null
             // eg if player isn't exactly in the middle of a tile (walking between tiles), coords don't match
             // So below if statement is needed
@@ -265,6 +266,8 @@ public class EnvironmentManager extends TickableManager {
 
       //Set Background music
       setTODMusic();
+
+      setBiome();
    }
    
 }
