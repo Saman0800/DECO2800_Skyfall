@@ -1,11 +1,14 @@
 package deco2800.skyfall.worlds.generation.delaunay;
 
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.generation.WorldGenException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.Assert.*;
 
@@ -21,13 +24,61 @@ public class VoronoiEdgeTest {
     }
 
     @Test
-    public void twoEdgeNodesTest() {
+    public void twoEdgeAndEndNodesTest() {
+        Random random = new Random(0);
+        final int WORLD_SIZE = 15;
+        final int NODE_SPACING = 3;
+        ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
+        ArrayList<Tile> tiles = new ArrayList<>();
+        ArrayList<VoronoiEdge> voronoiEdges = new ArrayList<>();
 
-    }
+        int nodeCount = Math.round((float) WORLD_SIZE * WORLD_SIZE * 4 / NODE_SPACING / NODE_SPACING);
+        // TODO: if nodeCount is less than the number of biomes, throw an exception
 
-    @Test
-    public void atLeastTwoEndNodesTest() {
+        for (int i = 0; i < nodeCount; i++) {
+            // Sets coordinates to a random number from -WORLD_SIZE to WORLD_SIZE
+            float x = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
+            float y = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
+            worldGenNodes.add(new WorldGenNode(x, y));
+        }
 
+        // Apply Delaunay triangulation to the nodes, so that vertices and
+        // adjacencies can be calculated. Also apply Lloyd Relaxation twice
+        // for more smooth looking polygons
+        try {
+            WorldGenNode.calculateVertices(worldGenNodes, WORLD_SIZE);
+            WorldGenNode.lloydRelaxation(worldGenNodes, 2, WORLD_SIZE);
+        } catch (WorldGenException e) {
+            fail();
+        }
+
+        for (int q = -WORLD_SIZE; q <= WORLD_SIZE; q++) {
+            for (int r = -WORLD_SIZE; r <= WORLD_SIZE; r++) {
+                // if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <=
+                // worldSize) {
+                float oddCol = (q % 2 != 0 ? 0.5f : 0);
+
+                Tile tile = new Tile(q, r + oddCol);
+                tiles.add(tile);
+                // }
+            }
+        }
+
+        try {
+            WorldGenNode.assignTiles(worldGenNodes, tiles, random, NODE_SPACING);
+            WorldGenNode.removeZeroTileNodes(worldGenNodes, WORLD_SIZE);
+            WorldGenNode.assignNeighbours(worldGenNodes, voronoiEdges);
+        } catch (WorldGenException e) {
+            fail();
+        }
+
+        VoronoiEdge.assignTiles(voronoiEdges, tiles, WORLD_SIZE);
+        VoronoiEdge.assignNeighbours(voronoiEdges);
+
+        for (VoronoiEdge edge : voronoiEdges) {
+            assertEquals(2, edge.getEdgeNodes().size());
+            assertTrue(edge.getEdgeNodes().size() >= 2);
+        }
     }
 
     @Test
@@ -63,6 +114,14 @@ public class VoronoiEdgeTest {
         edges.add(edge4);
         edges.add(edge5);
 
+        // Add this as an edge node to prevent a null pointer exception that isn't
+        // being tested
+        WorldGenNode node = new WorldGenNode(1, 1);
+
+        for (VoronoiEdge edge : edges) {
+            edge.addEdgeNode(node);
+        }
+
         VoronoiEdge.assignNeighbours(edges);
 
         assertNull(edge1.getVertexSharingEdges(point3));
@@ -81,10 +140,5 @@ public class VoronoiEdgeTest {
         assertEquals(1, edge3.getVertexSharingEdges(point1).size());
         assertTrue(edge3.getVertexSharingEdges(point1).contains(edge1));
         assertTrue(edge1.getVertexSharingEdges(point1).contains(edge3));
-    }
-
-    @Test
-    public void generatePathTest() {
-
     }
 }

@@ -157,9 +157,11 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     }
 
     /**
-     * Finds which nodes are neighbours, and assigns them to each other's list of neighbours
+     * Finds which nodes are neighbours, and assigns them to each other's list of neighbours.
+     * Also assigns the edge nodes of edges between each pair for neighbouring nodes
      *
      * @param nodes the list of nodes to assign neighbours
+     * @param edges the list of edges between nodes
      *
      * @throws InvalidCoordinatesException if any nodes have a vertex whose coordinates are not 2 dimensional
      */
@@ -168,13 +170,6 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         // Compare each node with each other node
         for (int i = 0; i < nodes.size(); i++) {
             for (int j = i + 1; j < nodes.size(); j++) {
-                /*
-                if (isAdjacent(nodes.get(i), nodes.get(j))) {
-                    nodes.get(i).assignNeighbour(nodes.get(j));
-                    nodes.get(j).assignNeighbour(nodes.get(i));
-                    count1++;
-                }
-                */
                 double[] vertexA = sharedVertex(nodes.get(i), nodes.get(j), null);
                 if (vertexA == null) {
                     continue;
@@ -187,26 +182,6 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
                     edges.add(edge);
                     edge.addEdgeNode(nodes.get(i));
                     edge.addEdgeNode(nodes.get(j));
-
-                    // Find the end nodes of the edge (it is arbitrary which
-                    // edge node is used for this
-                    // TODO move this in to a separate method for after all
-                    // TODO node neighbours have been assigned
-                    /*
-                    for (WorldGenNode neighbour : nodes.get(i).getNeighbours()) {
-                        // Don't add the other edge node as an end node
-                        if (neighbour == nodes.get(j)) {
-                            continue;
-                        }
-
-                        for (double[] nodeVertex : neighbour.getVertices()) {
-                            if (Arrays.equals(vertexA, nodeVertex) || Arrays.equals(vertexB, nodeVertex)) {
-                                edge.addEndNode(neighbour);
-                                break;
-                            }
-                        }
-                    }*/
-
                 }
             }
         }
@@ -380,6 +355,16 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         return (this.getY() - y) * (this.getY() - y);
     }
 
+    /**
+     * Finds one of the closest elements to the given y value in a sorted list of
+     * WorldGenNodes
+     *
+     * @param toFind The y coordinate to find
+     * @param nodes The list of nodes to search
+     * @param start The starting value of the array to search from
+     * @param end The ending value of the array to search from
+     * @return The node with closest y value to toFind
+     */
     private static int binarySearch(double toFind, List<WorldGenNode> nodes,
                                     int start, int end) {
         int middle = (end + start) / 2;
@@ -677,6 +662,13 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         }
     }
 
+    /**
+     * Remove all nodes with no associated tile from a list
+     *
+     * @param nodes The list of nodes to check
+     * @param worldSize Half the side length of the world
+     * @throws WorldGenException If calculateVertices throws a WorldGenException
+     */
     public static void removeZeroTileNodes(List<WorldGenNode> nodes, int worldSize) throws WorldGenException {
         // Set up iterator to allow nodes to be removed while looping through them
 

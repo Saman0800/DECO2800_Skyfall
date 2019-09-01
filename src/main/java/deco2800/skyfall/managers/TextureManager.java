@@ -8,11 +8,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Texture manager acts as a cache between the file system and the renderers. This allows all textures to be read into
- * memory at the start of the game saving file reads from being completed during rendering.
+ * Texture manager acts as a cache between the file system and the renderers.
+ * This allows all textures to be read into memory at the start of the game
+ * saving file reads from being completed during rendering.
  * <p>
- * With this in mind don't load textures you're not going to use. Textures that are not used should probably (at some
- * point) be removed from the list and then read from disk when needed again using some type of reference counting
+ * With this in mind don't load textures you're not going to use. Textures that
+ * are not used should probably (at some point) be removed from the list and
+ * then read from disk when needed again using some type of reference counting
  *
  * @Author Tim Hadwen
  */
@@ -48,12 +50,16 @@ public class TextureManager extends AbstractManager {
             textureMap.put("dialogue_text_background", new Texture("resources/dialogue_text_background.png"));
             textureMap.put("main_piece", new Texture("resources" + "/Main_Character_F_Right.png"));
 
-            textureMap.put("arcane", new Texture("resources/Arcane_Effect_1.png"));
-            //Tile textures
-            //Goes through all the folders with tile_textures and adds the tile name to the textures, it removes
-            //the last 4 characters to get the name of the file.
-            //Using this means that each tile texture should be given a unique name as otherwise it will get
-            //overridden in the texture hashmap .
+            textureMap.put("range_test", new Texture("resources/projectile.png"));
+            textureMap.put("melee_test", new Texture("resources/punch.png"));
+
+            // Tile textures
+            // Goes through all the folders with tile_textures and adds the tile name to the
+            // textures, it removes
+            // the last 4 characters to get the name of the file.
+            // Using this means that each tile texture should be given a unique name as
+            // otherwise it will get
+            // overridden in the texture hashmap .
             File[] files = new File("resources/tile_textures").listFiles();
             if (files == null) {
                 throw new FileNotFoundException();
@@ -79,7 +85,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("robotNW", new Texture("resources/robotNW.png"));
             textureMap.put("spider", new Texture("resources/spider.png"));
             textureMap.put("robot", new Texture("resources/robot.png"));
-
 
             textureMap.put("grass_tuff", new Texture("resources/world_details/grass1.png"));
 
@@ -165,19 +170,19 @@ public class TextureManager extends AbstractManager {
         if (textureMap.containsKey(id)) {
             return textureMap.get(id);
         } else if (id.startsWith("__ANIMATION_")) {
-//            System.out.println("Getting animation texture");
+            // System.out.println("Getting animation texture");
             AnimationManager animationManager = GameManager.getManagerFromInstance(AnimationManager.class);
             Texture texture = this.getTextureFromAnimation(id, animationManager);
 
             if (texture != null) {
                 return texture;
             } else {
-//                System.out.println("Texture animation could not be found");
+                // System.out.println("Texture animation could not be found");
                 return textureMap.get("spacman_ded");
             }
 
         } else {
-            //log.info("Texture map does not contain P{}, returning default texture.", id);
+            // log.info("Texture map does not contain P{}, returning default texture.", id);
             return textureMap.get("spacman_ded");
         }
 
@@ -206,7 +211,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put(id, new Texture(filename));
         }
     }
-
 
     private Texture getTextureFromAnimation(String id, AnimationManager animationManager) {
         String id1 = id.replaceAll("__ANIMATION_", "");
