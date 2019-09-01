@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
-import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.*;
 import org.slf4j.Logger;
