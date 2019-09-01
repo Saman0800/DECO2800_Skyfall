@@ -24,7 +24,7 @@ public class MainCharacterTest {
      */
     public void setup() {
         testCharacter = new MainCharacter(0f, 0f,
-                0.05f, "Main Piece", 10); 
+                0.05f, "Main Piece", 10);
     }
 
     @After

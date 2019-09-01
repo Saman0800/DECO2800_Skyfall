@@ -436,7 +436,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 //        TODO: Check direction for animation here
         this.updateAnimation();
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-            GameManager.getManagerFromInstance(ConstructionManager.class)
+            GameManager.getManagerFromInstance(ConstructionManager.class) 
                     .displayWindow();
         }
     }
