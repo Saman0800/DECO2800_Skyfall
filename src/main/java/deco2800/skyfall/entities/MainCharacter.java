@@ -1007,8 +1007,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 }
             }
 
-        } else{
-            logger.info("No Hatchet in Quick Access");
         }
     }
 
@@ -1033,8 +1031,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                     }
                 }
             }
-        } else{
-            logger.info("No PickAxe in Quick Access");
+
         }
     }
 

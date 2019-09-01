@@ -9,9 +9,10 @@ import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.animation.Direction;
 
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.resources.items.Apple;
-import deco2800.skyfall.resources.items.PoisonousMushroom;
+import deco2800.skyfall.resources.items.*;
 import deco2800.skyfall.resources.items.Stone;
+import deco2800.skyfall.worlds.AbstractWorld;
+import deco2800.skyfall.worlds.RocketWorld;
 import deco2800.skyfall.worlds.Tile;
 
 import deco2800.skyfall.util.Collider;
@@ -25,6 +26,8 @@ import org.mockito.Mockito;
 import java.util.HashMap;
 import java.util.Map;
 
+import java.util.Random;
+
 public class MainCharacterTest {
 
     private GoldPiece goldpiece;
@@ -37,6 +40,9 @@ public class MainCharacterTest {
     private Rock testRock;
     private Tile testTile;
     private InventoryManager inventoryManager;
+    private Hatchet testHatchet;
+    private PickAxe testPickaxe;
+    private AbstractWorld testWorld;
 
     // A hashmap for testing player's animations
     private HashMap testMap = new HashMap();
@@ -420,10 +426,40 @@ public class MainCharacterTest {
 
     @Test
     public void useHatchetTest(){
+        GameManager gameManager = GameManager.get();
+        testWorld= new RocketWorld(4, 300, 15, new int[] { 70, 70, 70 }, 3, 2);
+        gameManager.setWorld(testWorld);
+        testHatchet = new Hatchet(testCharacter);
+        testCharacter.getInventoryManager().inventoryAdd(testHatchet);
+        testWorld.addEntity(testCharacter);
+        testWorld.addEntity(testTree);
+        testCharacter.setCol(1f);
+        testCharacter.setRow(1f);
+        testTree.setCol(1f);
+        testTree.setRow(1f);
+        int currentWood = testCharacter.getInventoryManager().getAmount("Wood");
+        testCharacter.useHatchet();
+        Assert.assertEquals(currentWood+1,testCharacter.getInventoryManager().getAmount("Wood"));
+    }
 
+    @Test
+    public void usePickAxeTest() {
+        GameManager gameManager = GameManager.get();
+        testWorld= new RocketWorld(4, 300, 15, new int[] { 70, 70, 70 }, 3, 2);
+        gameManager.setWorld(testWorld);
+        testWorld.addEntity(testCharacter);
+        testWorld.addEntity(testRock);
+        testCharacter.setCol(1f);
+        testCharacter.setRow(1f);
+        testRock.setCol(1f);
+        testRock.setRow(1f);
+        int currentStone = testCharacter.getInventoryManager().getAmount("Stone");
+        testCharacter.usePickAxe();
+        Assert.assertEquals(currentStone+1,testCharacter.getInventoryManager().getAmount("Stone"));
 
 
     }
+
 
     @After
     public void cleanup() {
@@ -445,4 +481,5 @@ public class MainCharacterTest {
             System.out.println("NO COLLISION");
         }
     }
+
 }
