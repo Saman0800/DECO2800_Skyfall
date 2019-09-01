@@ -9,10 +9,10 @@ import java.util.List;
 public class EnvironmentManager extends TickableManager {
 
    //Hours in a game day
-   private long hours;
+   public long hours;
 
    // Seconds in a game day
-   private long  minutes;
+   public long  minutes;
 
    // Seasons in game
    private String season;
@@ -33,10 +33,10 @@ public class EnvironmentManager extends TickableManager {
    long displayHours;
 
    // Time of day: AM or PM
-   private String TOD;
+   public String TOD;
 
    // Music filename
-   private String file;
+   public String file;
 
    // Current music file being played
    private String currentFile;
@@ -56,7 +56,7 @@ public class EnvironmentManager extends TickableManager {
    /**
     * Private helper function for constructor to set biome
     */
-   private void setBiome() {
+   public void setBiome() {
       List<AbstractEntity> entities = GameManager.get().getWorld().getEntities();
       AbstractEntity player;
       for (int i = 0; i < entities.size(); i++) {
@@ -87,7 +87,7 @@ public class EnvironmentManager extends TickableManager {
    /**
     * Gets time of day in game
     *
-    * @return long The time of day
+    * @return long The time of day in hours
     */
    public long getTime() {
       return hours;
@@ -113,7 +113,9 @@ public class EnvironmentManager extends TickableManager {
     * @return boolean True if it is day, False if night
     */
    public boolean isDay() {
-      if (hours > 12 && hours < 24) {
+
+      // Day equals am, night equals pm for now.
+      if (hours >= 12 && hours < 24) {
          isDay = false;
       } else {
          isDay = true;
@@ -124,7 +126,7 @@ public class EnvironmentManager extends TickableManager {
 
    /**
     * Returns whether it is day or not
-    * @return am or pm depending on TOD
+    * @return String am or pm depending on TOD
     */
    public String getTOD() {
       // Set hours to be displayed
@@ -151,7 +153,7 @@ public class EnvironmentManager extends TickableManager {
 
    /**
     * Sets the season in game, starting with summer.
-    *
+    * @param i the time in milliseconds
     */
    public void setMonth(long i) {
       //Each month goes for approx 30 days
@@ -218,7 +220,6 @@ public class EnvironmentManager extends TickableManager {
 
    /**
     * Sets the music in game
-    *
     */
    public void setTODMusic () {
 
