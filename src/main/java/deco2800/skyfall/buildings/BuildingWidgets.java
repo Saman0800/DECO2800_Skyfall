@@ -36,9 +36,9 @@ public class BuildingWidgets implements TouchDownObserver {
      * Returns an instance of the building widgets.
      * @return the building widgets
      */
-    public static BuildingWidgets get() {
+    public static BuildingWidgets get(Stage stage, Skin skin, AbstractWorld world, InputManager input) {
         if (instance == null) {
-            return new BuildingWidgets();
+            return new BuildingWidgets(stage, skin, world, input);
         }
         return instance;
     }
@@ -46,12 +46,12 @@ public class BuildingWidgets implements TouchDownObserver {
     /**
      * Private constructor to enforce use of get().
      */
-    private BuildingWidgets() {
+    private BuildingWidgets(Stage stage, Skin skin, AbstractWorld world, InputManager input) {
         try {
-            this.stage = GameManager.get().getStage();
-            this.skin = GameManager.get().getSkin();
-            this.world = GameManager.get().getWorld();
-            this.inputManager = GameManager.get().getManager(InputManager.class);
+            this.stage = stage;
+            this.skin = skin;
+            this.world = world;
+            this.inputManager = input;
 
             if (this.skin == null) {
                 // using a skin for test, removed it later

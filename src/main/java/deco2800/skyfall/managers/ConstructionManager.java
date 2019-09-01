@@ -52,10 +52,11 @@ public class ConstructionManager extends AbstractManager {
         menuSetUp = false;
 
         buildingFactory = new BuildingFactory();
-//        buildingWidgets = BuildingWidgets.get();
+//        buildingWidgets = BuildingWidgets.get(GameManager.get().getStage(), GameManager.get().getSkin(),
+//                GameManager.get().getWorld(), GameManager.getManagerFromInstance(InputManager.class));
 
         // testing requirement fro widget, removed it later
-//        GameManager.get().getWorld().addEntity(buildingFactory.createHouse(0f, 0f));
+//        GameManager.get().getWorld().addEntity(buildingFactory.createHouse(0f, 0f, 0));
     }
 
     //Start of UI

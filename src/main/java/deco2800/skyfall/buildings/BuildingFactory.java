@@ -132,7 +132,7 @@ public class BuildingFactory {
     public BuildingEntity createFenceBuilding(float col, float row, int face) {
         BuildingEntity fence = new BuildingEntity(col, row, 2);
         BuildingTextures textures = BuildingTextures.Fence;
-        fence.setObjectName("Wall" + fence.getEntityID());
+        fence.setObjectName("Fence" + fence.getEntityID());
         fence.setTexture(textures.getTexture(face));
         fence.setBuildTime(3);
         fence.addBuildCost("", 0);
