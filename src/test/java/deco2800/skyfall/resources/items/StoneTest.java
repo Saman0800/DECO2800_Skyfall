@@ -94,4 +94,15 @@ public class StoneTest {
     public void getBiome() {
         assertEquals("Forest", stone.getBiome());
     }
+
+    /**
+     * Ensure that the wood's biome is correctly returned when getBiome()
+     * is called
+     */
+    @Test
+    public void getDescriptionTest() {
+        assertEquals("This resource can be found in the forest and " +
+                "mountain biomes and can be used to build a " +
+                "Pickaxe.", stone.getDescription());
+    }
 }

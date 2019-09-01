@@ -149,9 +149,10 @@ public class Stone extends EnemyEntity implements Animatable {
             destination=new HexVector(randomPositionWorld[0], randomPositionWorld[1]);
             moving=true;
         }
+
         if(destination.getCol()==this.getCol() && destination.getRow()==this.getRow()){
-            sound.stopSound("stoneWalk");
             moving=false;
+            sound.stopSound("stoneWalk");
         }
         this.position.moveToward(destination,this.getSpeed());
 
@@ -224,6 +225,7 @@ public class Stone extends EnemyEntity implements Animatable {
      * if this enemy is dead then will show dead texture for a while
      */
     private void stoneDead(){
+        sound.stopSound("stoneWalk");
         this.moving=true;
         this.destination=new HexVector(this.getCol(),this.getRow());
         if(time<=100){

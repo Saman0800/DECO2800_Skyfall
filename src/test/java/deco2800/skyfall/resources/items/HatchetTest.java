@@ -1,6 +1,8 @@
 package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.entities.AgentEntity;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.Tree;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.util.HexVector;
@@ -14,15 +16,19 @@ import static org.junit.Assert.*;
 public class HatchetTest {
 
     private Hatchet hatchet;
-    private AgentEntity owner;
+    private MainCharacter owner;
     private HexVector position;
     private Tree treeToFarm;
-    private InventoryManager ownerInventory;
     private Tile testTile;
+
 
     @Before
     public void setUp() {
-        hatchet = new Hatchet(owner,position, "Hatchet" );
+        position = new HexVector(1f,1f);
+        owner = new MainCharacter(1f,1f,0.05f,"player", 100);
+        hatchet = new Hatchet(owner,position);
+        testTile = new Tile(1f,1f);
+        treeToFarm = new Tree(testTile,true);
     }
 
     @After
@@ -41,12 +47,14 @@ public class HatchetTest {
 
     @Test
     public void getCoords() {
+        assertEquals(1f, position.getCol(),0);
+        assertEquals(1f,position.getRow(),0);
+
     }
 
     @Test
     public void toStringtest() {
         assertEquals("Manufactured Resource:Hatchet",hatchet.toString());
-
     }
 
     @Test
@@ -55,8 +63,9 @@ public class HatchetTest {
     }
 
     @Test
-    public void farmTreeTest() {
-
+    public void farmTreeTest(){
+        hatchet.farmTree(treeToFarm);
+        assertEquals(14, treeToFarm.getWoodAmount());
 
     }
 }

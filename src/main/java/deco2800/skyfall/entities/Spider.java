@@ -97,6 +97,7 @@ public class Spider extends EnemyEntity implements Animatable {
     public void onTick(long i) {
         if(this.isDead()==true){
             GameManager.get().getWorld().removeEntity(this);
+            sound.stopSound("spider");
         }
         super.onTick(i);
         if (mc != null) {
