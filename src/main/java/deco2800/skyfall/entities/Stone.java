@@ -30,24 +30,27 @@ public class Stone extends EnemyEntity implements Animatable {
     private Direction movingDirection;
 
     private static final transient String ENEMY_TYPE = "stone";
-    private boolean attacking=false;
+    private boolean attacking = false;
     private MainCharacter mc;
 
     //if the enemy is attacked by player or the player closed enough to the enemy
     //than the enemy my will be in angry situation
-    private int angerTimeAccount=0;
+    private int angerTimeAccount = 0;
 
     //a routine for destination
-    private HexVector destination=null;
+    private HexVector destination = null;
 
     //target position
-    private float[] targetPosition=null;
+    private float[] targetPosition = null;
 
     //world coordinate of this enemy
     private float[] orginalPosition = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
 
     //Insert SoundManager class
     private SoundManager sound = new SoundManager();
+
+    //To indicate whether the enemy arrives player's location
+    private boolean complete = false;
 
     public Stone(float col, float row, MainCharacter mc) {
         super(col, row);
@@ -61,7 +64,7 @@ public class Stone extends EnemyEntity implements Animatable {
         this.setSpeed(NORMALSPEED);
         this.setArmour(1);
         this.setDamage(3);
-        this.mc=mc;
+        this.mc = mc;
         this.configureAnimations();
         this.setDirectionTextures();
     }
@@ -74,6 +77,7 @@ public class Stone extends EnemyEntity implements Animatable {
 
     /**
      * get enemy type
+     *
      * @return enemy type
      */
     public String getEnemyType() {
@@ -81,126 +85,179 @@ public class Stone extends EnemyEntity implements Animatable {
     }
 
 
+    /**
+     * To get biome
+     *
+     * @return biome
+     */
     public String getBiome() {
         return BIOME;
     }
 
     // to account attack time
     private int period = 0;
+
+
     /**
      * Handles tick based stuff, e.g. movement
      */
     @Override
     public void onTick(long i) {
         this.setCollider();
-        if(!attacking){
-            randomMoving();
-            movingDirection=movementDirection(this.position.getAngle());
-        }
-
-        if(angerTimeAccount<10){
-            angerTimeAccount++;
-        }else{
-            angerTimeAccount=0;
-            this.setAttacked(false);
-        }
-        if(isDead()){
+        this.randomMoving();
+        this.resetFeeling();
+        if (isDead() == true) {
             this.stoneDead();
-        }else {
-            float colDistance = mc.getCol() - this.getCol();
-            float rowDistance = mc.getRow() - this.getRow();
-            if ((colDistance * colDistance + rowDistance * rowDistance) < 4 ||this.isAttacked()) {
-                this.setAttacking(true);
-                this.attackPlayer(mc);
-                if(this.getMovingDirection()==Direction.NORTH|| this.getMovingDirection()==Direction.NORTH_EAST){
-                    setCurrentDirection(movementDirection(this.position.getAngle()));
-                    setCurrentState(AnimationRole.MOVE);
-                }else {
-                    setCurrentDirection(movementDirection(this.position.getAngle()));
-                    setCurrentState(AnimationRole.MELEE);
-                }
-            }else {
-                this.setAttacking(false);
-                this.setSpeed(NORMALSPEED);
-                setCurrentDirection(movementDirection(this.position.getAngle()));
-                setCurrentState(AnimationRole.MOVE);
-            }
+        } else {
+            this.angryAttacking();
+
         }
-
-
-
     }
 
 
-    public void setAttacking(boolean attacking) {
+    /**
+     * Setting the enemy to attack model
+     *
+     * @param attacking
+     */
+    private void setAttacking(boolean attacking) {
         this.attacking = attacking;
+    }
+
+
+    private void angryAttacking() {
+        float colDistance = mc.getCol() - this.getCol();
+        float rowDistance = mc.getRow() - this.getRow();
+        //if the player in angry distance or the enemy is attacked by player then turning to angry model
+        if ((colDistance * colDistance + rowDistance * rowDistance) < 4 || this.isAttacked() == true) {
+            this.setAttacking(true);
+            this.attackPlayer(mc);
+            //because we have not north and north-east combat animation.....
+            //if the moving direction is north or north-east then do movement animation
+            if (this.getMovingDirection() == Direction.NORTH || this.getMovingDirection() == Direction.NORTH_EAST
+                    && complete == false) {
+                setCurrentDirection(movementDirection(this.position.getAngle()));
+                setCurrentState(AnimationRole.MOVE);
+            } else {
+                setCurrentDirection(movingDirection);
+                setCurrentState(AnimationRole.MELEE);
+            }
+        } else {
+            //if player out of angry distance then the enemy turns to normal model
+            this.setAttacking(false);
+            this.setSpeed(NORMALSPEED);
+            setCurrentDirection(movementDirection(this.position.getAngle()));
+            setCurrentState(AnimationRole.MOVE);
+        }
+    }
+
+    /**
+     * if the player is close enough then the enemy will attack player
+     *
+     * @param player Main character
+     */
+    private void attackPlayer(MainCharacter player) {
+        this.setSpeed(ARGRYSPEED);
+        destination = new HexVector(player.getCol(), player.getRow());
+        this.position.moveToward(destination, this.getSpeed());
+        //when enemy arrive player location turn it face to player and do attack animation
+        if (destination.getCol() == this.getCol() && destination.getRow() == this.getRow()) {
+            if (movingDirection == Direction.NORTH_EAST) {
+                complete = true;
+                movingDirection = Direction.SOUTH_WEST;
+                setCurrentDirection(movingDirection);
+            } else if (movingDirection == Direction.NORTH) {
+                complete = true;
+                movingDirection = Direction.SOUTH;
+                setCurrentDirection(movingDirection);
+            } else if (movingDirection == Direction.NORTH_WEST) {
+                complete = true;
+                movingDirection = Direction.SOUTH_WEST;
+                setCurrentDirection(movingDirection);
+            } else if (movingDirection == Direction.SOUTH_EAST) {
+                complete = true;
+                movingDirection = Direction.SOUTH_WEST;
+                setCurrentDirection(movingDirection);
+            }
+        } else {
+            complete = false;
+            movingDirection = movementDirection(this.position.getAngle());
+        }
+        //if the player in attack range then attack player
+        if (this.position.isCloseEnoughToBeTheSameByDistance(destination, ATTACK_RANGE)) {
+            if (period <= ATTACK_FREQUENCY) {
+                period++;
+            } else {
+                period = 0;
+                player.setHurt(true);
+                player.hurt(this.getDamage());
+            }
+
+        }
+    }
+
+
+    /**
+     * Turing attack model to normal model
+     */
+    private void resetFeeling() {
+        if (angerTimeAccount < 10) {
+            angerTimeAccount++;
+        } else {
+            angerTimeAccount = 0;
+            this.setAttacked(false);
+        }
     }
 
     /**
      * under normal situation the enemy will random wandering in 100 radius circle
      */
     private void randomMoving() {
-        if(!moving){
-            sound.loopSound("stoneWalk");
-            targetPosition =new float[2];
-            targetPosition[0]=(float) (Math.random() * 100 + orginalPosition[0]);
-            targetPosition[1]=(float) (Math.random() * 100 + orginalPosition[1]);
-            float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow(targetPosition[0], targetPosition[1]);
-            destination=new HexVector(randomPositionWorld[0], randomPositionWorld[1]);
-            moving=true;
-        }
+        if (!attacking) {
+            movingDirection = movementDirection(this.position.getAngle());
 
-        if(destination.getCol()==this.getCol() && destination.getRow()==this.getRow()){
-            moving=false;
-            sound.stopSound("stoneWalk");
-        }
-        this.position.moveToward(destination,this.getSpeed());
-
-    }
-
-    /**
-     * if the player is close enough then the enemy will attack player
-     * @param player Main character
-     */
-    public void attackPlayer(MainCharacter player){
-        this.setSpeed(ARGRYSPEED);
-        destination=new HexVector(player.getCol(),player.getRow());
-        this.position.moveToward(destination,this.getSpeed());
-        movingDirection=movementDirection(this.position.getAngle());
-        if(this.position.isCloseEnoughToBeTheSameByDistance(destination,ATTACK_RANGE)){
-            if(period <=ATTACK_FREQUENCY){
-                period++;
-            }else{
-                period=0;
-                player.setHurt(true);
-                player.hurt(this.getDamage());
-
+            if (moving == false) {
+                sound.loopSound("stoneWalk");
+                targetPosition = new float[2];
+                //random movement range
+                targetPosition[0] = (float) (Math.random() * 100 + orginalPosition[0]);
+                targetPosition[1] = (float) (Math.random() * 100 + orginalPosition[1]);
+                float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow(targetPosition[0], targetPosition[1]);
+                destination = new HexVector(randomPositionWorld[0], randomPositionWorld[1]);
+                moving = true;
             }
 
+            if (destination.getCol() == this.getCol() && destination.getRow() == this.getRow()) {
+                moving = false;
+                sound.stopSound("stoneWalk");
+            }
+            this.position.moveToward(destination, this.getSpeed());
         }
     }
+
 
     /**
      * get movement direction
+     *
      * @param angle the angle between to tile
      * @return direction
      */
-    public Direction movementDirection(double angle){
-        angle=Math.toDegrees(angle-Math.PI);
-        if (angle<0){
-            angle+=360;
+    public Direction movementDirection(double angle) {
+        angle = Math.toDegrees(angle - Math.PI);
+        if (angle < 0) {
+            angle += 360;
         }
-        if(angle>=0 && angle<=60){
+        if (angle >= 0 && angle <= 60) {
             return Direction.SOUTH_WEST;
-        }else if(angle>60 && angle<=120){
+        } else if (angle > 60 && angle <= 120) {
             return Direction.SOUTH;
-        }else if (angle>120 && angle<=180){
-            return  Direction.SOUTH_EAST;
-        }else if (angle>180 && angle<=240){
-            return  Direction.NORTH_EAST;
-        }else if (angle>240 && angle<=300){
-            return  Direction.NORTH;
-        }else if (angle>300 && angle <360){
+        } else if (angle > 120 && angle <= 180) {
+            return Direction.SOUTH_EAST;
+        } else if (angle > 180 && angle <= 240) {
+            return Direction.NORTH_EAST;
+        } else if (angle > 240 && angle <= 300) {
+            return Direction.NORTH;
+        } else if (angle > 300 && angle < 360) {
             return Direction.NORTH_WEST;
         }
         return null;
@@ -216,27 +273,27 @@ public class Stone extends EnemyEntity implements Animatable {
         return String.format("%s at (%d, %d) %s biome", getEnemyType(), (int) getCol(), (int) getRow(), getBiome());
     }
 
-    public Direction getMovingDirection(){
+    public Direction getMovingDirection() {
         return movingDirection;
     }
 
     //to count dead time
-    int time=0;
+    private int time = 0;
 
     /**
      * if this enemy is dead then will show dead texture for a while
      */
-    private void stoneDead(){
+    private void stoneDead() {
         sound.stopSound("stoneWalk");
-        this.moving=true;
-        this.destination=new HexVector(this.getCol(),this.getRow());
-        if(time<=100){
+        this.moving = true;
+        this.destination = new HexVector(this.getCol(), this.getRow());
+        if (time <= 100) {
             sound.loopSound("stoneDie");
             time++;
             setCurrentState(AnimationRole.NULL);
             this.setTexture("stoneDead");
             this.setObjectName("stoneDead");
-        }else{
+        } else {
             GameManager.get().getWorld().removeEntity(this);
             sound.stopSound("stoneDie");
         }
@@ -245,7 +302,7 @@ public class Stone extends EnemyEntity implements Animatable {
 
 
     /**
-     * add stone animations
+     * loading stone animations
      */
     @Override
     public void configureAnimations() {
