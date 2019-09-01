@@ -53,7 +53,7 @@ public class BuildingFactory {
         return null;
     }
 
-    public BuildingEntity createWallBuilding() {
+    public BuildingEntity createfenceBuilding() {
         return null;
     }
 }
