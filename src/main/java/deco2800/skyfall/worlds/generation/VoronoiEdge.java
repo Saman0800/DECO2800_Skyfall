@@ -130,9 +130,6 @@ public class VoronoiEdge {
                     continue;
                 }
 
-                // Add the edge if it's valid
-                path.add(neighbour);
-
                 // Check if the path has reached a lake or ocean
                 if (path.size() == 1) {
                     boolean endOfPath = true;
@@ -156,27 +153,29 @@ public class VoronoiEdge {
                     if (endOfPath) {
                         return path;
                     }
-                } else {
-                    for (WorldGenNode node : neighbour.endNodes) {
-                        if (node == null) {
-                            return path;
-                        }
-                        String biomeName = node.getTiles().get(0).getBiome().getBiomeName();
-                        // If the new edge ends with the ocean or a lake
-                        if (biomeName.equals("ocean") || biomeName.equals("lake")) {
-                            return path;
-                        }
+                }
+
+                // Add the edge if it's valid
+                path.add(neighbour);
+                for (WorldGenNode node : neighbour.endNodes) {
+                    if (node == null) {
+                        return path;
                     }
-                    // Repeat for edge nodes as a fail-safe
-                    for (WorldGenNode node : neighbour.edgeNodes) {
-                        if (node == null) {
-                            return path;
-                        }
-                        String biomeName = node.getTiles().get(0).getBiome().getBiomeName();
-                        // If the new edge ends with the ocean or a lake
-                        if (biomeName.equals("ocean") || biomeName.equals("lake")) {
-                            return path;
-                        }
+                    String biomeName = node.getTiles().get(0).getBiome().getBiomeName();
+                    // If the new edge ends with the ocean or a lake
+                    if (biomeName.equals("ocean") || biomeName.equals("lake")) {
+                        return path;
+                    }
+                }
+                // Repeat for edge nodes as a fail-safe
+                for (WorldGenNode node : neighbour.edgeNodes) {
+                    if (node == null) {
+                        return path;
+                    }
+                    String biomeName = node.getTiles().get(0).getBiome().getBiomeName();
+                    // If the new edge ends with the ocean or a lake
+                    if (biomeName.equals("ocean") || biomeName.equals("lake")) {
+                        return path;
                     }
                 }
 
