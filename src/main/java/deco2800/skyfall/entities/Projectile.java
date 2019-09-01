@@ -1,9 +1,6 @@
 package deco2800.skyfall.entities;
 
 import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.tasks.AbstractTask;
-import deco2800.skyfall.tasks.MovementTask;
-import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 
 /**
@@ -17,7 +14,7 @@ public class Projectile extends AgentEntity {
     /**
      * How many game ticks all projectiles survive for before being removed.
      */
-    public static final int LIFE_TIME_TICKS = 20;
+    public static final int LIFE_TIME_TICKS = 40;
 
     /**
      * The amount of damage this projectile deals.
