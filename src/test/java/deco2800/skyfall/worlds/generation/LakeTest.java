@@ -108,9 +108,11 @@ public class LakeTest {
                     biomeNodes.add(new ArrayList<>());
                 }
 
+                /*System.out.println(biomeNodes.size());
                 for (WorldGenNode node : worldGenNodes) {
+                    System.out.println(biomes.indexOf(node.getTiles().get(0).getBiome()));
                     biomeNodes.get(biomes.indexOf(node.getTiles().get(0).getBiome())).add(node);
-                }
+                }*/
 
                 biomeLists.add(biomes);
                 biomeNodesList.add(biomeNodes);

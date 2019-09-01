@@ -284,47 +284,6 @@ public class VoronoiEdge {
 
                 }
             }
-
-            // This is an old, asymptotically less efficient method. I am leaving
-            // it in just in case there is an issue with the new one
-            /*
-            for (Tile tile : tiles) {
-                // If the edge is vertical and has undefined gradient
-                if (edge.getA()[0] == edge.getB()[0]) {
-                    // The length of the edge is the difference in y coordinate
-                    double length = Math.abs(edge.getA()[1] - edge.getB()[1]);
-                    // If the tile is within MIN_DISTANCE of the line's x coordinate
-                    // and within the length of the line + MIN_DISTANCE from each vertex
-                    if (Math.abs(tile.getCol() - edge.getA()[0]) < MIN_DISTANCE
-                            && Math.abs(tile.getRow() - edge.getA()[1]) < MIN_DISTANCE + length
-                            && Math.abs(tile.getRow() - edge.getB()[1]) < MIN_DISTANCE + length) {
-                        edge.addTile(tile);
-                    }
-                // If the edge is not vertical
-                } else {
-                    double gradient = (edge.getA()[1] - edge.getB()[1]) / (edge.getA()[0] - edge.getB()[0]);
-                    // A quantity used to calculate the distance
-                    double distanceNumerator = -1 * gradient * tile.getCol() + tile.getRow()
-                            + gradient * edge.getB()[0] - edge.getB()[1];
-                    // Get the square distance
-                    double squareDistance = distanceNumerator * distanceNumerator / (gradient * gradient + 1);
-                    // If the tile is within the valid distance
-                    if (squareDistance <= MIN_SQUARE_DISTANCE) {
-                        double dxA = edge.getA()[0] - tile.getCol();
-                        double dxB = edge.getB()[0] - tile.getCol();
-                        double dyA = edge.getA()[1] - tile.getRow();
-                        double dyB = edge.getB()[1] - tile.getRow();
-                        // If the tile is near the edge (rather than near the line)
-                        // That passes through the edge
-                        if (dxA * dxA + dyA * dyA < edge.getSquareOfLength() + MIN_SQUARE_DISTANCE
-                                && dxB * dxB + dyB * dyB < edge.getSquareOfLength() + MIN_SQUARE_DISTANCE) {
-                            edge.addTile(tile);
-                        }
-                    }
-                }
-            }
-            */
-
         }
     }
 

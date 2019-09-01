@@ -65,8 +65,8 @@ public class GameScreen implements Screen,KeyDownObserver {
             if (GameManager.get().isTutorial) {
                 world = new TutorialWorld(seed, 80, 5);
             } else {
-                world = new RocketWorld(seed, 300, 30, new int[] { 30, 30, 30, 30, 30}, 2, 5);
-//                 world = new RocketWorld(0, 10, 1, new int[] {20,10,10}, 3,2);
+                world = new RocketWorld(seed, 300, 30, new int[] { 30, 30, 30, 30, 30}, 2, 5, 2, 2);
+                 //world = new RocketWorld(0, 80, 5, new int[] { 10, 10, 10, 5, 5 }, 2,2, 2, 1);
 			}
 			GameManager.get().getManager(NetworkManager.class).startHosting("host");
 		}

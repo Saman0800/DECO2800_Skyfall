@@ -3,6 +3,7 @@ package deco2800.skyfall.worlds.generation;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.LakeBiome;
+import deco2800.skyfall.worlds.biomes.RiverBiome;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 
@@ -425,41 +426,11 @@ public class BiomeGenerator {
             List<VoronoiEdge> riverEdges = VoronoiEdge.generatePath(edges, startingEdge, startingVertex, random, 2);
 
             // Create a river biome and add all tiles for each edge
-            AbstractBiome river = new LakeBiome(realBiomes.get(chosenLake.id));
+            AbstractBiome river = new RiverBiome(realBiomes.get(chosenLake.id));
             List<Tile> riverTiles = new ArrayList<>();
             for (VoronoiEdge riverEdge : riverEdges) {
                 riverTiles.addAll(riverEdge.getTiles());
             }
-
-            // This commented out code is an unsuccessful attempt to add noise
-            // to the rivers (it would replace the for loop after this)
-            /*
-            int expandCount = 0;
-            double expValue = Math.exp(riverWidth);
-            double scaleFactor = expValue / (expValue - 2);
-            while (true) {
-
-                double expValue2 = Math.exp(riverWidth - expandCount);
-                double expandProbability = expValue2 / (scaleFactor + expValue2) * (expValue + scaleFactor) / expValue;
-
-                List<Tile> newTiles = new ArrayList<>();
-                for (Tile tile : riverTiles) {
-                    for (Integer neighbourID : tile.getNeighbours().keySet()) {
-                        Tile neighbour = tile.getNeighbours().get(neighbourID);
-                        if (!neighbour.getBiome().getBiomeName().equals("ocean") &&
-                                !neighbour.getBiome().getBiomeName().equals("lake") &&
-                                !riverTiles.contains(neighbour) && random.nextDouble() < expandProbability) {
-                            newTiles.add(neighbour);
-                        }
-                    }
-                }
-                if (newTiles.size() == 0) {
-                    break;
-                }
-                riverTiles.addAll(newTiles);
-                expandCount++;
-            }
-            */
 
             // Expand the river
             for (int j = 0; j < riverWidth; j++) {
@@ -480,9 +451,22 @@ public class BiomeGenerator {
                 riverTiles.addAll(newTiles);
             }
 
+            boolean onSpawn = false;
             // Add the river and all it's tiles
             for (Tile tile : riverTiles) {
+                // If the river passes through the origin, it is invalid
+                if (tile.getRow() == 0 && tile.getCol() == 0) {
+                    onSpawn = true;
+                    break;
+                }
                 river.addTile(tile);
+            }
+            if (onSpawn) {
+                // Decrement i so that the program doesn't think the river has
+                // been added
+                i--;
+                // Don't add the biome
+                continue;
             }
             realBiomes.add(river);
         }
