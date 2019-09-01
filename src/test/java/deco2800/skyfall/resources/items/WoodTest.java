@@ -105,4 +105,14 @@ public class WoodTest extends NaturalResources {
     public void getBiome() {
         assertEquals("Forest", wood.getBiome());
     }
+
+    /**
+     * Ensure that the wood's biome is correctly returned when getBiome()
+     * is called
+     */
+    @Test
+    public void getDescriptionTest() {
+        assertEquals("This item can " +
+                "be found in the forest biome and can be used to create a pickaxe and start a fire.", wood.getDescription());
+    }
 }
