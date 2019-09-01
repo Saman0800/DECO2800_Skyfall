@@ -9,21 +9,35 @@ import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 
 public class Treeman extends EnemyEntity implements Animatable {
+    //The health of treeman
     private static final transient int HEALTH = 10;
+    //The attack range of treeman
     private static final transient float ATTACK_RANGE = 1f;
+    //The attack speed of treeman
     private static final transient int ATTACK_SPEED = 1000;
+    //The speed of treeman if it is angry and attack
     private static final transient float ARGRYSPEED = 0.05f;
+    //The normal speed of treeman, if it is not in attack
     private static final transient float NORMALSPEED = 0.03f;
+    //The speed of treeman, if it get injure
     private static final transient float INJURESPEED = 0.01f;
+    //The attack frequency of treeman
     private static final transient int ATTACK_FREQUENCY = 50;
+    //The biome of treeman
     private static final transient String BIOME = "forest";
+    //Moving direction
     private Direction movingDirection;
+    //Set boolean moving
     private boolean moving = false;
+    //Set the period equal to zero , to account attack time
     private int period = 0;
+    //Set the type
     private static final transient String ENEMY_TYPE = "treeman";
     //savage animation
     private MainCharacter mc;
     private boolean attackStatus = false;
+    //if the enemy is attacked by player or the player closed enough to the enemy
+    //than the enemy my will be in angry situation
     private int angerTimeAccount = 0;
 
     //a routine for destination
@@ -65,9 +79,11 @@ public class Treeman extends EnemyEntity implements Animatable {
         this.setArmour(5);
     }
 
+
     public String getEnemyType() {
         return ENEMY_TYPE;
     }
+
 
     public boolean getMoving() {
         return moving;
