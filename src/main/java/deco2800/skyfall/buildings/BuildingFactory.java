@@ -28,8 +28,8 @@ public class BuildingFactory {
         house.setObjectName("House" + house.getEntityID());
         house.setTexture("house1");
         house.setInitialHealth(10);
-        house.setWidth(1);
-        house.setLength(1);
+        house.setWidth(2);
+        house.setLength(2);
         return house;
     }
 

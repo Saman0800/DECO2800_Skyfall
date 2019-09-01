@@ -53,8 +53,10 @@ public class BuildingWidgets implements TouchDownObserver {
             this.world = GameManager.get().getWorld();
             this.inputManager = GameManager.get().getManager(InputManager.class);
 
-            // using a skin for test, removed it later
-            this.skin = new Skin(Gdx.files.internal("asserts/skin_for_test/uiskin.json"));
+            if (this.skin == null) {
+                // using a skin for test, removed it later
+                this.skin = new Skin(Gdx.files.internal("asserts/skin_for_test/uiskin.json"));
+            }
 
             this.menu = new Table();
             this.label = new Label("Name", this.skin);
@@ -116,6 +118,14 @@ public class BuildingWidgets implements TouchDownObserver {
                 menu.setVisible(false);
             }
         });
+    }
+
+    /**
+     * Get the widget layout.
+     * @return an table object forms widget
+     */
+    public Table getMenu() {
+        return this.menu;
     }
 
     /**

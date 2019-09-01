@@ -47,8 +47,10 @@ public class BuildingEntity extends AbstractEntity {
      * @param renderOrder the height position on the world
      */
     public BuildingEntity(float col, float row, int renderOrder) {
-        super(col, row, renderOrder);
+        super(col, row, renderOrder, 1, 1);
         this.setObjectName(ENTITY_ID_STRING);
+        this.setRenderOrder(renderOrder);
+        this.animations = new HashMap<>();
 
         if (!WorldUtil.validColRow(new HexVector(col, row))) {
             log.debug("Invalid position");

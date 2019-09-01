@@ -1,6 +1,5 @@
 package deco2800.skyfall.managers;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
