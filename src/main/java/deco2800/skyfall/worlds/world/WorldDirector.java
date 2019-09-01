@@ -34,7 +34,7 @@ public class WorldDirector {
         builder.addLake(5);
         builder.addRiver();
 
-        builder.setRiverSize(3);
+        builder.setRiverSize(5);
         builder.setBeachSize(12);
 
         builder.setStaticEntities(true);
