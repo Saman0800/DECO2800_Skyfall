@@ -94,6 +94,6 @@ public class TreemanTest {
         Assert.assertEquals(2,treeman.getLevel());
     }
 
-  
+
 
 }
