@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities;
 
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
 import deco2800.skyfall.worlds.TestWorld;
@@ -28,6 +29,8 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 public class EntitySpawnTableTest {
 
     private TestWorld testWorld = null;
+
+    private PhysicsManager physics;
 
     // size of test world
     final int worldSize = 100;
@@ -61,6 +64,9 @@ public class EntitySpawnTableTest {
         // required for proper EntitySpawnTable.placeEntity
         when(GameManager.get()).thenReturn(mockGM);
         when(mockGM.getWorld()).thenReturn(testWorld);
+
+        physics = new PhysicsManager();
+        when(mockGM.getManager(PhysicsManager.class)).thenReturn(physics);
     }
 
     // tests the place method
