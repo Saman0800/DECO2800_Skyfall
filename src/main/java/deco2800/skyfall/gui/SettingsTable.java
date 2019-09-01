@@ -19,9 +19,6 @@ public class SettingsTable {
         settingsTable.setPosition(Gdx.graphics.getWidth()/2 - 200, Gdx.graphics.getHeight()/2 - 90);
         settingsTable.setBackground(GameMenuManager.generateTextureRegionDrawableObject("pop up screen"));
 
-        Image image = new Image(GameMenuManager.generateTextureRegionDrawableObject(background));
-
-
         this.soundManager = soundManager;
         this.stage = stage;
         stage.addActor(settingsTable);

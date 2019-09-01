@@ -3,14 +3,12 @@ package deco2800.skyfall.resources.items;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.Rock;
 import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.resources.Item;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /***

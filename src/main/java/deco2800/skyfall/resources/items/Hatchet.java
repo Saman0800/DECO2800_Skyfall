@@ -1,17 +1,11 @@
 package deco2800.skyfall.resources.items;
 
-import deco2800.skyfall.entities.AgentEntity;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.Tree;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.managers.InventoryManager;
-import org.lwjgl.Sys;
-
-import java.lang.Math;
 import java.util.HashMap;
 import java.util.Map;
 

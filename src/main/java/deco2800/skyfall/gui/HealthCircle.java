@@ -2,15 +2,13 @@ package deco2800.skyfall.gui;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameMenuManager;
 
-public class HealthCircle {
+    public class HealthCircle{
     private MainCharacter mainCharacter;
     private float currentHealth;
     private int newHealth; // maybe for animating it down.
@@ -88,12 +86,12 @@ public class HealthCircle {
     }
 
     /**
-     * Updates the health circle and the position if the scren has been resized
+     * Updates the health circle and the position if the screen has been resized
      */
     public void update() {
         newHealth = mainCharacter.getHealth();
         updateWithViewportChanges();
-        if (!((currentHealth - newHealth) < 0)) {
+        if ((currentHealth - newHealth) >= 0) {
             updateInnerCircle();
         }
     }
