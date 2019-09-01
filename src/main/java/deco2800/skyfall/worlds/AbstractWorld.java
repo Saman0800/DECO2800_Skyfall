@@ -5,6 +5,7 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 
 import java.io.BufferedWriter;
@@ -37,6 +38,8 @@ public abstract class AbstractWorld {
     protected int[] biomeSizes;
     protected int numOfLakes;
     protected int lakeSize;
+    protected int noRivers;
+    protected int riverWidth;
 
     private long seed;
 
@@ -46,16 +49,19 @@ public abstract class AbstractWorld {
 
     protected CopyOnWriteArrayList<Tile> tiles;
     protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
+    protected CopyOnWriteArrayList<VoronoiEdge> voronoiEdges;
 
     protected List<AbstractEntity> entitiesToDelete = new CopyOnWriteArrayList<>();
     protected List<Tile> tilesToDelete = new CopyOnWriteArrayList<>();
 
-    protected AbstractWorld(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int lakeSize) {
+    protected AbstractWorld(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int lakeSize, int noRivers, int riverWidth) {
         Random random = new Random(seed);
         this.seed = seed;
         this.biomeSizes = biomeSizes;
         this.numOfLakes = numOfLakes;
         this.lakeSize = lakeSize;
+        this.noRivers = noRivers;
+        this.riverWidth = riverWidth;
 
         this.worldSize = worldSize;
         this.nodeSpacing = nodeSpacing;
@@ -63,8 +69,8 @@ public abstract class AbstractWorld {
         tiles = new CopyOnWriteArrayList<>();
         worldGenNodes = new CopyOnWriteArrayList<>();
 
-        tiles = new CopyOnWriteArrayList<Tile>();
-        // worldGenNodes = new CopyOnWriteArrayList<>();
+    	tiles = new CopyOnWriteArrayList<Tile>();
+    	voronoiEdges = new CopyOnWriteArrayList<>();
         biomes = new ArrayList<>();
 
 //        long startTime = System.nanoTime();

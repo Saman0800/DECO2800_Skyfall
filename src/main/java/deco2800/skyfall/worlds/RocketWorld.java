@@ -11,13 +11,13 @@ import deco2800.skyfall.entities.EntitySpawnRule;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
-import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.biomes.*;
 import deco2800.skyfall.worlds.generation.BiomeGenerator;
 import deco2800.skyfall.worlds.generation.DeadEndGenerationException;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.WorldGenException;
+import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 
 import java.util.ArrayList;
@@ -29,8 +29,8 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
     long entitySeed;
 
-    public RocketWorld(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int lakeSize) {
-        super(seed, worldSize, nodeSpacing, biomeSizes, numOfLakes, lakeSize);
+    public RocketWorld(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int lakeSize, int noRivers, int riverWidth) {
+        super(seed, worldSize, nodeSpacing, biomeSizes, numOfLakes, lakeSize, noRivers, riverWidth);
     }
 
     @Override
@@ -43,6 +43,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
             ArrayList<Tile> tiles = new ArrayList<>();
             ArrayList<AbstractBiome> biomes = new ArrayList<>();
+            ArrayList<VoronoiEdge> voronoiEdges = new ArrayList<>();
 
             int nodeCount = Math.round((float) worldSize * worldSize * 4 / nodeSpacing / nodeSpacing);
             // TODO: if nodeCount is less than the number of biomes, throw an exception
@@ -81,7 +82,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             try {
                 WorldGenNode.assignTiles(worldGenNodes, tiles, random, nodeSpacing);
                 WorldGenNode.removeZeroTileNodes(worldGenNodes, worldSize);
-                WorldGenNode.assignNeighbours(worldGenNodes);
+                WorldGenNode.assignNeighbours(worldGenNodes, voronoiEdges);
             } catch (WorldGenException e) {
                 continue;
             }
@@ -92,13 +93,17 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             biomes.add(new VolcanicMountainsBiome());
             biomes.add(new OceanBiome());
 
+            VoronoiEdge.assignTiles(voronoiEdges, tiles, worldSize);
+            VoronoiEdge.assignNeighbours(voronoiEdges);
+
             try {
-                BiomeGenerator.generateBiomes(worldGenNodes, random, biomeSizes, biomes, numOfLakes, lakeSize);
+                BiomeGenerator.generateBiomes(worldGenNodes, voronoiEdges, random, biomeSizes, biomes, numOfLakes, lakeSize, noRivers, riverWidth);
             } catch (NotEnoughPointsException | DeadEndGenerationException e) {
                 continue;
             }
 
             this.worldGenNodes.addAll(worldGenNodes);
+            this.voronoiEdges.addAll(voronoiEdges);
             this.tiles.addAll(tiles);
             this.biomes.addAll(biomes);
 

@@ -65,8 +65,8 @@ public class GameScreen implements Screen,KeyDownObserver {
             if (GameManager.get().isTutorial) {
                 world = new TutorialWorld(seed, 80, 5);
             } else {
-                world = new RocketWorld(seed, 300, 30, new int[] { 30, 30, 30, 30, 30}, 2, 5);
-//                 world = new RocketWorld(0, 10, 1, new int[] {20,10,10}, 3,2);
+                world = new RocketWorld(seed, 300, 30, new int[] { 30, 30, 30, 30, 30}, 2, 5, 2, 2);
+                 //world = new RocketWorld(0, 80, 5, new int[] { 10, 10, 10, 5, 5 }, 2,2, 2, 1);
 			}
 			GameManager.get().getManager(NetworkManager.class).startHosting("host");
 		}
@@ -108,7 +108,8 @@ public class GameScreen implements Screen,KeyDownObserver {
     }
 
     /**
-     * Renderer thread Must update all displayed elements using a Renderer
+     * Renderer thread
+     * Must update all displayed elements using a Renderer
      */
     @Override
     public void render(float delta) {
@@ -213,8 +214,8 @@ public class GameScreen implements Screen,KeyDownObserver {
             // world = new RocketWorld(random.nextLong(), 200, 15, new int[] {70,70,70}, 3,
             // 2);
 //            world = new RocketWorld(random.nextLong(), 300, 30, new int[] { 70, 70, 70 }, 2, 5);
-//            world = new RocketWorld(random.nextInt(), 300, 30, new int[] { 30, 30, 30, 30, 30}, 2, 5);
-             world = new RocketWorld(0, 30, 5, new int[] {5,5,5,5,5}, 2,5);
+            world = new RocketWorld(random.nextLong(), 100, 10, new int[] { 30, 30, 30, 30, 30}, 2, 5, 2, 2);
+             //world = new RocketWorld(0, 30, 5, new int[] {5,5,5,5,5}, 2,5);
 //            world = new RocketWorld(random.nextInt(), 30, 5, new int[] {20,10,10}, 2,5);
             AbstractEntity.resetID();
             Tile.resetID();
