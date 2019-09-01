@@ -24,10 +24,13 @@ public class WorldDirector {
      * @param builder The builder used to construct the world
      */
     public static void constructSimpleSinglePlayerWorld(WorldBuilder builder){
-        builder.setNodeSpacing(15);
-        builder.setWorldSize(160);
+        builder.setNodeSpacing(35);
+        builder.setWorldSize(300);
         builder.setSeed(random.nextInt());
         builder.addLake(5);
+        builder.addLake(5);
+        builder.addRiver();
+        builder.addRiver();
         builder.addRiver();
         builder.setRiverSize(5);
         builder.setStaticEntities(true);

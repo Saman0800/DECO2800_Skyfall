@@ -206,7 +206,6 @@ public class WorldBuilder implements WorldBuilderInterface{
      * @return A world
      */
     public World getWorld(){
-        //biomes.add(new OceanBiome());
         //Converting the ArrayLists to arrays
         int[] biomeSizesArray = biomeSizes.stream().mapToInt(biomeSize -> biomeSize).toArray();
         int[] lakeSizesArray = lakeSizes.stream().mapToInt(lakeSize -> lakeSize).toArray();
