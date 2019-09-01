@@ -67,7 +67,6 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
      */
     @Override
     public void onTick(long i) {
-        this.updateCollider();
 
         if (task != null && task.isAlive()) {
             task.onTick(i);

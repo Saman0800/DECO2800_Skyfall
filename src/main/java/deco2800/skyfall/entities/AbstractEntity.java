@@ -1,10 +1,12 @@
 package deco2800.skyfall.entities;
 
+import com.badlogic.gdx.physics.box2d.*;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.NetworkManager;
+import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.renderers.Renderable;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
@@ -33,12 +35,18 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		return nextID++;
 	}
 
-	private Collider collider;
+    private Collider collider;
 
 	protected HexVector position;
 	private int height;
 	private float colRenderLength;
 	private float rowRenderLength;
+
+    //Box2D properties
+    private Body body;
+    private World box2DWorld;
+    private Fixture fixture;
+    private Boolean isCollidable;
 
 	@Expose
 	private String texture = "error_box";
@@ -79,8 +87,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		this.setObjectName(ENTITY_ID_STRING);
 		this.renderOrder = renderOrder;
         animations = new HashMap<>();
-		this.setCollider();
-	}
+    }
 
 	public AbstractEntity() {
 		this.position = new HexVector();
@@ -88,7 +95,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		this.rowRenderLength = 1f;
 		this.setObjectName(ENTITY_ID_STRING);
         animations = new HashMap<>();
-        this.setCollider();
+        changeCollideability(true);
+		this.initialiseBox2D(position.getCol(), position.getRow());
     }
 
 	/**
@@ -106,8 +114,9 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		this.colRenderLength = colRenderLength;
 		this.rowRenderLength = rowRenderLength;
 		this.entityID = AbstractEntity.getNextID();
-		this.setCollider();
-	}
+        changeCollideability(true);
+		this.initialiseBox2D(position.getCol(), position.getRow());
+    }
 
 	/**
 	 * Get the column position of this AbstractWorld Entity
@@ -186,17 +195,17 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		return this.renderOrder - otherEntity.getRenderOrder();
 	}
 
-	/**
-	 * Creates a new Collider object at (x,y) coordinates with size xLength x
-	 * yLength.
-	 * Called by all constructors in this class such that no AbstractEntity
-	 * in the game has a Collider set to null.
-	 */
-	public void setCollider() {
-		float[] coords = WorldUtil.colRowToWorldCords(position.getCol(), position.getRow());
-		//TODO: length and width of collider to be determined by actual size of texture
-		this.collider = new Collider(coords[0], coords[1], 100, 100);
-	}
+    /**
+     * Creates a new Collider object at (x,y) coordinates with size xLength x
+     * yLength.
+     * Called by all constructors in this class such that no AbstractEntity
+     * in the game has a Collider set to null.
+     */
+    public void setCollider() {
+        float[] coords = WorldUtil.colRowToWorldCords(position.getCol(), position.getRow());
+        //TODO: length and width of collider to be determined by actual size of texture
+        this.collider = new Collider(coords[0], coords[1], 100, 100);
+    }
 
 	/**
 	 * Tests to see if the item collides with another entity in the world
@@ -283,16 +292,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	public abstract void onTick(long i);
 
 	/**
-	 * Updates the collider for each AbstractEntity to its current position
-	 * in the game.
-	 */
-	public void updateCollider() {
-		float[] coords = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
-		this.collider.setX(coords[0]);
-		this.collider.setY(coords[1]);
-	}
-
-	/**
 	 * Set objectID (If applicable)
 	 *
 	 * @param name of object
@@ -319,17 +318,19 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		this.entityID = id;
 	}
 
-	/**
-	 * @return The collider for the AbstractEntity
-	 */
-	public Collider getCollider() {
-		return this.collider;
-	}
+    /**
+     * @return The collider for the AbstractEntity
+     */
+    public Collider getCollider() {
+        return this.collider;
+    }
 
-	public void dispose() {
-		GameManager.get().getManager(NetworkManager.class).deleteEntity(this);
-		GameManager.get().getWorld().getEntities().remove(this);
-	}
+    public void dispose() {
+        body.destroyFixture(fixture);
+
+        GameManager.get().getManager(NetworkManager.class).deleteEntity(this);
+        GameManager.get().getWorld().getEntities().remove(this);
+    }
 
 
     //Used for managing animations
@@ -370,6 +371,42 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	public Queue<AnimationLinker> getToBeRun() {
 		return toBeRun;
 	}
+
+    private void initialiseBox2D(float x, float y) {
+        box2DWorld = GameManager.get().getManager(PhysicsManager.class).getBox2DWorld();
+
+        //Creates the body
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(x, y);
+        body = box2DWorld.createBody(bodyDef);
+
+        body.setFixedRotation(true);
+        body.setLinearDamping(0.8f);
+        body.setUserData(this);
+
+        CircleShape shape = new CircleShape();
+        shape.setRadius(5);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.density = 1f;
+        fixture = body.createFixture(fixtureDef);
+
+        //Sets up if the entity can be collided with
+        //True by default
+        fixture.setSensor(!isCollidable);
+
+        shape.dispose();
+    }
+
+    public void changeCollideability(Boolean collidable){
+        isCollidable = collidable;
+    }
+
+    public void handleCollision(Object hitter) {
+        System.out.println("I hit Something");
+    }
 
 }
 

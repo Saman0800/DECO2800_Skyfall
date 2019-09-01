@@ -440,7 +440,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     @Override
     public void onTick(long i) {
         this.updatePosition();
-        this.updateCollider();
         this.movementSound();
         //this.setCurrentSpeed(this.direction.len());
         //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
