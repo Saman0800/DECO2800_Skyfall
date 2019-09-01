@@ -36,8 +36,8 @@ public class Treeman extends EnemyEntity implements Animatable {
     //savage animation
     private MainCharacter mc;
     private boolean attackStatus = false;
-    //if the enemy is attacked by player or the player closed enough to the enemy
-    //than the enemy my will be in angry situation
+    //if the enemy is attacked by player or the player closed enough to the
+    // enemy than the enemy will be in angry situation
     private int angerTimeAccount = 0;
 
     //a routine for destination
@@ -47,13 +47,18 @@ public class Treeman extends EnemyEntity implements Animatable {
     private float[] targetPosition = null;
 
     //world coordinate of this enemy
-    private float[] orginalPosition = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
+    private float[] orginalPosition = WorldUtil.colRowToWorldCords
+            (this.getCol(), this.getRow());
 
 
-    public Treeman(float row, float col, String texturename, int health, int armour, int damage) {
+    public Treeman(float row, float col, String texturename,
+                   int health, int armour, int damage) {
         super(row, col, texturename, health, armour, damage);
     }
-
+    /**
+     * Initialization value of enemy treeman, and set the initial image in
+     * the game
+     */
     public Treeman(float col, float row, MainCharacter mc) {
         super(col, row);
         this.setTexture("enemyTreeman");
@@ -68,6 +73,9 @@ public class Treeman extends EnemyEntity implements Animatable {
         this.configureAnimations();
     }
 
+    /**
+     * Initialization value of enemy treeman
+     */
     public Treeman(float col, float row) {
         super(col, row);
         this.setTexture("enemyTreeman");
@@ -79,25 +87,43 @@ public class Treeman extends EnemyEntity implements Animatable {
         this.setArmour(5);
     }
 
-
+    /**
+     * get enemy type
+     * @return enemy type
+     */
     public String getEnemyType() {
         return ENEMY_TYPE;
     }
 
-
+    /**
+     * get enemy moving
+     * @return boolean moving
+     */
     public boolean getMoving() {
         return moving;
     }
 
+    /**
+     * get biome
+     * @return string of biome
+     */
     public String getBiome() {
         return BIOME;
     }
 
+    /**
+     * get the attack status of enemy treeman
+     * @param  status - boolean value
+     */
     public void SetAttackStatus(boolean status) {
         this.attackStatus = status;
 
     }
 
+    /**
+     * Return true, if the enemy treeman get injure. Otherwise return false
+     * @return True if get injure, false otherwise
+     */
     public boolean getInjure() {
         if (getHealth() < 5) {
             return true;
@@ -107,13 +133,25 @@ public class Treeman extends EnemyEntity implements Animatable {
 
 
     /**
-     * @return string representation of this class including its enemy type, biome and x,y coordinates
+     * Return the string
+     * @return string representation of this class including its enemy type,
+     * biome and x,y coordinates
      */
     @Override
     public String toString() {
-        return String.format("%s at (%d, %d) %s biome", getEnemyType(), (int) getCol(), (int) getRow(), getBiome());
+        return String.format("%s at (%d, %d) %s biome", getEnemyType(),
+                (int) getCol(), (int) getRow(), getBiome());
     }
 
+
+    /**
+     * If the enemy treem man not attack, it will do the random movement, if
+     * the treeman is dead, then it is dead. Otherwise, if the main character
+     * close to the treeman, the treeman will attack the character and chase
+     * the character at angry speed, if the treeman get injure, it will slow
+     * down the speed
+     *
+     */
     @Override
     public void onTick(long i) {
         this.setCollider();
@@ -133,16 +171,20 @@ public class Treeman extends EnemyEntity implements Animatable {
         } else {
             float colDistance = mc.getCol() - this.getCol();
             float rowDistance = mc.getRow() - this.getRow();
-            if ((colDistance * colDistance + rowDistance * rowDistance) < 4 || this.isAttacked() == true) {
+            if ((colDistance * colDistance + rowDistance * rowDistance) < 4
+                    || this.isAttacked() == true) {
                 this.SetAttackStatus(true);
                 this.attackPlayer(mc);
                 setCurrentState(AnimationRole.MELEE);
-                //if(this.getMovingDirection()==Direction.NORTH|| this.getMovingDirection()==Direction.NORTH_EAST){
-                // setCurrentDirection(movementDirection(this.position.getAngle()));
+                //if(this.getMovingDirection()==Direction.NORTH||
+                // this.getMovingDirection()==Direction.NORTH_EAST){
+                // setCurrentDirection(movementDirection
+                // (this.position.getAngle()));
                 //setCurrentState(AnimationRole.MOVE);
 
                 //}else {
-                // setCurrentDirection(movementDirection(this.position.getAngle()));
+                // setCurrentDirection(movementDirection
+                // (this.position.getAngle()));
                 // setCurrentState(AnimationRole.MELEE);
                 //}
             } else {
@@ -150,11 +192,13 @@ public class Treeman extends EnemyEntity implements Animatable {
                 setCurrentState(AnimationRole.MOVE);
                 if (getInjure() == true) {
                     this.setSpeed(INJURESPEED);
-                    //setCurrentDirection(movementDirection(this.position.getAngle()));
+                    //setCurrentDirection(movementDirection
+                    // (this.position.getAngle()));
                     setCurrentState(AnimationRole.MOVE);
                 } else {
                     this.setSpeed(NORMALSPEED);
-                    //setCurrentDirection(movementDirection(this.position.getAngle()));
+                    //setCurrentDirection(movementDirection
+                    // (this.position.getAngle()));
                     setCurrentState(AnimationRole.MOVE);
                 }
 
@@ -166,34 +210,51 @@ public class Treeman extends EnemyEntity implements Animatable {
 
 
 
-
+    /**
+     * get the moving direction
+     * @return moving direction
+     */
     public Direction getMovingDirection(){
         return movingDirection;
     }
 
-
+    /**
+     * Make the enemy tree man do the random movement
+     *
+     */
     private void randomMoving() {
         if(moving==false){
             targetPosition =new float[2];
-            targetPosition[0]=(float) (Math.random() * 800 + orginalPosition[0]);
-            targetPosition[1]=(float) (Math.random() * 800 + orginalPosition[1]);
-            float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow(targetPosition[0], targetPosition[1]);
-            destination=new HexVector(randomPositionWorld[0], randomPositionWorld[1]);
+            targetPosition[0]=(float)
+                    (Math.random() * 800 + orginalPosition[0]);
+            targetPosition[1]=(float)
+                    (Math.random() * 800 + orginalPosition[1]);
+            float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow
+                    (targetPosition[0], targetPosition[1]);
+            destination=new HexVector(randomPositionWorld[0],
+                    randomPositionWorld[1]);
             moving=true;
         }
-        if(destination.getCol()==this.getCol() && destination.getRow()==this.getRow()){
+        if(destination.getCol()==this.getCol() &&
+                destination.getRow()==this.getRow()){
             moving=false;
         }
         this.position.moveToward(destination,this.NORMALSPEED);
 
     }
 
+    /**
+     * The tree man will attack the player in angry speed and chase character as
+     * well
+     *
+     */
     public void attackPlayer(MainCharacter player){
         this.setSpeed(ARGRYSPEED);
         destination=new HexVector(player.getCol(),player.getRow());
         this.position.moveToward(destination,this. ARGRYSPEED);
         //movingDirection=movementDirection(this.position.getAngle());
-        if(this.position.isCloseEnoughToBeTheSameByDistance(destination,ATTACK_RANGE)){
+        if(this.position.isCloseEnoughToBeTheSameByDistance
+                (destination,ATTACK_RANGE)){
             if(period <=ATTACK_FREQUENCY){
                 period++;
             }else{
@@ -226,7 +287,9 @@ public class Treeman extends EnemyEntity implements Animatable {
 
     }**/
 
-
+    /**
+     * if this enemy is dead then will show dead texture for a while
+     */
     int time=0;
     private void treemanDead(){
         if(time<=100){
@@ -241,6 +304,9 @@ public class Treeman extends EnemyEntity implements Animatable {
 
     }
 
+    /**
+     * add treeman animations
+     */
     @Override
     public void configureAnimations() {
         this.addAnimations(
@@ -306,6 +372,9 @@ public class Treeman extends EnemyEntity implements Animatable {
                         true, true));
     }
 
+    /**
+     * Set the direction textures of the enemy treeman
+     */
     @Override
     public void setDirectionTextures() {
 
