@@ -133,7 +133,7 @@ public class Enemy extends AgentEntity implements ICombatEntity {
     @Override
     public void dealDamage(ICombatEntity entity) {
         if (this.canDealDamage()) {
-            entity.takeDamage(this.damage);
+            entity.takeDamage(this.getDamage());
         }
     }
 
