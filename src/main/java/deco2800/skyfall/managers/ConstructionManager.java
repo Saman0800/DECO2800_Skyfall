@@ -19,7 +19,7 @@ import deco2800.skyfall.entities.AbstractEntity;
 /**
  * Managers the construction process
  * Only a single instance should exist
- * Sets all build properties to false as nothing has been set ip yet
+ * Sets all build properties to false as nothing has been set up yet
  */
 public class ConstructionManager extends AbstractManager {
     //This manager while control all features related to construction
@@ -50,7 +50,7 @@ public class ConstructionManager extends AbstractManager {
         buildingFactory = new BuildingFactory();
 
         // testing requirements, removed later
-        //GameManager.get().getWorld().addEntity(buildingFactory.createHouse(2f, 1f));
+        GameManager.get().getWorld().addEntity(buildingFactory.createHouse(2f, 1f));
     }
 
     //Start of UI

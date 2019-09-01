@@ -1,75 +1,20 @@
 package deco2800.skyfall.buildings;
 
+
+import deco2800.skyfall.entities.structures.BuildingType;
+
 /**
  *  A BuildingFactory is a class to handle the creating process of all building entity classes,
  *  including both BuildingEntity based class and BuildingEntity subclasses.
  */
 public class BuildingFactory {
 
-    // building labels that a factory contains so far
-    enum Buildings {
-        House,
-        StorageUnit,
-        TownCentreBuilding,
-        WallBuilding
-    }
-
-    enum BuildingType {
-
-        HOUSE("House", 10, 1, 1,7,"house1"),
-        STORAGE_UNIT("StorageUnit", 5,2,2, 6, "storage_unit"),
-        TOWNCENTRE("Town Centre", 80,3,3,0, "town_centre"),
-        WALL("Wall",5, 1,1,3, "fence_bottom_left");
-
-        private String name;
-        private int maxHealth;
-        private int sizeX;
-        private int sizeY;
-        private int buildTime;
-        private String texture;
-
-        BuildingType( String name, int maxHealth, int sizeX, int sizeY, int buildTime, String texture) {
-            this.name = name;
-            this.maxHealth = maxHealth;
-            this.sizeX = sizeX;
-            this.sizeY = sizeY;
-            this.buildTime = buildTime;
-            this.texture = texture;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public int getMaxHealth() {
-            return maxHealth;
-        }
-
-        public int getSizeX() {
-            return sizeX;
-        }
-
-        public int getSizeY() {
-            return sizeY;
-        }
-
-        public int getBuildTime() {
-            return buildTime;
-        }
-
-        public String getTexture() {
-            return texture;
-        }
-
-
-    }
-
     /**
      * Get the number of buildings that a factory could build.
      * @return the number of building entities
      */
     public int getCount() {
-        return Buildings.values().length;
+        return BuildingType.values().length;
     }
 
     /**

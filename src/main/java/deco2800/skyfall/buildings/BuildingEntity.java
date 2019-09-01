@@ -1,5 +1,6 @@
 package deco2800.skyfall.buildings;
 
+import deco2800.skyfall.worlds.AbstractWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,9 +26,14 @@ public class BuildingEntity extends AbstractEntity {
     // consistent information for a specific building
     private int buildTime;
     private Map<String, Integer> buildCost;
-    private int initialHealth;
+    private int maxHealth;
 
     // changeable information for a specific building
+    private int sizeX;
+    private int sizeY;
+    private float col;
+    private float row;
+
     private int length;
     private int width;
     private int level;
@@ -97,9 +103,24 @@ public class BuildingEntity extends AbstractEntity {
         // do nothing so far
     }
 
-    /* ------------------------------------------------------------------------
-     * 				GETTERS AND SETTERS BELOW THIS COMMENT.
-     * ------------------------------------------------------------------------ */
+    /**
+     * @param x - X coordinate
+     * @param y - Y coordinate
+     * @param height - Render height
+     * @param world - World to place building in
+     */
+    public void placeBuilding(float x, float y, int height, AbstractWorld world) {
+        setPosition(x, y, height);
+        world.addEntity(this);
+    }
+
+    /**
+     * @param world - World to remove building from
+     */
+    public void removeBuilding(AbstractWorld world) {
+        world.removeEntity(this);
+    }
+
 
     /**
      * Set the time needed to build a building entity.
@@ -130,14 +151,21 @@ public class BuildingEntity extends AbstractEntity {
             buildCost.put(resource, cost);
         }
     }
+    /**
+     * @return - cost of building the building
+     */
+    public Map<String, Integer> getCost(){
+        return buildCost;
+    }
+
 
     /**
      * Set the initial health to a building entity.
      * @param health a building's initial health
      */
     public void setInitialHealth(int health) {
-        initialHealth = health;
-        this.currentHealth = initialHealth;
+        maxHealth = health;
+        this.currentHealth = maxHealth;
     }
 
     /**
@@ -145,7 +173,7 @@ public class BuildingEntity extends AbstractEntity {
      * @return a building's initial health
      */
     public int getInitialHealth() {
-        return initialHealth;
+        return maxHealth;
     }
 
     /**
@@ -227,4 +255,13 @@ public class BuildingEntity extends AbstractEntity {
     public int getCurrentHealth() {
         return this.currentHealth;
     }
+
+
+
+
+
+
+
+
+
 }
