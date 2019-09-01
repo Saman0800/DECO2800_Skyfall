@@ -100,11 +100,42 @@ public class EntitySpawnTableTest {
         assertEquals(0, countWorldEntities());
 
         // check basic spawnEntities
-        final double chance = 0.5;
+        final double chance = 0.95;
         Rock rock = new Rock();
-        EntitySpawnTable.spawnEntities(rock, chance, biome, new Random());
+        EntitySpawnTable.spawnEntities(rock, chance, testWorld);
 
         // count after spawning
         assertTrue(countWorldEntities() > 0);
+    }
+
+    @Test
+    public void maxMinPlacementTest() {
+        TestWorld newWorld = new TestWorld(0);
+
+        // create tile map, add tiles and push to testWorld
+        CopyOnWriteArrayList<Tile> newTileMap = new CopyOnWriteArrayList<>();
+
+        for (int i = 0; i < worldSize; i++) {
+            Tile tile = new Tile(1.0f * i, 0.0f);
+            newTileMap.add(tile);
+            biome.addTile(tile);
+        }
+
+        newWorld.setTileMap(newTileMap);
+
+        EntitySpawnRule newRule = new EntitySpawnRule(2, 4, null, true);
+        newRule.setChance(1.0);
+
+        Rock rock = new Rock();
+        EntitySpawnTable.spawnEntities(rock, newRule, newWorld);
+
+        int count = 0;
+        for (Tile tile : newWorld.getTileMap()) {
+            if (tile.hasParent()) {
+                count++;
+            }
+        }
+
+        assertTrue("Count was " + count, count <= 4);
     }
 }

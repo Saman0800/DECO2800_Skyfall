@@ -177,12 +177,15 @@ class TriangleSoup {
             // Record the relevant nodes as borders
             if (isBorder[0]) {
                 this.borderNodes.add(triangle.getA());
+                triangle.getA().setBorderNode(true);
             }
             if (isBorder[1]) {
                 this.borderNodes.add(triangle.getB());
+                triangle.getB().setBorderNode(true);
             }
             if (isBorder[2]) {
                 this.borderNodes.add(triangle.getC());
+                triangle.getC().setBorderNode(true);
             }
         }
     }
