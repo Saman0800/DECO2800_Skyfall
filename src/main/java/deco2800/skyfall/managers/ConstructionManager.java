@@ -122,7 +122,7 @@ public class ConstructionManager extends AbstractManager {
 
         Table buttonTable = new Table(skin);
 
-        TextButton buttonA = new TextButton("Back to Main", skin);
+        TextButton buttonClose = new TextButton("Close Window", skin);
 
         table.row().colspan(3).expandX().fillX();
         table.add(topLabel).fillX();
@@ -138,11 +138,21 @@ public class ConstructionManager extends AbstractManager {
 
         buttonTable.pad(16);
         buttonTable.row().fillX().expandX();
-        buttonTable.add(buttonA).width(cw/3.0f);
+        buttonTable.add(buttonClose).width(cw/3.0f);
 
         tableContainer.setActor(table);
         settingMenu.addActor(tableContainer);
         stage.addActor(settingMenu);
+
+        buttonClose.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                //call build function for specific building
+                settingMenu.setVisible(false);
+                menuSetUp =false;
+                displayWindow();
+            }
+        });
     }
     /**
      * Add components (such as buttons) to the build menu
