@@ -9,6 +9,7 @@ public class PoisonousMushroom extends HealthResources implements Item {
     // the name of the item
     private String name;
 
+
     // the colour of the PoisonousMushroom
     private String colour;
 
@@ -18,13 +19,12 @@ public class PoisonousMushroom extends HealthResources implements Item {
     // the biome the poisonous mushroom is in (will change to different type in future?)
     private String biome;
 
-
     //whether or not the item impacts the player's food fullness
     private Boolean hasFoodEffect;
 
 
     /**
-     * Create default Poisonous Mushroom.
+     * Creates a generic poisonous mushroom.
      */
     public PoisonousMushroom(){
 
@@ -35,7 +35,6 @@ public class PoisonousMushroom extends HealthResources implements Item {
         //PoisonousMushroom can increase the foodValue but reduce the healthValue
         this.foodValue = -20;
         //Todo: Look into this.healthValue = -20;
-        this.healthValue = -20;
     }
 
     @Override
@@ -62,20 +61,16 @@ public class PoisonousMushroom extends HealthResources implements Item {
         return hasFoodEffect;
     }
 
+
+
+
+
     @Override
     public String toString() {
         return "" + subtype + ":" + name;
     }
 
 
-    /**
-     * Returns the item description
-     * @return the item description
-     */
-    @Override
-    public String getDescription() {
-        return "This item reduces the main character's health.";
-    }
 
 
 
