@@ -1,6 +1,7 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.worlds.Tile;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class EnvironmentManager extends TickableManager {
    private String season;
 
    // Month in game
-   private long month;
+   public int month;
 
    // Seasons in game
    private long day;
@@ -58,13 +59,10 @@ public class EnvironmentManager extends TickableManager {
    private void setBiome() {
       List<AbstractEntity> entities = GameManager.get().getWorld().getEntities();
       AbstractEntity player;
-      for (int i = 0; i < entities.size(); i++) {
-         if (entities.get(i).getObjectName().equals("playerPeon")) {
+      for (int i =0; i < entities.size(); i++) {
+         if (entities.get(i) instanceof StaticEntity) {
             player = entities.get(i);
             Tile currentTile = GameManager.get().getWorld().getTile(player.getCol(), player.getRow());
-            // If player coords don't match tile coords, currentTile returns null
-            // eg if player isn't exactly in the middle of a tile (walking between tiles), coords don't match
-            // So below if statement is needed
             if (currentTile != null) {
                biome = currentTile.getBiome().getBiomeName();
             } else {
@@ -80,6 +78,7 @@ public class EnvironmentManager extends TickableManager {
     * @return String Current biome of player, or null if player is moving between tiles
     */
    public String currentBiome() {
+//      System.out.println(biome);
       return biome;
    }
 
@@ -155,8 +154,17 @@ public class EnvironmentManager extends TickableManager {
    public void setMonth(long i) {
       //Each month goes for approx 30 days
       long timeMonth = (i/60000)/730;
-      month = timeMonth % 12;
+      month = (int) timeMonth % 12;
    }
+
+   /**
+    * Gets the season in game.
+    *
+    */
+   public int getMonth() {
+      return month;
+   }
+
 
    /**
     * Gets time of day in game
@@ -165,36 +173,17 @@ public class EnvironmentManager extends TickableManager {
     */
    public String getSeason() {
       String seasonString;
-
-      switch (((int) month)) {
-         case 1:  seasonString = "Summer";
-            break;
-         case 2:  seasonString = "Summer";
-            break;
-         case 3:  seasonString = "Autumn";
-            break;
-         case 4:  seasonString = "Autumn";
-            break;
-         case 5:  seasonString = "Autumn";
-            break;
-         case 6:  seasonString = "Winter";
-            break;
-         case 7:  seasonString = "Winter";
-            break;
-         case 8:  seasonString = "Winter";
-            break;
-         case 9:  seasonString = "Spring";
-            break;
-         case 10: seasonString = "Spring";
-            break;
-         case 11: seasonString = "Spring";
-            break;
-         case 12: seasonString = "Summer";
-            break;
-         default: seasonString = "Invalid season";
-            break;
+      if (month == 1 || month == 2 || month == 12 || month == 0) {
+         seasonString = "Summer";
+      } else if (month == 3 || month == 4 || month == 5) {
+         seasonString = "Autumn";
+      } else if (month == 6 || month == 7 || month == 8) {
+         seasonString = "Winter";
+      } else if (month == 9 || month == 10 || month == 11) {
+         seasonString = "Spring";
+      } else {
+         seasonString = "Invalid season";
       }
-
       return seasonString;
    }
 
@@ -204,13 +193,16 @@ public class EnvironmentManager extends TickableManager {
     */
    public void setFilename() {
       String[] arrOfStr = file.split("_", 4);
+      currentBiome();
 
       // Check time of day and change files accordingly
-      if(isDay() == true) {
+      if (isDay()) {
+//         file = "resources/sounds/" + biome + "_" + arrOfStr[1]; // Mine
          file = "resources/sounds/forest_" + arrOfStr[1];
 
       } else {
          arrOfStr[1] = "night.wav";
+//         file = "resources/sounds/" + biome + "_" + arrOfStr[1]; // Mine
          file = "resources/sounds/forest_" + arrOfStr[1];
       }
    }
@@ -258,12 +250,14 @@ public class EnvironmentManager extends TickableManager {
       if (System.currentTimeMillis() - time > 20) {
          time = System.currentTimeMillis();
       }
+      //if (the player moves, then check biome)
 
       // Set the TOD and month in game
       setTime(time);
       setMonth(time);
 
-      //Set Background music
+      //Set Background music per TOD and Biome
+      setBiome();
       setTODMusic();
    }
    

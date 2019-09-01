@@ -107,6 +107,11 @@ public class OverlayRenderer implements Renderer {
 				String.format("Season: %s",
 						GameManager.get().getManager(EnvironmentManager.class).getSeason()));
 
+		// Display current biome in game
+		debugLine(batch, camera, line++,
+				String.format("Biome: %s",
+						GameManager.get().getManager(EnvironmentManager.class).currentBiome()));
+
 		line++;
 
 
