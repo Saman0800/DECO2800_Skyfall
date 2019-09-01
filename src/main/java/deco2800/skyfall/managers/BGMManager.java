@@ -133,10 +133,10 @@ public class BGMManager extends AbstractManager {
     }
 
     /**
-     * Unmutes the clip.
+     * Un-mutes the clip.
      */
-    public static void unmute () {
-        //Set mute value to true
+    public static void unmute() {
+        //Set mute value to false
         muteVol = (BooleanControl) clip.getControl(BooleanControl.Type.MUTE);
         muteVol.setValue(false);
     }
@@ -164,11 +164,8 @@ public class BGMManager extends AbstractManager {
             if (!(x > volume.getMaximum()) && !(x < volume.getMinimum())) {
                 volume.setValue(x);
             } else {
-                System.out.println("Value is too high/low. Pls don't.");
                 throw new IndexOutOfBoundsException();
             }
         } catch (NullPointerException | IllegalArgumentException ex) { }
     }
-
-
 }
