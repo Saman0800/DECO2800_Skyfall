@@ -245,7 +245,8 @@ public class GameScreen implements Screen,KeyDownObserver {
 
             //Create a random world
             WorldBuilder worldBuilder = new WorldBuilder();
-            WorldDirector.constructSimpleSinglePlayerWorld(worldBuilder);
+            // WorldDirector.constructSimpleSinglePlayerWorld(worldBuilder);
+            WorldDirector.constructNBiomeSinglePlayerWorld(worldBuilder, 3);
             world = worldBuilder.getWorld();
 
             AbstractEntity.resetID();

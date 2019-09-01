@@ -40,7 +40,7 @@ public class BiomeGeneratorTest {
 
     @BeforeClass
     public static void setup() {
-        Random random = new Random(0);
+        Random random = new Random(3);
 
         biomeNodesList = new ArrayList<>(TEST_COUNT);
         biomeLists = new ArrayList<>(TEST_COUNT);
@@ -97,7 +97,6 @@ public class BiomeGeneratorTest {
                 for (int j = 0; j < NODE_COUNTS.length; j++) {
                     biomes.add(new ForestBiome());
                 }
-                biomes.add(new OceanBiome());
 
                 VoronoiEdge.assignTiles(edges, tiles, WORLD_SIZE);
                 VoronoiEdge.assignNeighbours(edges);
