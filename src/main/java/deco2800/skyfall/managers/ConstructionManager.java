@@ -8,13 +8,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 
+import java.awt.*;
 import java.io.*;
 import java.util.*;
 
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import deco2800.skyfall.buildings.BuildingEntity;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.buildings.BuildingWidgets;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.structures.AbstractBuilding;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.Vector2;
+import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.AbstractWorld;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.entities.AbstractEntity;
@@ -32,6 +39,8 @@ public class ConstructionManager extends AbstractManager {
 
     private BuildingWidgets buildingWidgets;
     private BuildingFactory buildingFactory;
+
+    private BuildingEntity buildingToBePlaced;
 
     /**
      * Stores the current status of the build menu
@@ -108,54 +117,61 @@ public class ConstructionManager extends AbstractManager {
             Skin skin = new Skin(Gdx.files.internal("resources/uiskin.skin"));
 
             //to be improved when building factory has been created
-            TextButton building1 = new TextButton("Building 1", skin);
-            TextButton building2 = new TextButton("Building 2", skin);
+            TextButton house = new TextButton("House", skin);
+            TextButton storageUnit= new TextButton("Stroage Unit", skin);
             TextButton building3 = new TextButton("Building 3", skin);
             TextButton building4 = new TextButton("Building 4", skin);
-            ImageIcon a = new ImageIcon("resources/world_structures/house1.png");
-            Image b = new Image();
 
+            house.setBounds(50, 450, 140, 40);
+            storageUnit.setBounds(50, 350, 140, 40);
 
+            buildMenu.addActor(house);
+            buildMenu.addActor(storageUnit);
 
-            building1.setBounds(50, 450, 140, 40);
-            building2.setBounds(50, 350, 140, 40);
-            building3.setBounds(50, 250, 140, 40);
-            building4.setBounds(50, 150, 140, 40);
-
-
-            buildMenu.addActor(building1);
-            buildMenu.addActor(building2);
-            buildMenu.addActor(building3);
-            buildMenu.addActor(building4);
-
-            building1.addListener(new ClickListener() {
+            AbstractWorld world = GameManager.get().getWorld();
+            house.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y){
                     //call build function for specific building
+
+                    switchView();
+
+                    //TODO implement permissions
+                    //permission test have not been updated since switched to factory for buildings
+
+                    AbstractEntity mc = world.getSortedAgentEntities().get(world.getSortedAgentEntities().size()-1);
+                    HexVector position = mc.getPosition();
+
+                    float row = position.getRow();
+                    float col = position.getCol();
+
+                    setBuildingToBePlaced(buildingFactory.createHouse(row, col));
+                    buildingToBePlaced.placeBuilding(buildingToBePlaced.getRow(), buildingToBePlaced.getCol(), buildingToBePlaced.getHeight(), world);
+
+
 
                 }
             });
 
-            building2.addListener(new ClickListener() {
+            storageUnit.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y){
                     //call build function for specific building
 
-                }
-            });
 
-            building3.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y){
-                    //call build function for specific building
+                    switchView();
 
-                }
-            });
+                    //TODO implement permissions
+                    //permission test have not been updated since switched to factory for buildings
 
-            building4.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y){
-                    //call build function for specific building
+                    AbstractEntity mc = world.getSortedAgentEntities().get(world.getSortedAgentEntities().size()-1);
+                    HexVector position = mc.getPosition();
+
+                    float row = position.getRow();
+                    float col = position.getCol();
+
+                    setBuildingToBePlaced(buildingFactory.createStorageUnit(row, col));
+                    buildingToBePlaced.placeBuilding(buildingToBePlaced.getRow(), buildingToBePlaced.getCol(), buildingToBePlaced.getHeight(), world);
 
                 }
             });
@@ -342,15 +358,15 @@ public class ConstructionManager extends AbstractManager {
      * @param building - a construction object
      * @return true if a building is buildable on tiles, otherwise false
      */
-    public boolean isTilesBuildable(AbstractWorld worldMap, AbstractBuilding building) {
+    public boolean isTilesBuildable(AbstractWorld worldMap, BuildingEntity building) {
         if (worldMap == null || building == null) {
             return false;
         }
 
-        float xPos = building.getXcoord();
-        float yPos = building.getYcoord();
-        float xSize = building.getXSize();
-        float ySize = building.getYSize();
+        float xPos = building.getCol();
+        float yPos = building.getRow();
+        float xSize = building.getLength();
+        float ySize = building.getHeight();
         for (int i = 0; i < xSize; i++) {
             for (int j = 0; j < ySize; j++) {
                 Tile tile = worldMap.getTile(xPos + xSize, yPos + ySize);
@@ -411,6 +427,10 @@ public class ConstructionManager extends AbstractManager {
             Integer amount = entry.getValue();
             inventoryManager.inventoryDropMultiple(item, amount);
         }
+    }
+
+    public void setBuildingToBePlaced (BuildingEntity building){
+        buildingToBePlaced = building;
     }
 
     // End of inventory code
