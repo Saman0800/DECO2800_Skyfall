@@ -6,6 +6,9 @@ import deco2800.skyfall.worlds.generation.perlinnoise.TileNoiseGenerator;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Lake biome that is used for the lakes
+ */
 public class LakeBiome extends AbstractBiome {
     private ArrayList<String> textures = new ArrayList<>();
 
@@ -26,8 +29,6 @@ public class LakeBiome extends AbstractBiome {
     public void setTileTextures(Random random) {
         // TODO see if different textures should be used to the ocean
         ArrayList<String> textures = new ArrayList<>();
-        //textures.add("water_3");
-        //textures.add("water_0");
         textures.add("lake_1");
         textures.add("lake_2");
 

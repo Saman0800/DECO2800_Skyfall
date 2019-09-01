@@ -9,6 +9,10 @@ import java.util.Random;
  * Swamp biome
  */
 public class SwampBiome extends AbstractBiome{
+
+    /**
+     * Constructor for the SwampBiome
+     */
     public SwampBiome(){
         super("swamp", null);
     }

@@ -48,22 +48,38 @@ public class World implements TouchDownObserver {
     protected int width;
     protected int length;
 
+    //The length/2 of the world, (worldSize * 2)^2 to get the world area
     protected int worldSize;
+
+    //The distance between the nodes
     protected int nodeSpacing;
+
+    //A list corrosponding to the size of each biome
     protected int[] biomeSizes;
+
+    //The number of lakes
     protected int numOfLakes;
-    protected int lakeSize;
-    protected int noRivers;
-    protected int riverWidth;
+
+    //The size of each lake
     protected int[] lakeSizes;
 
+    //The number of rivers
+    protected int noRivers;
+
+    //The width of all the rivers
+    protected int riverWidth;
+
+    //The seed of the world, using with the random number generator to create deterministic worlds
     private long seed;
+
+    //Used to generate random numbers
     private Random random;
 
     // List that contains the world biomes
     protected ArrayList<AbstractBiome> biomes;
     public Map<String, Float> frictionMap;
 
+    //A list of all the tiles within a world
     protected CopyOnWriteArrayList<Tile> tiles;
     protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
     protected CopyOnWriteArrayList<VoronoiEdge> voronoiEdges;
@@ -71,6 +87,20 @@ public class World implements TouchDownObserver {
     protected List<AbstractEntity> entitiesToDelete = new CopyOnWriteArrayList<>();
     protected List<Tile> tilesToDelete = new CopyOnWriteArrayList<>();
 
+    /**
+     * The constructor for a world
+     * @param seed The seed of the world, used in conjuction with a random number generator allows for deterministic
+     *             generation
+     * @param worldSize The length/2 of the world, (worldSize * 2)^2 to get the world area/number of tiles
+     * @param nodeSpacing The spacing between the nodes
+     * @param biomeSizes The size of the biomes
+     * @param numOfLakes The number of lakes
+     * @param lakeSizes The respective sizing of each lake
+     * @param biomes The biomes in the world
+     * @param entities The entities in the world
+     * @param noRivers The number of rivers
+     * @param riverWidth The width of the rivers in terms of nodes
+     */
     public World(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int[] lakeSizes,
                 ArrayList<AbstractBiome> biomes, CopyOnWriteArrayList<AbstractEntity> entities, int noRivers, int riverWidth) {
 
@@ -100,6 +130,11 @@ public class World implements TouchDownObserver {
         initialiseFrictionmap();
     }
 
+    /**
+     * Generates the tiles and biomes in the world and adds the world to a listener to allow for interaction.
+     * Continuously repeats generation until it reaches a stable world
+     * @param random
+     */
     protected void generateWorld(Random random){
         while (true){
             try {
@@ -109,15 +144,17 @@ public class World implements TouchDownObserver {
             }
         }
 
-//        for (AbstractEntity entity : entities){
-//            addEntity(entity);
-//        }
-
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
 
     };
 
 
+    /**
+     * Generates the tiles and biomes in a world
+     * @throws NotEnoughPointsException When there are not enough points
+     * @throws DeadEndGenerationException
+     * @throws WorldGenException
+     */
     private void generateTiles() throws NotEnoughPointsException, DeadEndGenerationException, WorldGenException{
             //TODO clean the biomes and tiles on every iteration
             ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();

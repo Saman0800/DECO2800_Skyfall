@@ -15,13 +15,11 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Allows for step by step creation of a world
+ */
 public class WorldBuilder implements WorldBuilderInterface{
 
-    //Variables for nodes
-    private ArrayList<WorldGenNode> worldGenNodes;
-
-    //List of tiles
-    private ArrayList<Tile> tiles;
 
     //List of biomes
     private ArrayList<AbstractBiome> biomes;
@@ -41,22 +39,28 @@ public class WorldBuilder implements WorldBuilderInterface{
     //The side length/2 of the world, (worldSize* 2)^2 to get the number of tiles
     private int worldSize;
 
-    //Node spacing
+    //The spacing/distance between the nodes
     private int nodeSpacing;
 
+    //The entities in the world
     private CopyOnWriteArrayList<AbstractEntity> entities;
 
     //The world type, can either be single_player, server, tutorial or test
     private String type;
 
+    //The number of rivers
     private int rivers;
 
+    //The size of the rivers
     private int riverSize;
 
 
     //Determines whether static entities are on
     private boolean staticEntities;
 
+    /**
+     * Constructor for the WorldBuilder
+     */
     public WorldBuilder(){
         numOfLakes = 0;
         seed = 0;
@@ -70,6 +74,10 @@ public class WorldBuilder implements WorldBuilderInterface{
     }
 
 
+    /**
+     * Adds an entity to the world
+     * @param entity The entity to be added to the world
+     */
     @Override
     public void addEntity(AbstractEntity entity) {
         entities.add(entity);
@@ -77,12 +85,21 @@ public class WorldBuilder implements WorldBuilderInterface{
     }
 
 
+    /**
+     * Adds a biome to the world
+     * @param biome The biome to be added to the world
+     * @param size The size of the biome to be added
+     */
     @Override
     public void addBiome(AbstractBiome biome, int size) {
         biomes.add(biome);
         biomeSizes.add(size);
     }
 
+    /**
+     * Adds a lake to the world
+     * @param size The corresponding size of the lake
+     */
     @Override
     public void addLake(int size) {
         numOfLakes++;
@@ -94,33 +111,61 @@ public class WorldBuilder implements WorldBuilderInterface{
         this.worldSize = size;
     }
 
+    /**
+     * Sets the node spacing
+     * @param nodeSpacing The node spacing
+     */
     @Override
     public void setNodeSpacing(int nodeSpacing) {
         this.nodeSpacing = nodeSpacing;
     }
 
+    /**
+     * Sets a seed for the world
+     * @param seed
+     */
     @Override
     public void setSeed(long seed) {
         this.seed = seed;
     }
 
+    /**
+     * Sets the type of world to be created
+     * @param type A string value representing the type of world, can be single_player, server, test or tutorial
+     */
     public void setType(String type){
         this.type = type;
     }
 
+    /**
+     * Adds a single river to the world
+     */
     public void addRiver(){
         rivers++;
     }
 
+    /**
+     * Sets the size of all the rivers
+     * @param size The size which the rivers will be, in node width
+     */
     public void setRiverSize(int size){
         riverSize = size;
     }
 
+    /**
+     * Sets whether static entities are off or on
+     * @param staticEntities true representing static entities are on, false they are not
+     */
     public void setStaticEntities(boolean staticEntities){
         this.staticEntities = staticEntities;
     }
 
 
+    /**
+     * Generates the static entities in a world
+     * @param world The world that will get static entities
+     * @author  Micheal CC
+     */
     protected void generateStartEntities(World world) {
 
         Tile tileRock = world.getTile(0.0f, 1.0f);
@@ -156,8 +201,13 @@ public class WorldBuilder implements WorldBuilderInterface{
     }
 
 
+    /**
+     * Creates a world based on the values set in the builder
+     * @return A world
+     */
     public World getWorld(){
         biomes.add(new OceanBiome());
+        //Converting the ArrayLists to arrays
         int[] biomeSizesArray = biomeSizes.stream().mapToInt(biomeSize -> biomeSize).toArray();
         int[] lakeSizesArray = lakeSizes.stream().mapToInt(lakeSize -> lakeSize).toArray();
 

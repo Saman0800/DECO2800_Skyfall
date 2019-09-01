@@ -17,12 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @SuppressWarnings("unused")
 public class TestWorld extends World {
-    /*
-     * radius for tiles 1 - 7 2 - 19 3 - 37 4 - 61 5 - 91 10 - 331 25 - 1951 50 -
-     * 7,651 100 - 30,301 150 - 67,951 200 - 120601
-     * 
-     * N = 1 + 6 * summation[0 -> N]
-     */
+
     boolean notGenerated = true;
 
     private static int RADIUS = 25;

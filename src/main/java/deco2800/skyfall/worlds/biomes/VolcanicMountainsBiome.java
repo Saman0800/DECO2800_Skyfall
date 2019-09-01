@@ -10,6 +10,9 @@ import java.util.Random;
  */
 public class VolcanicMountainsBiome extends AbstractBiome {
 
+    /**
+     * Constructor for the VolcanicMountainsBiome
+     */
     public VolcanicMountainsBiome(){
         super("volcanic_mountains", null);
     }

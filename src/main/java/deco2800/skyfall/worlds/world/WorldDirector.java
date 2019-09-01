@@ -13,9 +13,16 @@ import deco2800.skyfall.worlds.biomes.SwampBiome;
 import deco2800.skyfall.worlds.biomes.VolcanicMountainsBiome;
 import java.util.Random;
 
+/**
+ * Class that helps with creating worlds using WorldBuilders
+ */
 public class WorldDirector {
     private static Random random = new Random(0);
 
+    /**
+     * A simple world used in single player
+     * @param builder The builder used to construct the world
+     */
     public static void constructSimpleSinglePlayerWorld(WorldBuilder builder){
         builder.setNodeSpacing(15);
         builder.setWorldSize(160);
@@ -41,7 +48,21 @@ public class WorldDirector {
         builder.addBiome(new SwampBiome(), 40);
     }
 
+    /**
+     * Constructs a tutorial world
+     * @param builder The builder used to construct the world
+     */
     public static void constructTutorialWorld(WorldBuilder builder){
+
+        MainCharacter mainCharacter = new MainCharacter(0,0,0.05f, "Main Piece", 10);
+
+        builder.addEntity(mainCharacter);
+        GameManager.getManagerFromInstance(GameMenuManager.class).setMainCharacter(mainCharacter);
+
+        builder.addEntity(new Spider(-4f, -1f, mainCharacter));
+        builder.addEntity(new Robot(-4, -2, mainCharacter));
+
+
         builder.setNodeSpacing(15);
         builder.setWorldSize(80);
         builder.setType("tutorial");
@@ -54,6 +75,10 @@ public class WorldDirector {
         builder.addBiome(new MountainBiome(), 20);
     }
 
+    /**
+     * Constructs a server world
+     * @param builder The builder used to construct the world
+     */
     public static void constructServerWorld(WorldBuilder builder){
         builder.setNodeSpacing(15);
         builder.setWorldSize(80);
@@ -63,6 +88,10 @@ public class WorldDirector {
         builder.addBiome(new MountainBiome(), 20);
     }
 
+    /**
+     * Constructs a world used for testing
+     * @param builder The builder used to construct the world
+     */
     public static void constructTestWorld(WorldBuilder builder){
         builder.setNodeSpacing(5);
         builder.setWorldSize(30);
@@ -70,19 +99,11 @@ public class WorldDirector {
         builder.setType("test");
         builder.setStaticEntities(true);
 
-        builder.addBiome(new ForestBiome(), 20);
-        builder.addBiome(new DesertBiome(), 20);
-        builder.addBiome(new MountainBiome(), 20);
-    }
-
-
-    public static void smallWorldTest(WorldBuilder builder){
-        builder.setNodeSpacing(5);
-        builder.setWorldSize(30);
-        builder.addBiome(new ForestBiome(), 5);
-        builder.addBiome(new MountainBiome(), 5);
-        builder.addBiome(new DesertBiome(), 5);
-        builder.addBiome(new VolcanicMountainsBiome(), 5);
-        builder.addBiome(new SwampBiome(), 5);
+        builder.addBiome(new ForestBiome(), 10);
+        builder.addBiome(new DesertBiome(), 10);
+        builder.addBiome(new MountainBiome(), 10);
+        builder.addBiome(new VolcanicMountainsBiome(), 10);
+        builder.addBiome(new SwampBiome(), 10);
+        builder.addLake(3);
     }
 }

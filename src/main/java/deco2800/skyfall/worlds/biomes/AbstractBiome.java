@@ -24,6 +24,7 @@ public abstract class AbstractBiome {
      * Constructor for a Biome
      *
      * @param biomeName The biome name
+     * @param parentBiome The biome that the biome lives in, null if the biome has no parent
      */
     public AbstractBiome(String biomeName, AbstractBiome parentBiome) {
         // this(biomeName, new ArrayList<>());

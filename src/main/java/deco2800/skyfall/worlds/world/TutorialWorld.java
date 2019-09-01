@@ -26,6 +26,13 @@ public class TutorialWorld extends World implements TouchDownObserver {
      * @param seed The random seed that identifies the world
      * @param worldSize The size of the world
      * @param nodeSpacing The distance between the nodes
+     * @param biomeSizes The number of nodes each biomes uses, determines the biome sizes
+     * @param numOfLakes The number of lakes
+     * @param lakeSizes The size of each lake
+     * @param biomes A list of biomes that the world has
+     * @param entities The entities that the world has
+     * @param noRivers The number of rivers
+     * @param riverWidth The size of all the rivers
      */
     public TutorialWorld(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int[] lakeSizes,
         ArrayList<AbstractBiome> biomes, CopyOnWriteArrayList<AbstractEntity> entities, int noRivers, int riverWidth) {
