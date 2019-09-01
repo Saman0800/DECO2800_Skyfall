@@ -223,7 +223,8 @@ public class ConstructionManager extends AbstractManager {
             storageUnit.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y){
-                    switchView();
+
+                    displayWindow();
 
                     //TODO implement permissions
                     //permission test have not been updated since switched to factory for buildings
