@@ -80,8 +80,8 @@ public class MainCharacterTest {
         testCharacter.changeHealth(5);
         Assert.assertEquals(testCharacter.getHealth(), 15);
         testCharacter.changeHealth(-20);
-        Assert.assertEquals(testCharacter.getHealth(), 0);
-        Assert.assertTrue(testCharacter.isDead());
+        Assert.assertEquals(testCharacter.getHealth(), 15);
+        Assert.assertEquals(testCharacter.getDeaths(), 1);
     }
 
     @Test
@@ -98,8 +98,8 @@ public class MainCharacterTest {
         testCharacter.weaponEffect(sword);
         testCharacter.weaponEffect(spear);
         testCharacter.weaponEffect(axe);
-        Assert.assertEquals(testCharacter.getHealth(), 0);
-        Assert.assertTrue(testCharacter.isDead());
+        Assert.assertEquals(testCharacter.getHealth(), 2);
+        Assert.assertEquals(testCharacter.getDeaths(), 1);
     }
 
     @Test
