@@ -1,17 +1,16 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 
 import java.io.*;
 import java.util.*;
 
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.buildings.BuildingWidgets;
 import deco2800.skyfall.entities.structures.AbstractBuilding;
@@ -53,10 +52,10 @@ public class ConstructionManager extends AbstractManager {
         menuSetUp = false;
 
         buildingFactory = new BuildingFactory();
-        buildingWidgets = BuildingWidgets.get();
+//        buildingWidgets = BuildingWidgets.get();
 
         // testing requirement fro widget, removed it later
-        GameManager.get().getWorld().addEntity(buildingFactory.createHouse(0f, 0f));
+//        GameManager.get().getWorld().addEntity(buildingFactory.createHouse(0f, 0f));
     }
 
     //Start of UI
@@ -88,11 +87,69 @@ public class ConstructionManager extends AbstractManager {
         }
     }
 
+    private void showSetting(){
+        Stage stage = GameManager.get().getStage();
+        Skin skin = new Skin(Gdx.files.internal("resources/uiskin.skin"));
+        Window settingMenu = new Window("settingMenu", skin);
+
+        float width = GameManager.get().getStage().getWidth();
+        float height = GameManager.get().getStage().getHeight();
+
+        settingMenu.setHeight(3 * height / 4);
+        settingMenu.setWidth(3 * width / 4);
+        settingMenu.setPosition(width / 8, height / 8);
+
+        buildMenu.setVisible(false);
+        Container<Table> tableContainer = new Container<Table>();
+
+        float sw = Gdx.graphics.getWidth();
+        float sh = Gdx.graphics.getHeight();
+
+        float cw = width * 0.7f;
+        float ch = height * 0.5f;
+
+        tableContainer.setSize(cw, ch);
+//        tableContainer.setPosition((sw - cw) / 2.0f, (sh - ch) / 2.0f);
+        tableContainer.fillX();
+
+        Table table = new Table(skin);
+
+        Label topLabel = new Label("Construction Speed", skin);
+        topLabel.setAlignment(Align.center);
+        Slider slider = new Slider(0, 100, 1, false, skin);
+//        Label anotherLabel = new Label("ANOTHER LABEL", skin);
+//        anotherLabel.setAlignment(Align.center);
+
+        Table buttonTable = new Table(skin);
+
+        TextButton buttonA = new TextButton("Back to Main", skin);
+
+        table.row().colspan(3).expandX().fillX();
+        table.add(topLabel).fillX();
+        table.row().colspan(3).expandX().fillX();
+        table.add(slider).fillX();
+        table.row().colspan(3).expandX().fillX();
+//        table.add(anotherLabel).fillX();
+        table.row().expandX().fillX();
+
+        table.row().expandX().fillX();;
+
+        table.add(buttonTable).colspan(3);
+
+        buttonTable.pad(16);
+        buttonTable.row().fillX().expandX();
+        buttonTable.add(buttonA).width(cw/3.0f);
+
+        tableContainer.setActor(table);
+        settingMenu.addActor(tableContainer);
+        stage.addActor(settingMenu);
+    }
     /**
      * Add components (such as buttons) to the build menu
      * Does nothing after it has been called once
      */
     private void setUpMenu() {
+
         if (!menuSetUp) {
             float width = GameManager.get().getStage().getWidth();
             float height = GameManager.get().getStage().getHeight();
@@ -111,26 +168,25 @@ public class ConstructionManager extends AbstractManager {
             TextButton building1 = new TextButton("Building 1", skin);
             TextButton building2 = new TextButton("Building 2", skin);
             TextButton building3 = new TextButton("Building 3", skin);
-            TextButton building4 = new TextButton("Building 4", skin);
+            TextButton setting = new TextButton("Setting", skin);
             ImageIcon a = new ImageIcon("resources/world_structures/house1.png");
             Image b = new Image();
-
 
 
             building1.setBounds(50, 450, 140, 40);
             building2.setBounds(50, 350, 140, 40);
             building3.setBounds(50, 250, 140, 40);
-            building4.setBounds(50, 150, 140, 40);
+            setting.setBounds(50, 150, 140, 40);
 
 
             buildMenu.addActor(building1);
             buildMenu.addActor(building2);
             buildMenu.addActor(building3);
-            buildMenu.addActor(building4);
+            buildMenu.addActor(setting);
 
             building1.addListener(new ClickListener() {
                 @Override
-                public void clicked(InputEvent event, float x, float y){
+                public void clicked(InputEvent event, float x, float y) {
                     //call build function for specific building
 
                 }
@@ -138,7 +194,7 @@ public class ConstructionManager extends AbstractManager {
 
             building2.addListener(new ClickListener() {
                 @Override
-                public void clicked(InputEvent event, float x, float y){
+                public void clicked(InputEvent event, float x, float y) {
                     //call build function for specific building
 
                 }
@@ -146,19 +202,22 @@ public class ConstructionManager extends AbstractManager {
 
             building3.addListener(new ClickListener() {
                 @Override
-                public void clicked(InputEvent event, float x, float y){
+                public void clicked(InputEvent event, float x, float y) {
                     //call build function for specific building
 
                 }
             });
 
-            building4.addListener(new ClickListener() {
+            setting.addListener(new ClickListener() {
                 @Override
-                public void clicked(InputEvent event, float x, float y){
+                public void clicked(InputEvent event, float x, float y) {
                     //call build function for specific building
-
+                    showSetting();
                 }
             });
+
+
+
         }
     }
 
