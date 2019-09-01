@@ -202,7 +202,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-<<<<<<< HEAD
      * Player takes damage from other entities/ by starving.
      *
      * @param damage Amount of damage player has taken
@@ -214,7 +213,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             isHurt = true;
             // TODO: add hurt animation here
 
-            if (getHealth() <= 0) {
+            if (this.getHealth() <= 0) {
                 kill();
             } else {
                 hurtTime = System.currentTimeMillis() + recoverTime;
@@ -285,16 +284,14 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * has died and cannot do any actions in game anymore.
      */
     void kill () {
-        if (this.getHealth() != 0) {
-            // stop player controls
-            vel = 0;
+        // stop player controls
+        vel = 0;
 
-            // set health to 0.
-            changeHealth(getHealth() * -1);
+        // set health to 0.
+        changeHealth(0);
 
-            // AS.PlayOneShot(dieSound);
-            GameManager.setPaused(true);
-        }
+        // AS.PlayOneShot(dieSound);
+        GameManager.setPaused(true);
     }
 
     /**
@@ -307,11 +304,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      *  Add weapon to weapons list
      * @param item weapon to be added
-=======
-     * Add weapon to weapons list
-     * @param item weapon to be added
      *
->>>>>>> 66096334e8b9c9746082b3d243f372fcb506f2a7
      */
     public void pickUpWeapon(Weapon item) {
         weapons.pickUpWeapon(item);

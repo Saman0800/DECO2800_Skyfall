@@ -13,6 +13,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
+import org.mockito.Mockito;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -177,7 +178,6 @@ public class MainCharacterTest {
     }
 
     @Test
-<<<<<<< HEAD
     public void setAndGetAnimationTest() {
         // testCharacter.addAnimations(AnimationRole.MOVE_EAST, "right");
         //testCharacter.getAnimationName(AnimationRole.MOVE_EAST);
@@ -228,18 +228,20 @@ public class MainCharacterTest {
      */
     @Test
     public void killTest() {
-        // Test if hurt() can initiate kill() when
+        // Test if hurt() can trigger Peon.changeHealth() when
         // the damage taken can make player's health below 0.
-        testCharacter.hurt(testCharacter.getHealth());
-        Assert.assertTrue(testCharacter.isDead());
+        testCharacter.hurt(100);
+        // player death + 1
+        Assert.assertEquals(1, testCharacter.getDeaths());
 
         // "Kill" animation test
         AnimationLinker animationLinker = new AnimationLinker("MainCharacter_Dead_E_Anim",
-                AnimationRole.DEAD, Direction.DEFAULT, false ,true);
+                AnimationRole.DEAD, Direction.DEFAULT, false, true);
         testMap.put(Direction.DEFAULT, animationLinker);
         testCharacter.addAnimations(AnimationRole.DEAD, Direction.DEFAULT, animationLinker);
         Assert.assertEquals(testMap, testCharacter.animations.get(AnimationRole.DEAD));
-=======
+    }
+
     public void movementAnimationsExist() {
         testCharacter.setCurrentState(AnimationRole.MOVE);
         testCharacter.setCurrentDirection(Direction.EAST);
@@ -262,6 +264,5 @@ public class MainCharacterTest {
         testCharacter.setCurrentDirection(Direction.NORTH);
         s = testCharacter.getDefaultTexture();
         Assert.assertEquals(s, "__ANIMATION_MainCharacterN_Anim:0");
->>>>>>> 66096334e8b9c9746082b3d243f372fcb506f2a7
     }
 }
