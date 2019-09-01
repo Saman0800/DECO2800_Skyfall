@@ -60,8 +60,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /*
      * The direction and speed of the MainCharacter
      */
-    //protected Vector2 direction;
-    //protected float currentSpeed;
+    protected Vector2 direction;
+    protected float currentSpeed;
 
     /*
      * Helper bools to tell which direction the player intends to move
@@ -224,7 +224,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Removes items from player's collection
-     *
      * @param item weapon being removed
      */
     public void dropWeapon(Weapon item) {
@@ -233,7 +232,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Get the weapons for the player
-     *
      * @return weapons
      */
     public Map<Weapon, Integer> getWeapons() {
@@ -276,7 +274,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Deals damage to character from combat
-     *
      * @param item weapon character is being hit by
      */
     public void weaponEffect(Weapon item) {
@@ -296,7 +293,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Add weapon to weapons list
-     *
      * @param item weapon to be added
      */
     public void pickUpInventory(Item item) {
@@ -305,7 +301,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Attempts to drop given item from inventory
-     *
      * @param item item to be dropped from inventory
      */
     public void dropInventory(String item) {
@@ -325,10 +320,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Change the hunger points value for the player
      * (+ve amount increases hunger points)
      * (-ve amount decreases hunger points)
-     *
      * @param amount the amount to change it by
      */
-    public void change_food(int amount) {
+    public void change_food(int amount){
         this.foodLevel += amount;
         if (foodLevel > 100) {
             foodLevel = 100;
@@ -340,10 +334,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Get how many hunger points the player has
-     *
      * @return The number of hunger points the player has
      */
-    public int getFoodLevel() {
+    public int getFoodLevel(){
         return foodLevel;
     }
 
@@ -370,7 +363,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * See if the player is starving
-     *
      * @return true if hunger points is <= 0, else false
      */
     public boolean isStarving() {
@@ -390,7 +382,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Gets the current level of character
-     *
      * @return level of character
      */
     public int getLevel() {
@@ -399,10 +390,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Change the player's appearance to the set texture
-     *
      * @param texture the texture to set
      */
-    public void changeTexture(String texture) {
+    public void changeTexture(String texture){
         this.setTexture(texture);
     }
 
@@ -460,7 +450,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Sets the appropriate movement flags to true on keyDown
-     *
      * @param keycode the key being pressed
      */
     @Override
@@ -490,7 +479,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Sets the appropriate movement flags to false on keyUp
-     *
      * @param keycode the key being released
      */
     @Override
