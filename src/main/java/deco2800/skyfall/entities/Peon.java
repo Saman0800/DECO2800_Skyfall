@@ -80,7 +80,7 @@ public class Peon extends AgentEntity implements Tickable {
 		this.health += amount;
 
 		if (this.isDead()) {
-			this.health = 10;
+			this.health = 0;
 			this.deaths += 1;
 		}
 	}

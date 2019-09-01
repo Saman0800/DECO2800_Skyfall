@@ -64,6 +64,8 @@ public class MainCharacterTest {
         testRock = new Rock(testTile,true);
 
         inventoryManager = GameManager.get().getManagerFromInstance(InventoryManager.class);
+
+
     }
 
     @After
@@ -88,7 +90,7 @@ public class MainCharacterTest {
         testCharacter.changeHealth(5);
         Assert.assertEquals(testCharacter.getHealth(), 15);
         testCharacter.changeHealth(-20);
-        Assert.assertEquals(testCharacter.getHealth(), 10);
+        Assert.assertEquals(testCharacter.getHealth(), 0);
         Assert.assertEquals(testCharacter.getDeaths(), 1);
     }
 
@@ -106,7 +108,7 @@ public class MainCharacterTest {
         testCharacter.weaponEffect(sword);
         testCharacter.weaponEffect(spear);
         testCharacter.weaponEffect(axe);
-        Assert.assertEquals(10, testCharacter.getHealth());
+        Assert.assertEquals(0, testCharacter.getHealth());
         Assert.assertEquals(1, testCharacter.getDeaths());
     }
 
@@ -240,16 +242,8 @@ public class MainCharacterTest {
      */
     @Test
     public void hurtTest() {
-        // testCharacter.direction = new Vector2(20, 0);
-        // Set player's health back to 10.
-        testCharacter.changeHealth(3);
-
-        // Check if the hurt() is called.
-        testCharacter.hurt(sword);
-        Assert.assertTrue(testCharacter.IsHurt());
-
         // Reduce health by input damage test
-        testCharacter.changeHealth(-3);
+        testCharacter.hurt(3);
         Assert.assertEquals(7, testCharacter.getHealth());
 
         // Character bounce back test
@@ -282,11 +276,9 @@ public class MainCharacterTest {
     public void killTest() {
         // Test if hurt() can trigger Peon.changeHealth() when
         // the damage taken can make player's health below 0.
-        testCharacter.hurt(bow);
-        testCharacter.hurt(bow);
-        testCharacter.hurt(bow);
-        // player death + 1
-        Assert.assertEquals(1, testCharacter.getDeaths());
+        testCharacter.hurt(10);
+        // player death + 1 = 2, since it has died in another test before
+        Assert.assertEquals(2, testCharacter.getDeaths());
 
         // "Kill" animation test
         AnimationLinker animationLinker = new AnimationLinker("MainCharacter_Dead_E_Anim",

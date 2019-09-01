@@ -19,6 +19,7 @@ import deco2800.skyfall.worlds.Tile;
 import org.lwjgl.Sys;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Main character in the game
@@ -107,7 +108,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * How long does MainCharacter hurt status lasts,
      */
-    private long hurtTime = 500;
+    private long hurtTime = 0;
 
     /**
      * How long does MainCharacter take to recover,
@@ -269,70 +270,54 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Player takes damage from other entities/ by starving.
      *
-     * @param item the weapon character is being hit by.
      */
-    public void hurt(Weapon item) {
-        // hurtTime < System.currentTimeMillis() &&
-        if (this.getHealth() >= 0) {
-            weaponEffect(item);
-            isHurt = true;
-            // TODO: add hurt animation here
+    public void hurt(int damage) {
+        this.changeHealth(-damage);
 
-            if (this.getHealth() <= 0) {
-                kill();
-            } else {
-                hurtTime = System.currentTimeMillis() + recoverTime;
+        if (this.getHealth() <= 0) {
+            kill();
+        } else {
+            hurtTime = 3000;
+            HexVector bounceBack = new HexVector();
+            /*
+            switch (getPlayerDirectionCardinal()) {
+                case "North":
+                    bounceBack = new HexVector(this.direction.getX(), this.direction.getY() - 1);
+                    break;
+                case "North-East":
+                    bounceBack = new HexVector(this.direction.getX() - 1, this.direction.getY() - 1);
+                    break;
+                case "East":
+                    bounceBack = new HexVector(this.direction.getX() - 1, this.direction.getY());
+                    break;
+                case "South-East":
+                    bounceBack = new HexVector(this.direction.getX() - 1, this.direction.getY() + 1);
+                    break;
+                case "South":
+                    bounceBack = new HexVector(this.direction.getX(), this.direction.getY() + 1);
+                    break;
+                case "South-West":
+                    bounceBack = new HexVector(this.direction.getX() + 1, this.direction.getY() + 1);
+                    break;
+                case "West":
+                    bounceBack = new HexVector(this.direction.getX() + 1, this.direction.getY());
+                    break;
+                case "North-West":
+                    bounceBack = new HexVector(this.direction.getX() + 1, this.direction.getY() - 1);
+                    break;
+            }
+            position.moveToward(bounceBack, 0.5f);
 
-                HexVector bounceBack = new HexVector();
+            /* AS.PlayOneShot(hurtSound);
+            while(hurtTime < System.currentTimeMillis()) {
+                vel = 0;
+                anim.SetBool("Invincible", true);
+                rb2d.AddForce(new com.badlogic.gdx.math.Vector2(hurtForce.x*forceDir,hurtForce.y));
+            }
+            */
 
-                /*
-                switch (getPlayerDirectionCardinal()) {
-                    case "North":
-                        bounceBack = new HexVector(this.direction.getX(), this.direction.getY() - 1);
-                        break;
-                    case "North-East":
-                        bounceBack = new HexVector(this.direction.getX() - 1, this.direction.getY() - 1);
-                        break;
-                    case "East":
-                        bounceBack = new HexVector(this.direction.getX() - 1, this.direction.getY());
-                        break;
-                    case "South-East":
-                        bounceBack = new HexVector(this.direction.getX() - 1, this.direction.getY() + 1);
-                        break;
-                    case "South":
-                        bounceBack = new HexVector(this.direction.getX(), this.direction.getY() + 1);
-                        break;
-                    case "South-West":
-                        bounceBack = new HexVector(this.direction.getX() + 1, this.direction.getY() + 1);
-                        break;
-                    case "West":
-                        bounceBack = new HexVector(this.direction.getX() + 1, this.direction.getY());
-                        break;
-                    case "North-West":
-                        bounceBack = new HexVector(this.direction.getX() + 1, this.direction.getY() - 1);
-                        break;
-                }
-
-                position.moveToward(bounceBack, 0.5f);
-
-                /* AS.PlayOneShot(hurtSound);
-                while(hurtTime < System.currentTimeMillis()) {
-                    vel = 0;
-                    anim.SetBool("Invincible", true);
-                    rb2d.AddForce(new com.badlogic.gdx.math.Vector2(hurtForce.x*forceDir,hurtForce.y));
-                }
-                */
-
-                /*
-                synchronized (lock) {
-                    this.wait(hurtTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                */
-                // recover();
-           }
-        }
+            recover();
+       }
     }
 
     /**
@@ -364,6 +349,13 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     public boolean IsHurt() {
         return isHurt;
+    }
+
+    /**
+     * @return if player is in the state of "hurt".
+     */
+    public void setHurt(boolean isHurt) {
+        this.isHurt = isHurt;
     }
 
     /**
@@ -431,6 +423,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     public void weaponEffect(Weapon item) {
         this.changeHealth(item.getDamage().intValue() * -1);
+        isHurt = true;
     }
 
     /**
@@ -1023,7 +1016,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                     }
                 }
             }
-
         } else{
             System.out.println("No PickAxe in Quick Access");
         }
@@ -1176,19 +1168,16 @@ public class MainCharacter extends Peon implements KeyDownObserver,
        getPlayerDirectionCardinal();
        List<Float> vel = getVelocity();
 
-       if (vel.get(2) == 0f) {
-           setCurrentState(AnimationRole.NULL);
-       } else {
-           setCurrentState(AnimationRole.MOVE);
-       }
-
-       /*
-       //TODO: Detect whether player is hurt by an enemy,
-       if(isHurt == true && this.getHealth() != 0) {
-           setCurrentState(AnimationRole.HURT);
-       } else if(this.getHealth() <= 0) {
-           setCurrentState(AnimationRole.DEAD);
-       }
-       */
+        if(isDead()) {
+            setCurrentState(AnimationRole.DEAD);
+        } else if(isHurt && this.getHealth() >= 0) {
+            setCurrentState(AnimationRole.HURT);
+        } else {
+            if (vel.get(2) == 0f) {
+                setCurrentState(AnimationRole.NULL);
+            } else {
+                setCurrentState(AnimationRole.MOVE);
+            }
+        }
     }
 }
