@@ -22,9 +22,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     // Weapon Manager for MainCharacter
     private WeaponManager weapons;
 
-    // Hitbox of melee.
-    private Projectile hitBox;
-
     // Manager for all of MainCharacter's inventories
     private InventoryManager inventories;
 
@@ -63,8 +60,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /*
      * The direction and speed of the MainCharacter
      */
-    //protected Vector2 direction;
-    //protected float currentSpeed;
+    protected Vector2 direction;
+    protected float currentSpeed;
 
     /*
      * Helper bools to tell which direction the player intends to move
@@ -113,7 +110,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public MainCharacter(float col, float row, float speed, String name,
                          int health) {
         super(row, col, speed, name, health);
-        this.setTexture("MainCharacterE");
+        this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
         this.setHeight(1);
         this.setObjectName("MainPiece");
 
@@ -145,7 +142,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         velHistoryY = new ArrayList<>();
 
         isMoving = false;
+        this.scale = 0.4f;
         setDirectionTextures();
+        configureAnimations();
     }
 
     /**
@@ -170,7 +169,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Switch the item the MainCharacter has equip.
-     *
      * @param keyCode Keycode the player has pressed.
      */
     protected void switchItem(int keyCode) {
@@ -184,7 +182,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Return the currently selected item slot.
-     *
      * @return The item slot the MainCharacter has equip.
      */
     public int getItemSlotSelected() {
@@ -200,26 +197,26 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         // Make projectile move toward the angle
         // Spawn projectile in front of character for now.
 
-        this.hitBox = new Projectile(mousePosition,
-                this.itemSlotSelected == 1 ? "arcane" : "slash",
+        Projectile projectile = new Projectile(mousePosition,
+                this.itemSlotSelected == 1 ? "range_test":"melee_test",
                 "test hitbox",
                 position.getCol() + 1,
                 position.getRow(),
                 1,
-                1,
+                0.1f,
                 this.itemSlotSelected == 1 ? 1 : 0);
 
         // Get AbstractWorld from static class GameManager.
         GameManager manager = GameManager.get();
 
         // Add the projectile entity to the game world.
-        manager.getWorld().addEntity(this.hitBox);
+        manager.getWorld().addEntity(projectile);
     }
 
     /**
      * Add weapon to weapons list
+     * @param item weapon to be addeda
      *
-     * @param item weapon to be added
      */
     public void pickUpWeapon(Weapon item) {
         weapons.pickUpWeapon(item);
@@ -227,7 +224,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Removes items from player's collection
-     *
      * @param item weapon being removed
      */
     public void dropWeapon(Weapon item) {
@@ -236,7 +232,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Get the weapons for the player
-     *
      * @return weapons
      */
     public Map<Weapon, Integer> getWeapons() {
@@ -245,7 +240,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Attempts to equip a weapon from the weapons map
-     *
      * @param item weapon being equipped
      */
     public void equipWeapon(Weapon item) {
@@ -254,7 +248,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Attempts to unequip a weapon and return it to the weapons map
-     *
      * @param item weapon being unequipped
      */
     public void unequipWeapon(Weapon item) {
@@ -264,7 +257,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Get a copy of the equipped weapons list
      * Modifying the returned list shouldn't affect the internal state of class
-     *
      * @return equipped list
      */
     public List<Weapon> getEquipped() {
@@ -274,7 +266,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Gets the weapon manager of the character, so it can only be modified
      * this way, prevents having it being a public variable
-     *
      * @return the weapon manager of character
      */
     public WeaponManager getWeaponManager() {
@@ -283,7 +274,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Deals damage to character from combat
-     *
      * @param item weapon character is being hit by
      */
     public void weaponEffect(Weapon item) {
@@ -293,7 +283,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Set the players inventory to a predefined inventory
      * e.g for loading player saves
-     *
      * @param inventoryContents the save for the inventory
      */
     public void setInventory(Map<String, List<Item>> inventoryContents,
@@ -304,7 +293,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Add weapon to weapons list
-     *
      * @param item weapon to be added
      */
     public void pickUpInventory(Item item) {
@@ -313,7 +301,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Attempts to drop given item from inventory
-     *
      * @param item item to be dropped from inventory
      */
     public void dropInventory(String item) {
@@ -323,7 +310,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Gets the inventory manager of the character, so it can only be modified
      * this way, prevents having it being a public variable
-     *
      * @return the inventory manager of character
      */
     public InventoryManager getInventoryManager() {
@@ -334,10 +320,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Change the hunger points value for the player
      * (+ve amount increases hunger points)
      * (-ve amount decreases hunger points)
-     *
      * @param amount the amount to change it by
      */
-    public void change_food(int amount) {
+    public void change_food(int amount){
         this.foodLevel += amount;
         if (foodLevel > 100) {
             foodLevel = 100;
@@ -349,16 +334,15 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Get how many hunger points the player has
-     *
      * @return The number of hunger points the player has
      */
-    public int getFoodLevel() {
+    public int getFoodLevel(){
         return foodLevel;
     }
 
     /**
-     * Method for the MainCharacter to eat food and restore/decrease hunger level
-     *
+     * Method for the MainCharacter to eat food and restore/decrease hunger
+     * level
      * @param item the item to eat
      */
     public void eatFood(Item item) {
@@ -379,7 +363,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * See if the player is starving
-     *
      * @return true if hunger points is <= 0, else false
      */
     public boolean isStarving() {
@@ -399,7 +382,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Gets the current level of character
-     *
      * @return level of character
      */
     public int getLevel() {
@@ -408,10 +390,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Change the player's appearance to the set texture
-     *
      * @param texture the texture to set
      */
-    public void changeTexture(String texture) {
+    public void changeTexture(String texture){
         this.setTexture(texture);
     }
 
@@ -444,7 +425,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 //         this.direction.y - this.getRow());
 //        System.out.printf("%s%n", this.currentSpeed);
 //        TODO: Check direction for animation here
-        this.getPlayerDirectionCardinal();
+        this.updateAnimation();
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             GameManager.getManagerFromInstance(ConstructionManager.class)
                     .displayWindow();
@@ -452,8 +433,23 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
+     * Move character towards a destination
+     */
+    @Override
+    public void moveTowards(HexVector destination) {
+        position.moveToward(destination, this.currentSpeed);
+    }
+
+    /**
+     * Sets the Player's current movement speed
+     * @param cSpeed the speed for the player to currently move at
+     */
+    private void setCurrentSpeed(float cSpeed){
+        this.currentSpeed = cSpeed;
+    }
+
+    /**
      * Sets the appropriate movement flags to true on keyDown
-     *
      * @param keycode the key being pressed
      */
     @Override
@@ -483,7 +479,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Sets the appropriate movement flags to false on keyUp
-     *
      * @param keycode the key being released
      */
     @Override
@@ -508,21 +503,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
 
     }
-
-    //@Override
-    //public void configureAnimations() {
-        //this.addAnimations(AnimationRole.MOVE, Direction.EAST,
-                //new AnimationLinker("mario_right", AnimationRole.MOVE, Direction.EAST, true));
-
-        //this.addAnimations(AnimationRole.MOVE, Direction.WEST,
-                //new AnimationLinker("mario_left", AnimationRole.MOVE, Direction.WEST, true));
-   // }
-   //
-    //@Override
-    //public void setDirectionTextures() {
-        //defaultDirectionTextures.put(Direction.EAST, "__ANIMATION_mario_right:1");
-        //defaultDirectionTextures.put(Direction.WEST, "__ANIMATION_mario_left:1");
-    //}
 
     /*
     Potential more methods and related attributes for future sprints:
@@ -650,7 +630,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     public String getPlayerDirectionCardinal() {
         double direction = getPlayerDirectionAngle();
-
         if (direction <= 22.5 || direction >= 337.5) {
             setCurrentDirection(Direction.NORTH);
             return "North";
@@ -688,7 +667,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      *
      * @return list of players velocity properties
      */
-    public List getVelocity() {
+    public List<Float> getVelocity() {
         ArrayList<Float> velocity = new ArrayList<>();
         velocity.add(xVel);
         velocity.add(yVel);
@@ -751,20 +730,72 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
     }
 
+    /**
+     * Sets the  animations.
+     */
     @Override
     public void configureAnimations() {
+        addAnimations(AnimationRole.MOVE, Direction.NORTH_WEST,
+                new AnimationLinker("MainCharacterNW_Anim",
+                AnimationRole.MOVE, Direction.NORTH_WEST, true ,true));
 
+        addAnimations(AnimationRole.MOVE, Direction.NORTH_EAST,
+                new AnimationLinker("MainCharacterNE_Anim",
+                        AnimationRole.MOVE, Direction.NORTH_WEST, true ,true));
+
+        addAnimations(AnimationRole.MOVE, Direction.SOUTH_WEST,
+                new AnimationLinker("MainCharacterSW_Anim",
+                        AnimationRole.MOVE, Direction.SOUTH_WEST, true ,true));
+
+        addAnimations(AnimationRole.MOVE, Direction.SOUTH_EAST,
+                new AnimationLinker("MainCharacterSE_Anim",
+                        AnimationRole.MOVE, Direction.SOUTH_EAST, true ,true));
+
+        addAnimations(AnimationRole.MOVE, Direction.EAST,
+                new AnimationLinker("MainCharacterE_Anim",
+                        AnimationRole.MOVE, Direction.EAST, true ,true));
+        addAnimations(AnimationRole.MOVE, Direction.NORTH,
+                new AnimationLinker("MainCharacterN_Anim",
+                        AnimationRole.MOVE, Direction.NORTH, true ,true));
+
+        addAnimations(AnimationRole.MOVE, Direction.WEST,
+                new AnimationLinker("MainCharacterW_Anim",
+                        AnimationRole.MOVE, Direction.WEST, true ,true));
+
+        addAnimations(AnimationRole.MOVE, Direction.SOUTH,
+                new AnimationLinker("MainCharacterS_Anim",
+                        AnimationRole.MOVE, Direction.SOUTH, true ,true));
     }
 
+    /**
+     * Sets default direction textures uses the get index for Animation feature
+     * as described in the animation documentation section 4.
+     */
     @Override
     public void setDirectionTextures() {
-        defaultDirectionTextures.put(Direction.EAST, "MainCharacterE");
-        defaultDirectionTextures.put(Direction.NORTH, "MainCharacterN");
-        defaultDirectionTextures.put(Direction.WEST, "MainCharacterW");
-        defaultDirectionTextures.put(Direction.SOUTH, "MainCharacterS");
-        defaultDirectionTextures.put(Direction.NORTH_EAST, "MainCharacterNE");
-        defaultDirectionTextures.put(Direction.NORTH_WEST, "MainCharacterNW");
-        defaultDirectionTextures.put(Direction.SOUTH_EAST, "MainCharacterSE");
-        defaultDirectionTextures.put(Direction.SOUTH_WEST, "MainCharacterSW");
+        defaultDirectionTextures.put(Direction.EAST, "__ANIMATION_MainCharacterE_Anim:0");
+        defaultDirectionTextures.put(Direction.NORTH, "__ANIMATION_MainCharacterN_Anim:0");
+        defaultDirectionTextures.put(Direction.WEST, "__ANIMATION_MainCharacterW_Anim:0");
+        defaultDirectionTextures.put(Direction.SOUTH, "__ANIMATION_MainCharacterS_Anim:0");
+        defaultDirectionTextures.put(Direction.NORTH_EAST, "__ANIMATION_MainCharacterNE_Anim:0");
+        defaultDirectionTextures.put(Direction.NORTH_WEST, "__ANIMATION_MainCharacterNW_Anim:0");
+        defaultDirectionTextures.put(Direction.SOUTH_EAST, "__ANIMATION_MainCharacterSE_Anim:0");
+        defaultDirectionTextures.put(Direction.SOUTH_WEST, "__ANIMATION_MainCharacterSW_Anim:0");
+    }
+
+    /**
+     * If the animation is moving sets the animation state to be Move
+     * else NULL. Also sets the direction
+     */
+    private void updateAnimation() {
+       getPlayerDirectionCardinal();
+       List<Float> vel = getVelocity();
+
+       if (vel.get(2) == 0f) {
+           setCurrentState(AnimationRole.NULL);
+       } else {
+           setCurrentState(AnimationRole.MOVE);
+       }
+
     }
 }

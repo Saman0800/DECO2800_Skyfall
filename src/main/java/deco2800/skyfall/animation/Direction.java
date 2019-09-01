@@ -1,6 +1,9 @@
 package deco2800.skyfall.animation;
 
 public enum Direction {
+    /**
+     * Cardinal Directions + Default
+     */
     NORTH,
     NORTH_EAST,
     EAST,

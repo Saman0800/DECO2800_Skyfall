@@ -47,8 +47,11 @@ public class TextureManager extends AbstractManager {
             textureMap.put("spacman_blue", new Texture("resources/spacman_blue.png"));
             textureMap.put("bowman", new Texture("resources/bowman.png"));
             textureMap.put("dialogue_text_background", new Texture("resources/dialogue_text_background.png"));
-            textureMap.put("slash", new Texture("resources/slash_long.png"));
-            textureMap.put("arcane", new Texture("resources/Arcane_Effect_1.png"));
+
+            textureMap.put("range_test", new Texture("resources/projectile.png"));
+            textureMap.put("melee_test", new Texture("resources/punch.png"));
+
+
             // Tile textures
             // Goes through all the folders with tile_textures and adds the tile name to the
             // textures, it removes
@@ -67,7 +70,7 @@ public class TextureManager extends AbstractManager {
             }
 
             //EnemyEntity robot
-//            textureMap.put("flower", new Texture("resources/flower.png"));
+            textureMap.put("flower", new Texture("resources/flower.png"));
             textureMap.put("enemyStone", new Texture("resources/enemyStone.png"));
             textureMap.put("spider", new Texture("resources/spider.png"));
             textureMap.put("robot", new Texture("resources/robot.png"));
@@ -78,8 +81,12 @@ public class TextureManager extends AbstractManager {
             textureMap.put("stoneRNW", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/stoneRNW.png"));
             textureMap.put("stoneRN", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/stoneRN.png"));
             textureMap.put("stoneDead", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/Dead.png"));
+
 //            textureMap.put("flowerDead", new Texture("resources/flowerDead.png"));
             textureMap.put("enemyTreeman", new Texture("resources/enemyTreemanSheet/enemyTreeman1.png"));
+
+            textureMap.put("flowerDead", new Texture("resources/flowerDead.png"));
+
 
             textureMap.put("grass_tuff", new Texture("resources/world_details/grass1.png"));
 
@@ -147,14 +154,15 @@ public class TextureManager extends AbstractManager {
             textureMap.put("fence_top_left", new Texture("resources/world_structures/fence_top_left.png"));
             textureMap.put("fence_top_right", new Texture("resources/world_structures/fence_top_right.png"));
 
-            textureMap.put("MainCharacterN", new Texture("resources/Main_Character_Back.png"));
-            textureMap.put("MainCharacterNE", new Texture("resources/Main_Character_B_Right.png"));
-            textureMap.put("MainCharacterE", new Texture("resources/Main_Character_Right.png"));
-            textureMap.put("MainCharacterSE", new Texture("resources/Main_Character_F_Right.png"));
-            textureMap.put("MainCharacterS", new Texture("resources/Main_Character_Front.png"));
-            textureMap.put("MainCharacterSW",new Texture( "resources/Main_Character_F_Left.png"));
-            textureMap.put("MainCharacterW", new Texture("resources/Main_Character_Left.png"));
-            textureMap.put("MainCharacterNW",new Texture( "resources/Main_Character_B_Left.png"));
+            textureMap.put("MainCharacterN_Anim", new Texture("resources/Main_Character_Back_Anim.png"));
+            textureMap.put("MainCharacterNE_Anim", new Texture("resources/Main_Character_B_Right_Anim.png"));
+            textureMap.put("MainCharacterE_Anim", new Texture("resources/Main_Character_Right_Anim.png"));
+            textureMap.put("MainCharacterSE_Anim", new Texture("resources/Main_Character_F_Right_Anim.png"));
+            textureMap.put("MainCharacterS_Anim", new Texture("resources/Main_Character_Front_Anim.png"));
+            textureMap.put("MainCharacterSW_Anim",new Texture( "resources/Main_Character_F_Left_Anim.png"));
+            textureMap.put("MainCharacterW_Anim", new Texture("resources/Main_Character_Left_Anim.png"));
+            textureMap.put("MainCharacterNW_Anim",new Texture( "resources/Main_Character_B_Left_Anim.png"));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -168,7 +176,9 @@ public class TextureManager extends AbstractManager {
 
     }
     /**
-     * Gets a texture object for a given string id
+     * Gets a texture object for a given string id, if
+     * the string id starts with __ANIMATION it will try and retrieve a
+     * sprite from an animation.
      *
      * @param id Texture identifier
      * @return Texture for given id
@@ -218,13 +228,20 @@ public class TextureManager extends AbstractManager {
         }
     }
 
+
+    /**
+     * Gets a texture from an animation.
+     * @param id The string id of the form __ANIMATION_<animation_name>:<index>
+     * @param animationManager The animation manager
+     * @return
+     */
     private Texture getTextureFromAnimation(String id, AnimationManager animationManager) {
         String id1 = id.replaceAll("__ANIMATION_", "");
         String[] split = id1.split(":");
-        System.out.println(split[0] + " " + split[1]);
+        //System.out.println(split[0] + " " + split[1]);
         Texture texture = animationManager.getKeyFrameFromAnimation(split[0], Integer.valueOf(split[1]));
         if (texture == null) {
-            System.out.println("getTextureFromAnimation did not find texture");
+            //System.out.println("getTextureFromAnimation did not find texture");
             return null;
         }
 

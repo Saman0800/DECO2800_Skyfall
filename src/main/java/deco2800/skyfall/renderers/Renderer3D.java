@@ -35,6 +35,8 @@ public class Renderer3D implements Renderer {
     @SuppressWarnings("unused")
     private final Logger logger = LoggerFactory.getLogger(Renderer3D.class);
 
+    SoundManager sound = new SoundManager();
+
     BitmapFont font;
 
     // mouse cursor
@@ -164,13 +166,14 @@ public class Renderer3D implements Renderer {
     private void renderAbstractEntities(SpriteBatch batch, OrthographicCamera camera) {
         List<AbstractEntity> entities = GameManager.get().getWorld().getSortedEntities();
 
-        // We get the tile height and width. NOTE: This assumes that the width and
-        // height of each tile is constant
-        int w = GameManager.get().getWorld().getTile(0).getTexture().getWidth();
-        int h = GameManager.get().getWorld().getTile(0).getTexture().getHeight();
-
         int entitiesSkipped = 0;
         logger.debug("NUMBER OF ENTITIES IN ENTITY RENDER LIST: {}", entities.size());
+
+        // We get the tile height and width. NOTE: This assumes that the width and
+        // height of each tile is constant
+        int w = TextureManager.TILE_WIDTH;
+        int h = TextureManager.TILE_HEIGHT;
+
         for (AbstractEntity entity : entities) {
             float[] entityWorldCoord = WorldUtil.colRowToWorldCords(entity.getCol(), entity.getRow());
             // If it's offscreen
@@ -185,7 +188,6 @@ public class Renderer3D implements Renderer {
                 Set<HexVector> childrenPosns = staticEntity.getChildrenPositions();
                 for (HexVector childpos : childrenPosns) {
                     Texture childTex = staticEntity.getTexture(childpos);
-
                     float[] childWorldCoord = WorldUtil.colRowToWorldCords(childpos.getCol(), childpos.getRow());
 
                     // time for some funky math: we want to render the entity at the centre of the
@@ -224,12 +226,20 @@ public class Renderer3D implements Renderer {
         GameManager.get().setEntitiesCount(entities.size());
     }
 
+    /**
+     *
+     * @param batch The sprite batch.
+     * @param entity The entity that will be drawn
+     * @param entityWorldCord The coordinates to render at
+     * @param tex The texture to render it as
+     */
+
     private void renderAbstractEntity(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCord, Texture tex) {
         float x = entityWorldCord[0];
         float y = entityWorldCord[1];
 
-        float width = tex.getWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X;
-        float height = tex.getHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y;
+        float width = tex.getWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X * entity.getScale();
+        float height = tex.getHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y * entity.getScale();
         batch.draw(tex, x, y, width, height);
     }
 
@@ -303,30 +313,43 @@ public class Renderer3D implements Renderer {
         }
     }
 
+    /**
+     * Render the default sprite for an entity, used if the state is NULL
+     * and the Animatable interface has been implemented. If a directional
+     * texture cannot be found then the default entity texture is render(i.e
+     * the one given into its constructor)
+     * @param batch The sprite batch.
+     * @param entity The entity that will be drawn
+     * @param entityWorldCoord The coordinates to render at
+     */
+    private void renderDefaultSprite(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord) {
+        String directionTexture = entity.getDefaultTexture();
+
+        if (!directionTexture.equals("Not Found")) {
+            renderAbstractEntity(batch, entity, entityWorldCoord, textureManager.getTexture(directionTexture));
+
+        } else {
+            renderAbstractEntity(batch, entity, entityWorldCoord, textureManager.getTexture(entity.getTexture()));
+        }
+    }
+
 
     /**
-     * Runs all other non-looping animations for the entity
+     * Runs an animation for the entity if it is applicable if there is
+     * no animation to be run or it cannot be found a default texture is run
      * 
      * @param batch            Sprite batch to draw onto
      * @param entity           Current entity
      * @param entityWorldCoord Where to draw.
      */
     private void runAnimation(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord) {
-
             if (entity.getCurrentState() == AnimationRole.NULL) {
-                String directionTexture = entity.getDefaultTexture();
-                if (!directionTexture.equals("Not Found")) {
-                    renderAbstractEntity(batch, entity, entityWorldCoord, textureManager.getTexture(directionTexture));
-                    return;
-                } else {
-                    renderAbstractEntity(batch, entity, entityWorldCoord, textureManager.getTexture(entity.getTexture()));
-                    return;
-                }
+                renderDefaultSprite(batch, entity, entityWorldCoord);
             }
 
             AnimationLinker aniLink = entity.getToBeRun();
             if (aniLink == null) {
-                //System.out.println("AnimationLinker is null");
+                renderDefaultSprite(batch, entity, entityWorldCoord);
                 return;
             }
 
@@ -335,6 +358,7 @@ public class Renderer3D implements Renderer {
 
             if (ani == null) {
                 //System.out.println("Animation is null");
+                renderDefaultSprite(batch, entity, entityWorldCoord);
                 return;
             }
 
@@ -342,15 +366,16 @@ public class Renderer3D implements Renderer {
                 //System.out.println("Animation is done");
                 aniLink.resetStartingTime();
 
-                if (!(entity.getCurrentState() == AnimationRole.MOVE)) {
+                if (!aniLink.isLooping()) {
                     entity.setGetToBeRunToNull();
                 }
+                renderDefaultSprite(batch, entity, entityWorldCoord);
                 return;
             }
 
             TextureRegion currentFrame = ani.getKeyFrame(time, true);
-            float width = currentFrame.getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X;
-            float height = currentFrame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y;
+            float width = currentFrame.getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X * entity.getScale() ;
+            float height = currentFrame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y * entity.getScale();
             int[] offset = aniLink.getOffset();
 
             batch.draw(currentFrame, entityWorldCoord[0] + offset[0], entityWorldCoord[1] + offset[0], width, height);
