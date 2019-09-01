@@ -275,8 +275,8 @@ public class MainCharacterTest {
         // Test if hurt() can trigger Peon.changeHealth() when
         // the damage taken can make player's health below 0.
         testCharacter.hurt(10);
-        // player death + 1 = 2, since it has died in another test before
-        Assert.assertEquals(2, testCharacter.getDeaths());
+
+        Assert.assertEquals(1, testCharacter.getDeaths());
 
         // "Kill" animation test
         AnimationLinker animationLinker = new AnimationLinker("MainCharacter_Dead_E_Anim",
