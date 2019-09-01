@@ -54,6 +54,9 @@ public class WorldBuilder implements WorldBuilderInterface{
     //The size of the rivers
     private int riverSize;
 
+    //The size of the beach
+    private int beachSize;
+
 
     //Determines whether static entities are on
     private boolean staticEntities;
@@ -153,6 +156,14 @@ public class WorldBuilder implements WorldBuilderInterface{
     }
 
     /**
+     * Sets the size of the beach
+     * @param size The size which the beach will be, in tiles
+     */
+    public void setBeachSize(int size){
+        beachSize = size;
+    }
+
+    /**
      * Sets whether static entities are off or on
      * @param staticEntities true representing static entities are on, false they are not
      */
@@ -215,19 +226,19 @@ public class WorldBuilder implements WorldBuilderInterface{
         switch (type){
             case "single_player":
                  world =  new World(seed, worldSize, nodeSpacing, biomeSizesArray,numOfLakes,lakeSizesArray, biomes,
-                    entities, rivers, riverSize);
+                    entities, rivers, riverSize, beachSize);
                  break;
             case "tutorial":
                 world =  new TutorialWorld(seed, worldSize, nodeSpacing, biomeSizesArray,numOfLakes,lakeSizesArray, biomes,
-                    entities, rivers, riverSize);
+                    entities, rivers, riverSize, beachSize);
                 break;
             case "test":
                 world =  new TestWorld(seed, worldSize, nodeSpacing, biomeSizesArray,numOfLakes,lakeSizesArray, biomes,
-                    entities, rivers, riverSize);
+                    entities, rivers, riverSize, beachSize);
                 break;
             case "server":
                 world =  new ServerWorld(seed, worldSize, nodeSpacing, biomeSizesArray,numOfLakes,lakeSizesArray, biomes,
-                    entities, rivers, riverSize);
+                    entities, rivers, riverSize, beachSize);
                 break;
             default:
                 throw new IllegalArgumentException("The world type is not valid");
