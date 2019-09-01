@@ -2,11 +2,9 @@ package deco2800.skyfall.gui;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameMenuManager;
 
@@ -93,7 +91,7 @@ public class HealthCircle {
     public void update() {
         newHealth = mainCharacter.getHealth();
         updateWithViewportChanges();
-        if (!((currentHealth - newHealth) < 0)) {
+        if (!((currentHealth - newHealth) >= 0)) {
             updateInnerCircle();
         }
     }
