@@ -24,14 +24,19 @@ public class WorldDirector {
      * @param builder The builder used to construct the world
      */
     public static void constructSimpleSinglePlayerWorld(WorldBuilder builder){
-        builder.setNodeSpacing(15);
+        builder.setType("single_player");
+
         builder.setWorldSize(160);
+        builder.setNodeSpacing(15);
         builder.setSeed(random.nextInt());
+
         builder.addLake(5);
         builder.addLake(5);
         builder.addRiver();
+
         builder.setRiverSize(5);
         builder.setBeachSize(12);
+
         builder.setStaticEntities(true);
 
         MainCharacter mainCharacter = new MainCharacter(0,0,0.05f, "Main Piece", 10);
@@ -59,9 +64,10 @@ public class WorldDirector {
         if (n < 1 || n > 5) {
             throw new IllegalArgumentException("n must be between 1 and 5");
         }
+        builder.setType("single_player");
 
-        builder.setNodeSpacing(15);
         builder.setWorldSize(160);
+        builder.setNodeSpacing(15);
         builder.setSeed(random.nextInt());
         builder.addLake(5);
         builder.addRiver();
@@ -104,6 +110,10 @@ public class WorldDirector {
         builder.addEntity(new Spider(-4f, -1f, mainCharacter));
         builder.addEntity(new Robot(-4, -2, mainCharacter));
 
+        builder.addLake(5);
+        builder.addRiver();
+        builder.setRiverSize(5);
+        builder.setBeachSize(12);
 
         builder.setNodeSpacing(15);
         builder.setWorldSize(80);
