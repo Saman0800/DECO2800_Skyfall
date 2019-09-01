@@ -123,7 +123,6 @@ public class Stone extends EnemyEntity implements Animatable {
     private void setAttacking(boolean attacking) {
         this.attacking = attacking;
     }
-    
 
 
     private void angryAttacking() {
