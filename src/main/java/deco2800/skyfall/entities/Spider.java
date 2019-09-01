@@ -4,6 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import deco2800.skyfall.animation.Animatable;
+import deco2800.skyfall.animation.AnimationLinker;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.tasks.MovementTask;
 import deco2800.skyfall.util.HexVector;
@@ -13,7 +17,7 @@ import java.util.Map;
 
 import static deco2800.skyfall.managers.GameManager.get;
 
-public class Spider extends EnemyEntity {
+public class Spider extends EnemyEntity implements Animatable {
     private static final transient int HEALTH = 10;
     private static final transient float ATTACK_RANGE = 0.5f;
     private static final transient int ATTACK_SPEED = 2000;
@@ -28,6 +32,22 @@ public class Spider extends EnemyEntity {
 
     //the animation resource
     private TextureAtlas textureAtlas;
+    private MainCharacter mc;
+    public Spider(float col, float row, MainCharacter mc) {
+        super(col, row);
+        this.originalCol=col;
+        this.orriginalRow=row;
+        this.setTexture("spider");
+        this.setObjectName("spider");
+        this.setHeight(1);
+        this.setHealth(HEALTH);
+        this.setLevel(1);
+        this.setSpeed(1);
+        this.setArmour(1);
+        this.mc = mc;
+        this.configureAnimations();
+        this.setDirectionTextures();
+    }
 
     public Spider(float col, float row) {
         super(col, row);
@@ -41,8 +61,6 @@ public class Spider extends EnemyEntity {
         this.setSpeed(1);
         this.setArmour(1);
     }
-
-
     public Spider(float row, float col, String texturename, int health, int armour, int damage) {
         super(row, col, texturename, health, armour, damage);
     }
@@ -78,6 +96,18 @@ public class Spider extends EnemyEntity {
     @Override
     public void onTick(long i) {
         super.onTick(i);
+        if (mc != null) {
+            float colDistance = mc.getCol() - this.getCol();
+            float rowDistance = mc.getRow() - this.getRow();
+
+            if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
+                this.setCurrentState(AnimationRole.DEFENCE);
+            } else {
+                this.setCurrentState(AnimationRole.NULL);
+            }
+        } else {
+      System.out.println("MainCharacter is null");
+        }
 //        if (task != null && task.isAlive()) {
 //            task.onTick(i);
 //
@@ -106,6 +136,20 @@ public class Spider extends EnemyEntity {
 //            this.setCol(this.originalCol);
 //        }
 
+    @Override
+    public void configureAnimations() {
+        this.addAnimations(
+                AnimationRole.DEFENCE,
+                Direction.DEFAULT,
+                new AnimationLinker("spider_defence",
+                        AnimationRole.MOVE, Direction.DEFAULT,
+                        true, true));
+    }
+
+    @Override
+    public void setDirectionTextures() {
+
+    }
 
     /**
      * @return string representation of this class including its enemy type, biome and x,y coordinates
