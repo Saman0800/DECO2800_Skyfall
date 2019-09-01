@@ -8,7 +8,6 @@ import deco2800.skyfall.resources.items.Apple;
 import deco2800.skyfall.resources.items.PoisonousMushroom;
 import deco2800.skyfall.resources.items.Stone;
 
-import javafx.animation.Animation;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
