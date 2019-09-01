@@ -268,7 +268,7 @@ public class EnvironmentManager extends TickableManager {
       //Set Background music
       setTODMusic();
 
-      setBiome();
+      //setBiome();
    }
    
 }
