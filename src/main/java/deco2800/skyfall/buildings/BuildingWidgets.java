@@ -21,9 +21,12 @@ import deco2800.skyfall.worlds.Tile;
  */
 public class BuildingWidgets implements TouchDownObserver {
     private static BuildingWidgets instance = null;
+
     private Stage stage;
     private Skin skin;
     private AbstractWorld world;
+    private InputManager inputManager;
+
     private Table menu;
     private Label label;
     private TextButton updateBtn;
@@ -44,28 +47,34 @@ public class BuildingWidgets implements TouchDownObserver {
      * Private constructor to enforce use of get().
      */
     private BuildingWidgets() {
-        this.stage = GameManager.get().getStage();
-        this.skin = GameManager.get().getSkin();
-        this.world = GameManager.get().getWorld();
+        try {
+            this.stage = GameManager.get().getStage();
+            this.skin = GameManager.get().getSkin();
+            this.world = GameManager.get().getWorld();
+            this.inputManager = GameManager.get().getManager(InputManager.class);
 
-        // using a skin for test, removed it later
-        this.skin = new Skin(Gdx.files.internal("/asserts/skin_for_test/uiskin.json"));
+            // using a skin for test, removed it later
+            this.skin = new Skin(Gdx.files.internal("asserts/skin_for_test/uiskin.json"));
 
-        this.menu = new Table();
-        this.label = new Label("Name", this.skin);
-        this.updateBtn = new TextButton("Update", this.skin);
-        this.destroyBtn = new TextButton("Destroy", this.skin);
+            this.menu = new Table();
+            this.label = new Label("Name", this.skin);
+            this.updateBtn = new TextButton("Update", this.skin);
+            this.destroyBtn = new TextButton("Destroy", this.skin);
 
-        this.menu.setVisible(false);
-        this.menu.align(Align.left|Align.top);
-        this.menu.add(label).padBottom(3);
-        this.menu.row();
-        this.menu.add(updateBtn).padBottom(3);
-        this.menu.row();
-        this.menu.add(destroyBtn);
+            this.menu.setVisible(false);
+            this.menu.align(Align.left|Align.top);
+            this.menu.add(label).padBottom(3);
+            this.menu.row();
+            this.menu.add(updateBtn).padBottom(3);
+            this.menu.row();
+            this.menu.add(destroyBtn);
 
-        this.stage.addActor(this.menu);
-        GameManager.get().getManager(InputManager.class).addTouchDownListener(this);
+            this.stage.addActor(this.menu);
+            this.inputManager.addTouchDownListener(this);
+        } catch (Exception e) {
+            // print exception trace, but no impact to game
+            e.printStackTrace();
+        }
     }
 
     /**
