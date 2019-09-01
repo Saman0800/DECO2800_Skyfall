@@ -158,6 +158,7 @@ public class Treeman extends EnemyEntity implements Animatable {
         this.setCollider();
         if (this.attackStatus == false) {
             randomMoving();
+            setCurrentState(AnimationRole.MOVE);
             //movingDirection=movementDirection(this.position.getAngle());
         }
 
@@ -195,12 +196,11 @@ public class Treeman extends EnemyEntity implements Animatable {
                     this.setSpeed(INJURESPEED);
                     //setCurrentDirection(movementDirection
                     // (this.position.getAngle()));
-                    setCurrentState(AnimationRole.MOVE);
                 } else {
                     this.setSpeed(NORMALSPEED);
                     //setCurrentDirection(movementDirection
                     // (this.position.getAngle()));
-                    setCurrentState(AnimationRole.MOVE);
+
                 }
 
 
@@ -367,10 +367,14 @@ public class Treeman extends EnemyEntity implements Animatable {
 
         this.addAnimations(
                 AnimationRole.MOVE,
-                Direction.SOUTH,
-                new AnimationLinker("treeman_dead",
-                        AnimationRole.MOVE, Direction.SOUTH,
+                Direction.DEFAULT,
+                new AnimationLinker("treeman_movement",
+                        AnimationRole.MOVE, Direction.DEFAULT,
                         true, true));
+
+
+
+
     }
 
     /**
