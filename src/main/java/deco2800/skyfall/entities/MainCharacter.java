@@ -331,8 +331,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Add weapon to weapons list
-     * @param item weapon to be addeda
+     *  Add weapon to weapons list
+     * @param item weapon to be added
+     */
     public void pickUpWeapon(Weapon item) {
         weapons.pickUpWeapon(item);
     }
