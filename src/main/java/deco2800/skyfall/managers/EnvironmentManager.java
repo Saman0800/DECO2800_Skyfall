@@ -210,25 +210,23 @@ public class EnvironmentManager extends TickableManager {
     *
     */
    public void setFilename() {
-      String[] arrOfStr = file.split("_", 4);
       currentBiome(); // Check current biome
 
       // Check time of day and biome, and change files accordingly
       if (isDay()) {
          // Until lake music created and ocean biome is restricted, play forest for now
          if (biome.equals("ocean") || biome.equals("lake")) {
-            file = "resources/sounds/forest_" + "day.wav";
+            file = "resources/sounds/forest_day.wav";
          } else {
-            file = "resources/sounds/" + biome + "_" + arrOfStr[1];
+            file = "resources/sounds/" + biome + "_day.wav";
          }
 
       } else {
-         arrOfStr[1] = "night.wav";
 //          Until lake music created and ocean biome is restricted, play forest for now
          if (biome.equals("ocean") || biome.equals("lake")) {
-            file = "resources/sounds/forest_" + arrOfStr[1];
+            file = "resources/sounds/forest_night.wav";
          } else {
-            file = "resources/sounds/" + biome + "_" + arrOfStr[1];
+            file = "resources/sounds/" + biome + "_night.wav";
          }
       }
    }
