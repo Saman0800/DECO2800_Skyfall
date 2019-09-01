@@ -76,7 +76,7 @@ public class Robot extends EnemyEntity implements Animatable {
 
     @Override
     public void onTick(long i) {
-        if(this.isDead()==true){
+        if(this.isDead()){
             GameManager.get().getWorld().removeEntity(this);
         }
         super.onTick(i);
