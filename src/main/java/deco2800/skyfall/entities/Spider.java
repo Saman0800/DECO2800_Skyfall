@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.tasks.MovementTask;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
@@ -25,6 +26,9 @@ public class Spider extends EnemyEntity {
     private static final transient String ENEMY_TYPE="spider";
     //savage animation
     private Animation<TextureRegion> animation;
+
+    //Insert SoundManager class
+    private SoundManager sound = new SoundManager();
 
     //the animation resource
     private TextureAtlas textureAtlas;
@@ -78,6 +82,7 @@ public class Spider extends EnemyEntity {
     @Override
     public void onTick(long i) {
         super.onTick(i);
+
 //        if (task != null && task.isAlive()) {
 //            task.onTick(i);
 //
@@ -91,7 +96,8 @@ public class Spider extends EnemyEntity {
 //            period=0;
 //            randomMoving();
 //        }
-    }
+
+
 //    private void randomMoving(){
 //        Map neighbourTiles=GameManager.get().getWorld().getTile(this.originalCol,this.orriginalRow).getNeighbours();
 //        Tile targetTile=(Tile) neighbourTiles.get((int)(Math.random()*neighbourTiles.size()));
@@ -105,7 +111,7 @@ public class Spider extends EnemyEntity {
 //            this.setRow(this.orriginalRow);
 //            this.setCol(this.originalCol);
 //        }
-
+    }
 
     /**
      * @return string representation of this class including its enemy type, biome and x,y coordinates
