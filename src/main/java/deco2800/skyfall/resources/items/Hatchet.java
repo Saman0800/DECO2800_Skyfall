@@ -1,17 +1,12 @@
 package deco2800.skyfall.resources.items;
 
-import deco2800.skyfall.entities.AgentEntity;
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.Tree;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.ScreenManager;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.managers.InventoryManager;
-import org.lwjgl.Sys;
 
-import java.lang.Math;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +25,7 @@ public class Hatchet extends ManufacturedResources implements Item {
      * @param owner the owner of the inventory.
      * @param position the position of the Hatchet.
      */
-    public Hatchet(MainCharacter owner, HexVector position) {
+    public Hatchet(ScreenManager.MainCharacter owner, HexVector position) {
         super(owner, position);
         this.name="Hatchet";
     }
@@ -41,7 +36,7 @@ public class Hatchet extends ManufacturedResources implements Item {
      * @param owner the owner of the inventory.
      */
 
-    public Hatchet(MainCharacter owner){
+    public Hatchet(ScreenManager.MainCharacter owner){
         super(owner);
         this.name="Hatchet";
     }

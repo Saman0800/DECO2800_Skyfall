@@ -1,10 +1,8 @@
 package deco2800.skyfall.resources;
 
-import deco2800.skyfall.entities.AgentEntity;
-import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.managers.ScreenManager;
 import deco2800.skyfall.util.HexVector;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -25,7 +23,7 @@ public abstract class ManufacturedResources implements Item, Blueprint {
     public HexVector position;
 
     // an AngnetEntity instance representing the owner of the resource.
-    protected MainCharacter owner;
+    protected ScreenManager.MainCharacter owner;
 
     // a list of all required resources needed to create a manufactured resource item.
     private Map<String, Integer> allRequirements;
@@ -39,14 +37,14 @@ public abstract class ManufacturedResources implements Item, Blueprint {
      * @param owner the resource owner.
      * @param position the Hexvector position of the manufactured resource.
      */
-    public ManufacturedResources(MainCharacter owner, HexVector position) {
+    public ManufacturedResources(ScreenManager.MainCharacter owner, HexVector position) {
         this.owner = owner;
         this.position = position;
         this.carryable = true;
         this.subtype = "Manufactured Resource";
     }
 
-    public ManufacturedResources(MainCharacter owner){
+    public ManufacturedResources(ScreenManager.MainCharacter owner){
         this.owner = owner;
         this.subtype= "Manufactured Resource";
     }

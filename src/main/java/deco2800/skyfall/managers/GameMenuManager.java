@@ -1,13 +1,10 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import deco2800.skyfall.GameScreen;
-import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gui.HealthCircle;
 import deco2800.skyfall.gui.SettingsTable;
 import deco2800.skyfall.GameMenu.PopUpTable;
@@ -20,7 +17,7 @@ public class GameMenuManager extends TickableManager {
 
     private static TextureManager textureManager;
     private Stage stage;
-    private MainCharacter mainCharacter;
+    private ScreenManager.MainCharacter mainCharacter;
     private HealthCircle healthCircle;
     private SettingsTable settingsTable;
     private InventoryManager inventory;
@@ -106,7 +103,7 @@ public class GameMenuManager extends TickableManager {
         return new TextureRegionDrawable((new TextureRegion(textureManager.getTexture(sName))));
     }
 
-    public void addMainCharacter(MainCharacter mainCharacter) {
+    public void addMainCharacter(ScreenManager.MainCharacter mainCharacter) {
         if (stage == null) {
             System.out.println("Please set stage before adding character");
             return;
@@ -115,7 +112,7 @@ public class GameMenuManager extends TickableManager {
 
     }
 
-    public MainCharacter getMainCharacter() {
+    public ScreenManager.MainCharacter getMainCharacter() {
         return mainCharacter;
     }
 }

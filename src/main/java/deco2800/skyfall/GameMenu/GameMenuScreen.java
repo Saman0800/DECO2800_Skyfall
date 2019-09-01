@@ -5,11 +5,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
-import deco2800.skyfall.GameScreen;
-import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gui.HealthCircle;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InventoryManager;
+import deco2800.skyfall.managers.ScreenManager;
 import deco2800.skyfall.managers.TextureManager;
 
 import java.util.Map;
@@ -25,7 +24,7 @@ public class GameMenuScreen {
     private PopUpTable pauseTable, helpTable, inventoryTable;
     private InventoryManager inventory;
     private HealthCircle healthCircle;
-    private MainCharacter mainCharacter;
+    private ScreenManager.MainCharacter mainCharacter;
 
     public GameMenuScreen(GameMenuManager gameMenuManager) {
         this.gameMenuManager = gameMenuManager;

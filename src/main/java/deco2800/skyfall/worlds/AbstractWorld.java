@@ -2,6 +2,7 @@ package deco2800.skyfall.worlds;
 
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.ScreenManager;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
@@ -312,6 +313,8 @@ public abstract class AbstractWorld {
             }
 
             e1.onTick(0);
+
+
             if (e1.getCollider() == null) {
                 break;
             }
@@ -323,7 +326,7 @@ public abstract class AbstractWorld {
                 Collider c2 = e2.getCollider();
 
                 if (e1 != e2 && c1.overlaps(c2)) {
-                    if (e1 instanceof MainCharacter || e2 instanceof MainCharacter) {
+                    if (e1 instanceof ScreenManager.MainCharacter || e2 instanceof ScreenManager.MainCharacter) {
                         break;
                     }
                     // collision handler

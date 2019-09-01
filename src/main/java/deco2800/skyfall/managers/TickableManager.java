@@ -4,5 +4,5 @@ import deco2800.skyfall.Tickable;
 
 public abstract class TickableManager extends AbstractManager implements Tickable{
 
-	 public abstract void onTick(long i);
+    public abstract void onTick(long i);
 }

@@ -2,16 +2,14 @@ package deco2800.skyfall.gui;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.ScreenManager;
 
 public class HealthCircle {
-    private MainCharacter mainCharacter;
+    private ScreenManager.MainCharacter mainCharacter;
     private float currentHealth;
     private int newHealth; // maybe for animating it down.
     private  ImageButton bigger_circle;
@@ -23,7 +21,7 @@ public class HealthCircle {
     private Label label;
     //TODO: change stage.
 
-    public HealthCircle(Stage stage, String t1, String t2, MainCharacter mc) {
+    public HealthCircle(Stage stage, String t1, String t2, ScreenManager.MainCharacter mc) {
         mainCharacter = mc;
         s = stage;
 

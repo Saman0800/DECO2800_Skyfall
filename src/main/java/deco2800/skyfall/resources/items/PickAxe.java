@@ -1,16 +1,14 @@
 package deco2800.skyfall.resources.items;
 
-import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.Rock;
 import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.InventoryManager;
+import deco2800.skyfall.managers.ScreenManager;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.resources.Item;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /***
@@ -26,7 +24,7 @@ public class PickAxe extends ManufacturedResources implements Item ,Blueprint{
      * @param owner the owner of the inventory.
      * @param position the position of the Pick Axe.
      */
-    public PickAxe (MainCharacter owner, HexVector position) {
+    public PickAxe (ScreenManager.MainCharacter owner, HexVector position) {
         super(owner, position);
         this.name="Pick Axe";
     }
@@ -36,7 +34,7 @@ public class PickAxe extends ManufacturedResources implements Item ,Blueprint{
      *
      * @param owner the owner of the inventory.
      */
-    public PickAxe (MainCharacter owner) {
+    public PickAxe (ScreenManager.MainCharacter owner) {
         super(owner);
         this.name="Pick Axe";
     }

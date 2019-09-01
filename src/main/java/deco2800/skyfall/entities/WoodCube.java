@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.managers.ScreenManager;
 import deco2800.skyfall.util.HexVector;
 
 import java.util.Random;
@@ -27,7 +28,7 @@ public class WoodCube extends AbstractEntity implements Collectable {
     @Override
     public boolean collidesWith(AbstractEntity entity) {
         // TODO: you will want to make collisions more generic and manageable
-        if (entity instanceof MainCharacter) {
+        if (entity instanceof ScreenManager.MainCharacter) {
             return entity.getPosition().getInt().equals(getPosition().getInt());
         }
 

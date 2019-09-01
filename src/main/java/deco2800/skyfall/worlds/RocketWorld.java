@@ -11,8 +11,8 @@ import deco2800.skyfall.entities.EntitySpawnRule;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InputManager;
+import deco2800.skyfall.managers.ScreenManager;
 import deco2800.skyfall.observers.TouchDownObserver;
-import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.biomes.*;
 import deco2800.skyfall.worlds.generation.BiomeGenerator;
@@ -112,13 +112,13 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         generateStartEntities(this);
 
         // MainCharacter is now being put into the game instead of PlayerPeon
-        MainCharacter testCharacter = new MainCharacter(0f, 0f, 0.05f, "Main Piece", 10);
+        ScreenManager.MainCharacter testCharacter = new ScreenManager.MainCharacter(0f, 0f, 0.05f, "Main Piece", 10);
         addEntity(testCharacter);
         GameManager.getManagerFromInstance(GameMenuManager.class).addMainCharacter(testCharacter);
 
-        EnemyEntity spider = new Spider(-4f, 1f);
+        EnemyEntity spider=new Spider(-4f,1f, testCharacter);
         addEntity(spider);
-        EnemyEntity robot = new Robot(-4f, -2f);
+        EnemyEntity robot=new Robot(-4f,-2f, testCharacter);
         addEntity(robot);
 
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
