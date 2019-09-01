@@ -56,8 +56,8 @@ public class MainCharacterTest {
         testCharacter.changeHealth(5);
         Assert.assertEquals(testCharacter.getHealth(), 15);
         testCharacter.changeHealth(-20);
-        Assert.assertEquals(testCharacter.getHealth(), 0);
-        Assert.assertTrue(testCharacter.isDead());
+        Assert.assertEquals(testCharacter.getHealth(), 10);
+        Assert.assertEquals(testCharacter.getDeaths(), 1);
     }
 
     @Test
@@ -89,19 +89,19 @@ public class MainCharacterTest {
      * Test main character is interacting correctly with basic inventory action
      */
     public void inventoryTest() {
-        Assert.assertEquals((int)testCharacter.getInventoryManager()
+        Assert.assertEquals(testCharacter.getInventoryManager()
                 .getAmount("Stone"), 2);
-        Assert.assertEquals((int)testCharacter.getInventoryManager()
+        Assert.assertEquals(testCharacter.getInventoryManager()
                 .getAmount("Wood"), 2);
         Stone stone = new Stone();
         testCharacter.pickUpInventory(stone);
-        Assert.assertEquals((int)testCharacter.getInventoryManager()
+        Assert.assertEquals(testCharacter.getInventoryManager()
                 .getAmount("Stone"), 3);
         testCharacter.dropInventory("Stone");
-        Assert.assertEquals((int)testCharacter.getInventoryManager()
+        Assert.assertEquals(testCharacter.getInventoryManager()
                 .getAmount("Stone"), 2);
         pickUpInventoryMultiple(stone, 500);
-        Assert.assertEquals((int)testCharacter.getInventoryManager()
+        Assert.assertEquals(testCharacter.getInventoryManager()
                 .getAmount("Stone"), 502);
         /* Had to change inventory method inventoryDropMultiple
             -   if(amount == num)
@@ -111,7 +111,7 @@ public class MainCharacterTest {
         */
         testCharacter.getInventoryManager()
                 .inventoryDropMultiple("Stone",502);
-        Assert.assertEquals((int)testCharacter.getInventoryManager()
+        Assert.assertEquals(testCharacter.getInventoryManager()
                 .getAmount("Stone"), 0);
     }
 
@@ -158,23 +158,26 @@ public class MainCharacterTest {
         Assert.assertEquals(1,testCharacter.getItemSlotSelected());
     }
 
-    /**
-     * Tests movingAnimation
-     */
     @Test
-    public void setMovingAnimationTest() {
-        //testCharacter.setMovingAnimation(AnimationRole.MOVE_NORTH);
-        //Assert.assertEquals(AnimationRole.MOVE_NORTH, testCharacter.getMovingAnimation());
+    public void directionCheck() {
+        testCharacter.setCurrentDirection(Direction.EAST);
+        Assert.assertEquals(testCharacter.getCurrentDirection(), Direction.EAST);
 
-        //testCharacter.setMovingAnimation(AnimationRole.NULL);
-        //Assert.assertEquals(AnimationRole.NULL, testCharacter.getMovingAnimation());
-
+        testCharacter.setCurrentDirection(Direction.WEST);
+        Assert.assertEquals(testCharacter.getCurrentDirection(), Direction.WEST);
     }
 
-    /**
-     * Set and get Animations
-     */
     @Test
+    public void roleCheck() {
+        testCharacter.setCurrentState(AnimationRole.MOVE);
+        Assert.assertEquals(testCharacter.getCurrentState(), AnimationRole.MOVE);
+
+        testCharacter.setCurrentState(AnimationRole.NULL);
+        Assert.assertEquals(testCharacter.getCurrentState(), AnimationRole.NULL);
+    }
+
+    @Test
+<<<<<<< HEAD
     public void setAndGetAnimationTest() {
         // testCharacter.addAnimations(AnimationRole.MOVE_EAST, "right");
         //testCharacter.getAnimationName(AnimationRole.MOVE_EAST);
@@ -236,5 +239,29 @@ public class MainCharacterTest {
         testMap.put(Direction.DEFAULT, animationLinker);
         testCharacter.addAnimations(AnimationRole.DEAD, Direction.DEFAULT, animationLinker);
         Assert.assertEquals(testMap, testCharacter.animations.get(AnimationRole.DEAD));
+=======
+    public void movementAnimationsExist() {
+        testCharacter.setCurrentState(AnimationRole.MOVE);
+        testCharacter.setCurrentDirection(Direction.EAST);
+
+        AnimationLinker al = testCharacter.getToBeRun();
+        Assert.assertEquals(al.getAnimationName(), "MainCharacterE_Anim");
+        Assert.assertEquals(al.getType(), AnimationRole.MOVE);
+    }
+
+    @Test
+    public void directionTexturesExist() {
+        testCharacter.setCurrentDirection(Direction.EAST);
+        String s = testCharacter.getDefaultTexture();
+        Assert.assertEquals(s, "__ANIMATION_MainCharacterE_Anim:0");
+
+        testCharacter.setCurrentDirection(Direction.WEST);
+        s = testCharacter.getDefaultTexture();
+        Assert.assertEquals(s, "__ANIMATION_MainCharacterW_Anim:0");
+
+        testCharacter.setCurrentDirection(Direction.NORTH);
+        s = testCharacter.getDefaultTexture();
+        Assert.assertEquals(s, "__ANIMATION_MainCharacterN_Anim:0");
+>>>>>>> 66096334e8b9c9746082b3d243f372fcb506f2a7
     }
 }

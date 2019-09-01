@@ -47,7 +47,11 @@ public class TextureManager extends AbstractManager {
             textureMap.put("spacman_blue", new Texture("resources/spacman_blue.png"));
             textureMap.put("bowman", new Texture("resources/bowman.png"));
             textureMap.put("dialogue_text_background", new Texture("resources/dialogue_text_background.png"));
-            textureMap.put("arcane", new Texture("resources/Arcane_Effect_1.png"));
+
+            textureMap.put("range_test", new Texture("resources/projectile.png"));
+            textureMap.put("melee_test", new Texture("resources/punch.png"));
+
+
             // Tile textures
             // Goes through all the folders with tile_textures and adds the tile name to the
             // textures, it removes
@@ -150,12 +154,15 @@ public class TextureManager extends AbstractManager {
             textureMap.put("MainCharacterW_Anim", new Texture("resources/Main_Character_Left_Anim.png"));
             textureMap.put("MainCharacterNW_Anim",new Texture( "resources/Main_Character_B_Left_Anim.png"));
 
+<<<<<<< HEAD
             // Main character Hurt animation
             textureMap.put("MainCharacter_Hurt_E_Anim", new Texture("resources/Main_Character_Hurt_E.png"));
             textureMap.put("MainCharacter_Dead_E_Anim", new Texture("resources/Main_Character_Dead_E.png"));
 
       System.out.println("ALL TEXTURES LOADED SUCCESSFULLY");
 
+=======
+>>>>>>> 66096334e8b9c9746082b3d243f372fcb506f2a7
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -169,7 +176,9 @@ public class TextureManager extends AbstractManager {
 
     }
     /**
-     * Gets a texture object for a given string id
+     * Gets a texture object for a given string id, if
+     * the string id starts with __ANIMATION it will try and retrieve a
+     * sprite from an animation.
      *
      * @param id Texture identifier
      * @return Texture for given id
@@ -219,13 +228,20 @@ public class TextureManager extends AbstractManager {
         }
     }
 
+
+    /**
+     * Gets a texture from an animation.
+     * @param id The string id of the form __ANIMATION_<animation_name>:<index>
+     * @param animationManager The animation manager
+     * @return
+     */
     private Texture getTextureFromAnimation(String id, AnimationManager animationManager) {
         String id1 = id.replaceAll("__ANIMATION_", "");
         String[] split = id1.split(":");
-        System.out.println(split[0] + " " + split[1]);
+        //System.out.println(split[0] + " " + split[1]);
         Texture texture = animationManager.getKeyFrameFromAnimation(split[0], Integer.valueOf(split[1]));
         if (texture == null) {
-            System.out.println("getTextureFromAnimation did not find texture");
+            //System.out.println("getTextureFromAnimation did not find texture");
             return null;
         }
 

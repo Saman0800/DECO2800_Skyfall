@@ -14,7 +14,7 @@ public class Projectile extends AgentEntity {
     /**
      * How many game ticks all projectiles survive for before being removed.
      */
-    public static final int LIFE_TIME_TICKS = 20;
+    public static final int LIFE_TIME_TICKS = 40;
 
     /**
      * The amount of damage this projectile deals.

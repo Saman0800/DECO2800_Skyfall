@@ -89,6 +89,10 @@ public class AnimationManager extends AbstractManager {
         System.out.println("All animations in game");
     }
 
+    /**
+     * Constructor used for testing.
+     * @param test
+     */
     public AnimationManager(boolean test) {
 
     }
@@ -145,6 +149,12 @@ public class AnimationManager extends AbstractManager {
         LOGGER.info("Object " + animationName + " has been generated");
     }
 
+    /**
+     * Generates an animation from a texture atlas
+     * @param animationName Register the animation as this name
+     * @param atlasPath The path to look at
+     * @param frameRate The frame rate of the animation
+     */
     public void generateAnimationObject(String animationName,String atlasPath,float frameRate){
         TextureAtlas textureAtlas=new TextureAtlas(Gdx.files.internal(atlasPath));
         LOGGER.info("textureAtlas file has been fetched");
@@ -190,6 +200,7 @@ public class AnimationManager extends AbstractManager {
         TextureRegion textureRegion = region[index];
 
 
+        //Generates a texture
         TextureData textureData = textureRegion.getTexture().getTextureData();
         if (!textureData.isPrepared()) {
             textureData.prepare();
@@ -199,15 +210,11 @@ public class AnimationManager extends AbstractManager {
                 textureRegion.getRegionHeight(),
                 textureData.getFormat()
         );
-        pixmap.drawPixmap(
-                textureData.consumePixmap(), // The other Pixmap
-                0, // The target x-coordinate (top left corner)
-                0, // The target y-coordinate (top left corner)
-                textureRegion.getRegionX(), // The source x-coordinate (top left corner)
-                textureRegion.getRegionY(), // The source y-coordinate (top left corner)
-                textureRegion.getRegionWidth(), // The width of the area from the other Pixmap in pixels
-                textureRegion.getRegionHeight() // The height of the area from the other Pixmap in pixels
-        );
+        pixmap.drawPixmap(textureData.consumePixmap(), 0, 0,
+                textureRegion.getRegionX(),
+                textureRegion.getRegionY(),
+                textureRegion.getRegionWidth(),
+                textureRegion.getRegionHeight());
 
 
         Texture texture =  new Texture(pixmap);
