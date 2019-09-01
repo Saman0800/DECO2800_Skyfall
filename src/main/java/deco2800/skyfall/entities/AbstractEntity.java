@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities;
 
 import com.google.gson.annotations.Expose;
+import com.sun.javafx.scene.traversal.Direction;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;

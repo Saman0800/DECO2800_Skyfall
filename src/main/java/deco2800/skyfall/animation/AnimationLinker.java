@@ -2,6 +2,7 @@ package deco2800.skyfall.animation;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.managers.AnimationManager;
 import deco2800.skyfall.managers.GameManager;
 import org.slf4j.Logger;
