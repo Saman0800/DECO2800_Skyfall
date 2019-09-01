@@ -21,9 +21,12 @@ import deco2800.skyfall.worlds.Tile;
  */
 public class BuildingWidgets implements TouchDownObserver {
     private static BuildingWidgets instance = null;
+
     private Stage stage;
     private Skin skin;
     private AbstractWorld world;
+    private InputManager inputManager;
+
     private Table menu;
     private Label label;
     private TextButton updateBtn;
@@ -33,10 +36,9 @@ public class BuildingWidgets implements TouchDownObserver {
      * Returns an instance of the building widgets.
      * @return the building widgets
      */
-    // return an instance of building widgets
-    public static BuildingWidgets get() {
+    public static BuildingWidgets get(Stage stage, Skin skin, AbstractWorld world, InputManager input) {
         if (instance == null) {
-            return new BuildingWidgets();
+            return new BuildingWidgets(stage, skin, world, input);
         }
         return instance;
     }
@@ -44,29 +46,37 @@ public class BuildingWidgets implements TouchDownObserver {
     /**
      * Private constructor to enforce use of get().
      */
-    private BuildingWidgets() {
-        this.stage = GameManager.get().getStage();
-        this.skin = GameManager.get().getSkin();
-        this.world = GameManager.get().getWorld();
+    private BuildingWidgets(Stage stage, Skin skin, AbstractWorld world, InputManager input) {
+        try {
+            this.stage = stage;
+            this.skin = skin;
+            this.world = world;
+            this.inputManager = input;
 
-        // using a skin for test, removed it later
-        this.skin = new Skin(Gdx.files.internal("asserts/skin_for_test/uiskin.json"));
+            if (this.skin == null) {
+                // using a skin for test, removed it later
+                this.skin = new Skin(Gdx.files.internal("asserts/skin_for_test/uiskin.json"));
+            }
 
-        this.menu = new Table();
-        this.label = new Label("Name", this.skin);
-        this.updateBtn = new TextButton("Update", this.skin);
-        this.destroyBtn = new TextButton("Destroy", this.skin);
+            this.menu = new Table();
+            this.label = new Label("Name", this.skin);
+            this.updateBtn = new TextButton("Update", this.skin);
+            this.destroyBtn = new TextButton("Destroy", this.skin);
 
-        this.menu.setVisible(false);
-        this.menu.align(Align.left|Align.top);
-        this.menu.add(label).padBottom(3);
-        this.menu.row();
-        this.menu.add(updateBtn).padBottom(3);
-        this.menu.row();
-        this.menu.add(destroyBtn);
+            this.menu.setVisible(false);
+            this.menu.align(Align.left|Align.top);
+            this.menu.add(label).padBottom(3);
+            this.menu.row();
+            this.menu.add(updateBtn).padBottom(3);
+            this.menu.row();
+            this.menu.add(destroyBtn);
 
-        this.stage.addActor(this.menu);
-        GameManager.get().getManager(InputManager.class).addTouchDownListener(this);
+            this.stage.addActor(this.menu);
+            this.inputManager.addTouchDownListener(this);
+        } catch (Exception e) {
+            // print exception trace, but no impact to game
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -108,6 +118,14 @@ public class BuildingWidgets implements TouchDownObserver {
                 menu.setVisible(false);
             }
         });
+    }
+
+    /**
+     * Get the widget layout.
+     * @return an table object forms widget
+     */
+    public Table getMenu() {
+        return this.menu;
     }
 
     /**

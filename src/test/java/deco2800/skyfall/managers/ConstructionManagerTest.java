@@ -1,32 +1,36 @@
 package deco2800.skyfall.managers;
 
-import deco2800.skyfall.entities.structures.AbstractBuilding;
-import deco2800.skyfall.entities.structures.WallBuilding;
-import deco2800.skyfall.worlds.RocketWorld;
+import deco2800.skyfall.entities.structures.House;
+import deco2800.skyfall.entities.structures.TownCentreBuilding;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
 
-import deco2800.skyfall.managers.ConstructionManager;
+import deco2800.skyfall.entities.structures.AbstractBuilding;
+import deco2800.skyfall.entities.structures.WallBuilding;
+import deco2800.skyfall.worlds.TestWorld;
 import deco2800.skyfall.worlds.AbstractWorld;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.worlds.RocketWorld;
 
 import java.util.TreeMap;
 
 //Add all tests related to the construction manager
 public class ConstructionManagerTest {
+    private GameManager gm;
     private ConstructionManager cmgr;
 
     @Before
     public void setup() {
+        this.gm = GameManager.get();
         this.cmgr = new ConstructionManager();
+        gm.setWorld(new TestWorld(1));
     }
 
     @Test
-    public void testInvCheckPositive(){
-        AbstractBuilding building = new WallBuilding(1,1);
+    public void testInvCheckPositive() {
+        AbstractBuilding building = new WallBuilding(1, 1);
         TreeMap<String, Integer> buildingCost = new TreeMap<>();
         buildingCost.put("Stone", 2);
         buildingCost.put("Wood", 2);
@@ -39,8 +43,8 @@ public class ConstructionManagerTest {
     }
 
     @Test
-    public void testInvCheckNegative(){
-        AbstractBuilding building = new WallBuilding(1,1);
+    public void testInvCheckNegative() {
+        AbstractBuilding building = new WallBuilding(1, 1);
         TreeMap<String, Integer> buildingCost = new TreeMap<>();
         buildingCost.put("Stone", 3);
         buildingCost.put("Wood", 2);
@@ -53,8 +57,8 @@ public class ConstructionManagerTest {
     }
 
     @Test
-    public void testInvRemove(){
-        AbstractBuilding building = new WallBuilding(1,1);
+    public void testInvRemove() {
+        AbstractBuilding building = new WallBuilding(1, 1);
         TreeMap<String, Integer> buildingCost = new TreeMap<>();
         buildingCost.put("Stone", 2);
         buildingCost.put("Wood", 2);
@@ -65,6 +69,30 @@ public class ConstructionManagerTest {
 
         Assert.assertEquals(0, inventoryManager.getAmount("Stone"));
         Assert.assertEquals(0, inventoryManager.getAmount("Wood"));
+    }
+
+    @Test
+    public void testMergeBuildingPositive() {
+        AbstractBuilding[] buildings = {
+                new WallBuilding(1, 1),
+                new WallBuilding(3, 5)
+        };
+        InventoryManager inventoryManager = new InventoryManager();
+        Boolean result = cmgr.mergeBuilding(buildings, inventoryManager);
+
+        Assert.assertEquals(true, result);
+    }
+
+    @Test
+    public void testMergeBuildingNegative() {
+        AbstractBuilding[] buildings = {
+                new WallBuilding(1, 1),
+                new TownCentreBuilding(3, 5)
+        };
+        InventoryManager inventoryManager = new InventoryManager();
+        Boolean result = cmgr.mergeBuilding(buildings, inventoryManager);
+
+        Assert.assertEquals(false, result);
     }
 
     @Test
@@ -96,7 +124,7 @@ public class ConstructionManagerTest {
     public void emptyTerrainTest() {
         String terrain = "";
         boolean bool = false;
-        Tile tile = new Tile(1,1);
+        Tile tile = new Tile(1, 1);
 
         tile.setTexture(terrain);
         this.cmgr.updateTerrainMap(terrain, bool);
@@ -108,7 +136,7 @@ public class ConstructionManagerTest {
     public void existTerrainTest() {
         String terrain = "River";
         boolean bool = false;
-        Tile tile = new Tile(1,1);
+        Tile tile = new Tile(1, 1);
 
         tile.setTexture(terrain);
         this.cmgr.updateTerrainMap(terrain, bool);
@@ -118,7 +146,7 @@ public class ConstructionManagerTest {
 
     @Test
     public void verifyBoimeTest() {
-        Tile tile = new Tile(1,1);
+        Tile tile = new Tile(1, 1);
         tile.setIsBuildable(false);
         Assert.assertFalse(this.cmgr.verifyBiome(tile));
         tile.setIsBuildable(true);
@@ -127,8 +155,8 @@ public class ConstructionManagerTest {
 
     @Test
     public void verifyEntityTest() {
-        AbstractWorld world = new RocketWorld(1, 30,5, new int[] {20,10,10}, 0, 0 );
-        Tile tile = world.getTile(10,10);
+        AbstractWorld world = new RocketWorld(1, 30, 5, new int[]{20, 10, 10}, 0, 0);
+        Tile tile = world.getTile(10, 10);
         if (world.getEntities().size() == 0) {
             Assert.assertTrue(this.cmgr.verifyEntity(world, tile));
         }

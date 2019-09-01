@@ -26,6 +26,7 @@ public class BuildingEntity extends AbstractEntity {
     // consistent information for a specific building
     private int buildTime;
     private Map<String, Integer> buildCost;
+    private Map<String, String> buildingTextures;
     private int maxHealth;
 
     // changeable information for a specific building
@@ -47,8 +48,10 @@ public class BuildingEntity extends AbstractEntity {
      * @param renderOrder the height position on the world
      */
     public BuildingEntity(float col, float row, int renderOrder) {
-        super(col, row, renderOrder);
+        super(col, row, renderOrder, 1, 1);
         this.setObjectName(ENTITY_ID_STRING);
+        this.setRenderOrder(renderOrder);
+        this.animations = new HashMap<>();
 
         if (!WorldUtil.validColRow(new HexVector(col, row))) {
             log.debug("Invalid position");
@@ -158,6 +161,25 @@ public class BuildingEntity extends AbstractEntity {
         return buildCost;
     }
 
+    /**
+     * Adds a texture to the buildings list of textures.
+     * @param name the name of the texture
+     * @param texture the texture
+     */
+    public void addTexture(String name, String texture) {
+        if (name == null) {
+            buildingTextures = new HashMap<>();
+        }
+        if (!texture.equals("")) {
+            buildingTextures.put(name, texture);
+        }
+    }
+    /**
+     * @return - the list of the building textures
+     */
+    public Map<String, String> getTextures(){
+        return buildingTextures;
+    }
 
     /**
      * Set the initial health to a building entity.

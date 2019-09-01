@@ -1,19 +1,17 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 
-import java.awt.*;
 import java.io.*;
 import java.util.*;
 
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.buildings.BuildingEntity;
+import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.buildings.BuildingWidgets;
 import deco2800.skyfall.entities.MainCharacter;
@@ -61,11 +59,12 @@ public class ConstructionManager extends AbstractManager {
         menuAdded = false;
         menuSetUp = false;
 
-        buildingWidgets = BuildingWidgets.get();
         buildingFactory = new BuildingFactory();
+//        buildingWidgets = BuildingWidgets.get(GameManager.get().getStage(), GameManager.get().getSkin(),
+//                GameManager.get().getWorld(), GameManager.getManagerFromInstance(InputManager.class));
 
-        // testing requirements, removed later
-        GameManager.get().getWorld().addEntity(buildingFactory.createHouse(2f, 1f));
+        // testing requirement fro widget, removed it later
+//        GameManager.get().getWorld().addEntity(buildingFactory.createHouse(0f, 0f, 0));
     }
 
     //Start of UI
@@ -97,11 +96,79 @@ public class ConstructionManager extends AbstractManager {
         }
     }
 
+    private void showSetting(){
+        Stage stage = GameManager.get().getStage();
+        Skin skin = new Skin(Gdx.files.internal("resources/uiskin.skin"));
+        Window settingMenu = new Window("settingMenu", skin);
+
+        float width = GameManager.get().getStage().getWidth();
+        float height = GameManager.get().getStage().getHeight();
+
+        settingMenu.setHeight(3 * height / 4);
+        settingMenu.setWidth(3 * width / 4);
+        settingMenu.setPosition(width / 8, height / 8);
+
+        buildMenu.setVisible(false);
+        Container<Table> tableContainer = new Container<Table>();
+
+        float sw = Gdx.graphics.getWidth();
+        float sh = Gdx.graphics.getHeight();
+
+        float cw = width * 0.7f;
+        float ch = height * 0.5f;
+
+        tableContainer.setSize(cw, ch);
+//        tableContainer.setPosition((sw - cw) / 2.0f, (sh - ch) / 2.0f);
+        tableContainer.fillX();
+
+        Table table = new Table(skin);
+
+        Label topLabel = new Label("Construction Speed", skin);
+        topLabel.setAlignment(Align.center);
+        Slider slider = new Slider(0, 100, 1, false, skin);
+//        Label anotherLabel = new Label("ANOTHER LABEL", skin);
+//        anotherLabel.setAlignment(Align.center);
+
+        Table buttonTable = new Table(skin);
+
+        TextButton buttonClose = new TextButton("Close Window", skin);
+
+        table.row().colspan(3).expandX().fillX();
+        table.add(topLabel).fillX();
+        table.row().colspan(3).expandX().fillX();
+        table.add(slider).fillX();
+        table.row().colspan(3).expandX().fillX();
+//        table.add(anotherLabel).fillX();
+        table.row().expandX().fillX();
+
+        table.row().expandX().fillX();;
+
+        table.add(buttonTable).colspan(3);
+
+        buttonTable.pad(16);
+        buttonTable.row().fillX().expandX();
+        buttonTable.add(buttonClose).width(cw/3.0f);
+
+        tableContainer.setActor(table);
+        settingMenu.addActor(tableContainer);
+        stage.addActor(settingMenu);
+
+        buttonClose.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                //call build function for specific building
+                settingMenu.setVisible(false);
+                menuSetUp =false;
+                displayWindow();
+            }
+        });
+    }
     /**
      * Add components (such as buttons) to the build menu
      * Does nothing after it has been called once
      */
     private void setUpMenu() {
+
         if (!menuSetUp) {
             float width = GameManager.get().getStage().getWidth();
             float height = GameManager.get().getStage().getHeight();
@@ -119,46 +186,43 @@ public class ConstructionManager extends AbstractManager {
             //to be improved when building factory has been created
             TextButton house = new TextButton("House", skin);
             TextButton storageUnit= new TextButton("Stroage Unit", skin);
-            TextButton building3 = new TextButton("Building 3", skin);
-            TextButton building4 = new TextButton("Building 4", skin);
+            TextButton setting = new TextButton("Setting", skin);
+
+            setting.setBounds(50, 150, 140, 40);
 
             house.setBounds(50, 450, 140, 40);
             storageUnit.setBounds(50, 350, 140, 40);
 
+
             buildMenu.addActor(house);
             buildMenu.addActor(storageUnit);
+            buildMenu.addActor(setting);
+
 
             AbstractWorld world = GameManager.get().getWorld();
             house.addListener(new ClickListener() {
                 @Override
-                public void clicked(InputEvent event, float x, float y){
+                public void clicked(InputEvent event, float x, float y) {
                     //call build function for specific building
 
-                    switchView();
-
+                    displayWindow();
                     //TODO implement permissions
                     //permission test have not been updated since switched to factory for buildings
 
-                    AbstractEntity mc = world.getSortedAgentEntities().get(world.getSortedAgentEntities().size()-1);
+                    AbstractEntity mc = world.getSortedAgentEntities().get(world.getSortedAgentEntities().size() - 1);
                     HexVector position = mc.getPosition();
 
                     float row = position.getRow();
                     float col = position.getCol();
 
-                    setBuildingToBePlaced(buildingFactory.createHouse(row, col));
+                    setBuildingToBePlaced(buildingFactory.createHouse(row, col, 0));
                     buildingToBePlaced.placeBuilding(buildingToBePlaced.getRow(), buildingToBePlaced.getCol(), buildingToBePlaced.getHeight(), world);
-
-
-
                 }
             });
 
             storageUnit.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y){
-                    //call build function for specific building
-
-
                     switchView();
 
                     //TODO implement permissions
@@ -170,11 +234,16 @@ public class ConstructionManager extends AbstractManager {
                     float row = position.getRow();
                     float col = position.getCol();
 
-                    setBuildingToBePlaced(buildingFactory.createStorageUnit(row, col));
+                    setBuildingToBePlaced(buildingFactory.createStorageUnit(row, col, 0));
                     buildingToBePlaced.placeBuilding(buildingToBePlaced.getRow(), buildingToBePlaced.getCol(), buildingToBePlaced.getHeight(), world);
-
                 }
             });
+
+            setting.addListener(new ClickListener() {
+                public void clicked(InputEvent event, float x, float y){
+                    showSetting();
+                }
+                });
         }
     }
 
@@ -434,4 +503,29 @@ public class ConstructionManager extends AbstractManager {
     }
 
     // End of inventory code
+
+    /**
+     *
+     * @param buildings
+     */
+    public boolean mergeBuilding(AbstractBuilding[] buildings, InventoryManager inventoryManager) {
+
+        if (buildings.length == 0) return false;
+        String className = buildings[0].getClass().getName();
+        for (int i = 0; i < buildings.length; i++) {
+
+            if (buildings[i].getClass().getName() != className) {
+                return false;
+            }
+
+            if (i != 0) {
+                invRemove(buildings[i], inventoryManager);
+            }
+        }
+
+        buildings[0].placeBuilding(buildings[0].getXcoord(), buildings[0].getYcoord(),
+                buildings.length, GameManager.get().getWorld());
+
+        return true;
+    }
 }
