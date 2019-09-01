@@ -5,7 +5,7 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import deco2800.skyfall.worlds.generation.delaunay.VoronoiEdge;
+import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 
 import java.io.BufferedWriter;

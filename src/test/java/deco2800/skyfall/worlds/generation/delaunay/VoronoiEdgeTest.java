@@ -1,6 +1,7 @@
 package deco2800.skyfall.worlds.generation.delaunay;
 
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.WorldGenException;
 import org.junit.After;
 import org.junit.Before;

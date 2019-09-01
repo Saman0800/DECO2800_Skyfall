@@ -1,10 +1,9 @@
 package deco2800.skyfall.worlds.generation.delaunay;
 
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
-import deco2800.skyfall.worlds.generation.perlinnoise.TileNoiseGenerator;
-import org.lwjgl.Sys;
 
 import java.util.*;
 

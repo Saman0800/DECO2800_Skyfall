@@ -5,27 +5,29 @@ import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
 import deco2800.skyfall.worlds.biomes.OceanBiome;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
+import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.*;
 
 import static org.junit.Assert.*;
 
-public class BiomeGeneratorTest {
+public class LakeTest {
     private static final int TEST_COUNT = 5;
     private static final int[] NODE_COUNTS = { 10, 10, 10, 5, 5 };
 
     private static final int WORLD_SIZE = 80;
     private static final int NODE_SPACING = 5;
 
-    private static final int LAKE_SIZE = 0;
-    private static final int LAKE_COUNT = 0;
+    private static final int LAKE_SIZE = 2;
+    private static final int LAKE_COUNT = 2;
 
-    private static final int RIVER_WIDTH = 0;
-    private static final int RIVER_COUNT = 0;
+    private static final int RIVER_WIDTH = 1;
+    private static final int RIVER_COUNT = 2;
 
     private static ArrayList<ArrayList<ArrayList<WorldGenNode>>> biomeNodesList;
     private static ArrayList<ArrayList<AbstractBiome>> biomeLists;
@@ -124,90 +126,35 @@ public class BiomeGeneratorTest {
         }
     }
 
+    @Test
+    public void lakeNotInOceanOrOtherLakeTest() {
+        for (WorldGenNode node : nodeBiomes.keySet()) {
+            if (nodeBiomes.get(node).getBiomeName().equals("lake")) {
+                for (WorldGenNode neighbour : node.getNeighbours()) {
+                    assertNotEquals("ocean", nodeBiomes.get(neighbour).getBiomeName());
+                    assertFalse(nodeBiomes.get(neighbour).getBiomeName().equals("lake")
+                            && nodeBiomes.get(neighbour).getParentBiome().getBiomeName() == null
+                            && nodeBiomes.get(neighbour) != nodeBiomes.get(node));
+                }
+            }
+        }
+    }
+
+    @Test
+    public void lakeParentBiomeTest() {
+        for (List<AbstractBiome> biomes : biomeLists) {
+            for (AbstractBiome biome : biomes) {
+                if (biome.getBiomeName().equals("lake")) {
+                    assertNotNull(biome.getParentBiome());
+                }
+            }
+        }
+    }
+
     @AfterClass
     public static void tearDown() {
         biomeLists = null;
         biomeNodesList = null;
-    }
-
-    @Test
-    // @Ignore("This test almost always passes, but can fail due to issue #99.")
-    public void testTileContiguity() {
-        for (ArrayList<AbstractBiome> biomes : biomeLists) {
-            for (AbstractBiome biome : biomes) {
-                HashSet<Tile> tilesToFind = new HashSet<>(biome.getTiles());
-
-                ArrayDeque<Tile> borderTiles = new ArrayDeque<>();
-
-                Tile startTile = biome.getTiles().get(0);
-                tilesToFind.remove(startTile);
-                borderTiles.add(startTile);
-
-                while (!borderTiles.isEmpty()) {
-                    Tile nextTile = borderTiles.remove();
-                    for (int direction = 0; direction < 6; direction++) {
-                        Tile neighbour = nextTile.getNeighbour(direction);
-                        if (tilesToFind.contains(neighbour)) {
-                            tilesToFind.remove(neighbour);
-                            borderTiles.add(neighbour);
-                        }
-                    }
-                }
-
-                assertEquals(0, tilesToFind.size());
-            }
-        }
-    }
-
-    @Test
-    public void testNodeContiguity() {
-        for (ArrayList<ArrayList<WorldGenNode>> nodesList : biomeNodesList) {
-            for (ArrayList<WorldGenNode> nodeList : nodesList) {
-                HashSet<WorldGenNode> nodesToFind = new HashSet<>(nodeList);
-
-                ArrayDeque<WorldGenNode> borderNodes = new ArrayDeque<>();
-
-                WorldGenNode startNode = nodeList.get(0);
-                nodesToFind.remove(startNode);
-                borderNodes.add(startNode);
-
-                while (!borderNodes.isEmpty()) {
-                    WorldGenNode nextNode = borderNodes.remove();
-                    for (WorldGenNode neighbour : nextNode.getNeighbours()) {
-                        if (nodesToFind.contains(neighbour)) {
-                            nodesToFind.remove(neighbour);
-                            borderNodes.add(neighbour);
-                        }
-                    }
-                }
-
-                assertEquals(0, nodesToFind.size());
-            }
-        }
-    }
-
-    @Test
-    public void testBiomeNodeCounts() {
-        for (ArrayList<ArrayList<WorldGenNode>> biomeNodes : biomeNodesList) {
-            for (int i = 0; i < NODE_COUNTS.length; i++) {
-                // There may be more nodes in the resulting biomes than in NODE_COUNTS because biomes may be expanded to
-                // fill gaps.
-                assertTrue(String.format("Expected node count (%d) must be less than or equal to actual (%d)",
-                                         NODE_COUNTS[i], biomeNodes.get(i).size()),
-                           NODE_COUNTS[i] <= biomeNodes.get(i).size());
-            }
-        }
-    }
-
-    @Test
-    public void testOceanOnBorders() {
-        for (ArrayList<ArrayList<WorldGenNode>> biomeNodes : biomeNodesList) {
-            for (int i = 0; i < biomeNodes.size() - 1; i++) {
-                ArrayList<WorldGenNode> nodes = biomeNodes.get(i);
-                assertTrue("Non-ocean biomes cannot contain border nodes",
-                           nodes.stream().noneMatch(WorldGenNode::isBorderNode));
-            }
-        }
     }
 
     // Adapted from AbstractWorld.generateNeighbours().
@@ -265,4 +212,5 @@ public class BiomeGeneratorTest {
             }
         }
     }
+
 }

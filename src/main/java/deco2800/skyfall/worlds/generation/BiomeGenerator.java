@@ -4,7 +4,6 @@ import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.LakeBiome;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
-import deco2800.skyfall.worlds.generation.delaunay.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 
 import java.util.*;
