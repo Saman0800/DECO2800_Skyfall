@@ -133,7 +133,10 @@ public class GameMenuManager extends TickableManager {
         return mainCharacter;
     }
 
-
+    /**
+     * Adds the circle to menu Screen
+     * @param hc
+     */
     public void addHealthCircle(HealthCircle hc) {
         this.healthCircle = hc;
     }

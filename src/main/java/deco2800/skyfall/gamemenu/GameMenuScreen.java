@@ -427,6 +427,9 @@ public class GameMenuScreen {
         }
     }
 
+    /**
+     * gets the settings table
+     */
     private PopUpTable getSettingsTable() {
         if (settingsTable == null) {
             setSettingsTable();
@@ -437,6 +440,9 @@ public class GameMenuScreen {
         return settingsTable;
     }
 
+    /**
+     * Sets the settings table to be the current table. (Currently incomplete)
+     */
     private void setSettingsTable() {
 
         //split into set and update
