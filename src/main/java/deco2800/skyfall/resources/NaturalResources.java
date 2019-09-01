@@ -110,4 +110,13 @@ public abstract class NaturalResources implements deco2800.skyfall.resources.Ite
         return "" + subtype + ":" + name;
     }
 
+    /**
+     * Returns the item description
+     * @return the item description
+     */
+    @Override
+    public String getDescription() {
+        return "These items exist naturally in the world.";
+    }
+
 }

@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
+import deco2800.skyfall.gamemenu.GameMenuScreen;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.Peon;
 import deco2800.skyfall.handlers.KeyboardManager;
@@ -47,16 +48,20 @@ public class GameScreen implements Screen,KeyDownObserver {
 
     long lastGameTick = 0;
 
-    /**
-     * Create an EnvironmentManager for ToD.
-     */
-    EnvironmentManager timeOfDay;
+	/**
+	 * Create an EnvironmentManager for ToD.
+	 */
+	EnvironmentManager timeOfDay;
+	public static boolean isPaused = false;
 
     public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
         /* Create an example world for the engine */
         this.game = game;
 
         GameManager gameManager = GameManager.get();
+        GameMenuManager gameMenuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+        gameMenuManager.setStage(stage);
+        gameMenuManager.setSkin(gameManager.getSkin());
 
         //Used to create to the world
 
@@ -100,17 +105,17 @@ public class GameScreen implements Screen,KeyDownObserver {
         /* Add inventory to game manager */
         gameManager.addManager(new InventoryManager());
 
-        /* Play BGM */
-        try {
-            BGMManager.BGMManager("resources/sounds/forest_day.wav");
-            BGMManager.play();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		/* Add environment to game manager */
+		gameManager.addManager(new EnvironmentManager());
 
-        new GameMenuManager().show(stage);
+		/* Add BGM to game manager */
+		gameManager.addManager(new BGMManager());
+
+        GameMenuScreen gamemenuScreen = new GameMenuScreen(gameMenuManager);
+		gamemenuScreen.show();
 
         PathFindingService pathFindingService = new PathFindingService();
+
         GameManager.get().addManager(pathFindingService);
 
         InputMultiplexer multiplexer = new InputMultiplexer();
@@ -122,6 +127,7 @@ public class GameScreen implements Screen,KeyDownObserver {
         GameManager.get().getManager(KeyboardManager.class).registerForKeyDown(this);
     }
 
+
     /**
      * Renderer thread
      * Must update all displayed elements using a Renderer
@@ -130,11 +136,17 @@ public class GameScreen implements Screen,KeyDownObserver {
     public void render(float delta) {
         handleRenderables();
 
-        moveCamera();
+        if (!isPaused) {
+            moveCamera();
+            handleRenderables();
+            cameraDebug.position.set(camera.position);
+            cameraDebug.update();
+            camera.update();
+        } else {
+            stage.draw();
+            pause();
+        }
 
-        cameraDebug.position.set(camera.position);
-        cameraDebug.update();
-        camera.update();
 
         SpriteBatch batchDebug = new SpriteBatch();
         batchDebug.setProjectionMatrix(cameraDebug.combined);
@@ -143,23 +155,29 @@ public class GameScreen implements Screen,KeyDownObserver {
         batch.setProjectionMatrix(camera.combined);
 
         // Clear the entire display as we are using lazy rendering
+
+        // Commented out by Cyrus
+//        if (!isPaused) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         rerenderMapObjects(batch, camera);
         rendererDebug.render(batchDebug, cameraDebug);
-
-        /* Refresh the experience UI for if information was updated */
         stage.act(delta);
         stage.draw();
-        batch.dispose();
-    }
+//        }
+//        stage.act(delta);
+//        stage.draw();
+
+
+		/* Refresh the experience UI for if information was updated */
+
+		batch.dispose();
+	}
 
     private void handleRenderables() {
         if (System.currentTimeMillis() - lastGameTick > 20) {
             lastGameTick = System.currentTimeMillis();
             GameManager.get().onTick(0);
-            timeOfDay = new EnvironmentManager(lastGameTick);
         }
     }
 

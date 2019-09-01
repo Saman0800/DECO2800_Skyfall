@@ -1,7 +1,11 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.Robot;
 import deco2800.skyfall.entities.Spider;
+import deco2800.skyfall.entities.Stone;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.worlds.biomes.DesertBiome;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
 import deco2800.skyfall.worlds.biomes.MountainBiome;
@@ -21,8 +25,14 @@ public class WorldDirector {
         builder.setRiverSize(5);
         builder.setStaticEntities(true);
 
-        builder.addEntity(new Spider(-4f, -1f));
-        builder.addEntity(new MainCharacter(0f,0f,0.05f, "Main Piece", 10));
+        MainCharacter mainCharacter = new MainCharacter(0,0,0.05f, "Main Piece", 10);
+
+        builder.addEntity(mainCharacter);
+        GameManager.getManagerFromInstance(GameMenuManager.class).setMainCharacter(mainCharacter);
+
+        builder.addEntity(new Spider(-4f, -1f, mainCharacter));
+        builder.addEntity(new Robot(-4, -2, mainCharacter));
+        builder.addEntity(new Stone(-4, -2, mainCharacter));
 
         builder.addBiome(new ForestBiome(), 40);
         builder.addBiome(new DesertBiome(), 40);

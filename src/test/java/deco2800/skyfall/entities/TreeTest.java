@@ -180,7 +180,7 @@ public class TreeTest {
         Tree tree1 = new Tree(tile1, true);
         Tree tree2 = new Tree(0.0f, 0.5f, 2, texture);
 
-        assertEquals(0, tree1.getWoodAmount());
+        assertEquals(15, tree1.getWoodAmount());
 
         assertEquals(15, tree2.getWoodAmount());
         tree2.decreaseWoodAmount();

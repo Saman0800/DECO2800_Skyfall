@@ -18,34 +18,29 @@ public class AnimationLinker {
     private String animationName;
     private Animation<TextureRegion> animation;
     private float startingTime;
-    private static AnimationManager animationManager = GameManager.get().getManager(AnimationManager.class);
     private final Logger logger = LoggerFactory.getLogger(AnimationLinker.class);
     private boolean isCompleted = false;
-
-
+    private Direction direction;
+    private boolean looping;
     /**
      * Construct
      * @param type Animation Type
      * @param animationName The name of the animation name
-     * @param offset Position to display animation relative to the entity. Needs
-     *               to be of length 2. Only first 2 values are used.
+     * @param direction Direction the animation is in
+     * @param fetchAnimation Whether to get animation straight away
+     * @param looping Is the animation looping
      */
-    public AnimationLinker(AnimationRole type, String animationName, int[] offset) {
-            this.type = type;
+    public AnimationLinker(String animationName, AnimationRole type,
+               Direction direction, boolean looping, boolean fetchAnimation) {
+        if (fetchAnimation) {
+            getAnimation(animationName);
+        }
+        this.type = type;
+        this.direction = direction;
         this.animationName = animationName;
-
-        this.animation = animationManager.getAnimation(animationName);
-        if (animation == null) {
-            logger.error(animationName + " for entity" + "not found.");
-        }
-        if (offset.length != 2) {
-            logger.error(animationName + " for entity " + ": incorrect offset specified. Must of length 2");
-
-        }
         this.startingTime = 0f;
         this.offset = new int[2];
-        this.offset[0] = offset[0];
-        this.offset[1] = offset[1];
+        this.looping = looping;
     }
      /**
       * Increments the internal animation time
@@ -54,14 +49,15 @@ public class AnimationLinker {
     public void incrTime(float incr) {
         this.startingTime += incr;
     }
-
+    public void resetStartingTime() {
+        this.startingTime = 0f;
+    }
 
     /*GETTERS AND SETTERS*/
 
     public String getAnimationName() {
         return animationName;
     }
-
     public AnimationRole getType() {
         return type;
     }
@@ -90,5 +86,27 @@ public class AnimationLinker {
 
     public void setCompleted(boolean completed) {
         isCompleted = completed;
+    }
+
+    public boolean isLooping() {
+        return looping;
+    }
+    /**
+     * Gets the animation from the animation manager.
+     * @param animationName The animation name as registered in the animation manager
+     */
+    private void getAnimation(String animationName) {
+        AnimationManager animationManager =
+                GameManager.get().getManager(AnimationManager.class);
+        try {
+            this.animation = animationManager.getAnimation(animationName);
+        } catch (Exception e) {
+            logger.error("BAD! Could not find ANIMATION MANAGER");
+            this.animation = null;
+        }
+
+        if (this.animation == null) {
+            logger.error(animationName + " for entity" + "not found.");
+        }
     }
 }
