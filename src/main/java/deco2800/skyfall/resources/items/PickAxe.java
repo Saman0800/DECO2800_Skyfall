@@ -1,26 +1,50 @@
 package deco2800.skyfall.resources.items;
 
-import deco2800.skyfall.entities.AgentEntity;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.Rock;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.InventoryManager;
+import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.managers.InventoryManager;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /***
  * A Pick Axe item. Pick Axe is a manufacturd resource. It can harvest a rock.
  */
-public class PickAxe extends ManufacturedResources implements Item {
+public class PickAxe extends ManufacturedResources implements Item ,Blueprint{
 
+    private Map<String, Integer> allRequirements;
+    private  boolean blueprintLearned=false;
     /***
      * Create a Pick Axe with the name Pick Axe.
      *
      * @param owner the owner of the inventory.
      * @param position the position of the Pick Axe.
-     * @param name the name of the item which is Pick Axe.
      */
-    public PickAxe (AgentEntity owner, HexVector position, String name) {
-        super(owner, position, name);
+    public PickAxe (MainCharacter owner, HexVector position) {
+        super(owner, position);
+        this.name="Pick Axe";
+    }
+
+    /***
+     * Create a Pick Axe with only one owner parameter.
+     *
+     * @param owner the owner of the inventory.
+     */
+    public PickAxe (MainCharacter owner) {
+        super(owner);
+        this.name="Pick Axe";
+    }
+
+    /***
+     * Create a Pick Axe no parameter.
+     */
+    public PickAxe () {
         this.name="Pick Axe";
     }
 
@@ -74,19 +98,88 @@ public class PickAxe extends ManufacturedResources implements Item {
 
     /**
      * Harvests a rock. Currently making an inventory and adding the collected
-     * rock to that inventory. Decreases the rock health.
+     * rock and metal to that inventory. Decreases the rock health.
      * @param rockToFarm the rock to be farmed
      */
     public void farmRock(Rock rockToFarm) {
-        int i;
 
-        //temporary  inventory. this will change to the player inventory later.
-        InventoryManager ownerInventory = new InventoryManager();
+        if (rockToFarm.getHealth()==0){
+            System.out.println("This rock has nothing left to offer");
+            GameManager.get().getWorld().removeEntity(rockToFarm);
 
-        for (i = 0; i < rockToFarm.getHealth()/10; i++) {
-            ownerInventory.inventoryAdd(new Stone());
-            rockToFarm.setHealth(rockToFarm.getHeight()-10);
+        }
+
+        else {
+            owner.getInventoryManager().inventoryAdd(new Stone());
+
+            //lowering the possibility of gaining metal
+            double x = (int)(Math.random()*((1-0)+1));
+
+                if (x==1) {
+                    owner.getInventoryManager().inventoryAdd(new Metal());
+            }
+
+            rockToFarm.setHealth(rockToFarm.getHealth()-10);
         }
 
     }
+
+    /**
+     * Returns the item description
+     * @return the item description
+     */
+    @Override
+    public String getDescription() {
+        return "This item can be constructed using stone and wood. " +
+                "It can farm stone from biomes.";
+    }
+
+    /**
+     * Returns the number of wood required for the item.
+     *
+     * @return The name of the item
+     */
+    @Override
+    public int getRequiredWood() {
+        return 50;
+    }
+
+    /**
+     * Returns the number of stones required for the item.
+     *
+     * @return The name of the item
+     */
+    @Override
+    public int getRequiredStone() {
+        return 30;
+    }
+
+    /**
+     * Returns the number of metal required for the item.
+     *
+     * @return The name of the item
+     */
+    @Override
+    public int getRequiredMetal() {
+        return 10;
+    }
+
+    /**
+     * Returns a map of the name of the required resource and
+     * the required number of each resource to create the item.
+     *
+     * @return a hashamp of the required resources and their number.
+     */
+    @Override
+    public Map<String, Integer> getAllRequirements() {
+
+        allRequirements = new HashMap<>();
+        allRequirements.put("Wood",50);
+        allRequirements.put("Stone",30);
+        allRequirements.put("Metal",10);
+
+        return allRequirements;
+    }
+
+
 }
