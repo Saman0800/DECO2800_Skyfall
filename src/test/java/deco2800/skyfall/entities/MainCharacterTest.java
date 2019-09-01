@@ -137,23 +137,6 @@ public class MainCharacterTest {
         Assert.assertTrue(testCharacter.isStarving());
     }
 
-    //TODO: change these tests as Animation System Changes
-    //These test abstract entity methods
-    /**
-     * Tests movingAnimation
-     */
-    @Test
-    public void setMovingAnimationTest() {
-        testCharacter.setMovingAnimation(AnimationRole.MOVE_NORTH);
-        Assert.assertEquals(AnimationRole.MOVE_NORTH,
-                testCharacter.getMovingAnimation());
-
-        testCharacter.setMovingAnimation(AnimationRole.NULL);
-        Assert.assertEquals(AnimationRole.NULL,
-                testCharacter.getMovingAnimation());
-
-    }
-
     /**
      * Test that the item properly switches.
      */
@@ -174,10 +157,6 @@ public class MainCharacterTest {
 
         testCharacter.setCurrentDirection(Direction.WEST);
         Assert.assertEquals(testCharacter.getCurrentDirection(), Direction.WEST);
-    public void setAndGetAnimationTest() {
-        testCharacter.addAnimations(AnimationRole.MOVE_EAST,
-                "right");
-        testCharacter.getAnimationName(AnimationRole.MOVE_EAST);
     }
 
     @Test

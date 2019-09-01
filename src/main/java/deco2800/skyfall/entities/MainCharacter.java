@@ -446,7 +446,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     @Override
     public void moveTowards(HexVector destination) {
-        position.moveToward(destination, this.currentSpeed);
+        position.moveToward(destination, this.speed);
     }
 
     /**
@@ -454,7 +454,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @param cSpeed the speed for the player to currently move at
      */
     private void setCurrentSpeed(float cSpeed){
-        this.currentSpeed = cSpeed;
+        this.speed = cSpeed;
     }
 
     /**
