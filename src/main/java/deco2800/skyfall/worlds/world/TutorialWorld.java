@@ -1,17 +1,21 @@
-package deco2800.skyfall.worlds;
+package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.gui.GuiMaster;
 import deco2800.skyfall.gui.ScrollingTextBox;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.observers.TouchDownObserver;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.world.World;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * This is a tutorial world created to help the player understand the world
  * and the mechanics of the game.
  */
-public class TutorialWorld extends RocketWorld implements TouchDownObserver {
+public class TutorialWorld extends World implements TouchDownObserver {
     // Variables used for the event triggers used in the tutorial
     boolean firstTime = true;
     boolean testKilledTree = false;
@@ -23,9 +27,9 @@ public class TutorialWorld extends RocketWorld implements TouchDownObserver {
      * @param worldSize The size of the world
      * @param nodeSpacing The distance between the nodes
      */
-    public TutorialWorld(long seed, int worldSize, int nodeSpacing) {
-        //TODO Don't know whether these values should be variable
-        super(seed, worldSize, nodeSpacing, new int[] {40,30,30}, 0, 0, 0, 0);
+    public TutorialWorld(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int[] lakeSizes,
+        ArrayList<AbstractBiome> biomes, CopyOnWriteArrayList<AbstractEntity> entities, int noRivers, int riverWidth) {
+        super(seed, worldSize, nodeSpacing, biomeSizes, numOfLakes, lakeSizes, biomes, entities, noRivers, riverWidth);
     }
 
     @Override

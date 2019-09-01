@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * Builds biomes from the nodes generated in the previous phase of the world generation.
  */
-public class BiomeGenerator {
+public class BiomeGenerator implements BiomeGeneratorInterface{
     /** The fraction of the original number of tiles that must remain in each biome after contiguity processing */
     private static final double CONTIGUOUS_TILE_RETENTION_THRESHOLD = 0.75;
 
@@ -45,10 +45,8 @@ public class BiomeGenerator {
 
     // The number of lakes and rivers
     private int noLakes;
+    private int[] lakeSizes;
     private int noRivers;
-
-    // The number of nodes a lake takes up
-    private int lakeSize;
 
     // Half the width of a river
     private int riverWidth;
@@ -63,14 +61,13 @@ public class BiomeGenerator {
      *
      * @throws NotEnoughPointsException if there are not enough non-border nodes from which to form the biomes
      */
-
-    public static void generateBiomes(List<WorldGenNode> nodes, List<VoronoiEdge> voronoiEdges, Random random,
-                                      int[] biomeSizes, List<AbstractBiome> biomes, int noLakes, int lakeSize,
-                                      int noRivers, int riverWidth)
-            throws NotEnoughPointsException, DeadEndGenerationException {
-        BiomeGenerator biomeGenerator = new BiomeGenerator(nodes, voronoiEdges, random, biomeSizes, biomes, noLakes, lakeSize, noRivers, riverWidth);
-        biomeGenerator.generateBiomesInternal();
-    }
+//    public static void generateBiomes(List<WorldGenNode> nodes, List<VoronoiEdge> voronoiEdges, Random random,
+//                                      int[] biomeSizes, List<AbstractBiome> biomes, int noLakes, int lakeSize,
+//                                      int noRivers, int riverWidth)
+//            throws NotEnoughPointsException, DeadEndGenerationException {
+//        BiomeGenerator biomeGenerator = new BiomeGenerator(nodes, voronoiEdges, random, biomeSizes, biomes, noLakes, lakeSize, noRivers, riverWidth);
+//        biomeGenerator.generateBiomesInternal();
+//    }
 
     /**
      * Creates a {@code BiomeGenerator} for a list of nodes (but does not start the generation).
@@ -80,10 +77,11 @@ public class BiomeGenerator {
      * @param biomeSizes the number of nodes for each of the biomes (except ocean)
      * @param realBiomes the biomes to populate (ocean must be last)
      *
+     * @param lakeSizes
      * @throws NotEnoughPointsException if there are not enough non-border nodes from which to form the biomes
      */
-    private BiomeGenerator(List<WorldGenNode> nodes, List<VoronoiEdge> voronoiEdges, Random random, int[] biomeSizes, List<AbstractBiome> realBiomes,
-                           int noLakes, int lakeSize, int noRivers, int riverWidth)
+    public BiomeGenerator(List<WorldGenNode> nodes, List<VoronoiEdge> voronoiEdges, Random random, int[] biomeSizes, List<AbstractBiome> realBiomes,
+                           int noLakes, int[] lakeSizes, int noRivers, int riverWidth)
             throws NotEnoughPointsException {
         Objects.requireNonNull(nodes, "nodes must not be null");
         Objects.requireNonNull(random, "random must not be null");
@@ -113,9 +111,9 @@ public class BiomeGenerator {
         this.realBiomes = realBiomes;
         this.centerNode = calculateCenterNode();
         this.noLakes = noLakes;
-        this.lakeSize = lakeSize;
         this.noRivers = noRivers;
         this.riverWidth = riverWidth;
+        this.lakeSizes = lakeSizes;
     }
 
     /**
@@ -144,7 +142,7 @@ public class BiomeGenerator {
     /**
      * Runs the generation process.
      */
-    private void generateBiomesInternal() throws DeadEndGenerationException {
+    public void generateBiomes() throws DeadEndGenerationException {
         for (int i = 0; ; i++) {
             try {
                 biomes = new ArrayList<>(biomeSizes.length + noLakes + 1);
@@ -154,7 +152,7 @@ public class BiomeGenerator {
                 growBiomes();
                 growOcean();
                 fillGaps();
-                generateLakes(lakeSize, noLakes);
+                generateLakes(lakeSizes, noLakes);
                 populateRealBiomes();
                 ensureContiguity();
                 generateRivers(noRivers, riverWidth, random, voronoiEdges);
@@ -244,13 +242,12 @@ public class BiomeGenerator {
      * Randomly generate lakes in landlocked locations (ie not next to the ocean
      * or another lake)
      *
-     * @param lakeSize The number of WorldGenNodes to make each lake out of
+     * @param lakeSizes The number of WorldGenNodes to make each lake out of
      * @param noLakes The number of lakes to genereate
      * @throws DeadEndGenerationException If a valid position for a lake cannot
      *         be found
      */
-    private void generateLakes(int lakeSize, int noLakes) throws DeadEndGenerationException {
-        // A list of nodes for each lake
+    private void generateLakes(int[] lakeSizes, int noLakes) throws DeadEndGenerationException {
         List<List<WorldGenNode>> chosenNodes = new ArrayList<>();
         // A list of parent biomes for each lake
         List<BiomeInProgress> maxNodesBiomes = new ArrayList<>();
@@ -282,7 +279,7 @@ public class BiomeGenerator {
                 nodesFound.add(chosenNode);
 
                 // Find nodes to expand to
-                for (int j = 1; j < lakeSize; j++) {
+                for (int j = 1; j < lakeSizes[i]; j++) {
                     ArrayList<WorldGenNode> growToCandidates = new ArrayList<>();
                     // All neighbours of lake nodes that are valid via validLakeNode
                     // are possible candidates to grow to
@@ -302,8 +299,9 @@ public class BiomeGenerator {
                     nodesFound.add(newNode);
                 }
 
-                // If the lake couldn't fully expand, find a new location
-                if (nodesFound.size() < lakeSize) {
+                //findLakeLocation(nodes, nodes.get(0), lakeSize);
+
+                if (nodesFound.size() < lakeSizes[i]) {
                     continue;
                 }
                 break;

@@ -9,7 +9,7 @@ import java.io.*;
 import java.util.*;
 
 import deco2800.skyfall.entities.structures.AbstractBuilding;
-import deco2800.skyfall.worlds.AbstractWorld;
+import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.entities.AbstractEntity;
 
@@ -242,7 +242,7 @@ public class ConstructionManager extends AbstractManager {
      * @param tiles    - tiles that will be checked if contain entities
      * @return true if empty entities on tiles, otherwise false
      */
-    public boolean verifyEntity(AbstractWorld worldMap, Tile... tiles) {
+    public boolean verifyEntity(World worldMap, Tile... tiles) {
         if (worldMap == null || tiles == null) {
             return false;
         }
@@ -270,7 +270,7 @@ public class ConstructionManager extends AbstractManager {
      * @param building - a construction object
      * @return true if a building is buildable on tiles, otherwise false
      */
-    public boolean isTilesBuildable(AbstractWorld worldMap, AbstractBuilding building) {
+    public boolean isTilesBuildable(World worldMap, AbstractBuilding building) {
         if (worldMap == null || building == null) {
             return false;
         }

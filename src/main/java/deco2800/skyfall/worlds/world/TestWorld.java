@@ -1,5 +1,8 @@
-package deco2800.skyfall.worlds;
+package deco2800.skyfall.worlds.world;
 
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.world.World;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -10,9 +13,10 @@ import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @SuppressWarnings("unused")
-public class TestWorld extends AbstractWorld {
+public class TestWorld extends World {
     /*
      * radius for tiles 1 - 7 2 - 19 3 - 37 4 - 61 5 - 91 10 - 331 25 - 1951 50 -
      * 7,651 100 - 30,301 150 - 67,951 200 - 120601
@@ -23,8 +27,9 @@ public class TestWorld extends AbstractWorld {
 
     private static int RADIUS = 25;
 
-    public TestWorld(long seed) {
-        super(seed, 5, 5, new int[] {10,10,10}, 3, 3, 0, 0);
+    public TestWorld(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int[] lakeSizes,
+        ArrayList<AbstractBiome> biomes, CopyOnWriteArrayList<AbstractEntity> entities, int rivers, int riverSize) {
+        super(seed, worldSize, nodeSpacing, biomeSizes, numOfLakes, lakeSizes, biomes, entities, rivers, riverSize);
     }
 
     // 5 tile building

@@ -18,10 +18,11 @@ import deco2800.skyfall.renderers.Renderer3D;
 import deco2800.skyfall.worlds.*;
 import deco2800.skyfall.managers.EnvironmentManager;
 
+import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.world.WorldBuilder;
+import deco2800.skyfall.worlds.world.WorldDirector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Random;
 
 public class GameScreen implements Screen,KeyDownObserver {
 	private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
@@ -33,7 +34,7 @@ public class GameScreen implements Screen,KeyDownObserver {
      */
     Renderer3D renderer = new Renderer3D();
     OverlayRenderer rendererDebug = new OverlayRenderer();
-    AbstractWorld world;
+    World world;
     static Skin skin;
 
     /**
@@ -57,16 +58,30 @@ public class GameScreen implements Screen,KeyDownObserver {
 
         GameManager gameManager = GameManager.get();
 
+        //Used to create to the world
+
         // Create main world
         if (!isHost) {
-            world = new ServerWorld(seed);
+
+            //Creating the world
+            WorldBuilder worldBuilder = new WorldBuilder();
+            WorldDirector.constructServerWorld(worldBuilder);
+            world = worldBuilder.getWorld();
+
             GameManager.get().getManager(NetworkManager.class).connectToHost("localhost", "duck1234");
         } else {
             if (GameManager.get().isTutorial) {
-                world = new TutorialWorld(seed, 80, 5);
+
+                WorldBuilder worldBuilder = new WorldBuilder();
+                WorldDirector.constructTutorialWorld(worldBuilder);
+                world = worldBuilder.getWorld();
             } else {
-                world = new RocketWorld(seed, 300, 30, new int[] { 30, 30, 30, 30, 30}, 2, 5, 2, 2);
-                 //world = new RocketWorld(0, 80, 5, new int[] { 10, 10, 10, 5, 5 }, 2,2, 2, 1);
+
+                //Creating the world
+                WorldBuilder worldBuilder = new WorldBuilder();
+                WorldDirector.constructSimpleSinglePlayerWorld(worldBuilder);
+                world = worldBuilder.getWorld();
+
 			}
 			GameManager.get().getManager(NetworkManager.class).startHosting("host");
 		}
@@ -209,14 +224,12 @@ public class GameScreen implements Screen,KeyDownObserver {
         }
 
         if (keycode == Input.Keys.F5) {
-            // Use a random seed for now
-            Random random = new Random();
-            // world = new RocketWorld(random.nextLong(), 200, 15, new int[] {70,70,70}, 3,
-            // 2);
-//            world = new RocketWorld(random.nextLong(), 300, 30, new int[] { 70, 70, 70 }, 2, 5);
-            world = new RocketWorld(random.nextLong(), 100, 10, new int[] { 30, 30, 30, 30, 30}, 2, 5, 2, 2);
-             //world = new RocketWorld(0, 30, 5, new int[] {5,5,5,5,5}, 2,5);
-//            world = new RocketWorld(random.nextInt(), 30, 5, new int[] {20,10,10}, 2,5);
+
+            //Create a random world
+            WorldBuilder worldBuilder = new WorldBuilder();
+            WorldDirector.constructSimpleSinglePlayerWorld(worldBuilder);
+            world = worldBuilder.getWorld();
+
             AbstractEntity.resetID();
             Tile.resetID();
             GameManager gameManager = GameManager.get();

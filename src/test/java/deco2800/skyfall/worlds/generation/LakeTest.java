@@ -23,7 +23,8 @@ public class LakeTest {
     private static final int WORLD_SIZE = 80;
     private static final int NODE_SPACING = 5;
 
-    private static final int LAKE_SIZE = 2;
+    private static final int[] NODE_COUNTS = { 15, 15, 15 };
+    private static final int[] LAKE_SIZES = {2, 2};
     private static final int LAKE_COUNT = 2;
 
     private static final int RIVER_WIDTH = 1;
@@ -108,6 +109,12 @@ public class LakeTest {
                     biomeNodes.add(new ArrayList<>());
                 }
 
+            try {
+                BiomeGenerator biomeGenerator = new BiomeGenerator(nodes, random, NODE_COUNTS, biomes, LAKE_COUNT, LAKE_SIZES);
+                biomeGenerator.generateBiomes();
+            } catch (DeadEndGenerationException e) {
+                continue;
+            }
                 /*System.out.println(biomeNodes.size());
                 for (WorldGenNode node : worldGenNodes) {
                     System.out.println(biomes.indexOf(node.getTiles().get(0).getBiome()));
@@ -126,6 +133,10 @@ public class LakeTest {
                 break;
             }
         }
+    }
+
+    @After
+    public void tearDown() throws Exception {
     }
 
     @Test

@@ -8,10 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
 
-import deco2800.skyfall.managers.ConstructionManager;
-import deco2800.skyfall.worlds.AbstractWorld;
+import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.entities.AbstractEntity;
 
 import java.util.TreeMap;
 
@@ -83,7 +81,7 @@ public class ConstructionManagerTest {
 
     @Test
     public void verifyNullTest() {
-        AbstractWorld world = null;
+        World world = null;
         Tile tile = null;
         AbstractBuilding building = null;
         Assert.assertFalse(this.cmgr.verifyTerrain(tile));
@@ -127,7 +125,7 @@ public class ConstructionManagerTest {
 
     @Test
     public void verifyEntityTest() {
-        AbstractWorld world = new RocketWorld(1, 30,5, new int[] {10,10,10,10,10}, 0, 0, 0, 0);
+        World world = new RocketWorld(1, 30,5, new int[] {10,10,10,10,10}, 0, 0 );
         Tile tile = world.getTile(10,10);
         if (world.getEntities().size() == 0) {
             Assert.assertTrue(this.cmgr.verifyEntity(world, tile));

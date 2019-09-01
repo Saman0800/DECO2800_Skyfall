@@ -42,6 +42,15 @@ public abstract class AbstractBiome {
         return tiles;
     }
 
+
+    /**
+     * Sets the tiles in the biome
+     * @param tiles The list of tiles for the biome
+     */
+    public void setTiles(ArrayList<Tile> tiles){
+        this.tiles = tiles;
+    }
+
     /**
      * Gets the biomes name
      *

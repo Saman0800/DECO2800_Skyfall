@@ -1,11 +1,26 @@
-package deco2800.skyfall.worlds;
+package deco2800.skyfall.worlds.world;
 
+import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.InputManager;
+import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.VoronoiEdge;
+import deco2800.skyfall.worlds.biomes.DesertBiome;
+import deco2800.skyfall.worlds.biomes.ForestBiome;
+import deco2800.skyfall.worlds.biomes.MountainBiome;
+import deco2800.skyfall.worlds.biomes.OceanBiome;
+import deco2800.skyfall.worlds.biomes.SwampBiome;
+import deco2800.skyfall.worlds.biomes.VolcanicMountainsBiome;
+import deco2800.skyfall.worlds.generation.BiomeGenerator;
+import deco2800.skyfall.worlds.generation.DeadEndGenerationException;
+import deco2800.skyfall.worlds.generation.WorldGenException;
+import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 
 import java.io.BufferedWriter;
@@ -26,9 +41,9 @@ import java.io.FileWriter;
  * It provides storage for the WorldEntities and other universal world level
  * items.
  */
-public abstract class AbstractWorld {
+public class World implements TouchDownObserver {
 
-    protected List<AbstractEntity> entities = new CopyOnWriteArrayList<>();
+    protected List<AbstractEntity> entities;
 
     protected int width;
     protected int length;
@@ -40,12 +55,14 @@ public abstract class AbstractWorld {
     protected int lakeSize;
     protected int noRivers;
     protected int riverWidth;
+    protected int[] lakeSizes;
 
     private long seed;
+    private Random random;
 
     // List that contains the world biomes
     protected ArrayList<AbstractBiome> biomes;
-    protected Map<String, Float> frictionMap;
+    public Map<String, Float> frictionMap;
 
     protected CopyOnWriteArrayList<Tile> tiles;
     protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
@@ -54,12 +71,16 @@ public abstract class AbstractWorld {
     protected List<AbstractEntity> entitiesToDelete = new CopyOnWriteArrayList<>();
     protected List<Tile> tilesToDelete = new CopyOnWriteArrayList<>();
 
-    protected AbstractWorld(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int lakeSize, int noRivers, int riverWidth) {
-        Random random = new Random(seed);
+    public World(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int[] lakeSizes,
+                ArrayList<AbstractBiome> biomes, CopyOnWriteArrayList<AbstractEntity> entities, int noRivers, int riverWidth) {
+
+        random = new Random(seed);
         this.seed = seed;
         this.biomeSizes = biomeSizes;
         this.numOfLakes = numOfLakes;
-        this.lakeSize = lakeSize;
+        this.lakeSizes = lakeSizes;
+        this.biomes = biomes;
+        this.entities = entities;
         this.noRivers = noRivers;
         this.riverWidth = riverWidth;
 
@@ -69,28 +90,107 @@ public abstract class AbstractWorld {
         tiles = new CopyOnWriteArrayList<>();
         worldGenNodes = new CopyOnWriteArrayList<>();
 
-    	tiles = new CopyOnWriteArrayList<Tile>();
+        tiles = new CopyOnWriteArrayList<Tile>();
     	voronoiEdges = new CopyOnWriteArrayList<>();
-        biomes = new ArrayList<>();
 
-//        long startTime = System.nanoTime();
         generateWorld(random);
         generateNeighbours();
         generateTileIndexes();
-
         generateTileTypes(random);
         initialiseFrictionmap();
-
-        // Saving the world for test, and likely saving and loading later
-        // try {
-        // saveWorld("ExampleWorldOutput.txt");
-        // } catch (IOException e){
-        // System.out.println("Could not save world");
-        // }
-
     }
 
-    protected abstract void generateWorld(Random random);
+    protected void generateWorld(Random random){
+        while (true){
+            try {
+                generateTiles();
+                break;
+            } catch (WorldGenException | DeadEndGenerationException | NotEnoughPointsException ignored){
+            }
+        }
+
+//        for (AbstractEntity entity : entities){
+//            addEntity(entity);
+//        }
+
+        GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
+
+    };
+
+
+    private void generateTiles() throws NotEnoughPointsException, DeadEndGenerationException, WorldGenException{
+            //TODO clean the biomes and tiles on every iteration
+            ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
+            ArrayList<Tile> tiles = new ArrayList<>();
+
+            for (Tile tile : getTileMap()){
+                tile.setBiome(null);
+            }
+
+            for (AbstractBiome biome : biomes){
+                biome.getTiles().clear();
+            }
+
+            int nodeCount = Math.round((float) worldSize * worldSize * 4 / nodeSpacing / nodeSpacing);
+            // TODO: if nodeCount is less than the number of biomes, throw an exception
+
+            for (int i = 0; i < nodeCount; i++) {
+                // Sets coordinates to a random number from -WORLD_SIZE to WORLD_SIZE
+                float x = (float) (random.nextFloat() - 0.5) * 2 * worldSize;
+                float y = (float) (random.nextFloat() - 0.5) * 2 * worldSize;
+                worldGenNodes.add(new WorldGenNode(x, y));
+            }
+
+            // Apply Delaunay triangulation to the nodes, so that vertices and
+            // adjacencies can be calculated. Also apply Lloyd Relaxation twice
+            // for more smooth looking polygons
+            try {
+                WorldGenNode.calculateVertices(worldGenNodes, worldSize);
+                WorldGenNode.lloydRelaxation(worldGenNodes, 2, worldSize);
+            } catch (WorldGenException e) {
+                throw e;
+            }
+
+            for (int q = -worldSize; q <= worldSize; q++) {
+                for (int r = -worldSize; r <= worldSize; r++) {
+                    // if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <=
+                    // worldSize) {
+                    float oddCol = (q % 2 != 0 ? 0.5f : 0);
+
+                    Tile tile = new Tile(q, r + oddCol);
+                    tiles.add(tile);
+                    // }
+                }
+            }
+            // TODO Fix this.
+            generateNeighbours(tiles);
+
+            try {
+                WorldGenNode.assignTiles(worldGenNodes, tiles, random, nodeSpacing);
+                WorldGenNode.removeZeroTileNodes(worldGenNodes, worldSize);
+                WorldGenNode.assignNeighbours(worldGenNodes, voronoiEdges);
+            } catch (WorldGenException e) {
+                throw e;
+            }
+            VoronoiEdge.assignTiles(voronoiEdges, tiles, worldSize);
+            VoronoiEdge.assignNeighbours(voronoiEdges);
+
+
+
+            try {
+                BiomeGenerator biomeGenerator = new BiomeGenerator(worldGenNodes, voronoiEdges, random, biomeSizes, biomes, numOfLakes, lakeSizes, noRivers, riverWidth);
+                biomeGenerator.generateBiomes();
+            } catch (NotEnoughPointsException | DeadEndGenerationException e) {
+                 throw e;
+            }
+
+            this.worldGenNodes.addAll(worldGenNodes);
+            this.tiles.addAll(tiles);
+    }
+
+
+
+
 
     /**
      * Loops through all the biomes within the world and adds textures to the tiles
@@ -425,5 +525,37 @@ public abstract class AbstractWorld {
      */
     public long getSeed() {
         return seed;
+    }
+
+
+    public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
+        // only allow right clicks to collect resources
+        if (button != 1) {
+            return;
+        }
+
+        float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
+        float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
+
+        Tile tile = getTile(clickedPosition[0], clickedPosition[1]);
+
+        if (tile == null) {
+            return;
+        }
+        // todo: more efficient way to find entities
+        for (AbstractEntity entity : getEntities()) {
+            if (!tile.getCoordinates().equals(entity.getPosition())) {
+                continue;
+            }
+
+            if (entity instanceof Harvestable) {
+                removeEntity(entity);
+                List<AbstractEntity> drops = ((Harvestable) entity).harvest(tile);
+
+                for (AbstractEntity drop : drops) {
+                    addEntity(drop);
+                }
+            }
+        }
     }
 }
