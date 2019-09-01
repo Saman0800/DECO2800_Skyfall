@@ -154,15 +154,12 @@ public class TextureManager extends AbstractManager {
             textureMap.put("MainCharacterW_Anim", new Texture("resources/Main_Character_Left_Anim.png"));
             textureMap.put("MainCharacterNW_Anim",new Texture( "resources/Main_Character_B_Left_Anim.png"));
 
-<<<<<<< HEAD
             // Main character Hurt animation
             textureMap.put("MainCharacter_Hurt_E_Anim", new Texture("resources/Main_Character_Hurt_E.png"));
             textureMap.put("MainCharacter_Dead_E_Anim", new Texture("resources/Main_Character_Dead_E.png"));
 
       System.out.println("ALL TEXTURES LOADED SUCCESSFULLY");
 
-=======
->>>>>>> 66096334e8b9c9746082b3d243f372fcb506f2a7
         } catch (Exception e) {
             e.printStackTrace();
         }

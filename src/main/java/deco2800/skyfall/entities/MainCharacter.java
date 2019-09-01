@@ -853,7 +853,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         addAnimations(AnimationRole.MOVE, Direction.SOUTH,
                 new AnimationLinker("MainCharacterS_Anim",
-<<<<<<< HEAD
                         AnimationRole.MOVE, Direction.SOUTH, true ,true));
 
         // Hurt animation
@@ -865,10 +864,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         addAnimations(AnimationRole.DEAD, Direction.DEFAULT,
                 new AnimationLinker("MainCharacter_Dead_E_Anim",
                         AnimationRole.DEAD, Direction.DEFAULT, false ,true));
-=======
-                        AnimationRole.MOVE, Direction.SOUTH, true,
-                        true));
->>>>>>> 66096334e8b9c9746082b3d243f372fcb506f2a7
+
     }
 
     /**
@@ -908,7 +904,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
        } else {
            setCurrentState(AnimationRole.MOVE);
        }
-<<<<<<< HEAD
 
        /*
        //TODO: Detect whether player is hurt by an enemy,
@@ -918,8 +913,5 @@ public class MainCharacter extends Peon implements KeyDownObserver,
            setCurrentState(AnimationRole.DEAD);
        }
        */
-
-=======
->>>>>>> 66096334e8b9c9746082b3d243f372fcb506f2a7
     }
 }
