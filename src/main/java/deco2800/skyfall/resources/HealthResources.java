@@ -20,35 +20,27 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
     // the co-ordinates of the tile the item has been placed on
     private HexVector position;
 
-    //How many amount of healing power could be recovered
-    //private Integer AmountOfHealingPower;
-
-    //How many amount of healing will be deducted if have a poison
-    //private Integer HealingDeducted;
-
-
-    //if and only if the items deduct the HP of player
-    //private Boolean notHealingPower;
-
     //Items could change or not e.g. coins, items
     private Boolean exchangeable;
 
+    // the value of the piece of food
     public int foodValue;
 
-    //TODO: look into public int healthValue;
+    // the healing ability of the health item
+    public int healthValue;
 
 
-
+    /**
+     * Creates a default health resource.
+     */
     public HealthResources(){
-        //Added this default constructor to resolve an issue in apple class - Kathryn
-        //this.name = name;
+        this.name = null;
         this.carryable = true;
         this.subtype = "Health Resource";
-        this.hasHealingPower = true;
-        //Do we need a new type like FoodResources? and hasFoodEffect may false in here as medicine may not affect the food fullness
-
-        //this.notHealingPower=false;
         this.exchangeable = true;
+        this.hasHealingPower = true;
+        //Do we need a new type like FoodResources? and hasFoodEffect may false
+        // in here as medicine may not affect the food fullness
 
     }
 
@@ -64,9 +56,8 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
         this.carryable = true;
         this.subtype = "Health Resource";
         this.hasHealingPower = true;
-        //Do we need a new type like FoodResources? and hasFoodEffect may false in here as medicine may not affect the food fullness
-
-        //this.notHealingPower=false;
+        //Do we need a new type like FoodResources?
+        // and hasFoodEffect may false in here as medicine may not affect the food fullness
         this.exchangeable = true;
 
         this.position = position.getCoordinates();
@@ -125,17 +116,6 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
      */
 
 
-    /**public Boolean getNotHealingPower() {
-     * return notHealingPower;
-     * }*/
-
-
-    //public Boolean getNotHealingPower() {
-        //return notHealingPower;
-    //}
-
-
-
 
     /**
      * Returns whether or not the item could be exchanged
@@ -160,7 +140,9 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
     public int getFoodValue() {
         return foodValue;
     }
-
+    public int getHealthValue(){
+        return healthValue;
+    }
 
     /**
      * Creates a string representation of the health resource in the format:
@@ -180,6 +162,13 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
         return "" + subtype + ":" + name;
     }
 
-
+    /**
+     * Returns the item description
+     * @return the item description
+     */
+    @Override
+    public String getDescription() {
+        return "This item increases or decreases a player's health.";
+    }
 
 }

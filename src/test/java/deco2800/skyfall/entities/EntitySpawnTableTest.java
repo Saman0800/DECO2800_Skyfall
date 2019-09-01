@@ -1,4 +1,5 @@
 package deco2800.skyfall.entities;
+
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
@@ -28,10 +29,10 @@ public class EntitySpawnTableTest {
 
     private TestWorld testWorld = null;
 
-    //size of test world
+    // size of test world
     final int worldSize = 100;
 
-    //create a mock game manager for successful .getWorld()
+    // create a mock game manager for successful .getWorld()
     @Mock
     private GameManager mockGM;
 
@@ -43,7 +44,7 @@ public class EntitySpawnTableTest {
 
         biome = new ForestBiome();
 
-        //create tile map, add tiles and push to testWorld
+        // create tile map, add tiles and push to testWorld
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
 
         for (int i = 0; i < worldSize; i++) {
@@ -57,30 +58,29 @@ public class EntitySpawnTableTest {
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
 
-        //required for proper EntitySpawnTable.placeEntity
+        // required for proper EntitySpawnTable.placeEntity
         when(GameManager.get()).thenReturn(mockGM);
         when(mockGM.getWorld()).thenReturn(testWorld);
     }
 
-    //tests the place method
+    // tests the place method
     @Test
     public void testPlaceEntity() {
         Tile tile = new Tile(0.0f, 0.0f);
         Rock rock = new Rock();
 
-        //check tile has no rock
+        // check tile has no rock
         assertTrue(!tile.hasParent());
 
-        //place
+        // place
         EntitySpawnTable.placeEntity(rock, tile);
 
-        //has the rock
+        // has the rock
         assertTrue(tile.hasParent());
 
     }
 
-
-    //simple method to count number of static entities on world
+    // simple method to count number of static entities on world
     private int countWorldEntities() {
         int count = 0;
         for (Tile tile : testWorld.getTileMap()) {
@@ -93,18 +93,49 @@ public class EntitySpawnTableTest {
 
     @Test
     public void testDirectPlace() {
-        //check if construction was valid
+        // check if construction was valid
         assertEquals(worldSize, testWorld.getTileMap().size());
 
-        //count before spawning
+        // count before spawning
         assertEquals(0, countWorldEntities());
 
-        //check basic spawnEntities
-        final double chance = 0.5;
+        // check basic spawnEntities
+        final double chance = 0.95;
         Rock rock = new Rock();
-        EntitySpawnTable.spawnEntities(rock, chance, biome, new Random());
+        EntitySpawnTable.spawnEntities(rock, chance, testWorld);
 
-        //count after spawning
-        assertTrue(countWorldEntities()>0);
+        // count after spawning
+        assertTrue(countWorldEntities() > 0);
+    }
+
+    @Test
+    public void maxMinPlacementTest() {
+        TestWorld newWorld = new TestWorld(0);
+
+        // create tile map, add tiles and push to testWorld
+        CopyOnWriteArrayList<Tile> newTileMap = new CopyOnWriteArrayList<>();
+
+        for (int i = 0; i < worldSize; i++) {
+            Tile tile = new Tile(1.0f * i, 0.0f);
+            newTileMap.add(tile);
+            biome.addTile(tile);
+        }
+
+        newWorld.setTileMap(newTileMap);
+
+        EntitySpawnRule newRule = new EntitySpawnRule(2, 4, null, true);
+        newRule.setChance(1.0);
+
+        Rock rock = new Rock();
+        EntitySpawnTable.spawnEntities(rock, newRule, newWorld);
+
+        int count = 0;
+        for (Tile tile : newWorld.getTileMap()) {
+            if (tile.hasParent()) {
+                count++;
+            }
+        }
+
+        assertTrue("Count was " + count, count <= 4);
     }
 }

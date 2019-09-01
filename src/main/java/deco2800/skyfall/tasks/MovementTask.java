@@ -79,37 +79,37 @@ public class MovementTask extends AbstractTask{
 
 
 	public void updateAnimation() {
-        if (this.complete) {
-            entity.setMovingAnimation(AnimationRole.NULL);
-            return;
-        }
-
-        double angle = entity.getPosition().getAngle();
-        final double TOL = 0.1;
-        if (angle < Math.PI/6 + TOL && angle > Math.PI/6 - TOL) {
-            System.out.println("Setting "+ AnimationRole.MOVE_NORTH_EAST.name() +" animation in " + entity.getObjectName());
-            entity.setMovingAnimation(AnimationRole.MOVE_NORTH_EAST);
-
-        } else if (angle < Math.PI/2 + TOL && angle > Math.PI/2 - TOL) {
-            System.out.println("Setting "+ AnimationRole.MOVE_NORTH.name() + " animation in " + entity.getObjectName());
-            entity.setMovingAnimation(AnimationRole.MOVE_NORTH);
-
-        } else if (angle < 5*Math.PI/6 + TOL && angle > 5*Math.PI/6 - TOL) {
-            System.out.println("Setting "+ AnimationRole.MOVE_NORTH_WEST.name() +" animation in " + entity.getObjectName());
-            entity.setMovingAnimation(AnimationRole.MOVE_NORTH_WEST);
-
-
-        } else if (angle < 7*Math.PI/6 + TOL && angle > Math.PI/6 - TOL) {
-            System.out.println("Setting "+ AnimationRole.MOVE_SOUTH_WEST.name() +" animation in " + entity.getObjectName());
-            entity.setMovingAnimation(AnimationRole.MOVE_SOUTH_WEST);
-
-        } else if (angle < 3 * Math.PI/2 + TOL && angle > 3 * Math.PI/2 - TOL) {
-            System.out.println("Setting "+ AnimationRole.MOVE_SOUTH.name() + " animation in " + entity.getObjectName());
-            entity.setMovingAnimation(AnimationRole.MOVE_SOUTH);
-        } else {
-            System.out.println("Setting "+ AnimationRole.MOVE_SOUTH_EAST.name() + " animation in " + entity.getObjectName());
-            entity.setMovingAnimation(AnimationRole.MOVE_SOUTH_EAST);
-        }
+//        if (this.complete) {
+//            entity.setMovingAnimation(AnimationRole.NULL);
+//            return;
+//        }
+//
+//        double angle = entity.getPosition().getAngle();
+//        final double TOL = 0.1;
+//        if (angle < Math.PI/6 + TOL && angle > Math.PI/6 - TOL) {
+////            System.out.println("Setting "+ AnimationRole.MOVE_NORTH_EAST.name() +" animation in " + entity.getObjectName());
+//            entity.setMovingAnimation(AnimationRole.MOVE_NORTH_EAST);
+//
+//        } else if (angle < Math.PI/2 + TOL && angle > Math.PI/2 - TOL) {
+////            System.out.println("Setting "+ AnimationRole.MOVE_NORTH.name() + " animation in " + entity.getObjectName());
+//            entity.setMovingAnimation(AnimationRole.MOVE_NORTH);
+//
+//        } else if (angle < 5*Math.PI/6 + TOL && angle > 5*Math.PI/6 - TOL) {
+////            System.out.println("Setting "+ AnimationRole.MOVE_NORTH_WEST.name() +" animation in " + entity.getObjectName());
+//            entity.setMovingAnimation(AnimationRole.MOVE_NORTH_WEST);
+//
+//
+//        } else if (angle < 7*Math.PI/6 + TOL && angle > Math.PI/6 - TOL) {
+////            System.out.println("Setting "+ AnimationRole.MOVE_SOUTH_WEST.name() +" animation in " + entity.getObjectName());
+//            entity.setMovingAnimation(AnimationRole.MOVE_SOUTH_WEST);
+//
+//        } else if (angle < 3 * Math.PI/2 + TOL && angle > 3 * Math.PI/2 - TOL) {
+////            System.out.println("Setting "+ AnimationRole.MOVE_SOUTH.name() + " animation in " + entity.getObjectName());
+//            entity.setMovingAnimation(AnimationRole.MOVE_SOUTH);
+//        } else {
+////            System.out.println("Setting "+ AnimationRole.MOVE_SOUTH_EAST.name() + " animation in " + entity.getObjectName());
+//            entity.setMovingAnimation(AnimationRole.MOVE_SOUTH_EAST);
+//        }
 
 
 
