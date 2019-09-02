@@ -26,13 +26,13 @@ public class BuildingFactoryTest {
     }
 
     @Test
-    public void createHouseTest() {
-        BuildingEntity house = factory.createCabin(0f, 2f);
-        Assert.assertEquals(2f, house.getWidth(), 0.0);
-        Assert.assertEquals(2f, house.getLength(), 0.0);
-        Assert.assertEquals(0f, house.getCol(), 0.0);
-        Assert.assertEquals(2f, house.getRow(), 0.0);
-        Assert.assertEquals("House", house.getObjectName().substring(0, 5));
+    public void createCabinTest() {
+        BuildingEntity cabin = factory.createCabin(0f, 2f);
+        Assert.assertEquals(2f, cabin.getWidth(), 0.0);
+        Assert.assertEquals(2f, cabin.getLength(), 0.0);
+        Assert.assertEquals(0f, cabin.getCol(), 0.0);
+        Assert.assertEquals(2f, cabin.getRow(), 0.0);
+        Assert.assertEquals("House", cabin.getObjectName().substring(0, 5));
     }
 
     @Test

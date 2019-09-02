@@ -215,7 +215,7 @@ public class ConstructionManager extends AbstractManager {
                     float row = position.getRow();
                     float col = position.getCol();
 
-                    setBuildingToBePlaced(buildingFactory.createHouse(row, col));
+                    setBuildingToBePlaced(buildingFactory.createCabin(row, col));
                     buildingToBePlaced.placeBuilding(buildingToBePlaced.getRow(), buildingToBePlaced.getCol(), buildingToBePlaced.getHeight(), world);
                 }
             });
