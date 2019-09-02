@@ -3,6 +3,7 @@ package deco2800.skyfall.managers;
 import deco2800.skyfall.gui.Tuple;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.*;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 

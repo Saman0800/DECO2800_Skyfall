@@ -9,22 +9,6 @@ public class PoisonousMushroom extends HealthResources implements Item {
     // the name of the item
     private String name;
 
-    // can the item be stored in the inventory
-    //private Boolean carryable;
-
-    // the name of the subtype the item belongs to
-    //private String subtype;
-
-    // does the item impact the player's health
-    ///private Boolean hasHealingPower;
-
-    // the co-ordinates of the tile the item has been placed on
-    //private HexVector position;
-
-    //whether or not the item impacts the player's food fullness
-    //For PoisonousMushroom, it could recover players' food fullness,
-    //but deduct the healing power
-    //private Boolean hasFoodEffect;
 
     // the colour of the PoisonousMushroom
     private String colour;
@@ -35,21 +19,13 @@ public class PoisonousMushroom extends HealthResources implements Item {
     // the biome the poisonous mushroom is in (will change to different type in future?)
     private String biome;
 
-    //How many amount of healing power could be recovered
-    //private Integer HealingDeducted;
-
-    //Amount of food fullness increased
-    //private Integer amoutoffoodeffect;
-
-    //How many PoisonousMushroom that players have;
-    //private Integer NumberOfPoisonousMushroom;
-
     //whether or not the item impacts the player's food fullness
     private Boolean hasFoodEffect;
 
 
-    //PoisonousMushroom could recover the food fullness, but deducting the
-    //healing power
+    /**
+     * Creates a generic poisonous mushroom.
+     */
     public PoisonousMushroom(){
 
         this.biome = "Forest";
@@ -59,8 +35,6 @@ public class PoisonousMushroom extends HealthResources implements Item {
         //PoisonousMushroom can increase the foodValue but reduce the healthValue
         this.foodValue = -20;
         //Todo: Look into this.healthValue = -20;
-        this.healthValue = -20;
-        //default constructor added for building inventory
     }
 
     @Override
@@ -87,49 +61,9 @@ public class PoisonousMushroom extends HealthResources implements Item {
         return hasFoodEffect;
     }
 
-    /**
-     * Returns the integer of deducting healing power
-     *
-     * @return the integer of deducting healing power
-     */
-
-
-    /*public Integer HealingDeducted(Integer AmountOfDeducted){
-        HealingDeducted = AmountOfDeducted;
-        return HealingDeducted;
-    }
-    */
-
-    /**
-     * Returns Amount of food fullness increased
-     *
-     * @return Amount of food fullness increased
-     */
-    /*
-    public Integer amoutoffoodeffect(Integer Amountoffood) {
-        amoutoffoodeffect = Amountoffood;
-        return amoutoffoodeffect;
-    }
-
-     */
 
 
 
-    /**
-     * Returns the integer of number of Poisonous Mushroom
-     *
-     * @return the integer of number of Poisonous Mushroom
-     */
-
-    /*public Integer getNumberOfPoisonousMushroom(Integer numberOfPoisonousMushroom){
-
-        NumberOfPoisonousMushroom = numberOfPoisonousMushroom;
-
-        if(NumberOfPoisonousMushroom > 99){
-            System.out.println("Out of Maximum number of PoisonousMushroom");
-        }
-        return NumberOfPoisonousMushroom;
-    }*/
 
     @Override
     public String toString() {
@@ -137,14 +71,6 @@ public class PoisonousMushroom extends HealthResources implements Item {
     }
 
 
-    /**
-     * Returns the item description
-     * @return the item description
-     */
-    @Override
-    public String getDescription() {
-        return "This item reduces the main character's health.";
-    }
 
 
 

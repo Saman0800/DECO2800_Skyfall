@@ -14,16 +14,22 @@ public class HealthCircle {
     private MainCharacter mainCharacter;
     private float currentHealth;
     private int newHealth; // maybe for animating it down.
-    private  ImageButton bigger_circle;
-    private  ImageButton smaller_circle;
+    private  ImageButton biggerCircle;
+    private  ImageButton smallerCircle;
     private Stage s;
     private float positionX;
     private float positionY;
     private float offset;
     private Label label;
-    //TODO: change stage.
 
-    public HealthCircle(Stage stage, String t1, String t2, MainCharacter mc) {
+    /**
+     * Constructor
+     * @param stage Stage to display things on
+     * @param innerTexture Texture of the inner circle
+     * @param outerTexture Texture of the outer circle
+     * @param mc Main Character (Needs to be migrated to statsManager)
+     */
+    public HealthCircle(Stage stage, String innerTexture, String outerTexture, MainCharacter mc) {
         mainCharacter = mc;
         s = stage;
 
@@ -34,56 +40,56 @@ public class HealthCircle {
 
         label = new Label("Health: 10", new Label.LabelStyle(bitmapFont, Color.WHITE));
 
-        this.bigger_circle = new ImageButton(GameMenuManager.generateTextureRegionDrawableObject(t1));
-        bigger_circle.setSize(100, 100);
+        this.biggerCircle = new ImageButton(GameMenuManager.generateTextureRegionDrawableObject(innerTexture));
+        biggerCircle.setSize(100, 100);
 
-        this.smaller_circle = new ImageButton(GameMenuManager.generateTextureRegionDrawableObject(t2));
-        smaller_circle.setSize(100, 100);
+        this.smallerCircle = new ImageButton(GameMenuManager.generateTextureRegionDrawableObject(outerTexture));
+        smallerCircle.setSize(100, 100);
 
         updateWithViewportChanges();
 
-        stage.addActor(bigger_circle);
-        stage.addActor(smaller_circle);
+        stage.addActor(biggerCircle);
+        stage.addActor(smallerCircle);
         stage.addActor(label);
-        //Testing functionality
-//        smaller_circle.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                mc.changeHealth(-1);
-//                updateInnerCircle();
-//            }
-//        });
 
     }
 
+    /**
+     * Keeps the object on the top left of the screen
+     */
     private void updateWithViewportChanges() {
         positionX = (s.getCamera().position.x  + (s.getCamera().viewportWidth / 2) - 100);
         positionY = (s.getCamera().position.y  +  (s.getCamera().viewportHeight / 2) - 100);
-        smaller_circle.setPosition(positionX + offset, positionY + offset);
-        bigger_circle.setPosition(positionX, positionY);
+        smallerCircle.setPosition(positionX + offset, positionY + offset);
+        biggerCircle.setPosition(positionX, positionY);
         label.setPosition(positionX + 15, positionY + 40);
     }
 
+    /**
+     * Updates
+     */
     private void updateInnerCircle() {
         float diff = currentHealth - newHealth;
 
-        if (smaller_circle == null) {
+        if (smallerCircle == null) {
             System.out.println("Smaller circle is null");
-            if (bigger_circle == null) {
+            if (biggerCircle == null) {
                 System.out.println("Bigger circle is null");
                 return;
             }
             return;
         }
 
-        smaller_circle.setSize(10 * newHealth, 10 * newHealth);
+        smallerCircle.setSize(10 * newHealth, 10 * newHealth);
         offset += (diff * 10) / 2;
-        smaller_circle.setPosition(positionX + offset, positionY + offset);
+        smallerCircle.setPosition(positionX + offset, positionY + offset);
         currentHealth = newHealth;
         label.setText("Health: " + mainCharacter.getHealth());
     }
 
-
+    /**
+     * Updates the health circle and the position if the scren has been resized
+     */
     public void update() {
         newHealth = mainCharacter.getHealth();
         updateWithViewportChanges();

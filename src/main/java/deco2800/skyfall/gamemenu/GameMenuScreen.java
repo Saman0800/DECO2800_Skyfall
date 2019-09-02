@@ -467,9 +467,7 @@ public class GameMenuScreen {
     }
 
     /**
-     * Getter of Settings Screen.
-     *
-     * @return Settings Screen.
+     * gets the settings table
      */
     private PopUpTable getSettingsTable() {
         if (settingsTable == null) {
@@ -483,6 +481,7 @@ public class GameMenuScreen {
 
     /**
      * Initialise Settings Screen pop up.
+     * Sets the settings table to be the current table. (Currently incomplete)
      */
     private void setSettingsTable() {
 
