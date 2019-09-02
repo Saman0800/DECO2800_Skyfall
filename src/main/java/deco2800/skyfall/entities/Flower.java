@@ -9,7 +9,7 @@ import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 
 public class Flower extends EnemyEntity implements Animatable {
-    private static final transient int HEALTH = 2;
+    private static final transient int HEALTH = 1;
     private static final transient float ATTACK_RANGE = 1f;
     private static final transient int ATTACK_SPEED = 1000;
     private static final transient String BIOME="forest";
@@ -70,22 +70,29 @@ public class Flower extends EnemyEntity implements Animatable {
         return String.format("%s at (%d, %d) %s biome", getEnemyType(), (int)getCol(), (int)getRow(),getBiome());
     }
 
+    //check whether the main character is near the flower or not
     private boolean mcnear = false;
+    //check whether the main character is leave the flower or not
     private boolean mcleave = false;
+    //time to open the flower
     private int time1 =0;
+    //time to melee
     private int time2 = 0;
+    //time to close
     private int time3 = 0;
     @Override
     public void onTick(long i) {
         if (this.isDead()) {
             this.flowerDead();
-        } else {
+        }
             super.onTick(i);
             if (mc != null) {
                 float colDistance = mc.getCol() - this.getCol();
                 float rowDistance = mc.getRow() - this.getRow();
 
+                //check the distance between main character and flower
                 if ((colDistance * colDistance + rowDistance * rowDistance) < 4 || mcnear) {
+                    //boolean mcnear is to make sure it goes to next step (melee)
                     mcnear = true;
                     //flower open
                     if(time1<=135) {
@@ -104,6 +111,7 @@ public class Flower extends EnemyEntity implements Animatable {
                                 time2 = 0;
                             }
                             else{
+                                //mcleave is to make sure when the flower is closing, if main character come close, the flower still closing.
                                 mcleave = true;
                                 if (time3 <= 135 ) {
                                     time3++;
@@ -111,6 +119,7 @@ public class Flower extends EnemyEntity implements Animatable {
                                 }
                                 else{
                                     this.setCurrentState(AnimationRole.NULL);
+                                    //reset all
                                     mcnear = false;
                                     mcleave = false;
                                     time1 = 0;
@@ -133,7 +142,7 @@ public class Flower extends EnemyEntity implements Animatable {
                 System.out.println("Mc is null");
             }
 
-        }
+
     }
 
     int time=0;
