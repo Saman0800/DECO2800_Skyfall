@@ -38,7 +38,7 @@ public class TreemanTest {
      */
     @Test
     public void healTest(){
-        Assert.assertEquals(10,treeman.getHealth());
+        Assert.assertEquals(3,treeman.getHealth());
     }
 
     /**
