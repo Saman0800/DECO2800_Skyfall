@@ -41,4 +41,12 @@ public interface Item {
 
     //method for getting the biome?
 
+    /**
+     * Returns a description about the item
+     * @return a description about the item
+     */
+    String getDescription();
+
+
+
 }

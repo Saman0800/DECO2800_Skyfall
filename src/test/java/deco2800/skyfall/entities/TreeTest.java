@@ -4,10 +4,13 @@ import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.OnScreenMessageManager;
-import deco2800.skyfall.worlds.TestWorld;
+import deco2800.skyfall.worlds.world.TestWorld;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.util.HexVector;
 
+import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.world.WorldBuilder;
+import deco2800.skyfall.worlds.world.WorldDirector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,14 +32,17 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ GameManager.class, DatabaseManager.class, PlayerPeon.class })
 public class TreeTest {
-    private TestWorld w = null;
+    private World w = null;
 
     @Mock
     private GameManager mockGM;
 
     @Before
     public void Setup() {
-        w = new TestWorld(0);
+
+        WorldBuilder worldBuilder = new WorldBuilder();
+        WorldDirector.constructTestWorld(worldBuilder);
+        w = worldBuilder.getWorld();
 
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
@@ -174,7 +180,7 @@ public class TreeTest {
         Tree tree1 = new Tree(tile1, true);
         Tree tree2 = new Tree(0.0f, 0.5f, 2, texture);
 
-        assertEquals(0, tree1.getWoodAmount());
+        assertEquals(15, tree1.getWoodAmount());
 
         assertEquals(15, tree2.getWoodAmount());
         tree2.decreaseWoodAmount();

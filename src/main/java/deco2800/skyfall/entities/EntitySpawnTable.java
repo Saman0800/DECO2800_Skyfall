@@ -1,13 +1,11 @@
 package deco2800.skyfall.entities;
 
-import deco2800.skyfall.worlds.AbstractWorld;
+import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.managers.GameManager;
 import java.util.*;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -33,7 +31,7 @@ public class EntitySpawnTable {
      *         to place items
      */
     public static <T extends StaticEntity> void placeEntity(T entity, Tile tile) {
-        AbstractWorld world = GameManager.get().getWorld();
+        World world = GameManager.get().getWorld();
         world.addEntity((T) entity.newInstance(tile));
     }
 
@@ -67,7 +65,7 @@ public class EntitySpawnTable {
      *                 that is compared to the uniform probability.
      */
     public static <T extends StaticEntity> void placeUniform(T entity, EntitySpawnRule rule, Tile nextTile,
-            Random randGen, AbstractWorld world) {
+            Random randGen, World world) {
 
         // Get the uniform chance from the rule
         double chance = rule.getChance();
@@ -98,7 +96,7 @@ public class EntitySpawnTable {
      *                 that is compared to the adjusted probability.
      */
     public static <T extends StaticEntity> void placePerlin(T entity, EntitySpawnRule rule, Tile nextTile,
-            Random randGen, AbstractWorld world) {
+            Random randGen, World world) {
 
         // Get the perlin noise value of the tile and apply the perlin map
         double noise = rule.getNoiseGenerator().getOctavedPerlinValue(nextTile.getRow(), nextTile.getCol());
@@ -128,7 +126,7 @@ public class EntitySpawnTable {
      *               combination of these, e.g.
      * @param <T>    T must extend StaticEntity and have .newInstance inherited
      */
-    public static <T extends StaticEntity> void spawnEntities(T entity, EntitySpawnRule rule, AbstractWorld world) {
+    public static <T extends StaticEntity> void spawnEntities(T entity, EntitySpawnRule rule, World world) {
 
         List<Tile> tiles = null;
         // Use the current time as a seed
@@ -194,7 +192,7 @@ public class EntitySpawnTable {
      * @param biome  specified biome to spawn in, null for no specification
      */
     public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntities(T entity, double chance,
-            AbstractWorld world) {
+            World world) {
         EntitySpawnRule spawnRule = new EntitySpawnRule(chance);
         spawnEntities(entity, spawnRule, world);
     }

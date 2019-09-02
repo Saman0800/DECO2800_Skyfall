@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.entities.*;
@@ -32,6 +33,8 @@ public class Renderer3D implements Renderer {
 
     @SuppressWarnings("unused")
     private final Logger logger = LoggerFactory.getLogger(Renderer3D.class);
+
+    SoundManager sound = new SoundManager();
 
     BitmapFont font;
 
@@ -83,23 +86,6 @@ public class Renderer3D implements Renderer {
         debugRender(batch, camera);
 
         batch.end();
-    }
-
-    /**
-     * Render an animation
-     * 
-     * @param batch     the sprite batch.
-     * @param camera    the camera.
-     * @param animation the animation need to rend
-     * @param x         animation x coordinate
-     * @param y         animation y coordinate
-     */
-    private void renderAnimation(SpriteBatch batch, OrthographicCamera camera, Animation<TextureRegion> animation,
-            Float x, Float y) {
-        elapsedTime += Gdx.graphics.getDeltaTime();
-        batch.draw(animation.getKeyFrame(elapsedTime, true), x, y,
-                animation.getKeyFrame(elapsedTime, true).getRegionWidth() * WorldUtil.SCALE_X,
-                animation.getKeyFrame(elapsedTime, true).getRegionHeight() * WorldUtil.SCALE_Y);
     }
 
     /**
@@ -167,103 +153,7 @@ public class Renderer3D implements Renderer {
 
     }
 
-    /**
-     * Robot animation
-     * 
-     * @param batch      SpriteBatch
-     * @param camera     camera
-     * @param entity     entity
-     * @param playerPeon Player peon
-     */
-    private void robotAnimation(SpriteBatch batch, OrthographicCamera camera, AbstractEntity entity,
-            MainCharacter playerPeon) {
-        // if the distance between player peon and Robot is greater than 2 then Robot do
-        // defence animation
-        // (distance^2=(Robot col -Robot col)^2 +(Robot row -Robot row))
-        if (entity instanceof Robot && playerPeon != null) {
-            Robot robot = (Robot) entity;
-            float colDistance = playerPeon.getCol() - robot.getCol();
-            float rowDistance = playerPeon.getRow() - robot.getRow();
-            if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
-                float[] tileWorldCord = WorldUtil.colRowToWorldCords(robot.getCol(), robot.getRow());
-                renderAnimation(batch, camera, animationManager.getAnimation("robot_defence"), tileWorldCord[0],
-                        tileWorldCord[1]);
-            } else {
-                Texture savageTexture = textureManager.getTexture(robot.getTexture());
-                float[] savageCoord = WorldUtil.colRowToWorldCords(robot.getCol(), robot.getRow());
-                renderAbstractEntity(batch, robot, savageCoord, savageTexture);
-            }
 
-        }
-    }
-
-    /**
-     * skip draw enemy entities
-     * 
-     * @param batch            the spriteBatch
-     * @param entity           AbstractEntity
-     * @param entityWorldCoord coordinate of entity world
-     * @param tex              texture of entity
-     */
-    private void skipDrawingEnemy(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord, Texture tex) {
-        // if the entity is spider of savage then not drawing
-        if (entity instanceof Spider || entity instanceof Robot) {
-
-        } else {
-            renderAbstractEntity(batch, entity, entityWorldCoord, tex);
-        }
-    }
-
-    /**
-     * Spider defence Animation
-     * 
-     * @param batch      the sprite batch
-     * @param camera     the camera.
-     * @param entity     AbstractEntity
-     * @param playerPeon playerPeon
-     */
-    private void spiderAnimation(SpriteBatch batch, OrthographicCamera camera, AbstractEntity entity,
-            MainCharacter playerPeon) {
-
-        // if the distance between player peon and spider is greater than 2 then spider
-        // do defence animation
-        // (distance^2=(player col -spider col)^2 +(spider row -spider row))
-        if (entity instanceof Spider && playerPeon != null) {
-            Spider spider = (Spider) entity;
-            float colDistance = playerPeon.getCol() - spider.getCol();
-            float rowDistance = playerPeon.getRow() - spider.getRow();
-            if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
-                float[] tileWorldCord = WorldUtil.colRowToWorldCords(spider.getCol(), spider.getRow());
-
-                renderAnimation(batch, camera, animationManager.getAnimation("spider_defence"), tileWorldCord[0],
-                        tileWorldCord[1]);
-            } else {
-                // draw spider texture when distance greater than 2
-                Texture spiderTexture = textureManager.getTexture(spider.getTexture());
-                float[] spiderCoord = WorldUtil.colRowToWorldCords(spider.getCol(), spider.getRow());
-                renderAbstractEntity(batch, spider, spiderCoord, spiderTexture);
-            }
-        }
-
-    }
-
-    /**
-     * To find playerPeon
-     * 
-     * @param entities AbstractEntity
-     * @return entity playerPeon
-     */
-    private MainCharacter findPlayerPeon(List<AbstractEntity> entities) {
-        // find playerPeon in the entities list
-        MainCharacter mainCharacter = null;
-        // iterate abstract entity to find Player peon
-        for (AbstractEntity e : entities) {
-            if (e instanceof MainCharacter) {
-                mainCharacter = (MainCharacter) e;
-            }
-        }
-        return mainCharacter;
-    }
 
     /**
      * Render all the entities on in view, including movement tiles, and excluding
@@ -274,7 +164,6 @@ public class Renderer3D implements Renderer {
      */
     private void renderAbstractEntities(SpriteBatch batch, OrthographicCamera camera) {
         List<AbstractEntity> entities = GameManager.get().getWorld().getSortedEntities();
-        MainCharacter playerPeon = findPlayerPeon(entities);
 
         int entitiesSkipped = 0;
         logger.debug("NUMBER OF ENTITIES IN ENTITY RENDER LIST: {}", entities.size());
@@ -314,14 +203,10 @@ public class Renderer3D implements Renderer {
                             childTex.getHeight() * WorldUtil.SCALE_Y);
                 }
             } else {
-                skipDrawingEnemy(batch, entity, entityWorldCoord, tex);
-
-                AnimationRole moveType = entity.getMovingAnimation();
-
-                if (moveType == AnimationRole.NULL) {
-                    skipDrawingEnemy(batch, entity, entityWorldCoord, tex);
+                if (!(entity instanceof Animatable)) {
+                    renderAbstractEntity(batch, entity, entityWorldCoord, tex);
                 } else {
-                    runMovementAnimations(batch, entity, entityWorldCoord, tex);
+                    runAnimation(batch, entity, entityWorldCoord);
                 }
 
                 /* Draw Peon */
@@ -329,23 +214,31 @@ public class Renderer3D implements Renderer {
                 if (entity instanceof Peon && GameManager.get().showPath) {
                     renderPeonMovementTiles(batch, camera, entity, entityWorldCoord);
                 }
-                spiderAnimation(batch, camera, entity, playerPeon);
-                robotAnimation(batch, camera, entity, playerPeon);
-                runAnimations(batch, entity, entityWorldCoord);
+
+
             }
 
         }
+
 
         GameManager.get().setEntitiesRendered(entities.size() - entitiesSkipped);
         GameManager.get().setEntitiesCount(entities.size());
     }
 
+    /**
+     *
+     * @param batch The sprite batch.
+     * @param entity The entity that will be drawn
+     * @param entityWorldCord The coordinates to render at
+     * @param tex The texture to render it as
+     */
+
     private void renderAbstractEntity(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCord, Texture tex) {
         float x = entityWorldCord[0];
         float y = entityWorldCord[1];
 
-        float width = tex.getWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X;
-        float height = tex.getHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y;
+        float width = tex.getWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X * entity.getScale();
+        float height = tex.getHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y * entity.getScale();
         batch.draw(tex, x, y, width, height);
     }
 
@@ -420,77 +313,71 @@ public class Renderer3D implements Renderer {
     }
 
     /**
-     * Runs the movement animations for the current entity. If NULL draws the static
-     * texture gotten by Entity.getTexture().
-     * 
-     * @param batch            Sprite batch to draw onto
-     * @param entity           Entity who the animation is associate with
-     * @param entityWorldCoord Where on the game screen the entity is
-     * @param tex              Texture to draw if animation does not exist or is in
-     *                         state AnimationRole.NULL
+     * Render the default sprite for an entity, used if the state is NULL
+     * and the Animatable interface has been implemented. If a directional
+     * texture cannot be found then the default entity texture is render(i.e
+     * the one given into its constructor)
+     * @param batch The sprite batch.
+     * @param entity The entity that will be drawn
+     * @param entityWorldCoord The coordinates to render at
      */
-    private void runMovementAnimations(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord,
-            Texture tex) {
-        AnimationRole moveType = entity.getMovingAnimation();
-        String animationName = entity.getAnimationName(moveType);
+    private void renderDefaultSprite(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord) {
+        String directionTexture = entity.getDefaultTexture();
 
-        if (animationName == null) {
-            // System.out.println("Could not find animation in entity" +
-            // entity.getObjectName());
-            renderAbstractEntity(batch, entity, entityWorldCoord, tex);
+        if (!directionTexture.equals("Not Found")) {
+            renderAbstractEntity(batch, entity, entityWorldCoord, textureManager.getTexture(directionTexture));
+
         } else {
-            Animation<TextureRegion> runAnimation = animationManager.getAnimation(animationName);
-
-            if (runAnimation == null) {
-                System.out.println("Could not find animation object in animationManager");
-
-                renderAbstractEntity(batch, entity, entityWorldCoord, tex);
-            } else {
-                TextureRegion frame = runAnimation.getKeyFrame(elapsedTime, true);
-                float width = frame.getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X;
-                float height = frame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y;
-                batch.draw(frame, entityWorldCoord[0], entityWorldCoord[1], width, height);
-            }
+            renderAbstractEntity(batch, entity, entityWorldCoord, textureManager.getTexture(entity.getTexture()));
         }
     }
 
+
     /**
-     * Runs all other non-looping animations for the entity
+     * Runs an animation for the entity if it is applicable if there is
+     * no animation to be run or it cannot be found a default texture is run
      * 
      * @param batch            Sprite batch to draw onto
      * @param entity           Current entity
      * @param entityWorldCoord Where to draw.
      */
-    private void runAnimations(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord) {
-        Queue<AnimationLinker> q = entity.getToBeRun();
-        int queueSize = q.size();
-        if (queueSize == 0) {
-            return;
-        }
+    private void runAnimation(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord) {
+            if (entity.getCurrentState() == AnimationRole.NULL) {
+                renderDefaultSprite(batch, entity, entityWorldCoord);
+            }
 
-        for (int i = 0; i < queueSize; i++) {
-            AnimationLinker aniLink = q.remove();
+            AnimationLinker aniLink = entity.getToBeRun();
+            if (aniLink == null) {
+                renderDefaultSprite(batch, entity, entityWorldCoord);
+                return;
+            }
+
             Animation<TextureRegion> ani = aniLink.getAnimation();
             float time = aniLink.getStartingTime();
 
             if (ani == null) {
-                System.out.println("Animation is null");
-                continue;
+                //System.out.println("Animation is null");
+                renderDefaultSprite(batch, entity, entityWorldCoord);
+                return;
             }
 
-            if (ani.isAnimationFinished(time)) {
-                System.out.println("Animation is done");
-                continue;
+            if (ani.isAnimationFinished(time) && entity.getCurrentState()==AnimationRole.NULL) {
+                //System.out.println("Animation is done");
+                aniLink.resetStartingTime();
+
+                if (!aniLink.isLooping()) {
+                    entity.setGetToBeRunToNull();
+                }
+                renderDefaultSprite(batch, entity, entityWorldCoord);
+                return;
             }
 
-            TextureRegion currentFrame = ani.getKeyFrame(time, false);
-            float width = currentFrame.getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X;
-            float height = currentFrame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y;
+            TextureRegion currentFrame = ani.getKeyFrame(time, true);
+            float width = currentFrame.getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X * entity.getScale() ;
+            float height = currentFrame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y * entity.getScale();
             int[] offset = aniLink.getOffset();
 
             batch.draw(currentFrame, entityWorldCoord[0] + offset[0], entityWorldCoord[1] + offset[0], width, height);
             aniLink.incrTime(Gdx.graphics.getDeltaTime());
-            q.add(aniLink);
-        }
     }
 }

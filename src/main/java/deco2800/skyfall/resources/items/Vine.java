@@ -42,6 +42,16 @@ public class Vine extends NaturalResources implements Item {
     }
 
     /**
+     * Returns the item description
+     * @return the item description
+     */
+    @Override
+    public String getDescription() {
+        return "This item can be found in the forest biome and can " +
+                "be used to produce rope.";
+    }
+
+    /**
      * Creates a string representation of the natural resource in the format:
      *
      * <p>'{Natural Resource}:{Name}' </p>

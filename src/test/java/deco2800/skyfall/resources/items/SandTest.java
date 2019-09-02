@@ -85,4 +85,15 @@ public class SandTest {
     public void getBiome() {
         assertEquals("Beach", sand.getBiome());
     }
+
+
+    /**
+     * Ensure that the wood's biome is correctly returned when getBiome()
+     * is called
+     */
+    @Test
+    public void getDescriptionTest() {
+        assertEquals("This resource can be found in the Desert or Beach " +
+                "biomes.", sand.getDescription());
+    }
 }
