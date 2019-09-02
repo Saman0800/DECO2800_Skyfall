@@ -102,8 +102,6 @@ public class BuildingWidgets implements TouchDownObserver {
      */
     private void setWidgets(BuildingEntity building) {
         float[] wCords = WorldUtil.colRowToWorldCords(building.getCol(), building.getRow());
-        System.out.println(building.getCol());
-        System.out.println(building.getRow());
         this.label.setText(building.getObjectName());
         this.menu.setPosition(this.stage.getWidth()/2 + wCords[0] - GameManager.get().getCamera().position.x,
                 this.stage.getHeight()/2 + wCords[1] - GameManager.get().getCamera().position.y);

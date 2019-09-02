@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
+import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.gamemenu.GameMenuScreen;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.Peon;
@@ -104,6 +105,12 @@ public class GameScreen implements Screen,KeyDownObserver {
 
         /* Add inventory to game manager */
         gameManager.addManager(new InventoryManager());
+
+        /* Add construction manager to game manager */
+        gameManager.addManager(new ConstructionManager());
+        // testing requirement for widget, removed it later
+        BuildingFactory bf = new BuildingFactory();
+        GameManager.get().getWorld().addEntity(bf.createCabin(3f, 1.5f));
 
 		/* Add environment to game manager */
 		gameManager.addManager(new EnvironmentManager());
