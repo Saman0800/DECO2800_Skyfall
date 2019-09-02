@@ -148,6 +148,7 @@ public class World implements TouchDownObserver {
             }
         }
 
+
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
 
     };

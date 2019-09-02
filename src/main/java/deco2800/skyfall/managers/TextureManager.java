@@ -241,7 +241,7 @@ public class TextureManager extends AbstractManager {
     public Texture getTexture(String id) {
         if (textureMap.containsKey(id)) {
             return textureMap.get(id);
-        } else if (id.startsWith("__ANIMATION_")) {
+        } else if (id != null && id.startsWith("__ANIMATION_")) {
             // System.out.println("Getting animation texture");
             AnimationManager animationManager = GameManager.getManagerFromInstance(AnimationManager.class);
             Texture texture = this.getTextureFromAnimation(id, animationManager);
@@ -255,7 +255,10 @@ public class TextureManager extends AbstractManager {
 
         } else {
             // log.info("Texture map does not contain P{}, returning default texture.", id);
-            return textureMap.get("spacman_ded");
+            //TODO fix the issue where tiles are not getting added to lakes correctly,
+            //Temporary fix is just to assign tiles without a texture the lake texture so that the
+            //issue isn't as noticable
+            return textureMap.get("lake_1");
         }
 
     }
