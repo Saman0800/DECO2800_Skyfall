@@ -263,12 +263,18 @@ public class BuildingEntity extends AbstractEntity {
     }
 
     /**
-     * Set current health to a building entity.
-     * @param health building current health
+     * Updates the health of a Building
+     * @param amount - Amount of heath to update
      */
-    public void setCurrentHealth(int health) {
-        this.currentHealth = health;
+    public void updateHealth(int amount) {
+        if (amount <0 && (currentHealth + amount) > 0) {
+            currentHealth +=  amount;
+        }
+        if (amount >= 1 && currentHealth< maxHealth) {
+            currentHealth +=  amount;
+        }
     }
+
 
     /**
      * Get the current health of a building entity.

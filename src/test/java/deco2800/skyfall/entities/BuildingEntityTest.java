@@ -58,6 +58,27 @@ public class BuildingEntityTest {
         assertEquals(testbuilding.getTextures(), expectedTextures2);
     }
 
+    @Test
+    public void HealthTest() {
+        //setting the initial health and getting it
+        testbuilding.setInitialHealth(10);
+        assertEquals(testbuilding.getInitialHealth(), 10);
+
+        // detracting from the health
+        testbuilding.updateHealth(-4);
+        assertEquals(testbuilding.getCurrentHealth(), 6);
+
+        // adding to the health
+        testbuilding.updateHealth(2);
+        assertEquals(testbuilding.getCurrentHealth(), 8);
+
+        // doing nothing to the health
+        testbuilding.updateHealth(0);
+        assertEquals(testbuilding.getCurrentHealth(), 8);
+    }
+
+
+
 
     @After
     public void tearDown() throws Exception {
