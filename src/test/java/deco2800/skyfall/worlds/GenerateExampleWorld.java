@@ -1,5 +1,8 @@
 package deco2800.skyfall.worlds;
 
+import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.world.WorldBuilder;
+import deco2800.skyfall.worlds.world.WorldDirector;
 import java.io.IOException;
 
 /**
@@ -10,9 +13,13 @@ import java.io.IOException;
 public class GenerateExampleWorld {
     public static void main(String[] args){
 
-        AbstractWorld world = new RocketWorld(0, 10, 1, new int[] {20,10,10}, 3,2);
+        WorldBuilder worldBuilder = new WorldBuilder();
+        WorldDirector.constructTestWorld(worldBuilder);
+        worldBuilder.setType("single_player");
+        worldBuilder.setStaticEntities(false);
+        World world = worldBuilder.getWorld();
 
-    	try {
+        try {
             world.saveWorld("src/test/java/deco2800/skyfall/worlds/ExampleWorldOutput.txt");
         } catch (IOException e){
     	    System.out.println("Could not save world");

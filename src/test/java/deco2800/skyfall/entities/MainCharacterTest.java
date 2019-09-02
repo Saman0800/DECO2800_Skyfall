@@ -2,35 +2,29 @@ package deco2800.skyfall.entities;
 
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
-import deco2800.skyfall.managers.*;
-import deco2800.skyfall.resources.GoldPiece;
-
 import deco2800.skyfall.animation.Direction;
-
+import deco2800.skyfall.managers.DatabaseManager;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.InventoryManager;
+import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.resources.items.*;
 import deco2800.skyfall.resources.items.Stone;
-import deco2800.skyfall.worlds.AbstractWorld;
-import deco2800.skyfall.worlds.RocketWorld;
-import deco2800.skyfall.worlds.TestWorld;
-import deco2800.skyfall.worlds.Tile;
-
+import deco2800.skyfall.resources.items.*;
 import deco2800.skyfall.util.Collider;
-import deco2800.skyfall.util.Vector2;
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.world.WorldBuilder;
+import deco2800.skyfall.worlds.world.WorldDirector;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.After;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.HashMap;
-import java.util.Map;
-
-import java.util.Random;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -52,7 +46,7 @@ public class MainCharacterTest {
     private InventoryManager inventoryManager;
     private Hatchet testHatchet;
     private PickAxe testPickaxe;
-    private TestWorld w =null;
+    private World w =null;
     @Mock
     private GameManager mockGM;
 
@@ -83,7 +77,9 @@ public class MainCharacterTest {
 
         inventoryManager = GameManager.get().getManagerFromInstance(InventoryManager.class);
 
-        w = new TestWorld(0);
+        WorldBuilder builder = new WorldBuilder();
+        WorldDirector.constructTestWorld(builder);
+        w = builder.getWorld();
 
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);

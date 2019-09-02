@@ -9,6 +9,8 @@ import java.util.concurrent.TimeUnit;
  * Used to allow for generation of perlin noise value for coordinates
  * Implementation inspired by
  * <a>https://longwelwind.net/2017/02/09/perlin-noise.html</a>
+ * permutation and hashing inspired by
+ * <a>https://flafla2.github.io/2014/08/09/perlinnoise.html</a>
  */
 public class NoiseGenerator {
 
@@ -118,28 +120,31 @@ public class NoiseGenerator {
         yRel = fade(yRel);
         xRel = fade(xRel);
 
-        try {
-            int xy = permutation[permutation[xInt] + yInt];
-            int xpy = permutation[permutation[xInt+1] + yInt];
-            int xyp = permutation[permutation[xInt] + yInt + 1];
-            int xpyp = permutation[permutation[xInt+1] + yInt+1];
+        int xy = permutation[permutation[xInt] + yInt];
+        int xpy = permutation[permutation[xInt+1] + yInt];
+        int xyp = permutation[permutation[xInt] + yInt + 1];
+        int xpyp = permutation[permutation[xInt+1] + yInt+1];
 
-            double xyGrad = determineGradientVector(xRel, yRel, xy);
-            double xpyGrad = determineGradientVector(1 - xRel, yRel, xpy);
-            double xypGrad = determineGradientVector(xRel, 1 - yRel, xyp);
-            double xpypGrad = determineGradientVector(1 - xRel, 1 - yRel, xpyp);
+        double xyGrad = determineGradientVector(xRel, yRel, xy);
+        double xpyGrad = determineGradientVector(1 - xRel, yRel, xpy);
+        double xypGrad = determineGradientVector(xRel, 1 - yRel, xyp);
+        double xpypGrad = determineGradientVector(1 - xRel, 1 - yRel, xpyp);
 
-            double topLerp = lerp(xyGrad, xpyGrad, xRel);
-            double bottomLerp = lerp(xypGrad, xpypGrad, xRel);
+        double topLerp = lerp(xyGrad, xpyGrad, xRel);
+        double bottomLerp = lerp(xypGrad, xpypGrad, xRel);
 
-            double finalLerp = lerp(topLerp, bottomLerp, yRel);
+        double finalLerp = lerp(topLerp, bottomLerp, yRel);
 
-            return (finalLerp * NORMALISATION_VALUE + 1) / 2;
-        } catch (RuntimeException e){
-            throw e;
-        }
+        return (finalLerp * NORMALISATION_VALUE + 1) / 2;
     }
 
+    /**
+     * Determines the gradient vector for two given points, this function includes calculating the dot product
+     * @param x The x point
+     * @param y The y point
+     * @param hash The hashing table that gets used to create more variance in the gradient values
+     * @return The dot product between the two points
+     */
     private double determineGradientVector(double x, double y, int hash) {
         return (((1 & hash) != 0) ? x : -x) + (((2 & hash) != 0) ? y : -y);
     }

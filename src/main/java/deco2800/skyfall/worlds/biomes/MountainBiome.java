@@ -29,15 +29,16 @@ public class MountainBiome extends AbstractBiome {
     @Override
     public void setTileTextures(Random random) {
         ArrayList<String> textures = new ArrayList<>();
-        textures.add("mountain_9");
-        textures.add("mountain_10");
-        textures.add("mountain_11");
-//        textures.add("mountain_5");
-//        textures.add("mountain_0");
-//        textures.add("mountain_6");
+//        textures.add("mountain_9");
+//        textures.add("mountain_10");
+//        textures.add("mountain_11");
+        textures.add("mountain_1");
+        textures.add("mountain_2");
+        textures.add("mountain_3");
+//        textures.add("snow");
 
         //Perlin noise generation
-        new TileNoiseGenerator(getTiles(), random,3  , 15,0.5, Tile::setPerlinValue);
+        new TileNoiseGenerator(getTiles(), random,3  , 60,0.5, Tile::setPerlinValue);
 
 
         for (Tile tile : getTiles()) {

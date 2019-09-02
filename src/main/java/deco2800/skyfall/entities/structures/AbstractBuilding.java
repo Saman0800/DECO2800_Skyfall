@@ -1,7 +1,7 @@
 package deco2800.skyfall.entities.structures;
 
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.worlds.AbstractWorld;
+import deco2800.skyfall.worlds.world.World;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -38,7 +38,7 @@ public abstract class AbstractBuilding extends AbstractEntity {
      * @param height - Render height
      * @param world - World to place building in
      */
-    public void placeBuilding(float x, float y, int height, AbstractWorld world) {
+    public void placeBuilding(float x, float y, int height, World world) {
         //Construction_Permissions
         setPosition(x, y, height);
         world.addEntity(this);
@@ -47,7 +47,7 @@ public abstract class AbstractBuilding extends AbstractEntity {
     /**
      * @param world - World to remove building from
      */
-    public void removeBuilding(AbstractWorld world) {
+    public void removeBuilding(World world) {
         world.removeEntity(this);
     }
 

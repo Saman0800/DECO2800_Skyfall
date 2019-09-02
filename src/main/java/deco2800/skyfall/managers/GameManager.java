@@ -4,7 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import deco2800.skyfall.renderers.PotateCamera;
-import deco2800.skyfall.worlds.AbstractWorld;
+import deco2800.skyfall.worlds.world.World;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ public class GameManager {
 	private List<AbstractManager> managers = new ArrayList<>();
 
 	// The game world currently being played on.
-	private AbstractWorld gameWorld;
+	private World gameWorld;
 
 	// The camera being used by the Game Screen to project the game world.
 	private PotateCamera camera;
@@ -208,7 +208,7 @@ public class GameManager {
 	 *
 	 * @param world
 	 */
-	public void setWorld(AbstractWorld world) {
+	public void setWorld(World world) {
 		this.gameWorld = world;
 	}
 
@@ -217,7 +217,7 @@ public class GameManager {
 	 *
 	 * @return
 	 */
-	public AbstractWorld getWorld() {
+	public World getWorld() {
 		return gameWorld;
 	}
 
