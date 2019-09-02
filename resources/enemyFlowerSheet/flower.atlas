@@ -1,0 +1,240 @@
+
+flower.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+flower0001
+  rotate: false
+  xy: 1, 358
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+flower0002
+  rotate: false
+  xy: 1, 1
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+
+flower2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+flower0003
+  rotate: false
+  xy: 1, 358
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+flower0004
+  rotate: false
+  xy: 1, 1
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+
+flower3.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+flower0005
+  rotate: false
+  xy: 1, 358
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+flower0006
+  rotate: false
+  xy: 1, 1
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+
+flower4.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+flower0007
+  rotate: false
+  xy: 1, 358
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+flower0008
+  rotate: false
+  xy: 1, 1
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+
+flower5.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+flower0009
+  rotate: false
+  xy: 1, 358
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+flower0010
+  rotate: false
+  xy: 1, 1
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+
+flower6.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+flower0011
+  rotate: false
+  xy: 1, 358
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+flower0012
+  rotate: false
+  xy: 1, 1
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+
+flower7.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+flower0013
+  rotate: false
+  xy: 1, 358
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+flower0014
+  rotate: false
+  xy: 1, 1
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+
+flower8.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+flower0015
+  rotate: false
+  xy: 1, 358
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+flower0016
+  rotate: false
+  xy: 1, 1
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+
+flower9.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+flower0017
+  rotate: false
+  xy: 1, 358
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+flower0018
+  rotate: false
+  xy: 1, 1
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+
+flower10.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+flower0019
+  rotate: false
+  xy: 1, 358
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+flower0020
+  rotate: false
+  xy: 1, 1
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+
+flower11.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+flower0021
+  rotate: false
+  xy: 1, 358
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+flower0022
+  rotate: false
+  xy: 1, 1
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+
+flower12.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+flower0023
+  rotate: false
+  xy: 1, 358
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+flower0024
+  rotate: false
+  xy: 1, 1
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1
+
+flower13.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+flower0025
+  rotate: false
+  xy: 1, 1
+  size: 858, 355
+  orig: 858, 355
+  offset: 0, 0
+  index: -1

@@ -115,6 +115,12 @@ public class EntitySpawnTableTest {
 
         // count after spawning
         assertTrue(countWorldEntities() > 0);
+
+        //check perlin noice place
+        int currentCount = countWorldEntities();
+
+
+
     }
 
     @Test

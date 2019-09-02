@@ -10,6 +10,7 @@ import deco2800.skyfall.observers.*;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.util.*;
@@ -81,6 +82,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     // A goldPouch to store the character's gold pieces.
     private HashMap<Integer, Integer> goldPouch;
 
+
     /**
      * The direction and speed of the MainCharacter
      */
@@ -109,7 +111,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * e.g. 1 = test range weapon
      * 2 = test melee weapon
      */
-    private int itemSlotSelected = 0;
+    private int itemSlotSelected = 1;
 
     /**
      * How long does MainCharacter hurt status lasts,
@@ -664,11 +666,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             case Input.Keys.M:
                 getGoldPouchTotalValue();
                 break;
-            /*default:
+            default:
                 switchItem(keycode);
-                xInput += 1;
+                //xInput += 1;
                 break;
-            */
+
         }
     }
 
@@ -1084,7 +1086,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                     }
                 }
             }
-
         }
     }
 
@@ -1118,6 +1119,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @return the learned blueprints list
      */
     public List<String> getBlueprintsLearned() {
+        blueprintsLearned = new ArrayList<>();
+
         return this.blueprintsLearned;
     }
 
@@ -1126,50 +1129,51 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @return the item to create.
      */
     public String getItemToCreate() {
-        return itemToCreate;
+        return this.itemToCreate;
     }
 
     /***
      * A Setter method to get the Item to be created.
      * @param itemToCreate the item to be created.
      */
-    public void setItemToCreate(String itemToCreate) {
-        this.itemToCreate = itemToCreate;
+    public void setItemToCreate(String item) {
+        this.itemToCreate = item;
     }
 
     /***
-     * Creates a Hatchet. Checks if required resources are in the inventory.
-     * if yes, created a hatchet, and deducts the required resource from
-     * inventory
+     * Creates a manufactured item. Checks if required resources are in the inventory.
+     * if yes, creates the item, adds it to the player's inventory
+     * and deducts the required resource from inventory
      */
-    public void createHatchet(){
+    public void createItem(ManufacturedResources itemToCreate){
 
-        if (getItemToCreate()=="Hatchet") {
-            hatchetToCreate = new Hatchet();
+        if (getBlueprintsLearned().contains(itemToCreate.getName())) {
 
-            if (hatchetToCreate.getRequiredMetal() < inventories.getAmount
-                    ("Metal")) {
+            if (itemToCreate.getRequiredMetal()>=
+                    this.getInventoryManager().getAmount(itemToCreate.getName())){
                 logger.info("You don't have enough Metal");
 
-            } else if (hatchetToCreate.getRequiredWood() < inventories.getAmount
-                    ("Wood")) {
+            } else if (itemToCreate.getRequiredWood()>=
+                    this.getInventoryManager().getAmount(itemToCreate.getName())){
                 logger.info("You don't have enough Wood");
 
-            } else if (hatchetToCreate.getRequiredStone() < inventories.getAmount
-                    ("Stone")) {
+            } else if (itemToCreate.getRequiredStone()>=
+                    this.getInventoryManager().getAmount(itemToCreate.getName())) {
                 logger.info("You don't have enough Stone");
 
             } else {
-                inventories.inventoryAdd(hatchetToCreate);
-                inventories.inventoryDropMultiple("Metal",
-                        hatchetToCreate.getRequiredMetal());
-                inventories.inventoryDropMultiple("Stone",
-                        hatchetToCreate.getRequiredStone());
-                inventories.inventoryDropMultiple("Wood",
-                        hatchetToCreate.getRequiredWood());
+                this.getInventoryManager().inventoryAdd(itemToCreate);
+
+                this.getInventoryManager().inventoryDropMultiple("Metal",
+                        itemToCreate.getRequiredMetal());
+                this.getInventoryManager().inventoryDropMultiple("Stone",
+                        itemToCreate.getRequiredStone());
+                this.getInventoryManager().inventoryDropMultiple("Wood",
+                        itemToCreate.getRequiredWood());
             }
         }
     }
+
 
     /**
      * Sets the animations.
