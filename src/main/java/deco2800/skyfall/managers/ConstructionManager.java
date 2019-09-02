@@ -64,7 +64,7 @@ public class ConstructionManager extends AbstractManager {
 //                GameManager.get().getWorld(), GameManager.getManagerFromInstance(InputManager.class));
 
         // testing requirement fro widget, removed it later
-//        GameManager.get().getWorld().addEntity(buildingFactory.createHouse(0f, 0f, 0));
+//        GameManager.get().getWorld().addEntity(buildingFactory.createHouse(0f, 0f));
     }
 
     //Start of UI
