@@ -11,7 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.rmi.activation.UnknownGroupException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,6 +33,8 @@ public class BiomeGeneratorTest {
     // Rivers split biomes and break contiguity so they must be disabled for these tests.
     private static final int RIVER_WIDTH = 0;
     private static final int RIVER_COUNT = 0;
+
+    private static final int BEACH_WIDTH = 1;
 
     private static ArrayList<ArrayList<ArrayList<WorldGenNode>>> biomeNodesList;
     private static ArrayList<ArrayList<AbstractBiome>> biomeLists;
@@ -72,7 +74,6 @@ public class BiomeGeneratorTest {
                 } catch (WorldGenException e) {
                     continue;
                 }
-                worldGenNodesList.add(worldGenNodes);
 
                 ArrayList<Tile> tiles = new ArrayList<>();
                 for (int q = -WORLD_SIZE; q <= WORLD_SIZE; q++) {
@@ -107,11 +108,32 @@ public class BiomeGeneratorTest {
                 VoronoiEdge.assignTiles(edges, tiles, WORLD_SIZE);
                 VoronoiEdge.assignNeighbours(edges);
 
+                HashMap<WorldGenNode, AbstractBiome> nodesBiomes = null;
                 try {
                     BiomeGenerator biomeGenerator =
                             new BiomeGenerator(worldGenNodes, edges, random, NODE_COUNTS, biomes, LAKE_COUNT,
-                                               LAKE_SIZES, RIVER_COUNT, RIVER_WIDTH, 0);
+                                               LAKE_SIZES, RIVER_COUNT, RIVER_WIDTH, BEACH_WIDTH);
                     biomeGenerator.generateBiomes();
+
+                    try {
+                        // There is no other way to get the node-biome data.
+
+                        Field biomesField = biomeGenerator.getClass().getDeclaredField("biomes");
+                        biomesField.setAccessible(true);
+                        ArrayList<Object> biomesInProgress = (ArrayList<Object>) biomesField.get(biomeGenerator);
+
+                        Field nodesBiomesField = biomeGenerator.getClass().getDeclaredField("nodesBiomes");
+                        nodesBiomesField.setAccessible(true);
+                        HashMap<WorldGenNode, Object> map =
+                                (HashMap<WorldGenNode, Object>) nodesBiomesField.get(biomeGenerator);
+
+                        nodesBiomes = new HashMap<>();
+                        for (Map.Entry<WorldGenNode, Object> entry : map.entrySet()) {
+                            nodesBiomes.put(entry.getKey(), biomes.get(biomesInProgress.indexOf(entry.getValue())));
+                        }
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
                 } catch (NotEnoughPointsException | DeadEndGenerationException e) {
                     continue;
                 }
@@ -127,15 +149,9 @@ public class BiomeGeneratorTest {
                     biomeNodes.get(biomes.indexOf(node.getTiles().get(0).getBiome())).add(node);
                 }
 
-                biomeLists.add(biomes);
                 biomeNodesList.add(biomeNodes);
-
-                // Get the biome for each node by checking the biome of one if it's
-                // tiles
-                HashMap<WorldGenNode, AbstractBiome> nodesBiomes = new HashMap<>();
-                for (WorldGenNode node : worldGenNodes) {
-                    nodesBiomes.put(node, node.getTiles().get(0).getBiome());
-                }
+                biomeLists.add(biomes);
+                worldGenNodesList.add(worldGenNodes);
                 nodesBiomesList.add(nodesBiomes);
 
                 break;
@@ -169,8 +185,7 @@ public class BiomeGeneratorTest {
 
                 while (!borderTiles.isEmpty()) {
                     Tile nextTile = borderTiles.remove();
-                    for (int direction = 0; direction < 6; direction++) {
-                        Tile neighbour = nextTile.getNeighbour(direction);
+                    for (Tile neighbour : nextTile.getNeighbours().values()) {
                         if (tilesToFind.contains(neighbour)) {
                             tilesToFind.remove(neighbour);
                             borderTiles.add(neighbour);
@@ -178,7 +193,7 @@ public class BiomeGeneratorTest {
                     }
                 }
 
-                assertEquals(0, tilesToFind.size());
+                assertTrue(tilesToFind.isEmpty());
             }
         }
     }
@@ -194,6 +209,11 @@ public class BiomeGeneratorTest {
                 HashSet<WorldGenNode> nodesToFind =
                         nodes.stream().filter(node -> nodesBiomes.get(node).isDescendedFrom(biome)).collect(
                                 Collectors.toCollection(HashSet::new));
+
+                // TODO Fix empty biomes (is this even an issue?).
+                if (nodesToFind.isEmpty()) {
+                    continue;
+                }
 
                 ArrayDeque<WorldGenNode> borderNodes = new ArrayDeque<>();
 
@@ -211,7 +231,7 @@ public class BiomeGeneratorTest {
                     }
                 }
 
-                assertEquals(0, nodesToFind.size());
+                assertEquals(biome.getBiomeName(), 0, nodesToFind.size());
             }
         }
     }
