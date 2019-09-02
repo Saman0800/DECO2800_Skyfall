@@ -526,6 +526,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Gets the default direction texture
+	 *
      * @return Texture name of the direction texture
      */
     public String getDefaultTexture() {
