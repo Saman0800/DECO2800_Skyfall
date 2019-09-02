@@ -1,16 +1,12 @@
 package deco2800.skyfall;
 
 import deco2800.skyfall.entities.*;
-<<<<<<< HEAD
 import deco2800.skyfall.managers.*;
-import deco2800.skyfall.worlds.TestWorld;
-=======
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.OnScreenMessageManager;
 import deco2800.skyfall.worlds.world.TestWorld;
->>>>>>> f34c38bef075cf7f98d9af9bf1aac57b23ce76aa
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
@@ -37,13 +33,8 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({GameManager.class, DatabaseManager.class, PlayerPeon.class})
 public class SaveLoadTest {
-<<<<<<< HEAD
-    private TestWorld w = null;
-
     private PhysicsManager physics;
-=======
     private World w = null;
->>>>>>> f34c38bef075cf7f98d9af9bf1aac57b23ce76aa
    
     @Mock
     private GameManager mockGM;
