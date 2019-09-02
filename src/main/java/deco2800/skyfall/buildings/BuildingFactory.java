@@ -123,7 +123,7 @@ public class BuildingFactory {
      */
     public BuildingEntity createWatchTower(float col, float row) {
         BuildingEntity watchTower = new BuildingEntity(col, row, 2);
-        BuildingType watchTowerType = BuildingType.SAFEHOUSE;
+        BuildingType watchTowerType = BuildingType.WATCHTOWER;
         watchTower.setObjectName(watchTowerType.getName() + watchTower.getEntityID());
         watchTower.setTexture(watchTowerType.getMainTexture());
         watchTower.setBuildTime(watchTowerType.getBuildTime());
@@ -134,6 +134,7 @@ public class BuildingFactory {
         watchTower.setLength(watchTowerType.getSizeX());
         return watchTower;
     }
+
 
     /*
      *  Following contents are in BuildingType class

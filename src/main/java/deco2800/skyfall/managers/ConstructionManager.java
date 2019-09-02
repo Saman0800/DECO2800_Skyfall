@@ -584,13 +584,13 @@ public class ConstructionManager extends AbstractManager {
             case 0:
                 return buildingFactory.createCabin(row, col);
             case 1:
-                return buildingFactory.createFenceBuilding(row, col);
-            case 2:
-                return buildingFactory.createSafeHouse(row, col);
-            case 3:
                 return buildingFactory.createStorageUnit(row, col);
-            case 4:
+            case 2:
                 return buildingFactory.createTownCentreBuilding(row, col);
+            case 3:
+                return buildingFactory.createFenceBuilding(row, col);
+            case 4:
+                return buildingFactory.createSafeHouse(row, col);
             case 5:
                 return buildingFactory.createWatchTower(row, col);
             //case 6:
