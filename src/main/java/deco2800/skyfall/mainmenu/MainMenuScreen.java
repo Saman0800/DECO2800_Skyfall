@@ -1,5 +1,6 @@
 package deco2800.skyfall.mainmenu;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -30,8 +31,8 @@ public class MainMenuScreen implements Screen {
      */
     public MainMenuScreen(final SkyfallGame game) {
         this.game = game;
-
         stage = new Stage(new ExtendViewport(MIN_WIDTH, MIN_HEIGHT), game.batch);
+        System.out.println(GameManager.get());
         skin = GameManager.get().getSkin();
 
         Image background = new Image(GameManager.get().getManager(TextureManager.class).getTexture("background"));
@@ -43,6 +44,7 @@ public class MainMenuScreen implements Screen {
         // logo.setPosition(1280/2 - 225, 720/2 + 100);
         // stage.addActor(logo);
 
+        System.out.println(skin==null);
         Button newGameBtn = new TextButton("SINGLE PLAYER", skin, "main_menu");
         newGameBtn.setPosition(10, MIN_HEIGHT - 100);
         stage.addActor(newGameBtn);
@@ -74,7 +76,6 @@ public class MainMenuScreen implements Screen {
                 GameManager.get().isTutorial = false;
                 // TODO Accept user-provided seed or generate random seed.
                 game.setScreen(new GameScreen(new SkyfallGame(), 1, true));
-
             }
         });
 

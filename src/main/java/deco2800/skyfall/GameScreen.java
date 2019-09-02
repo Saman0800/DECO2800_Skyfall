@@ -62,12 +62,12 @@ public class GameScreen implements Screen,KeyDownObserver {
         GameMenuManager gameMenuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
         gameMenuManager.setStage(stage);
         gameMenuManager.setSkin(gameManager.getSkin());
+        gameMenuManager.setGame(game);
 
         //Used to create to the world
 
         // Create main world
         if (!isHost) {
-
             //Creating the world
             WorldBuilder worldBuilder = new WorldBuilder();
             WorldDirector.constructServerWorld(worldBuilder);
@@ -86,7 +86,6 @@ public class GameScreen implements Screen,KeyDownObserver {
                 WorldBuilder worldBuilder = new WorldBuilder();
                 WorldDirector.constructSimpleSinglePlayerWorld(worldBuilder);
                 world = worldBuilder.getWorld();
-
 			}
 			GameManager.get().getManager(NetworkManager.class).startHosting("host");
 		}
@@ -101,6 +100,7 @@ public class GameScreen implements Screen,KeyDownObserver {
         GameManager.get().setSkin(skin);
         GameManager.get().setStage(stage);
         GameManager.get().setCamera(camera);
+
 
         /* Add inventory to game manager */
         gameManager.addManager(new InventoryManager());
