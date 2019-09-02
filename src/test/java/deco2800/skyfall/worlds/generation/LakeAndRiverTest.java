@@ -33,6 +33,8 @@ public class LakeAndRiverTest {
     private static final int RIVER_WIDTH = 1;
     private static final int RIVER_COUNT = 2;
 
+    private static final int BEACH_WIDTH = 5;
+
     private static ArrayList<ArrayList<AbstractBiome>> biomeLists;
     private static ArrayList<ArrayList<WorldGenNode>> worldGenNodesList;
     private static ArrayList<HashMap<WorldGenNode, AbstractBiome>> nodesBiomesList;
@@ -40,7 +42,7 @@ public class LakeAndRiverTest {
 
     @BeforeClass
     public static void setup() {
-        Random random = new Random(3);
+        Random random = new Random(0);
 
         biomeLists = new ArrayList<>(TEST_COUNT);
         worldGenNodesList = new ArrayList<>();
@@ -107,7 +109,7 @@ public class LakeAndRiverTest {
                 try {
                     BiomeGenerator biomeGenerator =
                             new BiomeGenerator(worldGenNodes, edges, random, NODE_COUNTS, biomes, LAKE_COUNT,
-                                    LAKE_SIZES, RIVER_COUNT, RIVER_WIDTH, 0);
+                                    LAKE_SIZES, RIVER_COUNT, RIVER_WIDTH, BEACH_WIDTH);
                     biomeGenerator.generateBiomes();
                 } catch (NotEnoughPointsException | DeadEndGenerationException e) {
                     continue;

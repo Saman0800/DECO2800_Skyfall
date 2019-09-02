@@ -142,6 +142,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 populateRealBiomes();
                 generateBeaches();
                 ensureContiguity();
+                testTileContiguity();
                 generateRivers(noRivers, riverWidth, voronoiEdges);
 
                 return;
@@ -155,7 +156,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 }
                 // Remove all biomes that were added to the list during generation.
                 while (realBiomes.size() > biomeSizes.length) {
-                    realBiomes.remove(biomeSizes.length);
+                    realBiomes.remove(realBiomes.size() - 1);
                 }
 
                 // If the generation reached a dead-end, try again.
@@ -261,7 +262,8 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             ArrayList<Tile> nextCoastLayer = new ArrayList<>();
 
             for (Tile tile : coast) {
-                if (distance < beachWidth * NoiseGenerator.fade(distanceGen.getOctavedPerlinValue(tile.getCol(), tile.getRow()))) {
+                if (distance <= beachWidth *
+                        NoiseGenerator.fade(distanceGen.getOctavedPerlinValue(tile.getCol(), tile.getRow()))) {
                     BeachBiome biome = beachesForBiomes.computeIfAbsent(tile.getBiome(), parentBiome -> {
                         BeachBiome beachBiome = new BeachBiome(parentBiome);
                         realBiomes.add(beachBiome);
@@ -597,12 +599,12 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             ArrayList<Tile> mainClusterTiles = new ArrayList<>();
 
             while (!biomeUncheckedTiles.isEmpty()) {
-                // If there are fewer remaining tiles in the biome than the main cluster, than the largest cluster must
-                // already be found, so break early.
-                if (biomeUncheckedTiles.size() <= mainClusterTiles.size()) {
-                    removedTiles.addAll(biomeUncheckedTiles);
-                    break;
-                }
+                // // If there are fewer remaining tiles in the biome than the main cluster, than the largest cluster must
+                // // already be found, so break early.
+                // if (biomeUncheckedTiles.size() <= mainClusterTiles.size()) {
+                //     removedTiles.addAll(biomeUncheckedTiles);
+                //     break;
+                // }
 
                 // The tiles to be checked.
                 ArrayDeque<Tile> clusterCheckQueue = new ArrayDeque<>();
@@ -617,6 +619,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
 
                 clusterCheckQueue.add(clusterStart);
 
+                boolean parentFound = biome.getParentBiome() == null;
                 while (!clusterCheckQueue.isEmpty()) {
                     Tile expandFrom = clusterCheckQueue.remove();
                     // Don't add tiles from sub-biomes to this cluster's tiles.
@@ -630,13 +633,27 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                             clusterCheckQueue.add(neighbour);
                             biomeUncheckedTiles.remove(neighbour);
                         }
+                        if (!parentFound && neighbour.getBiome() == biome.getParentBiome() &&
+                                !removedTiles.contains(neighbour)) {
+                            parentFound = true;
+                        }
                     }
                 }
 
                 // Keep the biggest cluster of tiles and mark the tile from the other cluster to be removed.
-                if (clusterTiles.size() > mainClusterTiles.size()) {
-                    removedTiles.addAll(mainClusterTiles);
+                if (parentFound && clusterTiles.size() > mainClusterTiles.size()) {
+                    if (biome.getParentBiome() == null) {
+                        removedTiles.addAll(mainClusterTiles);
+                    } else {
+                        for (Tile tile : mainClusterTiles) {
+                            biome.getParentBiome().addTile(tile);
+                        }
+                    }
                     mainClusterTiles = clusterTiles;
+                } else if (biome.getParentBiome() != null && parentFound) {
+                    for (Tile tile : clusterTiles) {
+                        biome.getParentBiome().addTile(tile);
+                    }
                 } else {
                     removedTiles.addAll(clusterTiles);
                 }
@@ -678,6 +695,34 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                     borderTiles.remove(neighbour);
                 }
             }
+        }
+    }
+
+    public void testTileContiguity() {
+        for (AbstractBiome biome : realBiomes) {
+            // HashSet<Tile> tilesToFind = new HashSet<>(biome.getTiles());
+            ArrayList<Tile> descendantTiles =
+                    biome.getDescendantBiomes().stream().flatMap(descendant -> descendant.getTiles().stream())
+                            .collect(Collectors.toCollection(ArrayList::new));
+            HashSet<Tile> tilesToFind = new HashSet<>(descendantTiles);
+
+            ArrayDeque<Tile> borderTiles = new ArrayDeque<>();
+
+            Tile startTile = descendantTiles.get(0);
+            tilesToFind.remove(startTile);
+            borderTiles.add(startTile);
+
+            while (!borderTiles.isEmpty()) {
+                Tile nextTile = borderTiles.remove();
+                for (Tile neighbour : nextTile.getNeighbours().values()) {
+                    if (tilesToFind.contains(neighbour)) {
+                        tilesToFind.remove(neighbour);
+                        borderTiles.add(neighbour);
+                    }
+                }
+            }
+
+            assert tilesToFind.isEmpty();
         }
     }
 
