@@ -219,7 +219,7 @@ public class EnvironmentManagerTest {
     public void setBiomeTest() {
         // Check no null elements
         try {
-            manager.biome = "apple";
+            manager.biome = "forest";
             manager.setBiome();
             manager.entities = GameManager.get().getWorld().getEntities();
             for (int i = 0; i < manager.entities.size(); i++) {
@@ -228,7 +228,7 @@ public class EnvironmentManagerTest {
 
             assertTrue(manager.player instanceof MainCharacter);
 
-            // Let currentTile = null and check whether biome gets changed from apple
+            // Let currentTile = null and check whether biome gets changed from forest
 //            manager.currentTile = null;
             // Check tile
 //            assertNotNull(manager.biome);
