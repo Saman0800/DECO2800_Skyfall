@@ -63,8 +63,6 @@ public class EnvironmentManager extends TickableManager {
    }
 
    /**
-    * Private helper function for constructor to set biome
-    *
     * Tracks the biome the player is currently in by retrieving the player's coordinates,
     * the corresponding tile, and the corresponding biome.
     *
@@ -215,7 +213,7 @@ public class EnvironmentManager extends TickableManager {
       // Check time of day and biome, and change files accordingly
       if (isDay()) {
          // Until lake music created and ocean biome is restricted, play forest for now
-         if (biome.equals("ocean") || biome.equals("lake")) {
+         if (biome.equals("ocean") || biome.equals("lake") || biome.equals("river")) {
             file = "resources/sounds/forest_day.wav";
          } else {
             file = "resources/sounds/" + biome + "_day.wav";
@@ -223,7 +221,7 @@ public class EnvironmentManager extends TickableManager {
 
       } else {
 //          Until lake music created and ocean biome is restricted, play forest for now
-         if (biome.equals("ocean") || biome.equals("lake")) {
+         if (biome.equals("ocean") || biome.equals("lake") || biome.equals("river")) {
             file = "resources/sounds/forest_night.wav";
          } else {
             file = "resources/sounds/" + biome + "_night.wav";
