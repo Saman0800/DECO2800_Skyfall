@@ -20,7 +20,6 @@ public class BowMan extends AgentEntity {
 
     @Override
     public void onTick(long i) {
-        this.updateCollider();
 
         if(task != null && task.isAlive()) {
             if(task.isComplete()) {

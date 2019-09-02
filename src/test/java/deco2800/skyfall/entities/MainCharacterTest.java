@@ -6,6 +6,7 @@ import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
+import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.Stone;
@@ -52,6 +53,8 @@ public class MainCharacterTest {
     @Mock
     private GameManager mockGM;
 
+    private PhysicsManager physics;
+
     // A hashmap for testing player's animations
     private HashMap testMap = new HashMap();
 
@@ -89,12 +92,12 @@ public class MainCharacterTest {
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
 
+        physics = new PhysicsManager();
+        when(mockGM.getManager(PhysicsManager.class)).thenReturn(physics);
+
 
         when(GameManager.get()).thenReturn(mockGM);
         when(mockGM.getWorld()).thenReturn(w);
-
-
-
     }
 
     @After
@@ -507,17 +510,4 @@ public class MainCharacterTest {
         bow = null;
         axe = null;
     }
-
-    @Test
-    public void testCollision() {
-        WoodCube woodCube = new WoodCube(50,50);
-        Collider c1 = woodCube.getCollider();
-        Collider c2 = testCharacter.getCollider();
-        if (c1.overlaps(c2)) {
-            System.out.println("COLLISION");
-        } else {
-            System.out.println("NO COLLISION");
-        }
-    }
-
 }
