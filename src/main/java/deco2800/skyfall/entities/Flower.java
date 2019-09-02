@@ -37,8 +37,8 @@ public class Flower extends EnemyEntity implements Animatable {
 
     public Flower(float col, float row) {
         super(col,row);
-        this.setTexture("robot");
-        this.setObjectName("robot");
+        this.setTexture("flower");
+        this.setObjectName("flower");
         this.setHeight(1);
         this.setHealth(HEALTH);
         this.setLevel(2);
