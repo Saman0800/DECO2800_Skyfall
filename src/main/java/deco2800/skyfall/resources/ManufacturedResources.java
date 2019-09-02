@@ -65,8 +65,17 @@ public abstract class ManufacturedResources implements Item, Blueprint {
     }
 
     /**
-     * Returns the subtype which the item belongs to.
+     * Returns the name of the Manufactured Resource.
      * @return The subtype which the item belongs to.
+     */
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Returns the co-ordinates of the tile the item is on.
+     * @return the co-ordinates of the tile the item is on.
      */
     @Override
     public String getSubtype() {

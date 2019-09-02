@@ -20,6 +20,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.lwjgl.Sys;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -45,6 +46,7 @@ public class MainCharacterTest {
     private Tile testTile;
     private InventoryManager inventoryManager;
     private Hatchet testHatchet;
+    private Hatchet testHatchet2;
     private PickAxe testPickaxe;
     private World w =null;
     @Mock
@@ -70,6 +72,9 @@ public class MainCharacterTest {
                 "splash", 4, 3, 10);
         axe = new Weapon("axe", "melee",
                 "slash", 4, 4, 10);
+
+        testHatchet = new Hatchet();
+        testHatchet2 = new Hatchet();
 
         testTile = new Tile(0f,0f);
         testTree = new Tree(testTile,true);
@@ -474,6 +479,25 @@ public class MainCharacterTest {
         Assert.assertEquals(currentStone+1,testCharacter.getInventoryManager().getAmount("Stone"));
 
     }
+
+    @Test
+    public void createItemTest() {
+
+        testCharacter.getBlueprintsLearned().add("Hatchet");
+        int i;
+
+        for (i = 0; i < 25; i++) {
+            testCharacter.getInventoryManager().inventoryAdd(new Wood());
+            testCharacter.getInventoryManager().inventoryAdd(new Stone());
+        }
+
+        int currentHatchetAmount = testCharacter.getInventoryManager().getAmount("Hatchet");
+        testCharacter.createItem(testHatchet2);
+
+        Assert.assertEquals(currentHatchetAmount, testCharacter.getInventoryManager().getAmount("Hatchet"));
+
+    }
+
 
     @After
     public void cleanup() {

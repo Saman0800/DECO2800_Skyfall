@@ -78,6 +78,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     // A goldPouch to store the character's gold pieces.
     private HashMap<Integer, Integer> goldPouch;
 
+
     /**
      * The direction and speed of the MainCharacter
      */
@@ -1039,6 +1040,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @return the learned blueprints list
      */
     public List<String> getBlueprintsLearned() {
+        blueprintsLearned = new ArrayList<>();
+
         return this.blueprintsLearned;
     }
 
@@ -1047,15 +1050,15 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @return the item to create.
      */
     public String getItemToCreate() {
-        return itemToCreate;
+        return this.itemToCreate;
     }
 
     /***
      * A Setter method to get the Item to be created.
      * @param itemToCreate the item to be created.
      */
-    public void setItemToCreate(String itemToCreate) {
-        this.itemToCreate = itemToCreate;
+    public void setItemToCreate(String item) {
+        this.itemToCreate = item;
     }
 
     /***
@@ -1065,25 +1068,23 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     public void createItem(ManufacturedResources itemToCreate){
 
-        if (itemToCreate.getName() == getItemToCreate()) {
+        if (getBlueprintsLearned().contains(itemToCreate.getName())) {
 
-            if (getBlueprintsLearned().contains(itemToCreate.getName())) {
+            if (itemToCreate.getRequiredMetal()>=
+                    this.getInventoryManager().getAmount(itemToCreate.getName())){
+                logger.info("You don't have enough Metal");
 
-                if (itemToCreate.getRequiredMetal()>=
-                        this.getInventoryManager().getAmount(itemToCreate.getName())){
-                    logger.info("You don't have enough Metal");
+            } else if (itemToCreate.getRequiredWood()>=
+                    this.getInventoryManager().getAmount(itemToCreate.getName())){
+                logger.info("You don't have enough Wood");
 
-                } else if (itemToCreate.getRequiredWood()>=
-                        this.getInventoryManager().getAmount(itemToCreate.getName())){
-                    logger.info("You don't have enough Wood");
-
-                } else if (itemToCreate.getRequiredStone()>=
-                        this.getInventoryManager().getAmount(itemToCreate.getName())) {
-                    logger.info("You don't have enough Stone");
-                }
+            } else if (itemToCreate.getRequiredStone()>=
+                    this.getInventoryManager().getAmount(itemToCreate.getName())) {
+                logger.info("You don't have enough Stone");
 
             } else {
                 this.getInventoryManager().inventoryAdd(itemToCreate);
+
                 this.getInventoryManager().inventoryDropMultiple("Metal",
                         itemToCreate.getRequiredMetal());
                 this.getInventoryManager().inventoryDropMultiple("Stone",
@@ -1093,6 +1094,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             }
         }
     }
+
 
     /**
      * Sets the animations.
