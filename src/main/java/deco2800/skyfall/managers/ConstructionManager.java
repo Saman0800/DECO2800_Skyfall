@@ -61,11 +61,11 @@ public class ConstructionManager extends AbstractManager {
         menuSetUp = false;
 
         buildingFactory = new BuildingFactory();
-//        buildingWidgets = BuildingWidgets.get(GameManager.get().getStage(), GameManager.get().getSkin(),
-//                GameManager.get().getWorld(), GameManager.getManagerFromInstance(InputManager.class));
+        buildingWidgets = BuildingWidgets.get(GameManager.get().getStage(), GameManager.get().getSkin(),
+                GameManager.get().getWorld(), GameManager.getManagerFromInstance(InputManager.class));
 
         // testing requirement fro widget, removed it later
-//        GameManager.get().getWorld().addEntity(buildingFactory.createHouse(0f, 0f));
+        GameManager.get().getWorld().addEntity(buildingFactory.createCabin(0f, 0f));
     }
 
     //Start of UI
@@ -480,7 +480,7 @@ public class ConstructionManager extends AbstractManager {
         float xPos = building.getCol();
         float yPos = building.getRow();
         float xSize = building.getLength();
-        float ySize = building.getHeight();
+        float ySize = building.getWidth();
         for (int i = 0; i < xSize; i++) {
             for (int j = 0; j < ySize; j++) {
                 Tile tile = worldMap.getTile(xPos + xSize, yPos + ySize);
