@@ -111,6 +111,7 @@ public class GameScreen implements Screen,KeyDownObserver {
         // testing requirement for widget, removed it later
         BuildingFactory bf = new BuildingFactory();
         GameManager.get().getWorld().addEntity(bf.createCabin(3f, 1.5f));
+        GameManager.get().getWorld().addEntity(bf.createCabin(0f, 0f));
 
 		/* Add environment to game manager */
 		gameManager.addManager(new EnvironmentManager());

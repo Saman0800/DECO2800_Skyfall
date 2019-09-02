@@ -20,12 +20,13 @@ import java.util.TreeMap;
 public class ConstructionManagerTest {
     private GameManager gm;
     private ConstructionManager cmgr;
+    private WorldBuilder wb;
 
     @Before
     public void setup() {
         this.gm = GameManager.get();
         this.cmgr = new ConstructionManager();
-        WorldBuilder wb = new WorldBuilder();
+        wb = new WorldBuilder();
         WorldDirector.constructTestWorld(wb);
         gm.setWorld(wb.getWorld());
     }
@@ -157,7 +158,7 @@ public class ConstructionManagerTest {
 
     @Test
     public void verifyEntityTest() {
-        World world = new WorldBuilder().getWorld();
+        World world = wb.getWorld();
         Tile tile = world.getTile(10, 10);
         if (world.getEntities().size() == 0) {
             Assert.assertTrue(this.cmgr.verifyEntity(world, tile));

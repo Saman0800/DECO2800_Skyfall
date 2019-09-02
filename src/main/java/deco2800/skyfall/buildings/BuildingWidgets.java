@@ -30,8 +30,10 @@ public class BuildingWidgets implements TouchDownObserver {
 
     private Table menu;
     private Label label;
-    private TextButton updateBtn;
+    private TextButton upgradeBtn;
+    private ClickListener upgradeListener;
     private TextButton destroyBtn;
+    private ClickListener destroyListener;
 
     /**
      * Returns an instance of the building widgets.
@@ -61,14 +63,14 @@ public class BuildingWidgets implements TouchDownObserver {
 
             this.menu = new Table();
             this.label = new Label("Name", this.skin);
-            this.updateBtn = new TextButton("Update", this.skin);
+            this.upgradeBtn = new TextButton("Update", this.skin);
             this.destroyBtn = new TextButton("Destroy", this.skin);
 
             this.menu.setVisible(false);
             this.menu.align(Align.left|Align.top);
             this.menu.add(label).padBottom(3);
             this.menu.row();
-            this.menu.add(updateBtn).padBottom(3);
+            this.menu.add(upgradeBtn).padBottom(3);
             this.menu.row();
             this.menu.add(destroyBtn);
 
@@ -76,7 +78,6 @@ public class BuildingWidgets implements TouchDownObserver {
             this.inputManager.addTouchDownListener(this);
         } catch (Exception e) {
             // print exception trace, but no impact to game
-            e.printStackTrace();
         }
     }
 
@@ -105,14 +106,14 @@ public class BuildingWidgets implements TouchDownObserver {
         this.label.setText(building.getObjectName());
         this.menu.setPosition(this.stage.getWidth()/2 + wCords[0] - GameManager.get().getCamera().position.x,
                 this.stage.getHeight()/2 + wCords[1] - GameManager.get().getCamera().position.y);
-        this.updateBtn.addListener(new ClickListener() {
+        this.upgradeBtn.addListener(upgradeListener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 updateBuilding(building);
                 menu.setVisible(false);
             }
         });
-        this.destroyBtn.addListener(new ClickListener() {
+        this.destroyBtn.addListener(destroyListener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 destroyBuilding(building);
@@ -153,6 +154,10 @@ public class BuildingWidgets implements TouchDownObserver {
 
         // hide the building widget initially
         this.menu.setVisible(false);
+        if (upgradeListener != null && destroyListener != null) {
+            this.upgradeBtn.removeListener(upgradeListener);
+            this.destroyBtn.removeListener(destroyListener);
+        }
 
         for (AbstractEntity entity : this.world.getEntities()) {
             if (!tile.getCoordinates().equals(entity.getPosition())) {
