@@ -10,7 +10,7 @@ import deco2800.skyfall.util.WorldUtil;
 
 public class Treeman extends EnemyEntity implements Animatable {
     //The health of treeman
-    private static final transient int HEALTH = 10;
+    private static final transient int HEALTH = 3;
     //The attack range of treeman
     private static final transient float ATTACK_RANGE = 1f;
     //The attack speed of treeman
@@ -170,6 +170,7 @@ public class Treeman extends EnemyEntity implements Animatable {
          }**/
         if (isDead() == true) {
             this.treemanDead();
+            setCurrentState(AnimationRole.DEFENCE);
         } else {
             float colDistance = mc.getCol() - this.getCol();
             float rowDistance = mc.getRow() - this.getRow();
@@ -295,9 +296,9 @@ public class Treeman extends EnemyEntity implements Animatable {
     private void treemanDead(){
         if(time<=100){
             time++;
-            setCurrentState(AnimationRole.NULL);
             this.setTexture("treemanDead");
             this.setObjectName("treemanDead");
+            setCurrentState(AnimationRole.DEFENCE);
         }else{
             GameManager.get().getWorld().removeEntity(this);
 
@@ -312,9 +313,9 @@ public class Treeman extends EnemyEntity implements Animatable {
     public void configureAnimations() {
         this.addAnimations(
                 AnimationRole.MELEE,
-                Direction.SOUTH,
+                Direction.DEFAULT,
                 new AnimationLinker("treeman_defence",
-                        AnimationRole.MELEE, Direction.SOUTH,
+                        AnimationRole.MELEE, Direction.DEFAULT,
                         true, true));
 
         this.addAnimations(
@@ -373,7 +374,19 @@ public class Treeman extends EnemyEntity implements Animatable {
                         true, true));
 
 
+        this.addAnimations(
+                AnimationRole.MOVE,
+                Direction.DEFAULT,
+                new AnimationLinker("treeman_movement",
+                        AnimationRole.MOVE, Direction.DEFAULT,
+                        true, true));
 
+        this.addAnimations(
+                AnimationRole.DEFENCE,
+                Direction.DEFAULT,
+                new AnimationLinker("treeman_dead",
+                        AnimationRole.DEFENCE, Direction.DEFAULT,
+                        true, true));
 
     }
 
