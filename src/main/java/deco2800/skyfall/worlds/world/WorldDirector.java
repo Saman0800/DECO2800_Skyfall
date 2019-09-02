@@ -24,12 +24,19 @@ public class WorldDirector {
      * @param builder The builder used to construct the world
      */
     public static void constructSimpleSinglePlayerWorld(WorldBuilder builder){
-        builder.setNodeSpacing(15);
+        builder.setType("single_player");
+
         builder.setWorldSize(160);
+        builder.setNodeSpacing(15);
         builder.setSeed(random.nextInt());
+
+        builder.addLake(5);
         builder.addLake(5);
         builder.addRiver();
+
         builder.setRiverSize(5);
+        builder.setBeachSize(12);
+
         builder.setStaticEntities(true);
 
         MainCharacter mainCharacter = new MainCharacter(0,0,0.05f, "Main Piece", 10);
@@ -41,11 +48,12 @@ public class WorldDirector {
         builder.addEntity(new Robot(-4, -2, mainCharacter));
         builder.addEntity(new Stone(-4, -2, mainCharacter));
 
-        builder.addBiome(new ForestBiome(), 40);
-        builder.addBiome(new DesertBiome(), 40);
-        builder.addBiome(new MountainBiome(), 40);
-        builder.addBiome(new VolcanicMountainsBiome(), 40);
-        builder.addBiome(new SwampBiome(), 40);
+        builder.addBiome(new ForestBiome(), 20);
+        builder.addBiome(new DesertBiome(), 20);
+        builder.addBiome(new MountainBiome(), 20);
+        builder.addBiome(new VolcanicMountainsBiome(), 20);
+        builder.addBiome(new SwampBiome(), 20);
+        builder.addBiome(new SnowyMountainsBiome(), 20);
     }
 
     /**
@@ -57,13 +65,15 @@ public class WorldDirector {
         if (n < 1 || n > 5) {
             throw new IllegalArgumentException("n must be between 1 and 5");
         }
+        builder.setType("single_player");
 
-        builder.setNodeSpacing(15);
         builder.setWorldSize(160);
+        builder.setNodeSpacing(15);
         builder.setSeed(random.nextInt());
         builder.addLake(5);
         builder.addRiver();
         builder.setRiverSize(5);
+        builder.setBeachSize(12);
         builder.setStaticEntities(true);
 
         MainCharacter mainCharacter = new MainCharacter(0,0,0.05f, "Main Piece", 10);
@@ -81,6 +91,7 @@ public class WorldDirector {
         choices.add(new MountainBiome());
         choices.add(new VolcanicMountainsBiome());
         choices.add(new SwampBiome());
+        choices.add(new SnowyMountainsBiome());
 
         for (int i = 0; i < n; i++) {
             builder.addBiome(choices.remove(random.nextInt(choices.size())), 50);
@@ -101,6 +112,10 @@ public class WorldDirector {
         builder.addEntity(new Spider(-4f, -1f, mainCharacter));
         builder.addEntity(new Robot(-4, -2, mainCharacter));
 
+        builder.addLake(5);
+        builder.addRiver();
+        builder.setRiverSize(5);
+        builder.setBeachSize(12);
 
         builder.setNodeSpacing(15);
         builder.setWorldSize(80);
@@ -143,6 +158,7 @@ public class WorldDirector {
         builder.addBiome(new MountainBiome(), 10);
         builder.addBiome(new VolcanicMountainsBiome(), 10);
         builder.addBiome(new SwampBiome(), 10);
+        builder.addBiome(new SnowyMountainsBiome(), 10);
         builder.addLake(3);
     }
 }
