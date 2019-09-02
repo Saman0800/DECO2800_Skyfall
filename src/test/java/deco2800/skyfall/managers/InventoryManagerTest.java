@@ -1,7 +1,9 @@
 package deco2800.skyfall.managers;
 
+import deco2800.skyfall.gui.Tuple;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.*;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,7 +27,6 @@ public class InventoryManagerTest {
         qai.add("Stone");
 
         test = new InventoryManager(inv, qai);
-
     }
 
 
@@ -33,7 +34,7 @@ public class InventoryManagerTest {
     public void inventoryDefaultConstructorTest(){
         InventoryManager inv = new InventoryManager();
 
-        assertEquals(2, inv.getInventoryContents().size());
+        assertEquals(4, inv.getInventoryContents().size());
         assertEquals(2, inv.getAmount("Stone"));
         assertEquals(2, inv.getAmount("Wood"));
 
@@ -89,7 +90,8 @@ public class InventoryManagerTest {
         assertEquals(0, test.getInventoryAmounts().size());
         assertEquals(0,test.getAmount("Stone"));
 
-        test.inventoryAdd(new Wood());
+        Wood wood = new Wood();
+        test.inventoryAdd(wood);
         test.inventoryAdd(new Wood());
         test.inventoryAdd(new Vine());
         test.inventoryAdd(new Stone());
@@ -172,5 +174,34 @@ public class InventoryManagerTest {
         assertEquals(6, test.getQuickAccess().size());
         assertFalse(test.getQuickAccess().containsKey("Metal"));
 
+    }
+
+    @Test
+    public void positionsTest() {
+        assertEquals("{Stone=(0, 0)}", test.getPositions().toString());
+        test.inventoryAdd(new Apple());
+        assertEquals("{Apple=(1, 0), Stone=(0, 0)}", test.getPositions().toString());
+
+        Map<String, List<Item>> inventory = new HashMap<>();
+
+        List<Item> stones = new ArrayList<>();
+        stones.add(new Stone());
+        List<Item> apples = new ArrayList<>();
+        apples.add(new Apple());
+        List<Item> aloe = new ArrayList<>();
+        aloe.add(new Aloe_Vera());
+        List<Item> wood = new ArrayList<>();
+        wood.add(new Wood());
+        List<Item> sand = new ArrayList<>();
+        sand.add(new Sand());
+
+        inventory.put(new Stone().getName(), stones);
+        inventory.put(new Apple().getName(), apples);
+        inventory.put(new Aloe_Vera().getName(), aloe);
+        inventory.put(new Wood().getName(), wood);
+        inventory.put(new Sand().getName(), sand);
+
+        InventoryManager m = new InventoryManager(inventory, new ArrayList<>());
+        assertEquals("{Apple=(0, 0), Aloe_Vera=(1, 0), Sand=(2, 0), Wood=(3, 0), Stone=(0, 1)}", m.getPositions().toString());
     }
 }

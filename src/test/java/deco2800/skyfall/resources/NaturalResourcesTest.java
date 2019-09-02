@@ -7,6 +7,9 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+/**
+ * A test class for the NaturalResources Abstract Class.
+ */
 public class NaturalResourcesTest extends NaturalResources {
 
     // create Wood, Sand, Stone, Metal and Vine instances of Natural Resource
@@ -71,19 +74,15 @@ public class NaturalResourcesTest extends NaturalResources {
     }
 
 
-    //@Test
-   // public void hasHealingPower1() {
-       // assertFalse(naturalResource.hasHealingPower());
-   // }
 
 
-    /**
-     * Ensure that the item is considered exchangeable for later use in the game
-     */
     @Test
     public void getCoords1() {
     }
 
+    /**
+     * Ensure that the item is considered exchangeable for later use in the game
+     */
     @Test
     public void isExchangeable1() {
         assertTrue(wood.isExchangeable());

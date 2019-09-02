@@ -84,4 +84,15 @@ public class MetalTest {
     public void getBiome() {
         assertEquals("Ruined City", metal.getBiome());
     }
+
+
+    /**
+     * Ensure that the wood's biome is correctly returned when getBiome()
+     * is called
+     */
+    @Test
+    public void getDescriptionTest() {
+        assertEquals("This item can be collected by destroying " +
+                "an enemy.", metal.getDescription());
+    }
 }

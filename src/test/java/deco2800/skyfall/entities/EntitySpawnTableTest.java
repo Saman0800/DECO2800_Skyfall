@@ -3,9 +3,12 @@ package deco2800.skyfall.entities;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
-import deco2800.skyfall.worlds.TestWorld;
+import deco2800.skyfall.worlds.world.TestWorld;
 
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.world.WorldBuilder;
+import deco2800.skyfall.worlds.world.WorldDirector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,8 +16,6 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.List;
-import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.junit.Assert.assertEquals;
@@ -27,7 +28,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @PrepareForTest(GameManager.class)
 public class EntitySpawnTableTest {
 
-    private TestWorld testWorld = null;
+    private World testWorld = null;
 
     // size of test world
     final int worldSize = 100;
@@ -40,7 +41,9 @@ public class EntitySpawnTableTest {
 
     @Before
     public void createTestEnvironment() {
-        testWorld = new TestWorld(0);
+        WorldBuilder worldBuilder = new WorldBuilder();
+        WorldDirector.constructTestWorld(worldBuilder);
+        testWorld = worldBuilder.getWorld();
 
         biome = new ForestBiome();
 
@@ -110,7 +113,9 @@ public class EntitySpawnTableTest {
 
     @Test
     public void maxMinPlacementTest() {
-        TestWorld newWorld = new TestWorld(0);
+        WorldBuilder worldBuilder = new WorldBuilder();
+        WorldDirector.constructTestWorld(worldBuilder);
+        World newWorld = worldBuilder.getWorld();
 
         // create tile map, add tiles and push to testWorld
         CopyOnWriteArrayList<Tile> newTileMap = new CopyOnWriteArrayList<>();

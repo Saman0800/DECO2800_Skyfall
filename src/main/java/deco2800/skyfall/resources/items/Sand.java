@@ -60,5 +60,12 @@ public class Sand extends NaturalResources implements Item {
         return "" + subtype + ":" + name;
     }
 
-
+    /**
+     * Returns the item description
+     * @return the item description
+     */
+    @Override
+    public String getDescription() {
+        return "This resource can be found in the Desert or Beach biomes.";
+    }
 }

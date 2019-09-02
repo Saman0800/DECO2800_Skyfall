@@ -359,4 +359,34 @@ public class DelaunayTest {
         assertNotNull(sharedVertex3);
         assertTrue(Arrays.equals(sharedVertex3, sharedVertex1));
     }
+
+    @Test
+    public void removeZeroTileNodesTest() {
+        Random random = new Random(0);
+        List<Tile> tiles = new ArrayList<>();
+        for (int q = -5; q <= 5; q++) {
+            for (int r = -5; r <= 5; r++) {
+                float oddCol = (q % 2 != 0 ? 0.5f : 0);
+
+                Tile tile = new Tile(q, r + oddCol);
+                tiles.add(tile);
+            }
+        }
+
+        List<WorldGenNode> nodes = new ArrayList<>();
+        WorldGenNode nodeToRemove = new WorldGenNode(0.5, 0.5);
+        nodes.add(nodeToRemove);
+        nodes.add(new WorldGenNode(0.6, 0.6));
+        nodes.add(new WorldGenNode(0.4, 0.4));
+        nodes.add(new WorldGenNode(0.55, 0.45));
+        nodes.add(new WorldGenNode(0.5, 0.6));
+        WorldGenNode.assignTiles(nodes, tiles, random, 1);
+        try {
+            WorldGenNode.removeZeroTileNodes(nodes, 5);
+        } catch  (WorldGenException e) {
+            fail();
+        }
+        assertEquals(4, nodes.size());
+        assertFalse(nodes.contains(nodeToRemove));
+    }
 }

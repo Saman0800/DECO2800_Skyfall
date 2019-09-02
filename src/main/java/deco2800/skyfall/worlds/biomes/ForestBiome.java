@@ -13,7 +13,7 @@ import java.util.Random;
 public class ForestBiome extends AbstractBiome {
 
     /**
-     * Constructor for a Biome
+     * Constructor for the ForestBiome
      */
     public ForestBiome() {
         super("forest", null);
@@ -27,10 +27,6 @@ public class ForestBiome extends AbstractBiome {
     @Override
     public void setTileTextures(Random random) {
         ArrayList<String> textures = new ArrayList<>();
-//        textures.add("forest_1");
-//        textures.add("forest_2");
-//        textures.add("forest_3");
-//        textures.add("forest_4");
         textures.add("forest_1");
         textures.add("forest_2");
         textures.add("forest_3");
@@ -43,6 +39,7 @@ public class ForestBiome extends AbstractBiome {
                 noise.getOctavedPerlinValue(tile.getRow() + tile.getCol(), tile.getRow() - tile.getCol())) / 2);
         }
 
+        //Looping through each tile and assigning a perlin noise value
         for (Tile tile : getTiles()) {
             int perlinValue = (int) Math.floor(tile.getPerlinValue() * textures.size());
             tile.setTexture(textures.get(perlinValue < textures.size() ? perlinValue : textures.size() - 1));
