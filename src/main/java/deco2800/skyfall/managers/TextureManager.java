@@ -76,8 +76,8 @@ public class TextureManager extends AbstractManager {
 
             }
 
-            // EnemyEntity robot
-            // textureMap.put("flower", new Texture("resources/flower.png"));
+            //EnemyEntity robot
+            textureMap.put("flower", new Texture("resources/flower.png"));
             textureMap.put("enemyStone", new Texture("resources/enemyStone.png"));
             textureMap.put("spider", new Texture("resources/spider.png"));
             textureMap.put("robot", new Texture("resources/robot.png"));
@@ -88,7 +88,13 @@ public class TextureManager extends AbstractManager {
             textureMap.put("stoneRNW", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/stoneRNW.png"));
             textureMap.put("stoneRN", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/stoneRN.png"));
             textureMap.put("stoneDead", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/Dead.png"));
-            // textureMap.put("flowerDead", new Texture("resources/flowerDead.png"));
+
+            textureMap.put("enemyTreeman", new Texture("resources/Treeman.png"));
+            textureMap.put("treemanDead", new Texture("resources/TreemanDead.png"));
+
+
+            textureMap.put("flowerDead", new Texture("resources/flowerDead.png"));
+
 
             textureMap.put("grass_tuff", new Texture("resources/world_details/grass1.png"));
 
