@@ -233,7 +233,7 @@ public class MainCharacterTest {
      * Test that the item properly switches.
      */
     public void switchItemTest() {
-        Assert.assertEquals(0,testCharacter.getItemSlotSelected());
+        Assert.assertEquals(1,testCharacter.getItemSlotSelected());
         testCharacter.switchItem(9);
         Assert.assertEquals(2,testCharacter.getItemSlotSelected());
         testCharacter.switchItem(10);

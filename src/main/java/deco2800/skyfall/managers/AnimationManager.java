@@ -61,7 +61,18 @@ public class AnimationManager extends AbstractManager {
                 "stoneAttackSouthEast/stoneASE.atlas",0.2f);
         this.generateAnimationObject("stoneASW","resources/EnemyAnimationPacked/attackAnimation/" +
                 "stoneAttackSouthWest/stoneASW.atlas",0.2f);
-        //        this.generateAnimationObject("flower_defence","resources/enemyFlowerSheet/flower.atlas",0.2f);
+        this.generateAnimationObject("flower_defence","resources/enemyFlowerSheet/flower.atlas",0.2f);
+
+
+        this.generateAnimationObject("treeman_defence","resources/enemyTreemanSheet/TreemanAttack.atlas",0.2f);
+        this.generateAnimationObject("treeman_dead","resources/enemyTreemanDeadSheet/TreemanDead.atlas",0.2f);
+        this.generateAnimationObject("treeman_movement","resources/enemyTreemanMovementSheet/TreemanMovement.atlas",0.2f);
+
+
+
+        this.generateAnimationObject("flower_melee","resources/enemyFlowerMelee/FlowerMelee.atlas",0.2f);
+        this.generateAnimationObject("flower_close","resources/enemyFlowerClose/FlowerClose.atlas",0.2f);
+
         this.generateAnimationObject("MainCharacterN_Anim",
                 "MainCharacterN_Anim",
                 729, 1134, 0.2f);

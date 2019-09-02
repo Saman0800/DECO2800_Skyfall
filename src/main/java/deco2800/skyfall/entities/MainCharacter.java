@@ -105,7 +105,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * e.g. 1 = test range weapon
      * 2 = test melee weapon
      */
-    private int itemSlotSelected = 0;
+    private int itemSlotSelected = 1;
 
     /**
      * How long does MainCharacter hurt status lasts,
@@ -649,11 +649,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             case Input.Keys.M:
                 getGoldPouchTotalValue();
                 break;
-            /*default:
+            default:
                 switchItem(keycode);
-                xInput += 1;
+                //xInput += 1;
                 break;
-            */
+
         }
     }
 
