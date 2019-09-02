@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
+import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.gamemenu.GameMenuScreen;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.Peon;
@@ -62,12 +63,12 @@ public class GameScreen implements Screen,KeyDownObserver {
         GameMenuManager gameMenuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
         gameMenuManager.setStage(stage);
         gameMenuManager.setSkin(gameManager.getSkin());
+        gameMenuManager.setGame(game);
 
         //Used to create to the world
 
         // Create main world
         if (!isHost) {
-
             //Creating the world
             WorldBuilder worldBuilder = new WorldBuilder();
             WorldDirector.constructServerWorld(worldBuilder);
@@ -86,7 +87,6 @@ public class GameScreen implements Screen,KeyDownObserver {
                 WorldBuilder worldBuilder = new WorldBuilder();
                 WorldDirector.constructSimpleSinglePlayerWorld(worldBuilder);
                 world = worldBuilder.getWorld();
-
 			}
 			GameManager.get().getManager(NetworkManager.class).startHosting("host");
 		}
@@ -102,8 +102,16 @@ public class GameScreen implements Screen,KeyDownObserver {
         GameManager.get().setStage(stage);
         GameManager.get().setCamera(camera);
 
+
         /* Add inventory to game manager */
         gameManager.addManager(new InventoryManager());
+
+        /* Add construction manager to game manager */
+        gameManager.addManager(new ConstructionManager());
+        // testing requirement for widget, removed it later
+        BuildingFactory bf = new BuildingFactory();
+        GameManager.get().getWorld().addEntity(bf.createCabin(3f, 1.5f));
+        GameManager.get().getWorld().addEntity(bf.createCabin(0f, 0f));
 
 		/* Add environment to game manager */
 		gameManager.addManager(new EnvironmentManager());

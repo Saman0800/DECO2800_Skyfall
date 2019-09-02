@@ -319,13 +319,21 @@ public class World implements TouchDownObserver {
         return new CopyOnWriteArrayList<>(this.entities);
     }
 
+    /**
+     * Creates a friction map that assigns a friction to every tile type
+     */
     public void initialiseFrictionmap() {
         frictionMap = new HashMap<>();
-        frictionMap.put("grass", 0.6f);
-        frictionMap.put("water", 0.2f);
-        frictionMap.put("rock", 0.3f);
-        frictionMap.put("mountain", 0.4f);
-        frictionMap.put("ice", 0.8f);
+        frictionMap.put("grass", 0.8f);
+        frictionMap.put("forest", 0.76f);
+        frictionMap.put("water", 0.4f);
+        frictionMap.put("ocean", 0.4f);
+        frictionMap.put("lake", 0.4f);
+        frictionMap.put("volcanic", 0.6f);
+        frictionMap.put("mountain", 0.67f);
+        frictionMap.put("desert", 0.59f);
+        frictionMap.put("ice", 1f);
+        frictionMap.put("snow", 1f);
         this.frictionMap.putAll(frictionMap);
     }
 
@@ -451,19 +459,15 @@ public class World implements TouchDownObserver {
 
         // Collision detection for entities
         for (AbstractEntity e1 : this.getEntities()) {
-
             if (e1 instanceof StaticEntity) {
                 // Static entities can't move into other entities. Only worry
                 // about entities that can move themselves into other entities
                 continue;
             }
-
             e1.onTick(0);
-
-
-            if (e1.getCollider() == null) {
-                break;
-            }
+            //if (e1.getCollider() == null) {
+            //    break;
+            //}
             Collider c1 = e1.getCollider();
             for (AbstractEntity e2 : this.getEntities()) {
                 if (e2.getCollider() == null) {
@@ -471,12 +475,13 @@ public class World implements TouchDownObserver {
                 }
                 Collider c2 = e2.getCollider();
                 if (e1 != e2 && c1.overlaps(c2)) {
-                    if (e1 instanceof MainCharacter || e2 instanceof MainCharacter) {
+                    if (e1 instanceof MainCharacter || e2 instanceof
+                    MainCharacter) {
                         break;
                     }
-                    // collision handler
-                    this.handleCollision(e1, e2);
-                    break;
+                    //collision handler
+                //    this.handleCollision(e1, e2);
+                //    break;
                 }
             }
             // no collision here
