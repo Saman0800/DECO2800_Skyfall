@@ -1,14 +1,11 @@
 package deco2800.skyfall.entities;
 
 import deco2800.skyfall.buildings.BuildingEntity;
-import deco2800.skyfall.entities.structures.Building;
-import deco2800.skyfall.entities.structures.TownCentreBuilding;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -77,7 +74,35 @@ public class BuildingEntityTest {
         assertEquals(testbuilding.getCurrentHealth(), 8);
     }
 
+    @Test
+    public void lengthTest() {
+        //testing with random value
+        testbuilding.setLength(2);
+        assertEquals(testbuilding.getLength(), 2);
+        // testing with a zero value
+        testbuilding.setLength(0);
+        assertEquals(testbuilding.getLength(), 2);
+    }
 
+    @Test
+    public void widthTest() {
+        //testing with random value
+        testbuilding.setWidth(4);
+        assertEquals(testbuilding.getWidth(), 4);
+        // testing with a zero value
+        testbuilding.setWidth(0);
+        assertEquals(testbuilding.getWidth(), 4);
+    }
+
+    @Test
+    public void upgradableTest() {
+        // testing the constructor
+        assertEquals(testbuilding.isUpgradable(), false);
+        // changing to be upgradable
+        testbuilding.setUpgradable(true);
+        assertEquals(testbuilding.isUpgradable(), true);
+
+    }
 
 
     @After

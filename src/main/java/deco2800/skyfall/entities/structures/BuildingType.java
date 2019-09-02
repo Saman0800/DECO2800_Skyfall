@@ -11,10 +11,16 @@ import java.util.Map;
  */
 public enum BuildingType {
 
-    HOUSE("House", 10, 1, 1, 7, "house1"),
+    CABIN("Cabin", 10, 1, 1, 7, "cabin_0"),
     STORAGE_UNIT("StorageUnit", 5, 2, 2, 6, "storage_unit"),
     TOWNCENTRE("TownCentre", 80, 3, 3, 0, "town_centre"),
-    WALL("Fence", 5, 1, 1, 3, "fenceN-S");
+    FENCE("Fence", 5, 1, 1, 3, "fenceN-S"),
+    SAFEHOUSE("SafeHouse", 5, 5, 5, 7, "safe_house_0"),
+    WATCHTOWER("WatchTower", 8, 1, 1, 8, "watchtower_0"),
+    CASTLE("Castle", 10, 1, 1, 6, "castle_0");
+
+
+
 
 
     private String name;

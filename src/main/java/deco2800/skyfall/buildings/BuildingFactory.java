@@ -17,25 +17,24 @@ public class BuildingFactory {
     }
 
     /**
-     * Create a house based on BuildingEntity class with defined default renderOrder.
+     * Create cabin building based on BuildingEntity class with defined default renderOrder.
      * @param col column coordinate that a building located on
      * @param row row coordinate that a building located on
-     * @return a house building object
+     * @return a cabin object
      */
-    public BuildingEntity createHouse(float col, float row) {
-        BuildingEntity house = new BuildingEntity(col, row, 2);
-        BuildingType textures = BuildingType.HOUSE;
-        house.setObjectName("House" + house.getEntityID());
-        house.setTexture(textures.getMainTexture());
-        house.setBuildTime(7);
-        house.addBuildCost("", 0);
-        house.addBuildCost("", 0);
-        house.setInitialHealth(10);
-        house.setWidth(2);
-        house.setLength(2);
-        return house;
+    public BuildingEntity createCabin(float col, float row) {
+        BuildingEntity cabin = new BuildingEntity(col, row, 2);
+        BuildingType cabinType = BuildingType.CABIN;
+        cabin.setObjectName(cabinType.getName() + cabin.getEntityID());
+        cabin.setTexture(cabinType.getMainTexture());
+        cabin.setBuildTime(cabinType.getBuildTime());
+        cabin.addBuildCost("", 0);
+        cabin.addBuildCost("", 0);
+        cabin.setInitialHealth(cabinType.getMaxHealth());
+        cabin.setWidth(cabinType.getSizeX());
+        cabin.setLength(cabinType.getSizeX());
+        return cabin;
     }
-
     /**
      * Create a storage unit based on BuildingEntity class with defined default renderOrder.
      * @param col column coordinate that a building located on
@@ -44,15 +43,15 @@ public class BuildingFactory {
      */
     public BuildingEntity createStorageUnit(float col, float row) {
         BuildingEntity storage = new BuildingEntity(col, row, 2);
-        BuildingType textures = BuildingType.STORAGE_UNIT;
+        BuildingType storageType = BuildingType.STORAGE_UNIT;
         storage.setObjectName("StorageUnit" + storage.getEntityID());
-        storage.setTexture(textures.getMainTexture());
-        storage.setBuildTime(6);
+        storage.setTexture(storageType.getMainTexture());
+        storage.setBuildTime(storageType.getBuildTime());
         storage.addBuildCost("", 0);
         storage.addBuildCost("", 0);
-        storage.setInitialHealth(5);
-        storage.setWidth(2);
-        storage.setLength(2);
+        storage.setInitialHealth(storageType.getMaxHealth());
+        storage.setWidth(storageType.getSizeX());
+        storage.setLength(storageType.getSizeY());
         return storage;
     }
 
@@ -64,15 +63,15 @@ public class BuildingFactory {
      */
     public BuildingEntity createTownCentreBuilding(float col, float row) {
         BuildingEntity town = new BuildingEntity(col, row, 2);
-        BuildingType textures = BuildingType.TOWNCENTRE;
+        BuildingType townType = BuildingType.TOWNCENTRE;
         town.setObjectName("TownCentre" + town.getEntityID());
-        town.setTexture(textures.getMainTexture());
-        town.setBuildTime(6);
+        town.setTexture(townType.getMainTexture());
+        town.setBuildTime(townType.getBuildTime());
         town.addBuildCost("", 0);
         town.addBuildCost("", 0);
-        town.setInitialHealth(80);
-        town.setWidth(3);
-        town.setLength(3);
+        town.setInitialHealth(townType.getMaxHealth());
+        town.setWidth(townType.getSizeX());
+        town.setLength(townType.getSizeY());
         return town;
     }
 
@@ -84,16 +83,56 @@ public class BuildingFactory {
      */
     public BuildingEntity createFenceBuilding(float col, float row) {
         BuildingEntity fence = new BuildingEntity(col, row, 2);
-        BuildingType textures = BuildingType.WALL;
+        BuildingType fenceType = BuildingType.FENCE;
         fence.setObjectName("Fence" + fence.getEntityID());
-        fence.setTexture(textures.getMainTexture());
-        fence.setBuildTime(3);
+        fence.setTexture(fenceType.getMainTexture());
+        fence.setBuildTime(fenceType.getBuildTime());
         fence.addBuildCost("", 0);
         fence.addBuildCost("", 0);
-        fence.setInitialHealth(80);
-        fence.setWidth(1);
-        fence.setLength(1);
+        fence.setInitialHealth(fenceType.getMaxHealth());
+        fence.setWidth(fenceType.getSizeX());
+        fence.setLength(fenceType.getSizeY());
         return fence;
+    }
+
+    /**
+     * Create safeHouse building based on BuildingEntity class with defined default renderOrder.
+     * @param col column coordinate that a building located on
+     * @param row row coordinate that a building located on
+     * @return a safeHouse object
+     */
+    public BuildingEntity createSafeHouse(float col, float row) {
+        BuildingEntity safeHouse = new BuildingEntity(col, row, 2);
+        BuildingType safeHouseType = BuildingType.SAFEHOUSE;
+        safeHouse.setObjectName(safeHouseType.getName() + safeHouse.getEntityID());
+        safeHouse.setTexture(safeHouseType.getMainTexture());
+        safeHouse.setBuildTime(safeHouseType.getBuildTime());
+        safeHouse.addBuildCost("", 0);
+        safeHouse.addBuildCost("", 0);
+        safeHouse.setInitialHealth(safeHouseType.getMaxHealth());
+        safeHouse.setWidth(safeHouseType.getSizeX());
+        safeHouse.setLength(safeHouseType.getSizeX());
+        return safeHouse;
+    }
+
+    /**
+     * Create safeHouse building based on BuildingEntity class with defined default renderOrder.
+     * @param col column coordinate that a building located on
+     * @param row row coordinate that a building located on
+     * @return a safeHouse object
+     */
+    public BuildingEntity createWatchTower(float col, float row) {
+        BuildingEntity watchTower = new BuildingEntity(col, row, 2);
+        BuildingType watchTowerType = BuildingType.SAFEHOUSE;
+        watchTower.setObjectName(watchTowerType.getName() + watchTower.getEntityID());
+        watchTower.setTexture(watchTowerType.getMainTexture());
+        watchTower.setBuildTime(watchTowerType.getBuildTime());
+        watchTower.addBuildCost("", 0);
+        watchTower.addBuildCost("", 0);
+        watchTower.setInitialHealth(watchTowerType.getMaxHealth());
+        watchTower.setWidth(watchTowerType.getSizeX());
+        watchTower.setLength(watchTowerType.getSizeX());
+        return watchTower;
     }
 
     /*

@@ -27,7 +27,7 @@ public class BuildingFactoryTest {
 
     @Test
     public void createHouseTest() {
-        BuildingEntity house = factory.createHouse(0f, 2f);
+        BuildingEntity house = factory.createCabin(0f, 2f);
         Assert.assertEquals(2f, house.getWidth(), 0.0);
         Assert.assertEquals(2f, house.getLength(), 0.0);
         Assert.assertEquals(0f, house.getCol(), 0.0);

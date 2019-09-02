@@ -30,8 +30,6 @@ public class BuildingEntity extends AbstractEntity {
     private int maxHealth;
 
     // changeable information for a specific building
-    private int sizeX;
-    private int sizeY;
     private float col;
     private float row;
 
@@ -203,7 +201,9 @@ public class BuildingEntity extends AbstractEntity {
      * @param length a building's length
      */
     public void setLength(int length) {
-        this.length = length;
+        if (length != 0) {
+            this.length = length;
+        }
     }
 
     /**
@@ -219,7 +219,9 @@ public class BuildingEntity extends AbstractEntity {
      * @param width a building's width
      */
     public void setWidth(int width) {
-        this.width = width;
+        if (width != 0) {
+            this.width = width;
+        }
     }
 
     /**
