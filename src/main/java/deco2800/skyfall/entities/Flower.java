@@ -9,7 +9,7 @@ import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 
 public class Flower extends EnemyEntity implements Animatable {
-    private static final transient int HEALTH = 1;
+    private static transient int HEALTH = 5000;
     private static final transient float ATTACK_RANGE = 1f;
     private static final transient int ATTACK_SPEED = 1000;
     private static final transient String BIOME="forest";
@@ -85,6 +85,7 @@ public class Flower extends EnemyEntity implements Animatable {
         if (this.isDead()) {
             this.flowerDead();
         }
+        else {
             super.onTick(i);
             if (mc != null) {
                 float colDistance = mc.getCol() - this.getCol();
@@ -95,29 +96,29 @@ public class Flower extends EnemyEntity implements Animatable {
                     //boolean mcnear is to make sure it goes to next step (melee)
                     mcnear = true;
                     //flower open
-                    if(time1<=135) {
+                    if (time1 <= 135) {
                         time1++;
                         this.setCurrentState(AnimationRole.DEFENCE);
-                    }
-                    else {
+                    } else {
+                        //when the flower is open, their health is quite low and easy to kill
+                        HEALTH = 2;
+                        this.setHealth(HEALTH);
                         //flower melee
                         if (time2 <= 120) {
                             time2++;
                             this.setCurrentState(AnimationRole.MELEE);
-                        }
-                        else {
+                        } else {
                             //flower close if there is no play near it.
-                            if((colDistance * colDistance + rowDistance * rowDistance) < 4 && !mcleave) {
+                            if ((colDistance * colDistance + rowDistance * rowDistance) < 4 && !mcleave) {
                                 time2 = 0;
-                            }
-                            else{
+                            } else {
                                 //mcleave is to make sure when the flower is closing, if main character come close, the flower still closing.
                                 mcleave = true;
-                                if (time3 <= 135 ) {
+
+                                if (time3 <= 135) {
                                     time3++;
                                     this.setCurrentState(AnimationRole.MOVE);
-                                }
-                                else{
+                                } else {
                                     this.setCurrentState(AnimationRole.NULL);
                                     //reset all
                                     mcnear = false;
@@ -129,12 +130,11 @@ public class Flower extends EnemyEntity implements Animatable {
 
                             }
                         }
-                        }
                     }
-
-                else {
-                        this.setCurrentState(AnimationRole.NULL);
-
+                } else {
+                    this.setCurrentState(AnimationRole.NULL);
+                    HEALTH = 5000;
+                    this.setHealth(HEALTH);
 
                 }
 
@@ -142,7 +142,7 @@ public class Flower extends EnemyEntity implements Animatable {
                 System.out.println("Mc is null");
             }
 
-
+        }
     }
 
     int time=0;
