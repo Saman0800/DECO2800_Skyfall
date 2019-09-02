@@ -12,7 +12,7 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.AbstractWorld;
+import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.Tile;
 import org.lwjgl.Sys;
 
@@ -25,7 +25,7 @@ public class BuildingWidgets implements TouchDownObserver {
 
     private Stage stage;
     private Skin skin;
-    private AbstractWorld world;
+    private World world;
     private InputManager inputManager;
 
     private Table menu;
@@ -37,7 +37,7 @@ public class BuildingWidgets implements TouchDownObserver {
      * Returns an instance of the building widgets.
      * @return the building widgets
      */
-    public static BuildingWidgets get(Stage stage, Skin skin, AbstractWorld world, InputManager input) {
+    public static BuildingWidgets get(Stage stage, Skin skin, World world, InputManager input) {
         if (instance == null) {
             return new BuildingWidgets(stage, skin, world, input);
         }
@@ -47,7 +47,7 @@ public class BuildingWidgets implements TouchDownObserver {
     /**
      * Private constructor to enforce use of get().
      */
-    private BuildingWidgets(Stage stage, Skin skin, AbstractWorld world, InputManager input) {
+    private BuildingWidgets(Stage stage, Skin skin, World world, InputManager input) {
         try {
             this.stage = stage;
             this.skin = skin;

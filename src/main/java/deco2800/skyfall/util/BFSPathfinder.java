@@ -11,7 +11,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import deco2800.skyfall.worlds.AbstractWorld;
+import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.Tile;
 
 public class BFSPathfinder extends Pathfinder {
@@ -21,7 +21,7 @@ public class BFSPathfinder extends Pathfinder {
 
 
 	@Override
-	public List<Tile> pathfind(AbstractWorld world, HexVector origin, HexVector destination) {
+	public List<Tile> pathfind(World world, HexVector origin, HexVector destination) {
 
 		Tile originTile = getTileByHexVector(world, origin);
 		Tile destinationTile = getTileByHexVector(world, destination);
@@ -33,7 +33,7 @@ public class BFSPathfinder extends Pathfinder {
 
 	}
 
-	private List<Tile> pathfindBFS(AbstractWorld world, Tile origin, Tile destination) {
+	private List<Tile> pathfindBFS(World world, Tile origin, Tile destination) {
 		LinkedList<Tile> queue = new LinkedList<Tile>();
 		Set<Tile> closedSet = new HashSet<Tile>();
 		Map<Tile, Tile> path = new HashMap<Tile, Tile>();
@@ -73,7 +73,7 @@ public class BFSPathfinder extends Pathfinder {
 		return path;
 	}
 
-	private Tile getTileByHexVector(AbstractWorld world, HexVector vector) {
+	private Tile getTileByHexVector(World world, HexVector vector) {
 		for (Tile tile : world.getTileMap()) {
 			if ((int) tile.getCol() == (int) vector.getCol() && (int) tile.getRow() == (int) vector.getRow()) {
 				return tile;

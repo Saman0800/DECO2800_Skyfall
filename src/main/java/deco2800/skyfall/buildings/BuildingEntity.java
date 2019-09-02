@@ -1,7 +1,7 @@
 package deco2800.skyfall.buildings;
 
 import deco2800.skyfall.entities.structures.Structure;
-import deco2800.skyfall.worlds.AbstractWorld;
+import deco2800.skyfall.worlds.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,7 +111,7 @@ public class BuildingEntity extends AbstractEntity implements Structure {
      * @param height - Render height
      * @param world - World to place building in
      */
-    public void placeBuilding(float x, float y, int height, AbstractWorld world) {
+    public void placeBuilding(float x, float y, int height, World world) {
         setPosition(x, y, height);
         world.addEntity(this);
     }
@@ -119,7 +119,7 @@ public class BuildingEntity extends AbstractEntity implements Structure {
     /**
      * @param world - World to remove building from
      */
-    public void removeBuilding(AbstractWorld world) {
+    public void removeBuilding(World world) {
         world.removeEntity(this);
     }
 

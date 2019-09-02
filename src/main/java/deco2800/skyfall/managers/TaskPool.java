@@ -7,13 +7,13 @@ import java.util.Random;
 import deco2800.skyfall.entities.AgentEntity;
 import deco2800.skyfall.tasks.AbstractTask;
 import deco2800.skyfall.tasks.MovementTask;
-import deco2800.skyfall.worlds.AbstractWorld;
+import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.Tile;
 
 public class TaskPool extends AbstractManager {
 
 	private List<AbstractTask> taskPool;
-	private AbstractWorld world;
+	private World world;
 	private Random random;
 
 	public TaskPool() {

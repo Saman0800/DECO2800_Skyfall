@@ -2,7 +2,9 @@ package deco2800.skyfall.buildings;
 
 import deco2800.skyfall.entities.structures.BuildingType;
 import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.worlds.TestWorld;
+import deco2800.skyfall.worlds.world.WorldBuilder;
+import deco2800.skyfall.worlds.world.WorldDirector;
+import deco2800.skyfall.worlds.world.World;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +18,9 @@ public class BuildingFactoryTest {
     @Before
     public void setup() {
         this.gm = GameManager.get();
-        this.gm.setWorld(new TestWorld(1));
+        WorldBuilder wb = new WorldBuilder();
+        WorldDirector.constructTestWorld(wb);
+        this.gm.setWorld(wb.getWorld());
         this.factory = new BuildingFactory();
     }
 

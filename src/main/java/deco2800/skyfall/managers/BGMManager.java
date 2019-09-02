@@ -25,12 +25,22 @@ public class BGMManager extends AbstractManager {
     /* Boolean mute control */
     public static BooleanControl muteVol;
 
+    EnvironmentManager environmentManager;
+
+    /**
+     * Background music constructor
+     */
+    public static void BGMManager() {
+        // Set parameters here
+    }
+
     /**
      * Initialises the Audio Input Stream and allows clip to loop continuously.
      * @param file is the name of the audio intended to be played.
      */
-    public static void BGMManager(String file) throws UnsupportedAudioFileException,
+    public static void initClip(String file) throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
+
         try {
             //Set current audio to equal file
             audio = file;
@@ -123,10 +133,10 @@ public class BGMManager extends AbstractManager {
     }
 
     /**
-     * Unmutes the clip.
+     * Un-mutes the clip.
      */
-    public static void unmute () {
-        //Set mute value to true
+    public static void unmute() {
+        //Set mute value to false
         muteVol = (BooleanControl) clip.getControl(BooleanControl.Type.MUTE);
         muteVol.setValue(false);
     }
@@ -154,10 +164,8 @@ public class BGMManager extends AbstractManager {
             if (!(x > volume.getMaximum()) && !(x < volume.getMinimum())) {
                 volume.setValue(x);
             } else {
-                System.out.println("Value is too high/low. Pls don't.");
                 throw new IndexOutOfBoundsException();
             }
         } catch (NullPointerException | IllegalArgumentException ex) { }
     }
-
 }

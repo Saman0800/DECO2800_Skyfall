@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
-import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import deco2800.skyfall.worlds.biomes.DesertBiome;
-import deco2800.skyfall.worlds.biomes.ForestBiome;
-import deco2800.skyfall.worlds.biomes.MountainBiome;
+import deco2800.skyfall.worlds.biomes.*;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -81,5 +79,13 @@ public class BiomeTest {
 
 
 
+        }
+
+        @Test
+        public void parentBiomeTest() {
+                AbstractBiome forest = new ForestBiome();
+                assertNull(forest.getParentBiome());
+                AbstractBiome lake = new LakeBiome(forest);
+                assertEquals(forest, lake.getParentBiome());
         }
 }

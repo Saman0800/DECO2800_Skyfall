@@ -1,8 +1,10 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.buildings.BuildingEntity;
-import deco2800.skyfall.entities.structures.House;
 import deco2800.skyfall.entities.structures.TownCentreBuilding;
+import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.world.WorldBuilder;
+import deco2800.skyfall.worlds.world.WorldDirector;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,10 +12,7 @@ import org.junit.After;
 
 import deco2800.skyfall.entities.structures.AbstractBuilding;
 import deco2800.skyfall.entities.structures.WallBuilding;
-import deco2800.skyfall.worlds.TestWorld;
-import deco2800.skyfall.worlds.AbstractWorld;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.RocketWorld;
 
 import java.util.TreeMap;
 
@@ -26,7 +25,9 @@ public class ConstructionManagerTest {
     public void setup() {
         this.gm = GameManager.get();
         this.cmgr = new ConstructionManager();
-        gm.setWorld(new TestWorld(1));
+        WorldBuilder wb = new WorldBuilder();
+        WorldDirector.constructTestWorld(wb);
+        gm.setWorld(wb.getWorld());
     }
 
     @Test
@@ -112,7 +113,7 @@ public class ConstructionManagerTest {
 
     @Test
     public void verifyNullTest() {
-        AbstractWorld world = null;
+        World world = null;
         Tile tile = null;
         BuildingEntity building = null;
         Assert.assertFalse(this.cmgr.verifyTerrain(tile));
@@ -156,7 +157,7 @@ public class ConstructionManagerTest {
 
     @Test
     public void verifyEntityTest() {
-        AbstractWorld world = new RocketWorld(1, 30, 5, new int[]{20, 10, 10}, 0, 0);
+        World world = new WorldBuilder().getWorld();
         Tile tile = world.getTile(10, 10);
         if (world.getEntities().size() == 0) {
             Assert.assertTrue(this.cmgr.verifyEntity(world, tile));

@@ -115,6 +115,14 @@ public class EntitySpawnRule {
         this.biome = biome;
     }
 
+    /**
+     * An overloaded constructor for EntitySpawnRule that is more efficient
+     *
+     * @param chance Likelihood that a tile of a given biome contains a tile
+     * @param min Minimum count
+     * @param max Maximum count
+     * @param biome A reference to a biome
+     */
     public EntitySpawnRule(double chance, int min, int max, AbstractBiome biome) {
         this(chance, min, max);
         this.biome = biome;

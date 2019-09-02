@@ -5,7 +5,6 @@ import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.managers.ConstructionManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.AbstractWorld;
 import deco2800.skyfall.worlds.Tile;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Walls that the player can place. Walls are stationary buildings that

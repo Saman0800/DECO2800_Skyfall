@@ -21,7 +21,7 @@ import deco2800.skyfall.entities.structures.BuildingType;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.Vector2;
 import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.AbstractWorld;
+import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.entities.AbstractEntity;
 
@@ -199,7 +199,7 @@ public class ConstructionManager extends AbstractManager {
             buildMenu.addActor(storageUnit);
             buildMenu.addActor(setting);
 
-            AbstractWorld world = GameManager.get().getWorld();
+            World world = GameManager.get().getWorld();
 
             for(int i = 0; i < buildingFactory.getCount(); i++){
                 String name = BuildingType.values()[i].getName();
@@ -444,7 +444,7 @@ public class ConstructionManager extends AbstractManager {
      * @param tiles    - tiles that will be checked if contain entities
      * @return true if empty entities on tiles, otherwise false
      */
-    public boolean verifyEntity(AbstractWorld worldMap, Tile... tiles) {
+    public boolean verifyEntity(World worldMap, Tile... tiles) {
         if (worldMap == null || tiles == null) {
             return false;
         }
@@ -472,7 +472,7 @@ public class ConstructionManager extends AbstractManager {
      * @param building - a construction object
      * @return true if a building is buildable on tiles, otherwise false
      */
-    public boolean isTilesBuildable(AbstractWorld worldMap, BuildingEntity building) {
+    public boolean isTilesBuildable(World worldMap, BuildingEntity building) {
         if (worldMap == null || building == null) {
             return false;
         }
