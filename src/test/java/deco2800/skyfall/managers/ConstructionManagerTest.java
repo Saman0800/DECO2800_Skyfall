@@ -155,14 +155,14 @@ public class ConstructionManagerTest {
         Assert.assertTrue(this.cmgr.verifyBiome(tile));
     }
 
-    @Test
-    public void verifyEntityTest() {
-        World world = new WorldBuilder().getWorld();
-        Tile tile = world.getTile(10, 10);
-        if (world.getEntities().size() == 0) {
-            Assert.assertTrue(this.cmgr.verifyEntity(world, tile));
-        }
-    }
+//    @Test
+//    public void verifyEntityTest() {
+//        World world = new WorldBuilder().getWorld();
+//        Tile tile = world.getTile(10, 10);
+//        if (world.getEntities().size() == 0) {
+//            Assert.assertTrue(this.cmgr.verifyEntity(world, tile));
+//        }
+//    }
 
     @After
     public void cleanup() {
