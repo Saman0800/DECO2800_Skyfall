@@ -212,20 +212,24 @@ public class ConstructionManager extends AbstractManager {
                     building.setBounds(600, 450 - (i - 6) * 100, 140, 40);
                 }
 
-                AbstractEntity mc = world.getSortedAgentEntities().get(world.getSortedAgentEntities().size() - 1);
-                HexVector position = mc.getPosition();
-
-                float row = position.getRow();
-                float col = position.getCol();
+                final int FINALi = i;
 
                 buildMenu.addActor(building);
-                setBuildingToBePlaced(selectBuilding(i, row, col));
-
                 building.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y){
+
                         displayWindow();
 
-                        buildingToBePlaced.placeBuilding(buildingToBePlaced.getRow(), buildingToBePlaced.getCol(), buildingToBePlaced.getHeight(), world);
+                        AbstractEntity mc = world.getSortedAgentEntities().get(world.getSortedAgentEntities().size() - 1);
+                        HexVector position = mc.getPosition();
+
+                        float row = position.getRow();
+                        float col = position.getCol();
+
+
+                        BuildingEntity toBePlaced = selectBuilding(FINALi, row, col);
+
+                        toBePlaced.placeBuilding(toBePlaced.getRow(), toBePlaced.getCol(), toBePlaced.getHeight(), world);
                     }
                 });
             }
@@ -593,8 +597,8 @@ public class ConstructionManager extends AbstractManager {
                 return buildingFactory.createSafeHouse(row, col);
             case 5:
                 return buildingFactory.createWatchTower(row, col);
-            //case 6:
-                //return buildingFactory.createCastle(row, col);
+            case 6:
+                return buildingFactory.createCastle(row, col);
 
 
         }
