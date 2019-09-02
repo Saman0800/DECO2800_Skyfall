@@ -4,9 +4,12 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
-import deco2800.skyfall.worlds.TestWorld;
+import deco2800.skyfall.worlds.world.TestWorld;
 
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.world.WorldBuilder;
+import deco2800.skyfall.worlds.world.WorldDirector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,8 +17,6 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.List;
-import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.junit.Assert.assertEquals;
@@ -28,7 +29,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @PrepareForTest(GameManager.class)
 public class EntitySpawnTableTest {
 
-    private TestWorld testWorld = null;
+    private World testWorld = null;
 
     private PhysicsManager physics;
 
@@ -43,7 +44,9 @@ public class EntitySpawnTableTest {
 
     @Before
     public void createTestEnvironment() {
-        testWorld = new TestWorld(0);
+        WorldBuilder worldBuilder = new WorldBuilder();
+        WorldDirector.constructTestWorld(worldBuilder);
+        testWorld = worldBuilder.getWorld();
 
         biome = new ForestBiome();
 
@@ -106,11 +109,44 @@ public class EntitySpawnTableTest {
         assertEquals(0, countWorldEntities());
 
         // check basic spawnEntities
-        final double chance = 0.9;
+        final double chance = 0.95;
         Rock rock = new Rock();
         EntitySpawnTable.spawnEntities(rock, chance, testWorld);
 
         // count after spawning
         assertTrue(countWorldEntities() > 0);
+    }
+
+    @Test
+    public void maxMinPlacementTest() {
+        WorldBuilder worldBuilder = new WorldBuilder();
+        WorldDirector.constructTestWorld(worldBuilder);
+        World newWorld = worldBuilder.getWorld();
+
+        // create tile map, add tiles and push to testWorld
+        CopyOnWriteArrayList<Tile> newTileMap = new CopyOnWriteArrayList<>();
+
+        for (int i = 0; i < worldSize; i++) {
+            Tile tile = new Tile(1.0f * i, 0.0f);
+            newTileMap.add(tile);
+            biome.addTile(tile);
+        }
+
+        newWorld.setTileMap(newTileMap);
+
+        EntitySpawnRule newRule = new EntitySpawnRule(2, 4, null, true);
+        newRule.setChance(1.0);
+
+        Rock rock = new Rock();
+        EntitySpawnTable.spawnEntities(rock, newRule, newWorld);
+
+        int count = 0;
+        for (Tile tile : newWorld.getTileMap()) {
+            if (tile.hasParent()) {
+                count++;
+            }
+        }
+
+        assertTrue("Count was " + count, count <= 4);
     }
 }

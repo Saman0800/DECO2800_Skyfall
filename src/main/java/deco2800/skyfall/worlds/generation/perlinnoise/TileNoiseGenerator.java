@@ -73,7 +73,7 @@ public class TileNoiseGenerator {
     public void fadeNoiseValues(){
         for (Tile tile : tiles) {
             double value = tile.getPerlinValue();
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 2; i++) {
                 value = NoiseGenerator.fade(value);
             }
             tile.setPerlinValue(value);

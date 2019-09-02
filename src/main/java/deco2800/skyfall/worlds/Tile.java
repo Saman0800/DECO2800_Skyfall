@@ -131,9 +131,17 @@ public class Tile {
 			return frictionMap.get("water");
 		}else if(tileType.contains("forest")) {
     	    return frictionMap.get("forest");
-    	}else{
-			return frictionMap.get("grass");
-		}
+    	}else if(tileType.contains("lake")) {
+    	    return frictionMap.get("lake");
+        }else if(tileType.contains("ocean")) {
+    	    return frictionMap.get("ocean");
+        }else if(tileType.contains("snow")){
+    	    return frictionMap.get("snow");
+    	}else if(tileType.contains("volcanic")) {
+    	    return frictionMap.get("volcanic");
+        }else{
+            return frictionMap.get("grass");
+        }
 	}
     public Map<Integer, Tile> getNeighbours() {
         return neighbours;

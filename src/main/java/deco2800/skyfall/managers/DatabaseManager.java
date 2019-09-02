@@ -1,7 +1,7 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.*;
-import deco2800.skyfall.worlds.AbstractWorld;
+import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.util.HexVector;
 
@@ -403,7 +403,7 @@ public final class DatabaseManager extends AbstractManager {
      * @param world We have a world as a parameter for testing purposes.  In the main game, this will never need to be
      *              passed, but when testing a TestWorld is needed to be passed.
      */
-    public static void loadWorld(AbstractWorld world) {
+    public static void loadWorld(World world) {
         // This check allows for the world parameter to act as an optional
         if (world == null) {
             world = GameManager.get().getWorld();
@@ -475,7 +475,7 @@ public final class DatabaseManager extends AbstractManager {
      * @param world We have a world as a parameter for testing purposes.  In the main game, this will never need to be
      *              passed, but when testing a TestWorld is needed to be passed.
      */
-    public static void saveWorld(AbstractWorld world) {
+    public static void saveWorld(World world) {
         logger.info("Saving the world to database.");
         // This check allows for world to act as an optional parameter
         if (world == null) {

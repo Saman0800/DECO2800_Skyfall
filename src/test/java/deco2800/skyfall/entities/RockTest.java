@@ -1,9 +1,20 @@
 package deco2800.skyfall.entities;
 
+<<<<<<< HEAD
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.worlds.TestWorld;
+=======
+import deco2800.skyfall.managers.DatabaseManager;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.InputManager;
+import deco2800.skyfall.managers.OnScreenMessageManager;
+import deco2800.skyfall.worlds.world.TestWorld;
+>>>>>>> f34c38bef075cf7f98d9af9bf1aac57b23ce76aa
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.world.WorldBuilder;
+import deco2800.skyfall.worlds.world.WorldDirector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +35,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ GameManager.class, DatabaseManager.class, PlayerPeon.class })
 public class RockTest {
-    private TestWorld w = null;
+    private World w = null;
 
     private PhysicsManager physics;
 
@@ -33,7 +44,10 @@ public class RockTest {
 
     @Before
     public void Setup() {
-        w = new TestWorld(0);
+
+        WorldBuilder worldBuilder = new WorldBuilder();
+        WorldDirector.constructTestWorld(worldBuilder);
+        w = worldBuilder.getWorld();
 
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
@@ -99,6 +113,9 @@ public class RockTest {
         assertEquals("Unexpected health value for Rock.", rock1.getHealth(), 5);
 
         Rock rock2 = rock1.newInstance(tile2);
+
+        assertFalse(rock1.equals(rock2));
+
         // check various properties of this new rock
         assertTrue(rock2.getPosition().equals(new HexVector(0.0f, 1.0f)));
         assertEquals(rock2.getRenderOrder(), 2);
@@ -120,5 +137,21 @@ public class RockTest {
         assertFalse("Unexpected rock placement.", tile3.isObstructed());
         assertFalse("Unexpected rock placement.", tile4.hasParent());
         assertFalse("Unexpected rock placement.", tile4.isObstructed());
+    }
+
+    @Test
+    public void TestGetandSet() {
+        CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
+        // Populate world with tiles
+        Tile tile1 = new Tile(0.0f, 0.0f);
+        Tile tile2 = new Tile(0.0f, 1.0f);
+        tileMap.add(tile1);
+        tileMap.add(tile2);
+        w.setTileMap(tileMap);
+
+        Rock rock1 = new Rock(tile1, true);
+
+        rock1.setHealth(3);
+        assertEquals(3, rock1.getHealth());
     }
 }

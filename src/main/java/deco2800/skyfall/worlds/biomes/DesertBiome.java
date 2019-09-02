@@ -10,17 +10,15 @@ import java.util.Random;
  * Desert Biome
  */
 public class DesertBiome extends AbstractBiome {
-    private ArrayList<String> textures = new ArrayList<>();
 
     /**
-     * Constructor for a Biome
+     * Constructor for the DesertBiome
      */
     public DesertBiome() {
         super("desert", null);
     }
 
 
-    //Likes grouped with likes
     /**
      * Method that will determine the textures of the desert biome textures
      *
@@ -29,15 +27,15 @@ public class DesertBiome extends AbstractBiome {
     @Override
     public void setTileTextures(Random random) {
         ArrayList<String> textures = new ArrayList<>();
-        textures.add("desert_3");
-        textures.add("desert_2");
         textures.add("desert_1");
-//        textures.add("desert_4");
+        textures.add("desert_2");
+        textures.add("desert_3");
 
         //Perlin noise generation
-        new TileNoiseGenerator(getTiles(), random, 4, 30,0.5,  Tile::setPerlinValue);
+        new TileNoiseGenerator(getTiles(), random, 4, 50,0.5,  Tile::setPerlinValue);
 
 
+        //Going through each tile assigning a perlin noise value
         for (Tile tile : getTiles()) {
             int perlinValue = (int) Math.floor(tile.getPerlinValue() * textures.size());
             tile.setTexture(textures.get(perlinValue < textures.size() ? perlinValue : textures.size() - 1));

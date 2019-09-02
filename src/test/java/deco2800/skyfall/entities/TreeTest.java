@@ -1,10 +1,21 @@
 package deco2800.skyfall.entities;
 
+<<<<<<< HEAD
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.worlds.TestWorld;
+=======
+import deco2800.skyfall.managers.DatabaseManager;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.InputManager;
+import deco2800.skyfall.managers.OnScreenMessageManager;
+import deco2800.skyfall.worlds.world.TestWorld;
+>>>>>>> f34c38bef075cf7f98d9af9bf1aac57b23ce76aa
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.util.HexVector;
 
+import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.world.WorldBuilder;
+import deco2800.skyfall.worlds.world.WorldDirector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +24,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -26,7 +37,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ GameManager.class, DatabaseManager.class, PlayerPeon.class })
 public class TreeTest {
-    private TestWorld w = null;
+    private World w = null;
 
     private PhysicsManager physics;
 
@@ -35,7 +46,10 @@ public class TreeTest {
 
     @Before
     public void Setup() {
-        w = new TestWorld(0);
+
+        WorldBuilder worldBuilder = new WorldBuilder();
+        WorldDirector.constructTestWorld(worldBuilder);
+        w = worldBuilder.getWorld();
 
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
@@ -72,6 +86,7 @@ public class TreeTest {
         // Check that the various properties of this static entity have been
         // set correctly
         assertTrue(tree1.equals(tree1));
+        assertFalse(tree1.equals(null));
         assertTrue(tree1.getPosition().equals(new HexVector(0.0f, 0.0f)));
         assertEquals(tree1.getRenderOrder(), 5);
         assertEquals(tree1.getCol(), 0.0f, 0.0f);
@@ -82,7 +97,7 @@ public class TreeTest {
     }
 
     @Test
-    public void TestAddedFunctions() {
+    public void TestnewInstance() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
         // Populate world with tiles
         Tile tile1 = new Tile(0.0f, 0.0f);
@@ -96,8 +111,9 @@ public class TreeTest {
         w.setTileMap(tileMap);
 
         Tree tree1 = new Tree(tile1, true);
+        Tree tree2 = tree1.newInstance(tile2);
 
-        tree1.newInstance(tile2);
+        assertFalse("Duplicated tree on the same position", tree1.equals(tree2));
 
         // Check that the Overwritten newInstance method is working as expected
         // Check that the static entity has been placed down on the tile
@@ -138,5 +154,46 @@ public class TreeTest {
             AbstractEntity dropItem = drops.get(0);
             assertTrue("Incorrect instance type for tree drop", dropItem instanceof WoodCube);
         }
+    }
+
+    @Test
+    public void TestHashCode() {
+        CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
+        Tile tile1 = new Tile(0.0f, 0.0f);
+        tileMap.add(tile1);
+        w.setTileMap(tileMap);
+
+        Tree tree1 = new Tree(tile1, true);
+
+        // Calculate the expected hash code
+        float result = 1;
+        final float prime = 31;
+        result = (result + tree1.getCol()) * prime;
+        result = (result + tree1.getRow()) * prime;
+        result = (result + tree1.getHeight()) * prime;
+
+        assertTrue("Unexpected hashcode for tree.", tree1.hashCode() == result);
+    }
+
+    @Test
+    public void TestWoodAmount() {
+        CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
+        Tile tile1 = new Tile(0.0f, 0.0f);
+        Tile tile2 = new Tile(0.0f, 0.5f);
+        tileMap.add(tile1);
+        tileMap.add(tile2);
+        w.setTileMap(tileMap);
+
+        Map<HexVector, String> texture = new HashMap<>();
+        texture.put(new HexVector(0.0f, 0.0f), "tree");
+
+        Tree tree1 = new Tree(tile1, true);
+        Tree tree2 = new Tree(0.0f, 0.5f, 2, texture);
+
+        assertEquals(15, tree1.getWoodAmount());
+
+        assertEquals(15, tree2.getWoodAmount());
+        tree2.decreaseWoodAmount();
+        assertEquals(14, tree2.getWoodAmount());
     }
 }

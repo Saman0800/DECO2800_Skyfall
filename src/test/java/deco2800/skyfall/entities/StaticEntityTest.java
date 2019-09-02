@@ -1,9 +1,20 @@
 package deco2800.skyfall.entities;
 
+<<<<<<< HEAD
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.worlds.TestWorld;
+=======
+import deco2800.skyfall.managers.DatabaseManager;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.InputManager;
+import deco2800.skyfall.managers.OnScreenMessageManager;
+import deco2800.skyfall.worlds.world.TestWorld;
+>>>>>>> f34c38bef075cf7f98d9af9bf1aac57b23ce76aa
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.world.WorldBuilder;
+import deco2800.skyfall.worlds.world.WorldDirector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +36,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ GameManager.class, DatabaseManager.class, PlayerPeon.class })
 public class StaticEntityTest {
-    private TestWorld w = null;
+    private World w;
 
     private PhysicsManager physics;
 
@@ -34,7 +45,11 @@ public class StaticEntityTest {
 
     @Before
     public void Setup() {
-        w = new TestWorld(0);
+        WorldBuilder worldBuilder = new WorldBuilder();
+        WorldDirector.constructTestWorld(worldBuilder);
+        w = worldBuilder.getWorld();
+
+
 
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
@@ -59,6 +74,7 @@ public class StaticEntityTest {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
         Tile tile1 = new Tile(0.0f, 0.0f);
         tileMap.add(tile1);
+        System.out.println("World " + w);
         w.setTileMap(tileMap);
 
         StaticEntity rock1 = new StaticEntity(tile1, 2, "rock", true);
@@ -84,17 +100,24 @@ public class StaticEntityTest {
         Map<HexVector, String> texture = new HashMap<>();
         texture.put(new HexVector(0.0f, 0.0f), "rock");
         StaticEntity rock1 = new StaticEntity(0.0f, 0.0f, 2, texture);
+
         w.addEntity(rock1);
 
         // Check that the various properties of this static entity have been
         // set correctly
         assertTrue(rock1.equals(rock1));
+        assertTrue(rock1.getTextures().equals(texture));
         assertTrue(rock1.getPosition().equals(new HexVector(0.0f, 0.0f)));
         assertEquals(rock1.getRenderOrder(), 2);
         assertEquals(rock1.getCol(), 0.0f, 0.0f);
         assertEquals(rock1.getRow(), 0.0f, 0.0f);
         assertTrue(rock1.isObstructed());
         assertEquals(rock1.getObjectName(), "staticEntityID");
+
+        Set<HexVector> childPos = new HashSet<HexVector>();
+        childPos.add(new HexVector(0.0f, 0.0f));
+
+        assertEquals(childPos, rock1.getChildrenPositions());
     }
 
     @Test
@@ -146,5 +169,22 @@ public class StaticEntityTest {
         rock1.newInstance(tile3);
         assertTrue("New instance of static item not found.", tile3.hasParent());
         assertTrue("New instance of static item not found.", tile3.isObstructed());
+    }
+
+    @Test
+    public void NewInstanceTest() {
+        CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
+        // Populate world with tiles
+        Tile tile1 = new Tile(0.0f, 0.0f);
+        Tile tile2 = new Tile(0.0f, 1.0f);
+        tileMap.add(tile1);
+        tileMap.add(tile2);
+        w.setTileMap(tileMap);
+
+        StaticEntity rock1 = new StaticEntity(tile1, 2, "rock", true);
+        StaticEntity rock2 = rock1.newInstance(tile2);
+
+        assertTrue(tile2.isObstructed());
+        assertFalse(rock1.equals(rock2));
     }
 }
