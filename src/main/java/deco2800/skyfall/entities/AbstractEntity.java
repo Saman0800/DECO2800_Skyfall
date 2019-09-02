@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.animation.AnimationLinker;
@@ -364,40 +365,108 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		return toBeRun;
 	}
 
+	/**
+	 * Called on creation of the entity for setting up the entities collision
+	 * Uses default fixture shape/size of a small circle
+	 *
+	 * @param x the entities x coordinate
+	 * @param y the entities y coordinate
+	 */
     private void initialiseBox2D(float x, float y) {
-        box2DWorld = GameManager.get().getManager(PhysicsManager.class).getBox2DWorld();
-
-        //Creates the body
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(x, y);
-        body = box2DWorld.createBody(bodyDef);
-
-        body.setFixedRotation(true);
-        body.setLinearDamping(0.8f);
-        body.setUserData(this);
-
-        CircleShape shape = new CircleShape();
-        shape.setRadius(5);
-
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape;
-        fixtureDef.density = 1f;
-        fixture = body.createFixture(fixtureDef);
-
-        //Sets up if the entity can be collided with
-        //True by default
-        fixture.setSensor(!isCollidable);
-
-        shape.dispose();
+		defineBody(x, y);
+		defineFixture();
     }
 
+	/**
+	 * Called on creation of the entity for setting up the entities collision
+	 * Defines the fixture size/shape based on a .JSON file
+	 *
+	 * @param x the entities x coordinate
+	 * @param y the entities y coordinate
+	 * @param fixtureDefFile file path the .JSON file
+	 */
+    public void initialiseBox2D(float x, float y, String fixtureDefFile){
+		defineBody(x, y);
+		defineFixture(fixtureDefFile);
+	}
+
+	/**
+	 * Defines the properties for the entity's body using default values
+	 * Custom values can be set in the individual entities constructor after the
+	 * body has been created
+	 *
+	 * @param x the entities x coordinate
+	 * @param y the entities y coordinate
+	 */
+	private void defineBody(float x, float y){
+		box2DWorld = GameManager.get().getManager(PhysicsManager.class).getBox2DWorld();
+
+		//Creates the body
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.type = BodyDef.BodyType.DynamicBody;
+		bodyDef.position.set(x, y);
+		body = box2DWorld.createBody(bodyDef);
+
+		body.setFixedRotation(true);
+		body.setLinearDamping(0.8f);
+		body.setUserData(this);
+	}
+
+	/**
+	 * Defines the fixture using default properties and default shape
+	 * of a small circle.
+	 * Custom values can be set in the individual entities constructor after the
+	 * fixture has been created.
+	 */
+	public void defineFixture(){
+		CircleShape shape = new CircleShape();
+		shape.setRadius(5);
+
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.shape = shape;
+		fixtureDef.density = 1f;
+		fixture = body.createFixture(fixtureDef);
+
+		//Sets up if the entity can be collided with
+		//True by default
+		fixture.setSensor(!isCollidable);
+
+		shape.dispose();
+	}
+
+	/**
+	 * Defines the body's fixture with default values which can be changes in
+	 * the entity's constructor after the fixture is created.
+	 * Sets the fixtures shape and size based on a .JSON file
+	 *
+	 * @param fixtureDefFile file path to .JSON file defining the fixture
+	 */
+	public void defineFixture(String fixtureDefFile){
+		//TODO: Add code for defining code for custom body shape
+	}
+
+	/**
+	 * Controls if the entity can be collided with
+	 *
+	 * @param collidable boolean value if entities can collide with this entity
+	 */
+	
     public void changeCollideability(Boolean collidable){
         isCollidable = collidable;
+        if (fixture != null) {
+			fixture.setSensor(!isCollidable);
+		}
     }
 
-    public void handleCollision(Object hitter) {
-        System.out.println("I hit Something");
+	/**
+	 * Called every time the entity is involved in a collision
+	 * Should be overwritten for each entity where something should occur
+	 * during a collision
+	 *
+	 * @param hitter the other object involved in the collision
+	 */
+	public void handleCollision(Object hitter) {
+        //Does nothing as collision logic should be case specific
     }
 
     /**
