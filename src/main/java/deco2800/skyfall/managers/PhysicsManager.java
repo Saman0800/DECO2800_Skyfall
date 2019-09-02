@@ -33,6 +33,8 @@ public class PhysicsManager extends AbstractManager{
                 Object o1 = contact.getFixtureA().getBody().getUserData();
                 Object o2 = contact.getFixtureB().getBody().getUserData();
 
+                System.out.println("Collision occured");
+
                 //Runs collision handler defined in class
                 if (o1.getClass() == AbstractEntity.class && !contact.getFixtureA().isSensor()){
                     AbstractEntity a1 = (AbstractEntity) o1;

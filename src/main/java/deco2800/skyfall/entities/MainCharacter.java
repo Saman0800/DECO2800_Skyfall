@@ -933,6 +933,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         //Records velocity history in x direction
         recordVelHistory(xVel,yVel);
+
+        getBody().setTransform(xPos, yPos, getBody().getAngle());
     }
 
     /**

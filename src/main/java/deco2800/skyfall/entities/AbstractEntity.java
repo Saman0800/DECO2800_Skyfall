@@ -46,7 +46,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     //Box2D properties
     private Body body;
-    private World box2DWorld;
     private Fixture fixture;
     private Boolean isCollidable;
 
@@ -399,7 +398,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 * @param y the entities y coordinate
 	 */
 	private void defineBody(float x, float y){
-		box2DWorld = GameManager.get().getManager(PhysicsManager.class).getBox2DWorld();
+		World box2DWorld = GameManager.get().getManager(PhysicsManager.class).getBox2DWorld();
 
 		//Creates the body
 		BodyDef bodyDef = new BodyDef();
@@ -420,7 +419,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 */
 	public void defineFixture(){
 		CircleShape shape = new CircleShape();
-		shape.setRadius(5);
+		shape.setRadius(50);
 
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
@@ -467,6 +466,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 */
 	public void handleCollision(Object hitter) {
         //Does nothing as collision logic should be case specific
+		System.out.println("I hit something");
     }
 
     /**
@@ -541,6 +541,15 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     public float getScale() {
         return scale;
     }
+	/**
+	 * Gets the body for the entity
+	 *
+	 * @return body of the entity
+	 */
+	public Body getBody(){
+		return body;
+	}
+
 }
 
 
