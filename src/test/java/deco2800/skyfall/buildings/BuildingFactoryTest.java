@@ -27,7 +27,7 @@ public class BuildingFactoryTest {
 
     @Test
     public void createHouseTest() {
-        BuildingEntity house = factory.createHouse(0f, 2f,0);
+        BuildingEntity house = factory.createHouse(0f, 2f);
         Assert.assertEquals(2f, house.getWidth(), 0.0);
         Assert.assertEquals(2f, house.getLength(), 0.0);
         Assert.assertEquals(0f, house.getCol(), 0.0);
@@ -37,7 +37,7 @@ public class BuildingFactoryTest {
 
     @Test
     public void createStorageUnitTest() {
-        BuildingEntity storage = factory.createStorageUnit(3f, 1f,0);
+        BuildingEntity storage = factory.createStorageUnit(3f, 1f);
         Assert.assertEquals(2f, storage.getWidth(), 0.0);
         Assert.assertEquals(2f, storage.getLength(), 0.0);
         Assert.assertEquals(3f, storage.getCol(), 0.0);
@@ -47,7 +47,7 @@ public class BuildingFactoryTest {
 
     @Test
     public void createTownCentreBuildingTest() {
-        BuildingEntity town = factory.createTownCentreBuilding(2f, 1f,0);
+        BuildingEntity town = factory.createTownCentreBuilding(2f, 1f);
         Assert.assertEquals(3f, town.getWidth(), 0.0);
         Assert.assertEquals(3f, town.getLength(), 0.0);
         Assert.assertEquals(2f, town.getCol(), 0.0);
@@ -57,7 +57,7 @@ public class BuildingFactoryTest {
 
     @Test
     public void createFenceTest() {
-        BuildingEntity fence = factory.createFenceBuilding(3f, 2f,0);
+        BuildingEntity fence = factory.createFenceBuilding(3f, 2f);
         Assert.assertEquals(1f, fence.getWidth(), 0.0);
         Assert.assertEquals(1f, fence.getLength(), 0.0);
         Assert.assertEquals(3f, fence.getCol(), 0.0);

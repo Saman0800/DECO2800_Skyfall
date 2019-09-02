@@ -38,7 +38,7 @@ public class BuildingEntity extends AbstractEntity {
     private int length;
     private int width;
     private int level;
-    private boolean updatable;
+    private boolean upgradable;
     private int currentHealth;
 
     /**
@@ -95,7 +95,7 @@ public class BuildingEntity extends AbstractEntity {
         length = 1;
         width = 1;
         level = 1;
-        updatable = false;
+        upgradable = false;
         currentHealth = getInitialHealth();
     }
 
@@ -231,19 +231,19 @@ public class BuildingEntity extends AbstractEntity {
     }
 
     /**
-     * Set a building entity updatability.
-     * @param updatable by boolean value
+     * Set a building entity upgrade state.
+     * @param upgradable by boolean value
      */
-    public void setUpdatability(boolean updatable) {
-        this.updatable = updatable;
+    public void setUpgradable(boolean upgradable) {
+        this.upgradable = upgradable;
     }
 
     /**
-     * Get a building entity current updatability.
-     * @return boolean value for current updatability
+     * Get a building entity current upgrade state.
+     * @return boolean value for current upgrade state
      */
-    public boolean getUpdatability() {
-        return this.updatable;
+    public boolean isUpgradable() {
+        return this.upgradable;
     }
 
     /**

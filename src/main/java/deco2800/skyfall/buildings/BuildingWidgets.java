@@ -84,7 +84,7 @@ public class BuildingWidgets implements TouchDownObserver {
      * @param building a building is selected on the world
      */
     private void updateBuilding(BuildingEntity building) {
-        // TODO: check if building is updatable then update the building
+        // TODO: check if building is upgradable then update the building
     }
 
     /**
