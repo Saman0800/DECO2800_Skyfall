@@ -8,6 +8,11 @@ import deco2800.skyfall.entities.Tree;
 import deco2800.skyfall.entities.Rock;
 import deco2800.skyfall.entities.LongGrass;
 import deco2800.skyfall.entities.EntitySpawnRule;
+import deco2800.skyfall.entities.structures.Building;
+import deco2800.skyfall.buildings.BuildingEntity;
+import deco2800.skyfall.entities.structures.BuildingInteractions;
+import deco2800.skyfall.entities.structures.BuildingType;
+import deco2800.skyfall.entities.structures.Structure;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
@@ -183,6 +188,8 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
         if (tile == null) {
             return;
         }
+
+        BuildingInteractions interact = new BuildingInteractions();
         // todo: more efficient way to find entities
         for (AbstractEntity entity : getEntities()) {
             if (!tile.getCoordinates().equals(entity.getPosition())) {
@@ -195,6 +202,11 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
 
                 for (AbstractEntity drop : drops) {
                     addEntity(drop);
+                }
+            }
+            if (entity instanceof Structure) {
+                if(interact.checkIfBuilding(entity)) {
+                    removeEntity(entity);
                 }
             }
         }
