@@ -17,6 +17,7 @@ import deco2800.skyfall.buildings.BuildingWidgets;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.structures.AbstractBuilding;
+import deco2800.skyfall.entities.structures.BuildingType;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.Vector2;
 import deco2800.skyfall.util.WorldUtil;
@@ -198,16 +199,49 @@ public class ConstructionManager extends AbstractManager {
             buildMenu.addActor(storageUnit);
             buildMenu.addActor(setting);
 
-
             AbstractWorld world = GameManager.get().getWorld();
+
+            for(int i = 0; i < buildingFactory.getCount(); i++){
+                String name = BuildingType.values()[i].getName();
+                TextButton building = new TextButton(name, skin);
+                if (i < 3){
+                    building.setBounds(50, 450 - i * 100, 140, 40);
+                }else if(i < 6){
+                    building.setBounds(300, 450 - (i - 3) * 100, 140, 40);
+                }else{
+                    building.setBounds(600, 450 - (i - 6) * 100, 140, 40);
+                }
+
+                AbstractEntity mc = world.getSortedAgentEntities().get(world.getSortedAgentEntities().size() - 1);
+                HexVector position = mc.getPosition();
+
+                float row = position.getRow();
+                float col = position.getCol();
+
+                buildMenu.addActor(building);
+                setBuildingToBePlaced(selectBuilding(i, row, col));
+
+                building.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y){
+                        displayWindow();
+
+                        buildingToBePlaced.placeBuilding(buildingToBePlaced.getRow(), buildingToBePlaced.getCol(), buildingToBePlaced.getHeight(), world);
+                    }
+                });
+            }
+
+
+
             house.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     //call build function for specific building
 
+                    /*
                     displayWindow();
                     //TODO implement permissions
                     //permission test have not been updated since switched to factory for buildings
+
 
                     AbstractEntity mc = world.getSortedAgentEntities().get(world.getSortedAgentEntities().size() - 1);
                     HexVector position = mc.getPosition();
@@ -215,8 +249,11 @@ public class ConstructionManager extends AbstractManager {
                     float row = position.getRow();
                     float col = position.getCol();
 
-                    setBuildingToBePlaced(buildingFactory.createCabin(row, col));
-                    buildingToBePlaced.placeBuilding(buildingToBePlaced.getRow(), buildingToBePlaced.getCol(), buildingToBePlaced.getHeight(), world);
+                    BuildingEntity building1 = selectBuilding(i, );
+                    building1.placeBuilding(building1.getRow(), building1.getCol(), building1.getHeight(), world);
+
+
+                     */
                 }
             });
 
@@ -224,6 +261,7 @@ public class ConstructionManager extends AbstractManager {
                 @Override
                 public void clicked(InputEvent event, float x, float y){
 
+                    /*
                     displayWindow();
 
                     //TODO implement permissions
@@ -237,6 +275,8 @@ public class ConstructionManager extends AbstractManager {
 
                     setBuildingToBePlaced(buildingFactory.createStorageUnit(row, col));
                     buildingToBePlaced.placeBuilding(buildingToBePlaced.getRow(), buildingToBePlaced.getCol(), buildingToBePlaced.getHeight(), world);
+
+                     */
                 }
             });
 
@@ -528,5 +568,35 @@ public class ConstructionManager extends AbstractManager {
                 buildings.length, GameManager.get().getWorld());
 
         return true;
+    }
+
+    /**
+     *
+     * @param index - index of the values in BuildingType
+     * @param row - x position that building will be placed
+     * @param col - y position that building will be placed
+     * @return Building Entity that is selected
+     */
+    public BuildingEntity selectBuilding(int index, float row, float col){
+        switch (index){
+            default:
+                return null;
+            case 0:
+                return buildingFactory.createCabin(row, col);
+            case 1:
+                return buildingFactory.createFenceBuilding(row, col);
+            case 2:
+                return buildingFactory.createSafeHouse(row, col);
+            case 3:
+                return buildingFactory.createStorageUnit(row, col);
+            case 4:
+                return buildingFactory.createTownCentreBuilding(row, col);
+            case 5:
+                return buildingFactory.createWatchTower(row, col);
+            //case 6:
+                //return buildingFactory.createCastle(row, col);
+
+
+        }
     }
 }
