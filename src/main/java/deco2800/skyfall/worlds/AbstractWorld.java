@@ -6,6 +6,7 @@ import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
+import org.lwjgl.Sys;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -73,7 +74,6 @@ public abstract class AbstractWorld {
     	generateTileIndexes();
 
     	generateTileTypes(random);
-    	initialiseFrictionmap();
 
     	//Saving the world for test, and likely saving and loading later
 //    	try {
@@ -170,21 +170,6 @@ public abstract class AbstractWorld {
     public List<AbstractEntity> getEntities() {
         return new CopyOnWriteArrayList<>(this.entities);
     }
-
-    /**
-     * Creates a friction map that assigns a friction to every tile type
-     */
-    public void initialiseFrictionmap() {
-        // Hard coded map, should change when tile can return its type
-        frictionMap = new HashMap<>();
-        frictionMap.put("grass", 0.8f);
-        frictionMap.put("forest", 0.76f);
-        frictionMap.put("water", 0.4f);
-        frictionMap.put("mountain", 0.67f);
-        frictionMap.put("desert", 0.59f);
-        frictionMap.put("ice", 1f);
-        this.frictionMap.putAll(frictionMap);
-    }
     
     /**
      *  Returns a list of entities in this world, ordered by their render level 
@@ -195,7 +180,6 @@ public abstract class AbstractWorld {
     	Collections.sort(e);
 		return e;
     }
-
 
     /**
      *  Returns a list of entities in this world, ordered by their render level 
@@ -211,7 +195,6 @@ public abstract class AbstractWorld {
     	Collections.sort(e);
 		return e;
     }
-
 
 
     /**
@@ -313,7 +296,7 @@ public abstract class AbstractWorld {
             Collider c1 = e1.getCollider();
             for (AbstractEntity e2 : this.getEntities()) {
                 if (e2.getCollider() == null) {
-                    break;
+                  break;
                 }
                 Collider c2 = e2.getCollider();
 

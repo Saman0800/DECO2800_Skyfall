@@ -12,7 +12,7 @@ public abstract class AbstractGui {
     protected boolean active = true;
 
     protected AbstractGui parent;
-    protected List<AbstractGui> children = new ArrayList<AbstractGui>();
+    protected List<AbstractGui> children = new ArrayList<>();
 
     protected Vector2 pos;
     protected Vector2 size;
@@ -63,8 +63,8 @@ public abstract class AbstractGui {
         }
     }
 
-    abstract public void update(long timeDelta);
-    abstract public void render(BitmapFont font, SpriteBatch batch, OrthographicCamera camera, ShapeRenderer shapeRenderer);
+    public abstract void update(long timeDelta);
+    public abstract void render(BitmapFont font, SpriteBatch batch, OrthographicCamera camera, ShapeRenderer shapeRenderer);
 
     /**
      * Renders all the children of the gui element

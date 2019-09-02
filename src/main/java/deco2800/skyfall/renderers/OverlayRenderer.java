@@ -8,10 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import deco2800.skyfall.gui.GuiMaster;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.NetworkManager;
-import deco2800.skyfall.managers.OnScreenMessageManager;
-import deco2800.skyfall.managers.PathFindingService;
+import deco2800.skyfall.managers.*;
 import deco2800.skyfall.util.WorldUtil;
 
 /**
@@ -100,6 +97,21 @@ public class OverlayRenderer implements Renderer {
 		float[] ColRow = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 		debugLine(batch, camera, line++, String.format("World: X:%.0f Y:%.0f", ColRow[0], ColRow[1]));
 
+		// Display current time in game
+		debugLine(batch, camera, line++,
+				String.format("Time: %s",
+						GameManager.get().getManager(EnvironmentManager.class).getTOD()));
+
+		// Display current month in game
+		debugLine(batch, camera, line++,
+				String.format("Season: %s",
+						GameManager.get().getManager(EnvironmentManager.class).getSeason()));
+
+		// Display current biome in game
+		debugLine(batch, camera, line++,
+				String.format("Biome: %s",
+						GameManager.get().getManager(EnvironmentManager.class).currentBiome()));
+
 		line++;
 
 		debugLine(batch, camera, line++, "PathfindingService");
@@ -115,7 +127,7 @@ public class OverlayRenderer implements Renderer {
 				String.format("Messages Sent: %d", GameManager.get().getManager(NetworkManager.class).getMessagesSent()));
 		debugLine(batch, camera, line++,
 				String.format("Username: %s", GameManager.get().getManager(NetworkManager.class).getUsername()));
-		debugLine(batch, camera, line++, String.format("World seed %d", GameManager.get().getWorld().getSeed()));
+		debugLine(batch, camera, line++, String.format("World seed: %d", GameManager.get().getWorld().getSeed()));
 
 	}
 }

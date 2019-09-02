@@ -40,6 +40,12 @@ public class SoundManager extends AbstractManager {
                     (Gdx.files.internal("resources/sounds/" + "robot.wav")));
             soundMap.put("sword", Gdx.audio.newSound
                     (Gdx.files.internal("resources/sounds/" + "sword.wav")));
+            soundMap.put("stoneWalk", Gdx.audio.newSound
+                    (Gdx.files.internal("resources/sounds/" + "stone_walk.wav")));
+            soundMap.put("stoneDie", Gdx.audio.newSound
+                    (Gdx.files.internal("resources/sounds/" + "stone_die.wav")));
+            soundMap.put("collectStone", Gdx.audio.newSound
+                    (Gdx.files.internal("resources/sounds/" + "collect-stone.wav")));
         } catch(Exception e) {
             LOGGER.error("no song be found");
         }

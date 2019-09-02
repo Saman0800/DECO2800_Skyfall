@@ -1,7 +1,6 @@
 package deco2800.skyfall.entities.structures;
 
 import com.google.gson.annotations.Expose;
-import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.managers.ConstructionManager;
 import deco2800.skyfall.util.HexVector;
@@ -15,26 +14,23 @@ import java.util.Map;
 
 public class StorageUnit extends AbstractBuilding {
 
-
     private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
 
     private static final String ENTITY_ID_STRING = "StorageUnitID";
     private int renderOrder;
     private int maxHealth = 5;
     private int currentHealth;
-    //Build time in seconds.
+    // Build time in seconds.
     private int buildTime = 6;
-    //Currently just uses basic X/Y coords, will be changed at a later date.
+    // Currently just uses basic X/Y coords, will be changed at a later date.
     private int sizeX = 2;
     private int sizeY = 2;
     private HexVector coords;
     private String texture = "storage_unit";
     ConstructionManager permissions = new ConstructionManager();
 
-
     @Expose
     public Map<HexVector, String> children;
-
 
     public StorageUnit(Tile tile, int renderOrder) {
         super(tile.getRow(), tile.getCol());
@@ -44,8 +40,7 @@ public class StorageUnit extends AbstractBuilding {
         this.renderOrder = renderOrder;
         this.currentHealth = maxHealth;
 
-
-        //Call Construction Permissions here but for now just do basic checking
+        // Call Construction Permissions here but for now just do basic checking
 
         children = new HashMap<>();
         children.put(tile.getCoordinates(), texture);
@@ -63,8 +58,7 @@ public class StorageUnit extends AbstractBuilding {
         this.renderOrder = renderOrder;
         this.currentHealth = maxHealth;
 
-
-        //Call Construction Permissions here
+        // Call Construction Permissions here
 
         children = new HashMap<>();
         coords = new HexVector(x, y);
@@ -78,58 +72,72 @@ public class StorageUnit extends AbstractBuilding {
     /**
      * Will link to Construction Manager Permissions but for now will be true
      */
-    public boolean permissions(){
+    public boolean permissions() {
         return true;
     }
 
     /**
      * Will place the building in the world
      */
-    public void placeBuilding(){
-        //next sprint
+    public void placeBuilding() {
+        // next sprint
     }
 
     /**
      * @return - Health of the House
      */
-    public int getMaxHealth() {return this.maxHealth;}
+    public int getMaxHealth() {
+        return this.maxHealth;
+    }
 
     /**
      * @return - Current health
      */
-    public int getCurrentHealth() {return this.currentHealth;}
+    public int getCurrentHealth() {
+        return this.currentHealth;
+    }
 
     /**
      * @return - Build time
      */
-    public int getBuildTime() {return this.buildTime;}
+    public int getBuildTime() {
+        return this.buildTime;
+    }
 
     /**
      * @return - X length
      */
-    public int getXSize() {return this.sizeX;}
+    public int getXSize() {
+        return this.sizeX;
+    }
 
     /**
      * @return - Y length
      */
-    public int getYSize() {return this.sizeY;}
+    public int getYSize() {
+        return this.sizeY;
+    }
 
     /**
      * @param newMaxHealth - New max health
      */
-    public void setHealth(int newMaxHealth) {this.maxHealth = newMaxHealth;}
+    public void setHealth(int newMaxHealth) {
+        this.maxHealth = newMaxHealth;
+    }
 
     /**
      * @param newCurrentHealth - New current health
      */
-    public void setCurrentHealth(int newCurrentHealth) {this.currentHealth = newCurrentHealth;}
+    public void setCurrentHealth(int newCurrentHealth) {
+        this.currentHealth = newCurrentHealth;
+    }
 
     /**
      * @param damage - Amount of damage to take
      */
     public void takeDamage(int damage) {
-        if((currentHealth - damage) > 0) {
-            currentHealth = currentHealth = damage;
+        if ((currentHealth - damage) > 0) {
+            currentHealth = currentHealth - damage;
         } else {
             currentHealth = 0;
         }
@@ -138,19 +146,20 @@ public class StorageUnit extends AbstractBuilding {
     /**
      * @param newXSize - New X length
      */
-    public void setXSize(int newXSize) {this.sizeX = newXSize;}
+    public void setXSize(int newXSize) {
+        this.sizeX = newXSize;
+    }
 
     /**
      * @param newYSize - New Y length
      */
-    public void setYSize(int newYSize) {this.sizeY = newYSize;}
+    public void setYSize(int newYSize) {
+        this.sizeY = newYSize;
+    }
 
     @Override
     public void onTick(long i) {
-        //Functionality.
+        // Functionality.
     }
 
-
-
 }
-
