@@ -104,7 +104,6 @@ public class BuildingEntityTest {
 
     }
 
-
     @After
     public void tearDown() throws Exception {
         testbuilding = null;

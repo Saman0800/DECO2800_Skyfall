@@ -158,6 +158,23 @@ public class TextureManager extends AbstractManager {
             textureMap.put("MainCharacterW_Anim", new Texture("resources/Main_Character_Left_Anim.png"));
             textureMap.put("MainCharacterNW_Anim",new Texture( "resources/Main_Character_B_Left_Anim.png"));
 
+            textureMap.put("cabin_0",new Texture( "resources/world_structures/cabin_0.png"));
+            textureMap.put("cabin_90",new Texture( "resources/world_structures/cabin_90.png"));
+            textureMap.put("cabin_180",new Texture( "resources/world_structures/cabin_180.png"));
+            textureMap.put("cabin_270",new Texture( "resources/world_structures/cabin_270.png"));
+            textureMap.put("castle_0",new Texture( "resources/world_structures/castle_0.png"));
+            textureMap.put("castle_90",new Texture( "resources/world_structures/castle_90.png"));
+            textureMap.put("castle_180",new Texture( "resources/world_structures/castle_180.png"));
+            textureMap.put("castle_270",new Texture( "resources/world_structures/castle_270.png"));
+            textureMap.put("safe_house_0",new Texture( "resources/world_structures/safe_house_0.png"));
+            textureMap.put("safe_house_90",new Texture( "resources/world_structures/safe_house_90.png"));
+            textureMap.put("safe_house_180",new Texture( "resources/world_structures/safe_house_180.png"));
+            textureMap.put("safe_house_270",new Texture( "resources/world_structures/safe_house_270.png"));
+            textureMap.put("watchtower_0",new Texture( "resources/world_structures/watchtower_0.png"));
+            textureMap.put("watchtower_90",new Texture( "resources/world_structures/watchtower_90.png"));
+            textureMap.put("watchtower_180",new Texture( "resources/world_structures/watchtower_180.png"));
+            textureMap.put("watchtower_270",new Texture( "resources/world_structures/watchtower_270.png"));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
