@@ -65,7 +65,7 @@ public class ConstructionManager extends AbstractManager {
                 GameManager.get().getWorld(), GameManager.getManagerFromInstance(InputManager.class));
 
         // testing requirement fro widget, removed it later
-        GameManager.get().getWorld().addEntity(buildingFactory.createCabin(0f, 0f));
+        GameManager.get().getWorld().addEntity(buildingFactory.createCabin(3f, 1.5f));
     }
 
     //Start of UI

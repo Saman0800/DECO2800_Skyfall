@@ -189,7 +189,7 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
             return;
         }
 
-        BuildingInteractions interact = new BuildingInteractions();
+//        BuildingInteractions interact = new BuildingInteractions();
         // todo: more efficient way to find entities
         for (AbstractEntity entity : getEntities()) {
             if (!tile.getCoordinates().equals(entity.getPosition())) {
@@ -204,11 +204,11 @@ public class RocketWorld extends AbstractWorld implements TouchDownObserver {
                     addEntity(drop);
                 }
             }
-            if (entity instanceof Structure) {
-                if(interact.checkIfBuilding(entity)) {
-                    removeEntity(entity);
-                }
-            }
+//            if (entity instanceof Structure) {
+//                if(interact.checkIfBuilding(entity)) {
+//                    removeEntity(entity);
+//                }
+//            }
         }
     }
 }

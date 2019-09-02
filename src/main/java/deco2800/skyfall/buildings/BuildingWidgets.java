@@ -14,6 +14,7 @@ import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.AbstractWorld;
 import deco2800.skyfall.worlds.Tile;
+import org.lwjgl.Sys;
 
 /**
  *  A BuildingWidgets is a UI widgets for existing building entities, and provides some handling
@@ -101,6 +102,8 @@ public class BuildingWidgets implements TouchDownObserver {
      */
     private void setWidgets(BuildingEntity building) {
         float[] wCords = WorldUtil.colRowToWorldCords(building.getCol(), building.getRow());
+        System.out.println(building.getCol());
+        System.out.println(building.getRow());
         this.label.setText(building.getObjectName());
         this.menu.setPosition(this.stage.getWidth()/2 + wCords[0] - GameManager.get().getCamera().position.x,
                 this.stage.getHeight()/2 + wCords[1] - GameManager.get().getCamera().position.y);
