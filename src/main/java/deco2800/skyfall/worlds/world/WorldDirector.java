@@ -53,6 +53,7 @@ public class WorldDirector {
         builder.addBiome(new MountainBiome(), 20);
         builder.addBiome(new VolcanicMountainsBiome(), 20);
         builder.addBiome(new SwampBiome(), 20);
+        builder.addBiome(new SnowyMountainsBiome(), 20);
     }
 
     /**
@@ -90,6 +91,7 @@ public class WorldDirector {
         choices.add(new MountainBiome());
         choices.add(new VolcanicMountainsBiome());
         choices.add(new SwampBiome());
+        choices.add(new SnowyMountainsBiome());
 
         for (int i = 0; i < n; i++) {
             builder.addBiome(choices.remove(random.nextInt(choices.size())), 50);
@@ -156,6 +158,7 @@ public class WorldDirector {
         builder.addBiome(new MountainBiome(), 10);
         builder.addBiome(new VolcanicMountainsBiome(), 10);
         builder.addBiome(new SwampBiome(), 10);
+        builder.addBiome(new SnowyMountainsBiome(), 10);
         builder.addLake(3);
     }
 }

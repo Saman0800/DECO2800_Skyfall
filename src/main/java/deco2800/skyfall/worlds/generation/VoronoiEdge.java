@@ -255,7 +255,7 @@ public class VoronoiEdge {
                         // and within the length of the line + MIN_DISTANCE from each vertex
                         if (Math.abs(tile.getCol() - ax) < MIN_DISTANCE
                                 && Math.abs(tile.getRow() - ay) < MIN_DISTANCE + length
-                                && Math.abs(tile.getRow() - ay) < MIN_DISTANCE + length) {
+                                && Math.abs(tile.getRow() - by) < MIN_DISTANCE + length) {
                             edge.addTile(tile);
                         }
                         // If the edge is not vertical

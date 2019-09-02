@@ -24,7 +24,7 @@ public class WorldDirectorTest {
         verify(builder).setRiverSize(5);
         verify(builder).setBeachSize(12);
         verify(builder).setStaticEntities(true);
-        verify(builder, times(5)).addBiome(any(AbstractBiome.class), any(Integer.class));
+        verify(builder, times(6)).addBiome(any(AbstractBiome.class), any(Integer.class));
     }
 
     @Test
@@ -77,7 +77,7 @@ public class WorldDirectorTest {
         verify(builder).setNodeSpacing(5);
         verify(builder).addLake(any(Integer.class));
         verify(builder).setStaticEntities(true);
-        verify(builder, times(5)).addBiome(any(AbstractBiome.class), any(Integer.class));
+        verify(builder, times(6)).addBiome(any(AbstractBiome.class), any(Integer.class));
     }
 
 }

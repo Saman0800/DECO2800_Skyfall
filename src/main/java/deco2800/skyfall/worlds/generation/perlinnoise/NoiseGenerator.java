@@ -120,26 +120,22 @@ public class NoiseGenerator {
         yRel = fade(yRel);
         xRel = fade(xRel);
 
-        try {
-            int xy = permutation[permutation[xInt] + yInt];
-            int xpy = permutation[permutation[xInt+1] + yInt];
-            int xyp = permutation[permutation[xInt] + yInt + 1];
-            int xpyp = permutation[permutation[xInt+1] + yInt+1];
+        int xy = permutation[permutation[xInt] + yInt];
+        int xpy = permutation[permutation[xInt+1] + yInt];
+        int xyp = permutation[permutation[xInt] + yInt + 1];
+        int xpyp = permutation[permutation[xInt+1] + yInt+1];
 
-            double xyGrad = determineGradientVector(xRel, yRel, xy);
-            double xpyGrad = determineGradientVector(1 - xRel, yRel, xpy);
-            double xypGrad = determineGradientVector(xRel, 1 - yRel, xyp);
-            double xpypGrad = determineGradientVector(1 - xRel, 1 - yRel, xpyp);
+        double xyGrad = determineGradientVector(xRel, yRel, xy);
+        double xpyGrad = determineGradientVector(1 - xRel, yRel, xpy);
+        double xypGrad = determineGradientVector(xRel, 1 - yRel, xyp);
+        double xpypGrad = determineGradientVector(1 - xRel, 1 - yRel, xpyp);
 
-            double topLerp = lerp(xyGrad, xpyGrad, xRel);
-            double bottomLerp = lerp(xypGrad, xpypGrad, xRel);
+        double topLerp = lerp(xyGrad, xpyGrad, xRel);
+        double bottomLerp = lerp(xypGrad, xpypGrad, xRel);
 
-            double finalLerp = lerp(topLerp, bottomLerp, yRel);
+        double finalLerp = lerp(topLerp, bottomLerp, yRel);
 
-            return (finalLerp * NORMALISATION_VALUE + 1) / 2;
-        } catch (RuntimeException e){
-            throw e;
-        }
+        return (finalLerp * NORMALISATION_VALUE + 1) / 2;
     }
 
     /**

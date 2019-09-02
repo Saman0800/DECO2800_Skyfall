@@ -183,7 +183,6 @@ public class WorldBuilder implements WorldBuilderInterface {
         Tile startTile = world.getTile(0.0f, 1.0f);
 
         for (AbstractBiome biome : world.getBiomes()) {
-
             switch (biome.getBiomeName()) {
             case "forest":
 

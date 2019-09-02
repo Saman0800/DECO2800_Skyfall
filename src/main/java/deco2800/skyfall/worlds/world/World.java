@@ -168,7 +168,7 @@ public class World implements TouchDownObserver {
                 tile.setBiome(null);
             }
 
-            for (AbstractBiome biome : biomes){
+            for (AbstractBiome biome : biomes) {
                 biome.getTiles().clear();
             }
 
