@@ -28,7 +28,9 @@ public class Tree extends StaticEntity implements Tickable, Harvestable {
     public Tree(Tile tile, boolean obstructed) {
         super(tile, 5, "tree" + nextTreeTexture, obstructed);
         nextTreeTexture = randomGen.nextInt(3) + 1;
-    }
+        this.woodAmount = 15;
+        }
+
 
     /**
      * The newInstance method implemented for the Tree class to allow for item
@@ -97,7 +99,7 @@ public class Tree extends StaticEntity implements Tickable, Harvestable {
 
     /***
      * A getter method to for woodAmount.
-     * 
+     *
      * @return woodAmount.
      */
     public int getWoodAmount() {
