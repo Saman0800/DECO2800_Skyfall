@@ -1,9 +1,6 @@
 package deco2800.skyfall.worlds.world;
 
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.Robot;
-import deco2800.skyfall.entities.Spider;
-import deco2800.skyfall.entities.Stone;
+import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.worlds.biomes.*;
@@ -34,7 +31,7 @@ public class WorldDirector {
         builder.addLake(5);
         builder.addRiver();
 
-        builder.setRiverSize(5);
+        builder.setRiverSize(2);
         builder.setBeachSize(12);
 
         builder.setStaticEntities(true);
@@ -47,6 +44,8 @@ public class WorldDirector {
         builder.addEntity(new Spider(-4f, -1f, mainCharacter));
         builder.addEntity(new Robot(-4, -2, mainCharacter));
         builder.addEntity(new Stone(-4, -2, mainCharacter));
+        builder.addEntity(new Flower(2f,2f,mainCharacter));
+        builder.addEntity(new Treeman(-2f,-3f,mainCharacter));
 
         builder.addBiome(new ForestBiome(), 20);
         builder.addBiome(new DesertBiome(), 20);
@@ -72,7 +71,7 @@ public class WorldDirector {
         builder.setSeed(random.nextInt());
         builder.addLake(5);
         builder.addRiver();
-        builder.setRiverSize(5);
+        builder.setRiverSize(3);
         builder.setBeachSize(12);
         builder.setStaticEntities(true);
 
@@ -84,6 +83,8 @@ public class WorldDirector {
         builder.addEntity(new Spider(-4f, -1f, mainCharacter));
         builder.addEntity(new Robot(-4, -2, mainCharacter));
         builder.addEntity(new Stone(-4, -2, mainCharacter));
+        builder.addEntity(new Flower(2f,2f,mainCharacter));
+        builder.addEntity(new Treeman(-2f,-3f,mainCharacter));
 
         ArrayList<AbstractBiome> choices = new ArrayList<>();
         choices.add(new ForestBiome());

@@ -192,6 +192,30 @@ public class LakeAndRiverTest {
         }
     }
 
+    @Test
+    @Ignore
+    public void riverTerminatingBiomeTest() {
+        for (List<AbstractBiome> biomes : biomeLists) {
+            for (AbstractBiome biome : biomes) {
+                if (!biome.getBiomeName().equals("river")) {
+                    continue;
+                }
+                List<AbstractBiome> adjacentWaterBodies = new ArrayList<>();
+                for (Tile tile : biome.getTiles()) {
+                    for (Tile neighbour : tile.getNeighbours().values()) {
+                        boolean correctBiome = neighbour.getBiome().getBiomeName().equals("lake")
+                                || neighbour.getBiome().getBiomeName().equals("ocean")
+                                || (neighbour.getBiome().getBiomeName().equals("river") && neighbour.getBiome() != biome);
+                        if (correctBiome && !adjacentWaterBodies.contains(biome)) {
+                            adjacentWaterBodies.add(neighbour.getBiome());
+                        }
+                    }
+                }
+                assertTrue(adjacentWaterBodies.size() >= 2);
+            }
+        }
+    }
+
     // Adapted from AbstractWorld.generateNeighbours().
     private static void generateTileNeighbours(List<Tile> tiles) {
         //multiply coords by 2 to remove floats
