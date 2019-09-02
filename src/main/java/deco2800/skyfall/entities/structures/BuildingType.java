@@ -20,9 +20,6 @@ public enum BuildingType {
     CASTLE("Castle", 10, 1, 1, 6, "castle_0");
 
 
-
-
-
     private String name;
     private int maxHealth;
     private int sizeX;
@@ -41,8 +38,8 @@ public enum BuildingType {
 
         // adding all of the possible textures for each building type
         switch(name){
-            case "House":
-                buildingTextures = initialiseHouseTextures();
+            case "Cabin":
+                buildingTextures = initialiseCabinTextures();
                 break;
             case "StorageUnit":
                 buildingTextures = initialiseStorageUnitTextures();
@@ -57,13 +54,16 @@ public enum BuildingType {
     }
 
     /**
-     * Initialises the textures for the House Building Tpe
+     * Initialises the textures for the Cabin Building Tpe
      *
-     * @return the House textures
+     * @return the Cabin textures
      */
-    public List<String> initialiseHouseTextures() {
+    public List<String> initialiseCabinTextures() {
         List<String> buildingTextures = new ArrayList<String>();
-        buildingTextures.add("house1");
+        buildingTextures.add("cabin_0");
+        buildingTextures.add("cabin_90");
+        buildingTextures.add("cabin_180");
+        buildingTextures.add("cabin_270");
         return buildingTextures;
     }
 
@@ -90,6 +90,48 @@ public enum BuildingType {
     }
 
     /**
+     * Initialises the textures for the Castle Building Tpe
+     *
+     * @return the Castle textures
+     */
+    public List<String> initialiseCastleTextures() {
+        List<String> castleCentreTextures = new ArrayList<String>();
+        castleCentreTextures.add("castle_0");
+        castleCentreTextures.add("castle_90");
+        castleCentreTextures.add("castle_180");
+        castleCentreTextures.add("castle_270");
+        return castleCentreTextures;
+    }
+
+    /**
+     * Initialises the textures for the Safe House Building Tpe
+     *
+     * @return the safe house textures
+     */
+    public List<String> initialiseSafeHouseTextures() {
+        List<String> safeHouseTextures = new ArrayList<String>();
+        safeHouseTextures.add("safe_house_0");
+        safeHouseTextures.add("safe_house_90");
+        safeHouseTextures.add("safe_house_180");
+        safeHouseTextures.add("safe_house_270");
+        return safeHouseTextures;
+    }
+
+    /**
+     * Initialises the textures for the Watch tower Building Tpe
+     *
+     * @return the watch tower textures
+     */
+    public List<String> initialiseWatchTowerTextures() {
+        List<String> watchTowerTextures = new ArrayList<String>();
+        watchTowerTextures.add("watchtower_0");
+        watchTowerTextures.add("watchtower_90");
+        watchTowerTextures.add("watchtower_180");
+        watchTowerTextures.add("watchtower_270");
+        return watchTowerTextures;
+    }
+
+    /**
      * Initialises the textures for the Wall Building Tpe
      *
      * @return the Wall textures
@@ -108,7 +150,6 @@ public enum BuildingType {
         fenceTextures.add("fenceNW-S");
         return fenceTextures;
     }
-
 
     /**
      * Gets the name of the Building Type

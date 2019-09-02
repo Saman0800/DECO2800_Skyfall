@@ -116,14 +116,14 @@ public class BuildingFactory {
     }
 
     /**
-     * Create safeHouse building based on BuildingEntity class with defined default renderOrder.
+     * Create watch tower building based on BuildingEntity class with defined default renderOrder.
      * @param col column coordinate that a building located on
      * @param row row coordinate that a building located on
      * @return a safeHouse object
      */
     public BuildingEntity createWatchTower(float col, float row) {
         BuildingEntity watchTower = new BuildingEntity(col, row, 2);
-        BuildingType watchTowerType = BuildingType.SAFEHOUSE;
+        BuildingType watchTowerType = BuildingType.WATCHTOWER;
         watchTower.setObjectName(watchTowerType.getName() + watchTower.getEntityID());
         watchTower.setTexture(watchTowerType.getMainTexture());
         watchTower.setBuildTime(watchTowerType.getBuildTime());
@@ -133,6 +133,26 @@ public class BuildingFactory {
         watchTower.setWidth(watchTowerType.getSizeX());
         watchTower.setLength(watchTowerType.getSizeX());
         return watchTower;
+    }
+
+    /**
+     * Create Castle building based on BuildingEntity class with defined default renderOrder.
+     * @param col column coordinate that a building located on
+     * @param row row coordinate that a building located on
+     * @return a safeHouse object
+     */
+    public BuildingEntity createCastle(float col, float row) {
+        BuildingEntity castle = new BuildingEntity(col, row, 2);
+        BuildingType castleType = BuildingType.CASTLE;
+        castle.setObjectName(castleType.getName() + castle.getEntityID());
+        castle.setTexture(castleType.getMainTexture());
+        castle.setBuildTime(castleType.getBuildTime());
+        castle.addBuildCost("", 0);
+        castle.addBuildCost("", 0);
+        castle.setInitialHealth(castleType.getMaxHealth());
+        castle.setWidth(castleType.getSizeX());
+        castle.setLength(castleType.getSizeX());
+        return castle;
     }
 
     /*
