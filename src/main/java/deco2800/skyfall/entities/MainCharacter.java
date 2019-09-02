@@ -10,10 +10,12 @@ import deco2800.skyfall.observers.*;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.Tile;
+import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,11 +73,15 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     private int foodLevel;
 
+    // The accumulated food tick to tick
+    private float foodAccum;
+
     // Textures for all 6 directions to correspond to movement of character
     private String[] textures;
 
     // A goldPouch to store the character's gold pieces.
     private HashMap<Integer, Integer> goldPouch;
+
 
     /**
      * The direction and speed of the MainCharacter
@@ -96,6 +102,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private ArrayList<Integer> velHistoryX;
     private ArrayList<Integer> velHistoryY;
     private boolean isMoving;
+    private boolean canSwim;
+    private boolean isSprinting;
 
     /*
      * Used for combat testing melee/range weapons.
@@ -157,6 +165,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.equipped_item = 0;
         this.level = 1;
         this.foodLevel = 100;
+        foodAccum = 0.f;
 
         // create a new goldPouch object
         this.goldPouch = new HashMap<>();
@@ -185,19 +194,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 position.getRow(),
                 1, 1);*/
 
-
-        //Initialises the players velocity properties
-        xInput = 0;
-        yInput = 0;
-        xVel = 0;
-        yVel = 0;
-        setAcceleration(0.01f);
-        setMaxSpeed(0.7f);
-        vel = 0;
-        velHistoryX = new ArrayList<>();
-        velHistoryY = new ArrayList<>();
-
-        isMoving = false;
+        canSwim = true;
+        isSprinting = false;
         this.scale = 0.4f;
         setDirectionTextures();
         configureAnimations();
@@ -519,6 +517,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         return foodLevel <= 0;
     }
 
+    public void changeSwimming(boolean swimmingAbility) {
+        this.canSwim = swimmingAbility;
+    }
+
     /**
      * Change current level of character and increases health by 10
      * @param change amount being added or subtracted
@@ -577,7 +579,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     @Override
     public void onTick(long i) {
         this.updatePosition();
-        this.updateCollider();
         this.movementSound();
 
         //this.setCurrentSpeed(this.direction.len());
@@ -592,7 +593,21 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             GameManager.getManagerFromInstance(ConstructionManager.class)
                     .displayWindow();
         }
+        // Do hunger stuff here
+        if (isMoving) {
+            if (isSprinting) {
+                foodAccum += 0.1f;
+            } else {
+                foodAccum += 0.01f;
+            }
+        } else {
+            foodAccum += 0.001f;
+        }
 
+        while(foodAccum >= 1.f) {
+            change_food(-1);
+            foodAccum -= 1.f;
+        }
     }
 
     /**
@@ -634,6 +649,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 break;
             case Input.Keys.D:
                 xInput += 1;
+                break;
+            case Input.Keys.SHIFT_LEFT:
+                isSprinting = true;
+                maxSpeed *= 2.f;
                 break;
             case Input.Keys.H:
                 useHatchet();
@@ -678,6 +697,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             case Input.Keys.D:
                 xInput -= 1;
                 break;
+            case Input.Keys.SHIFT_LEFT:
+                isSprinting = false;
+                maxSpeed /= 2.f;
+                break;
             case Input.Keys.H:
                 break;
             case Input.Keys.P:
@@ -686,7 +709,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 break;
             case Input.Keys.M:
                 break;
-
         }
     }
 
@@ -770,81 +792,28 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Moves the player based on current key inputs
+     * Gets the tile at a position.
+     * @param xPos The x position
+     * @param yPos The y position
+     * @return The Tile at that position
      */
-    public void updatePosition() {
-        // Gets current position
-        float xPos = position.getCol();
-        float yPos = position.getRow();
-
-        // Returns tile at left arm (our perspective) of the player
+    public Tile getTile(float xPos, float yPos) {
+        //Returns tile at left arm (our perspective) of the player
         float tileCol = (float) Math.round(xPos);
         float tileRow = (float) Math.round(yPos);
-        if (tileCol % 2 != 0){
+        if (tileCol % 2 != 0) {
             tileRow += 0.5f;
         }
-
-        // Determined friction scaling factor to apply based on current tile
-        float friction;
-        Tile currentTile = GameManager.get().getWorld().getTile(tileCol,
+        return GameManager.get().getWorld().getTile(tileCol,
                 tileRow);
-        if (currentTile != null && currentTile.getTexture() != null) {
-            // Tile specific friction
-            friction = Tile.getFriction(currentTile.getTextureName());
-        } else {
-            // Default friction
-            friction = 1f;
-        }
+    }
 
-        // Calculates new x and y positions
-        xPos += xVel + xInput * acceleration * 0.5 * friction;
-        yPos += yVel + yInput * acceleration * 0.5 * friction;
-
-        // Calculates velocity in x direction
-        if (xInput != 0) {
-            xVel += xInput * acceleration * friction;
-            // Prevents sliding
-            if (xVel / Math.abs(xVel) != xInput) {
-                xVel = 0;
-            }
-        } else if (yInput != 0) {
-            xVel *= 0.8;
-        } else {
-            xVel = 0;
-        }
-
-        // Calculates velocity in y direction
-        if (yInput != 0) {
-            yVel += yInput * acceleration * friction;
-            // Prevents sliding
-            if (yVel / Math.abs(yVel) != yInput) {
-                yVel = 0;
-            }
-        } else if (xInput != 0) {
-            yVel *= 0.8;
-        } else {
-            yVel = 0;
-        }
-
-        // caps the velocity
-        if (vel > maxSpeed) {
-            xVel /= vel;
-            yVel /= vel;
-
-            xVel *= maxSpeed;
-            yVel *= maxSpeed;
-        }
-
-        // Calculates speed to destination
-        vel = Math.sqrt((xVel * xVel) + (yVel * yVel));
-
-        // Calculates destination vector
-        HexVector destination = new HexVector(xPos, yPos);
-
-        // Moves the player to new location
-        position.moveToward(destination, vel);
-
-        // Records velocity history in x direction
+    /**
+     * Records the player velocity history
+     * @param xVel The x velocity
+     * @param yVel The y velocity
+     */
+    public void recordVelHistory(float xVel, float yVel) {
         if (velHistoryX.size() < 2 || velHistoryY.size() < 2) {
             velHistoryX.add((int) (xVel * 100));
             velHistoryY.add((int) (yVel * 100));
@@ -856,6 +825,118 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             velHistoryY.set(0, velHistoryY.get(1));
             velHistoryY.set(1, (int) (yVel * 100));
         }
+    }
+
+    /**
+     * Calculates the velocity of the player
+     * @param mainInput Input being checked
+     * @param altInput Input not being checked
+     * @param vel Velocity to calculate
+     * @param friction Friction value
+     * @return The new velocity
+     */
+    public float calVelocity(int mainInput, int altInput, float vel,
+                            float friction) {
+        if (mainInput != 0) {
+            vel += mainInput * acceleration * friction;
+            // Prevents sliding
+            if (vel / Math.abs(vel) != mainInput) {
+                vel = 0;
+            }
+        } else if (altInput != 0) {
+            vel *= 0.8;
+        } else {
+            vel = 0;
+        }
+        return vel;
+    }
+
+    /**
+     * Finds the next position to move to and moves there
+     * @param position The current position
+     * @param destination The new position
+     * @param nextTile The tile that will be moved to
+     */
+    public void findNewPosition(HexVector position, HexVector destination,
+                                Tile nextTile) {
+        if(nextTile == null) {
+            // Prevents the player from walking into the void
+            position.moveToward(destination, 0);
+        }else if(nextTile.getTextureName().contains("water") && !canSwim) {
+            // Prevents the player back if they try to enter water when they
+            // can't swim
+            position.moveToward(destination, 0);
+        }else {
+            position.moveToward(destination, vel);
+        }
+    }
+
+    /**
+     * Moves the player based on current key inputs
+     */
+    public void updatePosition() {
+        // Gets current position
+        float xPos = position.getCol();
+        float yPos = position.getRow();
+
+        // Gets the tile the player is standing on
+        Tile currentTile = getTile(xPos,yPos);
+        // Returns tile at left arm (our perspective) of the player
+        float tileCol = (float) Math.round(xPos);
+        float tileRow = (float) Math.round(yPos);
+        if (tileCol % 2 != 0){
+            tileRow += 0.5f;
+        }
+
+        // Determined friction scaling factor to apply based on current tile
+        float friction;
+        if(currentTile != null && currentTile.getTexture() != null) {
+            //Tile specific friction
+            currentTile = GameManager.get().getWorld().getTile(tileCol,
+                tileRow);
+            friction = Tile.getFriction(currentTile.getTextureName());
+        } else {
+            // Default friction
+            friction = 1f;
+        }
+
+        // Calculates new x and y positions
+        xPos += xVel + xInput * acceleration * 0.5 * friction;
+        yPos += yVel + yInput * acceleration * 0.5 * friction;
+
+        // Calculates velocity in x and y directions
+        xVel = calVelocity(xInput, yInput, xVel, friction);
+        yVel = calVelocity(yInput, xInput, yVel, friction);
+
+        // caps the velocity depending on the friction of the current tile
+        float maxTileSpeed = maxSpeed * friction;
+        if (vel > maxTileSpeed) {
+            xVel /= vel;
+            yVel /= vel;
+
+            xVel *= maxTileSpeed;
+            yVel *= maxTileSpeed;
+        }
+
+        // Calculates speed to destination
+        vel = friction * Math.sqrt((xVel * xVel) + (yVel * yVel));
+
+        // Calculates destination vector
+        HexVector destination = new HexVector(xPos, yPos);
+
+        // Next tile the player will move to
+        Tile nextTile = getTile(xPos, yPos);
+
+        // Method to take away the player's ability to swim
+        changeSwimming(false);
+
+        // Moves the player to new location
+        findNewPosition(position, destination, nextTile);
+
+        //Records velocity history in x direction
+        recordVelHistory(xVel,yVel);
+
+        getBody().setTransform(xPos, yPos, getBody().getAngle());
     }
 
     /**
@@ -1005,7 +1086,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                     }
                 }
             }
-
         }
     }
 
@@ -1039,6 +1119,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @return the learned blueprints list
      */
     public List<String> getBlueprintsLearned() {
+        blueprintsLearned = new ArrayList<>();
+
         return this.blueprintsLearned;
     }
 
@@ -1047,50 +1129,51 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @return the item to create.
      */
     public String getItemToCreate() {
-        return itemToCreate;
+        return this.itemToCreate;
     }
 
     /***
      * A Setter method to get the Item to be created.
      * @param itemToCreate the item to be created.
      */
-    public void setItemToCreate(String itemToCreate) {
-        this.itemToCreate = itemToCreate;
+    public void setItemToCreate(String item) {
+        this.itemToCreate = item;
     }
 
     /***
-     * Creates a Hatchet. Checks if required resources are in the inventory.
-     * if yes, created a hatchet, and deducts the required resource from
-     * inventory
+     * Creates a manufactured item. Checks if required resources are in the inventory.
+     * if yes, creates the item, adds it to the player's inventory
+     * and deducts the required resource from inventory
      */
-    public void createHatchet(){
+    public void createItem(ManufacturedResources itemToCreate){
 
-        if (getItemToCreate()=="Hatchet") {
-            hatchetToCreate = new Hatchet();
+        if (getBlueprintsLearned().contains(itemToCreate.getName())) {
 
-            if (hatchetToCreate.getRequiredMetal() < inventories.getAmount
-                    ("Metal")) {
+            if (itemToCreate.getRequiredMetal()>=
+                    this.getInventoryManager().getAmount(itemToCreate.getName())){
                 logger.info("You don't have enough Metal");
 
-            } else if (hatchetToCreate.getRequiredWood() < inventories.getAmount
-                    ("Wood")) {
+            } else if (itemToCreate.getRequiredWood()>=
+                    this.getInventoryManager().getAmount(itemToCreate.getName())){
                 logger.info("You don't have enough Wood");
 
-            } else if (hatchetToCreate.getRequiredStone() < inventories.getAmount
-                    ("Stone")) {
+            } else if (itemToCreate.getRequiredStone()>=
+                    this.getInventoryManager().getAmount(itemToCreate.getName())) {
                 logger.info("You don't have enough Stone");
 
             } else {
-                inventories.inventoryAdd(hatchetToCreate);
-                inventories.inventoryDropMultiple("Metal",
-                        hatchetToCreate.getRequiredMetal());
-                inventories.inventoryDropMultiple("Stone",
-                        hatchetToCreate.getRequiredStone());
-                inventories.inventoryDropMultiple("Wood",
-                        hatchetToCreate.getRequiredWood());
+                this.getInventoryManager().inventoryAdd(itemToCreate);
+
+                this.getInventoryManager().inventoryDropMultiple("Metal",
+                        itemToCreate.getRequiredMetal());
+                this.getInventoryManager().inventoryDropMultiple("Stone",
+                        itemToCreate.getRequiredStone());
+                this.getInventoryManager().inventoryDropMultiple("Wood",
+                        itemToCreate.getRequiredWood());
             }
         }
     }
+
 
     /**
      * Sets the animations.
