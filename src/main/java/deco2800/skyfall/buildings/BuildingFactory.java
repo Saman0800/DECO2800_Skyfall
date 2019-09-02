@@ -123,7 +123,7 @@ public class BuildingFactory {
      */
     public BuildingEntity createWatchTower(float col, float row) {
         BuildingEntity watchTower = new BuildingEntity(col, row, 2);
-        BuildingType watchTowerType = BuildingType.SAFEHOUSE;
+        BuildingType watchTowerType = BuildingType.WATCHTOWER;
         watchTower.setObjectName(watchTowerType.getName() + watchTower.getEntityID());
         watchTower.setTexture(watchTowerType.getMainTexture());
         watchTower.setBuildTime(watchTowerType.getBuildTime());
@@ -143,7 +143,7 @@ public class BuildingFactory {
      */
     public BuildingEntity createCastle(float col, float row) {
         BuildingEntity castle = new BuildingEntity(col, row, 2);
-        BuildingType castleType = BuildingType.SAFEHOUSE;
+        BuildingType castleType = BuildingType.CASTLE;
         castle.setObjectName(castleType.getName() + castle.getEntityID());
         castle.setTexture(castleType.getMainTexture());
         castle.setBuildTime(castleType.getBuildTime());
