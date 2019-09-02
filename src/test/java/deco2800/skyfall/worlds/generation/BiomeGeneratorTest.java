@@ -44,7 +44,7 @@ public class BiomeGeneratorTest {
 
     @BeforeClass
     public static void setup() {
-        Random random = new Random(0);
+        Random random = new Random(1);
 
         biomeNodesList = new ArrayList<>(TEST_COUNT);
         biomeLists = new ArrayList<>(TEST_COUNT);
@@ -171,7 +171,6 @@ public class BiomeGeneratorTest {
     public void testTileContiguity() {
         for (ArrayList<AbstractBiome> biomes : biomeLists) {
             for (AbstractBiome biome : biomes) {
-                // HashSet<Tile> tilesToFind = new HashSet<>(biome.getTiles());
                 ArrayList<Tile> descendantTiles =
                         biome.getDescendantBiomes().stream().flatMap(descendant -> descendant.getTiles().stream())
                                 .collect(Collectors.toCollection(ArrayList::new));
@@ -262,6 +261,29 @@ public class BiomeGeneratorTest {
             for (WorldGenNode node : worldGenNodes) {
                 if (node.isBorderNode()) {
                     assertEquals("ocean", nodesBiomes.get(node).getBiomeName());
+                }
+            }
+        }
+    }
+
+    @Test
+    public void testBeachIsOnCoast() {
+        for (ArrayList<AbstractBiome> biomes : biomeLists) {
+            for (AbstractBiome biome : biomes) {
+                if (biome.getBiomeName().equals("beach")) {
+                    assertTrue(biome.getTiles().stream().anyMatch(tile -> tile.getNeighbours().values().stream()
+                            .anyMatch(neighbour -> neighbour.getBiome().getBiomeName().equals("ocean"))));
+                }
+            }
+        }
+    }
+
+    @Test
+    public void testBeachHasParent() {
+        for (ArrayList<AbstractBiome> biomes : biomeLists) {
+            for (AbstractBiome biome : biomes) {
+                if (biome.getBiomeName().equals("beach")) {
+                    assertNotNull(biome.getParentBiome());
                 }
             }
         }
