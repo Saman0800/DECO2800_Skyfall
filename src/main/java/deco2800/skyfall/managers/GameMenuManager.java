@@ -100,6 +100,7 @@ public class GameMenuManager extends TickableManager {
         table.getExit().setVisible(false);
         PopUpTable.setOpened(null);
         System.out.println("exited " + table.name);
+        BGMManager.unmute(); // Un-mute the BGM when menu is closed
     }
 
     public void open(PopUpTable table) {
@@ -113,6 +114,7 @@ public class GameMenuManager extends TickableManager {
         pause();
         PopUpTable.setOpened(table);
         System.out.println("opened " + table.name);
+        BGMManager.mute(); // Mute the BGM when menu is opened
     }
 
 
