@@ -12,6 +12,7 @@ public class Rock extends StaticEntity implements HasHealth {
 
     private static Random randomGen = new Random();
     private static int nextRock = 1;
+    private int metalAmount;
 
     public Rock() {
         this.setObjectName(ENTITY_ID_STRING);
@@ -21,6 +22,7 @@ public class Rock extends StaticEntity implements HasHealth {
         super(tile, 2, "rock" + nextRock, obstructed);
         nextRock = randomGen.nextInt(3) + 1;
         this.setObjectName(ENTITY_ID_STRING);
+        this.metalAmount = 15;
     }
 
     @Override
@@ -48,4 +50,5 @@ public class Rock extends StaticEntity implements HasHealth {
     public Rock newInstance(Tile tile) {
         return new Rock(tile, this.isObstructed());
     }
+
 }

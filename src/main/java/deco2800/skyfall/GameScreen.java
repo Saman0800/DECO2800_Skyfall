@@ -7,6 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
+import deco2800.skyfall.buildings.BuildingFactory;
+import deco2800.skyfall.gamemenu.GameMenuScreen;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.Peon;
 import deco2800.skyfall.handlers.KeyboardManager;
@@ -18,22 +20,23 @@ import deco2800.skyfall.renderers.Renderer3D;
 import deco2800.skyfall.worlds.*;
 import deco2800.skyfall.managers.EnvironmentManager;
 
+import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.world.WorldBuilder;
+import deco2800.skyfall.worlds.world.WorldDirector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Random;
-
-public class GameScreen implements Screen, KeyDownObserver {
-    private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
-    @SuppressWarnings("unused")
-    private final SkyfallGame game;
-    /**
+public class GameScreen implements Screen,KeyDownObserver {
+	private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
+	@SuppressWarnings("unused")
+	private final SkyfallGame game;
+	/**
      * Set the renderer. 3D is for Isometric worlds Check the documentation for each
      * renderer to see how it handles WorldEntity coordinates
      */
     Renderer3D renderer = new Renderer3D();
     OverlayRenderer rendererDebug = new OverlayRenderer();
-    AbstractWorld world;
+    World world;
     static Skin skin;
 
     /**
@@ -46,29 +49,47 @@ public class GameScreen implements Screen, KeyDownObserver {
 
     long lastGameTick = 0;
 
-    /**
-     * Create an EnvironmentManager for ToD.
-     */
-    EnvironmentManager timeOfDay;
+	/**
+	 * Create an EnvironmentManager for ToD.
+	 */
+	EnvironmentManager timeOfDay;
+	public static boolean isPaused = false;
 
     public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
         /* Create an example world for the engine */
         this.game = game;
 
         GameManager gameManager = GameManager.get();
+        GameMenuManager gameMenuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+        gameMenuManager.setStage(stage);
+        gameMenuManager.setSkin(gameManager.getSkin());
+        gameMenuManager.setGame(game);
+
+        //Used to create to the world
 
         // Create main world
         if (!isHost) {
-            world = new ServerWorld(seed);
+            //Creating the world
+            WorldBuilder worldBuilder = new WorldBuilder();
+            WorldDirector.constructServerWorld(worldBuilder);
+            world = worldBuilder.getWorld();
+
             GameManager.get().getManager(NetworkManager.class).connectToHost("localhost", "duck1234");
         } else {
             if (GameManager.get().isTutorial) {
-                world = new TutorialWorld(seed, 80, 5);
+
+                WorldBuilder worldBuilder = new WorldBuilder();
+                WorldDirector.constructTutorialWorld(worldBuilder);
+                world = worldBuilder.getWorld();
             } else {
-                world = new RocketWorld(seed, 200, 15, new int[] { 90, 70, 70 }, 2, 5);
-            }
-            GameManager.get().getManager(NetworkManager.class).startHosting("host");
-        }
+
+                //Creating the world
+                WorldBuilder worldBuilder = new WorldBuilder();
+                WorldDirector.constructSimpleSinglePlayerWorld(worldBuilder);
+                world = worldBuilder.getWorld();
+			}
+			GameManager.get().getManager(NetworkManager.class).startHosting("host");
+		}
 
         gameManager.setWorld(world);
 
@@ -81,20 +102,28 @@ public class GameScreen implements Screen, KeyDownObserver {
         GameManager.get().setStage(stage);
         GameManager.get().setCamera(camera);
 
+
         /* Add inventory to game manager */
         gameManager.addManager(new InventoryManager());
 
-        /* Play BGM */
-        try {
-            BGMManager.BGMManager("resources/sounds/forest_day.wav");
-            BGMManager.play();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        /* Add construction manager to game manager */
+        gameManager.addManager(new ConstructionManager());
+        // testing requirement for widget, removed it later
+        BuildingFactory bf = new BuildingFactory();
+        GameManager.get().getWorld().addEntity(bf.createCabin(3f, 1.5f));
+        GameManager.get().getWorld().addEntity(bf.createCabin(0f, 0f));
 
-        new GameMenuManager().show(stage);
+		/* Add environment to game manager */
+		gameManager.addManager(new EnvironmentManager());
+
+		/* Add BGM to game manager */
+		gameManager.addManager(new BGMManager());
+
+        GameMenuScreen gamemenuScreen = new GameMenuScreen(gameMenuManager);
+		gamemenuScreen.show();
 
         PathFindingService pathFindingService = new PathFindingService();
+
         GameManager.get().addManager(pathFindingService);
 
         InputMultiplexer multiplexer = new InputMultiplexer();
@@ -106,18 +135,26 @@ public class GameScreen implements Screen, KeyDownObserver {
         GameManager.get().getManager(KeyboardManager.class).registerForKeyDown(this);
     }
 
+
     /**
-     * Renderer thread Must update all displayed elements using a Renderer
+     * Renderer thread
+     * Must update all displayed elements using a Renderer
      */
     @Override
     public void render(float delta) {
         handleRenderables();
 
-        moveCamera();
+        if (!isPaused) {
+            moveCamera();
+            handleRenderables();
+            cameraDebug.position.set(camera.position);
+            cameraDebug.update();
+            camera.update();
+        } else {
+            stage.draw();
+            pause();
+        }
 
-        cameraDebug.position.set(camera.position);
-        cameraDebug.update();
-        camera.update();
 
         SpriteBatch batchDebug = new SpriteBatch();
         batchDebug.setProjectionMatrix(cameraDebug.combined);
@@ -126,23 +163,29 @@ public class GameScreen implements Screen, KeyDownObserver {
         batch.setProjectionMatrix(camera.combined);
 
         // Clear the entire display as we are using lazy rendering
+
+        // Commented out by Cyrus
+//        if (!isPaused) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         rerenderMapObjects(batch, camera);
         rendererDebug.render(batchDebug, cameraDebug);
-
-        /* Refresh the experience UI for if information was updated */
         stage.act(delta);
         stage.draw();
-        batch.dispose();
-    }
+//        }
+//        stage.act(delta);
+//        stage.draw();
+
+
+		/* Refresh the experience UI for if information was updated */
+
+		batch.dispose();
+	}
 
     private void handleRenderables() {
         if (System.currentTimeMillis() - lastGameTick > 20) {
             lastGameTick = System.currentTimeMillis();
             GameManager.get().onTick(0);
-            timeOfDay = new EnvironmentManager(lastGameTick);
         }
     }
 
@@ -207,11 +250,13 @@ public class GameScreen implements Screen, KeyDownObserver {
         }
 
         if (keycode == Input.Keys.F5) {
-            // Use a random seed for now
-            Random random = new Random();
-            // world = new RocketWorld(random.nextLong(), 200, 15, new int[] {70,70,70}, 3,
-            // 2);
-            world = new RocketWorld(random.nextLong(), 300, 15, new int[] { 70, 70, 70 }, 3, 2);
+
+            //Create a random world
+            WorldBuilder worldBuilder = new WorldBuilder();
+            // WorldDirector.constructSimpleSinglePlayerWorld(worldBuilder);
+            WorldDirector.constructNBiomeSinglePlayerWorld(worldBuilder, 3);
+            world = worldBuilder.getWorld();
+
             AbstractEntity.resetID();
             Tile.resetID();
             GameManager gameManager = GameManager.get();

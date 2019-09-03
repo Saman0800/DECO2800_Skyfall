@@ -1,167 +1,241 @@
 package deco2800.skyfall.managers;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import deco2800.skyfall.GameScreen;
+import deco2800.skyfall.SkyfallGame;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.gamemenu.GameMenuScreen;
+import deco2800.skyfall.gui.HealthCircle;
+import deco2800.skyfall.gui.SettingsTable;
+import deco2800.skyfall.gamemenu.PopUpTable;
+
 
 /**
- * Managers the menu bar during the game
+ * Manages the menu bar during the game
  */
-public class GameMenuManager {
+public class GameMenuManager extends TickableManager {
 
-        private Table pauseTable = null;
+    private static TextureManager textureManager;
+    private Stage stage;
+    private MainCharacter mainCharacter;
+    private HealthCircle healthCircle;
+    private InventoryManager inventory;
+    private SoundManager soundManager;
+    private Skin skin;
+    private String[] characters;
+    private SkyfallGame game;
 
-        // default constructor
-        public GameMenuManager() {
-        }
-
-        /**
-         * Display menu bar at the bottom of the game
-         *
-         * @param stage Current stage
-         */
-        private void showMenu(Stage stage){
-
-            Image menuBar = new Image(GameManager.get().getManager(TextureManager.class).getTexture("game menu bar"));
-            menuBar.setSize(910, 170);
-            menuBar.setPosition(185, 20);
-            stage.addActor(menuBar);
-        }
+    // Number of characters in the game.
+    public static final int NUMBEROFCHARACTERS = 5;
 
     /**
-     * Display buttons in the menu bar
+     * Initialise a new GameMenuManager with stage and skin including the characters in the game.
+     * And construct Manager instances for later use.
+     */
+    public GameMenuManager() {
+        textureManager = GameManager.get().getManager(TextureManager.class);
+        inventory = GameManager.get().getManager(InventoryManager.class);
+        soundManager = GameManager.get().getManager(SoundManager.class);
+        stage = null;
+        skin = null;
+        characters = new String[NUMBEROFCHARACTERS];
+        // testing
+        characters[0] = "MainCharacter";
+        characters[1] = "bowman";
+        characters[2] = "robot";
+        characters[3] = "spider";
+        characters[4] = "spacman_ded";
+        GameMenuScreen.currentCharacter = 0;
+    }
+
+    @Override
+    public void onTick(long i) {
+        //Get the current state of the inventory on tick so that display can be updated
+        inventory = GameManager.get().getManager(InventoryManager.class);
+
+        if (healthCircle != null) {
+            healthCircle.update();
+        }
+
+
+    }
+
+    /**
+     * Sets the current game to be {game}.
      *
-     * @param stage Current stage
+     * @param game Current game.
      */
-    private void showButtons(Stage stage) {
-            int height;
-            height = 75;
-            ImageButton pause = new ImageButton(new TextureRegionDrawable((new TextureRegion(GameManager.get().getManager(TextureManager.class).getTexture("pause")))));
-            pause.setSize(height, height*146/207);
-            pause.setPosition(208, 115);
-            stage.addActor(pause);
-
-            pause.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    if (pauseTable == null) {
-                        setPauseTable();
-                        stage.addActor(pauseTable);
-                    } else {
-                        pauseTable.setVisible(true);
-                    }
-                    pause();
-                }
-            });
-
-            ImageButton selectCharacter = new ImageButton(new TextureRegionDrawable((new TextureRegion(GameManager.get().getManager(TextureManager.class).getTexture("select-character")))));
-            selectCharacter.setSize(height, height*146/207);
-            selectCharacter.setPosition(208,41*1000/800);
-            stage.addActor(selectCharacter);
-
-            ImageButton info = new ImageButton(new TextureRegionDrawable((new TextureRegion(GameManager.get().getManager(TextureManager.class).getTexture("info")))));
-            info.setSize(height, height*146/207);
-            info.setPosition(992,115);
-            stage.addActor(info);
-
-            ImageButton settings = new ImageButton(new TextureRegionDrawable((new TextureRegion(GameManager.get().getManager(TextureManager.class).getTexture("settings")))));
-            settings.setSize(height, height*146/207);
-            settings.setPosition(992,41*1000/800);
-            stage.addActor(settings);
-
-            ImageButton build = new ImageButton(new TextureRegionDrawable((new TextureRegion(GameManager.get().getManager(TextureManager.class).getTexture("build")))));
-            build.setSize(219*0.55f, 207*0.55f);
-            build.setPosition(300, 41*1000/800);
-            stage.addActor(build);
-
-            ImageButton radar = new ImageButton(new TextureRegionDrawable((new TextureRegion(GameManager.get().getManager(TextureManager.class).getTexture("radar")))));
-            radar.setSize(219*0.55f, 207*0.55f);
-            radar.setPosition(440, 41*1000/800);
-            stage.addActor(radar);
-        }
+    public void setGame(SkyfallGame game) {
+        this.game = game;
+    }
 
     /**
-     * Getter of pause pop up table
-     * @return
+     * Getter of current game.
+     *
+     * @return Current game.
      */
-    private Table getPauseTable() {
-            return pauseTable;
-        }
+    public SkyfallGame getGame() {
+        return game;
+    }
 
     /**
-     * Sets the pause pop up table
+     * Getter of current Inventory.
+     *
+     * @return Current Inventory.
      */
-    private void setPauseTable() {
-            Table pauseTable = new Table();
-            pauseTable.setSize(500, 500*1346/1862);
-            pauseTable.setPosition(Gdx.graphics.getWidth()/2 - 200, Gdx.graphics.getHeight()/2 - 90);
-            pauseTable.setBackground(new TextureRegionDrawable((new TextureRegion(GameManager.get().getManager(TextureManager.class).getTexture("pop up screen")))));
-
-
-//        Table infoBar = new Table();
-            Image infoBar = new Image(new TextureRegionDrawable((new TextureRegion(GameManager.get().getManager(TextureManager.class).getTexture("game menu bar")))));
-            infoBar.setSize(475, 475*188/1756);
-//        infoBar.setBackground(new TextureRegionDrawable((new TextureRegion(GameManager.get().getManager(TextureManager.class).getTexture("game menu bar")))));
-
-            Table buttons = new Table();
-            ImageButton toHome = new ImageButton(new TextureRegionDrawable((new TextureRegion(GameManager.get().getManager(TextureManager.class).getTexture("goHome")))));
-//        toHome.setSize(200, 200*263/264);
-            toHome.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-
-                }
-            });
-
-            ImageButton resume = new ImageButton(new TextureRegionDrawable((new TextureRegion(GameManager.get().getManager(TextureManager.class).getTexture("resume")))));
-            resume.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    GameManager.setPaused(false);
-                    pauseTable.setVisible(false);
-                }
-            });
-
-//        resume.setSize(300, 300*409/410);
-            ImageButton reset = new ImageButton(new TextureRegionDrawable((new TextureRegion(GameManager.get().getManager(TextureManager.class).getTexture("reset")))));
-//        reset.setSize(200, 200*263/264);
-
-            buttons.add(toHome).width(100).padRight(10).padLeft(50).padBottom(300);
-            buttons.add(resume).width(125).padBottom(290);
-            buttons.add(reset).width(100).padLeft(10).padRight(30).padBottom(300);
-
-            Table bar = new Table();
-            bar.addActor(infoBar);
-            pauseTable.add(bar).width(475).padTop(450).colspan(3).fillX();
-            pauseTable.row();
-            pauseTable.add(buttons);
-
-            this.pauseTable = pauseTable;
-        }
+    public InventoryManager getInventory() {
+        return inventory;
+    }
 
     /**
-     * Pauses the game
+     * Getter of the TextureManager of the menu.
+     *
+     * @return TextureManager of the menu.
+     */
+    public static TextureManager getTextureManager() {
+        return textureManager;
+    }
+
+    /**
+     * Sets the stage of the menu to be {stage}.
+     *
+     * @param stage Current stage.
+     */
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    /**
+     * Getter of current stage.
+     *
+     * @return Current stage.
+     */
+    public Stage getStage() {
+        return stage;
+    }
+
+    /**
+     * Sets the skin of the menu to be {skin}.
+     *
+     * @param skin Current skin.
+     */
+    public void setSkin(Skin skin) {
+        this.skin = skin;
+    }
+
+    /**
+     * Getter of current stage.
+     *
+     * @return Current stage.
+     */
+    public Skin getSkin() {
+        return skin;
+    }
+
+    /**
+     * Pause the game.
      */
     private void pause() {
-            GameManager.setPaused(true);
-        }
-
+        GameManager.setPaused(true);
+    }
 
     /**
-     * Display eveything created
+     * Resume the game and make the PopUpTable disappear.
      *
-     * @param stage current stage
+     * @param table PopUpTable to be exited.
      */
-    public void show(Stage stage) {
-            showMenu(stage);
-            showButtons(stage);
-        }
+    public void resume(PopUpTable table) {
+        GameManager.setPaused(false);
+        GameScreen.isPaused = false;
+        exit(table);
     }
+
+    /**
+     * Makes the PopUpTable not visible to users.
+     *
+     * @param table PopUpTable to be exited.
+     */
+    private void exit(PopUpTable table) {
+        table.setVisible(false);
+        table.getExit().setVisible(false);
+        PopUpTable.setOpened(null);
+        System.out.println("exited " + table.name);
+        BGMManager.unmute(); // Un-mute the BGM when menu is closed
+    }
+
+    /**
+     * Opens up the pop up screen with its exit button.
+     *
+     * @param table PopUpTable to be opened.
+     */
+    public void open(PopUpTable table) {
+        if (PopUpTable.getOpened() != null) {
+            System.out.println("Should be exited: " + PopUpTable.getOpened().name);
+            exit(PopUpTable.getOpened());
+        }
+        table.setVisible(true);
+        table.getExit().setVisible(true);
+        GameScreen.isPaused = true;
+        pause();
+        PopUpTable.setOpened(table);
+        System.out.println("opened " + table.name);
+        BGMManager.mute(); // Mute the BGM when menu is opened
+    }
+
+    /**
+     * Generates an instance of TextureRegionDrawable with the given texture name.
+     *
+     * @param sName Texture Name.
+     *
+     * @return An instance of TextureRegionDrawable with the given texture name.
+     */
+    public static TextureRegionDrawable generateTextureRegionDrawableObject(String sName) {
+        return new TextureRegionDrawable((new TextureRegion(textureManager.getTexture(sName))));
+    }
+
+    /**
+     * Set main character of the game to be {mainCharacter}.
+     *
+     * @param mainCharacter Main character of the game.
+     */
+    public void setMainCharacter(MainCharacter mainCharacter) {
+        if (stage == null) {
+            System.out.println("Please set stage before adding character");
+            return;
+        }
+        this.mainCharacter = mainCharacter;
+
+    }
+
+    /**
+     * Getter of main character of the game.
+     *
+     * @return Main character of the game.
+     */
+    public MainCharacter getMainCharacter() {
+        return mainCharacter;
+    }
+
+    /**
+     * Adds the circle to menu Screen
+     * @param hc
+     */
+    public void addHealthCircle(HealthCircle hc) {
+        this.healthCircle = hc;
+    }
+
+    /**
+     * Getter of all characters in the game.
+     *
+     * @return Texture names of the characters.
+     */
+    public String[] getCharacters() {
+        return characters;
+    }
+}
 
 

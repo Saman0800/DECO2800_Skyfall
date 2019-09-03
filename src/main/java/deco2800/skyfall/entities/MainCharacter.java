@@ -1,14 +1,23 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.math.Vector2;
+import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.*;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.*;
+import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.resources.ManufacturedResources;
+import deco2800.skyfall.resources.items.Hatchet;
+import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.Tile;
+import org.lwjgl.Sys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -18,6 +27,7 @@ import java.util.*;
 public class MainCharacter extends Peon implements KeyDownObserver,
         KeyUpObserver,TouchDownObserver, Tickable , Animatable {
 
+    private final Logger logger = LoggerFactory.getLogger(MainCharacter.class);
 
     // Weapon Manager for MainCharacter
     private WeaponManager weapons;
@@ -28,18 +38,27 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     // Hotbar of inventories
     private List<Item> hotbar;
 
-    public static final String WALK_NORMAL = "people_walk_normal";
+    //List of blueprints that the player has learned.
+    private List<String> blueprintsLearned;
 
+    //The name of the item to be created.
+    private String itemToCreate;
+
+    // Variables to sound effects
+    public static final String WALK_NORMAL = "people_walk_normal";
     private SoundManager soundManager = GameManager.get()
             .getManager(SoundManager.class);
+
+    //The pick Axe that is going to be created
+    private Hatchet hatchetToCreate;
 
     // The index of the item selected to be used in the hotbar
     // ie. [sword][gun][apple]
     // if selecting sword then equipped_item = 0,
     // if selecting gun the equipped_item = 1
     private int equipped_item;
-    private final int INVENTORY_MAX_CAPACITY = 20;
-    private final int HOTBAR_MAX_CAPACITY = 5;
+    private static final int INVENTORY_MAX_CAPACITY = 20;
+    private static final int HOTBAR_MAX_CAPACITY = 5;
 
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
@@ -54,43 +73,65 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     private int foodLevel;
 
+    // The accumulated food tick to tick
+    private float foodAccum;
+
     // Textures for all 6 directions to correspond to movement of character
     private String[] textures;
 
-    /*
+    // A goldPouch to store the character's gold pieces.
+    private HashMap<Integer, Integer> goldPouch;
+
+
+    /**
      * The direction and speed of the MainCharacter
      */
-    //protected Vector2 direction;
-    //protected float currentSpeed;
+    protected Vector2 direction;
+    protected float currentSpeed;
 
     /*
-     * Helper bools to tell which direction the player intends to move
+     * Helper vars to tell which direction the player intends to move
      */
     private int xInput;
     private int yInput;
-
     private float xVel;
     private float yVel;
-
     private float acceleration;
-
     private float maxSpeed;
-
     private double vel;
-
     private ArrayList<Integer> velHistoryX;
     private ArrayList<Integer> velHistoryY;
-
     private boolean isMoving;
+    private boolean canSwim;
+    private boolean isSprinting;
 
-    /**
+    /*
      * Used for combat testing melee/range weapons.
      * What number item slot the player has pressed.
-     * TODO: remove or integrate into item system.
      * e.g. 1 = test range weapon
      * 2 = test melee weapon
      */
     private int itemSlotSelected = 1;
+
+    /**
+     * How long does MainCharacter hurt status lasts,
+     */
+    private long hurtTime = 0;
+
+    /**
+     * How long does MainCharacter take to recover,
+     */
+    private long recoverTime = 3000;
+
+    /**
+     * Check whether MainCharacter is hurt.
+     */
+    private boolean isHurt = false;
+
+    /**
+     * Check whether MainCharacter is attacking.
+     */
+    private boolean isAttacking = false;
 
     /**
      * Private helper method to instantiate inventory and weapon managers for
@@ -98,9 +139,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     private void instantiateManagers() {
         this.inventories = new InventoryManager();
-        this.hotbar = new ArrayList<>();
-        this.equipped_item = 0;
-
         this.weapons = new WeaponManager();
     }
 
@@ -121,15 +159,19 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         GameManager.getManagerFromInstance(InputManager.class)
                 .addTouchDownListener(this);
 
-        //this.direction = new Vector2(row, col);
-        //this.direction.limit2(0.05f);
+        this.weapons = GameManager.getManagerFromInstance(WeaponManager.class);
+        this.inventories = GameManager.getManagerFromInstance(InventoryManager.class);
 
-        instantiateManagers();
-
+        this.equipped_item = 0;
         this.level = 1;
         this.foodLevel = 100;
+        foodAccum = 0.f;
 
-
+        // create a new goldPouch object
+        this.goldPouch = new HashMap<>();
+        // create the starting gold pouch with 1 x 100G
+        GoldPiece initialPiece = new GoldPiece(100);
+        this.addGold(initialPiece, 1);
         //Initialises the players velocity properties
         xInput = 0;
         yInput = 0;
@@ -142,6 +184,18 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         velHistoryY = new ArrayList<>();
 
         isMoving = false;
+
+        HexVector position = this.getPosition();
+
+/*        //Spawn projectile in front of character for now.
+        this.hitBox = new Projectile("slash",
+                "test hitbox",
+                position.getCol() + 1,
+                position.getRow(),
+                1, 1);*/
+
+        canSwim = true;
+        isSprinting = false;
         this.scale = 0.4f;
         setDirectionTextures();
         configureAnimations();
@@ -149,7 +203,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Constructor with various textures
-     *
      * @param textures A array of length 6 with string names corresponding to
      *                 different orientation
      *                 0 = North
@@ -176,7 +229,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         if (keyCode >= 8 && keyCode <= 16) {
             int keyNumber = Integer.parseInt(Input.Keys.toString(keyCode));
             this.itemSlotSelected = keyNumber;
-            System.out.println("Switched to item: " + keyNumber);
+            logger.info("Switched to item: " + keyNumber);
         }
     }
 
@@ -193,6 +246,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     public void attack(HexVector mousePosition) {
         HexVector position = this.getPosition();
+        setAttacking(true);
+        setCurrentState(AnimationRole.DEAD);
 
         // Make projectile move toward the angle
         // Spawn projectile in front of character for now.
@@ -213,9 +268,104 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         manager.getWorld().addEntity(projectile);
     }
 
+    public void setAttacking(boolean isAttacking) {
+        this.isAttacking = isAttacking;
+    }
+
     /**
-     * Add weapon to weapons list
+     * Player takes damage from other entities/ by starving.
+     *
+     */
+    public void hurt(int damage) {
+        this.changeHealth(-damage);
+
+        if (this.getHealth() <= 0) {
+            kill();
+        } else {
+            hurtTime = 3000;
+            HexVector bounceBack = new HexVector();
+            /*
+            switch (getPlayerDirectionCardinal()) {
+                case "North":
+                    bounceBack = new HexVector(this.direction.getX(), this.direction.getY() - 1);
+                    break;
+                case "North-East":
+                    bounceBack = new HexVector(this.direction.getX() - 1, this.direction.getY() - 1);
+                    break;
+                case "East":
+                    bounceBack = new HexVector(this.direction.getX() - 1, this.direction.getY());
+                    break;
+                case "South-East":
+                    bounceBack = new HexVector(this.direction.getX() - 1, this.direction.getY() + 1);
+                    break;
+                case "South":
+                    bounceBack = new HexVector(this.direction.getX(), this.direction.getY() + 1);
+                    break;
+                case "South-West":
+                    bounceBack = new HexVector(this.direction.getX() + 1, this.direction.getY() + 1);
+                    break;
+                case "West":
+                    bounceBack = new HexVector(this.direction.getX() + 1, this.direction.getY());
+                    break;
+                case "North-West":
+                    bounceBack = new HexVector(this.direction.getX() + 1, this.direction.getY() - 1);
+                    break;
+            }
+            position.moveToward(bounceBack, 0.5f);
+
+            /* AS.PlayOneShot(hurtSound);
+            while(hurtTime < System.currentTimeMillis()) {
+                vel = 0;
+                anim.SetBool("Invincible", true);
+                rb2d.AddForce(new com.badlogic.gdx.math.Vector2(hurtForce.x*forceDir,hurtForce.y));
+            }
+            */
+           // recover();
+       }
+    }
+
+    /**
+     * Player recovers from being attacked. It removes player 's
+     * hurt effect (e.g. sprite flashing in red), in hurt().
+     */
+    void recover () {
+        setHurt(false);
+        // controller.enabled = true;
+    }
+
+    /**
+     * Kills the player. and notifying the game that the player
+     * has died and cannot do any actions in game anymore.
+     */
+    void kill () {
+        // stop player controls
+        setMaxSpeed(0);
+
+        // set health to 0.
+        changeHealth(0);
+
+        // AS.PlayOneShot(dieSound);
+        GameManager.setPaused(true);
+    }
+
+    /**
+     * @return if player is in the state of "hurt".
+     */
+    public boolean IsHurt() {
+        return isHurt;
+    }
+
+    /**
+     * @return if player is in the state of "hurt".
+     */
+    public void setHurt(boolean isHurt) {
+        this.isHurt = isHurt;
+    }
+
+    /**
+     *  Add weapon to weapons list
      * @param item weapon to be added
+     *
      */
     public void pickUpWeapon(Weapon item) {
         weapons.pickUpWeapon(item);
@@ -223,7 +373,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Removes items from player's collection
-     *
      * @param item weapon being removed
      */
     public void dropWeapon(Weapon item) {
@@ -232,7 +381,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Get the weapons for the player
-     *
      * @return weapons
      */
     public Map<Weapon, Integer> getWeapons() {
@@ -275,7 +423,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Deals damage to character from combat
-     *
      * @param item weapon character is being hit by
      */
     public void weaponEffect(Weapon item) {
@@ -295,7 +442,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Add weapon to weapons list
-     *
      * @param item weapon to be added
      */
     public void pickUpInventory(Item item) {
@@ -304,7 +450,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Attempts to drop given item from inventory
-     *
      * @param item item to be dropped from inventory
      */
     public void dropInventory(String item) {
@@ -324,10 +469,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Change the hunger points value for the player
      * (+ve amount increases hunger points)
      * (-ve amount decreases hunger points)
-     *
      * @param amount the amount to change it by
      */
-    public void change_food(int amount) {
+    public void change_food(int amount){
         this.foodLevel += amount;
         if (foodLevel > 100) {
             foodLevel = 100;
@@ -339,10 +483,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Get how many hunger points the player has
-     *
      * @return The number of hunger points the player has
      */
-    public int getFoodLevel() {
+    public int getFoodLevel(){
         return foodLevel;
     }
 
@@ -359,21 +502,23 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 change_food(hungerValue);
                 dropInventory(item.getName());
             } else {
-                System.out.println("Given item (" + item.getName() + ") is " +
-                        "not edible!");
+                logger.info("Given item (" + item.getName() + ") is " + "not edible!");
             }
         } else {
-            System.out.println("You don't have enough of the given item");
+           logger.info("You don't have enough of the given item");
         }
     }
 
     /**
      * See if the player is starving
-     *
      * @return true if hunger points is <= 0, else false
      */
     public boolean isStarving() {
         return foodLevel <= 0;
+    }
+
+    public void changeSwimming(boolean swimmingAbility) {
+        this.canSwim = swimmingAbility;
     }
 
     /**
@@ -383,13 +528,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void changeLevel(int change) {
         if (level + change >= 1) {
             this.level += change;
-            this.changeHealth(10);
+            this.changeHealth(change * 10);
         }
     }
 
     /**
      * Gets the current level of character
-     *
      * @return level of character
      */
     public int getLevel() {
@@ -398,15 +542,25 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Change the player's appearance to the set texture
-     *
      * @param texture the texture to set
      */
-    public void changeTexture(String texture) {
+    public void changeTexture(String texture){
         this.setTexture(texture);
     }
 
+    /**
+     * Handles mouse click events
+     * @param screenX the x position the mouse was pressed at
+     * @param screenY the y position the mouse was pressed at
+     * @param pointer mouse pointer
+     * @param button the button which was pressed
+     */
     public void notifyTouchDown(int screenX, int screenY, int pointer,
                                 int button) {
+        // only allow left clicks to move player
+        if (GameScreen.isPaused) {
+            return;
+        }
         if (button == 0) {
             float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
@@ -425,19 +579,34 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     @Override
     public void onTick(long i) {
         this.updatePosition();
-        this.updateCollider();
         this.movementSound();
+
         //this.setCurrentSpeed(this.direction.len());
         //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
 //        System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction,
 //         this.getPosition(), this.direction.x - this.getCol(),
 //         this.direction.y - this.getRow());
 //        System.out.printf("%s%n", this.currentSpeed);
-//        TODO: Check direction for animation here
+
         this.updateAnimation();
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-            GameManager.getManagerFromInstance(ConstructionManager.class) 
+            GameManager.getManagerFromInstance(ConstructionManager.class)
                     .displayWindow();
+        }
+        // Do hunger stuff here
+        if (isMoving) {
+            if (isSprinting) {
+                foodAccum += 0.1f;
+            } else {
+                foodAccum += 0.01f;
+            }
+        } else {
+            foodAccum += 0.001f;
+        }
+
+        while(foodAccum >= 1.f) {
+            change_food(-1);
+            foodAccum -= 1.f;
         }
     }
 
@@ -446,7 +615,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     @Override
     public void moveTowards(HexVector destination) {
-        position.moveToward(destination, this.speed);
+        position.moveToward(destination, this.currentSpeed);
     }
 
     /**
@@ -454,17 +623,17 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @param cSpeed the speed for the player to currently move at
      */
     private void setCurrentSpeed(float cSpeed){
-        this.speed = cSpeed;
+        this.currentSpeed = cSpeed;
     }
 
     /**
      * Sets the appropriate movement flags to true on keyDown
-     *
      * @param keycode the key being pressed
      */
     @Override
     public void notifyKeyDown(int keycode) {
-        // Player cant move when paused
+        GoldPiece g = new GoldPiece(5);
+        //player cant move when paused
         if (GameManager.getPaused()) {
             return;
         }
@@ -481,15 +650,32 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             case Input.Keys.D:
                 xInput += 1;
                 break;
+            case Input.Keys.SHIFT_LEFT:
+                isSprinting = true;
+                maxSpeed *= 2.f;
+                break;
+            case Input.Keys.H:
+                useHatchet();
+                break;
+            case Input.Keys.P:
+                usePickAxe();
+                break;
+            case Input.Keys.G:
+                addClosestGoldPiece();
+                break;
+            case Input.Keys.M:
+                getGoldPouchTotalValue();
+                break;
             default:
                 switchItem(keycode);
+                //xInput += 1;
                 break;
+
         }
     }
 
     /**
      * Sets the appropriate movement flags to false on keyUp
-     *
      * @param keycode the key being released
      */
     @Override
@@ -511,92 +697,123 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             case Input.Keys.D:
                 xInput -= 1;
                 break;
+            case Input.Keys.SHIFT_LEFT:
+                isSprinting = false;
+                maxSpeed /= 2.f;
+                break;
+            case Input.Keys.H:
+                break;
+            case Input.Keys.P:
+                break;
+            case Input.Keys.G:
+                break;
+            case Input.Keys.M:
+                break;
+        }
+    }
+
+    /**
+     * Adds a piece of gold to the Gold Pouch
+     * @param gold The piece of gold to be added to the pouch
+     * @param count How many of that piece of gold should be added
+     */
+    public void addGold(GoldPiece gold, Integer count){
+
+        // store the gold's value (5G, 10G etc) as a variable
+        Integer goldValue = gold.getValue();
+
+        // if this gold value already exists in the pouch
+        if (goldPouch.containsKey(goldValue)){
+            // add this piece to the already existing list of pieces
+            goldPouch.put(goldValue, goldPouch.get(goldValue) + count);
+        } else {
+            goldPouch.put(goldValue, count);
         }
 
     }
 
-    /*
-    Potential more methods and related attributes for future sprints:
-    -record killed enemies
-    -interaction with worlds
-    -effects on MainCharacter with different Inventory and Weapon items
-    */
+    /**
+     * Removes one instance of a gold piece in the pouch.
+     * @param gold The gold piece to be removed from the pouch.
+     */
+    public void removeGold(GoldPiece gold){
+        // store the gold's value (5G, 10G etc) as a variable
+        Integer goldValue = gold.getValue();
+
+        // if this gold value does not exist in the pouch
+        if (!(goldPouch.containsKey(goldValue))){
+            return;
+        } else if (goldPouch.get(goldValue) > 1) {
+            goldPouch.put(goldValue, goldPouch.get(goldValue) - 1);
+        } else {
+            goldPouch.remove(goldValue);
+        }
+    }
 
     /**
-     * Moves the player based on current key inputs
+     * Returns the types of GoldPieces in the pouch and how many of each type
+     * exist
+     * @return The contents of the Main Character's gold pouch
      */
-    public void updatePosition() {
-        // Gets current position
-        float xPos = position.getCol();
-        float yPos = position.getRow();
+    public HashMap<Integer, Integer> getGoldPouch() {
+        return new HashMap<>(goldPouch);
+    }
 
+    /**
+     * Returns the sum of the gold piece values in the Gold Pouch
+     * @return The total value of the Gold Pouch
+     */
+    public Integer getGoldPouchTotalValue(){
+        Integer totalValue = 0;
+        for (Integer goldValue : goldPouch.keySet()) {
+            totalValue += goldValue * goldPouch.get(goldValue);
+        }
+        logger.info("The total value of your Gold Pouch is: " + totalValue + "G");
+        return totalValue;
+    }
+
+    /**
+     * If the player is within 2m of a gold piece and presses G, it will
+     * be added to their Gold Pouch.
+     *
+     */
+    public void addClosestGoldPiece(){
+        for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+                if (entity instanceof GoldPiece) {
+                    if ( this.getPosition().distance(entity.getPosition()) <= 2 ) {
+                        this.addGold((GoldPiece) entity, 1);
+                        logger.info(this.inventories.toString());
+                    }
+                }
+
+        }
+        logger.info("Sorry, you are not close enough to a gold piece!");
+
+    }
+
+    /**
+     * Gets the tile at a position.
+     * @param xPos The x position
+     * @param yPos The y position
+     * @return The Tile at that position
+     */
+    public Tile getTile(float xPos, float yPos) {
         //Returns tile at left arm (our perspective) of the player
         float tileCol = (float) Math.round(xPos);
         float tileRow = (float) Math.round(yPos);
-        if (tileCol % 2 != 0){
+        if (tileCol % 2 != 0) {
             tileRow += 0.5f;
         }
+        return GameManager.get().getWorld().getTile(tileCol,
+                tileRow);
+    }
 
-        //Determined friction scaling factor to apply based on current tile
-        float friction;
-        Tile currentTile = GameManager.get().getWorld().getTile(tileCol,tileRow);
-        if(currentTile != null && currentTile.getTexture() != null){
-            //Tile specific friction
-            friction = Tile.getFriction(currentTile.getTextureName());
-        }else{
-            //Default friction
-            friction = 1f;
-        }
-
-        // Calculates new x and y positions
-        xPos += xVel + xInput * acceleration * 0.5 * friction;
-        yPos += yVel + yInput * acceleration * 0.5 * friction;
-
-        // Calculates velocity in x direction
-        if (xInput != 0) {
-            xVel += xInput * acceleration * friction;
-            // Prevents sliding
-            if (xVel / Math.abs(xVel) != xInput) {
-                xVel = 0;
-            }
-        } else if (yInput != 0) {
-            xVel *= 0.8;
-        } else {
-            xVel = 0;
-        }
-
-        // Calculates velocity in y direction
-        if (yInput != 0) {
-            yVel += yInput * acceleration * friction;
-            // Prevents sliding
-            if (yVel / Math.abs(yVel) != yInput) {
-                yVel = 0;
-            }
-        } else if (xInput != 0) {
-            yVel *= 0.8;
-        } else {
-            yVel = 0;
-        }
-
-        // caps the velocity
-        if (vel > maxSpeed) {
-            xVel /= vel;
-            yVel /= vel;
-
-            xVel *= maxSpeed;
-            yVel *= maxSpeed;
-        }
-
-        // Calculates speed to destination
-        vel = Math.sqrt((xVel * xVel) + (yVel * yVel));
-
-        // Calculates destination vector
-        HexVector destination = new HexVector(xPos, yPos);
-
-        // Moves the player to new location
-        position.moveToward(destination, vel);
-
-        //Records velocity history in x direction
+    /**
+     * Records the player velocity history
+     * @param xVel The x velocity
+     * @param yVel The y velocity
+     */
+    public void recordVelHistory(float xVel, float yVel) {
         if (velHistoryX.size() < 2 || velHistoryY.size() < 2) {
             velHistoryX.add((int) (xVel * 100));
             velHistoryY.add((int) (yVel * 100));
@@ -611,12 +828,123 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
+     * Calculates the velocity of the player
+     * @param mainInput Input being checked
+     * @param altInput Input not being checked
+     * @param vel Velocity to calculate
+     * @param friction Friction value
+     * @return The new velocity
+     */
+    public float calVelocity(int mainInput, int altInput, float vel,
+                            float friction) {
+        if (mainInput != 0) {
+            vel += mainInput * acceleration * friction;
+            // Prevents sliding
+            if (vel / Math.abs(vel) != mainInput) {
+                vel = 0;
+            }
+        } else if (altInput != 0) {
+            vel *= 0.8;
+        } else {
+            vel = 0;
+        }
+        return vel;
+    }
+
+    /**
+     * Finds the next position to move to and moves there
+     * @param position The current position
+     * @param destination The new position
+     * @param nextTile The tile that will be moved to
+     */
+    public void findNewPosition(HexVector position, HexVector destination,
+                                Tile nextTile) {
+        if(nextTile == null) {
+            // Prevents the player from walking into the void
+            position.moveToward(destination, 0);
+        }else if(nextTile.getTextureName().contains("water") && !canSwim) {
+            // Prevents the player back if they try to enter water when they
+            // can't swim
+            position.moveToward(destination, 0);
+        }else {
+            position.moveToward(destination, vel);
+        }
+    }
+
+    /**
+     * Moves the player based on current key inputs
+     */
+    public void updatePosition() {
+        // Gets current position
+        float xPos = position.getCol();
+        float yPos = position.getRow();
+
+        // Gets the tile the player is standing on
+        Tile currentTile = getTile(xPos,yPos);
+        // Returns tile at left arm (our perspective) of the player
+        float tileCol = (float) Math.round(xPos);
+        float tileRow = (float) Math.round(yPos);
+        if (tileCol % 2 != 0){
+            tileRow += 0.5f;
+        }
+
+        // Determined friction scaling factor to apply based on current tile
+        float friction;
+        if(currentTile != null && currentTile.getTexture() != null) {
+            //Tile specific friction
+            currentTile = GameManager.get().getWorld().getTile(tileCol,
+                tileRow);
+            friction = Tile.getFriction(currentTile.getTextureName());
+        } else {
+            // Default friction
+            friction = 1f;
+        }
+
+        // Calculates new x and y positions
+        xPos += xVel + xInput * acceleration * 0.5 * friction;
+        yPos += yVel + yInput * acceleration * 0.5 * friction;
+
+        // Calculates velocity in x and y directions
+        xVel = calVelocity(xInput, yInput, xVel, friction);
+        yVel = calVelocity(yInput, xInput, yVel, friction);
+
+        // caps the velocity depending on the friction of the current tile
+        float maxTileSpeed = maxSpeed * friction;
+        if (vel > maxTileSpeed) {
+            xVel /= vel;
+            yVel /= vel;
+
+            xVel *= maxTileSpeed;
+            yVel *= maxTileSpeed;
+        }
+
+        // Calculates speed to destination
+        vel = friction * Math.sqrt((xVel * xVel) + (yVel * yVel));
+
+        // Calculates destination vector
+        HexVector destination = new HexVector(xPos, yPos);
+
+        // Next tile the player will move to
+        Tile nextTile = getTile(xPos, yPos);
+
+        // Method to take away the player's ability to swim
+        changeSwimming(false);
+
+        // Moves the player to new location
+        findNewPosition(position, destination, nextTile);
+
+        //Records velocity history in x direction
+        recordVelHistory(xVel,yVel);
+
+        getBody().setTransform(xPos, yPos, getBody().getAngle());
+    }
+
+    /**
      * Gets the direction the player is currently facing
      * North: 0 deg
      * East: 90 deg
      * South: 180 deg
      * West: 270 deg
-     *
      * @return the player direction (units: degrees)
      */
     public double getPlayerDirectionAngle() {
@@ -636,33 +964,32 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Converts the current players direction into a cardinal direction
      * North, South-West, etc.
-     *
      * @return new texture to use
      */
     public String getPlayerDirectionCardinal() {
-        double direction = getPlayerDirectionAngle();
-        if (direction <= 22.5 || direction >= 337.5) {
+        double playerDirectionAngle = getPlayerDirectionAngle();
+        if (playerDirectionAngle <= 22.5 || playerDirectionAngle >= 337.5) {
             setCurrentDirection(Direction.NORTH);
             return "North";
-        } else if (22.5 <= direction && direction <= 67.5) {
+        } else if (22.5 <= playerDirectionAngle && playerDirectionAngle <= 67.5) {
             setCurrentDirection(Direction.NORTH_EAST);
             return "North-East";
-        } else if (67.5 <= direction && direction <= 112.5) {
+        } else if (67.5 <= playerDirectionAngle && playerDirectionAngle <= 112.5) {
             setCurrentDirection(Direction.EAST);
             return "East";
-        } else if (112.5 <= direction && direction <= 157.5) {
+        } else if (112.5 <= playerDirectionAngle && playerDirectionAngle <= 157.5) {
             setCurrentDirection(Direction.SOUTH_EAST);
             return "South-East";
-        } else if (157.5 <= direction && direction <= 202.5) {
+        } else if (157.5 <= playerDirectionAngle && playerDirectionAngle <= 202.5) {
             setCurrentDirection(Direction.SOUTH);
             return "South";
-        } else if (202.5 <= direction && direction <= 247.5) {
+        } else if (202.5 <= playerDirectionAngle && playerDirectionAngle <= 247.5) {
             setCurrentDirection(Direction.SOUTH_WEST);
             return "South-West";
-        } else if (247.5 <= direction && direction <= 292.5) {
+        } else if (247.5 <= playerDirectionAngle && playerDirectionAngle <= 292.5) {
             setCurrentDirection(Direction.WEST);
             return "West";
-        } else if (292.5 <= direction && direction <= 337.5) {
+        } else if (292.5 <= playerDirectionAngle && playerDirectionAngle <= 337.5) {
             setCurrentDirection(Direction.NORTH_WEST);
             return "North-West";
         }
@@ -675,7 +1002,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * 0: x velocity
      * 1: y velocity
      * 2: net velocity
-     *
      * @return list of players velocity properties
      */
     public List<Float> getVelocity() {
@@ -689,7 +1015,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Sets the players acceleration
-     *
      * @param newAcceleration: the new acceleration for the player
      */
     public void setAcceleration(float newAcceleration) {
@@ -698,7 +1023,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Sets the players max speed
-     *
      * @param newMaxSpeed: the new max speed of the player
      */
     public void setMaxSpeed(float newMaxSpeed) {
@@ -707,7 +1031,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Gets the players current acceleration
-     *
      * @return the players acceleration
      */
     public float getAcceleration() {
@@ -716,7 +1039,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Gets the plays current max speed
-     *
      * @return the players max speed
      */
     public float getMaxSpeed() {
@@ -725,57 +1047,193 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     public void movementSound() {
         if (!isMoving && vel != 0) {
-            //Runs when the player starts moving
+            // Runs when the player starts moving
             isMoving = true;
-            //System.out.println("Start Playing");
+
+            //logger.info("Start Playing");
             //TODO: Play movement sound
             SoundManager.loopSound(WALK_NORMAL);
         }
 
         if (isMoving && vel == 0) {
-            //Runs when the player stops moving
+            // Runs when the player stops moving
             isMoving = false;
-            //System.out.println("Stop Playing");
+
+            //logger.info("Stop Playing");
             //TODO: Stop Player movement
             SoundManager.stopSound(WALK_NORMAL);
         }
     }
 
+    /***
+     * This method enables the Main character to use Hatchet. The player's
+     * distance from the tree should not be more than 2.5.Every time a
+     * wood is collected a message is printed.
+     * This method will be changed later to increase efficiency.
+     */
+    public void useHatchet(){
+
+        if (this.inventories.getQuickAccess().containsKey("Hatchet")) {
+            Hatchet playerHatchet = new Hatchet(this);
+
+            for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+
+                if (entity instanceof Tree) {
+
+                    if ( this.getPosition().distance(entity.getPosition()) <= 0.5 ) {
+                        playerHatchet.farmTree((Tree) entity);
+                        logger.info(this.inventories.toString());
+                    }
+                }
+            }
+        }
+    }
+
+    /***
+     * This method enables the Main character to use Hatchet. The player's
+     * distance from the tree should not be more than 2.5.Every time a
+     * wood is collected a message is printed.
+     * This method will be changed later to increase efficiency.
+     */
+    public void usePickAxe(){
+
+        if (this.inventories.getQuickAccess().containsKey("Pick Axe")) {
+            PickAxe playerPickAxe = new PickAxe(this);
+
+            for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+
+                if (entity instanceof Rock) {
+
+                    if ( this.getPosition().distance(entity.getPosition()) <= 0.5 ) {
+                        playerPickAxe.farmRock((Rock) entity);
+                        logger.info(this.inventories.toString());
+                    }
+                }
+            }
+
+        }
+    }
+
+    /***
+     * A getter method for the blueprints that the player has learned.
+     * @return the learned blueprints list
+     */
+    public List<String> getBlueprintsLearned() {
+        blueprintsLearned = new ArrayList<>();
+
+        return this.blueprintsLearned;
+    }
+
+    /***
+     * A getter method to get the Item to be created.
+     * @return the item to create.
+     */
+    public String getItemToCreate() {
+        return this.itemToCreate;
+    }
+
+    /***
+     * A Setter method to get the Item to be created.
+     * @param itemToCreate the item to be created.
+     */
+    public void setItemToCreate(String item) {
+        this.itemToCreate = item;
+    }
+
+    /***
+     * Creates a manufactured item. Checks if required resources are in the inventory.
+     * if yes, creates the item, adds it to the player's inventory
+     * and deducts the required resource from inventory
+     */
+    public void createItem(ManufacturedResources itemToCreate){
+
+        if (getBlueprintsLearned().contains(itemToCreate.getName())) {
+
+            if (itemToCreate.getRequiredMetal()>=
+                    this.getInventoryManager().getAmount(itemToCreate.getName())){
+                logger.info("You don't have enough Metal");
+
+            } else if (itemToCreate.getRequiredWood()>=
+                    this.getInventoryManager().getAmount(itemToCreate.getName())){
+                logger.info("You don't have enough Wood");
+
+            } else if (itemToCreate.getRequiredStone()>=
+                    this.getInventoryManager().getAmount(itemToCreate.getName())) {
+                logger.info("You don't have enough Stone");
+
+            } else {
+                this.getInventoryManager().inventoryAdd(itemToCreate);
+
+                this.getInventoryManager().inventoryDropMultiple("Metal",
+                        itemToCreate.getRequiredMetal());
+                this.getInventoryManager().inventoryDropMultiple("Stone",
+                        itemToCreate.getRequiredStone());
+                this.getInventoryManager().inventoryDropMultiple("Wood",
+                        itemToCreate.getRequiredWood());
+            }
+        }
+    }
+
+
     /**
-     * Sets the  animations.
+     * Sets the animations.
      */
     @Override
     public void configureAnimations() {
+
+        // Walk animation
         addAnimations(AnimationRole.MOVE, Direction.NORTH_WEST,
                 new AnimationLinker("MainCharacterNW_Anim",
-                AnimationRole.MOVE, Direction.NORTH_WEST, true ,true));
+                AnimationRole.MOVE, Direction.NORTH_WEST, true,
+                        true));
 
         addAnimations(AnimationRole.MOVE, Direction.NORTH_EAST,
                 new AnimationLinker("MainCharacterNE_Anim",
-                        AnimationRole.MOVE, Direction.NORTH_WEST, true ,true));
+                        AnimationRole.MOVE, Direction.NORTH_WEST, true,
+                        true));
 
         addAnimations(AnimationRole.MOVE, Direction.SOUTH_WEST,
                 new AnimationLinker("MainCharacterSW_Anim",
-                        AnimationRole.MOVE, Direction.SOUTH_WEST, true ,true));
+                        AnimationRole.MOVE, Direction.SOUTH_WEST, true,
+                        true));
 
         addAnimations(AnimationRole.MOVE, Direction.SOUTH_EAST,
                 new AnimationLinker("MainCharacterSE_Anim",
-                        AnimationRole.MOVE, Direction.SOUTH_EAST, true ,true));
+                        AnimationRole.MOVE, Direction.SOUTH_EAST, true,
+                        true));
 
         addAnimations(AnimationRole.MOVE, Direction.EAST,
                 new AnimationLinker("MainCharacterE_Anim",
-                        AnimationRole.MOVE, Direction.EAST, true ,true));
+                        AnimationRole.MOVE, Direction.EAST, true,
+                        true));
         addAnimations(AnimationRole.MOVE, Direction.NORTH,
                 new AnimationLinker("MainCharacterN_Anim",
-                        AnimationRole.MOVE, Direction.NORTH, true ,true));
+                        AnimationRole.MOVE, Direction.NORTH, true,
+                        true));
 
         addAnimations(AnimationRole.MOVE, Direction.WEST,
                 new AnimationLinker("MainCharacterW_Anim",
-                        AnimationRole.MOVE, Direction.WEST, true ,true));
+                        AnimationRole.MOVE, Direction.WEST, true,
+                        true));
 
         addAnimations(AnimationRole.MOVE, Direction.SOUTH,
                 new AnimationLinker("MainCharacterS_Anim",
                         AnimationRole.MOVE, Direction.SOUTH, true ,true));
+
+        // Attack animation
+        addAnimations(AnimationRole.ATTACK, Direction.DEFAULT,
+                new AnimationLinker("MainCharacter_Attack_E_Anim",
+                        AnimationRole.ATTACK, Direction.DEFAULT, false ,true));
+
+        // Hurt animation
+        addAnimations(AnimationRole.HURT, Direction.DEFAULT,
+                new AnimationLinker("MainCharacter_Hurt_E_Anim",
+                        AnimationRole.HURT, Direction.DEFAULT, false ,true));
+
+        // Dead animation
+        addAnimations(AnimationRole.DEAD, Direction.DEFAULT,
+                new AnimationLinker("MainCharacter_Dead_E_Anim",
+                        AnimationRole.DEAD, Direction.DEFAULT, false ,true));
     }
 
     /**
@@ -784,14 +1242,22 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     @Override
     public void setDirectionTextures() {
-        defaultDirectionTextures.put(Direction.EAST, "__ANIMATION_MainCharacterE_Anim:0");
-        defaultDirectionTextures.put(Direction.NORTH, "__ANIMATION_MainCharacterN_Anim:0");
-        defaultDirectionTextures.put(Direction.WEST, "__ANIMATION_MainCharacterW_Anim:0");
-        defaultDirectionTextures.put(Direction.SOUTH, "__ANIMATION_MainCharacterS_Anim:0");
-        defaultDirectionTextures.put(Direction.NORTH_EAST, "__ANIMATION_MainCharacterNE_Anim:0");
-        defaultDirectionTextures.put(Direction.NORTH_WEST, "__ANIMATION_MainCharacterNW_Anim:0");
-        defaultDirectionTextures.put(Direction.SOUTH_EAST, "__ANIMATION_MainCharacterSE_Anim:0");
-        defaultDirectionTextures.put(Direction.SOUTH_WEST, "__ANIMATION_MainCharacterSW_Anim:0");
+        defaultDirectionTextures.put(Direction.EAST,
+                "__ANIMATION_MainCharacterE_Anim:0");
+        defaultDirectionTextures.put(Direction.NORTH,
+                "__ANIMATION_MainCharacterN_Anim:0");
+        defaultDirectionTextures.put(Direction.WEST,
+                "__ANIMATION_MainCharacterW_Anim:0");
+        defaultDirectionTextures.put(Direction.SOUTH,
+                "__ANIMATION_MainCharacterS_Anim:0");
+        defaultDirectionTextures.put(Direction.NORTH_EAST,
+                "__ANIMATION_MainCharacterNE_Anim:0");
+        defaultDirectionTextures.put(Direction.NORTH_WEST,
+                "__ANIMATION_MainCharacterNW_Anim:0");
+        defaultDirectionTextures.put(Direction.SOUTH_EAST,
+                "__ANIMATION_MainCharacterSE_Anim:0");
+        defaultDirectionTextures.put(Direction.SOUTH_WEST,
+                "__ANIMATION_MainCharacterSW_Anim:0");
     }
 
     /**
@@ -802,11 +1268,23 @@ public class MainCharacter extends Peon implements KeyDownObserver,
        getPlayerDirectionCardinal();
        List<Float> vel = getVelocity();
 
-       if (vel.get(2) == 0f) {
-           setCurrentState(AnimationRole.NULL);
-       } else {
-           setCurrentState(AnimationRole.MOVE);
-       }
+       /*
+        if(isAttacking) {
+            setCurrentState(AnimationRole.ATTACK);
+           // System.out.println(isAttacking);
+        }
+       */
 
+        if(isDead()) {
+            setCurrentState(AnimationRole.DEAD);
+        } else if(isHurt) {
+            setCurrentState(AnimationRole.HURT);
+        } else {
+            if (vel.get(2) == 0f) {
+                setCurrentState(AnimationRole.NULL);
+            } else {
+                setCurrentState(AnimationRole.MOVE);
+            }
+        }
     }
 }

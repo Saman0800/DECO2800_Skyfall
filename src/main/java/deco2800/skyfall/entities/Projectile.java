@@ -93,7 +93,6 @@ public class Projectile extends AgentEntity {
      */
     @Override
     public void onTick(long tick) {
-        this.updateCollider();
 
         //Each game tick add to counter.
         this.ticksAliveFor++;

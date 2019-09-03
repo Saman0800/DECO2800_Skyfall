@@ -1,10 +1,13 @@
 package deco2800.skyfall.entities;
 
 
+
 import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.SoundManager;
 
 public class Robot extends EnemyEntity implements Animatable {
     private static final transient int HEALTH = 20;
@@ -15,6 +18,9 @@ public class Robot extends EnemyEntity implements Animatable {
     private static final transient String ENEMY_TYPE="robot";
     //savage animation
     private MainCharacter mc;
+
+    //Insert SoundManager class
+    private SoundManager sound = new SoundManager();
     public Robot(float row, float col, String texturename, int health, int armour, int damage) {
         super(row, col, texturename, health, armour, damage);
     }
@@ -70,14 +76,19 @@ public class Robot extends EnemyEntity implements Animatable {
 
     @Override
     public void onTick(long i) {
+        if(this.isDead()){
+            GameManager.get().getWorld().removeEntity(this);
+        }
         super.onTick(i);
         if (mc != null) {
             float colDistance = mc.getCol() - this.getCol();
             float rowDistance = mc.getRow() - this.getRow();
 
             if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
+                sound.loopSound("robot");
                 this.setCurrentState(AnimationRole.DEFENCE);
             } else {
+                sound.stopSound("robot");
                 this.setCurrentState(AnimationRole.NULL);
             }
         } else {

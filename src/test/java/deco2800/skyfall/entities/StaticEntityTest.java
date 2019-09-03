@@ -1,12 +1,15 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.managers.*;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.OnScreenMessageManager;
-import deco2800.skyfall.worlds.TestWorld;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.world.WorldBuilder;
+import deco2800.skyfall.worlds.world.WorldDirector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,17 +31,26 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ GameManager.class, DatabaseManager.class, PlayerPeon.class })
 public class StaticEntityTest {
-    private TestWorld w = null;
+    private World w;
+
+    private PhysicsManager physics;
 
     @Mock
     private GameManager mockGM;
 
     @Before
     public void Setup() {
-        w = new TestWorld(0);
+        WorldBuilder worldBuilder = new WorldBuilder();
+        WorldDirector.constructTestWorld(worldBuilder);
+        w = worldBuilder.getWorld();
+
+
 
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
+
+        physics = new PhysicsManager();
+        when(mockGM.getManager(PhysicsManager.class)).thenReturn(physics);
 
         when(GameManager.get()).thenReturn(mockGM);
         when(mockGM.getWorld()).thenReturn(w);
@@ -57,6 +69,7 @@ public class StaticEntityTest {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
         Tile tile1 = new Tile(0.0f, 0.0f);
         tileMap.add(tile1);
+        System.out.println("World " + w);
         w.setTileMap(tileMap);
 
         StaticEntity rock1 = new StaticEntity(tile1, 2, "rock", true);

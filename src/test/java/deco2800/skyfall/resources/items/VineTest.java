@@ -86,4 +86,14 @@ public class VineTest {
     public void getBiome() {
         assertEquals("Forest", vine.getBiome());
     }
+
+    /**
+     * Ensure that the wood's biome is correctly returned when getBiome()
+     * is called
+     */
+    @Test
+    public void getDescriptionTest() {
+        assertEquals("This item can be found in the forest biome " +
+                "and can be used to produce rope.", vine.getDescription());
+    }
 }

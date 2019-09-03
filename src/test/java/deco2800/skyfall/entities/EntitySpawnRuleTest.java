@@ -15,6 +15,8 @@ import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import java.util.Random;
 
 public class EntitySpawnRuleTest {
+    AbstractBiome biome;
+
     @Test
     public void testAccessorsAndMutators() {
         ForestBiome biome = new ForestBiome();
@@ -72,6 +74,16 @@ public class EntitySpawnRuleTest {
         assertEquals(5, rule.getMin());
         assertEquals(10, rule.getMax());
 
+        biome = new ForestBiome();
+        rule = new EntitySpawnRule(0.5, biome);
+        assertEquals(0.5, rule.getChance(), 0.001);
+        assertEquals(biome, rule.getBiome());
+
+        rule = new EntitySpawnRule(0.5, 2, 100, biome);
+        assertEquals(0.5, rule.getChance(), 0.001);
+        assertEquals(2, rule.getMin());
+        assertEquals(100, rule.getMax());
+        assertEquals(biome, rule.getBiome());
     }
 
 }
