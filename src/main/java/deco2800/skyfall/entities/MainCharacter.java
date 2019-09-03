@@ -1080,7 +1080,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
                 if (entity instanceof Tree) {
 
-                    if ( this.getPosition().distance(entity.getPosition()) <= 0.5 ) {
+                    if ( this.getPosition().distance(entity.getPosition()) <= 1) {
                         playerHatchet.farmTree((Tree) entity);
                         logger.info(this.inventories.toString());
                     }
@@ -1104,7 +1104,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
                 if (entity instanceof Rock) {
 
-                    if ( this.getPosition().distance(entity.getPosition()) <= 0.5 ) {
+                    if ( this.getPosition().distance(entity.getPosition()) <= 1 ) {
                         playerPickAxe.farmRock((Rock) entity);
                         logger.info(this.inventories.toString());
                     }
@@ -1134,7 +1134,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /***
      * A Setter method to get the Item to be created.
-     * @param itemToCreate the item to be created.
+     * @param item the item to be created.
      */
     public void setItemToCreate(String item) {
         this.itemToCreate = item;
