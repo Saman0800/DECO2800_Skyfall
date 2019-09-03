@@ -15,10 +15,9 @@ import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.Tile;
-import org.lwjgl.Sys;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.*;
 
 /**
@@ -27,6 +26,7 @@ import java.util.*;
 public class MainCharacter extends Peon implements KeyDownObserver,
         KeyUpObserver,TouchDownObserver, Tickable , Animatable {
 
+    // Logger tp print messages
     private final Logger logger = LoggerFactory.getLogger(MainCharacter.class);
 
     // Weapon Manager for MainCharacter
@@ -38,10 +38,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     // Hotbar of inventories
     private List<Item> hotbar;
 
-    //List of blueprints that the player has learned.
+    // List of blueprints that the player has learned.
     private List<String> blueprintsLearned;
 
-    //The name of the item to be created.
+    // The name of the item to be created.
     private String itemToCreate;
 
     // Variables to sound effects
@@ -49,16 +49,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private SoundManager soundManager = GameManager.get()
             .getManager(SoundManager.class);
 
-    //The pick Axe that is going to be created
+    // The pick Axe that is going to be created
     private Hatchet hatchetToCreate;
-
-    // The index of the item selected to be used in the hotbar
-    // ie. [sword][gun][apple]
-    // if selecting sword then equipped_item = 0,
-    // if selecting gun the equipped_item = 1
-    private int equipped_item;
-    private static final int INVENTORY_MAX_CAPACITY = 20;
-    private static final int HOTBAR_MAX_CAPACITY = 5;
 
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
@@ -82,8 +74,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     // A goldPouch to store the character's gold pieces.
     private HashMap<Integer, Integer> goldPouch;
 
-
-    /**
+    /*
      * The direction and speed of the MainCharacter
      */
     protected Vector2 direction;
@@ -113,22 +104,22 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     private int itemSlotSelected = 1;
 
-    /**
+    /*
      * How long does MainCharacter hurt status lasts,
      */
     private long hurtTime = 0;
 
-    /**
+    /*
      * How long does MainCharacter take to recover,
      */
     private long recoverTime = 3000;
 
-    /**
+    /*
      * Check whether MainCharacter is hurt.
      */
     private boolean isHurt = false;
 
-    /**
+    /*
      * Check whether MainCharacter is attacking.
      */
     private boolean isAttacking = false;
@@ -160,9 +151,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 .addTouchDownListener(this);
 
         this.weapons = GameManager.getManagerFromInstance(WeaponManager.class);
-        this.inventories = GameManager.getManagerFromInstance(InventoryManager.class);
+        this.inventories =
+                GameManager.getManagerFromInstance(InventoryManager.class);
 
-        this.equipped_item = 0;
         this.level = 1;
         this.foodLevel = 100;
         foodAccum = 0.f;
@@ -172,7 +163,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         // create the starting gold pouch with 1 x 100G
         GoldPiece initialPiece = new GoldPiece(100);
         this.addGold(initialPiece, 1);
-        //Initialises the players velocity properties
+
+        // Initialises the players velocity properties
         xInput = 0;
         yInput = 0;
         xVel = 0;
@@ -182,21 +174,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         vel = 0;
         velHistoryX = new ArrayList<>();
         velHistoryY = new ArrayList<>();
-
         isMoving = false;
-
         HexVector position = this.getPosition();
-
-/*        //Spawn projectile in front of character for now.
-        this.hitBox = new Projectile("slash",
-                "test hitbox",
-                position.getCol() + 1,
-                position.getRow(),
-                1, 1);*/
-
         canSwim = true;
         isSprinting = false;
         this.scale = 0.4f;
+
         setDirectionTextures();
         configureAnimations();
     }
@@ -268,6 +251,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         manager.getWorld().addEntity(projectile);
     }
 
+    /**
+     * Set isAttacking variable
+     */
     public void setAttacking(boolean isAttacking) {
         this.isAttacking = isAttacking;
     }
@@ -284,10 +270,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         } else {
             hurtTime = 3000;
             HexVector bounceBack = new HexVector();
+
             /*
             switch (getPlayerDirectionCardinal()) {
                 case "North":
-                    bounceBack = new HexVector(this.direction.getX(), this.direction.getY() - 1);
+                    bounceBack = new HexVector(this.direction.getX(),this.direction.getY() - 1);
                     break;
                 case "North-East":
                     bounceBack = new HexVector(this.direction.getX() - 1, this.direction.getY() - 1);
@@ -356,7 +343,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * @return if player is in the state of "hurt".
+     * set the state of "hurt".
      */
     public void setHurt(boolean isHurt) {
         this.isHurt = isHurt;
@@ -502,7 +489,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 change_food(hungerValue);
                 dropInventory(item.getName());
             } else {
-                logger.info("Given item (" + item.getName() + ") is " + "not edible!");
+                logger.info("Given item (" + item.getName() + ") is " + "not " +
+                        "edible!");
             }
         } else {
            logger.info("You don't have enough of the given item");
@@ -581,19 +569,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.updatePosition();
         this.movementSound();
 
-        //this.setCurrentSpeed(this.direction.len());
-        //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
-//        System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction,
-//         this.getPosition(), this.direction.x - this.getCol(),
-//         this.direction.y - this.getRow());
-//        System.out.printf("%s%n", this.currentSpeed);
-
         this.updateAnimation();
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             GameManager.getManagerFromInstance(ConstructionManager.class)
                     .displayWindow();
         }
-        // Do hunger stuff here
+
         if (isMoving) {
             if (isSprinting) {
                 foodAccum += 0.1f;
@@ -604,7 +585,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             foodAccum += 0.001f;
         }
 
-        while(foodAccum >= 1.f) {
+        while (foodAccum >= 1.f) {
             change_food(-1);
             foodAccum -= 1.f;
         }
@@ -622,7 +603,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Sets the Player's current movement speed
      * @param cSpeed the speed for the player to currently move at
      */
-    private void setCurrentSpeed(float cSpeed){
+    private void setCurrentSpeed(float cSpeed) {
         this.currentSpeed = cSpeed;
     }
 
@@ -718,7 +699,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @param count How many of that piece of gold should be added
      */
     public void addGold(GoldPiece gold, Integer count){
-
         // store the gold's value (5G, 10G etc) as a variable
         Integer goldValue = gold.getValue();
 
@@ -763,8 +743,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Returns the sum of the gold piece values in the Gold Pouch
      * @return The total value of the Gold Pouch
      */
-    public Integer getGoldPouchTotalValue(){
-        Integer totalValue = 0;
+    public int getGoldPouchTotalValue() {
+        int totalValue = 0;
         for (Integer goldValue : goldPouch.keySet()) {
             totalValue += goldValue * goldPouch.get(goldValue);
         }
@@ -1134,7 +1114,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /***
      * A Setter method to get the Item to be created.
-     * @param itemToCreate the item to be created.
+     * @param item the item to be created.
      */
     public void setItemToCreate(String item) {
         this.itemToCreate = item;
