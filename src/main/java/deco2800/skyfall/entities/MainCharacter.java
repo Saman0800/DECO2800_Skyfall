@@ -559,6 +559,35 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                     clickedPosition[1]);
             this.attack(mousePos);
         }
+
+        //pickup weapon on right click if player is within certain distance
+        // from weapon and add it to weapons list (to be put into UI soon)
+        if (button == 1) {
+            float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(),
+                    Gdx.input.getY());
+            float[] clickedPosition =
+                    WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
+
+            HexVector pos = new HexVector(clickedPosition[0],
+                    clickedPosition[1]);
+
+            Tile tile = getTile(clickedPosition[0], clickedPosition[1]);
+
+            if (tile == null) {
+                return;
+            }
+
+            for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+
+                if (entity instanceof Weapon) {
+
+                    if (this.getPosition().distance(entity.getPosition()) <= 1) {
+                        weapons.pickUpWeapon((Weapon) entity);
+                        GameManager.get().getWorld().removeEntity(entity);
+                    }
+                }
+            }
+        }
     }
 
     /**
