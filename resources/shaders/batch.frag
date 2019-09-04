@@ -17,6 +17,11 @@ varying vec2 v_texCoords;
 uniform sampler2D u_texture;
 uniform mat4 u_projTrans;
 
+//Portion of lighting done by sun
+uniform float sunStrength;
+//Colour of sunlight
+uniform vec3 sunColour;
+
 void main() {
     //query texture for colour of fragment
     vec4 texColor = texture2D(u_texture, v_texCoords).rgba;
@@ -28,10 +33,12 @@ void main() {
         discard;
     }
     
-    vec3 ambientComponent = texColour;
+    //Ambient component is modulated by the colour of the sun
+    //This works because sunColour components are in (0,1)
+    vec3 ambientComponent = sunColour*texColor.rgb;
     
     gl_FragColor = vec4(
-        ambientComponent,
+        sunStrength*ambientComponent,
         1.0
     );
 }

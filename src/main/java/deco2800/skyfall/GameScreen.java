@@ -229,6 +229,8 @@ public class GameScreen implements Screen,KeyDownObserver {
      */
     private void rerenderMapObjects(SpriteBatch batch, OrthographicCamera camera) {
         if (extendedLightingActive) {
+            shaderProgram.setUniformf("sunStrength", 0.65f);
+            shaderProgram.setUniformf("sunColour", 0.9921f, 0.7215f, 0.0745f);
             batch.setShader(shaderProgram);
         }
         renderer.render(batch, camera);
