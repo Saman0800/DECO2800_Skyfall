@@ -357,11 +357,11 @@ public class MainCharacterTest {
         // ensure the gold piece is only added once
         Assert.assertTrue(testCharacter.getGoldPouch().get(5).equals(1));
         // ensure that total pouch value has been calculated correctly
-        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(105));
+        Assert.assertTrue(testCharacter.getGoldPouchTotalValue() == 105);
 
         testCharacter.addGold(g5, count);
         Assert.assertTrue(testCharacter.getGoldPouch().get(5).equals(2));
-        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(110));
+        Assert.assertTrue(testCharacter.getGoldPouchTotalValue() == 110);
 
         // create a new gold piece with a value of 50
         GoldPiece g50 = new GoldPiece(50);
@@ -373,7 +373,7 @@ public class MainCharacterTest {
         Assert.assertTrue(testCharacter.getGoldPouch().get(50).equals(1));
 
         // ensure that the pouch total value is correct
-        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(160));
+        Assert.assertTrue(testCharacter.getGoldPouchTotalValue() == 160);
 
     }
 
@@ -390,7 +390,7 @@ public class MainCharacterTest {
         testCharacter.addGold(g50, 3);
 
         // ensure all the pieces have been added
-        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(280));
+        Assert.assertTrue(testCharacter.getGoldPouchTotalValue() == 280);
         Assert.assertTrue(testCharacter.getGoldPouch().get(5).equals(4));
         Assert.assertTrue(testCharacter.getGoldPouch().get(10).equals(1));
         Assert.assertTrue(testCharacter.getGoldPouch().get(50).equals(3));
@@ -399,7 +399,7 @@ public class MainCharacterTest {
         testCharacter.removeGold(g5);
 
         // ensure that the necessary adjustments have been made
-        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(275));
+        Assert.assertTrue(testCharacter.getGoldPouchTotalValue() == 275);
         Assert.assertTrue(testCharacter.getGoldPouch().get(5).equals(3));
         Assert.assertTrue(testCharacter.getGoldPouch().get(10).equals(1));
         Assert.assertTrue(testCharacter.getGoldPouch().get(50).equals(3));
@@ -408,7 +408,7 @@ public class MainCharacterTest {
         testCharacter.removeGold(g10);
 
         // ensure that the necessary adjustments have been made
-        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(265));
+        Assert.assertTrue(testCharacter.getGoldPouchTotalValue() == 265);
         Assert.assertFalse(testCharacter.getGoldPouch().containsKey(10));
 
     }
@@ -448,7 +448,7 @@ public class MainCharacterTest {
         testCharacter.addGold(g50, 3);
 
         // ensure all the pieces have been added
-        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(280));
+        Assert.assertTrue(testCharacter.getGoldPouchTotalValue() == 280);
 
     }
 
