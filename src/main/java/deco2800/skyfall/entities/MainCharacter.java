@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.*;
+import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.*;
 import deco2800.skyfall.resources.GoldPiece;
@@ -15,7 +16,6 @@ import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.Tile;
-import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -132,6 +132,16 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Check whether MainCharacter is attacking.
      */
     private boolean isAttacking = false;
+
+    /**
+     * The spell the user currently has selected to cast.
+     */
+    private SpellType spellSelected = SpellType.NONE;
+
+    /**
+     * How many mana the character has available for spellcasting.
+     */
+    private int mana = 100;
 
     /**
      * Private helper method to instantiate inventory and weapon managers for
@@ -666,12 +676,24 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             case Input.Keys.M:
                 getGoldPouchTotalValue();
                 break;
+            case Input.Keys.Z:
+                selectSpell(SpellType.FLAME_WALL);
+                break;
             default:
                 switchItem(keycode);
                 //xInput += 1;
                 break;
 
         }
+    }
+
+    /**
+     * Select the spell that the character is ready to cast.
+     * When they next click attack, this spell will cast.
+     * @param type The SpellType to cast.
+     */
+    private void selectSpell(SpellType type) {
+        this.spellSelected = type;
     }
 
     /**

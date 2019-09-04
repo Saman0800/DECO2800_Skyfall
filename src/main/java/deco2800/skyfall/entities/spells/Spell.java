@@ -3,6 +3,8 @@ package deco2800.skyfall.entities.spells;
 import deco2800.skyfall.entities.Projectile;
 import deco2800.skyfall.util.HexVector;
 
+
+
 public class Spell extends Projectile {
 
     /**
@@ -17,9 +19,11 @@ public class Spell extends Projectile {
      * @param speed            How fast this projectile is travelling.
      * @param range
      */
-    public Spell(HexVector movementPosition, String textureName, String objectName, float col, float row, int damage, float speed, int range) {
+    public Spell(HexVector movementPosition, String textureName, String objectName, float col,
+                 float row, int damage, float speed, int range) {
         super(movementPosition, textureName, objectName, col, row, damage, speed, range);
 
-
+        this.setTexture("flame_wall_placeholder");
     }
+
 }
