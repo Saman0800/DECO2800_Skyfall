@@ -139,7 +139,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private SpellType spellSelected = SpellType.NONE;
 
     /**
-     * How many mana the character has available for spellcasting.
+     * How much mana the character has available for spellcasting.
      */
     private int mana = 100;
 
@@ -255,13 +255,27 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Attack with the weapon the character has equip.
      */
     public void attack(HexVector mousePosition) {
-        HexVector position = this.getPosition();
+
+        //Animation control
         setAttacking(true);
         setCurrentState(AnimationRole.DEAD);
 
-        // Make projectile move toward the angle
-        // Spawn projectile in front of character for now.
+        //If there is a spell selected, fire that.
+        //else, just fire off a normal projectile.
+        if (this.spellSelected != SpellType.NONE) {
+            this.castSpell(mousePosition);
+        } else {
+            this.fireProjectile(mousePosition);
+        }
+    }
 
+    /**
+     * Fire a projectile in the position that the mouse is in.
+     * @param mousePosition The position of the user's mouse.
+     */
+    private void fireProjectile(HexVector mousePosition) {
+        //TODO: Call weapon.Attack(); and move this logic to the weapon.
+        HexVector position = this.getPosition();
         Projectile projectile = new Projectile(mousePosition,
                 this.itemSlotSelected == 1 ? "range_test":"melee_test",
                 "test hitbox",
@@ -273,9 +287,25 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         // Get AbstractWorld from static class GameManager.
         GameManager manager = GameManager.get();
-
         // Add the projectile entity to the game world.
         manager.getWorld().addEntity(projectile);
+    }
+
+    /**
+     * Cast the spell in the position that the mouse is in.
+     * @param mousePosition The position of the user's mouse.
+     */
+    private void castSpell(HexVector mousePosition) {
+
+        //TODO: Check if have enough mana to attack.
+
+        //TODO: Fire the spell in the users mouse direction.
+
+        //Unselect the spell
+        this.spellSelected = SpellType.NONE;
+
+        //Subtract some mana.
+        this.mana-=20;
     }
 
     public void setAttacking(boolean isAttacking) {
