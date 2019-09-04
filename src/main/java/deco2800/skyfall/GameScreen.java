@@ -61,7 +61,9 @@ public class GameScreen implements Screen,KeyDownObserver {
     /**
      * Extended shading program
      */
+    //Set to true when extended shader is to be used
     boolean extendedLightingActive = false;
+    //An extended shader program that implements extended lighting
     ShaderProgram shaderProgram;
 
     public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
@@ -143,16 +145,16 @@ public class GameScreen implements Screen,KeyDownObserver {
 
         GameManager.get().getManager(KeyboardManager.class).registerForKeyDown(this);
 
-        /**
-         * Create the shader program from resource files
-         * Shader program will be attached later
-         */
+        //Create the shader program from resource files
+        //Shader program will be attached later
         String vertexShader = Gdx.files.internal("resources\\shaders\\batch.vert").readString();
         String fragmentShader = Gdx.files.internal("resources\\shaders\\batch.frag").readString();
-
         shaderProgram = new ShaderProgram(vertexShader,fragmentShader);
+
         //Allows uniform variables to be in the fragment shader but not the vertex
         shaderProgram.pedantic=false;
+
+        //A small log explaining how the shader compilation went
         System.out.print("\n");
         System.out.println("Shader program log:");
         System.out.print(shaderProgram.getLog());
@@ -228,6 +230,7 @@ public class GameScreen implements Screen,KeyDownObserver {
      * Use the selected renderer to render objects onto the map
      */
     private void rerenderMapObjects(SpriteBatch batch, OrthographicCamera camera) {
+        //set uniform values for lighting parameters
         if (extendedLightingActive) {
             shaderProgram.setUniformf("sunStrength", 0.65f);
             shaderProgram.setUniformf("sunColour", 0.9921f, 0.7215f, 0.0745f);
