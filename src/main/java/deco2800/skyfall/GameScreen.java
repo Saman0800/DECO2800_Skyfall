@@ -1,6 +1,7 @@
 package deco2800.skyfall;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -25,6 +26,8 @@ import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class GameScreen implements Screen,KeyDownObserver {
 	private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
@@ -54,6 +57,12 @@ public class GameScreen implements Screen,KeyDownObserver {
 	 */
 	EnvironmentManager timeOfDay;
 	public static boolean isPaused = false;
+
+    /**
+     * Extended shading program
+     */
+    boolean extendedLightingActive = false;
+    ShaderProgram shaderProgram;
 
     public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
         /* Create an example world for the engine */
@@ -133,6 +142,25 @@ public class GameScreen implements Screen,KeyDownObserver {
         Gdx.input.setInputProcessor(multiplexer);
 
         GameManager.get().getManager(KeyboardManager.class).registerForKeyDown(this);
+
+        /**
+         * Create the shader program from resource files
+         * Shader program will be attached later
+         */
+        String vertexShader = Gdx.files.internal("resources\\shaders\\batch.vert").readString();
+        String fragmentShader = Gdx.files.internal("resources\\shaders\\batch.frag").readString();
+
+        shaderProgram = new ShaderProgram(vertexShader,fragmentShader);
+        //Allows uniform variables to be in the fragment shader but not the vertex
+        shaderProgram.pedantic=false;
+        System.out.print("\n");
+        System.out.println("Shader program log:");
+        System.out.print(shaderProgram.getLog());
+        if (shaderProgram.isCompiled()) {
+            System.out.println("Shader program compiled");
+            extendedLightingActive = true;
+        }
+        System.out.print("\n");
     }
 
 
@@ -159,6 +187,10 @@ public class GameScreen implements Screen,KeyDownObserver {
         SpriteBatch batchDebug = new SpriteBatch();
         batchDebug.setProjectionMatrix(cameraDebug.combined);
 
+        if (extendedLightingActive) {
+            shaderProgram.begin();
+        }
+
         SpriteBatch batch = new SpriteBatch();
         batch.setProjectionMatrix(camera.combined);
 
@@ -180,6 +212,9 @@ public class GameScreen implements Screen,KeyDownObserver {
 		/* Refresh the experience UI for if information was updated */
 
 		batch.dispose();
+        if (extendedLightingActive) {
+            shaderProgram.end();
+        }
 	}
 
     private void handleRenderables() {
@@ -193,6 +228,9 @@ public class GameScreen implements Screen,KeyDownObserver {
      * Use the selected renderer to render objects onto the map
      */
     private void rerenderMapObjects(SpriteBatch batch, OrthographicCamera camera) {
+        if (extendedLightingActive) {
+            batch.setShader(shaderProgram);
+        }
         renderer.render(batch, camera);
     }
 
