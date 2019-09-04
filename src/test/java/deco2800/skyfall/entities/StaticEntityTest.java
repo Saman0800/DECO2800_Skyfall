@@ -1,10 +1,10 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.managers.*;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.OnScreenMessageManager;
-import deco2800.skyfall.worlds.world.TestWorld;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.world.World;
@@ -33,6 +33,8 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 public class StaticEntityTest {
     private World w;
 
+    private PhysicsManager physics;
+
     @Mock
     private GameManager mockGM;
 
@@ -46,6 +48,9 @@ public class StaticEntityTest {
 
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
+
+        physics = new PhysicsManager();
+        when(mockGM.getManager(PhysicsManager.class)).thenReturn(physics);
 
         when(GameManager.get()).thenReturn(mockGM);
         when(mockGM.getWorld()).thenReturn(w);

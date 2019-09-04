@@ -20,11 +20,6 @@ public class SoundManager extends AbstractManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SoundManager.class);
 
-//    public void playSound(String soundName) {
-//        Sound sound = Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + soundName));
-//        sound.play(1);
-//    }
-
     /**
      * Initialize SoundManager by adding different sounds in a map
      */
@@ -32,20 +27,33 @@ public class SoundManager extends AbstractManager {
         LOGGER.info("soundManager song list");
 
         try {
+            String PATH = "resources/sounds/";
             soundMap.put("people_walk_normal", Gdx.audio.newSound
-                    (Gdx.files.internal("resources/sounds/" + "pick up.wav")));
+                    (Gdx.files.internal(PATH + "pick up.wav")));
             soundMap.put("spider", Gdx.audio.newSound
-                    (Gdx.files.internal("resources/sounds/" + "spider.wav")));
+                    (Gdx.files.internal(PATH + "spider.wav")));
             soundMap.put("robot", Gdx.audio.newSound
-                    (Gdx.files.internal("resources/sounds/" + "robot.wav")));
+                    (Gdx.files.internal(PATH + "robot.wav")));
             soundMap.put("sword", Gdx.audio.newSound
-                    (Gdx.files.internal("resources/sounds/" + "sword.wav")));
+                    (Gdx.files.internal(PATH + "sword.wav")));
             soundMap.put("stoneWalk", Gdx.audio.newSound
-                    (Gdx.files.internal("resources/sounds/" + "stone_walk.wav")));
+                    (Gdx.files.internal(PATH + "stone_walk.wav")));
             soundMap.put("stoneDie", Gdx.audio.newSound
-                    (Gdx.files.internal("resources/sounds/" + "stone_die.wav")));
+                    (Gdx.files.internal(PATH + "stone_die.wav")));
             soundMap.put("collectStone", Gdx.audio.newSound
-                    (Gdx.files.internal("resources/sounds/" + "collect-stone.wav")));
+                    (Gdx.files.internal(PATH + "collect-stone.wav")));
+            soundMap.put("menu", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "menu.wav")));
+            soundMap.put("robot_movement", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "robot movement.wav")));
+            soundMap.put("robot_walk", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "robot walk.wav")));
+            soundMap.put("first_attack", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "fist attack.wav")));
+            soundMap.put("bow_and_arrow_attack", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "bow and arrow attack.wav")));
+            soundMap.put("axe_attack", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "axe attack.wav")));
         } catch(Exception e) {
             LOGGER.error("no song be found");
         }
@@ -73,6 +81,7 @@ public class SoundManager extends AbstractManager {
             sound.play(1);
             return true;
         } else {
+            LOGGER.info("There does not exist a {} sound", soundName);
             return false;
         }
     }
@@ -107,6 +116,7 @@ public class SoundManager extends AbstractManager {
             sound.stop();
             return true;
         } else {
+            LOGGER.info("There does not exist a {} sound", soundName);
             return false;
         }
     }
@@ -124,6 +134,7 @@ public class SoundManager extends AbstractManager {
             sound.pause();
             return true;
         } else {
+            LOGGER.info("There does not exist a {} sound", soundName);
             return false;
         }
     }
@@ -141,6 +152,7 @@ public class SoundManager extends AbstractManager {
             sound.resume();
             return true;
         } else {
+            LOGGER.info("There does not exist a {} sound", soundName);
             return false;
         }
     }
@@ -169,23 +181,5 @@ public class SoundManager extends AbstractManager {
         return Collections.unmodifiableMap(soundMap);
 
     }
-
-//    /**
-//     * Play the sound
-//     * @param soundName
-//     */
-//    public void playTheSound(String soundName) {
-//        Sound sound = Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + soundName));
-//        sound.play(1);
-//    }
-//
-//    /**
-//     * Pause the sound
-//     * @param soundName
-//     */
-//    public void pauseTheSound(String soundName){
-//        Sound sound = Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + soundName));
-//        sound.stop();
-//    }
 
 }

@@ -34,7 +34,6 @@ public class House extends AbstractBuilding {
     @Expose
     public Map<HexVector, String> children;
 
-
     public House(Tile tile, int renderOrder) {
         super(tile.getRow(), tile.getCol());
         this.setTexture(texture);

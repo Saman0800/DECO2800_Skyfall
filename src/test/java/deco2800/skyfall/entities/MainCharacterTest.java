@@ -6,6 +6,7 @@ import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
+import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.Stone;
@@ -20,6 +21,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.lwjgl.Sys;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -45,10 +47,13 @@ public class MainCharacterTest {
     private Tile testTile;
     private InventoryManager inventoryManager;
     private Hatchet testHatchet;
+    private Hatchet testHatchet2;
     private PickAxe testPickaxe;
     private World w =null;
     @Mock
     private GameManager mockGM;
+
+    private PhysicsManager physics;
 
     // A hashmap for testing player's animations
     private HashMap testMap = new HashMap();
@@ -71,6 +76,9 @@ public class MainCharacterTest {
         axe = new Weapon("axe", "melee",
                 "slash", 4, 4, 10);
 
+        testHatchet = new Hatchet();
+        testHatchet2 = new Hatchet();
+
         testTile = new Tile(0f,0f);
         testTree = new Tree(testTile,true);
         testRock = new Rock(testTile,true);
@@ -84,12 +92,12 @@ public class MainCharacterTest {
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
 
+        physics = new PhysicsManager();
+        when(mockGM.getManager(PhysicsManager.class)).thenReturn(physics);
+
 
         when(GameManager.get()).thenReturn(mockGM);
         when(mockGM.getWorld()).thenReturn(w);
-
-
-
     }
 
     @After
@@ -228,7 +236,7 @@ public class MainCharacterTest {
      * Test that the item properly switches.
      */
     public void switchItemTest() {
-        Assert.assertEquals(0,testCharacter.getItemSlotSelected());
+        Assert.assertEquals(1,testCharacter.getItemSlotSelected());
         testCharacter.switchItem(9);
         Assert.assertEquals(2,testCharacter.getItemSlotSelected());
         testCharacter.switchItem(10);
@@ -475,6 +483,25 @@ public class MainCharacterTest {
 
     }
 
+    @Test
+    public void createItemTest() {
+
+        testCharacter.getBlueprintsLearned().add("Hatchet");
+        int i;
+
+        for (i = 0; i < 25; i++) {
+            testCharacter.getInventoryManager().inventoryAdd(new Wood());
+            testCharacter.getInventoryManager().inventoryAdd(new Stone());
+        }
+
+        int currentHatchetAmount = testCharacter.getInventoryManager().getAmount("Hatchet");
+        testCharacter.createItem(testHatchet2);
+
+        Assert.assertEquals(currentHatchetAmount, testCharacter.getInventoryManager().getAmount("Hatchet"));
+
+    }
+
+
     @After
     public void cleanup() {
         testCharacter = null;
@@ -483,17 +510,4 @@ public class MainCharacterTest {
         bow = null;
         axe = null;
     }
-
-    @Test
-    public void testCollision() {
-        WoodCube woodCube = new WoodCube(50,50);
-        Collider c1 = woodCube.getCollider();
-        Collider c2 = testCharacter.getCollider();
-        if (c1.overlaps(c2)) {
-            System.out.println("COLLISION");
-        } else {
-            System.out.println("NO COLLISION");
-        }
-    }
-
 }

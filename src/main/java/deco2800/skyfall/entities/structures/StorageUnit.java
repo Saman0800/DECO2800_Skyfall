@@ -28,6 +28,7 @@ public class StorageUnit extends AbstractBuilding {
     private HexVector coords;
     private String texture = "storage_unit";
     ConstructionManager permissions = new ConstructionManager();
+    //Inventory manager for a storage unit!
 
     @Expose
     public Map<HexVector, String> children;
