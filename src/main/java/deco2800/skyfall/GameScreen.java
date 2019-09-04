@@ -155,8 +155,7 @@ public class GameScreen implements Screen,KeyDownObserver {
         shaderProgram.pedantic=false;
 
         //A small log explaining how the shader compilation went
-        System.out.print("\n");
-        System.out.println("Shader program log:");
+        System.out.println("\nShader program log:");
         System.out.print(shaderProgram.getLog());
         if (shaderProgram.isCompiled()) {
             System.out.println("Shader program compiled");
@@ -203,6 +202,7 @@ public class GameScreen implements Screen,KeyDownObserver {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         rerenderMapObjects(batch, camera);
+        rendererDebug.setUsingShader(extendedLightingActive);
         rendererDebug.render(batchDebug, cameraDebug);
         stage.act(delta);
         stage.draw();
@@ -230,7 +230,7 @@ public class GameScreen implements Screen,KeyDownObserver {
      * Use the selected renderer to render objects onto the map
      */
     private void rerenderMapObjects(SpriteBatch batch, OrthographicCamera camera) {
-        //set uniform values for lighting parameters
+        //set uniform values for lighting parameters and attach shader to batch
         if (extendedLightingActive) {
             shaderProgram.setUniformf("sunStrength", 0.65f);
             shaderProgram.setUniformf("sunColour", 0.9921f, 0.7215f, 0.0745f);
