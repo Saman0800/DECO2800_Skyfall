@@ -111,16 +111,33 @@ public class Tile {
         neighbours.remove(direction);
     }
 
+    /**
+     * Gets the friction value for the tile
+     * @param tileType The type of the tile
+     * @return The friction value for the tile
+     */
     public static float getFriction(String tileType) {
+        //Gets the friction map for the world
         Map<String, Float> frictionMap = GameManager.get().getWorld().frictionMap;
+        // Checks the type of the tile
         if (tileType.contains("ice")) {
             return frictionMap.get("ice");
-        } else if (tileType.contains("sand")) {
-            return frictionMap.get("sand");
+        } else if (tileType.contains("desert")) {
+            return frictionMap.get("desert");
         } else if (tileType.contains("mountain")) {
             return frictionMap.get("mountain");
         } else if (tileType.contains("water")) {
             return frictionMap.get("water");
+        } else if (tileType.contains("forest")) {
+            return frictionMap.get("forest");
+        } else if (tileType.contains("lake")) {
+            return frictionMap.get("lake");
+        } else if (tileType.contains("ocean")) {
+            return frictionMap.get("ocean");
+        } else if (tileType.contains("snow")) {
+            return frictionMap.get("snow");
+        } else if (tileType.contains("volcanic")) {
+            return frictionMap.get("volcanic");
         } else {
             return frictionMap.get("grass");
         }

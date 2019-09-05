@@ -23,7 +23,7 @@ public class Stone extends EnemyEntity implements Animatable {
 
     //frequency of attack
     private static final transient int ATTACK_FREQUENCY = 50;
-    private static final transient String BIOME = "forest";
+    private static final transient String BIOME = "desert";
     private boolean moving = false;
     private float originalCol;
     private float orriginalRow;
@@ -125,7 +125,7 @@ public class Stone extends EnemyEntity implements Animatable {
     }
 
 
-    private void angryAttacking() {
+    public void angryAttacking() {
         float colDistance = mc.getCol() - this.getCol();
         float rowDistance = mc.getRow() - this.getRow();
         //if the player in angry distance or the enemy is attacked by player then turning to angry model
@@ -156,7 +156,7 @@ public class Stone extends EnemyEntity implements Animatable {
      *
      * @param player Main character
      */
-    private void attackPlayer(MainCharacter player) {
+    public void attackPlayer(MainCharacter player) {
         this.setSpeed(ARGRYSPEED);
         destination = new HexVector(player.getCol(), player.getRow());
         this.position.moveToward(destination, this.getSpeed());
@@ -200,7 +200,7 @@ public class Stone extends EnemyEntity implements Animatable {
     /**
      * Turing attack model to normal model
      */
-    private void resetFeeling() {
+    public void resetFeeling() {
         if (angerTimeAccount < 10) {
             angerTimeAccount++;
         } else {
@@ -212,7 +212,7 @@ public class Stone extends EnemyEntity implements Animatable {
     /**
      * under normal situation the enemy will random wandering in 100 radius circle
      */
-    private void randomMoving() {
+    public void randomMoving() {
         if (!attacking) {
             movingDirection = movementDirection(this.position.getAngle());
 

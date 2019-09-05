@@ -126,16 +126,16 @@ public class BGMManagerTest {
     @Test
     public void getVolumeTest() {
         try {
-            bgmManager.initClip(file);
-            bgmManager.play();
+            BGMManager.initClip(file);
+            BGMManager.play();
 
             // Test Minimum (0)
-            bgmManager.setVolume(0);
-            assertEquals(0, bgmManager.getVolume(), 0.01);
+            BGMManager.setVolume(0);
+            assertEquals(0, BGMManager.getVolume(), 0.01);
 
             // Test Maximum (100)
-            bgmManager.setVolume(100);
-            assertEquals(100, bgmManager.getVolume(), 0.01);
+            BGMManager.setVolume(100);
+            assertEquals(100, BGMManager.getVolume(), 0.01);
 
         } catch (Exception e) {
         }
@@ -144,26 +144,26 @@ public class BGMManagerTest {
     @Test
     public void setVolumeTest() {
         try {
-            bgmManager.initClip(file);
-            bgmManager.play();
+            BGMManager.initClip(file);
+            BGMManager.play();
 
             // Test Minimum (0)
-            bgmManager.setVolume(0);
-            assertEquals(0, bgmManager.getVolume(), 0.01);
+            BGMManager.setVolume(0);
+            assertEquals(0, BGMManager.getVolume(), 0.01);
 
             // Test Maximum (100)
-            bgmManager.setVolume(100);
-            assertEquals(100, bgmManager.getVolume(), 0.01);
+            BGMManager.setVolume(100);
+            assertEquals(100, BGMManager.getVolume(), 0.01);
 
             // Test whether exceptions are thrown (x > MAX).
             try {
-                bgmManager.setVolume(1000);
+                BGMManager.setVolume(1000);
                 fail();
             } catch (IndexOutOfBoundsException e) { }
 
             // Test whether exceptions are thrown (x > MAX).
             try {
-                bgmManager.setVolume(-1);
+                BGMManager.setVolume(-1);
                 fail();
             } catch (IndexOutOfBoundsException e) { }
 

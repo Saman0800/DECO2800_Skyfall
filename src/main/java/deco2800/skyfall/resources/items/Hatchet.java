@@ -107,7 +107,6 @@ public class Hatchet extends ManufacturedResources implements Item {
      */
     public void farmTree(Tree treeToFarm) {
 
-        if (owner.distance(treeToFarm) <= 0.5) {
 
             if (treeToFarm.getWoodAmount() == 0) {
                 System.out.println("This tree has no more wood");
@@ -116,13 +115,8 @@ public class Hatchet extends ManufacturedResources implements Item {
             } else {
                 owner.getInventoryManager().inventoryAdd(new Wood());
                 treeToFarm.decreaseWoodAmount();
-                System.out.println("wood added");
             }
-        } else {
-            System.out.println("No Trees in the vicinity");
-
         }
-    }
 
     /**
      * Returns the item description
