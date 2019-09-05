@@ -10,6 +10,7 @@ import static java.lang.Float.parseFloat;
  * Abstracts saving settings to a file
  * Reads on constructor, saves all files on close()
  * Designed for no exceptions or error checking, all exceptional cases are dealt with defaults
+ * Typical usage is create->get->set->close
  */
 public class SettingsFile {
     //location of settings file
@@ -20,7 +21,7 @@ public class SettingsFile {
 
     /**
      * Sets the given file as location, if a file is not found, will create, errors internally handled
-     * @param path location of settings file (internal convention should be: settings/FEATURE_NAME/SETTING.ini)
+     * @param path location of settings file (internal convention should be: settings/FEATURE_NAME/SETTING_NAME.ini)
      * The file at path should look like:
      * ----------------------
      * Key0 Value0
@@ -71,7 +72,8 @@ public class SettingsFile {
             file.close();
         }
         catch (IOException ex) {
-            //TODO
+            //Could have a lot of causes outside of our control
+            //SettingFile will default on next execution
         }
     }
 
@@ -114,13 +116,13 @@ public class SettingsFile {
         }
         catch (NumberFormatException ex) {
             //set default and return
-            values.put( key, Float.toString(backup) );
+            values.put( key, Integer.toString(backup) );
             return backup;
         }
     }
 
     /**
-     * Gets string from key, reverts to backup on fail
+     * Gets string from key, reverts to backup on failgit sa=
      * @param key String key, case sensitive
      * @param backup Backup string value, will revert to this on failure
      * @return Returned value, backup on failure
@@ -132,6 +134,33 @@ public class SettingsFile {
             value = values.get(key);
         }
         return value;
+    }
+
+    /**
+     * Sets value, not saved until close() invoked
+     * @param key Key to be used
+     * @param value Value to save to
+     */
+    public void set(String key, double value) {
+        values.put( key, Double.toString(value) );
+    }
+
+    /**
+     * Sets value, not saved until close() invoked
+     * @param key Key to be used
+     * @param value Value to save to
+     */
+    public void set(String key, int value) {
+        values.put( key, Integer.toString(value) );
+    }
+
+    /**
+     * Sets value, not saved until close() invoked
+     * @param key Key to be used
+     * @param value Value to save to
+     */
+    public void set(String key, String value) {
+        values.put( key, value );
     }
 
 }
