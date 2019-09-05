@@ -180,7 +180,8 @@ public class WorldBuilder implements WorldBuilderInterface {
      */
     protected void generateStartEntities(World world) {
 
-        EntitySpawnRule.setNoiseSeed(world.getSeed());
+        long worldSeed = world.getSeed();
+        EntitySpawnRule.setNoiseSeed(worldSeed);
 
         // Nothing will ever be placed on this tile. Only a dummy tile.
         Tile startTile = world.getTile(0.0f, 1.0f);
@@ -207,12 +208,13 @@ public class WorldBuilder implements WorldBuilderInterface {
 
                 ForestMushroom startMushroom = new ForestMushroom(startTile, false);
                 // This generator will cause the mushrooms to clump togteher more
-                NoiseGenerator mushroomGen = new NoiseGenerator(new Random(), 10, 20, 0.9);
+                NoiseGenerator mushroomGen = new NoiseGenerator(new Random(worldSeed), 10, 20, 0.9);
                 SpawnControl mushroomControl = x -> (x * x * x * x * x * x) / 3.0;
                 EntitySpawnRule mushroomRule = new EntitySpawnRule(biome, true, mushroomControl);
                 mushroomRule.setNoiseGenerator(mushroomGen);
                 EntitySpawnTable.spawnEntities(startMushroom, mushroomRule, world);
                 break;
+
             case "mountain":
 
                 MountainTree startMTree = new MountainTree(startTile, true);
@@ -224,8 +226,38 @@ public class WorldBuilder implements WorldBuilderInterface {
                 MountainRock startMRock = new MountainRock(startTile, true);
                 // Create a new perlin noise map
                 SpawnControl rockControl = x -> (x * x * x * x) / 2.0;
-                EntitySpawnRule mRockControl = new EntitySpawnRule(biome, true, rockControl);
-                EntitySpawnTable.spawnEntities(startMRock, mRockControl, world);
+                EntitySpawnRule mRockRule = new EntitySpawnRule(biome, true, rockControl);
+                EntitySpawnTable.spawnEntities(startMRock, mRockRule, world);
+
+                // Spawn some Snow uniformly
+                SnowClump startMountainSnow = new SnowClump(startTile, false);
+                EntitySpawnRule mSnowRule = new EntitySpawnRule(0.07, 30, 200, biome);
+                EntitySpawnTable.spawnEntities(startMountainSnow, mSnowRule, world);
+
+                break;
+
+            case "desert":
+
+                DesertCacti startDCacti = new DesertCacti(startTile, true);
+                // Create a new perlin noise map
+                SpawnControl cactiControl = x -> (x * x * x * x) / 4.0;
+                EntitySpawnRule cactiRule = new EntitySpawnRule(biome, true, cactiControl);
+                EntitySpawnTable.spawnEntities(startDCacti, cactiRule, world);
+                break;
+
+            case "snowy_mountains":
+
+                SnowClump startSnowyMountainSnow = new SnowClump(startTile, false);
+                // Create a new perlin noise map
+                SpawnControl sSnowControl = x -> (x * x * x);
+                EntitySpawnRule sSnowRule = new EntitySpawnRule(biome, true, sSnowControl);
+                EntitySpawnTable.spawnEntities(startSnowyMountainSnow, sSnowRule, world);
+
+                // Spawn some Snow Shrubs uniformly
+                SnowShrub startSnowShrub = new SnowShrub(startTile, true);
+                EntitySpawnRule snowShrubRule = new EntitySpawnRule(0.07, 20, 200, biome);
+                EntitySpawnTable.spawnEntities(startSnowShrub, snowShrubRule, world);
+
                 break;
             }
         }
