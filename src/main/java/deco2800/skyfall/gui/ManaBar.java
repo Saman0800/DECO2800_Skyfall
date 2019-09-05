@@ -16,7 +16,7 @@ import deco2800.skyfall.managers.GameMenuManager;
  *
  * TODO inherit a onWindowResize event
  */
-public class ManaBar {
+public class ManaBar extends StatBar {
 
     private ImageButton bar;
     private Stage stage;
