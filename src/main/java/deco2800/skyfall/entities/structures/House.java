@@ -1,8 +1,7 @@
 package deco2800.skyfall.entities.structures;
 
-
 import com.google.gson.annotations.Expose;
-import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.entities.StaticEntity;;
 import deco2800.skyfall.managers.ConstructionManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
@@ -30,10 +29,8 @@ public class House extends AbstractBuilding {
     private String texture = "house1";
     ConstructionManager permissions = new ConstructionManager();
 
-
     @Expose
     public Map<HexVector, String> children;
-
 
     public House(Tile tile, int renderOrder) {
         super(tile.getRow(), tile.getCol());
@@ -42,7 +39,6 @@ public class House extends AbstractBuilding {
         this.setObjectName(ENTITY_ID_STRING);
         this.renderOrder = renderOrder;
         this.currentHealth = maxHealth;
-
 
         //Call Construction Permissions here but for now just do basic checking
 
@@ -62,7 +58,6 @@ public class House extends AbstractBuilding {
         this.renderOrder = renderOrder;
         this.currentHealth = maxHealth;
 
-
         //Call Construction Permissions here
 
         children = new HashMap<>();
@@ -77,58 +72,72 @@ public class House extends AbstractBuilding {
     /**
      * Will link to Construction Manager Permissions but for now will be true
      */
-    public boolean permissions(){
+    public boolean permissions() {
         return true;
     }
 
     /**
      * Will place the building in the world
      */
-    public void placeBuilding(){
+    public void placeBuilding() {
         //next sprint
     }
 
     /**
      * @return - Health of the House
      */
-    public int getMaxHealth() {return this.maxHealth;}
+    public int getMaxHealth() {
+        return this.maxHealth;
+    }
 
     /**
      * @return - Current health
      */
-    public int getCurrentHealth() {return this.currentHealth;}
+    public int getCurrentHealth() {
+        return this.currentHealth;
+    }
 
     /**
      * @return - Build time
      */
-    public int getBuildTime() {return this.buildTime;}
+    public int getBuildTime() {
+        return this.buildTime;
+    }
 
     /**
      * @return - X length
      */
-    public int getXSize() {return this.sizeX;}
+    public int getXSize() {
+        return this.sizeX;
+    }
 
     /**
      * @return - Y length
      */
-    public int getYSize() {return this.sizeY;}
+    public int getYSize() {
+        return this.sizeY;
+    }
 
     /**
      * @param newMaxHealth - New max health
      */
-    public void setHealth(int newMaxHealth) {this.maxHealth = newMaxHealth;}
+    public void setHealth(int newMaxHealth) {
+        this.maxHealth = newMaxHealth;
+    }
 
     /**
      * @param newCurrentHealth - New current health
      */
-    public void setCurrentHealth(int newCurrentHealth) {this.currentHealth = newCurrentHealth;}
+    public void setCurrentHealth(int newCurrentHealth) {
+        this.currentHealth = newCurrentHealth;
+    }
 
     /**
      * @param damage - Amount of damage to take
      */
     public void takeDamage(int damage) {
-        if((currentHealth - damage) > 0) {
-            currentHealth -=  damage;
+        if ((currentHealth - damage) > 0) {
+            currentHealth -= damage;
         } else {
             currentHealth = 0;
         }
@@ -137,23 +146,20 @@ public class House extends AbstractBuilding {
     /**
      * @param newXSize - New X length
      */
-    public void setXSize(int newXSize) {this.sizeX = newXSize;}
+    public void setXSize(int newXSize) {
+        this.sizeX = newXSize;
+    }
 
     /**
      * @param newYSize - New Y length
      */
-    public void setYSize(int newYSize) {this.sizeY = newYSize;}
+    public void setYSize(int newYSize) {
+        this.sizeY = newYSize;
+    }
 
     @Override
     public void onTick(long i) {
         //Functionality.
     }
-
-
-
-
-
-
-
 
 }

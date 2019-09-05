@@ -1,7 +1,9 @@
-package deco2800.skyfall.entities;
+package deco2800.skyfall.entities.worlditems;
 
+import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.worlds.Tile;
 import java.util.Random;
+import deco2800.skyfall.entities.HasHealth;
 
 public class Rock extends StaticEntity implements HasHealth {
     private int health = 100;

@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
@@ -31,7 +32,7 @@ import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({GameManager.class, DatabaseManager.class, PlayerPeon.class})
+@PrepareForTest({ GameManager.class, DatabaseManager.class, PlayerPeon.class })
 public class MainCharacterTest {
 
     private GoldPiece goldpiece;
@@ -46,7 +47,7 @@ public class MainCharacterTest {
     private InventoryManager inventoryManager;
     private Hatchet testHatchet;
     private PickAxe testPickaxe;
-    private World w =null;
+    private World w = null;
     @Mock
     private GameManager mockGM;
 
@@ -58,22 +59,17 @@ public class MainCharacterTest {
      * Sets up all variables to be used for testing
      */
     public void setup() {
-        testCharacter = new MainCharacter(0f, 0f,
-                0.05f, "Main Piece", 10);
+        testCharacter = new MainCharacter(0f, 0f, 0.05f, "Main Piece", 10);
 
         // Weapons being used for testing
-        sword = new Weapon("sword", "melee",
-                "slash", 3, 5, 6);
-        spear = new Weapon("spear", "range",
-                "splash", 5, 4, 7);
-        bow = new Weapon("bow", "range",
-                "splash", 4, 3, 10);
-        axe = new Weapon("axe", "melee",
-                "slash", 4, 4, 10);
+        sword = new Weapon("sword", "melee", "slash", 3, 5, 6);
+        spear = new Weapon("spear", "range", "splash", 5, 4, 7);
+        bow = new Weapon("bow", "range", "splash", 4, 3, 10);
+        axe = new Weapon("axe", "melee", "slash", 4, 4, 10);
 
-        testTile = new Tile(0f,0f);
-        testTree = new Tree(testTile,true);
-        testRock = new Rock(testTile,true);
+        testTile = new Tile(0f, 0f);
+        testTree = new Tree(testTile, true);
+        testRock = new Rock(testTile, true);
 
         inventoryManager = GameManager.get().getManagerFromInstance(InventoryManager.class);
 
@@ -84,11 +80,8 @@ public class MainCharacterTest {
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
 
-
         when(GameManager.get()).thenReturn(mockGM);
         when(mockGM.getWorld()).thenReturn(w);
-
-
 
     }
 
@@ -155,11 +148,10 @@ public class MainCharacterTest {
      * Private helper method used for inventory testting
      */
     private void pickUpInventoryMultiple(Item item, int amount) {
-        for(int i = 0; i < amount; i++) {
+        for (int i = 0; i < amount; i++) {
             testCharacter.pickUpInventory(item);
         }
     }
-
 
     //LEAVE COMMENTED! As discussed on Gitlab ticket #197, after fixing an issue with the MainCharacter inventory this
     //causes issues with gradle that need to be fixed.
@@ -168,30 +160,29 @@ public class MainCharacterTest {
      * Test main character is interacting correctly with basic inventory action
      */
     public void inventoryTest() {
-        Assert.assertEquals((int)testCharacter.getInventoryManager()
-                .getAmount("Stone"), inventoryManager.getAmount("Stone"));
-        Assert.assertEquals((int)testCharacter.getInventoryManager()
-                .getAmount("Wood"), inventoryManager.getAmount("Wood"));
+        Assert.assertEquals((int) testCharacter.getInventoryManager().getAmount("Stone"),
+                inventoryManager.getAmount("Stone"));
+        Assert.assertEquals((int) testCharacter.getInventoryManager().getAmount("Wood"),
+                inventoryManager.getAmount("Wood"));
         Stone stone = new Stone();
         testCharacter.pickUpInventory(stone);
-        Assert.assertEquals((int)testCharacter.getInventoryManager()
-                .getAmount("Stone"), inventoryManager.getAmount("Stone"));
+        Assert.assertEquals((int) testCharacter.getInventoryManager().getAmount("Stone"),
+                inventoryManager.getAmount("Stone"));
         testCharacter.dropInventory("Stone");
-        Assert.assertEquals((int)testCharacter.getInventoryManager()
-                .getAmount("Stone"), inventoryManager.getAmount("Stone"));
+        Assert.assertEquals((int) testCharacter.getInventoryManager().getAmount("Stone"),
+                inventoryManager.getAmount("Stone"));
         pickUpInventoryMultiple(stone, 500);
-        Assert.assertEquals((int)testCharacter.getInventoryManager()
-                .getAmount("Stone"), inventoryManager.getAmount("Stone"));
+        Assert.assertEquals((int) testCharacter.getInventoryManager().getAmount("Stone"),
+                inventoryManager.getAmount("Stone"));
         /* Had to change inventory method inventoryDropMultiple
             -   if(amount == num)
             to:
             -   if(amount.equals(num)
             for this to work
         */
-        testCharacter.getInventoryManager()
-                .inventoryDropMultiple("Stone",inventoryManager.getAmount("Stone"));
-        Assert.assertEquals((int)testCharacter.getInventoryManager()
-                .getAmount("Stone"), inventoryManager.getAmount("Stone"));
+        testCharacter.getInventoryManager().inventoryDropMultiple("Stone", inventoryManager.getAmount("Stone"));
+        Assert.assertEquals((int) testCharacter.getInventoryManager().getAmount("Stone"),
+                inventoryManager.getAmount("Stone"));
     }
 
     @Test
@@ -199,7 +190,7 @@ public class MainCharacterTest {
      * Test main character is interacting correctly with basic food action
      */
     public void foodTest() {
-        Assert.assertEquals(100,testCharacter.getFoodLevel());
+        Assert.assertEquals(100, testCharacter.getFoodLevel());
 
         Apple apple = new Apple();
         testCharacter.pickUpInventory(apple);
@@ -228,13 +219,13 @@ public class MainCharacterTest {
      * Test that the item properly switches.
      */
     public void switchItemTest() {
-        Assert.assertEquals(0,testCharacter.getItemSlotSelected());
+        Assert.assertEquals(0, testCharacter.getItemSlotSelected());
         testCharacter.switchItem(9);
-        Assert.assertEquals(2,testCharacter.getItemSlotSelected());
+        Assert.assertEquals(2, testCharacter.getItemSlotSelected());
         testCharacter.switchItem(10);
-        Assert.assertEquals(3,testCharacter.getItemSlotSelected());
+        Assert.assertEquals(3, testCharacter.getItemSlotSelected());
         testCharacter.switchItem(8);
-        Assert.assertEquals(1,testCharacter.getItemSlotSelected());
+        Assert.assertEquals(1, testCharacter.getItemSlotSelected());
     }
 
     @Test
@@ -274,8 +265,8 @@ public class MainCharacterTest {
         // Assert.assertEquals(, testCharacter.getCol());
 
         // "Hurt" animation test
-        AnimationLinker animationLinker = new AnimationLinker("MainCharacter_Hurt_E_Anim",
-                AnimationRole.HURT, Direction.DEFAULT, false ,true);
+        AnimationLinker animationLinker = new AnimationLinker("MainCharacter_Hurt_E_Anim", AnimationRole.HURT,
+                Direction.DEFAULT, false, true);
         testMap.put(Direction.DEFAULT, animationLinker);
         testCharacter.addAnimations(AnimationRole.HURT, Direction.DEFAULT, animationLinker);
         Assert.assertEquals(testMap, testCharacter.animations.get(AnimationRole.HURT));
@@ -305,8 +296,8 @@ public class MainCharacterTest {
         Assert.assertEquals(1, testCharacter.getDeaths());
 
         // "Kill" animation test
-        AnimationLinker animationLinker = new AnimationLinker("MainCharacter_Dead_E_Anim",
-                AnimationRole.DEAD, Direction.DEFAULT, false, true);
+        AnimationLinker animationLinker = new AnimationLinker("MainCharacter_Dead_E_Anim", AnimationRole.DEAD,
+                Direction.DEFAULT, false, true);
         testMap.put(Direction.DEFAULT, animationLinker);
         testCharacter.addAnimations(AnimationRole.DEAD, Direction.DEFAULT, animationLinker);
         Assert.assertEquals(testMap, testCharacter.animations.get(AnimationRole.DEAD));
@@ -337,7 +328,7 @@ public class MainCharacterTest {
     }
 
     @Test
-    public void addGoldTest(){
+    public void addGoldTest() {
         // create a new gold piece with a value of 5
         GoldPiece g5 = new GoldPiece(5);
         Integer count = 1;
@@ -370,7 +361,7 @@ public class MainCharacterTest {
     }
 
     @Test
-    public void removeGoldTest(){
+    public void removeGoldTest() {
         // create a new gold pieces
         GoldPiece g5 = new GoldPiece(5);
         GoldPiece g10 = new GoldPiece(10);
@@ -406,7 +397,7 @@ public class MainCharacterTest {
     }
 
     @Test
-    public void getGoldPouchTest(){
+    public void getGoldPouchTest() {
         // create a new gold pieces
         GoldPiece g5 = new GoldPiece(5);
         GoldPiece g10 = new GoldPiece(10);
@@ -428,7 +419,7 @@ public class MainCharacterTest {
     }
 
     @Test
-    public void getGoldPouchTotalValueTest(){
+    public void getGoldPouchTotalValueTest() {
         // create a new gold pieces
         GoldPiece g5 = new GoldPiece(5);
         GoldPiece g10 = new GoldPiece(10);
@@ -445,7 +436,7 @@ public class MainCharacterTest {
     }
 
     @Test
-    public void useHatchetTest(){
+    public void useHatchetTest() {
 
         mockGM.setWorld(w);
         w.addEntity(testCharacter);
@@ -456,7 +447,7 @@ public class MainCharacterTest {
         testTree.setRow(1f);
         int currentWood = testCharacter.getInventoryManager().getAmount("Wood");
         testCharacter.useHatchet();
-        Assert.assertEquals(currentWood+1,testCharacter.getInventoryManager().getAmount("Wood"));
+        Assert.assertEquals(currentWood + 1, testCharacter.getInventoryManager().getAmount("Wood"));
     }
 
     @Test
@@ -471,7 +462,7 @@ public class MainCharacterTest {
         testRock.setRow(1f);
         int currentStone = testCharacter.getInventoryManager().getAmount("Stone");
         testCharacter.usePickAxe();
-        Assert.assertEquals(currentStone+1,testCharacter.getInventoryManager().getAmount("Stone"));
+        Assert.assertEquals(currentStone + 1, testCharacter.getInventoryManager().getAmount("Stone"));
 
     }
 
@@ -486,7 +477,7 @@ public class MainCharacterTest {
 
     @Test
     public void testCollision() {
-        WoodCube woodCube = new WoodCube(50,50);
+        WoodCube woodCube = new WoodCube(50, 50);
         Collider c1 = woodCube.getCollider();
         Collider c2 = testCharacter.getCollider();
         if (c1.overlaps(c2)) {

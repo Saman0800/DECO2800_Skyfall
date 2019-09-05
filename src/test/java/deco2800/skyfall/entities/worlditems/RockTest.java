@@ -1,5 +1,6 @@
-package deco2800.skyfall.entities;
+package deco2800.skyfall.entities.worlditems;
 
+import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
@@ -22,13 +23,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ GameManager.class, DatabaseManager.class, PlayerPeon.class })
-public class LongGrassTest {
+public class RockTest {
     private World w = null;
 
     @Mock
@@ -36,9 +38,11 @@ public class LongGrassTest {
 
     @Before
     public void Setup() {
+
         WorldBuilder worldBuilder = new WorldBuilder();
         WorldDirector.constructTestWorld(worldBuilder);
         w = worldBuilder.getWorld();
+
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
 
@@ -62,7 +66,7 @@ public class LongGrassTest {
         tileMap.add(tile1);
         w.setTileMap(tileMap);
 
-        LongGrass longGrass1 = new LongGrass(tile1, true);
+        Rock rock1 = new Rock(tile1, true);
 
         // Make sure our tile is non-null
         Tile tileGet1 = w.getTile(0.0f, 0.0f);
@@ -70,13 +74,13 @@ public class LongGrassTest {
 
         // Check that the various properties of this static entity have been
         // set correctly
-        assertTrue(longGrass1.equals(longGrass1));
-        assertTrue(longGrass1.getPosition().equals(new HexVector(0.0f, 0.0f)));
-        assertEquals(longGrass1.getRenderOrder(), 2);
-        assertEquals(longGrass1.getCol(), 0.0f, 0.0f);
-        assertEquals(longGrass1.getRow(), 0.0f, 0.0f);
-        assertTrue(longGrass1.isObstructed());
-        assertEquals(longGrass1.getObjectName(), "long_grass");
+        assertTrue(rock1.equals(rock1));
+        assertTrue(rock1.getPosition().equals(new HexVector(0.0f, 0.0f)));
+        assertEquals(rock1.getRenderOrder(), 2);
+        assertEquals(rock1.getCol(), 0.0f, 0.0f);
+        assertEquals(rock1.getRow(), 0.0f, 0.0f);
+        assertTrue(rock1.isObstructed());
+        assertEquals(rock1.getObjectName(), "rock");
     }
 
     @Test
@@ -93,8 +97,25 @@ public class LongGrassTest {
         tileMap.add(tile3);
         w.setTileMap(tileMap);
 
-        LongGrass longGrass1 = new LongGrass(tile1, true);
-        longGrass1.newInstance(tile2);
+        Rock rock1 = new Rock(tile1, true);
+
+        // Check that the health interface is working as expected
+        rock1.setHealth(5);
+        assertEquals("Unexpected health value for Rock.", rock1.getHealth(), 5);
+
+        Rock rock2 = rock1.newInstance(tile2);
+
+        assertFalse(rock1.equals(rock2));
+
+        // check various properties of this new rock
+        assertTrue(rock2.getPosition().equals(new HexVector(0.0f, 1.0f)));
+        assertEquals(rock2.getRenderOrder(), 2);
+        assertEquals(rock2.getCol(), 0.0f, 0.001f);
+        assertEquals(rock2.getRow(), 1.0f, 0.001f);
+        assertTrue(rock2.isObstructed());
+        String rockObjectName = "rock";
+        assertEquals("Rock id was " + rock2.getObjectName() + " but expected " + rockObjectName, rockObjectName,
+                rock2.getObjectName());
 
         // Check that the Overwritten newInstance method is working as expected
         // Check that the static entity has been placed down on the tile
@@ -102,5 +123,26 @@ public class LongGrassTest {
                 tile2.hasParent());
         assertTrue("Tile has had a rock placed on it with the tile construct thus the tile should be obstructed",
                 tile2.isObstructed());
+        // Check that no other tiles have static instances
+        assertFalse("Unexpected rock placement.", tile3.hasParent());
+        assertFalse("Unexpected rock placement.", tile3.isObstructed());
+        assertFalse("Unexpected rock placement.", tile4.hasParent());
+        assertFalse("Unexpected rock placement.", tile4.isObstructed());
+    }
+
+    @Test
+    public void TestGetandSet() {
+        CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
+        // Populate world with tiles
+        Tile tile1 = new Tile(0.0f, 0.0f);
+        Tile tile2 = new Tile(0.0f, 1.0f);
+        tileMap.add(tile1);
+        tileMap.add(tile2);
+        w.setTileMap(tileMap);
+
+        Rock rock1 = new Rock(tile1, true);
+
+        rock1.setHealth(3);
+        assertEquals(3, rock1.getHealth());
     }
 }
