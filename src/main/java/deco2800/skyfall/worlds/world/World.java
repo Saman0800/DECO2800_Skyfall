@@ -1,7 +1,9 @@
 package deco2800.skyfall.worlds.world;
 
 import com.badlogic.gdx.Gdx;
+//import com.sun.tools.internal.jxc.ap.Const;
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.managers.ConstructionManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
@@ -581,6 +583,17 @@ public class World implements TouchDownObserver {
 
 
     public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
+        if(button == 0) {
+            if (GameManager.getManagerFromInstance(ConstructionManager.class).getStatus() == 1) {
+                System.out.println("place building");
+                float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
+                float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
+                GameManager.getManagerFromInstance(ConstructionManager.class).build(this,
+                        (int)clickedPosition[0], (int)clickedPosition[1]);
+                GameManager.getManagerFromInstance(ConstructionManager.class).setNull();
+            }
+        }
+
         // only allow right clicks to collect resources
         if (button != 1) {
             return;

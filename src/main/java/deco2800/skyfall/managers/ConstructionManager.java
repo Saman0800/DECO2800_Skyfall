@@ -18,6 +18,7 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.structures.AbstractBuilding;
 import deco2800.skyfall.entities.structures.BuildingType;
+import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.Vector2;
 import deco2800.skyfall.util.WorldUtil;
@@ -25,6 +26,7 @@ import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.entities.AbstractEntity;
 
+import javax.print.DocFlavor;
 import javax.swing.*;
 
 
@@ -35,6 +37,10 @@ import javax.swing.*;
  */
 public class ConstructionManager extends AbstractManager {
     //This manager while control all features related to construction
+
+    //lmao
+    private int spaghetti = 0;
+    private int meatballs;
 
     private BuildingWidgets buildingWidgets;
     private BuildingFactory buildingFactory;
@@ -217,16 +223,18 @@ public class ConstructionManager extends AbstractManager {
 
                         displayWindow();
 
-                        AbstractEntity mc = world.getSortedAgentEntities().get(world.getSortedAgentEntities().size() - 1);
-                        HexVector position = mc.getPosition();
+                        //Place at character
+                        //AbstractEntity mc = world.getSortedAgentEntities().get(world.getSortedAgentEntities().size() - 1);
+                        //HexVector position = mc.getPosition();
 
-                        float row = position.getRow();
-                        float col = position.getCol();
+                        //float row = 5;
+                        //float col = 5;
 
+                        System.out.println("hello");
+                        //BuildingEntity toBePlaced = selectBuilding(FINALi, 0, 0);
+                        spaghetti = 1;
+                        meatballs = FINALi;
 
-                        BuildingEntity toBePlaced = selectBuilding(FINALi, row, col);
-
-                        toBePlaced.placeBuilding(toBePlaced.getRow(), toBePlaced.getCol(), toBePlaced.getHeight(), world);
                     }
                 });
             }
@@ -287,6 +295,24 @@ public class ConstructionManager extends AbstractManager {
                 }
                 });
         }
+    }
+
+    public int getStatus() {
+        int returnValue = spaghetti;
+        spaghetti = 0;
+        return returnValue;
+    }
+
+    public void build(World world, int x, int y) {
+        System.out.printf("x = %d, y = %d\n", x, y);
+
+        BuildingEntity buildingToBePlaced = selectBuilding(meatballs, x, y); 
+
+        buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
+    }
+
+    public void setNull() {
+        buildingToBePlaced = null;
     }
 
     /**
