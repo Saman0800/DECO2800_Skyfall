@@ -3,11 +3,15 @@ package deco2800.skyfall.worlds.world;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.*;
 
 import java.lang.management.MonitorInfo;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -46,8 +50,10 @@ public class WorldDirector {
         builder.addEntity(new Stone(-4, -2, mainCharacter));
         builder.addEntity(new Flower(2f,2f,mainCharacter));
         builder.addEntity(new Treeman(-2f,-3f,mainCharacter));
-        builder.addEntity(new Weapon(-2f, 3f, "sword", "melee",
-                "slash", 3, 5, 6, null));
+
+        Weapon w = new Weapon(new Tile(-2,3), true, "sword", "melee",
+                "slash", 3, 5, 6);
+        builder.addEntity(w);
 
         builder.addBiome(new ForestBiome(), 20);
         builder.addBiome(new DesertBiome(), 20);

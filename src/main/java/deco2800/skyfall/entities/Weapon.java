@@ -2,6 +2,7 @@ package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.Tile;
 
 import java.util.Map;
 
@@ -24,11 +25,10 @@ public class Weapon extends StaticEntity implements Item, IWeapon {
         //TODO: Decide if want to have setters for instance variables.
     }
 
-    public Weapon(float col, float row, String name, String
-            weaponType, String damageType,
-                  float damage, float attackRate, float durability,
-                  Map<HexVector, String> texture) {
-        super(col, row, 5, texture);
+    public Weapon(Tile tile, boolean obstructed, String name, String weaponType, String damageType,
+                  float damage, float attackRate, float durability) {
+        super(tile, 5, name + "_tex", obstructed);
+
         System.out.println("Constructing new Weapon class.");
 
         this.name = name;
@@ -38,7 +38,6 @@ public class Weapon extends StaticEntity implements Item, IWeapon {
         this.damage = damage;
         this.attackRate = attackRate;
 
-        this.setTexture("wood_sword_small");
     }
 
     public Weapon(String name, String weaponType, String damageType,
@@ -86,5 +85,8 @@ public class Weapon extends StaticEntity implements Item, IWeapon {
 
     @Override
     public void onTick(long i) {
+
     }
+
+//    public Map<HexVector, String>
 }

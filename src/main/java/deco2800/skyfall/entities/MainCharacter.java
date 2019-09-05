@@ -584,6 +584,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                     if (this.getPosition().distance(entity.getPosition()) <= 1) {
                         weapons.pickUpWeapon((Weapon) entity);
                         GameManager.get().getWorld().removeEntity(entity);
+                        System.out.println("picked up weapon!");
                     }
                 }
             }
