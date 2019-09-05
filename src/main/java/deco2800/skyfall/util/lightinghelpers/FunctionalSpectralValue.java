@@ -11,15 +11,15 @@ public class FunctionalSpectralValue extends SpectralValue {
      */
     private IntensityFunction intensityFunction = (double x) -> 1.0;
 
-    FunctionalSpectralValue() {
+    public FunctionalSpectralValue() {
         // Do nothing, we already have a default intensityFunction picked out
     }
 
-    FunctionalSpectralValue(IntensityFunction intensityFunction) {
+    public FunctionalSpectralValue(IntensityFunction intensityFunction) {
         this.intensityFunction = intensityFunction;
     }
 
-    FunctionalSpectralValue(IntensityFunction intensityFunction, EnvironmentManager envirManag) {
+    public FunctionalSpectralValue(IntensityFunction intensityFunction, EnvironmentManager envirManag) {
         this(intensityFunction);
         this.envirManag = envirManag;
     }
