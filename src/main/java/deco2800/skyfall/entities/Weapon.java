@@ -1,6 +1,9 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.graphics.Texture;
+import deco2800.skyfall.util.HexVector;
+
+import java.util.Map;
 
 /**
  * A generic type of weapon that can be extended to
@@ -8,7 +11,7 @@ import com.badlogic.gdx.graphics.Texture;
  *
  * Created by Christopher Poli on 10/08/2019
  */
-public class Weapon extends AbstractEntity implements Item, IWeapon {
+public class Weapon extends StaticEntity implements Item, IWeapon {
 
     private String name;
     private String weaponType;
@@ -21,9 +24,11 @@ public class Weapon extends AbstractEntity implements Item, IWeapon {
         //TODO: Decide if want to have setters for instance variables.
     }
 
-    public Weapon(float col, float row, String name, String weaponType, String damageType,
-                  float damage, float attackRate, float durability) {
-        super(col, row, 5);
+    public Weapon(float col, float row, String name, String
+            weaponType, String damageType,
+                  float damage, float attackRate, float durability,
+                  Map<HexVector, String> texture) {
+        super(col, row, 5, texture);
         System.out.println("Constructing new Weapon class.");
 
         this.name = name;

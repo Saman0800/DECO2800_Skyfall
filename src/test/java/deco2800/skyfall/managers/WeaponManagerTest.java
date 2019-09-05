@@ -1,8 +1,10 @@
 package deco2800.skyfall.managers;
 
+import com.badlogic.gdx.Game;
 import deco2800.skyfall.entities.*;
 
 import org.junit.*;
+import org.lwjgl.Sys;
 
 public class WeaponManagerTest {
     // MainCharacter being used for testing
@@ -38,6 +40,9 @@ public class WeaponManagerTest {
                 "splash", 4, 3, 10);
         axe = new Weapon("axe", "melee",
                 "slash", 4, 4, 10);
+        //System.out.println(testWeaponManager.getWeapons());
+        System.out.println(sword);
+        System.out.println(spear);
 
         actualWeaponManager = GameManager.get().getManagerFromInstance(WeaponManager.class);
     }
@@ -77,6 +82,8 @@ public class WeaponManagerTest {
         testWeaponManager.pickUpWeapon(axe);
         testWeaponManager.pickUpWeapon(axe);
         Assert.assertEquals(testWeaponManager.getNumWeapons(), 8);
+
+        System.out.println(testWeaponManager.getWeapons());
 
         Assert.assertEquals(testWeaponManager.getWeaponAmount(sword), 2);
         Assert.assertEquals(testWeaponManager.getWeaponAmount(spear), 2);
