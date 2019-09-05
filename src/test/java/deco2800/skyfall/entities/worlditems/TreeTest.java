@@ -1,5 +1,6 @@
-package deco2800.skyfall.entities;
+package deco2800.skyfall.entities.worlditems;
 
+import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;

@@ -1,4 +1,4 @@
-package deco2800.skyfall.entities;
+package deco2800.skyfall.entities.worlditems;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;

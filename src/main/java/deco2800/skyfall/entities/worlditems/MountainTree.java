@@ -1,5 +1,9 @@
-package deco2800.skyfall.entities;
+package deco2800.skyfall.entities.worlditems;
 
+import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.entities.Harvestable;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.WoodCube;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;

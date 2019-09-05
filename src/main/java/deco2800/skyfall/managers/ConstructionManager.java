@@ -10,6 +10,7 @@ import java.io.*;
 import java.util.*;
 
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import deco2800.skyfall.Tickable;
 import deco2800.skyfall.buildings.BuildingEntity;
 import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.buildings.BuildingFactory;
@@ -35,7 +36,7 @@ import javax.swing.*;
  * Only a single instance should exist
  * Sets all build properties to false as nothing has been set up yet
  */
-public class ConstructionManager extends AbstractManager {
+public class ConstructionManager extends TickableManager {
     //This manager while control all features related to construction
 
     //lmao
@@ -67,8 +68,7 @@ public class ConstructionManager extends AbstractManager {
         menuSetUp = false;
 
         buildingFactory = new BuildingFactory();
-        buildingWidgets = BuildingWidgets.get(GameManager.get().getStage(), GameManager.get().getSkin(),
-                GameManager.get().getWorld(), GameManager.getManagerFromInstance(InputManager.class));
+        buildingWidgets = BuildingWidgets.get(GameManager.get());
     }
 
     //Start of UI
@@ -625,5 +625,12 @@ public class ConstructionManager extends AbstractManager {
 
 
         }
+    }
+
+    // This method will be run per frame handled by GameManager automatically
+    @Override
+    public void onTick(long tick) {
+        buildingWidgets.apply();
+        buildingWidgets.update();
     }
 }

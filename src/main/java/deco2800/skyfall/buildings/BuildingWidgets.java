@@ -1,6 +1,7 @@
 package deco2800.skyfall.buildings;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -11,18 +12,26 @@ import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
+import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.Tile;
-import org.lwjgl.Sys;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *  A BuildingWidgets is a UI widgets for existing building entities, and provides some handling
  *  methods shown on the screen to the existing building entities.
  */
-public class BuildingWidgets implements TouchDownObserver {
+public class BuildingWidgets {
+
+    // a debug logger
+    private final transient Logger logger = LoggerFactory.getLogger(BuildingWidgets.class);
+
     private static BuildingWidgets instance = null;
 
+    private GameManager gm;
     private Stage stage;
     private Skin skin;
     private World world;
@@ -35,13 +44,16 @@ public class BuildingWidgets implements TouchDownObserver {
     private TextButton destroyBtn;
     private ClickListener destroyListener;
 
+    // Game camera position
+    private HexVector cameraPos;
+
     /**
      * Returns an instance of the building widgets.
      * @return the building widgets
      */
-    public static BuildingWidgets get(Stage stage, Skin skin, World world, InputManager input) {
+    public static BuildingWidgets get(GameManager gm) {
         if (instance == null) {
-            return new BuildingWidgets(stage, skin, world, input);
+            return new BuildingWidgets(gm);
         }
         return instance;
     }
@@ -49,16 +61,16 @@ public class BuildingWidgets implements TouchDownObserver {
     /**
      * Private constructor to enforce use of get().
      */
-    private BuildingWidgets(Stage stage, Skin skin, World world, InputManager input) {
+    private BuildingWidgets(GameManager gm) {
         try {
-            this.stage = stage;
-            this.skin = skin;
-            this.world = world;
-            this.inputManager = input;
+            this.gm = gm;
+            this.stage = gm.getStage();
+            this.skin = gm.getSkin();
+            this.world = gm.getWorld();
+            this.inputManager = gm.getManager(InputManager.class);
 
             if (this.skin == null) {
-                // using a skin for test, removed it later
-                this.skin = new Skin(Gdx.files.internal("asserts/skin_for_test/uiskin.json"));
+                this.skin = new Skin(Gdx.files.internal("resources/uiskin.skin"));
             }
 
             this.menu = new Table();
@@ -73,19 +85,28 @@ public class BuildingWidgets implements TouchDownObserver {
             this.menu.add(upgradeBtn).padBottom(3);
             this.menu.row();
             this.menu.add(destroyBtn);
-
             this.stage.addActor(this.menu);
-            this.inputManager.addTouchDownListener(this);
+
+            this.cameraPos = new HexVector();
         } catch (Exception e) {
-            // print exception trace, but no impact to game
+            // print errors, but no impact to game
+            logger.debug("null skin provided for style.");
         }
+    }
+
+    /**
+     * Get the widget layout.
+     * @return an table object forms widget
+     */
+    public Table getMenu() {
+        return menu;
     }
 
     /**
      * Updates the building object when update button is clicked.
      * @param building a building is selected on the world
      */
-    private void updateBuilding(BuildingEntity building) {
+    private void upgradeBuilding(BuildingEntity building) {
         // TODO: check if building is upgradable then update the building
     }
 
@@ -94,26 +115,35 @@ public class BuildingWidgets implements TouchDownObserver {
      * @param building a building is selected on the world
      */
     private void destroyBuilding(BuildingEntity building) {
-        this.world.removeEntity(building);
+        world.removeEntity(building);
     }
 
-    /**
-     * Sets up a widget with specific information of a selected building and its position, then showing it.
-     * @param building a building is selected on the world
-     */
-    private void setWidgets(BuildingEntity building) {
+    private void setMenu(BuildingEntity building) {
         float[] wCords = WorldUtil.colRowToWorldCords(building.getCol(), building.getRow());
-        this.label.setText(building.getObjectName());
-        this.menu.setPosition(this.stage.getWidth()/2 + wCords[0] - GameManager.get().getCamera().position.x,
-                this.stage.getHeight()/2 + wCords[1] - GameManager.get().getCamera().position.y);
-        this.upgradeBtn.addListener(upgradeListener = new ClickListener() {
+        cameraPos.setCol(gm.getCamera().position.x);
+        cameraPos.setRow(gm.getCamera().position.y);
+        menu.setPosition(stage.getWidth()/2 + wCords[0] - cameraPos.getCol(),
+                stage.getHeight()/2 + wCords[1] - cameraPos.getRow());
+    }
+
+    private void setUpgradeBtn(BuildingEntity building) {
+        if (upgradeListener != null) {
+            upgradeBtn.removeListener(upgradeListener);
+        }
+        upgradeBtn.addListener(upgradeListener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                updateBuilding(building);
+                upgradeBuilding(building);
                 menu.setVisible(false);
             }
         });
-        this.destroyBtn.addListener(destroyListener = new ClickListener() {
+    }
+
+    private void setDestroyBtn(BuildingEntity building) {
+        if (destroyListener != null) {
+            destroyBtn.removeListener(destroyListener);
+        }
+        destroyBtn.addListener(destroyListener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 destroyBuilding(building);
@@ -123,51 +153,48 @@ public class BuildingWidgets implements TouchDownObserver {
     }
 
     /**
-     * Get the widget layout.
-     * @return an table object forms widget
+     * Sets up a widget with specific information of a selected building and its position, then showing it.
+     * @param building a building is selected on the world
      */
-    public Table getMenu() {
-        return this.menu;
+    private void setWidgets(BuildingEntity building) {
+        label.setText(building.getObjectName());
+        setMenu(building);
+        setUpgradeBtn(building);
+        setDestroyBtn(building);
     }
 
-    /**
-     * Runs the method when right button of a mouse is clicked on the world. Used to check and get a specific
-     * building object on the mouse's position.
-     * @param screenX screen X coordinate
-     * @param screenY screen Y coordinate
-     * @param pointer index or order of touch down event
-     * @param button mouse button of left (0) or right (1)
-     */
-    @Override
-    public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
-        // only allow right click to handle buildings
-        if (button != 1) {
-            return;
+    public void update() {
+        if (cameraPos.getCol() != gm.getCamera().position.x
+                || cameraPos.getRow() != gm.getCamera().position.y) {
+            menu.setPosition(menu.getX() - gm.getCamera().position.x + cameraPos.getCol(),
+                    menu.getY() - gm.getCamera().position.y + cameraPos.getRow());
+            cameraPos.setCol(gm.getCamera().position.x);
+            cameraPos.setRow(gm.getCamera().position.y);
         }
-        float[] mousePos = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
-        float[] clickedPos = WorldUtil.worldCoordinatesToColRow(mousePos[0], mousePos[1]);
+    }
 
-        Tile tile = this.world.getTile(clickedPos[0], clickedPos[1]);
-        if (tile == null) {
-            return;
-        }
+    public void apply() {
+        if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
+            float[] mousePos = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
+            float[] clickedPos = WorldUtil.worldCoordinatesToColRow(mousePos[0], mousePos[1]);
 
-        // hide the building widget initially
-        this.menu.setVisible(false);
-        if (upgradeListener != null && destroyListener != null) {
-            this.upgradeBtn.removeListener(upgradeListener);
-            this.destroyBtn.removeListener(destroyListener);
-        }
-
-        for (AbstractEntity entity : this.world.getEntities()) {
-            if (!tile.getCoordinates().equals(entity.getPosition())) {
-                continue;
+            Tile tile = this.world.getTile(clickedPos[0], clickedPos[1]);
+            if (tile == null) {
+                return;
             }
-            if (entity instanceof BuildingEntity) {
-                // show the building widgets if a building is clicked
-                setWidgets((BuildingEntity)entity);
-                this.menu.setVisible(true);
-                break;
+
+            // hide the building widget initially
+            this.menu.setVisible(false);
+            for (AbstractEntity entity : this.world.getEntities()) {
+                if (!tile.getCoordinates().equals(entity.getPosition())) {
+                    continue;
+                }
+                if (entity instanceof BuildingEntity) {
+                    // show the building widgets if a building is clicked
+                    setWidgets((BuildingEntity)entity);
+                    this.menu.setVisible(true);
+                    break;
+                }
             }
         }
     }

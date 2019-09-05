@@ -1,8 +1,12 @@
-package deco2800.skyfall.entities;
+package deco2800.skyfall.entities.worlditems;
 
+import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.entities.Harvestable;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.WoodCube;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,8 +33,7 @@ public class Tree extends StaticEntity implements Tickable, Harvestable {
         super(tile, 5, "tree" + nextTreeTexture, obstructed);
         nextTreeTexture = randomGen.nextInt(3) + 1;
         this.woodAmount = 15;
-        }
-
+    }
 
     /**
      * The newInstance method implemented for the Tree class to allow for item

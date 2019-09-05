@@ -1,6 +1,7 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
@@ -179,6 +180,8 @@ public class WorldBuilder implements WorldBuilderInterface {
      */
     protected void generateStartEntities(World world) {
 
+        EntitySpawnRule.setNoiseSeed(world.getSeed());
+
         // Nothing will ever be placed on this tile. Only a dummy tile.
         Tile startTile = world.getTile(0.0f, 1.0f);
 
@@ -188,7 +191,7 @@ public class WorldBuilder implements WorldBuilderInterface {
 
                 Tree startTree = new Tree(startTile, true);
                 // Create a new perlin noise map
-                SpawnControl treeControl = x -> (x * x * x) / 4.0;
+                SpawnControl treeControl = x -> (x * x * x) / 3.0;
                 EntitySpawnRule treeRule = new EntitySpawnRule(biome, true, treeControl);
                 EntitySpawnTable.spawnEntities(startTree, treeRule, world);
 
@@ -205,7 +208,7 @@ public class WorldBuilder implements WorldBuilderInterface {
                 ForestMushroom startMushroom = new ForestMushroom(startTile, false);
                 // This generator will cause the mushrooms to clump togteher more
                 NoiseGenerator mushroomGen = new NoiseGenerator(new Random(), 10, 20, 0.9);
-                SpawnControl mushroomControl = x -> (x * x * x * x * x * x) / 2.0;
+                SpawnControl mushroomControl = x -> (x * x * x * x * x * x) / 3.0;
                 EntitySpawnRule mushroomRule = new EntitySpawnRule(biome, true, mushroomControl);
                 mushroomRule.setNoiseGenerator(mushroomGen);
                 EntitySpawnTable.spawnEntities(startMushroom, mushroomRule, world);
