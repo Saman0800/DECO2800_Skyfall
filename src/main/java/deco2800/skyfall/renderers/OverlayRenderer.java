@@ -110,7 +110,7 @@ public class OverlayRenderer implements Renderer {
 		// Display current biome in game
 		debugLine(batch, camera, line++,
 				String.format("Biome: %s",
-						GameManager.get().getManager(EnvironmentManager.class).currentBiome()));
+						GameManager.get().getManager(EnvironmentManager.class).biomeDisplayName()));
 
 		line++;
 

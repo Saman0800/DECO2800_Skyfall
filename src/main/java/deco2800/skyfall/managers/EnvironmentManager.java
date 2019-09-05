@@ -53,6 +53,9 @@ public class EnvironmentManager extends TickableManager {
    // Abstract entity within entities list. (Public for testing)
    public AbstractEntity player;
 
+   // Correct biome name to display on screen
+   public String biomeDisplay;
+
    /**
     * Constructor
     *
@@ -81,6 +84,7 @@ public class EnvironmentManager extends TickableManager {
             // So below if statement is needed
             if (currentTile != null) {
                biome = currentTile.getBiome().getBiomeName();
+               biomeDisplayName();
             } else {
                // Do nothing
             }
@@ -95,6 +99,49 @@ public class EnvironmentManager extends TickableManager {
     */
    public String currentBiome() {
       return biome;
+   }
+
+   /**
+    * Gets current biome player is in
+    *
+    * @return String Current biome of player, or null if player is moving between tiles
+    */
+   public String biomeDisplayName() {
+
+      if (biome.equals("forest")) {
+         biomeDisplay = "Forest";
+      }
+      if (biome.equals("volcanic_mountains")) {
+         biomeDisplay = "Volcanic Mountains";
+      }
+      if (biome.equals("snowy_mountains")) {
+         biomeDisplay = "Snowy Mountains";
+      }
+      if (biome.equals("mountain")) {
+         biomeDisplay = "Mountains";
+      }
+      if (biome.equals("swamp")) {
+         biomeDisplay = "Swamp";
+      }
+      if (biome.equals("lake")) {
+         biomeDisplay = "Lake";
+      }
+      if (biome.equals("river")) {
+         biomeDisplay = "River";
+      }
+      if (biome.equals("jungle")) {
+         biomeDisplay = "Jungle";
+      }
+      if (biome.equals("desert")) {
+         biomeDisplay = "Desert";
+      }
+      if (biome.equals("beach")) {
+         biomeDisplay = "Beach";
+      }
+      if (biome.equals("ocean")) {
+         biomeDisplay = "Ocean";
+      }
+      return biomeDisplay;
    }
 
    /**
