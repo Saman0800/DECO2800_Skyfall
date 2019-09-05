@@ -195,8 +195,13 @@ public class TextureManager extends AbstractManager {
             textureMap.put("Hatchet", new Texture("resources/temp_hatchet.png"));
             textureMap.put("Select", new Texture("resources/item_selected.png"));
             textureMap.put("quick_access_panel", new Texture("quick_access_panel.png"));
+
             textureMap.put("wood_sword", new Texture("resources/woodSword.png"));
+
             textureMap.put("sword_tex", new Texture("resources/woodSwordSmall.png"));
+            textureMap.put("axe_tex", new Texture("resources/temp_axe.png"));
+            textureMap.put("bow_tex", new Texture("resources/temp_bow.png"));
+            textureMap.put("spear_tex", new Texture("resources/temp_spear.png"));
 
             textureMap.put("MainCharacter", new Texture("resources/Main_Character_F_Right.png"));
             textureMap.put("MainCharacterN_Anim", new Texture("resources/Main_Character_Back_Anim.png"));

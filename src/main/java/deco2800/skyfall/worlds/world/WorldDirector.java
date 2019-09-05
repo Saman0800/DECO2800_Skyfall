@@ -51,9 +51,9 @@ public class WorldDirector {
         builder.addEntity(new Flower(2f,2f,mainCharacter));
         builder.addEntity(new Treeman(-2f,-3f,mainCharacter));
 
-        Weapon w = new Weapon(new Tile(-2,3), true, "sword", "melee",
-                "slash", 3, 5, 6);
-        builder.addEntity(w);
+//        Weapon w = new Weapon(new Tile(-2,3), true, "sword", "melee",
+//                "slash", 3, 5, 6);
+//        builder.addEntity(w);
 
         builder.addBiome(new ForestBiome(), 20);
         builder.addBiome(new DesertBiome(), 20);

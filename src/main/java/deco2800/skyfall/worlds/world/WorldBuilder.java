@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.Random;
 
+import static com.badlogic.gdx.math.MathUtils.random;
+
 /**
  * Allows for step by step creation of a world
  */
@@ -185,6 +187,34 @@ public class WorldBuilder implements WorldBuilderInterface {
         for (AbstractBiome biome : world.getBiomes()) {
             switch (biome.getBiomeName()) {
             case "forest":
+
+                // Spawn some axes
+                Weapon startAxe = new Weapon(startTile, true, "axe", "melee",
+                        "slash", 4, 4, 10);
+                EntitySpawnRule axeRule = new EntitySpawnRule(0.04, 10, 50,
+                        biome);
+                EntitySpawnTable.spawnEntities(startAxe, axeRule, world);
+
+                // Spawn some bows
+                Weapon startBow = new Weapon(startTile, true, "bow", "range",
+                        "slash", 3, 4, 10);
+                EntitySpawnRule bowRule = new EntitySpawnRule(0.04, 10, 50,
+                        biome);
+                EntitySpawnTable.spawnEntities(startBow, bowRule, world);
+
+                // Spawn some spears
+                Weapon startSpear = new Weapon(startTile, true, "spear", "range",
+                        "slash", 5, 4, 7);
+                EntitySpawnRule spearRule = new EntitySpawnRule(0.04, 10, 50,
+                        biome);
+                EntitySpawnTable.spawnEntities(startSpear, spearRule, world);
+
+                // Spawn some swords
+                Weapon startSword = new Weapon(startTile, true, "sword", "melee",
+                        "slash", 3, 5, 6);
+                EntitySpawnRule swordRule = new EntitySpawnRule(0.04, 10, 50,
+                        biome);
+                EntitySpawnTable.spawnEntities(startSword, swordRule, world);
 
                 Tree startTree = new Tree(startTile, true);
                 // Create a new perlin noise map
