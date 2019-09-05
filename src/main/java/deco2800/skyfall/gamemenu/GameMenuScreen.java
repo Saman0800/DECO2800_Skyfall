@@ -149,6 +149,8 @@ public class GameMenuScreen {
                 "inner_circle",
                 mainCharacter);
 
+
+
         gameMenuManager.addHealthCircle(healthCircle);
     }
 

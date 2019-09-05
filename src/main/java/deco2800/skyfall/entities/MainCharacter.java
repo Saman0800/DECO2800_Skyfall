@@ -5,7 +5,9 @@ import com.badlogic.gdx.math.Vector2;
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.*;
+import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.gui.ManaBar;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.*;
 import deco2800.skyfall.resources.GoldPiece;
@@ -144,6 +146,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private int mana = 100;
 
     /**
+     * The GUI mana bar that can be updated when mana is restored/lost.
+     */
+    private ManaBar manaBar;
+
+    /**
      * Private helper method to instantiate inventory and weapon managers for
      * Main Character constructor
      */
@@ -209,6 +216,15 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.scale = 0.4f;
         setDirectionTextures();
         configureAnimations();
+
+        setUpManaBar();
+    }
+
+    /**
+     * Set up the mana bar.
+     */
+    private void setUpManaBar() {
+        manaBar = new ManaBar();
     }
 
     /**
@@ -285,10 +301,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 0.1f,
                 this.itemSlotSelected == 1 ? 1 : 0);
 
-        // Get AbstractWorld from static class GameManager.
-        GameManager manager = GameManager.get();
+
         // Add the projectile entity to the game world.
-        manager.getWorld().addEntity(projectile);
+        GameManager.get().getWorld().addEntity(projectile);
     }
 
     /**
@@ -300,12 +315,23 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         //TODO: Check if have enough mana to attack.
 
         //TODO: Fire the spell in the users mouse direction.
+        Spell spell = new Spell(mousePosition,
+                "flame_wall_placeholder",
+                "spell",
+                mousePosition.getCol(),
+                mousePosition.getRow(),
+                1,
+                0.1f,
+                0);
 
         //Unselect the spell
         this.spellSelected = SpellType.NONE;
 
         //Subtract some mana.
         this.mana-=20;
+
+        GameManager.get().getWorld().addEntity(spell);
+
     }
 
     public void setAttacking(boolean isAttacking) {
