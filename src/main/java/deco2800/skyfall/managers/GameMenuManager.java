@@ -1,6 +1,5 @@
 package deco2800.skyfall.managers;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -9,8 +8,7 @@ import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.SkyfallGame;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gamemenu.GameMenuScreen;
-import deco2800.skyfall.gui.HealthCircle;
-import deco2800.skyfall.gui.SettingsTable;
+import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gamemenu.PopUpTable;
 
 
