@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Random;
 
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.HexVector;
@@ -23,8 +24,10 @@ public class TestWorld extends World {
     private static int RADIUS = 25;
 
     public TestWorld(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int[] lakeSizes,
-        ArrayList<AbstractBiome> biomes, CopyOnWriteArrayList<AbstractEntity> entities, int rivers, int riverSize, int beachSize) {
-        super(seed, worldSize, nodeSpacing, biomeSizes, numOfLakes, lakeSizes, biomes, entities, rivers, riverSize, beachSize);
+            ArrayList<AbstractBiome> biomes, CopyOnWriteArrayList<AbstractEntity> entities, int rivers, int riverSize,
+            int beachSize) {
+        super(seed, worldSize, nodeSpacing, biomeSizes, numOfLakes, lakeSizes, biomes, entities, rivers, riverSize,
+                beachSize);
     }
 
     // 5 tile building
@@ -118,9 +121,9 @@ public class TestWorld extends World {
             }
         }
 
-		// Create the entities in the game
-//		addEntity(new MainCharacter(0f,
-//                0f, 0.05f, "Main Piece", 10));
+        // Create the entities in the game
+        //		addEntity(new MainCharacter(0f,
+        //                0f, 0.05f, "Main Piece", 10));
 
     }
 
