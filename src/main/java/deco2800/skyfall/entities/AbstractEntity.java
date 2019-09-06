@@ -473,8 +473,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * Sets the current animation to be run to null
      */
 	public void setGetToBeRunToNull() {
-		setCurrentState(AnimationRole.NULL);
-		//toBeRun = null;
+		//setCurrentState(AnimationRole.NULL);
+		toBeRun = null;
 	}
 
     /**
