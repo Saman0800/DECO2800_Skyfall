@@ -29,7 +29,7 @@ public class FunctionalSpectralValueTest {
 
         mockEnvironManag = mock(EnvironmentManager.class);
         mockStatic(EnvironmentManager.class);
-        when(mockEnvironManag.getHourDecimal()).thenReturn(4.5);
+        when(mockEnvironManag.getHourDecimal()).thenReturn(4.5f);
 
     }
 
@@ -37,18 +37,18 @@ public class FunctionalSpectralValueTest {
     public void testEmpty() {
         spectralVal = new FunctionalSpectralValue();
 
-        assertEquals(1.0, spectralVal.getIntensity(0.5), 0.0001);
-        assertEquals(1.0, spectralVal.getIntensity(23.0), 0.0001);
+        assertEquals(1.0f, spectralVal.getIntensity(0.5f), 0.0001);
+        assertEquals(1.0f, spectralVal.getIntensity(23.0f), 0.0001);
     }
 
     @Test
     public void testFunctionOnly() {
 
-        IntensityFunction intensityFunction = (double x) -> 2 * x;
+        IntensityFunction intensityFunction = (float x) -> 2 * x;
         spectralVal = new FunctionalSpectralValue(intensityFunction);
 
-        assertEquals(1.0, spectralVal.getIntensity(0.5), 0.0001);
-        assertEquals(46.0, spectralVal.getIntensity(23.0), 0.0001);
+        assertEquals(1.0f, spectralVal.getIntensity(0.5f), 0.0001);
+        assertEquals(46.0f, spectralVal.getIntensity(23.0f), 0.0001);
 
         try {
             // Try getting the intensity without passing in a Environment Manager
@@ -64,10 +64,10 @@ public class FunctionalSpectralValueTest {
     @Test
     public void testFunctionManager() {
 
-        IntensityFunction intensityFunction = (double x) -> 3 * x;
+        IntensityFunction intensityFunction = (float x) -> 3 * x;
         spectralVal = new FunctionalSpectralValue(intensityFunction, mockEnvironManag);
 
-        assertEquals(6.0, spectralVal.getIntensity(2.0), 0.0001);
-        assertEquals(13.5, spectralVal.getIntensity(), 0.0001);
+        assertEquals(6.0f, spectralVal.getIntensity(2.0f), 0.0001);
+        assertEquals(13.5f, spectralVal.getIntensity(), 0.0001);
     }
 }

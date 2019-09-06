@@ -144,7 +144,7 @@ public class GameScreen implements Screen, KeyDownObserver {
          * NOTE: Now that the Environment Manager has been added start creating the
          * SpectralValue instances for the Ambient Light.
          */
-        IntensityFunction intensityFunction = (double x) -> {
+        IntensityFunction intensityFunction = (float x) -> {
             double A = 0.4;
             double B = 7.2;
             double C = 1.46;
@@ -152,7 +152,7 @@ public class GameScreen implements Screen, KeyDownObserver {
             double cosEval = Math.cos(((x - 12) * Math.PI) / 12.0);
             double normalise = A * Math.sqrt((1 + B * B) / (1 + B * B * cosEval * cosEval));
 
-            return normalise * cosEval + A * C;
+            return (float) (normalise * cosEval + A * C);
         };
         ambientIntensity = new FunctionalSpectralValue(intensityFunction, gameEnvironManag);
 
@@ -255,7 +255,7 @@ public class GameScreen implements Screen, KeyDownObserver {
     private void rerenderMapObjects(SpriteBatch batch, OrthographicCamera camera) {
         //set uniform values for lighting parameters and attach shader to batch
         if (extendedLightingActive) {
-            shaderProgram.setUniformf("sunStrength", (float) ambientIntensity.getIntensity());
+            shaderProgram.setUniformf("sunStrength", ambientIntensity.getIntensity());
             // shaderProgram.setUniformf("sunColour", 0.9921f, 0.7215f, 0.0745f);
             shaderProgram.setUniformf("sunColour", 1.0f, 1.0f, 1.0f);
             batch.setShader(shaderProgram);

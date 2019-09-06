@@ -13,11 +13,11 @@ public abstract class SpectralValue {
      * @return Yields an intensity based off the in-game time (usually queried
      * from an Environment manager).
      */
-    abstract public double getIntensity();
+    abstract public float getIntensity();
 
     /**
      * @param time A concrete time (not nesseccarily related to the game).
      * @return Yields an intensity based off a concrete time.
      */
-    abstract public double getIntensity(double time);
+    abstract public float getIntensity(float time);
 }
