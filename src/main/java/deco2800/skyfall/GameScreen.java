@@ -20,6 +20,7 @@ import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.renderers.OverlayRenderer;
 import deco2800.skyfall.renderers.Renderer3D;
+import deco2800.skyfall.util.SettingsFile;
 import deco2800.skyfall.worlds.*;
 import deco2800.skyfall.managers.EnvironmentManager;
 import deco2800.skyfall.util.lightinghelpers.*;
@@ -185,7 +186,9 @@ public class GameScreen implements Screen, KeyDownObserver {
         System.out.print(shaderProgram.getLog());
         if (shaderProgram.isCompiled()) {
             System.out.println("Shader program compiled");
-            extendedLightingActive = true;
+            SettingsFile gfxSettings = new SettingsFile("settings\\gfx.ini");
+            extendedLightingActive = (gfxSettings.get("s_use_e_shader", 1) != 0);
+            gfxSettings.close();
         }
         System.out.print("\n");
     }
