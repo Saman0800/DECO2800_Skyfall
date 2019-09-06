@@ -123,8 +123,8 @@ public class EnvironmentManager extends TickableManager {
      * @return Converts the game minutes and hours into a hour-decimal value. For
      * example the time 2:30am would yield a hour-decimal of 2.5
      */
-    public double getHourDecimal() {
-        return ((double) hours) + ((double) minutes / 60);
+    public float getHourDecimal() {
+        return ((float) hours) + ((float) minutes / 60);
     }
 
     /**

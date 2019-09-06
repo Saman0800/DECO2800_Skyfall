@@ -10,6 +10,6 @@ public interface IntensityFunction {
      * 
      * @return Returns value between 0 and 1 that represents a light intensity.
      */
-    public double intensityMap(double gameTime);
+    public float intensityMap(float gameTime);
 
 }
