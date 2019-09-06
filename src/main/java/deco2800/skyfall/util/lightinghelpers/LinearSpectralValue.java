@@ -15,19 +15,22 @@ public class LinearSpectralValue extends SpectralValue {
     /**
      * Values for storing the coefficients of the linear function y = mx + c.
      */
-    float m;
-    float c;
+    private float m;
+    private float c;
 
     /**
      * The two time intervals that the current game time is in between.
      */
-    TFTuple lowerTuple;
-    TFTuple higherTuple;
+    private TFTuple lowerTuple;
+    private TFTuple higherTuple;
 
     public LinearSpectralValue() {
         // This will create spectral value that has a constant output value of 1
         TFTuple startTuple = new TFTuple(0.0f, 1.0f);
         TFTuple endTuple = new TFTuple(24.0f, 1.0f);
+
+        this.m = 0.0f;
+        this.c = 1.0f;
 
         tupleSet = new TreeSet<>();
 
@@ -36,7 +39,6 @@ public class LinearSpectralValue extends SpectralValue {
 
         tupleSet.add(startTuple);
         tupleSet.add(endTuple);
-        calcLinearCoeff();
     }
 
     public LinearSpectralValue(List<TFTuple> startTuples) {
@@ -49,10 +51,8 @@ public class LinearSpectralValue extends SpectralValue {
         addFillerTuples(startTuples);
         Collections.sort(startTuples);
 
-        lowerTuple = startTuples.get(0);
-        higherTuple = startTuples.get(1);
-
         tupleSet = new TreeSet<>(startTuples);
+        setLowHigh(0.0f);
         calcLinearCoeff();
     }
 
@@ -66,7 +66,7 @@ public class LinearSpectralValue extends SpectralValue {
     private void addFillerTuples(List<TFTuple> startTuples) {
 
         TFTuple startTFTuple = startTuples.get(0);
-        TFTuple endTFTuple = startTuples.get(startTuples.size());
+        TFTuple endTFTuple = startTuples.get(startTuples.size() - 1);
 
         if (Float.compare(startTFTuple.getHour(), 0.0f) == 0) {
             if (Float.compare(endTFTuple.getHour(), 24.0f) == 0) {
@@ -78,14 +78,14 @@ public class LinearSpectralValue extends SpectralValue {
             // Figure out what the intensity values of the filler tuples should be
             float t1 = endTFTuple.getHour();
             float v1 = endTFTuple.getIntensity();
-            float t2 = endTFTuple.getHour() + startTFTuple.getHour();
+            float t2 = endTFTuple.getHour() + startTFTuple.getHour() + 1;
             float v2 = startTFTuple.getIntensity();
 
-            float gradient = (t1 - t2) / (v1 - v2);
+            float gradient = (v1 - v2) / (t1 - t2);
             float intercept = v1 - gradient * t1;
 
-            startTuples.add(new TFTuple(0.0f, intercept));
-            startTuples.add(new TFTuple(24.0f, intercept));
+            startTuples.add(new TFTuple(0.0f, gradient * 24.0f + intercept));
+            startTuples.add(new TFTuple(24.0f, gradient * 24.0f + intercept));
         }
 
         return;
@@ -97,14 +97,37 @@ public class LinearSpectralValue extends SpectralValue {
      */
     private void calcLinearCoeff() {
 
-        m = (lowerTuple.getHour() - higherTuple.getHour()) / (lowerTuple.getIntensity() - higherTuple.getIntensity());
-        c = lowerTuple.getIntensity() - m * lowerTuple.getHour();
+        this.m = (lowerTuple.getIntensity() - higherTuple.getIntensity())
+                / (lowerTuple.getHour() - higherTuple.getHour());
+        this.c = lowerTuple.getIntensity() - this.m * lowerTuple.getHour();
 
         return;
     }
 
     private float calcIntensity(float time) {
-        return m * time + c;
+        return this.m * time + this.c;
+    }
+
+    private void setLowHigh(float time) {
+
+        // The interval need to be updated
+        Iterator<TFTuple> tupleIter = tupleSet.iterator();
+
+        TFTuple prevTup = tupleIter.next();
+        TFTuple nextTup = null;
+        while (tupleIter.hasNext()) {
+            nextTup = tupleIter.next();
+
+            if (prevTup.getHour() <= time && time <= nextTup.getHour()) {
+                lowerTuple = prevTup;
+                break;
+            }
+
+            prevTup = nextTup;
+        }
+
+        higherTuple = nextTup;
+
     }
 
     public float getIntensity(float time) {
@@ -113,22 +136,10 @@ public class LinearSpectralValue extends SpectralValue {
             return calcIntensity(time);
         }
 
-        // The interval need to be updated
-        Iterator<TFTuple> tupleIter = tupleSet.iterator();
-
-        while (tupleIter.hasNext()) {
-            TFTuple nextTup = tupleIter.next();
-
-            if (nextTup.getHour() <= time) {
-                nextTup = lowerTuple;
-                break;
-            }
-        }
-
-        higherTuple = tupleIter.next();
+        setLowHigh(time);
 
         // Recalculate the linear coefficients
-        calcLinearCoeff();
+        this.calcLinearCoeff();
 
         return calcIntensity(time);
     };
@@ -145,4 +156,12 @@ public class LinearSpectralValue extends SpectralValue {
 
         return returnValue;
     };
+
+    public TFTuple getLowTfTuple() {
+        return this.lowerTuple;
+    }
+
+    public TFTuple getHiTfTuple() {
+        return this.higherTuple;
+    }
 }

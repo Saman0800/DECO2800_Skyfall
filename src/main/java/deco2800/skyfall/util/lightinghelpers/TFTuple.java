@@ -32,7 +32,8 @@ public class TFTuple implements Comparable<TFTuple> {
         }
 
         if (intensity < 0.0 || intensity > 1.0) {
-            throw new ArithmeticException("The intensity value must be between 0.0 and 1.0.");
+            throw new ArithmeticException(
+                    "Input intensity of: " + intensity + ". The intensity value must be between 0.0 and 1.0.");
         } else {
             this.intensity = intensity;
         }
