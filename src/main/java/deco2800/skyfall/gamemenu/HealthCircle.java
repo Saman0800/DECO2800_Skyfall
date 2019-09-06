@@ -5,10 +5,13 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.sun.org.glassfish.external.statistics.Statistic;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.StatisticsManager;
+import deco2800.skyfall.managers.TextureManager;
 
-    public class HealthCircle{
+public class HealthCircle extends AbstractUIElement{
     private MainCharacter mainCharacter;
     private float currentHealth;
     private int newHealth; // maybe for animating it down.
@@ -20,6 +23,10 @@ import deco2800.skyfall.managers.GameMenuManager;
     private float offset;
     private Label label;
 
+    // new stuff
+
+    StatisticsManager sm;
+    //private Label label_ref;
     /**
      * Constructor
      * @param stage Stage to display things on
@@ -29,7 +36,7 @@ import deco2800.skyfall.managers.GameMenuManager;
      */
     public HealthCircle(Stage stage, String innerTexture, String outerTexture, MainCharacter mc) {
         mainCharacter = mc;
-        s = stage;
+        this.s = stage;
 
         currentHealth = mc.getHealth();
         newHealth = mc.getHealth();
@@ -44,7 +51,7 @@ import deco2800.skyfall.managers.GameMenuManager;
         this.smallerCircle = new ImageButton(GameMenuManager.generateTextureRegionDrawableObject(outerTexture));
         smallerCircle.setSize(100, 100);
 
-        updateWithViewportChanges();
+        updatePosition();
 
         stage.addActor(biggerCircle);
         stage.addActor(smallerCircle);
@@ -52,16 +59,9 @@ import deco2800.skyfall.managers.GameMenuManager;
 
     }
 
-    /**
-     * Keeps the object on the top left of the screen
-     */
-    private void updateWithViewportChanges() {
-        positionX = (s.getCamera().position.x  + (s.getCamera().viewportWidth / 2) - 100);
-        positionY = (s.getCamera().position.y  +  (s.getCamera().viewportHeight / 2) - 100);
-        smallerCircle.setPosition(positionX + offset, positionY + offset);
-        biggerCircle.setPosition(positionX, positionY);
-        label.setPosition(positionX + 15, positionY + 40);
-    }
+
+
+
 
     /**
      * Updates
@@ -88,12 +88,38 @@ import deco2800.skyfall.managers.GameMenuManager;
     /**
      * Updates the health circle and the position if the screen has been resized
      */
+    @Override
     public void update() {
+        updatePosition();
         newHealth = mainCharacter.getHealth();
-        updateWithViewportChanges();
         if ((currentHealth - newHealth) >= 0) {
             updateInnerCircle();
         }
     }
+    /**
+     * Keeps the object on the top left of the screen
+     */
 
+
+    @Override
+    public void updatePosition() {
+        positionX = (s.getCamera().position.x  + (s.getCamera().viewportWidth / 2) - 100);
+        positionY = (s.getCamera().position.y  +  (s.getCamera().viewportHeight / 2) - 100);
+        smallerCircle.setPosition(positionX + offset, positionY + offset);
+        biggerCircle.setPosition(positionX, positionY);
+        label.setPosition(positionX + 15, positionY + 40);
+    }
+
+    @Override
+    public void draw() {
+
+    }
+
+
+    //Uses new refactored system
+    public HealthCircle(Stage stage, String[] textureNames, TextureManager tm, StatisticsManager sm) {
+        super(stage, textureNames, tm);
+        this.sm = sm;
+        this.draw();
+    }
 }
