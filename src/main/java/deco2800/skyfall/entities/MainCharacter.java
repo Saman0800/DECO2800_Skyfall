@@ -238,7 +238,7 @@ public class MainCharacter extends Peon
         HexVector position = this.getPosition();
         setAttacking(true);
         setCurrentState(AnimationRole.DEAD);
-
+        setCurrentState(AnimationRole.ATTACK);
         // Make projectile move toward the angle
         // Spawn projectile in front of character for now.
 
@@ -250,6 +250,7 @@ public class MainCharacter extends Peon
 
         // Add the projectile entity to the game world.
         manager.getWorld().addEntity(projectile);
+        setAttacking(false);
     }
 
     public void setAttacking(boolean isAttacking) {
@@ -1230,6 +1231,7 @@ public class MainCharacter extends Peon
         }
         */
         /* Short Animations */
+
         if (getToBeRun() != null) {
             if (getToBeRun().getType() == AnimationRole.ATTACK) {
                 return;
@@ -1241,8 +1243,6 @@ public class MainCharacter extends Peon
             setCurrentState(AnimationRole.DEAD);
         } else if (isHurt) {
             setCurrentState(AnimationRole.HURT);
-        } else if (isAttacking) {
-            setCurrentState(AnimationRole.ATTACK);
         } else {
             if (vel.get(2) == 0f) {
                 setCurrentState(AnimationRole.NULL);
@@ -1250,5 +1250,6 @@ public class MainCharacter extends Peon
                 setCurrentState(AnimationRole.MOVE);
             }
         }
+
     }
 }
