@@ -77,8 +77,6 @@ public class MainCharacter extends Peon
     private float foodAccum;
 
     // Textures for all 6 directions to correspond to movement of character
-    private String[] textures;
-
     // A goldPouch to store the character's gold pieces.
     private HashMap<Integer, Integer> goldPouch;
 
@@ -209,8 +207,6 @@ public class MainCharacter extends Peon
      */
     public MainCharacter(float col, float row, float speed, String name, int health, String[] textures) {
         this(row, col, speed, name, health);
-
-        this.textures = textures;
         this.setTexture(textures[2]);
     }
 
@@ -270,7 +266,8 @@ public class MainCharacter extends Peon
         if (this.getHealth() <= 0) {
             kill();
         } else {
-            hurtTime = 3000;
+            hurtTime = 2000;
+            recoverTime = 0;
             HexVector bounceBack = new HexVector();
             /*
             switch (getPlayerDirectionCardinal()) {
@@ -555,6 +552,15 @@ public class MainCharacter extends Peon
         }
     }
 
+    private void checkIfRecovered() {
+        System.out.println("Character is hurt. and recovering");
+        recoverTime += 20;
+        if (recoverTime > hurtTime) {
+            System.out.println("Recovered");
+            setHurt(false);
+        }
+    }
+
     /**
      * Handles tick based stuff, e.g. movement
      */
@@ -570,11 +576,16 @@ public class MainCharacter extends Peon
         //         this.direction.y - this.getRow());
         //        System.out.printf("%s%n", this.currentSpeed);
 
+        if (isHurt) {
+            checkIfRecovered();
+        }
         this.updateAnimation();
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
         }
         // Do hunger stuff here
+
+
         if (isMoving) {
             if (isSprinting) {
                 foodAccum += 0.1f;
@@ -1181,7 +1192,7 @@ public class MainCharacter extends Peon
 
         // Hurt animation
         addAnimations(AnimationRole.HURT, Direction.DEFAULT,
-                new AnimationLinker("MainCharacter_Hurt_E_Anim", AnimationRole.HURT, Direction.DEFAULT, false, true));
+                new AnimationLinker("MainCharacter_Hurt_E_Anim", AnimationRole.HURT, Direction.DEFAULT, true, true));
 
         // Dead animation
         addAnimations(AnimationRole.DEAD, Direction.DEFAULT,
@@ -1218,11 +1229,20 @@ public class MainCharacter extends Peon
            // System.out.println(isAttacking);
         }
         */
+        /* Short Animations */
+        if (getToBeRun() != null) {
+            if (getToBeRun().getType() == AnimationRole.ATTACK) {
+                return;
+            }
+        }
+
 
         if (isDead()) {
             setCurrentState(AnimationRole.DEAD);
         } else if (isHurt) {
             setCurrentState(AnimationRole.HURT);
+        } else if (isAttacking) {
+            setCurrentState(AnimationRole.ATTACK);
         } else {
             if (vel.get(2) == 0f) {
                 setCurrentState(AnimationRole.NULL);

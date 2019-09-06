@@ -361,7 +361,7 @@ public class Renderer3D implements Renderer {
                 return;
             }
 
-            if (ani.isAnimationFinished(time) && entity.getCurrentState()==AnimationRole.NULL) {
+            if (ani.isAnimationFinished(time)) {
                 //System.out.println("Animation is done");
                 aniLink.resetStartingTime();
 
