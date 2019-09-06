@@ -31,7 +31,7 @@ public class SettingsFile {
      * ----------------------
      * But invalid file and even non-existent files will be handled
      */
-    SettingsFile(String path) {
+    public SettingsFile(String path) {
         this.path = path;
         values = new HashMap<String, String>();
         try {
@@ -63,6 +63,13 @@ public class SettingsFile {
      * Closes SettingsFile and saves to path
      */
     public void close() {
+        //create directory for file, if needed
+        File child = new File(path);
+        File parent = child.getParentFile();
+        if (parent != null && !parent.exists()) {
+            parent.mkdir();
+        }
+
         //Set up writer
         try {
             PrintWriter file = new PrintWriter(path);
