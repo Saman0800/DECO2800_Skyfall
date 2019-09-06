@@ -34,11 +34,11 @@ void main() {
     }
     
     //Ambient component is modulated by the colour of the sun
-    //This works because sunColour components are in (0,1)
-    vec3 ambientComponent = sunColour*texColor.rgb;
+    //This works because sunColour components are in [0,1]
+    vec3 ambientComponent = sunColour * texColor.rgb;
     
     gl_FragColor = vec4(
-        sunStrength*ambientComponent,
+        sunStrength * ambientComponent,
         1.0
     );
 }
