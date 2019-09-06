@@ -31,7 +31,7 @@ public class BuildingFactory {
         cabin.addBuildCost("", 0);
         cabin.addBuildCost("", 0);
         cabin.setInitialHealth(cabinType.getMaxHealth());
-        cabin.setWidth(cabinType.getSizeX());
+        cabin.setWidth(cabinType.getSizeY());
         cabin.setLength(cabinType.getSizeX());
         return cabin;
     }
@@ -50,8 +50,8 @@ public class BuildingFactory {
         storage.addBuildCost("", 0);
         storage.addBuildCost("", 0);
         storage.setInitialHealth(storageType.getMaxHealth());
-        storage.setWidth(storageType.getSizeX());
-        storage.setLength(storageType.getSizeY());
+        storage.setWidth(storageType.getSizeY());
+        storage.setLength(storageType.getSizeX());
         return storage;
     }
 
@@ -70,8 +70,8 @@ public class BuildingFactory {
         town.addBuildCost("", 0);
         town.addBuildCost("", 0);
         town.setInitialHealth(townType.getMaxHealth());
-        town.setWidth(townType.getSizeX());
-        town.setLength(townType.getSizeY());
+        town.setWidth(townType.getSizeY());
+        town.setLength(townType.getSizeX());
         return town;
     }
 
@@ -90,8 +90,8 @@ public class BuildingFactory {
         fence.addBuildCost("", 0);
         fence.addBuildCost("", 0);
         fence.setInitialHealth(fenceType.getMaxHealth());
-        fence.setWidth(fenceType.getSizeX());
-        fence.setLength(fenceType.getSizeY());
+        fence.setWidth(fenceType.getSizeY());
+        fence.setLength(fenceType.getSizeX());
         return fence;
     }
 
@@ -110,7 +110,7 @@ public class BuildingFactory {
         safeHouse.addBuildCost("", 0);
         safeHouse.addBuildCost("", 0);
         safeHouse.setInitialHealth(safeHouseType.getMaxHealth());
-        safeHouse.setWidth(safeHouseType.getSizeX());
+        safeHouse.setWidth(safeHouseType.getSizeY());
         safeHouse.setLength(safeHouseType.getSizeX());
         return safeHouse;
     }
@@ -130,7 +130,7 @@ public class BuildingFactory {
         watchTower.addBuildCost("", 0);
         watchTower.addBuildCost("", 0);
         watchTower.setInitialHealth(watchTowerType.getMaxHealth());
-        watchTower.setWidth(watchTowerType.getSizeX());
+        watchTower.setWidth(watchTowerType.getSizeY());
         watchTower.setLength(watchTowerType.getSizeX());
         return watchTower;
     }
@@ -150,53 +150,8 @@ public class BuildingFactory {
         castle.addBuildCost("", 0);
         castle.addBuildCost("", 0);
         castle.setInitialHealth(castleType.getMaxHealth());
-        castle.setWidth(castleType.getSizeX());
+        castle.setWidth(castleType.getSizeY());
         castle.setLength(castleType.getSizeX());
         return castle;
     }
-
-    /*
-     *  Following contents are in BuildingType class
-     *  Each enum constant is one building type and field values relate to texture facing direction.
-     *  Texture facing directions and field values order are following
-     *      0 as south,
-     *      1 as west,
-     *      2 as north,
-     *      3 as east.
-     */
-/*    enum BuildingTextures {
-        House("cabin_0", "", "", ""),
-        StorageUnit("storage_unit", "", "", ""),
-        TownCentre("town_centre", "", "", ""),
-        Fence("fence_left_bottom", "", "", "");
-
-        private final String south;
-        private final String west;
-        private final String north;
-        private final String east;
-
-        BuildingTextures(String south, String west, String north, String east) {
-            this.south = south;
-            this.west = west;
-            this.north = north;
-            this.east = east;
-        }
-
-        // default is south facing direction
-        public String getTexture(int index) {
-            switch (index) {
-                case 0:
-                    return south;
-                case 1:
-                    return west;
-                case 2:
-                    return north;
-                case 3:
-                    return east;
-                default:
-                    return south;
-            }
-        }
-    }
-*/
 }

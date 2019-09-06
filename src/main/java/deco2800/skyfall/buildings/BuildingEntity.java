@@ -1,6 +1,7 @@
 package deco2800.skyfall.buildings;
 
 import deco2800.skyfall.entities.structures.Structure;
+import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.worlds.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ public class BuildingEntity extends AbstractEntity implements Structure {
     private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);
     // a building object name
     private static final String ENTITY_ID_STRING = "buildingEntityID";
+    private Collider collider;
 
     // consistent information for a specific building
     private int buildTime;
@@ -96,6 +98,19 @@ public class BuildingEntity extends AbstractEntity implements Structure {
         level = 1;
         upgradable = false;
         currentHealth = getInitialHealth();
+    }
+
+     /**
+     * Creates a new Collider object at (x,y) coordinates with size xLength x yLength.
+     * Called by building factory when creating a building such that no building
+     * in the game has a Collider set to null.
+     *
+     * @param xLength the x size of a building texture
+     * @param yLength the y size of a building texture
+     */
+    public void setCollider(float xLength, float yLength) {
+        float[] coords = WorldUtil.colRowToWorldCords(position.getCol(), position.getRow());
+        this.collider = new Collider(coords[0], coords[1], xLength, yLength);
     }
 
     @Override
@@ -199,7 +214,7 @@ public class BuildingEntity extends AbstractEntity implements Structure {
 
     /**
      * Set a building entity length related to number of tile in terms of column.
-     * @param length a building's length
+     * @param length a building's length (x length)
      */
     public void setLength(int length) {
         if (length != 0) {
@@ -209,7 +224,7 @@ public class BuildingEntity extends AbstractEntity implements Structure {
 
     /**
      * Get a building entity length related to number of tile in terms of column.
-     * @return a building's length
+     * @return a building's length (x length)
      */
     public int getLength() {
         return this.length;
@@ -217,7 +232,7 @@ public class BuildingEntity extends AbstractEntity implements Structure {
 
     /**
      * Set a building entity width related to number of tile in terms of row.
-     * @param width a building's width
+     * @param width a building's width (y length)
      */
     public void setWidth(int width) {
         if (width != 0) {
@@ -227,7 +242,7 @@ public class BuildingEntity extends AbstractEntity implements Structure {
 
     /**
      * Get a building entity width related to number of tile in terms of row.
-     * @return a building's width
+     * @return a building's width (y length)
      */
     public int getWidth() {
         return this.width;

@@ -12,6 +12,7 @@ import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
+import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.world.World;
@@ -186,10 +187,16 @@ public class BuildingWidgets {
             // hide the building widget initially
             this.menu.setVisible(false);
             for (AbstractEntity entity : this.world.getEntities()) {
-                if (!tile.getCoordinates().equals(entity.getPosition())) {
-                    continue;
-                }
                 if (entity instanceof BuildingEntity) {
+                    Collider collider = entity.getCollider();
+                    if ((collider != null) && !(collider.getX() <= mousePos[0] && collider.getY() <= mousePos[1]
+                            && collider.getX() + collider.getXLength() >= mousePos[0]
+                            && collider.getY() + collider.getYLength() >= mousePos[1])) {
+                        continue;
+                    } else if ((collider == null) && !tile.getCoordinates().equals(entity.getPosition())) {
+                        continue;
+                    }
+
                     // show the building widgets if a building is clicked
                     setWidgets((BuildingEntity)entity);
                     this.menu.setVisible(true);
