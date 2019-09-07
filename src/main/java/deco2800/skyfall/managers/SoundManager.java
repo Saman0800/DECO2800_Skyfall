@@ -28,6 +28,7 @@ public class SoundManager extends AbstractManager {
     public SoundManager() {
         LOGGER.info("soundManager song list");
 
+        try {
             String PATH = "resources/sounds/";
             soundMap.put("people_walk_normal", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "pick up.wav")));
@@ -59,9 +60,9 @@ public class SoundManager extends AbstractManager {
                     (Gdx.files.internal(PATH + "be_hit.wav")));
             soundMap.put("player_died", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "died.wav")));
-       // } catch(Exception e) {
-       //     LOGGER.error("no song be found");
-       // }
+        } catch(Exception e) {
+            LOGGER.error("no song be found");
+        }
     }
 
     /**
