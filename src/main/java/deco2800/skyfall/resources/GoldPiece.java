@@ -17,12 +17,15 @@ public class GoldPiece extends StaticEntity {
     // the value of the piece of gold (either 5G,10G,50G or 100G)
     public int value;
 
+
+
     /**
      * Creates a gold piece with a particular value.
      * @param value The value of the piece of gold, either 5G, 10G, 50G or 100G.
      */
     public GoldPiece(int value){
         this.setObjectName(ENTITY_ID_STRING);
+
         // if the GoldPiece is of value of 5,10,50 or 100
         if (value == 5 || value == 10 || value == 50 || value == 100){
             this.value = value;
@@ -36,9 +39,10 @@ public class GoldPiece extends StaticEntity {
      * @param tile
      * @param obstructed
      */
-    public GoldPiece(Tile tile, boolean obstructed) {
-        super(tile, 2, "goldPieceFive", obstructed);
+    public GoldPiece(Tile tile, boolean obstructed, int value) {
+        super(tile, 2, "goldPiece" + value, obstructed);
         this.setObjectName(ENTITY_ID_STRING);
+        this.value = value;
     }
 
 
@@ -50,7 +54,7 @@ public class GoldPiece extends StaticEntity {
      */
     @Override
     public GoldPiece newInstance(Tile tile) {
-        return new GoldPiece(tile, this.isObstructed());
+        return new GoldPiece(tile, this.isObstructed(), value);
     }
     /**
      * Returns the value of the piece of gold.

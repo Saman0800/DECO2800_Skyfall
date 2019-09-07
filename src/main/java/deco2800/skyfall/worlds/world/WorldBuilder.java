@@ -208,8 +208,8 @@ public class WorldBuilder implements WorldBuilderInterface {
                 EntitySpawnTable.spawnEntities(startRock, rockRule, world);
 
                 // Spawn gold pieces uniformly
-                GoldPiece startGoldPiece = new GoldPiece(startTile, true);
-                EntitySpawnRule goldRule = new EntitySpawnRule(0.1, 10, 50, biome);
+                GoldPiece startGoldPiece = new GoldPiece(startTile, true, 5);
+                EntitySpawnRule goldRule = new EntitySpawnRule(0.5, 10, 50, biome);
                 EntitySpawnTable.spawnEntities(startGoldPiece, goldRule, world);
 
                 ForestMushroom startMushroom = new ForestMushroom(startTile, false);
