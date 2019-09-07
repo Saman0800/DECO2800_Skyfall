@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import com.badlogic.gdx.audio.Sound;
 import deco2800.skyfall.entities.worlditems.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.Vector2;
@@ -311,8 +312,8 @@ public class MainCharacter extends Peon
                         break;
                 }
                 position.moveToward(bounceBack, 1f);
-            
-                soundManager.playSound("");
+
+                Sound sound = Gdx.audio.newSound(Gdx.files.internal("sounds/"));
 
             }
         }

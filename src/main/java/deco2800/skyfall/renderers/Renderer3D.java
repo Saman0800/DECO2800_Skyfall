@@ -216,11 +216,12 @@ public class Renderer3D implements Renderer {
                     GameMenuManager gameMenuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
 
                     if (entity instanceof MainCharacter) {
-                        if (((MainCharacter) entity).IsHurt() || ((MainCharacter) entity).isDead()){
+                        if (((MainCharacter) entity).IsHurt() ||
+                                ((MainCharacter) entity).isDead()) {
                             // System.out.println(entity.);
                             batch.setColor(Color.RED);
-                        } else if(((MainCharacter) entity).isRecovering()) {
-                            if(((MainCharacter) entity).isTexChanging()) {
+                        } else if (((MainCharacter) entity).isRecovering()) {
+                            if (((MainCharacter) entity).isTexChanging()) {
                                 batch.setColor(c.r, c.g, c.b, 0f);
                                 ((MainCharacter) entity).setTexChanging(!((MainCharacter) entity).isTexChanging());
                             } else {
@@ -228,24 +229,16 @@ public class Renderer3D implements Renderer {
                                 ((MainCharacter) entity).setTexChanging(!((MainCharacter) entity).isTexChanging());
                             }
                         }
-                    } else {
-                        batch.setColor(c.r, c.g, c.b, 1f);
                     }
                     runAnimation(batch, entity, entityWorldCoord);
                     batch.setColor(c.r, c.g, c.b, 1f);
                 }
 
-
                 /* Draw Peon */
                 // Place movement tiles
-
-                /*
                 if (entity instanceof Peon && GameManager.get().showPath) {
                     renderPeonMovementTiles(batch, camera, entity, entityWorldCoord);
                 }
-
-                */
-
             }
 
         }

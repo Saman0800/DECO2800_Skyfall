@@ -20,18 +20,19 @@ public class SoundManager extends AbstractManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SoundManager.class);
 
+    int i = 0;
+
     /**
      * Initialize SoundManager by adding different sounds in a map
      */
     public SoundManager() {
         LOGGER.info("soundManager song list");
 
-        try {
             String PATH = "resources/sounds/";
             soundMap.put("people_walk_normal", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "pick up.wav")));
             soundMap.put("spider", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "spider.wav")));
+                    (Gdx.files.internal(PATH + "spider.wav"))); //
             soundMap.put("robot", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "robot.wav")));
             soundMap.put("sword", Gdx.audio.newSound
@@ -39,7 +40,7 @@ public class SoundManager extends AbstractManager {
             soundMap.put("stoneWalk", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "stone_walk.wav")));
             soundMap.put("stoneDie", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "stone_die.wav")));
+                    (Gdx.files.internal(PATH + "stone_die.wav"))); //
             soundMap.put("collectStone", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "collect-stone.wav")));
             soundMap.put("menu", Gdx.audio.newSound
@@ -58,9 +59,9 @@ public class SoundManager extends AbstractManager {
                     (Gdx.files.internal(PATH + "be_hit.wav")));
             soundMap.put("player_died", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "died.wav")));
-        } catch(Exception e) {
-            LOGGER.error("no song be found");
-        }
+       // } catch(Exception e) {
+       //     LOGGER.error("no song be found");
+       // }
     }
 
     /**
