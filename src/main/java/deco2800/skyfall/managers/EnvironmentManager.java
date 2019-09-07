@@ -179,6 +179,7 @@ public class EnvironmentManager extends TickableManager {
 
       // Day is 6am - 6pm, Night 6pm - 6am
       if (hours < 6 || hours >= 18) {
+         //check if observers need notifying
          if (isDay) {
             for (DayNightObserver observer : dayNightListeners) {
                observer.notifyDayNightUpdate(false);
@@ -186,6 +187,7 @@ public class EnvironmentManager extends TickableManager {
          }
          isDay = false;
       } else {
+         //check if observers need notifying
          if (!isDay) {
             for (DayNightObserver observer :dayNightListeners) {
                observer.notifyDayNightUpdate(true);

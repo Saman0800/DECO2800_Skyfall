@@ -30,22 +30,22 @@ public class EnvironmentManagerTest {
 
     @Test
     public void isDayTest() {
-        manager.setTime(100000);
-        assertTrue(manager.isDay());
         manager.setTime(1000000);
+        assertTrue(manager.isDay());
+        manager.setTime(100000);
         assertFalse(manager.isDay());
     }
 
     @Test
     public void amTest() {
-        manager.setTime(100000);
+        manager.setTime(500000);
         assertTrue(manager.isDay());
 
         manager.getTOD();
         assertEquals("am", manager.TOD);
 
         manager.hours = 24;
-        assertTrue(manager.isDay());
+        assertFalse(manager.isDay());
 
         manager.getTOD();
         assertEquals("am", manager.TOD);
@@ -53,13 +53,13 @@ public class EnvironmentManagerTest {
 
     @Test
     public void pmTest() {
-        manager.setTime(1000000);
+        manager.setTime(10000000);
         assertFalse(manager.isDay());
 
         manager.getTOD();
         assertEquals("pm", manager.TOD);
 
-        manager.hours = 12;
+        manager.hours = 19;
         assertFalse(manager.isDay());
 
         manager.getTOD();
@@ -83,7 +83,7 @@ public class EnvironmentManagerTest {
         manager.setFilename();
         assertEquals("resources/sounds/forest_day.wav", manager.file);
 
-        manager.hours = 15;
+        manager.hours = 19;
         manager.isDay();
         manager.biome = "desert";
         manager.setFilename();
