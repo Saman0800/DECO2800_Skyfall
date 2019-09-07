@@ -2,6 +2,7 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.observers.DayNightObserver;
 import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.worlds.Tile;
 
@@ -58,6 +59,9 @@ public class EnvironmentManager extends TickableManager {
    //List of objects implementing TimeObserver
    private ArrayList<TimeObserver> timeListeners;
 
+   //List of objects implementing DayNightObserver
+   private ArrayList<DayNightObserver> dayNightListeners;
+
    /**
     * Constructor
     *
@@ -66,6 +70,7 @@ public class EnvironmentManager extends TickableManager {
       file = "resources/sounds/forest_day.wav";
       currentFile = "resources/sounds/forest_night.wav";
       timeListeners = new ArrayList<>();
+      dayNightListeners = new ArrayList<>();
    }
 
    /**
@@ -82,6 +87,22 @@ public class EnvironmentManager extends TickableManager {
     */
    public void removeTimeListener (TimeObserver observer) {
       timeListeners.remove(observer);
+   }
+
+   /**
+    * Adds an observer to observe day/night change
+    * @param observer The observer to add
+    */
+   public void addDayNightListener (DayNightObserver observer) {
+      dayNightListeners.add(observer);
+   }
+
+   /**
+    * Removes and observer from observing day/night change
+    * @param observer The observer to remove
+    */
+   public void removeDayNightListener (DayNightObserver observer) {
+      dayNightListeners.remove(observer);
    }
 
    /**
@@ -145,6 +166,9 @@ public class EnvironmentManager extends TickableManager {
       //Each minute equals one second
       long timeMins = (i / 1000);
       minutes = timeMins % 60;
+
+      //Update isDay boolean
+      isDay();
    }
 
    /**
@@ -153,10 +177,20 @@ public class EnvironmentManager extends TickableManager {
     */
    public boolean isDay() {
 
-      // Day equals am, night equals pm for now.
-      if (hours >= 12 && hours < 24) {
+      // Day is 6am - 6pm, Night 6pm - 6am
+      if (hours < 6 || hours >= 18) {
+         if (isDay) {
+            for (DayNightObserver observer : dayNightListeners) {
+               observer.notifyDayNightUpdate(false);
+            }
+         }
          isDay = false;
       } else {
+         if (!isDay) {
+            for (DayNightObserver observer :dayNightListeners) {
+               observer.notifyDayNightUpdate(true);
+            }
+         }
          isDay = true;
       }
       return isDay;
