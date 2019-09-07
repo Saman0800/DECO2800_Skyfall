@@ -38,9 +38,8 @@ public class GoldPiece extends StaticEntity {
      * @param obstructed
      */
     public GoldPiece(Tile tile, boolean obstructed) {
-        super(tile, 2, "bush" + nextRock, obstructed);
+        super(tile, 2, "goldPieceFive", obstructed);
         this.setObjectName(ENTITY_ID_STRING);
-        nextRock = randomGen.nextInt(3) + 1;
     }
 
 

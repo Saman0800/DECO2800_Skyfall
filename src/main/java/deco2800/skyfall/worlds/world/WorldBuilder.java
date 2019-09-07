@@ -2,6 +2,7 @@ package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.worlditems.*;
+import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
@@ -205,6 +206,11 @@ public class WorldBuilder implements WorldBuilderInterface {
                 Rock startRock = new Rock(startTile, true);
                 EntitySpawnRule rockRule = new EntitySpawnRule(0.04, 10, 50, biome);
                 EntitySpawnTable.spawnEntities(startRock, rockRule, world);
+
+                // Spawn gold pieces uniformly
+                GoldPiece startGoldPiece = new GoldPiece(startTile, true);
+                EntitySpawnRule goldRule = new EntitySpawnRule(0.1, 10, 50, biome);
+                EntitySpawnTable.spawnEntities(startGoldPiece, goldRule, world);
 
                 ForestMushroom startMushroom = new ForestMushroom(startTile, false);
                 // This generator will cause the mushrooms to clump togteher more
