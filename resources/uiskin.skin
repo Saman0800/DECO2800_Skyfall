@@ -54,7 +54,8 @@
 },
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
   default: { font: default-font, fontColor: black }
-  pop-up-title: { font: game-font, fontColor: black}
+  black-text: { font: game-font, fontColor: black}
+  white-text: { font: game-font, fontColor: white}
   white-label: { font: game-font, fontColor: white , background: default-round}
   black-label: { font: game-font, fontColor: black , background: default-round}
 },

@@ -182,7 +182,7 @@ public class GameMenuScreen {
         Table infoBar = new Table();
         infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
 
-        Label text = new Label("GAME PAUSED", skin, "pop-up-title");
+        Label text = new Label("GAME PAUSED", skin, "black-text");
         infoBar.add(text);
 
         pauseTable.add(infoBar).width(475).height(475 * 188f / 1756).padTop(20).colspan(3);
@@ -199,7 +199,7 @@ public class GameMenuScreen {
         }
     });
 
-        Label homeText = new Label("HOME", skin, "pop-up");
+        Label homeText = new Label("HOME", skin, "white-text");
         homeText.setFontScale(0.7f);
         System.out.println("homeText width" + homeText.getWidth());
 
@@ -211,11 +211,11 @@ public class GameMenuScreen {
             }
         });
 
-        Label resumeText = new Label("RESUME", skin, "pop-up");
+        Label resumeText = new Label("RESUME", skin, "white-text");
         resumeText.setFontScale(0.7f);
 
         ImageButton reset = new ImageButton(generateTextureRegionDrawableObject("reset"));
-        Label resetText = new Label("RESET", skin, "pop-up");
+        Label resetText = new Label("RESET", skin, "white-text");
         resetText.setFontScale(0.7f);
         System.out.println("resetText width" + resetText.getWidth());
 
@@ -264,7 +264,7 @@ public class GameMenuScreen {
         Table infoBar = new Table();
         infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
 
-        Label text = new Label("HELP", skin, "pop-up-title");
+        Label text = new Label("HELP", skin, "black-text");
         infoBar.add(text);
 
         helpTable.add(infoBar).width(550).height(550 * 188f / 1756).padTop(20).colspan(3);
@@ -327,7 +327,7 @@ public class GameMenuScreen {
         Table infoBar = new Table();
         infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
 
-        Label text = new Label("BUILDING TABLE", skin, "pop-up-title");
+        Label text = new Label("BUILDING TABLE", skin, "black-text");
         infoBar.add(text);
 
         buildingTable.add(infoBar).width(650).height(650 * 188f / 1756).padTop(20).colspan(2);
@@ -564,7 +564,7 @@ public class GameMenuScreen {
         Table infoBar = new Table();
         infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
 
-        Label text = new Label("SETTINGS", skin, "pop-up-title");
+        Label text = new Label("SETTINGS", skin, "black-text");
         infoBar.add(text);
 
         settingsTable.add(infoBar).width(550).height(475 * 188f / 1756).padTop(20).colspan(3);
@@ -597,7 +597,7 @@ public class GameMenuScreen {
         Table infoBar = new Table();
         infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
 
-        Label text = new Label("PLAYER SELECT", skin, "pop-up-title");
+        Label text = new Label("PLAYER SELECT", skin, "black-text");
         infoBar.add(text);
 
         playerSelect.add(infoBar).width(550).height(550f * 180 / 1756).padTop(20).colspan(5).padBottom(20);
