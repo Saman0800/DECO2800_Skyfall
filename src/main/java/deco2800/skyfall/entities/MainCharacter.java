@@ -244,7 +244,6 @@ public class MainCharacter extends Peon
     public void attack(HexVector mousePosition) {
         HexVector position = this.getPosition();
         setAttacking(true);
-        setCurrentState(AnimationRole.DEAD);
         setCurrentState(AnimationRole.ATTACK);
         // Make projectile move toward the angle
         // Spawn projectile in front of character for now.
@@ -1260,12 +1259,13 @@ public class MainCharacter extends Peon
         getPlayerDirectionCardinal();
         List<Float> vel = getVelocity();
 
-        /*
+
         if(isAttacking) {
             setCurrentState(AnimationRole.ATTACK);
            // System.out.println(isAttacking);
+            setAttacking(false);
         }
-        */
+
         /* Short Animations */
 
         if (getToBeRun() != null) {
