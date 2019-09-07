@@ -12,12 +12,10 @@ import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
 
 public class HealthCircle extends AbstractUIElement{
-    private MainCharacter mainCharacter;
     private float currentHealth;
     private int newHealth; // maybe for animating it down.
     private  ImageButton biggerCircle;
     private  ImageButton smallerCircle;
-    private Stage s;
     private float positionX;
     private float positionY;
     private float offset;
@@ -26,38 +24,37 @@ public class HealthCircle extends AbstractUIElement{
     // new stuff
 
     StatisticsManager sm;
-    //private Label label_ref;
-    /**
-     * Constructor
-     * @param stage Stage to display things on
-     * @param innerTexture Texture of the inner circle
-     * @param outerTexture Texture of the outer circle
-     * @param mc Main Character (Needs to be migrated to statsManager)
-     */
-    public HealthCircle(Stage stage, String innerTexture, String outerTexture, MainCharacter mc) {
-        mainCharacter = mc;
-        this.s = stage;
-
-        currentHealth = mc.getHealth();
-        newHealth = mc.getHealth();
-        BitmapFont bitmapFont  = new BitmapFont();
-        bitmapFont.getData().setScale(1f);
-
-        label = new Label("Health: 10", new Label.LabelStyle(bitmapFont, Color.WHITE));
-
-        this.biggerCircle = new ImageButton(GameMenuManager.generateTextureRegionDrawableObject(innerTexture));
-        biggerCircle.setSize(100, 100);
-
-        this.smallerCircle = new ImageButton(GameMenuManager.generateTextureRegionDrawableObject(outerTexture));
-        smallerCircle.setSize(100, 100);
-
-        updatePosition();
-
-        stage.addActor(biggerCircle);
-        stage.addActor(smallerCircle);
-        stage.addActor(label);
-
-    }
+//    //private Label label_ref;
+//    /**
+//     * Constructor
+//     * @param stage Stage to display things on
+//     * @param innerTexture Texture of the inner circle
+//     * @param outerTexture Texture of the outer circle
+//     * @param mc Main Character (Needs to be migrated to statsManager)
+//     */
+//    public HealthCircle(Stage stage, String innerTexture, String outerTexture, MainCharacter mc) {
+//        mainCharacter = mc;
+//        this.s = stage;
+//
+//        currentHealth = mc.getHealth();
+//        newHealth = mc.getHealth();
+//        BitmapFont bitmapFont  = new BitmapFont();
+//        bitmapFont.getData().setScale(1f);
+//
+//        label = new Label("Health: 10", new Label.LabelStyle(bitmapFont, Color.WHITE));
+//
+//        this.biggerCircle = new ImageButton(GameMenuManager.generateTextureRegionDrawableObject(innerTexture));
+//        biggerCircle.setSize(100, 100);
+//
+//        this.smallerCircle = new ImageButton(GameMenuManager.generateTextureRegionDrawableObject(outerTexture));
+//        smallerCircle.setSize(100, 100);
+//
+//        updatePosition();
+//
+//        stage.addActor(biggerCircle);
+//        stage.addActor(smallerCircle);
+//        stage.addActor(label);
+//    }
 
 
 
@@ -82,7 +79,7 @@ public class HealthCircle extends AbstractUIElement{
         offset += (diff * 10) / 2;
         smallerCircle.setPosition(positionX + offset, positionY + offset);
         currentHealth = newHealth;
-        label.setText("Health: " + mainCharacter.getHealth());
+        label.setText("Health: " + sm.getHealth());
     }
 
     /**
@@ -91,8 +88,10 @@ public class HealthCircle extends AbstractUIElement{
     @Override
     public void update() {
         updatePosition();
-        newHealth = mainCharacter.getHealth();
+        newHealth = sm.getHealth();
+        System.out.println(newHealth);
         if ((currentHealth - newHealth) >= 0) {
+      ///System.out.println(currentHealth- newHealth);
             updateInnerCircle();
         }
     }
@@ -103,8 +102,8 @@ public class HealthCircle extends AbstractUIElement{
 
     @Override
     public void updatePosition() {
-        positionX = (s.getCamera().position.x  + (s.getCamera().viewportWidth / 2) - 100);
-        positionY = (s.getCamera().position.y  +  (s.getCamera().viewportHeight / 2) - 100);
+        positionX = (stage.getCamera().position.x  + (stage.getCamera().viewportWidth / 2) - 100);
+        positionY = (stage.getCamera().position.y  +  (stage.getCamera().viewportHeight / 2) - 100);
         smallerCircle.setPosition(positionX + offset, positionY + offset);
         biggerCircle.setPosition(positionX, positionY);
         label.setPosition(positionX + 15, positionY + 40);
@@ -112,7 +111,22 @@ public class HealthCircle extends AbstractUIElement{
 
     @Override
     public void draw() {
+        BitmapFont bitmapFont  = new BitmapFont();
+        bitmapFont.getData().setScale(1f);
+        label = new Label("Health: 10", new Label.LabelStyle(bitmapFont, Color.WHITE));
 
+        int OUTER_CIRCLE = 1;
+        int INNER_CIRCLE = 0;
+
+        this.biggerCircle = new ImageButton(textures[OUTER_CIRCLE]);
+        biggerCircle.setSize(100, 100);
+
+        this.smallerCircle = new ImageButton(textures[INNER_CIRCLE]);
+        smallerCircle.setSize(100, 100);
+
+        stage.addActor(biggerCircle);
+        stage.addActor(smallerCircle);
+        stage.addActor(label);
     }
 
 
@@ -121,5 +135,6 @@ public class HealthCircle extends AbstractUIElement{
         super(stage, textureNames, tm);
         this.sm = sm;
         this.draw();
+        currentHealth = sm.getHealth();
     }
 }

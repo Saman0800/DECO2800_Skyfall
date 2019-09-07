@@ -3,6 +3,7 @@ package deco2800.skyfall.worlds.world;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.worlds.biomes.*;
 
 import java.lang.management.MonitorInfo;
@@ -37,9 +38,12 @@ public class WorldDirector {
         builder.setStaticEntities(true);
 
         MainCharacter mainCharacter = new MainCharacter(0,0,0.05f, "Main Piece", 10);
-
         builder.addEntity(mainCharacter);
-        GameManager.getManagerFromInstance(GameMenuManager.class).setMainCharacter(mainCharacter);
+        GameMenuManager onScreenUI = GameManager.getManagerFromInstance(GameMenuManager.class);
+        StatisticsManager sm = new StatisticsManager(mainCharacter);
+        GameManager.addManagerToInstance(sm);
+        onScreenUI.addStatsManager(sm);
+        onScreenUI.drawAllElements();
 
         builder.addEntity(new Spider(-4f, -1f, mainCharacter));
         builder.addEntity(new Robot(-4, -2, mainCharacter));
@@ -94,7 +98,6 @@ public class WorldDirector {
         MainCharacter mainCharacter = new MainCharacter(0,0,0.05f, "Main Piece", 10);
 
         builder.addEntity(mainCharacter);
-        GameManager.getManagerFromInstance(GameMenuManager.class).setMainCharacter(mainCharacter);
 
         builder.addEntity(new Spider(-4f, -1f, mainCharacter));
         builder.addEntity(new Robot(-4, -2, mainCharacter));
@@ -114,7 +117,6 @@ public class WorldDirector {
         MainCharacter mainCharacter = new MainCharacter(0,0,0.05f, "Main Piece", 10);
 
         builder.addEntity(mainCharacter);
-        GameManager.getManagerFromInstance(GameMenuManager.class).setMainCharacter(mainCharacter);
 
         builder.addEntity(new Spider(-4f, -1f, mainCharacter));
         builder.addEntity(new Robot(-4, -2, mainCharacter));

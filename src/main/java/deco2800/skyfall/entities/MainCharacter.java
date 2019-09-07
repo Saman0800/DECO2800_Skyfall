@@ -554,10 +554,10 @@ public class MainCharacter extends Peon
     }
 
     private void checkIfRecovered() {
-        System.out.println("Character is hurt. and recovering");
+        //System.out.println("Character is hurt. and recovering");
         recoverTime += 20;
         if (recoverTime > hurtTime) {
-            System.out.println("Recovered");
+            //System.out.println("Recovered");
             setHurt(false);
         }
     }

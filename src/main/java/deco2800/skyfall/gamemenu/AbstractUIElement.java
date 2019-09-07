@@ -7,9 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import deco2800.skyfall.managers.TextureManager;
 
 public abstract class AbstractUIElement {
-    TextureRegionDrawable[] textures;
-    Stage stage;
-    TextureManager tm;
+    protected TextureRegionDrawable[] textures;
+    protected Stage stage;
+    protected TextureManager tm;
 
 
     public abstract void updatePosition();
