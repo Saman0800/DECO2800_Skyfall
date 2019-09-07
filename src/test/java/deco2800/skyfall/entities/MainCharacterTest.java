@@ -46,6 +46,7 @@ public class MainCharacterTest {
     private Tree testTree;
     private Rock testRock;
     private Tile testTile;
+    private GoldPiece testGoldPiece;
     private InventoryManager inventoryManager;
     private Hatchet testHatchet;
     private Hatchet testHatchet2;
@@ -78,6 +79,8 @@ public class MainCharacterTest {
         testTile = new Tile(0f, 0f);
         testTree = new Tree(testTile, true);
         testRock = new Rock(testTile, true);
+
+        testGoldPiece = new GoldPiece(5);
 
         inventoryManager = GameManager.get().getManagerFromInstance(InventoryManager.class);
 
@@ -473,6 +476,24 @@ public class MainCharacterTest {
         int currentStone = testCharacter.getInventoryManager().getAmount("Stone");
         testCharacter.usePickAxe();
         Assert.assertEquals(currentStone + 1, testCharacter.getInventoryManager().getAmount("Stone"));
+
+    }
+
+    /**
+     * Tests to ensure that the closest gold piece is added to the gold pouch
+     */
+    @Test
+    public void addClosestGoldPieceTest(){
+        mockGM.setWorld(w);
+        w.addEntity(testCharacter);
+        w.addEntity(testGoldPiece);
+        testCharacter.setCol(1f);
+        testCharacter.setRow(1f);
+        testGoldPiece.setCol(1f);
+        testGoldPiece.setRow(1f);
+        testCharacter.addClosestGoldPiece();
+        Assert.assertTrue(testCharacter.getGoldPouch().containsKey(5));
+        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(105));
 
     }
 

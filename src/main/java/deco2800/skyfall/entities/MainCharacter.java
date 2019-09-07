@@ -766,21 +766,22 @@ public class MainCharacter extends Peon
     }
 
     /**
-     * If the player is within 2m of a gold piece and presses G, it will
+     * If the player is within 1m of a gold piece and presses G, it will
      * be added to their Gold Pouch.
      *
      */
     public void addClosestGoldPiece() {
-/*        for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+        for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
             if (entity instanceof GoldPiece) {
-                if (this.getPosition().distance(entity.getPosition()) <= 2) {
+                if (this.getPosition().distance(entity.getPosition()) <= 1) {
+                    this.changeTexture("woodcube");
                     this.addGold((GoldPiece) entity, 1);
-                    logger.info(this.inventories.toString());
+                    logger.info("Gold piece added!");
                 }
             }
 
         }
-        logger.info("Sorry, you are not close enough to a gold piece!");*/
+        logger.info("Sorry, you are not close enough to a gold piece!");
 
     }
 

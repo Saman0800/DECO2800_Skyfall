@@ -89,7 +89,7 @@ public class HealthCircle extends AbstractUIElement{
     public void update() {
         updatePosition();
         newHealth = sm.getHealth();
-        System.out.println(newHealth);
+        //System.out.println(newHealth);
         if ((currentHealth - newHealth) >= 0) {
       ///System.out.println(currentHealth- newHealth);
             updateInnerCircle();

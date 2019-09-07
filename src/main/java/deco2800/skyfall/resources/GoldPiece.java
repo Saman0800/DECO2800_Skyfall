@@ -3,7 +3,6 @@ package deco2800.skyfall.resources;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.worlds.Tile;
 
-import java.util.Random;
 
 /**
  * The civilisation's currency is Gold Pieces valued as either 5G,
