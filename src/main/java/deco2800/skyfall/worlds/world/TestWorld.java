@@ -1,20 +1,18 @@
 package deco2800.skyfall.worlds.world;
 
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.world.World;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-
-import deco2800.skyfall.entities.*;
-import deco2800.skyfall.entities.worlditems.*;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.entities.worlditems.Rock;
+import deco2800.skyfall.entities.worlditems.Tree;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 @SuppressWarnings("unused")
 public class TestWorld extends World {

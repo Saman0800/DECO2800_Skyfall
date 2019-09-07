@@ -49,8 +49,6 @@ public class World implements TouchDownObserver {
     //Used to generate random numbers
     private Random random;
 
-    // List that contains the world biomes
-    protected ArrayList<AbstractBiome> biomes;
     public Map<String, Float> frictionMap;
 
     //A list of all the tiles within a world
@@ -149,13 +147,9 @@ public class World implements TouchDownObserver {
 
             for (int q = -worldSize; q <= worldSize; q++) {
                 for (int r = -worldSize; r <= worldSize; r++) {
-                    // if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <=
-                    // worldSize) {
                     float oddCol = (q % 2 != 0 ? 0.5f : 0);
-
                     Tile tile = new Tile(q, r + oddCol);
                     tiles.add(tile);
-                    // }
                 }
             }
             // TODO Fix this.
@@ -297,8 +291,7 @@ public class World implements TouchDownObserver {
      * @return all entities in the world
      */
     public List<AbstractEntity> getSortedEntities() {
-        List<AbstractEntity> e = new CopyOnWriteArrayList<>(this.worldParameters.getEntities());
-        return e;
+        return new CopyOnWriteArrayList<>(this.worldParameters.getEntities());
     }
 
     /**
@@ -336,7 +329,7 @@ public class World implements TouchDownObserver {
         Collections.sort(worldParameters.getEntities());
     }
 
-    public void setEntities(CopyOnWriteArrayList<AbstractEntity> entities) {
+    public void setEntities(List<AbstractEntity> entities) {
         this.worldParameters.setEntities(entities);
     }
 
