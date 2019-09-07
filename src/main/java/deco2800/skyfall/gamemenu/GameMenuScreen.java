@@ -155,12 +155,6 @@ public class GameMenuScreen {
         stage.addActor(radar);
 
 
-        HealthCircle healthCircle = new HealthCircle(stage,
-                "big_circle",
-                "inner_circle",
-                mainCharacter);
-
-        gameMenuManager.addHealthCircle(healthCircle);
     }
 
     /**
