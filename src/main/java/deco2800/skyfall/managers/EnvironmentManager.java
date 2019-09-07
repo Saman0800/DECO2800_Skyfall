@@ -2,8 +2,10 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.worlds.Tile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EnvironmentManager extends TickableManager {
@@ -53,6 +55,9 @@ public class EnvironmentManager extends TickableManager {
    // Abstract entity within entities list. (Public for testing)
    public AbstractEntity player;
 
+   //List of objects implementing TimeObserver
+   private ArrayList<TimeObserver> timeListeners;
+
    /**
     * Constructor
     *
@@ -60,6 +65,23 @@ public class EnvironmentManager extends TickableManager {
    public EnvironmentManager() {
       file = "resources/sounds/forest_day.wav";
       currentFile = "resources/sounds/forest_night.wav";
+      timeListeners = new ArrayList<>();
+   }
+
+   /**
+    * Adds an observer to observe the time update
+    * @param observer the observer to add
+    */
+   public void addTimeListener (TimeObserver observer) {
+      timeListeners.add(observer);
+   }
+
+   /**
+    * Removes an observer from observing the time update
+    * @param observer the observer to remove
+    */
+   public void removeTimeListener (TimeObserver observer) {
+      timeListeners.remove(observer);
    }
 
    /**
@@ -112,6 +134,12 @@ public class EnvironmentManager extends TickableManager {
    public void setTime(long i) {
       //Each day cycle goes for approx 24 minutes
       long timeHours = (i / 60000);
+      //Check if observers need notifying, notifies if needed
+      if (timeHours % 24 != hours) {
+         for (TimeObserver observer : timeListeners) {
+            observer.notifyTimeUpdate(timeHours % 24);
+         }
+      }
       hours = timeHours % 24;
 
       //Each minute equals one second
