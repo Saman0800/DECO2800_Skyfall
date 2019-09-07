@@ -14,9 +14,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class ServerWorld extends World {
 
-    public ServerWorld(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int[] lakeSizes,
-        ArrayList<AbstractBiome> biomes, CopyOnWriteArrayList<AbstractEntity> entities, int rivers, int riverSize, int beachSize) {
-        super(seed, worldSize, nodeSpacing, biomeSizes, numOfLakes, lakeSizes, biomes, entities, rivers, riverSize, beachSize);
+    public ServerWorld(WorldParameters worldParameters) {
+        super(worldParameters);
     }
 
     /**

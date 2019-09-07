@@ -6,6 +6,7 @@ import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 
+import deco2800.skyfall.worlds.world.WorldParameters;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,47 +59,44 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      *
      * @param nodes      the nodes generated in the previous phase of the world generation
      * @param random     the random number generator used for deterministic generation
-     * @param biomeSizes the number of nodes for each of the biomes (except ocean)
-     * @param realBiomes the biomes to populate (ocean must be last)
-     * @param lakeSizes  the number of nodes assigned to each of the lakes
+     * @param worldParameters A class that contains most the world parameters
      *
      * @throws NotEnoughPointsException if there are not enough non-border nodes from which to form the biomes
      */
-    public BiomeGenerator(List<WorldGenNode> nodes, List<VoronoiEdge> voronoiEdges, Random random, int[] biomeSizes,
-                          List<AbstractBiome> realBiomes,
-                          int noLakes, int[] lakeSizes, int noRivers, int riverWidth, int beachWidth)
+    public BiomeGenerator(List<WorldGenNode> nodes, List<VoronoiEdge> voronoiEdges, Random random,
+                          WorldParameters worldParameters)
             throws NotEnoughPointsException {
         Objects.requireNonNull(nodes, "nodes must not be null");
         Objects.requireNonNull(random, "random must not be null");
-        Objects.requireNonNull(biomeSizes, "biomeSizes must not be null");
-        Objects.requireNonNull(realBiomes, "realBiomes must not be null");
-        for (AbstractBiome realBiome : realBiomes) {
-            Objects.requireNonNull(realBiome, "Elements of realBiome must not be null");
+        Objects.requireNonNull(worldParameters.getBiomeSizes(), "biomeSizes must not be null");
+        Objects.requireNonNull(worldParameters.getBiomes(), "realBiomes must not be null");
+        for (AbstractBiome realBiome : worldParameters.getBiomes()){
+            Objects.requireNonNull(worldParameters.getBiomes(), "Elements of realBiome must not be null");
         }
 
-        if (Arrays.stream(biomeSizes).anyMatch(size -> size == 0)) {
+        if (Arrays.stream(worldParameters.getBiomeSizes()).anyMatch(size -> size == 0)) {
             throw new IllegalArgumentException("All biomes must require at least one node");
         }
 
-        if (biomeSizes.length != realBiomes.size()) {
+        if (worldParameters.getBiomeSizes().length != worldParameters.getBiomes().size()) {
             throw new IllegalArgumentException("The number of biomes must be equal to the number of biome sizes");
         }
 
-        if (nodes.stream().filter(node -> !node.isBorderNode()).count() < Arrays.stream(biomeSizes).sum()) {
+        if (nodes.stream().filter(node -> !node.isBorderNode()).count() < Arrays.stream(worldParameters.getBiomeSizes()).sum()) {
             throw new NotEnoughPointsException("Not enough nodes to build biomes");
         }
 
         this.nodes = nodes;
         this.voronoiEdges = voronoiEdges;
         this.random = random;
-        this.biomeSizes = biomeSizes;
-        this.realBiomes = realBiomes;
+        this.biomeSizes = worldParameters.getBiomeSizes();
+        this.realBiomes = worldParameters.getBiomes();
         this.centerNode = calculateCenterNode();
-        this.noLakes = noLakes;
-        this.noRivers = noRivers;
-        this.riverWidth = riverWidth;
-        this.beachWidth = beachWidth;
-        this.lakeSizes = lakeSizes;
+        this.noLakes = worldParameters.getNumOfLakes();
+        this.noRivers = worldParameters.getNoRivers();
+        this.riverWidth = worldParameters.getRiverWidth();
+        this.beachWidth = worldParameters.getBeachWidth();
+        this.lakeSizes = worldParameters.getLakeSizes();
     }
 
     /**

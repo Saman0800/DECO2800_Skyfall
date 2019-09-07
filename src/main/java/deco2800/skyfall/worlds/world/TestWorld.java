@@ -23,11 +23,8 @@ public class TestWorld extends World {
 
     private static int RADIUS = 25;
 
-    public TestWorld(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int[] lakeSizes,
-            ArrayList<AbstractBiome> biomes, CopyOnWriteArrayList<AbstractEntity> entities, int rivers, int riverSize,
-            int beachSize) {
-        super(seed, worldSize, nodeSpacing, biomeSizes, numOfLakes, lakeSizes, biomes, entities, rivers, riverSize,
-                beachSize);
+    public TestWorld(WorldParameters worldParameters) {
+        super(worldParameters);
     }
 
     // 5 tile building
@@ -80,7 +77,7 @@ public class TestWorld extends World {
         Map<HexVector, String> textures = new HashMap<>();
         Tile t = GameManager.get().getWorld().getTile(col, row);
         Tree tree = new Tree(t, true);
-        entities.add(tree);
+        worldParameters.addEntity(tree);
     }
 
     // this get ran on first game tick so the world tiles exist.
@@ -92,10 +89,11 @@ public class TestWorld extends World {
         for (int i = 0; i < 200; i++) {
             Tile t = GameManager.get().getWorld().getTile(random.nextInt(tileCount));
             if (t != null) {
-                entities.add(new Rock(t, true));
+                worldParameters.addEntity(new Rock(t, true));
+
             }
         }
-        entities.add(createBuilding2(-5, 0.5f));
+        worldParameters.addEntity(createBuilding2(-5, 0.5f));
 
     }
 

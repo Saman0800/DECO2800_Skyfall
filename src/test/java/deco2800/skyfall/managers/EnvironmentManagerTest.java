@@ -1,16 +1,12 @@
 package deco2800.skyfall.managers;
 
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.MainCharacter;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.internal.matchers.Null;
-import sun.applet.Main;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 public class EnvironmentManagerTest {
 
