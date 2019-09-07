@@ -16,7 +16,6 @@ import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.Tile;
-import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +46,8 @@ public class MainCharacter extends Peon
 
     // Variables to sound effects
     public static final String WALK_NORMAL = "people_walk_normal";
+    public static final String HURT = "player_hurt";
+    public static final String DIED = "player_died";
     private SoundManager soundManager = GameManager.get().getManager(SoundManager.class);
 
     //The pick Axe that is going to be created
@@ -126,7 +127,13 @@ public class MainCharacter extends Peon
     private boolean isHurt = false;
 
     /**
-     * Check whether MainCharacter is attacking.
+     * Check id player is recovering
+     */
+    private boolean isRecovering = false;
+    private boolean isTexChanging = false;
+
+    /**
+     * Check id player is attacking
      */
     private boolean isAttacking = false;
 
@@ -192,6 +199,7 @@ public class MainCharacter extends Peon
         this.scale = 0.4f;
         setDirectionTextures();
         configureAnimations();
+        setCollider();
     }
 
     /**
@@ -262,51 +270,62 @@ public class MainCharacter extends Peon
      *
      */
     public void hurt(int damage) {
-        this.changeHealth(-damage);
 
-        if (this.getHealth() <= 0) {
-            kill();
-        } else {
-            hurtTime = 2000;
-            recoverTime = 0;
-            HexVector bounceBack = new HexVector();
-            /*
-            switch (getPlayerDirectionCardinal()) {
-                case "North":
-                    bounceBack = new HexVector(this.direction.getX(), this.direction.getY() - 1);
-                    break;
-                case "North-East":
-                    bounceBack = new HexVector(this.direction.getX() - 1, this.direction.getY() - 1);
-                    break;
-                case "East":
-                    bounceBack = new HexVector(this.direction.getX() - 1, this.direction.getY());
-                    break;
-                case "South-East":
-                    bounceBack = new HexVector(this.direction.getX() - 1, this.direction.getY() + 1);
-                    break;
-                case "South":
-                    bounceBack = new HexVector(this.direction.getX(), this.direction.getY() + 1);
-                    break;
-                case "South-West":
-                    bounceBack = new HexVector(this.direction.getX() + 1, this.direction.getY() + 1);
-                    break;
-                case "West":
-                    bounceBack = new HexVector(this.direction.getX() + 1, this.direction.getY());
-                    break;
-                case "North-West":
-                    bounceBack = new HexVector(this.direction.getX() + 1, this.direction.getY() - 1);
-                    break;
-            }
-            position.moveToward(bounceBack, 0.5f);
+        System.out.println("Hurted: " + isRecovering);
+
+        if(!isRecovering) {
+            setHurt(true);
+            this.changeHealth(-damage);
+
+            if (this.getHealth() <= 0) {
+                kill();
+            } else {
+                hurtTime = 0;
+                recoverTime = 0;
+                HexVector bounceBack = new HexVector();
+
+                switch (getPlayerDirectionCardinal()) {
+                    case "North":
+                        bounceBack = new HexVector(position.getCol(), position.getRow() - 2);
+                        break;
+                    case "North-East":
+                        bounceBack = new HexVector(position.getCol() - 2, position.getRow() - 2);
+                        break;
+                    case "East":
+                        bounceBack = new HexVector(position.getCol() - 2, position.getRow());
+                        break;
+                    case "South-East":
+                        bounceBack = new HexVector(position.getCol() - 2, position.getRow() + 2);
+                        break;
+                    case "South":
+                        bounceBack = new HexVector(position.getCol(), position.getRow() + 2);
+                        break;
+                    case "South-West":
+                        bounceBack = new HexVector(position.getCol() + 2, position.getRow() + 2);
+                        break;
+                    case "West":
+                        bounceBack = new HexVector(position.getCol() - 2, position.getRow());
+                        break;
+                    case "North-West":
+                        bounceBack = new HexVector(position.getCol() + 2, position.getRow() - 2);
+                        break;
+                }
+                position.moveToward(bounceBack, 1f);
             
-            /* AS.PlayOneShot(hurtSound);
-            while(hurtTime < System.currentTimeMillis()) {
-                vel = 0;
-                anim.SetBool("Invincible", true);
-                rb2d.AddForce(new com.badlogic.gdx.math.Vector2(hurtForce.x*forceDir,hurtForce.y));
+                soundManager.playSound("");
+
             }
-            */
-            // recover();
+        }
+    }
+
+    private void checkIfHurtEnded() {
+        hurtTime += 20; // hurt for 1 second
+
+        if (hurtTime > 400) {
+            System.out.println("Hurt ended");
+            setHurt(false);
+            setRecovering(true);
+            hurtTime = 0;
         }
     }
 
@@ -314,16 +333,40 @@ public class MainCharacter extends Peon
      * Player recovers from being attacked. It removes player 's
      * hurt effect (e.g. sprite flashing in red), in hurt().
      */
-    void recover() {
-        setHurt(false);
-        // controller.enabled = true;
+    public boolean isRecovering() {
+        return isRecovering;
+    }
+
+    public void setRecovering(boolean isRecovering) {
+        this.isRecovering = isRecovering;
+    }
+
+    public boolean isTexChanging() {
+        return isTexChanging;
+    }
+
+    public void setTexChanging(boolean isTexChanging) {
+        this.isTexChanging = isTexChanging;
+    }
+
+    private void checkIfRecovered() {
+        System.out.println("Character recovering");
+        recoverTime += 20;
+
+        this.changeCollideability(false);
+
+        if (recoverTime > 2000) {
+            System.out.println("Recovered");
+            setRecovering(false);
+            changeCollideability(true);
+        }
     }
 
     /**
      * Kills the player. and notifying the game that the player
      * has died and cannot do any actions in game anymore.
      */
-    void kill() {
+    public void kill() {
         // stop player controls
         setMaxSpeed(0);
 
@@ -553,15 +596,6 @@ public class MainCharacter extends Peon
         }
     }
 
-    private void checkIfRecovered() {
-        System.out.println("Character is hurt. and recovering");
-        recoverTime += 20;
-        if (recoverTime > hurtTime) {
-            System.out.println("Recovered");
-            setHurt(false);
-        }
-    }
-
     /**
      * Handles tick based stuff, e.g. movement
      */
@@ -577,10 +611,13 @@ public class MainCharacter extends Peon
         //         this.direction.y - this.getRow());
         //        System.out.printf("%s%n", this.currentSpeed);
 
-        if (isHurt) {
+        if(isHurt) {
+            checkIfHurtEnded();
+        } else if(isRecovering) {
             checkIfRecovered();
         }
         this.updateAnimation();
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
         }
