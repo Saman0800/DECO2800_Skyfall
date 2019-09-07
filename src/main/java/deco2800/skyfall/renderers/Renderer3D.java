@@ -206,7 +206,27 @@ public class Renderer3D implements Renderer {
                 if (!(entity instanceof Animatable)) {
                     renderAbstractEntity(batch, entity, entityWorldCoord, tex);
                 } else {
+                    Color c = batch.getColor();
+                    GameMenuManager gameMenuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
+
+                    if (entity instanceof MainCharacter) {
+                        if (((MainCharacter) entity).IsHurt() || ((MainCharacter) entity).isDead()){
+                            // System.out.println(entity.);
+                            batch.setColor(Color.RED);
+                        } else if(((MainCharacter) entity).isRecovering()) {
+                            if(((MainCharacter) entity).isTexChanging()) {
+                                batch.setColor(c.r, c.g, c.b, 0f);
+                                ((MainCharacter) entity).setTexChanging(!((MainCharacter) entity).isTexChanging());
+                            } else {
+                                batch.setColor(c.r, c.g, c.b, 1f);
+                                ((MainCharacter) entity).setTexChanging(!((MainCharacter) entity).isTexChanging());
+                            }
+                        }
+                    } else {
+                        batch.setColor(c.r, c.g, c.b, 1f);
+                    }
                     runAnimation(batch, entity, entityWorldCoord);
+                    batch.setColor(c.r, c.g, c.b, 1f);
                 }
 
                 /* Draw Peon */
@@ -214,10 +234,7 @@ public class Renderer3D implements Renderer {
                 if (entity instanceof Peon && GameManager.get().showPath) {
                     renderPeonMovementTiles(batch, camera, entity, entityWorldCoord);
                 }
-
-
             }
-
         }
 
 
