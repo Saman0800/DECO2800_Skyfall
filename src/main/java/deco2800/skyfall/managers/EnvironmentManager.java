@@ -131,6 +131,10 @@ public class EnvironmentManager extends TickableManager {
       return dayNightListeners;
    }
 
+   /**
+    * Notifies all observers in dayNightListeners list of day/night change
+    * @param isDay true if day, false if night
+    */
    public void updateDayNightListeners(boolean isDay) {
       for (DayNightObserver observer : dayNightListeners) {
          observer.notifyDayNightUpdate(isDay);
