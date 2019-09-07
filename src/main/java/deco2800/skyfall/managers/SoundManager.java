@@ -54,6 +54,10 @@ public class SoundManager extends AbstractManager {
                     (Gdx.files.internal(PATH + "bow and arrow attack.wav")));
             soundMap.put("axe_attack", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "axe attack.wav")));
+            soundMap.put("player_hurt", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "be_hit.wav")));
+            soundMap.put("player_died", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "died.wav")));
         } catch(Exception e) {
             LOGGER.error("no song be found");
         }
