@@ -771,7 +771,7 @@ public class MainCharacter extends Peon
      *
      */
     public void addClosestGoldPiece() {
-        for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+/*        for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
             if (entity instanceof GoldPiece) {
                 if (this.getPosition().distance(entity.getPosition()) <= 2) {
                     this.addGold((GoldPiece) entity, 1);
@@ -780,7 +780,7 @@ public class MainCharacter extends Peon
             }
 
         }
-        logger.info("Sorry, you are not close enough to a gold piece!");
+        logger.info("Sorry, you are not close enough to a gold piece!");*/
 
     }
 

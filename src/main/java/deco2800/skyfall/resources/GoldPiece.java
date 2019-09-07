@@ -1,12 +1,19 @@
 package deco2800.skyfall.resources;
 
-import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.worlds.Tile;
+
+import java.util.Random;
 
 /**
  * The civilisation's currency is Gold Pieces valued as either 5G,
  * 10G, 50G or 100G
  */
-public class GoldPiece extends AbstractEntity {
+public class GoldPiece extends StaticEntity {
+
+    private static final String ENTITY_ID_STRING = "gold_piece";
+    private static Random randomGen = new Random();
+    private static int nextRock = 1;
 
     // the value of the piece of gold (either 5G,10G,50G or 100G)
     public int value;
@@ -16,15 +23,36 @@ public class GoldPiece extends AbstractEntity {
      * @param value The value of the piece of gold, either 5G, 10G, 50G or 100G.
      */
     public GoldPiece(int value){
+        this.setObjectName(ENTITY_ID_STRING);
         // if the GoldPiece is of value of 5,10,50 or 100
         if (value == 5 || value == 10 || value == 50 || value == 100){
             this.value = value;
         } else {
             System.out.println("Invalid piece of gold");
         }
+            }
+
+    /**
+     *
+     * @param tile
+     * @param obstructed
+     */
+    public GoldPiece(Tile tile, boolean obstructed) {
+        super(tile, 2, "bush" + nextRock, obstructed);
+        this.setObjectName(ENTITY_ID_STRING);
+        nextRock = randomGen.nextInt(3) + 1;
+    }
 
 
-
+    /**
+     * The newInstance method implemented for the GoldPiece class to allow for item
+     * dispersal on game start up.
+     *
+     * @return Duplicate goldPiece instance with modified position.
+     */
+    @Override
+    public GoldPiece newInstance(Tile tile) {
+        return new GoldPiece(tile, this.isObstructed());
     }
     /**
      * Returns the value of the piece of gold.
@@ -42,4 +70,7 @@ public class GoldPiece extends AbstractEntity {
     public void onTick(long i) {
         // Do nothing on tick
     }
+
+
+
 }
