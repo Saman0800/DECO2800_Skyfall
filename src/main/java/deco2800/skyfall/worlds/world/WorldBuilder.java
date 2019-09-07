@@ -8,6 +8,8 @@ import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.Random;
 
@@ -207,9 +209,15 @@ public class WorldBuilder implements WorldBuilderInterface {
                 EntitySpawnRule rockRule = new EntitySpawnRule(0.04, 10, 50, biome);
                 EntitySpawnTable.spawnEntities(startRock, rockRule, world);
 
+                // Create a list of all possible gold values
+                List<Integer> goldValues = Arrays.asList(5, 10, 50, 100);
+                Random rand = new Random();
+                // Select a random coin value from this list
+                int randomValue = goldValues.get(rand.nextInt(goldValues.size()));
+
                 // Spawn gold pieces uniformly
-                GoldPiece startGoldPiece = new GoldPiece(startTile, true, 5);
-                EntitySpawnRule goldRule = new EntitySpawnRule(0.5, 10, 50, biome);
+                GoldPiece startGoldPiece = new GoldPiece(startTile, true, randomValue);
+                EntitySpawnRule goldRule = new EntitySpawnRule(0.1, 10, 50, biome);
                 EntitySpawnTable.spawnEntities(startGoldPiece, goldRule, world);
 
                 ForestMushroom startMushroom = new ForestMushroom(startTile, false);
