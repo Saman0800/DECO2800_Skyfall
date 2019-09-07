@@ -12,8 +12,7 @@ import java.util.Random;
 public class GoldPiece extends StaticEntity {
 
     private static final String ENTITY_ID_STRING = "gold_piece";
-    private static Random randomGen = new Random();
-    private static int nextRock = 1;
+
 
     // the value of the piece of gold (either 5G,10G,50G or 100G)
     public int value;
