@@ -26,7 +26,7 @@ import deco2800.skyfall.worlds.Tile;
 
 /**
  * A ~simple~ complex hex renderer for DECO2800 games
- * 
+ *
  * @Author Tim Hadwen & Lachlan Healey
  */
 public class Renderer3D implements Renderer {
@@ -51,7 +51,7 @@ public class Renderer3D implements Renderer {
     /**
      * Renders onto a batch, given a renderables with entities It is expected that
      * AbstractWorld contains some entities and a Map to read tiles from
-     * 
+     *
      * @param batch Batch to render onto
      */
     @Override
@@ -90,7 +90,7 @@ public class Renderer3D implements Renderer {
 
     /**
      * Render a single tile.
-     * 
+     *
      * @param batch            the sprite batch.
      * @param camera           the camera.
      * @param tileMap          the tile map.
@@ -98,7 +98,7 @@ public class Renderer3D implements Renderer {
      * @param tile             the tile to render.
      */
     private void renderTile(SpriteBatch batch, OrthographicCamera camera, List<Tile> tileMap,
-            List<Tile> tilesToBeSkipped, Tile tile) {
+                            List<Tile> tilesToBeSkipped, Tile tile) {
 
         if (tilesToBeSkipped.contains(tile)) {
             return;
@@ -126,7 +126,7 @@ public class Renderer3D implements Renderer {
 
     /**
      * Render the tile under the mouse.
-     * 
+     *
      * @param batch the sprite batch.
      */
     private void renderMouse(SpriteBatch batch) {
@@ -158,7 +158,7 @@ public class Renderer3D implements Renderer {
     /**
      * Render all the entities on in view, including movement tiles, and excluding
      * undiscovered area.
-     * 
+     *
      * @param batch  the sprite batch.
      * @param camera the camera.
      */
@@ -243,7 +243,7 @@ public class Renderer3D implements Renderer {
     }
 
     private void renderPeonMovementTiles(SpriteBatch batch, OrthographicCamera camera, AbstractEntity entity,
-            float[] entityWorldCord) {
+                                         float[] entityWorldCord) {
         Peon actor = (Peon) entity;
         AbstractTask task = actor.getTask();
         if (task instanceof MovementTask) {
@@ -262,7 +262,7 @@ public class Renderer3D implements Renderer {
                     continue;
                 }
                 batch.draw(tex, tileWorldCord[0], tileWorldCord[1]// + ((tile.getElevation() + 1) *
-                                                                  // elevationZeroThiccness * WorldUtil.SCALE_Y)
+                        // elevationZeroThiccness * WorldUtil.SCALE_Y)
                         , tex.getWidth() * WorldUtil.SCALE_X, tex.getHeight() * WorldUtil.SCALE_Y);
 
             }
@@ -290,9 +290,9 @@ public class Renderer3D implements Renderer {
                             // String.format("%.0f, %.0f, %d",tileWorldCord[0], tileWorldCord[1],
                             // tileMap.indexOf(tile)),
                             tileWorldCord[0] + WorldUtil.TILE_WIDTH / 4.5f, tileWorldCord[1]);// + ((tile.getElevation()
-                                                                                              // + 1) *
-                                                                                              // elevationZeroThiccness
-                                                                                              // * WorldUtil.SCALE_Y)
+                    // + 1) *
+                    // elevationZeroThiccness
+                    // * WorldUtil.SCALE_Y)
                     // + WorldUtil.TILE_HEIGHT-10);
                 }
 
@@ -336,48 +336,49 @@ public class Renderer3D implements Renderer {
     /**
      * Runs an animation for the entity if it is applicable if there is
      * no animation to be run or it cannot be found a default texture is run
-     * 
+     *
      * @param batch            Sprite batch to draw onto
      * @param entity           Current entity
      * @param entityWorldCoord Where to draw.
      */
     private void runAnimation(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord) {
-            if (entity.getCurrentState() == AnimationRole.NULL) {
-                renderDefaultSprite(batch, entity, entityWorldCoord);
+        if (entity.getCurrentState() == AnimationRole.NULL) {
+            renderDefaultSprite(batch, entity, entityWorldCoord);
+        }
+
+        AnimationLinker aniLink = entity.getToBeRun();
+        if (aniLink == null) {
+            renderDefaultSprite(batch, entity, entityWorldCoord);
+            return;
+        }
+
+        Animation<TextureRegion> ani = aniLink.getAnimation();
+        float time = aniLink.getStartingTime();
+
+        if (ani == null) {
+            //System.out.println("Animation is null");
+            renderDefaultSprite(batch, entity, entityWorldCoord);
+            return;
+        }
+
+        if (ani.isAnimationFinished(time)) {
+            System.out.println("Animation is done");
+            aniLink.resetStartingTime();
+
+            if (!aniLink.isLooping()) {
+                System.out.println("Setting to null");
+                entity.setGetToBeRunToNull();
             }
+            renderDefaultSprite(batch, entity, entityWorldCoord);
+            return;
+        }
 
-            AnimationLinker aniLink = entity.getToBeRun();
-            if (aniLink == null) {
-                renderDefaultSprite(batch, entity, entityWorldCoord);
-                return;
-            }
+        TextureRegion currentFrame = ani.getKeyFrame(time, true);
+        float width = currentFrame.getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X * entity.getScale() ;
+        float height = currentFrame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y * entity.getScale();
+        int[] offset = aniLink.getOffset();
 
-            Animation<TextureRegion> ani = aniLink.getAnimation();
-            float time = aniLink.getStartingTime();
-
-            if (ani == null) {
-                //System.out.println("Animation is null");
-                renderDefaultSprite(batch, entity, entityWorldCoord);
-                return;
-            }
-
-            if (ani.isAnimationFinished(time) && entity.getCurrentState()==AnimationRole.NULL) {
-                //System.out.println("Animation is done");
-                aniLink.resetStartingTime();
-
-                if (!aniLink.isLooping()) {
-                    entity.setGetToBeRunToNull();
-                }
-                renderDefaultSprite(batch, entity, entityWorldCoord);
-                return;
-            }
-
-            TextureRegion currentFrame = ani.getKeyFrame(time, true);
-            float width = currentFrame.getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X * entity.getScale() ;
-            float height = currentFrame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y * entity.getScale();
-            int[] offset = aniLink.getOffset();
-
-            batch.draw(currentFrame, entityWorldCoord[0] + offset[0], entityWorldCoord[1] + offset[0], width, height);
-            aniLink.incrTime(Gdx.graphics.getDeltaTime());
+        batch.draw(currentFrame, entityWorldCoord[0] + offset[0], entityWorldCoord[1] + offset[0], width, height);
+        aniLink.incrTime(Gdx.graphics.getDeltaTime());
     }
 }

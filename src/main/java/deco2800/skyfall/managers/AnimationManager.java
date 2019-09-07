@@ -152,7 +152,7 @@ public class AnimationManager extends AbstractManager {
                 animationFrames[index++] = tmpFrames[i][j];
             }
         }
-        
+
         return animationFrames;
     }
 
