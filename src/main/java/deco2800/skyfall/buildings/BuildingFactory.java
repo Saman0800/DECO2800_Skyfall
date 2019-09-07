@@ -33,8 +33,10 @@ public class BuildingFactory {
         cabin.setInitialHealth(cabinType.getMaxHealth());
         cabin.setWidth(cabinType.getSizeY());
         cabin.setLength(cabinType.getSizeX());
+        cabin.setCollider();
         return cabin;
     }
+
     /**
      * Create a storage unit based on BuildingEntity class with defined default renderOrder.
      * @param col column coordinate that a building located on
@@ -52,6 +54,7 @@ public class BuildingFactory {
         storage.setInitialHealth(storageType.getMaxHealth());
         storage.setWidth(storageType.getSizeY());
         storage.setLength(storageType.getSizeX());
+        storage.setCollider();
         return storage;
     }
 
@@ -72,6 +75,7 @@ public class BuildingFactory {
         town.setInitialHealth(townType.getMaxHealth());
         town.setWidth(townType.getSizeY());
         town.setLength(townType.getSizeX());
+        town.setCollider();
         return town;
     }
 
@@ -92,6 +96,7 @@ public class BuildingFactory {
         fence.setInitialHealth(fenceType.getMaxHealth());
         fence.setWidth(fenceType.getSizeY());
         fence.setLength(fenceType.getSizeX());
+        fence.setCollider();
         return fence;
     }
 
@@ -112,6 +117,7 @@ public class BuildingFactory {
         safeHouse.setInitialHealth(safeHouseType.getMaxHealth());
         safeHouse.setWidth(safeHouseType.getSizeY());
         safeHouse.setLength(safeHouseType.getSizeX());
+        safeHouse.setCollider();
         return safeHouse;
     }
 
@@ -132,6 +138,7 @@ public class BuildingFactory {
         watchTower.setInitialHealth(watchTowerType.getMaxHealth());
         watchTower.setWidth(watchTowerType.getSizeY());
         watchTower.setLength(watchTowerType.getSizeX());
+        watchTower.setCollider();
         return watchTower;
     }
 
@@ -152,6 +159,7 @@ public class BuildingFactory {
         castle.setInitialHealth(castleType.getMaxHealth());
         castle.setWidth(castleType.getSizeY());
         castle.setLength(castleType.getSizeX());
+        castle.setCollider();
         return castle;
     }
 }

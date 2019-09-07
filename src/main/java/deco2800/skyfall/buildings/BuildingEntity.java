@@ -1,5 +1,8 @@
 package deco2800.skyfall.buildings;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureData;
 import deco2800.skyfall.entities.structures.Structure;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.worlds.world.World;
@@ -100,17 +103,34 @@ public class BuildingEntity extends AbstractEntity implements Structure {
         currentHealth = getInitialHealth();
     }
 
-     /**
-     * Creates a new Collider object at (x,y) coordinates with size xLength x yLength.
-     * Called by building factory when creating a building such that no building
-     * in the game has a Collider set to null.
-     *
-     * @param xLength the x size of a building texture
-     * @param yLength the y size of a building texture
+    /**
+    * Creates a new Collider object at (x,y) coordinates with size xLength x yLength.
+    * Called by building factory before returning a building such that no building
+    * in the game has a Collider set to null.
+    */
+    @Override
+    public void setCollider() {
+        try {
+            float[] cords = WorldUtil.colRowToWorldCords(position.getCol(), position.getRow());
+
+            // A way to set collider based on tiles
+            float tileSize = 100;
+            collider = new Collider(cords[0], cords[1], tileSize * getLength(), tileSize * getWidth());
+
+//            // Preferred way to set collider based on texture, but so far a issue that texture is not found
+//            Texture texture = new Texture(getTexture());
+//            collider = new Collider(cords[0], cords[1], texture.getWidth(), texture.getHeight());
+        } catch (Exception e) {
+            log.debug("Building texture do not exist when setting its collider");
+        }
+    }
+
+    /**
+     * @return The collider for the building entity
      */
-    public void setCollider(float xLength, float yLength) {
-        float[] coords = WorldUtil.colRowToWorldCords(position.getCol(), position.getRow());
-        this.collider = new Collider(coords[0], coords[1], xLength, yLength);
+    @Override
+    public Collider getCollider() {
+        return collider;
     }
 
     @Override

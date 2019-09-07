@@ -123,8 +123,8 @@ public class BuildingWidgets {
         float[] wCords = WorldUtil.colRowToWorldCords(building.getCol(), building.getRow());
         cameraPos.setCol(gm.getCamera().position.x);
         cameraPos.setRow(gm.getCamera().position.y);
-        menu.setPosition(stage.getWidth()/2 + wCords[0] - cameraPos.getCol(),
-                stage.getHeight()/2 + wCords[1] - cameraPos.getRow());
+        menu.setPosition(stage.getWidth()/2 + wCords[0] - cameraPos.getCol() - menu.getMinWidth(),
+                stage.getHeight()/2 + wCords[1] - cameraPos.getRow() + menu.getMinHeight());
     }
 
     private void setUpgradeBtn(BuildingEntity building) {
