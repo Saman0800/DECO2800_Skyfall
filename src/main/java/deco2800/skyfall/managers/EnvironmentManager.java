@@ -90,6 +90,24 @@ public class EnvironmentManager extends TickableManager {
    }
 
    /**
+    * Get list of observers observing time update
+    * @return The list of observers currently observing the time update
+    */
+   public ArrayList<TimeObserver> getTimeListeners() {
+      return timeListeners;
+   }
+
+   /**
+    * Notifies all observers in timeListeners list of time change
+    * @param i The hour the game has updated to
+    */
+   public void updateTimeListeners(long i) {
+      for (TimeObserver observer : timeListeners) {
+         observer.notifyTimeUpdate(i);
+      }
+   }
+
+   /**
     * Adds an observer to observe day/night change
     * @param observer The observer to add
     */
@@ -103,6 +121,20 @@ public class EnvironmentManager extends TickableManager {
     */
    public void removeDayNightListener (DayNightObserver observer) {
       dayNightListeners.remove(observer);
+   }
+
+   /**
+    * Gets list of observers observing day/night change
+    * @return The list of observers currently observing the day/night change
+    */
+   public ArrayList<DayNightObserver> getDayNightListeners() {
+      return dayNightListeners;
+   }
+
+   public void updateDayNightListeners(boolean isDay) {
+      for (DayNightObserver observer : dayNightListeners) {
+         observer.notifyDayNightUpdate(isDay);
+      }
    }
 
    /**
@@ -157,10 +189,8 @@ public class EnvironmentManager extends TickableManager {
       long timeHours = (i / 60000);
       //Check if observers need notifying, notifies if needed
       if (timeHours % 24 != hours) {
-         for (TimeObserver observer : timeListeners) {
-            observer.notifyTimeUpdate(timeHours % 24);
+         updateTimeListeners(timeHours % 24);
          }
-      }
       hours = timeHours % 24;
 
       //Each minute equals one second
@@ -181,17 +211,13 @@ public class EnvironmentManager extends TickableManager {
       if (hours < 6 || hours >= 18) {
          //check if observers need notifying
          if (isDay) {
-            for (DayNightObserver observer : dayNightListeners) {
-               observer.notifyDayNightUpdate(false);
-            }
+            updateDayNightListeners(false);
          }
          isDay = false;
       } else {
          //check if observers need notifying
          if (!isDay) {
-            for (DayNightObserver observer :dayNightListeners) {
-               observer.notifyDayNightUpdate(true);
-            }
+            updateDayNightListeners(true);
          }
          isDay = true;
       }
