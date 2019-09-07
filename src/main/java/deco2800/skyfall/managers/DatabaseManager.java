@@ -430,7 +430,7 @@ public final class DatabaseManager extends AbstractManager {
 
         world.setTileMap(newTiles);
         world.generateNeighbours();
-        world.setEntities(new ArrayList<AbstractEntity>(newEntities.values()));
+        world.setEntities(new CopyOnWriteArrayList<>(newEntities.values()));
         logger.info("Load succeeded");
         GameManager.get().getManager(OnScreenMessageManager.class).addMessage("Loaded game from the database.");
     }

@@ -2,6 +2,8 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.observers.DayNightObserver;
+import deco2800.skyfall.observers.TimeObserver;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.internal.matchers.Null;
@@ -11,16 +13,62 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class EnvironmentManagerTest {
 
     EnvironmentManager manager;
+    TimeObserver mockTimeObserver = mock(TimeObserver.class);
+    DayNightObserver mockDayNightObserver = mock(DayNightObserver.class);
 
     @Before
     public void initialize() {
         manager = new EnvironmentManager();
     }
 
+    @Test
+    public void addTimeListenerTest() {
+        manager.addTimeListener(mockTimeObserver);
+        assertTrue(manager.getTimeListeners().contains(mockTimeObserver));
+    }
+
+    @Test
+    public void removeTimeListenerTest() {
+        manager.addTimeListener(mockTimeObserver);
+        assertTrue(manager.getTimeListeners().contains(mockTimeObserver));
+        manager.removeTimeListener(mockTimeObserver);
+        assertFalse(manager.getTimeListeners().contains(mockTimeObserver));
+    }
+
+    @Test
+    public void updateTimeListenersTest() {
+        doNothing().when(mockTimeObserver).notifyTimeUpdate(10000);
+        manager.addTimeListener(mockTimeObserver);
+        manager.updateTimeListeners(10000);
+        verify(mockTimeObserver).notifyTimeUpdate(10000);
+    }
+
+    @Test
+    public void addDayNightListenerTest() {
+        manager.addDayNightListener(mockDayNightObserver);
+        assertTrue(manager.getDayNightListeners().contains(mockDayNightObserver));
+    }
+
+    @Test
+    public void removeDayNightListenerTest() {
+        manager.addDayNightListener(mockDayNightObserver);
+        assertTrue(manager.getDayNightListeners().contains(mockDayNightObserver));
+        manager.removeDayNightListener(mockDayNightObserver);
+        assertFalse(manager.getDayNightListeners().contains(mockDayNightObserver));
+    }
+
+    @Test
+    public void updateDayNightListenersTest() {
+        doNothing().when(mockDayNightObserver).notifyDayNightUpdate(true);
+        manager.addDayNightListener(mockDayNightObserver);
+        manager.updateDayNightListeners(true);
+        verify(mockDayNightObserver).notifyDayNightUpdate(true);
+    }
 
     @Test
     public void setTimeTest() {
@@ -30,22 +78,22 @@ public class EnvironmentManagerTest {
 
     @Test
     public void isDayTest() {
-        manager.setTime(100000);
-        assertTrue(manager.isDay());
         manager.setTime(1000000);
+        assertTrue(manager.isDay());
+        manager.setTime(100000);
         assertFalse(manager.isDay());
     }
 
     @Test
     public void amTest() {
-        manager.setTime(100000);
+        manager.setTime(500000);
         assertTrue(manager.isDay());
 
         manager.getTOD();
         assertEquals("am", manager.TOD);
 
         manager.hours = 24;
-        assertTrue(manager.isDay());
+        assertFalse(manager.isDay());
 
         manager.getTOD();
         assertEquals("am", manager.TOD);
@@ -53,13 +101,13 @@ public class EnvironmentManagerTest {
 
     @Test
     public void pmTest() {
-        manager.setTime(1000000);
+        manager.setTime(10000000);
         assertFalse(manager.isDay());
 
         manager.getTOD();
         assertEquals("pm", manager.TOD);
 
-        manager.hours = 12;
+        manager.hours = 19;
         assertFalse(manager.isDay());
 
         manager.getTOD();
@@ -83,7 +131,7 @@ public class EnvironmentManagerTest {
         manager.setFilename();
         assertEquals("resources/sounds/forest_day.wav", manager.file);
 
-        manager.hours = 15;
+        manager.hours = 19;
         manager.isDay();
         manager.biome = "desert";
         manager.setFilename();
