@@ -252,18 +252,17 @@ public class GameScreen implements Screen,KeyDownObserver {
         if (keycode == Input.Keys.F5) {
 
             //Create a random world
-            WorldBuilder worldBuilder = new WorldBuilder();
-            // WorldDirector.constructSimpleSinglePlayerWorld(worldBuilder);
-            WorldDirector.constructNBiomeSinglePlayerWorld(worldBuilder, 3);
-            world = worldBuilder.getWorld();
+            world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 3).getWorld();
+
 
             AbstractEntity.resetID();
             Tile.resetID();
             GameManager gameManager = GameManager.get();
             gameManager.setWorld(world);
 
+
             // Add first peon to the world
-            world.addEntity(new Peon(0f, 0f, 0.05f, "Side Piece", 10));
+//            world.addEntity(new Peon(0f, 0f, 0.05f, "Side Piece", 10));
         }
 
         if (keycode == Input.Keys.F11) { // F11

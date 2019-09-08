@@ -1,7 +1,13 @@
 package deco2800.skyfall.worlds.world;
 
 import com.badlogic.gdx.Gdx;
-import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.AgentEntity;
+import deco2800.skyfall.entities.EnemyEntity;
+import deco2800.skyfall.entities.Harvestable;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.Projectile;
+import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
@@ -10,20 +16,14 @@ import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import deco2800.skyfall.worlds.generation.VoronoiEdge;
-import deco2800.skyfall.worlds.biomes.DesertBiome;
-import deco2800.skyfall.worlds.biomes.ForestBiome;
-import deco2800.skyfall.worlds.biomes.MountainBiome;
-import deco2800.skyfall.worlds.biomes.OceanBiome;
-import deco2800.skyfall.worlds.biomes.SwampBiome;
-import deco2800.skyfall.worlds.biomes.VolcanicMountainsBiome;
 import deco2800.skyfall.worlds.generation.BiomeGenerator;
 import deco2800.skyfall.worlds.generation.DeadEndGenerationException;
+import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
-
 import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,8 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.*;
-import java.io.FileWriter;
+import java.util.stream.Collectors;
 
 /**
  * AbstractWorld is the Game AbstractWorld
@@ -43,37 +42,9 @@ import java.io.FileWriter;
  */
 public class World implements TouchDownObserver {
 
-    protected List<AbstractEntity> entities;
 
     protected int width;
     protected int length;
-
-    //The length/2 of the world, (worldSize * 2)^2 to get the world area
-    protected int worldSize;
-
-    //The distance between the nodes
-    protected int nodeSpacing;
-
-    //A list corrosponding to the size of each biome
-    protected int[] biomeSizes;
-
-    //The number of lakes
-    protected int numOfLakes;
-
-    //The size of each lake
-    protected int[] lakeSizes;
-
-    //The number of rivers
-    protected int noRivers;
-
-    //The width of all the rivers
-    protected int riverWidth;
-
-    //The width of the beach
-    protected int beachWidth;
-
-    //The seed of the world, using with the random number generator to create deterministic worlds
-    private long seed;
 
     //Used to generate random numbers
     private Random random;
@@ -90,36 +61,17 @@ public class World implements TouchDownObserver {
     protected List<AbstractEntity> entitiesToDelete = new CopyOnWriteArrayList<>();
     protected List<Tile> tilesToDelete = new CopyOnWriteArrayList<>();
 
+
+    protected WorldParameters worldParameters;
+
     /**
      * The constructor for a world
-     * @param seed The seed of the world, used in conjuction with a random number generator allows for deterministic
-     *             generation
-     * @param worldSize The length/2 of the world, (worldSize * 2)^2 to get the world area/number of tiles
-     * @param nodeSpacing The spacing between the nodes
-     * @param biomeSizes The size of the biomes
-     * @param numOfLakes The number of lakes
-     * @param lakeSizes The respective sizing of each lake
-     * @param biomes The biomes in the world
-     * @param entities The entities in the world
-     * @param noRivers The number of rivers
-     * @param riverWidth The width of the rivers in terms of nodes
+     * @param worldParameters A class that contains the world parameters
      */
-    public World(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int[] lakeSizes,
-                ArrayList<AbstractBiome> biomes, CopyOnWriteArrayList<AbstractEntity> entities, int noRivers, int riverWidth, int beachWidth) {
+    public World(WorldParameters worldParameters){
+        this.worldParameters = worldParameters;
 
-        random = new Random(seed);
-        this.seed = seed;
-        this.biomeSizes = biomeSizes;
-        this.numOfLakes = numOfLakes;
-        this.lakeSizes = lakeSizes;
-        this.biomes = biomes;
-        this.entities = entities;
-        this.noRivers = noRivers;
-        this.riverWidth = riverWidth;
-        this.beachWidth = beachWidth;
-
-        this.worldSize = worldSize;
-        this.nodeSpacing = nodeSpacing;
+        random = new Random(worldParameters.getSeed());
 
         tiles = new CopyOnWriteArrayList<>();
         worldGenNodes = new CopyOnWriteArrayList<>();
@@ -148,6 +100,7 @@ public class World implements TouchDownObserver {
             }
         }
 
+
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
 
     };
@@ -168,10 +121,12 @@ public class World implements TouchDownObserver {
                 tile.setBiome(null);
             }
 
-            for (AbstractBiome biome : biomes) {
+            for (AbstractBiome biome : worldParameters.getBiomes()) {
                 biome.getTiles().clear();
             }
 
+            int worldSize = worldParameters.getWorldSize();
+            int nodeSpacing = worldParameters.getNodeSpacing();
             int nodeCount = Math.round((float) worldSize * worldSize * 4 / nodeSpacing / nodeSpacing);
             // TODO: if nodeCount is less than the number of biomes, throw an exception
 
@@ -219,7 +174,7 @@ public class World implements TouchDownObserver {
 
 
             try {
-                BiomeGenerator biomeGenerator = new BiomeGenerator(worldGenNodes, voronoiEdges, random, biomeSizes, biomes, numOfLakes, lakeSizes, noRivers, riverWidth, beachWidth);
+                BiomeGenerator biomeGenerator = new BiomeGenerator(worldGenNodes, voronoiEdges, random,worldParameters);
                 biomeGenerator.generateBiomes();
             } catch (NotEnoughPointsException | DeadEndGenerationException e) {
                  throw e;
@@ -238,7 +193,7 @@ public class World implements TouchDownObserver {
      * which determine their properties
      */
     public void generateTileTypes(Random random) {
-        for (AbstractBiome biome : biomes) {
+        for (AbstractBiome biome : worldParameters.getBiomes()) {
             biome.setTileTextures(random);
         }
     }
@@ -315,7 +270,7 @@ public class World implements TouchDownObserver {
      * @return All Entities in the world
      */
     public List<AbstractEntity> getEntities() {
-        return new CopyOnWriteArrayList<>(this.entities);
+        return new CopyOnWriteArrayList<>(this.worldParameters.getEntities());
     }
 
     /**
@@ -342,7 +297,7 @@ public class World implements TouchDownObserver {
      * @return all entities in the world
      */
     public List<AbstractEntity> getSortedEntities() {
-        List<AbstractEntity> e = new CopyOnWriteArrayList<>(this.entities);
+        List<AbstractEntity> e = new CopyOnWriteArrayList<>(this.worldParameters.getEntities());
         return e;
     }
 
@@ -352,7 +307,7 @@ public class World implements TouchDownObserver {
      * @return all entities in the world
      */
     public List<AgentEntity> getSortedAgentEntities() {
-        List<AgentEntity> e = this.entities.stream().filter(p -> p instanceof AgentEntity).map(p -> (AgentEntity) p)
+        List<AgentEntity> e = this.worldParameters.getEntities().stream().filter(p -> p instanceof AgentEntity).map(p -> (AgentEntity) p)
                 .collect(Collectors.toList());
 
         Collections.sort(e);
@@ -365,9 +320,9 @@ public class World implements TouchDownObserver {
      * @param entity the entity to add
      */
     public void addEntity(AbstractEntity entity) {
-        entities.add(entity);
+        worldParameters.getEntities().add(entity);
         // Keep the entities sorted by render order
-        Collections.sort(entities);
+        Collections.sort(worldParameters.getEntities());
     }
 
     /**
@@ -376,13 +331,13 @@ public class World implements TouchDownObserver {
      * @param entity the entity to remove
      */
     public void removeEntity(AbstractEntity entity) {
-        entities.remove(entity);
+        worldParameters.getEntities().remove(entity);
         // Keep the entities sorted by render order
-        Collections.sort(entities);
+        Collections.sort(worldParameters.getEntities());
     }
 
-    public void setEntities(List<AbstractEntity> entities) {
-        this.entities = entities;
+    public void setEntities(CopyOnWriteArrayList<AbstractEntity> entities) {
+        this.worldParameters.setEntities(entities);
     }
 
     public List<Tile> getTileMap() {
@@ -431,14 +386,14 @@ public class World implements TouchDownObserver {
 
     // TODO ADDRESS THIS..?
     public void updateEntity(AbstractEntity entity) {
-        for (AbstractEntity e : this.entities) {
+        for (AbstractEntity e : this.worldParameters.getEntities()) {
             if (e.getEntityID() == entity.getEntityID()) {
-                this.entities.remove(e);
-                this.entities.add(entity);
+                worldParameters.removeEntity(e);
+                this.worldParameters.getEntities().add(entity);
                 return;
             }
         }
-        this.entities.add(entity);
+        this.worldParameters.addEntity(entity);
 
         // Since MultiEntities need to be attached to the tiles they live on, setup that
         // connection.
@@ -449,7 +404,7 @@ public class World implements TouchDownObserver {
 
     public void onTick(long i) {
         for (AbstractEntity e : entitiesToDelete) {
-            entities.remove(e);
+            worldParameters.removeEntity(e);
         }
 
         for (Tile t : tilesToDelete) {
@@ -516,14 +471,14 @@ public class World implements TouchDownObserver {
      * @param biome The biome getting added
      */
     public void addBiome(AbstractBiome biome) {
-        this.biomes.add(biome);
+        worldParameters.addBiome(biome);
     }
 
     /**
      * Gets the list of biomes in a world
      */
     public List<AbstractBiome> getBiomes() {
-        return this.biomes;
+        return this.worldParameters.getBiomes();
     }
 
     public void handleCollision(AbstractEntity e1, AbstractEntity e2) {
@@ -576,7 +531,7 @@ public class World implements TouchDownObserver {
      * @return
      */
     public long getSeed() {
-        return seed;
+        return worldParameters.getSeed();
     }
 
 

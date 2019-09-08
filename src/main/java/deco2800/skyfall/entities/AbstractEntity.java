@@ -473,7 +473,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * Sets the current animation to be run to null
      */
 	public void setGetToBeRunToNull() {
-		toBeRun = null;
+		setCurrentState(AnimationRole.NULL);
+		//toBeRun = null;
 	}
 
     /**
@@ -519,6 +520,10 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * @param animationLinker Animation object
      */
     protected void addAnimations(AnimationRole role, Direction currentDirection, AnimationLinker animationLinker) {
+    	if (role == AnimationRole.NULL) {
+      		System.out.println("Don't Set AnimationRole.NULL to an animation");
+			return;
+    	}
 	    animations.putIfAbsent(role, new HashMap<>());
         Map<Direction, AnimationLinker> direction = animations.get(role);
         direction.put(currentDirection, animationLinker);

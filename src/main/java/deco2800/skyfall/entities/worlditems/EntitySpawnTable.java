@@ -1,5 +1,6 @@
-package deco2800.skyfall.entities;
+package deco2800.skyfall.entities.worlditems;
 
+import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.Tile;

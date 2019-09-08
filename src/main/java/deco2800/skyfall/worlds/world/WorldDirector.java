@@ -31,7 +31,7 @@ public class WorldDirector {
         builder.addLake(5);
         builder.addRiver();
 
-        builder.setRiverSize(2);
+        builder.setRiverSize(5);
         builder.setBeachSize(12);
 
         builder.setStaticEntities(true);
@@ -60,19 +60,35 @@ public class WorldDirector {
      * @param builder The builder used to construct the world
      * @throws IllegalArgumentException if n is less than 1 or greater than 5
      */
-    public static void constructNBiomeSinglePlayerWorld(WorldBuilder builder, int n){
+    public static WorldBuilder constructNBiomeSinglePlayerWorld(WorldBuilder builder, int n){
+        builder.setType("single_player");
         if (n < 1 || n > 5) {
             throw new IllegalArgumentException("n must be between 1 and 5");
         }
-        builder.setType("single_player");
+
+        ArrayList<AbstractBiome> choices = new ArrayList<>();
+        choices.add(new ForestBiome());
+        choices.add(new DesertBiome());
+        choices.add(new MountainBiome());
+        choices.add(new VolcanicMountainsBiome());
+        choices.add(new SwampBiome());
+        choices.add(new SnowyMountainsBiome());
+
+        for (int i = 0; i < n; i++) {
+            builder.addBiome(choices.remove(random.nextInt(choices.size())), 40);
+        }
 
         builder.setWorldSize(160);
         builder.setNodeSpacing(15);
         builder.setSeed(random.nextInt());
+
+        builder.addLake(5);
         builder.addLake(5);
         builder.addRiver();
-        builder.setRiverSize(3);
+
+        builder.setRiverSize(5);
         builder.setBeachSize(12);
+
         builder.setStaticEntities(true);
 
         MainCharacter mainCharacter = new MainCharacter(0,0,0.05f, "Main Piece", 10);
@@ -86,17 +102,7 @@ public class WorldDirector {
         builder.addEntity(new Flower(2f,2f,mainCharacter));
         builder.addEntity(new Treeman(-2f,-3f,mainCharacter));
 
-        ArrayList<AbstractBiome> choices = new ArrayList<>();
-        choices.add(new ForestBiome());
-        choices.add(new DesertBiome());
-        choices.add(new MountainBiome());
-        choices.add(new VolcanicMountainsBiome());
-        choices.add(new SwampBiome());
-        choices.add(new SnowyMountainsBiome());
-
-        for (int i = 0; i < n; i++) {
-            builder.addBiome(choices.remove(random.nextInt(choices.size())), 50);
-        }
+        return builder;
     }
 
     /**
