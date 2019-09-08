@@ -54,6 +54,9 @@ public class GameMenuScreen {
     //Inventory pop up
     private PopUpTable inventoryTable;
 
+    //Gold Pouch pop ip
+    private PopUpTable goldTable;
+
     /**
      * Construct the menu screen in the game.
      *
@@ -149,11 +152,20 @@ public class GameMenuScreen {
             }
         });
 
-        ImageButton goldPouch = new ImageButton(generateTextureRegionDrawableObject("goldPiece5"));
-        goldPouch.setSize(200 * 0.55f, 207 * 0.55f);
-        goldPouch.setPosition(440, 30 * 1000 / 800f);
-        stage.addActor(goldPouch);
+        ImageButton goldPouchButton = new ImageButton(generateTextureRegionDrawableObject("goldPiece5"));
+        goldPouchButton.setSize(200 * 0.55f, 207 * 0.55f);
+        goldPouchButton.setPosition(440, 30 * 1000 / 800f);
+        stage.addActor(goldPouchButton);
+
+        //Add gold piece button listener
+        goldPouchButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameMenuManager.open(getGoldTable());
+            }
+        });
     }
+
 
     /**
      * Getter of Game Paused screen.
@@ -398,13 +410,58 @@ public class GameMenuScreen {
         infoPanel.setBackground(generateTextureRegionDrawableObject("info_panel"));
 
 
-        updateResourcePanel();
+        //updateResourcePanel();
 
         inventoryTable.addActor(infoBar);
         inventoryTable.addActor(infoPanel);
         inventoryTable.addActor(this.resourcePanel);
 
         this.inventoryTable = inventoryTable;
+    }
+
+    /**
+     * Updates and returns current state of the goldPouch table.
+     *
+     * @return inventoryTable
+     */
+    private PopUpTable getGoldTable() {
+        if (goldTable == null) {
+            setGoldTable();
+            setExitButton(goldTable);
+            stage.addActor(goldTable);
+            stage.addActor(goldTable.getExit());
+        } else {
+            //goldTable.removeActor(resourcePanel);
+            //updateResourcePanel();
+            //goldTable.addActor(resourcePanel);
+        }
+        return goldTable;
+    }
+
+    /***
+     * Sets all images and buttons in the gold pouch table.
+     */
+    private void setGoldTable() {
+        PopUpTable goldTable = new PopUpTable(700, 700 * 1346 / 1862f, "gold");
+        goldTable.setName("goldTable");
+
+        Image infoBar = new Image(generateTextureRegionDrawableObject("inventory_banner"));
+        infoBar.setSize(650, 55);
+        infoBar.setPosition(130, 435);
+
+        Table infoPanel = new Table();
+        infoPanel.setSize(410, 400);
+        infoPanel.setPosition(25, 18);
+        infoPanel.setBackground(generateTextureRegionDrawableObject("info_panel"));
+
+
+        //updateResourcePanel();
+
+        goldTable.addActor(infoBar);
+        goldTable.addActor(infoPanel);
+        //goldTable.addActor(this.resourcePanel);
+
+        this.goldTable = goldTable;
     }
 
     /***
