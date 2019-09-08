@@ -223,18 +223,6 @@ public class Tile {
      * Returns whether the tile obstructs entities.
      *
      * @return whether the tile obstructs entities
-     *
-     * @deprecated use {@link #isObstructed()}
-     */
-    @Deprecated
-    public boolean getObstructed() {
-        return isObstructed();
-    }
-
-    /**
-     * Returns whether the tile obstructs entities.
-     *
-     * @return whether the tile obstructs entities
      */
     public boolean isObstructed() {
         return obstructed;
