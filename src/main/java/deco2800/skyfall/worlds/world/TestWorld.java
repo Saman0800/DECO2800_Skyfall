@@ -1,19 +1,18 @@
 package deco2800.skyfall.worlds.world;
 
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.world.World;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-
-import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.entities.worlditems.Rock;
+import deco2800.skyfall.entities.worlditems.Tree;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 @SuppressWarnings("unused")
 public class TestWorld extends World {
@@ -22,9 +21,8 @@ public class TestWorld extends World {
 
     private static int RADIUS = 25;
 
-    public TestWorld(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int[] lakeSizes,
-        ArrayList<AbstractBiome> biomes, CopyOnWriteArrayList<AbstractEntity> entities, int rivers, int riverSize, int beachSize) {
-        super(seed, worldSize, nodeSpacing, biomeSizes, numOfLakes, lakeSizes, biomes, entities, rivers, riverSize, beachSize);
+    public TestWorld(WorldParameters worldParameters) {
+        super(worldParameters);
     }
 
     // 5 tile building
@@ -45,9 +43,8 @@ public class TestWorld extends World {
 
     // building with a fence
     private StaticEntity createBuilding2(float col, float row) {
-        Map<HexVector, String> textures = new HashMap<>();
 
-        textures = new HashMap<>();
+        Map<HexVector, String> textures = new HashMap<>();
         textures.put(new HexVector(0, 0), "buildingA");
 
         textures.put(new HexVector(-2, 1), "fenceNE-S");
@@ -77,7 +74,7 @@ public class TestWorld extends World {
         Map<HexVector, String> textures = new HashMap<>();
         Tile t = GameManager.get().getWorld().getTile(col, row);
         Tree tree = new Tree(t, true);
-        entities.add(tree);
+        worldParameters.addEntity(tree);
     }
 
     // this get ran on first game tick so the world tiles exist.
@@ -89,15 +86,16 @@ public class TestWorld extends World {
         for (int i = 0; i < 200; i++) {
             Tile t = GameManager.get().getWorld().getTile(random.nextInt(tileCount));
             if (t != null) {
-                entities.add(new Rock(t, true));
+                worldParameters.addEntity(new Rock(t, true));
+
             }
         }
-        entities.add(createBuilding2(-5, 0.5f));
+        worldParameters.addEntity(createBuilding2(-5, 0.5f));
 
     }
 
     @Override
-    protected void generateWorld(Random random) {
+    protected void generateWorld() {
         AbstractBiome biome = new ForestBiome();
         for (int q = -1000; q < 1000; q++) {
             for (int r = -1000; r < 1000; r++) {
@@ -118,9 +116,9 @@ public class TestWorld extends World {
             }
         }
 
-		// Create the entities in the game
-//		addEntity(new MainCharacter(0f,
-//                0f, 0.05f, "Main Piece", 10));
+        // Create the entities in the game
+        //		addEntity(new MainCharacter(0f,
+        //                0f, 0.05f, "Main Piece", 10));
 
     }
 

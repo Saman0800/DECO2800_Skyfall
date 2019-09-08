@@ -1,10 +1,15 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.entities.worlditems.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.Vector2;
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.*;
+import deco2800.skyfall.entities.spells.Spell;
+import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.gui.HealthCircle;
+import deco2800.skyfall.gui.ManaBar;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.*;
 import deco2800.skyfall.resources.GoldPiece;
@@ -23,8 +28,8 @@ import java.util.*;
 /**
  * Main character in the game
  */
-public class MainCharacter extends Peon implements KeyDownObserver,
-        KeyUpObserver,TouchDownObserver, Tickable , Animatable {
+public class MainCharacter extends Peon
+        implements KeyDownObserver, KeyUpObserver, TouchDownObserver, Tickable, Animatable {
 
     // Logger tp print messages
     private final Logger logger = LoggerFactory.getLogger(MainCharacter.class);
@@ -67,9 +72,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     // The accumulated food tick to tick
     private float foodAccum;
-
-    // Textures for all 6 directions to correspond to movement of character
-    private String[] textures;
 
     // A goldPouch to store the character's gold pieces.
     private HashMap<Integer, Integer> goldPouch;
@@ -124,6 +126,26 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     private boolean isAttacking = false;
 
+    /*
+     * The spell the user currently has selected to cast.
+     */
+    private SpellType spellSelected = SpellType.NONE;
+
+    /*
+     * How much mana the character has available for spellcasting.
+     */
+    private int mana = 100;
+
+    /*
+     * The GUI mana bar that can be updated when mana is restored/lost.
+     */
+    private ManaBar manaBar;
+
+    /*
+     * The GUI health bar for the character.
+     */
+    private HealthCircle healthBar;
+
     /**
      * Private helper method to instantiate inventory and weapon managers for
      * Main Character constructor
@@ -174,6 +196,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         vel = 0;
         velHistoryX = new ArrayList<>();
         velHistoryY = new ArrayList<>();
+        blueprintsLearned = new ArrayList<>();
+
         isMoving = false;
         HexVector position = this.getPosition();
         canSwim = true;
@@ -182,6 +206,29 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         setDirectionTextures();
         configureAnimations();
+    }
+
+    /**
+     * Setup the character specific gui elements.
+     */
+    public void setUpGUI() {
+        this.setupHealthBar();
+        this.setUpManaBar();
+    }
+
+    /**
+     * Set up the mana bar.
+     */
+    private void setUpManaBar() {
+        // Start with 100 mana.
+        this.manaBar = new ManaBar(100,"mana_bar_inner","mana_bar");
+    }
+
+    /**
+     * Set up the health bar.
+     */
+    private void setupHealthBar() {
+        this.healthBar = new HealthCircle(this.getHealth(), "big_circle", "inner_circle");
     }
 
     /**
@@ -228,10 +275,29 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Attack with the weapon the character has equip.
      */
     public void attack(HexVector mousePosition) {
-        HexVector position = this.getPosition();
+        // Animation control
         setAttacking(true);
         setCurrentState(AnimationRole.DEAD);
 
+        // If there is a spell selected, fire that.
+        // else, just fire off a normal projectile.
+        if (this.spellSelected != SpellType.NONE) {
+            this.castSpell(mousePosition);
+        } else {
+            this.fireProjectile(mousePosition);
+        }
+    }
+
+    /**
+     * Fire a projectile in the position that the mouse is in.
+     * @param mousePosition The position of the user's mouse.
+     */
+    private void fireProjectile(HexVector mousePosition) {
+        //TODO: Call weapon.Attack(); and move this logic to the weapon.
+        HexVector position = this.getPosition();
+
+
+        setCurrentState(AnimationRole.ATTACK);
         // Make projectile move toward the angle
         // Spawn projectile in front of character for now.
 
@@ -244,11 +310,41 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 0.1f,
                 this.itemSlotSelected == 1 ? 1 : 0);
 
-        // Get AbstractWorld from static class GameManager.
-        GameManager manager = GameManager.get();
-
         // Add the projectile entity to the game world.
-        manager.getWorld().addEntity(projectile);
+        GameManager.get().getWorld().addEntity(projectile);
+    }
+
+    /**
+     * Cast the spell in the position that the mouse is in.
+     * @param mousePosition The position of the user's mouse.
+     */
+    private void castSpell(HexVector mousePosition) {
+
+        // Unselect the spell
+        this.spellSelected = SpellType.NONE;
+
+        // Check if have enough mana to attack.
+        if (mana < 20) {
+            return;
+        }
+
+        // TODO: Fire the spell in the users mouse direction.
+        Spell spell = new Spell(mousePosition,
+                "flame_wall_placeholder",
+                "spell",
+                mousePosition.getCol(),
+                mousePosition.getRow(),
+                1,
+                0.1f,
+                0);
+
+        // Subtract some mana, and update the GUI.
+        this.mana-=20;
+        this.manaBar.update(this.mana);
+
+        GameManager.get().getWorld().addEntity(spell);
+
+        setAttacking(false);
     }
 
     /**
@@ -265,16 +361,21 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void hurt(int damage) {
         this.changeHealth(-damage);
 
+        if (this.healthBar != null) {
+            this.healthBar.update(this.getHealth());
+        }
+
         if (this.getHealth() <= 0) {
             kill();
         } else {
-            hurtTime = 3000;
+            hurtTime = 2000;
+            recoverTime = 0;
             HexVector bounceBack = new HexVector();
 
             /*
             switch (getPlayerDirectionCardinal()) {
                 case "North":
-                    bounceBack = new HexVector(this.direction.getX(),this.direction.getY() - 1);
+                    bounceBack = new HexVector(this.direction.getX(), this.direction.getY() - 1);
                     break;
                 case "North-East":
                     bounceBack = new HexVector(this.direction.getX() - 1, this.direction.getY() - 1);
@@ -315,7 +416,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Player recovers from being attacked. It removes player 's
      * hurt effect (e.g. sprite flashing in red), in hurt().
      */
-    void recover () {
+    void recover() {
         setHurt(false);
         // controller.enabled = true;
     }
@@ -324,7 +425,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Kills the player. and notifying the game that the player
      * has died and cannot do any actions in game anymore.
      */
-    void kill () {
+    void kill() {
         // stop player controls
         setMaxSpeed(0);
 
@@ -458,7 +559,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * (-ve amount decreases hunger points)
      * @param amount the amount to change it by
      */
-    public void change_food(int amount){
+    public void change_food(int amount) {
         this.foodLevel += amount;
         if (foodLevel > 100) {
             foodLevel = 100;
@@ -472,7 +573,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Get how many hunger points the player has
      * @return The number of hunger points the player has
      */
-    public int getFoodLevel(){
+    public int getFoodLevel() {
         return foodLevel;
     }
 
@@ -532,7 +633,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Change the player's appearance to the set texture
      * @param texture the texture to set
      */
-    public void changeTexture(String texture){
+    public void changeTexture(String texture) {
         this.setTexture(texture);
     }
 
@@ -596,6 +697,15 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
     }
 
+    private void checkIfRecovered() {
+        System.out.println("Character is hurt. and recovering");
+        recoverTime += 20;
+        if (recoverTime > hurtTime) {
+            System.out.println("Recovered");
+            setHurt(false);
+        }
+    }
+
     /**
      * Handles tick based stuff, e.g. movement
      */
@@ -604,6 +714,16 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.updatePosition();
         this.movementSound();
 
+        //this.setCurrentSpeed(this.direction.len());
+        //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
+        //        System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction,
+        //         this.getPosition(), this.direction.x - this.getCol(),
+        //         this.direction.y - this.getRow());
+        //        System.out.printf("%s%n", this.currentSpeed);
+
+        if (isHurt) {
+            checkIfRecovered();
+        }
         this.updateAnimation();
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             GameManager.getManagerFromInstance(ConstructionManager.class)
@@ -682,12 +802,23 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             case Input.Keys.M:
                 getGoldPouchTotalValue();
                 break;
+            case Input.Keys.Z:
+                selectSpell(SpellType.FLAME_WALL);
+                break;
             default:
                 switchItem(keycode);
                 //xInput += 1;
                 break;
-
         }
+    }
+
+    /**
+     * Select the spell that the character is ready to cast.
+     * When they next click attack, this spell will cast.
+     * @param type The SpellType to cast.
+     */
+    private void selectSpell(SpellType type) {
+        this.spellSelected = type;
     }
 
     /**
@@ -733,12 +864,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @param gold The piece of gold to be added to the pouch
      * @param count How many of that piece of gold should be added
      */
-    public void addGold(GoldPiece gold, Integer count){
+    public void addGold(GoldPiece gold, Integer count) {
         // store the gold's value (5G, 10G etc) as a variable
         Integer goldValue = gold.getValue();
 
         // if this gold value already exists in the pouch
-        if (goldPouch.containsKey(goldValue)){
+        if (goldPouch.containsKey(goldValue)) {
             // add this piece to the already existing list of pieces
             goldPouch.put(goldValue, goldPouch.get(goldValue) + count);
         } else {
@@ -751,12 +882,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Removes one instance of a gold piece in the pouch.
      * @param gold The gold piece to be removed from the pouch.
      */
-    public void removeGold(GoldPiece gold){
+    public void removeGold(GoldPiece gold) {
         // store the gold's value (5G, 10G etc) as a variable
         Integer goldValue = gold.getValue();
 
         // if this gold value does not exist in the pouch
-        if (!(goldPouch.containsKey(goldValue))){
+        if (!(goldPouch.containsKey(goldValue))) {
             return;
         } else if (goldPouch.get(goldValue) > 1) {
             goldPouch.put(goldValue, goldPouch.get(goldValue) - 1);
@@ -792,14 +923,14 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * be added to their Gold Pouch.
      *
      */
-    public void addClosestGoldPiece(){
+    public void addClosestGoldPiece() {
         for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
-                if (entity instanceof GoldPiece) {
-                    if ( this.getPosition().distance(entity.getPosition()) <= 2 ) {
-                        this.addGold((GoldPiece) entity, 1);
-                        logger.info(this.inventories.toString());
-                    }
+            if (entity instanceof GoldPiece) {
+                if (this.getPosition().distance(entity.getPosition()) <= 2) {
+                    this.addGold((GoldPiece) entity, 1);
+                    logger.info(this.inventories.toString());
                 }
+            }
 
         }
         logger.info("Sorry, you are not close enough to a gold piece!");
@@ -874,14 +1005,14 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     public void findNewPosition(HexVector position, HexVector destination,
                                 Tile nextTile) {
-        if(nextTile == null) {
+        if (nextTile == null) {
             // Prevents the player from walking into the void
             position.moveToward(destination, 0);
-        }else if(nextTile.getTextureName().contains("water") && !canSwim) {
+        } else if (nextTile.getTextureName().contains("water") && !canSwim) {
             // Prevents the player back if they try to enter water when they
             // can't swim
             position.moveToward(destination, 0);
-        }else {
+        } else {
             position.moveToward(destination, vel);
         }
     }
@@ -895,17 +1026,17 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         float yPos = position.getRow();
 
         // Gets the tile the player is standing on
-        Tile currentTile = getTile(xPos,yPos);
+        Tile currentTile = getTile(xPos, yPos);
         // Returns tile at left arm (our perspective) of the player
         float tileCol = (float) Math.round(xPos);
         float tileRow = (float) Math.round(yPos);
-        if (tileCol % 2 != 0){
+        if (tileCol % 2 != 0) {
             tileRow += 0.5f;
         }
 
         // Determined friction scaling factor to apply based on current tile
         float friction;
-        if(currentTile != null && currentTile.getTexture() != null) {
+        if (currentTile != null && currentTile.getTexture() != null) {
             //Tile specific friction
             currentTile = GameManager.get().getWorld().getTile(tileCol,
                 tileRow);
@@ -949,7 +1080,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         findNewPosition(position, destination, nextTile);
 
         //Records velocity history in x direction
-        recordVelHistory(xVel,yVel);
+        recordVelHistory(xVel, yVel);
 
         getBody().setTransform(xPos, yPos, getBody().getAngle());
     }
@@ -1086,7 +1217,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * wood is collected a message is printed.
      * This method will be changed later to increase efficiency.
      */
-    public void useHatchet(){
+    public void useHatchet() {
 
         if (this.inventories.getQuickAccess().containsKey("Hatchet")) {
             Hatchet playerHatchet = new Hatchet(this);
@@ -1095,7 +1226,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
                 if (entity instanceof Tree) {
 
-                    if ( this.getPosition().distance(entity.getPosition()) <= 1) {
+                    if (this.getPosition().distance(entity.getPosition()) <= 1) {
                         playerHatchet.farmTree((Tree) entity);
                         logger.info(this.inventories.toString());
                     }
@@ -1110,7 +1241,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * wood is collected a message is printed.
      * This method will be changed later to increase efficiency.
      */
-    public void usePickAxe(){
+    public void usePickAxe() {
 
         if (this.inventories.getQuickAccess().containsKey("Pick Axe")) {
             PickAxe playerPickAxe = new PickAxe(this);
@@ -1119,7 +1250,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
                 if (entity instanceof Rock) {
 
-                    if ( this.getPosition().distance(entity.getPosition()) <= 1 ) {
+                    if (this.getPosition().distance(entity.getPosition()) <= 1) {
                         playerPickAxe.farmRock((Rock) entity);
                         logger.info(this.inventories.toString());
                     }
@@ -1134,7 +1265,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @return the learned blueprints list
      */
     public List<String> getBlueprintsLearned() {
-        blueprintsLearned = new ArrayList<>();
 
         return this.blueprintsLearned;
     }
@@ -1160,35 +1290,31 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * if yes, creates the item, adds it to the player's inventory
      * and deducts the required resource from inventory
      */
-    public void createItem(ManufacturedResources itemToCreate){
+    public void createItem(ManufacturedResources newItem){
+        if (getBlueprintsLearned().contains(newItem.getName())) {
 
-        if (getBlueprintsLearned().contains(itemToCreate.getName())) {
-
-            if (itemToCreate.getRequiredMetal()>=
-                    this.getInventoryManager().getAmount(itemToCreate.getName())){
+            if (newItem.getRequiredMetal()>= this.getInventoryManager().
+                    getAmount("Metal")){
                 logger.info("You don't have enough Metal");
 
-            } else if (itemToCreate.getRequiredWood()>=
-                    this.getInventoryManager().getAmount(itemToCreate.getName())){
+            } else if (newItem.getRequiredWood()>= this.getInventoryManager().
+                    getAmount("Wood")){
                 logger.info("You don't have enough Wood");
 
-            } else if (itemToCreate.getRequiredStone()>=
-                    this.getInventoryManager().getAmount(itemToCreate.getName())) {
+            } else if (newItem.getRequiredStone()>= this.getInventoryManager().
+                    getAmount("Stone")) {
                 logger.info("You don't have enough Stone");
 
             } else {
-                this.getInventoryManager().inventoryAdd(itemToCreate);
+                this.getInventoryManager().inventoryAdd(new Hatchet(this));
 
-                this.getInventoryManager().inventoryDropMultiple("Metal",
-                        itemToCreate.getRequiredMetal());
-                this.getInventoryManager().inventoryDropMultiple("Stone",
-                        itemToCreate.getRequiredStone());
-                this.getInventoryManager().inventoryDropMultiple("Wood",
-                        itemToCreate.getRequiredWood());
+                this.getInventoryManager().inventoryDropMultiple("Metal", newItem.getRequiredMetal());
+                this.getInventoryManager().inventoryDropMultiple("Stone", newItem.getRequiredStone());
+                this.getInventoryManager().inventoryDropMultiple("Wood", newItem.getRequiredWood());
+
             }
         }
     }
-
 
     /**
      * Sets the animations.
@@ -1288,11 +1414,19 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             setCurrentState(AnimationRole.ATTACK);
            // System.out.println(isAttacking);
         }
-       */
+        */
+        /* Short Animations */
 
-        if(isDead()) {
+        if (getToBeRun() != null) {
+            if (getToBeRun().getType() == AnimationRole.ATTACK) {
+                return;
+            }
+        }
+
+
+        if (isDead()) {
             setCurrentState(AnimationRole.DEAD);
-        } else if(isHurt) {
+        } else if (isHurt) {
             setCurrentState(AnimationRole.HURT);
         } else {
             if (vel.get(2) == 0f) {

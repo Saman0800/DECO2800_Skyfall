@@ -1,4 +1,4 @@
-package deco2800.skyfall.entities;
+package deco2800.skyfall.entities.worlditems;
 
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
@@ -37,11 +37,16 @@ public class EntitySpawnRule {
     private boolean usePerlin = false;
 
     /**
+     * A seed to use for all the perlin noise
+     */
+    private static long seed = 0;
+
+    /**
      * If the usePerlin parameter is set to true then a perlin noise generator will
      * be used to dictate the probability of an entity spawn on a tile. If no noise
      * generator is provided this will become the default noise generator.
      */
-    NoiseGenerator noiseGenerator = new NoiseGenerator(new Random(), 5, 20, 0.4);
+    NoiseGenerator noiseGenerator = null;
 
     /**
      * The biome in which the entities are to spawn. If no biome is specified then
@@ -119,9 +124,9 @@ public class EntitySpawnRule {
      * An overloaded constructor for EntitySpawnRule that is more efficient
      *
      * @param chance Likelihood that a tile of a given biome contains a tile
-     * @param min Minimum count
-     * @param max Maximum count
-     * @param biome A reference to a biome
+     * @param min    Minimum count
+     * @param max    Maximum count
+     * @param biome  A reference to a biome
      */
     public EntitySpawnRule(double chance, int min, int max, AbstractBiome biome) {
         this(chance, min, max);
@@ -139,6 +144,10 @@ public class EntitySpawnRule {
     public EntitySpawnRule(AbstractBiome biome, boolean usePerlin) {
         this.biome = biome;
         this.usePerlin = usePerlin;
+
+        if (usePerlin) {
+            noiseGenerator = new NoiseGenerator(new Random(EntitySpawnRule.seed), 5, 20, 0.4);
+        }
     }
 
     /**
@@ -187,6 +196,15 @@ public class EntitySpawnRule {
     public EntitySpawnRule(int min, int max, AbstractBiome biome, boolean usePerlin, SpawnControl map) {
         this(min, max, biome, usePerlin);
         this.map = map;
+    }
+
+    /**
+     * Sets the seed to use for the Perlin noise values.
+     * 
+     * @param newSeed The new seed value.
+     */
+    public static void setNoiseSeed(long newSeed) {
+        EntitySpawnRule.seed = newSeed;
     }
 
     /**

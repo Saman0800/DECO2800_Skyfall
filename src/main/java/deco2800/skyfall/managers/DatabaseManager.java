@@ -1,6 +1,7 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.util.HexVector;
@@ -80,7 +81,7 @@ public final class DatabaseManager extends AbstractManager {
      * @return A StringBuilder object with the entity JSON appended.
      */
     private static StringBuilder generateJsonForEntity(AbstractEntity e, StringBuilder entireJsonAsString,
-                                                      boolean appendComma) {
+            boolean appendComma) {
         Gson tileJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         Float rowPosition = e.getRow();
         Float colPosition = e.getCol();
@@ -89,8 +90,8 @@ public final class DatabaseManager extends AbstractManager {
         JsonElement element = tileJson.fromJson(json, JsonElement.class);
         JsonObject jsonObject = element.getAsJsonObject();
         JsonObject result = new JsonObject();
-        
-        result.addProperty("objectName",e.getObjectName());                                                
+
+        result.addProperty("objectName", e.getObjectName());
         for (String s : jsonObject.keySet()) {
             result.add(s, jsonObject.get(s));
         }
@@ -144,27 +145,25 @@ public final class DatabaseManager extends AbstractManager {
         return "ErrorSignal";
     }
 
-
     /**
      * Processes the tile portions of the JSON file when loading.
      *
      * @param reader the JsonReader object for loading JsonTokens
      * @param newTiles the list of new tiles.
      */
-    private static void processTileJson(com.google.gson.stream.JsonReader reader,
-                                       List<Tile> newTiles) {
+    private static void processTileJson(com.google.gson.stream.JsonReader reader, List<Tile> newTiles) {
         try {
             reader.nextName();
             reader.beginArray();
             while (reader.hasNext()) {
-            	reader.beginObject();
+                reader.beginObject();
 
-            	// TODO This looks broken.
-                Tile tile = new Tile(0,0);
+                // TODO This looks broken.
+                Tile tile = new Tile(0, 0);
                 while (reader.hasNext()) {
-                    checkBasicTileSettings(tile,reader.nextName(),reader);
+                    checkBasicTileSettings(tile, reader.nextName(), reader);
                 }
- 
+
                 newTiles.add(tile);
                 reader.endObject();
             }
@@ -178,27 +177,27 @@ public final class DatabaseManager extends AbstractManager {
     private static boolean checkBasicTileSettings(Tile tile, String entityField, JsonReader reader) {
         try {
             switch (entityField) {
-                case "colPos":
-                    tile.setCol((float) reader.nextDouble());
-                    return true;
-                case "rowPos":
-                    tile.setRow((float) reader.nextDouble());
-                    return true;
-                case "index":
-                    tile.setIndex(reader.nextInt());
-                    return true;
-                case "texture":
-                    tile.setTexture(reader.nextString());
-                    return true;
-                case "tileID":
-                    tile.setTileID(reader.nextInt());
-                    return true;
-                case "obstructed":
-                    tile.setObstructed( reader.nextBoolean());
-                    return true;
-                default:
-                    logger.error("Unexpected attribute when loading an entity:" + entityField);
-                    return false;
+            case "colPos":
+                tile.setCol((float) reader.nextDouble());
+                return true;
+            case "rowPos":
+                tile.setRow((float) reader.nextDouble());
+                return true;
+            case "index":
+                tile.setIndex(reader.nextInt());
+                return true;
+            case "texture":
+                tile.setTexture(reader.nextString());
+                return true;
+            case "tileID":
+                tile.setTileID(reader.nextInt());
+                return true;
+            case "obstructed":
+                tile.setObstructed(reader.nextBoolean());
+                return true;
+            default:
+                logger.error("Unexpected attribute when loading an entity:" + entityField);
+                return false;
             }
         } catch (IOException e) {
             logger.error("Cannot read the tile json array");
@@ -206,32 +205,29 @@ public final class DatabaseManager extends AbstractManager {
         return false;
     }
 
-
-
-
     private static AbstractEntity resolveEntityToLoad(String entityObjectName) {
         try {
-            for (String s:Arrays.asList("rock")){
-                if (entityObjectName.startsWith(s)){ 
+            for (String s : Arrays.asList("rock")) {
+                if (entityObjectName.startsWith(s)) {
                     Rock create = new Rock();
-                    create.setObjectName(entityObjectName); 
+                    create.setObjectName(entityObjectName);
                     return (AbstractEntity) create;
                 }
             }
 
-            for (String s:Arrays.asList("staticEntityID")){
-                if (entityObjectName.startsWith(s)){ 
+            for (String s : Arrays.asList("staticEntityID")) {
+                if (entityObjectName.startsWith(s)) {
                     StaticEntity create = new StaticEntity();
-                    create.setObjectName(entityObjectName); 
+                    create.setObjectName(entityObjectName);
                     return (AbstractEntity) create;
                 }
             }
-            
-            for (String s:Arrays.asList("playerPeon")){
-                if (entityObjectName.startsWith(s)){
-                     PlayerPeon create = new PlayerPeon(1,1,1,"playerPeon",10);
-                     create.setObjectName(entityObjectName); 
-                     return (AbstractEntity) create;
+
+            for (String s : Arrays.asList("playerPeon")) {
+                if (entityObjectName.startsWith(s)) {
+                    PlayerPeon create = new PlayerPeon(1, 1, 1, "playerPeon", 10);
+                    create.setObjectName(entityObjectName);
+                    return (AbstractEntity) create;
                 }
             }
 
@@ -245,55 +241,56 @@ public final class DatabaseManager extends AbstractManager {
 
             fullEntityName.append(entityMap.get(entityObjectName));
             return (AbstractEntity) Class.forName(fullEntityName.toString()).getDeclaredConstructor().newInstance();
-        } catch (ClassNotFoundException|NoSuchMethodException|InstantiationException|
-                    IllegalAccessException|InvocationTargetException e) {
+        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException
+                | InvocationTargetException e) {
             return null;
         }
     }
 
-    private static AbstractEntity checkBasicEntitySettings(AbstractEntity entity,  String entityField,JsonReader reader) {
+    private static AbstractEntity checkBasicEntitySettings(AbstractEntity entity, String entityField,
+            JsonReader reader) {
         try {
             switch (entityField) {
-                case "speed":
-                    ((AgentEntity)entity).setSpeed((float) reader.nextDouble());
-                    return entity;
-                case "colPos":
-                    entity.setCol((float) reader.nextDouble());
-                    return entity;
-                case "rowPos":
-                    entity.setRow((float) reader.nextDouble());
-                    return entity;
-                case "texture":
-                    entity.setTexture(reader.nextString());
-                    return entity;
-                case "children":
-                case "staticTexture":
-                    reader.beginObject();
-                    Map<HexVector, String> children = new HashMap<>();
-                    while (reader.hasNext()) {
+            case "speed":
+                ((AgentEntity) entity).setSpeed((float) reader.nextDouble());
+                return entity;
+            case "colPos":
+                entity.setCol((float) reader.nextDouble());
+                return entity;
+            case "rowPos":
+                entity.setRow((float) reader.nextDouble());
+                return entity;
+            case "texture":
+                entity.setTexture(reader.nextString());
+                return entity;
+            case "children":
+            case "staticTexture":
+                reader.beginObject();
+                Map<HexVector, String> children = new HashMap<>();
+                while (reader.hasNext()) {
                     JsonToken t = reader.peek();
                     String position = reader.nextName();
-                    String texture =  reader.nextString();
+                    String texture = reader.nextString();
                     HexVector pos = new HexVector(position);
-                    children.put(pos,texture);
-                    }
-                    
-                    ((StaticEntity) entity).setChildren(children);
-                    reader.endObject();
-                    return entity;
-               
-                case "entityID":
-                    entity.setEntityID(reader.nextInt());
-                    return entity;
-                case "obstructed":
-                    return entity;
-                default:
-                    logger.error("Unexpected attribute when loading an entity:" + entityField);
-                    return null;
+                    children.put(pos, texture);
+                }
+
+                ((StaticEntity) entity).setChildren(children);
+                reader.endObject();
+                return entity;
+
+            case "entityID":
+                entity.setEntityID(reader.nextInt());
+                return entity;
+            case "obstructed":
+                return entity;
+            default:
+                logger.error("Unexpected attribute when loading an entity:" + entityField);
+                return null;
             }
         } catch (IOException e) {
             logger.error("Cannot read the tile json array");
-        }  
+        }
         return null;
     }
 
@@ -303,41 +300,39 @@ public final class DatabaseManager extends AbstractManager {
      * @param reader the JsonReader object for loading JsonTokens
      * @param newEntities the map of new entities.
      */
-    private static void processEntityJson(JsonReader reader,
-                                          Map<Integer, AbstractEntity> newEntities) {
-   
+    private static void processEntityJson(JsonReader reader, Map<Integer, AbstractEntity> newEntities) {
+
         String entityName = "";
         try {
             AbstractEntity entity;
             JsonToken t = reader.peek();
             entityName = reader.nextName();
-            if ( entityName.startsWith("objectName")) {
+            if (entityName.startsWith("objectName")) {
                 entityName = reader.nextString();
                 entity = resolveEntityToLoad(entityName);
                 if (entity == null) {
-                    logger.error("Unable to resolve an " + entityName +" from the save file, on load.");
+                    logger.error("Unable to resolve an " + entityName + " from the save file, on load.");
                     logger.error("This is likely due to the entity being a new addition to the game.");
                     return;
-                }            
+                }
                 entity.setObjectName(entityName);
-  
+
                 while (reader.hasNext()) {
-                    entity = checkBasicEntitySettings(entity,reader.nextName(), reader);
+                    entity = checkBasicEntitySettings(entity, reader.nextName(), reader);
                 }
                 reader.endObject();
-            if (entity != null) {
-                newEntities.put(entity.getEntityID(), entity);
-            }
+                if (entity != null) {
+                    newEntities.put(entity.getEntityID(), entity);
+                }
             }
         } catch (IOException e) {
             logger.error("Cannot read the tile json array");
-        }       
-       
+        }
+
     }
 
-
     private static boolean startArrayReading(com.google.gson.stream.JsonReader reader,
-                                          CopyOnWriteArrayList<Tile> newTiles) {
+            CopyOnWriteArrayList<Tile> newTiles) {
         try {
             reader.beginArray();
             return true;
@@ -350,9 +345,8 @@ public final class DatabaseManager extends AbstractManager {
         }
     }
 
-    private static void descendThroughSaveFile(JsonReader reader,
-                                               Map<Integer, AbstractEntity> newEntities,
-                                               CopyOnWriteArrayList<Tile> newTiles) {
+    private static void descendThroughSaveFile(JsonReader reader, Map<Integer, AbstractEntity> newEntities,
+            CopyOnWriteArrayList<Tile> newTiles) {
         try {
             reader.beginObject();
             while (reader.hasNext()) {
@@ -367,7 +361,9 @@ public final class DatabaseManager extends AbstractManager {
             logger.error("Somehow loaded the JSON file, but it's somewhat corrupted", e);
         }
     }
-    private static void readEntities(JsonReader reader, Map<Integer, AbstractEntity> newEntities, CopyOnWriteArrayList<Tile> newTiles) throws IOException {
+
+    private static void readEntities(JsonReader reader, Map<Integer, AbstractEntity> newEntities,
+            CopyOnWriteArrayList<Tile> newTiles) throws IOException {
         while (reader.hasNext()) {
             if (!startArrayReading(reader, newTiles)) {
                 break;
@@ -376,11 +372,11 @@ public final class DatabaseManager extends AbstractManager {
                 JsonToken nextToken = reader.peek();
                 if (JsonToken.BEGIN_OBJECT.equals(nextToken)) {
                     reader.beginObject();
-                    processEntityJson(reader, newEntities);             
+                    processEntityJson(reader, newEntities);
                 } else if (JsonToken.NAME.equals(nextToken)) {
-                    reader.nextName();                    
-                } else if (JsonToken.STRING.equals(nextToken)) {     
-                    reader.nextString();                   
+                    reader.nextName();
+                } else if (JsonToken.STRING.equals(nextToken)) {
+                    reader.nextString();
                 } else if (JsonToken.NUMBER.equals(nextToken)) {
                     reader.nextDouble();
                 } else if (JsonToken.END_OBJECT.equals(nextToken)) {
@@ -411,8 +407,8 @@ public final class DatabaseManager extends AbstractManager {
         String saveLocationAndFilename = "resources/save_file.json";
         File f = new File(saveLocationAndFilename);
         if (!f.exists()) {
-            GameManager.get().getManager(OnScreenMessageManager.class).
-                    addMessage("Load attempted, but no save file found");
+            GameManager.get().getManager(OnScreenMessageManager.class)
+                    .addMessage("Load attempted, but no save file found");
             logger.info("Load attempted, but no save file found");
         }
 
@@ -424,8 +420,8 @@ public final class DatabaseManager extends AbstractManager {
         CopyOnWriteArrayList<Tile> newTiles = new CopyOnWriteArrayList<>();
 
         try {
-            com.google.gson.stream.JsonReader reader =
-                    new com.google.gson.stream.JsonReader(new FileReader(saveLocationAndFilename));
+            com.google.gson.stream.JsonReader reader = new com.google.gson.stream.JsonReader(
+                    new FileReader(saveLocationAndFilename));
             descendThroughSaveFile(reader, newEntities, newTiles);
         } catch (FileNotFoundException e) {
             logger.error("Somehow failed to load the JSON file even after checking", e);
@@ -434,7 +430,7 @@ public final class DatabaseManager extends AbstractManager {
 
         world.setTileMap(newTiles);
         world.generateNeighbours();
-        world.setEntities(new ArrayList<AbstractEntity>(newEntities.values()));
+        world.setEntities(new CopyOnWriteArrayList<>(newEntities.values()));
         logger.info("Load succeeded");
         GameManager.get().getManager(OnScreenMessageManager.class).addMessage("Loaded game from the database.");
     }
@@ -454,7 +450,7 @@ public final class DatabaseManager extends AbstractManager {
             logger.error("Could not overwrite previous save.");
         } finally {
             try {
-                if (fileWriter != null){
+                if (fileWriter != null) {
                     fileWriter.close();
                 } else {
                     logger.error("Could not close fileWriter as it is null");
@@ -481,9 +477,9 @@ public final class DatabaseManager extends AbstractManager {
         if (world == null) {
             world = GameManager.get().getWorld();
         }
-     
-            saveName = "save_file.json";
-       
+
+        saveName = "save_file.json";
+
         saveNameList.add(saveName);
 
         StringBuilder entireJsonAsString = new StringBuilder("{\"entities\": [");

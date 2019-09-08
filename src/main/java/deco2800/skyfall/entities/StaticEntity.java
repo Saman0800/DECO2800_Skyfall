@@ -13,6 +13,7 @@ import java.util.Set;
 
 import com.badlogic.gdx.graphics.Texture;
 
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.util.HexVector;

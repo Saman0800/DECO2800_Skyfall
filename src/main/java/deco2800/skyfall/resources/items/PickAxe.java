@@ -1,7 +1,7 @@
 package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.Rock;
+import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.ManufacturedResources;
@@ -14,19 +14,20 @@ import java.util.Map;
 /***
  * A Pick Axe item. Pick Axe is a manufacturd resource. It can harvest a rock.
  */
-public class PickAxe extends ManufacturedResources implements Item ,Blueprint{
+public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
     private Map<String, Integer> allRequirements;
-    private  boolean blueprintLearned=false;
+    private boolean blueprintLearned = false;
+
     /***
      * Create a Pick Axe with the name Pick Axe.
      *
      * @param owner the owner of the inventory.
      * @param position the position of the Pick Axe.
      */
-    public PickAxe (MainCharacter owner, HexVector position) {
+    public PickAxe(MainCharacter owner, HexVector position) {
         super(owner, position);
-        this.name="Pick Axe";
+        this.name = "Pick Axe";
     }
 
     /***
@@ -34,16 +35,16 @@ public class PickAxe extends ManufacturedResources implements Item ,Blueprint{
      *
      * @param owner the owner of the inventory.
      */
-    public PickAxe (MainCharacter owner) {
+    public PickAxe(MainCharacter owner) {
         super(owner);
-        this.name="Pick Axe";
+        this.name = "Pick Axe";
     }
 
     /***
      * Create a Pick Axe no parameter.
      */
-    public PickAxe () {
-        this.name="Pick Axe";
+    public PickAxe() {
+        this.name = "Pick Axe";
     }
 
     /**
@@ -101,7 +102,7 @@ public class PickAxe extends ManufacturedResources implements Item ,Blueprint{
      */
     public void farmRock(Rock rockToFarm) {
 
-        if (rockToFarm.getHealth()==0){
+        if (rockToFarm.getHealth() == 0) {
             System.out.println("This rock has nothing left to offer");
             GameManager.get().getWorld().removeEntity(rockToFarm);
 
@@ -111,13 +112,13 @@ public class PickAxe extends ManufacturedResources implements Item ,Blueprint{
             owner.getInventoryManager().inventoryAdd(new Stone());
 
             //lowering the possibility of gaining metal
-            double x = (int)(Math.random()*((1-0)+1));
+            double x = (int) (Math.random() * ((1 - 0) + 1));
 
-                if (x==1) {
-                    owner.getInventoryManager().inventoryAdd(new Metal());
+            if (x == 1) {
+                owner.getInventoryManager().inventoryAdd(new Metal());
             }
 
-            rockToFarm.setHealth(rockToFarm.getHealth()-10);
+            rockToFarm.setHealth(rockToFarm.getHealth() - 10);
         }
 
     }
@@ -128,8 +129,7 @@ public class PickAxe extends ManufacturedResources implements Item ,Blueprint{
      */
     @Override
     public String getDescription() {
-        return "This item can be constructed using stone and wood. " +
-                "It can farm stone from biomes.";
+        return "This item can be constructed using stone and wood. " + "It can farm stone from biomes.";
     }
 
     /**
@@ -172,12 +172,11 @@ public class PickAxe extends ManufacturedResources implements Item ,Blueprint{
     public Map<String, Integer> getAllRequirements() {
 
         allRequirements = new HashMap<>();
-        allRequirements.put("Wood",50);
-        allRequirements.put("Stone",30);
-        allRequirements.put("Metal",10);
+        allRequirements.put("Wood", 50);
+        allRequirements.put("Stone", 30);
+        allRequirements.put("Metal", 10);
 
         return allRequirements;
     }
-
 
 }

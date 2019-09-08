@@ -1,46 +1,46 @@
-package deco2800.skyfall.entities;
+package deco2800.skyfall.entities.worlditems;
 
+import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import deco2800.skyfall.entities.Harvestable;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.WoodCube;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class MountainTree extends StaticEntity implements Tickable, Harvestable {
-    private static final Logger LOG = LoggerFactory.getLogger(MountainTree.class);
+public class DesertCacti extends StaticEntity implements Tickable, Harvestable {
     private int woodAmount; // amount of wood that each tree has
 
     private static Random randomGen = new Random();
-    private static int nextTreeTexture = 1;
+    private static int nextImage = 1;
 
-    public MountainTree(float col, float row, int renderOrder, Map<HexVector, String> texture) {
+    public DesertCacti(float col, float row, int renderOrder, Map<HexVector, String> texture) {
         super(col, row, renderOrder, texture);
-        LOG.info("Making a tree at {}, {}", col, row);
-        this.setTexture("tree_cubeH1A0");
-        this.woodAmount = 15;
+        this.setTexture("");
+        this.woodAmount = 3;
     }
 
-    public MountainTree(Tile tile, boolean obstructed) {
-        super(tile, 5, "MTree" + nextTreeTexture, obstructed);
-        nextTreeTexture = randomGen.nextInt(3) + 1;
-        this.woodAmount = 15;
+    public DesertCacti(Tile tile, boolean obstructed) {
+        super(tile, 5, "DCactus" + nextImage, obstructed);
+        nextImage = randomGen.nextInt(4) + 1;
+        this.woodAmount = 3;
     }
 
     /**
-     * The newInstance method implemented for the MountainTree class to allow for
-     * item dispersal on game start up. This function is implemented with the
+     * The newInstance method implemented for the DesertCacti class to allow for item
+     * dispersal on game start up. This function is implemented with the
      * 
      * 
      * @return Duplicate rock tile with modified position.
      */
     @Override
-    public MountainTree newInstance(Tile tile) {
-        return new MountainTree(tile, this.isObstructed());
+    public DesertCacti newInstance(Tile tile) {
+        return new DesertCacti(tile, this.isObstructed());
     }
 
     @Override
@@ -48,10 +48,10 @@ public class MountainTree extends StaticEntity implements Tickable, Harvestable 
         if (other == null) {
             return false;
         }
-        if (!(other instanceof MountainTree)) {
+        if (!(other instanceof DesertCacti)) {
             return false;
         }
-        MountainTree otherTree = (MountainTree) other;
+        DesertCacti otherTree = (DesertCacti) other;
         if (this.getCol() != otherTree.getCol() || this.getRow() != otherTree.getRow()) {
             return false;
         }
@@ -66,7 +66,7 @@ public class MountainTree extends StaticEntity implements Tickable, Harvestable 
      */
     @Override
     public int hashCode() {
-        final float prime = 17;
+        final float prime = 101;
         float result = 1;
         result = (result + super.getCol()) * prime;
         result = (result + super.getRow()) * prime;
