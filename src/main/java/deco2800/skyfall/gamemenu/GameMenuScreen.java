@@ -434,9 +434,9 @@ public class GameMenuScreen {
             stage.addActor(goldTable);
             stage.addActor(goldTable.getExit());
         } else {
-            //goldTable.removeActor(resourcePanel);
-            //updateResourcePanel();
-            //goldTable.addActor(resourcePanel);
+            goldTable.removeActor(goldPanel);
+            updateGoldPanel();
+            goldTable.addActor(goldPanel);
         }
         return goldTable;
     }
@@ -471,6 +471,36 @@ public class GameMenuScreen {
         goldPanel.setPosition(110, 100);
         goldPanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
 
+        Map<Integer, Integer> goldAmounts = mainCharacter.getGoldPouch();
+
+        int count = 0;
+        int xpos = 20;
+        int ypos = 280;
+
+        for (Map.Entry<Integer, Integer> entry : goldAmounts.entrySet()) {
+
+            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject("goldPiece" + entry.getKey()));
+            icon.setName("icon");
+            icon.setSize(100, 100);
+            icon.setPosition(xpos + count * 130, ypos);
+
+            goldPanel.addActor(icon);
+
+            Label num = new Label(entry.getValue().toString(), skin, "white-label");
+            num.setPosition(xpos + 85 + count * 130, ypos + 75);
+            goldPanel.addActor(num);
+
+            count++;
+
+            if ((count) % 3 == 0) {
+                ypos -= 120;
+                count = 0;
+            }
+        }
+
+    }
+
+    private void updateGoldTable() {
         Map<Integer, Integer> goldAmounts = mainCharacter.getGoldPouch();
 
         int count = 0;
