@@ -13,9 +13,9 @@ import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
+
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.Tile;
-import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -138,7 +138,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Main Character constructor
      */
     private void instantiateManagers() {
-        this.inventories = new InventoryManager();
+        //this.inventories = new InventoryManager();
         this.weapons = new WeaponManager();
     }
 
@@ -182,6 +182,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         vel = 0;
         velHistoryX = new ArrayList<>();
         velHistoryY = new ArrayList<>();
+        blueprintsLearned = new ArrayList<>();
+
 
         isMoving = false;
 
@@ -1119,7 +1121,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @return the learned blueprints list
      */
     public List<String> getBlueprintsLearned() {
-        blueprintsLearned = new ArrayList<>();
 
         return this.blueprintsLearned;
     }
@@ -1145,31 +1146,27 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * if yes, creates the item, adds it to the player's inventory
      * and deducts the required resource from inventory
      */
-    public void createItem(ManufacturedResources itemToCreate){
+    public void createItem(ManufacturedResources newItem){
+        if (getBlueprintsLearned().contains(newItem.getName())) {
 
-        if (getBlueprintsLearned().contains(itemToCreate.getName())) {
-
-            if (itemToCreate.getRequiredMetal()>=
-                    this.getInventoryManager().getAmount(itemToCreate.getName())){
+            if (newItem.getRequiredMetal()>= this.getInventoryManager().
+                    getAmount("Metal")){
                 logger.info("You don't have enough Metal");
 
-            } else if (itemToCreate.getRequiredWood()>=
-                    this.getInventoryManager().getAmount(itemToCreate.getName())){
+            } else if (newItem.getRequiredWood()>= this.getInventoryManager().
+                    getAmount("Wood")){
                 logger.info("You don't have enough Wood");
 
-            } else if (itemToCreate.getRequiredStone()>=
-                    this.getInventoryManager().getAmount(itemToCreate.getName())) {
+            } else if (newItem.getRequiredStone()>= this.getInventoryManager().
+                    getAmount("Stone")) {
                 logger.info("You don't have enough Stone");
 
             } else {
-                this.getInventoryManager().inventoryAdd(itemToCreate);
+                this.getInventoryManager().inventoryAdd(new Hatchet(this));
 
-                this.getInventoryManager().inventoryDropMultiple("Metal",
-                        itemToCreate.getRequiredMetal());
-                this.getInventoryManager().inventoryDropMultiple("Stone",
-                        itemToCreate.getRequiredStone());
-                this.getInventoryManager().inventoryDropMultiple("Wood",
-                        itemToCreate.getRequiredWood());
+                this.getInventoryManager().inventoryDropMultiple("Metal", newItem.getRequiredMetal());
+                this.getInventoryManager().inventoryDropMultiple("Stone", newItem.getRequiredStone());
+                this.getInventoryManager().inventoryDropMultiple("Wood", newItem.getRequiredWood());
             }
         }
     }
