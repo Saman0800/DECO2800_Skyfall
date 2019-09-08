@@ -84,9 +84,7 @@ public class GameScreen implements Screen,KeyDownObserver {
             } else {
 
                 //Creating the world
-                WorldBuilder worldBuilder = new WorldBuilder();
-                WorldDirector.constructSimpleSinglePlayerWorld(worldBuilder);
-                world = worldBuilder.getWorld();
+                world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 5).getWorld();
 			}
 			GameManager.get().getManager(NetworkManager.class).startHosting("host");
 		}

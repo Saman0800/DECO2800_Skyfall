@@ -22,7 +22,7 @@ public class ServerWorld extends World {
     }
 
     @Override
-    protected void generateWorld(Random random) {
+    protected void generateWorld() {
         // TODO Auto-generated method stub
 
     }

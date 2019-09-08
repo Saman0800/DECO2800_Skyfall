@@ -43,9 +43,8 @@ public class TestWorld extends World {
 
     // building with a fence
     private StaticEntity createBuilding2(float col, float row) {
-        Map<HexVector, String> textures = new HashMap<>();
 
-        textures = new HashMap<>();
+        Map<HexVector, String> textures = new HashMap<>();
         textures.put(new HexVector(0, 0), "buildingA");
 
         textures.put(new HexVector(-2, 1), "fenceNE-S");
@@ -96,7 +95,7 @@ public class TestWorld extends World {
     }
 
     @Override
-    protected void generateWorld(Random random) {
+    protected void generateWorld() {
         AbstractBiome biome = new ForestBiome();
         for (int q = -1000; q < 1000; q++) {
             for (int r = -1000; r < 1000; r++) {

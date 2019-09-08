@@ -47,7 +47,7 @@ public class World implements TouchDownObserver {
     protected int length;
 
     //Used to generate random numbers
-    private Random random;
+    protected Random random;
 
     public Map<String, Float> frictionMap;
 
@@ -73,12 +73,10 @@ public class World implements TouchDownObserver {
 
         tiles = new CopyOnWriteArrayList<>();
         worldGenNodes = new CopyOnWriteArrayList<>();
-
-        tiles = new CopyOnWriteArrayList<Tile>();
     	voronoiEdges = new CopyOnWriteArrayList<>();
 
-        generateWorld(random);
-        generateTileTypes(random);
+        generateWorld();
+        generateTileTypes();
         generateNeighbours();
         generateTileIndexes();
         initialiseFrictionmap();
@@ -87,9 +85,8 @@ public class World implements TouchDownObserver {
     /**
      * Generates the tiles and biomes in the world and adds the world to a listener to allow for interaction.
      * Continuously repeats generation until it reaches a stable world
-     * @param random
      */
-    protected void generateWorld(Random random){
+    protected void generateWorld(){
         while (true){
             try {
                 generateTiles();
@@ -186,7 +183,7 @@ public class World implements TouchDownObserver {
      * Loops through all the biomes within the world and adds textures to the tiles
      * which determine their properties
      */
-    public void generateTileTypes(Random random) {
+    public void generateTileTypes() {
         for (AbstractBiome biome : worldParameters.getBiomes()) {
             biome.setTileTextures(random);
         }
@@ -201,6 +198,8 @@ public class World implements TouchDownObserver {
         // multiply coords by 2 to remove floats
         Map<Integer, Map<Integer, Tile>> tileMap = new HashMap<>();
         Map<Integer, Tile> columnMap;
+
+
         for (Tile tile : tiles) {
             columnMap = tileMap.getOrDefault((int) tile.getCol() * 2, new HashMap<Integer, Tile>());
             columnMap.put((int) (tile.getRow() * 2), tile);
