@@ -246,7 +246,6 @@ public class MainCharacter extends Peon
                          int health, String[] textures) {
         this(row, col, speed, name, health);
 
-        this.textures = textures;
         this.setTexture(textures[2]);
     }
 
