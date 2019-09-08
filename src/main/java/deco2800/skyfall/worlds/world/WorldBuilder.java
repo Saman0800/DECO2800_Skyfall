@@ -211,7 +211,7 @@ public class WorldBuilder implements WorldBuilderInterface {
                     }
                     // Spawn gold pieces uniformly
                     GoldPiece startGoldPiece = new GoldPiece(startTile, true, goldValue);
-                    EntitySpawnRule goldRule = new EntitySpawnRule(0.2 - (goldValue/1000) - 0.05, 10, 50, biome);
+                    EntitySpawnRule goldRule = new EntitySpawnRule(0.15 - (goldValue/1000), 10, 50, biome);
                     EntitySpawnTable.spawnEntities(startGoldPiece, goldRule, world);
                 }
 
