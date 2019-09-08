@@ -306,7 +306,7 @@ public class MainCharacterTest {
         // Set the health status of player from hurt back to normal
         // so that the effect (e.g. sprite flashing in red) will disappear
         // after recovering.
-        // testCharacter.recover();
+
         Assert.assertFalse(testCharacter.IsHurt());
     }
 

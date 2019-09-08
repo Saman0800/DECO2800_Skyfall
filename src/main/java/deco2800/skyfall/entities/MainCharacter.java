@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import com.badlogic.gdx.audio.Sound;
 import deco2800.skyfall.entities.worlditems.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.Vector2;
@@ -53,8 +54,10 @@ public class MainCharacter extends Peon
     public static final String WALK_NORMAL = "people_walk_normal";
     public static final String HURT = "player_hurt";
     public static final String DIED = "player_died";
-    private SoundManager soundManager = GameManager.get().
-            getManager(SoundManager.class);
+
+    private SoundManager soundManager = GameManager.get().getManager(SoundManager.class);
+
+    public static final String BOWATTACK = "bow_and_arrow_attack";
 
     //The pick Axe that is going to be created
     private Hatchet hatchetToCreate;
@@ -243,7 +246,7 @@ public class MainCharacter extends Peon
      */
     private void setUpManaBar() {
         //Start with 100 mana.
-        this.manaBar = new ManaBar(100,"mana_bar_inner","mana_bar");
+        this.manaBar = new ManaBar(100, "mana_bar_inner", "mana_bar");
     }
 
     /**
@@ -255,6 +258,7 @@ public class MainCharacter extends Peon
 
     /**
      * Constructor with various textures
+     *
      * @param textures A array of length 6 with string names corresponding to
      *                 different orientation
      *                 0 = North
@@ -272,6 +276,7 @@ public class MainCharacter extends Peon
 
     /**
      * Switch the item the MainCharacter has equip.
+     *
      * @param keyCode Keycode the player has pressed.
      */
     protected void switchItem(int keyCode) {
@@ -285,6 +290,7 @@ public class MainCharacter extends Peon
 
     /**
      * Return the currently selected item slot.
+     *
      * @return The item slot the MainCharacter has equip.
      */
     public int getItemSlotSelected() {
@@ -310,6 +316,7 @@ public class MainCharacter extends Peon
 
     /**
      * Fire a projectile in the position that the mouse is in.
+     *
      * @param mousePosition The position of the user's mouse.
      */
     private void fireProjectile(HexVector mousePosition) {
@@ -318,10 +325,11 @@ public class MainCharacter extends Peon
 
 
         setCurrentState(AnimationRole.ATTACK);
+        SoundManager.playSound(BOWATTACK);
         // Make projectile move toward the angle
         // Spawn projectile in front of character for now.
         Projectile projectile = new Projectile(mousePosition,
-                this.itemSlotSelected == 1 ? "range_test":"melee_test",
+                this.itemSlotSelected == 1 ? "range_test" : "melee_test",
                 "test hitbox",
                 position.getCol() + 1,
                 position.getRow(),
@@ -337,6 +345,7 @@ public class MainCharacter extends Peon
 
     /**
      * Cast the spell in the position that the mouse is in.
+     *
      * @param mousePosition The position of the user's mouse.
      */
     private void castSpell(HexVector mousePosition) {
@@ -360,7 +369,7 @@ public class MainCharacter extends Peon
                 0);
 
         //Subtract some mana, and update the GUI.
-        this.mana-=20;
+        this.mana -= 20;
         if (this.manaBar != null) {
             this.manaBar.update(this.mana);
         }
@@ -372,6 +381,7 @@ public class MainCharacter extends Peon
 
     /**
      * Set the mana the character has available.
+     *
      * @param mana The mana to set for the character.
      */
     public void setMana(int mana) {
@@ -380,6 +390,7 @@ public class MainCharacter extends Peon
 
     /**
      * Get the mana the character currently has available.
+     *
      * @return The mana the character has available.
      */
     public int getMana() {
@@ -392,10 +403,8 @@ public class MainCharacter extends Peon
 
     /**
      * Player takes damage from other entities/ by starving.
-     *
      */
     public void hurt(int damage) {
-
         System.out.println("Hurted: " + isRecovering);
 
         if (!isRecovering) {
@@ -405,1014 +414,1030 @@ public class MainCharacter extends Peon
             if (this.healthBar != null) {
                 this.healthBar.update(this.getHealth());
             }
-            if (this.getHealth() <= 0) {
-                kill();
-            } else {
+            System.out.println("Hurted: " + isRecovering);
+
+            if (!isRecovering) {
+                setHurt(true);
+                this.changeHealth(-damage);
+
+                if (this.healthBar != null) {
+                    this.healthBar.update(this.getHealth());
+                }
+
+                if (this.getHealth() <= 0) {
+                    kill();
+                } else {
+                    hurtTime = 0;
+                    recoverTime = 0;
+                    HexVector bounceBack = new HexVector();
+
+                    switch (getPlayerDirectionCardinal()) {
+                        case "North":
+                            bounceBack = new HexVector(position.getCol(), position.getRow() - 2);
+                            break;
+                        case "North-East":
+                            bounceBack = new HexVector(position.getCol() - 2, position.getRow() - 2);
+                            break;
+                        case "East":
+                            bounceBack = new HexVector(position.getCol() - 2, position.getRow());
+                            break;
+                        case "South-East":
+                            bounceBack = new HexVector(position.getCol() - 2, position.getRow() + 2);
+                            break;
+                        case "South":
+                            bounceBack = new HexVector(position.getCol(), position.getRow() + 2);
+                            break;
+                        case "South-West":
+                            bounceBack = new HexVector(position.getCol() + 2, position.getRow() + 2);
+                            break;
+                        case "West":
+                            bounceBack = new HexVector(position.getCol() - 2, position.getRow());
+                            break;
+                        case "North-West":
+                            bounceBack = new HexVector(position.getCol() + 2, position.getRow() - 2);
+                            break;
+                    }
+                    position.moveToward(bounceBack, 1f);
+
+                    SoundManager.playSound(HURT);
+                }
+            }
+        }
+    }
+
+        private void checkIfHurtEnded () {
+            hurtTime += 20; // hurt for 1 second
+
+            if (hurtTime > 400) {
+                System.out.println("Hurt ended");
+                setHurt(false);
+                setRecovering(true);
                 hurtTime = 0;
-                recoverTime = 0;
-                HexVector bounceBack = new HexVector();
+            }
+        }
 
-                switch (getPlayerDirectionCardinal()) {
-                    case "North":
-                        bounceBack = new HexVector(position.getCol(), position.getRow() - 2);
-                        break;
-                    case "North-East":
-                        bounceBack = new HexVector(position.getCol() - 2, position.getRow() - 2);
-                        break;
-                    case "East":
-                        bounceBack = new HexVector(position.getCol() - 2, position.getRow());
-                        break;
-                    case "South-East":
-                        bounceBack = new HexVector(position.getCol() - 2, position.getRow() + 2);
-                        break;
-                    case "South":
-                        bounceBack = new HexVector(position.getCol(), position.getRow() + 2);
-                        break;
-                    case "South-West":
-                        bounceBack = new HexVector(position.getCol() + 2, position.getRow() + 2);
-                        break;
-                    case "West":
-                        bounceBack = new HexVector(position.getCol() - 2, position.getRow());
-                        break;
-                    case "North-West":
-                        bounceBack = new HexVector(position.getCol() + 2, position.getRow() - 2);
-                        break;
+        /**
+         * Player recovers from being attacked. It removes player 's
+         * hurt effect (e.g. sprite flashing in red), in hurt().
+         */
+        public boolean isRecovering () {
+            return isRecovering;
+        }
+
+        public void setRecovering ( boolean isRecovering){
+            this.isRecovering = isRecovering;
+        }
+
+        public boolean isTexChanging () {
+            return isTexChanging;
+        }
+
+        public void setTexChanging ( boolean isTexChanging){
+            this.isTexChanging = isTexChanging;
+        }
+
+        private void checkIfRecovered () {
+            recoverTime += 20;
+            System.out.println("Character recovering");
+            recoverTime += 20;
+
+            this.changeCollideability(false);
+
+            if (recoverTime > 2000) {
+                System.out.println("Recovered");
+                setRecovering(false);
+                changeCollideability(true);
+            }
+        }
+
+        /**
+         * Kills the player. and notifying the game that the player
+         * has died and cannot do any actions in game anymore.
+         */
+        public void kill () {
+            // stop player controls
+            AnimationManager animationManager = GameManager.getManagerFromInstance(AnimationManager.class);
+
+
+            // set health to 0.
+            changeHealth(0);
+
+            // AS.PlayOneShot(dieSound);
+            GameManager.setPaused(true);
+        }
+
+        /**
+         * @return if player is in the state of "hurt".
+         */
+        public boolean IsHurt () {
+            return isHurt;
+        }
+
+        /**
+         * @return if player is in the state of "hurt".
+         */
+        public void setHurt ( boolean isHurt){
+            this.isHurt = isHurt;
+        }
+
+        /**
+         *  Add weapon to weapons list
+         * @param item weapon to be added
+         *
+         */
+        public void pickUpWeapon (Weapon item){
+            weapons.pickUpWeapon(item);
+        }
+
+        /**
+         * Removes items from player's collection
+         * @param item weapon being removed
+         */
+        public void dropWeapon (Weapon item){
+            weapons.dropWeapon(item);
+        }
+
+        /**
+         * Get the weapons for the player
+         * @return weapons
+         */
+        public Map<Weapon, Integer> getWeapons () {
+            return weapons.getWeapons();
+        }
+
+        /**
+         * Attempts to equip a weapon from the weapons map
+         * @param item weapon being equipped
+         */
+        public void equipWeapon (Weapon item){
+            weapons.equipWeapon(item);
+        }
+
+        /**
+         * Attempts to unequip a weapon and return it to the weapons map
+         * @param item weapon being unequipped
+         */
+        public void unequipWeapon (Weapon item){
+            weapons.unequipWeapon(item);
+        }
+
+        /**
+         * Get a copy of the equipped weapons list
+         * Modifying the returned list shouldn't affect the internal state of class
+         * @return equipped list
+         */
+        public List<Weapon> getEquipped () {
+            return weapons.getEquipped();
+        }
+
+        /**
+         * Gets the weapon manager of the character, so it can only be modified
+         * this way, prevents having it being a public variable
+         * @return the weapon manager of character
+         */
+        public WeaponManager getWeaponManager () {
+            return this.weapons;
+        }
+
+        /**
+         * Deals damage to character from combat
+         * @param item weapon character is being hit by
+         */
+        public void weaponEffect (Weapon item){
+            this.changeHealth(item.getDamage().intValue() * -1);
+        }
+
+        /**
+         * Set the players inventory to a predefined inventory
+         * e.g for loading player saves
+         * @param inventoryContents the save for the inventory
+         */
+        public void setInventory (Map < String, List < Item >> inventoryContents,
+                List < String > quickAccessContent){
+            this.inventories = new InventoryManager(inventoryContents,
+                    quickAccessContent);
+        }
+
+        /**
+         * Add weapon to weapons list
+         * @param item weapon to be added
+         */
+        public void pickUpInventory (Item item){
+            this.inventories.inventoryAdd(item);
+        }
+
+        /**
+         * Attempts to drop given item from inventory
+         * @param item item to be dropped from inventory
+         */
+        public void dropInventory (String item){
+            this.inventories.inventoryDrop(item);
+        }
+
+        /**
+         * Gets the inventory manager of the character, so it can only be modified
+         * this way, prevents having it being a public variable
+         * @return the inventory manager of character
+         */
+        public InventoryManager getInventoryManager () {
+            return this.inventories;
+        }
+
+        /**
+         * Change the hunger points value for the player
+         * (+ve amount increases hunger points)
+         * (-ve amount decreases hunger points)
+         * @param amount the amount to change it by
+         */
+        public void change_food ( int amount){
+            this.foodLevel += amount;
+            if (foodLevel > 100) {
+                foodLevel = 100;
+            }
+            if (foodLevel < 0) {
+                foodLevel = 0;
+            }
+        }
+
+        /**
+         * Get how many hunger points the player has
+         * @return The number of hunger points the player has
+         */
+        public int getFoodLevel () {
+            return foodLevel;
+        }
+
+        /**
+         * Method for the MainCharacter to eat food and restore/decrease hunger
+         * level
+         * @param item the item to eat
+         */
+        public void eatFood (Item item){
+            int amount = inventories.getAmount(item.getName());
+            if (amount > 0) {
+                if (item instanceof HealthResources) {
+                    int hungerValue = ((HealthResources) item).getFoodValue();
+                    change_food(hungerValue);
+                    dropInventory(item.getName());
+                } else {
+                    logger.info("Given item (" + item.getName() + ") is " + "not edible!");
                 }
-                position.moveToward(bounceBack, 1f);
-
-                soundManager.playSound(HURT);
-            }
-        }
-    }
-
-    private void checkIfHurtEnded() {
-        hurtTime += 20; // hurt for 1 second
-
-        if (hurtTime > 400) {
-            System.out.println("Hurt ended");
-            setHurt(false);
-            setRecovering(true);
-            hurtTime = 0;
-        }
-    }
-
-    /**
-     * Player recovers from being attacked. It removes player 's
-     * hurt effect (e.g. sprite flashing in red), in hurt().
-     */
-    public boolean isRecovering() {
-        return isRecovering;
-    }
-
-    public void setRecovering(boolean isRecovering) {
-        this.isRecovering = isRecovering;
-    }
-
-    public boolean isTexChanging() {
-        return isTexChanging;
-    }
-
-    public void setTexChanging(boolean isTexChanging) {
-        this.isTexChanging = isTexChanging;
-    }
-
-    private void checkIfRecovered() {
-        recoverTime += 20;
-        this.changeCollideability(false);
-
-        if (recoverTime > 2000) {
-            System.out.println("Recovered");
-            setRecovering(false);
-            changeCollideability(true);
-        }
-    }
-
-    /**
-     * Kills the player. and notifying the game that the player
-     * has died and cannot do any actions in game anymore.
-     */
-    public void kill() {
-        // stop player controls
-        AnimationManager animationManager = GameManager.getManagerFromInstance(AnimationManager.class);
-
-
-
-        // set health to 0.
-        changeHealth(0);
-
-        // AS.PlayOneShot(dieSound);
-        GameManager.setPaused(true);
-    }
-
-    /**
-     * @return if player is in the state of "hurt".
-     */
-    public boolean IsHurt() {
-        return isHurt;
-    }
-
-    /**
-     * @return if player is in the state of "hurt".
-     */
-    public void setHurt(boolean isHurt) {
-        this.isHurt = isHurt;
-    }
-
-    /**
-     *  Add weapon to weapons list
-     * @param item weapon to be added
-     *
-     */
-    public void pickUpWeapon(Weapon item) {
-        weapons.pickUpWeapon(item);
-    }
-
-    /**
-     * Removes items from player's collection
-     * @param item weapon being removed
-     */
-    public void dropWeapon(Weapon item) {
-        weapons.dropWeapon(item);
-    }
-
-    /**
-     * Get the weapons for the player
-     * @return weapons
-     */
-    public Map<Weapon, Integer> getWeapons() {
-        return weapons.getWeapons();
-    }
-
-    /**
-     * Attempts to equip a weapon from the weapons map
-     * @param item weapon being equipped
-     */
-    public void equipWeapon(Weapon item) {
-        weapons.equipWeapon(item);
-    }
-
-    /**
-     * Attempts to unequip a weapon and return it to the weapons map
-     * @param item weapon being unequipped
-     */
-    public void unequipWeapon(Weapon item) {
-        weapons.unequipWeapon(item);
-    }
-
-    /**
-     * Get a copy of the equipped weapons list
-     * Modifying the returned list shouldn't affect the internal state of class
-     * @return equipped list
-     */
-    public List<Weapon> getEquipped() {
-        return weapons.getEquipped();
-    }
-
-    /**
-     * Gets the weapon manager of the character, so it can only be modified
-     * this way, prevents having it being a public variable
-     * @return the weapon manager of character
-     */
-    public WeaponManager getWeaponManager() {
-        return this.weapons;
-    }
-
-    /**
-     * Deals damage to character from combat
-     * @param item weapon character is being hit by
-     */
-    public void weaponEffect(Weapon item) {
-        this.changeHealth(item.getDamage().intValue() * -1);
-    }
-
-    /**
-     * Set the players inventory to a predefined inventory
-     * e.g for loading player saves
-     * @param inventoryContents the save for the inventory
-     */
-    public void setInventory(Map<String, List<Item>> inventoryContents,
-                             List<String> quickAccessContent) {
-        this.inventories = new InventoryManager(inventoryContents,
-                quickAccessContent);
-    }
-
-    /**
-     * Add weapon to weapons list
-     * @param item weapon to be added
-     */
-    public void pickUpInventory(Item item) {
-        this.inventories.inventoryAdd(item);
-    }
-
-    /**
-     * Attempts to drop given item from inventory
-     * @param item item to be dropped from inventory
-     */
-    public void dropInventory(String item) {
-        this.inventories.inventoryDrop(item);
-    }
-
-    /**
-     * Gets the inventory manager of the character, so it can only be modified
-     * this way, prevents having it being a public variable
-     * @return the inventory manager of character
-     */
-    public InventoryManager getInventoryManager() {
-        return this.inventories;
-    }
-
-    /**
-     * Change the hunger points value for the player
-     * (+ve amount increases hunger points)
-     * (-ve amount decreases hunger points)
-     * @param amount the amount to change it by
-     */
-    public void change_food(int amount) {
-        this.foodLevel += amount;
-        if (foodLevel > 100) {
-            foodLevel = 100;
-        }
-        if (foodLevel < 0) {
-            foodLevel = 0;
-        }
-    }
-
-    /**
-     * Get how many hunger points the player has
-     * @return The number of hunger points the player has
-     */
-    public int getFoodLevel() {
-        return foodLevel;
-    }
-
-    /**
-     * Method for the MainCharacter to eat food and restore/decrease hunger
-     * level
-     * @param item the item to eat
-     */
-    public void eatFood(Item item) {
-        int amount = inventories.getAmount(item.getName());
-        if (amount > 0) {
-            if (item instanceof HealthResources) {
-                int hungerValue = ((HealthResources) item).getFoodValue();
-                change_food(hungerValue);
-                dropInventory(item.getName());
             } else {
-                logger.info("Given item (" + item.getName() + ") is " + "not edible!");
+                logger.info("You don't have enough of the given item");
             }
-        } else {
-            logger.info("You don't have enough of the given item");
         }
-    }
 
-    /**
-     * See if the player is starving
-     * @return true if hunger points is <= 0, else false
-     */
-    public boolean isStarving() {
-        return foodLevel <= 0;
-    }
-
-    public void changeSwimming(boolean swimmingAbility) {
-        this.canSwim = swimmingAbility;
-    }
-
-    /**
-     * Change current level of character and increases health by 10
-     * @param change amount being added or subtracted
-     */
-    public void changeLevel(int change) {
-        if (level + change >= 1) {
-            this.level += change;
-            this.changeHealth(change * 10);
+        /**
+         * See if the player is starving
+         * @return true if hunger points is <= 0, else false
+         */
+        public boolean isStarving () {
+            return foodLevel <= 0;
         }
-    }
 
-    /**
-     * Gets the current level of character
-     * @return level of character
-     */
-    public int getLevel() {
-        return this.level;
-    }
-
-    /**
-     * Change the player's appearance to the set texture
-     * @param texture the texture to set
-     */
-    public void changeTexture(String texture) {
-        this.setTexture(texture);
-    }
-
-    /**
-     * Handles mouse click events
-     * @param screenX the x position the mouse was pressed at
-     * @param screenY the y position the mouse was pressed at
-     * @param pointer mouse pointer
-     * @param button the button which was pressed
-     */
-    public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
-        // only allow left clicks to move player
-        if (GameScreen.isPaused) {
-            return;
+        public void changeSwimming ( boolean swimmingAbility){
+            this.canSwim = swimmingAbility;
         }
-        if (button == 0) {
-            float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
-            float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 
-            HexVector mousePos = new HexVector(clickedPosition[0], clickedPosition[1]);
-            this.attack(mousePos);
-        }
-    }
-
-    /**
-     * Handles tick based stuff, e.g. movement
-     */
-    @Override
-    public void onTick(long i) {
-        this.updatePosition();
-        this.movementSound();
-
-        //this.setCurrentSpeed(this.direction.len());
-        //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
-        //        System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction,
-        //         this.getPosition(), this.direction.x - this.getCol(),
-        //         this.direction.y - this.getRow());
-        //        System.out.printf("%s%n", this.currentSpeed);
-
-        if(isHurt) {
-            checkIfHurtEnded();
-        } else if(isRecovering) {
-            checkIfRecovered();
-        }
-        this.updateAnimation();
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-            GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
-        }
-        // Do hunger stuff here
-
-
-        if (isMoving) {
-            if (isSprinting) {
-                foodAccum += 0.1f;
-            } else {
-                foodAccum += 0.01f;
+        /**
+         * Change current level of character and increases health by 10
+         * @param change amount being added or subtracted
+         */
+        public void changeLevel ( int change){
+            if (level + change >= 1) {
+                this.level += change;
+                this.changeHealth(change * 10);
             }
-        } else {
-            foodAccum += 0.001f;
         }
 
-        while (foodAccum >= 1.f) {
-            change_food(-1);
-            foodAccum -= 1.f;
-        }
-    }
-
-    /**
-     * Move character towards a destination
-     */
-    @Override
-    public void moveTowards(HexVector destination) {
-        position.moveToward(destination, this.currentSpeed);
-    }
-
-    /**
-     * Sets the Player's current movement speed
-     * @param cSpeed the speed for the player to currently move at
-     */
-    private void setCurrentSpeed(float cSpeed) {
-        this.currentSpeed = cSpeed;
-    }
-
-    /**
-     * Sets the appropriate movement flags to true on keyDown
-     * @param keycode the key being pressed
-     */
-    @Override
-    public void notifyKeyDown(int keycode) {
-        GoldPiece g = new GoldPiece(5);
-        //player cant move when paused
-        if (GameManager.getPaused()) {
-            return;
-        }
-        switch (keycode) {
-            case Input.Keys.W:
-                yInput += 1;
-                break;
-            case Input.Keys.A:
-                xInput += -1;
-                break;
-            case Input.Keys.S:
-                yInput += -1;
-                break;
-            case Input.Keys.D:
-                xInput += 1;
-                break;
-            case Input.Keys.SHIFT_LEFT:
-                isSprinting = true;
-                maxSpeed *= 2.f;
-                break;
-            case Input.Keys.H:
-                useHatchet();
-                break;
-            case Input.Keys.P:
-                usePickAxe();
-                break;
-            case Input.Keys.G:
-                addClosestGoldPiece();
-                break;
-            case Input.Keys.M:
-                getGoldPouchTotalValue();
-                break;
-            case Input.Keys.Z:
-                selectSpell(SpellType.FLAME_WALL);
-                break;
-            default:
-                switchItem(keycode);
-                //xInput += 1;
-                break;
-        }
-    }
-
-    /**
-     * Select the spell that the character is ready to cast.
-     * When they next click attack, this spell will cast.
-     * @param type The SpellType to cast.
-     */
-    private void selectSpell(SpellType type) {
-        this.spellSelected = type;
-    }
-
-    /**
-     * Sets the appropriate movement flags to false on keyUp
-     * @param keycode the key being released
-     */
-    @Override
-    public void notifyKeyUp(int keycode) {
-        // Player cant move when paused
-        if (GameManager.getPaused()) {
-            return;
-        }
-        switch (keycode) {
-        case Input.Keys.W:
-            yInput -= 1;
-            break;
-        case Input.Keys.A:
-            xInput -= -1;
-            break;
-        case Input.Keys.S:
-            yInput -= -1;
-            break;
-        case Input.Keys.D:
-            xInput -= 1;
-            break;
-        case Input.Keys.SHIFT_LEFT:
-            isSprinting = false;
-            maxSpeed /= 2.f;
-            break;
-        case Input.Keys.H:
-            break;
-        case Input.Keys.P:
-            break;
-        case Input.Keys.G:
-            break;
-        case Input.Keys.M:
-            break;
-        }
-    }
-
-    /**
-     * Adds a piece of gold to the Gold Pouch
-     * @param gold The piece of gold to be added to the pouch
-     * @param count How many of that piece of gold should be added
-     */
-    public void addGold(GoldPiece gold, Integer count) {
-
-        // store the gold's value (5G, 10G etc) as a variable
-        Integer goldValue = gold.getValue();
-
-        // if this gold value already exists in the pouch
-        if (goldPouch.containsKey(goldValue)) {
-            // add this piece to the already existing list of pieces
-            goldPouch.put(goldValue, goldPouch.get(goldValue) + count);
-        } else {
-            goldPouch.put(goldValue, count);
+        /**
+         * Gets the current level of character
+         * @return level of character
+         */
+        public int getLevel () {
+            return this.level;
         }
 
-    }
-
-    /**
-     * Removes one instance of a gold piece in the pouch.
-     * @param gold The gold piece to be removed from the pouch.
-     */
-    public void removeGold(GoldPiece gold) {
-        // store the gold's value (5G, 10G etc) as a variable
-        Integer goldValue = gold.getValue();
-
-        // if this gold value does not exist in the pouch
-        if (!(goldPouch.containsKey(goldValue))) {
-            return;
-        } else if (goldPouch.get(goldValue) > 1) {
-            goldPouch.put(goldValue, goldPouch.get(goldValue) - 1);
-        } else {
-            goldPouch.remove(goldValue);
+        /**
+         * Change the player's appearance to the set texture
+         * @param texture the texture to set
+         */
+        public void changeTexture (String texture){
+            this.setTexture(texture);
         }
-    }
 
-    /**
-     * Returns the types of GoldPieces in the pouch and how many of each type
-     * exist
-     * @return The contents of the Main Character's gold pouch
-     */
-    public HashMap<Integer, Integer> getGoldPouch() {
-        return new HashMap<>(goldPouch);
-    }
+        /**
+         * Handles mouse click events
+         * @param screenX the x position the mouse was pressed at
+         * @param screenY the y position the mouse was pressed at
+         * @param pointer mouse pointer
+         * @param button the button which was pressed
+         */
+        public void notifyTouchDown ( int screenX, int screenY, int pointer, int button){
+            // only allow left clicks to move player
+            if (GameScreen.isPaused) {
+                return;
+            }
+            if (button == 0) {
+                float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
+                float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 
-    /**
-     * Returns the sum of the gold piece values in the Gold Pouch
-     * @return The total value of the Gold Pouch
-     */
-    public Integer getGoldPouchTotalValue() {
-        Integer totalValue = 0;
-        for (Integer goldValue : goldPouch.keySet()) {
-            totalValue += goldValue * goldPouch.get(goldValue);
+                HexVector mousePos = new HexVector(clickedPosition[0], clickedPosition[1]);
+                this.attack(mousePos);
+            }
         }
-        logger.info("The total value of your Gold Pouch is: " + totalValue + "G");
-        return totalValue;
-    }
 
-    /**
-     * If the player is within 2m of a gold piece and presses G, it will
-     * be added to their Gold Pouch.
-     *
-     */
-    public void addClosestGoldPiece() {
-        for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
-            if (entity instanceof GoldPiece) {
-                if (this.getPosition().distance(entity.getPosition()) <= 2) {
-                    this.addGold((GoldPiece) entity, 1);
-                    logger.info(this.inventories.toString());
+        /**
+         * Handles tick based stuff, e.g. movement
+         */
+        @Override
+        public void onTick ( long i){
+            this.updatePosition();
+            this.movementSound();
+
+            //this.setCurrentSpeed(this.direction.len());
+            //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
+            //        System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction,
+            //         this.getPosition(), this.direction.x - this.getCol(),
+            //         this.direction.y - this.getRow());
+            //        System.out.printf("%s%n", this.currentSpeed);
+
+            if (isHurt) {
+                checkIfHurtEnded();
+            } else if (isRecovering) {
+                checkIfRecovered();
+            }
+            this.updateAnimation();
+
+            if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+                GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
+            }
+            // Do hunger stuff here
+
+
+            if (isMoving) {
+                if (isSprinting) {
+                    foodAccum += 0.1f;
+                } else {
+                    foodAccum += 0.01f;
                 }
+            } else {
+                foodAccum += 0.001f;
+            }
+
+            while (foodAccum >= 1.f) {
+                change_food(-1);
+                foodAccum -= 1.f;
+            }
+        }
+
+        /**
+         * Move character towards a destination
+         */
+        @Override
+        public void moveTowards (HexVector destination){
+            position.moveToward(destination, this.currentSpeed);
+        }
+
+        /**
+         * Sets the Player's current movement speed
+         * @param cSpeed the speed for the player to currently move at
+         */
+        private void setCurrentSpeed ( float cSpeed){
+            this.currentSpeed = cSpeed;
+        }
+
+        /**
+         * Sets the appropriate movement flags to true on keyDown
+         * @param keycode the key being pressed
+         */
+        @Override
+        public void notifyKeyDown ( int keycode){
+            GoldPiece g = new GoldPiece(5);
+            //player cant move when paused
+            if (GameManager.getPaused()) {
+                return;
+            }
+            switch (keycode) {
+                case Input.Keys.W:
+                    yInput += 1;
+                    break;
+                case Input.Keys.A:
+                    xInput += -1;
+                    break;
+                case Input.Keys.S:
+                    yInput += -1;
+                    break;
+                case Input.Keys.D:
+                    xInput += 1;
+                    break;
+                case Input.Keys.SHIFT_LEFT:
+                    isSprinting = true;
+                    maxSpeed *= 2.f;
+                    break;
+                case Input.Keys.H:
+                    useHatchet();
+                    break;
+                case Input.Keys.P:
+                    usePickAxe();
+                    break;
+                case Input.Keys.G:
+                    addClosestGoldPiece();
+                    break;
+                case Input.Keys.M:
+                    getGoldPouchTotalValue();
+                    break;
+                case Input.Keys.Z:
+                    selectSpell(SpellType.FLAME_WALL);
+                    break;
+                default:
+                    switchItem(keycode);
+                    //xInput += 1;
+                    break;
+            }
+        }
+
+        /**
+         * Select the spell that the character is ready to cast.
+         * When they next click attack, this spell will cast.
+         * @param type The SpellType to cast.
+         */
+        private void selectSpell (SpellType type){
+            this.spellSelected = type;
+        }
+
+        /**
+         * Sets the appropriate movement flags to false on keyUp
+         * @param keycode the key being released
+         */
+        @Override
+        public void notifyKeyUp ( int keycode){
+            // Player cant move when paused
+            if (GameManager.getPaused()) {
+                return;
+            }
+            switch (keycode) {
+                case Input.Keys.W:
+                    yInput -= 1;
+                    break;
+                case Input.Keys.A:
+                    xInput -= -1;
+                    break;
+                case Input.Keys.S:
+                    yInput -= -1;
+                    break;
+                case Input.Keys.D:
+                    xInput -= 1;
+                    break;
+                case Input.Keys.SHIFT_LEFT:
+                    isSprinting = false;
+                    maxSpeed /= 2.f;
+                    break;
+                case Input.Keys.H:
+                    break;
+                case Input.Keys.P:
+                    break;
+                case Input.Keys.G:
+                    break;
+                case Input.Keys.M:
+                    break;
+            }
+        }
+
+        /**
+         * Adds a piece of gold to the Gold Pouch
+         * @param gold The piece of gold to be added to the pouch
+         * @param count How many of that piece of gold should be added
+         */
+        public void addGold (GoldPiece gold, Integer count){
+
+            // store the gold's value (5G, 10G etc) as a variable
+            Integer goldValue = gold.getValue();
+
+            // if this gold value already exists in the pouch
+            if (goldPouch.containsKey(goldValue)) {
+                // add this piece to the already existing list of pieces
+                goldPouch.put(goldValue, goldPouch.get(goldValue) + count);
+            } else {
+                goldPouch.put(goldValue, count);
             }
 
         }
-        logger.info("Sorry, you are not close enough to a gold piece!");
 
-    }
+        /**
+         * Removes one instance of a gold piece in the pouch.
+         * @param gold The gold piece to be removed from the pouch.
+         */
+        public void removeGold (GoldPiece gold){
+            // store the gold's value (5G, 10G etc) as a variable
+            Integer goldValue = gold.getValue();
 
-    /**
-     * Gets the tile at a position.
-     * @param xPos The x position
-     * @param yPos The y position
-     * @return The Tile at that position
-     */
-    public Tile getTile(float xPos, float yPos) {
-        //Returns tile at left arm (our perspective) of the player
-        float tileCol = (float) Math.round(xPos);
-        float tileRow = (float) Math.round(yPos);
-        if (tileCol % 2 != 0) {
-            tileRow += 0.5f;
+            // if this gold value does not exist in the pouch
+            if (!(goldPouch.containsKey(goldValue))) {
+                return;
+            } else if (goldPouch.get(goldValue) > 1) {
+                goldPouch.put(goldValue, goldPouch.get(goldValue) - 1);
+            } else {
+                goldPouch.remove(goldValue);
+            }
         }
-        return GameManager.get().getWorld().getTile(tileCol, tileRow);
-    }
 
-    /**
-     * Records the player velocity history
-     * @param xVel The x velocity
-     * @param yVel The y velocity
-     */
-    public void recordVelHistory(float xVel, float yVel) {
-        if (velHistoryX.size() < 2 || velHistoryY.size() < 2) {
-            velHistoryX.add((int) (xVel * 100));
-            velHistoryY.add((int) (yVel * 100));
-        } else if (velHistoryX.get(1) != (int) (xVel * 100) ||
-                velHistoryY.get(1) != (int) (yVel * 100)) {
-            velHistoryX.set(0, velHistoryX.get(1));
-            velHistoryX.set(1, (int) (xVel * 100));
-
-            velHistoryY.set(0, velHistoryY.get(1));
-            velHistoryY.set(1, (int) (yVel * 100));
+        /**
+         * Returns the types of GoldPieces in the pouch and how many of each type
+         * exist
+         * @return The contents of the Main Character's gold pouch
+         */
+        public HashMap<Integer, Integer> getGoldPouch () {
+            return new HashMap<>(goldPouch);
         }
-    }
 
-    /**
-     * Calculates the velocity of the player
-     * @param mainInput Input being checked
-     * @param altInput Input not being checked
-     * @param vel Velocity to calculate
-     * @param friction Friction value
-     * @return The new velocity
-     */
-    public float calVelocity(int mainInput, int altInput, float vel, float friction) {
-        if (mainInput != 0) {
-            vel += mainInput * acceleration * friction;
-            // Prevents sliding
-            if (vel / Math.abs(vel) != mainInput) {
+        /**
+         * Returns the sum of the gold piece values in the Gold Pouch
+         * @return The total value of the Gold Pouch
+         */
+        public Integer getGoldPouchTotalValue () {
+            Integer totalValue = 0;
+            for (Integer goldValue : goldPouch.keySet()) {
+                totalValue += goldValue * goldPouch.get(goldValue);
+            }
+            logger.info("The total value of your Gold Pouch is: " + totalValue + "G");
+            return totalValue;
+        }
+
+        /**
+         * If the player is within 2m of a gold piece and presses G, it will
+         * be added to their Gold Pouch.
+         *
+         */
+        public void addClosestGoldPiece () {
+            for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+                if (entity instanceof GoldPiece) {
+                    if (this.getPosition().distance(entity.getPosition()) <= 2) {
+                        this.addGold((GoldPiece) entity, 1);
+                        logger.info(this.inventories.toString());
+                    }
+                }
+
+            }
+            logger.info("Sorry, you are not close enough to a gold piece!");
+
+        }
+
+        /**
+         * Gets the tile at a position.
+         * @param xPos The x position
+         * @param yPos The y position
+         * @return The Tile at that position
+         */
+        public Tile getTile ( float xPos, float yPos){
+            //Returns tile at left arm (our perspective) of the player
+            float tileCol = (float) Math.round(xPos);
+            float tileRow = (float) Math.round(yPos);
+            if (tileCol % 2 != 0) {
+                tileRow += 0.5f;
+            }
+            return GameManager.get().getWorld().getTile(tileCol, tileRow);
+        }
+
+        /**
+         * Records the player velocity history
+         * @param xVel The x velocity
+         * @param yVel The y velocity
+         */
+        public void recordVelHistory ( float xVel, float yVel){
+            if (velHistoryX.size() < 2 || velHistoryY.size() < 2) {
+                velHistoryX.add((int) (xVel * 100));
+                velHistoryY.add((int) (yVel * 100));
+            } else if (velHistoryX.get(1) != (int) (xVel * 100) ||
+                    velHistoryY.get(1) != (int) (yVel * 100)) {
+                velHistoryX.set(0, velHistoryX.get(1));
+                velHistoryX.set(1, (int) (xVel * 100));
+
+                velHistoryY.set(0, velHistoryY.get(1));
+                velHistoryY.set(1, (int) (yVel * 100));
+            }
+        }
+
+        /**
+         * Calculates the velocity of the player
+         * @param mainInput Input being checked
+         * @param altInput Input not being checked
+         * @param vel Velocity to calculate
+         * @param friction Friction value
+         * @return The new velocity
+         */
+        public float calVelocity ( int mainInput, int altInput, float vel, float friction){
+            if (mainInput != 0) {
+                vel += mainInput * acceleration * friction;
+                // Prevents sliding
+                if (vel / Math.abs(vel) != mainInput) {
+                    vel = 0;
+                }
+            } else if (altInput != 0) {
+                vel *= 0.8;
+            } else {
                 vel = 0;
             }
-        } else if (altInput != 0) {
-            vel *= 0.8;
-        } else {
-            vel = 0;
-        }
-        return vel;
-    }
-
-    /**
-     * Finds the next position to move to and moves there
-     * @param position The current position
-     * @param destination The new position
-     * @param nextTile The tile that will be moved to
-     */
-    public void findNewPosition(HexVector position, HexVector destination, Tile nextTile) {
-        if (nextTile == null) {
-            // Prevents the player from walking into the void
-            position.moveToward(destination, 0);
-        } else if (nextTile.getTextureName().contains("water") && !canSwim) {
-            // Prevents the player back if they try to enter water when they
-            // can't swim
-            position.moveToward(destination, 0);
-        } else {
-            position.moveToward(destination, vel);
-        }
-    }
-
-    /**
-     * Moves the player based on current key inputs
-     */
-    public void updatePosition() {
-        // Gets current position
-        float xPos = position.getCol();
-        float yPos = position.getRow();
-
-        // Gets the tile the player is standing on
-        Tile currentTile = getTile(xPos, yPos);
-        // Returns tile at left arm (our perspective) of the player
-        float tileCol = (float) Math.round(xPos);
-        float tileRow = (float) Math.round(yPos);
-        if (tileCol % 2 != 0) {
-            tileRow += 0.5f;
+            return vel;
         }
 
-        // Determined friction scaling factor to apply based on current tile
-        float friction;
-        if (currentTile != null && currentTile.getTexture() != null) {
-            //Tile specific friction
-            currentTile = GameManager.get().getWorld().getTile(tileCol, tileRow);
-            friction = Tile.getFriction(currentTile.getTextureName());
-        } else {
-            // Default friction
-            friction = 1f;
-        }
-
-        // Calculates new x and y positions
-        xPos += xVel + xInput * acceleration * 0.5 * friction;
-        yPos += yVel + yInput * acceleration * 0.5 * friction;
-
-        // Calculates velocity in x and y directions
-        xVel = calVelocity(xInput, yInput, xVel, friction);
-        yVel = calVelocity(yInput, xInput, yVel, friction);
-
-        // caps the velocity depending on the friction of the current tile
-        float maxTileSpeed = maxSpeed * friction;
-        if (vel > maxTileSpeed) {
-            xVel /= vel;
-            yVel /= vel;
-
-            xVel *= maxTileSpeed;
-            yVel *= maxTileSpeed;
-        }
-
-        // Calculates speed to destination
-        vel = friction * Math.sqrt((xVel * xVel) + (yVel * yVel));
-
-        // Calculates destination vector
-        HexVector destination = new HexVector(xPos, yPos);
-
-        // Next tile the player will move to
-        Tile nextTile = getTile(xPos, yPos);
-
-        // Method to take away the player's ability to swim
-        changeSwimming(false);
-
-        // Moves the player to new location
-        findNewPosition(position, destination, nextTile);
-
-        //Records velocity history in x direction
-        recordVelHistory(xVel, yVel);
-
-        getBody().setTransform(xPos, yPos, getBody().getAngle());
-    }
-
-    /**
-     * Gets the direction the player is currently facing
-     * North: 0 deg
-     * East: 90 deg
-     * South: 180 deg
-     * West: 270 deg
-     * @return the player direction (units: degrees)
-     */
-    public double getPlayerDirectionAngle() {
-        double val;
-        if (xInput != 0 || yInput != 0) {
-            val = Math.atan2(yInput, xInput);
-        } else {
-            val = Math.atan2(velHistoryY.get(0), velHistoryX.get(0));
-        }
-        val = val * -180 / Math.PI + 90;
-        if (val < 0) {
-            val += 360;
-        }
-        return val;
-    }
-
-    /**
-     * Converts the current players direction into a cardinal direction
-     * North, South-West, etc.
-     * @return new texture to use
-     */
-    public String getPlayerDirectionCardinal() {
-        double playerDirectionAngle = getPlayerDirectionAngle();
-        if (playerDirectionAngle <= 22.5 || playerDirectionAngle >= 337.5) {
-            setCurrentDirection(Direction.NORTH);
-            return "North";
-        } else if (22.5 <= playerDirectionAngle && playerDirectionAngle <= 67.5) {
-            setCurrentDirection(Direction.NORTH_EAST);
-            return "North-East";
-        } else if (67.5 <= playerDirectionAngle && playerDirectionAngle <= 112.5) {
-            setCurrentDirection(Direction.EAST);
-            return "East";
-        } else if (112.5 <= playerDirectionAngle && playerDirectionAngle <= 157.5) {
-            setCurrentDirection(Direction.SOUTH_EAST);
-            return "South-East";
-        } else if (157.5 <= playerDirectionAngle && playerDirectionAngle <= 202.5) {
-            setCurrentDirection(Direction.SOUTH);
-            return "South";
-        } else if (202.5 <= playerDirectionAngle && playerDirectionAngle <= 247.5) {
-            setCurrentDirection(Direction.SOUTH_WEST);
-            return "South-West";
-        } else if (247.5 <= playerDirectionAngle && playerDirectionAngle <= 292.5) {
-            setCurrentDirection(Direction.WEST);
-            return "West";
-        } else if (292.5 <= playerDirectionAngle && playerDirectionAngle <= 337.5) {
-            setCurrentDirection(Direction.NORTH_WEST);
-            return "North-West";
-        }
-
-        return "Invalid";
-    }
-
-    /**
-     * Gets a list of the players current velocity
-     * 0: x velocity
-     * 1: y velocity
-     * 2: net velocity
-     * @return list of players velocity properties
-     */
-    public List<Float> getVelocity() {
-        ArrayList<Float> velocity = new ArrayList<>();
-        velocity.add(xVel);
-        velocity.add(yVel);
-        velocity.add((float) vel);
-
-        return velocity;
-    }
-
-    /**
-     * Sets the players acceleration
-     * @param newAcceleration: the new acceleration for the player
-     */
-    public void setAcceleration(float newAcceleration) {
-        this.acceleration = newAcceleration;
-    }
-
-    /**
-     * Sets the players max speed
-     * @param newMaxSpeed: the new max speed of the player
-     */
-    public void setMaxSpeed(float newMaxSpeed) {
-        this.maxSpeed = newMaxSpeed;
-    }
-
-    /**
-     * Gets the players current acceleration
-     * @return the players acceleration
-     */
-    public float getAcceleration() {
-        return this.acceleration;
-    }
-
-    /**
-     * Gets the plays current max speed
-     * @return the players max speed
-     */
-    public float getMaxSpeed() {
-        return this.maxSpeed;
-    }
-
-    public void movementSound() {
-        if (!isMoving && vel != 0) {
-            // Runs when the player starts moving
-            isMoving = true;
-
-            //logger.info("Start Playing");
-            //TODO: Play movement sound
-            SoundManager.loopSound(WALK_NORMAL);
-        }
-
-        if (isMoving && vel == 0) {
-            // Runs when the player stops moving
-            isMoving = false;
-
-            //logger.info("Stop Playing");
-            //TODO: Stop Player movement
-            SoundManager.stopSound(WALK_NORMAL);
-        }
-    }
-
-    /***
-     * This method enables the Main character to use Hatchet. The player's
-     * distance from the tree should not be more than 2.5.Every time a
-     * wood is collected a message is printed.
-     * This method will be changed later to increase efficiency.
-     */
-    public void useHatchet() {
-
-        if (this.inventories.getQuickAccess().containsKey("Hatchet")) {
-            Hatchet playerHatchet = new Hatchet(this);
-
-            for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
-
-                if (entity instanceof Tree) {
-
-                    if (this.getPosition().distance(entity.getPosition()) <= 1) {
-                        playerHatchet.farmTree((Tree) entity);
-                        logger.info(this.inventories.toString());
-                    }
-                }
-            }
-        }
-    }
-
-    /***
-     * This method enables the Main character to use Hatchet. The player's
-     * distance from the tree should not be more than 2.5.Every time a
-     * wood is collected a message is printed.
-     * This method will be changed later to increase efficiency.
-     */
-    public void usePickAxe() {
-
-        if (this.inventories.getQuickAccess().containsKey("Pick Axe")) {
-            PickAxe playerPickAxe = new PickAxe(this);
-
-            for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
-
-                if (entity instanceof Rock) {
-
-                    if (this.getPosition().distance(entity.getPosition()) <= 1) {
-                        playerPickAxe.farmRock((Rock) entity);
-                        logger.info(this.inventories.toString());
-                    }
-                }
-            }
-
-        }
-    }
-
-    /***
-     * A getter method for the blueprints that the player has learned.
-     * @return the learned blueprints list
-     */
-    public List<String> getBlueprintsLearned() {
-
-        return this.blueprintsLearned;
-    }
-
-    /***
-     * A getter method to get the Item to be created.
-     * @return the item to create.
-     */
-    public String getItemToCreate() {
-        return this.itemToCreate;
-    }
-
-    /***
-     * A Setter method to get the Item to be created.
-     * @param item the item to be created.
-     */
-    public void setItemToCreate(String item) {
-        this.itemToCreate = item;
-    }
-
-    /***
-     * Creates a manufactured item. Checks if required resources are in the inventory.
-     * if yes, creates the item, adds it to the player's inventory
-     * and deducts the required resource from inventory
-     */
-    public void createItem(ManufacturedResources newItem){
-        if (getBlueprintsLearned().contains(newItem.getName())) {
-            if (newItem.getRequiredMetal()>= this.getInventoryManager().
-                    getAmount("Metal")){
-                logger.info("You don't have enough Metal");
-
-            } else if (newItem.getRequiredWood()>= this.getInventoryManager().
-                    getAmount("Wood")){
-                logger.info("You don't have enough Wood");
-
-            } else if (newItem.getRequiredStone()>= this.getInventoryManager().
-                    getAmount("Stone")) {
-                logger.info("You don't have enough Stone");
-
+        /**
+         * Finds the next position to move to and moves there
+         * @param position The current position
+         * @param destination The new position
+         * @param nextTile The tile that will be moved to
+         */
+        public void findNewPosition (HexVector position, HexVector destination, Tile nextTile){
+            if (nextTile == null) {
+                // Prevents the player from walking into the void
+                position.moveToward(destination, 0);
+            } else if (nextTile.getTextureName().contains("water") && !canSwim) {
+                // Prevents the player back if they try to enter water when they
+                // can't swim
+                position.moveToward(destination, 0);
             } else {
-                this.getInventoryManager().inventoryAdd(new Hatchet(this));
+                position.moveToward(destination, vel);
+            }
+        }
 
-                this.getInventoryManager().inventoryDropMultiple("Metal", newItem.getRequiredMetal());
-                this.getInventoryManager().inventoryDropMultiple("Stone", newItem.getRequiredStone());
-                this.getInventoryManager().inventoryDropMultiple("Wood", newItem.getRequiredWood());
+        /**
+         * Moves the player based on current key inputs
+         */
+        public void updatePosition () {
+            // Gets current position
+            float xPos = position.getCol();
+            float yPos = position.getRow();
+
+            // Gets the tile the player is standing on
+            Tile currentTile = getTile(xPos, yPos);
+            // Returns tile at left arm (our perspective) of the player
+            float tileCol = (float) Math.round(xPos);
+            float tileRow = (float) Math.round(yPos);
+            if (tileCol % 2 != 0) {
+                tileRow += 0.5f;
+            }
+
+            // Determined friction scaling factor to apply based on current tile
+            float friction;
+            if (currentTile != null && currentTile.getTexture() != null) {
+                //Tile specific friction
+                currentTile = GameManager.get().getWorld().getTile(tileCol, tileRow);
+                friction = Tile.getFriction(currentTile.getTextureName());
+            } else {
+                // Default friction
+                friction = 1f;
+            }
+
+            // Calculates new x and y positions
+            xPos += xVel + xInput * acceleration * 0.5 * friction;
+            yPos += yVel + yInput * acceleration * 0.5 * friction;
+
+            // Calculates velocity in x and y directions
+            xVel = calVelocity(xInput, yInput, xVel, friction);
+            yVel = calVelocity(yInput, xInput, yVel, friction);
+
+            // caps the velocity depending on the friction of the current tile
+            float maxTileSpeed = maxSpeed * friction;
+            if (vel > maxTileSpeed) {
+                xVel /= vel;
+                yVel /= vel;
+
+                xVel *= maxTileSpeed;
+                yVel *= maxTileSpeed;
+            }
+
+            // Calculates speed to destination
+            vel = friction * Math.sqrt((xVel * xVel) + (yVel * yVel));
+
+            // Calculates destination vector
+            HexVector destination = new HexVector(xPos, yPos);
+
+            // Next tile the player will move to
+            Tile nextTile = getTile(xPos, yPos);
+
+            // Method to take away the player's ability to swim
+            changeSwimming(false);
+
+            // Moves the player to new location
+            findNewPosition(position, destination, nextTile);
+
+            //Records velocity history in x direction
+            recordVelHistory(xVel, yVel);
+
+            getBody().setTransform(xPos, yPos, getBody().getAngle());
+        }
+
+        /**
+         * Gets the direction the player is currently facing
+         * North: 0 deg
+         * East: 90 deg
+         * South: 180 deg
+         * West: 270 deg
+         * @return the player direction (units: degrees)
+         */
+        public double getPlayerDirectionAngle () {
+            double val;
+            if (xInput != 0 || yInput != 0) {
+                val = Math.atan2(yInput, xInput);
+            } else if (velHistoryX != null && velHistoryY != null
+                    && velHistoryX.size() > 1 && velHistoryY.size() > 1) {
+                val = Math.atan2(velHistoryY.get(0), velHistoryX.get(0));
+            } else {
+                val = 0;
+            }
+            val = val * -180 / Math.PI + 90;
+            if (val < 0) {
+                val += 360;
+            }
+            return val;
+        }
+
+        /**
+         * Converts the current players direction into a cardinal direction
+         * North, South-West, etc.
+         * @return new texture to use
+         */
+        public String getPlayerDirectionCardinal () {
+            double playerDirectionAngle = getPlayerDirectionAngle();
+            if (playerDirectionAngle <= 22.5 || playerDirectionAngle >= 337.5) {
+                setCurrentDirection(Direction.NORTH);
+                return "North";
+            } else if (22.5 <= playerDirectionAngle && playerDirectionAngle <= 67.5) {
+                setCurrentDirection(Direction.NORTH_EAST);
+                return "North-East";
+            } else if (67.5 <= playerDirectionAngle && playerDirectionAngle <= 112.5) {
+                setCurrentDirection(Direction.EAST);
+                return "East";
+            } else if (112.5 <= playerDirectionAngle && playerDirectionAngle <= 157.5) {
+                setCurrentDirection(Direction.SOUTH_EAST);
+                return "South-East";
+            } else if (157.5 <= playerDirectionAngle && playerDirectionAngle <= 202.5) {
+                setCurrentDirection(Direction.SOUTH);
+                return "South";
+            } else if (202.5 <= playerDirectionAngle && playerDirectionAngle <= 247.5) {
+                setCurrentDirection(Direction.SOUTH_WEST);
+                return "South-West";
+            } else if (247.5 <= playerDirectionAngle && playerDirectionAngle <= 292.5) {
+                setCurrentDirection(Direction.WEST);
+                return "West";
+            } else if (292.5 <= playerDirectionAngle && playerDirectionAngle <= 337.5) {
+                setCurrentDirection(Direction.NORTH_WEST);
+                return "North-West";
+            }
+
+            return "Invalid";
+        }
+
+        /**
+         * Gets a list of the players current velocity
+         * 0: x velocity
+         * 1: y velocity
+         * 2: net velocity
+         * @return list of players velocity properties
+         */
+        public List<Float> getVelocity () {
+            ArrayList<Float> velocity = new ArrayList<>();
+            velocity.add(xVel);
+            velocity.add(yVel);
+            velocity.add((float) vel);
+
+            return velocity;
+        }
+
+        /**
+         * Sets the players acceleration
+         * @param newAcceleration: the new acceleration for the player
+         */
+        public void setAcceleration ( float newAcceleration){
+            this.acceleration = newAcceleration;
+        }
+
+        /**
+         * Sets the players max speed
+         * @param newMaxSpeed: the new max speed of the player
+         */
+        public void setMaxSpeed ( float newMaxSpeed){
+            this.maxSpeed = newMaxSpeed;
+        }
+
+        /**
+         * Gets the players current acceleration
+         * @return the players acceleration
+         */
+        public float getAcceleration () {
+            return this.acceleration;
+        }
+
+        /**
+         * Gets the plays current max speed
+         * @return the players max speed
+         */
+        public float getMaxSpeed () {
+            return this.maxSpeed;
+        }
+
+        public void movementSound () {
+            if (!isMoving && vel != 0) {
+                // Runs when the player starts moving
+                isMoving = true;
+
+                //logger.info("Start Playing");
+                //TODO: Play movement sound
+                SoundManager.loopSound(WALK_NORMAL);
+            }
+
+            if (isMoving && vel == 0) {
+                // Runs when the player stops moving
+                isMoving = false;
+
+                //logger.info("Stop Playing");
+                //TODO: Stop Player movement
+                SoundManager.stopSound(WALK_NORMAL);
+            }
+        }
+
+        /***
+         * This method enables the Main character to use Hatchet. The player's
+         * distance from the tree should not be more than 2.5.Every time a
+         * wood is collected a message is printed.
+         * This method will be changed later to increase efficiency.
+         */
+        public void useHatchet () {
+
+            if (this.inventories.getQuickAccess().containsKey("Hatchet")) {
+                Hatchet playerHatchet = new Hatchet(this);
+
+                for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+
+                    if (entity instanceof Tree) {
+
+                        if (this.getPosition().distance(entity.getPosition()) <= 1) {
+                            playerHatchet.farmTree((Tree) entity);
+                            logger.info(this.inventories.toString());
+                        }
+                    }
+                }
+            }
+        }
+
+        /***
+         * This method enables the Main character to use Hatchet. The player's
+         * distance from the tree should not be more than 2.5.Every time a
+         * wood is collected a message is printed.
+         * This method will be changed later to increase efficiency.
+         */
+        public void usePickAxe () {
+
+            if (this.inventories.getQuickAccess().containsKey("Pick Axe")) {
+                PickAxe playerPickAxe = new PickAxe(this);
+
+                for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+
+                    if (entity instanceof Rock) {
+
+                        if (this.getPosition().distance(entity.getPosition()) <= 1) {
+                            playerPickAxe.farmRock((Rock) entity);
+                            logger.info(this.inventories.toString());
+                        }
+                    }
+                }
 
             }
         }
-    }
 
-    /**
-     * Sets the animations.
-     */
-    @Override
-    public void configureAnimations() {
+        /***
+         * A getter method for the blueprints that the player has learned.
+         * @return the learned blueprints list
+         */
+        public List<String> getBlueprintsLearned () {
 
-        // Walk animation
-        addAnimations(AnimationRole.MOVE, Direction.NORTH_WEST,
-                new AnimationLinker("MainCharacterNW_Anim",
-                        AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
+            return this.blueprintsLearned;
+        }
 
-        addAnimations(AnimationRole.MOVE, Direction.NORTH_EAST,
-                new AnimationLinker("MainCharacterNE_Anim",
-                        AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
+        /***
+         * A getter method to get the Item to be created.
+         * @return the item to create.
+         */
+        public String getItemToCreate () {
+            return this.itemToCreate;
+        }
 
-        addAnimations(AnimationRole.MOVE, Direction.SOUTH_WEST,
-                new AnimationLinker("MainCharacterSW_Anim",
-                        AnimationRole.MOVE, Direction.SOUTH_WEST, true, true));
+        /***
+         * A Setter method to get the Item to be created.
+         * @param item the item to be created.
+         */
+        public void setItemToCreate (String item){
+            this.itemToCreate = item;
+        }
 
-        addAnimations(AnimationRole.MOVE, Direction.SOUTH_EAST,
-                new AnimationLinker("MainCharacterSE_Anim",
-                        AnimationRole.MOVE, Direction.SOUTH_EAST, true, true));
+        /***
+         * Creates a manufactured item. Checks if required resources are in the inventory.
+         * if yes, creates the item, adds it to the player's inventory
+         * and deducts the required resource from inventory
+         */
+        public void createItem (ManufacturedResources newItem){
+            if (getBlueprintsLearned().contains(newItem.getName())) {
+                if (newItem.getRequiredMetal() >= this.getInventoryManager().
+                        getAmount("Metal")) {
+                    logger.info("You don't have enough Metal");
 
-        addAnimations(AnimationRole.MOVE, Direction.EAST,
-                new AnimationLinker("MainCharacterE_Anim",
-                        AnimationRole.MOVE, Direction.EAST, true, true));
+                } else if (newItem.getRequiredWood() >= this.getInventoryManager().
+                        getAmount("Wood")) {
+                    logger.info("You don't have enough Wood");
 
-        addAnimations(AnimationRole.MOVE, Direction.NORTH,
-                new AnimationLinker("MainCharacterN_Anim",
-                        AnimationRole.MOVE, Direction.NORTH, true, true));
+                } else if (newItem.getRequiredStone() >= this.getInventoryManager().
+                        getAmount("Stone")) {
+                    logger.info("You don't have enough Stone");
 
-        addAnimations(AnimationRole.MOVE, Direction.WEST,
-                new AnimationLinker("MainCharacterW_Anim",
-                        AnimationRole.MOVE, Direction.WEST, true, true));
+                } else {
+                    this.getInventoryManager().inventoryAdd(new Hatchet(this));
 
-        addAnimations(AnimationRole.MOVE, Direction.SOUTH,
-                new AnimationLinker("MainCharacterS_Anim",
-                        AnimationRole.MOVE, Direction.SOUTH, true, true));
+                    this.getInventoryManager().inventoryDropMultiple("Metal", newItem.getRequiredMetal());
+                    this.getInventoryManager().inventoryDropMultiple("Stone", newItem.getRequiredStone());
+                    this.getInventoryManager().inventoryDropMultiple("Wood", newItem.getRequiredWood());
 
-        // Attack animation
-        addAnimations(AnimationRole.ATTACK, Direction.DEFAULT,
-                new AnimationLinker("MainCharacter_Attack_E_Anim",
-                AnimationRole.ATTACK, Direction.DEFAULT, false, true));
+                }
+            }
+        }
 
-        // Hurt animation
-        addAnimations(AnimationRole.HURT, Direction.DEFAULT,
-                new AnimationLinker("MainCharacter_Hurt_E_Anim",
-                        AnimationRole.HURT, Direction.DEFAULT, true, true));
+        /**
+         * Sets the animations.
+         */
+        @Override
+        public void configureAnimations () {
 
-        // Dead animation
-        addAnimations(AnimationRole.DEAD, Direction.DEFAULT,
-                new AnimationLinker("MainCharacter_Dead_E_Anim",
-                        AnimationRole.DEAD, Direction.DEFAULT, false, true));
-    }
+            // Walk animation
+            addAnimations(AnimationRole.MOVE, Direction.NORTH_WEST,
+                    new AnimationLinker("MainCharacterNW_Anim",
+                            AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
 
-    /**
-     * Sets default direction textures uses the get index for Animation feature
-     * as described in the animation documentation section 4.
-     */
-    @Override
-    public void setDirectionTextures() {
-        defaultDirectionTextures.put(Direction.EAST, "__ANIMATION_MainCharacterE_Anim:0");
-        defaultDirectionTextures.put(Direction.NORTH, "__ANIMATION_MainCharacterN_Anim:0");
-        defaultDirectionTextures.put(Direction.WEST, "__ANIMATION_MainCharacterW_Anim:0");
-        defaultDirectionTextures.put(Direction.SOUTH, "__ANIMATION_MainCharacterS_Anim:0");
-        defaultDirectionTextures.put(Direction.NORTH_EAST, "__ANIMATION_MainCharacterNE_Anim:0");
-        defaultDirectionTextures.put(Direction.NORTH_WEST, "__ANIMATION_MainCharacterNW_Anim:0");
-        defaultDirectionTextures.put(Direction.SOUTH_EAST, "__ANIMATION_MainCharacterSE_Anim:0");
-        defaultDirectionTextures.put(Direction.SOUTH_WEST, "__ANIMATION_MainCharacterSW_Anim:0");
-    }
+            addAnimations(AnimationRole.MOVE, Direction.NORTH_EAST,
+                    new AnimationLinker("MainCharacterNE_Anim",
+                            AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
 
-    /**
-     * If the animation is moving sets the animation state to be Move
-     * else NULL. Also sets the direction
-     */
-    private void updateAnimation() {
-        getPlayerDirectionCardinal();
-        List<Float> vel = getVelocity();
+            addAnimations(AnimationRole.MOVE, Direction.SOUTH_WEST,
+                    new AnimationLinker("MainCharacterSW_Anim",
+                            AnimationRole.MOVE, Direction.SOUTH_WEST, true, true));
+
+            addAnimations(AnimationRole.MOVE, Direction.SOUTH_EAST,
+                    new AnimationLinker("MainCharacterSE_Anim",
+                            AnimationRole.MOVE, Direction.SOUTH_EAST, true, true));
+
+            addAnimations(AnimationRole.MOVE, Direction.EAST,
+                    new AnimationLinker("MainCharacterE_Anim",
+                            AnimationRole.MOVE, Direction.EAST, true, true));
+
+            addAnimations(AnimationRole.MOVE, Direction.NORTH,
+                    new AnimationLinker("MainCharacterN_Anim",
+                            AnimationRole.MOVE, Direction.NORTH, true, true));
+
+            addAnimations(AnimationRole.MOVE, Direction.WEST,
+                    new AnimationLinker("MainCharacterW_Anim",
+                            AnimationRole.MOVE, Direction.WEST, true, true));
+
+            addAnimations(AnimationRole.MOVE, Direction.SOUTH,
+                    new AnimationLinker("MainCharacterS_Anim",
+                            AnimationRole.MOVE, Direction.SOUTH, true, true));
+
+            // Attack animation
+            addAnimations(AnimationRole.ATTACK, Direction.DEFAULT,
+                    new AnimationLinker("MainCharacter_Attack_E_Anim",
+                            AnimationRole.ATTACK, Direction.DEFAULT, false, true));
+
+            // Hurt animation
+            addAnimations(AnimationRole.HURT, Direction.DEFAULT,
+                    new AnimationLinker("MainCharacter_Hurt_E_Anim",
+                            AnimationRole.HURT, Direction.DEFAULT, true, true));
+
+            // Dead animation
+            addAnimations(AnimationRole.DEAD, Direction.DEFAULT,
+                    new AnimationLinker("MainCharacter_Dead_E_Anim",
+                            AnimationRole.DEAD, Direction.DEFAULT, false, true));
+        }
+
+        /**
+         * Sets default direction textures uses the get index for Animation feature
+         * as described in the animation documentation section 4.
+         */
+        @Override
+        public void setDirectionTextures () {
+            defaultDirectionTextures.put(Direction.EAST, "__ANIMATION_MainCharacterE_Anim:0");
+            defaultDirectionTextures.put(Direction.NORTH, "__ANIMATION_MainCharacterN_Anim:0");
+            defaultDirectionTextures.put(Direction.WEST, "__ANIMATION_MainCharacterW_Anim:0");
+            defaultDirectionTextures.put(Direction.SOUTH, "__ANIMATION_MainCharacterS_Anim:0");
+            defaultDirectionTextures.put(Direction.NORTH_EAST, "__ANIMATION_MainCharacterNE_Anim:0");
+            defaultDirectionTextures.put(Direction.NORTH_WEST, "__ANIMATION_MainCharacterNW_Anim:0");
+            defaultDirectionTextures.put(Direction.SOUTH_EAST, "__ANIMATION_MainCharacterSE_Anim:0");
+            defaultDirectionTextures.put(Direction.SOUTH_WEST, "__ANIMATION_MainCharacterSW_Anim:0");
+        }
+
+        /**
+         * If the animation is moving sets the animation state to be Move
+         * else NULL. Also sets the direction
+         */
+        private void updateAnimation () {
+            getPlayerDirectionCardinal();
+            List<Float> vel = getVelocity();
 
         /*
         if(isAttacking) {
@@ -1422,24 +1447,25 @@ public class MainCharacter extends Peon
         }
 
         /* Short Animations */
-        if (getToBeRun() != null) {
-            if (getToBeRun().getType() == AnimationRole.ATTACK) {
-                return;
-            } else if (getToBeRun().getType() == AnimationRole.DEAD) {
-                return;
+            if (getToBeRun() != null) {
+                if (getToBeRun().getType() == AnimationRole.ATTACK) {
+                    return;
+                } else if (getToBeRun().getType() == AnimationRole.DEAD) {
+                    return;
+                }
             }
-        }
 
-        if (isHurt) {
-            setCurrentState(AnimationRole.HURT);
-        } else {
-            if (vel.get(2) == 0f) {
-                setCurrentState(AnimationRole.NULL);
+            if (isHurt) {
+                setCurrentState(AnimationRole.HURT);
             } else {
-                setCurrentState(AnimationRole.MOVE);
+                if (vel.get(2) == 0f) {
+                    setCurrentState(AnimationRole.NULL);
+                } else {
+                    setCurrentState(AnimationRole.MOVE);
+                }
             }
+
         }
 
     }
 
-}

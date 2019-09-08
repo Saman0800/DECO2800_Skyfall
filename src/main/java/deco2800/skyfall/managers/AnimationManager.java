@@ -107,7 +107,8 @@ public class AnimationManager extends AbstractManager {
 
         this.generateAnimationObject("MainCharacter_Attack_E_Anim",
                 "MainCharacter_Attack_E_Anim",
-                731, 1130, 0.13f);
+                731, 1130, 0.08f);
+
 
         this.generateAnimationObject("MainCharacter_Hurt_E_Anim",
                 "MainCharacter_Hurt_E_Anim",
