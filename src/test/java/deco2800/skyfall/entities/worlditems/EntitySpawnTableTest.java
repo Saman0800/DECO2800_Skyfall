@@ -1,4 +1,4 @@
-package deco2800.skyfall.entities;
+package deco2800.skyfall.entities.worlditems;
 
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.PhysicsManager;
@@ -118,8 +118,6 @@ public class EntitySpawnTableTest {
 
         //check perlin noice place
         int currentCount = countWorldEntities();
-
-
 
     }
 

@@ -10,7 +10,6 @@ import java.util.Random;
  * Lake biome that is used for the lakes
  */
 public class LakeBiome extends AbstractBiome {
-    private ArrayList<String> textures = new ArrayList<>();
 
     /**
      * Constructor for a Biome
