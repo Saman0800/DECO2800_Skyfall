@@ -400,9 +400,13 @@ public class GameMenuScreen {
         PopUpTable inventoryTable = new PopUpTable(910, 510, "i");
         inventoryTable.setName("inventoryTable");
 
-        Image infoBar = new Image(generateTextureRegionDrawableObject("inventory_banner"));
+        Table infoBar = new Table();
+        infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
         infoBar.setSize(650, 55);
-        infoBar.setPosition(130, 435);
+        infoBar.setPosition(130, 430);
+
+        Label text = new Label("INVENTORY", skin, "black-text");
+        infoBar.add(text);
 
         Table infoPanel = new Table();
         infoPanel.setSize(410, 400);
