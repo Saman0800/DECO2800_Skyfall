@@ -5,13 +5,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.sun.org.glassfish.external.statistics.Statistic;
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
 
-public class HealthCircle extends AbstractUIElement{
+public class HealthCircle extends AbstractUIElement {
     private float currentHealth;
     private int newHealth; // maybe for animating it down.
     private  ImageButton biggerCircle;

@@ -151,7 +151,7 @@ public class StatisticsManagerTest {
         Assert.assertEquals(testManager.getAmountKilled(testEnemy3), 3);
         Assert.assertEquals(testManager.getKills(), 10);
 
-        Assert.assertEquals(testManager.getMoney(), 0);
+        Assert.assertEquals(testManager.getMoney(), 100);
     }
 
     @Test
