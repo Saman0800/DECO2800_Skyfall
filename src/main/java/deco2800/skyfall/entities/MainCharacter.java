@@ -16,18 +16,18 @@ import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.Tile;
-import org.lwjgl.Sys;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.*;
 
 /**
  * Main character in the game
  */
-public class MainCharacter extends Peon
-        implements KeyDownObserver, KeyUpObserver, TouchDownObserver, Tickable, Animatable {
+public class MainCharacter extends Peon implements KeyDownObserver,
+        KeyUpObserver, TouchDownObserver, Tickable, Animatable {
 
+    // Logger to show messages
     private final Logger logger = LoggerFactory.getLogger(MainCharacter.class);
 
     // Weapon Manager for MainCharacter
@@ -47,18 +47,11 @@ public class MainCharacter extends Peon
 
     // Variables to sound effects
     public static final String WALK_NORMAL = "people_walk_normal";
-    private SoundManager soundManager = GameManager.get().getManager(SoundManager.class);
+    private SoundManager soundManager =
+            GameManager.get().getManager(SoundManager.class);
 
-    //The pick Axe that is going to be created
+    // The pick Axe that is going to be created
     private Hatchet hatchetToCreate;
-
-    // The index of the item selected to be used in the hotbar
-    // ie. [sword][gun][apple]
-    // if selecting sword then equipped_item = 0,
-    // if selecting gun the equipped_item = 1
-    private int equipped_item;
-    private static final int INVENTORY_MAX_CAPACITY = 20;
-    private static final int HOTBAR_MAX_CAPACITY = 5;
 
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
@@ -80,7 +73,7 @@ public class MainCharacter extends Peon
     // A goldPouch to store the character's gold pieces.
     private HashMap<Integer, Integer> goldPouch;
 
-    /**
+    /*
      * The direction and speed of the MainCharacter
      */
     protected Vector2 direction;
@@ -110,22 +103,22 @@ public class MainCharacter extends Peon
      */
     private int itemSlotSelected = 1;
 
-    /**
+    /*
      * How long does MainCharacter hurt status lasts,
      */
     private long hurtTime = 0;
 
-    /**
+    /*
      * How long does MainCharacter take to recover,
      */
     private long recoverTime = 3000;
 
-    /**
+    /*
      * Check whether MainCharacter is hurt.
      */
     private boolean isHurt = false;
 
-    /**
+    /*
      * Check whether MainCharacter is attacking.
      */
     private boolean isAttacking = false;
@@ -142,20 +135,24 @@ public class MainCharacter extends Peon
     /**
      * Base Main Character constructor
      */
-    public MainCharacter(float col, float row, float speed, String name, int health) {
+    public MainCharacter(float col, float row, float speed, String name,
+                         int health) {
         super(row, col, speed, name, health);
         this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
         this.setHeight(1);
         this.setObjectName("MainPiece");
 
-        GameManager.getManagerFromInstance(InputManager.class).addKeyDownListener(this);
-        GameManager.getManagerFromInstance(InputManager.class).addKeyUpListener(this);
-        GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
+        GameManager.getManagerFromInstance(InputManager.class)
+                .addKeyDownListener(this);
+        GameManager.getManagerFromInstance(InputManager.class)
+                .addKeyUpListener(this);
+        GameManager.getManagerFromInstance(InputManager.class)
+                .addTouchDownListener(this);
 
         this.weapons = GameManager.getManagerFromInstance(WeaponManager.class);
-        this.inventories = GameManager.getManagerFromInstance(InventoryManager.class);
+        this.inventories =
+                GameManager.getManagerFromInstance(InventoryManager.class);
 
-        this.equipped_item = 0;
         this.level = 1;
         this.foodLevel = 100;
         foodAccum = 0.f;
@@ -165,7 +162,8 @@ public class MainCharacter extends Peon
         // create the starting gold pouch with 1 x 100G
         GoldPiece initialPiece = new GoldPiece(100);
         this.addGold(initialPiece, 1);
-        //Initialises the players velocity properties
+
+        // Initialises the players velocity properties
         xInput = 0;
         yInput = 0;
         xVel = 0;
@@ -177,7 +175,6 @@ public class MainCharacter extends Peon
         velHistoryY = new ArrayList<>();
 
         isMoving = false;
-
         HexVector position = this.getPosition();
 
         /*        //Spawn projectile in front of character for now.
@@ -205,7 +202,8 @@ public class MainCharacter extends Peon
      *                 4 = South-West
      *                 5 = North-West
      */
-    public MainCharacter(float col, float row, float speed, String name, int health, String[] textures) {
+    public MainCharacter(float col, float row, float speed, String name,
+                         int health, String[] textures) {
         this(row, col, speed, name, health);
         this.setTexture(textures[2]);
     }
@@ -242,8 +240,11 @@ public class MainCharacter extends Peon
         // Make projectile move toward the angle
         // Spawn projectile in front of character for now.
 
-        Projectile projectile = new Projectile(mousePosition, this.itemSlotSelected == 1 ? "range_test" : "melee_test",
-                "test hitbox", position.getCol() + 1, position.getRow(), 1, 0.1f, this.itemSlotSelected == 1 ? 1 : 0);
+        Projectile projectile = new Projectile(mousePosition,
+                this.itemSlotSelected == 1 ? "range_test" : "melee_test",
+                "test hitbox", position.getCol() + 1,
+                position.getRow(), 1,
+                0.1f, this.itemSlotSelected == 1 ? 1 : 0);
 
         // Get AbstractWorld from static class GameManager.
         GameManager manager = GameManager.get();
@@ -253,6 +254,9 @@ public class MainCharacter extends Peon
         setAttacking(false);
     }
 
+    /**
+     * Set the isAttacking boolean
+     */
     public void setAttacking(boolean isAttacking) {
         this.isAttacking = isAttacking;
     }
@@ -342,7 +346,7 @@ public class MainCharacter extends Peon
     }
 
     /**
-     * @return if player is in the state of "hurt".
+     * set isHurt boolean
      */
     public void setHurt(boolean isHurt) {
         this.isHurt = isHurt;
@@ -420,8 +424,10 @@ public class MainCharacter extends Peon
      * e.g for loading player saves
      * @param inventoryContents the save for the inventory
      */
-    public void setInventory(Map<String, List<Item>> inventoryContents, List<String> quickAccessContent) {
-        this.inventories = new InventoryManager(inventoryContents, quickAccessContent);
+    public void setInventory(Map<String, List<Item>> inventoryContents,
+                             List<String> quickAccessContent) {
+        this.inventories = new InventoryManager(inventoryContents,
+                quickAccessContent);
     }
 
     /**
@@ -486,7 +492,8 @@ public class MainCharacter extends Peon
                 change_food(hungerValue);
                 dropInventory(item.getName());
             } else {
-                logger.info("Given item (" + item.getName() + ") is " + "not edible!");
+                logger.info("Given item (" + item.getName() + ") is " + "not " +
+                        "edible!");
             }
         } else {
             logger.info("You don't have enough of the given item");
@@ -501,6 +508,9 @@ public class MainCharacter extends Peon
         return foodLevel <= 0;
     }
 
+    /**
+     * Set swimmingAbility boolean
+     */
     public void changeSwimming(boolean swimmingAbility) {
         this.canSwim = swimmingAbility;
     }
@@ -539,22 +549,27 @@ public class MainCharacter extends Peon
      * @param pointer mouse pointer
      * @param button the button which was pressed
      */
-    public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
+    public void notifyTouchDown(int screenX, int screenY, int pointer,
+                                int button) {
         // only allow left clicks to move player
         if (GameScreen.isPaused) {
             return;
         }
         if (button == 0) {
-            float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
-            float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
+            float[] mouse =
+                    WorldUtil.screenToWorldCoordinates(Gdx.input.getX(),
+                            Gdx.input.getY());
+            float[] clickedPosition =
+                    WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 
-            HexVector mousePos = new HexVector(clickedPosition[0], clickedPosition[1]);
+            HexVector mousePos = new HexVector(clickedPosition[0],
+                    clickedPosition[1]);
             this.attack(mousePos);
         }
     }
 
     private void checkIfRecovered() {
-        //System.out.println("Character is hurt. and recovering");
+        // System.out.println("Character is hurt. and recovering");
         recoverTime += 20;
         if (recoverTime > hurtTime) {
             //System.out.println("Recovered");
@@ -582,10 +597,10 @@ public class MainCharacter extends Peon
         }
         this.updateAnimation();
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-            GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
+            GameManager.getManagerFromInstance(ConstructionManager.class)
+                    .displayWindow();
         }
         // Do hunger stuff here
-
 
         if (isMoving) {
             if (isSprinting) {
@@ -626,44 +641,43 @@ public class MainCharacter extends Peon
     @Override
     public void notifyKeyDown(int keycode) {
         GoldPiece g = new GoldPiece(5);
-        //player cant move when paused
+        // player cant move when paused
         if (GameManager.getPaused()) {
             return;
         }
         switch (keycode) {
-        case Input.Keys.W:
-            yInput += 1;
-            break;
-        case Input.Keys.A:
-            xInput += -1;
-            break;
-        case Input.Keys.S:
-            yInput += -1;
-            break;
-        case Input.Keys.D:
-            xInput += 1;
-            break;
-        case Input.Keys.SHIFT_LEFT:
-            isSprinting = true;
-            maxSpeed *= 2.f;
-            break;
-        case Input.Keys.H:
-            useHatchet();
-            break;
-        case Input.Keys.P:
-            usePickAxe();
-            break;
-        case Input.Keys.G:
-            addClosestGoldPiece();
-            break;
-        case Input.Keys.M:
-            getGoldPouchTotalValue();
-            break;
-        default:
-            switchItem(keycode);
-            //xInput += 1;
-            break;
-
+            case Input.Keys.W:
+                yInput += 1;
+                break;
+            case Input.Keys.A:
+                xInput += -1;
+                break;
+            case Input.Keys.S:
+                yInput += -1;
+                break;
+            case Input.Keys.D:
+                xInput += 1;
+                break;
+            case Input.Keys.SHIFT_LEFT:
+                isSprinting = true;
+                maxSpeed *= 2.f;
+                break;
+            case Input.Keys.H:
+                useHatchet();
+                break;
+            case Input.Keys.P:
+                usePickAxe();
+                break;
+            case Input.Keys.G:
+                addClosestGoldPiece();
+                break;
+            case Input.Keys.M:
+                getGoldPouchTotalValue();
+                break;
+            default:
+                switchItem(keycode);
+                // xInput += 1;
+                break;
         }
     }
 
@@ -678,31 +692,31 @@ public class MainCharacter extends Peon
             return;
         }
         switch (keycode) {
-        case Input.Keys.W:
-            yInput -= 1;
-            break;
-        case Input.Keys.A:
-            xInput -= -1;
-            break;
-        case Input.Keys.S:
-            yInput -= -1;
-            break;
-        case Input.Keys.D:
-            xInput -= 1;
-            break;
-        case Input.Keys.SHIFT_LEFT:
-            isSprinting = false;
-            maxSpeed /= 2.f;
-            break;
-        case Input.Keys.H:
-            break;
-        case Input.Keys.P:
-            break;
-        case Input.Keys.G:
-            break;
-        case Input.Keys.M:
-            break;
-        }
+            case Input.Keys.W:
+                yInput -= 1;
+                break;
+            case Input.Keys.A:
+                xInput -= -1;
+                break;
+            case Input.Keys.S:
+                yInput -= -1;
+                break;
+            case Input.Keys.D:
+                xInput -= 1;
+                break;
+            case Input.Keys.SHIFT_LEFT:
+                isSprinting = false;
+                maxSpeed /= 2.f;
+                break;
+            case Input.Keys.H:
+                break;
+            case Input.Keys.P:
+                break;
+            case Input.Keys.G:
+                break;
+            case Input.Keys.M:
+                break;
+            }
     }
 
     /**
@@ -711,7 +725,6 @@ public class MainCharacter extends Peon
      * @param count How many of that piece of gold should be added
      */
     public void addGold(GoldPiece gold, Integer count) {
-
         // store the gold's value (5G, 10G etc) as a variable
         Integer goldValue = gold.getValue();
 
@@ -756,12 +769,13 @@ public class MainCharacter extends Peon
      * Returns the sum of the gold piece values in the Gold Pouch
      * @return The total value of the Gold Pouch
      */
-    public Integer getGoldPouchTotalValue() {
-        Integer totalValue = 0;
+    public int getGoldPouchTotalValue() {
+        int totalValue = 0;
         for (Integer goldValue : goldPouch.keySet()) {
             totalValue += goldValue * goldPouch.get(goldValue);
         }
-        logger.info("The total value of your Gold Pouch is: " + totalValue + "G");
+        logger.info("The total value of your Gold Pouch is: " + totalValue +
+                "G");
         return totalValue;
     }
 
@@ -771,7 +785,8 @@ public class MainCharacter extends Peon
      *
      */
     public void addClosestGoldPiece() {
-        for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+        for (AbstractEntity entity :
+                GameManager.get().getWorld().getEntities()) {
             if (entity instanceof GoldPiece) {
                 if (this.getPosition().distance(entity.getPosition()) <= 1.5) {
                     this.addGold((GoldPiece) entity, 1);
@@ -782,8 +797,6 @@ public class MainCharacter extends Peon
             }
 
         }
-
-
     }
 
     /**
@@ -793,7 +806,7 @@ public class MainCharacter extends Peon
      * @return The Tile at that position
      */
     public Tile getTile(float xPos, float yPos) {
-        //Returns tile at left arm (our perspective) of the player
+        // Returns tile at left arm (our perspective) of the player
         float tileCol = (float) Math.round(xPos);
         float tileRow = (float) Math.round(yPos);
         if (tileCol % 2 != 0) {
@@ -811,7 +824,8 @@ public class MainCharacter extends Peon
         if (velHistoryX.size() < 2 || velHistoryY.size() < 2) {
             velHistoryX.add((int) (xVel * 100));
             velHistoryY.add((int) (yVel * 100));
-        } else if (velHistoryX.get(1) != (int) (xVel * 100) || velHistoryY.get(1) != (int) (yVel * 100)) {
+        } else if (velHistoryX.get(1) != (int) (xVel * 100)
+                || velHistoryY.get(1) != (int) (yVel * 100)) {
             velHistoryX.set(0, velHistoryX.get(1));
             velHistoryX.set(1, (int) (xVel * 100));
 
@@ -828,7 +842,8 @@ public class MainCharacter extends Peon
      * @param friction Friction value
      * @return The new velocity
      */
-    public float calVelocity(int mainInput, int altInput, float vel, float friction) {
+    public float calVelocity(int mainInput, int altInput, float vel,
+                             float friction) {
         if (mainInput != 0) {
             vel += mainInput * acceleration * friction;
             // Prevents sliding
@@ -849,7 +864,8 @@ public class MainCharacter extends Peon
      * @param destination The new position
      * @param nextTile The tile that will be moved to
      */
-    public void findNewPosition(HexVector position, HexVector destination, Tile nextTile) {
+    public void findNewPosition(HexVector position, HexVector destination,
+                                Tile nextTile) {
         if (nextTile == null) {
             // Prevents the player from walking into the void
             position.moveToward(destination, 0);
@@ -883,7 +899,8 @@ public class MainCharacter extends Peon
         float friction;
         if (currentTile != null && currentTile.getTexture() != null) {
             //Tile specific friction
-            currentTile = GameManager.get().getWorld().getTile(tileCol, tileRow);
+            currentTile = GameManager.get().getWorld().getTile(tileCol,
+                    tileRow);
             friction = Tile.getFriction(currentTile.getTextureName());
         } else {
             // Default friction
@@ -923,7 +940,7 @@ public class MainCharacter extends Peon
         // Moves the player to new location
         findNewPosition(position, destination, nextTile);
 
-        //Records velocity history in x direction
+        // Records velocity history in x direction
         recordVelHistory(xVel, yVel);
 
         getBody().setTransform(xPos, yPos, getBody().getAngle());
@@ -1252,6 +1269,5 @@ public class MainCharacter extends Peon
                 setCurrentState(AnimationRole.MOVE);
             }
         }
-
     }
 }
