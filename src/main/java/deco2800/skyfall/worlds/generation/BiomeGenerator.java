@@ -52,6 +52,9 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
     private int riverWidth;
     private int beachWidth;
 
+    private List<VoronoiEdge> riverEdges;
+    private List<VoronoiEdge> beachEdges;
+
     // TODO Remove `noLakes` parameter.
 
     /**
@@ -63,7 +66,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      *
      * @throws NotEnoughPointsException if there are not enough non-border nodes from which to form the biomes
      */
-    public BiomeGenerator(List<WorldGenNode> nodes, List<VoronoiEdge> voronoiEdges, Random random,
+    public BiomeGenerator(List<WorldGenNode> nodes, List<VoronoiEdge> voronoiEdges, List<Tile> tiles, Random random,
                           WorldParameters worldParameters)
             throws NotEnoughPointsException {
         Objects.requireNonNull(nodes, "nodes must not be null");
@@ -97,6 +100,8 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
         this.riverWidth = worldParameters.getRiverWidth();
         this.beachWidth = worldParameters.getBeachWidth();
         this.lakeSizes = worldParameters.getLakeSizes();
+        this.riverEdges = new ArrayList<>();
+        this.beachEdges = new ArrayList<>();
     }
 
     /**
@@ -139,8 +144,8 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 generateLakes(lakeSizes, noLakes);
                 populateRealBiomes();
                 generateBeaches();
+                List<VoronoiEdge> riverEdges = generateRivers(noRivers, riverWidth, voronoiEdges);
                 ensureContiguity();
-                generateRivers(noRivers, riverWidth, voronoiEdges);
 
                 return;
             } catch (DeadEndGenerationException e) {
@@ -408,9 +413,13 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      *
      * @throws DeadEndGenerationException If not enough valid rivers can be found
      */
-    private void generateRivers(int noRivers, int riverWidth, List<VoronoiEdge> edges)
+    private List<VoronoiEdge> generateRivers(int noRivers, int riverWidth, List<VoronoiEdge> edges)
             throws DeadEndGenerationException {
         List<BiomeInProgress> lakes = new ArrayList<>();
+        // A hash map cannot be used as that can cause non-deterministic
+        // behaviour when there is a tile equidistant from two edges
+        List<List<VoronoiEdge>> rivers = new ArrayList<>();
+        List<List<AbstractBiome>> riverParentBiomes = new ArrayList<>();
         // Get a list of lake biomes
         for (BiomeInProgress biome : biomes) {
             // If the biome is a lake
@@ -420,7 +429,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
         }
         // If there are no lakes, there can't be any rivers
         if (lakes.size() == 0) {
-            return;
+            return new ArrayList<>();
         }
         for (int i = 0; i < noRivers; i++) {
             // Choose a random lake
@@ -461,13 +470,24 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             // Generate the path for the river
             List<VoronoiEdge> riverEdges = VoronoiEdge.generatePath(edges, startingEdge, startingVertex, random, 2);
 
+            List<AbstractBiome> parentBiomes = new ArrayList<>();
             // Create a river biome and add all tiles for each edge
-            AbstractBiome river = new RiverBiome(realBiomes.get(chosenLake.id));
-            List<Tile> riverTiles = new ArrayList<>();
+            for (VoronoiEdge edge : riverEdges) {
+                AbstractBiome parentBiome = realBiomes.get(nodesBiomes
+                        .get(edge.getEdgeNodes().get(random.nextInt(2))).id);
+                parentBiomes.add(parentBiome);
+            }
+            rivers.add(riverEdges);
+            riverParentBiomes.add(parentBiomes);
+
+            //TODO delete
+            /*
+            //List<Tile> riverTiles = new ArrayList<>();
             for (VoronoiEdge riverEdge : riverEdges) {
                 riverTiles.addAll(riverEdge.getTiles());
             }
 
+            // TODO delete
             // Expand the river
             for (int j = 0; j < riverWidth; j++) {
                 List<Tile> newTiles = new ArrayList<>();
@@ -487,6 +507,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 riverTiles.addAll(newTiles);
             }
 
+            // TODO handle this
             boolean onSpawn = false;
             // Add the river and all it's tiles
             for (Tile tile : riverTiles) {
@@ -505,7 +526,34 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 continue;
             }
             realBiomes.add(river);
+             */
         }
+
+        List<VoronoiEdge> allRiverEdges = new ArrayList<>();
+        List<AbstractBiome> allParentBiomes = new ArrayList<>();
+
+        for (int i = 0; i < rivers.size(); i++) {
+            allRiverEdges.addAll(rivers.get(i));
+            allParentBiomes.addAll(riverParentBiomes.get(i));
+        }
+
+        // TODO make this not rely on tiles (ie return edges insteads)
+        /*
+        for (Tile tile : tiles) {
+            tile.assignEdge(allRiverEdges, riverWidth);
+        }
+        */
+
+        List<VoronoiEdge> nonDuplicateEdges = new ArrayList<>();
+
+        for (int i = 0; i < allRiverEdges.size(); i++) {
+            if (!nonDuplicateEdges.contains(allRiverEdges.get(i))) {
+                nonDuplicateEdges.add(allRiverEdges.get(i));
+                realBiomes.add(new RiverBiome(allParentBiomes.get(i)));
+            }
+        }
+
+        return nonDuplicateEdges;
     }
 
     /**
