@@ -305,7 +305,7 @@ public class MainCharacter extends Peon
         setAttacking(true);
         setCurrentState(AnimationRole.ATTACK);
 
-        //If there is a spell selected, fire that.
+        //If there is a spell selected, spawn the spell.
         //else, just fire off a normal projectile.
         if (this.spellSelected != SpellType.NONE) {
             this.castSpell(mousePosition);
@@ -350,15 +350,14 @@ public class MainCharacter extends Peon
      */
     private void castSpell(HexVector mousePosition) {
 
-        //Unselect the spell
+        //Unselect the spell.
         this.spellSelected = SpellType.NONE;
 
-        //Check if have enough mana to attack.
+        //Check if there is enough mana to attack.
         if (mana < 20) {
             return;
         }
 
-        //TODO: Fire the spell in the users mouse direction.
         Spell spell = new Spell(mousePosition,
                 "flame_wall_placeholder",
                 "spell",
@@ -849,6 +848,12 @@ public class MainCharacter extends Peon
                     break;
                 case Input.Keys.Z:
                     selectSpell(SpellType.FLAME_WALL);
+                    break;
+                case Input.Keys.X:
+                    selectSpell(SpellType.SHIELD);
+                    break;
+                case Input.Keys.C:
+                    selectSpell(SpellType.TORNADO);
                     break;
                 default:
                     switchItem(keycode);

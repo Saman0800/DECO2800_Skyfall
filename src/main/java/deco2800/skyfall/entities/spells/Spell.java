@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities.spells;
 
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.Projectile;
 import deco2800.skyfall.util.HexVector;
 
@@ -26,4 +27,16 @@ public class Spell extends Projectile {
         this.setTexture("flame_wall_placeholder");
     }
 
+    @Override
+    public void onTick(long tick) {
+        super.onTick(tick);
+
+        //Check for enemies and deal 1 damage.
+    }
+
+    @Override
+    public boolean collidesWith(AbstractEntity entity) {
+        System.out.println("COLLIDED WITH");
+        return false;
+    }
 }
