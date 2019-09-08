@@ -6,6 +6,10 @@ import com.badlogic.gdx.math.Vector2;
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.*;
+import deco2800.skyfall.entities.spells.Spell;
+import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.gui.HealthCircle;
+import deco2800.skyfall.gui.ManaBar;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.*;
 import deco2800.skyfall.resources.GoldPiece;
@@ -14,6 +18,7 @@ import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
+
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.Tile;
 import org.slf4j.Logger;
@@ -139,11 +144,32 @@ public class MainCharacter extends Peon
     private boolean isAttacking = false;
 
     /**
+     * The spell the user currently has selected to cast.
+     */
+    private SpellType spellSelected = SpellType.NONE;
+
+    /**
+     * How much mana the character has available for spellcasting.
+     */
+    private int mana = 100;
+
+    /**
+     * The GUI mana bar that can be updated when mana is restored/lost.
+     */
+    private ManaBar manaBar;
+
+
+    /**
+     * The GUI health bar for the character.
+     */
+    private HealthCircle healthBar;
+
+    /**
      * Private helper method to instantiate inventory and weapon managers for
      * Main Character constructor
      */
     private void instantiateManagers() {
-        this.inventories = new InventoryManager();
+        //this.inventories = new InventoryManager();
         this.weapons = new WeaponManager();
     }
 
@@ -183,6 +209,8 @@ public class MainCharacter extends Peon
         vel = 0;
         velHistoryX = new ArrayList<>();
         velHistoryY = new ArrayList<>();
+        blueprintsLearned = new ArrayList<>();
+
 
         isMoving = false;
 
@@ -200,7 +228,29 @@ public class MainCharacter extends Peon
         this.scale = 0.4f;
         setDirectionTextures();
         configureAnimations();
-        setCollider();
+    }
+
+    /**
+     * Setup the character specific gui elements.
+     */
+    public void setUpGUI() {
+        this.setupHealthBar();
+        this.setUpManaBar();
+    }
+
+    /**
+     * Set up the mana bar.
+     */
+    private void setUpManaBar() {
+        //Start with 100 mana.
+        this.manaBar = new ManaBar(100,"mana_bar_inner","mana_bar");
+    }
+
+    /**
+     * Set up the health bar.
+     */
+    private void setupHealthBar() {
+        this.healthBar = new HealthCircle(this.getHealth(), "big_circle", "inner_circle");
     }
 
     /**
@@ -245,23 +295,95 @@ public class MainCharacter extends Peon
      * Attack with the weapon the character has equip.
      */
     public void attack(HexVector mousePosition) {
-        HexVector position = this.getPosition();
+        //Animation control
         setAttacking(true);
+        setCurrentState(AnimationRole.ATTACK);
+
+        //If there is a spell selected, fire that.
+        //else, just fire off a normal projectile.
+        if (this.spellSelected != SpellType.NONE) {
+            this.castSpell(mousePosition);
+        } else {
+            this.fireProjectile(mousePosition);
+        }
+    }
+
+    /**
+     * Fire a projectile in the position that the mouse is in.
+     * @param mousePosition The position of the user's mouse.
+     */
+    private void fireProjectile(HexVector mousePosition) {
+        //TODO: Call weapon.Attack(); and move this logic to the weapon.
+        HexVector position = this.getPosition();
+
+
         setCurrentState(AnimationRole.ATTACK);
         // Make projectile move toward the angle
         // Spawn projectile in front of character for now.
-
         Projectile projectile = new Projectile(mousePosition,
-                this.itemSlotSelected == 1 ? "range_test" : "melee_test",
-                "test hitbox", position.getCol() + 1, position.getRow(),
-                1, 0.1f, this.itemSlotSelected == 1 ? 1 : 0);
-
+                this.itemSlotSelected == 1 ? "range_test":"melee_test",
+                "test hitbox",
+                position.getCol() + 1,
+                position.getRow(),
+                1,
+                0.1f,
+                this.itemSlotSelected == 1 ? 1 : 0);
         // Get AbstractWorld from static class GameManager.
         GameManager manager = GameManager.get();
 
         // Add the projectile entity to the game world.
-        manager.getWorld().addEntity(projectile);
+        GameManager.get().getWorld().addEntity(projectile);
+    }
+
+    /**
+     * Cast the spell in the position that the mouse is in.
+     * @param mousePosition The position of the user's mouse.
+     */
+    private void castSpell(HexVector mousePosition) {
+
+        //Unselect the spell
+        this.spellSelected = SpellType.NONE;
+
+        //Check if have enough mana to attack.
+        if (mana < 20) {
+            return;
+        }
+
+        //TODO: Fire the spell in the users mouse direction.
+        Spell spell = new Spell(mousePosition,
+                "flame_wall_placeholder",
+                "spell",
+                mousePosition.getCol(),
+                mousePosition.getRow(),
+                1,
+                0.1f,
+                0);
+
+        //Subtract some mana, and update the GUI.
+        this.mana-=20;
+        if (this.manaBar != null) {
+            this.manaBar.update(this.mana);
+        }
+
+        GameManager.get().getWorld().addEntity(spell);
+
         setAttacking(false);
+    }
+
+    /**
+     * Set the mana the character has available.
+     * @param mana The mana to set for the character.
+     */
+    public void setMana(int mana) {
+        this.mana = mana;
+    }
+
+    /**
+     * Get the mana the character currently has available.
+     * @return The mana the character has available.
+     */
+    public int getMana() {
+        return this.mana;
     }
 
     public void setAttacking(boolean isAttacking) {
@@ -276,10 +398,13 @@ public class MainCharacter extends Peon
 
         System.out.println("Hurted: " + isRecovering);
 
-        if(!isRecovering) {
+        if (!isRecovering) {
             setHurt(true);
             this.changeHealth(-damage);
 
+            if (this.healthBar != null) {
+                this.healthBar.update(this.getHealth());
+            }
             if (this.getHealth() <= 0) {
                 kill();
             } else {
@@ -316,7 +441,6 @@ public class MainCharacter extends Peon
                 position.moveToward(bounceBack, 1f);
 
                 soundManager.playSound(HURT);
-
             }
         }
     }
@@ -673,40 +797,51 @@ public class MainCharacter extends Peon
             return;
         }
         switch (keycode) {
-        case Input.Keys.W:
-            yInput += 1;
-            break;
-        case Input.Keys.A:
-            xInput += -1;
-            break;
-        case Input.Keys.S:
-            yInput += -1;
-            break;
-        case Input.Keys.D:
-            xInput += 1;
-            break;
-        case Input.Keys.SHIFT_LEFT:
-            isSprinting = true;
-            maxSpeed *= 2.f;
-            break;
-        case Input.Keys.H:
-            useHatchet();
-            break;
-        case Input.Keys.P:
-            usePickAxe();
-            break;
-        case Input.Keys.G:
-            addClosestGoldPiece();
-            break;
-        case Input.Keys.M:
-            getGoldPouchTotalValue();
-            break;
-        default:
-            switchItem(keycode);
-            //xInput += 1;
-            break;
-
+            case Input.Keys.W:
+                yInput += 1;
+                break;
+            case Input.Keys.A:
+                xInput += -1;
+                break;
+            case Input.Keys.S:
+                yInput += -1;
+                break;
+            case Input.Keys.D:
+                xInput += 1;
+                break;
+            case Input.Keys.SHIFT_LEFT:
+                isSprinting = true;
+                maxSpeed *= 2.f;
+                break;
+            case Input.Keys.H:
+                useHatchet();
+                break;
+            case Input.Keys.P:
+                usePickAxe();
+                break;
+            case Input.Keys.G:
+                addClosestGoldPiece();
+                break;
+            case Input.Keys.M:
+                getGoldPouchTotalValue();
+                break;
+            case Input.Keys.Z:
+                selectSpell(SpellType.FLAME_WALL);
+                break;
+            default:
+                switchItem(keycode);
+                //xInput += 1;
+                break;
         }
+    }
+
+    /**
+     * Select the spell that the character is ready to cast.
+     * When they next click attack, this spell will cast.
+     * @param type The SpellType to cast.
+     */
+    private void selectSpell(SpellType type) {
+        this.spellSelected = type;
     }
 
     /**
@@ -1150,7 +1285,6 @@ public class MainCharacter extends Peon
      * @return the learned blueprints list
      */
     public List<String> getBlueprintsLearned() {
-        blueprintsLearned = new ArrayList<>();
 
         return this.blueprintsLearned;
     }
@@ -1176,28 +1310,27 @@ public class MainCharacter extends Peon
      * if yes, creates the item, adds it to the player's inventory
      * and deducts the required resource from inventory
      */
-    public void createItem(ManufacturedResources itemToCreate) {
-
-        if (getBlueprintsLearned().contains(itemToCreate.getName())) {
-
-            if (itemToCreate.getRequiredMetal() >= this.getInventoryManager().
-                    getAmount(itemToCreate.getName())) {
+    public void createItem(ManufacturedResources newItem){
+        if (getBlueprintsLearned().contains(newItem.getName())) {
+            if (newItem.getRequiredMetal()>= this.getInventoryManager().
+                    getAmount("Metal")){
                 logger.info("You don't have enough Metal");
 
-            } else if (itemToCreate.getRequiredWood() >= this.getInventoryManager().
-                    getAmount(itemToCreate.getName())) {
+            } else if (newItem.getRequiredWood()>= this.getInventoryManager().
+                    getAmount("Wood")){
                 logger.info("You don't have enough Wood");
 
-            } else if (itemToCreate.getRequiredStone() >= this.getInventoryManager()
-                    .getAmount(itemToCreate.getName())) {
+            } else if (newItem.getRequiredStone()>= this.getInventoryManager().
+                    getAmount("Stone")) {
                 logger.info("You don't have enough Stone");
 
             } else {
-                this.getInventoryManager().inventoryAdd(itemToCreate);
+                this.getInventoryManager().inventoryAdd(new Hatchet(this));
 
-                this.getInventoryManager().inventoryDropMultiple("Metal", itemToCreate.getRequiredMetal());
-                this.getInventoryManager().inventoryDropMultiple("Stone", itemToCreate.getRequiredStone());
-                this.getInventoryManager().inventoryDropMultiple("Wood", itemToCreate.getRequiredWood());
+                this.getInventoryManager().inventoryDropMultiple("Metal", newItem.getRequiredMetal());
+                this.getInventoryManager().inventoryDropMultiple("Stone", newItem.getRequiredStone());
+                this.getInventoryManager().inventoryDropMultiple("Wood", newItem.getRequiredWood());
+
             }
         }
     }
@@ -1308,4 +1441,5 @@ public class MainCharacter extends Peon
         }
 
     }
+
 }
