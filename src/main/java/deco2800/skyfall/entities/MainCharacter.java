@@ -219,8 +219,15 @@ public class MainCharacter extends Peon
         setDirectionTextures();
         configureAnimations();
 
-        setUpManaBar();
-        setupHealthBar();
+
+    }
+
+    /**
+     * Setup the character specific gui elements.
+     */
+    public void setUpGUI() {
+        this.setupHealthBar();
+        this.setUpManaBar();
     }
 
     /**
@@ -235,9 +242,7 @@ public class MainCharacter extends Peon
      * Set up the health bar.
      */
     private void setupHealthBar() {
-        this.healthBar = new HealthCircle(this.getHealth(),
-                "big_circle",
-                "inner_circle");
+        this.healthBar = new HealthCircle(this.getHealth(), "big_circle", "inner_circle");
     }
 
     /**
@@ -364,7 +369,10 @@ public class MainCharacter extends Peon
      */
     public void hurt(int damage) {
         this.changeHealth(-damage);
-        this.healthBar.update(this.getHealth());
+
+        if (this.healthBar != null) {
+            this.healthBar.update(this.getHealth());
+        }
 
         if (this.getHealth() <= 0) {
             kill();

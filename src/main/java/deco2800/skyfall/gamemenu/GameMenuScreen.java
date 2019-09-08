@@ -62,6 +62,7 @@ public class GameMenuScreen {
         this.textureManager = gameMenuManager.getTextureManager();
         inventory = gameMenuManager.getInventory();
         mainCharacter = gameMenuManager.getMainCharacter();
+        mainCharacter.setUpGUI();
     }
 
     /**
