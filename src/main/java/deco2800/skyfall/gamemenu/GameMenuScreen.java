@@ -450,7 +450,7 @@ public class GameMenuScreen {
         infoBar.setSize(550, 55);
         infoBar.setPosition(100, 435);
 
-        //updateResourcePanel();
+        updateResourcePanel();
 
         goldTable.addActor(infoBar);
         //goldTable.addActor(this.resourcePanel);
