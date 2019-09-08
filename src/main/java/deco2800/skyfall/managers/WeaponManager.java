@@ -7,10 +7,10 @@ import java.util.*;
 public class WeaponManager extends TickableManager {
 
     // Map of how many of each weapon is available
-    private Map<Weapon, Integer> weapons;
+    private Map<String, Integer> weapons;
 
     // List of weapons being equipped
-    private List<Weapon> equipped;
+    private List<String> equipped;
 
     // Maximum number of equipped weapons
     private static final int MAX_EQUIPPED = 2;
@@ -27,7 +27,7 @@ public class WeaponManager extends TickableManager {
     /**
      * Creates a new Weapon Manager from a given weapons map and equipped list
      */
-    public WeaponManager(Map<Weapon, Integer> weapons, List<Weapon> equipped) {
+    public WeaponManager(Map<String, Integer> weapons, List<String> equipped) {
         this.weapons = weapons;
         this.equipped = equipped;
     }
@@ -37,12 +37,12 @@ public class WeaponManager extends TickableManager {
      * @param item weapon being added
      */
     public void pickUpWeapon(Weapon item) {
-        if (weapons.containsKey(item)) {
-            weapons.replace(item, weapons.get(item),
-                    weapons.get(item) + 1);
+        if (weapons.containsKey(item.getName())) {
+            weapons.replace(item.getName(), weapons.get(item.getName()),
+                    weapons.get(item.getName()) + 1);
 
         } else {
-            weapons.put(item, 1);
+            weapons.put(item.getName(), 1);
         }
     }
 
@@ -51,14 +51,14 @@ public class WeaponManager extends TickableManager {
      * @param item weapon being dropped
      */
     public void dropWeapon(Weapon item) {
-        if (!weapons.containsKey(item)) {
+        if (!weapons.containsKey(item.getName())) {
             return;
         }
-        if (weapons.get(item) - 1 == 0) {
-            weapons.remove(item, weapons.get(item));
+        if (weapons.get(item.getName()) - 1 == 0) {
+            weapons.remove(item.getName(), weapons.get(item.getName()));
         } else {
-            weapons.replace(item, weapons.get(item),
-                    weapons.get(item) - 1);
+            weapons.replace(item.getName(), weapons.get(item.getName()),
+                    weapons.get(item.getName()) - 1);
         }
     }
 
@@ -68,14 +68,15 @@ public class WeaponManager extends TickableManager {
      * @param amount amount to remove
      */
     public void dropWeapons(Weapon item, int amount) {
-        if (!weapons.containsKey(item) || amount > weapons.get(item)) {
+        if (!weapons.containsKey(item.getName())
+                || amount > weapons.get(item.getName())) {
             return;
         }
-        if (weapons.get(item) - amount == 0) {
-            weapons.remove(item, weapons.get(item));
+        if (weapons.get(item.getName()) - amount == 0) {
+            weapons.remove(item.getName(), weapons.get(item.getName()));
         } else {
-            weapons.replace(item, weapons.get(item),
-                    weapons.get(item) - amount);
+            weapons.replace(item.getName(), weapons.get(item.getName()),
+                    weapons.get(item.getName()) - amount);
         }
     }
 
@@ -85,10 +86,10 @@ public class WeaponManager extends TickableManager {
      * @return number of items in weapons map
      */
     public int getWeaponAmount(Weapon item) {
-        if (!weapons.containsKey(item)) {
+        if (!weapons.containsKey(item.getName())) {
             return 0;
         }
-        return weapons.get(item);
+        return weapons.get(item.getName());
     }
 
     /**
@@ -111,7 +112,7 @@ public class WeaponManager extends TickableManager {
      * Modifying the returned map shouldn't affect the internal state of class
      * @return weapons map
      */
-    public Map<Weapon, Integer> getWeapons() {
+    public Map<String, Integer> getWeapons() {
         return new HashMap<>(weapons);
     }
 
@@ -120,10 +121,11 @@ public class WeaponManager extends TickableManager {
      * @param item weapon being equipped
      */
     public void equipWeapon(Weapon item) {
-        if (weapons.containsKey(item) && !equipped.contains(item) &&
+        if (weapons.containsKey(item.getName()) &&
+                !equipped.contains(item.getName()) &&
                 equipped.size() < MAX_EQUIPPED) {
             dropWeapon(item);
-            equipped.add(item);
+            equipped.add(item.getName());
         }
     }
 
@@ -132,8 +134,8 @@ public class WeaponManager extends TickableManager {
      * @param item weapon being unequipped
      */
     public void unequipWeapon(Weapon item) {
-        if (equipped.contains(item)) {
-            equipped.remove(item);
+        if (equipped.contains(item.getName())) {
+            equipped.remove(item.getName());
             pickUpWeapon(item);
         }
     }
@@ -144,7 +146,7 @@ public class WeaponManager extends TickableManager {
      * @return true if item is equipped, false otherwise
      */
     public boolean isEquipped(Weapon item) {
-        return equipped.contains(item);
+        return equipped.contains(item.getName());
     }
 
     /**
@@ -160,35 +162,32 @@ public class WeaponManager extends TickableManager {
      * Modifying the returned list shouldn't affect the internal state of class
      * @return equipped list
      */
-    public List<Weapon> getEquipped() {
+    public List<String> getEquipped() {
         return new ArrayList<>(equipped);
     }
 
     @Override
+    /**
+     * Returns a string representation of the class showing amount of weapons
+     * and equipped weapons
+     */
     public String toString() {
-        List<String> weaponsNames = new ArrayList<>();
-        List<Integer> weaponsAmounts = new ArrayList<>(weapons.values());
-        Map<String, Integer> weaponString = new HashMap<>();
         StringBuilder equippedString = new StringBuilder();
 
-        for (Weapon weapon: weapons.keySet()) {
-            weaponsNames.add(weapon.getName());
-        }
-
-        for (int i = 0; i < weaponsAmounts.size(); i++) {
-            weaponString.put(weaponsNames.get(i), weaponsAmounts.get(i));
-        }
-
-        for (int i = 0; i < MAX_EQUIPPED; i++) {
-            equippedString.append(equipped.get(i).getName());
-            if (i < MAX_EQUIPPED - 1){
-                equippedString.append(", ");
-            } else {
-                equippedString.append(".");
+        if (this.getNumEquipped() == 0) {
+            equippedString.append("No Weapons.");
+        } else {
+            for (int i = 0; i < MAX_EQUIPPED; i++) {
+                equippedString.append(equipped.get(i));
+                if (i < MAX_EQUIPPED - 1) {
+                    equippedString.append(", ");
+                } else {
+                    equippedString.append(".");
+                }
             }
         }
 
-        return "Weapons: " + weaponString.toString() + "\n" +
+        return "Weapons: " + weapons.toString() + "\n" +
                 "Equipped: " + equippedString.toString();
     }
 
