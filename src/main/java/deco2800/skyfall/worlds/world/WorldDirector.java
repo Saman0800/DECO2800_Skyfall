@@ -4,15 +4,11 @@ import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.*;
 
 import java.lang.management.MonitorInfo;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 /**
@@ -21,6 +17,23 @@ import java.util.Random;
 public class WorldDirector {
     private static Random random = new Random(0);
 
+    /**
+     * A simple world used in single player
+     * @param builder The builder used to construct the world
+     */
+    public static void constructSimpleSinglePlayerWorld(WorldBuilder builder){
+        builder.setType("single_player");
+
+        builder.setWorldSize(160);
+        builder.setNodeSpacing(15);
+        builder.setSeed(random.nextInt());
+
+        builder.addLake(5);
+        builder.addLake(5);
+        builder.addRiver();
+
+        builder.setRiverSize(5);
+        builder.setBeachSize(12);
 
         builder.setStaticEntities(true);
 
@@ -50,8 +63,6 @@ public class WorldDirector {
      * A simple world used in single player with n random biomes
      * @param builder The builder used to construct the world
      * @throws IllegalArgumentException if n is less than 1 or greater than 5
-     * @return The builder that was passed in
-     * @author Ontonator
      */
     public static WorldBuilder constructNBiomeSinglePlayerWorld(WorldBuilder builder, int n){
         builder.setType("single_player");
