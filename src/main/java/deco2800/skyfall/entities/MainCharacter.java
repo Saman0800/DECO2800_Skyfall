@@ -1095,8 +1095,11 @@ public class MainCharacter extends Peon
         double val;
         if (xInput != 0 || yInput != 0) {
             val = Math.atan2(yInput, xInput);
-        } else {
+        } else if (velHistoryX != null && velHistoryY != null
+                && velHistoryX.size() > 1 && velHistoryY.size() > 1){
             val = Math.atan2(velHistoryY.get(0), velHistoryX.get(0));
+        } else {
+            val = 0;
         }
         val = val * -180 / Math.PI + 90;
         if (val < 0) {

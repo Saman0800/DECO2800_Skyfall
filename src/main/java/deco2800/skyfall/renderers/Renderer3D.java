@@ -26,7 +26,6 @@ import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.Vector2;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
-import sun.applet.Main;
 
 /**
  * A ~simple~ complex hex renderer for DECO2800 games
