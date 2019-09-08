@@ -228,7 +228,7 @@ public class MainCharacter extends Peon
      * Set up the health bar.
      */
     private void setupHealthBar() {
-        this.healthBar = new HealthCircle(this.getHealth(), "big_circle", "inner_circle");
+//        this.healthBar = new HealthCircle(this.getHealth(), "big_circle", "inner_circle");
     }
 
     /**
@@ -360,9 +360,9 @@ public class MainCharacter extends Peon
     public void hurt(int damage) {
         this.changeHealth(-damage);
 
-        if (this.healthBar != null) {
-            this.healthBar.update(this.getHealth());
-        }
+//        if (this.healthBar != null) {
+////            this.healthBar.update(this.getHealth());
+////        }
 
         if (this.getHealth() <= 0) {
             kill();
@@ -655,11 +655,6 @@ public class MainCharacter extends Peon
         if (button == 0) {
             float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
-            float[] clickedPosition =
-                    WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
-            float[] mouse =
-                    WorldUtil.screenToWorldCoordinates(Gdx.input.getX(),
-                            Gdx.input.getY());
             float[] clickedPosition =
                     WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 
