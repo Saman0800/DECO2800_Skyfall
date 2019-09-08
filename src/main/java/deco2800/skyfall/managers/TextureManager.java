@@ -199,17 +199,19 @@ public class TextureManager extends AbstractManager {
             textureMap.put("goldPiece50", new Texture("resources/goldPieces/goldPieceFifty.png"));
             textureMap.put("goldPiece100", new Texture("resources/goldPieces/goldPieceHundred.png"));
             textureMap.put("menu_panel", new Texture("resources/menu_panel.png"));
-            textureMap.put("info_panel", new Texture("resources/info_panel.png"));
             textureMap.put("exit", new Texture("resources/exit.png"));
             textureMap.put("exitButton", new Texture("resources/exit_button.png"));
             textureMap.put("inv_button", new Texture("resources/inv_button.png"));
-                        textureMap.put("Vine", new Texture("resources/temp_vine.png"));
+            textureMap.put("Vine", new Texture("resources/temp_vine.png"));
             textureMap.put("Sand", new Texture("resources/temp_sand.png"));
             textureMap.put("Metal", new Texture("resources/temp_metal.png"));
             textureMap.put("Pick Axe", new Texture("resources/temp_pickaxe.png"));
             textureMap.put("Hatchet", new Texture("resources/temp_hatchet.png"));
             textureMap.put("Select", new Texture("resources/item_selected.png"));
-            textureMap.put("quick_access_panel", new Texture("quick_access_panel.png"));
+            textureMap.put("quick_access_panel", new Texture("resources/quick_access_panel.png"));
+            textureMap.put("drop", new Texture("resources/temp_drop_button.png"));
+            textureMap.put("equip", new Texture("resources/temp_equip_button.png"));
+            textureMap.put("addqa", new Texture("resources/temp_addqa_button.png"));
 
             textureMap.put("MainCharacter", new Texture("resources/Main_Character_F_Right.png"));
             textureMap.put("MainCharacterN_Anim", new Texture("resources/Main_Character_Back_Anim.png"));
