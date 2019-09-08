@@ -1,6 +1,5 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -13,11 +12,6 @@ import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.tasks.MovementTask;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.Tile;
-
-import java.util.Map;
-
-import static deco2800.skyfall.managers.GameManager.get;
 
 public class Spider extends EnemyEntity implements Animatable {
     private static final transient int HEALTH = 10;
@@ -95,7 +89,7 @@ public class Spider extends EnemyEntity implements Animatable {
      */
     @Override
     public void onTick(long i) {
-        if(this.isDead()==true){
+        if(this.isDead()){
             GameManager.get().getWorld().removeEntity(this);
             sound.stopSound("spider");
         }

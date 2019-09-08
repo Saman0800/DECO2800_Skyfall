@@ -3,6 +3,7 @@ package deco2800.skyfall.entities.structures;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.managers.ConstructionManager;
+import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
@@ -27,9 +28,9 @@ public class TownCentreBuilding extends AbstractBuilding {
     private int currentHealth;
 
     private HexVector coords;
-    private String texture = "fence_bottom_left";
+    private String texture = "town_centre";
 
-    ConstructionManager permissions = new ConstructionManager();
+    ConstructionManager permissions = GameManager.get().getManager(ConstructionManager.class);
 
     @Expose
     public Map<HexVector, String> children;

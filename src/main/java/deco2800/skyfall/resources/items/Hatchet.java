@@ -1,20 +1,13 @@
 package deco2800.skyfall.resources.items;
 
-import deco2800.skyfall.entities.AgentEntity;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.PlayerPeon;
-import deco2800.skyfall.entities.Tree;
+import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.managers.InventoryManager;
-import org.lwjgl.Sys;
-
-import java.lang.Math;
 import java.util.HashMap;
 import java.util.Map;
-
 
 /***
  * A Hatchet item. Hatchet is a manufacturd resource. It can harvest a tree.
@@ -22,7 +15,7 @@ import java.util.Map;
 public class Hatchet extends ManufacturedResources implements Item {
 
     private Map<String, Integer> allRequirements;
-    private  boolean blueprintLearned=false;
+    private boolean blueprintLearned = false;
 
     /***
      * Create a Hatecht with the name Hatchet
@@ -32,7 +25,7 @@ public class Hatchet extends ManufacturedResources implements Item {
      */
     public Hatchet(MainCharacter owner, HexVector position) {
         super(owner, position);
-        this.name="Hatchet";
+        this.name = "Hatchet";
     }
 
     /***
@@ -41,16 +34,16 @@ public class Hatchet extends ManufacturedResources implements Item {
      * @param owner the owner of the inventory.
      */
 
-    public Hatchet(MainCharacter owner){
+    public Hatchet(MainCharacter owner) {
         super(owner);
-        this.name="Hatchet";
+        this.name = "Hatchet";
     }
 
     /***
      * Create a Hatecht with the name Hatchet with no parameters.
      */
-    public Hatchet(){
-        this.name="Hatchet";
+    public Hatchet() {
+        this.name = "Hatchet";
     }
 
     /**
@@ -87,11 +80,10 @@ public class Hatchet extends ManufacturedResources implements Item {
      * @return true if carryable, false otherwise.
      */
 
-
-     /**
-     * Creates a string representation Hatchet
-     * @return hatchet name and it's subtype.
-     */
+    /**
+    * Creates a string representation Hatchet
+    * @return hatchet name and it's subtype.
+    */
     @Override
     public String toString() {
 
@@ -115,7 +107,6 @@ public class Hatchet extends ManufacturedResources implements Item {
      */
     public void farmTree(Tree treeToFarm) {
 
-        if (owner.distance(treeToFarm) <= 0.5) {
 
             if (treeToFarm.getWoodAmount() == 0) {
                 System.out.println("This tree has no more wood");
@@ -124,13 +115,8 @@ public class Hatchet extends ManufacturedResources implements Item {
             } else {
                 owner.getInventoryManager().inventoryAdd(new Wood());
                 treeToFarm.decreaseWoodAmount();
-                System.out.println("wood added");
             }
-        } else {
-            System.out.println("No Trees in the vicinity");
-
         }
-    }
 
     /**
      * Returns the item description
@@ -138,8 +124,7 @@ public class Hatchet extends ManufacturedResources implements Item {
      */
     @Override
     public String getDescription() {
-        return "This item is similar to an axe. It can be used to " +
-                "cut down trees and retrieve wood.";
+        return "This item is similar to an axe. It can be used to " + "cut down trees and retrieve wood.";
     }
 
     @Override
@@ -177,9 +162,9 @@ public class Hatchet extends ManufacturedResources implements Item {
     public Map<String, Integer> getAllRequirements() {
 
         allRequirements = new HashMap<>();
-        allRequirements.put("Wood",25);
-        allRequirements.put("Stone",10);
-        allRequirements.put("Metal",0);
+        allRequirements.put("Wood", 25);
+        allRequirements.put("Stone", 10);
+        allRequirements.put("Metal", 0);
 
         return allRequirements;
     }
@@ -194,6 +179,5 @@ public class Hatchet extends ManufacturedResources implements Item {
 
         return blueprintLearned;
     }
-
 
 }

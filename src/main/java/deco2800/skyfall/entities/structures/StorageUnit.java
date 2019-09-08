@@ -1,7 +1,6 @@
 package deco2800.skyfall.entities.structures;
 
 import com.google.gson.annotations.Expose;
-import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.managers.ConstructionManager;
 import deco2800.skyfall.util.HexVector;
@@ -29,6 +28,7 @@ public class StorageUnit extends AbstractBuilding {
     private HexVector coords;
     private String texture = "storage_unit";
     ConstructionManager permissions = new ConstructionManager();
+    //Inventory manager for a storage unit!
 
     @Expose
     public Map<HexVector, String> children;

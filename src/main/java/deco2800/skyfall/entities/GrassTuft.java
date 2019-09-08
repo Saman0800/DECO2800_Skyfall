@@ -1,6 +1,6 @@
 package deco2800.skyfall.entities;
 
-import deco2800.skyfall.worlds.AbstractWorld;
+import deco2800.skyfall.worlds.world.World;
 
 /**
  * Class for the grass of the world
@@ -15,7 +15,7 @@ public class GrassTuft extends AbstractEntity {
      * @param col   the grass' x position in the world
      * @param row   the grass' y position in the world
      */
-    public GrassTuft(AbstractWorld world, float col, float row) {
+    public GrassTuft(World world, float col, float row) {
         super(col, row, 0);
         setTexture("grass_tuft");
         setObjectName(ENTITY_ID_STRING);

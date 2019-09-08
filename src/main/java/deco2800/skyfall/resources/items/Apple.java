@@ -2,8 +2,7 @@ package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.HealthResources;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.worlds.Tile;
+
 
 public class Apple extends HealthResources implements Item {
     // the name of the item

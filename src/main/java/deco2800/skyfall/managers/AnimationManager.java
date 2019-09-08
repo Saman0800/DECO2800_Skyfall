@@ -61,7 +61,18 @@ public class AnimationManager extends AbstractManager {
                 "stoneAttackSouthEast/stoneASE.atlas",0.2f);
         this.generateAnimationObject("stoneASW","resources/EnemyAnimationPacked/attackAnimation/" +
                 "stoneAttackSouthWest/stoneASW.atlas",0.2f);
-        //        this.generateAnimationObject("flower_defence","resources/enemyFlowerSheet/flower.atlas",0.2f);
+        this.generateAnimationObject("flower_defence","resources/enemyFlowerSheet/flower.atlas",0.2f);
+
+
+        this.generateAnimationObject("treeman_defence","resources/enemyTreemanSheet/TreemanAttack.atlas",0.2f);
+        this.generateAnimationObject("treeman_dead","resources/enemyTreemanDeadSheet/TreemanDead.atlas",0.2f);
+        this.generateAnimationObject("treeman_movement","resources/enemyTreemanMovementSheet/TreemanMovement.atlas",0.2f);
+
+
+
+        this.generateAnimationObject("flower_melee","resources/enemyFlowerMelee/FlowerMelee.atlas",0.2f);
+        this.generateAnimationObject("flower_close","resources/enemyFlowerClose/FlowerClose.atlas",0.2f);
+
         this.generateAnimationObject("MainCharacterN_Anim",
                 "MainCharacterN_Anim",
                 729, 1134, 0.2f);
@@ -94,7 +105,19 @@ public class AnimationManager extends AbstractManager {
                 "MainCharacterNW_Anim",
                 743, 1147, 0.2f);
 
-            System.out.println("All animations in game");
+        this.generateAnimationObject("MainCharacter_Attack_E_Anim",
+                "MainCharacter_Attack_E_Anim",
+                678, 1029, 0.2f);
+
+        this.generateAnimationObject("MainCharacter_Hurt_E_Anim",
+                "MainCharacter_Hurt_E_Anim",
+                667, 1032, 0.2f);
+
+        this.generateAnimationObject("MainCharacter_Dead_E_Anim",
+                "MainCharacter_Dead_E_Anim",
+                727, 861, 0.2f);
+
+        System.out.println("All animations in game");
     }
 
     /**

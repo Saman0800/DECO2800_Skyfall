@@ -7,8 +7,8 @@ import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.internal.matchers.Not;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
@@ -118,7 +118,7 @@ public class DelaunayTest {
 
         try {
             WorldGenNode.calculateVertices(nodes, worldSize);
-            WorldGenNode.assignNeighbours(nodes);
+            WorldGenNode.assignNeighbours(nodes, new ArrayList<>());
         } catch (WorldGenException e) {
             fail();
         }
@@ -152,7 +152,7 @@ public class DelaunayTest {
         int nodeSpacing = 27;
         int worldSize = 30;
         int nodeCount = Math.round((float) worldSize * worldSize * 4 / nodeSpacing / nodeSpacing);
-        Random random = new Random(0);
+        Random random = new Random(1);
 
         List<WorldGenNode> nodes = new ArrayList<>();
         List<Tile> tiles = new ArrayList<>();
@@ -184,7 +184,7 @@ public class DelaunayTest {
         Random noiseRandom2 = new Random(noiseSeed);
         int startPeriod = nodeSpacing * 2;
         int octaves = Math.max((int) Math.ceil(Math.log(startPeriod) / Math.log(2)) - 1, 1);
-        double attenuation = Math.pow(1.5, 1d / octaves);
+        double attenuation = Math.pow(0.9, 1d / octaves);
         NoiseGenerator xGen = new NoiseGenerator(noiseRandom2, octaves, startPeriod, attenuation);
         NoiseGenerator yGen = new NoiseGenerator(noiseRandom2, octaves, startPeriod, attenuation);
 
@@ -197,12 +197,12 @@ public class DelaunayTest {
             double minDistanceToNode = Double.POSITIVE_INFINITY;
             int index = 0;
 
-            double tileX = tile.getCol() +
-                    xGen.getOctavedPerlinValue(tile.getCol(), tile.getRow()) *
-                            (double) nodeSpacing - (double) nodeSpacing / 2;
-            double tileY = tile.getRow() +
-                    yGen.getOctavedPerlinValue(tile.getCol(), tile.getRow()) *
-                            (double) nodeSpacing - (double) nodeSpacing / 2;
+            double tileX =
+                    tile.getCol() + xGen.getOctavedPerlinValue(tile.getCol(), tile.getRow()) * (double) nodeSpacing -
+                            (double) nodeSpacing / 2;
+            double tileY =
+                    tile.getRow() + yGen.getOctavedPerlinValue(tile.getCol(), tile.getRow()) * (double) nodeSpacing -
+                            (double) nodeSpacing / 2;
 
             // Find the closest node
             for (int i = 0; i < nodes.size(); i++) {
@@ -332,5 +332,61 @@ public class DelaunayTest {
         } catch (Exception e) {
             fail();
         }
+    }
+
+    @Test
+    public void sharedVertexTest() {
+        WorldGenNode node1 = new WorldGenNode(0, 0);
+        WorldGenNode node2 = new WorldGenNode(1, 1);
+        WorldGenNode node3 = new WorldGenNode(-1, -1);
+
+        node1.addVertex(new double[] {2, 2});
+        node2.addVertex(new double[] {2, 2});
+        node1.addVertex(new double[] {2, 3});
+        node2.addVertex(new double[] {2, 3});
+        node1.addVertex(new double[] {-2, 2});
+        node2.addVertex(new double[] {2, -2});
+        node3.addVertex(new double[] {-2, -2});
+
+        assertNull(WorldGenNode.sharedVertex(node1, node3, null));
+        assertNull(WorldGenNode.sharedVertex(node2, node3, null));
+        double[] sharedVertex1 = WorldGenNode.sharedVertex(node1, node2, null);
+        assertNotNull(sharedVertex1);
+        double[] sharedVertex2 = WorldGenNode.sharedVertex(node1, node2, sharedVertex1);
+        assertNotNull(sharedVertex2);
+        assertFalse(Arrays.equals(sharedVertex1, sharedVertex2));
+        double[] sharedVertex3 = WorldGenNode.sharedVertex(node1, node2, sharedVertex2);
+        assertNotNull(sharedVertex3);
+        assertTrue(Arrays.equals(sharedVertex3, sharedVertex1));
+    }
+
+    @Test
+    public void removeZeroTileNodesTest() {
+        Random random = new Random(0);
+        List<Tile> tiles = new ArrayList<>();
+        for (int q = -5; q <= 5; q++) {
+            for (int r = -5; r <= 5; r++) {
+                float oddCol = (q % 2 != 0 ? 0.5f : 0);
+
+                Tile tile = new Tile(q, r + oddCol);
+                tiles.add(tile);
+            }
+        }
+
+        List<WorldGenNode> nodes = new ArrayList<>();
+        WorldGenNode nodeToRemove = new WorldGenNode(0.5, 0.5);
+        nodes.add(nodeToRemove);
+        nodes.add(new WorldGenNode(0.6, 0.6));
+        nodes.add(new WorldGenNode(0.4, 0.4));
+        nodes.add(new WorldGenNode(0.55, 0.45));
+        nodes.add(new WorldGenNode(0.5, 0.6));
+        WorldGenNode.assignTiles(nodes, tiles, random, 1);
+        try {
+            WorldGenNode.removeZeroTileNodes(nodes, 5);
+        } catch  (WorldGenException e) {
+            fail();
+        }
+        assertEquals(4, nodes.size());
+        assertFalse(nodes.contains(nodeToRemove));
     }
 }

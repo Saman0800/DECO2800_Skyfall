@@ -1,18 +1,36 @@
 package deco2800.skyfall.entities.structures;
 
+import deco2800.skyfall.managers.ConstructionManager;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.PhysicsManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 public class TownCentreBuildingTest {
 
     TownCentreBuilding townTest;
 
+    private GameManager mockGM;
+    private PhysicsManager physics;
+    private ConstructionManager con;
+
     @Before
     public void setUp() throws Exception {
         townTest = new TownCentreBuilding(0f, 0f);
+
+        mockGM = mock(GameManager.class);
+        mockStatic(GameManager.class);
+
+        physics = new PhysicsManager();
+        con = new ConstructionManager();
+        when(mockGM.getManager(PhysicsManager.class)).thenReturn(physics);
+        when(mockGM.getManager(ConstructionManager.class)).thenReturn(con);
     }
 
     @After

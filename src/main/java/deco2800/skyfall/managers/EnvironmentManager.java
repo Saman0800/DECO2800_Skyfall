@@ -2,8 +2,11 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.observers.DayNightObserver;
+import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.worlds.Tile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EnvironmentManager extends TickableManager {
@@ -20,6 +23,9 @@ public class EnvironmentManager extends TickableManager {
    // Month in game
    private long month;
 
+   // Month in game represented as an int
+   public int monthInt;
+
    // Seasons in game
    private long day;
 
@@ -27,7 +33,7 @@ public class EnvironmentManager extends TickableManager {
    private boolean isDay;
 
    // Biome player is currently in
-   private String biome;
+   public String biome;
 
    // Time to display on screen
    long displayHours;
@@ -39,10 +45,22 @@ public class EnvironmentManager extends TickableManager {
    public String file;
 
    // Current music file being played
-   private String currentFile;
+   public String currentFile;
 
    // Background Music Manager
    private BGMManager bgmManager;
+
+   // List of entities in the game
+   public List<AbstractEntity> entities;
+
+   // Abstract entity within entities list. (Public for testing)
+   public AbstractEntity player;
+
+   //List of objects implementing TimeObserver
+   private ArrayList<TimeObserver> timeListeners;
+
+   //List of objects implementing DayNightObserver
+   private ArrayList<DayNightObserver> dayNightListeners;
 
    /**
     * Constructor
@@ -51,25 +69,97 @@ public class EnvironmentManager extends TickableManager {
    public EnvironmentManager() {
       file = "resources/sounds/forest_day.wav";
       currentFile = "resources/sounds/forest_night.wav";
+      timeListeners = new ArrayList<>();
+      dayNightListeners = new ArrayList<>();
    }
 
    /**
-    * Private helper function for constructor to set biome
+    * Adds an observer to observe the time update
+    * @param observer the observer to add
+    */
+   public void addTimeListener (TimeObserver observer) {
+      timeListeners.add(observer);
+   }
+
+   /**
+    * Removes an observer from observing the time update
+    * @param observer the observer to remove
+    */
+   public void removeTimeListener (TimeObserver observer) {
+      timeListeners.remove(observer);
+   }
+
+   /**
+    * Get list of observers observing time update
+    * @return The list of observers currently observing the time update
+    */
+   public ArrayList<TimeObserver> getTimeListeners() {
+      return timeListeners;
+   }
+
+   /**
+    * Notifies all observers in timeListeners list of time change
+    * @param i The hour the game has updated to
+    */
+   public void updateTimeListeners(long i) {
+      for (TimeObserver observer : timeListeners) {
+         observer.notifyTimeUpdate(i);
+      }
+   }
+
+   /**
+    * Adds an observer to observe day/night change
+    * @param observer The observer to add
+    */
+   public void addDayNightListener (DayNightObserver observer) {
+      dayNightListeners.add(observer);
+   }
+
+   /**
+    * Removes and observer from observing day/night change
+    * @param observer The observer to remove
+    */
+   public void removeDayNightListener (DayNightObserver observer) {
+      dayNightListeners.remove(observer);
+   }
+
+   /**
+    * Gets list of observers observing day/night change
+    * @return The list of observers currently observing the day/night change
+    */
+   public ArrayList<DayNightObserver> getDayNightListeners() {
+      return dayNightListeners;
+   }
+
+   /**
+    * Notifies all observers in dayNightListeners list of day/night change
+    * @param isDay true if day, false if night
+    */
+   public void updateDayNightListeners(boolean isDay) {
+      for (DayNightObserver observer : dayNightListeners) {
+         observer.notifyDayNightUpdate(isDay);
+      }
+   }
+
+   /**
+    * Tracks the biome the player is currently in by retrieving the player's coordinates,
+    * the corresponding tile, and the corresponding biome.
+    *
     */
    public void setBiome() {
-      List<AbstractEntity> entities = GameManager.get().getWorld().getEntities();
-      AbstractEntity player;
+      entities = GameManager.get().getWorld().getEntities();
       for (int i = 0; i < entities.size(); i++) {
          if (entities.get(i) instanceof MainCharacter) {
             player = entities.get(i);
-            Tile currentTile = GameManager.get().getWorld().getTile(Math.round(player.getCol()), Math.round(player.getRow()));
+            Tile currentTile = GameManager.get().getWorld().getTile(Math.round(player.getCol()),
+                    Math.round(player.getRow()));
             // If player coords don't match tile coords, currentTile returns null
             // eg if player isn't exactly in the middle of a tile (walking between tiles), coords don't match
             // So below if statement is needed
             if (currentTile != null) {
                biome = currentTile.getBiome().getBiomeName();
             } else {
-               // do nothing
+               // Do nothing
             }
          }
       }
@@ -101,11 +191,20 @@ public class EnvironmentManager extends TickableManager {
    public void setTime(long i) {
       //Each day cycle goes for approx 24 minutes
       long timeHours = (i / 60000);
-      hours = timeHours % 12;
+
+      //hours = timeHours % 12;
+
+      //Check if observers need notifying, notifies if needed
+      if (timeHours % 24 != hours) {
+         updateTimeListeners(timeHours % 24);
+      }
 
       //Each minute equals one second
       long timeMins = (i / 1000);
       minutes = timeMins % 60;
+
+      //Update isDay boolean
+      isDay();
    }
 
    /**
@@ -114,13 +213,20 @@ public class EnvironmentManager extends TickableManager {
     */
    public boolean isDay() {
 
-      // Day equals am, night equals pm for now.
-      if (hours >= 12 && hours < 24) {
+      // Day is 6am - 6pm, Night 6pm - 6am
+      if (hours < 6 || hours >= 18) {
+         //check if observers need notifying
+         if (isDay) {
+            updateDayNightListeners(false);
+         }
          isDay = false;
       } else {
+         //check if observers need notifying
+         if (!isDay) {
+            updateDayNightListeners(true);
+         }
          isDay = true;
       }
-
       return isDay;
    }
 
@@ -171,64 +277,65 @@ public class EnvironmentManager extends TickableManager {
    }
 
    /**
+    * Gets the month in the game.
+    * @return month (int) (0 to 12)
+    *
+    */
+   public int getMonth() {
+      monthInt = (int) month;
+      return  monthInt;
+   }
+
+   /**
     * Gets time of day in game
     *
     * @return String The month
     */
    public String getSeason() {
       String seasonString;
-
-      switch (((int) month)) {
-         case 1:  seasonString = "Summer";
-            break;
-         case 2:  seasonString = "Summer";
-            break;
-         case 3:  seasonString = "Autumn";
-            break;
-         case 4:  seasonString = "Autumn";
-            break;
-         case 5:  seasonString = "Autumn";
-            break;
-         case 6:  seasonString = "Winter";
-            break;
-         case 7:  seasonString = "Winter";
-            break;
-         case 8:  seasonString = "Winter";
-            break;
-         case 9:  seasonString = "Spring";
-            break;
-         case 10: seasonString = "Spring";
-            break;
-         case 11: seasonString = "Spring";
-            break;
-         case 12: seasonString = "Summer";
-            break;
-         default: seasonString = "Invalid season";
-            break;
+      if (monthInt == 1 || monthInt == 2 || monthInt == 12 || monthInt == 0) {
+         seasonString = "Summer";
+      } else if (monthInt == 3 || monthInt == 4 || monthInt == 5) {
+         seasonString = "Autumn";
+      } else if (monthInt == 6 || monthInt == 7 || monthInt == 8) {
+         seasonString = "Winter";
+      } else if (monthInt == 9 || monthInt == 10 || monthInt == 11) {
+         seasonString = "Spring";
+      } else {
+         seasonString = "Invalid season";
       }
-
       return seasonString;
    }
 
    /**
-    * Sets the filename in game
+    * Sets the filename in game.
+    * Format for filenames: "biome_day/night" e.g. "forest_day"
     *
     */
    public void setFilename() {
-      String[] arrOfStr = file.split("_", 4);
+      currentBiome(); // Check current biome
 
-      // Check time of day and change files accordingly
-      if(isDay() == true) {
-         file = "resources/sounds/forest_" + arrOfStr[1];
+      // Check time of day and biome, and change files accordingly
+      if (isDay()) {
+         // Until lake music created and ocean biome is restricted, play forest for now
+         if (biome.equals("ocean") || biome.equals("lake") || biome.equals("river")) {
+            file = "resources/sounds/forest_day.wav";
+         } else {
+            file = "resources/sounds/" + biome + "_day.wav";
+         }
 
       } else {
-         arrOfStr[1] = "night.wav";
-         file = "resources/sounds/forest_" + arrOfStr[1];
+//          Until lake music created and ocean biome is restricted, play forest for now
+         if (biome.equals("ocean") || biome.equals("lake") || biome.equals("river")) {
+            file = "resources/sounds/forest_night.wav";
+         } else {
+            file = "resources/sounds/" + biome + "_night.wav";
+         }
       }
    }
 
    /**
-    * Sets the music in game
+    * Sets the music in game as per current time and biome the player resides in.
     */
    public void setTODMusic () {
 
@@ -238,9 +345,7 @@ public class EnvironmentManager extends TickableManager {
          // Stop current music
          try {
             bgmManager.stop();
-         } catch (Exception e) {
-            // Exception caught, if any
-         }
+         } catch (Exception e) { /* Exception caught, if any */ }
 
          currentFile = file;
 
@@ -248,9 +353,7 @@ public class EnvironmentManager extends TickableManager {
          try {
             bgmManager.initClip(currentFile);
             bgmManager.play();
-         } catch (Exception e) {
-            // Exception caught, if any
-         }
+         } catch (Exception e) { /* Exception caught, if any */ }
       }
 
       setFilename();
@@ -274,10 +377,9 @@ public class EnvironmentManager extends TickableManager {
       setTime(time);
       setMonth(time);
 
-      //Set Background music
+      //Set Background music as per the specific biome and TOD
+      setBiome();
       setTODMusic();
-
-      //setBiome();
    }
    
 }
