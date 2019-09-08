@@ -509,6 +509,18 @@ public class MainCharacterTest {
         Assert.assertEquals(currentHatchetAmount+1, testCharacter.getInventoryManager().getAmount("Hatchet"));
     }
 
+    @Test
+    public void manaTest() {
+        Assert.assertEquals(this.testCharacter.getMana(),100);
+        this.testCharacter.setMana(50);
+        Assert.assertEquals(this.testCharacter.getMana(),50);
+        this.testCharacter.setMana(-1);
+        Assert.assertEquals(this.testCharacter.getMana(),-1);
+        this.testCharacter.setMana(0);
+        Assert.assertEquals(this.testCharacter.getMana(),0);
+
+    }
+
     @After
     public void cleanup() {
         testCharacter = null;

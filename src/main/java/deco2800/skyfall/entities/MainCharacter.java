@@ -352,11 +352,29 @@ public class MainCharacter extends Peon
 
         //Subtract some mana, and update the GUI.
         this.mana-=20;
-        this.manaBar.update(this.mana);
+        if (this.manaBar != null) {
+            this.manaBar.update(this.mana);
+        }
 
         GameManager.get().getWorld().addEntity(spell);
 
         setAttacking(false);
+    }
+
+    /**
+     * Set the mana the character has available.
+     * @param mana The mana to set for the character.
+     */
+    public void setMana(int mana) {
+        this.mana = mana;
+    }
+
+    /**
+     * Get the mana the character currently has available.
+     * @return The mana the character has available.
+     */
+    public int getMana() {
+        return this.mana;
     }
 
     public void setAttacking(boolean isAttacking) {
