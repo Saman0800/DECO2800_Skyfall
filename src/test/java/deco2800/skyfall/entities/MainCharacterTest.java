@@ -17,6 +17,14 @@ import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
+
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import static org.mockito.Mockito.verify;
+
+
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,7 +35,9 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -54,6 +64,9 @@ public class MainCharacterTest {
     @Mock
     private GameManager mockGM;
 
+
+
+
     private PhysicsManager physics;
 
     // A hashmap for testing player's animations
@@ -75,9 +88,9 @@ public class MainCharacterTest {
         testHatchet = new Hatchet();
         testHatchet2 = new Hatchet();
 
-        testTile = new Tile(0f, 0f);
-        testTree = new Tree(testTile, true);
-        testRock = new Rock(testTile, true);
+        testTile = new Tile(0f,0f);
+        testTree = new Tree(testTile,true);
+        testRock = new Rock(testTile,true);
 
         inventoryManager = GameManager.get().getManagerFromInstance(InventoryManager.class);
 
@@ -93,6 +106,9 @@ public class MainCharacterTest {
 
         when(GameManager.get()).thenReturn(mockGM);
         when(mockGM.getWorld()).thenReturn(w);
+
+
+
     }
 
     @After
@@ -100,7 +116,7 @@ public class MainCharacterTest {
      * Sets up all variables to be null after esting
      */
     public void tearDown() {
-        testCharacter = null;
+        //testCharacter = null;
     }
 
     @Test
@@ -290,7 +306,7 @@ public class MainCharacterTest {
         // Set the health status of player from hurt back to normal
         // so that the effect (e.g. sprite flashing in red) will disappear
         // after recovering.
-        testCharacter.recover();
+        // testCharacter.;
         Assert.assertFalse(testCharacter.IsHurt());
     }
 
@@ -479,19 +495,18 @@ public class MainCharacterTest {
     @Test
     public void createItemTest() {
 
-        testCharacter.getBlueprintsLearned().add("Hatchet");
         int i;
+        testCharacter.getBlueprintsLearned().add("Hatchet");
 
         for (i = 0; i < 25; i++) {
             testCharacter.getInventoryManager().inventoryAdd(new Wood());
             testCharacter.getInventoryManager().inventoryAdd(new Stone());
+            testCharacter.getInventoryManager().inventoryAdd(new Metal());
         }
 
         int currentHatchetAmount = testCharacter.getInventoryManager().getAmount("Hatchet");
-        testCharacter.createItem(testHatchet2);
-
-        Assert.assertEquals(currentHatchetAmount, testCharacter.getInventoryManager().getAmount("Hatchet"));
-
+        testCharacter.createItem(new Hatchet());
+        Assert.assertEquals(currentHatchetAmount+1, testCharacter.getInventoryManager().getAmount("Hatchet"));
     }
 
     @After

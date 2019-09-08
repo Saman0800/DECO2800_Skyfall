@@ -3,6 +3,7 @@ package deco2800.skyfall.worlds.world;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class WorldParameters {
@@ -26,10 +27,10 @@ public class WorldParameters {
     private int numOfLakes;
 
     //List of the biomes in the world
-    private ArrayList<AbstractBiome> biomes;
+    private List<AbstractBiome> biomes;
 
     //List of the entities in the world
-    private CopyOnWriteArrayList<AbstractEntity> entities;
+    private List<AbstractEntity> entities;
 
     //The number of rivers
     private int noRivers;
@@ -111,7 +112,7 @@ public class WorldParameters {
      * Sets the biomes
      * @param biomes The biomes
      */
-    public void setBiomes(ArrayList<AbstractBiome> biomes) {
+    public void setBiomes(List<AbstractBiome> biomes) {
         this.biomes = biomes;
     }
 
@@ -119,7 +120,7 @@ public class WorldParameters {
      * Sets the entities
      * @param entities A list of entities
      */
-    public void setEntities(CopyOnWriteArrayList<AbstractEntity> entities) {
+    public void setEntities(List<AbstractEntity> entities) {
         this.entities = entities;
     }
 
@@ -199,7 +200,7 @@ public class WorldParameters {
      * Gets the biomes
      * @return The biomes
      */
-    public ArrayList<AbstractBiome> getBiomes() {
+    public List<AbstractBiome> getBiomes() {
         return biomes;
     }
 
@@ -207,7 +208,7 @@ public class WorldParameters {
      * Gets the entities
      * @return The entities
      */
-    public CopyOnWriteArrayList<AbstractEntity> getEntities() {
+    public List<AbstractEntity> getEntities() {
         return entities;
     }
 

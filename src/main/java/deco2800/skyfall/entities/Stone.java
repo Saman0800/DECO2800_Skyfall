@@ -10,7 +10,7 @@ import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 
 public class Stone extends EnemyEntity implements Animatable {
-    private static final transient int HEALTH = 30;
+    private static final transient int HEALTH = 3;
 
     //the speed in normal situation
     private static final transient float NORMALSPEED = 0.01f;
@@ -19,7 +19,7 @@ public class Stone extends EnemyEntity implements Animatable {
     private static final transient float ARGRYSPEED = 0.03f;
 
     //combat range
-    private static final transient float ATTACK_RANGE = 3f;
+    private static final transient float ATTACK_RANGE = 1f;
 
     //frequency of attack
     private static final transient int ATTACK_FREQUENCY = 50;
@@ -44,7 +44,7 @@ public class Stone extends EnemyEntity implements Animatable {
     private float[] targetPosition = null;
 
     //world coordinate of this enemy
-    private float[] orginalPosition = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
+    private float[] originalPosition = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
 
     //Insert SoundManager class
     private SoundManager sound = new SoundManager();
@@ -110,7 +110,6 @@ public class Stone extends EnemyEntity implements Animatable {
             this.stoneDead();
         } else {
             this.angryAttacking();
-
         }
     }
 
@@ -162,22 +161,19 @@ public class Stone extends EnemyEntity implements Animatable {
         this.position.moveToward(destination, this.getSpeed());
         //when enemy arrive player location turn it face to player and do attack animation
         if (destination.getCol() == this.getCol() && destination.getRow() == this.getRow()) {
+            complete = true;
             if (movingDirection == Direction.NORTH_EAST) {
-                complete = true;
                 movingDirection = Direction.SOUTH_WEST;
-                setCurrentDirection(movingDirection);
+                setCurrentDirection(Direction.SOUTH_WEST);
             } else if (movingDirection == Direction.NORTH) {
-                complete = true;
                 movingDirection = Direction.SOUTH;
-                setCurrentDirection(movingDirection);
+                setCurrentDirection(Direction.SOUTH);
             } else if (movingDirection == Direction.NORTH_WEST) {
-                complete = true;
                 movingDirection = Direction.SOUTH_WEST;
-                setCurrentDirection(movingDirection);
+                setCurrentDirection(Direction.SOUTH_WEST);
             } else if (movingDirection == Direction.SOUTH_EAST) {
-                complete = true;
                 movingDirection = Direction.SOUTH_WEST;
-                setCurrentDirection(movingDirection);
+                setCurrentDirection(Direction.SOUTH_WEST);
             }
         } else {
             complete = false;
@@ -189,10 +185,9 @@ public class Stone extends EnemyEntity implements Animatable {
                 period++;
             } else {
                 period = 0;
-                player.setHurt(true);
                 player.hurt(this.getDamage());
-            }
 
+            }
         }
     }
 
@@ -220,8 +215,8 @@ public class Stone extends EnemyEntity implements Animatable {
                 sound.loopSound("stoneWalk");
                 targetPosition = new float[2];
                 //random movement range
-                targetPosition[0] = (float) (Math.random() * 100 + orginalPosition[0]);
-                targetPosition[1] = (float) (Math.random() * 100 + orginalPosition[1]);
+                targetPosition[0] = (float) (Math.random() * 100 + originalPosition[0]);
+                targetPosition[1] = (float) (Math.random() * 100 + originalPosition[1]);
                 float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow(targetPosition[0], targetPosition[1]);
                 destination = new HexVector(randomPositionWorld[0], randomPositionWorld[1]);
                 moving = true;
@@ -234,7 +229,6 @@ public class Stone extends EnemyEntity implements Animatable {
             this.position.moveToward(destination, this.getSpeed());
         }
     }
-
 
     /**
      * get movement direction
@@ -263,7 +257,6 @@ public class Stone extends EnemyEntity implements Animatable {
         return null;
 
     }
-
 
     /**
      * @return string representation of this class including its enemy type, biome and x,y coordinates
