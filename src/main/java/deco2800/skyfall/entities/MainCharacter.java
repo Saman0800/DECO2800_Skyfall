@@ -8,6 +8,7 @@ import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.*;
 import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.gui.HealthCircle;
 import deco2800.skyfall.gui.ManaBar;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.*;
@@ -148,6 +149,11 @@ public class MainCharacter extends Peon
     private ManaBar manaBar;
 
     /**
+     * The GUI health bar for the character.
+     */
+    private HealthCircle healthBar;
+
+    /**
      * Private helper method to instantiate inventory and weapon managers for
      * Main Character constructor
      */
@@ -211,6 +217,7 @@ public class MainCharacter extends Peon
         configureAnimations();
 
         setUpManaBar();
+        setupHealthBar();
     }
 
     /**
@@ -218,7 +225,16 @@ public class MainCharacter extends Peon
      */
     private void setUpManaBar() {
         //Start with 100 mana.
-        manaBar = new ManaBar(100);
+        this.manaBar = new ManaBar(100,"mana_bar_inner","mana_bar");
+    }
+
+    /**
+     * Set up the health bar.
+     */
+    private void setupHealthBar() {
+        this.healthBar = new HealthCircle(this.getHealth(),
+                "big_circle",
+                "inner_circle");
     }
 
     /**
@@ -326,7 +342,6 @@ public class MainCharacter extends Peon
                 0.1f,
                 0);
 
-
         //Subtract some mana, and update the GUI.
         this.mana-=20;
         this.manaBar.update(this.mana);
@@ -346,6 +361,7 @@ public class MainCharacter extends Peon
      */
     public void hurt(int damage) {
         this.changeHealth(-damage);
+        this.healthBar.update(this.getHealth());
 
         if (this.getHealth() <= 0) {
             kill();

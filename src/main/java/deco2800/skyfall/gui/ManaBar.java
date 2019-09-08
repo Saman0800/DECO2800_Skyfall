@@ -19,49 +19,14 @@ import deco2800.skyfall.managers.GameMenuManager;
  */
 public class ManaBar extends StatBar {
 
-    private ImageButton bar;
-    private ImageButton biggerCircle;
-    private ImageButton smallerCircle;
-    private Stage stage;
-    private Label label;
-    private int currentValue;
-    private int initialValue;
-    private float offset;
-    private float positionX;
-    private float positionY;
-
-    public ManaBar(int currentValue) {
-
-        this.initialValue = currentValue;
-        this.currentValue = currentValue;
-
-        stage = GameManager.get().getManager(GameMenuManager.class).getStage();
-
-        BitmapFont bitmapFont  = new BitmapFont();
-        bitmapFont.getData().setScale(1f);
-
-        label = new Label("" + currentValue, new Label.LabelStyle(bitmapFont, Color.BLACK));
-
-        this.biggerCircle = new ImageButton(GameMenuManager.generateTextureRegionDrawableObject("mana_bar_inner"));
-        biggerCircle.setSize(100, 100);
-
-        this.smallerCircle = new ImageButton(GameMenuManager.generateTextureRegionDrawableObject("mana_bar"));
-        smallerCircle.setSize(100, 100);
-
-        stage.addActor(biggerCircle);
-        stage.addActor(smallerCircle);
-
-        stage.addActor(label);
-        label.setAlignment(Align.center);
-
-        updateWithViewportChanges();
-
+    public ManaBar(int currentValue, String biggerTextureName, String smallerTextureName) {
+        super (currentValue,"Mana",biggerTextureName,smallerTextureName);
     }
 
     /**
      * Updates
      */
-    private void updateInnerCircle(int newValue) {
+    protected void updateInnerCircle(int newValue) {
         float diff = initialValue - newValue;
 
         if (smallerCircle == null) {
@@ -85,24 +50,14 @@ public class ManaBar extends StatBar {
     }
 
     /**
-     * Updates the health circle and the position if the screen has been resized
-     */
-    public void update(int newValue) {
-
-        updateWithViewportChanges();
-        if ((currentValue - newValue) >= 0) {
-            updateInnerCircle(newValue);
-        }
-    }
-    /**
      * Keeps the object in the correct position no matter how window is resized.
      * Inspiration for the method was taken from HealthCircle.java.
      */
-    private void updateWithViewportChanges() {
+    protected void updateWithViewportChanges() {
         positionX = (stage.getCamera().position.x  + (stage.getCamera().viewportWidth / 2) - 100);
         positionY = (stage.getCamera().position.y  +  (stage.getCamera().viewportHeight / 2) - 300);
         smallerCircle.setPosition(positionX, positionY);
         biggerCircle.setPosition(positionX, positionY);
-        label.setPosition(positionX+38, positionY+20);
+        label.setPosition(positionX+20, positionY+20);
     }
 }
