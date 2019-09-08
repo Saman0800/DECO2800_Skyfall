@@ -140,7 +140,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 populateRealBiomes();
                 generateBeaches();
                 ensureContiguity();
-                testTileContiguity();
                 generateRivers(noRivers, riverWidth, voronoiEdges);
 
                 return;
@@ -693,34 +692,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                     borderTiles.remove(neighbour);
                 }
             }
-        }
-    }
-
-    public void testTileContiguity() {
-        for (AbstractBiome biome : realBiomes) {
-            // HashSet<Tile> tilesToFind = new HashSet<>(biome.getTiles());
-            ArrayList<Tile> descendantTiles =
-                    biome.getDescendantBiomes().stream().flatMap(descendant -> descendant.getTiles().stream())
-                            .collect(Collectors.toCollection(ArrayList::new));
-            HashSet<Tile> tilesToFind = new HashSet<>(descendantTiles);
-
-            ArrayDeque<Tile> borderTiles = new ArrayDeque<>();
-
-            Tile startTile = descendantTiles.get(0);
-            tilesToFind.remove(startTile);
-            borderTiles.add(startTile);
-
-            while (!borderTiles.isEmpty()) {
-                Tile nextTile = borderTiles.remove();
-                for (Tile neighbour : nextTile.getNeighbours().values()) {
-                    if (tilesToFind.contains(neighbour)) {
-                        tilesToFind.remove(neighbour);
-                        borderTiles.add(neighbour);
-                    }
-                }
-            }
-
-            assert tilesToFind.isEmpty();
         }
     }
 

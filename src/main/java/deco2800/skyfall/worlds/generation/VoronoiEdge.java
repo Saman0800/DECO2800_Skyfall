@@ -364,7 +364,7 @@ public class VoronoiEdge {
      *
      * @return The square of the length of this edge
      */
-    private double getSquareOfLength() {
+    public double getSquareOfLength() {
         double dx = this.pointA[0] - this.pointB[0];
         double dy = this.pointA[1] - this.pointB[1];
         return dx * dx + dy * dy;

@@ -107,7 +107,7 @@ public class World implements TouchDownObserver {
      * @throws DeadEndGenerationException
      * @throws WorldGenException
      */
-    private void generateTiles() throws NotEnoughPointsException, DeadEndGenerationException, WorldGenException{
+    private void generateTiles() throws NotEnoughPointsException, DeadEndGenerationException, WorldGenException {
             //TODO clean the biomes and tiles on every iteration
             ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
             ArrayList<Tile> tiles = new ArrayList<>();
@@ -149,11 +149,19 @@ public class World implements TouchDownObserver {
                     tiles.add(tile);
                 }
             }
+
+            Tile.setNoiseGenerators(random, nodeSpacing);
+            worldGenNodes.sort(Comparable::compareTo);
+            // TODO do this in chunks
+            for (Tile tile : tiles) {
+                tile.assignNode(worldGenNodes, nodeSpacing);
+            }
+
             // TODO Fix this.
             generateNeighbours(tiles);
 
             try {
-                WorldGenNode.assignTiles(worldGenNodes, tiles, random, nodeSpacing);
+                //WorldGenNode.assignTiles(worldGenNodes, tiles, random, nodeSpacing);
                 WorldGenNode.removeZeroTileNodes(worldGenNodes, worldSize);
                 WorldGenNode.assignNeighbours(worldGenNodes, voronoiEdges);
             } catch (WorldGenException e) {

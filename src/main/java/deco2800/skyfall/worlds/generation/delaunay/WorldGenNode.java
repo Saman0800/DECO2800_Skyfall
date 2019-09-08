@@ -234,6 +234,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         return null;
     }
 
+    // TODO delete this (It's now done in Tile)
     /**
      * Assigns each tile in the world to the nearest node.
      *
@@ -368,7 +369,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * @param end The ending value of the array to search from
      * @return The node with closest y value to toFind
      */
-    private static int binarySearch(double toFind, List<WorldGenNode> nodes,
+    public static int binarySearch(double toFind, List<WorldGenNode> nodes,
                                     int start, int end) {
         int middle = (end + start) / 2;
         double middleValue = nodes.get(middle).getY();
