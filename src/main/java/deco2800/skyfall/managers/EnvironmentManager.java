@@ -101,7 +101,7 @@ public class EnvironmentManager extends TickableManager {
    public void setTime(long i) {
       //Each day cycle goes for approx 24 minutes
       long timeHours = (i / 60000);
-      hours = timeHours % 24;
+      hours = timeHours % 12;
 
       //Each minute equals one second
       long timeMins = (i / 1000);
@@ -130,18 +130,27 @@ public class EnvironmentManager extends TickableManager {
     */
    public String getTOD() {
       // Set hours to be displayed
-      if (hours > 12 && hours < 24) {
-         displayHours = hours - 12;
-         TOD = "pm";
-      } else if (hours == 24) {
-         displayHours = hours - 12;
+//      if (hours > 12 && hours < 24) {
+//         displayHours = hours - 12;
+//         TOD = "pm";
+//      } else if (hours == 24) {
+//         displayHours = hours - 12;
+//         TOD = "am";
+//      } else if (hours == 12) {
+//         displayHours = hours;
+//         TOD = "pm";
+//      } else {
+//         displayHours = hours;
+//         TOD = "am";
+//      }
+
+      // Set hours to be displayed
+      if (hours <= 6) {
+         displayHours = hours + 6;
          TOD = "am";
-      } else if (hours == 12) {
-         displayHours = hours;
-         TOD = "pm";
       } else {
-         displayHours = hours;
-         TOD = "am";
+         displayHours = hours - 6;
+         TOD = "pm";
       }
 
       if (minutes < 10) {
