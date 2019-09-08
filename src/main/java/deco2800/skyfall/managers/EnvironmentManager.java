@@ -2,8 +2,11 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.observers.DayNightObserver;
+import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.worlds.Tile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EnvironmentManager extends TickableManager {
@@ -53,6 +56,12 @@ public class EnvironmentManager extends TickableManager {
    // Abstract entity within entities list. (Public for testing)
    public AbstractEntity player;
 
+   //List of objects implementing TimeObserver
+   private ArrayList<TimeObserver> timeListeners;
+
+   //List of objects implementing DayNightObserver
+   private ArrayList<DayNightObserver> dayNightListeners;
+
    /**
     * Constructor
     *
@@ -60,6 +69,76 @@ public class EnvironmentManager extends TickableManager {
    public EnvironmentManager() {
       file = "resources/sounds/forest_day.wav";
       currentFile = "resources/sounds/forest_night.wav";
+      timeListeners = new ArrayList<>();
+      dayNightListeners = new ArrayList<>();
+   }
+
+   /**
+    * Adds an observer to observe the time update
+    * @param observer the observer to add
+    */
+   public void addTimeListener (TimeObserver observer) {
+      timeListeners.add(observer);
+   }
+
+   /**
+    * Removes an observer from observing the time update
+    * @param observer the observer to remove
+    */
+   public void removeTimeListener (TimeObserver observer) {
+      timeListeners.remove(observer);
+   }
+
+   /**
+    * Get list of observers observing time update
+    * @return The list of observers currently observing the time update
+    */
+   public ArrayList<TimeObserver> getTimeListeners() {
+      return timeListeners;
+   }
+
+   /**
+    * Notifies all observers in timeListeners list of time change
+    * @param i The hour the game has updated to
+    */
+   public void updateTimeListeners(long i) {
+      for (TimeObserver observer : timeListeners) {
+         observer.notifyTimeUpdate(i);
+      }
+   }
+
+   /**
+    * Adds an observer to observe day/night change
+    * @param observer The observer to add
+    */
+   public void addDayNightListener (DayNightObserver observer) {
+      dayNightListeners.add(observer);
+   }
+
+   /**
+    * Removes and observer from observing day/night change
+    * @param observer The observer to remove
+    */
+   public void removeDayNightListener (DayNightObserver observer) {
+      dayNightListeners.remove(observer);
+   }
+
+   /**
+    * Gets list of observers observing day/night change
+    * @return The list of observers currently observing the day/night change
+    */
+   public ArrayList<DayNightObserver> getDayNightListeners() {
+      return dayNightListeners;
+   }
+
+   /**
+    * Notifies all observers in dayNightListeners list of day/night change
+    * @param isDay true if day, false if night
+    */
+   public void updateDayNightListeners(boolean isDay) {
+      for (DayNightObserver observer : dayNightListeners) {
+         observer.notifyDayNightUpdate(isDay);
+      }
    }
 
    /**
@@ -112,11 +191,18 @@ public class EnvironmentManager extends TickableManager {
    public void setTime(long i) {
       //Each day cycle goes for approx 24 minutes
       long timeHours = (i / 60000);
+      //Check if observers need notifying, notifies if needed
+      if (timeHours % 24 != hours) {
+         updateTimeListeners(timeHours % 24);
+         }
       hours = timeHours % 24;
 
       //Each minute equals one second
       long timeMins = (i / 1000);
       minutes = timeMins % 60;
+
+      //Update isDay boolean
+      isDay();
    }
 
    /**
@@ -125,10 +211,18 @@ public class EnvironmentManager extends TickableManager {
     */
    public boolean isDay() {
 
-      // Day equals am, night equals pm for now.
-      if (hours >= 12 && hours < 24) {
+      // Day is 6am - 6pm, Night 6pm - 6am
+      if (hours < 6 || hours >= 18) {
+         //check if observers need notifying
+         if (isDay) {
+            updateDayNightListeners(false);
+         }
          isDay = false;
       } else {
+         //check if observers need notifying
+         if (!isDay) {
+            updateDayNightListeners(true);
+         }
          isDay = true;
       }
       return isDay;

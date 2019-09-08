@@ -111,11 +111,11 @@ public class AnimationManager extends AbstractManager {
 
         this.generateAnimationObject("MainCharacter_Hurt_E_Anim",
                 "MainCharacter_Hurt_E_Anim",
-                667, 1032, 0.2f);
+                750, 1161, 0.2f);
 
         this.generateAnimationObject("MainCharacter_Dead_E_Anim",
                 "MainCharacter_Dead_E_Anim",
-                727, 861, 0.2f);
+                940, 1093, 0.2f);
 
         System.out.println("All animations in game");
     }

@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.entities.worlditems.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.Vector2;
 import deco2800.skyfall.GameScreen;
@@ -47,7 +48,8 @@ public class MainCharacter extends Peon
     public static final String WALK_NORMAL = "people_walk_normal";
     public static final String HURT = "player_hurt";
     public static final String DIED = "player_died";
-    private SoundManager soundManager = GameManager.get().getManager(SoundManager.class);
+    private SoundManager soundManager = GameManager.get().
+            getManager(SoundManager.class);
 
     //The pick Axe that is going to be created
     private Hatchet hatchetToCreate;
@@ -212,7 +214,8 @@ public class MainCharacter extends Peon
      *                 4 = South-West
      *                 5 = North-West
      */
-    public MainCharacter(float col, float row, float speed, String name, int health, String[] textures) {
+    public MainCharacter(float col, float row, float speed,
+                         String name, int health, String[] textures) {
         this(row, col, speed, name, health);
         this.setTexture(textures[2]);
     }
@@ -248,8 +251,10 @@ public class MainCharacter extends Peon
         // Make projectile move toward the angle
         // Spawn projectile in front of character for now.
 
-        Projectile projectile = new Projectile(mousePosition, this.itemSlotSelected == 1 ? "range_test" : "melee_test",
-                "test hitbox", position.getCol() + 1, position.getRow(), 1, 0.1f, this.itemSlotSelected == 1 ? 1 : 0);
+        Projectile projectile = new Projectile(mousePosition,
+                this.itemSlotSelected == 1 ? "range_test" : "melee_test",
+                "test hitbox", position.getCol() + 1, position.getRow(),
+                1, 0.1f, this.itemSlotSelected == 1 ? 1 : 0);
 
         // Get AbstractWorld from static class GameManager.
         GameManager manager = GameManager.get();
@@ -310,7 +315,7 @@ public class MainCharacter extends Peon
                 }
                 position.moveToward(bounceBack, 1f);
 
-                soundManager.playSound("");
+                soundManager.playSound(HURT);
 
             }
         }
@@ -348,9 +353,7 @@ public class MainCharacter extends Peon
     }
 
     private void checkIfRecovered() {
-        System.out.println("Character recovering");
         recoverTime += 20;
-
         this.changeCollideability(false);
 
         if (recoverTime > 2000) {
@@ -366,7 +369,9 @@ public class MainCharacter extends Peon
      */
     public void kill() {
         // stop player controls
-        setMaxSpeed(0);
+        AnimationManager animationManager = GameManager.getManagerFromInstance(AnimationManager.class);
+
+
 
         // set health to 0.
         changeHealth(0);
@@ -461,8 +466,10 @@ public class MainCharacter extends Peon
      * e.g for loading player saves
      * @param inventoryContents the save for the inventory
      */
-    public void setInventory(Map<String, List<Item>> inventoryContents, List<String> quickAccessContent) {
-        this.inventories = new InventoryManager(inventoryContents, quickAccessContent);
+    public void setInventory(Map<String, List<Item>> inventoryContents,
+                             List<String> quickAccessContent) {
+        this.inventories = new InventoryManager(inventoryContents,
+                quickAccessContent);
     }
 
     /**
@@ -666,38 +673,38 @@ public class MainCharacter extends Peon
             return;
         }
         switch (keycode) {
-            case Input.Keys.W:
-                yInput += 1;
-                break;
-            case Input.Keys.A:
-                xInput += -1;
-                break;
-            case Input.Keys.S:
-                yInput += -1;
-                break;
-            case Input.Keys.D:
-                xInput += 1;
-                break;
-            case Input.Keys.SHIFT_LEFT:
-                isSprinting = true;
-                maxSpeed *= 2.f;
-                break;
-            case Input.Keys.H:
-                useHatchet();
-                break;
-            case Input.Keys.P:
-                usePickAxe();
-                break;
-            case Input.Keys.G:
-                addClosestGoldPiece();
-                break;
-            case Input.Keys.M:
-                getGoldPouchTotalValue();
-                break;
-            default:
-                switchItem(keycode);
-                //xInput += 1;
-                break;
+        case Input.Keys.W:
+            yInput += 1;
+            break;
+        case Input.Keys.A:
+            xInput += -1;
+            break;
+        case Input.Keys.S:
+            yInput += -1;
+            break;
+        case Input.Keys.D:
+            xInput += 1;
+            break;
+        case Input.Keys.SHIFT_LEFT:
+            isSprinting = true;
+            maxSpeed *= 2.f;
+            break;
+        case Input.Keys.H:
+            useHatchet();
+            break;
+        case Input.Keys.P:
+            usePickAxe();
+            break;
+        case Input.Keys.G:
+            addClosestGoldPiece();
+            break;
+        case Input.Keys.M:
+            getGoldPouchTotalValue();
+            break;
+        default:
+            switchItem(keycode);
+            //xInput += 1;
+            break;
 
         }
     }
@@ -713,30 +720,30 @@ public class MainCharacter extends Peon
             return;
         }
         switch (keycode) {
-            case Input.Keys.W:
-                yInput -= 1;
-                break;
-            case Input.Keys.A:
-                xInput -= -1;
-                break;
-            case Input.Keys.S:
-                yInput -= -1;
-                break;
-            case Input.Keys.D:
-                xInput -= 1;
-                break;
-            case Input.Keys.SHIFT_LEFT:
-                isSprinting = false;
-                maxSpeed /= 2.f;
-                break;
-            case Input.Keys.H:
-                break;
-            case Input.Keys.P:
-                break;
-            case Input.Keys.G:
-                break;
-            case Input.Keys.M:
-                break;
+        case Input.Keys.W:
+            yInput -= 1;
+            break;
+        case Input.Keys.A:
+            xInput -= -1;
+            break;
+        case Input.Keys.S:
+            yInput -= -1;
+            break;
+        case Input.Keys.D:
+            xInput -= 1;
+            break;
+        case Input.Keys.SHIFT_LEFT:
+            isSprinting = false;
+            maxSpeed /= 2.f;
+            break;
+        case Input.Keys.H:
+            break;
+        case Input.Keys.P:
+            break;
+        case Input.Keys.G:
+            break;
+        case Input.Keys.M:
+            break;
         }
     }
 
@@ -844,7 +851,8 @@ public class MainCharacter extends Peon
         if (velHistoryX.size() < 2 || velHistoryY.size() < 2) {
             velHistoryX.add((int) (xVel * 100));
             velHistoryY.add((int) (yVel * 100));
-        } else if (velHistoryX.get(1) != (int) (xVel * 100) || velHistoryY.get(1) != (int) (yVel * 100)) {
+        } else if (velHistoryX.get(1) != (int) (xVel * 100) ||
+                velHistoryY.get(1) != (int) (yVel * 100)) {
             velHistoryX.set(0, velHistoryX.get(1));
             velHistoryX.set(1, (int) (xVel * 100));
 
@@ -1172,10 +1180,12 @@ public class MainCharacter extends Peon
 
         if (getBlueprintsLearned().contains(itemToCreate.getName())) {
 
-            if (itemToCreate.getRequiredMetal() >= this.getInventoryManager().getAmount(itemToCreate.getName())) {
+            if (itemToCreate.getRequiredMetal() >= this.getInventoryManager().
+                    getAmount(itemToCreate.getName())) {
                 logger.info("You don't have enough Metal");
 
-            } else if (itemToCreate.getRequiredWood() >= this.getInventoryManager().getAmount(itemToCreate.getName())) {
+            } else if (itemToCreate.getRequiredWood() >= this.getInventoryManager().
+                    getAmount(itemToCreate.getName())) {
                 logger.info("You don't have enough Wood");
 
             } else if (itemToCreate.getRequiredStone() >= this.getInventoryManager()
@@ -1200,39 +1210,51 @@ public class MainCharacter extends Peon
 
         // Walk animation
         addAnimations(AnimationRole.MOVE, Direction.NORTH_WEST,
-                new AnimationLinker("MainCharacterNW_Anim", AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
+                new AnimationLinker("MainCharacterNW_Anim",
+                        AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
 
         addAnimations(AnimationRole.MOVE, Direction.NORTH_EAST,
-                new AnimationLinker("MainCharacterNE_Anim", AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
+                new AnimationLinker("MainCharacterNE_Anim",
+                        AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
 
         addAnimations(AnimationRole.MOVE, Direction.SOUTH_WEST,
-                new AnimationLinker("MainCharacterSW_Anim", AnimationRole.MOVE, Direction.SOUTH_WEST, true, true));
+                new AnimationLinker("MainCharacterSW_Anim",
+                        AnimationRole.MOVE, Direction.SOUTH_WEST, true, true));
 
         addAnimations(AnimationRole.MOVE, Direction.SOUTH_EAST,
-                new AnimationLinker("MainCharacterSE_Anim", AnimationRole.MOVE, Direction.SOUTH_EAST, true, true));
+                new AnimationLinker("MainCharacterSE_Anim",
+                        AnimationRole.MOVE, Direction.SOUTH_EAST, true, true));
 
         addAnimations(AnimationRole.MOVE, Direction.EAST,
-                new AnimationLinker("MainCharacterE_Anim", AnimationRole.MOVE, Direction.EAST, true, true));
+                new AnimationLinker("MainCharacterE_Anim",
+                        AnimationRole.MOVE, Direction.EAST, true, true));
+
         addAnimations(AnimationRole.MOVE, Direction.NORTH,
-                new AnimationLinker("MainCharacterN_Anim", AnimationRole.MOVE, Direction.NORTH, true, true));
+                new AnimationLinker("MainCharacterN_Anim",
+                        AnimationRole.MOVE, Direction.NORTH, true, true));
 
         addAnimations(AnimationRole.MOVE, Direction.WEST,
-                new AnimationLinker("MainCharacterW_Anim", AnimationRole.MOVE, Direction.WEST, true, true));
+                new AnimationLinker("MainCharacterW_Anim",
+                        AnimationRole.MOVE, Direction.WEST, true, true));
 
         addAnimations(AnimationRole.MOVE, Direction.SOUTH,
-                new AnimationLinker("MainCharacterS_Anim", AnimationRole.MOVE, Direction.SOUTH, true, true));
+                new AnimationLinker("MainCharacterS_Anim",
+                        AnimationRole.MOVE, Direction.SOUTH, true, true));
 
         // Attack animation
-        addAnimations(AnimationRole.ATTACK, Direction.DEFAULT, new AnimationLinker("MainCharacter_Attack_E_Anim",
+        addAnimations(AnimationRole.ATTACK, Direction.DEFAULT,
+                new AnimationLinker("MainCharacter_Attack_E_Anim",
                 AnimationRole.ATTACK, Direction.DEFAULT, false, true));
 
         // Hurt animation
         addAnimations(AnimationRole.HURT, Direction.DEFAULT,
-                new AnimationLinker("MainCharacter_Hurt_E_Anim", AnimationRole.HURT, Direction.DEFAULT, true, true));
+                new AnimationLinker("MainCharacter_Hurt_E_Anim",
+                        AnimationRole.HURT, Direction.DEFAULT, true, true));
 
         // Dead animation
         addAnimations(AnimationRole.DEAD, Direction.DEFAULT,
-                new AnimationLinker("MainCharacter_Dead_E_Anim", AnimationRole.DEAD, Direction.DEFAULT, false, true));
+                new AnimationLinker("MainCharacter_Dead_E_Anim",
+                        AnimationRole.DEAD, Direction.DEFAULT, false, true));
     }
 
     /**
@@ -1259,7 +1281,7 @@ public class MainCharacter extends Peon
         getPlayerDirectionCardinal();
         List<Float> vel = getVelocity();
 
-
+        /*
         if(isAttacking) {
             setCurrentState(AnimationRole.ATTACK);
            // System.out.println(isAttacking);
@@ -1267,17 +1289,15 @@ public class MainCharacter extends Peon
         }
 
         /* Short Animations */
-
         if (getToBeRun() != null) {
             if (getToBeRun().getType() == AnimationRole.ATTACK) {
+                return;
+            } else if (getToBeRun().getType() == AnimationRole.DEAD) {
                 return;
             }
         }
 
-
-        if (isDead()) {
-            setCurrentState(AnimationRole.DEAD);
-        } else if (isHurt) {
+        if (isHurt) {
             setCurrentState(AnimationRole.HURT);
         } else {
             if (vel.get(2) == 0f) {

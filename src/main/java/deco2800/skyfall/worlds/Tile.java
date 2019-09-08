@@ -116,48 +116,51 @@ public class Tile {
      * @param tileType The type of the tile
      * @return The friction value for the tile
      */
-	public static float getFriction(String tileType) {
-	    //Gets the friction map for the world
-    	Map<String, Float> frictionMap =
-				GameManager.get().getWorld().frictionMap;
-    	// Checks the type of the tile
-    	if(tileType.contains("ice")) {
-			return frictionMap.get("ice");
-		}else if(tileType.contains("desert")) {
-			return frictionMap.get("desert");
-		}else if(tileType.contains("mountain")) {
-			return frictionMap.get("mountain");
-		}else if(tileType.contains("water")) {
-			return frictionMap.get("water");
-		}else if(tileType.contains("forest")) {
-    	    return frictionMap.get("forest");
-    	}else if(tileType.contains("lake")) {
-    	    return frictionMap.get("lake");
-        }else if(tileType.contains("ocean")) {
-    	    return frictionMap.get("ocean");
-        }else if(tileType.contains("snow")){
-    	    return frictionMap.get("snow");
-    	}else if(tileType.contains("volcanic")) {
-    	    return frictionMap.get("volcanic");
-        }else{
+    public static float getFriction(String tileType) {
+        //Gets the friction map for the world
+        Map<String, Float> frictionMap = GameManager.get().getWorld().frictionMap;
+        // Checks the type of the tile
+        if (tileType.contains("ice")) {
+            return frictionMap.get("ice");
+        } else if (tileType.contains("desert")) {
+            return frictionMap.get("desert");
+        } else if (tileType.contains("mountain")) {
+            return frictionMap.get("mountain");
+        } else if (tileType.contains("water")) {
+            return frictionMap.get("water");
+        } else if (tileType.contains("forest")) {
+            return frictionMap.get("forest");
+        } else if (tileType.contains("lake")) {
+            return frictionMap.get("lake");
+        } else if (tileType.contains("ocean")) {
+            return frictionMap.get("ocean");
+        } else if (tileType.contains("snow")) {
+            return frictionMap.get("snow");
+        } else if (tileType.contains("volcanic")) {
+            return frictionMap.get("volcanic");
+        } else {
             return frictionMap.get("grass");
         }
-	}
+    }
+
     public Map<Integer, Tile> getNeighbours() {
         return neighbours;
     }
 
-	public StaticEntity getParent() {
-		return parent;
-	}
-	
-	public boolean hasParent() {
-		return parent != null;
-	}
+    public StaticEntity getParent() {
+        return parent;
+    }
+
+    public boolean hasParent() {
+        return parent != null;
+    }
+
     public String toString() {
         // return String.format("[%.0f, %.1f: %d]", coords.getCol(), coords.getRow(),
         // index);
-        return String.format("%f", getPerlinValue());
+//        return String.format("%f", getPerlinValue());
+//        return textureBackup;
+        return getBiome().getBiomeName();
     }
 
     public void setParent(StaticEntity parent) {
