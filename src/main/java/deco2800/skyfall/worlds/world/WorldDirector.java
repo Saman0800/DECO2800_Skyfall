@@ -3,6 +3,7 @@ package deco2800.skyfall.worlds.world;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.*;
@@ -21,6 +22,29 @@ public class WorldDirector {
     private static Random random = new Random(0);
 
 
+        builder.setStaticEntities(true);
+
+        MainCharacter mainCharacter = new MainCharacter(0,0,0.05f, "Main Piece", 10);
+        builder.addEntity(mainCharacter);
+        GameMenuManager onScreenUI = GameManager.getManagerFromInstance(GameMenuManager.class);
+        StatisticsManager sm = new StatisticsManager(mainCharacter);
+        GameManager.addManagerToInstance(sm);
+        onScreenUI.addStatsManager(sm);
+        onScreenUI.drawAllElements();
+
+        builder.addEntity(new Spider(-4f, -1f, mainCharacter));
+        builder.addEntity(new Robot(-4, -2, mainCharacter));
+        builder.addEntity(new Stone(-4, -2, mainCharacter));
+        builder.addEntity(new Flower(2f,2f,mainCharacter));
+        builder.addEntity(new Treeman(-2f,-3f,mainCharacter));
+
+        builder.addBiome(new ForestBiome(), 20);
+        builder.addBiome(new DesertBiome(), 20);
+        builder.addBiome(new MountainBiome(), 20);
+        builder.addBiome(new VolcanicMountainsBiome(), 20);
+        builder.addBiome(new SwampBiome(), 20);
+        builder.addBiome(new SnowyMountainsBiome(), 20);
+    }
 
     /**
      * A simple world used in single player with n random biomes
@@ -63,7 +87,6 @@ public class WorldDirector {
         MainCharacter mainCharacter = new MainCharacter(0,0,0.05f, "Main Piece", 10);
 
         builder.addEntity(mainCharacter);
-        GameManager.getManagerFromInstance(GameMenuManager.class).setMainCharacter(mainCharacter);
 
         builder.addEntity(new Spider(-4f, -1f, mainCharacter));
         builder.addEntity(new Robot(-4, -2, mainCharacter));
@@ -83,7 +106,6 @@ public class WorldDirector {
         MainCharacter mainCharacter = new MainCharacter(0,0,0.05f, "Main Piece", 10);
 
         builder.addEntity(mainCharacter);
-        GameManager.getManagerFromInstance(GameMenuManager.class).setMainCharacter(mainCharacter);
 
         builder.addEntity(new Spider(-4f, -1f, mainCharacter));
         builder.addEntity(new Robot(-4, -2, mainCharacter));

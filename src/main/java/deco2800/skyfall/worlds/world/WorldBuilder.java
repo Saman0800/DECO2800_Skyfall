@@ -2,11 +2,14 @@ package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.worlditems.*;
+import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.Random;
 
@@ -217,6 +220,32 @@ public class WorldBuilder implements WorldBuilderInterface {
                 Rock startRock = new Rock(startTile, true);
                 EntitySpawnRule rockRule = new EntitySpawnRule(0.04, 10, 50, biome);
                 EntitySpawnTable.spawnEntities(startRock, rockRule, world);
+
+                // Create a list of all possible gold values
+                List<Integer> goldValues = Arrays.asList(5, 10, 50, 100);
+                Random rand = new Random();
+                // Select a random coin value from this list
+                int randomValue = goldValues.get(rand.nextInt(goldValues.size()));
+
+                // create a loop to generate different coin values
+                for (int i = 0; i < 4; i++){
+                    int goldValue = 5;
+                    if (i == 1){
+                        goldValue = 10;
+                    }
+                    if (i == 2){
+                        goldValue = 50;
+                    }
+                    if (i == 3){
+                        goldValue = 100;
+                    }
+                    // Spawn gold pieces uniformly
+                    GoldPiece startGoldPiece = new GoldPiece(startTile, true, goldValue);
+                    EntitySpawnRule goldRule = new EntitySpawnRule(0.15 - (goldValue/1000), 10, 50, biome);
+                    EntitySpawnTable.spawnEntities(startGoldPiece, goldRule, world);
+                }
+
+
 
                 ForestMushroom startMushroom = new ForestMushroom(startTile, false);
                 // This generator will cause the mushrooms to clump togteher more

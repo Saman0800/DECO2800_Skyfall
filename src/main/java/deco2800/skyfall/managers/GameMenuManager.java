@@ -1,6 +1,5 @@
 package deco2800.skyfall.managers;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -8,10 +7,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.SkyfallGame;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.gamemenu.AbstractUIElement;
 import deco2800.skyfall.gamemenu.GameMenuScreen;
-import deco2800.skyfall.gui.HealthCircle;
-import deco2800.skyfall.gui.SettingsTable;
+import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gamemenu.PopUpTable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -22,7 +23,6 @@ public class GameMenuManager extends TickableManager {
     private static TextureManager textureManager;
     private Stage stage;
     private MainCharacter mainCharacter;
-    private HealthCircle healthCircle;
     private InventoryManager inventory;
     private SoundManager soundManager;
     private Skin skin;
@@ -31,6 +31,10 @@ public class GameMenuManager extends TickableManager {
 
     // Number of characters in the game.
     public static final int NUMBEROFCHARACTERS = 5;
+    private StatisticsManager sm;
+
+    //Refactor Code
+    List<AbstractUIElement> uiElements = new ArrayList<>();
 
     /**
      * Initialise a new GameMenuManager with stage and skin including the characters in the game.
@@ -56,6 +60,11 @@ public class GameMenuManager extends TickableManager {
     public void onTick(long i) {
         //Get the current state of the inventory on tick so that display can be updated
         inventory = GameManager.get().getManager(InventoryManager.class);
+
+        for (AbstractUIElement element: uiElements) {
+            element.update();
+      //System.out.println("Updating " + element.getClass().toString());
+        }
 
 
     }
@@ -194,35 +203,14 @@ public class GameMenuManager extends TickableManager {
     }
 
     /**
-     * Set main character of the game to be {mainCharacter}.
-     *
-     * @param mainCharacter Main character of the game.
-     */
-    public void setMainCharacter(MainCharacter mainCharacter) {
-        if (stage == null) {
-            System.out.println("Please set stage before adding character");
-            return;
-        }
-        this.mainCharacter = mainCharacter;
-
-    }
-
-    /**
      * Getter of main character of the game.
      *
      * @return Main character of the game.
      */
     public MainCharacter getMainCharacter() {
-        return mainCharacter;
+        return sm.getCharacter();
     }
 
-    /**
-     * Adds the circle to menu Screen
-     * @param hc
-     */
-    public void addHealthCircle(HealthCircle hc) {
-        this.healthCircle = hc;
-    }
 
     /**
      * Getter of all characters in the game.
@@ -231,6 +219,21 @@ public class GameMenuManager extends TickableManager {
      */
     public String[] getCharacters() {
         return characters;
+    }
+
+    //refactor
+    public void addStatsManager(StatisticsManager statsManager) {
+        sm = statsManager;
+        System.out.println("Stats Manager added and drawing HealthCircle");
+        drawAllElements();
+    }
+
+    public void drawAllElements(){
+        if (sm == null) {
+            System.out.println("Please add stats manager before drawing");
+            return;
+        }
+        uiElements.add(new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm));
     }
 }
 

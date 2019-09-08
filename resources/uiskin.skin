@@ -2,6 +2,7 @@
   com.badlogic.gdx.graphics.g2d.BitmapFont: {
     default-font: { file: default.fnt },
     main_menu_font: { file: OpenSans30.fnt }
+    game-font: { file: adumu.fnt }
   },
   com.badlogic.gdx.graphics.Color: {
   green: { a: 1, b: 0, g: 1, r: 0 },
@@ -53,8 +54,10 @@
 },
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
   default: { font: default-font, fontColor: black }
-  pop-up: { font: default-font, fontColor: white}
-  WASD: { font: default-font, fontColor: white , background: default-round}
+  black-text: { font: game-font, fontColor: black}
+  white-text: { font: game-font, fontColor: white}
+  white-label: { font: game-font, fontColor: white , background: default-round}
+  black-label: { font: game-font, fontColor: black , background: default-round}
 },
   com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
   default: { selection: selection, background: textfield, font: default-font, fontColor: white, cursor: cursor }

@@ -1,17 +1,19 @@
 package deco2800.skyfall.gamemenu;
 
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.gui.HealthCircle;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.managers.TextureManager;
 
+import javax.swing.*;
 import java.util.Map;
 
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
@@ -35,6 +37,8 @@ public class GameMenuScreen {
     private PopUpTable settingsTable;
     // Player Select screen pop up
     private PopUpTable playerSelect;
+    //Building Table
+    private PopUpTable buildingTable;
     private MainCharacter mainCharacter;
 
     //Inventory Manager instance in game
@@ -50,6 +54,9 @@ public class GameMenuScreen {
     //Inventory pop up
     private PopUpTable inventoryTable;
 
+    //Gold Pouch pop ip
+    private PopUpTable goldTable;
+
     /**
      * Construct the menu screen in the game.
      *
@@ -62,7 +69,6 @@ public class GameMenuScreen {
         this.textureManager = gameMenuManager.getTextureManager();
         inventory = gameMenuManager.getInventory();
         mainCharacter = gameMenuManager.getMainCharacter();
-        mainCharacter.setUpGUI();
     }
 
     /**
@@ -139,12 +145,27 @@ public class GameMenuScreen {
         build.setPosition(300, 30 * 1000 / 800f);
         stage.addActor(build);
 
-        ImageButton radar = new ImageButton(generateTextureRegionDrawableObject("radar"));
-        radar.setSize(219 * 0.55f, 207 * 0.55f);
-        radar.setPosition(440, 30 * 1000 / 800f);
-        stage.addActor(radar);
-        
+        build.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameMenuManager.open(getBuildingTable());
+            }
+        });
+
+        ImageButton goldPouchButton = new ImageButton(generateTextureRegionDrawableObject("goldPiece5"));
+        goldPouchButton.setSize(200 * 0.55f, 207 * 0.55f);
+        goldPouchButton.setPosition(440, 30 * 1000 / 800f);
+        stage.addActor(goldPouchButton);
+
+        //Add gold piece button listener
+        goldPouchButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameMenuManager.open(getGoldTable());
+            }
+        });
     }
+
 
     /**
      * Getter of Game Paused screen.
@@ -166,12 +187,12 @@ public class GameMenuScreen {
      */
     private void setPauseTable() {
         PopUpTable pauseTable = new PopUpTable(500, 500 * 1346 / 1862f, "p");
-//        pauseTable.setDebug(true);
+        pauseTable.setDebug(true);
 
         Table infoBar = new Table();
         infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
 
-        Label text = new Label("Game Paused", skin, "default");
+        Label text = new Label("GAME PAUSED", skin, "black-text");
         infoBar.add(text);
 
         pauseTable.add(infoBar).width(475).height(475 * 188f / 1756).padTop(20).colspan(3);
@@ -188,7 +209,9 @@ public class GameMenuScreen {
         }
     });
 
-        Label homeText = new Label("HOME", skin, "pop-up");
+        Label homeText = new Label("HOME", skin, "white-text");
+        homeText.setFontScale(0.7f);
+        System.out.println("homeText width" + homeText.getWidth());
 
         ImageButton resume = new ImageButton(generateTextureRegionDrawableObject("resume"));
         resume.addListener(new ClickListener() {
@@ -198,10 +221,13 @@ public class GameMenuScreen {
             }
         });
 
-        Label resumeText = new Label("RESUME", skin, "pop-up");
+        Label resumeText = new Label("RESUME", skin, "white-text");
+        resumeText.setFontScale(0.7f);
 
         ImageButton reset = new ImageButton(generateTextureRegionDrawableObject("reset"));
-        Label resetText = new Label("RESET", skin, "pop-up");
+        Label resetText = new Label("RESET", skin, "white-text");
+        resetText.setFontScale(0.7f);
+        System.out.println("resetText width" + resetText.getWidth());
 
         reset.addListener(new ClickListener() {
             @Override
@@ -211,9 +237,9 @@ public class GameMenuScreen {
         });
 
         pauseTable.row();
-        pauseTable.add(homeText).expandY().right().bottom().padRight(25);
+        pauseTable.add(homeText).expandY().right().bottom().padRight(17.1f);//.padRight(25)
         pauseTable.add(resumeText).expandY().bottom().padBottom(12.5f);
-        pauseTable.add(resetText).expandY().left().bottom().padLeft(25);
+        pauseTable.add(resetText).expandY().left().bottom().padLeft(11.85f);//.padLeft(25)
         pauseTable.row();
         pauseTable.add(toHome).width(100).height(100 * 263 / 264f).right().padBottom(70);
         pauseTable.add(resume).width(125).height(125 * 409 / 410f).padBottom(70);
@@ -242,15 +268,16 @@ public class GameMenuScreen {
      */
     private void setHelpTable() {
         PopUpTable helpTable = new PopUpTable(600, 600 * 1346 / 1862f, "h");
-//        helpTable.setDebug(true);
+        helpTable.setDebug(true);
+        helpTable.top();
 
         Table infoBar = new Table();
         infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
 
-        Label text = new Label("HELP", skin, "default");
+        Label text = new Label("HELP", skin, "black-text");
         infoBar.add(text);
 
-        helpTable.add(infoBar).width(550).height(475 * 188f / 1756).padTop(20).colspan(3);
+        helpTable.add(infoBar).width(550).height(550 * 188f / 1756).padTop(20).colspan(3);
         helpTable.row().padTop(20);
 
         setControl("W", "Move Up", helpTable);
@@ -258,12 +285,12 @@ public class GameMenuScreen {
         setControl("S", "Move Down", helpTable);
         setControl("D", "Move Right", helpTable);
 
-        Label space = new Label("SPACE", skin, "WASD");
-        space.setAlignment(Align.center);
-        helpTable.add(space).height(50).padLeft(25).fillX().colspan(2).expandY();
-        Label spaceDescription = new Label("Description", skin, "WASD");
-        helpTable.add(spaceDescription).width(spaceDescription.getWidth() * 2).height(50).left().expandX().padLeft(20);
-        helpTable.row().padTop(15);
+//        Label space = new Label("SPACE", skin, "WASD");
+//        space.setAlignment(Align.center);
+//        helpTable.add(space).height(50).padLeft(25).colspan(2).expandY();
+//        Label spaceDescription = new Label("Description", skin, "WASD");
+//        helpTable.add(spaceDescription).height(50).left().expandX().padLeft(20);
+//        helpTable.row().padTop(15);
 
         this.helpTable = helpTable;
     }
@@ -276,13 +303,75 @@ public class GameMenuScreen {
      * @param table Table to add on.
      */
     private void setControl(String key, String description, PopUpTable table) {
-        Label label = new Label(key, skin, "WASD");
-        table.add(label).width(50).height(50).padLeft(25);
+        Label label = new Label(key, skin, "white-label");
+        table.add(label).padLeft(25).width(50).height(50);
         label.setAlignment(Align.center);
-        Label desc = new Label(description, skin, "WASD");
-        table.add(desc).width(desc.getWidth() * 2).height(50).left().padLeft(20);
-        table.add().expandX().fillX();
+        Label desc = new Label(description, skin, "white-label");
+        table.add(desc).left().padLeft(20).height(50).expandX();//.width(desc.getWidth() * 2).height(50)
+//        table.add().expandX().fillX();
         table.row().padTop(15);
+    }
+
+    /**
+     * Get current building table, if null, create one and return it.
+     *
+     * @return Current building table.
+     */
+    private PopUpTable getBuildingTable() {
+        if (buildingTable == null) {
+            setBuildingTable();
+            setExitButton(buildingTable);
+            stage.addActor(buildingTable);
+            stage.addActor(buildingTable.getExit());
+        }
+        return buildingTable;
+    }
+
+    /**
+     * Setup Building Table.
+     */
+    public void setBuildingTable() {
+        PopUpTable buildingTable = new PopUpTable(700, 700 * 1346 / 1862f, "build");
+//        buildingTable.setDebug(true);
+
+        Table infoBar = new Table();
+        infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
+
+        Label text = new Label("BUILDING TABLE", skin, "black-text");
+        infoBar.add(text);
+
+        buildingTable.add(infoBar).width(650).height(650 * 188f / 1756).padTop(20).colspan(2);
+        buildingTable.row();
+
+        Table blueprint = new Table();
+        Label blueprintTitle = new Label("BLUEPRINT", skin, "black-label");
+        blueprint.add(blueprintTitle);
+
+        Table items = new Table();
+        items.setDebug(true);
+        Label number = new Label("1/36", skin, "black-label");
+        items.add(number).colspan(4);
+        items.row();
+        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+        Drawable test = generateTextureRegionDrawableObject("left_arrow");
+        Drawable testTexture = generateTextureRegionDrawableObject("enemyTreeman");
+        style.up = test;
+        style.down = test;
+        style.checked = test;
+        style.imageUp = testTexture;
+        style.imageDown = testTexture;
+        style.imageChecked = testTexture;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 4; j++) {
+                ImageButton testt = new ImageButton(style);
+                items.add(testt).width(50).height(50*testt.getHeight()/testt.getWidth());
+            }
+            items.row();
+        }
+        buildingTable.add(blueprint).width(325);
+        buildingTable.add(items).width(325);
+
+        this.buildingTable = buildingTable;
     }
 
     /***
@@ -330,6 +419,44 @@ public class GameMenuScreen {
         this.inventoryTable = inventoryTable;
     }
 
+    /**
+     * Updates and returns current state of the goldPouch table.
+     *
+     * @return inventoryTable
+     */
+    private PopUpTable getGoldTable() {
+        if (goldTable == null) {
+            setGoldTable();
+            setExitButton(goldTable);
+            stage.addActor(goldTable);
+            stage.addActor(goldTable.getExit());
+        } else {
+            //goldTable.removeActor(resourcePanel);
+            //updateResourcePanel();
+            //goldTable.addActor(resourcePanel);
+        }
+        return goldTable;
+    }
+
+    /***
+     * Sets all images and buttons in the gold pouch table.
+     */
+    private void setGoldTable() {
+        PopUpTable goldTable = new PopUpTable(700, 700 * 1346 / 1862f, "gold");
+        goldTable.setName("goldTable");
+
+        Image infoBar = new Image(generateTextureRegionDrawableObject("inventory_banner"));
+        infoBar.setSize(550, 55);
+        infoBar.setPosition(100, 435);
+
+        //updateResourcePanel();
+
+        goldTable.addActor(infoBar);
+        //goldTable.addActor(this.resourcePanel);
+
+        this.goldTable = goldTable;
+    }
+
     /***
      * Updates the resources panel to display the current inventory contents.
      */
@@ -355,7 +482,7 @@ public class GameMenuScreen {
 
             resourcePanel.addActor(icon);
 
-            Label num = new Label(entry.getValue().toString(), skin, "WASD");
+            Label num = new Label(entry.getValue().toString(), skin, "white-label");
             num.setPosition(xpos + 85 + count * 130, ypos + 75);
             resourcePanel.addActor(num);
 
@@ -385,7 +512,7 @@ public class GameMenuScreen {
 
             resourcePanel.addActor(icon);
 
-            Label num = new Label(entry.getValue().toString(), skin, "WASD");
+            Label num = new Label(entry.getValue().toString(), skin, "white-label");
             num.setPosition(xpos + 85 + count * 130, ypos + 75);
             resourcePanel.addActor(num);
 
@@ -450,7 +577,7 @@ public class GameMenuScreen {
 
             quickAccessPanel.addActor(icon);
 
-            Label num = new Label(entry.getValue().toString(), skin, "WASD");
+            Label num = new Label(entry.getValue().toString(), skin, "white-label");
             num.setPosition(xpos + 50 + 64*count, ypos + 40);
             quickAccessPanel.addActor(num);
 
@@ -485,7 +612,7 @@ public class GameMenuScreen {
         Table infoBar = new Table();
         infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
 
-        Label text = new Label("SETTINGS", skin, "default");
+        Label text = new Label("SETTINGS", skin, "black-text");
         infoBar.add(text);
 
         settingsTable.add(infoBar).width(550).height(475 * 188f / 1756).padTop(20).colspan(3);
@@ -518,7 +645,7 @@ public class GameMenuScreen {
         Table infoBar = new Table();
         infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
 
-        Label text = new Label("PLAYER SELECT", skin, "default");
+        Label text = new Label("PLAYER SELECT", skin, "black-text");
         infoBar.add(text);
 
         playerSelect.add(infoBar).width(550).height(550f * 180 / 1756).padTop(20).colspan(5).padBottom(20);
@@ -595,8 +722,10 @@ public class GameMenuScreen {
         for (int i = currentCharacter; i < currentCharacter + 3; i++) {
             Table characterTable = characterTables[i - currentCharacter];
             characterTable.clearChildren();
-            Label characterName = new Label("CHARACTER\nNAME", skin, "WASD");
+            Label characterName = new Label("CHARACTER\nNAME", skin, "white-label");
             characterName.setAlignment(Align.center);
+            characterName.setFontScaleX(0.5f);
+            characterName.setFontScaleY(0.5f);
             characterTable.add(characterName).top();
             characterTable.row();
             String texture = gameMenuManager.getCharacters()[(i + gameMenuManager.NUMBEROFCHARACTERS - 1) % gameMenuManager.NUMBEROFCHARACTERS];

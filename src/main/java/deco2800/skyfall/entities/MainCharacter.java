@@ -301,13 +301,13 @@ public class MainCharacter extends Peon
         // Spawn projectile in front of character for now.
 
         Projectile projectile = new Projectile(mousePosition,
-                this.itemSlotSelected == 1 ? "range_test":"melee_test",
-                "test hitbox",
-                position.getCol() + 1,
-                position.getRow(),
-                1,
-                0.1f,
-                this.itemSlotSelected == 1 ? 1 : 0);
+                this.itemSlotSelected == 1 ? "range_test" : "melee_test",
+                "test hitbox", position.getCol() + 1,
+                position.getRow(), 1,
+                0.1f, this.itemSlotSelected == 1 ? 1 : 0);
+
+        // Get AbstractWorld from static class GameManager.
+        GameManager manager = GameManager.get();
 
         // Add the projectile entity to the game world.
         GameManager.get().getWorld().addEntity(projectile);
@@ -347,7 +347,7 @@ public class MainCharacter extends Peon
     }
 
     /**
-     * Set isAttacking variable
+     * Set the isAttacking boolean
      */
     public void setAttacking(boolean isAttacking) {
         this.isAttacking = isAttacking;
@@ -605,6 +605,9 @@ public class MainCharacter extends Peon
         return foodLevel <= 0;
     }
 
+    /**
+     * Set swimmingAbility boolean
+     */
     public void changeSwimming(boolean swimmingAbility) {
         this.canSwim = swimmingAbility;
     }
@@ -652,6 +655,11 @@ public class MainCharacter extends Peon
         if (button == 0) {
             float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
+            float[] clickedPosition =
+                    WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
+            float[] mouse =
+                    WorldUtil.screenToWorldCoordinates(Gdx.input.getX(),
+                            Gdx.input.getY());
             float[] clickedPosition =
                     WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 
@@ -768,7 +776,7 @@ public class MainCharacter extends Peon
     @Override
     public void notifyKeyDown(int keycode) {
         GoldPiece g = new GoldPiece(5);
-        //player cant move when paused
+        // player cant move when paused
         if (GameManager.getPaused()) {
             return;
         }
@@ -913,27 +921,29 @@ public class MainCharacter extends Peon
         for (Integer goldValue : goldPouch.keySet()) {
             totalValue += goldValue * goldPouch.get(goldValue);
         }
-        logger.info("The total value of your Gold Pouch is: " + totalValue + "G");
+        logger.info("The total value of your Gold Pouch is: " + totalValue +
+                "G");
         return totalValue;
     }
 
     /**
-     * If the player is within 2m of a gold piece and presses G, it will
+     * If the player is within 1m of a gold piece and presses G, it will
      * be added to their Gold Pouch.
      *
      */
     public void addClosestGoldPiece() {
-        for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+        for (AbstractEntity entity :
+                GameManager.get().getWorld().getEntities()) {
             if (entity instanceof GoldPiece) {
-                if (this.getPosition().distance(entity.getPosition()) <= 2) {
+                if (this.getPosition().distance(entity.getPosition()) <= 1.5) {
                     this.addGold((GoldPiece) entity, 1);
-                    logger.info(this.inventories.toString());
+                    logger.info("Gold piece added!");
+                    // entity.dispose doesn't work
+                    //entity.dispose();
                 }
             }
 
         }
-        logger.info("Sorry, you are not close enough to a gold piece!");
-
     }
 
     /**
@@ -943,7 +953,7 @@ public class MainCharacter extends Peon
      * @return The Tile at that position
      */
     public Tile getTile(float xPos, float yPos) {
-        //Returns tile at left arm (our perspective) of the player
+        // Returns tile at left arm (our perspective) of the player
         float tileCol = (float) Math.round(xPos);
         float tileRow = (float) Math.round(yPos);
         if (tileCol % 2 != 0) {
@@ -962,8 +972,8 @@ public class MainCharacter extends Peon
         if (velHistoryX.size() < 2 || velHistoryY.size() < 2) {
             velHistoryX.add((int) (xVel * 100));
             velHistoryY.add((int) (yVel * 100));
-        } else if (velHistoryX.get(1) != (int) (xVel * 100) ||
-                velHistoryY.get(1) != (int) (yVel * 100)) {
+        } else if (velHistoryX.get(1) != (int) (xVel * 100)
+                || velHistoryY.get(1) != (int) (yVel * 100)) {
             velHistoryX.set(0, velHistoryX.get(1));
             velHistoryX.set(1, (int) (xVel * 100));
 
@@ -1078,7 +1088,7 @@ public class MainCharacter extends Peon
         // Moves the player to new location
         findNewPosition(position, destination, nextTile);
 
-        //Records velocity history in x direction
+        // Records velocity history in x direction
         recordVelHistory(xVel, yVel);
 
         getBody().setTransform(xPos, yPos, getBody().getAngle());
