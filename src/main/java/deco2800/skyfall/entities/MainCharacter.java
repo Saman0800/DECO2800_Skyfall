@@ -217,7 +217,8 @@ public class MainCharacter extends Peon
      * Set up the mana bar.
      */
     private void setUpManaBar() {
-        manaBar = new ManaBar();
+        //Start with 100 mana.
+        manaBar = new ManaBar(100);
     }
 
     /**
@@ -307,7 +308,13 @@ public class MainCharacter extends Peon
      */
     private void castSpell(HexVector mousePosition) {
 
-        //TODO: Check if have enough mana to attack.
+        //Unselect the spell
+        this.spellSelected = SpellType.NONE;
+
+        //Check if have enough mana to attack.
+        if (mana < 20) {
+            return;
+        }
 
         //TODO: Fire the spell in the users mouse direction.
         Spell spell = new Spell(mousePosition,
@@ -319,11 +326,10 @@ public class MainCharacter extends Peon
                 0.1f,
                 0);
 
-        //Unselect the spell
-        this.spellSelected = SpellType.NONE;
 
-        //Subtract some mana.
+        //Subtract some mana, and update the GUI.
         this.mana-=20;
+        this.manaBar.update(this.mana);
 
         GameManager.get().getWorld().addEntity(spell);
 
