@@ -401,7 +401,8 @@ public class GameMenuScreen {
         inventoryTable.setName("inventoryTable");
 
         Image infoBar = new Image(generateTextureRegionDrawableObject("inventory_banner"));
-        infoBar.setSize(650, 55);
+        //width(650).height(650 * 188f / 1756).padTop(20).colspan(2);
+        infoBar.setSize(650 * 188f / 1756, 55);
         infoBar.setPosition(130, 435);
 
         Table infoPanel = new Table();
@@ -442,23 +443,16 @@ public class GameMenuScreen {
      * Sets all images and buttons in the gold pouch table.
      */
     private void setGoldTable() {
-        PopUpTable goldTable = new PopUpTable(700, 700 * 1346 / 1862f, "gold");
+        PopUpTable goldTable = new PopUpTable(700, 700, "gold");
         goldTable.setName("goldTable");
 
         Image infoBar = new Image(generateTextureRegionDrawableObject("inventory_banner"));
-        infoBar.setSize(650, 55);
-        infoBar.setPosition(130, 435);
-
-        Table infoPanel = new Table();
-        infoPanel.setSize(410, 400);
-        infoPanel.setPosition(25, 18);
-        infoPanel.setBackground(generateTextureRegionDrawableObject("info_panel"));
-
+        infoBar.setSize(550, 55);
+        infoBar.setPosition(100, 435);
 
         //updateResourcePanel();
 
         goldTable.addActor(infoBar);
-        goldTable.addActor(infoPanel);
         //goldTable.addActor(this.resourcePanel);
 
         this.goldTable = goldTable;
