@@ -1,6 +1,8 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.managers.ChestManager;
+import deco2800.skyfall.resources.LootRarity;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
@@ -202,6 +204,8 @@ public class WorldBuilder implements WorldBuilderInterface {
                 EntitySpawnRule rockRule = new EntitySpawnRule(0.04, 10, 50, biome);
                 EntitySpawnTable.spawnEntities(startRock, rockRule, world);
 
+                spawnChests(10, startTile, biome, world);
+
                 ForestMushroom startMushroom = new ForestMushroom(startTile, false);
                 // This generator will cause the mushrooms to clump togteher more
                 NoiseGenerator mushroomGen = new NoiseGenerator(new Random(), 10, 20, 0.9);
@@ -218,6 +222,8 @@ public class WorldBuilder implements WorldBuilderInterface {
                 EntitySpawnRule mTreeControl = new EntitySpawnRule(biome, true, cubic);
                 EntitySpawnTable.spawnEntities(startMTree, mTreeControl, world);
 
+                spawnChests(10, startTile, biome, world);
+
                 MountainRock startMRock = new MountainRock(startTile, true);
                 // Create a new perlin noise map
                 SpawnControl rockControl = x -> (x * x * x * x) / 2.0;
@@ -225,6 +231,16 @@ public class WorldBuilder implements WorldBuilderInterface {
                 EntitySpawnTable.spawnEntities(startMRock, mRockControl, world);
                 break;
             }
+        }
+    }
+
+    public void spawnChests(int num, Tile startTile, AbstractBiome biome, World world) {
+        // Spawn chests
+        Random random = new Random();
+        for (int i = 0; i < num; i++) {
+            Chest chest = new Chest(startTile, true, ChestManager.generateRandomLoot(random.nextInt(10) + 5, LootRarity.LEGENDARY));
+            EntitySpawnRule chestRule = new EntitySpawnRule(0.04, 0, 1, biome);
+            EntitySpawnTable.spawnEntities(chest, chestRule, world);
         }
     }
 
