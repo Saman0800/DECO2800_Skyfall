@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities.structures;
 
+import deco2800.skyfall.buildings.BuildingType;
 import deco2800.skyfall.entities.AbstractEntity;
 
 public class BuildingInteractions {

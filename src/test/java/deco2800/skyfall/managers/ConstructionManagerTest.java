@@ -1,7 +1,6 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.buildings.BuildingEntity;
-import deco2800.skyfall.entities.structures.TownCentreBuilding;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
@@ -11,7 +10,6 @@ import org.junit.Test;
 import org.junit.After;
 
 import deco2800.skyfall.entities.structures.AbstractBuilding;
-import deco2800.skyfall.entities.structures.WallBuilding;
 import deco2800.skyfall.worlds.Tile;
 
 import java.util.TreeMap;

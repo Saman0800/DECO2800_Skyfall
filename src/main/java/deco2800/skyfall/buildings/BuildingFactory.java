@@ -1,7 +1,5 @@
 package deco2800.skyfall.buildings;
 
-import deco2800.skyfall.entities.structures.BuildingType;
-
 /**
  *  A BuildingFactory is a class to handle the creating process of all building entity classes,
  *  including both BuildingEntity based class and BuildingEntity subclasses.
