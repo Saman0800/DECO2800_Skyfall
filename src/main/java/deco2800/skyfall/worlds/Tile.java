@@ -320,6 +320,12 @@ public class Tile {
     public void assignEdge(LinkedHashMap<VoronoiEdge, RiverBiome> riverEdges,
                            LinkedHashMap<VoronoiEdge, BeachBiome> beachEdges,
                            double riverWidth, double beachWidth) {
+        /* TODO do something better than this to prevent rivers from being on
+            the origin
+         */
+        if (Math.abs(this.getCol()) < riverWidth || Math.abs(this.getRow()) < riverWidth) {
+            return;
+        }
         VoronoiEdge closestEdge = findNearestEdge(null, new ArrayList<>(beachEdges.keySet()), beachWidth);
         closestEdge = findNearestEdge(closestEdge, new ArrayList<>(riverEdges.keySet()), riverWidth);
         this.edge = closestEdge;

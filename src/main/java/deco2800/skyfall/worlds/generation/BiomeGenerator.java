@@ -150,7 +150,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 populateRealBiomes();
                 generateBeaches();
                 generateRivers(noRivers, riverWidth, voronoiEdges);
-                ensureContiguity();
+                //ensureContiguity();
 
                 return;
             } catch (DeadEndGenerationException e) {
@@ -246,6 +246,37 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      * Converts the coastal region of the island into a beach biome.
      */
     private void generateBeaches() {
+
+        LinkedHashMap<VoronoiEdge, BeachBiome> beachEdges = new LinkedHashMap<>();
+
+        for (VoronoiEdge edge : voronoiEdges) {
+            int oceanIndex = -1;
+            if (realBiomes.get(nodesBiomes.get(edge.getEdgeNodes().get(0)).id).getBiomeName().equals("ocean")) {
+                oceanIndex = 0;
+            }
+            if (realBiomes.get(nodesBiomes.get(edge.getEdgeNodes().get(1)).id).getBiomeName().equals("ocean")) {
+
+                if (realBiomes.get(nodesBiomes.get(edge.getEdgeNodes().get(0)).id).getBiomeName().equals("ocean") || oceanIndex == 0) {
+                    oceanIndex = -1;
+                } else {
+                    oceanIndex = 1;
+                }
+            }
+
+            if (oceanIndex == -1) {
+                continue;
+            }
+
+            // Sets the parent biome to the one that isn't the ocean
+            AbstractBiome parentBiome = realBiomes.get(nodesBiomes.get(edge.getEdgeNodes().get(1 - oceanIndex)).id);
+            BeachBiome beach = new BeachBiome(parentBiome);
+            beachEdges.put(edge, beach);
+        }
+
+        world.setBeachEdges(beachEdges);
+
+
+        /*
         ArrayList<Tile> coast = new ArrayList<>();
         for (WorldGenNode node : nodes) {
             if (!realBiomes.get(biomes.indexOf(nodesBiomes.get(node))).getBiomeName().equals("ocean") &&
@@ -292,6 +323,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
 
             coast = nextCoastLayer;
         }
+        */
     }
 
     /**
