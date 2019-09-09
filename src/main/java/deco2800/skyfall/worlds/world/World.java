@@ -16,6 +16,8 @@ import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.BeachBiome;
+import deco2800.skyfall.worlds.biomes.RiverBiome;
 import deco2800.skyfall.worlds.generation.BiomeGenerator;
 import deco2800.skyfall.worlds.generation.DeadEndGenerationException;
 import deco2800.skyfall.worlds.generation.VoronoiEdge;
@@ -25,12 +27,7 @@ import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -56,6 +53,9 @@ public class World implements TouchDownObserver {
     protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
     protected CopyOnWriteArrayList<VoronoiEdge> voronoiEdges;
 
+    protected  LinkedHashMap<VoronoiEdge, RiverBiome> riverEdges;
+    protected LinkedHashMap<VoronoiEdge, BeachBiome> beachEdges;
+
     protected List<AbstractEntity> entitiesToDelete = new CopyOnWriteArrayList<>();
     protected List<Tile> tilesToDelete = new CopyOnWriteArrayList<>();
 
@@ -72,6 +72,8 @@ public class World implements TouchDownObserver {
         random = new Random(worldParameters.getSeed());
 
         tiles = new CopyOnWriteArrayList<>();
+        riverEdges = new LinkedHashMap<>();
+        beachEdges = new LinkedHashMap<>();
         worldGenNodes = new CopyOnWriteArrayList<>();
     	voronoiEdges = new CopyOnWriteArrayList<>();
 
@@ -111,6 +113,7 @@ public class World implements TouchDownObserver {
             //TODO clean the biomes and tiles on every iteration
             ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
             ArrayList<Tile> tiles = new ArrayList<>();
+            ArrayList<VoronoiEdge> voronoiEdges = new ArrayList<>();
 
             for (Tile tile : getTileMap()){
                 tile.setBiome(null);
@@ -155,6 +158,7 @@ public class World implements TouchDownObserver {
             // TODO do this in chunks
             for (Tile tile : tiles) {
                 tile.assignNode(worldGenNodes, nodeSpacing);
+                tile.assignEdge(this.riverEdges, this.beachEdges, worldParameters.getRiverWidth(), worldParameters.getBeachWidth());
             }
 
             // TODO Fix this.
@@ -173,7 +177,7 @@ public class World implements TouchDownObserver {
 
 
             try {
-                BiomeGenerator biomeGenerator = new BiomeGenerator(worldGenNodes, voronoiEdges, random,worldParameters);
+                BiomeGenerator biomeGenerator = new BiomeGenerator(this, worldGenNodes, voronoiEdges, tiles, random,worldParameters);
                 biomeGenerator.generateBiomes();
             } catch (NotEnoughPointsException | DeadEndGenerationException e) {
                  throw e;
@@ -181,6 +185,7 @@ public class World implements TouchDownObserver {
 
             this.worldGenNodes.addAll(worldGenNodes);
             this.tiles.addAll(tiles);
+            this.voronoiEdges.addAll(voronoiEdges);
     }
 
 
@@ -564,5 +569,41 @@ public class World implements TouchDownObserver {
                 }
             }
         }
+    }
+
+    /**
+     * Sets the list of river edges with their associated biomes
+     *
+     * @param edges the list of edges that are rivers
+     */
+    public void setRiverEdges(LinkedHashMap<VoronoiEdge, RiverBiome> edges) {
+        this.riverEdges = edges;
+    }
+
+    /**
+     * Sets the list of beach edges with their associated biomes
+     *
+     * @param edges the list of edges that are beaches
+     */
+    public void setBeachEdges(LinkedHashMap<VoronoiEdge, BeachBiome> edges) {
+        this.beachEdges = edges;
+    }
+
+    /**
+     * Returns the edges that are in rivers, and their associated biomes
+     *
+     * @return the edges that are in rivers, and their associated biomes
+     */
+    public LinkedHashMap<VoronoiEdge, RiverBiome> getRiverEdges() {
+        return this.riverEdges;
+    }
+
+    /**
+     * Returns the edges that are in beaches, and their associated biomes
+     *
+     * @return the edges that are in beaches, and their associated biomes
+     */
+    public LinkedHashMap<VoronoiEdge, BeachBiome> getBeachEdges() {
+        return this.beachEdges;
     }
 }

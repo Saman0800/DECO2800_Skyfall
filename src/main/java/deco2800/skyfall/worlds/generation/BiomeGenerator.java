@@ -6,6 +6,7 @@ import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 
+import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldParameters;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,6 +17,9 @@ import java.util.stream.Collectors;
 public class BiomeGenerator implements BiomeGeneratorInterface {
     /** The fraction of the original number of tiles that must remain in each biome after contiguity processing */
     private static final double CONTIGUOUS_TILE_RETENTION_THRESHOLD = 0.75;
+
+    /** The world this is generating biomes for */
+    private final World world;
 
     /** The `Random` instance being used for world generation. */
     private final Random random;
@@ -66,8 +70,8 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      *
      * @throws NotEnoughPointsException if there are not enough non-border nodes from which to form the biomes
      */
-    public BiomeGenerator(List<WorldGenNode> nodes, List<VoronoiEdge> voronoiEdges, List<Tile> tiles, Random random,
-                          WorldParameters worldParameters)
+    public BiomeGenerator(World world, List<WorldGenNode> nodes, List<VoronoiEdge> voronoiEdges,
+                          List<Tile> tiles, Random random, WorldParameters worldParameters)
             throws NotEnoughPointsException {
         Objects.requireNonNull(nodes, "nodes must not be null");
         Objects.requireNonNull(random, "random must not be null");
@@ -89,6 +93,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             throw new NotEnoughPointsException("Not enough nodes to build biomes");
         }
 
+        this.world = world;
         this.nodes = nodes;
         this.voronoiEdges = voronoiEdges;
         this.random = random;
@@ -144,7 +149,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 generateLakes(lakeSizes, noLakes);
                 populateRealBiomes();
                 generateBeaches();
-                List<VoronoiEdge> riverEdges = generateRivers(noRivers, riverWidth, voronoiEdges);
+                generateRivers(noRivers, riverWidth, voronoiEdges);
                 ensureContiguity();
 
                 return;
@@ -413,7 +418,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      *
      * @throws DeadEndGenerationException If not enough valid rivers can be found
      */
-    private List<VoronoiEdge> generateRivers(int noRivers, int riverWidth, List<VoronoiEdge> edges)
+    private void generateRivers(int noRivers, int riverWidth, List<VoronoiEdge> edges)
             throws DeadEndGenerationException {
         List<BiomeInProgress> lakes = new ArrayList<>();
         // A hash map cannot be used as that can cause non-deterministic
@@ -429,7 +434,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
         }
         // If there are no lakes, there can't be any rivers
         if (lakes.size() == 0) {
-            return new ArrayList<>();
+            return;
         }
         for (int i = 0; i < noRivers; i++) {
             // Choose a random lake
@@ -537,23 +542,19 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             allParentBiomes.addAll(riverParentBiomes.get(i));
         }
 
-        // TODO make this not rely on tiles (ie return edges insteads)
-        /*
-        for (Tile tile : tiles) {
-            tile.assignEdge(allRiverEdges, riverWidth);
-        }
-        */
-
-        List<VoronoiEdge> nonDuplicateEdges = new ArrayList<>();
+        LinkedHashMap<VoronoiEdge, RiverBiome> nonDuplicateEdges = new LinkedHashMap<>();
 
         for (int i = 0; i < allRiverEdges.size(); i++) {
-            if (!nonDuplicateEdges.contains(allRiverEdges.get(i))) {
-                nonDuplicateEdges.add(allRiverEdges.get(i));
-                realBiomes.add(new RiverBiome(allParentBiomes.get(i)));
+            if (!nonDuplicateEdges.containsKey(allRiverEdges.get(i))) {
+                RiverBiome river = new RiverBiome(allParentBiomes.get(i));
+                realBiomes.add(river);
+                nonDuplicateEdges.put(allRiverEdges.get(i), river);
+                //nonDuplicateBiomes.add(allParentBiomes.get(i));
+                //realBiomes.add(new RiverBiome(allParentBiomes.get(i)));
             }
         }
 
-        return nonDuplicateEdges;
+        world.setRiverEdges(nonDuplicateEdges);
     }
 
     /**

@@ -12,6 +12,8 @@ import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.BeachBiome;
+import deco2800.skyfall.worlds.biomes.RiverBiome;
 import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
@@ -243,7 +245,6 @@ public class Tile {
         this.node = nodes.get(minDistanceIndex);
     }
 
-    /*
     private VoronoiEdge findNearestEdge(VoronoiEdge currentEdge,
             List<VoronoiEdge> edges, double maxDistance) {
         VoronoiEdge closestEdge = currentEdge;
@@ -305,74 +306,29 @@ public class Tile {
         }
         return closestEdge;
     }
-    */
 
     /**
-     * Assigns the nearest river/beach edge to this node. It will only assign
-     * for tiles within a certain distance of an edge
+     * Assigns the nearest river or beach edge to this node, giving priority to
+     * rivers. It will only assign for tiles within a certain distance of an
+     * edge
      *
-     * @param edges A list of edges to check
-     * @param maxDistance The maximum distance away tiles will be checked fior
+     * @param riverEdges A list of edges that are in rivers
+     * @param beachEdges A list of edges that are in beaches
+     * @param riverWidth The maximum distance away for rivers
+     * @param beachWidth The maximum distance away for edges
      */
-    public void assignEdge(List<VoronoiEdge> edges, double maxDistance) {
-        VoronoiEdge closestEdge = null;
-        double closestDistance = Double.POSITIVE_INFINITY;
-        for (VoronoiEdge voronoiEdge : edges) {
-
-            // Get the coordinates of the vertices
-            double ax = voronoiEdge.getA()[0];
-            double ay = voronoiEdge.getA()[1];
-            double bx = voronoiEdge.getB()[0];
-            double by = voronoiEdge.getB()[1];
-
-            double squareDistance;
-
-            // If the edge is vertical and has undefined gradient
-            if (ax == bx) {
-                double smallY = Math.min(ay, by);
-                double bigY = Math.max(ay, by);
-
-                // If the tile is within the y values of the edge
-                if (this.getRow() <= bigY && this.getRow() >= smallY) {
-                    squareDistance = Math.abs(this.getCol() - ax);
-                    squareDistance *= squareDistance;
-                } else if (this.getRow() > bigY) {
-                    squareDistance = this.squareDistanceTo(ax, bigY);
-                } else {
-                    squareDistance = this.squareDistanceTo(ax, smallY);
-                }
-
-            } else {
-                double dxA = this.getCol() - ax;
-                double dxB = this.getCol() - bx;
-                double dyA = this.getRow() - ay;
-                double dyB = this.getRow() - by;
-
-                double edgeLength = voronoiEdge.getSquareOfLength();
-                double dotProduct = (dxA * (bx - ax) + dyA * (by - ay));
-
-                if (dotProduct < 0 || dotProduct * dotProduct > edgeLength) {
-                    double squareDistanceToA = dxA * dxA + dyA * dyA;
-                    double squareDistanceToB = dxB * dxB + dyB + dyB;
-                    squareDistance = Math.min(squareDistanceToA,
-                            squareDistanceToB);
-                } else {
-                    double gradient = (ay - by) / (ax - bx);
-                    // A quantity used to calculate the distance
-                    double distanceNumerator = -1 * gradient * this.getCol() + this.getRow()
-                            + gradient * bx - by;
-                    // Get the square distance
-                    squareDistance = distanceNumerator * distanceNumerator / (gradient * gradient + 1);
-                }
-            }
-
-            if (squareDistance < closestDistance
-                    && squareDistance < maxDistance * maxDistance) {
-                closestDistance = squareDistance;
-                closestEdge = voronoiEdge;
-            }
-        }
+    public void assignEdge(LinkedHashMap<VoronoiEdge, RiverBiome> riverEdges,
+                           LinkedHashMap<VoronoiEdge, BeachBiome> beachEdges,
+                           double riverWidth, double beachWidth) {
+        VoronoiEdge closestEdge = findNearestEdge(null, new ArrayList<>(beachEdges.keySet()), beachWidth);
+        closestEdge = findNearestEdge(closestEdge, new ArrayList<>(riverEdges.keySet()), riverWidth);
         this.edge = closestEdge;
+        if (beachEdges.containsKey(closestEdge)) {
+            beachEdges.get(closestEdge).addTile(this);
+        } else if (riverEdges.containsKey(closestEdge)) {
+            riverEdges.get(closestEdge).addTile(this);
+        }
+        // If here is reached, this.edge will remain null
     }
 
     /**
