@@ -158,7 +158,6 @@ public class World implements TouchDownObserver {
             // TODO do this in chunks
             for (Tile tile : tiles) {
                 tile.assignNode(worldGenNodes, nodeSpacing);
-                tile.assignEdge(this.riverEdges, this.beachEdges, worldParameters.getRiverWidth(), worldParameters.getBeachWidth());
             }
 
             // TODO Fix this.
@@ -181,6 +180,11 @@ public class World implements TouchDownObserver {
                 biomeGenerator.generateBiomes();
             } catch (NotEnoughPointsException | DeadEndGenerationException e) {
                  throw e;
+            }
+
+            // TODO do this in chunks
+            for (Tile tile : tiles) {
+                tile.assignEdge(this.riverEdges, this.beachEdges, worldParameters.getRiverWidth(), worldParameters.getBeachWidth());
             }
 
             this.worldGenNodes.addAll(worldGenNodes);

@@ -273,7 +273,6 @@ public class Tile {
                 } else {
                     squareDistance = this.squareDistanceTo(ax, smallY);
                 }
-
             } else {
                 double dxA = this.getCol() - ax;
                 double dxB = this.getCol() - bx;
@@ -285,7 +284,7 @@ public class Tile {
 
                 if (dotProduct < 0 || dotProduct * dotProduct > edgeLength) {
                     double squareDistanceToA = dxA * dxA + dyA * dyA;
-                    double squareDistanceToB = dxB * dxB + dyB + dyB;
+                    double squareDistanceToB = dxB * dxB + dyB * dyB;
                     squareDistance = Math.min(squareDistanceToA,
                             squareDistanceToB);
                 } else {
@@ -323,7 +322,7 @@ public class Tile {
         /* TODO do something better than this to prevent rivers from being on
             the origin
          */
-        if (Math.abs(this.getCol()) < riverWidth || Math.abs(this.getRow()) < riverWidth) {
+        if (Math.abs(this.getCol()) < riverWidth && Math.abs(this.getRow()) < riverWidth) {
             return;
         }
         VoronoiEdge closestEdge = findNearestEdge(null, new ArrayList<>(beachEdges.keySet()), beachWidth);
