@@ -1,15 +1,11 @@
 package deco2800.skyfall.entities.spells;
 
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.Projectile;
 import deco2800.skyfall.util.HexVector;
 
+public class FlameWall extends Spell {
 
-
-public class Spell extends Projectile {
-
-    protected int manaCost = 20;
-
+    public int ticksSinceAttacked = 0;
+    public int ATTACK_TIME_CD = 10;
     /**
      * Construct a new spell.
      *
@@ -22,25 +18,25 @@ public class Spell extends Projectile {
      * @param speed            How fast this projectile is travelling.
      * @param range
      */
-    public Spell(HexVector movementPosition, String textureName, String objectName, float col,
-                 float row, int damage, float speed, int range) {
+    public FlameWall(HexVector movementPosition, String textureName, String objectName,
+                     float col, float row, int damage, float speed, int range) {
         super(movementPosition, textureName, objectName, col, row, damage, speed, range);
-    }
 
-    public int getManaCost() {
-        return this.manaCost;
+        this.manaCost = 20;
     }
 
     @Override
     public void onTick(long tick) {
         super.onTick(tick);
 
+        //Each game tick add to counter.
+        this.ticksSinceAttacked++;
 
-        //Check for enemies and deal 1 damage.
-    }
+        //If this projectile has been alive for longer than the set number of ticks, remove it from the world.
+        if (this.ticksSinceAttacked > LIFE_TIME_TICKS) {
+            ///deal a damage to entities on this tile.
 
-    @Override
-    public boolean collidesWith(AbstractEntity entity) {
-        return false;
+        }
+
     }
 }

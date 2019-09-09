@@ -414,6 +414,7 @@ public class World implements TouchDownObserver {
             //if (e1.getCollider() == null) {
             //    break;
             //}
+
             Collider c1 = e1.getCollider();
             for (AbstractEntity e2 : this.getEntities()) {
                 if (e2.getCollider() == null) {
@@ -426,7 +427,7 @@ public class World implements TouchDownObserver {
                         break;
                     }
                     //collision handler
-                //    this.handleCollision(e1, e2);
+                    this.handleCollision(e1, e2);
                 //    break;
                 }
             }
@@ -477,6 +478,7 @@ public class World implements TouchDownObserver {
         // TODO: implement proper game logic for collisions between different types of
         // entities.
 
+        System.out.println("Handle collision");
         // TODO: this needs to be internalized into classes for cleaner code.
         if (e1 instanceof Projectile && e2 instanceof EnemyEntity) {
             if(((EnemyEntity) e2).getHealth()>0){

@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.audio.Sound;
+import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.worlditems.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.Vector2;
@@ -168,6 +169,11 @@ public class MainCharacter extends Peon
     private HealthCircle healthBar;
 
     /**
+     * Can this character take damage.
+     */
+    private boolean isInvincible;
+
+    /**
      * Private helper method to instantiate inventory and weapon managers for
      * Main Character constructor
      */
@@ -308,7 +314,7 @@ public class MainCharacter extends Peon
         //If there is a spell selected, spawn the spell.
         //else, just fire off a normal projectile.
         if (this.spellSelected != SpellType.NONE) {
-            this.castSpell(mousePosition);
+            this.castSpell(mousePosition,spellSelected);
         } else {
             this.fireProjectile(mousePosition);
         }
@@ -348,27 +354,26 @@ public class MainCharacter extends Peon
      *
      * @param mousePosition The position of the user's mouse.
      */
-    private void castSpell(HexVector mousePosition) {
+    private void castSpell(HexVector mousePosition, SpellType spellType) {
 
         //Unselect the spell.
         this.spellSelected = SpellType.NONE;
 
+
+        //Create the spell using the factory.
+        Spell spell = SpellFactory.createSpell(spellType,mousePosition);
+
+        System.out.println(spellType.toString());
+
+        int manaCost = spell.getManaCost();
+
         //Check if there is enough mana to attack.
-        if (mana < 20) {
+        if (mana < manaCost) {
             return;
         }
 
-        Spell spell = new Spell(mousePosition,
-                "flame_wall_placeholder",
-                "spell",
-                mousePosition.getCol(),
-                mousePosition.getRow(),
-                1,
-                0.1f,
-                0);
-
         //Subtract some mana, and update the GUI.
-        this.mana -= 20;
+        this.mana -= manaCost;
         if (this.manaBar != null) {
             this.manaBar.update(this.mana);
         }
@@ -401,9 +406,27 @@ public class MainCharacter extends Peon
     }
 
     /**
+     * Set if the character is invincible.
+     * @param isInvincible Is the character invincible.
+     */
+    public void setInvincible(boolean isInvincible) {
+        this.isInvincible = isInvincible;
+    }
+
+    /**
      * Player takes damage from other entities/ by starving.
      */
     public void hurt(int damage) {
+
+        if (this.isInvincible) return;
+        if (this.isRecovering) return;
+
+        setHurt(true);
+        this.changeHealth(-damage);
+
+        if (this.healthBar != null) {
+            this.healthBar.update(this.getHealth());
+        }
         System.out.println("Hurted: " + isRecovering);
 
         if (!isRecovering) {
@@ -413,53 +436,43 @@ public class MainCharacter extends Peon
             if (this.healthBar != null) {
                 this.healthBar.update(this.getHealth());
             }
-            System.out.println("Hurted: " + isRecovering);
 
-            if (!isRecovering) {
-                setHurt(true);
-                this.changeHealth(-damage);
+            if (this.getHealth() <= 0) {
+                kill();
+            } else {
+                hurtTime = 0;
+                recoverTime = 0;
+                HexVector bounceBack = new HexVector();
 
-                if (this.healthBar != null) {
-                    this.healthBar.update(this.getHealth());
+                switch (getPlayerDirectionCardinal()) {
+                    case "North":
+                        bounceBack = new HexVector(position.getCol(), position.getRow() - 2);
+                        break;
+                    case "North-East":
+                        bounceBack = new HexVector(position.getCol() - 2, position.getRow() - 2);
+                        break;
+                    case "East":
+                        bounceBack = new HexVector(position.getCol() - 2, position.getRow());
+                        break;
+                    case "South-East":
+                        bounceBack = new HexVector(position.getCol() - 2, position.getRow() + 2);
+                        break;
+                    case "South":
+                        bounceBack = new HexVector(position.getCol(), position.getRow() + 2);
+                        break;
+                    case "South-West":
+                        bounceBack = new HexVector(position.getCol() + 2, position.getRow() + 2);
+                        break;
+                    case "West":
+                        bounceBack = new HexVector(position.getCol() - 2, position.getRow());
+                        break;
+                    case "North-West":
+                        bounceBack = new HexVector(position.getCol() + 2, position.getRow() - 2);
+                        break;
                 }
+                position.moveToward(bounceBack, 1f);
 
-                if (this.getHealth() <= 0) {
-                    kill();
-                } else {
-                    hurtTime = 0;
-                    recoverTime = 0;
-                    HexVector bounceBack = new HexVector();
-
-                    switch (getPlayerDirectionCardinal()) {
-                        case "North":
-                            bounceBack = new HexVector(position.getCol(), position.getRow() - 2);
-                            break;
-                        case "North-East":
-                            bounceBack = new HexVector(position.getCol() - 2, position.getRow() - 2);
-                            break;
-                        case "East":
-                            bounceBack = new HexVector(position.getCol() - 2, position.getRow());
-                            break;
-                        case "South-East":
-                            bounceBack = new HexVector(position.getCol() - 2, position.getRow() + 2);
-                            break;
-                        case "South":
-                            bounceBack = new HexVector(position.getCol(), position.getRow() + 2);
-                            break;
-                        case "South-West":
-                            bounceBack = new HexVector(position.getCol() + 2, position.getRow() + 2);
-                            break;
-                        case "West":
-                            bounceBack = new HexVector(position.getCol() - 2, position.getRow());
-                            break;
-                        case "North-West":
-                            bounceBack = new HexVector(position.getCol() + 2, position.getRow() - 2);
-                            break;
-                    }
-                    position.moveToward(bounceBack, 1f);
-
-                    SoundManager.playSound(HURT);
-                }
+                SoundManager.playSound(HURT);
             }
         }
     }
