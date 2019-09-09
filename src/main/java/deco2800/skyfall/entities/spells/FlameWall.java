@@ -1,6 +1,12 @@
 package deco2800.skyfall.entities.spells;
 
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.EnemyEntity;
+import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FlameWall extends Spell {
 
@@ -32,10 +38,23 @@ public class FlameWall extends Spell {
         //Each game tick add to counter.
         this.ticksSinceAttacked++;
 
-        //If this projectile has been alive for longer than the set number of ticks, remove it from the world.
-        if (this.ticksSinceAttacked > LIFE_TIME_TICKS) {
+        if (this.ticksSinceAttacked > ATTACK_TIME_CD) {
             ///deal a damage to entities on this tile.
 
+            //Loop through enemies.
+            List<AbstractEntity> entities =  GameManager.get().getWorld().getEntities();
+
+            //TODO can add a kd tree or similar to only select enemies in the target area.
+            for (AbstractEntity entity : entities) {
+                if (entity instanceof EnemyEntity) {
+                    //If close enough, deal damage to the enemy over time.
+                    if (this.position.isCloseEnoughToBeTheSameByDistance(entity.getPosition(),1)) {
+                        ((EnemyEntity) entity).takeDamage(this.getDamage());
+                    }
+                }
+            }
+            //if(this.position.isCloseEnoughToBeTheSameByDistance()
+            this.ticksSinceAttacked = 0;
         }
 
     }

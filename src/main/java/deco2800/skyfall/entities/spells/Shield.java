@@ -22,7 +22,7 @@ public class Shield extends Spell {
         this.mc = GameManager.getManagerFromInstance(GameMenuManager.class).getMainCharacter();
         this.mc.setInvincible(true);
     }
-    
+
     @Override
     public void onTick(long tick) {
         super.onTick(tick);
