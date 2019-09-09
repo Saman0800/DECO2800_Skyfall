@@ -10,14 +10,24 @@ public abstract class SpectralValue {
     protected EnvironmentManager envirManag = null;
 
     /**
-     * @return Yields an intensity based off the in-game time (usually queried
-     * from an Environment manager).
-     */
-    abstract public float getIntensity();
-
-    /**
      * @param time A concrete time (not nesseccarily related to the game).
      * @return Yields an intensity based off a concrete time.
      */
     abstract public float getIntensity(float time);
+
+    /**
+     * @return Yields an intensity based off the in-game time (usually queried
+     * from an Environment manager).
+     */
+    public float getIntensity() {
+
+        float returnValue = 0.0f;
+
+        try {
+            returnValue = getIntensity(envirManag.getHourDecimal());
+        } catch (NullPointerException NPE) {
+            throw new IllegalStateException("Cannot use getIntensity when environment manager is not set");
+        }
+        return returnValue;
+    };
 }

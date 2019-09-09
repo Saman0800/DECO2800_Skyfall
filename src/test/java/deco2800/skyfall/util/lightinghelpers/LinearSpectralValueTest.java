@@ -53,8 +53,8 @@ public class LinearSpectralValueTest {
 
         List<TFTuple> tupleList = new ArrayList<>();
         tupleList.add(tuple1H);
-        tupleList.add(tuple2H);
         tupleList.add(tuple3H);
+        tupleList.add(tuple2H);
         tupleList.add(tuple23H);
 
         spectralVal = new LinearSpectralValue(tupleList);

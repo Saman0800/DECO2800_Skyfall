@@ -49,7 +49,6 @@ public class LinearSpectralValue extends SpectralValue {
 
         Collections.sort(startTuples);
         addFillerTuples(startTuples);
-        Collections.sort(startTuples);
 
         tupleSet = new TreeSet<>(startTuples);
         setLowHigh(0.0f);
@@ -63,6 +62,11 @@ public class LinearSpectralValue extends SpectralValue {
 
     }
 
+    /**
+     * Adds in tuples at hours 0 and 24 to assist with interpolation.
+     * 
+     * @param startTuples User input tuples
+     */
     private void addFillerTuples(List<TFTuple> startTuples) {
 
         TFTuple startTFTuple = startTuples.get(0);
@@ -104,10 +108,23 @@ public class LinearSpectralValue extends SpectralValue {
         return;
     }
 
+    /**
+     * A helper method that calculates the light intensity with the current
+     * values for the gradient and y-intercept
+     * 
+     * @param time The time for which the intensity is requested.
+     * @return The intensity for the given time.
+     */
     private float calcIntensity(float time) {
         return this.m * time + this.c;
     }
 
+    /**
+     * Sets the appropriate high and low tuples from the tupleSet for the given
+     * time value.
+     * 
+     * @param time The time for which the intensity is being requested.
+     */
     private void setLowHigh(float time) {
 
         // The interval need to be updated
@@ -130,38 +147,24 @@ public class LinearSpectralValue extends SpectralValue {
 
     }
 
+    /**
+     * Evalutes the intensity by linearly interpolating between the two TFTuples
+     * the input time sits between.
+     * 
+     * @param time The time for which the intensity is requested.
+     * @return The intensity corresponding to the requested time value.
+     */
     public float getIntensity(float time) {
 
         if (lowerTuple.getHour() <= time && time <= higherTuple.getHour()) {
             return calcIntensity(time);
         }
 
+        // Update the high and low TFTuples
         setLowHigh(time);
-
         // Recalculate the linear coefficients
-        this.calcLinearCoeff();
+        calcLinearCoeff();
 
         return calcIntensity(time);
     };
-
-    public float getIntensity() {
-
-        float returnValue = 0.0f;
-
-        try {
-            returnValue = getIntensity(envirManag.getHourDecimal());
-        } catch (NullPointerException NPE) {
-            throw new IllegalStateException("Cannot use getIntensity when environment manager is not set");
-        }
-
-        return returnValue;
-    };
-
-    public TFTuple getLowTfTuple() {
-        return this.lowerTuple;
-    }
-
-    public TFTuple getHiTfTuple() {
-        return this.higherTuple;
-    }
 }

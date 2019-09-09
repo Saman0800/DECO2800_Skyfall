@@ -24,19 +24,12 @@ public class FunctionalSpectralValue extends SpectralValue {
         this.envirManag = envirManag;
     }
 
+    /**
+     * @param time A concrete time (not nesseccarily related to the game).
+     * @return Yields an intensity based the intensity map specified.
+     */
+    @Override
     public float getIntensity(float time) {
         return intensityFunction.intensityMap(time);
-    };
-
-    public float getIntensity() {
-
-        float returnValue = 0.0f;
-
-        try {
-            returnValue = getIntensity(envirManag.getHourDecimal());
-        } catch (NullPointerException NPE) {
-            throw new IllegalStateException("Cannot use getIntensity when environment manager is not set");
-        }
-        return returnValue;
     };
 }
