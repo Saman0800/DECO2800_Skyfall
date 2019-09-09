@@ -1,5 +1,6 @@
 package deco2800.skyfall.buildings;
 
+import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.worlds.world.World;
 import org.slf4j.Logger;
@@ -17,13 +18,16 @@ import deco2800.skyfall.entities.AbstractEntity;
  *  A BuildingEntity is an base class for all building entity subclass,
  *  including basic information that a building object should contains.
  */
-public class BuildingEntity extends AbstractEntity {
+public class BuildingEntity extends AbstractEntity implements Blueprint {
 
     // a debug logger
     private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);
     // a building object name
     private static final String ENTITY_ID_STRING = "buildingEntityID";
     private Collider collider;
+
+    //The type of building to be created
+    private BuildingType buildingType;
 
     // consistent information for a specific building
     private int buildTime;
@@ -47,11 +51,21 @@ public class BuildingEntity extends AbstractEntity {
      * @param row the row position on the world
      * @param renderOrder the height position on the world
      */
-    public BuildingEntity(float col, float row, int renderOrder) {
+    public BuildingEntity(float col, float row, int renderOrder, BuildingType buildingType) {
         super(col, row, renderOrder, 1, 1);
         this.setObjectName(ENTITY_ID_STRING);
         this.setRenderOrder(renderOrder);
         this.animations = new HashMap<>();
+        this.buildingType = buildingType;
+        this.setObjectName(buildingType.getName() + this.getEntityID());
+        this.setTexture(buildingType.getMainTexture());
+        this.setBuildTime(buildingType.getBuildTime());
+        this.setInitialHealth(buildingType.getMaxHealth());
+        this.setWidth(buildingType.getSizeY());
+        this.setLength(buildingType.getSizeX());
+        this.setCollider();
+
+
 
         if (!WorldUtil.validColRow(new HexVector(col, row))) {
             log.debug("Invalid position");
@@ -320,10 +334,73 @@ public class BuildingEntity extends AbstractEntity {
 
 
 
+    /**
+     * Returns the number of wood required for the item.
+     *
+     * @return The name of the item
+     */
+    @Override
+    public int getRequiredWood() {
+        return 1;
+    }
+
+    /**
+     * Returns the number of stones required for the item.
+     *
+     * @return The name of the item
+     */
+    @Override
+    public int getRequiredStone() {
+        return 30;
+    }
+
+    /**
+     * Returns the number of metal required for the item.
+     *
+     * @return The name of the item
+     */
+    @Override
+    public int getRequiredMetal() {
+        return 10;
+    }
+
+    /**
+     * Returns a map of the name of the required resource and
+     * the required number of each resource to create the item.
+     *
+     * @return a hashamp of the required resources and their number.
+     */
+    @Override
+    public Map<String, Integer> getAllRequirements() {
+
+        buildCost.put("Wood", 50);
+        buildCost.put("Stone", 30);
+        buildCost.put("Metal", 10);
+
+        return buildCost;
+    }
+
+    /**
+     * Returns the number of metal required for the item.
+     *
+     * @return The name of the item
+     */
+    @Override
+    public boolean isBlueprintLearned() {
+        //not finished
+        return true;
+    }
 
 
-
-
+    /**
+     * Returns the number of metal required for the item.
+     *
+     * @return The name of the item
+     */
+    @Override
+    public void toggleBlueprintLearned() {
+        //do nothing
+    }
 
 
 }
