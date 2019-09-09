@@ -1,9 +1,5 @@
 package deco2800.skyfall.buildings;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.TextureData;
-import deco2800.skyfall.entities.structures.Structure;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.worlds.world.World;
 import org.slf4j.Logger;
@@ -21,7 +17,7 @@ import deco2800.skyfall.entities.AbstractEntity;
  *  A BuildingEntity is an base class for all building entity subclass,
  *  including basic information that a building object should contains.
  */
-public class BuildingEntity extends AbstractEntity implements Structure {
+public class BuildingEntity extends AbstractEntity {
 
     // a debug logger
     private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);

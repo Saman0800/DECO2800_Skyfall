@@ -1,4 +1,4 @@
-package deco2800.skyfall.entities.structures;
+package deco2800.skyfall.buildings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
