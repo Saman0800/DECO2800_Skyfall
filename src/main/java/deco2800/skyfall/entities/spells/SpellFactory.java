@@ -25,7 +25,7 @@ public class SpellFactory {
                     "spell", mousePosition.getCol(), mousePosition.getRow(),
                     1,
                     0.1f,
-                    0);
+                    10);
         }
 
         return spell;

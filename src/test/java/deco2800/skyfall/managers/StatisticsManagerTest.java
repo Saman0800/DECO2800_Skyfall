@@ -135,7 +135,8 @@ public class StatisticsManagerTest {
         testManager.loseLevel();
 
         Assert.assertEquals(testManager.getLevel(), 5);
-        //Assert.assertEquals(testManager.getHealth(), 50);
+
+        Assert.assertEquals(testManager.getHealth(), 50);
 
     }
 

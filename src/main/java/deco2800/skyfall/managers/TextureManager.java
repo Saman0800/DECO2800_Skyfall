@@ -49,6 +49,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bowman", new Texture("resources/bowman.png"));
             textureMap.put("dialogue_text_background", new Texture("resources/dialogue_text_background.png"));
 
+            textureMap.put("tornado_placeholder",new Texture("resources/spells/tornado_placeholder.png"));
             textureMap.put("shield_placeholder",new Texture("resources/spells/shield_placeholder.png"));
             textureMap.put("flame_wall_placeholder", new Texture("resources/spells/flame_wall_placeholder.png"));
             textureMap.put("range_test", new Texture("resources/projectile.png"));
