@@ -435,7 +435,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @param item weapon to be added
      */
     public void pickUpInventory(Item item) {
-        this.inventories.inventoryAdd(item);
+        this.inventories.add(item);
     }
 
     /**
@@ -443,7 +443,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @param item item to be dropped from inventory
      */
     public void dropInventory(String item) {
-        this.inventories.inventoryDrop(item);
+        this.inventories.drop(item);
     }
 
     /**
@@ -1167,11 +1167,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 logger.info("You don't have enough Stone");
 
             } else {
-                this.getInventoryManager().inventoryAdd(itemToCreate);
+                this.getInventoryManager().add(itemToCreate);
 
-                this.getInventoryManager().inventoryDropMultiple("Metal", itemToCreate.getRequiredMetal());
-                this.getInventoryManager().inventoryDropMultiple("Stone", itemToCreate.getRequiredStone());
-                this.getInventoryManager().inventoryDropMultiple("Wood", itemToCreate.getRequiredWood());
+                this.getInventoryManager().dropMultiple("Metal", itemToCreate.getRequiredMetal());
+                this.getInventoryManager().dropMultiple("Stone", itemToCreate.getRequiredStone());
+                this.getInventoryManager().dropMultiple("Wood", itemToCreate.getRequiredWood());
             }
         }
     }

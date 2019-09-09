@@ -426,7 +426,7 @@ public class GameMenuScreen {
         drop.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                inventory.inventoryDrop(inventorySelected);
+                inventory.drop(inventorySelected);
                 inventoryTable.removeActor(resourcePanel);
                 updateResourcePanel();
                 inventoryTable.addActor(resourcePanel);
@@ -518,7 +518,7 @@ public class GameMenuScreen {
         resourcePanel.setPosition(475, 98);
         resourcePanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
 
-        Map<String, Integer> inventoryAmounts = gameMenuManager.getInventory().getInventoryAmounts();
+        Map<String, Integer> inventoryAmounts = gameMenuManager.getInventory().getAmounts();
 
         int count = 0;
         int xpos = 115;

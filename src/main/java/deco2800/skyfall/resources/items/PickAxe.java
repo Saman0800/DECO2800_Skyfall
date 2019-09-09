@@ -109,13 +109,13 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
         }
 
         else {
-            owner.getInventoryManager().inventoryAdd(new Stone());
+            owner.getInventoryManager().add(new Stone());
 
             //lowering the possibility of gaining metal
             double x = (int) (Math.random() * ((1 - 0) + 1));
 
             if (x == 1) {
-                owner.getInventoryManager().inventoryAdd(new Metal());
+                owner.getInventoryManager().add(new Metal());
             }
 
             rockToFarm.setHealth(rockToFarm.getHealth() - 10);

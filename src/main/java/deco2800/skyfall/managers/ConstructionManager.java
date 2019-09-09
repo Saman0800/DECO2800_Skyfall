@@ -536,7 +536,7 @@ public class ConstructionManager extends AbstractManager {
 
             String item = entry.getKey();
             Integer amount = entry.getValue();
-            inventoryManager.inventoryDropMultiple(item, amount);
+            inventoryManager.dropMultiple(item, amount);
         }
     }
 

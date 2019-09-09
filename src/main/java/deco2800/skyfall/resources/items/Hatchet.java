@@ -113,7 +113,7 @@ public class Hatchet extends ManufacturedResources implements Item {
                 GameManager.get().getWorld().removeEntity(treeToFarm);
 
             } else {
-                owner.getInventoryManager().inventoryAdd(new Wood());
+                owner.getInventoryManager().add(new Wood());
                 treeToFarm.decreaseWoodAmount();
             }
         }
