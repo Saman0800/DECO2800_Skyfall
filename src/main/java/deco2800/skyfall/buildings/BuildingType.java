@@ -221,6 +221,15 @@ public enum BuildingType {
     public String getMainTexture() {
         return mainTexture;
     }
+
+    /**
+     * Gets the building cost of the Building Type
+     *
+     * @return Building Cost
+     */
+    public Map<String, Integer> getBuildCost() {
+        return buildingCost;
+    }
 }
 
 

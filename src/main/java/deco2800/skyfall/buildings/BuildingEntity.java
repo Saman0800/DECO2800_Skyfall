@@ -57,6 +57,7 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
         this.setRenderOrder(renderOrder);
         this.animations = new HashMap<>();
         this.buildingType = buildingType;
+        this.buildCost = buildingType.getBuildCost();
         this.setObjectName(buildingType.getName() + this.getEntityID());
         this.setTexture(buildingType.getMainTexture());
         this.setBuildTime(buildingType.getBuildTime());
@@ -64,9 +65,7 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
         this.setWidth(buildingType.getSizeY());
         this.setLength(buildingType.getSizeX());
         this.setCollider();
-
-
-
+        
         if (!WorldUtil.validColRow(new HexVector(col, row))) {
             log.debug("Invalid position");
         }
@@ -376,7 +375,6 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
         buildCost.put("Wood", 50);
         buildCost.put("Stone", 30);
         buildCost.put("Metal", 10);
-
         return buildCost;
     }
 
