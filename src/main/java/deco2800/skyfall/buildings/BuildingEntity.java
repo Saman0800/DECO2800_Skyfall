@@ -65,7 +65,7 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
         this.setWidth(buildingType.getSizeY());
         this.setLength(buildingType.getSizeX());
         this.setCollider();
-        
+
         if (!WorldUtil.validColRow(new HexVector(col, row))) {
             log.debug("Invalid position");
         }

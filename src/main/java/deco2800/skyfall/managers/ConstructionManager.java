@@ -519,7 +519,7 @@ public class ConstructionManager extends TickableManager {
      * @param inventoryManager - player's inventory
      * @return True, if the player's inventory meets the inventory requirements, otherwise false
      */
-    public Boolean invCheck(AbstractBuilding building, InventoryManager inventoryManager) {
+    public Boolean invCheck(BuildingEntity building, InventoryManager inventoryManager) {
 
         Map<String, Integer> buildingCost = building.getCost();
 
