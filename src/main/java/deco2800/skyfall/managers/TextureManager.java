@@ -213,6 +213,9 @@ public class TextureManager extends AbstractManager {
             textureMap.put("Hatchet", new Texture("resources/temp_hatchet.png"));
             textureMap.put("Select", new Texture("resources/item_selected.png"));
             textureMap.put("quick_access_panel", new Texture("quick_access_panel.png"));
+            textureMap.put("drop", new Texture("resources/temp_drop_button.png"));
+            textureMap.put("equip", new Texture("resources/temp_equip_button.png"));
+            textureMap.put("addqa", new Texture("resources/temp_addqa_button.png"));
             textureMap.put("takeall", new Texture("resources/takeall.png"));
 
             // Inventory items
