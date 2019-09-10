@@ -42,14 +42,14 @@ public class TFTuple implements Comparable<TFTuple> {
     /**
      * @return Returns the time value of this tuple.
      */
-    float getHour() {
+    public float getHour() {
         return this.time;
     }
 
     /**
      * @return Returns the intensity value of this tuple.
      */
-    float getIntensity() {
+    public float getIntensity() {
         return this.intensity;
     }
 

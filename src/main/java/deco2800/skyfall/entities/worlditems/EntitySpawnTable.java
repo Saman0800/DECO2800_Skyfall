@@ -28,8 +28,6 @@ public class EntitySpawnTable {
      * @param tile   The tile the new entity will occupy
      * @param entity The entity to be deep copied
      * @param <T>    T must extend StaticEntity and have .newInstance inherited
-     * @return The duplicated instance with the new tile position. See NewInstance
-     *         to place items
      */
     public static <T extends StaticEntity> void placeEntity(T entity, Tile tile) {
         World world = GameManager.get().getWorld();
@@ -190,7 +188,6 @@ public class EntitySpawnTable {
      * @param entity Entity to be copied and inserted
      * @param chance probability that the entity will be in a given tile
      * @param <T>    T must extend StaticEntity and have .newInstance inherited
-     * @param biome  specified biome to spawn in, null for no specification
      */
     public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntities(T entity, double chance,
             World world) {
