@@ -589,7 +589,6 @@ public class GameMenuScreen {
         PopUpTable goldTable = new PopUpTable(700, 700, "gold");
         goldTable.setName("goldTable");
 
-        // get a gold banner made
         Image infoBar = new Image(generateTextureRegionDrawableObject("goldBanner"));
         infoBar.setSize(550, 55);
         infoBar.setPosition(90, 600);

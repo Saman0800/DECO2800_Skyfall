@@ -392,7 +392,7 @@ public class MainCharacterTest {
         Assert.assertTrue(testCharacter.getGoldPouch().get(50).equals(3));
 
         //remove a piece of gold from the pouch
-        testCharacter.removeGold(g5);
+        testCharacter.removeGold(5);
 
         // ensure that the necessary adjustments have been made
         Assert.assertTrue(testCharacter.getGoldPouchTotalValue() == 275);
@@ -401,7 +401,7 @@ public class MainCharacterTest {
         Assert.assertTrue(testCharacter.getGoldPouch().get(50).equals(3));
 
         //remove a piece of gold from the pouch which is the last piece
-        testCharacter.removeGold(g10);
+        testCharacter.removeGold(10);
 
         // ensure that the necessary adjustments have been made
         Assert.assertTrue(testCharacter.getGoldPouchTotalValue() == 265);
