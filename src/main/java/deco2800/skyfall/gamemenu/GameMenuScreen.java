@@ -155,7 +155,7 @@ public class GameMenuScreen {
             }
         });
 
-        ImageButton goldPouchButton = new ImageButton(generateTextureRegionDrawableObject("goldPiece5"));
+        ImageButton goldPouchButton = new ImageButton(generateTextureRegionDrawableObject("goldPouch"));
         goldPouchButton.setSize(200 * 0.55f, 207 * 0.55f);
         goldPouchButton.setPosition(440, 30 * 1000 / 800f);
         stage.addActor(goldPouchButton);
@@ -449,7 +449,7 @@ public class GameMenuScreen {
         goldTable.setName("goldTable");
 
         // get a gold banner made
-        Image infoBar = new Image(generateTextureRegionDrawableObject("inventory_banner"));
+        Image infoBar = new Image(generateTextureRegionDrawableObject("goldBanner"));
         infoBar.setSize(550, 55);
         infoBar.setPosition(90, 600);
 
