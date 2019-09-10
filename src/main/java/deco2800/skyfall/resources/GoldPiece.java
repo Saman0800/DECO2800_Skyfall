@@ -23,8 +23,7 @@ public class GoldPiece extends AbstractEntity {
             System.out.println("Invalid piece of gold");
         }
 
-
-
+        changeCollideability(false);
     }
     /**
      * Returns the value of the piece of gold.

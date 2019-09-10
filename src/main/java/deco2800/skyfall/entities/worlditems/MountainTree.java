@@ -1,5 +1,9 @@
-package deco2800.skyfall.entities;
+package deco2800.skyfall.entities.worlditems;
 
+import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.entities.Harvestable;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.WoodCube;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
@@ -11,37 +15,36 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class Tree extends StaticEntity implements Tickable, Harvestable {
-    private static final Logger LOG = LoggerFactory.getLogger(Tree.class);
+public class MountainTree extends StaticEntity implements Tickable, Harvestable {
+    private static final Logger LOG = LoggerFactory.getLogger(MountainTree.class);
     private int woodAmount; // amount of wood that each tree has
 
     private static Random randomGen = new Random();
     private static int nextTreeTexture = 1;
 
-    public Tree(float col, float row, int renderOrder, Map<HexVector, String> texture) {
+    public MountainTree(float col, float row, int renderOrder, Map<HexVector, String> texture) {
         super(col, row, renderOrder, texture);
         LOG.info("Making a tree at {}, {}", col, row);
         this.setTexture("tree_cubeH1A0");
         this.woodAmount = 15;
     }
 
-    public Tree(Tile tile, boolean obstructed) {
-        super(tile, 5, "tree" + nextTreeTexture, obstructed);
+    public MountainTree(Tile tile, boolean obstructed) {
+        super(tile, 5, "MTree" + nextTreeTexture, obstructed);
         nextTreeTexture = randomGen.nextInt(3) + 1;
         this.woodAmount = 15;
-        }
-
+    }
 
     /**
-     * The newInstance method implemented for the Tree class to allow for item
-     * dispersal on game start up. This function is implemented with the
+     * The newInstance method implemented for the MountainTree class to allow for
+     * item dispersal on game start up. This function is implemented with the
      * 
      * 
      * @return Duplicate rock tile with modified position.
      */
     @Override
-    public Tree newInstance(Tile tile) {
-        return new Tree(tile, this.isObstructed());
+    public MountainTree newInstance(Tile tile) {
+        return new MountainTree(tile, this.isObstructed());
     }
 
     @Override
@@ -49,10 +52,10 @@ public class Tree extends StaticEntity implements Tickable, Harvestable {
         if (other == null) {
             return false;
         }
-        if (!(other instanceof Tree)) {
+        if (!(other instanceof MountainTree)) {
             return false;
         }
-        Tree otherTree = (Tree) other;
+        MountainTree otherTree = (MountainTree) other;
         if (this.getCol() != otherTree.getCol() || this.getRow() != otherTree.getRow()) {
             return false;
         }
@@ -67,7 +70,7 @@ public class Tree extends StaticEntity implements Tickable, Harvestable {
      */
     @Override
     public int hashCode() {
-        final float prime = 31;
+        final float prime = 17;
         float result = 1;
         result = (result + super.getCol()) * prime;
         result = (result + super.getRow()) * prime;

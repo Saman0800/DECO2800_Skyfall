@@ -155,7 +155,12 @@ public class Treeman extends EnemyEntity implements Animatable {
      */
     @Override
     public void onTick(long i) {
-        this.setCollider();
+
+        //Used to update collision
+        //super.onTick(i);
+
+        getBody().setTransform(position.getCol(), position.getRow(), getBody().getAngle());
+
         if (this.attackStatus == false) {
             randomMoving();
             setCurrentState(AnimationRole.MOVE);

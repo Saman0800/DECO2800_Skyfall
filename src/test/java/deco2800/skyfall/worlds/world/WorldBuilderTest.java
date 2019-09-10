@@ -41,18 +41,18 @@ public class WorldBuilderTest {
         //Testing the builder methods
         World world = builder.getWorld();
 
-        assertEquals(1, world.numOfLakes);
-        assertEquals(1, world.lakeSizes.length);
+        assertEquals(1, world.worldParameters.getNumOfLakes());
+        assertEquals(1, world.worldParameters.getLakeSizes().length);
 
-        assertEquals(2, world.nodeSpacing);
-        assertEquals(20, world.worldSize);
+        assertEquals(2, world.worldParameters.getNodeSpacing());
+        assertEquals(20, world.worldParameters.getWorldSize());
 
-        assertEquals(1, world.beachWidth);
+        assertEquals(1, world.worldParameters.getBeachWidth());
 
         assertEquals(5, world.getBiomes().size());
         assertTrue(world.getBiomes().get(0) instanceof ForestBiome);
 
-        assertEquals(2, world.riverWidth);
+        assertEquals(2, world.worldParameters.getRiverWidth());
 
 
         assertEquals(0, world.getSeed());

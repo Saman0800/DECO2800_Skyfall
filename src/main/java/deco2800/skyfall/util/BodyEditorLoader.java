@@ -18,7 +18,10 @@ import java.util.Map;
  * application. You only need to give it a body and the corresponding fixture
  * name, and it will attach these fixtures to your body.
  *
+ * This code is authored by
  * @author Aurelien Ribon | http://www.aurelienribon.com
+ * and is fare use under the Apache License, link found below
+ * https://github.com/julienvillegas/box2d-editor/blob/develop/LICENSE
  */
 public class BodyEditorLoader {
 

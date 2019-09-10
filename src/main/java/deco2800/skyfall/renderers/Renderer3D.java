@@ -6,11 +6,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.gamemenu.GameMenuScreen;
 import deco2800.skyfall.managers.*;
+import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -68,7 +71,7 @@ public class Renderer3D implements Renderer {
 
         batch.begin();
         // Render elements section by section
-        // tiles will render the static entity attaced to each tile after the tile is
+        // tiles will render the static entity attached to each tile after the tile is
         // rendered
 
         tilesSkipped = 0;
@@ -206,7 +209,28 @@ public class Renderer3D implements Renderer {
                 if (!(entity instanceof Animatable)) {
                     renderAbstractEntity(batch, entity, entityWorldCoord, tex);
                 } else {
+
+                    Color c = batch.getColor();
+
+                    GameMenuManager gameMenuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
+
+                    if (entity instanceof MainCharacter) {
+                        if (((MainCharacter) entity).IsHurt() ||
+                                ((MainCharacter) entity).isDead()) {
+                            // System.out.println(entity.);
+                            batch.setColor(Color.RED);
+                        } else if (((MainCharacter) entity).isRecovering()) {
+                            if (((MainCharacter) entity).isTexChanging()) {
+                                batch.setColor(c.r, c.g, c.b, 0f);
+                                ((MainCharacter) entity).setTexChanging(!((MainCharacter) entity).isTexChanging());
+                            } else {
+                                batch.setColor(c.r, c.g, c.b, 1f);
+                                ((MainCharacter) entity).setTexChanging(!((MainCharacter) entity).isTexChanging());
+                            }
+                        }
+                    }
                     runAnimation(batch, entity, entityWorldCoord);
+                    batch.setColor(c.r, c.g, c.b, 1f);
                 }
 
                 /* Draw Peon */
@@ -214,15 +238,13 @@ public class Renderer3D implements Renderer {
                 if (entity instanceof Peon && GameManager.get().showPath) {
                     renderPeonMovementTiles(batch, camera, entity, entityWorldCoord);
                 }
-
-
             }
 
         }
 
-
         GameManager.get().setEntitiesRendered(entities.size() - entitiesSkipped);
         GameManager.get().setEntitiesCount(entities.size());
+
     }
 
     /**
@@ -332,7 +354,6 @@ public class Renderer3D implements Renderer {
         }
     }
 
-
     /**
      * Runs an animation for the entity if it is applicable if there is
      * no animation to be run or it cannot be found a default texture is run
@@ -361,11 +382,12 @@ public class Renderer3D implements Renderer {
                 return;
             }
 
-            if (ani.isAnimationFinished(time) && entity.getCurrentState()==AnimationRole.NULL) {
-                //System.out.println("Animation is done");
+            if (ani.isAnimationFinished(time)) {
+                System.out.println("Animation is done");
                 aniLink.resetStartingTime();
 
                 if (!aniLink.isLooping()) {
+                    System.out.println("Setting to null");
                     entity.setGetToBeRunToNull();
                 }
                 renderDefaultSprite(batch, entity, entityWorldCoord);

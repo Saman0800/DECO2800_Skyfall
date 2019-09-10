@@ -1,17 +1,10 @@
 package deco2800.skyfall.worlds;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2D;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
-import org.lwjgl.Sys;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -289,31 +282,6 @@ public abstract class AbstractWorld {
 
         for (Tile t : tilesToDelete) {
             tiles.remove(t);
-        }
-
-        //Collision detection for entities
-        for (AbstractEntity e1 : this.getEntities()) {
-            e1.onTick(0);
-            if (e1.getCollider() == null) {
-                break;
-            }
-            Collider c1 = e1.getCollider();
-            for (AbstractEntity e2 : this.getEntities()) {
-                if (e2.getCollider() == null) {
-                  break;
-                }
-                Collider c2 = e2.getCollider();
-
-                if (e1 != e2 && c1.overlaps(c2)) {
-                    if (e1 instanceof MainCharacter || e2 instanceof MainCharacter) {
-                        break;
-                    }
-                    //collision handler
-                    this.handleCollision(e1, e2);
-                    break;
-                }
-            }
-            //no collision here
         }
     }
 

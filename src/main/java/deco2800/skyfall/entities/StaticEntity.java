@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Collections;
 
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -144,6 +145,8 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
                 child.setParent(this);
             }
         }
+
+        getBody().setType(BodyDef.BodyType.StaticBody);
     }
 
     /**

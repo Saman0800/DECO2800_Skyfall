@@ -18,8 +18,6 @@ public interface ICombatEntity extends HasHealth {
 
     /**
      * Some combat entities will only be able to be attacked.
-     *
-     * @return If the combat entity can deal damage.
      */
     boolean canDealDamage();
 
