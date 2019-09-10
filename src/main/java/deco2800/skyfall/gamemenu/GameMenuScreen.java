@@ -61,7 +61,7 @@ public class GameMenuScreen {
     //Inventory pop up
     private PopUpTable inventoryTable;
 
-    //Gold Pouch pop ip
+    //Gold Pouch pop up
     private PopUpTable goldTable;
 
     private PopUpTable chestTable;
