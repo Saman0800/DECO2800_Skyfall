@@ -164,7 +164,7 @@ public class GameMenuScreen {
             }
         });
 
-        ImageButton goldPouchButton = new ImageButton(generateTextureRegionDrawableObject("goldPiece5"));
+        ImageButton goldPouchButton = new ImageButton(generateTextureRegionDrawableObject("goldPouch"));
         goldPouchButton.setSize(200 * 0.55f, 207 * 0.55f);
         goldPouchButton.setPosition(440, 30 * 1000 / 800f);
         stage.addActor(goldPouchButton);
