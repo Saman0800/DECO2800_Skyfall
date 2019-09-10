@@ -193,7 +193,7 @@ public class MainCharacterTest {
             -   if(amount.equals(num)
             for this to work
         */
-        testCharacter.getInventoryManager().inventoryDropMultiple("Stone", inventoryManager.getAmount("Stone"));
+        testCharacter.getInventoryManager().dropMultiple("Stone", inventoryManager.getAmount("Stone"));
         Assert.assertEquals((int) testCharacter.getInventoryManager().getAmount("Stone"),
                 inventoryManager.getAmount("Stone"));
     }
@@ -504,8 +504,8 @@ public class MainCharacterTest {
         int i;
 
         for (i = 0; i < 25; i++) {
-            testCharacter.getInventoryManager().inventoryAdd(new Wood());
-            testCharacter.getInventoryManager().inventoryAdd(new Stone());
+            testCharacter.getInventoryManager().add(new Wood());
+            testCharacter.getInventoryManager().add(new Stone());
         }
 
         int currentHatchetAmount = testCharacter.getInventoryManager().getAmount("Hatchet");

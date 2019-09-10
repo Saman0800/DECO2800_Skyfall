@@ -540,7 +540,7 @@ public class GameMenuScreen {
         resourcePanel.setPosition(475, 18);
         resourcePanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
 
-        Map<String, Integer> inventoryAmounts = gameMenuManager.getInventory().getInventoryAmounts();
+        /*Map<String, Integer> inventoryAmounts = gameMenuManager.getInventory().getInventoryAmounts();
 
         int count = 0;
         int xpos = 20;
@@ -565,12 +565,12 @@ public class GameMenuScreen {
                 ypos -= 120;
                 count = 0;
             }
-        }
+        }*/
 
     }
 
     private void updateInventoryTable() {
-        Map<String, Integer> inventoryAmounts = gameMenuManager.getInventory().getInventoryAmounts();
+/*        Map<String, Integer> inventoryAmounts = gameMenuManager.getInventory().getInventoryAmounts();
 
         int count = 0;
         int xpos = 20;
@@ -595,7 +595,7 @@ public class GameMenuScreen {
                 ypos -= 120;
                 count = 0;
             }
-        }
+        }*/
 
     }
 

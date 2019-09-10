@@ -15,7 +15,7 @@ import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDra
 
 public class SettingsTable extends AbstractPopUpElement{
     private Skin skin;
-    Table settingsTable;
+    private Table settingsTable;
 
     public SettingsTable(Stage stage, ImageButton exit, String[] textureNames,
                          TextureManager tm, GameMenuManager gameMenuManager, Skin skin) {
@@ -27,7 +27,7 @@ public class SettingsTable extends AbstractPopUpElement{
     @Override
     public void hide() {
         super.hide();
-        System.out.println("Hiding settings tahle");
+        System.out.println("Hiding settings table");
         settingsTable.setVisible(false);
     }
 
@@ -50,7 +50,7 @@ public class SettingsTable extends AbstractPopUpElement{
     @Override
     public void draw() {
         super.draw();
-        System.out.println("Drawing settings tahle");
+        System.out.println("Drawing settings table");
         settingsTable = new Table();
         settingsTable.setVisible(false);
         settingsTable.setSize(910, 510);
