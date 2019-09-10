@@ -739,7 +739,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Removes one instance of a gold piece in the pouch.
+     * Removes one instance of a gold piece in the pouch with a specific value.
      * @param goldValue The value of the gold piece to be removed from the pouch.
      */
     public void removeGold(Integer goldValue) {
