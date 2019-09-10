@@ -43,43 +43,42 @@ public class WeaponManagerTest {
         axe = null;
     }
 
+    /**
+     * Private helper method for the test character to pick up weapons
+     */
+    private void pickUpWeapons() {
+        testCharacter.pickUpInventory(sword);
+        testCharacter.pickUpInventory(sword);
+        testCharacter.pickUpInventory(spear);
+        testCharacter.pickUpInventory(spear);
+        testCharacter.pickUpInventory(bow);
+        testCharacter.pickUpInventory(bow);
+        testCharacter.pickUpInventory(axe);
+        testCharacter.pickUpInventory(axe);
+    }
+
+    /**
+     * Private helper method for the test character to drop weapons
+     */
+    private void dropWeapons() {
+        testCharacter.getInventoryManager().inventoryDropMultiple("sword", 2);
+        testCharacter.dropInventory("spear");
+        testCharacter.dropInventory("bow");
+        testCharacter.dropInventory("axe");
+    }
+
     @Ignore
     @Test
     /**
      * Tests basic pickup works
      */
     public void pickUpTest() {
-        Assert.assertEquals(testCharacter.getWeaponManager().getNumWeapons(),
-                0);
+        Assert.assertEquals(testCharacter.getInventoryManager().getTotalAmount(), 6);
 
-        testCharacter.pickUpWeapon(sword);
-        testCharacter.pickUpWeapon(sword);
-        Assert.assertEquals(testCharacter.getWeaponManager().getNumWeapons(),
-                2);
+        this.pickUpWeapons();
 
-        testCharacter.pickUpWeapon(spear);
-        testCharacter.pickUpWeapon(spear);
-        Assert.assertEquals(testCharacter.getWeaponManager().getNumWeapons(),
-                4);
+        Assert.assertEquals(testCharacter.getInventoryManager().getTotalAmount(), 14);
 
-        testCharacter.pickUpWeapon(bow);
-        testCharacter.pickUpWeapon(bow);
-        Assert.assertEquals(testCharacter.getWeaponManager().getNumWeapons(),
-                6);
-
-        testCharacter.pickUpWeapon(axe);
-        testCharacter.pickUpWeapon(axe);
-        Assert.assertEquals(testCharacter.getWeaponManager().getNumWeapons(),
-                8);
-
-        Assert.assertEquals(testCharacter.getWeaponManager()
-                .getWeaponAmount(sword), 2);
-        Assert.assertEquals(testCharacter.getWeaponManager()
-                .getWeaponAmount(spear), 2);
-        Assert.assertEquals(testCharacter.getWeaponManager()
-                .getWeaponAmount(bow), 2);
-        Assert.assertEquals(testCharacter.getWeaponManager()
-                .getWeaponAmount(axe), 2);
     }
 
     @Ignore
@@ -88,128 +87,28 @@ public class WeaponManagerTest {
      * Test that weapon dropping works
      */
     public void dropTest() {
-        System.out.println(testCharacter.getWeapons().toString());
+        this.pickUpWeapons();
 
-        Assert.assertEquals(testCharacter.getWeaponManager().getNumWeapons(),
-                0);
+        Assert.assertEquals(testCharacter.getInventoryManager().getTotalAmount(), 14);
 
-        testCharacter.pickUpWeapon(sword);
-        testCharacter.dropWeapon(sword);
-        Assert.assertEquals(testCharacter.getWeaponManager()
-                .getWeaponAmount(sword), 0);
+        this.dropWeapons();
 
-        testCharacter.dropWeapon(spear);
-        testCharacter.pickUpWeapon(spear);
-        testCharacter.pickUpWeapon(spear);
-        Assert.assertEquals(testCharacter.getWeaponManager()
-                .getWeaponAmount(spear), 2);
+        Assert.assertEquals(testCharacter.getInventoryManager().getTotalAmount(), 9);
 
-        testCharacter.pickUpWeapon(bow);
-        testCharacter.pickUpWeapon(bow);
-        testCharacter.pickUpWeapon(bow);
-        testCharacter.pickUpWeapon(bow);
-        testCharacter.getWeaponManager().dropWeapons(bow, 2);
-        Assert.assertEquals(testCharacter.getWeaponManager()
-                .getWeaponAmount(bow), 2);
+        testCharacter.dropInventory("sword");
 
-        testCharacter.pickUpWeapon(axe);
-        testCharacter.pickUpWeapon(axe);
-        testCharacter.getWeaponManager().dropWeapons(spear, 3);
-        Assert.assertEquals(testCharacter.getWeaponManager()
-                .getWeaponAmount(axe), 2);
-
-        Assert.assertEquals(testCharacter.getWeaponManager().getNumWeapons(),
-                6);
+        Assert.assertEquals(testCharacter.getInventoryManager().getTotalAmount(), 9);
     }
 
     @Ignore
-    @Test
-    /**
-     * Equip weapon testing
-     */
-    public void equipTest() {
-        Assert.assertEquals(testCharacter.getWeaponManager().getNumEquipped()
-                , 0);
-
-        testCharacter.pickUpWeapon(sword);
-        testCharacter.pickUpWeapon(sword);
-
-        System.out.println(testCharacter.getWeapons().toString());
-
-        Assert.assertEquals(testCharacter.getWeaponManager()
-                .getWeaponAmount(sword), 2);
-
-        testCharacter.equipWeapon(sword);
-        Assert.assertTrue(testCharacter.getWeaponManager().isEquipped(sword));
-        Assert.assertEquals(testCharacter.getWeaponManager().getNumEquipped()
-                , 1);
-        Assert.assertEquals(testCharacter.getWeaponManager()
-                .getWeaponAmount(sword), 1);
-
-        testCharacter.equipWeapon(spear);
-        Assert.assertFalse(testCharacter.getWeaponManager().isEquipped(spear));
-        Assert.assertEquals(testCharacter.getWeaponManager().getNumEquipped()
-                , 1);
-        testCharacter.pickUpWeapon(spear);
-        testCharacter.pickUpWeapon(spear);
-        testCharacter.equipWeapon(spear);
-        testCharacter.equipWeapon(spear);
-        Assert.assertEquals(testCharacter.getWeaponManager().getNumEquipped()
-                , 2);
-        Assert.assertEquals(testCharacter.getWeaponManager()
-                .getWeaponAmount(spear), 1);
-
-        testCharacter.unequipWeapon(bow);
-        Assert.assertEquals(testCharacter.getWeaponManager().getNumEquipped()
-                , 2);
-        testCharacter.pickUpWeapon(bow);
-        testCharacter.equipWeapon(bow);
-        Assert.assertFalse(testCharacter.getWeaponManager().isEquipped(bow));
-        Assert.assertEquals(testCharacter.getWeaponManager().getNumEquipped()
-                , 2);
-        Assert.assertEquals(testCharacter.getWeaponManager()
-                .getWeaponAmount(bow), 1);
-
-        testCharacter.pickUpWeapon(axe);
-        testCharacter.equipWeapon(axe);
-        Assert.assertFalse(testCharacter.getWeaponManager().isEquipped(axe));
-        Assert.assertEquals(testCharacter.getWeaponManager().getNumEquipped()
-                , 2);
-        testCharacter.unequipWeapon(spear);
-        testCharacter.unequipWeapon(sword);
-        testCharacter.equipWeapon(axe);
-        Assert.assertFalse(testCharacter.getWeaponManager().isEquipped(spear));
-        Assert.assertFalse(testCharacter.getWeaponManager().isEquipped(sword));
-        Assert.assertTrue(testCharacter.getWeaponManager().isEquipped(axe));
-
-        Assert.assertEquals(testCharacter.getWeaponManager().getNumWeapons(),
-                5);
-    }
-
     @Test
     /**
      * Test return methods for weapons map, toString and equipped list are
      * doing the right thing
      */
     public void returnTest() {
-        testCharacter.pickUpWeapon(sword);
-        testCharacter.pickUpWeapon(sword);
-        testCharacter.pickUpWeapon(spear);
-        testCharacter.pickUpWeapon(spear);
-        testCharacter.pickUpWeapon(bow);
-        testCharacter.pickUpWeapon(bow);
-        testCharacter.pickUpWeapon(axe);
-        testCharacter.pickUpWeapon(axe);
-        Assert.assertEquals(testCharacter.getWeapons().size(), 4);
+        this.pickUpWeapons();
 
-        testCharacter.equipWeapon(sword);
-        testCharacter.equipWeapon(spear);
-        testCharacter.equipWeapon(bow);
-        testCharacter.equipWeapon(axe);
-        Assert.assertEquals(testCharacter.getEquipped().size(), 2);
-
-        Assert.assertEquals(testCharacter.getWeaponManager().toString().length(),
-                ("Weapons: {sword=1, spear=1, bow=1, axe=2}" +
-                        "\nEquipped: sword, spear.").length());
+        Assert.assertEquals(testCharacter.getInventoryManager().getInventoryAmounts().size(), 8);
     }
 }

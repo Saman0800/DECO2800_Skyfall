@@ -29,19 +29,14 @@ import java.util.*;
  * Main character in the game
  */
 public class MainCharacter extends Peon
-        implements KeyDownObserver, KeyUpObserver, TouchDownObserver, Tickable, Animatable {
+        implements KeyDownObserver, KeyUpObserver, TouchDownObserver,
+        Tickable, Animatable {
 
     // Logger tp print messages
     private final Logger logger = LoggerFactory.getLogger(MainCharacter.class);
 
-    // Weapon Manager for MainCharacter
-    private WeaponManager weapons;
-
     // Manager for all of MainCharacter's inventories
     private InventoryManager inventories;
-
-    // Hotbar of inventories
-    private List<Item> hotbar;
 
     // List of blueprints that the player has learned.
     private List<String> blueprintsLearned;
@@ -132,7 +127,7 @@ public class MainCharacter extends Peon
     private SpellType spellSelected = SpellType.NONE;
 
     /*
-     * How much mana the character has available for spellcasting.
+     * How much mana the character has available for spell casting.
      */
     private int mana = 100;
 
@@ -145,15 +140,6 @@ public class MainCharacter extends Peon
      * The GUI health bar for the character.
      */
     private HealthCircle healthBar;
-
-    /**
-     * Private helper method to instantiate inventory and weapon managers for
-     * Main Character constructor
-     */
-    private void instantiateManagers() {
-        this.inventories = new InventoryManager();
-        this.weapons = new WeaponManager();
-    }
 
     /**
      * Base Main Character constructor
@@ -172,7 +158,6 @@ public class MainCharacter extends Peon
         GameManager.getManagerFromInstance(InputManager.class)
                 .addTouchDownListener(this);
 
-        this.weapons = GameManager.getManagerFromInstance(WeaponManager.class);
         this.inventories =
                 GameManager.getManagerFromInstance(InventoryManager.class);
 
@@ -245,7 +230,6 @@ public class MainCharacter extends Peon
     public MainCharacter(float col, float row, float speed, String name,
                          int health, String[] textures) {
         this(row, col, speed, name, health);
-
         this.setTexture(textures[2]);
     }
 
@@ -415,7 +399,7 @@ public class MainCharacter extends Peon
      * Player recovers from being attacked. It removes player 's
      * hurt effect (e.g. sprite flashing in red), in hurt().
      */
-    void recover() {
+    public void recover() {
         setHurt(false);
         // controller.enabled = true;
     }
@@ -424,7 +408,7 @@ public class MainCharacter extends Peon
      * Kills the player. and notifying the game that the player
      * has died and cannot do any actions in game anymore.
      */
-    void kill() {
+    public void kill() {
         // stop player controls
         setMaxSpeed(0);
 
@@ -447,73 +431,6 @@ public class MainCharacter extends Peon
      */
     public void setHurt(boolean isHurt) {
         this.isHurt = isHurt;
-    }
-
-    /**
-     *  Add weapon to weapons list
-     * @param item weapon to be added
-     *
-     */
-    public void pickUpWeapon(Weapon item) {
-        weapons.pickUpWeapon(item);
-    }
-
-    /**
-     * Removes items from player's collection
-     * @param item weapon being removed
-     */
-    public void dropWeapon(Weapon item) {
-        weapons.dropWeapon(item);
-    }
-
-    /**
-     * Get the weapons for the player
-     * @return weapons
-     */
-    public Map<String, Integer> getWeapons() {
-        return weapons.getWeapons();
-    }
-
-    /**
-     * Attempts to equip a weapon from the weapons map
-     * @param item weapon being equipped
-     */
-    public void equipWeapon(Weapon item) {
-        weapons.equipWeapon(item);
-    }
-
-    /**
-     * Attempts to unequip a weapon and return it to the weapons map
-     * @param item weapon being unequipped
-     */
-    public void unequipWeapon(Weapon item) {
-        weapons.unequipWeapon(item);
-    }
-
-    /**
-     * Get a copy of the equipped weapons list
-     * Modifying the returned list shouldn't affect the internal state of class
-     * @return equipped list
-     */
-    public List<String> getEquipped() {
-        return weapons.getEquipped();
-    }
-
-    /**
-     * Gets the weapon manager of the character, so it can only be modified
-     * this way, prevents having it being a public variable
-     * @return the weapon manager of character
-     */
-    public WeaponManager getWeaponManager() {
-        return this.weapons;
-    }
-
-    /**
-     * Deals damage to character from combat
-     * @param item weapon character is being hit by
-     */
-    public void weaponEffect(Weapon item) {
-        this.changeHealth(item.getDamage().intValue() * -1);
     }
 
     /**
@@ -688,10 +605,10 @@ public class MainCharacter extends Peon
                     if (this.getPosition().distance(entity.getPosition())
                             <= 1) {
                         System.out.println("got here");
-                        weapons.pickUpWeapon((Weapon) entity);
+                        inventories.inventoryAdd((Weapon) entity);
                         GameManager.get().getWorld().removeEntity(entity);
                         System.out.println("picked up weapon!");
-                        logger.info(weapons.toString());
+                        logger.info(inventories.toString());
                     }
                     return;
                 }

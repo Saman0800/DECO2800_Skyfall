@@ -43,29 +43,15 @@ public class StatisticsManager  extends TickableManager {
     }
 
     /**
-     * Gets the weapons manager for character
-     * @return the character's weapons manager
-     */
-    public WeaponManager getWeapons() {
-        return this.getCharacter().getWeaponManager();
-    }
-
-    /**
      * Increases experience of character due to certain achievements such as
      * collecting weapons, inventory, money and getting kills
      */
     public void gainExperience() {
-        // Every 10 weapon collected by the character will give them 10
-        // experience points
-        if (this.getWeapons().getNumWeapons() != 0 &&
-                this.getWeapons().getNumWeapons() % 10 == 0) {
-            experience += 10;
-        }
 
         // Every 10 inventory items collected by the character will give them
         // 10 experience points
-        if ((this.getInventory().getTotalAmount() - 4) != 0 &&
-                (this.getInventory().getTotalAmount() - 4) % 10 == 0) {
+        if (this.getInventory().getTotalAmount() != 0 &&
+                this.getInventory().getTotalAmount() % 10 == 0) {
             experience += 10;
         }
 

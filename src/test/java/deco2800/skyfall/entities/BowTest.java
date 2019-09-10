@@ -1,34 +1,48 @@
 package deco2800.skyfall.entities;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import org.junit.*;
 
 public class BowTest {
 
-  private Bow bow = new Bow();
-  @Before
-  public void setUp() throws Exception {
+    private Weapon bow;
 
-  }
+    @Before
+    public void setUp() {
+        bow = new Weapon("bow", "range",
+              "splash", 4, 3, 10);
+    }
 
-  @Test
-  public void getDurability() {
-    assert(bow.getDurability().equals(10));
-  }
+    @After
+    public void tearDown() {
+        bow = null;
+    }
 
-  @Test
-  public void getAttackRate() {
-    assert (bow.getAttackRate().equals(3));
-  }
-  @Test
-  public void getDamage() {
-    assert(bow.getDamage().equals(4));
-  }
+    @Test
+    public void getDurabilityTest() {
+        assert(bow.getDurability() == 10);
+    }
 
-  @Test
-  public void getName() {
-    assert (bow.getName().equals("bow"));
-  }
+    @Test
+    public void getAttackRateTest() {
+        assert (bow.getAttackRate() == 3);
+    }
+    @Test
+    public void getDamageTest() {
+        assert(bow.getDamage() == 4);
+    }
+
+    @Test
+    public void getNameTest() {
+        assert (bow.getName().equals("bow"));
+    }
+
+    @Test
+    public void toStringTest() {
+        Assert.assertEquals(bow.toString(), "bow is a range weapon " +
+              "which can be used to help the Main Character" +
+              " defeat enemies. It has deals 4 splash damages each time it is" +
+              " used. It also has an attack rate " +
+              "of: 3 and a durability of: 10 before it become useless. "
+              + "bow" + "is carryable, but exchangeable.");
+    }
 }

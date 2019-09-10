@@ -85,16 +85,16 @@ public class StatisticsManagerTest {
      * Private helper method to be called to record picked up weapons
      */
     private void pickUpWeapons() {
-        this.testManager.getCharacter().pickUpWeapon(sword);
-        this.testManager.getCharacter().pickUpWeapon(sword);
-        this.testManager.getCharacter().pickUpWeapon(sword);
-        this.testManager.getCharacter().pickUpWeapon(spear);
-        this.testManager.getCharacter().pickUpWeapon(spear);
-        this.testManager.getCharacter().pickUpWeapon(bow);
-        this.testManager.getCharacter().pickUpWeapon(bow);
-        this.testManager.getCharacter().pickUpWeapon(axe);
-        this.testManager.getCharacter().pickUpWeapon(axe);
-        this.testManager.getCharacter().pickUpWeapon(axe);
+        this.testManager.getCharacter().pickUpInventory(sword);
+        this.testManager.getCharacter().pickUpInventory(sword);
+        this.testManager.getCharacter().pickUpInventory(sword);
+        this.testManager.getCharacter().pickUpInventory(spear);
+        this.testManager.getCharacter().pickUpInventory(spear);
+        this.testManager.getCharacter().pickUpInventory(bow);
+        this.testManager.getCharacter().pickUpInventory(bow);
+        this.testManager.getCharacter().pickUpInventory(axe);
+        this.testManager.getCharacter().pickUpInventory(axe);
+        this.testManager.getCharacter().pickUpInventory(axe);
     }
 
     /**
@@ -168,15 +168,6 @@ public class StatisticsManagerTest {
         this.pickUpInventory();
 
         testManager.gainExperience();
-
-//        Assert.assertEquals(testManager.getExperience(), 30);
-
         testManager.levelUp();
-
-//        Assert.assertEquals(testManager.getLevel(), 2);
-//        Assert.assertEquals(testManager.getExperience(), 10);
-//        Assert.assertEquals(testManager.getExperienceCap(), 40);
-//
-//        Assert.assertEquals(testManager.getHealth(), 20);
     }
 }

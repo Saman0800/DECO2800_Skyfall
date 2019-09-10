@@ -8,7 +8,7 @@ public class Axe extends MeleeWeapon {
      * on the scale of 0 to 10
      */
     @Override
-    public Number getDurability() {
+    public int getDurability() {
         return 10;
     }
 
@@ -18,7 +18,7 @@ public class Axe extends MeleeWeapon {
      * on the scale of 1 to 5
      */
     @Override
-    public Number getAttackRate() {
+    public int getAttackRate() {
         return 4;
     }
 
@@ -27,7 +27,7 @@ public class Axe extends MeleeWeapon {
      * @return a number as damage amount of the weapon
      */
     @Override
-    public Number getDamage() {
+    public int getDamage() {
         return 4;
     }
 
@@ -35,7 +35,6 @@ public class Axe extends MeleeWeapon {
      * Return the name of the weapon
      * @return a string "axe"
      */
-    @Override
     public String getName() {
         return "axe";
     }

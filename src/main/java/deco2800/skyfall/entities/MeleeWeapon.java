@@ -1,6 +1,6 @@
 package deco2800.skyfall.entities;
 
-public abstract class MeleeWeapon extends AbstractEntity implements IWeapon, Item {
+public abstract class MeleeWeapon extends AbstractEntity implements IWeapon {
 
     /**
      * what is the type of the weapon

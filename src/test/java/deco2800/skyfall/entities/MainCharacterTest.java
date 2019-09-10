@@ -142,24 +142,6 @@ public class MainCharacterTest {
 
     @Test
     /**
-     * Test main character is interacting correctly with basic weapon action
-     */
-    public void weaponTest() {
-        testCharacter.pickUpWeapon(sword);
-        testCharacter.pickUpWeapon(spear);
-        testCharacter.dropWeapon(axe);
-        testCharacter.dropWeapon(sword);
-        testCharacter.pickUpWeapon(bow);
-
-        testCharacter.weaponEffect(sword);
-        testCharacter.weaponEffect(spear);
-        testCharacter.weaponEffect(axe);
-        Assert.assertEquals(testCharacter.getHealth(), 2);
-        Assert.assertEquals(testCharacter.getDeaths(), 1);
-    }
-
-    @Test
-    /**
      * Test level changing of main character
      */
     public void levelTest() {
