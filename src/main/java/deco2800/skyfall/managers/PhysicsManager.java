@@ -23,7 +23,7 @@ public class PhysicsManager extends AbstractManager{
     }
 
     public void initialiseCollision(){
-        System.out.println("Coliision Started");
+        System.out.println("Coliision Started!!!!!");
         box2DWorld.setContactListener(new ContactListener() {
             //What happens when two bodies collide
             //Most collision is handled here

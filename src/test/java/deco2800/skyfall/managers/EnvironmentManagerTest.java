@@ -7,7 +7,6 @@ import deco2800.skyfall.observers.TimeObserver;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.internal.matchers.Null;
-import sun.applet.Main;
 
 import java.util.ArrayList;
 import java.util.List;

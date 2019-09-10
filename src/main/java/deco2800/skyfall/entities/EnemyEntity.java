@@ -1,10 +1,14 @@
 package deco2800.skyfall.entities;
 
 
-import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.tasks.AbstractTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class EnemyEntity extends Peon implements ICombatEntity{
+
+    private final transient Logger log = LoggerFactory.getLogger(EnemyEntity.class);
+
     //The task this Enemy is set to perform.
     protected transient AbstractTask task;
 
@@ -34,10 +38,13 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
     public EnemyEntity(float col, float row){
         this.setRow(row);
         this.setCol(col);
+        this.setCollider();
     }
     public EnemyEntity(float row, float col, String texturename,int health,int armour,int damage) {
         super(row, col, 0.2f,texturename,health);
         this.setTexture(texturename);
+        this.setCollider();
+
     }
 
     public void onTick(long i) {
@@ -127,8 +134,8 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
     public void takeDamage(int damage) {
         //TODO: perform damage calculation factoring in status indicators, armour and resistance attributes.
         this.health -= damage;
-        System.out.println("Enemy took " + damage + " damage.");
-        System.out.println("Enemy has " + this.health + " health remaining.");
+        log.info("Enemy took " + damage + " damage.");
+        log.info("Enemy has " + this.health + " health remaining.");
         //If the health of this enemy is <= 0, remove it from the game world.
         if (this.health <= 0) {
             this.destroy();
@@ -189,6 +196,6 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
      */
     private void destroy() {
         this.setDead(true);
-        System.out.println("Enemy destroyed.");
+        log.info("Enemy destroyed.");
     }
 }

@@ -40,7 +40,7 @@ public class Projectile extends AgentEntity {
     /**
      * How far this projectile will travel.
      */
-    private int range;
+    protected int range;
 
     /**
      * Construct a new projectile.
@@ -66,6 +66,8 @@ public class Projectile extends AgentEntity {
 
         //Position the projectile correctly.
         position.moveToward(movementPosition,speed);
+
+        this.setCollider();
 
         //TODO: rotate sprite in angle facing.
     }
