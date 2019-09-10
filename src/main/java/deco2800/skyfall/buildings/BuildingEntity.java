@@ -1,5 +1,6 @@
 package deco2800.skyfall.buildings;
 
+import com.google.gson.annotations.Expose;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.worlds.world.World;
@@ -69,7 +70,8 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
         if (!WorldUtil.validColRow(new HexVector(col, row))) {
             log.debug("Invalid position");
         }
-        setDefault();
+        //What is this doing? It current sets the building texture to default.
+        //setDefault();
     }
 
     /**
