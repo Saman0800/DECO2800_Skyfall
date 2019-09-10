@@ -40,7 +40,7 @@ public class EntitySpawnTable {
      * 
      * @param rule          The EntitySpawn that holds the characteristics of the
      *                      placement of the static entity
-     * @param tile          The tile the new entity will occupy
+     * @param nextTile The tile the new entity will occupy
      * @param currentChance The current chance the entity has of spawning on the
      *                      tile
      */
@@ -188,6 +188,7 @@ public class EntitySpawnTable {
      * @param entity Entity to be copied and inserted
      * @param chance probability that the entity will be in a given tile
      * @param <T>    T must extend StaticEntity and have .newInstance inherited
+     * @param world  specified biome to spawn in, null for no specification
      */
     public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntities(T entity, double chance,
             World world) {

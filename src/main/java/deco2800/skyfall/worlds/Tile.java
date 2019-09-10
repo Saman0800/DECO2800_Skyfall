@@ -158,7 +158,9 @@ public class Tile {
     public String toString() {
         // return String.format("[%.0f, %.1f: %d]", coords.getCol(), coords.getRow(),
         // index);
-        return String.format("%f", getPerlinValue());
+//        return String.format("%f", getPerlinValue());
+//        return textureBackup;
+        return getBiome().getBiomeName();
     }
 
     public void setParent(StaticEntity parent) {
@@ -215,18 +217,6 @@ public class Tile {
 
     public void setIndex(Integer indexValue) {
         this.index = indexValue;
-    }
-
-    /**
-     * Returns whether the tile obstructs entities.
-     *
-     * @return whether the tile obstructs entities
-     *
-     * @deprecated use {@link #isObstructed()}
-     */
-    @Deprecated
-    public boolean getObstructed() {
-        return isObstructed();
     }
 
     /**

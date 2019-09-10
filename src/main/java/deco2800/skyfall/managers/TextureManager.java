@@ -49,6 +49,9 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bowman", new Texture("resources/bowman.png"));
             textureMap.put("dialogue_text_background", new Texture("resources/dialogue_text_background.png"));
 
+            textureMap.put("tornado_placeholder",new Texture("resources/spells/tornado_placeholder.png"));
+            textureMap.put("shield_placeholder",new Texture("resources/spells/shield_placeholder.png"));
+            textureMap.put("flame_wall_placeholder", new Texture("resources/spells/flame_wall_placeholder.png"));
             textureMap.put("range_test", new Texture("resources/projectile.png"));
             textureMap.put("melee_test", new Texture("resources/punch.png"));
 
@@ -191,6 +194,9 @@ public class TextureManager extends AbstractManager {
             textureMap.put("big_circle", new Texture("resources/OrangeCircle.png"));
             textureMap.put("inner_circle", new Texture("resources/RedCircle.png"));
 
+            textureMap.put("mana_bar",new Texture("resources/mana_bar.png"));
+            textureMap.put("mana_bar_inner",new Texture("resources/mana_bar_inner.png"));
+
             textureMap.put("inventory_banner", new Texture("resources/inventory_banner.png"));
             textureMap.put("Stone", new Texture("resources/temp_stone.png"));
             textureMap.put("Wood", new Texture("resources/temp_wood.png"));
@@ -270,7 +276,7 @@ public class TextureManager extends AbstractManager {
     public Texture getTexture(String id) {
         if (textureMap.containsKey(id)) {
             return textureMap.get(id);
-        } else if (id.startsWith("__ANIMATION_")) {
+        } else if (id != null && id.startsWith("__ANIMATION_")) {
             // System.out.println("Getting animation texture");
             AnimationManager animationManager = GameManager.getManagerFromInstance(AnimationManager.class);
             Texture texture = this.getTextureFromAnimation(id, animationManager);
@@ -284,7 +290,10 @@ public class TextureManager extends AbstractManager {
 
         } else {
             // log.info("Texture map does not contain P{}, returning default texture.", id);
-            return textureMap.get("spacman_ded");
+            //TODO fix the issue where tiles are not getting added to lakes correctly,
+            //Temporary fix is just to assign tiles without a texture the lake texture so that the
+            //issue isn't as noticable
+            return textureMap.get("lake_1");
         }
 
     }

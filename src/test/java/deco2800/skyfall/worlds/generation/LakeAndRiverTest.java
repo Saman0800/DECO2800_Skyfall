@@ -6,6 +6,7 @@ import deco2800.skyfall.worlds.biomes.ForestBiome;
 import deco2800.skyfall.worlds.biomes.OceanBiome;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
+import deco2800.skyfall.worlds.world.WorldParameters;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -18,10 +19,13 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.*;
 
 public class LakeAndRiverTest {
+    private static WorldParameters WORLD_PARAMETERS;
+
     private static final int TEST_COUNT = 5;
     private static final int[] NODE_COUNTS = { 10, 10, 10, 5, 5 };
 
     private static final int WORLD_SIZE = 80;
+
     private static final int NODE_SPACING = 5;
 
     // private static final int[] LAKE_SIZES = { 2, 2 };
@@ -42,7 +46,15 @@ public class LakeAndRiverTest {
 
     @BeforeClass
     public static void setup() {
+        WORLD_PARAMETERS = new WorldParameters();
         Random random = new Random(0);
+        WORLD_PARAMETERS.setWorldSize(WORLD_SIZE);
+        WORLD_PARAMETERS.setNodeSpacing(NODE_SPACING);
+        WORLD_PARAMETERS.setLakeSizes(LAKE_SIZES);
+        WORLD_PARAMETERS.setNumOfLakes(LAKE_COUNT);
+        WORLD_PARAMETERS.setRiverWidth(RIVER_WIDTH);
+        WORLD_PARAMETERS.setNoRivers(RIVER_COUNT);
+        WORLD_PARAMETERS.setBeachWidth(BEACH_WIDTH);
 
         biomeLists = new ArrayList<>(TEST_COUNT);
         worldGenNodesList = new ArrayList<>();
@@ -105,11 +117,12 @@ public class LakeAndRiverTest {
 
                 VoronoiEdge.assignTiles(edges, tiles, WORLD_SIZE);
                 VoronoiEdge.assignNeighbours(edges);
+                WORLD_PARAMETERS.setBiomes(biomes);
+                WORLD_PARAMETERS.setBiomeSizes(NODE_COUNTS);
 
                 try {
                     BiomeGenerator biomeGenerator =
-                            new BiomeGenerator(worldGenNodes, edges, random, NODE_COUNTS, biomes, LAKE_COUNT,
-                                    LAKE_SIZES, RIVER_COUNT, RIVER_WIDTH, BEACH_WIDTH);
+                            new BiomeGenerator(worldGenNodes, edges, random,   WORLD_PARAMETERS);
                     biomeGenerator.generateBiomes();
                 } catch (NotEnoughPointsException | DeadEndGenerationException e) {
                     continue;

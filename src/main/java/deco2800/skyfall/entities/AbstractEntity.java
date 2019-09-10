@@ -1,6 +1,5 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.animation.AnimationLinker;
@@ -13,6 +12,8 @@ import deco2800.skyfall.renderers.Renderable;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -22,6 +23,9 @@ import java.util.*;
  * need to be rendered should not be a WorldEntity
  */
 public abstract class AbstractEntity implements Comparable<AbstractEntity>, Renderable {
+	private final transient Logger log =
+			LoggerFactory.getLogger(AbstractEntity.class);
+
 	private static final String ENTITY_ID_STRING = "entityID";
 	
 	@Expose
@@ -466,14 +470,15 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 */
 	public void handleCollision(Object hitter) {
         //Does nothing as collision logic should be case specific
-		System.out.println("I hit something");
+		log.info("I hit something");
     }
 
     /**
      * Sets the current animation to be run to null
      */
 	public void setGetToBeRunToNull() {
-		toBeRun = null;
+		setCurrentState(AnimationRole.NULL);
+		//toBeRun = null;
 	}
 
     /**
@@ -519,6 +524,10 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * @param animationLinker Animation object
      */
     protected void addAnimations(AnimationRole role, Direction currentDirection, AnimationLinker animationLinker) {
+    	if (role == AnimationRole.NULL) {
+      		log.info("Don't Set AnimationRole.NULL to an animation");
+			return;
+    	}
 	    animations.putIfAbsent(role, new HashMap<>());
         Map<Direction, AnimationLinker> direction = animations.get(role);
         direction.put(currentDirection, animationLinker);

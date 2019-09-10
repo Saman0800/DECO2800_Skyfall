@@ -15,26 +15,11 @@ import java.util.Random;
  */
 public class WorldBuilder implements WorldBuilderInterface {
 
-    // List of biomes
-    private ArrayList<AbstractBiome> biomes;
-
     // List of biomes size
     private ArrayList<Integer> biomeSizes;
 
-    // Seed that is going to be used for world gen
-    private long seed;
-
-    // Number of lakes
-    private int numOfLakes;
-
     // Corresponding sizes of the lakes
     private ArrayList<Integer> lakeSizes;
-
-    // The side length/2 of the world, (worldSize* 2)^2 to get the number of tiles
-    private int worldSize;
-
-    // The spacing/distance between the nodes
-    private int nodeSpacing;
 
     // The entities in the world
     private CopyOnWriteArrayList<AbstractEntity> entities;
@@ -42,29 +27,26 @@ public class WorldBuilder implements WorldBuilderInterface {
     // The world type, can either be single_player, server, tutorial or test
     private String type;
 
-    // The number of rivers
-    private int rivers;
-
-    // The size of the rivers
-    private int riverSize;
-
-    // The size of the beach
-    private int beachSize;
-
     // Determines whether static entities are on
     private boolean staticEntities;
+
+    //Contains parameters for the world
+    private WorldParameters worldParameters;
 
     /**
      * Constructor for the WorldBuilder
      */
     public WorldBuilder() {
-        numOfLakes = 0;
-        seed = 0;
-        rivers = 0;
+        worldParameters = new WorldParameters();
+        worldParameters.setNumOfLakes(0);
+        worldParameters.setSeed(0);
+        worldParameters.setNoRivers(0);
+        worldParameters.setNoRivers(0);
+        worldParameters.setEntities(new CopyOnWriteArrayList<>());
+        worldParameters.setBiomes(new ArrayList<>());
+
         biomeSizes = new ArrayList<>();
         lakeSizes = new ArrayList<>();
-        entities = new CopyOnWriteArrayList<>();
-        biomes = new ArrayList<>();
         type = "single_player";
         staticEntities = false;
     }
@@ -76,7 +58,7 @@ public class WorldBuilder implements WorldBuilderInterface {
      */
     @Override
     public void addEntity(AbstractEntity entity) {
-        entities.add(entity);
+        worldParameters.addEntity(entity);
     }
 
     /**
@@ -87,7 +69,7 @@ public class WorldBuilder implements WorldBuilderInterface {
      */
     @Override
     public void addBiome(AbstractBiome biome, int size) {
-        biomes.add(biome);
+        worldParameters.addBiome(biome);
         biomeSizes.add(size);
     }
 
@@ -98,13 +80,13 @@ public class WorldBuilder implements WorldBuilderInterface {
      */
     @Override
     public void addLake(int size) {
-        numOfLakes++;
+        worldParameters.setNumOfLakes(worldParameters.getNumOfLakes()+1);
         lakeSizes.add(size);
     }
 
     @Override
     public void setWorldSize(int size) {
-        this.worldSize = size;
+        worldParameters.setWorldSize(size);
     }
 
     /**
@@ -114,7 +96,7 @@ public class WorldBuilder implements WorldBuilderInterface {
      */
     @Override
     public void setNodeSpacing(int nodeSpacing) {
-        this.nodeSpacing = nodeSpacing;
+        worldParameters.setNodeSpacing(nodeSpacing);
     }
 
     /**
@@ -124,7 +106,7 @@ public class WorldBuilder implements WorldBuilderInterface {
      */
     @Override
     public void setSeed(long seed) {
-        this.seed = seed;
+        worldParameters.setSeed(seed);
     }
 
     /**
@@ -141,7 +123,7 @@ public class WorldBuilder implements WorldBuilderInterface {
      * Adds a single river to the world
      */
     public void addRiver() {
-        rivers++;
+        worldParameters.setNoRivers(worldParameters.getNoRivers()+1);
     }
 
     /**
@@ -150,7 +132,7 @@ public class WorldBuilder implements WorldBuilderInterface {
      * @param size The size which the rivers will be, in node width
      */
     public void setRiverSize(int size) {
-        riverSize = size;
+        worldParameters.setRiverWidth(size);
     }
 
     /**
@@ -159,7 +141,7 @@ public class WorldBuilder implements WorldBuilderInterface {
      * @param size The size which the beach will be, in tiles
      */
     public void setBeachSize(int size) {
-        beachSize = size;
+        worldParameters.setBeachWidth(size);
     }
 
     /**
@@ -270,27 +252,23 @@ public class WorldBuilder implements WorldBuilderInterface {
      */
     public World getWorld() {
         // Converting the ArrayLists to arrays
-        int[] biomeSizesArray = biomeSizes.stream().mapToInt(biomeSize -> biomeSize).toArray();
-        int[] lakeSizesArray = lakeSizes.stream().mapToInt(lakeSize -> lakeSize).toArray();
+        worldParameters.setBiomeSizes(biomeSizes.stream().mapToInt(biomeSize -> biomeSize).toArray());
+        worldParameters.setLakeSizes(lakeSizes.stream().mapToInt(lakeSize -> lakeSize).toArray());
 
         World world;
 
         switch (type) {
         case "single_player":
-            world = new World(seed, worldSize, nodeSpacing, biomeSizesArray, numOfLakes, lakeSizesArray, biomes,
-                    entities, rivers, riverSize, beachSize);
+            world = new World(worldParameters);
             break;
         case "tutorial":
-            world = new TutorialWorld(seed, worldSize, nodeSpacing, biomeSizesArray, numOfLakes, lakeSizesArray, biomes,
-                    entities, rivers, riverSize, beachSize);
+            world = new TutorialWorld(worldParameters);
             break;
         case "test":
-            world = new TestWorld(seed, worldSize, nodeSpacing, biomeSizesArray, numOfLakes, lakeSizesArray, biomes,
-                    entities, rivers, riverSize, beachSize);
+            world = new TestWorld(worldParameters);
             break;
         case "server":
-            world = new ServerWorld(seed, worldSize, nodeSpacing, biomeSizesArray, numOfLakes, lakeSizesArray, biomes,
-                    entities, rivers, riverSize, beachSize);
+            world = new ServerWorld(worldParameters);
             break;
         default:
             throw new IllegalArgumentException("The world type is not valid");
