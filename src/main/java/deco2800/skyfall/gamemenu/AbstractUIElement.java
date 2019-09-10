@@ -34,9 +34,11 @@ public abstract class AbstractUIElement {
     }
 
     public AbstractUIElement(Stage stage, String[] textureNames, TextureManager tm) {
-        textures = new TextureRegionDrawable[textureNames.length];
-        this.getTextures(textureNames, tm);
         this.tm = tm;
+        if (textureNames != null) {
+            textures = new TextureRegionDrawable[textureNames.length];
+            this.getTextures(textureNames, tm);
+        }
         this.stage = stage;
     }
 

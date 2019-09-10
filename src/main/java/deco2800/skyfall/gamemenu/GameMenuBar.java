@@ -20,6 +20,7 @@ public class GameMenuBar extends AbstractUIElement {
     public GameMenuBar(Stage stage, String[] textureNames, TextureManager tm, GameMenuManager gameMenuManager) {
         super(stage, textureNames, tm);
         this.gameMenuManager = gameMenuManager;
+        this.draw();
     }
 
 
@@ -53,7 +54,7 @@ public class GameMenuBar extends AbstractUIElement {
         pause.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //gameMenuManager.open(getPauseTable());
+                gameMenuManager.setPopUp("pauseTable");
             }
         });
 
@@ -69,7 +70,7 @@ public class GameMenuBar extends AbstractUIElement {
         selectCharacter.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //gameMenuManager.open(getPlayerSelect());
+                gameMenuManager.setPopUp("selectCharacter");
             }
         });
 
@@ -81,7 +82,7 @@ public class GameMenuBar extends AbstractUIElement {
         info.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //gameMenuManager.open(getHelpTable());
+                gameMenuManager.setPopUp("helpTable");
             }
         });
 
@@ -93,7 +94,7 @@ public class GameMenuBar extends AbstractUIElement {
         settings.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //gameMenuManager.open(getSettingsTable());
+                gameMenuManager.setPopUp("settingsTable");
             }
         });
 
@@ -107,7 +108,7 @@ public class GameMenuBar extends AbstractUIElement {
         radar.setPosition(440, 30 * 1000 / 800f);
         stage.addActor(radar);
 
-
+        System.out.println("Finished drawing menu bar");
     }
 
     /***
