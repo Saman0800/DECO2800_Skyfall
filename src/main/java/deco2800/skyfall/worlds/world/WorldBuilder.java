@@ -195,11 +195,6 @@ public class WorldBuilder implements WorldBuilderInterface {
 
                 spawnChests(10, startTile, biome, world);
 
-                // Create a list of all possible gold values
-                List<Integer> goldValues = Arrays.asList(5, 10, 50, 100);
-                Random rand = new Random();
-                // Select a random coin value from this list
-                int randomValue = goldValues.get(rand.nextInt(goldValues.size()));
 
                 // create a loop to generate different coin values
                 for (int i = 0; i < 4; i++){

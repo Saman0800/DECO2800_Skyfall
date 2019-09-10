@@ -739,12 +739,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Removes one instance of a gold piece in the pouch.
-     * @param gold The gold piece to be removed from the pouch.
+     * Removes one instance of a gold piece in the pouch with a specific value.
+     * @param goldValue The value of the gold piece to be removed from the pouch.
      */
-    public void removeGold(GoldPiece gold) {
-        // store the gold's value (5G, 10G etc) as a variable
-        Integer goldValue = gold.getValue();
+    public void removeGold(Integer goldValue) {
 
         // if this gold value does not exist in the pouch
         if (!(goldPouch.containsKey(goldValue))) {
