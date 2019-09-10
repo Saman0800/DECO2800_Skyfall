@@ -60,6 +60,9 @@ public class GameMenuScreen {
     //Gold Pouch pop ip
     private PopUpTable goldTable;
 
+    //Table in the gold table containing the gold balances
+    private Table goldPanel;
+
     /**
      * Construct the menu screen in the game.
      *
@@ -482,28 +485,98 @@ public class GameMenuScreen {
             stage.addActor(goldTable);
             stage.addActor(goldTable.getExit());
         } else {
-            //goldTable.removeActor(resourcePanel);
-            //updateResourcePanel();
-            //goldTable.addActor(resourcePanel);
+            goldTable.removeActor(goldPanel);
+            updateGoldPanel();
+            goldTable.addActor(goldPanel);
         }
         return goldTable;
+    }
+
+    /***
+     * Updates the gold panel to display the current value of each coin.
+     */
+    private void updateGoldPanel(){
+        goldPanel = new Table();
+        goldPanel.setName("goldPanel");
+        goldPanel.setSize(500, 450);
+        goldPanel.setPosition(110, 100);
+        goldPanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
+
+        Map<Integer, Integer> goldAmounts = mainCharacter.getGoldPouch();
+
+        int count = 0;
+        int xpos = 20;
+        int ypos = 280;
+
+        for (Map.Entry<Integer, Integer> entry : goldAmounts.entrySet()) {
+
+            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject("goldPiece" + entry.getKey()));
+            icon.setName("icon");
+            icon.setSize(100, 100);
+            icon.setPosition(xpos + count * 130, ypos);
+
+            goldPanel.addActor(icon);
+
+            Label num = new Label(entry.getValue().toString(), skin, "white-label");
+            num.setPosition(xpos + 85 + count * 130, ypos + 75);
+            goldPanel.addActor(num);
+
+            count++;
+
+            if ((count) % 3 == 0) {
+                ypos -= 120;
+                count = 0;
+            }
+        }
+
+    }
+
+    private void updateGoldTable() {
+        Map<Integer, Integer> goldAmounts = mainCharacter.getGoldPouch();
+
+        int count = 0;
+        int xpos = 20;
+        int ypos = 280;
+
+        for (Map.Entry<Integer, Integer> entry : goldAmounts.entrySet()) {
+
+            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject("goldPiece" + entry.getKey()));
+            icon.setName("icon");
+            icon.setSize(100, 100);
+            icon.setPosition(xpos + count * 130, ypos);
+
+            goldPanel.addActor(icon);
+
+            Label num = new Label(entry.getValue().toString(), skin, "white-label");
+            num.setPosition(xpos + 85 + count * 130, ypos + 75);
+            goldPanel.addActor(num);
+
+            count++;
+
+            if ((count) % 3 == 0) {
+                ypos -= 120;
+                count = 0;
+            }
+        }
+
     }
 
     /***
      * Sets all images and buttons in the gold pouch table.
      */
     private void setGoldTable() {
-        PopUpTable goldTable = new PopUpTable(700, 700 * 1346 / 1862f, "gold");
+        PopUpTable goldTable = new PopUpTable(700, 700, "gold");
         goldTable.setName("goldTable");
 
-        Image infoBar = new Image(generateTextureRegionDrawableObject("inventory_banner"));
+        // get a gold banner made
+        Image infoBar = new Image(generateTextureRegionDrawableObject("goldBanner"));
         infoBar.setSize(550, 55);
-        infoBar.setPosition(100, 435);
+        infoBar.setPosition(90, 600);
 
-        updateResourcePanel();
+        updateGoldPanel();
 
         goldTable.addActor(infoBar);
-        //goldTable.addActor(this.resourcePanel);
+        goldTable.addActor(this.goldPanel);
 
         this.goldTable = goldTable;
     }
