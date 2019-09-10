@@ -34,9 +34,12 @@ public class GoldPiece extends StaticEntity {
             }
 
     /**
-     *
-     * @param tile
-     * @param obstructed
+     * Creates a gold piece with a specific title, whether or not it is
+     * obstructed and its value
+     * @param tile the entity's ID (gold piece)
+     * @param obstructed true or false depending on whether or not the object
+     *                   is obstructed
+     * @param value the value of the gold piece being constructed
      */
     public GoldPiece(Tile tile, boolean obstructed, int value) {
         super(tile, 2, "goldPiece" + value, obstructed);
