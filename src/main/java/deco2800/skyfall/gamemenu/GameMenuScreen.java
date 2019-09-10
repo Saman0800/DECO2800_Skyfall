@@ -535,7 +535,7 @@ public class GameMenuScreen {
 
             resourcePanel.addActor(icon);
 
-            Label num = new Label(entry.getValue().toString(), skin, "WASD");
+            Label num = new Label(entry.getValue().toString(), skin, "white-label");
             num.setPosition(xpos + 85 + count * 130, ypos + 75);
             resourcePanel.addActor(num);
 
