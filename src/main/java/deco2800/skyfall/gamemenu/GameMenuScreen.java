@@ -8,7 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import deco2800.skyfall.entities.Chest;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.managers.ChestManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.managers.TextureManager;
@@ -43,9 +45,14 @@ public class GameMenuScreen {
     //Inventory Manager instance in game
     private InventoryManager inventory;
 
+    //Item selected
+    private String inventorySelected;
+
     //Table in inventory popup containing resource icons
     private Table resourcePanel;
     public static int currentCharacter;
+
+    private Table chestPanel;
 
     //Table in hot bar containing quick access resources
     private Table quickAccessPanel;
@@ -53,8 +60,10 @@ public class GameMenuScreen {
     //Inventory pop up
     private PopUpTable inventoryTable;
 
-    //Gold Pouch pop ip
+    //Gold Pouch pop up
     private PopUpTable goldTable;
+
+    private PopUpTable chestTable;
 
     //Table in the gold table containing the gold balances
     private Table goldPanel;
@@ -169,6 +178,7 @@ public class GameMenuScreen {
     }
 
 
+
     /**
      * Getter of Game Paused screen.
      *
@@ -203,13 +213,13 @@ public class GameMenuScreen {
         ImageButton toHome = new ImageButton(generateTextureRegionDrawableObject("goHome"));
         toHome.addListener(new ClickListener() {
             @Override
-        public void clicked(InputEvent event, float x, float y) {
+            public void clicked(InputEvent event, float x, float y) {
 //                gameMenuManager.getGame().batch = new SpriteBatch();
 //                gameMenuManager.getGame().setScreen(new MainMenuScreen(gameMenuManager.getGame()));
 //            System.out.println(gameMenuManager.getGame().batch == null);
 //            gameMenuManager.getGame().create();
-        }
-    });
+            }
+        });
 
         Label homeText = new Label("HOME", skin, "white-text");
         homeText.setFontScale(0.7f);
@@ -376,6 +386,20 @@ public class GameMenuScreen {
         this.buildingTable = buildingTable;
     }
 
+    public PopUpTable getChestTable(Chest chest) {
+        if (chestTable == null) {
+            setChestTable(chest);
+            setExitButton(chestTable);
+            stage.addActor(chestTable);
+            stage.addActor(chestTable.getExit());
+        } else {
+            chestTable.removeActor(chestPanel);
+            updateChestPanel(chest);
+            chestTable.addActor(chestTable);
+        }
+        return chestTable;
+    }
+
     /***
      * Updates and returns current state of the inventory table.
      *
@@ -402,6 +426,76 @@ public class GameMenuScreen {
         PopUpTable inventoryTable = new PopUpTable(910, 510, "i");
         inventoryTable.setName("inventoryTable");
 
+        Table infoBar = new Table();
+        infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
+        infoBar.setSize(650, 55);
+        infoBar.setPosition(130, 430);
+
+        Label text = new Label("INVENTORY", skin, "black-text");
+        infoBar.add(text);
+
+        Table infoPanel = new Table();
+        infoPanel.setSize(410, 320);
+        infoPanel.setPosition(25, 98);
+        infoPanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
+
+
+        updateResourcePanel();
+
+        ImageButton drop = new ImageButton(generateTextureRegionDrawableObject("drop"));
+        drop.setSize(100, 60);
+        drop.setPosition(285, 20);
+        drop.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                inventory.dropAll(inventorySelected);
+                inventoryTable.removeActor(resourcePanel);
+                updateResourcePanel();
+                inventoryTable.addActor(resourcePanel);
+                quickAccessPanel.remove();
+                setQuickAccessPanel();
+                inventorySelected = null;
+            }
+        });
+
+        ImageButton equip = new ImageButton(generateTextureRegionDrawableObject("equip"));
+        equip.setSize(100, 60);
+        equip.setPosition(405, 20);
+        equip.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+
+            }
+        });
+
+        ImageButton addqa = new ImageButton(generateTextureRegionDrawableObject("addqa"));
+        addqa.setSize(100, 60);
+        addqa.setPosition(530, 20);
+        addqa.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                inventory.quickAccessAdd(inventorySelected);
+                inventorySelected = null;
+                quickAccessPanel.remove();
+                setQuickAccessPanel();
+
+            }
+        });
+
+        inventoryTable.addActor(infoBar);
+        inventoryTable.addActor(infoPanel);
+        inventoryTable.addActor(this.resourcePanel);
+        inventoryTable.addActor(drop);
+        inventoryTable.addActor(equip);
+        inventoryTable.addActor(addqa);
+
+        this.inventoryTable = inventoryTable;
+    }
+
+    private void setChestTable(Chest chest) {
+        PopUpTable chestTable = new PopUpTable(910, 510, "i");
+        chestTable.setName("chestTable");
+
         Image infoBar = new Image(generateTextureRegionDrawableObject("inventory_banner"));
         infoBar.setSize(650, 55);
         infoBar.setPosition(130, 435);
@@ -412,13 +506,60 @@ public class GameMenuScreen {
         infoPanel.setBackground(generateTextureRegionDrawableObject("info_panel"));
 
 
-        updateResourcePanel();
+        updateChestPanel(chest);
 
-        inventoryTable.addActor(infoBar);
-        inventoryTable.addActor(infoPanel);
-        inventoryTable.addActor(this.resourcePanel);
+        chestTable.addActor(infoBar);
+        chestTable.addActor(infoPanel);
+        chestTable.addActor(this.resourcePanel);
 
-        this.inventoryTable = inventoryTable;
+        this.chestTable = chestTable;
+    }
+
+    private void updateChestPanel(Chest chest) {
+        resourcePanel = new Table();
+        resourcePanel.setName("resourcePanel");
+        resourcePanel.setSize(410, 400);
+        resourcePanel.setPosition(475, 18);
+        resourcePanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
+
+        Map<String, Integer> inventoryAmounts = chest.getManager().getAmounts();
+
+        int count = 0;
+        int xpos = 20;
+        int ypos = 280;
+
+        for (Map.Entry<String, Integer> entry : inventoryAmounts.entrySet()) {
+
+            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey()));
+            icon.setName("icon");
+            icon.setSize(100, 100);
+            icon.setPosition(xpos + count * 130, ypos);
+
+            resourcePanel.addActor(icon);
+
+            Label num = new Label(entry.getValue().toString(), skin, "white-label");
+            num.setPosition(xpos + 85 + count * 130, ypos + 75);
+            resourcePanel.addActor(num);
+
+            count++;
+
+            if ((count) % 3 == 0) {
+                ypos -= 120;
+                count = 0;
+            }
+        }
+
+        ImageButton button = new ImageButton(generateTextureRegionDrawableObject("takeall"));
+        button.setName("Take all");
+        button.setSize(100, 100);
+        button.setPosition(xpos + count * 130, ypos);
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                mainCharacter.getInventoryManager().inventoryAddMultiple(chest.getManager().getContents());
+            }
+        });
+        resourcePanel.addActor(button);
     }
 
     /**
@@ -447,7 +588,6 @@ public class GameMenuScreen {
         PopUpTable goldTable = new PopUpTable(700, 700, "gold");
         goldTable.setName("goldTable");
 
-        // get a gold banner made
         Image infoBar = new Image(generateTextureRegionDrawableObject("goldBanner"));
         infoBar.setSize(550, 55);
         infoBar.setPosition(90, 600);
@@ -535,68 +675,50 @@ public class GameMenuScreen {
     private void updateResourcePanel(){
         resourcePanel = new Table();
         resourcePanel.setName("resourcePanel");
-        resourcePanel.setSize(410, 400);
-        resourcePanel.setPosition(475, 18);
+        resourcePanel.setSize(410, 320);
+        resourcePanel.setPosition(475, 98);
         resourcePanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
 
         Map<String, Integer> inventoryAmounts = gameMenuManager.getInventory().getAmounts();
 
         int count = 0;
-        int xpos = 20;
-        int ypos = 280;
+        int xpos = 115;
+        int ypos = 215;
+        int size = 80;
+        int xspace = 20;
 
         for (Map.Entry<String, Integer> entry : inventoryAmounts.entrySet()) {
 
             ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey()));
-            icon.setName("icon");
-            icon.setSize(100, 100);
-            icon.setPosition(xpos + count * 130, ypos);
+            icon.setName(entry.getKey());
+            icon.setSize((float)size, (float)size);
+            icon.setPosition((float)(xpos + (size+xspace)*(count-1)), ypos);
+
+            icon.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    inventorySelected = icon.getName();
+                }
+            });
 
             resourcePanel.addActor(icon);
 
             Label num = new Label(entry.getValue().toString(), skin, "white-label");
-            num.setPosition(xpos + 85 + count * 130, ypos + 75);
+            num.setFontScale((float)0.4);
+            num.setSize(18, 25);
+            num.setPosition(xspace*count + size*count + xpos - 35, ypos + 65);
             resourcePanel.addActor(num);
 
             count++;
 
-            if ((count) % 3 == 0) {
-                ypos -= 120;
+            if ((count) % 4 == 0) {
+                ypos -= 98;
                 count = 0;
             }
         }
 
     }
 
-    private void updateInventoryTable() {
-        Map<String, Integer> inventoryAmounts = gameMenuManager.getInventory().getAmounts();
-
-        int count = 0;
-        int xpos = 20;
-        int ypos = 280;
-
-        for (Map.Entry<String, Integer> entry : inventoryAmounts.entrySet()) {
-
-            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey()));
-            icon.setName("icon");
-            icon.setSize(100, 100);
-            icon.setPosition(xpos + count * 130, ypos);
-
-            resourcePanel.addActor(icon);
-
-            Label num = new Label(entry.getValue().toString(), skin, "white-label");
-            num.setPosition(xpos + 85 + count * 130, ypos + 75);
-            resourcePanel.addActor(num);
-
-            count++;
-
-            if ((count) % 3 == 0) {
-                ypos -= 120;
-                count = 0;
-            }
-        }
-
-    }
 
     /***
      * Sets the quick access panel and inventory button displayed on the game's hot bar.
@@ -637,20 +759,23 @@ public class GameMenuScreen {
     private void updateQuickAccess(){
         Map<String, Integer> quickAccess = gameMenuManager.getInventory().getQuickAccess();
 
-        int count = 0;
+        int count = 1;
         int xpos = 15;
         int ypos = 28;
+        int size = 55;
 
         for (Map.Entry<String, Integer> entry : quickAccess.entrySet()) {
 
             ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey()));
-            icon.setSize(60, 60);
-            icon.setPosition(xpos + 68*count, ypos);
+            icon.setSize(size, size);
+            icon.setPosition((xpos*count) + size*(count-1), ypos);
 
             quickAccessPanel.addActor(icon);
 
             Label num = new Label(entry.getValue().toString(), skin, "white-label");
-            num.setPosition(xpos + 50 + 64*count, ypos + 40);
+            num.setPosition(xpos*count + size*count - 10, ypos + 40);
+            num.setFontScale((float)0.4);
+            num.setSize(18, 25);
             quickAccessPanel.addActor(num);
 
             count++;

@@ -248,6 +248,16 @@ public class InventoryManager extends TickableManager {
         }
     }
 
+    public void inventoryAddMultiple(Map<String, List<Item>> items) {
+        for (Map.Entry<String, List<Item>> e : items.entrySet()) {
+            if (inventory.get(e.getKey()) != null) {
+                inventory.get(e.getKey()).addAll(e.getValue());
+            } else {
+                inventory.put(e.getKey(), e.getValue());
+            }
+        }
+    }
+
     /**
      * Removes an item from the inventory and returns it. If the item is the
      * last of a specific type present in the inventory (and quick access
@@ -270,6 +280,25 @@ public class InventoryManager extends TickableManager {
                 this.inventory.put(itemName, itemsList);
                 return item;
             }
+        }
+
+        System.out.println("You can't remove what you don't have!");
+
+        return null;
+    }
+
+
+    /**
+     * Removes all of a specific item type from the inventory, and quick access inventory.
+     * Returns as a list of items.
+     * @param itemName the String name of the item type to drop from the inventory.
+     * @return List of instances of item type dropped from inventory
+     */
+    public List<Item> dropAll(String itemName) {
+        if(this.inventory.get(itemName) != null){
+            List<Item> items = this.inventory.get(itemName);
+            remove(itemName);
+            return items;
         }
 
         System.out.println("You can't remove what you don't have!");
