@@ -9,6 +9,7 @@ import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.SkyfallGame;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gamemenu.GameMenuScreen;
+import deco2800.skyfall.gui.Clock;
 import deco2800.skyfall.gui.HealthCircle;
 import deco2800.skyfall.gui.SettingsTable;
 import deco2800.skyfall.gamemenu.PopUpTable;
@@ -25,6 +26,7 @@ public class GameMenuManager extends TickableManager {
     private HealthCircle healthCircle;
     private InventoryManager inventory;
     private SoundManager soundManager;
+    private Clock clock;
     private Skin skin;
     private String[] characters;
     private SkyfallGame game;
@@ -59,6 +61,10 @@ public class GameMenuManager extends TickableManager {
 
         if (healthCircle != null) {
             healthCircle.update();
+        }
+
+        if (clock != null) {
+            clock.update();
         }
 
 
@@ -226,6 +232,14 @@ public class GameMenuManager extends TickableManager {
      */
     public void addHealthCircle(HealthCircle hc) {
         this.healthCircle = hc;
+    }
+
+    /**
+     * Adds the circle to menu Screen
+     * @param clk
+     */
+    public void addClock(Clock clk) {
+        this.clock = clk;
     }
 
     /**

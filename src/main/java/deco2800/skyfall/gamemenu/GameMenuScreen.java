@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.gui.Clock;
 import deco2800.skyfall.gui.HealthCircle;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InventoryManager;
@@ -150,6 +151,12 @@ public class GameMenuScreen {
                 mainCharacter);
 
         gameMenuManager.addHealthCircle(healthCircle);
+
+        Clock clock = new Clock(stage,
+                "rounded_rectangle");
+
+        gameMenuManager.addClock(clock);
+
     }
 
     /**
