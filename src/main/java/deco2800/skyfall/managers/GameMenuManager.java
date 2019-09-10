@@ -9,6 +9,7 @@ import deco2800.skyfall.SkyfallGame;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gamemenu.*;
 import deco2800.skyfall.gamemenu.popupmenu.HelpTable;
+import deco2800.skyfall.gamemenu.popupmenu.PauseTable;
 import deco2800.skyfall.gamemenu.popupmenu.SettingsTable;
 
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class GameMenuManager extends TickableManager {
                 }
             }
             element.update();
-            System.out.println(currentPopUpElement);
+//            System.out.println(currentPopUpElement);
       //System.out.println("Updating " + element.getClass().toString());
         }
 
@@ -241,10 +242,11 @@ public class GameMenuManager extends TickableManager {
     }
 
     public void drawAllElements(){
-        if (sm == null) {
-            System.out.println("Please add stats manager before drawing");
-            return;
-        }
+//        if (sm == null) {
+//            System.out.println("Please add stats manager before drawing");
+//            return;
+//        }
+//        uiElements.add(new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm));
 //        popUps.put("settingsTable", new SettingsTable(stage,
 //                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
 //                null, textureManager, this,
@@ -254,16 +256,27 @@ public class GameMenuManager extends TickableManager {
 //                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
 //                null, textureManager, this,
 //                skin));
+//
+//        popUps.put("pauseTable", new PauseTable(stage,
+//                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+//                null, textureManager, this,
+//                skin));
 //        uiElements.add(new GameMenuBar(stage, null, textureManager, this));
-        uiElements.add(new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm));
 
+    }
 
+    /**
+     * Getter of current pop up table.
+     *
+     * @return Current pop up table.
+     */
+    public AbstractPopUpElement getPopUp() {
+        return popUps.get(currentPopUpElement);
     }
 
     public void setPopUp(String popUpName) {
         currentPopUpElement = popUpName;
     }
-
 
 }
 

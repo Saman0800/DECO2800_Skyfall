@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
-import deco2800.skyfall.gamemenu.PopUpTable;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
 
@@ -51,7 +50,7 @@ public class HelpTable extends AbstractPopUpElement{
         super.draw();
         System.out.println("Drawing HELPTABLE");
         helpTable = new Table();
-        helpTable.setSize(910, 510);
+        helpTable.setSize(600, 600 * 1346 / 1862f);
         helpTable.setPosition(Gdx.graphics.getWidth()/2f - helpTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - helpTable.getHeight()/2);
         helpTable.setDebug(true);

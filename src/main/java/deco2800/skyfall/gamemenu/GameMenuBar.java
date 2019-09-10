@@ -17,6 +17,7 @@ public class GameMenuBar extends AbstractUIElement {
 
     private GameMenuManager gameMenuManager;
 
+
     public GameMenuBar(Stage stage, String[] textureNames, TextureManager tm, GameMenuManager gameMenuManager) {
         super(stage, textureNames, tm);
         this.gameMenuManager = gameMenuManager;
@@ -54,6 +55,7 @@ public class GameMenuBar extends AbstractUIElement {
         pause.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                hideOpened();
                 gameMenuManager.setPopUp("pauseTable");
             }
         });
@@ -70,7 +72,8 @@ public class GameMenuBar extends AbstractUIElement {
         selectCharacter.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gameMenuManager.setPopUp("selectCharacter");
+//                hideOpened();
+//                gameMenuManager.setPopUp("selectCharacter");
             }
         });
 
@@ -82,6 +85,7 @@ public class GameMenuBar extends AbstractUIElement {
         info.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                hideOpened();
                 gameMenuManager.setPopUp("helpTable");
             }
         });
@@ -94,6 +98,7 @@ public class GameMenuBar extends AbstractUIElement {
         settings.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                hideOpened();
                 gameMenuManager.setPopUp("settingsTable");
             }
         });
@@ -144,4 +149,12 @@ public class GameMenuBar extends AbstractUIElement {
         });
     }
 
+    /**
+     * If there is any opened popup, closes it.
+     */
+    private void hideOpened() {
+        if (gameMenuManager.getPopUp() != null) {
+            gameMenuManager.getPopUp().hide();
+        }
+    }
 }
