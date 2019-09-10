@@ -1,6 +1,8 @@
 package deco2800.skyfall.worlds.world;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
@@ -150,7 +152,7 @@ public class World implements TouchDownObserver {
 
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
 
-    };
+    }
 
 
     /**
@@ -228,10 +230,6 @@ public class World implements TouchDownObserver {
             this.worldGenNodes.addAll(worldGenNodes);
             this.tiles.addAll(tiles);
     }
-
-
-
-
 
     /**
      * Loops through all the biomes within the world and adds textures to the tiles

@@ -2,6 +2,8 @@ package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.*;
@@ -15,7 +17,6 @@ import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.Tile;
-import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -178,7 +179,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         xVel = 0;
         yVel = 0;
         setAcceleration(0.01f);
-        setMaxSpeed(0.7f);
+        setMaxSpeed(0.4f);
         vel = 0;
         velHistoryX = new ArrayList<>();
         velHistoryY = new ArrayList<>();
@@ -194,7 +195,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 position.getRow(),
                 1, 1);*/
 
-        canSwim = true;
+        canSwim = false;
         isSprinting = false;
         this.scale = 0.4f;
         setDirectionTextures();
@@ -268,8 +269,51 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         manager.getWorld().addEntity(projectile);
     }
 
+    /**
+     * Set the player as attacking, which is used for attack animations
+     * @param isAttacking Value for whether the player is attacking or not
+     */
     public void setAttacking(boolean isAttacking) {
         this.isAttacking = isAttacking;
+    }
+
+    /**
+     * Lets the player enter a vehicle, by changing there speed and there sprite
+     * @param vehicle The vehicle they are entering
+     */
+    public void enterVehicle(String vehicle) {
+        // Determine the vehicle they are entering and set their new speed and
+        // texture
+        if(vehicle.equals("Horse")){
+            //this.setTexture();
+            setAcceleration(0.1f);
+            setMaxSpeed(0.8f);
+        }else if(vehicle.equals("Dragon")) {
+            //this.setTexture();
+            setAcceleration(0.125f);
+            setMaxSpeed(1f);
+        }else if(vehicle.equals("Boat")) {
+            //this.setTexture();
+            setAcceleration(0.01f);
+            setMaxSpeed(0.5f);
+            changeSwimming(true);
+        }else {
+            //this.setTexture();
+            setAcceleration(0.03f);
+            setMaxSpeed(0.6f);
+        }
+    }
+
+    /**
+     * Lets the player exit the vehicle by setting their speed back to
+     * default and changing the texture. Also changing swimming to false in
+     * case they were in a boat
+     */
+    public void exitVehicle() {
+        //this.setTexture();
+        setAcceleration(0.01f);
+        setMaxSpeed(0.4f);
+        changeSwimming(false);
     }
 
     /**
@@ -862,7 +906,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         if(nextTile == null) {
             // Prevents the player from walking into the void
             position.moveToward(destination, 0);
-        }else if(nextTile.getTextureName().contains("water") && !canSwim) {
+        }else if((nextTile.getTextureName().contains("water")
+                || nextTile.getTextureName().contains("lake")
+                || nextTile.getTextureName().contains("ocean")) && !canSwim) {
             // Prevents the player back if they try to enter water when they
             // can't swim
             position.moveToward(destination, 0);
@@ -926,9 +972,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         // Next tile the player will move to
         Tile nextTile = getTile(xPos, yPos);
-
-        // Method to take away the player's ability to swim
-        changeSwimming(false);
 
         // Moves the player to new location
         findNewPosition(position, destination, nextTile);

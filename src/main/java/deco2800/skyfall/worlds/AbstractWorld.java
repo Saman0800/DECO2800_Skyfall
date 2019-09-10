@@ -1,5 +1,9 @@
 package deco2800.skyfall.worlds;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2D;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.Collider;
@@ -75,7 +79,7 @@ public abstract class AbstractWorld {
 
     	generateTileTypes(random);
 
-    	//Saving the world for test, and likely saving and loading later
+        //Saving the world for test, and likely saving and loading later
 //    	try {
 //            saveWorld("ExampleWorldOutput.txt");
 //        } catch (IOException e){
