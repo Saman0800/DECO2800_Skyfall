@@ -1,6 +1,7 @@
 package deco2800.skyfall;
 
 import java.lang.Math;
+import java.util.ArrayList;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.FileHandle;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import deco2800.skyfall.buildings.BuildingFactory;
@@ -74,6 +76,13 @@ public class GameScreen implements Screen, KeyDownObserver {
      * This hold the intensity for the ambient light for the ambient light.
      */
     SpectralValue ambientIntensity;
+
+    /**
+     * The will be the spectral values for the RBG values of the ambient light
+     */
+    SpectralValue ambientRed;
+    SpectralValue ambientBlue;
+    SpectralValue ambientGreen;
 
     public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
         /* Create an example world for the engine */
@@ -153,7 +162,24 @@ public class GameScreen implements Screen, KeyDownObserver {
 
             return (float) (normalise * cosEval + A * C);
         };
+
         ambientIntensity = new FunctionalSpectralValue(intensityFunction, gameEnvironManag);
+
+        // Create the rgb spectral values
+        ArrayList<TFTuple> redKeyFrame = new ArrayList<TFTuple>();
+        redKeyFrame.add(new TFTuple(0.0f, 1.0f));
+        redKeyFrame.add(new TFTuple(12.0f, 1.0f));
+        ambientRed = new LinearSpectralValue(redKeyFrame);
+
+        ArrayList<TFTuple> greenKeyFrame = new ArrayList<TFTuple>();
+        greenKeyFrame.add(new TFTuple(0.0f, 1.0f));
+        greenKeyFrame.add(new TFTuple(12.0f, 1.0f));
+        ambientGreen = new LinearSpectralValue(greenKeyFrame);
+
+        ArrayList<TFTuple> blueKeyFrame = new ArrayList<TFTuple>();
+        blueKeyFrame.add(new TFTuple(0.0f, 1.0f));
+        blueKeyFrame.add(new TFTuple(12.0f, 1.0f));
+        ambientBlue = new LinearSpectralValue(blueKeyFrame);
 
         GameMenuScreen gamemenuScreen = new GameMenuScreen(gameMenuManager);
         gamemenuScreen.show();
