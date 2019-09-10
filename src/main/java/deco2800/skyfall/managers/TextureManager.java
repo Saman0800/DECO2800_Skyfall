@@ -198,6 +198,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("goldPiece10", new Texture("resources/goldPieces/goldPieceTen.png"));
             textureMap.put("goldPiece50", new Texture("resources/goldPieces/goldPieceFifty.png"));
             textureMap.put("goldPiece100", new Texture("resources/goldPieces/goldPieceHundred.png"));
+            textureMap.put("goldPouch", new Texture("resources/goldPieces/goldPouch.png"));
+            textureMap.put("goldBanner", new Texture("resources/goldPieces/goldBanner.png"));
             textureMap.put("menu_panel", new Texture("resources/menu_panel.png"));
             textureMap.put("exit", new Texture("resources/exit.png"));
             textureMap.put("exitButton", new Texture("resources/exit_button.png"));
