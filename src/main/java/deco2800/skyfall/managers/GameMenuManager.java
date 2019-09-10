@@ -8,7 +8,6 @@ import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.SkyfallGame;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gamemenu.*;
-import deco2800.skyfall.gamemenu.popupmenu.HelpTable;
 import deco2800.skyfall.gamemenu.popupmenu.SettingsTable;
 
 import java.util.ArrayList;
@@ -249,14 +248,9 @@ public class GameMenuManager extends TickableManager {
 //                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
 //                null, textureManager, this,
 //                skin));
-//
-//        popUps.put("helpTable", new HelpTable(stage,
-//                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-//                null, textureManager, this,
-//                skin));
-//        uiElements.add(new GameMenuBar(stage, null, textureManager, this));
-        uiElements.add(new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm));
 
+        uiElements.add(new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm));
+        //uiElements.add(new GameMenuBar(stage, null, textureManager, this));
 
     }
 
