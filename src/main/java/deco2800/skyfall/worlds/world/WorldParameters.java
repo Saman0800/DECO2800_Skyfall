@@ -36,10 +36,10 @@ public class WorldParameters {
     private int noRivers;
 
     //The width of the rivers
-    private int riverWidth;
+    private double riverWidth;
 
     //The width of the beach
-    private int beachWidth;
+    private double beachWidth;
 
 
     /**
@@ -224,7 +224,7 @@ public class WorldParameters {
      * Gets the river width
      * @return The river width
      */
-    public int getRiverWidth() {
+    public double getRiverWidth() {
         return riverWidth;
     }
 
@@ -232,7 +232,7 @@ public class WorldParameters {
      * Gets the beach width
      * @return The beach width
      */
-    public int getBeachWidth() {
+    public double getBeachWidth() {
         return beachWidth;
     }
 

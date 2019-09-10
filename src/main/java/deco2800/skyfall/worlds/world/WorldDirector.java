@@ -52,7 +52,7 @@ public class WorldDirector {
         builder.addRiver();
 
         builder.setRiverSize(5);
-        builder.setBeachSize(1);
+        builder.setBeachSize(12);
 
         builder.setStaticEntities(true);
 

@@ -53,8 +53,8 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
     private int noRivers;
 
     // Half the width of a river
-    private int riverWidth;
-    private int beachWidth;
+    private double riverWidth;
+    private double beachWidth;
 
     private List<VoronoiEdge> riverEdges;
     private List<VoronoiEdge> beachEdges;
@@ -149,8 +149,8 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 generateLakes(lakeSizes, noLakes);
                 populateRealBiomes();
                 generateBeaches();
-                generateRivers(noRivers, riverWidth, voronoiEdges);
-                //ensureContiguity();
+                generateRivers(noRivers, voronoiEdges);
+                ensureContiguity();
 
                 return;
             } catch (DeadEndGenerationException e) {
@@ -270,11 +270,11 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             // Sets the parent biome to the one that isn't the ocean
             AbstractBiome parentBiome = realBiomes.get(nodesBiomes.get(edge.getEdgeNodes().get(1 - oceanIndex)).id);
             BeachBiome beach = new BeachBiome(parentBiome);
+            realBiomes.add(beach);
             beachEdges.put(edge, beach);
         }
 
         world.setBeachEdges(beachEdges);
-
 
         /*
         ArrayList<Tile> coast = new ArrayList<>();
@@ -445,12 +445,11 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      * already been overwritten by rivers. This method is still deterministic for a constant riverWidth
      *
      * @param noRivers   The number of rivers to generate
-     * @param riverWidth The width of the rivers (the number of tiles wide is 2 * riverWidth + 1)
      * @param edges      A list of edges that a river can use
      *
      * @throws DeadEndGenerationException If not enough valid rivers can be found
      */
-    private void generateRivers(int noRivers, int riverWidth, List<VoronoiEdge> edges)
+    private void generateRivers(int noRivers, List<VoronoiEdge> edges)
             throws DeadEndGenerationException {
         List<BiomeInProgress> lakes = new ArrayList<>();
         // A hash map cannot be used as that can cause non-deterministic
@@ -581,8 +580,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 RiverBiome river = new RiverBiome(allParentBiomes.get(i));
                 realBiomes.add(river);
                 nonDuplicateEdges.put(allRiverEdges.get(i), river);
-                //nonDuplicateBiomes.add(allParentBiomes.get(i));
-                //realBiomes.add(new RiverBiome(allParentBiomes.get(i)));
             }
         }
 

@@ -53,7 +53,7 @@ public class World implements TouchDownObserver {
     protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
     protected CopyOnWriteArrayList<VoronoiEdge> voronoiEdges;
 
-    protected  LinkedHashMap<VoronoiEdge, RiverBiome> riverEdges;
+    protected LinkedHashMap<VoronoiEdge, RiverBiome> riverEdges;
     protected LinkedHashMap<VoronoiEdge, BeachBiome> beachEdges;
 
     protected List<AbstractEntity> entitiesToDelete = new CopyOnWriteArrayList<>();

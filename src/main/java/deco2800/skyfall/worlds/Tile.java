@@ -246,7 +246,15 @@ public class Tile {
     }
 
     private VoronoiEdge findNearestEdge(VoronoiEdge currentEdge,
-            List<VoronoiEdge> edges, double maxDistance) {
+            List<VoronoiEdge> edges, double maxDistance, double noiseFactor) {
+        // TODO make noise contiguous
+        double tileX =
+                this.getCol() + xNoiseGen.getOctavedPerlinValue(this.getCol() , this.getRow()) *
+                        (double) noiseFactor - (double) noiseFactor / 2;
+        double tileY =
+                this.getRow() + yNoiseGen.getOctavedPerlinValue(this.getCol() , this.getRow()) *
+                        (double) noiseFactor - (double) noiseFactor / 2;
+
         VoronoiEdge closestEdge = currentEdge;
         double closestDistance = Double.POSITIVE_INFINITY;
         for (VoronoiEdge voronoiEdge : edges) {
@@ -265,24 +273,24 @@ public class Tile {
                 double bigY = Math.max(ay, by);
 
                 // If the tile is within the y values of the edge
-                if (this.getRow() <= bigY && this.getRow() >= smallY) {
-                    squareDistance = Math.abs(this.getCol() - ax);
+                if (tileY <= bigY && tileY >= smallY) {
+                    squareDistance = Math.abs(tileX - ax);
                     squareDistance *= squareDistance;
-                } else if (this.getRow() > bigY) {
+                } else if (tileY > bigY) {
                     squareDistance = this.squareDistanceTo(ax, bigY);
                 } else {
                     squareDistance = this.squareDistanceTo(ax, smallY);
                 }
             } else {
-                double dxA = this.getCol() - ax;
-                double dxB = this.getCol() - bx;
-                double dyA = this.getRow() - ay;
-                double dyB = this.getRow() - by;
+                double dxA = tileX - ax;
+                double dxB = tileX - bx;
+                double dyA = tileY - ay;
+                double dyB = tileY - by;
 
                 double edgeLength = voronoiEdge.getSquareOfLength();
                 double dotProduct = (dxA * (bx - ax) + dyA * (by - ay));
 
-                if (dotProduct < 0 || dotProduct * dotProduct > edgeLength) {
+                if (dotProduct < 0 || dotProduct > edgeLength) {
                     double squareDistanceToA = dxA * dxA + dyA * dyA;
                     double squareDistanceToB = dxB * dxB + dyB * dyB;
                     squareDistance = Math.min(squareDistanceToA,
@@ -290,7 +298,7 @@ public class Tile {
                 } else {
                     double gradient = (ay - by) / (ax - bx);
                     // A quantity used to calculate the distance
-                    double distanceNumerator = -1 * gradient * this.getCol() + this.getRow()
+                    double distanceNumerator = -1 * gradient * tileX + tileY
                             + gradient * bx - by;
                     // Get the square distance
                     squareDistance = distanceNumerator * distanceNumerator / (gradient * gradient + 1);
@@ -322,12 +330,15 @@ public class Tile {
         /* TODO do something better than this to prevent rivers from being on
             the origin
          */
-        if (Math.abs(this.getCol()) < riverWidth && Math.abs(this.getRow()) < riverWidth) {
+        if (this.getBiome().getBiomeName().equals("ocean")) {
             return;
         }
-        VoronoiEdge closestEdge = findNearestEdge(null, new ArrayList<>(beachEdges.keySet()), beachWidth);
-        closestEdge = findNearestEdge(closestEdge, new ArrayList<>(riverEdges.keySet()), riverWidth);
+        VoronoiEdge closestEdge = findNearestEdge(null, new ArrayList<>(beachEdges.keySet()), beachWidth, beachWidth * 2);
+        if (!(Math.abs(this.getCol()) < riverWidth && Math.abs(this.getRow()) < riverWidth)) {
+            closestEdge = findNearestEdge(closestEdge, new ArrayList<>(riverEdges.keySet()), riverWidth, riverWidth * 2);
+        }
         this.edge = closestEdge;
+        // Add the tile to the biome for the beach/river
         if (beachEdges.containsKey(closestEdge)) {
             beachEdges.get(closestEdge).addTile(this);
         } else if (riverEdges.containsKey(closestEdge)) {
