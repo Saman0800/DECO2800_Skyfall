@@ -1,9 +1,13 @@
 package deco2800.skyfall.entities.spells;
 
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.EnemyEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.util.HexVector;
+
+import java.util.List;
 
 public class Tornado extends Spell {
 
@@ -26,6 +30,22 @@ public class Tornado extends Spell {
     @Override
     public void onTick(long tick) {
         super.onTick(tick);
+
+        //Loop through enemies.
+        List<AbstractEntity> entities =  GameManager.get().getWorld().getEntities();
+
+        //TODO can add a kd tree or similar to only select enemies in the target area.
+        for (AbstractEntity entity : entities) {
+            if (entity instanceof EnemyEntity) {
+                //If close enough, deal damage to the enemy over time.
+                if (this.position.isCloseEnoughToBeTheSameByDistance(entity.getPosition(),1)) {
+                    ((EnemyEntity) entity).takeDamage(this.getDamage());
+                    this.destroy();
+                    //TODO: add a status indicator.
+                    //entity.addStatusIndicator();
+                }
+            }
+        }
 
     }
 }

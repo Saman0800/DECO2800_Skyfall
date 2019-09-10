@@ -23,7 +23,7 @@ public class SpellFactory {
         } else if(spellType.equals(SpellType.TORNADO)){
             spell = new Tornado(mousePosition, "tornado_placeholder",
                     "spell", mousePosition.getCol(), mousePosition.getRow(),
-                    1,
+                    20,
                     0.1f,
                     10);
         }
