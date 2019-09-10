@@ -446,7 +446,7 @@ public class GameMenuScreen {
         drop.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                inventory.drop(inventorySelected);
+                inventory.dropAll(inventorySelected);
                 inventoryTable.removeActor(resourcePanel);
                 updateResourcePanel();
                 inventoryTable.addActor(resourcePanel);
