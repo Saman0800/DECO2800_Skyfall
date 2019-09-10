@@ -46,7 +46,7 @@ public class Chest extends StaticEntity implements HasHealth {
      */
     @Override
     public Chest newInstance(Tile tile) {
-        return new Chest(tile, this.isObstructed(), manager.getInventoryContents());
+        return new Chest(tile, this.isObstructed(), manager.getContents());
     }
 
     public ChestManager getManager() {
