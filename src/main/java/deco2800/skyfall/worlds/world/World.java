@@ -403,34 +403,9 @@ public class World implements TouchDownObserver {
             tiles.remove(t);
         }
 
-        // Collision detection for entities
-        for (AbstractEntity e1 : this.getEntities()) {
-            if (e1 instanceof StaticEntity) {
-                // Static entities can't move into other entities. Only worry
-                // about entities that can move themselves into other entities
-                continue;
-            }
-            e1.onTick(0);
-            //if (e1.getCollider() == null) {
-            //    break;
-            //}
-            Collider c1 = e1.getCollider();
-            for (AbstractEntity e2 : this.getEntities()) {
-                if (e2.getCollider() == null) {
-                    break;
-                }
-                Collider c2 = e2.getCollider();
-                if (e1 != e2 && c1.overlaps(c2)) {
-                    if (e1 instanceof MainCharacter || e2 instanceof
-                    MainCharacter) {
-                        break;
-                    }
-                    //collision handler
-                //    this.handleCollision(e1, e2);
-                //    break;
-                }
-            }
-            // no collision here
+        //
+        for (AbstractEntity e1 : this.getEntities()){
+            e1.onTick(i);
         }
     }
 

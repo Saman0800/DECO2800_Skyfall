@@ -45,8 +45,9 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
     }
 
     public void onTick(long i) {
+        getBody().setTransform(position.getCol(), position.getRow(), getBody().getAngle());
+
         //@TODO
-        //this.updateCollider();
         if (task != null && task.isAlive()) {
             task.onTick(i);
 

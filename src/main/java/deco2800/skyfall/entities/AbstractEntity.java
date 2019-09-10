@@ -41,8 +41,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		return nextID++;
 	}
 
-    private Collider collider;
-
 	protected HexVector position;
 	private int height;
 	private float colRenderLength;
@@ -58,9 +56,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
 	@Expose
 	private int entityID = 0;
-
-	/** Whether an entity should trigger a collision when */
-	private boolean collidable = true; 
 
 	private int renderOrder = 0;
 
@@ -208,28 +203,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		return this.renderOrder - otherEntity.getRenderOrder();
 	}
 
-    /**
-     * Creates a new Collider object at (x,y) coordinates with size xLength x
-     * yLength.
-     * Called by all constructors in this class such that no AbstractEntity
-     * in the game has a Collider set to null.
-     */
-    public void setCollider() {
-        float[] coords = WorldUtil.colRowToWorldCords(position.getCol(), position.getRow());
-        //TODO: length and width of collider to be determined by actual size of texture
-        this.collider = new Collider(coords[0], coords[1], 100, 100);
-    }
-
-	/**
-	 * Tests to see if the item collides with another entity in the world
-	 * @param entity the entity to test collision with
-	 * @return true if they collide, false if they do not collide
-     */
-	public boolean collidesWith(AbstractEntity entity) {
-		//TODO: Implement this.
-		return this.collider.overlaps(entity.collider);
-	}
-
 	@Override
 	public float getColRenderLength() {
 		return this.colRenderLength;
@@ -276,7 +249,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 				Float.compare(entity.colRenderLength, colRenderLength) == 0 &&
 				Float.compare(entity.rowRenderLength, rowRenderLength) == 0 &&
 				entityID == entity.entityID &&
-				collidable == entity.collidable &&
 				Objects.equals(texture, entity.texture) &&
 				Objects.equals(position, entity.position);
 	}
@@ -330,13 +302,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	public void setEntityID(int id) {
 		this.entityID = id;
 	}
-
-    /**
-     * @return The collider for the AbstractEntity
-     */
-    public Collider getCollider() {
-        return this.collider;
-    }
 
     public void dispose() {
         body.destroyFixture(fixture);
@@ -423,7 +388,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 */
 	public void defineFixture(){
 		CircleShape shape = new CircleShape();
-		shape.setRadius(50);
+		shape.setRadius(0.2f);
 
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
@@ -466,11 +431,11 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 * Should be overwritten for each entity where something should occur
 	 * during a collision
 	 *
-	 * @param hitter the other object involved in the collision
+	 * @param other the other object involved in the collision
 	 */
-	public void handleCollision(Object hitter) {
+	public void handleCollision(Object other) {
         //Does nothing as collision logic should be case specific
-		log.info("I hit something");
+		log.info("I was hit: " + this.getClass() + "\n by: " + other.getClass());
     }
 
     /**

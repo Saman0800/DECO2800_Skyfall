@@ -98,8 +98,6 @@ public class MainCharacter extends Peon
      */
     private int xInput;
     private int yInput;
-    private float xVel;
-    private float yVel;
     private float acceleration;
     private float maxSpeed;
     private double vel;
@@ -108,6 +106,7 @@ public class MainCharacter extends Peon
     private boolean isMoving;
     private boolean canSwim;
     private boolean isSprinting;
+    private float speedFactor;
 
     /*
      * Used for combat testing melee/range weapons.
@@ -199,15 +198,15 @@ public class MainCharacter extends Peon
         GoldPiece initialPiece = new GoldPiece(100);
         this.addGold(initialPiece, 1);
         //Initialises the players velocity properties
-        xInput = 0;
-        yInput = 0;
-        xVel = 0;
-        yVel = 0;
+
+
         setAcceleration(0.01f);
         setMaxSpeed(0.7f);
         vel = 0;
         velHistoryX = new ArrayList<>();
         velHistoryY = new ArrayList<>();
+        speedFactor = 1f/30f;
+
         blueprintsLearned = new ArrayList<>();
 
 
@@ -712,6 +711,7 @@ public class MainCharacter extends Peon
         this.updatePosition();
         this.movementSound();
 
+
         //this.setCurrentSpeed(this.direction.len());
         //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
         //        System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction,
@@ -975,112 +975,106 @@ public class MainCharacter extends Peon
     }
 
     /**
-     * Calculates the velocity of the player
-     * @param mainInput Input being checked
-     * @param altInput Input not being checked
-     * @param vel Velocity to calculate
-     * @param friction Friction value
-     * @return The new velocity
-     */
-    public float calVelocity(int mainInput, int altInput, float vel, float friction) {
-        if (mainInput != 0) {
-            vel += mainInput * acceleration * friction;
-            // Prevents sliding
-            if (vel / Math.abs(vel) != mainInput) {
-                vel = 0;
-            }
-        } else if (altInput != 0) {
-            vel *= 0.8;
-        } else {
-            vel = 0;
-        }
-        return vel;
-    }
-
-    /**
-     * Finds the next position to move to and moves there
-     * @param position The current position
-     * @param destination The new position
-     * @param nextTile The tile that will be moved to
-     */
-    public void findNewPosition(HexVector position, HexVector destination, Tile nextTile) {
-        if (nextTile == null) {
-            // Prevents the player from walking into the void
-            position.moveToward(destination, 0);
-        } else if (nextTile.getTextureName().contains("water") && !canSwim) {
-            // Prevents the player back if they try to enter water when they
-            // can't swim
-            position.moveToward(destination, 0);
-        } else {
-            position.moveToward(destination, vel);
-        }
-    }
-
-    /**
      * Moves the player based on current key inputs
      */
     public void updatePosition() {
-        // Gets current position
         float xPos = position.getCol();
         float yPos = position.getRow();
 
         // Gets the tile the player is standing on
         Tile currentTile = getTile(xPos, yPos);
-        // Returns tile at left arm (our perspective) of the player
-        float tileCol = (float) Math.round(xPos);
-        float tileRow = (float) Math.round(yPos);
-        if (tileCol % 2 != 0) {
-            tileRow += 0.5f;
-        }
 
         // Determined friction scaling factor to apply based on current tile
         float friction;
         if (currentTile != null && currentTile.getTexture() != null) {
             //Tile specific friction
-            currentTile = GameManager.get().getWorld().getTile(tileCol, tileRow);
             friction = Tile.getFriction(currentTile.getTextureName());
         } else {
             // Default friction
             friction = 1f;
         }
 
-        // Calculates new x and y positions
-        xPos += xVel + xInput * acceleration * 0.5 * friction;
-        yPos += yVel + yInput * acceleration * 0.5 * friction;
+        getBody().setLinearDamping(friction);
 
-        // Calculates velocity in x and y directions
-        xVel = calVelocity(xInput, yInput, xVel, friction);
-        yVel = calVelocity(yInput, xInput, yVel, friction);
-
-        // caps the velocity depending on the friction of the current tile
-        float maxTileSpeed = maxSpeed * friction;
-        if (vel > maxTileSpeed) {
-            xVel /= vel;
-            yVel /= vel;
-
-            xVel *= maxTileSpeed;
-            yVel *= maxTileSpeed;
+        if (checkTileMovement()) {
+            this.processMovement();
         }
 
-        // Calculates speed to destination
-        vel = friction * Math.sqrt((xVel * xVel) + (yVel * yVel));
+        //this.setPosition(getBody().getPosition().x, getBody().getPosition().y, this.getHeight());
+        position.setCol(getBody().getPosition().x);
+        position.setRow(getBody().getPosition().y);
+        //System.out.println(position.getCol());
+    }
 
-        // Calculates destination vector
-        HexVector destination = new HexVector(xPos, yPos);
+    public void processMovement(){
+        float xVel = getBody().getLinearVelocity().x;
+        float yVel = getBody().getLinearVelocity().y;
+        recordVelHistory(xVel,yVel);
 
-        // Next tile the player will move to
-        Tile nextTile = getTile(xPos, yPos);
+        // Scales the players velocity (previous)
+        getBody().setLinearVelocity(getBody().getLinearVelocity().limit(maxSpeed));
 
-        // Method to take away the player's ability to swim
-        changeSwimming(false);
+        float xDirection = directionValue(xInput, yInput, xVel);
+        float yDirection = directionValue(yInput, xInput, yVel);
 
-        // Moves the player to new location
-        findNewPosition(position, destination, nextTile);
+        if (xDirection == 5 && yDirection != 5){
+            getBody().setLinearVelocity(0, yVel);
+        } else if (xDirection != 5 && yDirection == 5){
+            getBody().setLinearVelocity(xVel,0);
+        } else if (xDirection == 5 && yDirection == 5){
+            getBody().setLinearVelocity(0,0);
+        } else if (xDirection == 0 && yDirection == 0){
+            getBody().setLinearVelocity(xDirection, yDirection);
+        } else{
+            getBody().applyForceToCenter(xDirection, yDirection, true);
+        }
 
-        //Records velocity history in x direction
-        recordVelHistory(xVel, yVel);
+        updateVel();
+    }
 
-        getBody().setTransform(xPos, yPos, getBody().getAngle());
+    public void updateVel(){
+        vel = getBody().getLinearVelocity().len();
+    }
+
+    public float directionValue(int mainInput, int altInput, float vel){
+        float direction;
+        //System.out.println(mainInput);
+
+        /**
+        if (mainInput != 0){
+            direction = mainInput;
+        }
+
+         } else if (altInput != 0){
+         direction = Math.abs(vel) * 0.2f;
+         */
+
+        if (mainInput != 0){
+            if (vel / Math.abs(vel) != mainInput && vel != 0){
+                direction = 5;
+            } else {
+                direction = mainInput;
+            }
+        } else {
+            direction = 0;
+        }
+
+        if (direction != 5){
+            direction *= speedFactor;
+        }
+
+        //System.out.println(direction);
+        return direction;
+    }
+
+    public Boolean checkTileMovement(){
+        Tile tile = getTile(position.getCol()+xInput, position.getRow()+yInput);
+
+        if (tile == null) {
+            return false;
+        } else {
+            return !tile.getTextureName().contains("water") || canSwim;
+        }
     }
 
     /**
@@ -1153,8 +1147,8 @@ public class MainCharacter extends Peon
      */
     public List<Float> getVelocity() {
         ArrayList<Float> velocity = new ArrayList<>();
-        velocity.add(xVel);
-        velocity.add(yVel);
+        velocity.add(getBody().getLinearVelocity().x);
+        velocity.add(getBody().getLinearVelocity().x);
         velocity.add((float) vel);
 
         return velocity;

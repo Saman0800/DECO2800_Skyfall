@@ -103,7 +103,7 @@ public class Stone extends EnemyEntity implements Animatable {
      */
     @Override
     public void onTick(long i) {
-        this.setCollider();
+        getBody().setTransform(position.getCol(), position.getRow(), getBody().getAngle());
         this.randomMoving();
         this.resetFeeling();
         if (isDead() == true) {
