@@ -10,6 +10,7 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gamemenu.*;
 import deco2800.skyfall.gamemenu.popupmenu.HelpTable;
 import deco2800.skyfall.gamemenu.popupmenu.PauseTable;
+import deco2800.skyfall.gamemenu.popupmenu.PlayerSelectTable;
 import deco2800.skyfall.gamemenu.popupmenu.SettingsTable;
 
 import java.util.ArrayList;
@@ -155,14 +156,15 @@ public class GameMenuManager extends TickableManager {
     }
 
     /**
-     * Pause the game.
+     * Pauses the game.
      */
     private void pause() {
         GameManager.setPaused(true);
+        GameScreen.isPaused = true;
     }
 
     /**
-     * Resume the game and make the PopUpTable disappear.
+     * Resumes the game and make the PopUpTable disappear.
      *
      * @param table PopUpTable to be exited.
      */
@@ -261,6 +263,12 @@ public class GameMenuManager extends TickableManager {
 //                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
 //                null, textureManager, this,
 //                skin));
+//
+//        popUps.put("playerSelectTable", new PlayerSelectTable(stage,
+//                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+//                null, textureManager, this,
+//                skin));
+//
 //        uiElements.add(new GameMenuBar(stage, null, textureManager, this));
 
     }

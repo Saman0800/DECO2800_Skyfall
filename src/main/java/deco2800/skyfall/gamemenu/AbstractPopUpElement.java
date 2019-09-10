@@ -13,7 +13,7 @@ import deco2800.skyfall.managers.TextureManager;
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
 public class AbstractPopUpElement extends AbstractUIElement {
-    private GameMenuManager gameMenuManager;
+    protected GameMenuManager gameMenuManager;
     ImageButton exitButton;
     protected boolean isVisible = false;
 
@@ -26,15 +26,27 @@ public class AbstractPopUpElement extends AbstractUIElement {
         gameMenuManager.setPopUp(null);
     }
 
+    /**
+     * Resumes the game.
+     */
     public void resume() {
         GameManager.setPaused(false);
         GameScreen.isPaused = false;
+    }
+
+    /**
+     * Pause the game.
+     */
+    private void pause() {
+        GameManager.setPaused(true);
+        GameScreen.isPaused = true;
     }
 
     public void show(){
         System.out.println("showing exit");
         exitButton.setVisible(true);
         isVisible = true;
+        pause();
     }
 
     @Override

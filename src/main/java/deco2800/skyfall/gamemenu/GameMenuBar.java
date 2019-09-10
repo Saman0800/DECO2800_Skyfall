@@ -72,8 +72,8 @@ public class GameMenuBar extends AbstractUIElement {
         selectCharacter.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-//                hideOpened();
-//                gameMenuManager.setPopUp("selectCharacter");
+                hideOpened();
+                gameMenuManager.setPopUp("playerSelectTable");
             }
         });
 
