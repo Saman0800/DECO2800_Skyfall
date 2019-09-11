@@ -663,7 +663,43 @@ public class MainCharacter extends Peon
                 HexVector mousePos = new HexVector(clickedPosition[0], clickedPosition[1]);
                 this.attack(mousePos);
             }
+
+            if (button == 1) {
+                System.out.println("right clicked!");
+                float[] mouse =
+                        WorldUtil.screenToWorldCoordinates(Gdx.input.getX(),
+                                Gdx.input.getY());
+                float[] clickedPosition =
+                        WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
+
+                Tile tile = getTile(clickedPosition[0], clickedPosition[1]);
+
+                if (tile == null) {
+                    System.out.println("tile is null");
+                    return;
+                }
+
+                for (AbstractEntity entity :
+                        GameManager.get().getWorld().getEntities()) {
+                    if (entity instanceof Weapon) {
+                        System.out.println(entity);
+
+                        if (this.getPosition().distance(entity.getPosition())
+                                <= 1) {
+                            System.out.println("got here");
+                            inventories.inventoryAdd((Item)entity);
+                            //weapons.pickUpWeapon((Weapon) entity);
+                            GameManager.get().getWorld().removeEntity(entity);
+                            System.out.println("picked up weapon!");
+                            //logger.info(weapons.toString());
+                        }
+                        return;
+                    }
+                }
+            }
         }
+
+
 
         /**
          * Handles tick based stuff, e.g. movement

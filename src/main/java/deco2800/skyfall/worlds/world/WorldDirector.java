@@ -3,6 +3,7 @@ package deco2800.skyfall.worlds.world;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.*;
 
 import java.lang.management.MonitorInfo;
@@ -66,6 +67,8 @@ public class WorldDirector {
         builder.addEntity(new Stone(-4, -2, mainCharacter));
         builder.addEntity(new Flower(2f,2f,mainCharacter));
         builder.addEntity(new Treeman(-2f,-3f,mainCharacter));
+        builder.addEntity(new Weapon(new Tile(-1f, 3f), true, "sword",
+                "melee", "splash", 3, 5, 6));
 
         return builder;
     }
