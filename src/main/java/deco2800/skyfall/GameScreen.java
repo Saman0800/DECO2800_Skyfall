@@ -150,9 +150,9 @@ public class GameScreen implements Screen, KeyDownObserver {
          * SpectralValue instances for the Ambient Light.
          */
         IntensityFunction intensityFunction = (float x) -> {
-            double A = 0.4;
-            double B = 7.2;
-            double C = 1.46;
+            double A = 0.3;
+            double B = 6.7;
+            double C = 2.38;
 
             double cosEval = Math.cos(((x - 12) * Math.PI) / 12.0);
             double normalise = A * Math.sqrt((1 + B * B) / (1 + B * B * cosEval * cosEval));
@@ -164,19 +164,43 @@ public class GameScreen implements Screen, KeyDownObserver {
 
         // Create the rgb spectral values
         ArrayList<TFTuple> redKeyFrame = new ArrayList<TFTuple>();
-        redKeyFrame.add(new TFTuple(0.0f, 1.0f));
-        redKeyFrame.add(new TFTuple(12.0f, 1.0f));
-        ambientRed = new LinearSpectralValue(redKeyFrame);
+        redKeyFrame.add(new TFTuple(0.0f, 0.15f));
+        redKeyFrame.add(new TFTuple(5.0f, 0.15f));
+        redKeyFrame.add(new TFTuple(5.5f, 0.2f));
+        redKeyFrame.add(new TFTuple(6.0f, 0.7f));
+        redKeyFrame.add(new TFTuple(6.3f, 0.6f));
+        redKeyFrame.add(new TFTuple(7.0f, 0.9f));
+        redKeyFrame.add(new TFTuple(17.0f, 0.9f));
+        redKeyFrame.add(new TFTuple(17.5f, 0.8f));
+        redKeyFrame.add(new TFTuple(18.5f, 0.6f));
+        redKeyFrame.add(new TFTuple(19.0f, 0.15f));
+        ambientRed = new LinearSpectralValue(redKeyFrame, gameEnvironManag);
 
         ArrayList<TFTuple> greenKeyFrame = new ArrayList<TFTuple>();
-        greenKeyFrame.add(new TFTuple(0.0f, 1.0f));
-        greenKeyFrame.add(new TFTuple(12.0f, 1.0f));
-        ambientGreen = new LinearSpectralValue(greenKeyFrame);
+        greenKeyFrame.add(new TFTuple(0.0f, 0.12f));
+        greenKeyFrame.add(new TFTuple(5.0f, 0.12f));
+        greenKeyFrame.add(new TFTuple(5.5f, 0.2f));
+        greenKeyFrame.add(new TFTuple(6.0f, 0.45f));
+        greenKeyFrame.add(new TFTuple(6.3f, 0.4f));
+        greenKeyFrame.add(new TFTuple(7.0f, 0.9f));
+        greenKeyFrame.add(new TFTuple(17.0f, 0.9f));
+        greenKeyFrame.add(new TFTuple(17.5f, 0.5f));
+        greenKeyFrame.add(new TFTuple(18.5f, 0.4f));
+        greenKeyFrame.add(new TFTuple(19.0f, 0.12f));
+        ambientGreen = new LinearSpectralValue(greenKeyFrame, gameEnvironManag);
 
         ArrayList<TFTuple> blueKeyFrame = new ArrayList<TFTuple>();
-        blueKeyFrame.add(new TFTuple(0.0f, 1.0f));
-        blueKeyFrame.add(new TFTuple(12.0f, 1.0f));
-        ambientBlue = new LinearSpectralValue(blueKeyFrame);
+        blueKeyFrame.add(new TFTuple(0.0f, 0.19f));
+        blueKeyFrame.add(new TFTuple(5.0f, 0.19f));
+        blueKeyFrame.add(new TFTuple(5.5f, 0.6f));
+        blueKeyFrame.add(new TFTuple(6.0f, 0.1f));
+        blueKeyFrame.add(new TFTuple(6.3f, 0.45f));
+        blueKeyFrame.add(new TFTuple(7.0f, 0.96f));
+        blueKeyFrame.add(new TFTuple(17.0f, 0.96f));
+        blueKeyFrame.add(new TFTuple(17.5f, 0.35f));
+        blueKeyFrame.add(new TFTuple(18.5f, 0.8f));
+        blueKeyFrame.add(new TFTuple(19.0f, 0.19f));
+        ambientBlue = new LinearSpectralValue(blueKeyFrame, gameEnvironManag);
 
         GameMenuScreen gamemenuScreen = new GameMenuScreen(gameMenuManager);
         gamemenuScreen.show();
@@ -258,7 +282,9 @@ public class GameScreen implements Screen, KeyDownObserver {
      */
     private void rerenderMapObjects(SpriteBatch batch, OrthographicCamera camera) {
         //set ambient light
-        shader.setAmbientComponent(new vec3(1.0f, 1.0f, 1.0f), ambientIntensity.getIntensity());
+        shader.setAmbientComponent(
+                new vec3(ambientRed.getIntensity(), ambientGreen.getIntensity(), ambientBlue.getIntensity()),
+                ambientIntensity.getIntensity());
         //finalise shader parameters and attach to batch
         shader.finaliseAndAttachShader(batch);
         //render batch
