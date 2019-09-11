@@ -383,7 +383,7 @@ public class Renderer3D implements Renderer {
             }
 
             if (ani.isAnimationFinished(time)) {
-                System.out.println("Animation is done");
+                //System.out.println("Animation is done");
                 aniLink.resetStartingTime();
 
                 if (!aniLink.isLooping()) {

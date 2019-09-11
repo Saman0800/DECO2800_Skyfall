@@ -159,13 +159,9 @@ public class Treeman extends EnemyEntity implements Animatable {
         //Used to update collision
         //super.onTick(i);
 
-        getBody().setTransform(position.getCol(), position.getRow(), getBody().getAngle());
+        System.out.println(getHealth());
 
-        if (this.attackStatus == false) {
-            randomMoving();
-            setCurrentState(AnimationRole.MOVE);
-            //movingDirection=movementDirection(this.position.getAngle());
-        }
+        getBody().setTransform(position.getCol(), position.getRow(), getBody().getAngle());
 
         /**if(angerTimeAccount<10){
          angerTimeAccount++;
@@ -173,10 +169,15 @@ public class Treeman extends EnemyEntity implements Animatable {
          angerTimeAccount=0;
          this.setAttacked(false);
          }**/
-        if (isDead() == true) {
+        if (isDead()) {
             this.treemanDead();
-            setCurrentState(AnimationRole.DEFENCE);
         } else {
+            if (this.attackStatus == false) {
+                randomMoving();
+                setCurrentState(AnimationRole.MOVE);
+                //movingDirection=movementDirection(this.position.getAngle());
+            }
+
             float colDistance = mc.getCol() - this.getCol();
             float rowDistance = mc.getRow() - this.getRow();
             if ((colDistance * colDistance + rowDistance * rowDistance) < 4
@@ -299,14 +300,15 @@ public class Treeman extends EnemyEntity implements Animatable {
      */
     int time=0;
     private void treemanDead(){
-        if(time<=100){
+        if (time<=100) {
+            if (time == 0) {
+                this.setTexture("treemanDead");
+                this.setObjectName("treemanDead");
+                setCurrentState(AnimationRole.DEFENCE);
+            }
             time++;
-            this.setTexture("treemanDead");
-            this.setObjectName("treemanDead");
-            setCurrentState(AnimationRole.DEFENCE);
         }else{
             GameManager.get().getWorld().removeEntity(this);
-
         }
 
     }

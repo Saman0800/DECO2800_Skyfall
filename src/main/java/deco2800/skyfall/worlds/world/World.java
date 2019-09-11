@@ -448,34 +448,6 @@ public class World implements TouchDownObserver {
         return this.worldParameters.getBiomes();
     }
 
-    public void handleCollision(AbstractEntity e1, AbstractEntity e2) {
-        // TODO: implement proper game logic for collisions between different types of
-        // entities.
-
-        // TODO: this needs to be internalized into classes for cleaner code.
-        if (e1 instanceof Projectile && e2 instanceof EnemyEntity) {
-            if(((EnemyEntity) e2).getHealth()>0){
-                ((EnemyEntity) e2).takeDamage(((Projectile) e1).getDamage());
-                ((EnemyEntity) e2).setAttacked(true);
-                ((Projectile) e1).destroy();
-            }else{
-                ((EnemyEntity) e2).setDead(true);
-            }
-
-
-        } else if (e2 instanceof Projectile && e1 instanceof EnemyEntity) {
-            if(((EnemyEntity) e1).getHealth()>0){
-                ((EnemyEntity) e1).takeDamage(((EnemyEntity) e1).getDamage());
-                ((EnemyEntity) e1).setAttacked(true);
-                ((Projectile) e2).destroy();
-            }else{
-                ((EnemyEntity) e1).setDead(true);
-            }
-
-
-        }
-    }
-
     public void saveWorld(String filename) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             writer.write(worldToString());

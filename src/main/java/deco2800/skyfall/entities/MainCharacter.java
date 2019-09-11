@@ -200,7 +200,7 @@ public class MainCharacter extends Peon
         //Initialises the players velocity properties
 
 
-        setAcceleration(0.01f);
+        setAcceleration(1.f);
         setMaxSpeed(0.7f);
         vel = 0;
         velHistoryX = new ArrayList<>();
@@ -324,7 +324,7 @@ public class MainCharacter extends Peon
                 "test hitbox",
                 position.getCol() + 1,
                 position.getRow(),
-                1,
+                2,
                 0.1f,
                 this.itemSlotSelected == 1 ? 1 : 0);
 
@@ -703,6 +703,11 @@ public class MainCharacter extends Peon
         }
     }
 
+    @Override
+    public void handleCollision(Object other) {
+
+    }
+
     /**
      * Handles tick based stuff, e.g. movement
      */
@@ -791,6 +796,7 @@ public class MainCharacter extends Peon
             case Input.Keys.SHIFT_LEFT:
                 isSprinting = true;
                 maxSpeed *= 2.f;
+                acceleration *= 2.f;
                 break;
             case Input.Keys.H:
                 useHatchet();
@@ -849,6 +855,7 @@ public class MainCharacter extends Peon
         case Input.Keys.SHIFT_LEFT:
             isSprinting = false;
             maxSpeed /= 2.f;
+            acceleration /= 2.f;
             break;
         case Input.Keys.H:
             break;
@@ -1011,23 +1018,9 @@ public class MainCharacter extends Peon
         float yVel = getBody().getLinearVelocity().y;
         recordVelHistory(xVel,yVel);
 
-        // Scales the players velocity (previous)
+        getBody().applyForceToCenter(new Vector2(xInput * getAcceleration(), yInput * getAcceleration()), true);
+
         getBody().setLinearVelocity(getBody().getLinearVelocity().limit(maxSpeed));
-
-        float xDirection = directionValue(xInput, yInput, xVel);
-        float yDirection = directionValue(yInput, xInput, yVel);
-
-        if (xDirection == 5 && yDirection != 5){
-            getBody().setLinearVelocity(0, yVel);
-        } else if (xDirection != 5 && yDirection == 5){
-            getBody().setLinearVelocity(xVel,0);
-        } else if (xDirection == 5 && yDirection == 5){
-            getBody().setLinearVelocity(0,0);
-        } else if (xDirection == 0 && yDirection == 0){
-            getBody().setLinearVelocity(xDirection, yDirection);
-        } else{
-            getBody().applyForceToCenter(xDirection, yDirection, true);
-        }
 
         updateVel();
     }
@@ -1038,16 +1031,6 @@ public class MainCharacter extends Peon
 
     public float directionValue(int mainInput, int altInput, float vel){
         float direction;
-        //System.out.println(mainInput);
-
-        /**
-        if (mainInput != 0){
-            direction = mainInput;
-        }
-
-         } else if (altInput != 0){
-         direction = Math.abs(vel) * 0.2f;
-         */
 
         if (mainInput != 0){
             if (vel / Math.abs(vel) != mainInput && vel != 0){

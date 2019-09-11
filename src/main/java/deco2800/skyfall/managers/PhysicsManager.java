@@ -41,6 +41,11 @@ public class PhysicsManager extends TickableManager {
                 Object o1 = contact.getFixtureA().getBody().getUserData();
                 Object o2 = contact.getFixtureB().getBody().getUserData();
 
+                if (o1 == o2) {
+                    System.out.println("If this is ever printed I hope I'm not the one debugging it");
+                    return;
+                }
+
                 boolean reactionOccurred = !contact.getFixtureA().isSensor()
                         && !contact.getFixtureB().isSensor();
 
@@ -50,13 +55,11 @@ public class PhysicsManager extends TickableManager {
 
                 //Runs collision handler defined in class
                 if (o1 instanceof AbstractEntity && reactionOccurred) {
-                    AbstractEntity a1 = (AbstractEntity) o1;
-                    a1.handleCollision(o2);
+                    ((AbstractEntity)o1).handleCollision(o2);
                 }
 
                 if (o2 instanceof AbstractEntity && reactionOccurred) {
-                    AbstractEntity a2 = (AbstractEntity) o2;
-                    a2.handleCollision(o1);
+                    ((AbstractEntity) o2).handleCollision(o1);
                 }
             }
 

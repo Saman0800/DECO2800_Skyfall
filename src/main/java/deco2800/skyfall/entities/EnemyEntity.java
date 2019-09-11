@@ -140,6 +140,11 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
         }
     }
 
+    @Override
+    public void handleCollision(Object other) {
+        speed /= 2;
+    }
+
     /**
      * Return the health this enemy has.
      * @return The health this enemy has.
