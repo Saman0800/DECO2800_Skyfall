@@ -59,6 +59,10 @@ public class Weapon extends StaticEntity implements Item, IWeapon {
         this.name = "no_weapon";
     }
 
+//    public Weapon(Tile tile, boolean obstructed, String name) {
+//        super(tile, 5, name + "_tex", obstructed);
+//    }
+
     /**
      * @return name of weapon
      */
@@ -173,5 +177,12 @@ public class Weapon extends StaticEntity implements Item, IWeapon {
     @Override
     public void onTick(long i) {
         // Auto-generated method stub
+    }
+
+    @Override
+    public Weapon newInstance(Tile tile) {
+        return new Weapon(tile, this.isObstructed(), this.name, this
+                        .weaponType, this.damageType, this.damage, this
+                        .attackRate, this.durability);
     }
 }

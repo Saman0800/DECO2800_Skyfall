@@ -683,13 +683,18 @@ public class MainCharacter extends Peon
                     return;
                 }
 
-                for (AbstractEntity entity :
-                        GameManager.get().getWorld().getEntities()) {
+                for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
                     if (entity instanceof Weapon) {
                         //System.out.println(entity);
+                        System.out.println("instance of weapon");
 
-                        if (this.getPosition().distance(entity.getPosition()) <= 1
-                                && entity.getPosition().distance(tile.getCoordinates()) <= 1) {
+                        System.out.println(this.getPosition());
+                        System.out.println(entity.getPosition());
+                        System.out.println(tile.getCoordinates());
+
+                        if (this.getPosition().distance(entity.getPosition()) <= 2
+                                && entity.getPosition().distance(tile.getCoordinates()) <= 2) {
+                            System.out.println("close enough");
                             inventories.inventoryAdd((Item)entity);
                             System.out.println(inventories.getInventoryContents());
                             String weapon = ((Weapon) entity).getName();
