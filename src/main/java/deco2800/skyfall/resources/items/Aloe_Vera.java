@@ -58,5 +58,10 @@ public class Aloe_Vera extends HealthResources implements Item {
     public String getDescription() {
         return "This item can be used to heal the Main Character.";
     }
+
+    @Override
+    public void use(){
+
+    }
 }
 

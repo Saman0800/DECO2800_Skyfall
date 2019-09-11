@@ -179,4 +179,9 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
         return allRequirements;
     }
 
+    @Override
+    public void use(){
+
+    }
+
 }

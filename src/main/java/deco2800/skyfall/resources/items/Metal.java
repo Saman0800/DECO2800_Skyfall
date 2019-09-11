@@ -69,4 +69,9 @@ public class Metal extends NaturalResources implements Item {
         return "This item can be collected by destroying an enemy.";
     }
 
+    @Override
+    public void use(){
+
+    }
+
 }

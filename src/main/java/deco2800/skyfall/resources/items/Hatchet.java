@@ -180,4 +180,9 @@ public class Hatchet extends ManufacturedResources implements Item {
         return blueprintLearned;
     }
 
+    @Override
+    public void use(){
+
+    }
+
 }

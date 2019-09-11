@@ -81,4 +81,9 @@ public class Stone extends NaturalResources implements Item {
     }
 
 
+    @Override
+    public void use(){
+
+    }
+
 }
