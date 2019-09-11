@@ -44,6 +44,7 @@ public class ResearchTable extends ManufacturedResources implements Blueprint,
      * @param owner the owner of the research table.
      */
     public ResearchTable(MainCharacter owner){
+        super(owner);
 
         creatablesList = new ArrayList<>();
         creatablesList.add("Hatchet");
@@ -70,7 +71,7 @@ public class ResearchTable extends ManufacturedResources implements Blueprint,
      */
     public void buyBlueprint(){
 
-        if (owner.getGoldPouchTotalValue()<goldCost){
+        if (owner.getGoldPouchTotalValue()<getGoldCost()){
             logger.info("You don't have enough gold to buy a blueprint");
 
         } else {
@@ -80,6 +81,10 @@ public class ResearchTable extends ManufacturedResources implements Blueprint,
             this.getCreatableItems().remove(0);
             owner.removeGold(goldCost);
             }
+    }
+
+    public int getGoldCost(){
+        return this.goldCost;
     }
 
     /**
@@ -124,7 +129,7 @@ public class ResearchTable extends ManufacturedResources implements Blueprint,
      */
     @Override
     public String getDescription() {
-        return "A research table is used to retrieve blueprints in exchange" +
+        return "A research table is used to retrieve blueprints in exchange " +
                 "of resources or gold";
     }
 
