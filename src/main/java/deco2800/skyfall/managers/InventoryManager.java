@@ -1,5 +1,6 @@
 package deco2800.skyfall.managers;
 
+import deco2800.skyfall.entities.Weapon;
 import deco2800.skyfall.gui.Tuple;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.*;
@@ -49,9 +50,10 @@ public class InventoryManager extends TickableManager {
         this.inventoryAdd(new Wood());
         this.inventoryAdd(new Hatchet());
         this.inventoryAdd(new PickAxe());
+        this.inventoryAdd(new Weapon("no_weapon_tex"));
         this.quickAccessAdd("Hatchet");
         this.quickAccessAdd("Pick Axe");
-        this.quickAccessAdd("No Weapon Equipped");
+        this.quickAccessAdd("no_weapon_tex");
     }
 
     public void initInventory(Map<String, List<Item>> inventory) {
@@ -217,7 +219,12 @@ public class InventoryManager extends TickableManager {
      * @param item the item to add to the inventory, implements Item interface.
      */
     public boolean inventoryAdd(Item item) {
-        String name = item.getName();
+        String name;
+        if (item instanceof Weapon) {
+            name = item.getName() + "_tex";
+        } else {
+            name = item.getName();
+        }
 
         if (this.inventory.get(name) != null) {
             List<Item> itemsList = this.inventory.get(name);

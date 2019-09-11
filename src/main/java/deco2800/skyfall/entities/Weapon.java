@@ -54,6 +54,11 @@ public class Weapon extends StaticEntity implements Item, IWeapon {
         this.exchangeable = false;
     }
 
+    public Weapon(String texture) {
+        this.setTexture(texture);
+        this.name = "no_weapon";
+    }
+
     /**
      * @return name of weapon
      */

@@ -208,7 +208,7 @@ public class MainCharacter extends Peon
                 position.getRow(),
                 1, 1);*/
 
-        equipped = "No Weapon Equipped";
+        equipped = "no_weapon";
         canSwim = true;
         isSprinting = false;
         this.scale = 0.4f;
@@ -686,22 +686,27 @@ public class MainCharacter extends Peon
                 for (AbstractEntity entity :
                         GameManager.get().getWorld().getEntities()) {
                     if (entity instanceof Weapon) {
-                        System.out.println(entity);
+                        //System.out.println(entity);
 
                         if (this.getPosition().distance(entity.getPosition()) <= 1
                                 && entity.getPosition().distance(tile.getCoordinates()) <= 1) {
                             inventories.inventoryAdd((Item)entity);
+                            System.out.println(inventories.getInventoryContents());
                             String weapon = ((Weapon) entity).getName();
+                            System.out.println(weapon);
                             if (!this.equipped.equals(weapon)) {
-                                inventories.quickAccessRemove(this.equipped);
-                                inventories.quickAccessAdd(weapon);
+                                System.out.println("New equipped weapon");
+                                inventories.quickAccessRemove(this.equipped + "_tex");
+                                inventories.quickAccessAdd(weapon + "_tex");
+                                inventories.inventoryDrop(this.equipped + "_tex");
                                 this.equipped = weapon;
+                                System.out.println(this.equipped);
                             }
                             GameManager.get().getWorld().removeEntity(entity);
                             System.out.println("picked up weapon!");
-                            System.out.println(inventories.getInventoryContents());
-                            System.out.println(this.equipped);
                             System.out.println(inventories.getQuickAccess());
+
+
                         }
                         return;
                     }
