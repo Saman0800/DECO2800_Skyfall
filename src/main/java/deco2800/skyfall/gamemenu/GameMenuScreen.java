@@ -1,5 +1,6 @@
 package deco2800.skyfall.gamemenu;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -464,7 +465,14 @@ public class GameMenuScreen {
         equip.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                mainCharacter.setEquippedItem(inventory.drop(inventorySelected));
+                System.out.println(mainCharacter.getEquippedItem());
+                inventoryTable.removeActor(resourcePanel);
+                updateResourcePanel();
+                inventoryTable.addActor(resourcePanel);
+                quickAccessPanel.remove();
+                setQuickAccessPanel();
+                inventorySelected = null;
             }
         });
 
@@ -688,6 +696,11 @@ public class GameMenuScreen {
         int xspace = 20;
 
         for (Map.Entry<String, Integer> entry : inventoryAmounts.entrySet()) {
+            Image selected = new Image(generateTextureRegionDrawableObject("selected"));
+            selected.setName(entry.getKey() + "-selected");
+            selected.setSize((float) size + 20, (float) size + 20);
+            selected.setPosition((float)(xpos + -10 + (size+xspace)*(count-1)), ypos -10);
+            selected.setVisible(false);
 
             ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey()));
             icon.setName(entry.getKey());
@@ -697,10 +710,31 @@ public class GameMenuScreen {
             icon.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    inventorySelected = icon.getName();
+                    if(inventorySelected != icon.getName()){
+                        inventorySelected = icon.getName();
+                    }else{
+                        inventorySelected = null;
+                    }
+
+                    Actor selected = stage.getRoot().findActor(icon.getName() + "-selected");
+
+                    if(selected.isVisible()){
+                        selected.setVisible(false);
+                    }else{
+                        for(Actor actor: resourcePanel.getChildren()){
+                            String name = actor.getName();
+                            if(name != null && name.contains("-selected")){
+                                actor.setVisible(false);
+                            }
+                        }
+
+                        selected.setVisible(true);
+                    }
+
                 }
             });
 
+            resourcePanel.addActor(selected);
             resourcePanel.addActor(icon);
 
             Label num = new Label(entry.getValue().toString(), skin, "white-label");
@@ -956,7 +990,7 @@ public class GameMenuScreen {
      * Display everything created
      */
     public void show() {
-//        showMenu();
+        showMenu();
     }
 }
 

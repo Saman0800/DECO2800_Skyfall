@@ -69,5 +69,10 @@ public class Vine extends NaturalResources implements Item {
         return "" + subtype + ":" + name;
     }
 
+    @Override
+    public void use(HexVector position){
+
+    }
+
 
 }

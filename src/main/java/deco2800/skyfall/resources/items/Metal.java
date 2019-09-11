@@ -2,6 +2,7 @@ package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.NaturalResources;
+import deco2800.skyfall.util.HexVector;
 
 
 /**
@@ -67,6 +68,11 @@ public class Metal extends NaturalResources implements Item {
     @Override
     public String getDescription() {
         return "This item can be collected by destroying an enemy.";
+    }
+
+    @Override
+    public void use(HexVector position){
+
     }
 
 }

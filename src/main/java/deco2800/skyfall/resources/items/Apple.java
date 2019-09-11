@@ -2,6 +2,7 @@ package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.HealthResources;
+import deco2800.skyfall.util.HexVector;
 
 
 public class Apple extends HealthResources implements Item {
@@ -69,6 +70,11 @@ public class Apple extends HealthResources implements Item {
     @Override
     public String getDescription() {
         return "This item can be used to satisfy the Main Character's hunger.";
+    }
+
+    @Override
+    public void use(HexVector position){
+
     }
 
 

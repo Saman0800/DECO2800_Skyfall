@@ -1,8 +1,10 @@
 package deco2800.skyfall.resources.items;
 
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.resources.Item;
@@ -106,14 +108,12 @@ public class Hatchet extends ManufacturedResources implements Item {
      * @param treeToFarm the tree to be farmed
      */
     public void farmTree(Tree treeToFarm) {
-
-
             if (treeToFarm.getWoodAmount() == 0) {
                 System.out.println("This tree has no more wood");
                 GameManager.get().getWorld().removeEntity(treeToFarm);
 
             } else {
-                owner.getInventoryManager().add(new Wood());
+                GameManager.getManagerFromInstance(InventoryManager.class).add(new Wood());
                 treeToFarm.decreaseWoodAmount();
             }
         }
@@ -180,4 +180,16 @@ public class Hatchet extends ManufacturedResources implements Item {
         return blueprintLearned;
     }
 
+
+    @Override
+    public void use(HexVector position){
+        for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+            if (entity instanceof Tree) {
+                if (position.distance(entity.getPosition()) <= 1.5) {
+                    this.farmTree((Tree) entity);
+                }
+            }
+        }
+
+    }
 }

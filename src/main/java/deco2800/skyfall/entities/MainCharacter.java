@@ -123,6 +123,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     private boolean isAttacking = false;
 
+    /*
+     * Item player is currently equipped with/holding.
+     */
+    private Item equippedItem;
+
     /**
      * Private helper method to instantiate inventory and weapon managers for
      * Main Character constructor
@@ -208,6 +213,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.setTexture(textures[2]);
     }
 
+
     /**
      * Switch the item the MainCharacter has equip.
      * @param keyCode Keycode the player has pressed.
@@ -218,6 +224,44 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             int keyNumber = Integer.parseInt(Input.Keys.toString(keyCode));
             this.itemSlotSelected = keyNumber;
             logger.info("Switched to item: " + keyNumber);
+        }
+    }
+
+    /**
+     * Sets the player's equipped item
+     * @param item the item to equip
+     */
+    public void setEquippedItem(Item item){
+        this.equippedItem = item;
+    }
+
+    /**
+     * Returns the players equipped item
+     * @return Item object that player is equipped with
+     */
+    public Item getEquippedItem (){
+        return equippedItem;
+    }
+
+    /**
+     * Returns string of players equipped item, or "No item equipped" if equippedItem == null
+     * @return String of equipped item
+     */
+    public String displayEquippedItem(){
+        if(equippedItem != null){
+            return equippedItem.toString();
+        }
+
+        else{
+            return "No item equipped";
+        }
+    }
+
+    public void useEquipped(){
+        if(equippedItem != null){
+            equippedItem.use(this.getPosition());
+        } else{
+            //collect nearby resources
         }
     }
 
@@ -662,11 +706,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 isSprinting = true;
                 maxSpeed *= 2.f;
                 break;
-            case Input.Keys.H:
-                useHatchet();
-                break;
-            case Input.Keys.P:
-                usePickAxe();
+            case Input.Keys.SPACE:
+                this.useEquipped();
                 break;
             case Input.Keys.G:
                 addClosestGoldPiece();
@@ -1067,55 +1108,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             //logger.info("Stop Playing");
             //TODO: Stop Player movement
             SoundManager.stopSound(WALK_NORMAL);
-        }
-    }
-
-    /***
-     * This method enables the Main character to use Hatchet. The player's
-     * distance from the tree should not be more than 2.5.Every time a
-     * wood is collected a message is printed.
-     * This method will be changed later to increase efficiency.
-     */
-    public void useHatchet() {
-
-        if (this.inventories.getQuickAccess().containsKey("Hatchet")) {
-            Hatchet playerHatchet = new Hatchet(this);
-
-            for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
-
-                if (entity instanceof Tree) {
-
-                    if (this.getPosition().distance(entity.getPosition()) <= 1) {
-                        playerHatchet.farmTree((Tree) entity);
-                        logger.info(this.inventories.toString());
-                    }
-                }
-            }
-        }
-    }
-
-    /***
-     * This method enables the Main character to use Hatchet. The player's
-     * distance from the tree should not be more than 2.5.Every time a
-     * wood is collected a message is printed.
-     * This method will be changed later to increase efficiency.
-     */
-    public void usePickAxe() {
-
-        if (this.inventories.getQuickAccess().containsKey("Pick Axe")) {
-            PickAxe playerPickAxe = new PickAxe(this);
-
-            for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
-
-                if (entity instanceof Rock) {
-
-                    if (this.getPosition().distance(entity.getPosition()) <= 1) {
-                        playerPickAxe.farmRock((Rock) entity);
-                        logger.info(this.inventories.toString());
-                    }
-                }
-            }
-
         }
     }
 

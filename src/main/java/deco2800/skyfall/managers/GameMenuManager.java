@@ -238,7 +238,6 @@ public class GameMenuManager extends TickableManager {
     public void addStatsManager(StatisticsManager statsManager) {
         sm = statsManager;
         System.out.println("Stats Manager added and drawing HealthCircle and GameMenuBar");
-        drawAllElements();
     }
 
     public void drawAllElements(){
@@ -246,33 +245,33 @@ public class GameMenuManager extends TickableManager {
             System.out.println("Please add stats manager before drawing");
             return;
         }
-        uiElements.add(new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm));
-        popUps.put("settingsTable", new SettingsTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                null, textureManager, this,
-                skin));
-
-        popUps.put("helpTable", new HelpTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                null, textureManager, this,
-                skin));
-
-        popUps.put("pauseTable", new PauseTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                null, textureManager, this,
-                skin));
-
-        popUps.put("playerSelectTable", new PlayerSelectTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                null, textureManager, this,
-                skin));
-
-        popUps.put("buildingTable", new BuildingTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                null, textureManager, this,
-                skin));
-
-        uiElements.add(new GameMenuBar(stage, null, textureManager, this));
+//        uiElements.add(new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm));
+//        popUps.put("settingsTable", new SettingsTable(stage,
+//                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+//                null, textureManager, this,
+//                skin));
+//
+//        popUps.put("helpTable", new HelpTable(stage,
+//                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+//                null, textureManager, this,
+//                skin));
+//
+//        popUps.put("pauseTable", new PauseTable(stage,
+//                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+//                null, textureManager, this,
+//                skin));
+//
+//        popUps.put("playerSelectTable", new PlayerSelectTable(stage,
+//                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+//                null, textureManager, this,
+//                skin));
+//
+//        popUps.put("buildingTable", new BuildingTable(stage,
+//                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+//                null, textureManager, this,
+//                skin));
+//
+//        uiElements.add(new GameMenuBar(stage, null, textureManager, this));
     }
 
     /**
@@ -284,9 +283,13 @@ public class GameMenuManager extends TickableManager {
         return popUps.get(currentPopUpElement);
     }
 
+    public AbstractPopUpElement getPopUp(String key) {
+        return popUps.get(key);
+    }
     public void setPopUp(String popUpName) {
         currentPopUpElement = popUpName;
     }
+
 
 }
 
