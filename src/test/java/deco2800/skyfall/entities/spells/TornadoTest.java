@@ -1,22 +1,25 @@
 package deco2800.skyfall.entities.spells;
 
+import deco2800.skyfall.entities.Spider;
+import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 import org.junit.Before;
 import org.junit.Test;
+import org.powermock.api.mockito.PowerMockito;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class FlameWallTest {
+public class TornadoTest {
 
-    FlameWall flameWall;
+    Tornado tornado;
 
     @Before
     public void setup() throws Exception {
-        flameWall = new FlameWall(new HexVector(), "flame_wall",
-                "spell", 2f, 2f,
-                1,
+        tornado = new Tornado(new HexVector(), "tornado_placeholder",
+                "spell", 0f, 0f,
+                20,
                 0.1f,
                 10);
     }
@@ -26,12 +29,13 @@ public class FlameWallTest {
      */
     @Test
     public void positionTest(){
-        //assertThat("", flameWall.getCol(), is(equalTo(2f)));
-        //assertThat("", flameWall.getRow(), is(equalTo(2f)));
+        assertThat("", tornado.getCol(), is(equalTo(0f)));
+        assertThat("", tornado.getRow(), is(equalTo(0f)));
     }
 
     @Test
     public void getManaTest() {
-        assertThat("", flameWall.getManaCost(), is(equalTo(20)));
+        assertThat("", tornado.getManaCost(), is(equalTo(10)));
     }
+
 }
