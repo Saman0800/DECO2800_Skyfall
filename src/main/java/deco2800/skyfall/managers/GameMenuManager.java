@@ -8,9 +8,7 @@ import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.SkyfallGame;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gamemenu.*;
-import deco2800.skyfall.gamemenu.popupmenu.HelpTable;
-import deco2800.skyfall.gamemenu.popupmenu.PauseTable;
-import deco2800.skyfall.gamemenu.popupmenu.PlayerSelectTable;
+import deco2800.skyfall.gamemenu.popupmenu.*;
 import deco2800.skyfall.gamemenu.popupmenu.SettingsTable;
 
 import java.util.ArrayList;
@@ -240,15 +238,14 @@ public class GameMenuManager extends TickableManager {
     public void addStatsManager(StatisticsManager statsManager) {
         sm = statsManager;
         System.out.println("Stats Manager added and drawing HealthCircle and GameMenuBar");
-        drawAllElements();
     }
 
     public void drawAllElements(){
-//        if (sm == null) {
-//            System.out.println("Please add stats manager before drawing");
-//            return;
-//        }
-//        uiElements.add(new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm));
+        if (sm == null) {
+            System.out.println("Please add stats manager before drawing");
+            return;
+        }
+        uiElements.add(new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm));
 //        popUps.put("settingsTable", new SettingsTable(stage,
 //                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
 //                null, textureManager, this,
@@ -268,7 +265,10 @@ public class GameMenuManager extends TickableManager {
 //                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
 //                null, textureManager, this,
 //                skin));
-//
+//        popUps.put("chestTable", new ChestTable(stage,
+//                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+//                null, textureManager, this, sm,
+//                skin));
 //        uiElements.add(new GameMenuBar(stage, null, textureManager, this));
 
     }
@@ -282,9 +282,13 @@ public class GameMenuManager extends TickableManager {
         return popUps.get(currentPopUpElement);
     }
 
+    public AbstractPopUpElement getPopUp(String key) {
+        return popUps.get(key);
+    }
     public void setPopUp(String popUpName) {
         currentPopUpElement = popUpName;
     }
+
 
 }
 
