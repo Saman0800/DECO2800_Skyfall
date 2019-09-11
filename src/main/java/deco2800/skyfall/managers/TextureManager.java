@@ -217,7 +217,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("equip", new Texture("resources/temp_equip_button.png"));
             textureMap.put("addqa", new Texture("resources/temp_addqa_button.png"));
             textureMap.put("takeall", new Texture("resources/takeall.png"));
-            textureMap.put("Apple", new Texture("resources/items_icons/selected.png"));
+            textureMap.put("selected", new Texture("resources/items_icons/selected.png"));
 
             // Inventory items
             textureMap.put("Apple", new Texture("resources/items_icons/apple.png"));
