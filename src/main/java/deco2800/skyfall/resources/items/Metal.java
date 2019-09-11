@@ -2,6 +2,7 @@ package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.NaturalResources;
+import deco2800.skyfall.util.HexVector;
 
 
 /**
@@ -70,7 +71,7 @@ public class Metal extends NaturalResources implements Item {
     }
 
     @Override
-    public void use(){
+    public void use(HexVector position){
 
     }
 

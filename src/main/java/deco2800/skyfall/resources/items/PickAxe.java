@@ -1,8 +1,10 @@
 package deco2800.skyfall.resources.items;
 
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
@@ -109,13 +111,13 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
         }
 
         else {
-            owner.getInventoryManager().add(new Stone());
+            GameManager.getManagerFromInstance(InventoryManager.class).add(new Stone());
 
             //lowering the possibility of gaining metal
             double x = (int) (Math.random() * ((1 - 0) + 1));
 
             if (x == 1) {
-                owner.getInventoryManager().add(new Metal());
+                GameManager.getManagerFromInstance(InventoryManager.class).add(new Metal());
             }
 
             rockToFarm.setHealth(rockToFarm.getHealth() - 10);
@@ -180,8 +182,13 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
     }
 
     @Override
-    public void use(){
-
+    public void use(HexVector position){
+        for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+            if (entity instanceof Rock) {
+                if (position.distance(entity.getPosition()) <= 1.5) {
+                    this.farmRock((Rock) entity);
+                }
+            }
+        }
     }
-
 }

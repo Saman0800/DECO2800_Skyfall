@@ -257,6 +257,14 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
     }
 
+    public void useEquipped(){
+        if(equippedItem != null){
+            equippedItem.use(this.getPosition());
+        } else{
+            //collect nearby resources
+        }
+    }
+
     /**
      * Return the currently selected item slot.
      * @return The item slot the MainCharacter has equip.
@@ -698,11 +706,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 isSprinting = true;
                 maxSpeed *= 2.f;
                 break;
-            case Input.Keys.H:
-                useHatchet();
-                break;
-            case Input.Keys.P:
-                usePickAxe();
+            case Input.Keys.SPACE:
+                this.useEquipped();
                 break;
             case Input.Keys.G:
                 addClosestGoldPiece();
@@ -1103,55 +1108,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             //logger.info("Stop Playing");
             //TODO: Stop Player movement
             SoundManager.stopSound(WALK_NORMAL);
-        }
-    }
-
-    /***
-     * This method enables the Main character to use Hatchet. The player's
-     * distance from the tree should not be more than 2.5.Every time a
-     * wood is collected a message is printed.
-     * This method will be changed later to increase efficiency.
-     */
-    public void useHatchet() {
-
-        if (this.inventories.getQuickAccess().containsKey("Hatchet")) {
-            Hatchet playerHatchet = new Hatchet(this);
-
-            for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
-
-                if (entity instanceof Tree) {
-
-                    if (this.getPosition().distance(entity.getPosition()) <= 1) {
-                        playerHatchet.farmTree((Tree) entity);
-                        logger.info(this.inventories.toString());
-                    }
-                }
-            }
-        }
-    }
-
-    /***
-     * This method enables the Main character to use Hatchet. The player's
-     * distance from the tree should not be more than 2.5.Every time a
-     * wood is collected a message is printed.
-     * This method will be changed later to increase efficiency.
-     */
-    public void usePickAxe() {
-
-        if (this.inventories.getQuickAccess().containsKey("Pick Axe")) {
-            PickAxe playerPickAxe = new PickAxe(this);
-
-            for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
-
-                if (entity instanceof Rock) {
-
-                    if (this.getPosition().distance(entity.getPosition()) <= 1) {
-                        playerPickAxe.farmRock((Rock) entity);
-                        logger.info(this.inventories.toString());
-                    }
-                }
-            }
-
         }
     }
 

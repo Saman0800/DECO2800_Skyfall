@@ -74,7 +74,7 @@ public class Berry extends HealthResources implements Item {
     }
 
     @Override
-    public void use(){
+    public void use(HexVector position){
 
     }
 

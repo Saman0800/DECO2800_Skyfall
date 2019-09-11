@@ -50,6 +50,6 @@ public interface Item {
     /**
      * Use the specific function associated with the item.
      */
-    void use();
+    void use(HexVector position);
 
 }

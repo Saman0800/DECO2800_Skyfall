@@ -70,7 +70,7 @@ public class Sand extends NaturalResources implements Item {
     }
 
     @Override
-    public void use(){
+    public void use(HexVector position){
 
     }
 }

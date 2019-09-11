@@ -60,7 +60,7 @@ public class Aloe_Vera extends HealthResources implements Item {
     }
 
     @Override
-    public void use(){
+    public void use(HexVector position){
 
     }
 }
