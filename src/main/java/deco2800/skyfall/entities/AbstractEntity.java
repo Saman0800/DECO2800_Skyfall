@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.animation.AnimationLinker;
@@ -9,12 +10,15 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.renderers.Renderable;
+import deco2800.skyfall.util.BodyEditorLoader;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
+import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.KeyStore;
 import java.util.*;
 
 /**
@@ -97,6 +101,15 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         animations = new HashMap<>();
     }
 
+	public AbstractEntity(float col, float row, int renderOrder,
+						  String fixtureDef) {
+		this(col, row, renderOrder, 1f, 1f, fixtureDef);
+		entityID = AbstractEntity.getNextID();
+		this.setObjectName(ENTITY_ID_STRING);
+		this.renderOrder = renderOrder;
+		animations = new HashMap<>();
+	}
+
 	public AbstractEntity() {
 		this.position = new HexVector();
 		this.colRenderLength = 1f;
@@ -125,6 +138,18 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         changeCollideability(true);
 		this.initialiseBox2D(position.getCol(), position.getRow());
     }
+
+	public AbstractEntity(float col, float row, int height,
+						  float colRenderLength, float rowRenderLength,
+						  String fixtureDefFile) {
+		this.position = new HexVector(col, row);
+		this.height = height;
+		this.colRenderLength = colRenderLength;
+		this.rowRenderLength = rowRenderLength;
+		this.entityID = AbstractEntity.getNextID();
+		changeCollideability(true);
+		this.initialiseBox2D(position.getCol(), position.getRow(), fixtureDefFile);
+	}
 
 	/**
 	 * Get the column position of this AbstractWorld Entity
@@ -410,6 +435,27 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 * @param fixtureDefFile file path to .JSON file defining the fixture
 	 */
 	public void defineFixture(String fixtureDefFile){
+		BodyEditorLoader loader =
+				new BodyEditorLoader(Gdx.files.internal("resources/HitBoxes/" + fixtureDefFile +
+						"HitBox.JSON"));
+
+		PhysicsManager manager = new PhysicsManager();
+		World world = manager.getBox2DWorld();
+		BodyDef bd = new BodyDef();
+		bd.type = BodyDef.BodyType.KinematicBody;
+		body = world.createBody(bd);
+
+		PolygonShape shape = new PolygonShape();
+
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.density = 1;
+		fixtureDef.friction = 0.5f;
+		fixtureDef.restitution = 0.3f;
+
+		fixture = body.createFixture(fixtureDef);
+		fixture.setSensor(!isCollidable);
+
+		loader.attachFixture(body, fixtureDefFile, fixtureDef, scale);
 		//TODO: Add code for defining code for custom body shape
 	}
 

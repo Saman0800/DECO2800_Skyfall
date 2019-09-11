@@ -1,6 +1,5 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.audio.Sound;
 import deco2800.skyfall.entities.worlditems.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.Vector2;
@@ -199,13 +198,13 @@ public class MainCharacter extends Peon
         this.addGold(initialPiece, 1);
         //Initialises the players velocity properties
 
-
         setAcceleration(1.f);
         setMaxSpeed(0.7f);
+
         vel = 0;
         velHistoryX = new ArrayList<>();
         velHistoryY = new ArrayList<>();
-        speedFactor = 1f/30f;
+        speedFactor = 60f/30f;
 
         blueprintsLearned = new ArrayList<>();
 
@@ -221,7 +220,7 @@ public class MainCharacter extends Peon
                 position.getRow(),
                 1, 1);*/
 
-        canSwim = true;
+        canSwim = false;
         isSprinting = false;
         this.scale = 0.4f;
         setDirectionTextures();
@@ -366,8 +365,51 @@ public class MainCharacter extends Peon
         setAttacking(false);
     }
 
+    /**
+     * Set the player as attacking, which is used for attack animations
+     * @param isAttacking Value for whether the player is attacking or not
+     */
     public void setAttacking(boolean isAttacking) {
         this.isAttacking = isAttacking;
+    }
+
+    /**
+     * Lets the player enter a vehicle, by changing there speed and there sprite
+     * @param vehicle The vehicle they are entering
+     */
+    public void enterVehicle(String vehicle) {
+        // Determine the vehicle they are entering and set their new speed and
+        // texture
+        if(vehicle.equals("Horse")){
+            //this.setTexture();
+            setAcceleration(0.1f);
+            setMaxSpeed(0.8f);
+        }else if(vehicle.equals("Dragon")) {
+            //this.setTexture();
+            setAcceleration(0.125f);
+            setMaxSpeed(1f);
+        }else if(vehicle.equals("Boat")) {
+            //this.setTexture();
+            setAcceleration(0.01f);
+            setMaxSpeed(0.5f);
+            changeSwimming(true);
+        }else {
+            //this.setTexture();
+            setAcceleration(0.03f);
+            setMaxSpeed(0.6f);
+        }
+    }
+
+    /**
+     * Lets the player exit the vehicle by setting their speed back to
+     * default and changing the texture. Also changing swimming to false in
+     * case they were in a boat
+     */
+    public void exitVehicle() {
+        //this.setTexture();
+        setAcceleration(0.01f);
+        setMaxSpeed(0.4f);
+        changeSwimming(false);
     }
 
     /**
@@ -982,6 +1024,52 @@ public class MainCharacter extends Peon
     }
 
     /**
+     * Calculates the velocity of the player
+     * @param mainInput Input being checked
+     * @param altInput Input not being checked
+     * @param vel Velocity to calculate
+     * @param friction Friction value
+     * @return The new velocity
+     */
+    public float calVelocity(int mainInput, int altInput, float vel,
+                            float friction) {
+        if (mainInput != 0) {
+            vel += mainInput * acceleration * friction;
+            // Prevents sliding
+            if (vel / Math.abs(vel) != mainInput) {
+                vel = 0;
+            }
+        } else if (altInput != 0) {
+            vel *= 0.8;
+        } else {
+            vel = 0;
+        }
+        return vel;
+    }
+
+    /**
+     * Finds the next position to move to and moves there
+     * @param position The current position
+     * @param destination The new position
+     * @param nextTile The tile that will be moved to
+     */
+    public void findNewPosition(HexVector position, HexVector destination,
+                                Tile nextTile) {
+        if(nextTile == null) {
+            // Prevents the player from walking into the void
+            position.moveToward(destination, 0);
+        }else if((nextTile.getTextureName().contains("water")
+                || nextTile.getTextureName().contains("lake")
+                || nextTile.getTextureName().contains("ocean")) && !canSwim) {
+            // Prevents the player back if they try to enter water when they
+            // can't swim
+            position.moveToward(destination, 0);
+        }else {
+            position.moveToward(destination, vel);
+        }
+    }
+
+    /**
      * Moves the player based on current key inputs
      */
     public void updatePosition() {
@@ -1056,7 +1144,7 @@ public class MainCharacter extends Peon
         if (tile == null) {
             return false;
         } else {
-            return !tile.getTextureName().contains("water") || canSwim;
+            return (!tile.getTextureName().contains("water") && !tile.getTextureName().contains("lake") && !tile.getTextureName().contains("ocean")) || canSwim;
         }
     }
 

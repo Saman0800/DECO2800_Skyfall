@@ -5,13 +5,11 @@ import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.AgentEntity;
 import deco2800.skyfall.entities.EnemyEntity;
 import deco2800.skyfall.entities.Harvestable;
-import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.Projectile;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
-import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
@@ -98,7 +96,7 @@ public class World implements TouchDownObserver {
 
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
 
-    };
+    }
 
 
     /**
@@ -174,10 +172,6 @@ public class World implements TouchDownObserver {
             this.worldGenNodes.addAll(worldGenNodes);
             this.tiles.addAll(tiles);
     }
-
-
-
-
 
     /**
      * Loops through all the biomes within the world and adds textures to the tiles

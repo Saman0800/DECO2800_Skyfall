@@ -155,12 +155,6 @@ public class Treeman extends EnemyEntity implements Animatable {
      */
     @Override
     public void onTick(long i) {
-
-        //Used to update collision
-        //super.onTick(i);
-
-        System.out.println(getHealth());
-
         getBody().setTransform(position.getCol(), position.getRow(), getBody().getAngle());
 
         /**if(angerTimeAccount<10){
@@ -171,6 +165,7 @@ public class Treeman extends EnemyEntity implements Animatable {
          }**/
         if (isDead()) {
             this.treemanDead();
+            return;
         } else {
             if (this.attackStatus == false) {
                 randomMoving();

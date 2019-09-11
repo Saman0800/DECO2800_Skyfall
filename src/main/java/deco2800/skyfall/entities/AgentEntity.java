@@ -15,6 +15,12 @@ public abstract class AgentEntity extends AbstractEntity{
 		this.speed = speed;
 	}
 
+	public AgentEntity(float col, float row, int renderOrder, float speed,
+					   String fixtureDef) {
+		super(col, row, renderOrder, fixtureDef);
+		this.speed = speed;
+	}
+
 	public AgentEntity() {
 		super();
 	}
