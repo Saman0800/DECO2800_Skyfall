@@ -22,6 +22,7 @@ import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.Tile;
 
+import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.*;
@@ -669,10 +670,10 @@ public class MainCharacter extends Peon
                 float[] mouse =
                         WorldUtil.screenToWorldCoordinates(Gdx.input.getX(),
                                 Gdx.input.getY());
-                float[] clickedPosition =
+                float[] pos =
                         WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 
-                Tile tile = getTile(clickedPosition[0], clickedPosition[1]);
+                Tile tile = getTile(pos[0], pos[1]);
 
                 if (tile == null) {
                     System.out.println("tile is null");
@@ -684,14 +685,12 @@ public class MainCharacter extends Peon
                     if (entity instanceof Weapon) {
                         System.out.println(entity);
 
-                        if (this.getPosition().distance(entity.getPosition())
-                                <= 1) {
-                            System.out.println("got here");
+                        if (this.getPosition().distance(entity.getPosition()) <= 1
+                                && entity.getPosition().distance(tile.getCoordinates()) <= 1) {
                             inventories.inventoryAdd((Item)entity);
-                            //weapons.pickUpWeapon((Weapon) entity);
                             GameManager.get().getWorld().removeEntity(entity);
                             System.out.println("picked up weapon!");
-                            //logger.info(weapons.toString());
+                            System.out.println(inventories.getInventoryContents());
                         }
                         return;
                     }

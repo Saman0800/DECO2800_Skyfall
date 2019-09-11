@@ -69,6 +69,12 @@ public class WorldDirector {
         builder.addEntity(new Treeman(-2f,-3f,mainCharacter));
         builder.addEntity(new Weapon(new Tile(-1f, 3f), true, "sword",
                 "melee", "splash", 3, 5, 6));
+        builder.addEntity(new Weapon(new Tile(-1f, 5f), true, "axe",
+                "melee", "splash", 4,4, 10));
+        builder.addEntity(new Weapon(new Tile(-1f, 7f), true, "bow",
+                "range", "splash", 4, 3, 10));
+        builder.addEntity(new Weapon(new Tile(-1f, 9f), true, "spear",
+                "range", "splash", 5, 4, 7));
 
         return builder;
     }
