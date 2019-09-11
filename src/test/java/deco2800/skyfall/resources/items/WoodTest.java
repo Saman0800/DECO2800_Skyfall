@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class WoodTest extends NaturalResources {
+public class WoodTest  {
 
     // create a Wood item
     private Wood wood;
