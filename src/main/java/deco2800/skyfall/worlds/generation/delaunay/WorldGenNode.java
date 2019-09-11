@@ -240,7 +240,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      *
      * @param nodes The list of nodes that can be assigned to
      * @param tiles The list of tiles to assign
-     */
+     *//*
     public static void assignTiles(List<WorldGenNode> nodes, List<Tile> tiles, Random random, int nodeSpacing) {
         int startPeriod = nodeSpacing * 2;
         // TODO Fix possible divide-by-zero.
@@ -315,6 +315,99 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
             // Assign tile to the node
             nodes.get(minDistanceIndex).addTile(tile);
         }
+    }*/
+
+    // TODO redo this javadoc
+    /**
+     * Assigns each tile in the world to the nearest node.
+     *
+     * @param nodes The list of nodes that can be assigned to
+     */
+    public static void removeZeroTileNodes(List<WorldGenNode> nodes, int nodeSpacing, int worldSize) throws WorldGenException {
+        NoiseGenerator xGen = Tile.getXNoiseGen();
+        NoiseGenerator yGen = Tile.getYNoiseGen();
+        List<WorldGenNode> tempNodes = new ArrayList<>(nodes);
+
+        for (int i = -1 * worldSize; i <= worldSize; i++) {
+            for (int j = -1 * worldSize; j <= worldSize; j++) {
+                double rowX = j + (i % 2 != 0 ? 0.5f : 0);
+                double tileX =
+                        i + xGen.getOctavedPerlinValue(i , rowX) *
+                                (double) nodeSpacing - (double) nodeSpacing / 2;
+                double tileY =
+                        rowX + yGen.getOctavedPerlinValue(i , rowX) *
+                                (double) nodeSpacing - (double) nodeSpacing / 2;
+
+                // Remove the node from the list of nodes to search
+                tempNodes.remove(nodes.get(findNearestNodeIndex(nodes, tileX, tileY)));
+            }
+        }
+        nodes.removeAll(tempNodes);
+        for (WorldGenNode node : nodes) {
+            // Clear all properties that may change with removing 0 tile nodes
+            node.vertices.clear();
+            node.neighbours.clear();
+            node.borderNode = false;
+        }
+        // Recalculate neighbours, borderNodes etc
+        calculateVertices(nodes, worldSize);
+    }
+
+    public static int findNearestNodeIndex(List<WorldGenNode> nodes, double tileX, double tileY) {
+        // Find the index of the node with the node with one of the nearest
+        // Y values (note, if there is no node with the exact Y value, it)
+        // Can choose the node on either side, not the strictly closest one
+        int nearestIndex = binarySearch(tileY, nodes, 0, nodes.size() - 1);
+
+        boolean lowerLimitFound = false;
+        boolean upperLimitFound = false;
+
+        // Store the minimum distance to a node, and the index of that node
+        double minDistance = nodes.get(nearestIndex).distanceTo(tileX, tileY);
+        int minDistanceIndex = nearestIndex;
+        int iterations = 1;
+        // Starting from the initial index, this loop checks the 1st node on
+        // either side, then the 2nd node on either side, continuing
+        // outwards (kept track of by iterations).
+        while (!(upperLimitFound && lowerLimitFound)) {
+            int lower = nearestIndex - iterations;
+            int upper = nearestIndex + iterations;
+            // Stop the algorithm from checking off the end of the list
+            if (lower < 0) {
+                lowerLimitFound = true;
+            }
+            if (upper > nodes.size() - 1) {
+                upperLimitFound = true;
+            }
+
+            if (!lowerLimitFound) {
+                double distance = nodes.get(lower).distanceTo(tileX, tileY);
+                // Update the closest node if necessary
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    minDistanceIndex = lower;
+                }
+                // As distance to a node is necessarily >= the difference in
+                // y value, if the difference in y value is greater than the
+                // smallest distance to a node, all future nodes in that
+                // direction will be further away
+                if (nodes.get(lower).yDistanceTo(tileY) > minDistance) {
+                    lowerLimitFound = true;
+                }
+            }
+            if (!upperLimitFound) {
+                double distance = nodes.get(upper).distanceTo(tileX, tileY);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    minDistanceIndex = upper;
+                }
+                if (nodes.get(upper).yDistanceTo(tileY) > minDistance) {
+                    upperLimitFound = true;
+                }
+            }
+            iterations++;
+        }
+        return minDistanceIndex;
     }
 
     /**
@@ -666,6 +759,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         }
     }
 
+    // TODO remove
     /**
      * Remove all nodes with no associated tile from a list
      *
@@ -673,6 +767,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * @param worldSize Half the side length of the world
      * @throws WorldGenException If calculateVertices throws a WorldGenException
      */
+    /*
     public static void removeZeroTileNodes(List<WorldGenNode> nodes, int worldSize) throws WorldGenException {
         // Set up iterator to allow nodes to be removed while looping through them
 
@@ -686,7 +781,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         }
         // Recalculate neighbours, borderNodes etc.
         calculateVertices(nodes, worldSize);
-    }
+    }*/
 
     /* ------------------------------------------------------------------------
      * 				GETTERS AND SETTERS BELOW THIS COMMENT.

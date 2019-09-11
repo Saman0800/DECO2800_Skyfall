@@ -164,12 +164,12 @@ public class World implements TouchDownObserver {
             generateNeighbours(tiles);
 
             try {
-                //WorldGenNode.assignTiles(worldGenNodes, tiles, random, nodeSpacing);
-                WorldGenNode.removeZeroTileNodes(worldGenNodes, worldSize);
+                WorldGenNode.removeZeroTileNodes(worldGenNodes, nodeSpacing, worldSize);
                 WorldGenNode.assignNeighbours(worldGenNodes, voronoiEdges);
             } catch (WorldGenException e) {
                 throw e;
             }
+
             VoronoiEdge.assignTiles(voronoiEdges, tiles, worldSize);
             VoronoiEdge.assignNeighbours(voronoiEdges);
 

@@ -173,6 +173,14 @@ public class Tile {
         yNoiseGen = new NoiseGenerator(random,  octaves, startPeriod, attenuation);
     }
 
+    public static NoiseGenerator getXNoiseGen() {
+        return xNoiseGen;
+    }
+
+    public static NoiseGenerator getYNoiseGen() {
+        return yNoiseGen;
+    }
+
     /**
      * Assigns this tile to the nearest node
      *
@@ -187,58 +195,8 @@ public class Tile {
         double tileY =
                 this.getRow() + yNoiseGen.getOctavedPerlinValue(this.getCol() , this.getRow()) *
                         (double) nodeSpacing - (double) nodeSpacing / 2;
-        // Find the index of the node with the node with one of the nearest
-        // Y values (note, if there is no node with the exact Y value, it)
-        // Can choose the node on either side, not the strictly closest one
-        int nearestIndex = WorldGenNode.binarySearch(tileY, nodes, 0, nodes.size() - 1);
-        boolean lowerLimitFound = false;
-        boolean upperLimitFound = false;
 
-        // Store the minimum distance to a node, and the index of that node
-        double minDistance = nodes.get(nearestIndex).distanceTo(tileX, tileY);
-        int minDistanceIndex = nearestIndex;
-        int iterations = 1;
-        // Starting from the initial index, this loop checks the 1st node on
-        // either side, then the 2nd node on either side, continuing
-        // outwards (kept track of by iterations).
-        while (!(upperLimitFound && lowerLimitFound)) {
-            int lower = nearestIndex - iterations;
-            int upper = nearestIndex + iterations;
-            // Stop the algorithm from checking off the end of the list
-            if (lower < 0) {
-                lowerLimitFound = true;
-            }
-            if (upper > nodes.size() - 1) {
-                upperLimitFound = true;
-            }
-
-            if (!lowerLimitFound) {
-                double distance = nodes.get(lower).distanceTo(tileX, tileY);
-                // Update the closest node if necessary
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    minDistanceIndex = lower;
-                }
-                // As distance to a node is necessarily >= the difference in
-                // y value, if the difference in y value is greater than the
-                // smallest distance to a node, all future nodes in that
-                // direction will be further away
-                if (nodes.get(lower).yDistanceTo(tileY) > minDistance) {
-                    lowerLimitFound = true;
-                }
-            }
-            if (!upperLimitFound) {
-                double distance = nodes.get(upper).distanceTo(tileX, tileY);
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    minDistanceIndex = upper;
-                }
-                if (nodes.get(upper).yDistanceTo(tileY) > minDistance) {
-                    upperLimitFound = true;
-                }
-            }
-            iterations++;
-        }
+        int minDistanceIndex = WorldGenNode.findNearestNodeIndex(nodes, tileX, tileY);
         // Assign tile to the node
         nodes.get(minDistanceIndex).addTile(this);
         // Assign node to the tile
