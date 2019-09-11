@@ -1,9 +1,6 @@
 package deco2800.skyfall.entities;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.*;
 import static org.junit.Assert.*;
 
 public class WeaponTest {
@@ -12,11 +9,12 @@ public class WeaponTest {
 
     @Before
     public void setUp() throws Exception {
-        weapon = new Weapon("Axe","Melee","Single",1f,1f,100f);
+        weapon = new Weapon("Axe","Melee","Single", 1,1,100);
     }
 
     @After
     public void tearDown() throws Exception {
+        weapon = null;
     }
 
     @Test
@@ -36,16 +34,16 @@ public class WeaponTest {
 
     @Test
     public void getDamageTest() {
-        assertEquals(1f, weapon.getDamage());
+        assertEquals(1, weapon.getDamage());
     }
 
     @Test
     public void getAttackRateTest() {
-        assertEquals(1f, weapon.getAttackRate());
+        assertEquals(1, weapon.getAttackRate());
     }
 
     @Test
     public void getDurabilityTest() {
-        assertEquals(100f, weapon.getDurability());
+        assertEquals(100, weapon.getDurability());
     }
 }
