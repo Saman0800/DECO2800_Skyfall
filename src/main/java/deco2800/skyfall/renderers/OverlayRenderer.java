@@ -113,6 +113,13 @@ public class OverlayRenderer implements Renderer {
 						GameManager.get().getManager(EnvironmentManager.class).currentBiome()));
 
 		line++;
+		
+		// Display player's current equipped item
+		debugLine(batch, camera, line++,
+				String.format("Equipped Item: %s",
+						GameManager.get().getManager(StatisticsManager.class).getCharacter().displayEquippedItem()));
+
+		line++;
 
 		debugLine(batch, camera, line++, "PathfindingService");
 		debugLine(batch, camera, line++, GameManager.get().getManager(PathFindingService.class).toString());

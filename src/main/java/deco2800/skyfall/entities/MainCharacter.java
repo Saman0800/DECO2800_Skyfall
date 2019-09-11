@@ -235,6 +235,16 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         return equippedItem;
     }
 
+    public String displayEquippedItem(){
+        if(equippedItem != null){
+            return equippedItem.toString();
+        }
+
+        else{
+            return "No item equipped";
+        }
+    }
+
     /**
      * Return the currently selected item slot.
      * @return The item slot the MainCharacter has equip.
