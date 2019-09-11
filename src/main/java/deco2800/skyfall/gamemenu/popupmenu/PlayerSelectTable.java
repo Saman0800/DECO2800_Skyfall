@@ -38,14 +38,14 @@ public class PlayerSelectTable extends AbstractPopUpElement{
     @Override
     public void hide() {
         super.hide();
-        System.out.println("Hiding pause table");
+        System.out.println("Hiding player select table");
         playerSelectTable.setVisible(false);
     }
 
     @Override
     public void show() {
         super.show();
-        System.out.println("Showing pause table");
+        System.out.println("Showing player select table");
         playerSelectTable.setVisible(true);
     }
 

@@ -108,6 +108,14 @@ public class GameMenuBar extends AbstractUIElement {
         build.setPosition(300, 30 * 1000 / 800f);
         stage.addActor(build);
 
+        build.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                hideOpened();
+                gameMenuManager.setPopUp("buildingTable");
+            }
+        });
+
         ImageButton radar = new ImageButton(generateTextureRegionDrawableObject("radar"));
         radar.setSize(219 * 0.55f, 207 * 0.55f);
         radar.setPosition(440, 30 * 1000 / 800f);

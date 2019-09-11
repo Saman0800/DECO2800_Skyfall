@@ -1124,9 +1124,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @return the learned blueprints list
      */
     public List<String> getBlueprintsLearned() {
-        blueprintsLearned = new ArrayList<>();
+        blueprintsLearned = new ArrayList<>(Arrays.asList("hatchet", "pickaxe"));
 
-        return this.blueprintsLearned;
+        return blueprintsLearned;
     }
 
     /***
