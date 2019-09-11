@@ -227,14 +227,26 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
     }
 
+    /**
+     * Sets the player's equipped item
+     * @param item the item to equip
+     */
     public void setEquippedItem(Item item){
         this.equippedItem = item;
     }
 
+    /**
+     * Returns the players equipped item
+     * @return Item object that player is equipped with
+     */
     public Item getEquippedItem (){
         return equippedItem;
     }
 
+    /**
+     * Returns string of players equipped item, or "No item equipped" if equippedItem == null
+     * @return String of equipped item
+     */
     public String displayEquippedItem(){
         if(equippedItem != null){
             return equippedItem.toString();
