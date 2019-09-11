@@ -123,6 +123,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     private boolean isAttacking = false;
 
+    /*
+     * Item player is currently equipped with/holding.
+     */
+    private Item equippedItem;
+
     /**
      * Private helper method to instantiate inventory and weapon managers for
      * Main Character constructor
@@ -208,6 +213,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.setTexture(textures[2]);
     }
 
+
     /**
      * Switch the item the MainCharacter has equip.
      * @param keyCode Keycode the player has pressed.
@@ -219,6 +225,14 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             this.itemSlotSelected = keyNumber;
             logger.info("Switched to item: " + keyNumber);
         }
+    }
+
+    public void setEquippedItem(Item item){
+        this.equippedItem = item;
+    }
+
+    public Item getEquippedItem (){
+        return equippedItem;
     }
 
     /**
