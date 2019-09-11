@@ -158,6 +158,8 @@ public class MainCharacter extends Peon
      */
     private boolean isInvincible;
 
+    private String equipped;
+
     /**
      * Base Main Character constructor
      */
@@ -206,6 +208,7 @@ public class MainCharacter extends Peon
                 position.getRow(),
                 1, 1);*/
 
+        equipped = "No Weapon Equipped";
         canSwim = true;
         isSprinting = false;
         this.scale = 0.4f;
@@ -688,9 +691,17 @@ public class MainCharacter extends Peon
                         if (this.getPosition().distance(entity.getPosition()) <= 1
                                 && entity.getPosition().distance(tile.getCoordinates()) <= 1) {
                             inventories.inventoryAdd((Item)entity);
+                            String weapon = ((Weapon) entity).getName();
+                            if (!this.equipped.equals(weapon)) {
+                                inventories.quickAccessRemove(this.equipped);
+                                inventories.quickAccessAdd(weapon);
+                                this.equipped = weapon;
+                            }
                             GameManager.get().getWorld().removeEntity(entity);
                             System.out.println("picked up weapon!");
                             System.out.println(inventories.getInventoryContents());
+                            System.out.println(this.equipped);
+                            System.out.println(inventories.getQuickAccess());
                         }
                         return;
                     }
