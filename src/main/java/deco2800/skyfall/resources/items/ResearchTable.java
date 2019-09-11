@@ -78,7 +78,7 @@ public class ResearchTable extends ManufacturedResources implements Blueprint,
             String newBlueprint = this.getCreatableItems().get(0);
             owner.getBlueprintsLearned().add(newBlueprint);
             this.getCreatableItems().remove(0);
-            //remove gold form player inventory
+            owner.removeGold(goldCost);
             }
     }
 
