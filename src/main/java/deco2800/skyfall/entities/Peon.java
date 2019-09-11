@@ -125,6 +125,9 @@ public class Peon extends AgentEntity implements Tickable {
 	 * Sets character to be dead
 	 */
 	public boolean setDead(boolean is_dead) {
+		if (is_dead) {
+			health = 0;
+		}
 		return is_dead;
 	}
 

@@ -52,7 +52,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     //Box2D properties
     private Body body;
-    private Fixture fixture;
+    protected Fixture fixture;
     private Boolean isCollidable;
 
 	@Expose

@@ -300,6 +300,7 @@ public class Treeman extends EnemyEntity implements Animatable {
                 this.setTexture("treemanDead");
                 this.setObjectName("treemanDead");
                 setCurrentState(AnimationRole.DEFENCE);
+                destroy();
             }
             time++;
         }else{

@@ -199,7 +199,7 @@ public class MainCharacter extends Peon
         //Initialises the players velocity properties
 
         setAcceleration(1.f);
-        setMaxSpeed(0.7f);
+        setMaxSpeed(1.f);
 
         vel = 0;
         velHistoryX = new ArrayList<>();
