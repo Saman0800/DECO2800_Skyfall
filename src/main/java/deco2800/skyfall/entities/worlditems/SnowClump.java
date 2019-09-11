@@ -1,9 +1,11 @@
-package deco2800.skyfall.entities;
+package deco2800.skyfall.entities.worlditems;
 
+import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.worlds.Tile;
 import java.util.Random;
+import deco2800.skyfall.entities.HasHealth;
 
-public class Rock extends StaticEntity implements HasHealth {
+public class SnowClump extends StaticEntity implements HasHealth {
     private int health = 100;
     private static final String ENTITY_ID_STRING = "rock";
 
@@ -11,18 +13,16 @@ public class Rock extends StaticEntity implements HasHealth {
     // parameter.
 
     private static Random randomGen = new Random();
-    private static int nextRock = 1;
-    private int metalAmount;
+    private static int nextImage = 1;
 
-    public Rock() {
+    public SnowClump() {
         this.setObjectName(ENTITY_ID_STRING);
     }
 
-    public Rock(Tile tile, boolean obstructed) {
-        super(tile, 2, "rock" + nextRock, obstructed);
-        nextRock = randomGen.nextInt(3) + 1;
+    public SnowClump(Tile tile, boolean obstructed) {
+        super(tile, 2, "MSnow" + nextImage, obstructed);
+        nextImage = randomGen.nextInt(3) + 1;
         this.setObjectName(ENTITY_ID_STRING);
-        this.metalAmount = 15;
     }
 
     @Override
@@ -41,14 +41,14 @@ public class Rock extends StaticEntity implements HasHealth {
     }
 
     /**
-     * The newInstance method implemented for the Rock class to allow for item
+     * The newInstance method implemented for the SnowClump class to allow for item
      * dispersal on game start up.
      * 
      * @return Duplicate rock instance with modified position.
      */
     @Override
-    public Rock newInstance(Tile tile) {
-        return new Rock(tile, this.isObstructed());
+    public SnowClump newInstance(Tile tile) {
+        return new SnowClump(tile, this.isObstructed());
     }
 
 }

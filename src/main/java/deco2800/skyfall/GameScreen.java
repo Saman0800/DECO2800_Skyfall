@@ -1,6 +1,9 @@
 package deco2800.skyfall;
 
+import java.lang.Math;
+
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -17,8 +20,10 @@ import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.renderers.OverlayRenderer;
 import deco2800.skyfall.renderers.Renderer3D;
+import deco2800.skyfall.util.SettingsFile;
 import deco2800.skyfall.worlds.*;
 import deco2800.skyfall.managers.EnvironmentManager;
+import deco2800.skyfall.util.lightinghelpers.*;
 
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
@@ -26,11 +31,13 @@ import deco2800.skyfall.worlds.world.WorldDirector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GameScreen implements Screen,KeyDownObserver {
-	private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
-	@SuppressWarnings("unused")
-	private final SkyfallGame game;
-	/**
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+
+public class GameScreen implements Screen, KeyDownObserver {
+    private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
+    @SuppressWarnings("unused")
+    private final SkyfallGame game;
+    /**
      * Set the renderer. 3D is for Isometric worlds Check the documentation for each
      * renderer to see how it handles WorldEntity coordinates
      */
@@ -49,11 +56,24 @@ public class GameScreen implements Screen,KeyDownObserver {
 
     long lastGameTick = 0;
 
-	/**
-	 * Create an EnvironmentManager for ToD.
-	 */
-	EnvironmentManager timeOfDay;
-	public static boolean isPaused = false;
+    /**
+     * Create an EnvironmentManager for ToD.
+     */
+    EnvironmentManager timeOfDay;
+    public static boolean isPaused = false;
+
+    /**
+     * Extended shading program
+     */
+    //Set to true when extended shader is to be used
+    boolean extendedLightingActive = false;
+    //An extended shader program that implements extended lighting
+    ShaderProgram shaderProgram;
+
+    /**
+     * This hold the intensity for the ambient light for the ambient light.
+     */
+    SpectralValue ambientIntensity;
 
     public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
         /* Create an example world for the engine */
@@ -84,12 +104,10 @@ public class GameScreen implements Screen,KeyDownObserver {
             } else {
 
                 //Creating the world
-                WorldBuilder worldBuilder = new WorldBuilder();
-                WorldDirector.constructSimpleSinglePlayerWorld(worldBuilder);
-                world = worldBuilder.getWorld();
-			}
-			GameManager.get().getManager(NetworkManager.class).startHosting("host");
-		}
+                world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 5).getWorld();
+            }
+            GameManager.get().getManager(NetworkManager.class).startHosting("host");
+        }
 
         gameManager.setWorld(world);
 
@@ -102,7 +120,6 @@ public class GameScreen implements Screen,KeyDownObserver {
         GameManager.get().setStage(stage);
         GameManager.get().setCamera(camera);
 
-
         /* Add inventory to game manager */
         gameManager.addManager(new InventoryManager());
 
@@ -113,14 +130,33 @@ public class GameScreen implements Screen,KeyDownObserver {
         GameManager.get().getWorld().addEntity(bf.createCabin(3f, 1.5f));
         GameManager.get().getWorld().addEntity(bf.createCabin(0f, 0f));
 
-		/* Add environment to game manager */
-		gameManager.addManager(new EnvironmentManager());
+        /* Add environment to game manager */
+        EnvironmentManager gameEnvironManag = new EnvironmentManager();
+        // For debuggin only!
+        gameEnvironManag.setTime(5 * 60000);
+        gameManager.addManager(gameEnvironManag);
 
-		/* Add BGM to game manager */
-		gameManager.addManager(new BGMManager());
+        /* Add BGM to game manager */
+        gameManager.addManager(new BGMManager());
+
+        /**
+         * NOTE: Now that the Environment Manager has been added start creating the
+         * SpectralValue instances for the Ambient Light.
+         */
+        IntensityFunction intensityFunction = (float x) -> {
+            double A = 0.4;
+            double B = 7.2;
+            double C = 1.46;
+
+            double cosEval = Math.cos(((x - 12) * Math.PI) / 12.0);
+            double normalise = A * Math.sqrt((1 + B * B) / (1 + B * B * cosEval * cosEval));
+
+            return (float) (normalise * cosEval + A * C);
+        };
+        ambientIntensity = new FunctionalSpectralValue(intensityFunction, gameEnvironManag);
 
         GameMenuScreen gamemenuScreen = new GameMenuScreen(gameMenuManager);
-		gamemenuScreen.show();
+        gamemenuScreen.show();
 
         PathFindingService pathFindingService = new PathFindingService();
 
@@ -133,8 +169,27 @@ public class GameScreen implements Screen,KeyDownObserver {
         Gdx.input.setInputProcessor(multiplexer);
 
         GameManager.get().getManager(KeyboardManager.class).registerForKeyDown(this);
-    }
 
+        //Create the shader program from resource files
+        //Shader program will be attached later
+        String vertexShader = Gdx.files.internal("resources\\shaders\\batch.vert").readString();
+        String fragmentShader = Gdx.files.internal("resources\\shaders\\batch.frag").readString();
+        shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
+
+        //Allows uniform variables to be in the fragment shader but not the vertex
+        shaderProgram.pedantic = false;
+
+        //A small log explaining how the shader compilation went
+        System.out.println("\nShader program log:");
+        System.out.print(shaderProgram.getLog());
+        if (shaderProgram.isCompiled()) {
+            System.out.println("Shader program compiled");
+            SettingsFile gfxSettings = new SettingsFile("settings\\gfx.ini");
+            extendedLightingActive = (gfxSettings.get("s_use_e_shader", 1) != 0);
+            gfxSettings.close();
+        }
+        System.out.print("\n");
+    }
 
     /**
      * Renderer thread
@@ -155,9 +210,12 @@ public class GameScreen implements Screen,KeyDownObserver {
             pause();
         }
 
-
         SpriteBatch batchDebug = new SpriteBatch();
         batchDebug.setProjectionMatrix(cameraDebug.combined);
+
+        if (extendedLightingActive) {
+            shaderProgram.begin();
+        }
 
         SpriteBatch batch = new SpriteBatch();
         batch.setProjectionMatrix(camera.combined);
@@ -165,22 +223,25 @@ public class GameScreen implements Screen,KeyDownObserver {
         // Clear the entire display as we are using lazy rendering
 
         // Commented out by Cyrus
-//        if (!isPaused) {
+        //        if (!isPaused) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         rerenderMapObjects(batch, camera);
+        rendererDebug.setUsingShader(extendedLightingActive);
         rendererDebug.render(batchDebug, cameraDebug);
         stage.act(delta);
         stage.draw();
-//        }
-//        stage.act(delta);
-//        stage.draw();
+        //        }
+        //        stage.act(delta);
+        //        stage.draw();
 
+        /* Refresh the experience UI for if information was updated */
 
-		/* Refresh the experience UI for if information was updated */
-
-		batch.dispose();
-	}
+        batch.dispose();
+        if (extendedLightingActive) {
+            shaderProgram.end();
+        }
+    }
 
     private void handleRenderables() {
         if (System.currentTimeMillis() - lastGameTick > 20) {
@@ -193,6 +254,13 @@ public class GameScreen implements Screen,KeyDownObserver {
      * Use the selected renderer to render objects onto the map
      */
     private void rerenderMapObjects(SpriteBatch batch, OrthographicCamera camera) {
+        //set uniform values for lighting parameters and attach shader to batch
+        if (extendedLightingActive) {
+            shaderProgram.setUniformf("sunStrength", ambientIntensity.getIntensity());
+            // shaderProgram.setUniformf("sunColour", 0.9921f, 0.7215f, 0.0745f);
+            shaderProgram.setUniformf("sunColour", 1.0f, 1.0f, 1.0f);
+            batch.setShader(shaderProgram);
+        }
         renderer.render(batch, camera);
     }
 
@@ -252,10 +320,7 @@ public class GameScreen implements Screen,KeyDownObserver {
         if (keycode == Input.Keys.F5) {
 
             //Create a random world
-            WorldBuilder worldBuilder = new WorldBuilder();
-            // WorldDirector.constructSimpleSinglePlayerWorld(worldBuilder);
-            WorldDirector.constructNBiomeSinglePlayerWorld(worldBuilder, 3);
-            world = worldBuilder.getWorld();
+            world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 3).getWorld();
 
             AbstractEntity.resetID();
             Tile.resetID();
@@ -263,7 +328,7 @@ public class GameScreen implements Screen,KeyDownObserver {
             gameManager.setWorld(world);
 
             // Add first peon to the world
-            world.addEntity(new Peon(0f, 0f, 0.05f, "Side Piece", 10));
+            //            world.addEntity(new Peon(0f, 0f, 0.05f, "Side Piece", 10));
         }
 
         if (keycode == Input.Keys.F11) { // F11

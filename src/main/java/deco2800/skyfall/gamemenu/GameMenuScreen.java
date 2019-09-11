@@ -68,6 +68,7 @@ public class GameMenuScreen {
         this.textureManager = gameMenuManager.getTextureManager();
         inventory = gameMenuManager.getInventory();
         mainCharacter = gameMenuManager.getMainCharacter();
+        mainCharacter.setUpGUI();
     }
 
     /**
@@ -148,14 +149,7 @@ public class GameMenuScreen {
         radar.setSize(219 * 0.55f, 207 * 0.55f);
         radar.setPosition(440, 30 * 1000 / 800f);
         stage.addActor(radar);
-
-
-        HealthCircle healthCircle = new HealthCircle(stage,
-                "big_circle",
-                "inner_circle",
-                mainCharacter);
-
-        gameMenuManager.addHealthCircle(healthCircle);
+        
     }
 
     /**
