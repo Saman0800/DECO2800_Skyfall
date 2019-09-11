@@ -16,6 +16,8 @@ import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.gamemenu.GameMenuScreen;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.Peon;
+import deco2800.skyfall.graphics.ShaderWrapper;
+import deco2800.skyfall.graphics.types.vec3;
 import deco2800.skyfall.handlers.KeyboardManager;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
@@ -64,13 +66,8 @@ public class GameScreen implements Screen, KeyDownObserver {
     EnvironmentManager timeOfDay;
     public static boolean isPaused = false;
 
-    /**
-     * Extended shading program
-     */
-    //Set to true when extended shader is to be used
-    boolean extendedLightingActive = false;
-    //An extended shader program that implements extended lighting
-    ShaderProgram shaderProgram;
+    //A wrapper for shader
+    ShaderWrapper shader;
 
     /**
      * This hold the intensity for the ambient light for the ambient light.
@@ -198,23 +195,7 @@ public class GameScreen implements Screen, KeyDownObserver {
 
         //Create the shader program from resource files
         //Shader program will be attached later
-        String vertexShader = Gdx.files.internal("resources\\shaders\\batch.vert").readString();
-        String fragmentShader = Gdx.files.internal("resources\\shaders\\batch.frag").readString();
-        shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
-
-        //Allows uniform variables to be in the fragment shader but not the vertex
-        shaderProgram.pedantic = false;
-
-        //A small log explaining how the shader compilation went
-        System.out.println("\nShader program log:");
-        System.out.print(shaderProgram.getLog());
-        if (shaderProgram.isCompiled()) {
-            System.out.println("Shader program compiled");
-            SettingsFile gfxSettings = new SettingsFile("settings\\gfx.ini");
-            extendedLightingActive = (gfxSettings.get("s_use_e_shader", 1) != 0);
-            gfxSettings.close();
-        }
-        System.out.print("\n");
+        shader = new ShaderWrapper("batch");
     }
 
     /**
@@ -239,9 +220,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         SpriteBatch batchDebug = new SpriteBatch();
         batchDebug.setProjectionMatrix(cameraDebug.combined);
 
-        if (extendedLightingActive) {
-            shaderProgram.begin();
-        }
+        shader.begin();
 
         SpriteBatch batch = new SpriteBatch();
         batch.setProjectionMatrix(camera.combined);
@@ -253,7 +232,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         rerenderMapObjects(batch, camera);
-        rendererDebug.setUsingShader(extendedLightingActive);
+        //rendererDebug.setUsingShader();
         rendererDebug.render(batchDebug, cameraDebug);
         stage.act(delta);
         stage.draw();
@@ -264,9 +243,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         /* Refresh the experience UI for if information was updated */
 
         batch.dispose();
-        if (extendedLightingActive) {
-            shaderProgram.end();
-        }
+        shader.end();
     }
 
     private void handleRenderables() {
@@ -280,13 +257,11 @@ public class GameScreen implements Screen, KeyDownObserver {
      * Use the selected renderer to render objects onto the map
      */
     private void rerenderMapObjects(SpriteBatch batch, OrthographicCamera camera) {
-        //set uniform values for lighting parameters and attach shader to batch
-        if (extendedLightingActive) {
-            shaderProgram.setUniformf("sunStrength", ambientIntensity.getIntensity());
-            // shaderProgram.setUniformf("sunColour", 0.9921f, 0.7215f, 0.0745f);
-            shaderProgram.setUniformf("sunColour", 1.0f, 1.0f, 1.0f);
-            batch.setShader(shaderProgram);
-        }
+        //set ambient light
+        shader.setAmbientComponent(new vec3(1.0f, 1.0f, 1.0f), ambientIntensity.getIntensity());
+        //finalise shader parameters and attach to batch
+        shader.finaliseAndAttachShader(batch);
+        //render batch
         renderer.render(batch, camera);
     }
 
