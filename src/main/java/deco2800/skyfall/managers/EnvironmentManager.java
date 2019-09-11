@@ -2,8 +2,11 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.observers.DayNightObserver;
+import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.worlds.Tile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EnvironmentManager extends TickableManager {
@@ -53,8 +56,11 @@ public class EnvironmentManager extends TickableManager {
    // Abstract entity within entities list. (Public for testing)
    public AbstractEntity player;
 
-   // Correct biome name to display on screen
-   public String biomeDisplay;
+   //List of objects implementing TimeObserver
+   private ArrayList<TimeObserver> timeListeners;
+
+   //List of objects implementing DayNightObserver
+   private ArrayList<DayNightObserver> dayNightListeners;
 
    /**
     * Constructor
@@ -63,11 +69,79 @@ public class EnvironmentManager extends TickableManager {
    public EnvironmentManager() {
       file = "resources/sounds/forest_day.wav";
       currentFile = "resources/sounds/forest_night.wav";
+      timeListeners = new ArrayList<>();
+      dayNightListeners = new ArrayList<>();
    }
 
    /**
-    * Private helper function for constructor to set biome
-    *
+    * Adds an observer to observe the time update
+    * @param observer the observer to add
+    */
+   public void addTimeListener (TimeObserver observer) {
+      timeListeners.add(observer);
+   }
+
+   /**
+    * Removes an observer from observing the time update
+    * @param observer the observer to remove
+    */
+   public void removeTimeListener (TimeObserver observer) {
+      timeListeners.remove(observer);
+   }
+
+   /**
+    * Get list of observers observing time update
+    * @return The list of observers currently observing the time update
+    */
+   public ArrayList<TimeObserver> getTimeListeners() {
+      return timeListeners;
+   }
+
+   /**
+    * Notifies all observers in timeListeners list of time change
+    * @param i The hour the game has updated to
+    */
+   public void updateTimeListeners(long i) {
+      for (TimeObserver observer : timeListeners) {
+         observer.notifyTimeUpdate(i);
+      }
+   }
+
+   /**
+    * Adds an observer to observe day/night change
+    * @param observer The observer to add
+    */
+   public void addDayNightListener (DayNightObserver observer) {
+      dayNightListeners.add(observer);
+   }
+
+   /**
+    * Removes and observer from observing day/night change
+    * @param observer The observer to remove
+    */
+   public void removeDayNightListener (DayNightObserver observer) {
+      dayNightListeners.remove(observer);
+   }
+
+   /**
+    * Gets list of observers observing day/night change
+    * @return The list of observers currently observing the day/night change
+    */
+   public ArrayList<DayNightObserver> getDayNightListeners() {
+      return dayNightListeners;
+   }
+
+   /**
+    * Notifies all observers in dayNightListeners list of day/night change
+    * @param isDay true if day, false if night
+    */
+   public void updateDayNightListeners(boolean isDay) {
+      for (DayNightObserver observer : dayNightListeners) {
+         observer.notifyDayNightUpdate(isDay);
+      }
+   }
+
+   /**
     * Tracks the biome the player is currently in by retrieving the player's coordinates,
     * the corresponding tile, and the corresponding biome.
     *
@@ -84,7 +158,6 @@ public class EnvironmentManager extends TickableManager {
             // So below if statement is needed
             if (currentTile != null) {
                biome = currentTile.getBiome().getBiomeName();
-               biomeDisplayName();
             } else {
                // Do nothing
             }
@@ -99,49 +172,6 @@ public class EnvironmentManager extends TickableManager {
     */
    public String currentBiome() {
       return biome;
-   }
-
-   /**
-    * Gets current biome player is in
-    *
-    * @return String Current biome of player, or null if player is moving between tiles
-    */
-   public String biomeDisplayName() {
-
-      if (biome.equals("forest")) {
-         biomeDisplay = "Forest";
-      }
-      if (biome.equals("volcanic_mountains")) {
-         biomeDisplay = "Volcanic Mountains";
-      }
-      if (biome.equals("snowy_mountains")) {
-         biomeDisplay = "Snowy Mountains";
-      }
-      if (biome.equals("mountain")) {
-         biomeDisplay = "Mountains";
-      }
-      if (biome.equals("swamp")) {
-         biomeDisplay = "Swamp";
-      }
-      if (biome.equals("lake")) {
-         biomeDisplay = "Lake";
-      }
-      if (biome.equals("river")) {
-         biomeDisplay = "River";
-      }
-      if (biome.equals("jungle")) {
-         biomeDisplay = "Jungle";
-      }
-      if (biome.equals("desert")) {
-         biomeDisplay = "Desert";
-      }
-      if (biome.equals("beach")) {
-         biomeDisplay = "Beach";
-      }
-      if (biome.equals("ocean")) {
-         biomeDisplay = "Ocean";
-      }
-      return biomeDisplay;
    }
 
    /**
@@ -161,11 +191,20 @@ public class EnvironmentManager extends TickableManager {
    public void setTime(long i) {
       //Each day cycle goes for approx 24 minutes
       long timeHours = (i / 60000);
-      hours = timeHours % 24;
+
+      hours = timeHours % 12;
+
+      //Check if observers need notifying, notifies if needed
+      if (timeHours % 24 != hours) {
+         updateTimeListeners(timeHours % 24);
+      }
 
       //Each minute equals one second
       long timeMins = (i / 1000);
       minutes = timeMins % 60;
+
+      //Update isDay boolean
+      isDay();
    }
 
    /**
@@ -174,10 +213,18 @@ public class EnvironmentManager extends TickableManager {
     */
    public boolean isDay() {
 
-      // Day equals am, night equals pm for now.
-      if (hours >= 12 && hours < 24) {
+      // Day is 6am - 6pm, Night 6pm - 6am
+      if (hours < 6 || hours >= 18) {
+         //check if observers need notifying
+         if (isDay) {
+            updateDayNightListeners(false);
+         }
          isDay = false;
       } else {
+         //check if observers need notifying
+         if (!isDay) {
+            updateDayNightListeners(true);
+         }
          isDay = true;
       }
       return isDay;
@@ -189,18 +236,27 @@ public class EnvironmentManager extends TickableManager {
     */
    public String getTOD() {
       // Set hours to be displayed
-      if (hours > 12 && hours < 24) {
-         displayHours = hours - 12;
-         TOD = "pm";
-      } else if (hours == 24) {
-         displayHours = hours - 12;
+//      if (hours > 12 && hours < 24) {
+//         displayHours = hours - 12;
+//         TOD = "pm";
+//      } else if (hours == 24) {
+//         displayHours = hours - 12;
+//         TOD = "am";
+//      } else if (hours == 12) {
+//         displayHours = hours;
+//         TOD = "pm";
+//      } else {
+//         displayHours = hours;
+//         TOD = "am";
+//      }
+
+      // Set hours to be displayed
+      if (hours <= 6) {
+         displayHours = hours + 6;
          TOD = "am";
-      } else if (hours == 12) {
-         displayHours = hours;
-         TOD = "pm";
       } else {
-         displayHours = hours;
-         TOD = "am";
+         displayHours = hours - 6;
+         TOD = "pm";
       }
 
       if (minutes < 10) {
@@ -262,7 +318,7 @@ public class EnvironmentManager extends TickableManager {
       // Check time of day and biome, and change files accordingly
       if (isDay()) {
          // Until lake music created and ocean biome is restricted, play forest for now
-         if (biome.equals("ocean") || biome.equals("lake")) {
+         if (biome.equals("ocean") || biome.equals("lake") || biome.equals("river")) {
             file = "resources/sounds/forest_day.wav";
          } else {
             file = "resources/sounds/" + biome + "_day.wav";
@@ -270,7 +326,7 @@ public class EnvironmentManager extends TickableManager {
 
       } else {
 //          Until lake music created and ocean biome is restricted, play forest for now
-         if (biome.equals("ocean") || biome.equals("lake")) {
+         if (biome.equals("ocean") || biome.equals("lake") || biome.equals("river")) {
             file = "resources/sounds/forest_night.wav";
          } else {
             file = "resources/sounds/" + biome + "_night.wav";

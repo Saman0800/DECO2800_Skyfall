@@ -6,6 +6,7 @@ import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 
+import deco2800.skyfall.worlds.world.WorldParameters;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,47 +59,44 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      *
      * @param nodes      the nodes generated in the previous phase of the world generation
      * @param random     the random number generator used for deterministic generation
-     * @param biomeSizes the number of nodes for each of the biomes (except ocean)
-     * @param realBiomes the biomes to populate (ocean must be last)
-     * @param lakeSizes  the number of nodes assigned to each of the lakes
+     * @param worldParameters A class that contains most the world parameters
      *
      * @throws NotEnoughPointsException if there are not enough non-border nodes from which to form the biomes
      */
-    public BiomeGenerator(List<WorldGenNode> nodes, List<VoronoiEdge> voronoiEdges, Random random, int[] biomeSizes,
-                          List<AbstractBiome> realBiomes,
-                          int noLakes, int[] lakeSizes, int noRivers, int riverWidth, int beachWidth)
+    public BiomeGenerator(List<WorldGenNode> nodes, List<VoronoiEdge> voronoiEdges, Random random,
+                          WorldParameters worldParameters)
             throws NotEnoughPointsException {
         Objects.requireNonNull(nodes, "nodes must not be null");
         Objects.requireNonNull(random, "random must not be null");
-        Objects.requireNonNull(biomeSizes, "biomeSizes must not be null");
-        Objects.requireNonNull(realBiomes, "realBiomes must not be null");
-        for (AbstractBiome realBiome : realBiomes) {
-            Objects.requireNonNull(realBiome, "Elements of realBiome must not be null");
+        Objects.requireNonNull(worldParameters.getBiomeSizes(), "biomeSizes must not be null");
+        Objects.requireNonNull(worldParameters.getBiomes(), "realBiomes must not be null");
+        for (AbstractBiome realBiome : worldParameters.getBiomes()){
+            Objects.requireNonNull(worldParameters.getBiomes(), "Elements of realBiome must not be null");
         }
 
-        if (Arrays.stream(biomeSizes).anyMatch(size -> size == 0)) {
+        if (Arrays.stream(worldParameters.getBiomeSizes()).anyMatch(size -> size == 0)) {
             throw new IllegalArgumentException("All biomes must require at least one node");
         }
 
-        if (biomeSizes.length != realBiomes.size()) {
+        if (worldParameters.getBiomeSizes().length != worldParameters.getBiomes().size()) {
             throw new IllegalArgumentException("The number of biomes must be equal to the number of biome sizes");
         }
 
-        if (nodes.stream().filter(node -> !node.isBorderNode()).count() < Arrays.stream(biomeSizes).sum()) {
+        if (nodes.stream().filter(node -> !node.isBorderNode()).count() < Arrays.stream(worldParameters.getBiomeSizes()).sum()) {
             throw new NotEnoughPointsException("Not enough nodes to build biomes");
         }
 
         this.nodes = nodes;
         this.voronoiEdges = voronoiEdges;
         this.random = random;
-        this.biomeSizes = biomeSizes;
-        this.realBiomes = realBiomes;
+        this.biomeSizes = worldParameters.getBiomeSizes();
+        this.realBiomes = worldParameters.getBiomes();
         this.centerNode = calculateCenterNode();
-        this.noLakes = noLakes;
-        this.noRivers = noRivers;
-        this.riverWidth = riverWidth;
-        this.beachWidth = beachWidth;
-        this.lakeSizes = lakeSizes;
+        this.noLakes = worldParameters.getNumOfLakes();
+        this.noRivers = worldParameters.getNoRivers();
+        this.riverWidth = worldParameters.getRiverWidth();
+        this.beachWidth = worldParameters.getBeachWidth();
+        this.lakeSizes = worldParameters.getLakeSizes();
     }
 
     /**
@@ -142,6 +140,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 populateRealBiomes();
                 generateBeaches();
                 ensureContiguity();
+                testTileContiguity();
                 generateRivers(noRivers, riverWidth, voronoiEdges);
 
                 return;
@@ -155,7 +154,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 }
                 // Remove all biomes that were added to the list during generation.
                 while (realBiomes.size() > biomeSizes.length) {
-                    realBiomes.remove(biomeSizes.length);
+                    realBiomes.remove(realBiomes.size() - 1);
                 }
 
                 // If the generation reached a dead-end, try again.
@@ -261,7 +260,8 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             ArrayList<Tile> nextCoastLayer = new ArrayList<>();
 
             for (Tile tile : coast) {
-                if (distance < beachWidth * NoiseGenerator.fade(distanceGen.getOctavedPerlinValue(tile.getCol(), tile.getRow()))) {
+                if (distance <= beachWidth *
+                        NoiseGenerator.fade(distanceGen.getOctavedPerlinValue(tile.getCol(), tile.getRow()))) {
                     BeachBiome biome = beachesForBiomes.computeIfAbsent(tile.getBiome(), parentBiome -> {
                         BeachBiome beachBiome = new BeachBiome(parentBiome);
                         realBiomes.add(beachBiome);
@@ -597,12 +597,12 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             ArrayList<Tile> mainClusterTiles = new ArrayList<>();
 
             while (!biomeUncheckedTiles.isEmpty()) {
-                // If there are fewer remaining tiles in the biome than the main cluster, than the largest cluster must
-                // already be found, so break early.
-                if (biomeUncheckedTiles.size() <= mainClusterTiles.size()) {
-                    removedTiles.addAll(biomeUncheckedTiles);
-                    break;
-                }
+                // // If there are fewer remaining tiles in the biome than the main cluster, than the largest cluster must
+                // // already be found, so break early.
+                // if (biomeUncheckedTiles.size() <= mainClusterTiles.size()) {
+                //     removedTiles.addAll(biomeUncheckedTiles);
+                //     break;
+                // }
 
                 // The tiles to be checked.
                 ArrayDeque<Tile> clusterCheckQueue = new ArrayDeque<>();
@@ -617,6 +617,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
 
                 clusterCheckQueue.add(clusterStart);
 
+                boolean parentFound = biome.getParentBiome() == null;
                 while (!clusterCheckQueue.isEmpty()) {
                     Tile expandFrom = clusterCheckQueue.remove();
                     // Don't add tiles from sub-biomes to this cluster's tiles.
@@ -630,13 +631,27 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                             clusterCheckQueue.add(neighbour);
                             biomeUncheckedTiles.remove(neighbour);
                         }
+                        if (!parentFound && neighbour.getBiome() == biome.getParentBiome() &&
+                                !removedTiles.contains(neighbour)) {
+                            parentFound = true;
+                        }
                     }
                 }
 
                 // Keep the biggest cluster of tiles and mark the tile from the other cluster to be removed.
-                if (clusterTiles.size() > mainClusterTiles.size()) {
-                    removedTiles.addAll(mainClusterTiles);
+                if (parentFound && clusterTiles.size() > mainClusterTiles.size()) {
+                    if (biome.getParentBiome() == null) {
+                        removedTiles.addAll(mainClusterTiles);
+                    } else {
+                        for (Tile tile : mainClusterTiles) {
+                            biome.getParentBiome().addTile(tile);
+                        }
+                    }
                     mainClusterTiles = clusterTiles;
+                } else if (biome.getParentBiome() != null && parentFound) {
+                    for (Tile tile : clusterTiles) {
+                        biome.getParentBiome().addTile(tile);
+                    }
                 } else {
                     removedTiles.addAll(clusterTiles);
                 }
@@ -678,6 +693,34 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                     borderTiles.remove(neighbour);
                 }
             }
+        }
+    }
+
+    public void testTileContiguity() {
+        for (AbstractBiome biome : realBiomes) {
+            // HashSet<Tile> tilesToFind = new HashSet<>(biome.getTiles());
+            ArrayList<Tile> descendantTiles =
+                    biome.getDescendantBiomes().stream().flatMap(descendant -> descendant.getTiles().stream())
+                            .collect(Collectors.toCollection(ArrayList::new));
+            HashSet<Tile> tilesToFind = new HashSet<>(descendantTiles);
+
+            ArrayDeque<Tile> borderTiles = new ArrayDeque<>();
+
+            Tile startTile = descendantTiles.get(0);
+            tilesToFind.remove(startTile);
+            borderTiles.add(startTile);
+
+            while (!borderTiles.isEmpty()) {
+                Tile nextTile = borderTiles.remove();
+                for (Tile neighbour : nextTile.getNeighbours().values()) {
+                    if (tilesToFind.contains(neighbour)) {
+                        tilesToFind.remove(neighbour);
+                        borderTiles.add(neighbour);
+                    }
+                }
+            }
+
+            assert tilesToFind.isEmpty();
         }
     }
 
