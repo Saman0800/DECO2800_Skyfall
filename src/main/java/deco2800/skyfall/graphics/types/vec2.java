@@ -2,7 +2,7 @@ package deco2800.skyfall.graphics.types;
 
 /**
  * An implementation of vec2
- * Simpler than
+ * more convenient than array.
  */
 public class vec2 {
     public float x;
@@ -13,7 +13,7 @@ public class vec2 {
      * @param x x component
      * @param y y component
      */
-    public vec2(float x, float y, float z) {
+    public vec2(float x, float y) {
         this.x = x;
         this.y = y;
     }

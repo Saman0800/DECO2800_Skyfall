@@ -2,7 +2,8 @@ package deco2800.skyfall.graphics.types;
 
 /**
  * An implementation of vec3
- * Simpler than
+ * more convenient than array
+ * When referring to colour x,y,z maps to r,g,b
  */
 public class vec3 {
     public float x;
@@ -11,9 +12,9 @@ public class vec3 {
 
     /**
      * Component wise constructor
-     * @param x x component
-     * @param y y component
-     * @param z z component
+     * @param x x component, might also be r for colours
+     * @param y y component, might also be g for colours
+     * @param z z component, might also be b for colours
      */
     public vec3(float x, float y, float z) {
         this.x = x;
