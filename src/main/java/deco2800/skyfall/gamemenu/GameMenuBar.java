@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
 
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
@@ -161,8 +160,8 @@ public class GameMenuBar extends AbstractUIElement {
      * If there is any opened popup, closes it.
      */
     private void hideOpened() {
-        if (gameMenuManager.getPopUp() != null) {
-            gameMenuManager.getPopUp().hide();
+        if (gameMenuManager.getCurrentPopUp() != null) {
+            gameMenuManager.getCurrentPopUp().hide();
         }
     }
 }

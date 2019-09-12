@@ -5,6 +5,7 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
+import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.resources.Item;
@@ -14,10 +15,10 @@ import java.util.Map;
 /***
  * A Hatchet item. Hatchet is a manufacturd resource. It can harvest a tree.
  */
-public class Hatchet extends ManufacturedResources implements Item {
+public class Hatchet extends ManufacturedResources implements Item, Blueprint {
 
     private Map<String, Integer> allRequirements;
-    private boolean blueprintLearned = false;
+    private static boolean blueprintLearned = false;
 
     /***
      * Create a Hatecht with the name Hatchet
@@ -179,7 +180,6 @@ public class Hatchet extends ManufacturedResources implements Item {
 
         return blueprintLearned;
     }
-
 
     @Override
     public void use(HexVector position){
