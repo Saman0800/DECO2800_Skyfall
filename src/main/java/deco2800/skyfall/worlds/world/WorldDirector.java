@@ -1,12 +1,20 @@
 package deco2800.skyfall.worlds.world;
 
-import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.Flower;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.Robot;
+import deco2800.skyfall.entities.Spider;
+import deco2800.skyfall.entities.Stone;
+import deco2800.skyfall.entities.Treeman;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.worlds.biomes.*;
-
-import java.lang.management.MonitorInfo;
-import java.lang.reflect.Array;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.DesertBiome;
+import deco2800.skyfall.worlds.biomes.ForestBiome;
+import deco2800.skyfall.worlds.biomes.MountainBiome;
+import deco2800.skyfall.worlds.biomes.SnowyMountainsBiome;
+import deco2800.skyfall.worlds.biomes.SwampBiome;
+import deco2800.skyfall.worlds.biomes.VolcanicMountainsBiome;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -122,15 +130,14 @@ public class WorldDirector {
         builder.setNodeSpacing(5);
         builder.setWorldSize(30);
 
-        builder.setType("test");
-        builder.setStaticEntities(true);
+        builder.setType("single_player");
+//        builder.setStaticEntities(true);
 
         builder.addBiome(new ForestBiome(), 10);
-        builder.addBiome(new DesertBiome(), 10);
-        builder.addBiome(new MountainBiome(), 10);
-        builder.addBiome(new VolcanicMountainsBiome(), 10);
-        builder.addBiome(new SwampBiome(), 10);
-        builder.addBiome(new SnowyMountainsBiome(), 10);
-        builder.addLake(3);
+//        builder.addBiome(new DesertBiome(), 10);
+//        builder.addBiome(new MountainBiome(), 10);
+//        builder.addBiome(new VolcanicMountainsBiome(), 10);
+//        builder.addBiome(new SwampBiome(), 10);
+//        builder.addBiome(new SnowyMountainsBiome(), 10);
     }
 }

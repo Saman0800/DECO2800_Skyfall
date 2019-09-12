@@ -18,10 +18,10 @@ public class WorldParameters {
     private int nodeSpacing;
 
     // Biomes size
-    private int[] biomeSizes;
+    private ArrayList<Integer> biomeSizes;
 
     //Sizes of the lakes
-    private int[] lakeSizes;
+    private ArrayList<Integer> lakeSizes;
 
     //The number of lakes
     private int numOfLakes;
@@ -60,6 +60,22 @@ public class WorldParameters {
 
 
     /**
+     * Adds a corresponding biome size
+     * @param size The biome size to be added
+     */
+    public void addBiomeSize(int size){
+        biomeSizes.add(size);
+    }
+
+    /**
+     * Adds a corresponding lake size
+     * @param size The size of the lake
+     */
+    public void addLakeSize(int size){
+        lakeSizes.add(size);
+    }
+
+    /**
      * Sets the seed
      * @param seed The value of the seed
      */
@@ -88,7 +104,7 @@ public class WorldParameters {
      * Sets the sizes of the corresponding biomes
      * @param biomeSizes A list of of corresponding biomessizes for each biome
      */
-    public void setBiomeSizes(int[] biomeSizes) {
+    public void setBiomeSizes(ArrayList<Integer> biomeSizes) {
         this.biomeSizes = biomeSizes;
     }
 
@@ -96,8 +112,23 @@ public class WorldParameters {
      * Sets the sizes of the lakes
      * @param lakeSizes The size of the lakes
      */
-    public void setLakeSizes(int[] lakeSizes) {
+    public void setLakeSizes(ArrayList<Integer> lakeSizes) {
         this.lakeSizes = lakeSizes;
+    }
+
+    public void setLakeSizes(int[] lakeSizes){
+        this.lakeSizes = new ArrayList<>();
+        for (int lakeSize : lakeSizes){
+            this.lakeSizes.add(lakeSize);
+        }
+    }
+
+
+    public void setBiomeSizes(int[] biomeSizes){
+        this.biomeSizes = new ArrayList<>();
+        for (int biomeSize : biomeSizes) {
+            this.biomeSizes.add(biomeSize);
+        }
     }
 
     /**
@@ -173,18 +204,37 @@ public class WorldParameters {
     }
 
     /**
-     * Gets the biomes sizes
+     * Gets the biomes sizes as an array
      * @return The biome sizes
      */
-    public int[] getBiomeSizes() {
+    public int[] getBiomeSizesArray() {
+        return biomeSizes.stream().mapToInt(biomeSize -> biomeSize).toArray();
+    }
+
+
+    /**
+     * Gets the lake sizes as an array
+     * @return The sizes of the lakes
+     */
+    public int[] getLakeSizesArray() {
+        return lakeSizes.stream().mapToInt(lakeSize -> lakeSize).toArray();
+    }
+
+
+    /**
+     * Gets the biome sizes
+     * @return The biome sizes
+     */
+    public ArrayList<Integer> getBiomeSizes(){
         return biomeSizes;
     }
 
+
     /**
      * Gets the lake sizes
-     * @return The sizes of the lakes
+     * @return The lake sizes
      */
-    public int[] getLakeSizes() {
+    public ArrayList<Integer> getLakeSizes(){
         return lakeSizes;
     }
 

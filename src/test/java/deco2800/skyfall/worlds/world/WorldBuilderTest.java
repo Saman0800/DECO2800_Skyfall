@@ -42,7 +42,7 @@ public class WorldBuilderTest {
         World world = builder.getWorld();
 
         assertEquals(1, world.worldParameters.getNumOfLakes());
-        assertEquals(1, world.worldParameters.getLakeSizes().length);
+        assertEquals(1, world.worldParameters.getLakeSizesArray().length);
 
         assertEquals(2, world.worldParameters.getNodeSpacing());
         assertEquals(20, world.worldParameters.getWorldSize());

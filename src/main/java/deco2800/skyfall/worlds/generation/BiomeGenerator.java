@@ -81,15 +81,15 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             Objects.requireNonNull(realBiome, "Elements of realBiome must not be null");
         }
 
-        if (Arrays.stream(worldParameters.getBiomeSizes()).anyMatch(size -> size == 0)) {
+        if (Arrays.stream(worldParameters.getBiomeSizesArray()).anyMatch(size -> size == 0)) {
             throw new IllegalArgumentException("All biomes must require at least one node");
         }
 
-        if (worldParameters.getBiomeSizes().length != worldParameters.getBiomes().size()) {
+        if (worldParameters.getBiomeSizesArray().length != worldParameters.getBiomes().size()) {
             throw new IllegalArgumentException("The number of biomes must be equal to the number of biome sizes");
         }
 
-        if (nodes.stream().filter(node -> !node.isBorderNode()).count() < Arrays.stream(worldParameters.getBiomeSizes()).sum()) {
+        if (nodes.stream().filter(node -> !node.isBorderNode()).count() < Arrays.stream(worldParameters.getBiomeSizesArray()).sum()) {
             throw new NotEnoughPointsException("Not enough nodes to build biomes");
         }
 
@@ -97,14 +97,14 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
         this.nodes = nodes;
         this.voronoiEdges = voronoiEdges;
         this.random = random;
-        this.biomeSizes = worldParameters.getBiomeSizes();
+        this.biomeSizes = worldParameters.getBiomeSizesArray();
         this.realBiomes = worldParameters.getBiomes();
         this.centerNode = calculateCenterNode();
         this.noLakes = worldParameters.getNumOfLakes();
         this.noRivers = worldParameters.getNoRivers();
         this.riverWidth = worldParameters.getRiverWidth();
         this.beachWidth = worldParameters.getBeachWidth();
-        this.lakeSizes = worldParameters.getLakeSizes();
+        this.lakeSizes = worldParameters.getLakeSizesArray();
         this.riverEdges = new ArrayList<>();
         this.beachEdges = new ArrayList<>();
     }

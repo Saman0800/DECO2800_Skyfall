@@ -15,15 +15,6 @@ import java.util.Random;
  */
 public class WorldBuilder implements WorldBuilderInterface {
 
-    // List of biomes size
-    private ArrayList<Integer> biomeSizes;
-
-    // Corresponding sizes of the lakes
-    private ArrayList<Integer> lakeSizes;
-
-    // The entities in the world
-    private CopyOnWriteArrayList<AbstractEntity> entities;
-
     // The world type, can either be single_player, server, tutorial or test
     private String type;
 
@@ -42,11 +33,12 @@ public class WorldBuilder implements WorldBuilderInterface {
         worldParameters.setSeed(0);
         worldParameters.setNoRivers(0);
         worldParameters.setNoRivers(0);
+
         worldParameters.setEntities(new CopyOnWriteArrayList<>());
         worldParameters.setBiomes(new ArrayList<>());
+        worldParameters.setLakeSizes(new ArrayList<>());
+        worldParameters.setBiomeSizes(new ArrayList<>());
 
-        biomeSizes = new ArrayList<>();
-        lakeSizes = new ArrayList<>();
         type = "single_player";
         staticEntities = false;
     }
@@ -70,7 +62,7 @@ public class WorldBuilder implements WorldBuilderInterface {
     @Override
     public void addBiome(AbstractBiome biome, int size) {
         worldParameters.addBiome(biome);
-        biomeSizes.add(size);
+        worldParameters.addBiomeSize(size);
     }
 
     /**
@@ -81,7 +73,7 @@ public class WorldBuilder implements WorldBuilderInterface {
     @Override
     public void addLake(int size) {
         worldParameters.setNumOfLakes(worldParameters.getNumOfLakes()+1);
-        lakeSizes.add(size);
+        worldParameters.addLakeSize(size);
     }
 
     @Override
@@ -251,10 +243,6 @@ public class WorldBuilder implements WorldBuilderInterface {
      * @return A world
      */
     public World getWorld() {
-        // Converting the ArrayLists to arrays
-        worldParameters.setBiomeSizes(biomeSizes.stream().mapToInt(biomeSize -> biomeSize).toArray());
-        worldParameters.setLakeSizes(lakeSizes.stream().mapToInt(lakeSize -> lakeSize).toArray());
-
         World world;
 
         switch (type) {
