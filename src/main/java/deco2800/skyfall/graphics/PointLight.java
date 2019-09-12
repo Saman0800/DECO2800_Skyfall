@@ -18,6 +18,13 @@ public class PointLight {
     //light horizontal dispersion constant
     float a;
 
+    /**
+     * Creates a point light
+     * @param position x,y position in world space
+     * @param colour rgb colour, from [0,1] for each component
+     * @param k scaling constant, lower values will result in lower overall strength
+     * @param a horizontal spread constant, lower values spread light out further
+     */
     public PointLight(vec2 position, vec3 colour, float k, float a) {
         this.position = position;
         this.colour = colour;
@@ -25,20 +32,37 @@ public class PointLight {
         this.a = a;
     }
 
+    /**
+     * @return current position of light in world space
+     */
     public vec2 getPosition() {
         return position;
     }
 
+    /**
+     * @param position the new position of the point light in world space
+     */
     public void setPosition(vec2 position) {
         this.position = position;
     }
 
+    /**
+     * @return returns colour of light, each component is from [0,1]
+     */
     public vec3 getColour() {
         return colour;
     }
+
+    /**
+     * @return gets `k` constant
+     */
     public float getK() {
         return k;
     }
+
+    /**
+     * @return gets `a` constant
+     */
     public float getA() {
         return a;
     }
