@@ -448,36 +448,38 @@ public class MainCharacterTest {
 
     }
 
-    @Test
-    public void useHatchetTest() {
-
-        mockGM.setWorld(w);
-        w.addEntity(testCharacter);
-        w.addEntity(testTree);
-        testCharacter.setCol(1f);
-        testCharacter.setRow(1f);
-        testTree.setCol(1f);
-        testTree.setRow(1f);
-        int currentWood = testCharacter.getInventoryManager().getAmount("Wood");
-        testCharacter.useHatchet();
-        Assert.assertEquals(currentWood + 1, testCharacter.getInventoryManager().getAmount("Wood"));
-    }
-
-    @Test
-    public void usePickAxeTest() {
-
-        mockGM.setWorld(w);
-        w.addEntity(testCharacter);
-        w.addEntity(testRock);
-        testCharacter.setCol(1f);
-        testCharacter.setRow(1f);
-        testRock.setCol(1f);
-        testRock.setRow(1f);
-        int currentStone = testCharacter.getInventoryManager().getAmount("Stone");
-        testCharacter.usePickAxe();
-        Assert.assertEquals(currentStone + 1, testCharacter.getInventoryManager().getAmount("Stone"));
-
-    }
+    //These methods no longer exist so tests are commented out, will be replaced with a more generic
+    //useEquippedItem test.
+//    @Test
+//    public void useHatchetTest() {
+//
+//        mockGM.setWorld(w);
+//        w.addEntity(testCharacter);
+//        w.addEntity(testTree);
+//        testCharacter.setCol(1f);
+//        testCharacter.setRow(1f);
+//        testTree.setCol(1f);
+//        testTree.setRow(1f);
+//        int currentWood = testCharacter.getInventoryManager().getAmount("Wood");
+//        testCharacter.useHatchet();
+//        Assert.assertEquals(currentWood + 1, testCharacter.getInventoryManager().getAmount("Wood"));
+//    }
+//
+//    @Test
+//    public void usePickAxeTest() {
+//
+//        mockGM.setWorld(w);
+//        w.addEntity(testCharacter);
+//        w.addEntity(testRock);
+//        testCharacter.setCol(1f);
+//        testCharacter.setRow(1f);
+//        testRock.setCol(1f);
+//        testRock.setRow(1f);
+//        int currentStone = testCharacter.getInventoryManager().getAmount("Stone");
+//        testCharacter.usePickAxe();
+//        Assert.assertEquals(currentStone + 1, testCharacter.getInventoryManager().getAmount("Stone"));
+//
+//    }
 
     /**
      * Tests to ensure that the closest gold piece is added to the gold pouch
