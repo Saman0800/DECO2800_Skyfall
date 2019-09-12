@@ -1,5 +1,6 @@
 package deco2800.skyfall.buildings;
 
+import com.google.gson.annotations.Expose;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.worlds.world.World;
@@ -46,13 +47,32 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
     private int currentHealth;
 
     /**
-     * Constructor for an building entity.
+     * Constructor for an building entity with normal rendering size.
      * @param col the col position on the world
      * @param row the row position on the world
      * @param renderOrder the height position on the world
+     * @param buildingType specific building information container
      */
     public BuildingEntity(float col, float row, int renderOrder, BuildingType buildingType) {
-        super(col, row, renderOrder, 1, 1);
+        this(col, row, renderOrder, buildingType, 1, 1);
+
+        if (!WorldUtil.validColRow(new HexVector(col, row))) {
+            log.debug("Invalid position");
+        }
+    }
+
+    /**
+     * Constructor for an building entity with customized scaling factors.
+     * @param col the col position on the world
+     * @param row the row position on the world
+     * @param renderOrder the height position on the world
+     * @param buildingType specific building information container
+     * @param colRenderLength factor to scale the texture length
+     * @param rowRenderLength factor to scale the texture width
+     */
+    public BuildingEntity(float col, float row, int renderOrder, BuildingType buildingType,
+                          float colRenderLength, float rowRenderLength) {
+        super(col, row, renderOrder, colRenderLength, rowRenderLength);
         this.setObjectName(ENTITY_ID_STRING);
         this.setRenderOrder(renderOrder);
         this.animations = new HashMap<>();
@@ -69,47 +89,6 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
         if (!WorldUtil.validColRow(new HexVector(col, row))) {
             log.debug("Invalid position");
         }
-        setDefault();
-    }
-
-    /**
-     * Constructor for an building entity with customized scaling factors.
-     * @param col the col position on the world
-     * @param row the row position on the world
-     * @param renderOrder the height position on the world
-     * @param colRenderLength factor to scale the texture length
-     * @param rowRenderLength factor to scale the texture width
-     */
-    public BuildingEntity(float col, float row, int renderOrder, float colRenderLength, float rowRenderLength) {
-        super(col, row, renderOrder, colRenderLength, rowRenderLength);
-        this.setObjectName(ENTITY_ID_STRING);
-        this.setRenderOrder(renderOrder);
-        this.animations = new HashMap<>();
-
-        if (!WorldUtil.validColRow(new HexVector(col, row))) {
-            log.debug("Invalid position");
-        }
-        setDefault();
-    }
-
-    /**
-     * Set default information for a building entity, and it should be overridden inside
-     * a building entity subclass for setting different basic information.
-     */
-    private void setDefault() {
-        // default consistent information of the building type
-        setTexture("error_build");
-        setBuildTime(1);
-        addBuildCost("", 0);
-        addBuildCost("", 0);
-        setInitialHealth(1000);
-
-        // default changeable information of the building type
-        length = 1;
-        width = 1;
-        level = 1;
-        upgradable = false;
-        currentHealth = getInitialHealth();
     }
 
     /**
@@ -126,7 +105,7 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
             float tileSize = 100;
             collider = new Collider(cords[0], cords[1], tileSize * getLength(), tileSize * getWidth());
 
-//            // Preferred way to set collider based on texture, but so far a issue that texture is not found
+            // Preferred way to set collider based on texture, but so far a issue that texture is not found
 //            Texture texture = new Texture(getTexture());
 //            collider = new Collider(cords[0], cords[1], texture.getWidth(), texture.getHeight());
         } catch (Exception e) {

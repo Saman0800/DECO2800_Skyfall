@@ -585,12 +585,12 @@ public class World implements TouchDownObserver {
     public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
         if(button == 0) {
             if (GameManager.getManagerFromInstance(ConstructionManager.class).getStatus() == 1) {
-                System.out.println("place building");
                 float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
                 float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
                 GameManager.getManagerFromInstance(ConstructionManager.class).build(this,
                         (int)clickedPosition[0], (int)clickedPosition[1]);
                 GameManager.getManagerFromInstance(ConstructionManager.class).setNull();
+                return;
             }
         }
 

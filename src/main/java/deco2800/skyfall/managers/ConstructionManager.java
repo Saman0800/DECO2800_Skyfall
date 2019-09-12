@@ -29,8 +29,8 @@ public class ConstructionManager extends TickableManager {
     //This manager while control all features related to construction
 
     //lmao
-    private int spaghetti = 0;
-    private int meatballs;
+    private int buildTrue = 0;
+    private int buildingID;
 
     private BuildingWidgets buildingWidgets;
     private BuildingFactory buildingFactory;
@@ -219,10 +219,12 @@ public class ConstructionManager extends TickableManager {
                         //float row = 5;
                         //float col = 5;
 
-                        System.out.println("hello");
                         //BuildingEntity toBePlaced = selectBuilding(FINALi, 0, 0);
-                        spaghetti = 1;
-                        meatballs = FINALi;
+
+                        //Sets building to be enabled
+                        buildTrue = 1;
+                        //ID of the building we want
+                        buildingID = FINALi;
 
                     }
                 });
@@ -286,21 +288,32 @@ public class ConstructionManager extends TickableManager {
         }
     }
 
+    /**
+     *
+     * @return 1 if building is allowed, else 0
+     */
     public int getStatus() {
-        int returnValue = spaghetti;
-        spaghetti = 0;
+        int returnValue = buildTrue;
+        buildTrue = 0;
         return returnValue;
     }
 
+    /**
+     * Places a structure in the world.
+     * @param world - World to place in
+     * @param x - x coordinate
+     * @param y - y coordinate
+     */
     public void build(World world, int x, int y) {
-        System.out.printf("x = %d, y = %d\n", x, y);
-
-        BuildingEntity buildingToBePlaced = selectBuilding(meatballs, x, y); 
-
+        BuildingEntity buildingToBePlaced = selectBuilding(buildingID, x, y);
         buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
-        //REMOVE THE INVENTORY
+
+        setNull();
     }
 
+    /**
+     * Resets current building by setting to null.
+     */
     public void setNull() {
         buildingToBePlaced = null;
     }
