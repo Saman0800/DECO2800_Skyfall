@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class Tree extends StaticEntity implements Tickable, Harvestable {
+public class Tree extends StaticTree {
     private static final Logger LOG = LoggerFactory.getLogger(Tree.class);
     private int woodAmount; // amount of wood that each tree has
 
@@ -30,7 +30,7 @@ public class Tree extends StaticEntity implements Tickable, Harvestable {
     }
 
     public Tree(Tile tile, boolean obstructed) {
-        super(tile, 5, "tree" + nextTreeTexture, obstructed);
+        super(tile, obstructed, "tree" + nextTreeTexture);
         nextTreeTexture = randomGen.nextInt(3) + 1;
         this.woodAmount = 15;
     }
