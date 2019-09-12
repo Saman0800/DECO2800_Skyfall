@@ -11,10 +11,8 @@ import deco2800.skyfall.gamemenu.*;
 import deco2800.skyfall.gamemenu.popupmenu.SettingsTable;
 import deco2800.skyfall.gamemenu.popupmenu.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -36,9 +34,11 @@ public class GameMenuManager extends TickableManager {
     private StatisticsManager sm;
 
     //Refactor Code
-    List<AbstractUIElement> uiElements = new ArrayList<>();
+    Map<String, AbstractUIElement> uiElements = new HashMap<>();
     Map<String, AbstractPopUpElement> popUps = new HashMap<>();
     private String currentPopUpElement = null;
+
+    public final static boolean runRefactored  = false;
     /**
      * Initialise a new GameMenuManager with stage and skin including the characters in the game.
      * And construct Manager instances for later use.
@@ -64,18 +64,16 @@ public class GameMenuManager extends TickableManager {
         //Get the current state of the inventory on tick so that display can be updated
         inventory = GameManager.get().getManager(InventoryManager.class);
 
-        for (AbstractUIElement element: uiElements) {
+        if (currentPopUpElement != null) {
+            AbstractPopUpElement popUp = popUps.get(currentPopUpElement);
 
-            if (currentPopUpElement != null) {
-                AbstractPopUpElement popUp = popUps.get(currentPopUpElement);
-
-                if (popUp != null && !popUp.isVisible()) {
-                    popUp.show();
-                }
+            if (popUp != null && !popUp.isVisible()) {
+                popUp.show();
             }
+        }
+
+        for (AbstractUIElement element: uiElements.values()) {
             element.update();
-//            System.out.println(currentPopUpElement);
-      //System.out.println("Updating " + element.getClass().toString());
         }
 
 
@@ -245,36 +243,44 @@ public class GameMenuManager extends TickableManager {
             System.out.println("Please add stats manager before drawing");
             return;
         }
-//        uiElements.add(new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm));
-//        popUps.put("settingsTable", new SettingsTable(stage,
-//                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-//                null, textureManager, this,
-//                skin));
-//
-//        popUps.put("helpTable", new HelpTable(stage,
-//                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-//                null, textureManager, this,
-//                skin));
-//
-//        popUps.put("pauseTable", new PauseTable(stage,
-//                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-//                null, textureManager, this,
-//                skin));
-//
-//        popUps.put("playerSelectTable", new PlayerSelectTable(stage,
-//                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-//                null, textureManager, this,
-//                skin));
-//
-//        popUps.put("buildingTable", new BuildingTable(stage,
-//                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-//                null, textureManager, this,
-//                skin));
-//
-//        popUps.put("goldTable", new GoldTable(stage,
-//                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-//                null, textureManager, this, sm, skin));
-//        uiElements.add(new GameMenuBar(stage, null, textureManager, this));
+        if (runRefactored) {
+            uiElements.put("healthCircle",
+                    new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm));
+            popUps.put("settingsTable", new SettingsTable(stage,
+                    new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                    null, textureManager, this,
+                    skin));
+
+            popUps.put("helpTable", new HelpTable(stage,
+                    new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                    null, textureManager, this,
+                    skin));
+
+            popUps.put("pauseTable", new PauseTable(stage,
+                    new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                    null, textureManager, this,
+                    skin));
+
+            popUps.put("playerSelectTable", new PlayerSelectTable(stage,
+                    new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                    null, textureManager, this,
+                    skin));
+
+            popUps.put("buildingTable", new BuildingTable(stage,
+                    new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                    null, textureManager, this,
+                    skin));
+
+            popUps.put("goldTable", new GoldTable(stage,
+                    new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                    null, textureManager, this, sm, skin));
+
+            popUps.put("chestTable",new ChestTable(stage,
+                    new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                    null, textureManager, this, sm, skin));
+
+            uiElements.put("gameMenuBar", new GameMenuBar(stage, null, textureManager, this));
+        }
     }
 
     /**
@@ -284,6 +290,10 @@ public class GameMenuManager extends TickableManager {
      */
     public AbstractPopUpElement getCurrentPopUp() {
         return popUps.get(currentPopUpElement);
+    }
+
+    public AbstractUIElement getUIElement(String key) {
+        return uiElements.get(key);
     }
 
     /**

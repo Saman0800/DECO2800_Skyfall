@@ -990,7 +990,9 @@ public class GameMenuScreen {
      * Display everything created
      */
     public void show() {
-        showMenu();
+        if (!GameMenuManager.runRefactored) {
+            showMenu();
+        }
     }
 }
 

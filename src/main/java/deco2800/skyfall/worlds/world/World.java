@@ -1,5 +1,6 @@
 package deco2800.skyfall.worlds.world;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.gamemenu.GameMenuScreen;
@@ -561,11 +562,14 @@ public class World implements TouchDownObserver {
                 }
             } else if (entity instanceof Chest) {
                 GameMenuManager menuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
-                menuManager.open(new GameMenuScreen(menuManager).getChestTable((Chest)entity));
-                //Refactored Version
-//                ChestTable chest = (ChestTable) menuManager.getPopUp("chestTable");
-//                chest.updateChestPanel((Chest) entity);
-//                menuManager.setPopUp("chestTable");
+
+                if (!GameMenuManager.runRefactored) {
+                    menuManager.open(new GameMenuScreen(menuManager).getChestTable((Chest)entity));
+                } else {
+                    ChestTable chest = (ChestTable) menuManager.getPopUp("chestTable");
+                    chest.updateChestPanel((Chest) entity);
+                    menuManager.setPopUp("chestTable");
+                }
             }
         }
     }
