@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities;
 
 import deco2800.skyfall.entities.spells.SpellFactory;
+import deco2800.skyfall.entities.weapons.Sword;
 import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.entities.worlditems.*;
 import com.badlogic.gdx.*;
@@ -360,6 +361,14 @@ public class MainCharacter extends Peon
         setAttacking(false);
     }
 
+    public String getEquipped() {
+        return this.equipped;
+    }
+
+    public void setEquipped(String item) {
+        this.equipped = item;
+    }
+
     /**
      * Set the mana the character has available.
      *
@@ -667,58 +676,7 @@ public class MainCharacter extends Peon
                 HexVector mousePos = new HexVector(clickedPosition[0], clickedPosition[1]);
                 this.attack(mousePos);
             }
-
-            if (button == 1) {
-                System.out.println("right clicked!");
-                float[] mouse =
-                        WorldUtil.screenToWorldCoordinates(Gdx.input.getX(),
-                                Gdx.input.getY());
-                float[] pos =
-                        WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
-
-                Tile tile = getTile(pos[0], pos[1]);
-
-                if (tile == null) {
-                    System.out.println("tile is null");
-                    return;
-                }
-
-                for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
-                    if (entity instanceof Weapon) {
-                        //System.out.println(entity);
-                        System.out.println("instance of weapon");
-
-                        System.out.println(this.getPosition());
-                        System.out.println(entity.getPosition());
-                        System.out.println(tile.getCoordinates());
-
-                        if (this.getPosition().distance(entity.getPosition()) <= 2
-                                && entity.getPosition().distance(tile.getCoordinates()) <= 2) {
-                            System.out.println("close enough");
-                            inventories.inventoryAdd((Item)entity);
-                            System.out.println(inventories.getInventoryContents());
-                            String weapon = ((Weapon) entity).getName();
-                            System.out.println(weapon);
-                            if (!this.equipped.equals(weapon)) {
-                                System.out.println("New equipped weapon");
-                                inventories.quickAccessRemove(this.equipped);
-                                inventories.quickAccessAdd(weapon);
-                                inventories.inventoryDrop(this.equipped);
-                                this.equipped = weapon;
-                                System.out.println(this.equipped);
-                            }
-                            GameManager.get().getWorld().removeEntity(entity);
-                            System.out.println("picked up weapon!");
-                            System.out.println(inventories.getQuickAccess());
-
-
-                        }
-                        return;
-                    }
-                }
-            }
         }
-
 
 
         /**

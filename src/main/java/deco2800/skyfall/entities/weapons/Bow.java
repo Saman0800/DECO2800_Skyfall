@@ -13,8 +13,8 @@ public class Bow extends Weapon implements Item, IWeapon {
     private int damage;
     private int durability;
 
-    public Bow(Tile tile, String texture, boolean obstructed) {
-        super(tile, texture, obstructed);
+    public Bow(Tile tile, boolean obstructed) {
+        super(tile, "bow_tex", obstructed);
 
         this.name = "bow";
         this.weaponType = "range";
@@ -22,6 +22,10 @@ public class Bow extends Weapon implements Item, IWeapon {
         this.damageType = "splash";
         this.damage = 4;
         this.attackRate = 3;
+    }
+
+    public Bow() {
+        this.name = "bow";
     }
 
     /**
@@ -113,8 +117,8 @@ public class Bow extends Weapon implements Item, IWeapon {
     /**
      * @return a new instance of sword
      */
-    public Bow newInstance(Tile tile, String texture) {
-        return new Bow(tile, texture, this.isObstructed());
+    public Bow newInstance(Tile tile) {
+        return new Bow(tile, this.isObstructed());
     }
 
     @Override

@@ -10,7 +10,7 @@ public class AxeTest {
 
   @Before
   public void setUp() {
-    axe = new Axe(new Tile(0, 0), "axe_tex", false);
+    axe = new Axe(new Tile(0, 0), false);
   }
 
   @After

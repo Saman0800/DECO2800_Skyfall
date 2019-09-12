@@ -23,10 +23,10 @@ public class WeaponManagerTest {
     public void setup() {
         testCharacter = new MainCharacter(0f, 0f,
                 0.05f, "Main Piece", 10);
-        sword = new Sword(new Tile(0, 0), "sword_tex", false);
-        spear = new Spear(new Tile(0, 0), "spear_tex", false);
-        bow = new Bow(new Tile(0, 0), "bow_tex", false);
-        axe = new Axe(new Tile(0, 0), "axe_tex", false);
+        sword = new Sword(new Tile(0, 0), false);
+        spear = new Spear(new Tile(0, 0), false);
+        bow = new Bow(new Tile(0, 0), false);
+        axe = new Axe(new Tile(0, 0), false);
     }
 
     @After

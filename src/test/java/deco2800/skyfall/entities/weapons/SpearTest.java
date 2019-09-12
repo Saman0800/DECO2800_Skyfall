@@ -10,7 +10,7 @@ public class SpearTest {
 
   @Before
   public void setUp() {
-    spear = new Spear(new Tile(0, 0), "spear_tex", false);
+    spear = new Spear(new Tile(0, 0), false);
   }
 
   @After

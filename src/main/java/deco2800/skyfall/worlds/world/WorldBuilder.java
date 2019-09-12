@@ -173,15 +173,13 @@ public class WorldBuilder implements WorldBuilderInterface {
             switch (biome.getBiomeName()) {
             case "forest":
 
-                Tree startTree = new Tree(startTile, true);
-
                 // Spawn some swords
-                Weapon startSword = new Sword(startTile, "sword_tex",
-                        true);
-                EntitySpawnRule swordRule = new EntitySpawnRule(0.05, 1, 10,
-                        biome);
+                Weapon startSword = new Sword(startTile, true);
+                EntitySpawnRule swordRule = new EntitySpawnRule(0.04, 10, 20, biome);
                 EntitySpawnTable.spawnEntities(startSword, swordRule, world);
 
+
+                Tree startTree = new Tree(startTile, true);
                 // Create a new perlin noise map
                 SpawnControl treeControl = x -> (x * x * x) / 3.0;
                 EntitySpawnRule treeRule = new EntitySpawnRule(biome, true, treeControl);
@@ -209,10 +207,8 @@ public class WorldBuilder implements WorldBuilderInterface {
             case "mountain":
 
                 // Spawn some spears
-                Weapon startSpear = new Spear(startTile, "spear_tex",
-                        true);
-                EntitySpawnRule spearRule = new EntitySpawnRule(0.05, 1, 10,
-                        biome);
+                Weapon startSpear = new Spear(startTile, true);
+                EntitySpawnRule spearRule = new EntitySpawnRule(0.05, 1, 10, biome);
                 EntitySpawnTable.spawnEntities(startSpear, spearRule, world);
 
                 MountainTree startMTree = new MountainTree(startTile, true);
@@ -237,8 +233,7 @@ public class WorldBuilder implements WorldBuilderInterface {
             case "desert":
 
                 // Spawn some axes
-                Weapon startAxe = new Axe(startTile, "axe_tex",
-                        true);
+                Weapon startAxe = new Axe(startTile,true);
                 EntitySpawnRule axeRule = new EntitySpawnRule(0.05, 1, 10,
                         biome);
                 EntitySpawnTable.spawnEntities(startAxe, axeRule, world);
@@ -253,8 +248,7 @@ public class WorldBuilder implements WorldBuilderInterface {
             case "snowy_mountains":
 
                 // Spawn some bows
-                Weapon startBow = new Bow(startTile, "bow_tex",
-                        true);
+                Weapon startBow = new Bow(startTile,true);
                 EntitySpawnRule bowRule = new EntitySpawnRule(0.05, 1, 10,
                         biome);
                 EntitySpawnTable.spawnEntities(startBow, bowRule, world);

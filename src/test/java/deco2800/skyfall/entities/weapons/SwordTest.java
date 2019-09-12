@@ -10,7 +10,7 @@ public class SwordTest {
 
   @Before
   public void setUp() {
-    sword = new Sword(new Tile(0, 0), "sword_tex", false);
+    sword = new Sword(new Tile(0, 0), false);
   }
 
   @After

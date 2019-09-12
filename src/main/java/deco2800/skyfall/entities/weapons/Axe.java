@@ -13,8 +13,8 @@ public class Axe extends Weapon implements Item, IWeapon {
     private int damage;
     private int durability;
 
-    public Axe(Tile tile, String texture, boolean obstructed) {
-        super(tile, texture, obstructed);
+    public Axe(Tile tile, boolean obstructed) {
+        super(tile, "axe_tex", obstructed);
 
         this.name = "axe";
         this.weaponType = "melee";
@@ -22,6 +22,10 @@ public class Axe extends Weapon implements Item, IWeapon {
         this.damageType = "slash";
         this.damage = 4;
         this.attackRate = 4;
+    }
+
+    public Axe() {
+        this.name = "axe";
     }
 
     /**
@@ -113,8 +117,8 @@ public class Axe extends Weapon implements Item, IWeapon {
     /**
      * @return a new instance of sword
      */
-    public Axe newInstance(Tile tile, String texture) {
-        return new Axe(tile, texture, this.isObstructed());
+    public Axe newInstance(Tile tile) {
+        return new Axe(tile, this.isObstructed());
     }
 
     @Override

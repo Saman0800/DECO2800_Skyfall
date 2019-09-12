@@ -11,8 +11,8 @@ public class MeleeWeaponTest {
 
     @Before
     public void setUp() {
-        axe = new Axe(new Tile(0, 0), "axe_tex", false);
-        sword = new Sword(new Tile(0, 0), "sword_tex", false);
+        axe = new Axe(new Tile(0, 0), false);
+        sword = new Sword(new Tile(0, 0), false);
     }
 
     @After

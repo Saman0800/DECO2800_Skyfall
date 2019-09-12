@@ -26,6 +26,9 @@ public abstract class Weapon extends StaticEntity implements Item {
         this.exchangeable = false;
     }
 
+    public Weapon() {
+    }
+
     /**
      * Returns whether or not the weapon can be carried
      * @return True if the item can be carried in the inventory, false

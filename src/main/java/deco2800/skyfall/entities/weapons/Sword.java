@@ -13,8 +13,8 @@ public class Sword extends Weapon implements Item, IWeapon {
     private int damage;
     private int durability;
 
-    public Sword(Tile tile, String texture, boolean obstructed) {
-        super(tile, texture, obstructed);
+    public Sword(Tile tile, boolean obstructed) {
+        super(tile, "sword_tex", obstructed);
 
         this.name = "sword";
         this.weaponType = "melee";
@@ -22,6 +22,10 @@ public class Sword extends Weapon implements Item, IWeapon {
         this.damageType = "slash";
         this.damage = 3;
         this.attackRate = 5;
+    }
+
+    public Sword() {
+        this.name = "sword";
     }
 
     /**
@@ -113,8 +117,8 @@ public class Sword extends Weapon implements Item, IWeapon {
     /**
      * @return a new instance of sword
      */
-    public Sword newInstance(Tile tile, String texture) {
-        return new Sword(tile, texture, this.isObstructed());
+    public Sword newInstance(Tile tile) {
+        return new Sword(tile, this.isObstructed());
     }
 
     @Override

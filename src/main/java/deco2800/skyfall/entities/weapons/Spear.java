@@ -13,8 +13,8 @@ public class Spear extends Weapon implements Item, IWeapon {
     private int damage;
     private int durability;
 
-    public Spear(Tile tile, String texture, boolean obstructed) {
-        super(tile, texture, obstructed);
+    public Spear(Tile tile, boolean obstructed) {
+        super(tile, "spear_tex", obstructed);
 
         this.name = "spear";
         this.weaponType = "range";
@@ -22,6 +22,10 @@ public class Spear extends Weapon implements Item, IWeapon {
         this.damageType = "splash";
         this.damage = 5;
         this.attackRate = 4;
+    }
+
+    public Spear() {
+        this.name = "spear";
     }
 
     /**
@@ -113,8 +117,8 @@ public class Spear extends Weapon implements Item, IWeapon {
     /**
      * @return a new instance of sword
      */
-    public Spear newInstance(Tile tile, String texture) {
-        return new Spear(tile, texture, this.isObstructed());
+    public Spear newInstance(Tile tile) {
+        return new Spear(tile, this.isObstructed());
     }
 
     @Override

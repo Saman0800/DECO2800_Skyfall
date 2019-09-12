@@ -10,8 +10,8 @@ public class RangeWeaponTest {
 
     @Before
     public void setUp() throws Exception {
-        bow = new Bow(new Tile(0, 0), "bow_tex", false);
-        spear = new Spear(new Tile(0, 0), "spear_tex", false);
+        bow = new Bow(new Tile(0, 0), false);
+        spear = new Spear(new Tile(0, 0), false);
     }
 
     @After
