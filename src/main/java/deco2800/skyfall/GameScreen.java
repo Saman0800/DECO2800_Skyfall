@@ -85,7 +85,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 
                 //Creating the world
                 WorldBuilder worldBuilder = new WorldBuilder();
-                WorldDirector.constructSimpleSinglePlayerWorld(worldBuilder);
+                WorldDirector.constructSimpleSinglePlayerWorld(worldBuilder, true);
                 world = worldBuilder.getWorld();
 			}
 			GameManager.get().getManager(NetworkManager.class).startHosting("host");

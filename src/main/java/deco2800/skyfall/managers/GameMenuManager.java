@@ -34,10 +34,11 @@ public class GameMenuManager extends TickableManager {
     private StatisticsManager sm;
 
     //Refactor Code
-    Map<String, AbstractUIElement> uiElements = new HashMap<>();
-    Map<String, AbstractPopUpElement> popUps = new HashMap<>();
+    private Map<String, AbstractUIElement> uiElements = new HashMap<>();
+    private Map<String, AbstractPopUpElement> popUps = new HashMap<>();
     private String currentPopUpElement = null;
 
+    //TODO: REMOVE WHEN REFACTOR IS FINISHED
     public final static boolean runRefactored  = false;
     /**
      * Initialise a new GameMenuManager with stage and skin including the characters in the game.
