@@ -7,6 +7,8 @@ import deco2800.skyfall.graphics.types.vec2;
 import deco2800.skyfall.graphics.types.vec3;
 import deco2800.skyfall.util.SettingsFile;
 
+import static deco2800.skyfall.util.MathUtil.clamp;
+
 /**
  * A class that wraps a shader program
  * Handles loading, compiling, disabling and adding lighting specification
@@ -81,8 +83,8 @@ public class ShaderWrapper {
     }
 
     public void setAmbientComponent(vec3 color, float intensity) {
-        ambientColour = color;
-        ambientIntensity = intensity;
+        ambientColour = color.getClampedComponents(0.0f, 1.0f);
+        ambientIntensity = clamp(intensity, 0.0f, 1.0f);;
         if (active) {
             shaderProgram.setUniformf("sunStrength", intensity);
             shaderProgram.setUniformf("sunColour", color.x, color.y, color.z);
@@ -97,6 +99,10 @@ public class ShaderWrapper {
         return ambientIntensity;
     }
 
+    /**
+     *
+     * @param pointLight The constructor for point light grantees a well formced point light
+     */
     public void addPointLight(PointLight pointLight) {
         if (active) {
             //creates the string for the target point light
@@ -115,6 +121,10 @@ public class ShaderWrapper {
         }
     }
 
+    /**
+     * If shader is being used return true, false implies default shader usage
+     * @return usage of shader
+     */
     public boolean getActive() {
         return active;
     }
