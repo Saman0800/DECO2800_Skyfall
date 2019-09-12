@@ -8,9 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import deco2800.skyfall.buildings.BuildingFactory;
-import deco2800.skyfall.gamemenu.GameMenuScreen;
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.Peon;
 import deco2800.skyfall.handlers.KeyboardManager;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
@@ -118,9 +116,6 @@ public class GameScreen implements Screen,KeyDownObserver {
 
 		/* Add BGM to game manager */
 		gameManager.addManager(new BGMManager());
-
-        GameMenuScreen gamemenuScreen = new GameMenuScreen(gameMenuManager);
-		gamemenuScreen.show();
 
         PathFindingService pathFindingService = new PathFindingService();
 
