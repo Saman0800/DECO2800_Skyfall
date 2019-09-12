@@ -139,7 +139,7 @@ public class GameMenuBar extends AbstractUIElement {
     /***
      * Sets the quick access panel and inventory button displayed on the game's hot bar.
      */
-    private void setQuickAccessPanel(){
+    public void setQuickAccessPanel(){
         //Set Quick Access Panel
         quickAccessPanel = new Table();
         quickAccessPanel.setBackground(generateTextureRegionDrawableObject("quick_access_panel"));
@@ -147,7 +147,7 @@ public class GameMenuBar extends AbstractUIElement {
         quickAccessPanel.setPosition(560, 30 * 1000 / 800f);
 
         //Populate quick access GUI with resources
-        //updateQuickAccess();
+        updateQuickAccess();
 
         stage.addActor(quickAccessPanel);
 
@@ -163,7 +163,7 @@ public class GameMenuBar extends AbstractUIElement {
         inventoryButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //gameMenuManager.open(getInventoryTable());
+                gameMenuManager.setPopUp("inventoryTable");
             }
         });
     }
@@ -172,7 +172,7 @@ public class GameMenuBar extends AbstractUIElement {
      * Updates the quick access inventory display to show the current contents
      * of the quick access inventory.
      */
-    private void updateQuickAccess(){
+    public void updateQuickAccess(){
         Map<String, Integer> quickAccess = gameMenuManager.getInventory().getQuickAccess();
 
         int count = 1;
@@ -197,6 +197,14 @@ public class GameMenuBar extends AbstractUIElement {
             count++;
 
         }
+    }
+
+    public Table getQuickAccessPanel(){
+        return quickAccessPanel;
+    }
+
+    public void removeQuickAccessPanel(){
+        quickAccessPanel.remove();
     }
 
     /**

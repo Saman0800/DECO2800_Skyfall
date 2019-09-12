@@ -40,6 +40,7 @@ public class GameMenuManager extends TickableManager {
 
     //TODO: REMOVE WHEN REFACTOR IS FINISHED
     public final static boolean runRefactored  = false;
+
     /**
      * Initialise a new GameMenuManager with stage and skin including the characters in the game.
      * And construct Manager instances for later use.
@@ -289,7 +290,12 @@ public class GameMenuManager extends TickableManager {
                     new ImageButton(generateTextureRegionDrawableObject("exitButton")),
                     null, textureManager, this, sm, skin));
 
+            //Important that put() gameMenuBar above put() inventoryTable
             uiElements.put("gameMenuBar", new GameMenuBar(stage, null, textureManager, this));
+
+            popUps.put("inventoryTable",
+                    new InventoryTable(stage, new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                            null, textureManager, skin,this));
         }
     }
 
