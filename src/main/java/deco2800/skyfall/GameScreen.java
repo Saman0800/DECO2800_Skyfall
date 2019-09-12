@@ -222,6 +222,8 @@ public class GameScreen implements Screen, KeyDownObserver {
         //Create the shader program from resource files
         //Shader program will be attached later
         shader = new ShaderWrapper("batch");
+        //add shader to rendererDebug
+        rendererDebug.setShader(shader);
     }
 
     /**

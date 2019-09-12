@@ -17,13 +17,19 @@ public class ShaderWrapper {
     //links to shaderProgram, or ill-formed program on failure
     ShaderProgram shaderProgram;
 
+    //Ambient components
+    vec3 ambientColour = new vec3(0.0f);
+    float ambientIntensity = 0;
+
     //used for counting number of light points allocated
     int pointLightCount = 0;
+    //used for final pointLight debuging
+    int finalPointLightCount = 0;
 
     /**
      * Loads and compiles a shader program
      * @param shaderName name of shader to use, resource will be <shaderName>.vert and <shaderName>.frag
-     *                   in resources/shaders/
+     *                   in resources\shaders\
      */
     public ShaderWrapper(String shaderName) {
         //load shaders
@@ -39,6 +45,7 @@ public class ShaderWrapper {
         System.out.print(shaderProgram.getLog());
         if (shaderProgram.isCompiled()) {
             System.out.println("Shader program compiled\n");
+
             SettingsFile gfxSettings = new SettingsFile("settings\\gfx.ini");
             active = (gfxSettings.get("s_use_e_shader", 1) != 0);
             gfxSettings.close();
@@ -63,16 +70,31 @@ public class ShaderWrapper {
     public void finaliseAndAttachShader(SpriteBatch batch) {
         if (active) {
             shaderProgram.setUniformi("numberOfPointLights", pointLightCount);
+            finalPointLightCount = pointLightCount;
             pointLightCount = 0;
             batch.setShader(shaderProgram);
         }
     }
 
+    public int getPointLightCount() {
+        return finalPointLightCount;
+    }
+
     public void setAmbientComponent(vec3 color, float intensity) {
+        ambientColour = color;
+        ambientIntensity = intensity;
         if (active) {
             shaderProgram.setUniformf("sunStrength", intensity);
             shaderProgram.setUniformf("sunColour", color.x, color.y, color.z);
         }
+    }
+
+    public vec3 getAmbientColour() {
+        return ambientColour;
+    }
+
+    public float getAmbientIntensity() {
+        return ambientIntensity;
     }
 
     public void addPointLight(PointLight pointLight) {
