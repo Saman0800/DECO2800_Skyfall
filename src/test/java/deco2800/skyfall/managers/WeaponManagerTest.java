@@ -1,6 +1,8 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.weapons.*;
+import deco2800.skyfall.worlds.Tile;
 
 import org.junit.*;
 
@@ -21,14 +23,10 @@ public class WeaponManagerTest {
     public void setup() {
         testCharacter = new MainCharacter(0f, 0f,
                 0.05f, "Main Piece", 10);
-        sword = new Weapon("sword", "melee",
-                "slash", 3, 5, 6);
-        spear = new Weapon("spear", "range",
-                "splash", 5, 4, 7);
-        bow = new Weapon("bow", "range",
-                "splash", 4, 3, 10);
-        axe = new Weapon("axe", "melee",
-                "slash", 4, 4, 10);
+        sword = new Sword(new Tile(0, 0), "sword_tex", false);
+        spear = new Spear(new Tile(0, 0), "spear_tex", false);
+        bow = new Bow(new Tile(0, 0), "bow_tex", false);
+        axe = new Axe(new Tile(0, 0), "axe_tex", false);
     }
 
     @After
@@ -73,12 +71,11 @@ public class WeaponManagerTest {
      * Tests basic pickup works
      */
     public void pickUpTest() {
-        Assert.assertEquals(testCharacter.getInventoryManager().getTotalAmount(), 6);
+        Assert.assertEquals(testCharacter.getInventoryManager().getTotalAmount(), 7);
 
         this.pickUpWeapons();
 
-        Assert.assertEquals(testCharacter.getInventoryManager().getTotalAmount(), 14);
-
+        Assert.assertEquals(testCharacter.getInventoryManager().getTotalAmount(), 15);
     }
 
     @Ignore
@@ -89,15 +86,15 @@ public class WeaponManagerTest {
     public void dropTest() {
         this.pickUpWeapons();
 
-        Assert.assertEquals(testCharacter.getInventoryManager().getTotalAmount(), 14);
+        Assert.assertEquals(testCharacter.getInventoryManager().getTotalAmount(), 15);
 
         this.dropWeapons();
 
-        Assert.assertEquals(testCharacter.getInventoryManager().getTotalAmount(), 9);
+        Assert.assertEquals(testCharacter.getInventoryManager().getTotalAmount(), 10);
 
         testCharacter.dropInventory("sword");
 
-        Assert.assertEquals(testCharacter.getInventoryManager().getTotalAmount(), 9);
+        Assert.assertEquals(testCharacter.getInventoryManager().getTotalAmount(), 10);
     }
 
     @Ignore

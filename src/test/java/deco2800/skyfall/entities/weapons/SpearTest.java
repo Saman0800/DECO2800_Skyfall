@@ -1,15 +1,16 @@
-package deco2800.skyfall.entities;
+package deco2800.skyfall.entities.weapons;
+
+import deco2800.skyfall.worlds.Tile;
 
 import org.junit.*;
 
 public class SpearTest {
 
-  private Weapon spear;
+  private Spear spear;
 
   @Before
   public void setUp() {
-    spear = new Weapon("spear", "range",
-            "splash", 5, 4, 7);
+    spear = new Spear(new Tile(0, 0), "spear_tex", false);
   }
 
   @After

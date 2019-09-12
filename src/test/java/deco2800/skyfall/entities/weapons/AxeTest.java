@@ -1,15 +1,16 @@
-package deco2800.skyfall.entities;
+package deco2800.skyfall.entities.weapons;
+
+import deco2800.skyfall.worlds.Tile;
 
 import org.junit.*;
 
 public class AxeTest {
 
-  private Weapon axe;
+  private Axe axe;
 
   @Before
   public void setUp() {
-    axe = new Weapon("axe", "melee",
-            "slash", 4, 4, 10);
+    axe = new Axe(new Tile(0, 0), "axe_tex", false);
   }
 
   @After

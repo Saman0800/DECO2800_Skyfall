@@ -1,15 +1,16 @@
-package deco2800.skyfall.entities;
+package deco2800.skyfall.entities.weapons;
+
+import deco2800.skyfall.worlds.Tile;
 
 import org.junit.*;
 
 public class BowTest {
 
-  private Weapon bow;
+  private Bow bow;
 
   @Before
   public void setUp() {
-    bow = new Weapon("bow", "range",
-            "splash", 4, 3, 10);
+    bow = new Bow(new Tile(0, 0), "bow_tex", false);
   }
 
   @After

@@ -1,8 +1,10 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.resources.items.*;
 import deco2800.skyfall.resources.items.Stone;
+import deco2800.skyfall.worlds.Tile;
 
 import org.junit.*;
 
@@ -33,20 +35,16 @@ public class StatisticsManagerTest {
         testCharacter1 = new MainCharacter(4, 4,
                 0.5f, "Side Piece", 10);
         testManager = new StatisticsManager(this.testCharacter1);
-        testEnemy1 = new Enemy(1,1,"SpiderAnimation.png",
+        testEnemy1 = new Enemy(1,1,"spider",
                 1,100,1);
-        testEnemy2 = new Enemy(2,2,"2800enemy.png",
+        testEnemy2 = new Enemy(2,2,"robot",
                 2,200,2);
-        testEnemy3 = new Enemy(3,3,"EnemyStone.png",
+        testEnemy3 = new Enemy(3,3,"stoneRS",
                 3,300,3);
-        sword = new Weapon("sword", "melee",
-                "slash", 3, 5, 6);
-        spear = new Weapon("spear", "range",
-                "splash", 5, 4, 7);
-        bow = new Weapon("bow", "range",
-                "splash", 4, 3, 10);
-        axe = new Weapon("axe", "melee",
-                "slash", 4, 4, 10);
+        sword = new Sword(new Tile(0, 0), "sword_tex", false);
+        spear = new Spear(new Tile(0, 0), "spear_tex", false);
+        bow = new Bow(new Tile(0, 0), "bow_tex", false);
+        axe = new Axe(new Tile(0, 0), "axe_tex", false);
     }
 
     @After

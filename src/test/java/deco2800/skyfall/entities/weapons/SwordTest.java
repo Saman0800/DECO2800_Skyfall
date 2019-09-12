@@ -1,15 +1,16 @@
-package deco2800.skyfall.entities;
+package deco2800.skyfall.entities.weapons;
 
+import deco2800.skyfall.entities.weapons.Sword;
+import deco2800.skyfall.worlds.Tile;
 import org.junit.*;
 
 public class SwordTest {
 
-  private Weapon sword;
+  private Sword sword;
 
   @Before
   public void setUp() {
-    sword = new Weapon("sword", "melee",
-            "slash", 3, 5, 6);
+    sword = new Sword(new Tile(0, 0), "sword_tex", false);
   }
 
   @After

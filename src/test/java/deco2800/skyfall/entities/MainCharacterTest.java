@@ -49,10 +49,6 @@ public class MainCharacterTest {
 
     private GoldPiece goldpiece;
     private MainCharacter testCharacter;
-    private Weapon sword;
-    private Weapon spear;
-    private Weapon bow;
-    private Weapon axe;
     private Tree testTree;
     private Rock testRock;
     private Tile testTile;
@@ -78,12 +74,6 @@ public class MainCharacterTest {
      */
     public void setup() {
         testCharacter = new MainCharacter(0f, 0f, 0.05f, "Main Piece", 10);
-
-        // Weapons being used for testing
-        sword = new Weapon("sword", "melee", "slash", 3, 5, 6);
-        spear = new Weapon("spear", "range", "splash", 5, 4, 7);
-        bow = new Weapon("bow", "range", "splash", 4, 3, 10);
-        axe = new Weapon("axe", "melee", "slash", 4, 4, 10);
 
         testHatchet = new Hatchet();
         testHatchet2 = new Hatchet();
@@ -506,9 +496,5 @@ public class MainCharacterTest {
     @After
     public void cleanup() {
         testCharacter = null;
-        sword = null;
-        spear = null;
-        bow = null;
-        axe = null;
     }
 }
