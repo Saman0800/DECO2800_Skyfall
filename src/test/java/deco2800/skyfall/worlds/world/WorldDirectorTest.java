@@ -16,7 +16,7 @@ public class WorldDirectorTest {
     @Test
     public void constructSimpleSinglePlayerWorldTest() {
         WorldBuilder builder = Mockito.mock(WorldBuilder.class);
-        WorldDirector.constructSimpleSinglePlayerWorld(builder);
+        WorldDirector.constructSimpleSinglePlayerWorld(builder, false);
         verify(builder).setType("single_player");
         verify(builder).setWorldSize(160);
         verify(builder).setNodeSpacing(15);
