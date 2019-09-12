@@ -63,11 +63,27 @@ public class AnimationManager extends AbstractManager {
                 "stoneAttackSouthWest/stoneASW.atlas",0.2f);
         this.generateAnimationObject("flower_defence","resources/enemyFlowerSheet/flower.atlas",0.2f);
 
+        //Animation of treeman
+        this.generateAnimationObject("treemanME","resources/enemyTreemanMovementSheet/eastMovement/eastMovement.atlas",0.2f);
+        this.generateAnimationObject("treemanMN","resources/enemyTreemanMovementSheet/northMovement/northMovement.atlas",0.2f);
+        this.generateAnimationObject("treemanMSE","resources/enemyTreemanMovementSheet/southEastMovement/southEastMovement.atlas",0.2f);
+        this.generateAnimationObject("treemanMS","resources/enemyTreemanMovementSheet/southMovement/southMovement.atlas",0.2f);
+        this.generateAnimationObject("treemanMSW","resources/enemyTreemanMovementSheet/southWestMovement/southWestMovement.atlas",0.2f);
+        this.generateAnimationObject("treemanMW","resources/enemyTreemanMovementSheet/westMovement/westMovement.atlas",0.2f);
+        this.generateAnimationObject("treemanAE","resources/EnemyAnimationPacked/TreemanAttackAnimation/" +
+                "eastAttack/eastAttack.atlas",0.2f);
+        this.generateAnimationObject("treemanAN","resources/EnemyAnimationPacked/TreemanAttackAnimation/" +
+                "northAttack/northAttack.atlas",0.2f);
+        this.generateAnimationObject("treemanAS","resources/EnemyAnimationPacked/TreemanAttackAnimation/" +
+                "southAttack/southAttack.atlas",0.2f);
+        this.generateAnimationObject("treemanASE","resources/EnemyAnimationPacked/TreemanAttackAnimation/" +
+                "southEastAttack/southEastAttack.atlas",0.2f);
+        this.generateAnimationObject("treemanASW","resources/EnemyAnimationPacked/TreemanAttackAnimation/" +
+                "southWestAttack/southWestAttack.atlas",0.2f);
+        this.generateAnimationObject("treemanAW","resources/EnemyAnimationPacked/TreemanAttackAnimation/" +
+                "westAttack/westAttack.atlas",0.2f);
 
-        this.generateAnimationObject("treeman_defence","resources/enemyTreemanSheet/TreemanAttack.atlas",0.2f);
-        this.generateAnimationObject("treeman_dead","resources/enemyTreemanDeadSheet/TreemanDead.atlas",0.2f);
-        this.generateAnimationObject("treeman_movement","resources/enemyTreemanMovementSheet/TreemanMovement.atlas",0.2f);
-
+        this.generateAnimationObject("treemanDead","resources/enemyTreemanDeadSheet/TreemanDead.atlas",0.2f);
 
 
         this.generateAnimationObject("flower_melee","resources/enemyFlowerMelee/FlowerMelee.atlas",0.2f);
@@ -107,16 +123,15 @@ public class AnimationManager extends AbstractManager {
 
         this.generateAnimationObject("MainCharacter_Attack_E_Anim",
                 "MainCharacter_Attack_E_Anim",
-                731, 1130, 0.08f);
-
+                678, 1029, 0.2f);
 
         this.generateAnimationObject("MainCharacter_Hurt_E_Anim",
                 "MainCharacter_Hurt_E_Anim",
-                750, 1161, 0.2f);
+                667, 1032, 0.2f);
 
         this.generateAnimationObject("MainCharacter_Dead_E_Anim",
                 "MainCharacter_Dead_E_Anim",
-                940, 1093, 0.2f);
+                727, 861, 0.2f);
 
         System.out.println("All animations in game");
     }
@@ -153,7 +168,7 @@ public class AnimationManager extends AbstractManager {
                 animationFrames[index++] = tmpFrames[i][j];
             }
         }
-
+        
         return animationFrames;
     }
 
