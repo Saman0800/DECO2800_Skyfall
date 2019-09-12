@@ -60,6 +60,15 @@ public class GameMenuManager extends TickableManager {
         GameMenuScreen.currentCharacter = 0;
     }
 
+    //used for testing
+    public GameMenuManager(TextureManager tm, SoundManager sm, InventoryManager im, Stage stage, Skin skin) {
+        GameMenuManager.textureManager = tm;
+        soundManager = sm;
+        inventory = im;
+        this.stage = stage;
+        this.skin = skin;
+    }
+
     @Override
     public void onTick(long i) {
         //Get the current state of the inventory on tick so that display can be updated
