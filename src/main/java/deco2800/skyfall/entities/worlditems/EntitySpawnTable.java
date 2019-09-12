@@ -28,8 +28,6 @@ public class EntitySpawnTable {
      * @param tile   The tile the new entity will occupy
      * @param entity The entity to be deep copied
      * @param <T>    T must extend StaticEntity and have .newInstance inherited
-     * @return The duplicated instance with the new tile position. See NewInstance
-     *         to place items
      */
     public static <T extends StaticEntity> void placeEntity(T entity, Tile tile) {
         World world = GameManager.get().getWorld();
