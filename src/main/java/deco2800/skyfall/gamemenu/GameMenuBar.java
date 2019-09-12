@@ -116,10 +116,20 @@ public class GameMenuBar extends AbstractUIElement {
             }
         });
 
-        ImageButton radar = new ImageButton(generateTextureRegionDrawableObject("radar"));
-        radar.setSize(219 * 0.55f, 207 * 0.55f);
-        radar.setPosition(440, 30 * 1000 / 800f);
-        stage.addActor(radar);
+
+        ImageButton goldPouchButton = new ImageButton(generateTextureRegionDrawableObject("goldPouch"));
+        goldPouchButton.setSize(200 * 0.55f, 207 * 0.55f);
+        goldPouchButton.setPosition(440, 30 * 1000 / 800f);
+        stage.addActor(goldPouchButton);
+
+        goldPouchButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                hideOpened();
+                gameMenuManager.setPopUp("goldTable");
+            }
+        });
+
 
         System.out.println("Finished drawing menu bar");
     }

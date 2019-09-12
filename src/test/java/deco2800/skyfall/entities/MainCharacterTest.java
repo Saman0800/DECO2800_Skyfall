@@ -459,7 +459,7 @@ public class MainCharacterTest {
         testTree.setCol(1f);
         testTree.setRow(1f);
         int currentWood = testCharacter.getInventoryManager().getAmount("Wood");
-        testCharacter.useHatchet();
+       // testCharacter.useHatchet();
         Assert.assertEquals(currentWood + 1, testCharacter.getInventoryManager().getAmount("Wood"));
     }
 
@@ -474,7 +474,7 @@ public class MainCharacterTest {
         testRock.setCol(1f);
         testRock.setRow(1f);
         int currentStone = testCharacter.getInventoryManager().getAmount("Stone");
-        testCharacter.usePickAxe();
+       // testCharacter.usePickAxe();
         Assert.assertEquals(currentStone + 1, testCharacter.getInventoryManager().getAmount("Stone"));
 
     }
