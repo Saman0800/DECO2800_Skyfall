@@ -1,5 +1,7 @@
 package deco2800.skyfall.graphics.types;
 
+import static deco2800.skyfall.util.MathUtil.clamp;
+
 /**
  * An implementation of vec3
  * more convenient than array
@@ -32,4 +34,13 @@ public class vec3 {
         this.z = a;
     }
 
+    /**
+     * returns a vec3 with each component clamped
+     * @param min minimum value for each component
+     * @param max minimum value for each component
+     * @return must be caught, vec3 called against will not be changed
+     */
+    public vec3 getClampedComponents(float min, float max) {
+        return new vec3( clamp(x, min, max), clamp(y, min, max), clamp(z, min, max) );
+    }
 }
