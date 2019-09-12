@@ -357,12 +357,12 @@ public class GameMenuScreen {
         buildingTable.row();
 
         Table blueprint = new Table();
-        Label blueprintTitle = new Label("BLUEPRINT", skin, "black-label");
+        Label blueprintTitle = new Label("ITEMS NEEDED", skin, "black-label");
         blueprint.add(blueprintTitle);
 
         Table items = new Table();
         items.setDebug(true);
-        Label number = new Label("1/36", skin, "black-label");
+        Label number = new Label("BLUEPRINTS", skin, "black-label");
         items.add(number).colspan(4);
         items.row();
         ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();

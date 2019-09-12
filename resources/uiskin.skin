@@ -20,7 +20,8 @@
   com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
   default: { down: default-round-down, up: default-round, font: default-font, fontColor: white },
   toggle: { down: default-round-down, up: default-round, checked: default-round-down, font: default-font, fontColor: white, downFontColor: red },
-  main_menu: { font: main_menu_font, fontColor: white }
+  main_menu: { font: main_menu_font, fontColor: white },
+  game: { down: default-round, up: default-round, font: game-font, fontColor: black }
 },  
   com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: {
   default: { down: default-round-down, up: default-round, font: default-font, fontColor: white },
