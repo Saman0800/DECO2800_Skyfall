@@ -11,10 +11,7 @@ import deco2800.skyfall.gamemenu.*;
 import deco2800.skyfall.gamemenu.popupmenu.SettingsTable;
 import deco2800.skyfall.gamemenu.popupmenu.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -36,9 +33,13 @@ public class GameMenuManager extends TickableManager {
     private StatisticsManager sm;
 
     //Refactor Code
-    List<AbstractUIElement> uiElements = new ArrayList<>();
-    Map<String, AbstractPopUpElement> popUps = new HashMap<>();
+    private Map<String, AbstractUIElement> uiElements;
+    private Map<String, AbstractPopUpElement> popUps = new HashMap<>();
     private String currentPopUpElement = null;
+
+    //TODO: REMOVE WHEN REFACTOR IS FINISHED
+    public final static boolean runRefactored  = true;
+
     /**
      * Initialise a new GameMenuManager with stage and skin including the characters in the game.
      * And construct Manager instances for later use.
@@ -56,7 +57,22 @@ public class GameMenuManager extends TickableManager {
         characters[2] = "robot";
         characters[3] = "spider";
         characters[4] = "spacman_ded";
-        GameMenuScreen.currentCharacter = 0;
+        uiElements = new HashMap<>();
+        popUps = new HashMap<>();
+    }
+
+    //used for testing
+    public GameMenuManager(TextureManager tm, SoundManager sm,
+                           InventoryManager im, Stage stage, Skin skin,
+                           Map<String, AbstractPopUpElement> popUps,
+                           Map<String, AbstractUIElement> uiElements) {
+        GameMenuManager.textureManager = tm;
+        soundManager = sm;
+        inventory = im;
+        this.stage = stage;
+        this.skin = skin;
+        this.popUps = popUps;
+        this.uiElements = uiElements;
     }
 
     @Override
@@ -64,18 +80,16 @@ public class GameMenuManager extends TickableManager {
         //Get the current state of the inventory on tick so that display can be updated
         inventory = GameManager.get().getManager(InventoryManager.class);
 
-        for (AbstractUIElement element: uiElements) {
+        if (currentPopUpElement != null) {
+            AbstractPopUpElement popUp = popUps.get(currentPopUpElement);
 
-            if (currentPopUpElement != null) {
-                AbstractPopUpElement popUp = popUps.get(currentPopUpElement);
-
-                if (popUp != null && !popUp.isVisible()) {
-                    popUp.show();
-                }
+            if (popUp != null && !popUp.isVisible()) {
+                popUp.show();
             }
+        }
+
+        for (AbstractUIElement element: uiElements.values()) {
             element.update();
-//            System.out.println(currentPopUpElement);
-      //System.out.println("Updating " + element.getClass().toString());
         }
 
 
@@ -162,49 +176,6 @@ public class GameMenuManager extends TickableManager {
     }
 
     /**
-     * Resumes the game and make the PopUpTable disappear.
-     *
-     * @param table PopUpTable to be exited.
-     */
-    public void resume(PopUpTable table) {
-        GameManager.setPaused(false);
-        GameScreen.isPaused = false;
-        exit(table);
-    }
-
-    /**
-     * Makes the PopUpTable not visible to users.
-     *
-     * @param table PopUpTable to be exited.
-     */
-    private void exit(PopUpTable table) {
-        table.setVisible(false);
-        table.getExit().setVisible(false);
-        PopUpTable.setOpened(null);
-        System.out.println("exited " + table.name);
-        BGMManager.unmute(); // Un-mute the BGM when menu is closed
-    }
-
-    /**
-     * Opens up the pop up screen with its exit button.
-     *
-     * @param table PopUpTable to be opened.
-     */
-    public void open(PopUpTable table) {
-        if (PopUpTable.getOpened() != null) {
-            System.out.println("Should be exited: " + PopUpTable.getOpened().name);
-            exit(PopUpTable.getOpened());
-        }
-        table.setVisible(true);
-        table.getExit().setVisible(true);
-        GameScreen.isPaused = true;
-        pause();
-        PopUpTable.setOpened(table);
-        System.out.println("opened " + table.name);
-        BGMManager.mute(); // Mute the BGM when menu is opened
-    }
-
-    /**
      * Generates an instance of TextureRegionDrawable with the given texture name.
      *
      * @param sName Texture Name.
@@ -245,33 +216,50 @@ public class GameMenuManager extends TickableManager {
             System.out.println("Please add stats manager before drawing");
             return;
         }
-        uiElements.add(new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm));
-        popUps.put("settingsTable", new SettingsTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                null, textureManager, this,
-                skin));
+        if (runRefactored) {
+            uiElements.put("healthCircle",
+                    new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm));
 
-        popUps.put("helpTable", new HelpTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                null, textureManager, this,
-                skin));
+            popUps.put("settingsTable", new SettingsTable(stage,
+                    new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                    null, textureManager, this,
+                    skin, soundManager));
 
-        popUps.put("pauseTable", new PauseTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                null, textureManager, this,
-                skin));
+            popUps.put("helpTable", new HelpTable(stage,
+                    new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                    null, textureManager, this,
+                    skin));
 
-        popUps.put("playerSelectTable", new PlayerSelectTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                null, textureManager, this,
-                skin));
+            popUps.put("pauseTable", new PauseTable(stage,
+                    new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                    null, textureManager, this,
+                    skin));
 
-        popUps.put("buildingTable", new BuildingTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                null, textureManager, this,
-                skin));
+            popUps.put("playerSelectTable", new PlayerSelectTable(stage,
+                    new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                    null, textureManager, this,
+                    skin));
 
-        uiElements.add(new GameMenuBar(stage, null, textureManager, this));
+            popUps.put("buildingTable", new BuildingTable(stage,
+                    new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                    null, textureManager, this,
+                    skin));
+
+            popUps.put("goldTable", new GoldTable(stage,
+                    new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                    null, textureManager, this, sm, skin));
+
+            popUps.put("chestTable",new ChestTable(stage,
+                    new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                    null, textureManager, this, sm, skin));
+
+            //Important that put() gameMenuBar above put() inventoryTable
+            uiElements.put("gameMenuBar", new GameMenuBar(stage, null, textureManager, this));
+
+            popUps.put("inventoryTable",
+                    new InventoryTable(stage, new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                            null, textureManager, skin,this));
+        }
     }
 
     /**
@@ -283,10 +271,23 @@ public class GameMenuManager extends TickableManager {
         return popUps.get(currentPopUpElement);
     }
 
-    public AbstractPopUpElement getPopUp(String key) {
-        return popUps.get(key);
+    public AbstractUIElement getUIElement(String key) {
+        return uiElements.get(key);
     }
 
+    /**
+     * Getter of specific popup
+     * @param name the string name of the popup
+     * @return
+     */
+    public AbstractPopUpElement getPopUp(String name) {
+        return popUps.get(name);
+    }
+
+    /**
+     * Sets the current popup element
+     * @param popUpName the name of popup to set.
+     */
     public void setPopUp(String popUpName) {
         currentPopUpElement = popUpName;
     }

@@ -2,12 +2,12 @@ package deco2800.skyfall.gamemenu;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
+
+import java.util.Map;
 
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
@@ -15,11 +15,13 @@ public class GameMenuBar extends AbstractUIElement {
 
 
     private GameMenuManager gameMenuManager;
-
+    Table quickAccessPanel;
+    private Skin skin;
 
     public GameMenuBar(Stage stage, String[] textureNames, TextureManager tm, GameMenuManager gameMenuManager) {
         super(stage, textureNames, tm);
         this.gameMenuManager = gameMenuManager;
+        this.skin = gameMenuManager.getSkin();
         this.draw();
     }
 
@@ -115,10 +117,20 @@ public class GameMenuBar extends AbstractUIElement {
             }
         });
 
-        ImageButton radar = new ImageButton(generateTextureRegionDrawableObject("radar"));
-        radar.setSize(219 * 0.55f, 207 * 0.55f);
-        radar.setPosition(440, 30 * 1000 / 800f);
-        stage.addActor(radar);
+
+        ImageButton goldPouchButton = new ImageButton(generateTextureRegionDrawableObject("goldPouch"));
+        goldPouchButton.setSize(200 * 0.55f, 207 * 0.55f);
+        goldPouchButton.setPosition(440, 30 * 1000 / 800f);
+        stage.addActor(goldPouchButton);
+
+        goldPouchButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                hideOpened();
+                gameMenuManager.setPopUp("goldTable");
+            }
+        });
+
 
         System.out.println("Finished drawing menu bar");
     }
@@ -126,16 +138,15 @@ public class GameMenuBar extends AbstractUIElement {
     /***
      * Sets the quick access panel and inventory button displayed on the game's hot bar.
      */
-    private void setQuickAccessPanel(){
+    public void setQuickAccessPanel(){
         //Set Quick Access Panel
-        Table quickAccessPanel;
         quickAccessPanel = new Table();
         quickAccessPanel.setBackground(generateTextureRegionDrawableObject("quick_access_panel"));
         quickAccessPanel.setSize(450, 207 * 0.55f);
         quickAccessPanel.setPosition(560, 30 * 1000 / 800f);
 
         //Populate quick access GUI with resources
-        //updateQuickAccess();
+        updateQuickAccess();
 
         stage.addActor(quickAccessPanel);
 
@@ -151,9 +162,48 @@ public class GameMenuBar extends AbstractUIElement {
         inventoryButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //gameMenuManager.open(getInventoryTable());
+                gameMenuManager.setPopUp("inventoryTable");
             }
         });
+    }
+
+    /***
+     * Updates the quick access inventory display to show the current contents
+     * of the quick access inventory.
+     */
+    public void updateQuickAccess(){
+        Map<String, Integer> quickAccess = gameMenuManager.getInventory().getQuickAccess();
+
+        int count = 1;
+        int xpos = 15;
+        int ypos = 28;
+        int size = 55;
+
+        for (Map.Entry<String, Integer> entry : quickAccess.entrySet()) {
+
+            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey()));
+            icon.setSize(size, size);
+            icon.setPosition((xpos*count) + size*(count-1), ypos);
+
+            quickAccessPanel.addActor(icon);
+
+            Label num = new Label(entry.getValue().toString(), skin, "white-label");
+            num.setPosition(xpos*count + size*count - 10, ypos + 40);
+            num.setFontScale((float)0.4);
+            num.setSize(18, 25);
+            quickAccessPanel.addActor(num);
+
+            count++;
+
+        }
+    }
+
+    public Table getQuickAccessPanel(){
+        return quickAccessPanel;
+    }
+
+    public void removeQuickAccessPanel(){
+        quickAccessPanel.remove();
     }
 
     /**

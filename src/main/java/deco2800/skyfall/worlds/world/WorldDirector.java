@@ -21,7 +21,7 @@ public class WorldDirector {
      * A simple world used in single player
      * @param builder The builder used to construct the world
      */
-    public static void constructSimpleSinglePlayerWorld(WorldBuilder builder){
+    public static void constructSimpleSinglePlayerWorld(WorldBuilder builder, boolean renderUI){
         builder.setType("single_player");
 
         builder.setWorldSize(160);
@@ -39,11 +39,15 @@ public class WorldDirector {
 
         MainCharacter mainCharacter = new MainCharacter(0,0,0.05f, "Main Piece", 10);
         builder.addEntity(mainCharacter);
-        GameMenuManager onScreenUI = GameManager.getManagerFromInstance(GameMenuManager.class);
-        StatisticsManager sm = new StatisticsManager(mainCharacter);
-        GameManager.addManagerToInstance(sm);
-        onScreenUI.addStatsManager(sm);
-        onScreenUI.drawAllElements();
+
+        if (renderUI) {
+            GameMenuManager onScreenUI = GameManager.getManagerFromInstance(GameMenuManager.class);
+            StatisticsManager sm = new StatisticsManager(mainCharacter);
+            GameManager.addManagerToInstance(sm);
+            onScreenUI.addStatsManager(sm);
+            onScreenUI.drawAllElements();
+        }
+
 
         builder.addEntity(new Spider(-4f, -1f, mainCharacter));
         builder.addEntity(new Robot(-4, -2, mainCharacter));

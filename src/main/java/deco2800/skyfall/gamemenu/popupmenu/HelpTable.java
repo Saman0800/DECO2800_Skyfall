@@ -53,7 +53,7 @@ public class HelpTable extends AbstractPopUpElement{
         helpTable.setSize(600, 600 * 1346 / 1862f);
         helpTable.setPosition(Gdx.graphics.getWidth()/2f - helpTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - helpTable.getHeight()/2);
-        helpTable.setDebug(true);
+//        helpTable.setDebug(true);
         helpTable.top();
         helpTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
 

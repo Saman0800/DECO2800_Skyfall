@@ -55,7 +55,7 @@ public class BuildingTable extends AbstractPopUpElement{
         super.draw();
         System.out.println("Drawing BUILDINGTABLE");
         buildingTable = new Table();
-        buildingTable.setDebug(true);
+//        buildingTable.setDebug(true);
         buildingTable.setSize(800, 800 * 1346 / 1862f);
         buildingTable.setPosition(Gdx.graphics.getWidth()/2f - buildingTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - buildingTable.getHeight()/2);
@@ -143,7 +143,7 @@ public class BuildingTable extends AbstractPopUpElement{
 
         Table itemsRequired = new Table();
         itemsRequired.top();
-        itemsRequired.setDebug(true);
+//        itemsRequired.setDebug(true);
         itemsRequired.setBackground(generateTextureRegionDrawableObject("pop up screen"));
 
         Table infoBar = new Table();

@@ -54,7 +54,7 @@ public class PauseTable extends AbstractPopUpElement{
         super.draw();
         System.out.println("Drawing PAUSETABLE");
         pauseTable = new Table();
-        pauseTable.setDebug(true);
+//        pauseTable.setDebug(true);
         pauseTable.setSize(500, 500 * 1346 / 1862f);
         pauseTable.setPosition(Gdx.graphics.getWidth()/2f - pauseTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - pauseTable.getHeight()/2);

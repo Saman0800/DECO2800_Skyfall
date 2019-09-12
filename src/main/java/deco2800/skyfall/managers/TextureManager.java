@@ -173,8 +173,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("goHome", new Texture("resources/home.png"));
             textureMap.put("reset", new Texture("resources/reset_game.png"));
 
-            textureMap.put("radar", new Texture("resources/radar.png"));
-            textureMap.put("build", new Texture("resources/build.png"));
+            textureMap.put("build", new Texture("resources/build_icon.png"));
 
             textureMap.put("left_arrow", new Texture("resources/left_arrow.png"));
             textureMap.put("right_arrow", new Texture("resources/right_arrow.png"));
