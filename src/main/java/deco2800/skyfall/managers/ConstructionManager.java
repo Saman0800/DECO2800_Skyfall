@@ -298,6 +298,7 @@ public class ConstructionManager extends TickableManager {
         BuildingEntity buildingToBePlaced = selectBuilding(meatballs, x, y); 
 
         buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
+        //REMOVE THE INVENTORY
     }
 
     public void setNull() {

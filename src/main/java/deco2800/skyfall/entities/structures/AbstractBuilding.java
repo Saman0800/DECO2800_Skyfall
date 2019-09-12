@@ -3,6 +3,7 @@ package deco2800.skyfall.entities.structures;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.worlds.world.World;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -20,7 +21,7 @@ public abstract class AbstractBuilding extends AbstractEntity {
 
     private int buildTime;
 
-    private Map<String, Integer> buildCost = new TreeMap<>();
+    private Map<String, Integer> buildCost = new HashMap<>();
 
     /**
      *

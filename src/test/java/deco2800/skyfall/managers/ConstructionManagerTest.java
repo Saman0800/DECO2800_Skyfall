@@ -13,6 +13,7 @@ import org.junit.After;
 import deco2800.skyfall.entities.structures.AbstractBuilding;
 import deco2800.skyfall.worlds.Tile;
 
+import java.util.HashMap;
 import java.util.TreeMap;
 
 //Add all tests related to the construction manager
@@ -34,13 +35,13 @@ public class ConstructionManagerTest {
     @Test
     public void testInvCheckPositive() {
 
-        //BuildingFactory factory = new BuildingFactory();
-        //BuildingEntity cabin = factory.createCabin(1,1);
+        BuildingFactory factory = new BuildingFactory();
+        BuildingEntity cabin = factory.createCabin(1,1);
 
-        //InventoryManager inventoryManager = new InventoryManager();
-        //Boolean result = cmgr.invCheck(cabin, inventoryManager);
+        InventoryManager inventoryManager = new InventoryManager();
+        Boolean result = cmgr.invCheck(cabin, inventoryManager);
 
-        //Assert.assertTrue(result);
+        Assert.assertTrue(result);
     }
 
     @Test
@@ -48,15 +49,15 @@ public class ConstructionManagerTest {
         BuildingFactory factory = new BuildingFactory();
         BuildingEntity cabin = factory.createCabin(1,1);
 
-        TreeMap<String, Integer> buildingCost = new TreeMap<>();
-        buildingCost.put("Stone", 3);
-        buildingCost.put("Wood", 2);
-        //building.setCost(buildingCost);
+        HashMap<String, Integer> buildingCost = new HashMap<>();
+        buildingCost.put("Wood", 7);
+        buildingCost.put("Stone",4);
 
         InventoryManager inventoryManager = new InventoryManager();
-        //Boolean result = cmgr.invCheck(building, inventoryManager);
 
-        //Assert.assertFalse(result);
+        Boolean result = cmgr.invCheck(cabin, inventoryManager);
+
+        Assert.assertFalse(result);
     }
 
     @Test
