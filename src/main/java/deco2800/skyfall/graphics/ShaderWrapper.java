@@ -57,18 +57,33 @@ public class ShaderWrapper {
         }
     }
 
+    /**
+     * Begins shader program, order is important
+     * No error checking for proper order
+     */
     public void begin() {
         if (active) {
             shaderProgram.begin();
         }
     }
 
+    /**
+     * ends shader program, order is important
+     * No error checking for proper order
+     */
     public void end() {
         if (active) {
             shaderProgram.end();
         }
     }
 
+    /**
+     * Finalises all point lights and ambient components specified
+     * writes these values to the shader then attaches to the batch
+     * Afterwards, resets for next frame
+     * @param batch the batch that requires the shader be attached to
+     *              invoke before the render call
+     */
     public void finaliseAndAttachShader(SpriteBatch batch) {
         if (active) {
             shaderProgram.setUniformi("numberOfPointLights", pointLightCount);
@@ -78,30 +93,48 @@ public class ShaderWrapper {
         }
     }
 
+    /**
+     * will be zero with no active shader
+     * @return number of point lights being rendered
+     */
     public int getPointLightCount() {
         return finalPointLightCount;
     }
 
+    /**
+     * Sets the ambient component to be used in next scene rendered
+     * Needs to be set each frame
+     * @param color vec3 of colour to set, as (r,g,b) with each component in [0,1]
+     * @param intensity intensity of light from [0,1], point light intensity will be 1-intensity
+     */
     public void setAmbientComponent(vec3 color, float intensity) {
         ambientColour = color.getClampedComponents(0.0f, 1.0f);
         ambientIntensity = clamp(intensity, 0.0f, 1.0f);;
         if (active) {
-            shaderProgram.setUniformf("sunStrength", intensity);
-            shaderProgram.setUniformf("sunColour", color.x, color.y, color.z);
+            shaderProgram.setUniformf("sunStrength", ambientIntensity);
+            shaderProgram.setUniformf("sunColour", ambientColour.x, ambientColour.y, ambientColour.z);
         }
     }
 
+    /**
+     * Gets current ambient colour
+     * @return in the form (r,g,b) with each component in [0,1]
+     */
     public vec3 getAmbientColour() {
         return ambientColour;
     }
 
+    /**
+     * Get current ambient intensity
+     * @return current value
+     */
     public float getAmbientIntensity() {
         return ambientIntensity;
     }
 
     /**
-     *
-     * @param pointLight The constructor for point light grantees a well formced point light
+     * Adds a point light, must be done before every finaliseAndAttachShader, and for each frame
+     * @param pointLight The constructor for point light grantees a well formed point light
      */
     public void addPointLight(PointLight pointLight) {
         if (active) {
