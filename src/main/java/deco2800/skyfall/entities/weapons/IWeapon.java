@@ -1,4 +1,4 @@
-package deco2800.skyfall.entities;
+package deco2800.skyfall.entities.weapons;
 
 public interface IWeapon {
     /**

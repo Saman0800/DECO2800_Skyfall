@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities;
 
 import deco2800.skyfall.entities.spells.SpellFactory;
+import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.entities.worlditems.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.Vector2;
@@ -22,7 +23,6 @@ import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.Tile;
 
-import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.*;
@@ -701,9 +701,9 @@ public class MainCharacter extends Peon
                             System.out.println(weapon);
                             if (!this.equipped.equals(weapon)) {
                                 System.out.println("New equipped weapon");
-                                inventories.quickAccessRemove(this.equipped + "_tex");
-                                inventories.quickAccessAdd(weapon + "_tex");
-                                inventories.inventoryDrop(this.equipped + "_tex");
+                                inventories.quickAccessRemove(this.equipped);
+                                inventories.quickAccessAdd(weapon);
+                                inventories.inventoryDrop(this.equipped);
                                 this.equipped = weapon;
                                 System.out.println(this.equipped);
                             }
