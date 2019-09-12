@@ -1,9 +1,11 @@
 package deco2800.skyfall.managers;
 
-import deco2800.skyfall.entities.Weapon;
+import deco2800.skyfall.entities.weapons.Sword;
+import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.gui.Tuple;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.*;
+import deco2800.skyfall.worlds.Tile;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,10 +52,10 @@ public class InventoryManager extends TickableManager {
         this.inventoryAdd(new Wood());
         this.inventoryAdd(new Hatchet());
         this.inventoryAdd(new PickAxe());
-        this.inventoryAdd(new Weapon("no_weapon_tex"));
+        this.inventoryAdd(new Sword(new Tile(0,0), "sword_tex", true));
         this.quickAccessAdd("Hatchet");
         this.quickAccessAdd("Pick Axe");
-        this.quickAccessAdd("no_weapon_tex");
+        this.quickAccessAdd("sword");
     }
 
     public void initInventory(Map<String, List<Item>> inventory) {
@@ -326,6 +328,9 @@ public class InventoryManager extends TickableManager {
         return itemsDropped;
     }
 
+    /**
+     * Removes an item from the inventory
+     */
     private void removeFromInventory(String itemName) {
         this.inventory.remove(itemName);
         this.quickAccessRemove((itemName));

@@ -1,6 +1,7 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
@@ -174,31 +175,10 @@ public class WorldBuilder implements WorldBuilderInterface {
 
                 Tree startTree = new Tree(startTile, true);
 
-                // Spawn some axes
-                Weapon startAxe = new Weapon(startTile, true, "axe", "melee",
-                        "splash", 4, 4, 10);
-                EntitySpawnRule axeRule = new EntitySpawnRule(0.04, 10, 50,
-                        biome);
-                EntitySpawnTable.spawnEntities(startAxe, axeRule, world);
-
-                // Spawn some bows
-                Weapon startBow = new Weapon(startTile, true, "bow", "range",
-                        "splash", 3, 4, 10);
-                EntitySpawnRule bowRule = new EntitySpawnRule(0.04, 10, 50,
-                        biome);
-                EntitySpawnTable.spawnEntities(startBow, bowRule, world);
-
-                // Spawn some spears
-                Weapon startSpear = new Weapon(startTile, true, "spear", "range",
-                        "splash", 5, 4, 7);
-                EntitySpawnRule spearRule = new EntitySpawnRule(0.04, 10, 50,
-                        biome);
-                EntitySpawnTable.spawnEntities(startSpear, spearRule, world);
-
                 // Spawn some swords
-                Weapon startSword = new Weapon(startTile, true, "sword", "melee",
-                        "splash", 3, 5, 6);
-                EntitySpawnRule swordRule = new EntitySpawnRule(0.04, 10, 50,
+                Weapon startSword = new Sword(startTile, "sword_tex",
+                        true);
+                EntitySpawnRule swordRule = new EntitySpawnRule(0.05, 1, 10,
                         biome);
                 EntitySpawnTable.spawnEntities(startSword, swordRule, world);
 
@@ -228,6 +208,13 @@ public class WorldBuilder implements WorldBuilderInterface {
 
             case "mountain":
 
+                // Spawn some spears
+                Weapon startSpear = new Spear(startTile, "spear_tex",
+                        true);
+                EntitySpawnRule spearRule = new EntitySpawnRule(0.05, 1, 10,
+                        biome);
+                EntitySpawnTable.spawnEntities(startSpear, spearRule, world);
+
                 MountainTree startMTree = new MountainTree(startTile, true);
                 // Create a new perlin noise map
                 SpawnControl cubic = x -> (x * x * x * x * x) / 4.0;
@@ -249,6 +236,13 @@ public class WorldBuilder implements WorldBuilderInterface {
 
             case "desert":
 
+                // Spawn some axes
+                Weapon startAxe = new Axe(startTile, "axe_tex",
+                        true);
+                EntitySpawnRule axeRule = new EntitySpawnRule(0.05, 1, 10,
+                        biome);
+                EntitySpawnTable.spawnEntities(startAxe, axeRule, world);
+
                 DesertCacti startDCacti = new DesertCacti(startTile, true);
                 // Create a new perlin noise map
                 SpawnControl cactiControl = x -> (x * x * x * x) / 4.0;
@@ -257,6 +251,13 @@ public class WorldBuilder implements WorldBuilderInterface {
                 break;
 
             case "snowy_mountains":
+
+                // Spawn some bows
+                Weapon startBow = new Bow(startTile, "bow_tex",
+                        true);
+                EntitySpawnRule bowRule = new EntitySpawnRule(0.05, 1, 10,
+                        biome);
+                EntitySpawnTable.spawnEntities(startBow, bowRule, world);
 
                 SnowClump startSnowyMountainSnow = new SnowClump(startTile, false);
                 // Create a new perlin noise map
