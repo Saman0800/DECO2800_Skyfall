@@ -2,13 +2,13 @@ package deco2800.skyfall.gamemenu;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
+
+import java.util.Map;
 
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
@@ -16,11 +16,13 @@ public class GameMenuBar extends AbstractUIElement {
 
 
     private GameMenuManager gameMenuManager;
-
+    Table quickAccessPanel;
+    private Skin skin;
 
     public GameMenuBar(Stage stage, String[] textureNames, TextureManager tm, GameMenuManager gameMenuManager) {
         super(stage, textureNames, tm);
         this.gameMenuManager = gameMenuManager;
+        this.skin = gameMenuManager.getSkin();
         this.draw();
     }
 
@@ -139,7 +141,6 @@ public class GameMenuBar extends AbstractUIElement {
      */
     private void setQuickAccessPanel(){
         //Set Quick Access Panel
-        Table quickAccessPanel;
         quickAccessPanel = new Table();
         quickAccessPanel.setBackground(generateTextureRegionDrawableObject("quick_access_panel"));
         quickAccessPanel.setSize(450, 207 * 0.55f);
@@ -167,12 +168,43 @@ public class GameMenuBar extends AbstractUIElement {
         });
     }
 
+    /***
+     * Updates the quick access inventory display to show the current contents
+     * of the quick access inventory.
+     */
+    private void updateQuickAccess(){
+        Map<String, Integer> quickAccess = gameMenuManager.getInventory().getQuickAccess();
+
+        int count = 1;
+        int xpos = 15;
+        int ypos = 28;
+        int size = 55;
+
+        for (Map.Entry<String, Integer> entry : quickAccess.entrySet()) {
+
+            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey()));
+            icon.setSize(size, size);
+            icon.setPosition((xpos*count) + size*(count-1), ypos);
+
+            quickAccessPanel.addActor(icon);
+
+            Label num = new Label(entry.getValue().toString(), skin, "white-label");
+            num.setPosition(xpos*count + size*count - 10, ypos + 40);
+            num.setFontScale((float)0.4);
+            num.setSize(18, 25);
+            quickAccessPanel.addActor(num);
+
+            count++;
+
+        }
+    }
+
     /**
      * If there is any opened popup, closes it.
      */
     private void hideOpened() {
-        if (gameMenuManager.getPopUp() != null) {
-            gameMenuManager.getPopUp().hide();
+        if (gameMenuManager.getCurrentPopUp() != null) {
+            gameMenuManager.getCurrentPopUp().hide();
         }
     }
 }

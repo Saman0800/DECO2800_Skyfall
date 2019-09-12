@@ -282,13 +282,23 @@ public class GameMenuManager extends TickableManager {
      *
      * @return Current pop up table.
      */
-    public AbstractPopUpElement getPopUp() {
+    public AbstractPopUpElement getCurrentPopUp() {
         return popUps.get(currentPopUpElement);
     }
 
-    public AbstractPopUpElement getPopUp(String key) {
-        return popUps.get(key);
+    /**
+     * Getter of specific popup
+     * @param name the string name of the popup
+     * @return
+     */
+    public AbstractPopUpElement getPopUp(String name) {
+        return popUps.get(name);
     }
+
+    /**
+     * Sets the current popup element
+     * @param popUpName the name of popup to set.
+     */
     public void setPopUp(String popUpName) {
         currentPopUpElement = popUpName;
     }
