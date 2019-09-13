@@ -70,7 +70,7 @@ public class EnvironmentManager extends TickableManager {
    private String biomeDisplay;
 
    // Current weather in the game
-   private static String weather;
+   public static String weather;
 
    /**
     * Constructor
@@ -387,7 +387,7 @@ public class EnvironmentManager extends TickableManager {
          biomeDisplay = "Snowy Mountains";
       }
       if (biome.equals("mountain")) {
-         biomeDisplay = "Mountains";
+         biomeDisplay = "Mountain";
       }
       if (biome.equals("swamp")) {
          biomeDisplay = "Swamp";
@@ -420,7 +420,7 @@ public class EnvironmentManager extends TickableManager {
     */
    public static String currentWeather() {
 
-      weather = "rain";
+//      weather = "rain";
 
       return weather;
    }
