@@ -80,7 +80,7 @@ public class WorldBuilder implements WorldBuilderInterface {
      */
     @Override
     public void addLake(int size) {
-        worldParameters.setNumOfLakes(worldParameters.getNumOfLakes()+1);
+        worldParameters.setNumOfLakes(worldParameters.getNumOfLakes() + 1);
         lakeSizes.add(size);
     }
 
@@ -123,7 +123,7 @@ public class WorldBuilder implements WorldBuilderInterface {
      * Adds a single river to the world
      */
     public void addRiver() {
-        worldParameters.setNoRivers(worldParameters.getNoRivers()+1);
+        worldParameters.setNoRivers(worldParameters.getNoRivers() + 1);
     }
 
     /**
@@ -192,7 +192,7 @@ public class WorldBuilder implements WorldBuilderInterface {
                 // This generator will cause the mushrooms to clump togteher more
                 NoiseGenerator mushroomGen = new NoiseGenerator(new Random(worldSeed), 10, 20, 0.9);
                 SpawnControl mushroomControl = x -> (x * x * x * x * x * x) / 3.0;
-                EntitySpawnRule mushroomRule = new EntitySpawnRule(biome, true, mushroomControl);
+                EntitySpawnRule mushroomRule = new EntitySpawnRule(5, 7, biome, true, mushroomControl);
                 mushroomRule.setNoiseGenerator(mushroomGen);
                 EntitySpawnTable.spawnEntities(startMushroom, mushroomRule, world);
                 break;

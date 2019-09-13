@@ -18,8 +18,8 @@ import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.Peon;
 import deco2800.skyfall.graphics.PointLight;
 import deco2800.skyfall.graphics.ShaderWrapper;
-import deco2800.skyfall.graphics.types.vec2;
-import deco2800.skyfall.graphics.types.vec3;
+import deco2800.skyfall.graphics.types.*;
+import deco2800.skyfall.graphics.*;
 import deco2800.skyfall.handlers.KeyboardManager;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
@@ -290,6 +290,19 @@ public class GameScreen implements Screen, KeyDownObserver {
                 new vec3(ambientRed.getIntensity(), ambientGreen.getIntensity(), ambientBlue.getIntensity()),
                 ambientIntensity.getIntensity());
         shader.addPointLight(new PointLight(new vec2(0.0f, 0.0f), new vec3(1.0f, 0.729f, 0.3372f), 0.9f, 0.5f));
+
+        // Add all the point lights of entities that implement the HasPointLight
+        // interface into the batch
+        for (AbstractEntity luminousEntity : GameManager.get().getWorld().getLuminousEntities()) {
+            if (luminousEntity instanceof HasPointLight) {
+                HasPointLight tempEntity = (HasPointLight) luminousEntity;
+                PointLight entityPointLight = tempEntity.getPointLight();
+                if (entityPointLight != null) {
+                    shader.addPointLight(entityPointLight);
+                }
+            }
+        }
+
         //finalise shader parameters and attach to batch
         shader.finaliseAndAttachShader(batch);
         //render batch
