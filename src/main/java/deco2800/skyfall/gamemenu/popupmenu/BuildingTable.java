@@ -20,6 +20,8 @@ public class BuildingTable extends AbstractPopUpElement{
     private Skin skin;
     private Table buildingTable, itemInfo;
     ManufacturedResources selectedItem = null;
+    InventoryTable inventoryTable;
+    GameMenuManager gameMenuManager;
 
 
     public BuildingTable(Stage stage, ImageButton exit,
@@ -27,6 +29,8 @@ public class BuildingTable extends AbstractPopUpElement{
                       GameMenuManager gameMenuManager, Skin skin) {
         super(stage, exit, textureNames,tm , gameMenuManager);
         this.skin = skin;
+        this.gameMenuManager = gameMenuManager;
+        inventoryTable = (InventoryTable) gameMenuManager.getPopUp("inventoryTable");
         this.draw();
     }
 
@@ -120,6 +124,7 @@ public class BuildingTable extends AbstractPopUpElement{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 gameMenuManager.getMainCharacter().createItem(selectedItem);
+                inventoryTable.updateResourcePanel();
                 hide();
             }
         });

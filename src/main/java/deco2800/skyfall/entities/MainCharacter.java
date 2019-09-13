@@ -1141,17 +1141,15 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * and deducts the required resource from inventory
      */
     public void createItem(ManufacturedResources itemToCreate) {
-
-        if (getBlueprintsLearned().contains(itemToCreate)) {
-
-            if (itemToCreate.getRequiredMetal() >= this.getInventoryManager().getAmount(itemToCreate.getName())) {
+       // if (getBlueprintsLearned().contains(itemToCreate)) {
+            if (this.getInventoryManager().getAmount("Metal") < itemToCreate.getRequiredMetal()) {
                 logger.info("You don't have enough Metal");
 
-            } else if (itemToCreate.getRequiredWood() >= this.getInventoryManager().getAmount(itemToCreate.getName())) {
+            } else if (this.getInventoryManager().getAmount("Wood") < itemToCreate.getRequiredWood()) {
                 logger.info("You don't have enough Wood");
 
-            } else if (itemToCreate.getRequiredStone() >= this.getInventoryManager()
-                    .getAmount(itemToCreate.getName())) {
+            } else if (this.getInventoryManager()
+                    .getAmount("Stone") < itemToCreate.getRequiredStone()) {
                 logger.info("You don't have enough Stone");
 
             } else {
@@ -1160,7 +1158,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 this.getInventoryManager().dropMultiple("Metal", itemToCreate.getRequiredMetal());
                 this.getInventoryManager().dropMultiple("Stone", itemToCreate.getRequiredStone());
                 this.getInventoryManager().dropMultiple("Wood", itemToCreate.getRequiredWood());
-            }
+         //   }
         }
     }
 

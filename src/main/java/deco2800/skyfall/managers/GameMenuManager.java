@@ -77,7 +77,7 @@ public class GameMenuManager extends TickableManager {
 
     @Override
     public void onTick(long i) {
-        //Get the current state of the inventory on tick so that display can be updated
+
         if (currentPopUpElement != null) {
             AbstractPopUpElement popUp = popUps.get(currentPopUpElement);
 
@@ -216,6 +216,12 @@ public class GameMenuManager extends TickableManager {
         if (runRefactored) {
             uiElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm));
 
+            uiElements.put("gameMenuBar", new GameMenuBar(stage, null, textureManager, this));
+
+            popUps.put("inventoryTable",
+                    new InventoryTable(stage, new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                            null, textureManager, skin,this));
+
             popUps.put("settingsTable", new SettingsTable(stage,
                     new ImageButton(generateTextureRegionDrawableObject("exitButton")),
                     null, textureManager, this,
@@ -248,13 +254,6 @@ public class GameMenuManager extends TickableManager {
             popUps.put("chestTable",new ChestTable(stage,
                     new ImageButton(generateTextureRegionDrawableObject("exitButton")),
                     null, textureManager, this, sm, skin));
-
-            //Important that put() gameMenuBar above put() inventoryTable
-            uiElements.put("gameMenuBar", new GameMenuBar(stage, null, textureManager, this));
-
-            popUps.put("inventoryTable",
-                    new InventoryTable(stage, new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                            null, textureManager, skin,this));
         }
     }
 

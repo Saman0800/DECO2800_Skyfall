@@ -26,6 +26,13 @@ public class InventoryTable extends AbstractPopUpElement {
     private String inventorySelected;
     private MainCharacter mainCharacter;
     private GameMenuBar gameMenuBar;
+    private ImageButton dropButton;
+    private ImageButton addqaButton;
+    private ImageButton equipButton;
+    private ImageButton inactiveDropButton;
+    private ImageButton inactiveAddqaButton;
+    private ImageButton inactiveEquipButton;
+
 
     public InventoryTable(Stage stage, ImageButton exitButton, String[] textureNames, TextureManager tm, Skin skin, GameMenuManager gameMenuManager) {
         super(stage, exitButton, textureNames, tm, gameMenuManager);
@@ -50,6 +57,7 @@ public class InventoryTable extends AbstractPopUpElement {
     @Override
     public void show() {
         super.show();
+        updateResourcePanel();
         System.out.println("Showing inventory table");
         inventoryTable.setVisible(true);
     }
@@ -87,59 +95,92 @@ public class InventoryTable extends AbstractPopUpElement {
 
         updateResourcePanel();
 
-        ImageButton drop = new ImageButton(generateTextureRegionDrawableObject("drop"));
-        drop.setSize(100, 60);
-        drop.setPosition(285, 20);
-        drop.addListener(new ClickListener() {
+        this.inactiveDropButton = new ImageButton(generateTextureRegionDrawableObject("drop inactive"));
+        this.inactiveDropButton.setSize(100, 60);
+        this.inactiveDropButton.setPosition(285, 20);
+
+        this.dropButton = new ImageButton(generateTextureRegionDrawableObject("drop"));
+        this.dropButton.setSize(100, 60);
+        this.dropButton.setPosition(285, 20);
+        this.dropButton.setVisible(false);
+        this.dropButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                inventory.dropAll(inventorySelected);
-                inventoryTable.removeActor(resourcePanel);
-                updateResourcePanel();
-                inventoryTable.addActor(resourcePanel);
-                gameMenuBar.removeQuickAccessPanel();
-                gameMenuBar.setQuickAccessPanel();
-                inventorySelected = null;
+                if(inventorySelected != null){
+                    inventory.dropAll(inventorySelected);
+                    inventorySelected = null;
+
+                    inactiveAddqaButton.setVisible(true);
+                    inactiveDropButton.setVisible(true);
+                    inactiveEquipButton.setVisible(true);
+                    addqaButton.setVisible(false);
+                    equipButton.setVisible(false);
+                    dropButton.setVisible(false);
+
+                    updateResourcePanel();
+                    gameMenuBar.removeQuickAccessPanel();
+                    gameMenuBar.setQuickAccessPanel();
+                }
             }
         });
 
-        ImageButton equip = new ImageButton(generateTextureRegionDrawableObject("equip"));
-        equip.setSize(100, 60);
-        equip.setPosition(405, 20);
-        equip.addListener(new ClickListener() {
+        this.inactiveEquipButton = new ImageButton(generateTextureRegionDrawableObject("equip inactive"));
+        this.inactiveEquipButton.setSize(100, 60);
+        this.inactiveEquipButton.setPosition(405, 20);
+
+        this.equipButton = new ImageButton(generateTextureRegionDrawableObject("equip"));
+        this.equipButton.setSize(100, 60);
+        this.equipButton.setPosition(405, 20);
+        this.equipButton.setVisible(false);
+        this.equipButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                mainCharacter.setEquippedItem(inventory.drop(inventorySelected));
-                System.out.println(mainCharacter.getEquippedItem());
-                inventoryTable.removeActor(resourcePanel);
-                updateResourcePanel();
-                inventoryTable.addActor(resourcePanel);
-                gameMenuBar.removeQuickAccessPanel();
-                gameMenuBar.setQuickAccessPanel();
-                inventorySelected = null;
+                if(inventorySelected != null) {
+                    mainCharacter.setEquippedItem(inventory.drop(inventorySelected));
+                    inventorySelected = null;
+
+                    inactiveAddqaButton.setVisible(true);
+                    inactiveDropButton.setVisible(true);
+                    inactiveEquipButton.setVisible(true);
+                    addqaButton.setVisible(false);
+                    equipButton.setVisible(false);
+                    dropButton.setVisible(false);
+
+                    updateResourcePanel();
+                    gameMenuBar.removeQuickAccessPanel();
+                    gameMenuBar.setQuickAccessPanel();
+                }
             }
         });
 
-        ImageButton addqa = new ImageButton(generateTextureRegionDrawableObject("addqa"));
-        addqa.setSize(100, 60);
-        addqa.setPosition(530, 20);
-        addqa.addListener(new ClickListener() {
+        this.inactiveAddqaButton = new ImageButton(generateTextureRegionDrawableObject("addqa inactive"));
+        this.inactiveAddqaButton.setSize(100, 60);
+        this.inactiveAddqaButton.setPosition(530, 20);
+
+        this.addqaButton = new ImageButton(generateTextureRegionDrawableObject("addqa"));
+        this.addqaButton.setSize(100, 60);
+        this.addqaButton.setPosition(530, 20);
+        this.addqaButton.setVisible(false);
+        this.addqaButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                inventory.quickAccessAdd(inventorySelected);
-                inventorySelected = null;
-                gameMenuBar.removeQuickAccessPanel();
-                gameMenuBar.setQuickAccessPanel();
-
+                if(inventorySelected != null) {
+                    inventory.quickAccessAdd(inventorySelected);
+                    inventorySelected = null;
+                    gameMenuBar.removeQuickAccessPanel();
+                    gameMenuBar.setQuickAccessPanel();
+                }
             }
         });
 
         inventoryTable.addActor(infoBar);
         inventoryTable.addActor(infoPanel);
-        inventoryTable.addActor(this.resourcePanel);
-        inventoryTable.addActor(drop);
-        inventoryTable.addActor(equip);
-        inventoryTable.addActor(addqa);
+        inventoryTable.addActor(dropButton);
+        inventoryTable.addActor(inactiveDropButton);
+        inventoryTable.addActor(equipButton);
+        inventoryTable.addActor(inactiveEquipButton);
+        inventoryTable.addActor(addqaButton);
+        inventoryTable.addActor(inactiveAddqaButton);
 
         inventoryTable.setVisible(false);
         stage.addActor(inventoryTable);
@@ -148,7 +189,11 @@ public class InventoryTable extends AbstractPopUpElement {
     /***
      * Updates the resources panel to display the current inventory contents.
      */
-    private void updateResourcePanel(){
+    protected void updateResourcePanel(){
+        if(resourcePanel != null){
+            inventoryTable.removeActor(resourcePanel);
+        }
+
         resourcePanel = new Table();
         resourcePanel.setName("resourcePanel");
         resourcePanel.setSize(410, 320);
@@ -188,6 +233,15 @@ public class InventoryTable extends AbstractPopUpElement {
 
                     if(selected.isVisible()){
                         selected.setVisible(false);
+
+                        inactiveAddqaButton.setVisible(true);
+                        inactiveDropButton.setVisible(true);
+                        inactiveEquipButton.setVisible(true);
+
+                        addqaButton.setVisible(false);
+                        equipButton.setVisible(false);
+                        dropButton.setVisible(false);
+
                     }else{
                         for(Actor actor: resourcePanel.getChildren()){
                             String name = actor.getName();
@@ -197,6 +251,14 @@ public class InventoryTable extends AbstractPopUpElement {
                         }
 
                         selected.setVisible(true);
+
+                        inactiveAddqaButton.setVisible(false);
+                        inactiveDropButton.setVisible(false);
+                        inactiveEquipButton.setVisible(false);
+
+                        addqaButton.setVisible(true);
+                        equipButton.setVisible(true);
+                        dropButton.setVisible(true);
                     }
 
                 }
@@ -207,7 +269,11 @@ public class InventoryTable extends AbstractPopUpElement {
 
             Label num = new Label(entry.getValue().toString(), skin, "white-label");
             num.setFontScale((float)0.4);
-            num.setSize(18, 25);
+            int numWidth = 18;
+            if(entry.getValue()>9){
+                numWidth += 8;
+            }
+            num.setSize(numWidth, 25);
             num.setPosition(xspace*count + size*count + xpos - 35, ypos + 65);
             resourcePanel.addActor(num);
 
@@ -218,6 +284,8 @@ public class InventoryTable extends AbstractPopUpElement {
                 count = 0;
             }
         }
+
+        inventoryTable.addActor(this.resourcePanel);
 
     }
 
