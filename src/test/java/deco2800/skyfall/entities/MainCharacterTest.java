@@ -460,7 +460,8 @@ public class MainCharacterTest {
     public void createItemTest() {
 
         int i;
-        testCharacter.getBlueprintsLearned().add("Hatchet");
+        testCharacter.getBlueprintsLearned().add(new Hatchet());
+
 
         for (i = 0; i < 25; i++) {
             testCharacter.getInventoryManager().inventoryAdd(new Wood());

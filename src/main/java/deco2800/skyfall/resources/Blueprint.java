@@ -39,6 +39,8 @@ public interface Blueprint {
      * @return true if the player has learned the blueprint.
      */
 
+    String getName();
+
     boolean isBlueprintLearned();
 
     /**

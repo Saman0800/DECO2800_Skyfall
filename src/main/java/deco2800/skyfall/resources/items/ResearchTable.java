@@ -1,7 +1,10 @@
 package deco2800.skyfall.resources.items;
 
 import com.badlogic.gdx.Game;
+import deco2800.skyfall.buildings.BuildingEntity;
+import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.managers.ConstructionManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.resources.Blueprint;
@@ -34,7 +37,9 @@ public class ResearchTable extends ManufacturedResources implements Blueprint,
     private Map<String, Integer> requiredResources;
 
     //a list of all items that can be created and need blueprint
-    private List<String> creatablesList;
+    private List<Blueprint> creatablesList;
+
+    private BuildingFactory buildingFactory;
 
     /***
      * constructor for a research table
@@ -43,10 +48,8 @@ public class ResearchTable extends ManufacturedResources implements Blueprint,
      */
     public ResearchTable(MainCharacter owner){
         super(owner);
-
         creatablesList = new ArrayList<>();
-        creatablesList.addAll(Arrays.asList("Hatchet","Pick Axe","Cabin","StorageUnit","TownCentre",
-                "Fence","SafeHouse","WatchTower","Castle"));
+        creatablesList.addAll(Arrays.asList(new Hatchet(),new PickAxe()));
         playerInvenotry = GameManager.getManagerFromInstance(InventoryManager.class);
         goldCost = 25;
     }
@@ -57,7 +60,7 @@ public class ResearchTable extends ManufacturedResources implements Blueprint,
      *
      * @return  a list of creatable items
      */
-    public List<String> getCreatableItems() {
+    public List<Blueprint> getCreatableItems() {
         return this.creatablesList;
     }
 
@@ -74,8 +77,7 @@ public class ResearchTable extends ManufacturedResources implements Blueprint,
 
         } else {
 
-            String newBlueprint = this.getCreatableItems().get(0);
-            owner.getBlueprintsLearned().add(newBlueprint);
+            owner.getBlueprintsLearned().add(this.getCreatableItems().get(0));
             this.getCreatableItems().remove(0);
             owner.removeGold(goldCost);
             }

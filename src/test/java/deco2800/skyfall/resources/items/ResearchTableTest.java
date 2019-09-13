@@ -1,6 +1,7 @@
 package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.GoldPiece;
 import org.junit.After;
 import org.junit.Assert;
@@ -18,7 +19,7 @@ public class ResearchTableTest {
 
     private MainCharacter testPlayer;
     private ResearchTable testTable;
-    private List<String> expectedCreatables;
+    private List<Blueprint> expectedCreatables;
     private int goldcost;
     private GoldPiece goldPiece;
     private Map<String, Integer> allRequirements;
@@ -31,6 +32,9 @@ public class ResearchTableTest {
         goldPiece = new GoldPiece(100);
         testPlayer.addGold(goldPiece,2);
         allRequirements = new HashMap<>();
+        expectedCreatables = new ArrayList<>();
+        expectedCreatables.addAll(Arrays.asList(new Hatchet(),new PickAxe()));
+
     }
 
     @After
@@ -39,21 +43,19 @@ public class ResearchTableTest {
 
     @Test
     public void getCreatableItems() {
-        expectedCreatables = new ArrayList<>();
-        expectedCreatables.add("Hatchet");
-        expectedCreatables.add("Pick Axe");
+        assertEquals(expectedCreatables.get(0).getClass(),testTable.getCreatableItems().get(0).getClass());
+        assertEquals(expectedCreatables.get(1).getClass(),testTable.getCreatableItems().get(1).getClass());
+        assertEquals(expectedCreatables.size(),testTable.getCreatableItems().size());
 
-        assertEquals(Arrays.asList("Hatchet","Pick Axe"),testTable.getCreatableItems());
+
     }
 
     @Test
     public void buyBlueprint() {
-        System.out.println(testPlayer.getGoldPouchTotalValue());
+        assertEquals(expectedCreatables.size(), testTable.getCreatableItems().size());
         testTable.buyBlueprint();
-        assertEquals(Arrays.asList("Pick Axe","Cabin","StorageUnit","TownCentre",
-                "Fence","SafeHouse","WatchTower","Castle"),
-                testTable.getCreatableItems());
-        assertEquals(Arrays.asList("Hatchet"),testPlayer.getBlueprintsLearned());
+        assertEquals(expectedCreatables.size()-1, testTable.getCreatableItems().size());
+        assertEquals(new PickAxe().getClass(),testTable.getCreatableItems().get(0).getClass());
     }
 
     @Test
