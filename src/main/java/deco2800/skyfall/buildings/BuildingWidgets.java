@@ -150,19 +150,31 @@ public class BuildingWidgets {
      */
     private void upgradeBuilding(BuildingEntity building) {
         int nextLevel = building.getBuildingLevel() + 1;
+
         if (building.isUpgradable() && building.getTextures().containsKey("level" + nextLevel)) {
             InventoryManager inventoryManager = gm.getManager(InventoryManager.class);
+            Map<String, Integer> resources = inventoryManager.getQuickAccess();
+
+            boolean check = true;
             for (Map.Entry<String, Integer> entry : building.getCost().entrySet()) {
-                String resource = entry.getKey();
-                Integer amount = entry.getValue();
-                if (amount <= inventoryManager.getAmount(resource)) {
-                    inventoryManager.inventoryDropMultiple(resource, amount);
+                if (!resources.containsKey(entry.getKey()) || resources.get(entry.getKey()) < entry.getValue()) {
+                    check = false;
                 }
             }
-            building.setTexture(building.getTextures().get("level" + nextLevel));
-            building.setBuildingLevel(nextLevel);
-            menu.setVisible(false);
-            return;
+
+            if (check) {
+                for (Map.Entry<String, Integer> entry : building.getCost().entrySet()) {
+                    String resource = entry.getKey();
+                    Integer amount = entry.getValue();
+                    if (amount <= inventoryManager.getAmount(resource)) {
+                        inventoryManager.inventoryDropMultiple(resource, amount);
+                    }
+                }
+                building.setTexture(building.getTextures().get("level" + nextLevel));
+                building.setBuildingLevel(nextLevel);
+                menu.setVisible(false);
+                return;
+            }
         }
 
         upgradeBtn.setText("Max Level");
