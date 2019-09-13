@@ -1,7 +1,8 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.audio.Sound;
 import deco2800.skyfall.entities.spells.SpellFactory;
+import deco2800.skyfall.entities.weapons.Sword;
+import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.entities.worlditems.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.Vector2;
@@ -20,12 +21,11 @@ import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
-
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.Tile;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.*;
 
 /**
@@ -36,14 +36,8 @@ public class MainCharacter extends Peon
 
     private final Logger logger = LoggerFactory.getLogger(MainCharacter.class);
 
-    // Weapon Manager for MainCharacter
-    private WeaponManager weapons;
-
     // Manager for all of MainCharacter's inventories
     private InventoryManager inventories;
-
-    // Hotbar of inventories
-    private List<Item> hotbar;
 
     //List of blueprints that the player has learned.
     private List<String> blueprintsLearned;
@@ -62,14 +56,6 @@ public class MainCharacter extends Peon
 
     //The pick Axe that is going to be created
     private Hatchet hatchetToCreate;
-
-    // The index of the item selected to be used in the hotbar
-    // ie. [sword][gun][apple]
-    // if selecting sword then equipped_item = 0,
-    // if selecting gun the equipped_item = 1
-    private int equipped_item;
-    private static final int INVENTORY_MAX_CAPACITY = 20;
-    private static final int HOTBAR_MAX_CAPACITY = 5;
 
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
@@ -173,14 +159,7 @@ public class MainCharacter extends Peon
      */
     private boolean isInvincible;
 
-    /**
-     * Private helper method to instantiate inventory and weapon managers for
-     * Main Character constructor
-     */
-    private void instantiateManagers() {
-        //this.inventories = new InventoryManager();
-        this.weapons = new WeaponManager();
-    }
+    private String equipped;
 
     /**
      * Base Main Character constructor
@@ -195,10 +174,8 @@ public class MainCharacter extends Peon
         GameManager.getManagerFromInstance(InputManager.class).addKeyUpListener(this);
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
 
-        this.weapons = GameManager.getManagerFromInstance(WeaponManager.class);
         this.inventories = GameManager.getManagerFromInstance(InventoryManager.class);
 
-        this.equipped_item = 0;
         this.level = 1;
         this.foodLevel = 100;
         foodAccum = 0.f;
@@ -232,6 +209,7 @@ public class MainCharacter extends Peon
                 position.getRow(),
                 1, 1);*/
 
+        equipped = "no_weapon";
         canSwim = true;
         isSprinting = false;
         this.scale = 0.4f;
@@ -380,6 +358,14 @@ public class MainCharacter extends Peon
         GameManager.get().getWorld().addEntity(spell);
 
         setAttacking(false);
+    }
+
+    public String getEquipped() {
+        return this.equipped;
+    }
+
+    public void setEquipped(String item) {
+        this.equipped = item;
     }
 
     /**
@@ -552,73 +538,6 @@ public class MainCharacter extends Peon
         }
 
         /**
-         *  Add weapon to weapons list
-         * @param item weapon to be added
-         *
-         */
-        public void pickUpWeapon (Weapon item){
-            weapons.pickUpWeapon(item);
-        }
-
-        /**
-         * Removes items from player's collection
-         * @param item weapon being removed
-         */
-        public void dropWeapon (Weapon item){
-            weapons.dropWeapon(item);
-        }
-
-        /**
-         * Get the weapons for the player
-         * @return weapons
-         */
-        public Map<Weapon, Integer> getWeapons () {
-            return weapons.getWeapons();
-        }
-
-        /**
-         * Attempts to equip a weapon from the weapons map
-         * @param item weapon being equipped
-         */
-        public void equipWeapon (Weapon item){
-            weapons.equipWeapon(item);
-        }
-
-        /**
-         * Attempts to unequip a weapon and return it to the weapons map
-         * @param item weapon being unequipped
-         */
-        public void unequipWeapon (Weapon item){
-            weapons.unequipWeapon(item);
-        }
-
-        /**
-         * Get a copy of the equipped weapons list
-         * Modifying the returned list shouldn't affect the internal state of class
-         * @return equipped list
-         */
-        public List<Weapon> getEquipped () {
-            return weapons.getEquipped();
-        }
-
-        /**
-         * Gets the weapon manager of the character, so it can only be modified
-         * this way, prevents having it being a public variable
-         * @return the weapon manager of character
-         */
-        public WeaponManager getWeaponManager () {
-            return this.weapons;
-        }
-
-        /**
-         * Deals damage to character from combat
-         * @param item weapon character is being hit by
-         */
-        public void weaponEffect (Weapon item){
-            this.changeHealth(item.getDamage().intValue() * -1);
-        }
-
-        /**
          * Set the players inventory to a predefined inventory
          * e.g for loading player saves
          * @param inventoryContents the save for the inventory
@@ -757,6 +676,7 @@ public class MainCharacter extends Peon
                 this.attack(mousePos);
             }
         }
+
 
         /**
          * Handles tick based stuff, e.g. movement
