@@ -49,6 +49,9 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bowman", new Texture("resources/bowman.png"));
             textureMap.put("dialogue_text_background", new Texture("resources/dialogue_text_background.png"));
 
+            textureMap.put("tornado_placeholder",new Texture("resources/spells/tornado_placeholder.png"));
+            textureMap.put("shield_placeholder",new Texture("resources/spells/shield_placeholder.png"));
+            textureMap.put("flame_wall_placeholder", new Texture("resources/spells/flame_wall_placeholder.png"));
             textureMap.put("range_test", new Texture("resources/projectile.png"));
             textureMap.put("melee_test", new Texture("resources/punch.png"));
 
@@ -161,6 +164,13 @@ public class TextureManager extends AbstractManager {
             textureMap.put("MBush2", new Texture("resources/world_details/MBush2.png"));
             textureMap.put("MBush3", new Texture("resources/world_details/MBush3.png"));
 
+            textureMap.put("sword_tex", new Texture("resources/weapons/sword.png"));
+            textureMap.put("sword", new Texture("resources/weapons/sword.png"));
+            textureMap.put("axe_tex", new Texture("resources/weapons/axe.png"));
+            textureMap.put("bow_tex", new Texture("resources/weapons/bow.png"));
+            textureMap.put("spear_tex", new Texture("resources/weapons/spear.png"));
+            textureMap.put("no_weapon_tex", new Texture("resources/weapons/noweapon.png"));
+
             textureMap.put("pop up screen", new Texture("resources/pop_up_screen_background.png"));
             textureMap.put("game menu bar", new Texture("resources/pop_up_screen_title_background.png"));
 
@@ -191,6 +201,9 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("big_circle", new Texture("resources/OrangeCircle.png"));
             textureMap.put("inner_circle", new Texture("resources/RedCircle.png"));
+
+            textureMap.put("mana_bar",new Texture("resources/mana_bar.png"));
+            textureMap.put("mana_bar_inner",new Texture("resources/mana_bar_inner.png"));
 
             textureMap.put("inventory_banner", new Texture("resources/inventory_banner.png"));
             textureMap.put("Stone", new Texture("resources/items_icons/stone.png"));
