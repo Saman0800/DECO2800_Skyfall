@@ -777,7 +777,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             goldPouch.put(goldValue, count);
         }
 
-    }
+    }   
 
     /**
      * Removes one instance of a gold piece in the pouch with a specific value.

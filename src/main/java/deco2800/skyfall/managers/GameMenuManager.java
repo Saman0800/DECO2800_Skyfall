@@ -84,15 +84,15 @@ public class GameMenuManager extends TickableManager {
             AbstractPopUpElement popUp = popUps.get(currentPopUpElement);
 
             if (popUp != null && !popUp.isVisible()) {
+                popUp.update();
                 popUp.show();
             }
         }
 
-        for (AbstractUIElement element: uiElements.values()) {
-            element.update();
+        for (String key: uiElements.keySet()) {
+            AbstractUIElement uiElement = uiElements.get(key);
+            uiElement.update();
         }
-
-
     }
 
     /**

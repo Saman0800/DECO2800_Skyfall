@@ -47,7 +47,7 @@ public class GoldTable extends AbstractPopUpElement{
 
     public void update() {
         super.update();
-
+        updateGoldPanel();
     }
 
     public void draw() {
@@ -84,7 +84,11 @@ public class GoldTable extends AbstractPopUpElement{
      * Updates the gold panel to display the current value of each coin.
      */
     private void updateGoldPanel(){
-        goldPanel = new Table();
+        if (goldPanel != null) {
+            goldPanel.clear();
+        } else {
+            goldPanel = new Table();
+        }
         goldPanel.setName("goldPanel");
         goldPanel.setSize(500, 450);
         goldPanel.setPosition(110, 100);
@@ -97,7 +101,8 @@ public class GoldTable extends AbstractPopUpElement{
         int ypos = 280;
 
         for (Map.Entry<Integer, Integer> entry : goldAmounts.entrySet()) {
-
+            System.out.println(entry.getKey());
+            System.out.println(entry.getValue());
             ImageButton icon = new ImageButton(generateTextureRegionDrawableObject("goldPiece" + entry.getKey()));
             icon.setName("icon");
             icon.setSize(100, 100);
