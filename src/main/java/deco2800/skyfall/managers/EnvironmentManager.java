@@ -179,8 +179,9 @@ public class EnvironmentManager extends TickableManager {
     *
     * @return long The time of day in hours
     */
-   public long getTime() {
-      return hours;
+   public float getTime() {
+      float mins = (float) minutes / 60;
+      return hours + mins;
    }
 
    /**
@@ -203,6 +204,12 @@ public class EnvironmentManager extends TickableManager {
 
       //Update isDay boolean
       isDay();
+
+      System.out.println(getTime());
+   }
+
+   public void setHours(float time) {
+
    }
 
    /**
