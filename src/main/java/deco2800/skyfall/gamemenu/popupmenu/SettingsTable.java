@@ -96,14 +96,12 @@ public class SettingsTable extends AbstractPopUpElement{
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Map<String, Sound> soundLoops = soundManager.getSoundMap();
-
                 if (soundFX.isChecked()) {
                     SoundManager.setPaused(true);
 
                     for (String sound : soundLoops.keySet()) {
                         SoundManager.stopSound(sound);
                     }
-
                 } else {
                     SoundManager.setPaused(false);
 

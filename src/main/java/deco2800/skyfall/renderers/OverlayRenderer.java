@@ -124,9 +124,10 @@ public class OverlayRenderer implements Renderer {
 		line++;
 
 		// Display player's current equipped item
-		debugLine(batch, camera, line++,
-				String.format("Equipped Item: %s",
-						GameManager.get().getManager(StatisticsManager.class).getCharacter().displayEquippedItem()));
+
+//		debugLine(batch, camera, line++,
+//				String.format("Equipped Item: %s",
+//						GameManager.get().getManager(StatisticsManager.class).getCharacter().displayEquippedItem()));
 
 		line++;
 
