@@ -34,7 +34,7 @@ public class GameMenuManager extends TickableManager {
 
     //Refactor Code
     private Map<String, AbstractUIElement> uiElements;
-    private Map<String, AbstractPopUpElement> popUps = new HashMap<>();
+    private Map<String, AbstractPopUpElement> popUps;
     private String currentPopUpElement = null;
 
     //TODO: REMOVE WHEN REFACTOR IS FINISHED
@@ -208,7 +208,6 @@ public class GameMenuManager extends TickableManager {
     //refactor
     public void addStatsManager(StatisticsManager statsManager) {
         sm = statsManager;
-        System.out.println("Stats Manager added and drawing HealthCircle and GameMenuBar");
     }
 
     public void drawAllElements(){
@@ -217,8 +216,7 @@ public class GameMenuManager extends TickableManager {
             return;
         }
         if (runRefactored) {
-            uiElements.put("healthCircle",
-                    new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm));
+            uiElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm));
 
             popUps.put("settingsTable", new SettingsTable(stage,
                     new ImageButton(generateTextureRegionDrawableObject("exitButton")),
@@ -263,7 +261,7 @@ public class GameMenuManager extends TickableManager {
     }
 
     /**
-     * Getter of current pop up table.
+     * Getter of current pop up table displayed
      *
      * @return Current pop up table.
      */

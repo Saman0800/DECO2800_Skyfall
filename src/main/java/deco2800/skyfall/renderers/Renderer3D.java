@@ -356,17 +356,14 @@ public class Renderer3D implements Renderer {
             float time = aniLink.getStartingTime();
 
             if (ani == null) {
-                //System.out.println("Animation is null");
                 renderDefaultSprite(batch, entity, entityWorldCoord);
                 return;
             }
 
             if (ani.isAnimationFinished(time)) {
-                //System.out.println("Animation is done");
                 aniLink.resetStartingTime();
 
                 if (!aniLink.isLooping()) {
-                    //System.out.println("Setting to null");
                     entity.setGetToBeRunToNull();
                 }
                 renderDefaultSprite(batch, entity, entityWorldCoord);
