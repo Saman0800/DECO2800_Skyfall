@@ -1,5 +1,7 @@
 package deco2800.skyfall.managers;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.observers.DayNightObserver;
@@ -7,7 +9,9 @@ import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.worlds.Tile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EnvironmentManager extends TickableManager {
 
@@ -61,6 +65,12 @@ public class EnvironmentManager extends TickableManager {
 
    //List of objects implementing DayNightObserver
    private ArrayList<DayNightObserver> dayNightListeners;
+
+   // Correct biome name to display on screen
+   private String biomeDisplay;
+
+   // Current weather in the game
+   private static String weather;
 
    /**
     * Constructor
@@ -361,6 +371,61 @@ public class EnvironmentManager extends TickableManager {
    }
 
    /**
+    * Gets current biome player is in
+    *
+    * @return String Current biome of player, or null if player is moving between tiles
+    */
+   public String biomeDisplayName() {
+
+      if (biome.equals("forest")) {
+         biomeDisplay = "Forest";
+      }
+      if (biome.equals("volcanic_mountains")) {
+         biomeDisplay = "Volcanic Mountains";
+      }
+      if (biome.equals("snowy_mountains")) {
+         biomeDisplay = "Snowy Mountains";
+      }
+      if (biome.equals("mountain")) {
+         biomeDisplay = "Mountains";
+      }
+      if (biome.equals("swamp")) {
+         biomeDisplay = "Swamp";
+      }
+      if (biome.equals("lake")) {
+         biomeDisplay = "Lake";
+      }
+      if (biome.equals("river")) {
+         biomeDisplay = "River";
+      }
+      if (biome.equals("jungle")) {
+         biomeDisplay = "Jungle";
+      }
+      if (biome.equals("desert")) {
+         biomeDisplay = "Desert";
+      }
+      if (biome.equals("beach")) {
+         biomeDisplay = "Beach";
+      }
+      if (biome.equals("ocean")) {
+         biomeDisplay = "Ocean";
+      }
+      return biomeDisplay;
+   }
+
+   /**
+    * Gets current biome player is in
+    *
+    * @return String Current biome of player, or null if player is moving between tiles
+    */
+   public static String currentWeather() {
+
+      weather = "rain";
+
+      return weather;
+   }
+
+   /**
     * On tick method for ticking managers with the TickableManager interface
     *
     * @param i
@@ -377,9 +442,19 @@ public class EnvironmentManager extends TickableManager {
       setTime(time);
       setMonth(time);
 
-      //Set Background music as per the specific biome and TOD
+      // Set Background music as per the specific biome and TOD
       setBiome();
       setTODMusic();
+      currentWeather();
+
+      // Key mapping to mute volume
+      // M for mute and U to un-mute
+      if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+         BGMManager.mute();
+      }
+      if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
+         BGMManager.unmute();
+      }
    }
    
 }

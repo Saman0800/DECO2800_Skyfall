@@ -112,6 +112,11 @@ public class OverlayRenderer implements Renderer {
 				String.format("Biome: %s",
 						GameManager.get().getManager(EnvironmentManager.class).biomeDisplayName()));
 
+		// Display current weather in game
+		debugLine(batch, camera, line++,
+				String.format("Weather: %s",
+						GameManager.get().getManager(EnvironmentManager.class).currentWeather()));
+
 		line++;
 
 		debugLine(batch, camera, line++, "PathfindingService");
