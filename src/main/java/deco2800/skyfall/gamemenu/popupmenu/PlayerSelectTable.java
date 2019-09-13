@@ -59,7 +59,7 @@ public class PlayerSelectTable extends AbstractPopUpElement{
         super.draw();
         System.out.println("Drawing PLAYERSELECTTABLE");
         playerSelectTable = new Table();
-        playerSelectTable.setDebug(true);
+//        playerSelectTable.setDebug(true);
         playerSelectTable.setSize(600, 600 * 1346 / 1862f);
         playerSelectTable.setPosition(Gdx.graphics.getWidth()/2f - playerSelectTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - playerSelectTable.getHeight()/2);

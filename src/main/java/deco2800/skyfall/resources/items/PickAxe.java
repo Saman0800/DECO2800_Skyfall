@@ -19,7 +19,7 @@ import java.util.Map;
 public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
     private Map<String, Integer> allRequirements;
-    private boolean blueprintLearned = false;
+    private static boolean blueprintLearned = false;
 
     /***
      * Create a Pick Axe with the name Pick Axe.
@@ -179,6 +179,17 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
         allRequirements.put("Metal", 10);
 
         return allRequirements;
+    }
+
+    /**
+     * a getter method to check if a player has learned the blueprint
+     *
+     * @return true if the player has learned the blueprint.
+     */
+    @Override
+    public boolean isBlueprintLearned() {
+
+        return blueprintLearned;
     }
 
     @Override

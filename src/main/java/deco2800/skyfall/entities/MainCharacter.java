@@ -8,10 +8,8 @@ import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.*;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.*;
-import deco2800.skyfall.resources.GoldPiece;
-import deco2800.skyfall.resources.HealthResources;
+import deco2800.skyfall.resources.*;
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.util.*;
@@ -40,7 +38,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private List<Item> hotbar;
 
     //List of blueprints that the player has learned.
-    private List<String> blueprintsLearned;
+    private List<ManufacturedResources> blueprintsLearned;
 
     //The name of the item to be created.
     private String itemToCreate;
@@ -1115,8 +1113,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * A getter method for the blueprints that the player has learned.
      * @return the learned blueprints list
      */
-    public List<String> getBlueprintsLearned() {
-        blueprintsLearned = new ArrayList<>(Arrays.asList("hatchet", "pickaxe"));
+    public List<ManufacturedResources> getBlueprintsLearned() {
+        blueprintsLearned = new ArrayList<>(Arrays.asList(new Hatchet(), new PickAxe()));
 
         return blueprintsLearned;
     }
@@ -1144,7 +1142,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     public void createItem(ManufacturedResources itemToCreate) {
 
-        if (getBlueprintsLearned().contains(itemToCreate.getName())) {
+        if (getBlueprintsLearned().contains(itemToCreate)) {
 
             if (itemToCreate.getRequiredMetal() >= this.getInventoryManager().getAmount(itemToCreate.getName())) {
                 logger.info("You don't have enough Metal");
