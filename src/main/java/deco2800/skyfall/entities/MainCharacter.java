@@ -1141,9 +1141,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * and deducts the required resource from inventory
      */
     public void createItem(ManufacturedResources itemToCreate) {
-
         if (getBlueprintsLearned().contains(itemToCreate)) {
-
+            System.out.println("ok");
             if (itemToCreate.getRequiredMetal() >= this.getInventoryManager().getAmount(itemToCreate.getName())) {
                 logger.info("You don't have enough Metal");
 

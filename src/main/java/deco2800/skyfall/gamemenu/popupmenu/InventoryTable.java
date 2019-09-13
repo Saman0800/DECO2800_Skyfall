@@ -50,6 +50,7 @@ public class InventoryTable extends AbstractPopUpElement {
     @Override
     public void show() {
         super.show();
+        updateResourcePanel();
         System.out.println("Showing inventory table");
         inventoryTable.setVisible(true);
     }
@@ -94,9 +95,7 @@ public class InventoryTable extends AbstractPopUpElement {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 inventory.dropAll(inventorySelected);
-                inventoryTable.removeActor(resourcePanel);
                 updateResourcePanel();
-                inventoryTable.addActor(resourcePanel);
                 gameMenuBar.removeQuickAccessPanel();
                 gameMenuBar.setQuickAccessPanel();
                 inventorySelected = null;
@@ -111,9 +110,7 @@ public class InventoryTable extends AbstractPopUpElement {
             public void clicked(InputEvent event, float x, float y) {
                 mainCharacter.setEquippedItem(inventory.drop(inventorySelected));
                 System.out.println(mainCharacter.getEquippedItem());
-                inventoryTable.removeActor(resourcePanel);
                 updateResourcePanel();
-                inventoryTable.addActor(resourcePanel);
                 gameMenuBar.removeQuickAccessPanel();
                 gameMenuBar.setQuickAccessPanel();
                 inventorySelected = null;
@@ -136,7 +133,6 @@ public class InventoryTable extends AbstractPopUpElement {
 
         inventoryTable.addActor(infoBar);
         inventoryTable.addActor(infoPanel);
-        inventoryTable.addActor(this.resourcePanel);
         inventoryTable.addActor(drop);
         inventoryTable.addActor(equip);
         inventoryTable.addActor(addqa);
@@ -148,7 +144,11 @@ public class InventoryTable extends AbstractPopUpElement {
     /***
      * Updates the resources panel to display the current inventory contents.
      */
-    private void updateResourcePanel(){
+    protected void updateResourcePanel(){
+        if(resourcePanel != null){
+            inventoryTable.removeActor(resourcePanel);
+        }
+
         resourcePanel = new Table();
         resourcePanel.setName("resourcePanel");
         resourcePanel.setSize(410, 320);
@@ -207,7 +207,11 @@ public class InventoryTable extends AbstractPopUpElement {
 
             Label num = new Label(entry.getValue().toString(), skin, "white-label");
             num.setFontScale((float)0.4);
-            num.setSize(18, 25);
+            int numWidth = 18;
+            if(entry.getValue()>9){
+                numWidth += 8;
+            }
+            num.setSize(numWidth, 25);
             num.setPosition(xspace*count + size*count + xpos - 35, ypos + 65);
             resourcePanel.addActor(num);
 
@@ -218,6 +222,8 @@ public class InventoryTable extends AbstractPopUpElement {
                 count = 0;
             }
         }
+
+        inventoryTable.addActor(this.resourcePanel);
 
     }
 
