@@ -3,6 +3,7 @@ package deco2800.skyfall.graphics;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import deco2800.skyfall.graphics.types.vec2;
 import deco2800.skyfall.graphics.types.vec3;
 import deco2800.skyfall.util.SettingsFile;
@@ -35,9 +36,19 @@ public class ShaderWrapper {
      */
     public ShaderWrapper(String shaderName) {
         //load shaders
-        String vertexShader = Gdx.files.internal("resources\\shaders\\" + shaderName + ".vert").readString();
-        String fragmentShader = Gdx.files.internal("resources\\shaders\\" + shaderName + ".frag").readString();
-        shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
+        try {
+            String vertexShader = Gdx.files.internal("resources/shaders/" + shaderName + ".vert").readString();
+            String fragmentShader = Gdx.files.internal("resources/shaders/" + shaderName + ".frag").readString();
+            shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
+        }
+        catch (GdxRuntimeException e) {
+            System.out.println("Shader source not found, check:\n");
+            System.out.println("resources/shaders/"  + shaderName + ".vert\n");
+            System.out.println("resources/shaders/"  + shaderName + ".frag\n");
+            System.out.println("Extended shader disabled\n");
+            return;
+        }
+
 
         //Allows uniform variables to be in the fragment shader but not referenced in the vertex
         shaderProgram.pedantic = false;
@@ -94,8 +105,10 @@ public class ShaderWrapper {
     }
 
     /**
+     * Not an accurate count of current point lights
+     * Rather a final count of last render finalisation's total rendered point lights
      * will be zero with no active shader
-     * @return number of point lights being rendered
+     * @return number of point lights being rendered after finalisation
      */
     public int getPointLightCount() {
         return finalPointLightCount;
