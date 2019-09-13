@@ -164,6 +164,13 @@ public class TextureManager extends AbstractManager {
             textureMap.put("MBush2", new Texture("resources/world_details/MBush2.png"));
             textureMap.put("MBush3", new Texture("resources/world_details/MBush3.png"));
 
+            textureMap.put("sword_tex", new Texture("resources/weapons/sword.png"));
+            textureMap.put("sword", new Texture("resources/weapons/sword.png"));
+            textureMap.put("axe_tex", new Texture("resources/weapons/axe.png"));
+            textureMap.put("bow_tex", new Texture("resources/weapons/bow.png"));
+            textureMap.put("spear_tex", new Texture("resources/weapons/spear.png"));
+            textureMap.put("no_weapon_tex", new Texture("resources/weapons/noweapon.png"));
+
             textureMap.put("pop up screen", new Texture("resources/pop_up_screen_background.png"));
             textureMap.put("game menu bar", new Texture("resources/pop_up_screen_title_background.png"));
 

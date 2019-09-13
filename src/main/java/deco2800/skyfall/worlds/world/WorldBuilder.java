@@ -3,6 +3,7 @@ package deco2800.skyfall.worlds.world;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.ChestManager;
 import deco2800.skyfall.resources.LootRarity;
+import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
@@ -174,6 +175,12 @@ public class WorldBuilder implements WorldBuilderInterface {
             switch (biome.getBiomeName()) {
             case "forest":
 
+                // Spawn some swords
+                Weapon startSword = new Sword(startTile, true);
+                EntitySpawnRule swordRule = new EntitySpawnRule(0.04, 10, 20, biome);
+                EntitySpawnTable.spawnEntities(startSword, swordRule, world);
+
+
                 Tree startTree = new Tree(startTile, true);
                 // Create a new perlin noise map
                 SpawnControl treeControl = x -> (x * x * x) / 3.0;
@@ -203,6 +210,11 @@ public class WorldBuilder implements WorldBuilderInterface {
 
             case "mountain":
 
+                // Spawn some spears
+                Weapon startSpear = new Spear(startTile, true);
+                EntitySpawnRule spearRule = new EntitySpawnRule(0.05, 1, 10, biome);
+                EntitySpawnTable.spawnEntities(startSpear, spearRule, world);
+
                 MountainTree startMTree = new MountainTree(startTile, true);
                 // Create a new perlin noise map
                 SpawnControl cubic = x -> (x * x * x * x * x) / 4.0;
@@ -226,6 +238,12 @@ public class WorldBuilder implements WorldBuilderInterface {
 
             case "desert":
 
+                // Spawn some axes
+                Weapon startAxe = new Axe(startTile,true);
+                EntitySpawnRule axeRule = new EntitySpawnRule(0.05, 1, 10,
+                        biome);
+                EntitySpawnTable.spawnEntities(startAxe, axeRule, world);
+
                 DesertCacti startDCacti = new DesertCacti(startTile, true);
                 // Create a new perlin noise map
                 SpawnControl cactiControl = x -> (x * x * x * x) / 4.0;
@@ -234,6 +252,12 @@ public class WorldBuilder implements WorldBuilderInterface {
                 break;
 
             case "snowy_mountains":
+
+                // Spawn some bows
+                Weapon startBow = new Bow(startTile,true);
+                EntitySpawnRule bowRule = new EntitySpawnRule(0.05, 1, 10,
+                        biome);
+                EntitySpawnTable.spawnEntities(startBow, bowRule, world);
 
                 SnowClump startSnowyMountainSnow = new SnowClump(startTile, false);
                 // Create a new perlin noise map
