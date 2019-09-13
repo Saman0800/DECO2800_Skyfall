@@ -317,6 +317,10 @@ public class GameScreen implements Screen,KeyDownObserver {
                 camera.translate(0, goFastSpeed, 0);
             }
 
+            if (Gdx.input.isKeyPressed(Input.Keys.P)) {
+                //FIXME:jeffvan12 Implement saving the game when this is pretty
+            }
+
             if (Gdx.input.isKeyPressed(Input.Keys.EQUALS)) {
                 camera.zoom *= 1 - 0.01 * normilisedGameSpeed;
                 if (camera.zoom < 0.5) {

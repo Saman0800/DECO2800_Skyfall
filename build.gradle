@@ -80,6 +80,10 @@ dependencies {
 	compile "com.badlogicgames.gdx:gdx:$gdxVersion"
 	compile "org.javatuples:javatuples:1.2"
 
+	compile "org.hibernate:hibernate-core:5.4.4.Final"
+	compile "org.hibernate:hibernate-entitymanager:5.4.4.Final"
+
+
 	compile group: 'com.esotericsoftware', name: 'kryo', version: '4.0.2'
 	compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
 

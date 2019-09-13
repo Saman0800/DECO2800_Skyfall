@@ -1,6 +1,7 @@
 package deco2800.skyfall.worlds.world;
 
 import com.badlogic.gdx.Gdx;
+import com.google.gson.Gson;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.AgentEntity;
 import deco2800.skyfall.entities.EnemyEntity;
@@ -10,6 +11,7 @@ import deco2800.skyfall.entities.Projectile;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
+import deco2800.skyfall.managers.SaveLoadInterface;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
@@ -27,9 +29,17 @@ import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
+import javax.persistence.Entity;
 
 /**
  * AbstractWorld is the Game AbstractWorld
@@ -37,7 +47,8 @@ import java.util.stream.Collectors;
  * It provides storage for the WorldEntities and other universal world level
  * items.
  */
-public class World implements TouchDownObserver {
+@Entity
+public class World implements TouchDownObserver , Serializable, SaveLoadInterface {
 
 
     protected int width;
@@ -609,5 +620,10 @@ public class World implements TouchDownObserver {
      */
     public LinkedHashMap<VoronoiEdge, BeachBiome> getBeachEdges() {
         return this.beachEdges;
+    }
+
+    @Override
+    public String formatData() {
+        return new Gson().toJson(this);
     }
 }

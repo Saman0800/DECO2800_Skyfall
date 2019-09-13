@@ -1,6 +1,13 @@
 package deco2800.skyfall.buildings;
 
+import com.badlogic.gdx.utils.Json;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.annotations.Expose;
 import deco2800.skyfall.entities.structures.Structure;
+import deco2800.skyfall.managers.SaveLoadInterface;
 import deco2800.skyfall.worlds.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +24,7 @@ import deco2800.skyfall.entities.AbstractEntity;
  *  A BuildingEntity is an base class for all building entity subclass,
  *  including basic information that a building object should contains.
  */
-public class BuildingEntity extends AbstractEntity implements Structure {
+public class BuildingEntity extends AbstractEntity implements Structure, SaveLoadInterface {
 
     // a debug logger
     private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);
@@ -28,13 +35,16 @@ public class BuildingEntity extends AbstractEntity implements Structure {
     private int buildTime;
     private Map<String, Integer> buildCost;
     private Map<String, String> buildingTextures;
+    @Expose
     private int maxHealth;
 
     // changeable information for a specific building
     private float col;
     private float row;
 
+    @Expose
     private int length;
+
     private int width;
     private int level;
     private boolean upgradable;
@@ -288,11 +298,10 @@ public class BuildingEntity extends AbstractEntity implements Structure {
     }
 
 
+    @Override
+    public String formatData() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
 
-
-
-
-
-
-
+    }
 }
