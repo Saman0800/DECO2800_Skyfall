@@ -1,6 +1,9 @@
 package deco2800.skyfall.worlds.world;
 
 import com.badlogic.gdx.Gdx;
+import deco2800.skyfall.entities.*;
+import deco2800.skyfall.gamemenu.GameMenuScreen;
+
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.AgentEntity;
 import deco2800.skyfall.entities.EnemyEntity;
@@ -566,6 +569,9 @@ public class World implements TouchDownObserver {
                 for (AbstractEntity drop : drops) {
                     addEntity(drop);
                 }
+            } else if (entity instanceof Chest) {
+                GameMenuManager menuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+                menuManager.open(new GameMenuScreen(menuManager).getChestTable((Chest)entity));
             } else if (entity instanceof Weapon) {
                 MainCharacter mc = gmm.getMainCharacter();
                 if (tile.getCoordinates().distance(mc.getPosition()) > 2) {

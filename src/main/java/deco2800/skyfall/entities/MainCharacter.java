@@ -1,5 +1,9 @@
 package deco2800.skyfall.entities;
 
+import com.badlogic.gdx.audio.Sound;
+import deco2800.skyfall.buildings.BuildingFactory;
+import deco2800.skyfall.entities.spells.SpellFactory;
+import deco2800.skyfall.entities.structures.BuildingType;
 import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.weapons.Sword;
 import deco2800.skyfall.entities.weapons.Weapon;
@@ -15,10 +19,8 @@ import deco2800.skyfall.gui.HealthCircle;
 import deco2800.skyfall.gui.ManaBar;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.*;
-import deco2800.skyfall.resources.GoldPiece;
-import deco2800.skyfall.resources.HealthResources;
+import deco2800.skyfall.resources.*;
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.util.*;
@@ -40,7 +42,13 @@ public class MainCharacter extends Peon
     private InventoryManager inventories;
 
     //List of blueprints that the player has learned.
-    private List<String> blueprintsLearned;
+
+    private List<Blueprint> blueprintsLearned;
+
+    private BuildingFactory tempFactory;
+
+
+
 
     //The name of the item to be created.
     private String itemToCreate;
@@ -196,6 +204,8 @@ public class MainCharacter extends Peon
         velHistoryX = new ArrayList<>();
         velHistoryY = new ArrayList<>();
         blueprintsLearned = new ArrayList<>();
+        tempFactory = new BuildingFactory();
+
 
 
         isMoving = false;
@@ -862,12 +872,10 @@ public class MainCharacter extends Peon
         }
 
         /**
-         * Removes one instance of a gold piece in the pouch.
-         * @param gold The gold piece to be removed from the pouch.
+         * Removes one instance of a gold piece in the pouch with a specific value.
+         * @param goldValue The value of the gold piece to be removed from the pouch.
          */
-        public void removeGold (GoldPiece gold){
-            // store the gold's value (5G, 10G etc) as a variable
-            Integer goldValue = gold.getValue();
+        public void removeGold(Integer goldValue) {
 
             // if this gold value does not exist in the pouch
             if (!(goldPouch.containsKey(goldValue))) {
@@ -1208,6 +1216,7 @@ public class MainCharacter extends Peon
 
                     if (entity instanceof Tree) {
 
+
                         if (this.getPosition().distance(entity.getPosition()) <= 1) {
                             playerHatchet.farmTree((Tree) entity);
                             logger.info(this.inventories.toString());
@@ -1246,10 +1255,11 @@ public class MainCharacter extends Peon
          * A getter method for the blueprints that the player has learned.
          * @return the learned blueprints list
          */
-        public List<String> getBlueprintsLearned () {
+    public List<Blueprint> getBlueprintsLearned () {
+            blueprintsLearned.add(new Hatchet());
 
-            return this.blueprintsLearned;
-        }
+        return this.blueprintsLearned;
+    }
 
         /***
          * A getter method to get the Item to be created.
@@ -1268,34 +1278,61 @@ public class MainCharacter extends Peon
         }
 
         /***
-         * Creates a manufactured item. Checks if required resources are in the inventory.
-         * if yes, creates the item, adds it to the player's inventory
-         * and deducts the required resource from inventory
+         * Creates an item if the player has the blueprint. Checks if required resources
+         * are in the inventory. if yes, creates the item, adds it to the player's
+         * inventoryand deducts the required resource from inventory
          */
-        public void createItem (ManufacturedResources newItem){
-            if (getBlueprintsLearned().contains(newItem.getName())) {
-                if (newItem.getRequiredMetal() >= this.getInventoryManager().
-                        getAmount("Metal")) {
-                    logger.info("You don't have enough Metal");
+    public void createItem (Blueprint newItem) {
 
-                } else if (newItem.getRequiredWood() >= this.getInventoryManager().
-                        getAmount("Wood")) {
-                    logger.info("You don't have enough Wood");
+            for (Blueprint blueprint: getBlueprintsLearned()){
+                if (blueprint.getClass()== newItem.getClass()) {
 
-                } else if (newItem.getRequiredStone() >= this.getInventoryManager().
-                        getAmount("Stone")) {
-                    logger.info("You don't have enough Stone");
+                    if (newItem.getRequiredMetal() > this.getInventoryManager().
+                            getAmount("Metal")) {
+                        logger.info("You don't have enough Metal");
 
-                } else {
-                    this.getInventoryManager().inventoryAdd(new Hatchet(this));
+                    } else if (newItem.getRequiredWood() > this.getInventoryManager().
+                            getAmount("Wood")) {
+                        logger.info("You don't have enough Wood");
 
-                    this.getInventoryManager().inventoryDropMultiple("Metal", newItem.getRequiredMetal());
-                    this.getInventoryManager().inventoryDropMultiple("Stone", newItem.getRequiredStone());
-                    this.getInventoryManager().inventoryDropMultiple("Wood", newItem.getRequiredWood());
+                    } else if (newItem.getRequiredStone() > this.getInventoryManager().
+                            getAmount("Stone")) {
+                        logger.info("You don't have enough Stone");
 
+                    } else {
+                        switch(newItem.getName()){
+                            case "Hatchet":
+                                this.getInventoryManager().inventoryAdd(new Hatchet());
+                            case "Pick Axe":
+                                this.getInventoryManager().inventoryAdd(new PickAxe());
+
+                                //These are only placeholders and will change once coordinated
+                                //with Building team
+                            case "Cabin":
+                                tempFactory.createCabin(this.getCol(),this.getRow());
+                            case "StorageUnit":
+                                tempFactory.createStorageUnit(this.getCol(),this.getRow());
+                            case "TownCentre":
+                                tempFactory.createTownCentreBuilding(this.getCol(),this.getRow());
+                            case "Fence":
+                                tempFactory.createFenceBuilding(this.getCol(),this.getRow());
+                            case "SafeHouse":
+                                tempFactory.createSafeHouse(this.getCol(),this.getRow());
+                            case "WatchTower":
+                                tempFactory.createWatchTower(this.getCol(),this.getRow());
+                            case "Castle":
+                                tempFactory.createCastle(this.getCol(),this.getRow());
+                        }
+                        this.getInventoryManager().inventoryDropMultiple
+                                ("Metal", newItem.getRequiredMetal());
+                        this.getInventoryManager().inventoryDropMultiple
+                                ("Stone", newItem.getRequiredStone());
+                        this.getInventoryManager().inventoryDropMultiple
+                                ("Wood", newItem.getRequiredWood());
+                    }
                 }
             }
-        }
+    }
 
         /**
          * Sets the animations.

@@ -259,6 +259,16 @@ public class InventoryManager extends TickableManager {
         }
     }
 
+    public void inventoryAddMultiple(Map<String, List<Item>> items) {
+        for (Map.Entry<String, List<Item>> e : items.entrySet()) {
+            if (inventory.get(e.getKey()) != null) {
+                inventory.get(e.getKey()).addAll(e.getValue());
+            } else {
+                inventory.put(e.getKey(), e.getValue());
+            }
+        }
+    }
+
     /**
      * Removes an item from the inventory and returns it. If the item is the
      * last of a specific type present in the inventory (and quick access
