@@ -53,6 +53,9 @@ public class BuildingWidgets {
     private TextButton destroyBtn;
     private ClickListener destroyListener;
 
+    private TextButton interactBtn;
+    private ClickListener interactListener;
+
     // the game camera position
     private HexVector cameraPos;
 
@@ -85,6 +88,7 @@ public class BuildingWidgets {
             this.label = new Label("Name", this.skin);
             this.healthBar = createHealthBar();
             this.upgradeBtn = new TextButton("Upgrade", this.skin);
+            this.interactBtn = new TextButton("Interact", this.skin);
             this.destroyBtn = new TextButton("Destroy", this.skin);
 
             this.menu.setVisible(false);
@@ -94,6 +98,8 @@ public class BuildingWidgets {
             this.menu.add(healthBar).padBottom(3).width(100);
             this.menu.row();
             this.menu.add(upgradeBtn).padBottom(3).width(100);
+            this.menu.row();
+            this.menu.add(interactBtn).padBottom(3).width(100);
             this.menu.row();
             this.menu.add(destroyBtn).width(100);
             this.stage.addActor(this.menu);
@@ -194,6 +200,37 @@ public class BuildingWidgets {
         world.removeEntity(building);
     }
 
+    /**
+     * Interact methods for buildings
+     * @param building building selected from world.
+     */
+    private void interactBuilding(BuildingEntity building) {
+        switch(building.getBuildingType()) {
+            default:
+                break;
+            case CABIN:
+                building.cabinInteract();
+                break;
+            case FENCE:
+                building.fenceInteract();
+                break;
+            case CASTLE:
+                building.castleInteract();
+                break;
+            case SAFEHOUSE:
+                building.safehouseInteract();
+                break;
+            case TOWNCENTRE:
+                building.towncentreInteract();
+                break;
+            case WATCHTOWER:
+                building.watchtowerInteract();
+                break;
+            case STORAGE_UNIT:
+                break;
+        }
+    }
+
     private void setMenu(BuildingEntity building) {
         float[] wCords = WorldUtil.colRowToWorldCords(building.getCol(), building.getRow());
         cameraPos.setCol(gm.getCamera().position.x);
@@ -224,6 +261,18 @@ public class BuildingWidgets {
         });
     }
 
+    private void setInteractBtn(BuildingEntity building) {
+        if (interactListener != null) {
+            interactBtn.removeListener(interactListener);
+        }
+        interactBtn.addListener(interactListener = new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                interactBuilding(building);
+            }
+        });
+    }
+
     private void setDestroyBtn(BuildingEntity building) {
         if (destroyListener != null) {
             destroyBtn.removeListener(destroyListener);
@@ -246,6 +295,7 @@ public class BuildingWidgets {
         setMenu(building);
         setHealthBar(building);
         setUpgradeBtn(building);
+        setInteractBtn(building);
         setDestroyBtn(building);
     }
 
