@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.BGMManager;
 import deco2800.skyfall.managers.GameMenuManager;
@@ -96,12 +95,14 @@ public class SettingsTable extends AbstractPopUpElement{
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Map<String, Sound> soundLoops = soundManager.getSoundMap();
+
                 if (soundFX.isChecked()) {
                     SoundManager.setPaused(true);
 
                     for (String sound : soundLoops.keySet()) {
                         SoundManager.stopSound(sound);
                     }
+
                 } else {
                     SoundManager.setPaused(false);
 
