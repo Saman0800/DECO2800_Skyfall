@@ -21,7 +21,7 @@ import deco2800.skyfall.entities.AbstractEntity;
  */
 public class BuildingEntity extends AbstractEntity implements Blueprint {
 
-    // a debug logger
+    // a logger
     private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);
     // a building object name
     private static final String ENTITY_ID_STRING = "buildingEntityID";
@@ -78,12 +78,13 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
         this.animations = new HashMap<>();
         this.buildingType = buildingType;
         this.buildCost = buildingType.getBuildCost();
-        this.setObjectName(buildingType.getName() + this.getEntityID());
+        this.setObjectName(buildingType.getName());
         this.setTexture(buildingType.getMainTexture());
         this.setBuildTime(buildingType.getBuildTime());
         this.setInitialHealth(buildingType.getMaxHealth());
         this.setWidth(buildingType.getSizeY());
         this.setLength(buildingType.getSizeX());
+        this.setBuildingLevel(1);
         this.setCollider();
 
         if (!WorldUtil.validColRow(new HexVector(col, row))) {
