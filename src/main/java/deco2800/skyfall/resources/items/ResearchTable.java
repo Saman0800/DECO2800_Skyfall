@@ -9,10 +9,8 @@ import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.ManufacturedResources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 /***
  * A research table item. the player can use a research table to buy blueprints
@@ -47,8 +45,8 @@ public class ResearchTable extends ManufacturedResources implements Blueprint,
         super(owner);
 
         creatablesList = new ArrayList<>();
-        creatablesList.add("Hatchet");
-        creatablesList.add("Pick Axe");
+        creatablesList.addAll(Arrays.asList("Hatchet","Pick Axe","Cabin","StorageUnit","TownCentre",
+                "Fence","SafeHouse","WatchTower","Castle"));
         playerInvenotry = GameManager.getManagerFromInstance(InventoryManager.class);
         goldCost = 25;
     }

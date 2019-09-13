@@ -42,6 +42,7 @@ public class ResearchTableTest {
         expectedCreatables = new ArrayList<>();
         expectedCreatables.add("Hatchet");
         expectedCreatables.add("Pick Axe");
+
         assertEquals(Arrays.asList("Hatchet","Pick Axe"),testTable.getCreatableItems());
     }
 
@@ -49,7 +50,9 @@ public class ResearchTableTest {
     public void buyBlueprint() {
         System.out.println(testPlayer.getGoldPouchTotalValue());
         testTable.buyBlueprint();
-        assertEquals(Arrays.asList("Pick Axe"),testTable.getCreatableItems());
+        assertEquals(Arrays.asList("Pick Axe","Cabin","StorageUnit","TownCentre",
+                "Fence","SafeHouse","WatchTower","Castle"),
+                testTable.getCreatableItems());
         assertEquals(Arrays.asList("Hatchet"),testPlayer.getBlueprintsLearned());
     }
 
