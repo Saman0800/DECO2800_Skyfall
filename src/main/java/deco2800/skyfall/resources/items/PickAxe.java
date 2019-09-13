@@ -1,8 +1,10 @@
 package deco2800.skyfall.resources.items;
 
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
@@ -17,7 +19,7 @@ import java.util.Map;
 public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
     private Map<String, Integer> allRequirements;
-    private boolean blueprintLearned = false;
+    private static boolean blueprintLearned = false;
 
     /***
      * Create a Pick Axe with the name Pick Axe.
@@ -109,13 +111,13 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
         }
 
         else {
-            owner.getInventoryManager().inventoryAdd(new Stone());
+            GameManager.getManagerFromInstance(InventoryManager.class).add(new Stone());
 
             //lowering the possibility of gaining metal
             double x = (int) (Math.random() * ((1 - 0) + 1));
 
             if (x == 1) {
-                owner.getInventoryManager().inventoryAdd(new Metal());
+                GameManager.getManagerFromInstance(InventoryManager.class).add(new Metal());
             }
 
             rockToFarm.setHealth(rockToFarm.getHealth() - 10);
@@ -179,4 +181,25 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
         return allRequirements;
     }
 
+    /**
+     * a getter method to check if a player has learned the blueprint
+     *
+     * @return true if the player has learned the blueprint.
+     */
+    @Override
+    public boolean isBlueprintLearned() {
+
+        return blueprintLearned;
+    }
+
+    @Override
+    public void use(HexVector position){
+        for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+            if (entity instanceof Rock) {
+                if (position.distance(entity.getPosition()) <= 1.5) {
+                    this.farmRock((Rock) entity);
+                }
+            }
+        }
+    }
 }

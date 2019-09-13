@@ -7,6 +7,7 @@ import deco2800.skyfall.entities.weapons.Spear;
 import deco2800.skyfall.entities.weapons.Sword;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.*;
 
@@ -28,7 +29,7 @@ public class WorldDirector {
      * @return The builder that was passed in
      * @author Ontonator
      */
-    public static WorldBuilder constructNBiomeSinglePlayerWorld(WorldBuilder builder, int n){
+    public static WorldBuilder constructNBiomeSinglePlayerWorld(WorldBuilder builder, int n, boolean renderUI){
         builder.setType("single_player");
         if (n < 1 || n > 5) {
             throw new IllegalArgumentException("n must be between 1 and 5");
@@ -61,8 +62,17 @@ public class WorldDirector {
 
         MainCharacter mainCharacter = new MainCharacter(0,0,0.05f, "Main Piece", 10);
 
+        if (renderUI) {
+            StatisticsManager sm = new StatisticsManager(mainCharacter);
+            GameManager.addManagerToInstance(sm);
+            GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
+            gmm.addStatsManager(sm);
+            gmm.drawAllElements();
+        }
+
+
         builder.addEntity(mainCharacter);
-        GameManager.getManagerFromInstance(GameMenuManager.class).setMainCharacter(mainCharacter);
+        //GameManager.getManagerFromInstance(GameMenuManager.class).setMainCharacter(mainCharacter);
 
         builder.addEntity(new Spider(-8f, -1f, mainCharacter));
         builder.addEntity(new Robot(-4, -2, mainCharacter));
@@ -87,7 +97,7 @@ public class WorldDirector {
         MainCharacter mainCharacter = new MainCharacter(0,0,0.05f, "Main Piece", 10);
 
         builder.addEntity(mainCharacter);
-        GameManager.getManagerFromInstance(GameMenuManager.class).setMainCharacter(mainCharacter);
+//        GameManager.getManagerFromInstance(GameMenuManager.class).setMainCharacter(mainCharacter);
 
         builder.addEntity(new Spider(-4f, -1f, mainCharacter));
         builder.addEntity(new Robot(-4, -2, mainCharacter));

@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import deco2800.skyfall.buildings.BuildingFactory;
-import deco2800.skyfall.gamemenu.GameMenuScreen;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.Peon;
 import deco2800.skyfall.handlers.KeyboardManager;
@@ -104,7 +103,7 @@ public class GameScreen implements Screen, KeyDownObserver {
             } else {
 
                 //Creating the world
-                world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 5).getWorld();
+                world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 5, true).getWorld();
             }
             GameManager.get().getManager(NetworkManager.class).startHosting("host");
         }
@@ -154,9 +153,6 @@ public class GameScreen implements Screen, KeyDownObserver {
             return (float) (normalise * cosEval + A * C);
         };
         ambientIntensity = new FunctionalSpectralValue(intensityFunction, gameEnvironManag);
-
-        GameMenuScreen gamemenuScreen = new GameMenuScreen(gameMenuManager);
-        gamemenuScreen.show();
 
         PathFindingService pathFindingService = new PathFindingService();
 
@@ -322,7 +318,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         if (keycode == Input.Keys.F5) {
 
             //Create a random world
-            world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 3).getWorld();
+            world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 3, true).getWorld();
 
             AbstractEntity.resetID();
             Tile.resetID();

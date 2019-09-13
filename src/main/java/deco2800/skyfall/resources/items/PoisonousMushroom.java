@@ -70,7 +70,10 @@ public class PoisonousMushroom extends HealthResources implements Item {
         return "" + subtype + ":" + name;
     }
 
+    @Override
+    public void use(HexVector position){
 
+    }
 
 
 

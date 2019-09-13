@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities.weapons;
 
 import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 
 public class Sword extends Weapon implements Item, IWeapon {
@@ -124,6 +125,11 @@ public class Sword extends Weapon implements Item, IWeapon {
     @Override
     public void onTick(long i) {
         // Auto-generated method stub
+    }
+
+    @Override
+    public void use(HexVector position){
+
     }
 }
 
