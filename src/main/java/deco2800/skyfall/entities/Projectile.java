@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import com.badlogic.gdx.math.Vector2;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 
@@ -69,7 +70,6 @@ public class Projectile extends AgentEntity {
 
         this.setCollider();
 
-        //TODO: rotate sprite in angle facing.
     }
 
     /**
@@ -109,6 +109,11 @@ public class Projectile extends AgentEntity {
             position.moveToward(movementPosition,speed);
         }
 
+    }
+
+    @Override
+    public boolean collidesWith(AbstractEntity entity) {
+        return super.collidesWith(entity);
     }
 
     /**
