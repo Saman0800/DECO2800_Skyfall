@@ -33,7 +33,7 @@ public class EnvironmentManager extends TickableManager {
    private boolean isDay;
 
    // Biome player is currently in
-   public String biome;
+   public String biome = "forest";
 
    // Time to display on screen
    long displayHours;
@@ -302,6 +302,7 @@ public class EnvironmentManager extends TickableManager {
     *
     */
    public void setFilename() {
+      // FIXME What is this meant to do? This is just a getter.
       currentBiome(); // Check current biome
 
       // Check time of day and biome, and change files accordingly

@@ -4,7 +4,6 @@ import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.*;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
-import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldParameters;
@@ -59,7 +58,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
     private List<VoronoiEdge> riverEdges;
     private List<VoronoiEdge> beachEdges;
 
-    // TODO Remove `noLakes` parameter.
+    // TODO Remove `noLakes` parameter (replace with `lakeSizes.length`).
 
     /**
      * Creates a {@code BiomeGenerator} for a list of nodes (but does not start the generation).
@@ -70,8 +69,8 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      *
      * @throws NotEnoughPointsException if there are not enough non-border nodes from which to form the biomes
      */
-    public BiomeGenerator(World world, List<WorldGenNode> nodes, List<VoronoiEdge> voronoiEdges,
-                          List<Tile> tiles, Random random, WorldParameters worldParameters)
+    public BiomeGenerator(World world, List<WorldGenNode> nodes, List<VoronoiEdge> voronoiEdges, Random random,
+                          WorldParameters worldParameters)
             throws NotEnoughPointsException {
         Objects.requireNonNull(nodes, "nodes must not be null");
         Objects.requireNonNull(random, "random must not be null");
@@ -149,8 +148,10 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 generateLakes(lakeSizes, noLakes);
                 populateRealBiomes();
                 generateBeaches();
+                // FIXME:Ontonator Check that this still works.
                 generateRivers(noRivers, voronoiEdges);
-                ensureContiguity();
+                // FIXME:Ontonator Adapt this to work with chunks.
+                // ensureContiguity();
 
                 return;
             } catch (DeadEndGenerationException e) {
@@ -181,7 +182,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      */
     private void growBiomes() throws DeadEndGenerationException {
         for (int biomeID = 0; biomeID < biomeSizes.length; biomeID++) {
-            BiomeInProgress biome = new BiomeInProgress(biomeID);
+            BiomeInProgress biome = new BiomeInProgress(biomeID, realBiomes.get(biomeID));
             biomes.add(biome);
 
             if (biomeID == 0) {
@@ -204,9 +205,12 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      * Grows the ocean biome from the outside of the world.
      */
     private void growOcean() {
+        OceanBiome realBiome = new OceanBiome(random);
+        realBiomes.add(realBiome);
+
         // All nodes on the outer edge of the map are ocean nodes.
         // Since the id is `biomeSizes.length`,
-        BiomeInProgress ocean = new BiomeInProgress(biomeSizes.length);
+        BiomeInProgress ocean = new BiomeInProgress(biomeSizes.length, realBiome);
         biomes.add(ocean);
         for (WorldGenNode node : nodes) {
             if (node.isBorderNode()) {
@@ -214,8 +218,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             }
         }
         ocean.floodGrowBiome();
-
-        realBiomes.add(new OceanBiome());
     }
 
     /**
@@ -246,7 +248,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      * Converts the coastal region of the island into a beach biome.
      */
     private void generateBeaches() {
-
+        // FIXME:Ontonator Check that this still works.
         LinkedHashMap<VoronoiEdge, BeachBiome> beachEdges = new LinkedHashMap<>();
 
         for (VoronoiEdge edge : voronoiEdges) {
@@ -269,7 +271,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
 
             // Sets the parent biome to the one that isn't the ocean
             AbstractBiome parentBiome = realBiomes.get(nodesBiomes.get(edge.getEdgeNodes().get(1 - oceanIndex)).id);
-            BeachBiome beach = new BeachBiome(parentBiome);
+            BeachBiome beach = new BeachBiome(parentBiome, random);
             realBiomes.add(beach);
             beachEdges.put(edge, beach);
         }
@@ -303,7 +305,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 if (distance <= beachWidth *
                         NoiseGenerator.fade(distanceGen.getOctavedPerlinValue(tile.getCol(), tile.getRow()))) {
                     BeachBiome biome = beachesForBiomes.computeIfAbsent(tile.getBiome(), parentBiome -> {
-                        BeachBiome beachBiome = new BeachBiome(parentBiome);
+                        BeachBiome beachBiome = new BeachBiome(parentBiome, random);
                         realBiomes.add(beachBiome);
                         return beachBiome;
                     });
@@ -393,7 +395,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             }
 
             // Add the lake
-            lakesFound.add(new BiomeInProgress(biomes.size() + i));
+            lakesFound.add(new BiomeInProgress(biomes.size() + i, null));
             chosenNodes.add(nodesFound);
             tempLakeNodes.addAll(nodesFound);
 
@@ -418,7 +420,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             }
 
             maxNodesBiomes.add(maxNodesBiome);
-
         }
 
         for (int i = 0; i < lakesFound.size(); i++) {
@@ -426,7 +427,9 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             biomes.add(lake);
             // Add the lake to the list of real biomes in the same position in
             // the list
-            realBiomes.add(new LakeBiome(realBiomes.get(maxNodesBiomes.get(i).id)));
+            LakeBiome realBiome = new LakeBiome(realBiomes.get(maxNodesBiomes.get(i).id), random);
+            realBiomes.add(realBiome);
+            lake.realBiome = realBiome;
             for (WorldGenNode node : chosenNodes.get(i)) {
                 // Update the BiomeInProgress that the node is in
                 nodesBiomes.get(node).nodes.remove(node);
@@ -508,6 +511,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
 
             List<AbstractBiome> parentBiomes = new ArrayList<>();
             // Create a river biome and add all tiles for each edge
+            // FIXME:Ontonator Check that this still works.
             for (VoronoiEdge edge : riverEdges) {
                 AbstractBiome parentBiome = realBiomes.get(nodesBiomes
                         .get(edge.getEdgeNodes().get(random.nextInt(2))).id);
@@ -577,7 +581,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
 
         for (int i = 0; i < allRiverEdges.size(); i++) {
             if (!nonDuplicateEdges.containsKey(allRiverEdges.get(i))) {
-                RiverBiome river = new RiverBiome(allParentBiomes.get(i));
+                RiverBiome river = new RiverBiome(allParentBiomes.get(i), random);
                 realBiomes.add(river);
                 nonDuplicateEdges.put(allRiverEdges.get(i), river);
             }
@@ -661,7 +665,8 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      * @throws DeadEndGenerationException if too many tiles from a biome are lost
      */
     private void ensureContiguity() throws DeadEndGenerationException {
-        // TODO Optimise search using border nodes only.
+        // TODO:Ontonator Adjust this to work chunk-by-chunk.
+        // TODO:Ontonator Optimise search using border nodes only.
 
         HashSet<Tile> removedTiles = new HashSet<>();
 
@@ -871,12 +876,18 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
         private ArrayList<WorldGenNode> borderNodes;
 
         /**
+         * The biome associated with this {@code BiomeInProgress}.
+         */
+        private AbstractBiome realBiome;
+
+        /**
          * Constructs a new {@code BiomeInProgress} with the specified id.
          *
          * @param id the id of the biome (to check the biome size)
          */
-        private BiomeInProgress(int id) {
+        private BiomeInProgress(int id, AbstractBiome realBiome) {
             this.id = id;
+            this.realBiome = realBiome;
 
             nodes = new ArrayList<>();
             borderNodes = new ArrayList<>();
@@ -932,6 +943,8 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             nodes.add(node);
             nodesBiomes.put(node, this);
             usedNodes.add(node);
+
+            node.setBiome(realBiome);
 
             // Reassess the border-node status of the surrounding nodes.
             for (WorldGenNode adjacentNode : node.getNeighbours()) {

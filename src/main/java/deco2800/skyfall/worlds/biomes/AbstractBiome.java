@@ -1,6 +1,7 @@
 package deco2800.skyfall.worlds.biomes;
 
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -75,6 +76,7 @@ public abstract class AbstractBiome {
         }
         tiles.add(tile);
         tile.setBiome(this);
+        setTileTexture(tile);
     }
 
     /**
@@ -122,9 +124,9 @@ public abstract class AbstractBiome {
     }
 
     /**
+     * Adds this biome its descendants to the provided list.
      *
-     *
-     * @param biomes
+     * @param biomes the list to which the biomes are added
      */
     private void aggregateDescendantBiomes(List<AbstractBiome> biomes) {
         biomes.add(this);
@@ -144,9 +146,7 @@ public abstract class AbstractBiome {
     }
 
     /**
-     * Sets all the textures within a biome.
-     *
-     * @param random the RNG to use to generate the textures
+     * Sets the texture of the given tile assuming it is in this biome.
      */
-    public abstract void setTileTextures(Random random);
+    public abstract void setTileTexture(Tile tile);
 }
