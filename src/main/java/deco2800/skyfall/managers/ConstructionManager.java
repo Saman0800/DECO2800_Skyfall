@@ -306,7 +306,14 @@ public class ConstructionManager extends TickableManager {
      */
     public void build(World world, int x, int y) {
         BuildingEntity buildingToBePlaced = selectBuilding(buildingID, x, y);
-        buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
+        //Permissions
+        if (invCheck(buildingToBePlaced, GameManager.getManagerFromInstance(InventoryManager.class))){
+            buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
+            invRemove(buildingToBePlaced,GameManager.getManagerFromInstance(InventoryManager.class));
+        } else {
+            // TO DO:outprint that a building cant be selected!
+        }
+
 
         setNull();
     }
@@ -529,7 +536,7 @@ public class ConstructionManager extends TickableManager {
      * return a list of how much of each relevant resources the player owns
      * When given a structure class gets its cost and compares it to the players inventory
      *
-     * @param building         - AbstractBuilding
+     * @param building         - Building
      * @param inventoryManager - player's inventory
      * @return True, if the player's inventory meets the inventory requirements, otherwise false
      */
@@ -555,11 +562,11 @@ public class ConstructionManager extends TickableManager {
     /**
      * Takes in a structure class and removes the material cost from player inventory
      *
-     * @param building         - AbstractBuilding
+     * @param building         - Building
      * @param inventoryManager - player's inventory
      * @pre: Assume that building has been verified against inventoryAmount in inventoryManager
      */
-    public void invRemove(AbstractBuilding building, InventoryManager inventoryManager) {
+    public void invRemove(BuildingEntity building, InventoryManager inventoryManager) {
         Map<String, Integer> buildingCost = building.getCost();
         for (Map.Entry<String, Integer> entry : buildingCost.entrySet()) {
 
@@ -579,7 +586,7 @@ public class ConstructionManager extends TickableManager {
      *
      * @param buildings
      */
-    public boolean mergeBuilding(AbstractBuilding[] buildings, InventoryManager inventoryManager) {
+    public boolean mergeBuilding(BuildingEntity[] buildings, InventoryManager inventoryManager) {
 
         if (buildings.length == 0) return false;
         String className = buildings[0].getClass().getName();
@@ -594,7 +601,7 @@ public class ConstructionManager extends TickableManager {
             }
         }
 
-        buildings[0].placeBuilding(buildings[0].getXcoord(), buildings[0].getYcoord(),
+        buildings[0].placeBuilding(buildings[0].getCol(), buildings[0].getRow(),
                 buildings.length, GameManager.get().getWorld());
 
         return true;

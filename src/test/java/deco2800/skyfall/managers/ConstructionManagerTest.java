@@ -39,6 +39,10 @@ public class ConstructionManagerTest {
         BuildingEntity cabin = factory.createCabin(1,1);
 
         InventoryManager inventoryManager = new InventoryManager();
+
+        Assert.assertEquals(0f, cabin.getCol(), 0.0);
+
+
         //Boolean result = cmgr.invCheck(cabin, inventoryManager);
 
         //Assert.assertTrue(result);
@@ -94,7 +98,7 @@ public class ConstructionManagerTest {
 
     @Test
     public void testMergeBuildingNegative() {
-        AbstractBuilding[] buildings = {
+        BuildingEntity[] buildings = {
             //    new WallBuilding(1, 1),
             //    new TownCentreBuilding(3, 5)
         };

@@ -128,6 +128,7 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
         // do nothing so far
     }
 
+
     /**
      * @param x - X coordinate
      * @param y - Y coordinate
@@ -364,7 +365,7 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
      */
     @Override
     public boolean isBlueprintLearned() {
-        //not finished
+        //do nothing
         return true;
     }
 
