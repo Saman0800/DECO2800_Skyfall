@@ -238,8 +238,6 @@ public class EnvironmentManager extends TickableManager {
             updateTimeListeners(hours);
         }
 
-        System.out.println("" + hours + ":" + minutes);
-
         //Update isDay boolean
         isDay();
     }
