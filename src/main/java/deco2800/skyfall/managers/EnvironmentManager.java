@@ -259,11 +259,9 @@ public class EnvironmentManager extends TickableManager {
          TOD = "pm";
       }
 
-      if (minutes < 10) {
-         return Long.toString(displayHours) + ":" + "0" + Long.toString(minutes) + TOD;
-      }
+      String prefix = minutes < 10 ? "0" : "";
 
-      return Long.toString(displayHours) + ":" + Long.toString(minutes) + TOD;
+      return Long.toString(displayHours) + ":" + prefix + Long.toString(minutes) + TOD;
    }
 
    /**
