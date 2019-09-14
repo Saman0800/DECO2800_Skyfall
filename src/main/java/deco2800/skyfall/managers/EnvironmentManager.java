@@ -21,6 +21,9 @@ public class EnvironmentManager extends TickableManager {
    // Seconds in a game day
    public long  minutes;
 
+   // Milliseconds since last time update
+   private long currentMillis;
+
    // Seasons in game
    private String season;
 
@@ -81,6 +84,7 @@ public class EnvironmentManager extends TickableManager {
       currentFile = "resources/sounds/forest_night.wav";
       timeListeners = new ArrayList<>();
       dayNightListeners = new ArrayList<>();
+      currentMillis = System.currentTimeMillis();
    }
 
    /**
@@ -163,13 +167,8 @@ public class EnvironmentManager extends TickableManager {
             player = entities.get(i);
             Tile currentTile = GameManager.get().getWorld().getTile(Math.round(player.getCol()),
                     Math.round(player.getRow()));
-            // If player coords don't match tile coords, currentTile returns null
-            // eg if player isn't exactly in the middle of a tile (walking between tiles), coords don't match
-            // So below if statement is needed
             if (currentTile != null) {
                biome = currentTile.getBiome().getBiomeName();
-            } else {
-               // Do nothing
             }
          }
       }
@@ -428,13 +427,14 @@ public class EnvironmentManager extends TickableManager {
    /**
     * On tick method for ticking managers with the TickableManager interface
     *
-    * @param i
+    * @param i long passed from GameManager
     */
    @Override
    public void onTick(long i) {
       long time = i;
 
-      if (System.currentTimeMillis() - time > 20) {
+      if (System.currentTimeMillis() - currentMillis > 1000) {
+         currentMillis = System.currentTimeMillis();
          time = System.currentTimeMillis();
       }
 
