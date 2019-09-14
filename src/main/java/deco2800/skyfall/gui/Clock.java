@@ -15,7 +15,6 @@ public class Clock {
     private Stage stage;
     private float positionX;
     private float positionY;
-    private Label label;
     private String clockTexture;
 
 
@@ -30,8 +29,6 @@ public class Clock {
 
         BitmapFont bitmapFont  = new BitmapFont();
         bitmapFont.getData().setScale(1f);
-
-        label = new Label("Time:", new Label.LabelStyle(bitmapFont, Color.WHITE));
 
         clockTexture = "dawn";
 
@@ -50,7 +47,6 @@ public class Clock {
         positionY = (stage.getCamera().position.y  +  (stage.getCamera().viewportHeight / 2) - 70);
 
         Clock.setPosition(positionX, positionY);
-        label.setPosition(positionX, positionY - 20);
     }
 
     /**
