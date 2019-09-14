@@ -13,6 +13,8 @@ import deco2800.skyfall.gui.WeatherGui;
 import deco2800.skyfall.gamemenu.*;
 import deco2800.skyfall.gamemenu.popupmenu.SettingsTable;
 import deco2800.skyfall.gamemenu.popupmenu.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -42,6 +44,7 @@ public class GameMenuManager extends TickableManager {
 
     //TODO: REMOVE WHEN REFACTOR IS FINISHED
     public final static boolean runRefactored  = true;
+    private Logger logger = LoggerFactory.getLogger(GameMenuManager.class);
 
     /**
      * Initialise a new GameMenuManager with stage and skin including the characters in the game.
@@ -207,7 +210,13 @@ public class GameMenuManager extends TickableManager {
      * @return Main character of the game.
      */
     public MainCharacter getMainCharacter() {
-        return sm.getCharacter();
+        try {
+            return sm.getCharacter();
+        } catch (NullPointerException npe) {
+            //TODO: Change to logger
+            logger.error("Please add stats manager returning default character");
+            return new MainCharacter(0,0,0.05f, "Main Piece", 10);
+        }
     }
     /**
      * Getter of all characters in the game.

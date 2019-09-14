@@ -14,8 +14,8 @@ import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDra
 
 public class AbstractPopUpElement extends AbstractUIElement {
     protected GameMenuManager gameMenuManager;
-    ImageButton exitButton;
-    protected boolean isVisible = false;
+    private ImageButton exitButton;
+    private boolean isVisible = false;
 
 
     public void hide() {
@@ -43,7 +43,6 @@ public class AbstractPopUpElement extends AbstractUIElement {
     }
 
     public void show(){
-        System.out.println("showing exit");
         exitButton.setVisible(true);
         isVisible = true;
         pause();
@@ -51,10 +50,13 @@ public class AbstractPopUpElement extends AbstractUIElement {
 
     @Override
     public void updatePosition() {
-        exitButton.setPosition(Gdx.graphics.getWidth() * 0.9f, Gdx.graphics.getHeight() * 0.9f);
+        float x  = stage.getCamera().position.x  + (stage.getCamera().viewportWidth / 2);
+        float y = stage.getCamera().position.y  +  (stage.getCamera().viewportHeight / 2);
+        exitButton.setPosition(x * 0.9f, y * 0.9f);
     }
 
-    public AbstractPopUpElement(Stage stage, ImageButton exitButton, String[] textureNames, TextureManager tm, GameMenuManager gameMenuManager) {
+    public AbstractPopUpElement(Stage stage, ImageButton exitButton, String[] textureNames,
+                                TextureManager tm, GameMenuManager gameMenuManager) {
         super(stage, textureNames, tm);
         this.exitButton = exitButton;
         this.gameMenuManager = gameMenuManager;
@@ -62,7 +64,6 @@ public class AbstractPopUpElement extends AbstractUIElement {
             exitButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    System.out.println("Clicked exit");
                     hide();
                 }
             });
@@ -72,9 +73,8 @@ public class AbstractPopUpElement extends AbstractUIElement {
     @Override
     public void draw() {
         if (exitButton != null) {
-            System.out.println("Drawing exit");
             exitButton.setSize(80, 80 * 207f / 305);
-            exitButton.setPosition(Gdx.graphics.getWidth() * 0.9f, Gdx.graphics.getHeight() * 0.9f);
+            updatePosition();
             exitButton.setVisible(false);
             stage.addActor(exitButton);
         }
