@@ -1,6 +1,9 @@
 package deco2800.skyfall.worlds.world;
 
 import com.badlogic.gdx.Gdx;
+import deco2800.skyfall.entities.*;
+import deco2800.skyfall.gamemenu.GameMenuScreen;
+
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.AgentEntity;
 import deco2800.skyfall.entities.EnemyEntity;
@@ -8,9 +11,12 @@ import deco2800.skyfall.entities.Harvestable;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.Projectile;
 import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
+import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
@@ -60,6 +66,11 @@ public class World implements TouchDownObserver {
     protected List<Tile> tilesToDelete = new CopyOnWriteArrayList<>();
 
     protected WorldParameters worldParameters;
+
+    private GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
+
+    //private MainCharacter mc = gmm.getMainCharacter();
+
 
     /**
      * The constructor for a world
@@ -545,11 +556,28 @@ public class World implements TouchDownObserver {
             }
 
             if (entity instanceof Harvestable) {
+                System.out.println(entity.getPosition());
+                System.out.println();
                 removeEntity(entity);
                 List<AbstractEntity> drops = ((Harvestable) entity).harvest(tile);
 
                 for (AbstractEntity drop : drops) {
                     addEntity(drop);
+                }
+            } else if (entity instanceof Chest) {
+                GameMenuManager menuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+                menuManager.open(new GameMenuScreen(menuManager).getChestTable((Chest)entity));
+            } else if (entity instanceof Weapon) {
+                MainCharacter mc = gmm.getMainCharacter();
+                if (tile.getCoordinates().distance(mc.getPosition()) > 2) {
+                    continue;
+                }
+                removeEntity(entity);
+                gmm.getInventory().inventoryAdd((Item) entity);
+                if (!mc.getEquipped().equals(((Weapon) entity).getName())) {
+                    gmm.getInventory().quickAccessRemove(mc.getEquipped());
+                    gmm.getInventory().quickAccessAdd(((Weapon) entity).getName());
+                    mc.setEquipped(((Weapon) entity).getName());
                 }
             }
         }

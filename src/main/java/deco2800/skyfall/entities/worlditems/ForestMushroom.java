@@ -46,18 +46,14 @@ public class ForestMushroom extends StaticEntity implements HasPointLight {
 
     @Override
     public void pointLightSetUp() {
-        float[] entityCoord = WorldUtil.colRowToWorldCords(getCol(), getRow());
+        int[] entityCoord = getRenderCentre();
         this.entityPointLight = new PointLight(new vec2(entityCoord[0], entityCoord[1]), new vec3(0.17f, 0.98f, 0.31f),
-                0.5f, 0.5f);
+                3.0f, 5.0f);
     }
 
     @Override
     public void updatePointLight() {
-        float mushroomRow = getRow();
-        float mushroomCol = getCol();
-        this.entityPointLight.setPosition(new vec2(mushroomRow, mushroomCol));
-
-        // The colour k and a values will always stay the same for the mushroom.
+        // All the values will always stay constant for the mushrooms.
         return;
     }
 

@@ -5,9 +5,8 @@ import deco2800.skyfall.worlds.Tile;
 import java.util.Random;
 import deco2800.skyfall.entities.HasHealth;
 
-public class Rock extends StaticEntity implements HasHealth {
+public class Rock extends StaticRock {
     private int health = 100;
-    private static final String ENTITY_ID_STRING = "rock";
 
     // TODO Remove this and replace the Random instance with the seeded Random as a
     // parameter.
@@ -16,12 +15,15 @@ public class Rock extends StaticEntity implements HasHealth {
     private static int nextRock = 1;
     private int metalAmount;
 
-    public Rock() {
+    public Rock(Tile tile, boolean obstructed) {
+        super(tile, obstructed, "rock" + nextRock);
+        nextRock = randomGen.nextInt(3) + 1;
         this.setObjectName(ENTITY_ID_STRING);
+        this.metalAmount = 15;
     }
 
-    public Rock(Tile tile, boolean obstructed) {
-        super(tile, 2, "rock" + nextRock, obstructed);
+    public Rock() {
+        super(new Tile(0.0f, 0.0f), true, "rock" + nextRock);
         nextRock = randomGen.nextInt(3) + 1;
         this.setObjectName(ENTITY_ID_STRING);
         this.metalAmount = 15;

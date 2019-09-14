@@ -224,6 +224,23 @@ public class GameScreen implements Screen, KeyDownObserver {
         shader = new ShaderWrapper("batch");
         //add shader to rendererDebug
         rendererDebug.setShader(shader);
+        // String vertexShader = Gdx.files.internal("resources/shaders/batch" + ".vert").readString();
+        // String fragmentShader = Gdx.files.internal("resources/shaders/batch" + ".frag").readString();
+        // shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
+
+        //Allows uniform variables to be in the fragment shader but not the vertex
+        // shaderProgram.pedantic = false;
+
+        // //A small log explaining how the shader compilation went
+        // System.out.println("\nShader program log:");
+        // System.out.print(shaderProgram.getLog());
+        // if (shaderProgram.isCompiled()) {
+        //     System.out.println("Shader program compiled");
+        //     SettingsFile gfxSettings = new SettingsFile("settings/gfx.ini");
+        //     extendedLightingActive = (gfxSettings.get("s_use_e_shader", 1) != 0);
+        //     gfxSettings.close();
+        // }
+        // System.out.print("\n");
     }
 
     /**
@@ -289,13 +306,14 @@ public class GameScreen implements Screen, KeyDownObserver {
         shader.setAmbientComponent(
                 new vec3(ambientRed.getIntensity(), ambientGreen.getIntensity(), ambientBlue.getIntensity()),
                 ambientIntensity.getIntensity());
-        shader.addPointLight(new PointLight(new vec2(0.0f, 0.0f), new vec3(1.0f, 0.729f, 0.3372f), 0.9f, 0.5f));
+        // shader.addPointLight(new PointLight(new vec2(0.0f, 0.0f), new vec3(1.0f, 0.729f, 0.3372f), 0.9f, 0.5f));
 
         // Add all the point lights of entities that implement the HasPointLight
         // interface into the batch
         for (AbstractEntity luminousEntity : GameManager.get().getWorld().getLuminousEntities()) {
             if (luminousEntity instanceof HasPointLight) {
                 HasPointLight tempEntity = (HasPointLight) luminousEntity;
+                tempEntity.updatePointLight();
                 PointLight entityPointLight = tempEntity.getPointLight();
                 if (entityPointLight != null) {
                     shader.addPointLight(entityPointLight);

@@ -47,6 +47,13 @@ public class PointLight {
     }
 
     /**
+     * Sets a new k value for the point light.
+     */
+    public void setKValue(float newK) {
+        this.k = newK;
+    }
+
+    /**
      * @return returns colour of light, each component is from [0,1]
      */
     public vec3 getColour() {

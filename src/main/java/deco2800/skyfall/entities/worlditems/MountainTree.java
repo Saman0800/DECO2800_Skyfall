@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class MountainTree extends StaticEntity implements Tickable, Harvestable {
+public class MountainTree extends StaticTree {
     private static final Logger LOG = LoggerFactory.getLogger(MountainTree.class);
     private int woodAmount; // amount of wood that each tree has
 
@@ -24,13 +24,12 @@ public class MountainTree extends StaticEntity implements Tickable, Harvestable 
 
     public MountainTree(float col, float row, int renderOrder, Map<HexVector, String> texture) {
         super(col, row, renderOrder, texture);
-        LOG.info("Making a tree at {}, {}", col, row);
         this.setTexture("tree_cubeH1A0");
         this.woodAmount = 15;
     }
 
     public MountainTree(Tile tile, boolean obstructed) {
-        super(tile, 5, "MTree" + nextTreeTexture, obstructed);
+        super(tile, obstructed, "MTree" + nextTreeTexture);
         nextTreeTexture = randomGen.nextInt(3) + 1;
         this.woodAmount = 15;
     }
