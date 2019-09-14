@@ -1,5 +1,6 @@
 package deco2800.skyfall.buildings;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.util.Collider;
@@ -21,7 +22,7 @@ import deco2800.skyfall.entities.AbstractEntity;
  */
 public class BuildingEntity extends AbstractEntity implements Blueprint {
 
-    // a debug logger
+    // a logger
     private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);
     // a building object name
     private static final String ENTITY_ID_STRING = "buildingEntityID";
@@ -78,12 +79,13 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
         this.animations = new HashMap<>();
         this.buildingType = buildingType;
         this.buildCost = buildingType.getBuildCost();
-        this.setObjectName(buildingType.getName() + this.getEntityID());
+        this.setObjectName(buildingType.getName());
         this.setTexture(buildingType.getMainTexture());
         this.setBuildTime(buildingType.getBuildTime());
         this.setInitialHealth(buildingType.getMaxHealth());
         this.setWidth(buildingType.getSizeY());
         this.setLength(buildingType.getSizeX());
+        this.setBuildingLevel(1);
         this.setCollider();
 
         if (!WorldUtil.validColRow(new HexVector(col, row))) {
@@ -98,18 +100,27 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
     */
     @Override
     public void setCollider() {
+        float[] cords = WorldUtil.colRowToWorldCords(position.getCol(), position.getRow());
+
+        // preferred way as setting a collider based on texture size
         try {
-            float[] cords = WorldUtil.colRowToWorldCords(position.getCol(), position.getRow());
-
-            // A way to set collider based on tiles
-            float tileSize = 100;
-            collider = new Collider(cords[0], cords[1], tileSize * getLength(), tileSize * getWidth());
-
-            // Preferred way to set collider based on texture, but so far a issue that texture is not found
-//            Texture texture = new Texture(getTexture());
-//            collider = new Collider(cords[0], cords[1], texture.getWidth(), texture.getHeight());
+            Texture texture = new Texture(getTexture());
+            collider = new Collider(cords[0], cords[1],
+                    texture.getWidth(), texture.getHeight());
+            return;
         } catch (Exception e) {
-            log.debug("Building texture do not exist when setting its collider");
+            log.info("Building {} can't set a collider with its texture",
+                    getObjectName() + getEntityID());
+        }
+
+        // preferred way is blocked, setting a collider based on tile
+        try {
+            float tileSize = 100;
+            collider = new Collider(cords[0], cords[1],
+                    tileSize * getLength(), tileSize * getWidth());
+        } catch (Exception e2) {
+            log.info("Building {} has a null collider",
+                    getObjectName() + getEntityID());
         }
     }
 
@@ -146,6 +157,12 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
     public void removeBuilding(World world) {
         world.removeEntity(this);
     }
+
+    /**
+     * Get the type of building
+     * @return building type
+     */
+    public BuildingType getBuildingType() { return this.buildingType; }
 
 
     /**
@@ -379,6 +396,20 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
     public void toggleBlueprintLearned() {
         //do nothing
     }
+
+    //TODO: Empty interact methods need to not be empty wooo!
+
+    public void cabinInteract() {}
+
+    public void fenceInteract() {}
+
+    public void castleInteract() {}
+
+    public void safehouseInteract() {}
+
+    public void towncentreInteract() {}
+
+    public void watchtowerInteract() {}
 
 
 }

@@ -13,8 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 
+import com.badlogic.gdx.utils.Timer;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
@@ -24,13 +26,15 @@ import deco2800.skyfall.worlds.Tile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+
 /**
  *  A BuildingWidgets is a UI widgets for existing building entities, and provides some handling
  *  methods shown on the screen to the existing building entities.
  */
 public class BuildingWidgets {
 
-    // a debug logger
+    // a logger
     private final transient Logger logger = LoggerFactory.getLogger(BuildingWidgets.class);
 
     private static BuildingWidgets instance = null;
@@ -48,6 +52,9 @@ public class BuildingWidgets {
     private ClickListener upgradeListener;
     private TextButton destroyBtn;
     private ClickListener destroyListener;
+
+    private TextButton interactBtn;
+    private ClickListener interactListener;
 
     // the game camera position
     private HexVector cameraPos;
@@ -80,30 +87,36 @@ public class BuildingWidgets {
             this.menu = new Table();
             this.label = new Label("Name", this.skin);
             this.healthBar = createHealthBar();
-            this.upgradeBtn = new TextButton("Update", this.skin);
+            this.upgradeBtn = new TextButton("Upgrade", this.skin);
+            this.interactBtn = new TextButton("Interact", this.skin);
             this.destroyBtn = new TextButton("Destroy", this.skin);
 
             this.menu.setVisible(false);
             this.menu.align(Align.left|Align.top);
             this.menu.add(label).padBottom(3);
             this.menu.row();
-            this.menu.add(healthBar).padBottom(3);
+            this.menu.add(healthBar).padBottom(3).width(100);
             this.menu.row();
-            this.menu.add(upgradeBtn).padBottom(3);
+            this.menu.add(upgradeBtn).padBottom(3).width(100);
             this.menu.row();
-            this.menu.add(destroyBtn);
+            this.menu.add(interactBtn).padBottom(3).width(100);
+            this.menu.row();
+            this.menu.add(destroyBtn).width(100);
             this.stage.addActor(this.menu);
 
             this.cameraPos = new HexVector();
         } catch (Exception e) {
-            // print errors, but no impact to game
-            logger.debug("Null skin provided for style.");
+            logger.warn("Null skin provided and the widget will not works.");
         }
     }
 
+    /**
+     * Returns a health bar for showing current health of a building.
+     * @return a health bar
+     */
     private ProgressBar createHealthBar() {
         // progress bar style setup
-        Pixmap bg = new Pixmap(50, 20, Pixmap.Format.RGBA8888);
+        Pixmap bg = new Pixmap(100, 15, Pixmap.Format.RGBA8888);
         bg.setColor(Color.RED);
         bg.fill();
         TextureRegionDrawable bgBar = new TextureRegionDrawable(new TextureRegion(new Texture(bg)));
@@ -111,14 +124,14 @@ public class BuildingWidgets {
         ProgressBar.ProgressBarStyle progressBarStyle = new ProgressBar.ProgressBarStyle();
         progressBarStyle.background = bgBar;
 
-        Pixmap healthEnd = new Pixmap(0, 20, Pixmap.Format.RGBA8888);
+        Pixmap healthEnd = new Pixmap(0, 15, Pixmap.Format.RGBA8888);
         healthEnd.setColor(Color.GREEN);
         healthEnd.fill();
         TextureRegionDrawable endBar = new TextureRegionDrawable(new TextureRegion(new Texture(healthEnd)));
         healthEnd.dispose();
         progressBarStyle.knob = endBar;
 
-        Pixmap healthFill = new Pixmap(50, 20, Pixmap.Format.RGBA8888);
+        Pixmap healthFill = new Pixmap(100, 15, Pixmap.Format.RGBA8888);
         healthFill.setColor(Color.GREEN);
         healthFill.fill();
         TextureRegionDrawable fillBar = new TextureRegionDrawable(new TextureRegion(new Texture(healthFill)));
@@ -129,34 +142,155 @@ public class BuildingWidgets {
         ProgressBar healthBar = new ProgressBar(0.0f, 1.0f, 0.01f, false, progressBarStyle);
         healthBar.setValue(1.0f);
         healthBar.setAnimateDuration(0.25f);
-        healthBar.setBounds(0, 0, 50, 20);
+        healthBar.setBounds(0, 0, 100, 15);
         return healthBar;
     }
 
     /**
-     * Get the widget layout.
-     * @return an table object forms widget
+     * Returns the widget container.
+     * @return the table object forms the widget
      */
     public Table getMenu() {
         return menu;
     }
 
     /**
-     * Updates the building object when update button is clicked.
-     * @param building a building is selected on the world
+     * Checks building upgrade costs and inventory resources.
+     * @param building the building clicked on the world
+     * @return true if enough resources provided for a upgrade, otherwise false
      */
-    private void upgradeBuilding(BuildingEntity building) {
-        // TODO: check if building is upgradable then update the building
+    private boolean checkCost(BuildingEntity building) {
+        InventoryManager inventoryManager = gm.getManager(InventoryManager.class);
+        Map<String, Integer> resources = inventoryManager.getQuickAccess();
+        Map<String, Integer> costs = building.getCost();
+
+        if (costs == null) {
+            logger.warn("The widget can't read the costs of building {}.",
+                    building.getObjectName() + building.getEntityID());
+            return false;
+        }
+
+        for (Map.Entry<String, Integer> cost : costs.entrySet()) {
+            if (!resources.containsKey(cost.getKey()) || resources.get(cost.getKey()) < cost.getValue()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
-     * Destroys the building object when destroy button is clicked.
+     * Based on option to remove or add building resources into the inventory.
+     * @param costs a list of resources with their amount
+     * @param option remove resources if is 0, add resources if is 1
+     */
+    private void handleCost(Map<String, Integer> costs, int option) {
+        InventoryManager inventoryManager = gm.getManager(InventoryManager.class);
+        for (Map.Entry<String, Integer> cost : costs.entrySet()) {
+            String resource = cost.getKey();
+            Integer amount = cost.getValue();
+            switch (option) {
+                case 0:
+                    inventoryManager.inventoryDropMultiple(resource, amount);
+                    break;
+                case 1:
+                    for (int i = 0; i < amount; i++) {
+                        inventoryManager.quickAccessAdd(resource);
+                    }
+                    break;
+                default:
+                    logger.warn("Out of options provided");
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Upgrades the building object when upgrade button is clicked.
      * @param building a building is selected on the world
      */
-    private void destroyBuilding(BuildingEntity building) {
+    private void upgradeBuilding(BuildingEntity building) {
+        int nextLevel = building.getBuildingLevel() + 1;
+
+        if (building.isUpgradable() && building.getTextures().containsKey("level" + nextLevel)) {
+            if (checkCost(building)) {
+                handleCost(building.getCost(), 0);
+                building.setTexture(building.getTextures().get("level" + nextLevel));
+                building.setBuildingLevel(nextLevel);
+                menu.setVisible(false);
+                return;
+            }
+        }
+
+        upgradeBtn.setText("Max Level");
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                upgradeBtn.setText("Upgrade");
+            }
+        }, 2);
+    }
+
+    /**
+     * Destroys the building object when destroy button is clicked, and returns
+     * customized percent of recourse costs back to inventory and also notes that
+     * the percent's range is from 0 to 1.
+     *
+     * @param building a building is selected on the world
+     * @param percent the percent of resource costs back to inventory
+     */
+    private void destroyBuilding(BuildingEntity building, float percent) {
+        Map<String, Integer> costs = building.getCost();
+
+        if (costs == null) {
+            logger.warn("The widget can't read the costs of building {}.",
+                    building.getObjectName() + building.getEntityID());
+            world.removeEntity(building);
+            return;
+        }
+
+        for (Map.Entry<String, Integer> cost : costs.entrySet()) {
+            int newValue = (int)Math.floor(percent * cost.getValue());
+            costs.replace(cost.getKey(), cost.getValue(), newValue);
+        }
+        handleCost(costs, 1);
         world.removeEntity(building);
     }
 
+    /**
+     * Interact methods for buildings
+     * @param building building selected from world.
+     */
+    private void interactBuilding(BuildingEntity building) {
+        switch(building.getBuildingType()) {
+            default:
+                break;
+            case CABIN:
+                building.cabinInteract();
+                break;
+            case FENCE:
+                building.fenceInteract();
+                break;
+            case CASTLE:
+                building.castleInteract();
+                break;
+            case SAFEHOUSE:
+                building.safehouseInteract();
+                break;
+            case TOWNCENTRE:
+                building.towncentreInteract();
+                break;
+            case WATCHTOWER:
+                building.watchtowerInteract();
+                break;
+            case STORAGE_UNIT:
+                break;
+        }
+    }
+
+    /**
+     * Sets up a container of the building widget with correct position settings.
+     * @param building a building is selected on the world
+     */
     private void setMenu(BuildingEntity building) {
         float[] wCords = WorldUtil.colRowToWorldCords(building.getCol(), building.getRow());
         cameraPos.setCol(gm.getCamera().position.x);
@@ -165,6 +299,10 @@ public class BuildingWidgets {
                 stage.getHeight()/2 + wCords[1] - cameraPos.getRow() + menu.getMinHeight());
     }
 
+    /**
+     * Sets up a health bar inside the building widget with its relevant functions.
+     * @param building a building is selected on the world
+     */
     private void setHealthBar(BuildingEntity building) {
         float health = building.getCurrentHealth() / building.getInitialHealth();
         healthBar.setValue(health);
@@ -175,6 +313,10 @@ public class BuildingWidgets {
         }
     }
 
+    /**
+     * Sets up a upgrade button inside the building widget with its relevant functions.
+     * @param building a building is selected on the world
+     */
     private void setUpgradeBtn(BuildingEntity building) {
         if (upgradeListener != null) {
             upgradeBtn.removeListener(upgradeListener);
@@ -183,11 +325,30 @@ public class BuildingWidgets {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 upgradeBuilding(building);
-                menu.setVisible(false);
             }
         });
     }
 
+    /**
+     * Sets up a interact button inside the building widget with its relevant functions.
+     * @param building a building is selected on the world
+     */
+    private void setInteractBtn(BuildingEntity building) {
+        if (interactListener != null) {
+            interactBtn.removeListener(interactListener);
+        }
+        interactBtn.addListener(interactListener = new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                interactBuilding(building);
+            }
+        });
+    }
+
+    /**
+     * Sets up a destroy button inside the building widget with its relevant functions.
+     * @param building a building is selected on the world
+     */
     private void setDestroyBtn(BuildingEntity building) {
         if (destroyListener != null) {
             destroyBtn.removeListener(destroyListener);
@@ -195,7 +356,7 @@ public class BuildingWidgets {
         destroyBtn.addListener(destroyListener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                destroyBuilding(building);
+                destroyBuilding(building, 0.3f);
                 menu.setVisible(false);
             }
         });
@@ -206,10 +367,11 @@ public class BuildingWidgets {
      * @param building a building is selected on the world
      */
     private void setWidgets(BuildingEntity building) {
-        label.setText(building.getObjectName());
+        label.setText(building.getObjectName() + " Lv" + building.getBuildingLevel());
         setMenu(building);
         setHealthBar(building);
         setUpgradeBtn(building);
+        setInteractBtn(building);
         setDestroyBtn(building);
     }
 
