@@ -67,7 +67,7 @@ public class WorldDirector {
         builder.addEntity(new Spider(-8f, -1f, mainCharacter));
         builder.addEntity(new Robot(-4, -2, mainCharacter));
         builder.addEntity(new Stone(-4, -3, mainCharacter));
-        builder.addEntity(new Flower(2f,2f,mainCharacter));
+        builder.addEntity(new Flower(5f,2f,mainCharacter));
         builder.addEntity(new Treeman(-2f,-3f,mainCharacter));
 
 //        builder.addEntity(new Sword(new Tile(-1f, 3f), "sword_tex", true));
