@@ -102,26 +102,22 @@ public class ConstructionManagerTest {
         Wood wood5 = new Wood();
         inventoryManager.inventoryAdd(wood5);
 
+        Assert.assertEquals(8.0, inventoryManager.getAmount("Wood"), 0.0);
+        Assert.assertEquals(5.0, inventoryManager.getAmount("Stone"), 0.0);
+
+
         BuildingFactory factory = new BuildingFactory();
         BuildingEntity cabin = factory.createCabin(1,1);
         cmgr.setBuildingToBePlaced(cabin);
 
         cmgr.build(wb.getWorld(),2,2);
 
-        Assert.assertEquals(5.0, inventoryManager.getTotalAmount(), 0.0);
+        Assert.assertEquals(1.0, inventoryManager.getAmount("Wood"), 0.0);
+        Assert.assertEquals(1.0, inventoryManager.getAmount("Stone"), 0.0);
 
 
-        //AbstractBuilding building = new WallBuilding(1, 1);
-       // TreeMap<String, Integer> buildingCost = new TreeMap<>();
-        //buildingCost.put("Stone", 2);
-        //buildingCost.put("Wood", 2);
-        //building.setCost(buildingCost);
 
-        //InventoryManager inventoryManager = new InventoryManager();
-        //cmgr.invRemove(building, inventoryManager);
 
-        //Assert.assertEquals(0, inventoryManager.getAmount("Stone"));
-        //Assert.assertEquals(0, inventoryManager.getAmount("Wood"));
     }
 
     /**
