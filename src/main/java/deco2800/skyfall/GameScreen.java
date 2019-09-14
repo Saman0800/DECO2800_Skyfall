@@ -115,7 +115,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         cameraDebug = new PotateCamera(1920, 1080);
 
         /* Add the window to the stage */
-        GameManager.get().setSkin(skin);
+//        GameManager.get().setSkin(skin);
         GameManager.get().setStage(stage);
         GameManager.get().setCamera(camera);
 

@@ -44,7 +44,6 @@ public class MainMenuScreen implements Screen {
         // logo.setPosition(1280/2 - 225, 720/2 + 100);
         // stage.addActor(logo);
 
-        System.out.println(skin==null);
         Button newGameBtn = new TextButton("SINGLE PLAYER", skin, "main_menu");
         newGameBtn.setPosition(10, MIN_HEIGHT - 100);
         stage.addActor(newGameBtn);

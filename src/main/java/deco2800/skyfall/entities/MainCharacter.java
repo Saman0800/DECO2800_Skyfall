@@ -13,6 +13,7 @@ import deco2800.skyfall.animation.*;
 import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.gamemenu.HealthCircle;
+import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
 import deco2800.skyfall.gui.ManaBar;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.*;
@@ -162,6 +163,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private boolean isInvincible;
 
     private String equipped;
+
+    private GameOverTable gameOverTable = (GameOverTable) GameManager.getManagerFromInstance(GameMenuManager.class).getPopUp("gameOverTable");
 
     /**
      * Base Main Character constructor
@@ -489,6 +492,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             this.healthBar.update();
             }
 
+            System.out.println("CURRENT HEALTH:" + String.valueOf(getHealth()));
         if (this.getHealth() <= 0) {
             kill();
         } else {
@@ -589,7 +593,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             changeHealth(0);
 
             // AS.PlayOneShot(dieSound);
-            GameManager.setPaused(true);
+            gameOverTable.show();
         }
 
         /**

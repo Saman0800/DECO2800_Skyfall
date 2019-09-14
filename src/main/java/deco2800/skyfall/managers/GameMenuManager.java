@@ -254,6 +254,11 @@ public class GameMenuManager extends TickableManager {
             popUps.put("chestTable",new ChestTable(stage,
                     new ImageButton(generateTextureRegionDrawableObject("exitButton")),
                     null, textureManager, this, sm, skin));
+
+            popUps.put("gameOverTable", new GameOverTable(stage,
+                    null,
+                    null, textureManager, this,
+                    skin));
         }
     }
 

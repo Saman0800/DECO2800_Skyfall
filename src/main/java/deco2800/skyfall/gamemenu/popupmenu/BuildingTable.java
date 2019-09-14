@@ -123,9 +123,11 @@ public class BuildingTable extends AbstractPopUpElement{
         buildIt.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gameMenuManager.getMainCharacter().createItem(selectedItem);
-                inventoryTable.updateResourcePanel();
-                hide();
+                if (selectedItem != null) {
+                    gameMenuManager.getMainCharacter().createItem(selectedItem);
+                    inventoryTable.updateResourcePanel();
+                    hide();
+                }
             }
         });
 

@@ -58,22 +58,26 @@ public class AbstractPopUpElement extends AbstractUIElement {
         super(stage, textureNames, tm);
         this.exitButton = exitButton;
         this.gameMenuManager = gameMenuManager;
-        exitButton.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                   System.out.println("Clicked exit");
-                   hide();
-            }
-        });
+        if (exitButton != null) {
+            exitButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    System.out.println("Clicked exit");
+                    hide();
+                }
+            });
+        }
     }
 
     @Override
     public void draw() {
-        System.out.println("Drawing exit");
-        exitButton.setSize(80, 80 * 207f / 305);
-        exitButton.setPosition(Gdx.graphics.getWidth() * 0.9f, Gdx.graphics.getHeight() * 0.9f);
-        exitButton.setVisible(false);
-        stage.addActor(exitButton);
+        if (exitButton != null) {
+            System.out.println("Drawing exit");
+            exitButton.setSize(80, 80 * 207f / 305);
+            exitButton.setPosition(Gdx.graphics.getWidth() * 0.9f, Gdx.graphics.getHeight() * 0.9f);
+            exitButton.setVisible(false);
+            stage.addActor(exitButton);
+        }
     }
 
     public boolean isVisible() {
