@@ -28,6 +28,7 @@ import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
+import deco2800.skyfall.graphics.HasPointLight;
 import deco2800.skyfall.graphics.types.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -70,7 +71,6 @@ public class World implements TouchDownObserver {
     private GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
 
     //private MainCharacter mc = gmm.getMainCharacter();
-
 
     /**
      * The constructor for a world
@@ -340,6 +340,12 @@ public class World implements TouchDownObserver {
 
     public void setEntities(List<AbstractEntity> entities) {
         this.worldParameters.setEntities(entities);
+
+        for (AbstractEntity entity : entities) {
+            if ((entity instanceof HasPointLight) && !entities.contains(entity)) {
+                this.worldParameters.addLuminousEntity(entity);
+            }
+        }
     }
 
     public List<Tile> getTileMap() {
@@ -566,7 +572,7 @@ public class World implements TouchDownObserver {
                 }
             } else if (entity instanceof Chest) {
                 GameMenuManager menuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
-                menuManager.open(new GameMenuScreen(menuManager).getChestTable((Chest)entity));
+                menuManager.open(new GameMenuScreen(menuManager).getChestTable((Chest) entity));
             } else if (entity instanceof Weapon) {
                 MainCharacter mc = gmm.getMainCharacter();
                 if (tile.getCoordinates().distance(mc.getPosition()) > 2) {
