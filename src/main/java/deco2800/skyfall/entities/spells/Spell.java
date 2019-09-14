@@ -1,11 +1,14 @@
 package deco2800.skyfall.entities.spells;
 
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.Projectile;
 import deco2800.skyfall.util.HexVector;
 
 
 
 public class Spell extends Projectile {
+
+    protected int manaCost = 20;
 
     /**
      * Construct a new spell.
@@ -22,8 +25,22 @@ public class Spell extends Projectile {
     public Spell(HexVector movementPosition, String textureName, String objectName, float col,
                  float row, int damage, float speed, int range) {
         super(movementPosition, textureName, objectName, col, row, damage, speed, range);
-
-        this.setTexture("flame_wall_placeholder");
     }
 
+    public int getManaCost() {
+        return this.manaCost;
+    }
+
+    @Override
+    public void onTick(long tick) {
+        super.onTick(tick);
+
+
+        //Check for enemies and deal 1 damage.
+    }
+
+    @Override
+    public boolean collidesWith(AbstractEntity entity) {
+        return false;
+    }
 }
