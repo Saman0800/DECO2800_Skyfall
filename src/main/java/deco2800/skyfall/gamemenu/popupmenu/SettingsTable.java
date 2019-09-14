@@ -84,19 +84,22 @@ public class SettingsTable extends AbstractPopUpElement{
         font.getData().setScale(1f);
 
         CheckBox.CheckBoxStyle cbs = new CheckBox.CheckBoxStyle(
-                generateTextureRegionDrawableObject("checked"),
                 generateTextureRegionDrawableObject("unchecked"),
+                generateTextureRegionDrawableObject("checked"),
                 font, Color.BLACK);
 
         soundFX = new CheckBox("", cbs);
         bgm = new CheckBox("", cbs);
+
+        bgm.setChecked(true);
+        soundFX.setChecked(true);
 
         soundFX.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Map<String, Sound> soundLoops = soundManager.getSoundMap();
 
-                if (soundFX.isChecked()) {
+                if (!soundFX.isChecked()) {
                     SoundManager.setPaused(true);
 
                     for (String sound : soundLoops.keySet()) {
@@ -117,9 +120,11 @@ public class SettingsTable extends AbstractPopUpElement{
         bgm.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (bgm.isChecked()) {
+                if (!bgm.isChecked()) {
+                    BGMManager.paused = true;
                     BGMManager.mute();
                 } else {
+                    BGMManager.paused = false;
                     BGMManager.unmute();
                 }
 
