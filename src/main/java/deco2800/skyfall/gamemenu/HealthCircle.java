@@ -85,6 +85,9 @@ public class HealthCircle extends AbstractUIElement {
         this.smallerCircle = new ImageButton(textures[INNER_CIRCLE]);
         smallerCircle.setSize(100, 100);
 
+        smallerCircle.setName("innerHealthCircle");
+        biggerCircle.setName("outerHealthCircle");
+
         stage.addActor(biggerCircle);
         stage.addActor(smallerCircle);
         stage.addActor(label);

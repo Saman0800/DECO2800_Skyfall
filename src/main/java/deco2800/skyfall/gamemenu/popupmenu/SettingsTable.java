@@ -70,6 +70,7 @@ public class SettingsTable extends AbstractPopUpElement{
         settingsTable.setPosition(Gdx.graphics.getWidth()/2f - settingsTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - settingsTable.getHeight()/2);
         settingsTable.setDebug(true);
+        settingsTable.setName("settingsTable");
         settingsTable.top();
         settingsTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
 
