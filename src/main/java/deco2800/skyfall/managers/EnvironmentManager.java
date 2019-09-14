@@ -241,7 +241,7 @@ public class EnvironmentManager extends TickableManager {
         //Update isDay boolean
         isDay();
     }
-
+    
     /**
      * Returns whether it is day or not
      *
