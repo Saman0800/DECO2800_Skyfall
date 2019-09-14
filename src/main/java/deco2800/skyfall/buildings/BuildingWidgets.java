@@ -144,6 +144,47 @@ public class BuildingWidgets {
         return menu;
     }
 
+    private boolean checkCost(BuildingEntity building) {
+        InventoryManager inventoryManager = gm.getManager(InventoryManager.class);
+        Map<String, Integer> resources = inventoryManager.getQuickAccess();
+        Map<String, Integer> costs = building.getCost();
+
+        if (costs == null) {
+            logger.warn("The widget can't read the costs of building {}.",
+                    building.getObjectName() + building.getEntityID());
+            return false;
+        }
+
+        for (Map.Entry<String, Integer> cost : costs.entrySet()) {
+            if (!resources.containsKey(cost.getKey()) || resources.get(cost.getKey()) < cost.getValue()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /* option is 0 remove resources, option is 1 add resource */
+    private void handleCost(Map<String, Integer> costs, int option) {
+        InventoryManager inventoryManager = gm.getManager(InventoryManager.class);
+        for (Map.Entry<String, Integer> cost : costs.entrySet()) {
+            String resource = cost.getKey();
+            Integer amount = cost.getValue();
+            switch (option) {
+                case 0:
+                    inventoryManager.inventoryDropMultiple(resource, amount);
+                    break;
+                case 1:
+                    for (int i = 0; i < amount; i++) {
+                        inventoryManager.quickAccessAdd(resource);
+                    }
+                    break;
+                default:
+                    logger.warn("Out of options provided");
+                    break;
+            }
+        }
+    }
+
     /**
      * Upgrades the building object when upgrade button is clicked.
      * @param building a building is selected on the world
@@ -152,24 +193,8 @@ public class BuildingWidgets {
         int nextLevel = building.getBuildingLevel() + 1;
 
         if (building.isUpgradable() && building.getTextures().containsKey("level" + nextLevel)) {
-            InventoryManager inventoryManager = gm.getManager(InventoryManager.class);
-            Map<String, Integer> resources = inventoryManager.getQuickAccess();
-
-            boolean check = true;
-            for (Map.Entry<String, Integer> entry : building.getCost().entrySet()) {
-                if (!resources.containsKey(entry.getKey()) || resources.get(entry.getKey()) < entry.getValue()) {
-                    check = false;
-                }
-            }
-
-            if (check) {
-                for (Map.Entry<String, Integer> entry : building.getCost().entrySet()) {
-                    String resource = entry.getKey();
-                    Integer amount = entry.getValue();
-                    if (amount <= inventoryManager.getAmount(resource)) {
-                        inventoryManager.inventoryDropMultiple(resource, amount);
-                    }
-                }
+            if (checkCost(building)) {
+                handleCost(building.getCost(), 0);
                 building.setTexture(building.getTextures().get("level" + nextLevel));
                 building.setBuildingLevel(nextLevel);
                 menu.setVisible(false);
@@ -187,10 +212,28 @@ public class BuildingWidgets {
     }
 
     /**
-     * Destroys the building object when destroy button is clicked.
+     * Destroys the building object when destroy button is clicked, and returns
+     * customized percent of recourse costs back to inventory and also notes that
+     * the percent's range is from 0 to 1.
+     *
      * @param building a building is selected on the world
+     * @param percent the percent of resource costs back to inventory
      */
-    private void destroyBuilding(BuildingEntity building) {
+    private void destroyBuilding(BuildingEntity building, float percent) {
+        Map<String, Integer> costs = building.getCost();
+
+        if (costs == null) {
+            logger.warn("The widget can't read the costs of building {}.",
+                    building.getObjectName() + building.getEntityID());
+            world.removeEntity(building);
+            return;
+        }
+
+        for (Map.Entry<String, Integer> cost : costs.entrySet()) {
+            int newValue = (int)Math.floor(percent * cost.getValue());
+            costs.replace(cost.getKey(), cost.getValue(), newValue);
+        }
+        handleCost(costs, 1);
         world.removeEntity(building);
     }
 
@@ -231,7 +274,7 @@ public class BuildingWidgets {
         destroyBtn.addListener(destroyListener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                destroyBuilding(building);
+                destroyBuilding(building, 0.3f);
                 menu.setVisible(false);
             }
         });

@@ -1,5 +1,6 @@
 package deco2800.skyfall.buildings;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.util.Collider;
@@ -99,18 +100,27 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
     */
     @Override
     public void setCollider() {
+        float[] cords = WorldUtil.colRowToWorldCords(position.getCol(), position.getRow());
+
+        // preferred way as setting a collider based on texture size
         try {
-            float[] cords = WorldUtil.colRowToWorldCords(position.getCol(), position.getRow());
-
-            // A way to set collider based on tiles
-            float tileSize = 100;
-            collider = new Collider(cords[0], cords[1], tileSize * getLength(), tileSize * getWidth());
-
-            // Preferred way to set collider based on texture, but so far a issue that texture is not found
-//            Texture texture = new Texture(getTexture());
-//            collider = new Collider(cords[0], cords[1], texture.getWidth(), texture.getHeight());
+            Texture texture = new Texture(getTexture());
+            collider = new Collider(cords[0], cords[1],
+                    texture.getWidth(), texture.getHeight());
+            return;
         } catch (Exception e) {
-            log.debug("Building texture do not exist when setting its collider");
+            log.info("Building {} can't set a collider with its texture",
+                    getObjectName() + getEntityID());
+        }
+
+        // preferred way is blocked, setting a collider based on tile
+        try {
+            float tileSize = 100;
+            collider = new Collider(cords[0], cords[1],
+                    tileSize * getLength(), tileSize * getWidth());
+        } catch (Exception e2) {
+            log.info("Building {} has a null collider",
+                    getObjectName() + getEntityID());
         }
     }
 
