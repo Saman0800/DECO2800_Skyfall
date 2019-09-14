@@ -1,6 +1,7 @@
 package deco2800.skyfall.worlds.generation.delaunay;
 
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
@@ -30,6 +31,8 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
 
     // Whether or not this node's polygon is on the edge of the map
     private boolean borderNode;
+
+    private AbstractBiome biome;
 
     /**
      * Constructor for a WorldGenNode
@@ -324,6 +327,10 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * @param nodes The list of nodes that can be assigned to
      */
     public static void removeZeroTileNodes(List<WorldGenNode> nodes, int nodeSpacing, int worldSize) throws WorldGenException {
+        // TODO Make this more efficient by looping through only the tiles within the rectangle containing this node
+        //  and stop on the first tile inside the border. Start iterating from the middle, which is more likely to
+        //  be within the node.
+
         NoiseGenerator xGen = Tile.getXNoiseGen();
         NoiseGenerator yGen = Tile.getYNoiseGen();
         List<WorldGenNode> tempNodes = new ArrayList<>(nodes);
@@ -860,4 +867,11 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         this.borderNode = borderNode;
     }
 
+    public AbstractBiome getBiome() {
+        return biome;
+    }
+
+    public void setBiome(AbstractBiome biome) {
+        this.biome = biome;
+    }
 }

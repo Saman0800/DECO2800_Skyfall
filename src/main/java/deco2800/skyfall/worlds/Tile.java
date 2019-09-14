@@ -17,6 +17,8 @@ import deco2800.skyfall.worlds.biomes.RiverBiome;
 import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
+import deco2800.skyfall.worlds.world.Chunk;
+import org.javatuples.Pair;
 
 public class Tile {
     private static int nextID = 0;
@@ -56,6 +58,7 @@ public class Tile {
 
     private transient Map<Integer, Tile> neighbours;
 
+    // FIXME:Ontonator Should these really be in Tile?
     // Noise generators for use in edges and nodes
     private static NoiseGenerator xNoiseGen;
     private static NoiseGenerator yNoiseGen;
@@ -66,6 +69,7 @@ public class Tile {
     @Expose
     private int tileID = 0;
 
+    // FIXME:Ontonator Does this really need to be stored?
     private WorldGenNode node;
     private VoronoiEdge edge;
 
@@ -78,8 +82,6 @@ public class Tile {
         this.neighbours = new HashMap<>();
         this.tileID = Tile.getNextID();
         this.node = null;
-        this.xNoiseGen = null;
-        this.yNoiseGen = null;
     }
 
     public float getCol() {
@@ -165,12 +167,11 @@ public class Tile {
      */
     public static void setNoiseGenerators(Random random, int nodeSpacing) {
         int startPeriod = nodeSpacing * 2;
-        // TODO Fix possible divide-by-zero.
         int octaves = Math.max((int) Math.ceil(Math.log(startPeriod) / Math.log(2)) - 1, 1);
         double attenuation = Math.pow(0.9, 1d / octaves);
 
         xNoiseGen = new NoiseGenerator(random, octaves, startPeriod, attenuation);
-        yNoiseGen = new NoiseGenerator(random,  octaves, startPeriod, attenuation);
+        yNoiseGen = new NoiseGenerator(random, octaves, startPeriod, attenuation);
     }
 
     public static NoiseGenerator getXNoiseGen() {
@@ -181,6 +182,14 @@ public class Tile {
         return yNoiseGen;
     }
 
+    private double getNoisyCol(double noiseFactor) {
+        return getCol() + xNoiseGen.getOctavedPerlinValue(getCol(), getRow()) * noiseFactor - noiseFactor / 2d;
+    }
+
+    private double getNoisyRow(double noiseFactor) {
+        return getRow() + yNoiseGen.getOctavedPerlinValue(getCol(), getRow()) * noiseFactor - noiseFactor / 2d;
+    }
+
     /**
      * Assigns this tile to the nearest node
      *
@@ -189,12 +198,8 @@ public class Tile {
     public void assignNode(List<WorldGenNode> nodes, int nodeSpacing) {
         // Offset the position of tiles used to calculate the nodes using
         // Perlin noise to add noise to the edges.
-        double tileX =
-                this.getCol() + xNoiseGen.getOctavedPerlinValue(this.getCol() , this.getRow()) *
-                        (double) nodeSpacing - (double) nodeSpacing / 2;
-        double tileY =
-                this.getRow() + yNoiseGen.getOctavedPerlinValue(this.getCol() , this.getRow()) *
-                        (double) nodeSpacing - (double) nodeSpacing / 2;
+        double tileX = getNoisyCol(nodeSpacing);
+        double tileY = getNoisyRow(nodeSpacing);
 
         int minDistanceIndex = WorldGenNode.findNearestNodeIndex(nodes, tileX, tileY);
         // Assign tile to the node
@@ -206,12 +211,8 @@ public class Tile {
     private VoronoiEdge findNearestEdge(VoronoiEdge currentEdge,
             List<VoronoiEdge> edges, double maxDistance, double noiseFactor) {
         // TODO make noise contiguous
-        double tileX =
-                this.getCol() + xNoiseGen.getOctavedPerlinValue(this.getCol() , this.getRow()) *
-                        (double) noiseFactor - (double) noiseFactor / 2;
-        double tileY =
-                this.getRow() + yNoiseGen.getOctavedPerlinValue(this.getCol() , this.getRow()) *
-                        (double) noiseFactor - (double) noiseFactor / 2;
+        double tileX = getNoisyCol(noiseFactor);
+        double tileY = getNoisyRow(noiseFactor);
 
         VoronoiEdge closestEdge = currentEdge;
         double closestDistance = Double.POSITIVE_INFINITY;
@@ -364,7 +365,12 @@ public class Tile {
         GameManager.get().getManager(NetworkManager.class).deleteTile(this);
 
         this.removeReferanceFromNeighbours();
-        GameManager.get().getWorld().getTileMap().remove(this);
+        Pair<Integer, Integer> chunk = Chunk.getChunkForCoordinates(getCol(), getRow());
+        GameManager.get()
+                .getWorld()
+                .getChunk(chunk.getValue0(), chunk.getValue1())
+                .getTiles()
+                .remove(this);
     }
 
     public int calculateIndex() {
@@ -410,6 +416,7 @@ public class Tile {
     public boolean checkObstructed(String texture) {
         ArrayList<String> obstructables = new ArrayList<>();
         obstructables.add("water");
+        // TODO This list needs to be kept up-to-date.
         for (String obstructable : obstructables) {
             if (texture.contains(obstructable)) {
                 return true;

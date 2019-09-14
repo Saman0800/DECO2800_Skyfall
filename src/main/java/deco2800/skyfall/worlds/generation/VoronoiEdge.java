@@ -138,7 +138,9 @@ public class VoronoiEdge {
                             return path;
                         }
                         // Get the biome of the end node
-                        String biomeName = node.getTiles().get(0).getBiome().getBiomeName();
+                        // FIXME:Ontonator Make sure this works without relying on the existence of tiles.
+                        // String biomeName = node.getTiles().get(0).getBiome().getBiomeName();
+                        String biomeName = node.getBiome().getBiomeName();
                         // If the path is already at the ocean
                         if (biomeName.equals("ocean")) {
                             return path;
@@ -161,7 +163,9 @@ public class VoronoiEdge {
                     if (node == null) {
                         return path;
                     }
-                    String biomeName = node.getTiles().get(0).getBiome().getBiomeName();
+                    // TODO:Ontonator Remove this.
+                    // String biomeName = node.getTiles().get(0).getBiome().getBiomeName();
+                    String biomeName = node.getBiome().getBiomeName();
                     // If the new edge ends with the ocean or a lake
                     if (biomeName.equals("ocean") || biomeName.equals("lake")) {
                         return path;
@@ -172,7 +176,9 @@ public class VoronoiEdge {
                     if (node == null) {
                         return path;
                     }
-                    String biomeName = node.getTiles().get(0).getBiome().getBiomeName();
+                    // TODO:Ontonator Remove this.
+                    // String biomeName = node.getTiles().get(0).getBiome().getBiomeName();
+                    String biomeName = node.getBiome().getBiomeName();
                     // If the new edge ends with the ocean or a lake
                     if (biomeName.equals("ocean") || biomeName.equals("lake")) {
                         return path;
@@ -194,6 +200,7 @@ public class VoronoiEdge {
         }
     }
 
+    // FIXME:Ontonator Does this even need to exist anymore?
     /**
      * Assign tiles to each edge. A tile is considered to be on the edge if the
      * square of the perpendicular distance between the edge and tile is less
@@ -280,7 +287,6 @@ public class VoronoiEdge {
                             }
                         }
                     }
-
                 }
             }
         }

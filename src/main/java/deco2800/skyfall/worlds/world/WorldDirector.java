@@ -24,8 +24,6 @@ import java.util.Random;
 public class WorldDirector {
     private static Random random = new Random(0);
 
-
-
     /**
      * A simple world used in single player with n random biomes
      * @param builder The builder used to construct the world
@@ -40,12 +38,12 @@ public class WorldDirector {
         }
 
         ArrayList<AbstractBiome> choices = new ArrayList<>();
-        choices.add(new ForestBiome());
-        choices.add(new DesertBiome());
-        choices.add(new MountainBiome());
-        choices.add(new VolcanicMountainsBiome());
-        choices.add(new SwampBiome());
-        choices.add(new SnowyMountainsBiome());
+        choices.add(new ForestBiome(random));
+        choices.add(new DesertBiome(random));
+        choices.add(new MountainBiome(random));
+        choices.add(new VolcanicMountainsBiome(random));
+        choices.add(new SwampBiome(random));
+        choices.add(new SnowyMountainsBiome(random));
 
         for (int i = 0; i < n; i++) {
             builder.addBiome(choices.remove(random.nextInt(choices.size())), 40);
@@ -104,9 +102,9 @@ public class WorldDirector {
         builder.setStaticEntities(true);
         builder.addEntity(new Spider(-4f, -1f));
         builder.addEntity(new MainCharacter(0f,0f,0.05f, "Main Piece", 10));
-        builder.addBiome(new ForestBiome(), 20);
-        builder.addBiome(new DesertBiome(), 20);
-        builder.addBiome(new MountainBiome(), 20);
+        builder.addBiome(new ForestBiome(random), 20);
+        builder.addBiome(new DesertBiome(random), 20);
+        builder.addBiome(new MountainBiome(random), 20);
     }
 
     /**
@@ -117,9 +115,9 @@ public class WorldDirector {
         builder.setNodeSpacing(15);
         builder.setWorldSize(80);
         builder.setType("server");
-        builder.addBiome(new ForestBiome(), 20);
-        builder.addBiome(new DesertBiome(), 20);
-        builder.addBiome(new MountainBiome(), 20);
+        builder.addBiome(new ForestBiome(random), 20);
+        builder.addBiome(new DesertBiome(random), 20);
+        builder.addBiome(new MountainBiome(random), 20);
     }
 
     /**
@@ -133,11 +131,11 @@ public class WorldDirector {
         builder.setType("single_player");
 //        builder.setStaticEntities(true);
 
-        builder.addBiome(new ForestBiome(), 10);
-//        builder.addBiome(new DesertBiome(), 10);
-//        builder.addBiome(new MountainBiome(), 10);
-//        builder.addBiome(new VolcanicMountainsBiome(), 10);
-//        builder.addBiome(new SwampBiome(), 10);
-//        builder.addBiome(new SnowyMountainsBiome(), 10);
+        builder.addBiome(new ForestBiome(random), 10);
+//        builder.addBiome(new DesertBiome(random), 10);
+//        builder.addBiome(new MountainBiome(random), 10);
+//        builder.addBiome(new VolcanicMountainsBiome(random), 10);
+//        builder.addBiome(new SwampBiome(random), 10);
+//        builder.addBiome(new SnowyMountainsBiome(random), 10);
     }
 }

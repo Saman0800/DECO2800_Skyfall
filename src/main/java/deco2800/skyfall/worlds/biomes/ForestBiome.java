@@ -11,39 +11,31 @@ import java.util.Random;
  * Forest Biome
  */
 public class ForestBiome extends AbstractBiome {
+    private NoiseGenerator textureGenerator;
 
     /**
      * Constructor for the ForestBiome
      */
-    public ForestBiome() {
+    public ForestBiome(Random random) {
         super("forest", null);
+
+        textureGenerator = new NoiseGenerator(random, 3, 60, 0.4);
     }
 
-    /**
-     * Method that will determine the textures of the forest biome textures
-     *
-     * @param random the RNG to use to generate the textures
-     */
     @Override
-    public void setTileTextures(Random random) {
+    public void setTileTexture(Tile tile) {
         ArrayList<String> textures = new ArrayList<>();
         textures.add("forest_1");
         textures.add("forest_2");
         textures.add("forest_3");
 
-        //Perlin noise generation
-        new TileNoiseGenerator(getTiles(), random, 3, 60,0.4, Tile::setPerlinValue);
-        NoiseGenerator noise = new NoiseGenerator(random, 5, 60, 0.4);
-        for (Tile tile : getTiles()) {
-            tile.setPerlinValue((tile.getPerlinValue() +
-                noise.getOctavedPerlinValue(tile.getRow() + tile.getCol(), tile.getRow() - tile.getCol())) / 2);
+        double perlinValue = textureGenerator.getOctavedPerlinValue(tile.getCol(), tile.getRow());
+        int adjustedPerlinValue = (int) Math.floor(perlinValue * textures.size());
+        if (adjustedPerlinValue >= textures.size()) {
+            adjustedPerlinValue = textures.size() - 1;
         }
-
-        //Looping through each tile and assigning a perlin noise value
-        for (Tile tile : getTiles()) {
-            int perlinValue = (int) Math.floor(tile.getPerlinValue() * textures.size());
-            tile.setTexture(textures.get(perlinValue < textures.size() ? perlinValue : textures.size() - 1));
-
-        }
+        // TODO Is `setPerlinValue` still required?
+        tile.setPerlinValue(adjustedPerlinValue);
+        tile.setTexture(textures.get(adjustedPerlinValue));
     }
 }

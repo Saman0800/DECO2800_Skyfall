@@ -13,6 +13,8 @@ import deco2800.skyfall.renderers.Renderable;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.world.Chunk;
+import org.javatuples.Pair;
 
 import java.util.*;
 
@@ -149,19 +151,47 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	public int getHeight() {
 		return height;
 	}
-	
+
 	/**
-	 * Sets the col coordinate for the entity
-     */
+	 * Sets the col coordinate for the entity. If you are setting both the row and the column of the entity, use {@link
+	 * #setPosition(float, float)} instead.
+	 *
+	 * @param col the new column of this entity
+	 */
 	public void setCol(float col) {
-		this.position.setCol(col);
+		setPosition(col, getRow());
 	}
 
 	/**
-	 * Sets the row coordinate for the entity
+	 * Sets the row coordinate for the entity. If you are setting both the row and the column of the entity, use {@link
+	 * #setPosition(float, float)} instead.
+	 *
+	 * @param row the new row of this entity
 	 */
 	public void setRow(float row) {
+		setPosition(getCol(), row);
+	}
+
+	/**
+	 * Sets the position of this entity.
+	 *
+	 * @param col the new column of this entity
+	 * @param row the new row of this entity
+	 */
+	public void setPosition(float col, float row) {
+		Pair<Integer, Integer> oldChunk = Chunk.getChunkForCoordinates(getCol(), getRow());
+		this.position.setCol(col);
 		this.position.setRow(row);
+		Pair<Integer, Integer> newChunk = Chunk.getChunkForCoordinates(getCol(), getRow());
+
+		if (!oldChunk.equals(newChunk)) {
+			// TODO:Ontonator Consider changing this from using `GameManger.getWorld()`.
+			deco2800.skyfall.worlds.world.World world = GameManager.get().getWorld();
+			if (world != null) {
+				world.getChunk(oldChunk.getValue0(), oldChunk.getValue1()).removeEntity(this);
+				world.getChunk(newChunk.getValue0(), newChunk.getValue1()).addEntity(this);
+			}
+		}
 	}
 
 	/**
@@ -178,8 +208,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * @param height the z coordinate for the entity
      */
 	public void setPosition(float col, float row, int height) {
-		setCol(col);
-		setRow(row);
+		setPosition(col, row);
 		setHeight(height);
 	}
 

@@ -2,13 +2,7 @@ package deco2800.skyfall.worlds.world;
 
 import com.badlogic.gdx.Gdx;
 import com.google.gson.Gson;
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.AgentEntity;
-import deco2800.skyfall.entities.EnemyEntity;
-import deco2800.skyfall.entities.Harvestable;
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.Projectile;
-import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.SaveLoadInterface;
@@ -26,20 +20,16 @@ import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
+import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
+import org.javatuples.Pair;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
-import javax.persistence.Entity;
 
 /**
  * AbstractWorld is the Game AbstractWorld
@@ -47,29 +37,33 @@ import javax.persistence.Entity;
  * It provides storage for the WorldEntities and other universal world level
  * items.
  */
-@Entity
 public class World implements TouchDownObserver , Serializable, SaveLoadInterface {
-
-
     protected int width;
     protected int length;
 
+    // TODO:Ontonator Reconsider whether this should exist.
     //Used to generate random numbers
     protected Random random;
 
     public Map<String, Float> frictionMap;
 
+    // TODO:Ontonator Does it matter that this is not `CopyOnWrite` like the tiles and enities used to be?
+    protected HashMap<Pair<Integer, Integer>, Chunk> loadedChunks;
+
     //A list of all the tiles within a world
-    protected CopyOnWriteArrayList<Tile> tiles;
     protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
     protected CopyOnWriteArrayList<VoronoiEdge> voronoiEdges;
+
+    // The noise generators used when adding offset during the biome assignment.
+    protected NoiseGenerator tileOffsetNoiseGeneratorX;
+    protected NoiseGenerator tileOffsetNoiseGeneratorY;
 
     protected LinkedHashMap<VoronoiEdge, RiverBiome> riverEdges;
     protected LinkedHashMap<VoronoiEdge, BeachBiome> beachEdges;
 
+    // TODO:Ontonator Reconsider this for chunks.
     protected List<AbstractEntity> entitiesToDelete = new CopyOnWriteArrayList<>();
     protected List<Tile> tilesToDelete = new CopyOnWriteArrayList<>();
-
 
     protected WorldParameters worldParameters;
 
@@ -78,20 +72,25 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
      * @param worldParameters A class that contains the world parameters
      */
     public World(WorldParameters worldParameters){
+        // TODO:Ontonator Consider whether `worldSize` must be a multiple of `CHUNK_SIDE_LENGTH`.
+
         this.worldParameters = worldParameters;
 
         random = new Random(worldParameters.getSeed());
 
-        tiles = new CopyOnWriteArrayList<>();
         riverEdges = new LinkedHashMap<>();
         beachEdges = new LinkedHashMap<>();
         worldGenNodes = new CopyOnWriteArrayList<>();
     	voronoiEdges = new CopyOnWriteArrayList<>();
 
+    	// FIXME:Ontonator Sort this out.
+        // tileOffsetNoiseGeneratorX = WorldGenNode.getOffsetNoiseGenerator(random, worldParameters.getNodeSpacing());
+        // tileOffsetNoiseGeneratorY = WorldGenNode.getOffsetNoiseGenerator(random, worldParameters.getNodeSpacing());
+
+        loadedChunks = new HashMap<>();
+
         generateWorld();
-        generateTileTypes();
-        generateNeighbours();
-        generateTileIndexes();
+        generateTileIndices();
         initialiseFrictionmap();
     }
 
@@ -99,20 +98,16 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
      * Generates the tiles and biomes in the world and adds the world to a listener to allow for interaction.
      * Continuously repeats generation until it reaches a stable world
      */
-    protected void generateWorld(){
-        while (true){
+    protected void generateWorld() {
+        while (true) {
             try {
                 generateTiles();
                 break;
-            } catch (WorldGenException | DeadEndGenerationException | NotEnoughPointsException ignored){
-            }
+            } catch (WorldGenException | DeadEndGenerationException | NotEnoughPointsException ignored) {}
         }
 
-
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
-
-    };
-
+    }
 
     /**
      * Generates the tiles and biomes in a world
@@ -120,168 +115,86 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
      * @throws DeadEndGenerationException
      * @throws WorldGenException
      */
+    // FIXME:Ontonator Make this work with chunks.
     private void generateTiles() throws NotEnoughPointsException, DeadEndGenerationException, WorldGenException {
-            //TODO clean the biomes and tiles on every iteration
-            ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
-            ArrayList<Tile> tiles = new ArrayList<>();
-            ArrayList<VoronoiEdge> voronoiEdges = new ArrayList<>();
+        ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
+        /*HashMap<Pair<Integer, Integer>, Chunk>*/ loadedChunks = new HashMap<>();
+        ArrayList<VoronoiEdge> voronoiEdges = new ArrayList<>();
 
-            for (Tile tile : getTileMap()){
-                tile.setBiome(null);
-            }
+        // TODO:Ontonator Remove this.
+        for (Tile tile : getTileMap()) {
+            assert false : "Should never get here.";
+            // tile.setBiome(null);
+        }
 
-            for (AbstractBiome biome : worldParameters.getBiomes()) {
-                biome.getTiles().clear();
-            }
-
-            int worldSize = worldParameters.getWorldSize();
-            int nodeSpacing = worldParameters.getNodeSpacing();
-            int nodeCount = Math.round((float) worldSize * worldSize * 4 / nodeSpacing / nodeSpacing);
-            // TODO: if nodeCount is less than the number of biomes, throw an exception
-
-            for (int i = 0; i < nodeCount; i++) {
-                // Sets coordinates to a random number from -WORLD_SIZE to WORLD_SIZE
-                float x = (float) (random.nextFloat() - 0.5) * 2 * worldSize;
-                float y = (float) (random.nextFloat() - 0.5) * 2 * worldSize;
-                worldGenNodes.add(new WorldGenNode(x, y));
-            }
-
-            // Apply Delaunay triangulation to the nodes, so that vertices and
-            // adjacencies can be calculated. Also apply Lloyd Relaxation twice
-            // for more smooth looking polygons
-            try {
-                WorldGenNode.calculateVertices(worldGenNodes, worldSize);
-                WorldGenNode.lloydRelaxation(worldGenNodes, 2, worldSize);
-            } catch (WorldGenException e) {
-                throw e;
-            }
-
-            for (int q = -worldSize; q <= worldSize; q++) {
-                for (int r = -worldSize; r <= worldSize; r++) {
-                    float oddCol = (q % 2 != 0 ? 0.5f : 0);
-                    Tile tile = new Tile(q, r + oddCol);
-                    tiles.add(tile);
-                }
-            }
-
-            Tile.setNoiseGenerators(random, nodeSpacing);
-            worldGenNodes.sort(Comparable::compareTo);
-            // TODO do this in chunks
-            for (Tile tile : tiles) {
-                tile.assignNode(worldGenNodes, nodeSpacing);
-            }
-
-            // TODO Fix this.
-            generateNeighbours(tiles);
-
-            try {
-                WorldGenNode.removeZeroTileNodes(worldGenNodes, nodeSpacing, worldSize);
-                WorldGenNode.assignNeighbours(worldGenNodes, voronoiEdges);
-            } catch (WorldGenException e) {
-                throw e;
-            }
-
-            VoronoiEdge.assignTiles(voronoiEdges, tiles, worldSize);
-            VoronoiEdge.assignNeighbours(voronoiEdges);
-
-
-
-            try {
-                BiomeGenerator biomeGenerator = new BiomeGenerator(this, worldGenNodes, voronoiEdges, tiles, random,worldParameters);
-                biomeGenerator.generateBiomes();
-            } catch (NotEnoughPointsException | DeadEndGenerationException e) {
-                 throw e;
-            }
-
-            // TODO do this in chunks
-            for (Tile tile : tiles) {
-                tile.assignEdge(this.riverEdges, this.beachEdges, worldParameters.getRiverWidth(), worldParameters.getBeachWidth());
-            }
-
-            this.worldGenNodes.addAll(worldGenNodes);
-            this.tiles.addAll(tiles);
-            this.voronoiEdges.addAll(voronoiEdges);
-    }
-
-
-
-
-
-    /**
-     * Loops through all the biomes within the world and adds textures to the tiles
-     * which determine their properties
-     */
-    public void generateTileTypes() {
         for (AbstractBiome biome : worldParameters.getBiomes()) {
-            biome.setTileTextures(random);
-        }
-    }
-
-    // TODO Fix this.
-    public void generateNeighbours() {
-        generateNeighbours(tiles);
-    }
-
-    public void generateNeighbours(List<Tile> tiles) {
-        // multiply coords by 2 to remove floats
-        Map<Integer, Map<Integer, Tile>> tileMap = new HashMap<>();
-        Map<Integer, Tile> columnMap;
-
-
-        for (Tile tile : tiles) {
-            columnMap = tileMap.getOrDefault((int) tile.getCol() * 2, new HashMap<Integer, Tile>());
-            columnMap.put((int) (tile.getRow() * 2), tile);
-            tileMap.put((int) (tile.getCol() * 2), columnMap);
+            biome.getTiles().clear();
         }
 
-        for (Tile tile : tiles) {
-            int col = (int) (tile.getCol() * 2);
-            int row = (int) (tile.getRow() * 2);
+        int worldSize = worldParameters.getWorldSize();
+        int nodeSpacing = worldParameters.getNodeSpacing();
+        int nodeCount = Math.round((float) worldSize * worldSize * 4 / nodeSpacing / nodeSpacing);
+        // TODO: if nodeCount is less than the number of biomes, throw an exception
 
-            // West
-            if (tileMap.containsKey(col - 2)) {
-                // North West
-                if (tileMap.get(col - 2).containsKey(row + 1)) {
-                    tile.addNeighbour(Tile.NORTH_WEST, tileMap.get(col - 2).get(row + 1));
-                }
+        for (int i = 0; i < nodeCount; i++) {
+            // Sets coordinates to a random number from -WORLD_SIZE to WORLD_SIZE
+            float x = (float) (random.nextFloat() - 0.5) * 2 * worldSize;
+            float y = (float) (random.nextFloat() - 0.5) * 2 * worldSize;
+            worldGenNodes.add(new WorldGenNode(x, y));
+        }
 
-                // South West
-                if (tileMap.get(col - 2).containsKey(row - 1)) {
-                    tile.addNeighbour(Tile.SOUTH_WEST, tileMap.get(col - 2).get(row - 1));
-                }
-            }
+        // Apply Delaunay triangulation to the nodes, so that vertices and
+        // adjacencies can be calculated. Also apply Lloyd Relaxation twice
+        // for more smooth looking polygons
+        try {
+            WorldGenNode.calculateVertices(worldGenNodes, worldSize);
+            WorldGenNode.lloydRelaxation(worldGenNodes, 2, worldSize);
+        } catch (WorldGenException e) {
+            throw e;
+        }
+        this.worldGenNodes = new CopyOnWriteArrayList<>(worldGenNodes);
 
-            // Central
-            if (tileMap.containsKey(col)) {
-                // North
-                if (tileMap.get(col).containsKey(row + 2)) {
-                    tile.addNeighbour(Tile.NORTH, tileMap.get(col).get(row + 2));
-                }
-
-                // South
-                if (tileMap.get(col).containsKey(row - 2)) {
-                    tile.addNeighbour(Tile.SOUTH, tileMap.get(col).get(row - 2));
-                }
-            }
-
-            // East
-            if (tileMap.containsKey(col + 2)) {
-                // North East
-                if (tileMap.get(col + 2).containsKey(row + 1)) {
-                    tile.addNeighbour(Tile.NORTH_EAST, tileMap.get(col + 2).get(row + 1));
-                }
-
-                // South East
-                if (tileMap.get(col + 2).containsKey(row - 1)) {
-                    tile.addNeighbour(Tile.SOUTH_EAST, tileMap.get(col + 2).get(row - 1));
-                }
+        Tile.setNoiseGenerators(random, nodeSpacing);
+        for (int q = -worldSize / Chunk.CHUNK_SIDE_LENGTH; q <= worldSize / Chunk.CHUNK_SIDE_LENGTH; q++) {
+            for (int r = -worldSize / Chunk.CHUNK_SIDE_LENGTH; r <= worldSize / Chunk.CHUNK_SIDE_LENGTH; r++) {
+                Chunk chunk = new Chunk(this, q, r);
+                loadedChunks.put(new Pair<>(q, r), chunk);
             }
         }
+
+        // Neighbours are generated when the tile is loaded.
+
+        // TODO:Ontonator Sort this out.
+        worldGenNodes.sort(Comparable::compareTo);
+
+        WorldGenNode.removeZeroTileNodes(worldGenNodes, nodeSpacing, worldSize);
+        WorldGenNode.assignNeighbours(worldGenNodes, voronoiEdges);
+
+        // TODO:Ontonator Remove this.
+        // VoronoiEdge.assignTiles(voronoiEdges, tiles, worldSize);
+        VoronoiEdge.assignNeighbours(voronoiEdges);
+
+        BiomeGenerator biomeGenerator = new BiomeGenerator(this, worldGenNodes, voronoiEdges, random,worldParameters);
+        biomeGenerator.generateBiomes();
+
+        for (Chunk chunk : loadedChunks.values()) {
+            for (Tile tile : chunk.getTiles()) {
+                // TODO:Ontonator Fix the parameters of this.
+                tile.assignEdge(this.riverEdges, this.beachEdges, worldParameters.getRiverWidth(),
+                                worldParameters.getBeachWidth());
+            }
+        }
+
+        // this.worldGenNodes.addAll(worldGenNodes);
+        //this.loadedChunks = loadedChunks;
     }
 
-    private void generateTileIndexes() {
-        for (Tile tile : tiles) {
-            tile.calculateIndex();
+    // TODO:Ontonator Consider removing this method.
+    private void generateTileIndices() {
+        for (Chunk chunk : loadedChunks.values()) {
+            for (Tile tile : chunk.getTiles()) {
+                tile.calculateIndex();
+            }
         }
     }
 
@@ -291,7 +204,10 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
      * @return All Entities in the world
      */
     public List<AbstractEntity> getEntities() {
-        return new CopyOnWriteArrayList<>(this.worldParameters.getEntities());
+        // TODO:Ontonator consider deprecating this method.
+        return loadedChunks.values().stream()
+                .flatMap(chunk -> chunk.getEntities().stream())
+                .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
     }
 
     /**
@@ -309,7 +225,6 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         frictionMap.put("desert", 0.59f);
         frictionMap.put("ice", 1f);
         frictionMap.put("snow", 1f);
-        this.frictionMap.putAll(frictionMap);
     }
 
     /**
@@ -318,7 +233,14 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
      * @return all entities in the world
      */
     public List<AbstractEntity> getSortedEntities() {
-        return new CopyOnWriteArrayList<>(this.worldParameters.getEntities());
+        // `List.sort` works quite efficiently for partially-sorted lists.
+        // TODO:Ontonator Does this need to be a `CopyOnWriteArrayList`?
+        ArrayList<AbstractEntity> entities = new ArrayList<>();
+        for (Chunk chunk : loadedChunks.values()) {
+            entities.addAll(chunk.getEntities());
+        }
+        entities.sort(null);
+        return entities;
     }
 
     /**
@@ -327,11 +249,10 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
      * @return all entities in the world
      */
     public List<AgentEntity> getSortedAgentEntities() {
-        List<AgentEntity> e = this.worldParameters.getEntities().stream().filter(p -> p instanceof AgentEntity).map(p -> (AgentEntity) p)
+        return getSortedEntities().stream()
+                .filter(AgentEntity.class::isInstance)
+                .map(AgentEntity.class::cast)
                 .collect(Collectors.toList());
-
-        Collections.sort(e);
-        return e;
     }
 
     /**
@@ -340,9 +261,9 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
      * @param entity the entity to add
      */
     public void addEntity(AbstractEntity entity) {
-        worldParameters.getEntities().add(entity);
-        // Keep the entities sorted by render order
-        Collections.sort(worldParameters.getEntities());
+        Pair<Integer, Integer> chunkCoords = Chunk.getChunkForCoordinates(entity.getCol(), entity.getRow());
+        Chunk chunk = getChunk(chunkCoords.getValue0(), chunkCoords.getValue1());
+        chunk.addEntity(entity);
     }
 
     /**
@@ -351,17 +272,49 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
      * @param entity the entity to remove
      */
     public void removeEntity(AbstractEntity entity) {
-        worldParameters.getEntities().remove(entity);
-        // Keep the entities sorted by render order
-        Collections.sort(worldParameters.getEntities());
+        for (Chunk chunk : loadedChunks.values()) {
+            if (chunk.getEntities().remove(entity)) {
+                break;
+            }
+        }
+        // Does not need to be kept sorted because removing an entity will not affect the ordering of the remaining
+        // elements.
     }
 
+    // TODO:Ontonator Consider removing entirely.
+    /**
+     * Sets all the entities in the loaded chunks.
+     *
+     * @param entities the new entities to use
+     *
+     * @deprecated since this only affects the loaded chunks and is no longer a trivial replacement of lists
+     */
+    @Deprecated
     public void setEntities(List<AbstractEntity> entities) {
-        this.worldParameters.setEntities(entities);
+        for (Chunk chunk : loadedChunks.values()) {
+            chunk.getEntities().clear();
+        }
+        for (AbstractEntity entity : entities) {
+            addEntity(entity);
+        }
     }
 
+    /**
+     * Returns a list of all of the tiles in the world. This list is <em>not</em> the list used internally (due to
+     * chunking) so modifying this list will not modify the list of tiles.
+     *
+     * @return a list of all of the tiles in the world
+     *
+     * @deprecated since this is no longer a trivial operation. Getting the chunk map and iterating through the tiles of
+     * the individual chunks should be preferred since it does not perform an unnecesary copy.
+     */
+    @Deprecated
     public List<Tile> getTileMap() {
-        return tiles;
+        // TODO:Ontonator Look for usages which assume that this is the internal list used (i.e. mutate the provided
+        //  list).
+        return loadedChunks.values().stream()
+                .flatMap(chunk -> chunk.getTiles().stream())
+                .collect(Collectors.toList());
     }
 
     public Tile getTile(float col, float row) {
@@ -369,7 +322,9 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
     }
 
     public Tile getTile(HexVector position) {
-        for (Tile t : tiles) {
+        Pair<Integer, Integer> chunkCoords = Chunk.getChunkForCoordinates(position.getCol(), position.getRow());
+        Chunk chunk = getChunk(chunkCoords.getValue0(), chunkCoords.getValue1());
+        for (Tile t : chunk.getTiles()) {
             if (t.getCoordinates().equals(position)) {
                 return t;
             }
@@ -377,58 +332,120 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         return null;
     }
 
-    public Tile getTile(int index) {
-        for (Tile t : tiles) {
-            if (t.getTileID() == index) {
-                return t;
+    // TODO:Ontonator Is it a problem that this does not find unloaded tiles?
+    public Tile getTile(int tileID) {
+        for (Chunk chunk : loadedChunks.values()) {
+            for (Tile t : chunk.getTiles()) {
+                if (t.getTileID() == tileID) {
+                    return t;
+                }
             }
         }
         return null;
     }
 
+    public Chunk getLoadedChunk(int x, int y) {
+        return loadedChunks.get(new Pair<>(x, y));
+    }
+
+    public Chunk getChunk(int x, int y) {
+        return loadedChunks.computeIfAbsent(new Pair<>(x, y), pair -> Chunk.loadChunkAt(this, x, y));
+    }
+
+    /**
+     * Sets all the tiles in the loaded chunks.
+     *
+     * @param tileMap the new tiles to use
+     *
+     * @deprecated since this only affects the loaded chunks and is no longer a trivial replacement of lists
+     */
+    @Deprecated
     public void setTileMap(CopyOnWriteArrayList<Tile> tileMap) {
-        this.tiles = tileMap;
+        // TODO:Ontonator Check that this works.
+        for (Chunk chunk : loadedChunks.values()) {
+            chunk.getEntities().clear();
+        }
+        for (Tile tile : tileMap) {
+            addTile(tile);
+        }
     }
 
     // TODO ADDRESS THIS..?
+    // TODO:Ontonator I don't really know what the point of this is, so I don't know what to do here.
+    /**
+     * This updates a tile with a given ID. This only works properly if the tile being updated is currently loaded; if
+     * the tile is not loaded, the original tile will remain in place and the new tile will still be added, even if it
+     * is being added to an area that is not loaded (and even if the value of the tile has not changed).
+     *
+     * @param tile the tile to add/update
+     *
+     * @deprecated because it does not properly account for unloaded chunks and does not seem to be used anywhere
+     */
+    @Deprecated
     public void updateTile(Tile tile) {
-        for (Tile t : this.tiles) {
-            if (t.getTileID() == tile.getTileID()) {
-                if (!t.equals(tile)) {
-                    this.tiles.remove(t);
-                    this.tiles.add(tile);
+        for (Chunk chunk : loadedChunks.values()) {
+            for (Tile t : chunk.getTiles()) {
+                if (t.getTileID() == tile.getTileID()) {
+                    if (!t.equals(tile)) {
+                        chunk.getTiles().remove(t);
+                        addTile(tile);
+                    }
+                    break;
                 }
-                return;
             }
         }
-        this.tiles.add(tile);
+        addTile(tile);
+    }
+
+    protected void addTile(Tile tile) {
+        Pair<Integer, Integer> chunkCoords = Chunk.getChunkForCoordinates(tile.getCol(), tile.getRow());
+        Chunk chunk = getChunk(chunkCoords.getValue0(), chunkCoords.getValue1());
+        chunk.getTiles().add(tile);
+    }
+
+    public HashMap<Pair<Integer, Integer>, Chunk> getLoadedChunks() {
+        return loadedChunks;
     }
 
     // TODO ADDRESS THIS..?
+    // TODO:Ontonator See above.
+    /**
+     * This updates an entity with a given ID. This only works properly if the entity being updated is currently loaded;
+     * if the entity is not loaded, the original entity will remain in place and the new entity will still be added,
+     * even if it is being added to an area that is not loaded (and even if the value of the entity has not changed).
+     *
+     * @param entity the entity to add/update
+     *
+     * @deprecated because it does not properly account for unloaded chunks and does not seem to be used anywhere
+     */
     public void updateEntity(AbstractEntity entity) {
-        for (AbstractEntity e : this.worldParameters.getEntities()) {
-            if (e.getEntityID() == entity.getEntityID()) {
-                worldParameters.removeEntity(e);
-                this.worldParameters.getEntities().add(entity);
-                return;
+        for (Chunk chunk : loadedChunks.values()) {
+            for (AbstractEntity e : chunk.getEntities()) {
+                if (e.getEntityID() == entity.getEntityID()) {
+                    chunk.getEntities().remove(e);
+                    addEntity(entity);
+                    return;
+                }
             }
         }
-        this.worldParameters.addEntity(entity);
+        addEntity(entity);
 
         // Since MultiEntities need to be attached to the tiles they live on, setup that
         // connection.
+        // TODO:Ontonator Is this needed in the loop as well, or only for first-time setup?
         if (entity instanceof StaticEntity) {
             ((StaticEntity) entity).setup();
         }
     }
 
+    // TODO:Ontonator This whole system might need to be rethought.
     public void onTick(long i) {
         for (AbstractEntity e : entitiesToDelete) {
-            worldParameters.removeEntity(e);
+            removeEntity(e);
         }
 
         for (Tile t : tilesToDelete) {
-            tiles.remove(t);
+            deleteTile(t.getTileID());
         }
 
         // Collision detection for entities
@@ -462,6 +479,7 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         }
     }
 
+    // TODO:Ontonator Why does this operate with an id?
     public void deleteTile(int tileid) {
         Tile tile = GameManager.get().getWorld().getTile(tileid);
         if (tile != null) {
@@ -536,19 +554,24 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
     }
 
     public String worldToString() {
+        // TODO:Ontonator Check that this works.
         StringBuilder string = new StringBuilder();
-        for (Tile tile : tiles) {
-            String out = String.format("%f, %f, %s, %s\n", tile.getCol(), tile.getRow(), tile.getBiome().getBiomeName(),
-                    tile.getTextureName());
-            string.append(out);
-        }
+        loadedChunks.entrySet().stream()
+                .sorted(Comparator.comparing(Map.Entry::getKey))
+                .flatMap(entry -> entry.getValue().getTiles().stream())
+                .forEachOrdered(tile -> {
+                    String out = String.format("%f, %f, %s, %s\n", tile.getCol(), tile.getRow(),
+                                               tile.getBiome().getBiomeName(),
+                                               tile.getTextureName());
+                    string.append(out);
+                });
         return string.toString();
     }
 
     /**
      * Returns the seed used in the world
      *
-     * @return
+     * @return the seed used in the world
      */
     public long getSeed() {
         return worldParameters.getSeed();
