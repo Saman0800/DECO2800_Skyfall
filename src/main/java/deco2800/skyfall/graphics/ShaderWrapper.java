@@ -42,13 +42,12 @@ public class ShaderWrapper {
             shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
         }
         catch (GdxRuntimeException e) {
-            System.out.println("Shader source not found, check:\n");
-            System.out.println("resources/shaders/"  + shaderName + ".vert\n");
-            System.out.println("resources/shaders/"  + shaderName + ".frag\n");
-            System.out.println("Extended shader disabled\n");
+            System.out.println("\nShader source not found, check:");
+            System.out.println("resources/shaders/"  + shaderName + ".vert");
+            System.out.println("resources/shaders/"  + shaderName + ".frag");
+            System.out.println("Extended shader disabled");
             return;
         }
-
 
         //Allows uniform variables to be in the fragment shader but not referenced in the vertex
         shaderProgram.pedantic = false;
