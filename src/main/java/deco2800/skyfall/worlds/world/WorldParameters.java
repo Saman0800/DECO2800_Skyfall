@@ -1,10 +1,11 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Map;
 
 public class WorldParameters {
 
@@ -29,6 +30,7 @@ public class WorldParameters {
     //List of the biomes in the world
     private List<AbstractBiome> biomes;
 
+    // TODO:Ontonator Consider removing this.
     //List of the entities in the world
     private List<AbstractEntity> entities;
 
@@ -41,6 +43,8 @@ public class WorldParameters {
     //The width of the beach
     private double beachWidth;
 
+    // The spawn rules to use when generating new chunks
+    private Map<AbstractBiome, List<EntitySpawnRule>> spawnRules;
 
     /**
      * Adds an entity to the list of entities
@@ -57,7 +61,6 @@ public class WorldParameters {
     public void addBiome(AbstractBiome biome){
         biomes.add(biome);
     }
-
 
     /**
      * Adds a corresponding biome size
@@ -82,7 +85,6 @@ public class WorldParameters {
     public void setSeed(long seed) {
         this.seed = seed;
     }
-
 
     /**
      * Seeds the world size value
@@ -122,7 +124,6 @@ public class WorldParameters {
             this.lakeSizes.add(lakeSize);
         }
     }
-
 
     public void setBiomeSizes(int[] biomeSizes){
         this.biomeSizes = new ArrayList<>();
@@ -177,6 +178,14 @@ public class WorldParameters {
      */
     public void setBeachWidth(int beachWidth) {
         this.beachWidth = beachWidth;
+    }
+
+    /**
+     * Sets the spawn rules.
+     * @param spawnRules the spawn rules
+     */
+    public void setSpawnRules(Map<AbstractBiome, List<EntitySpawnRule>> spawnRules) {
+        this.spawnRules = spawnRules;
     }
 
     /**
@@ -284,6 +293,14 @@ public class WorldParameters {
      */
     public double getBeachWidth() {
         return beachWidth;
+    }
+
+    /**
+     * Gets the beach width.
+     * @return the beach width
+     */
+    public Map<AbstractBiome, List<EntitySpawnRule>> getSpawnRules() {
+        return spawnRules;
     }
 
     /**

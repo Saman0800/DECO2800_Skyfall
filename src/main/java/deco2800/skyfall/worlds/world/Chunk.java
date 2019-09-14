@@ -1,8 +1,9 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
+import deco2800.skyfall.entities.worlditems.EntitySpawnTable;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import org.javatuples.Pair;
 
 import java.util.*;
@@ -46,23 +47,26 @@ public class Chunk {
         this.y = y;
         this.tiles = tiles;
         this.entities = entities;
+
+        // Add this now so that the static entity generation works.
+        world.getLoadedChunks().put(new Pair<>(x, y), this);
     }
 
     public Chunk(World world, int x, int y) {
         this(world, x, y, new ArrayList<>(), new ArrayList<>());
-        generateTiles();
+        generateChunk();
     }
 
-    public void generateTiles() {
+    public void generateChunk() {
         // TODO:Ontonator Check that this works.
-        createBlankTiles();
-        generateNeighbours();
+        generateTiles();
+        generateEntities();
     }
 
     /**
      * Creates blank tiles which fill the area of this chunk.
      */
-    private void createBlankTiles() {
+    private void generateTiles() {
         // TODO:Ontonator Does this need to check whether the chuk is completely within the world size?
         for (int row = y * CHUNK_SIDE_LENGTH; row < (y + 1) * CHUNK_SIDE_LENGTH; row++) {
             for (int col = x * CHUNK_SIDE_LENGTH; col < (x + 1) * CHUNK_SIDE_LENGTH; col++) {
@@ -75,6 +79,8 @@ public class Chunk {
                                 world.worldParameters.getRiverWidth(), world.worldParameters.getBeachWidth());
             }
         }
+
+        generateNeighbours();
     }
 
     private void generateNeighbours() {
@@ -156,7 +162,11 @@ public class Chunk {
     }
 
     public void generateEntities() {
-        // FIXME:Ontonator Implement.
+        for (Tile tile : getTiles()) {
+            for (EntitySpawnRule rule : world.getWorldParameters().getSpawnRules().get(tile.getBiome())) {
+                EntitySpawnTable.spawnEntity(rule, world, tile);
+            }
+        }
     }
 
     public void unload() {

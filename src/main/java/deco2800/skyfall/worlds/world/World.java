@@ -50,7 +50,7 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
 
     public Map<String, Float> frictionMap;
 
-    // TODO:Ontonator Does it matter that this is not `CopyOnWrite` like the tiles and enities used to be?
+    // TODO:Ontonator Does it matter that this is not `CopyOnWrite` like the tiles and entities used to be?
     protected HashMap<Pair<Integer, Integer>, Chunk> loadedChunks;
 
     //A list of all the tiles within a world
@@ -64,7 +64,7 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
     protected LinkedHashMap<VoronoiEdge, RiverBiome> riverEdges;
     protected LinkedHashMap<VoronoiEdge, BeachBiome> beachEdges;
 
-    protected CopyOnWriteArrayList<EntitySpawnRule> spawnRules;
+    protected NoiseGenerator staticEntityNoise;
 
     // TODO:Ontonator Reconsider this for chunks.
     protected List<AbstractEntity> entitiesToDelete = new CopyOnWriteArrayList<>();
@@ -77,8 +77,6 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
      * @param worldParameters A class that contains the world parameters
      */
     public World(WorldParameters worldParameters){
-        // TODO:Ontonator Consider whether `worldSize` must be a multiple of `CHUNK_SIDE_LENGTH`.
-
         this.worldParameters = worldParameters;
 
         random = new Random(worldParameters.getSeed());
@@ -91,6 +89,8 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
     	// FIXME:Ontonator Sort this out.
         // tileOffsetNoiseGeneratorX = WorldGenNode.getOffsetNoiseGenerator(random, worldParameters.getNodeSpacing());
         // tileOffsetNoiseGeneratorY = WorldGenNode.getOffsetNoiseGenerator(random, worldParameters.getNodeSpacing());
+
+        staticEntityNoise = new NoiseGenerator(random, 3, 4, 1.3);
 
         loadedChunks = new HashMap<>();
 
@@ -330,7 +330,13 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
     }
 
     public Chunk getChunk(int x, int y) {
-        return loadedChunks.computeIfAbsent(new Pair<>(x, y), pair -> Chunk.loadChunkAt(this, x, y));
+        // TODO:Ontonator Remove this.
+        // return loadedChunks.computeIfAbsent(new Pair<>(x, y), pair -> Chunk.loadChunkAt(this, x, y));
+        Chunk chunk = loadedChunks.get(new Pair<>(x, y));
+        if (chunk == null) {
+            chunk = Chunk.loadChunkAt(this, x, y);
+        }
+        return chunk;
     }
 
     /**
@@ -624,6 +630,24 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
      */
     public LinkedHashMap<VoronoiEdge, BeachBiome> getBeachEdges() {
         return this.beachEdges;
+    }
+
+    /**
+     * Gets the noise generator used to generate the static entities.
+     *
+     * @return the noise generator used to generate the static entities.
+     */
+    public NoiseGenerator getStaticEntityNoise() {
+        return staticEntityNoise;
+    }
+
+    /**
+     * Gets the world parameter object for this world.
+     *
+     * @return the world parameter object for this world
+     */
+    public WorldParameters getWorldParameters() {
+        return worldParameters;
     }
 
     @Override

@@ -101,6 +101,21 @@ public class NoiseGenerator {
         return x * x * x * (x * (x * 6 - 15) + 10);
     }
 
+    /**
+     * Repeatedly smooths a value using {@link #fade(double)} {@code n} times.
+     *
+     * @param x the value to fade
+     * @param n the number of times to apply the fade function
+     *
+     * @return the result of the fade
+     */
+    public static double fade(double x, int n) {
+        for (int i = 0; i < n; i++) {
+            x = fade(x);
+        }
+        return x;
+    }
+
 
     /**
      * Gets a perlin value at a certain point
