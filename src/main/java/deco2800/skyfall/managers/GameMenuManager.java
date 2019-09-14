@@ -9,9 +9,11 @@ import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.SkyfallGame;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gamemenu.GameMenuScreen;
+import deco2800.skyfall.gui.Clock;
 import deco2800.skyfall.gui.HealthCircle;
 import deco2800.skyfall.gui.SettingsTable;
 import deco2800.skyfall.gamemenu.PopUpTable;
+import deco2800.skyfall.gui.WeatherGui;
 
 
 /**
@@ -25,6 +27,8 @@ public class GameMenuManager extends TickableManager {
     private HealthCircle healthCircle;
     private InventoryManager inventory;
     private SoundManager soundManager;
+    private Clock clock;
+    private WeatherGui weather;
     private Skin skin;
     private String[] characters;
     private SkyfallGame game;
@@ -57,7 +61,14 @@ public class GameMenuManager extends TickableManager {
         //Get the current state of the inventory on tick so that display can be updated
         inventory = GameManager.get().getManager(InventoryManager.class);
 
+        if (clock != null) {
+            clock.update();
+        }
 
+        // Update the weather
+        if (weather != null) {
+            weather.update();
+        }
     }
 
     /**
@@ -223,6 +234,20 @@ public class GameMenuManager extends TickableManager {
     public void addHealthCircle(HealthCircle hc) {
         this.healthCircle = hc;
     }
+
+    /**
+     * Adds the circle to menu Screen
+     * @param clk
+     */
+    public void addClock(Clock clk) {
+        this.clock = clk;
+    }
+
+    /**
+     * Adds the current weather event to screen.
+     * @param weather
+     */
+    public void addWeather(WeatherGui weather){this.weather = weather;}
 
     /**
      * Getter of all characters in the game.
