@@ -75,7 +75,7 @@ public class EnvironmentManager extends TickableManager {
    // Current weather in the game
    public static String weather;
 
-   /**
+    /**
     * Constructor
     *
     */
@@ -188,47 +188,32 @@ public class EnvironmentManager extends TickableManager {
     *
     * @return long The time of day in hours
     */
+
    public float getTime() {
       float mins = (float) minutes / 60;
       return hours + mins;
    }
 
    /**
-    * Sets the time of day in game
-    *
-    * @param i The time of day to be set
-    */
-   public void setTime(long i) {
-      //Each day cycle goes for approx 24 minutes
-      long timeHours = (i / 60000);
-
-      hours = timeHours % 12;
-
-      //Check if observers need notifying, notifies if needed
-      if (timeHours % 24 != hours) {
-         updateTimeListeners(timeHours % 24);
-      }
-
-      //Each minute equals one second
-      long timeMins = (i / 1000);
-      minutes = timeMins % 60;
-
-      //Update isDay boolean
-      isDay();
-
-      System.out.println(getTime());
-   }
-
-   public void setHours(float time) {
-
-   }
-
-    /**
-     * @return Converts the game minutes and hours into a hour-decimal value. For
-     * example the time 2:30am would yield a hour-decimal of 2.5
+     * Sets the time of day in game
+     *
+     * @param i The time of day to be set
      */
-    public float getHourDecimal() {
-        return ((float) hours) + ((float) minutes / 60);
+    public void setTime(long i) {
+        //Each day cycle goes for approx 24 minutes
+        long timeHours = (i / 60000);
+        //Check if observers need notifying, notifies if needed
+        if (timeHours % 24 != hours) {
+            updateTimeListeners(timeHours % 24);
+        }
+        hours = timeHours % 24;
+
+        //Each minute equals one second
+        long timeMins = (i / 1000);
+        minutes = timeMins % 60;
+
+        //Update isDay boolean
+        isDay();
     }
 
     /**
@@ -279,7 +264,7 @@ public class EnvironmentManager extends TickableManager {
       return Long.toString(displayHours) + ":" + prefix + Long.toString(minutes) + TOD;
    }
 
-   /**
+    /**
     * Sets the season in game, starting with summer.
     * @param i the time in milliseconds
     */
@@ -444,10 +429,11 @@ public class EnvironmentManager extends TickableManager {
          time = System.currentTimeMillis();
       }
 
-        // Set the TOD and month in game
+      // Set the TOD and month in game
         setTime(time);
         setMonth(time);
 
+      currentWeather();
 
       // Key mapping to mute volume
       // M for mute and U to un-mute
