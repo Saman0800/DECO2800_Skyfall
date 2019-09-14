@@ -286,13 +286,14 @@ public class Tile {
      */
     public void assignEdge(LinkedHashMap<VoronoiEdge, RiverBiome> riverEdges,
                            LinkedHashMap<VoronoiEdge, BeachBiome> beachEdges,
-                           double riverWidth, double beachWidth) {
+                           int nodeSpacing, double riverWidth, double beachWidth) {
         /* TODO do something better than this to prevent rivers from being on
             the origin
          */
         if (getBiome().getBiomeName().equals("ocean")) {
             return;
         }
+        // FIXME:Ontonator Fix the beaches' noise.
         VoronoiEdge closestEdge = findNearestEdge(null, new ArrayList<>(beachEdges.keySet()), beachWidth, beachWidth * 2);
         if (!(Math.abs(getCol()) < riverWidth && Math.abs(getRow()) < riverWidth)) {
             closestEdge = findNearestEdge(closestEdge, new ArrayList<>(riverEdges.keySet()), riverWidth, riverWidth * 2);

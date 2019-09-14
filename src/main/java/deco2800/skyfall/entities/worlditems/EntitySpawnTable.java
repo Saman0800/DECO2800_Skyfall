@@ -19,7 +19,6 @@ import java.lang.Math;
  * EntitySpawnRule for precise spawning however, simpler methods exist that will
  * handle this for you
  */
-@SuppressWarnings("unchecked")
 public class EntitySpawnTable {
     /**
      * Simple static method for placing static items. Takes the given entity and
@@ -28,12 +27,10 @@ public class EntitySpawnTable {
      * @param tile   The tile the new entity will occupy
      * @param entity The entity to be deep copied
      * @param <T>    T must extend StaticEntity and have .newInstance inherited
-     * @return The duplicated instance with the new tile position. See NewInstance
-     *         to place items
      */
     public static <T extends StaticEntity> void placeEntity(T entity, Tile tile) {
         World world = GameManager.get().getWorld();
-        world.addEntity((T) entity.newInstance(tile));
+        world.addEntity(entity.newInstance(tile));
     }
 
     /**
@@ -42,13 +39,13 @@ public class EntitySpawnTable {
      * 
      * @param rule          The EntitySpawn that holds the characteristics of the
      *                      placement of the static entity
-     * @param tile          The tile the new entity will occupy
+     * @param nextTile      The tile the new entity will occupy
      * @param currentChance The current chance the entity has of spawning on the
      *                      tile
      */
     private static double adjustChanceAdjacent(EntitySpawnRule rule, Tile nextTile, double currentChance) {
 
-        double adjustmentFactor = Math.pow(rule.getLimitAdjacentValue(), (double) nextTile.getNeighbours().size());
+        double adjustmentFactor = Math.pow(rule.getLimitAdjacentValue(), nextTile.getNeighbours().size());
 
         return currentChance / adjustmentFactor;
 
@@ -76,13 +73,11 @@ public class EntitySpawnTable {
         }
 
         if ((randGen.nextDouble() < chance)) {
-            T newEntity = (T) entity.newInstance(nextTile);
+            StaticEntity newEntity = entity.newInstance(nextTile);
             int renderOrder = (int) (nextTile.getRow() * -2.0);
             newEntity.setRenderOrder(renderOrder);
-            world.addEntity((T) newEntity);
+            world.addEntity(newEntity);
         }
-
-        return;
     }
 
     /**
@@ -109,13 +104,11 @@ public class EntitySpawnTable {
         }
 
         if (randGen.nextDouble() < adjustedProb) {
-            T newEntity = (T) entity.newInstance(nextTile);
+            StaticEntity newEntity = entity.newInstance(nextTile);
             int renderOrder = (int) (nextTile.getRow() * -2.0);
             newEntity.setRenderOrder(renderOrder);
-            world.addEntity((T) newEntity);
+            world.addEntity(newEntity);
         }
-
-        return;
     }
 
     /**
@@ -129,7 +122,7 @@ public class EntitySpawnTable {
      */
     public static <T extends StaticEntity> void spawnEntities(T entity, EntitySpawnRule rule, World world) {
 
-        List<Tile> tiles = null;
+        List<Tile> tiles;
         // Use the current time as a seed
         Random rand = new Random((new Date()).getTime());
 
@@ -158,7 +151,7 @@ public class EntitySpawnTable {
             if (nextTile.isObstructed()) {
                 continue;
             }
-            world.addEntity((T) entity.newInstance(nextTile));
+            world.addEntity(entity.newInstance(nextTile));
             placedDown++;
         }
 
@@ -179,8 +172,6 @@ public class EntitySpawnTable {
 
             placedDown++;
         }
-
-        return;
     }
 
     /**
@@ -190,7 +181,6 @@ public class EntitySpawnTable {
      * @param entity Entity to be copied and inserted
      * @param chance probability that the entity will be in a given tile
      * @param <T>    T must extend StaticEntity and have .newInstance inherited
-     * @param biome  specified biome to spawn in, null for no specification
      */
     public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntities(T entity, double chance,
             World world) {

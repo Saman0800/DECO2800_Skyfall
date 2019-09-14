@@ -3,6 +3,7 @@ package deco2800.skyfall.worlds.world;
 import com.badlogic.gdx.Gdx;
 import com.google.gson.Gson;
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.SaveLoadInterface;
@@ -62,6 +63,8 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
 
     protected LinkedHashMap<VoronoiEdge, RiverBiome> riverEdges;
     protected LinkedHashMap<VoronoiEdge, BeachBiome> beachEdges;
+
+    protected CopyOnWriteArrayList<EntitySpawnRule> spawnRules;
 
     // TODO:Ontonator Reconsider this for chunks.
     protected List<AbstractEntity> entitiesToDelete = new CopyOnWriteArrayList<>();
@@ -159,12 +162,12 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         BiomeGenerator biomeGenerator = new BiomeGenerator(this, worldGenNodes, voronoiEdges, random, worldParameters);
         biomeGenerator.generateBiomes();
 
-        for (int q = -worldSize / Chunk.CHUNK_SIDE_LENGTH; q <= worldSize / Chunk.CHUNK_SIDE_LENGTH; q++) {
-            for (int r = -worldSize / Chunk.CHUNK_SIDE_LENGTH; r <= worldSize / Chunk.CHUNK_SIDE_LENGTH; r++) {
-                Chunk chunk = new Chunk(this, q, r);
-                loadedChunks.put(new Pair<>(q, r), chunk);
-            }
-        }
+        // for (int q = -worldSize / Chunk.CHUNK_SIDE_LENGTH; q <= worldSize / Chunk.CHUNK_SIDE_LENGTH; q++) {
+        //     for (int r = -worldSize / Chunk.CHUNK_SIDE_LENGTH; r <= worldSize / Chunk.CHUNK_SIDE_LENGTH; r++) {
+        //         Chunk chunk = new Chunk(this, q, r);
+        //         loadedChunks.put(new Pair<>(q, r), chunk);
+        //     }
+        // }
     }
 
     // TODO:Ontonator Consider removing this method.
