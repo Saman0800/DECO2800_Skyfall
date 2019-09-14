@@ -1,6 +1,5 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.math.Vector2;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 
@@ -30,7 +29,7 @@ public class Projectile extends AgentEntity {
     /**
      * How many game ticks this object has survived.
      */
-    private long ticksAliveFor = 0;
+    protected long ticksAliveFor = 0;
 
     /**
      *
@@ -104,16 +103,10 @@ public class Projectile extends AgentEntity {
             this.destroy();
         }
 
-        //TODO: Move to range max.
         if (this.range >= 1) {
             position.moveToward(movementPosition,speed);
         }
 
-    }
-
-    @Override
-    public boolean collidesWith(AbstractEntity entity) {
-        return super.collidesWith(entity);
     }
 
     /**
