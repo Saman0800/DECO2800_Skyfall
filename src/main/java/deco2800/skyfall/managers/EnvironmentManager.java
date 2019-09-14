@@ -16,10 +16,10 @@ import java.util.Map;
 public class EnvironmentManager extends TickableManager {
 
     //Hours in a game day
-    public long hours;
+    public int hours;
 
     // Seconds in a game day
-    public long minutes;
+    public int minutes;
 
    // Milliseconds since last time update
    private long currentMillis;
@@ -43,7 +43,7 @@ public class EnvironmentManager extends TickableManager {
     public String biome;
 
     // Time to display on screen
-    long displayHours;
+    private long displayHours;
 
     // Time of day: AM or PM
     public String TOD;
@@ -188,29 +188,37 @@ public class EnvironmentManager extends TickableManager {
     *
     * @return long The time of day in hours
     */
-
-   public float getTime() {
-      float mins = (float) minutes / 60;
-      return hours + mins;
+   public long getTime() {
+      return hours;
    }
 
-   /**
+    /**
+     * @return Converts the game minutes and hours into a hour-decimal value. For
+     * example the time 2:30am would yield a hour-decimal of 2.5
+     */
+    public float getHourDecimal() {
+        return ((float) hours) + ((float) minutes / 60);
+    }
+
+    /**
      * Sets the time of day in game
      *
-     * @param i The time of day to be set
+     * @param hour The hour of day to be set. Must be between 0-23 inclusive.
+     * @param mins The minutes of the hour of day to be set. Must be between 0-59 inclusive.
      */
-    public void setTime(long i) {
-        //Each day cycle goes for approx 24 minutes
-        long timeHours = (i / 60000);
-        //Check if observers need notifying, notifies if needed
-        if (timeHours % 24 != hours) {
-            updateTimeListeners(timeHours % 24);
-        }
-        hours = timeHours % 24;
+    public void setTime(int hour, int mins) {
+        hours = hour;
+        minutes = mins;
 
-        //Each minute equals one second
-        long timeMins = (i / 1000);
-        minutes = timeMins % 60;
+        //Check if observers need notifying, notifies if needed
+        if (mins >= 60) {
+            hours += 1;
+            if (hours >= 24) {
+                hours = 0;
+            }
+            minutes = 0;
+            updateTimeListeners(hours);
+        }
 
         //Update isDay boolean
         isDay();
@@ -424,15 +432,18 @@ public class EnvironmentManager extends TickableManager {
     public void onTick(long i) {
         long time = i;
 
-      if (System.currentTimeMillis() - currentMillis > 1000) {
-         currentMillis = System.currentTimeMillis();
-         time = System.currentTimeMillis();
-      }
+        if (System.currentTimeMillis() - currentMillis >= 1000) {
+            currentMillis = System.currentTimeMillis();
+            minutes += 1;
+        }
 
-      // Set the TOD and month in game
-        setTime(time);
-        setMonth(time);
+        // Set the TOD and month in game
+        setTime(hours, minutes);
+        setMonth(currentMillis);
 
+      // Set Background music as per the specific biome and TOD
+      setBiome();
+      setTODMusic();
       currentWeather();
 
       // Key mapping to mute volume

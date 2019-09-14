@@ -133,7 +133,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         /* Add environment to game manager */
         EnvironmentManager gameEnvironManag = new EnvironmentManager();
         // For debuggin only!
-        gameEnvironManag.setTime(5 * 60000);
+        gameEnvironManag.setTime(5, 0);
         gameManager.addManager(gameEnvironManag);
 
         /* Add BGM to game manager */
