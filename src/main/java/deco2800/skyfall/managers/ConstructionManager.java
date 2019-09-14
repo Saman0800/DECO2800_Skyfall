@@ -576,6 +576,21 @@ public class ConstructionManager extends TickableManager {
         }
     }
 
+    /**
+     * Sets the building to be placed
+     * @param buildingID - the building to change to
+     *
+     */
+    public void setBuilding(int buildingID) {
+        this.buildingID = buildingID;
+
+    }
+
+    /**
+     * Sets the building to be placed
+     * @param building - the building to change to
+     *
+     */
     public void setBuildingToBePlaced (BuildingEntity building){
         buildingToBePlaced = building;
     }

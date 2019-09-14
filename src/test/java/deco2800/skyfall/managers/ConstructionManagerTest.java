@@ -2,6 +2,8 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.buildings.BuildingEntity;
 import deco2800.skyfall.buildings.BuildingFactory;
+import deco2800.skyfall.resources.items.Stone;
+import deco2800.skyfall.resources.items.Wood;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
@@ -36,16 +38,32 @@ public class ConstructionManagerTest {
     public void testInvCheckPositive() {
 
         BuildingFactory factory = new BuildingFactory();
-        BuildingEntity cabin = factory.createCabin(1,1);
-
         InventoryManager inventoryManager = new InventoryManager();
 
-        Assert.assertEquals(0f, cabin.getCol(), 0.0);
+        Stone stone1 = new Stone();
+        inventoryManager.inventoryAdd(stone1);
+        Stone stone2 = new Stone();
+        inventoryManager.inventoryAdd(stone2);
+        Wood wood1 = new Wood();
+        inventoryManager.inventoryAdd(wood1);
+        Wood wood2 = new Wood();
+        inventoryManager.inventoryAdd(wood2);
+        Wood wood3 = new Wood();
+        inventoryManager.inventoryAdd(wood3);
+        Wood wood4 = new Wood();
+        inventoryManager.inventoryAdd(wood4);
+        Wood wood5 = new Wood();
+        inventoryManager.inventoryAdd(wood5);
 
 
-        //Boolean result = cmgr.invCheck(cabin, inventoryManager);
+        //Assert.assertEquals(1f, cabin.getCol(), 0.0);
 
-        //Assert.assertTrue(result);
+        BuildingEntity cabin = factory.createCabin(1,1);
+
+        Boolean result = cmgr.invCheck(cabin, inventoryManager);
+
+        Assert.assertTrue(result);
+
     }
 
     @Test
@@ -66,6 +84,33 @@ public class ConstructionManagerTest {
 
     @Test
     public void testInvRemove() {
+
+        InventoryManager inventoryManager = GameManager.getManagerFromInstance(InventoryManager.class);
+
+        Stone stone1 = new Stone();
+        inventoryManager.inventoryAdd(stone1);
+        Stone stone2 = new Stone();
+        inventoryManager.inventoryAdd(stone2);
+        Wood wood1 = new Wood();
+        inventoryManager.inventoryAdd(wood1);
+        Wood wood2 = new Wood();
+        inventoryManager.inventoryAdd(wood2);
+        Wood wood3 = new Wood();
+        inventoryManager.inventoryAdd(wood3);
+        Wood wood4 = new Wood();
+        inventoryManager.inventoryAdd(wood4);
+        Wood wood5 = new Wood();
+        inventoryManager.inventoryAdd(wood5);
+
+        BuildingFactory factory = new BuildingFactory();
+        BuildingEntity cabin = factory.createCabin(1,1);
+        cmgr.setBuildingToBePlaced(cabin);
+
+        cmgr.build(wb.getWorld(),2,2);
+
+        Assert.assertEquals(2, inventoryManager.getTotalAmount(), 0.0);
+
+
         //AbstractBuilding building = new WallBuilding(1, 1);
        // TreeMap<String, Integer> buildingCost = new TreeMap<>();
         //buildingCost.put("Stone", 2);
