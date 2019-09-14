@@ -9,6 +9,8 @@ import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gui.Clock;
 import deco2800.skyfall.gui.HealthCircle;
+import deco2800.skyfall.gui.WeatherGui;
+import deco2800.skyfall.managers.EnvironmentManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.managers.TextureManager;
@@ -156,6 +158,11 @@ public class GameMenuScreen {
                 "rounded_rectangle");
 
         gameMenuManager.addClock(clock);
+
+        String currentWeather;
+        currentWeather = EnvironmentManager.currentWeather();
+        WeatherGui weather = new WeatherGui(stage, currentWeather); // need to have this for any weather
+        gameMenuManager.addWeather(weather);
 
     }
 

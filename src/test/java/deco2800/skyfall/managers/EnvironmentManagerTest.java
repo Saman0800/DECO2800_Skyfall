@@ -275,4 +275,38 @@ public class EnvironmentManagerTest {
         } catch (Exception e) { /* Exception caught, if any */ }
     }
 
+    @Test
+    public void currentWeatherTest() {
+        manager.weather = "snow";
+        assertEquals(manager.currentWeather(), "snow");
+
+        manager.weather = "rain";
+        assertEquals(manager.currentWeather(), "rain");
+    }
+
+    @Test
+    public void biomeDisplayNameTest() {
+        manager.biome = "forest";
+        assertEquals("Forest", manager.biomeDisplayName());
+        manager.biome = "desert";
+        assertEquals("Desert", manager.biomeDisplayName());
+        manager.biome = "lake";
+        assertEquals("Lake", manager.biomeDisplayName());
+        manager.biome = "ocean";
+        assertEquals("Ocean", manager.biomeDisplayName());
+        manager.biome = "mountain";
+        assertEquals("Mountain", manager.biomeDisplayName());
+        manager.biome = "volcanic_mountains";
+        assertEquals("Volcanic Mountains", manager.biomeDisplayName());
+        manager.biome = "snowy_mountains";
+        assertEquals("Snowy Mountains", manager.biomeDisplayName());
+        manager.biome = "jungle";
+        assertEquals("Jungle", manager.biomeDisplayName());
+        manager.biome = "swamp";
+        assertEquals("Swamp", manager.biomeDisplayName());
+        manager.biome = "river";
+        assertEquals("River", manager.biomeDisplayName());
+        manager.biome = "beach";
+        assertEquals("Beach", manager.biomeDisplayName());
+    }
 }
