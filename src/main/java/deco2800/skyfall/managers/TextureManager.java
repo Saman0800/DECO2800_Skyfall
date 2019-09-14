@@ -92,6 +92,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("stoneRN", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/stoneRN.png"));
             textureMap.put("stoneDead", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/Dead.png"));
 
+            textureMap.put("chestClosed", new Texture("resources/chest_icon.png"));
+
             textureMap.put("enemyTreeman", new Texture("resources/Treeman.png"));
             textureMap.put("treemanDead", new Texture("resources/TreemanDead.png"));
 
@@ -162,6 +164,13 @@ public class TextureManager extends AbstractManager {
             textureMap.put("MBush2", new Texture("resources/world_details/MBush2.png"));
             textureMap.put("MBush3", new Texture("resources/world_details/MBush3.png"));
 
+            textureMap.put("sword_tex", new Texture("resources/weapons/sword.png"));
+            textureMap.put("sword", new Texture("resources/weapons/sword.png"));
+            textureMap.put("axe_tex", new Texture("resources/weapons/axe.png"));
+            textureMap.put("bow_tex", new Texture("resources/weapons/bow.png"));
+            textureMap.put("spear_tex", new Texture("resources/weapons/spear.png"));
+            textureMap.put("no_weapon_tex", new Texture("resources/weapons/noweapon.png"));
+
             textureMap.put("pop up screen", new Texture("resources/pop_up_screen_background.png"));
             textureMap.put("game menu bar", new Texture("resources/pop_up_screen_title_background.png"));
 
@@ -212,6 +221,12 @@ public class TextureManager extends AbstractManager {
             textureMap.put("Hatchet", new Texture("resources/temp_hatchet.png"));
             textureMap.put("Select", new Texture("resources/item_selected.png"));
             textureMap.put("quick_access_panel", new Texture("quick_access_panel.png"));
+            textureMap.put("takeall", new Texture("resources/takeall.png"));
+
+            // Inventory items
+            textureMap.put("Apple", new Texture("resources/inventory/apple-1.png"));
+            textureMap.put("Aloe_Vera", new Texture("resources/inventory/apple-1.png"));
+            textureMap.put("Berry", new Texture("resources/inventory/201567400471_.pic_thumb.png"));
 
             textureMap.put("MainCharacter", new Texture("resources/Main_Character_F_Right.png"));
             textureMap.put("MainCharacterN_Anim", new Texture("resources/Main_Character_Back_Anim.png"));

@@ -1,7 +1,12 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.audio.Sound;
+import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.spells.SpellFactory;
+import deco2800.skyfall.entities.structures.BuildingType;
+import deco2800.skyfall.entities.spells.SpellFactory;
+import deco2800.skyfall.entities.weapons.Sword;
+import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.entities.worlditems.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.Vector2;
@@ -14,18 +19,15 @@ import deco2800.skyfall.gui.HealthCircle;
 import deco2800.skyfall.gui.ManaBar;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.*;
-import deco2800.skyfall.resources.GoldPiece;
-import deco2800.skyfall.resources.HealthResources;
+import deco2800.skyfall.resources.*;
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
-
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.Tile;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.*;
 
 /**
@@ -36,17 +38,17 @@ public class MainCharacter extends Peon
 
     private final Logger logger = LoggerFactory.getLogger(MainCharacter.class);
 
-    // Weapon Manager for MainCharacter
-    private WeaponManager weapons;
-
     // Manager for all of MainCharacter's inventories
     private InventoryManager inventories;
 
-    // Hotbar of inventories
-    private List<Item> hotbar;
-
     //List of blueprints that the player has learned.
-    private List<String> blueprintsLearned;
+
+    private List<Blueprint> blueprintsLearned;
+
+    private BuildingFactory tempFactory;
+
+
+
 
     //The name of the item to be created.
     private String itemToCreate;
@@ -62,14 +64,6 @@ public class MainCharacter extends Peon
 
     //The pick Axe that is going to be created
     private Hatchet hatchetToCreate;
-
-    // The index of the item selected to be used in the hotbar
-    // ie. [sword][gun][apple]
-    // if selecting sword then equipped_item = 0,
-    // if selecting gun the equipped_item = 1
-    private int equipped_item;
-    private static final int INVENTORY_MAX_CAPACITY = 20;
-    private static final int HOTBAR_MAX_CAPACITY = 5;
 
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
@@ -173,14 +167,7 @@ public class MainCharacter extends Peon
      */
     private boolean isInvincible;
 
-    /**
-     * Private helper method to instantiate inventory and weapon managers for
-     * Main Character constructor
-     */
-    private void instantiateManagers() {
-        //this.inventories = new InventoryManager();
-        this.weapons = new WeaponManager();
-    }
+    private String equipped;
 
     /**
      * Base Main Character constructor
@@ -195,10 +182,8 @@ public class MainCharacter extends Peon
         GameManager.getManagerFromInstance(InputManager.class).addKeyUpListener(this);
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
 
-        this.weapons = GameManager.getManagerFromInstance(WeaponManager.class);
         this.inventories = GameManager.getManagerFromInstance(InventoryManager.class);
 
-        this.equipped_item = 0;
         this.level = 1;
         this.foodLevel = 100;
         foodAccum = 0.f;
@@ -219,6 +204,8 @@ public class MainCharacter extends Peon
         velHistoryX = new ArrayList<>();
         velHistoryY = new ArrayList<>();
         blueprintsLearned = new ArrayList<>();
+        tempFactory = new BuildingFactory();
+
 
 
         isMoving = false;
@@ -232,6 +219,7 @@ public class MainCharacter extends Peon
                 position.getRow(),
                 1, 1);*/
 
+        equipped = "no_weapon";
         canSwim = true;
         isSprinting = false;
         this.scale = 0.4f;
@@ -358,8 +346,7 @@ public class MainCharacter extends Peon
 
         //Unselect the spell.
         this.spellSelected = SpellType.NONE;
-
-
+        
         //Create the spell using the factory.
         Spell spell = SpellFactory.createSpell(spellType,mousePosition);
 
@@ -381,6 +368,14 @@ public class MainCharacter extends Peon
         GameManager.get().getWorld().addEntity(spell);
 
         setAttacking(false);
+    }
+
+    public String getEquipped() {
+        return this.equipped;
+    }
+
+    public void setEquipped(String item) {
+        this.equipped = item;
     }
 
     /**
@@ -553,73 +548,6 @@ public class MainCharacter extends Peon
         }
 
         /**
-         *  Add weapon to weapons list
-         * @param item weapon to be added
-         *
-         */
-        public void pickUpWeapon (Weapon item){
-            weapons.pickUpWeapon(item);
-        }
-
-        /**
-         * Removes items from player's collection
-         * @param item weapon being removed
-         */
-        public void dropWeapon (Weapon item){
-            weapons.dropWeapon(item);
-        }
-
-        /**
-         * Get the weapons for the player
-         * @return weapons
-         */
-        public Map<Weapon, Integer> getWeapons () {
-            return weapons.getWeapons();
-        }
-
-        /**
-         * Attempts to equip a weapon from the weapons map
-         * @param item weapon being equipped
-         */
-        public void equipWeapon (Weapon item){
-            weapons.equipWeapon(item);
-        }
-
-        /**
-         * Attempts to unequip a weapon and return it to the weapons map
-         * @param item weapon being unequipped
-         */
-        public void unequipWeapon (Weapon item){
-            weapons.unequipWeapon(item);
-        }
-
-        /**
-         * Get a copy of the equipped weapons list
-         * Modifying the returned list shouldn't affect the internal state of class
-         * @return equipped list
-         */
-        public List<Weapon> getEquipped () {
-            return weapons.getEquipped();
-        }
-
-        /**
-         * Gets the weapon manager of the character, so it can only be modified
-         * this way, prevents having it being a public variable
-         * @return the weapon manager of character
-         */
-        public WeaponManager getWeaponManager () {
-            return this.weapons;
-        }
-
-        /**
-         * Deals damage to character from combat
-         * @param item weapon character is being hit by
-         */
-        public void weaponEffect (Weapon item){
-            this.changeHealth(item.getDamage().intValue() * -1);
-        }
-
-        /**
          * Set the players inventory to a predefined inventory
          * e.g for loading player saves
          * @param inventoryContents the save for the inventory
@@ -758,6 +686,7 @@ public class MainCharacter extends Peon
                 this.attack(mousePos);
             }
         }
+
 
         /**
          * Handles tick based stuff, e.g. movement
@@ -943,12 +872,10 @@ public class MainCharacter extends Peon
         }
 
         /**
-         * Removes one instance of a gold piece in the pouch.
-         * @param gold The gold piece to be removed from the pouch.
+         * Removes one instance of a gold piece in the pouch with a specific value.
+         * @param goldValue The value of the gold piece to be removed from the pouch.
          */
-        public void removeGold (GoldPiece gold){
-            // store the gold's value (5G, 10G etc) as a variable
-            Integer goldValue = gold.getValue();
+        public void removeGold(Integer goldValue) {
 
             // if this gold value does not exist in the pouch
             if (!(goldPouch.containsKey(goldValue))) {
@@ -1289,6 +1216,7 @@ public class MainCharacter extends Peon
 
                     if (entity instanceof Tree) {
 
+
                         if (this.getPosition().distance(entity.getPosition()) <= 1) {
                             playerHatchet.farmTree((Tree) entity);
                             logger.info(this.inventories.toString());
@@ -1327,10 +1255,11 @@ public class MainCharacter extends Peon
          * A getter method for the blueprints that the player has learned.
          * @return the learned blueprints list
          */
-        public List<String> getBlueprintsLearned () {
+    public List<Blueprint> getBlueprintsLearned () {
+            blueprintsLearned.add(new Hatchet());
 
-            return this.blueprintsLearned;
-        }
+        return this.blueprintsLearned;
+    }
 
         /***
          * A getter method to get the Item to be created.
@@ -1349,34 +1278,78 @@ public class MainCharacter extends Peon
         }
 
         /***
-         * Creates a manufactured item. Checks if required resources are in the inventory.
-         * if yes, creates the item, adds it to the player's inventory
-         * and deducts the required resource from inventory
+         * Creates an item if the player has the blueprint. Checks if required resources
+         * are in the inventory. if yes, creates the item, adds it to the player's
+         * inventoryand deducts the required resource from inventory
          */
-        public void createItem (ManufacturedResources newItem){
-            if (getBlueprintsLearned().contains(newItem.getName())) {
-                if (newItem.getRequiredMetal() >= this.getInventoryManager().
-                        getAmount("Metal")) {
-                    logger.info("You don't have enough Metal");
+    public void createItem (Blueprint newItem) {
 
-                } else if (newItem.getRequiredWood() >= this.getInventoryManager().
-                        getAmount("Wood")) {
-                    logger.info("You don't have enough Wood");
+            for (Blueprint blueprint: getBlueprintsLearned()){
+                if (blueprint.getClass()== newItem.getClass()) {
 
-                } else if (newItem.getRequiredStone() >= this.getInventoryManager().
-                        getAmount("Stone")) {
-                    logger.info("You don't have enough Stone");
+                    if (newItem.getRequiredMetal() > this.getInventoryManager().
+                            getAmount("Metal")) {
+                        logger.info("You don't have enough Metal");
 
-                } else {
-                    this.getInventoryManager().inventoryAdd(new Hatchet(this));
+                    } else if (newItem.getRequiredWood() > this.getInventoryManager().
+                            getAmount("Wood")) {
+                        logger.info("You don't have enough Wood");
 
-                    this.getInventoryManager().inventoryDropMultiple("Metal", newItem.getRequiredMetal());
-                    this.getInventoryManager().inventoryDropMultiple("Stone", newItem.getRequiredStone());
-                    this.getInventoryManager().inventoryDropMultiple("Wood", newItem.getRequiredWood());
+                    } else if (newItem.getRequiredStone() > this.getInventoryManager().
+                            getAmount("Stone")) {
+                        logger.info("You don't have enough Stone");
 
+                    } else {
+                        switch(newItem.getName()){
+                            case "Hatchet":
+                                this.getInventoryManager().inventoryAdd(new Hatchet());
+                                break;
+
+                            case "Pick Axe":
+                                this.getInventoryManager().inventoryAdd(new PickAxe());
+                                break;
+
+                                //These are only placeholders and will change once coordinated
+                                //with Building team
+                            case "Cabin":
+                                tempFactory.createCabin(this.getCol(),this.getRow());
+                                break;
+
+                            case "StorageUnit":
+                                tempFactory.createStorageUnit(this.getCol(),this.getRow());
+                                break;
+
+                            case "TownCentre":
+                                tempFactory.createTownCentreBuilding(this.getCol(),this.getRow());
+                                break;
+
+                            case "Fence":
+                                tempFactory.createFenceBuilding(this.getCol(),this.getRow());
+                                break;
+
+                            case "SafeHouse":
+                                tempFactory.createSafeHouse(this.getCol(),this.getRow());
+                                break;
+
+                            case "WatchTower":
+                                tempFactory.createWatchTower(this.getCol(),this.getRow());
+                                break;
+
+                            case "Castle":
+                                tempFactory.createCastle(this.getCol(),this.getRow());
+                                break;
+                        }
+
+                        this.getInventoryManager().inventoryDropMultiple
+                                ("Metal", newItem.getRequiredMetal());
+                        this.getInventoryManager().inventoryDropMultiple
+                                ("Stone", newItem.getRequiredStone());
+                        this.getInventoryManager().inventoryDropMultiple
+                                ("Wood", newItem.getRequiredWood());
+                    }
                 }
             }
-        }
+    }
 
         /**
          * Sets the animations.

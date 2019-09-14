@@ -20,7 +20,9 @@ public class Shield extends Spell {
         this.range = 0;
         this.manaCost = 30;
         this.mc = GameManager.getManagerFromInstance(GameMenuManager.class).getMainCharacter();
-        this.mc.setInvincible(true);
+        if (this.mc != null) {
+            this.mc.setInvincible(true);
+        }
     }
 
     @Override
