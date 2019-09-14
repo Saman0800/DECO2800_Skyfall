@@ -1,13 +1,7 @@
 package deco2800.skyfall.worlds.world;
 
 import com.badlogic.gdx.Gdx;
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.AgentEntity;
-import deco2800.skyfall.entities.EnemyEntity;
-import deco2800.skyfall.entities.Harvestable;
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.Projectile;
-import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
@@ -578,6 +572,8 @@ public class World implements TouchDownObserver {
                     gmm.getInventory().quickAccessAdd(((Weapon) entity).getName());
                     mc.setEquipped(((Weapon) entity).getName());
                 }
+            } else if (entity instanceof Chest) {
+                // how to open chest now?
             }
         }
     }

@@ -3,7 +3,9 @@ package deco2800.skyfall.worlds.world;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.entities.worlditems.*;
+import deco2800.skyfall.managers.ChestManager;
 import deco2800.skyfall.resources.GoldPiece;
+import deco2800.skyfall.resources.LootRarity;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
@@ -156,6 +158,16 @@ public class WorldBuilder implements WorldBuilderInterface {
         this.staticEntities = staticEntities;
     }
 
+    public void spawnChests(int num, Tile startTile, AbstractBiome biome, World world) {
+        // Spawn chests
+        Random random = new Random();
+        for (int i = 0; i < num; i++) {
+            Chest chest = new Chest(startTile, true, ChestManager.generateRandomLoot(random.nextInt(10) + 5, LootRarity.LEGENDARY));
+            EntitySpawnRule chestRule = new EntitySpawnRule(0.04, 0, 1, biome);
+            EntitySpawnTable.spawnEntities(chest, chestRule, world);
+        }
+    }
+
     /**
      * Generates the static entities in a world
      * 
@@ -220,6 +232,8 @@ public class WorldBuilder implements WorldBuilderInterface {
                     GoldPiece startGoldPiece = new GoldPiece(startTile, true, goldValue);
                     EntitySpawnRule goldRule = new EntitySpawnRule(0.15 - (goldValue/1000), 10, 50, biome);
                     EntitySpawnTable.spawnEntities(startGoldPiece, goldRule, world);
+
+                    spawnChests(5, startTile, biome, world);
                 }
                 break;
 
@@ -247,6 +261,8 @@ public class WorldBuilder implements WorldBuilderInterface {
                 EntitySpawnRule mSnowRule = new EntitySpawnRule(0.07, 30, 200, biome);
                 EntitySpawnTable.spawnEntities(startMountainSnow, mSnowRule, world);
 
+                spawnChests(5, startTile, biome, world);
+
                 break;
 
             case "desert":
@@ -262,6 +278,9 @@ public class WorldBuilder implements WorldBuilderInterface {
                 SpawnControl cactiControl = x -> (x * x * x * x) / 4.0;
                 EntitySpawnRule cactiRule = new EntitySpawnRule(biome, true, cactiControl);
                 EntitySpawnTable.spawnEntities(startDCacti, cactiRule, world);
+
+                spawnChests(5, startTile, biome, world);
+
                 break;
 
             case "snowy_mountains":
@@ -282,6 +301,8 @@ public class WorldBuilder implements WorldBuilderInterface {
                 SnowShrub startSnowShrub = new SnowShrub(startTile, true);
                 EntitySpawnRule snowShrubRule = new EntitySpawnRule(0.07, 20, 200, biome);
                 EntitySpawnTable.spawnEntities(startSnowShrub, snowShrubRule, world);
+
+                spawnChests(5, startTile, biome, world);
 
                 break;
             }
