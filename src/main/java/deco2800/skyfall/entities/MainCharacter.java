@@ -675,10 +675,13 @@ public class MainCharacter extends Peon
          */
         public void notifyTouchDown ( int screenX, int screenY, int pointer, int button){
             // only allow left clicks to move player
+
+            System.out.println(button);
             if (GameScreen.isPaused) {
                 return;
             }
-            if (button == 0) {
+            if (button == 1) {
+
                 float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
                 float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 
@@ -794,7 +797,7 @@ public class MainCharacter extends Peon
                 case Input.Keys.X:
                     selectSpell(SpellType.SHIELD);
                     break;
-                case Input.Keys.C:
+                case Input.Keys.V:
                     selectSpell(SpellType.TORNADO);
                     break;
                 default:

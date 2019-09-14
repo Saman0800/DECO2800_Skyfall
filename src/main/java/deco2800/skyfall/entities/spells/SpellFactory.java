@@ -4,6 +4,13 @@ import deco2800.skyfall.util.HexVector;
 
 public class SpellFactory {
 
+    /**
+     * This class is a utility class and should not be instantiated.
+     */
+    private SpellFactory() {
+        throw new IllegalStateException("Utility class.");
+    }
+
     public static Spell createSpell(SpellType spellType, HexVector mousePosition){
         Spell spell = null;
 

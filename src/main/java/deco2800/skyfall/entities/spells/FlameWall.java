@@ -44,7 +44,6 @@ public class FlameWall extends Spell {
             //Loop through enemies.
             List<AbstractEntity> entities =  GameManager.get().getWorld().getEntities();
 
-            //TODO can add a kd tree or similar to only select enemies in the target area.
             for (AbstractEntity entity : entities) {
                 if (entity instanceof EnemyEntity) {
                     //If close enough, deal damage to the enemy over time.
@@ -53,7 +52,6 @@ public class FlameWall extends Spell {
                     }
                 }
             }
-            //if(this.position.isCloseEnoughToBeTheSameByDistance()
             this.ticksSinceAttacked = 0;
         }
 

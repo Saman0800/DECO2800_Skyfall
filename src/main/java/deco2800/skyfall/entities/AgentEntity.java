@@ -5,9 +5,9 @@ import com.google.gson.annotations.Expose;
 import deco2800.skyfall.util.HexVector;
 
 public abstract class AgentEntity extends AbstractEntity{
+
 	@Expose
 	protected float speed;
-
 
 
 	public AgentEntity(float col, float row, int renderOrder, float speed) {

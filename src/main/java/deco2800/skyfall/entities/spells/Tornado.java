@@ -36,15 +36,12 @@ public class Tornado extends Spell {
         //Loop through enemies.
         List<AbstractEntity> entities =  GameManager.get().getWorld().getEntities();
 
-        //TODO can add a kd tree or similar to only select enemies in the target area.
         for (AbstractEntity entity : entities) {
             if (entity instanceof EnemyEntity) {
                 //If close enough, deal damage to the enemy over time.
                 if (this.position.isCloseEnoughToBeTheSameByDistance(entity.getPosition(),1)) {
                     ((EnemyEntity) entity).takeDamage(this.getDamage());
                     this.destroy();
-                    //TODO: add a status indicator.
-                    //entity.addStatusIndicator();
                 }
             }
         }
