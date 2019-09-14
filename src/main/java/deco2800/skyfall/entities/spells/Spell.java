@@ -38,9 +38,4 @@ public class Spell extends Projectile {
 
         //Check for enemies and deal 1 damage.
     }
-
-    @Override
-    public boolean collidesWith(AbstractEntity entity) {
-        return false;
-    }
 }

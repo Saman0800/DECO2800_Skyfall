@@ -21,6 +21,7 @@ public class Chest extends StaticEntity implements HasHealth {
         super(tile, 2, ENTITY_ID_STRING, obstructed);
         this.manager = new ChestManager(contents);
         this.setObjectName(ENTITY_ID_STRING);
+        changeCollideability(false);
     }
 
     @Override
