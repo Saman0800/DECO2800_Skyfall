@@ -14,7 +14,6 @@ public class SpellFactory {
                     0.1f,
                     0);
         } else if(spellType.equals(SpellType.SHIELD)){
-            System.out.println("Spawning shield.");
             spell = new Shield(mousePosition, "shield_placeholder",
                     "shield_spell", mousePosition.getCol(), mousePosition.getRow(),
                     1,

@@ -346,8 +346,7 @@ public class MainCharacter extends Peon
 
         //Unselect the spell.
         this.spellSelected = SpellType.NONE;
-
-
+        
         //Create the spell using the factory.
         Spell spell = SpellFactory.createSpell(spellType,mousePosition);
 
