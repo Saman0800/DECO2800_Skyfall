@@ -83,7 +83,6 @@ public class EnvironmentManager extends TickableManager {
 
 
     /**
-     * <<<<<<< HEAD
      * Constructor
      */
     public EnvironmentManager() {
