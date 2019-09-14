@@ -61,10 +61,6 @@ public class GameMenuManager extends TickableManager {
         //Get the current state of the inventory on tick so that display can be updated
         inventory = GameManager.get().getManager(InventoryManager.class);
 
-        if (healthCircle != null) {
-            healthCircle.update();
-        }
-
         if (clock != null) {
             clock.update();
         }
@@ -73,8 +69,6 @@ public class GameMenuManager extends TickableManager {
         if (weather != null) {
             weather.update();
         }
-
-
     }
 
     /**

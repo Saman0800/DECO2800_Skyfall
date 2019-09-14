@@ -6,11 +6,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import deco2800.skyfall.entities.Chest;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gui.Clock;
 import deco2800.skyfall.gui.HealthCircle;
 import deco2800.skyfall.gui.WeatherGui;
 import deco2800.skyfall.managers.EnvironmentManager;
+import deco2800.skyfall.managers.ChestManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.managers.TextureManager;
@@ -47,11 +49,15 @@ public class GameMenuScreen {
     private Table resourcePanel;
     public static int currentCharacter;
 
+    private Table chestPanel;
+
     //Table in hot bar containing quick access resources
     private Table quickAccessPanel;
 
     //Inventory pop up
     private PopUpTable inventoryTable;
+
+    private PopUpTable chestTable;
 
     /**
      * Construct the menu screen in the game.
@@ -65,6 +71,7 @@ public class GameMenuScreen {
         this.textureManager = gameMenuManager.getTextureManager();
         inventory = gameMenuManager.getInventory();
         mainCharacter = gameMenuManager.getMainCharacter();
+        mainCharacter.setUpGUI();
     }
 
     /**
@@ -146,14 +153,6 @@ public class GameMenuScreen {
         radar.setPosition(440, 30 * 1000 / 800f);
         stage.addActor(radar);
 
-
-        HealthCircle healthCircle = new HealthCircle(stage,
-                "big_circle",
-                "inner_circle",
-                mainCharacter);
-
-        gameMenuManager.addHealthCircle(healthCircle);
-
         Clock clock = new Clock(stage);
 
         gameMenuManager.addClock(clock);
@@ -162,7 +161,6 @@ public class GameMenuScreen {
         currentWeather = EnvironmentManager.currentWeather();
         WeatherGui weather = new WeatherGui(stage, currentWeather); // need to have this for any weather
         gameMenuManager.addWeather(weather);
-
     }
 
     /**
@@ -304,6 +302,20 @@ public class GameMenuScreen {
         table.row().padTop(15);
     }
 
+    public PopUpTable getChestTable(Chest chest) {
+        if (chestTable == null) {
+            setChestTable(chest);
+            setExitButton(chestTable);
+            stage.addActor(chestTable);
+            stage.addActor(chestTable.getExit());
+        } else {
+            chestTable.removeActor(chestPanel);
+            updateChestPanel(chest);
+            chestTable.addActor(chestTable);
+        }
+        return chestTable;
+    }
+
     /***
      * Updates and returns current state of the inventory table.
      *
@@ -347,6 +359,76 @@ public class GameMenuScreen {
         inventoryTable.addActor(this.resourcePanel);
 
         this.inventoryTable = inventoryTable;
+    }
+
+    private void setChestTable(Chest chest) {
+        PopUpTable chestTable = new PopUpTable(910, 510, "i");
+        chestTable.setName("chestTable");
+
+        Image infoBar = new Image(generateTextureRegionDrawableObject("inventory_banner"));
+        infoBar.setSize(650, 55);
+        infoBar.setPosition(130, 435);
+
+        Table infoPanel = new Table();
+        infoPanel.setSize(410, 400);
+        infoPanel.setPosition(25, 18);
+        infoPanel.setBackground(generateTextureRegionDrawableObject("info_panel"));
+
+
+        updateChestPanel(chest);
+
+        chestTable.addActor(infoBar);
+        chestTable.addActor(infoPanel);
+        chestTable.addActor(this.resourcePanel);
+
+        this.chestTable = chestTable;
+    }
+
+    private void updateChestPanel(Chest chest) {
+        resourcePanel = new Table();
+        resourcePanel.setName("resourcePanel");
+        resourcePanel.setSize(410, 400);
+        resourcePanel.setPosition(475, 18);
+        resourcePanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
+
+        Map<String, Integer> inventoryAmounts = chest.getManager().getInventoryAmounts();
+
+        int count = 0;
+        int xpos = 20;
+        int ypos = 280;
+
+        for (Map.Entry<String, Integer> entry : inventoryAmounts.entrySet()) {
+
+            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey()));
+            icon.setName("icon");
+            icon.setSize(100, 100);
+            icon.setPosition(xpos + count * 130, ypos);
+
+            resourcePanel.addActor(icon);
+
+            Label num = new Label(entry.getValue().toString(), skin, "WASD");
+            num.setPosition(xpos + 85 + count * 130, ypos + 75);
+            resourcePanel.addActor(num);
+
+            count++;
+
+            if ((count) % 3 == 0) {
+                ypos -= 120;
+                count = 0;
+            }
+        }
+
+        ImageButton button = new ImageButton(generateTextureRegionDrawableObject("takeall"));
+        button.setName("Take all");
+        button.setSize(100, 100);
+        button.setPosition(xpos + count * 130, ypos);
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                mainCharacter.getInventoryManager().inventoryAddMultiple(chest.getManager().getInventoryContents());
+            }
+        });
+        resourcePanel.addActor(button);
     }
 
     /***
