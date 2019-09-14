@@ -40,7 +40,7 @@ public class EnvironmentManager extends TickableManager {
    public String biome;
 
    // Time to display on screen
-   long displayHours;
+   public long displayHours;
 
    // Time of day: AM or PM
    public String TOD;
@@ -246,27 +246,18 @@ public class EnvironmentManager extends TickableManager {
     */
    public String getTOD() {
       // Set hours to be displayed
-//      if (hours > 12 && hours < 24) {
-//         displayHours = hours - 12;
-//         TOD = "pm";
-//      } else if (hours == 24) {
-//         displayHours = hours - 12;
-//         TOD = "am";
-//      } else if (hours == 12) {
-//         displayHours = hours;
-//         TOD = "pm";
-//      } else {
-//         displayHours = hours;
-//         TOD = "am";
-//      }
-
-      // Set hours to be displayed
-      if (hours <= 6) {
-         displayHours = hours + 6;
-         TOD = "am";
-      } else {
-         displayHours = hours - 6;
+      if (hours > 12 && hours < 24) {
+         displayHours = hours - 12;
          TOD = "pm";
+      } else if (hours == 24) {
+         displayHours = hours - 12;
+         TOD = "am";
+      } else if (hours == 12) {
+         displayHours = hours;
+         TOD = "pm";
+      } else {
+         displayHours = hours;
+         TOD = "am";
       }
 
       String prefix = minutes < 10 ? "0" : "";

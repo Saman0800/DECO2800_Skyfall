@@ -154,8 +154,7 @@ public class GameMenuScreen {
 
         gameMenuManager.addHealthCircle(healthCircle);
 
-        Clock clock = new Clock(stage,
-                "rounded_rectangle");
+        Clock clock = new Clock(stage);
 
         gameMenuManager.addClock(clock);
 
