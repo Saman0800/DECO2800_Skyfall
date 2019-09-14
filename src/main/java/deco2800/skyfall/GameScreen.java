@@ -224,23 +224,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         shader = new ShaderWrapper("batch");
         //add shader to rendererDebug
         rendererDebug.setShader(shader);
-        // String vertexShader = Gdx.files.internal("resources/shaders/batch" + ".vert").readString();
-        // String fragmentShader = Gdx.files.internal("resources/shaders/batch" + ".frag").readString();
-        // shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
-
-        //Allows uniform variables to be in the fragment shader but not the vertex
-        // shaderProgram.pedantic = false;
-
-        // //A small log explaining how the shader compilation went
-        // System.out.println("\nShader program log:");
-        // System.out.print(shaderProgram.getLog());
-        // if (shaderProgram.isCompiled()) {
-        //     System.out.println("Shader program compiled");
-        //     SettingsFile gfxSettings = new SettingsFile("settings/gfx.ini");
-        //     extendedLightingActive = (gfxSettings.get("s_use_e_shader", 1) != 0);
-        //     gfxSettings.close();
-        // }
-        // System.out.print("\n");
     }
 
     /**
