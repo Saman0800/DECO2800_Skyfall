@@ -1338,6 +1338,8 @@ public class MainCharacter extends Peon
                             case "Castle":
                                 tempFactory.createCastle(this.getCol(),this.getRow());
                                 break;
+                            default:
+                                logger.info("Invalid Item");
                         }
 
                         this.getInventoryManager().inventoryDropMultiple
