@@ -7,6 +7,8 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.SaveLoadInterface;
 import deco2800.skyfall.observers.TouchDownObserver;
+import deco2800.skyfall.saving.AbstractMemento;
+import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
@@ -37,7 +39,7 @@ import java.util.stream.Collectors;
  * It provides storage for the WorldEntities and other universal world level
  * items.
  */
-public class World implements TouchDownObserver , Serializable, SaveLoadInterface {
+public class World implements TouchDownObserver , Serializable, SaveLoadInterface, Saveable<World.WorldMemento> {
     protected int width;
     protected int length;
 
@@ -624,5 +626,18 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
     @Override
     public String formatData() {
         return new Gson().toJson(this);
+    }
+
+    @Override
+    public WorldMemento save() {
+        return null;
+    }
+
+    @Override
+    public void load(WorldMemento worldMemento) {
+    }
+
+    class WorldMemento extends AbstractMemento {
+
     }
 }

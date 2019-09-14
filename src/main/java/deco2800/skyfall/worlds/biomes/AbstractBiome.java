@@ -1,5 +1,7 @@
 package deco2800.skyfall.worlds.biomes;
 
+import deco2800.skyfall.saving.AbstractMemento;
+import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 
@@ -11,7 +13,7 @@ import java.util.Random;
 /**
  * Class that represents the biomes
  */
-public abstract class AbstractBiome {
+public abstract class AbstractBiome implements Saveable<AbstractBiome.BiomeMemento> {
     // The biome name, i.e forest, desert, mountain
     private String biomeName;
     // The tiles the biome contains
@@ -149,4 +151,18 @@ public abstract class AbstractBiome {
      * Sets the texture of the given tile assuming it is in this biome.
      */
     public abstract void setTileTexture(Tile tile);
+
+    @Override
+    public BiomeMemento save() {
+        return null;
+    }
+
+    @Override
+    public void load(BiomeMemento saveInfo) {
+
+    }
+
+    class BiomeMemento extends AbstractMemento {
+
+    }
 }

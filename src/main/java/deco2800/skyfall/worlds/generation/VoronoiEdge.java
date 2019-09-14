@@ -1,5 +1,7 @@
 package deco2800.skyfall.worlds.generation;
 
+import deco2800.skyfall.saving.AbstractMemento;
+import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.BeachBiome;
@@ -11,7 +13,7 @@ import java.util.*;
 /**
  * A class to represent an edge of a polygon in a Voronoi Diagram
  */
-public class VoronoiEdge {
+public class VoronoiEdge implements Saveable<VoronoiEdge.EdgeMemento> {
 
     // The coordinates of the two endpoints of the edge
     private double[] pointA;
@@ -483,4 +485,17 @@ public class VoronoiEdge {
         return this.tiles;
     }
 
+    @Override
+    public EdgeMemento save() {
+        return null;
+    }
+
+    @Override
+    public void load(EdgeMemento saveInfo) {
+
+    }
+
+    class EdgeMemento extends AbstractMemento {
+
+    }
 }

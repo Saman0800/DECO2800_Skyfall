@@ -1,5 +1,7 @@
 package deco2800.skyfall.worlds.generation.delaunay;
 
+import deco2800.skyfall.saving.AbstractMemento;
+import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.VoronoiEdge;
@@ -14,7 +16,7 @@ import java.util.*;
  * <a href="http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/?fbclid=IwAR30I7ILTznH6YzYYqZfjIE3vcqPsed85ta9bohPZWi74SfWMwWpD8AVddQ#source">
  * This</a>
  */
-public class WorldGenNode implements Comparable<WorldGenNode> {
+public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGenNode.NodeMemento> {
 
     // position
     private double x;
@@ -873,5 +875,19 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
 
     public void setBiome(AbstractBiome biome) {
         this.biome = biome;
+    }
+
+    @Override
+    public NodeMemento save() {
+        return null;
+    }
+
+    @Override
+    public void load(NodeMemento saveInfo) {
+
+    }
+
+    class NodeMemento extends AbstractMemento {
+
     }
 }

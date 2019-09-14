@@ -14,6 +14,8 @@ import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
+import deco2800.skyfall.saving.AbstractMemento;
+import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.Tile;
 import org.lwjgl.Sys;
@@ -26,7 +28,11 @@ import java.util.*;
  * Main character in the game
  */
 public class MainCharacter extends Peon
-        implements KeyDownObserver, KeyUpObserver, TouchDownObserver, Tickable, Animatable {
+        implements KeyDownObserver, KeyUpObserver, TouchDownObserver, Tickable, Animatable, Saveable<MainCharacter.MainCharacterMemento> {
+
+    // The id of the character for storing in a database
+    private static int nextID = 0;
+    private int saveID;
 
     private final Logger logger = LoggerFactory.getLogger(MainCharacter.class);
 
@@ -144,6 +150,8 @@ public class MainCharacter extends Peon
      */
     public MainCharacter(float col, float row, float speed, String name, int health) {
         super(row, col, speed, name, health);
+        saveID = nextID;
+        nextID++;
         this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
         this.setHeight(1);
         this.setObjectName("MainPiece");
@@ -1251,6 +1259,29 @@ public class MainCharacter extends Peon
                 setCurrentState(AnimationRole.MOVE);
             }
         }
+
+    }
+
+    /**
+     * Returns the save ID of the player
+     *
+     * @return the save ID of the player
+     */
+    public int getSaveID() {
+        return this.saveID;
+    }
+
+    @Override
+    public MainCharacterMemento save() {
+        return null;
+    }
+
+    @Override
+    public void load(MainCharacterMemento saveInfo) {
+
+    }
+
+    class MainCharacterMemento extends AbstractMemento {
 
     }
 }

@@ -179,7 +179,10 @@ public class DelaunayTest {
 
         long noiseSeed = random.nextLong();
         Random noiseRandom1 = new Random(noiseSeed);
-        WorldGenNode.assignTiles(nodes, tiles, noiseRandom1, nodeSpacing);
+        Tile.setNoiseGenerators(noiseRandom1, nodeSpacing);
+        for (Tile tile : tiles) {
+            tile.assignNode(nodes, nodeSpacing);
+        }
 
         Random noiseRandom2 = new Random(noiseSeed);
         int startPeriod = nodeSpacing * 2;
@@ -362,6 +365,7 @@ public class DelaunayTest {
 
     @Test
     public void removeZeroTileNodesTest() {
+        // TODO simulate noise
         Random random = new Random(0);
         List<Tile> tiles = new ArrayList<>();
         for (int q = -5; q <= 5; q++) {
@@ -380,9 +384,13 @@ public class DelaunayTest {
         nodes.add(new WorldGenNode(0.4, 0.4));
         nodes.add(new WorldGenNode(0.55, 0.45));
         nodes.add(new WorldGenNode(0.5, 0.6));
+        /*for (Tile tile : tiles) {
+            tile.assignNode(nodes, );
+        }
         WorldGenNode.assignTiles(nodes, tiles, random, 1);
+        */
         try {
-            WorldGenNode.removeZeroTileNodes(nodes, 5);
+            WorldGenNode.removeZeroTileNodes(nodes, 5, 5);
         } catch  (WorldGenException e) {
             fail();
         }
