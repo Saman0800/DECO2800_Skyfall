@@ -1,10 +1,9 @@
-package deco2800.skyfall.managers;
+package deco2800.skyfall.managers.database;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.Driver;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -21,16 +20,21 @@ public class DataBaseConnector {
 
     public void run(){
         Connection connection;
+        System.out.println(String.format("%s", true));
         try {
             //Connects to the data base
             Driver derbyData = new EmbeddedDriver();
             DriverManager.registerDriver(derbyData);
             connection = DriverManager.getConnection("jdbc:derby:Database;create=true");
-            connection.setAutoCommit(false);
 
             createTables(connection);
 
-            connection.commit();
+
+            Statement statement = connection.createStatement();
+
+            InsertDataQueries insertQueries = new InsertDataQueries(statement);
+
+
             connection.close();
 
             DriverManager.getConnection("jdbc:derby:;shutdown=true");
@@ -71,8 +75,8 @@ public class DataBaseConnector {
         }
     }
 
+    //FIXME:jeffvan12 Adding saving and updating functionality
+    public void SaveWorld(){
 
-
-
-
+    }
 }

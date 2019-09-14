@@ -1,13 +1,15 @@
-package deco2800.skyfall.managers;
+package deco2800.skyfall.managers.database;
 
 import java.util.ArrayList;
 
 public class CreateTablesQueries {
 
-    public String createSaveTableSql = "CREATE TABLE SAVES("
+    public String createSaveTableSql = "CREATE TABLE SAVES"
+        + "("
         + "    save_id       int not null,"
         + "    data clob,"
-        + "    PRIMARY KEY (save_id))";
+        + "    PRIMARY KEY (save_id)"
+        + ")";
 
     public String createWorldsTableSql = "CREATE TABLE WORLDS("
         + "    save_id int not null ,"
@@ -65,22 +67,23 @@ public class CreateTablesQueries {
         + "    world_id int not null ,"
         + "    x int not null ,"
         + "    y int not null ,"
-        + "    chunk_id int not null ,"
         + "    data CLOB,"
-        + "    PRIMARY KEY (chunk_id),"
+        + "    PRIMARY KEY (world_id, x, y),"
         + "    FOREIGN KEY (world_id) references WORLDS(world_id)"
         + ")";
 
 
     public String createEntitiesSql = "CREATE TABLE ENTITIES"
         + "("
-        + "    chunk_id int not null ,"
         + "    type clob,"
         + "    x int not null ,"
         + "    y int not null ,"
+        + "    chunk_x int not null,"
+        + "    chunk_y int not null,"
+        + "    world_id int not null,"
         + "    data clob,"
-        + "    PRIMARY KEY (chunk_id, x, y),"
-        + "    foreign key (chunk_id) references CHUNKS(chunk_id)"
+        + "    PRIMARY KEY (world_id,chunk_x, chunk_y, x, y),"
+        + "    foreign key (world_id, chunk_x, chunk_y) references CHUNKS(world_id, x, y)"
         + ")";
 
 

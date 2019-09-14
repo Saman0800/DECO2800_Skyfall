@@ -43,6 +43,7 @@ sonar-project.properties
 
 .recommenders/
 EngineDB/*
+Database/*
 
 
 # vscode files

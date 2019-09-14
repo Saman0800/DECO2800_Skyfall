@@ -5,6 +5,7 @@ CREATE TABLE SAVES
     PRIMARY KEY (save_id)
 );
 
+
 CREATE TABLE WORLDS
 (
     save_id int not null ,
@@ -51,7 +52,7 @@ CREATE table BIOMES
 (
     biome_id       int not null ,
     world_id       int not null ,
-    biome_type     VARCHAR(30) not null ,
+    biome_type     CLOB ,
     tile_generator blob not null ,
     data CLOB,
     primary key (biome_id, world_id),
@@ -78,5 +79,5 @@ CREATE TABLE ENTITIES
     world_id int not null,
     data clob,
     PRIMARY KEY (world_id,chunk_x, chunk_y, x, y),
-    foreign key (chunk_x,chunk_y,world_id ) references CHUNKS(x, y, world_id)
+    foreign key (world_id, chunk_x, chunk_y) references CHUNKS(world_id, x, y)
 )
