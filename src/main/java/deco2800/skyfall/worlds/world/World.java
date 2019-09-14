@@ -118,14 +118,12 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
     // FIXME:Ontonator Make this work with chunks.
     private void generateTiles() throws NotEnoughPointsException, DeadEndGenerationException, WorldGenException {
         ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
+        // TODO:Ontonator Sort this out.
         /*HashMap<Pair<Integer, Integer>, Chunk>*/ loadedChunks = new HashMap<>();
         ArrayList<VoronoiEdge> voronoiEdges = new ArrayList<>();
 
         // TODO:Ontonator Remove this.
-        for (Tile tile : getTileMap()) {
-            assert false : "Should never get here.";
-            // tile.setBiome(null);
-        }
+        assert getTileMap().isEmpty();
 
         for (AbstractBiome biome : worldParameters.getBiomes()) {
             biome.getTiles().clear();
@@ -142,51 +140,29 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
             float y = (float) (random.nextFloat() - 0.5) * 2 * worldSize;
             worldGenNodes.add(new WorldGenNode(x, y));
         }
+        worldGenNodes.sort(null);
 
         // Apply Delaunay triangulation to the nodes, so that vertices and
         // adjacencies can be calculated. Also apply Lloyd Relaxation twice
         // for more smooth looking polygons
-        try {
-            WorldGenNode.calculateVertices(worldGenNodes, worldSize);
-            WorldGenNode.lloydRelaxation(worldGenNodes, 2, worldSize);
-        } catch (WorldGenException e) {
-            throw e;
-        }
+        WorldGenNode.calculateVertices(worldGenNodes, worldSize);
+        WorldGenNode.lloydRelaxation(worldGenNodes, 2, worldSize);
         this.worldGenNodes = new CopyOnWriteArrayList<>(worldGenNodes);
 
         Tile.setNoiseGenerators(random, nodeSpacing);
+        WorldGenNode.removeZeroTileNodes(worldGenNodes, nodeSpacing, worldSize);
+        WorldGenNode.assignNeighbours(worldGenNodes, voronoiEdges);
+        VoronoiEdge.assignNeighbours(voronoiEdges);
+
+        BiomeGenerator biomeGenerator = new BiomeGenerator(this, worldGenNodes, voronoiEdges, random, worldParameters);
+        biomeGenerator.generateBiomes();
+
         for (int q = -worldSize / Chunk.CHUNK_SIDE_LENGTH; q <= worldSize / Chunk.CHUNK_SIDE_LENGTH; q++) {
             for (int r = -worldSize / Chunk.CHUNK_SIDE_LENGTH; r <= worldSize / Chunk.CHUNK_SIDE_LENGTH; r++) {
                 Chunk chunk = new Chunk(this, q, r);
                 loadedChunks.put(new Pair<>(q, r), chunk);
             }
         }
-
-        // Neighbours are generated when the tile is loaded.
-
-        // TODO:Ontonator Sort this out.
-        worldGenNodes.sort(Comparable::compareTo);
-
-        WorldGenNode.removeZeroTileNodes(worldGenNodes, nodeSpacing, worldSize);
-        WorldGenNode.assignNeighbours(worldGenNodes, voronoiEdges);
-
-        // TODO:Ontonator Remove this.
-        // VoronoiEdge.assignTiles(voronoiEdges, tiles, worldSize);
-        VoronoiEdge.assignNeighbours(voronoiEdges);
-
-        BiomeGenerator biomeGenerator = new BiomeGenerator(this, worldGenNodes, voronoiEdges, random,worldParameters);
-        biomeGenerator.generateBiomes();
-
-        for (Chunk chunk : loadedChunks.values()) {
-            for (Tile tile : chunk.getTiles()) {
-                // TODO:Ontonator Fix the parameters of this.
-                tile.assignEdge(this.riverEdges, this.beachEdges, worldParameters.getRiverWidth(),
-                                worldParameters.getBeachWidth());
-            }
-        }
-
-        // this.worldGenNodes.addAll(worldGenNodes);
-        //this.loadedChunks = loadedChunks;
     }
 
     // TODO:Ontonator Consider removing this method.

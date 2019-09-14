@@ -71,6 +71,8 @@ public class Chunk {
                 Tile tile = new Tile(col, row + oddCol);
                 tiles.add(tile);
                 tile.assignNode(world.worldGenNodes, world.worldParameters.getNodeSpacing());
+                tile.assignEdge(world.riverEdges, world.beachEdges, world.worldParameters.getRiverWidth(),
+                                world.worldParameters.getBeachWidth());
             }
         }
     }

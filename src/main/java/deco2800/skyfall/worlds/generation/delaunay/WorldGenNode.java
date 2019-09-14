@@ -337,12 +337,12 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
 
         for (int i = -1 * worldSize; i <= worldSize; i++) {
             for (int j = -1 * worldSize; j <= worldSize; j++) {
-                double rowX = j + (i % 2 != 0 ? 0.5f : 0);
+                double rowY = j + (i % 2 != 0 ? 0.5f : 0);
                 double tileX =
-                        i + xGen.getOctavedPerlinValue(i , rowX) *
+                        i + xGen.getOctavedPerlinValue(i , rowY) *
                                 (double) nodeSpacing - (double) nodeSpacing / 2;
                 double tileY =
-                        rowX + yGen.getOctavedPerlinValue(i , rowX) *
+                        rowY + yGen.getOctavedPerlinValue(i , rowY) *
                                 (double) nodeSpacing - (double) nodeSpacing / 2;
 
                 // Remove the node from the list of nodes to search

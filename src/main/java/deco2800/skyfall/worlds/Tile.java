@@ -202,10 +202,11 @@ public class Tile {
         double tileY = getNoisyRow(nodeSpacing);
 
         int minDistanceIndex = WorldGenNode.findNearestNodeIndex(nodes, tileX, tileY);
-        // Assign tile to the node
-        nodes.get(minDistanceIndex).addTile(this);
         // Assign node to the tile
-        this.node = nodes.get(minDistanceIndex);
+        node = nodes.get(minDistanceIndex);
+        // Assign tile to the node
+        node.addTile(this);
+        node.getBiome().addTile(this);
     }
 
     private VoronoiEdge findNearestEdge(VoronoiEdge currentEdge,
@@ -289,11 +290,11 @@ public class Tile {
         /* TODO do something better than this to prevent rivers from being on
             the origin
          */
-        if (this.getBiome().getBiomeName().equals("ocean")) {
+        if (getBiome().getBiomeName().equals("ocean")) {
             return;
         }
         VoronoiEdge closestEdge = findNearestEdge(null, new ArrayList<>(beachEdges.keySet()), beachWidth, beachWidth * 2);
-        if (!(Math.abs(this.getCol()) < riverWidth && Math.abs(this.getRow()) < riverWidth)) {
+        if (!(Math.abs(getCol()) < riverWidth && Math.abs(getRow()) < riverWidth)) {
             closestEdge = findNearestEdge(closestEdge, new ArrayList<>(riverEdges.keySet()), riverWidth, riverWidth * 2);
         }
         this.edge = closestEdge;
