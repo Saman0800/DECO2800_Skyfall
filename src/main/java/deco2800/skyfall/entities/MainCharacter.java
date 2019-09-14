@@ -1304,26 +1304,43 @@ public class MainCharacter extends Peon
                         switch(newItem.getName()){
                             case "Hatchet":
                                 this.getInventoryManager().inventoryAdd(new Hatchet());
+                                break;
+
                             case "Pick Axe":
                                 this.getInventoryManager().inventoryAdd(new PickAxe());
+                                break;
 
                                 //These are only placeholders and will change once coordinated
                                 //with Building team
                             case "Cabin":
                                 tempFactory.createCabin(this.getCol(),this.getRow());
+                                break;
+
                             case "StorageUnit":
                                 tempFactory.createStorageUnit(this.getCol(),this.getRow());
+                                break;
+
                             case "TownCentre":
                                 tempFactory.createTownCentreBuilding(this.getCol(),this.getRow());
+                                break;
+
                             case "Fence":
                                 tempFactory.createFenceBuilding(this.getCol(),this.getRow());
+                                break;
+
                             case "SafeHouse":
                                 tempFactory.createSafeHouse(this.getCol(),this.getRow());
+                                break;
+
                             case "WatchTower":
                                 tempFactory.createWatchTower(this.getCol(),this.getRow());
+                                break;
+
                             case "Castle":
                                 tempFactory.createCastle(this.getCol(),this.getRow());
+                                break;
                         }
+
                         this.getInventoryManager().inventoryDropMultiple
                                 ("Metal", newItem.getRequiredMetal());
                         this.getInventoryManager().inventoryDropMultiple
