@@ -108,7 +108,7 @@ public class ConstructionManagerTest {
 
         cmgr.build(wb.getWorld(),2,2);
 
-        Assert.assertEquals(2, inventoryManager.getTotalAmount(), 0.0);
+        Assert.assertEquals(5.0, inventoryManager.getTotalAmount(), 0.0);
 
 
         //AbstractBuilding building = new WallBuilding(1, 1);
