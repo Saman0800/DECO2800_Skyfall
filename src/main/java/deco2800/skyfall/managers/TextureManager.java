@@ -201,6 +201,16 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("big_circle", new Texture("resources/OrangeCircle.png"));
             textureMap.put("inner_circle", new Texture("resources/RedCircle.png"));
+            
+            textureMap.put("dawn", new Texture("resources/clock/dawn_clock.png"));
+            textureMap.put("dusk", new Texture("resources/clock/dusk_clock.png"));
+            textureMap.put("day", new Texture("resources/clock/day_clock.png"));
+            textureMap.put("night", new Texture("resources/clock/night_clock.png"));
+
+
+            textureMap.put("rain", new Texture("resources/weather/rain.png")); // weather
+            textureMap.put("snow", new Texture("resources/weather/snow.png")); // weather
+
 
             textureMap.put("mana_bar",new Texture("resources/mana_bar.png"));
             textureMap.put("mana_bar_inner",new Texture("resources/mana_bar_inner.png"));

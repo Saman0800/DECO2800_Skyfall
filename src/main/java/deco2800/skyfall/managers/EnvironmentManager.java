@@ -1,5 +1,7 @@
 package deco2800.skyfall.managers;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.observers.DayNightObserver;
@@ -7,7 +9,9 @@ import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.worlds.Tile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EnvironmentManager extends TickableManager {
 
@@ -35,8 +39,8 @@ public class EnvironmentManager extends TickableManager {
     // Biome player is currently in
     public String biome;
 
-    // Time to display on screen
-    long displayHours;
+   // Time to display on screen
+   public long displayHours;
 
     // Time of day: AM or PM
     public String TOD;
@@ -61,6 +65,12 @@ public class EnvironmentManager extends TickableManager {
 
     //List of objects implementing DayNightObserver
     private ArrayList<DayNightObserver> dayNightListeners;
+
+   // Correct biome name to display on screen
+   private String biomeDisplay;
+
+   // Current weather in the game
+   public static String weather;
 
     /**
     * Constructor
@@ -191,6 +201,11 @@ public class EnvironmentManager extends TickableManager {
         return ((float) hours) + ((float) minutes / 60);
     }
 
+    /**
+     * Sets the time of day in game
+     *
+     * @param i The time of day to be set
+     */
     public void setTime(long i) {
         //Each day cycle goes for approx 24 minutes
         long timeHours = (i / 60000);
@@ -235,28 +250,26 @@ public class EnvironmentManager extends TickableManager {
     * Returns whether it is day or not
     * @return String am or pm depending on TOD
     */
-    public String getTOD() {
-        // Set hours to be displayed
-        if (hours > 12 && hours < 24) {
-            displayHours = hours - 12;
-            TOD = "pm";
-        } else if (hours == 24) {
-            displayHours = hours - 12;
-            TOD = "am";
-        } else if (hours == 12) {
-            displayHours = hours;
-            TOD = "pm";
-        } else {
-            displayHours = hours;
-            TOD = "am";
-        }
+   public String getTOD() {
+      // Set hours to be displayed
+      if (hours > 12 && hours < 24) {
+         displayHours = hours - 12;
+         TOD = "pm";
+      } else if (hours == 24) {
+         displayHours = hours - 12;
+         TOD = "am";
+      } else if (hours == 12) {
+         displayHours = hours;
+         TOD = "pm";
+      } else {
+         displayHours = hours;
+         TOD = "am";
+      }
 
-        if (minutes < 10) {
-            return Long.toString(displayHours) + ":" + "0" + Long.toString(minutes) + TOD;
-        }
+      String prefix = minutes < 10 ? "0" : "";
 
-        return Long.toString(displayHours) + ":" + Long.toString(minutes) + TOD;
-    }
+      return Long.toString(displayHours) + ":" + prefix + Long.toString(minutes) + TOD;
+   }
 
     /**
     * Sets the season in game, starting with summer.
@@ -357,26 +370,90 @@ public class EnvironmentManager extends TickableManager {
 
     }
 
-    /**
+   /**
+    * Gets current biome player is in
+    *
+    * @return String Current biome of player, or null if player is moving between tiles
+    */
+   public String biomeDisplayName() {
+
+      if (biome.equals("forest")) {
+         biomeDisplay = "Forest";
+      }
+      if (biome.equals("volcanic_mountains")) {
+         biomeDisplay = "Volcanic Mountains";
+      }
+      if (biome.equals("snowy_mountains")) {
+         biomeDisplay = "Snowy Mountains";
+      }
+      if (biome.equals("mountain")) {
+         biomeDisplay = "Mountain";
+      }
+      if (biome.equals("swamp")) {
+         biomeDisplay = "Swamp";
+      }
+      if (biome.equals("lake")) {
+         biomeDisplay = "Lake";
+      }
+      if (biome.equals("river")) {
+         biomeDisplay = "River";
+      }
+      if (biome.equals("jungle")) {
+         biomeDisplay = "Jungle";
+      }
+      if (biome.equals("desert")) {
+         biomeDisplay = "Desert";
+      }
+      if (biome.equals("beach")) {
+         biomeDisplay = "Beach";
+      }
+      if (biome.equals("ocean")) {
+         biomeDisplay = "Ocean";
+      }
+      return biomeDisplay;
+   }
+
+   /**
+    * Gets current biome player is in
+    *
+    * @return String Current biome of player, or null if player is moving between tiles
+    */
+   public static String currentWeather() {
+
+//      weather = "rain";
+
+      return weather;
+   }
+
+   /*
     * On tick method for ticking managers with the TickableManager interface
     *
     * @param i
     */
-    @Override
-    public void onTick(long i) {
-        long time = i;
+   @Override
+   public void onTick(long i) {
+      long time = i;
 
-        if (System.currentTimeMillis() - time > 20) {
-            time = System.currentTimeMillis();
-        }
+      if (System.currentTimeMillis() - time > 20) {
+         time = System.currentTimeMillis();
+      }
 
-        // Set the TOD and month in game
-        setTime(time);
-        setMonth(time);
+      // Set the TOD and month in game
+      setTime(time);
+      setMonth(time);
 
-        //Set Background music as per the specific biome and TOD
-        setBiome();
-        setTODMusic();
-    }
+      // Set Background music as per the specific biome and TOD
+      setBiome();
+      setTODMusic();
+      currentWeather();
 
+      // Key mapping to mute volume
+      // M for mute and U to un-mute
+      if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+         BGMManager.mute();
+      }
+      if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
+         BGMManager.unmute();
+      }
+   }
 }

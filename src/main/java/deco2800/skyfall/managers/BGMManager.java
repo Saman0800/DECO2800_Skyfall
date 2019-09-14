@@ -1,5 +1,8 @@
 package deco2800.skyfall.managers;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+
 import java.io.File;
 import java.io.IOException;
 

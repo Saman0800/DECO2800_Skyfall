@@ -1,3 +1,4 @@
+//<<<<<<< HEAD
 //package deco2800.skyfall.gamemenu;
 //
 //import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -200,6 +201,193 @@
 //     */
 //    private void setPauseTable() {
 //        PopUpTable pauseTable = new PopUpTable(500, 500 * 1346 / 1862f, "p");
+//=======
+//package deco2800.skyfall.gamemenu;
+//
+//import com.badlogic.gdx.scenes.scene2d.InputEvent;
+//import com.badlogic.gdx.scenes.scene2d.Stage;
+//import com.badlogic.gdx.scenes.scene2d.ui.*;
+//import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+//import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+//import com.badlogic.gdx.utils.Align;
+//import deco2800.skyfall.entities.Chest;
+//import deco2800.skyfall.entities.MainCharacter;
+//import deco2800.skyfall.gui.Clock;
+//import deco2800.skyfall.gui.HealthCircle;
+//import deco2800.skyfall.gui.WeatherGui;
+//import deco2800.skyfall.managers.EnvironmentManager;
+//import deco2800.skyfall.managers.ChestManager;
+//import deco2800.skyfall.managers.GameMenuManager;
+//import deco2800.skyfall.managers.InventoryManager;
+//import deco2800.skyfall.managers.TextureManager;
+//
+//import java.util.Map;
+//
+//import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
+//
+///**
+// * GUI of the Menu Screen in the game.
+// */
+//public class GameMenuScreen {
+//
+//    // Current stage of the game.
+//    private Stage stage;
+//    // Skin used for the game.
+//    private Skin skin;
+//    private static TextureManager textureManager;
+//    private GameMenuManager gameMenuManager;
+//    // Game Paused screen pop up
+//    private PopUpTable pauseTable;
+//    // Help screen pop up
+//    private PopUpTable helpTable;
+//    // Settings screen pop up
+//    private PopUpTable settingsTable;
+//    // Player Select screen pop up
+//    private PopUpTable playerSelect;
+//    private MainCharacter mainCharacter;
+//
+//    //Inventory Manager instance in game
+//    private InventoryManager inventory;
+//
+//    //Table in inventory popup containing resource icons
+//    private Table resourcePanel;
+//    public static int currentCharacter;
+//
+//    private Table chestPanel;
+//
+//    //Table in hot bar containing quick access resources
+//    private Table quickAccessPanel;
+//
+//    //Inventory pop up
+//    private PopUpTable inventoryTable;
+//
+//    private PopUpTable chestTable;
+//
+//    /**
+//     * Construct the menu screen in the game.
+//     *
+//     * @param gameMenuManager Current GameMenuManager
+//     */
+//    public GameMenuScreen(GameMenuManager gameMenuManager) {
+//        this.gameMenuManager = gameMenuManager;
+//        this.stage = gameMenuManager.getStage();
+//        this.skin = gameMenuManager.getSkin();
+//        this.textureManager = gameMenuManager.getTextureManager();
+//        inventory = gameMenuManager.getInventory();
+//        mainCharacter = gameMenuManager.getMainCharacter();
+//        mainCharacter.setUpGUI();
+//    }
+//
+//    /**
+//     * Display menu bar at the bottom of the game.
+//     */
+//    private void showMenu() {
+//        Image menuBar = new Image(textureManager.getTexture("game menu bar"));
+//        menuBar.setSize(910, 140);
+//        menuBar.setPosition(185, 20);
+//        stage.addActor(menuBar);
+//        showButtons();
+//    }
+//
+//    /**
+//     * Display buttons in the menu bar.
+//     */
+//    private void showButtons() {
+//        int width;
+//        width = 65;
+//        ImageButton pause = new ImageButton(generateTextureRegionDrawableObject("pause"));
+//
+//        pause.setSize(width, width * 146 / 207f);
+//        pause.setPosition(208, 105);
+//        stage.addActor(pause);
+//        pause.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                gameMenuManager.open(getPauseTable());
+//            }
+//        });
+//
+//        //Set quick access panel with inventory button
+//        setQuickAccessPanel();
+//
+//
+//        ImageButton selectCharacter = new ImageButton(generateTextureRegionDrawableObject("select-character"));
+//        selectCharacter.setSize(width, width * 146 / 207f);
+//        selectCharacter.setPosition(208, 30 * 1000 / 800f);
+//        stage.addActor(selectCharacter);
+//
+//        selectCharacter.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                gameMenuManager.open(getPlayerSelect());
+//            }
+//        });
+//
+//        ImageButton info = new ImageButton(generateTextureRegionDrawableObject("info"));
+//        info.setSize(width, width * 146 / 207f);
+//        info.setPosition(1015, 105);
+//        stage.addActor(info);
+//
+//        info.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                gameMenuManager.open(getHelpTable());
+//            }
+//        });
+//
+//        ImageButton settings = new ImageButton(generateTextureRegionDrawableObject("settings"));
+//        settings.setSize(width, width * 146 / 207f);
+//        settings.setPosition(1015, 30 * 1000 / 800f);
+//        stage.addActor(settings);
+//
+//        settings.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                gameMenuManager.open(getSettingsTable());
+//            }
+//        });
+//
+//        ImageButton build = new ImageButton(generateTextureRegionDrawableObject("build"));
+//        build.setSize(219 * 0.55f, 207 * 0.55f);
+//        build.setPosition(300, 30 * 1000 / 800f);
+//        stage.addActor(build);
+//
+//        ImageButton radar = new ImageButton(generateTextureRegionDrawableObject("radar"));
+//        radar.setSize(219 * 0.55f, 207 * 0.55f);
+//        radar.setPosition(440, 30 * 1000 / 800f);
+//        stage.addActor(radar);
+//
+//        Clock clock = new Clock(stage);
+//
+//        gameMenuManager.addClock(clock);
+//
+//        String currentWeather;
+//        currentWeather = EnvironmentManager.currentWeather();
+//        WeatherGui weather = new WeatherGui(stage, currentWeather); // need to have this for any weather
+//        gameMenuManager.addWeather(weather);
+//    }
+//
+//    /**
+//     * Getter of Game Paused screen.
+//     *
+//     * @return Game Paused screen.
+//     */
+//    private PopUpTable getPauseTable() {
+//        if (pauseTable == null) {
+//            setPauseTable();
+//            setExitButton(pauseTable);
+//            stage.addActor(pauseTable);
+//            stage.addActor(pauseTable.getExit());
+//        }
+//        return pauseTable;
+//    }
+//
+//    /**
+//     * Initialise Game Paused Screen pop up.
+//     */
+//    private void setPauseTable() {
+//        PopUpTable pauseTable = new PopUpTable(500, 500 * 1346 / 1862f, "p");
+//>>>>>>> master
 //        pauseTable.setDebug(true);
 //
 //        Table infoBar = new Table();

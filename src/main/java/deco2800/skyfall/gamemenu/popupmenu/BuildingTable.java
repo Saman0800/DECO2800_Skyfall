@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.ManufacturedResources;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDra
 public class BuildingTable extends AbstractPopUpElement{
     private Skin skin;
     private Table buildingTable, itemInfo;
-    ManufacturedResources selectedItem = null;
+    Blueprint selectedItem = null;
     InventoryTable inventoryTable;
     GameMenuManager gameMenuManager;
 
@@ -90,12 +91,12 @@ public class BuildingTable extends AbstractPopUpElement{
         items.add(number).padTop(10).colspan(4);
         items.row();
 
-        List<ManufacturedResources> blueprintsLearned = gameMenuManager.getMainCharacter().getBlueprintsLearned();
+        List<Blueprint> blueprintsLearned = gameMenuManager.getMainCharacter().getBlueprintsLearned();
         float itemWidth = 400/4f-10;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 4; j++) {
                 try {
-                    ManufacturedResources item = blueprintsLearned.get(4 * i + j);
+                    Blueprint item = blueprintsLearned.get(4 * i + j);
                     ImageButton testt = new ImageButton(generateTextureRegionDrawableObject(item.getName()));
                     testt.addListener(new ClickListener() {
                         @Override
@@ -142,7 +143,7 @@ public class BuildingTable extends AbstractPopUpElement{
      *
      * @param table Items' info table.
      */
-    private void showInfo(Table table, ManufacturedResources item) {
+    private void showInfo(Table table, Blueprint item) {
         table.clearChildren();
         Image test = new Image(generateTextureRegionDrawableObject(item.getName()));
         table.add(test).width(110).height(110).padTop(10).padBottom(10);

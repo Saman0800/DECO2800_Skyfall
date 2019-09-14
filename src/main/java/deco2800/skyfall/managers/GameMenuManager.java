@@ -1,5 +1,6 @@
 package deco2800.skyfall.managers;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -7,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.SkyfallGame;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.gui.Clock;
+import deco2800.skyfall.gui.WeatherGui;
 import deco2800.skyfall.gamemenu.*;
 import deco2800.skyfall.gamemenu.popupmenu.SettingsTable;
 import deco2800.skyfall.gamemenu.popupmenu.*;
@@ -24,6 +27,8 @@ public class GameMenuManager extends TickableManager {
     private MainCharacter mainCharacter;
     private InventoryManager inventory;
     private SoundManager soundManager;
+    private Clock clock;
+    private WeatherGui weather;
     private Skin skin;
     private String[] characters;
     private SkyfallGame game;
@@ -77,6 +82,8 @@ public class GameMenuManager extends TickableManager {
 
     @Override
     public void onTick(long i) {
+        //Get the current state of the inventory on tick so that display can be updated
+        inventory = GameManager.get().getManager(InventoryManager.class);
 
         if (currentPopUpElement != null) {
             AbstractPopUpElement popUp = popUps.get(currentPopUpElement);
@@ -90,6 +97,15 @@ public class GameMenuManager extends TickableManager {
         for (String key: uiElements.keySet()) {
             AbstractUIElement uiElement = uiElements.get(key);
             uiElement.update();
+        }
+
+        if (clock != null) {
+            clock.update();
+        }
+
+        // Update the weather
+        if (weather != null) {
+            weather.update();
         }
     }
 
@@ -166,7 +182,7 @@ public class GameMenuManager extends TickableManager {
     }
 
     /**
-     * Pauses the game.
+     * Pause the game.
      */
     private void pause() {
         GameManager.setPaused(true);
@@ -184,6 +200,20 @@ public class GameMenuManager extends TickableManager {
         return new TextureRegionDrawable((new TextureRegion(textureManager.getTexture(sName))));
     }
 
+//    /**
+//     * Set main character of the game to be {mainCharacter}.
+//     *
+//     * @param mainCharacter Main character of the game.
+//     */
+//    public void setMainCharacter(MainCharacter mainCharacter) {
+//        if (stage == null) {
+//            System.out.println("Please set stage before adding character");
+//            return;
+//        }
+//        this.mainCharacter = mainCharacter;
+//
+//    }
+
     /**
      * Getter of main character of the game.
      *
@@ -193,6 +223,20 @@ public class GameMenuManager extends TickableManager {
         return sm.getCharacter();
     }
 
+
+    /**
+     * Adds the circle to menu Screen
+     * @param clk
+     */
+    public void addClock(Clock clk) {
+        this.clock = clk;
+    }
+
+    /**
+     * Adds the current weather event to screen.
+     * @param weather
+     */
+    public void addWeather(WeatherGui weather){this.weather = weather;}
 
     /**
      * Getter of all characters in the game.

@@ -1,5 +1,9 @@
 package deco2800.skyfall.entities;
 
+import com.badlogic.gdx.audio.Sound;
+import deco2800.skyfall.buildings.BuildingFactory;
+import deco2800.skyfall.entities.spells.SpellFactory;
+import deco2800.skyfall.entities.structures.BuildingType;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.weapons.Sword;
@@ -19,6 +23,8 @@ import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.*;
 import deco2800.skyfall.resources.*;
 import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.resources.items.Hatchet;
+import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.Tile;
 
@@ -29,8 +35,8 @@ import java.util.*;
 /**
  * Main character in the game
  */
-public class MainCharacter extends Peon implements KeyDownObserver,
-        KeyUpObserver, TouchDownObserver, Tickable, Animatable {
+public class MainCharacter extends Peon
+        implements KeyDownObserver, KeyUpObserver, TouchDownObserver, Tickable, Animatable {
 
     // Logger to show messages
     private final Logger logger = LoggerFactory.getLogger(MainCharacter.class);
@@ -39,7 +45,13 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private InventoryManager inventories;
 
     //List of blueprints that the player has learned.
-    private List<ManufacturedResources> blueprintsLearned;
+
+    private List<Blueprint> blueprintsLearned;
+
+    private BuildingFactory tempFactory;
+
+
+
 
     //The name of the item to be created.
     private String itemToCreate;
@@ -54,6 +66,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     public static final String BOWATTACK = "bow_and_arrow_attack";
 
+    //The pick Axe that is going to be created
+    private Hatchet hatchetToCreate;
 
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
@@ -75,7 +89,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     // A goldPouch to store the character's gold pieces.
     private HashMap<Integer, Integer> goldPouch;
 
-    /*
+    /**
      * The direction and speed of the MainCharacter
      */
     protected Vector2 direction;
@@ -105,17 +119,17 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     private int itemSlotSelected = 1;
 
-    /*
+    /**
      * How long does MainCharacter hurt status lasts,
      */
     private long hurtTime = 0;
 
-    /*
+    /**
      * How long does MainCharacter take to recover,
      */
     private long recoverTime = 3000;
 
-    /*
+    /**
      * Check whether MainCharacter is hurt.
      */
     private boolean isHurt = false;
@@ -206,9 +220,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         velHistoryX = new ArrayList<>();
         velHistoryY = new ArrayList<>();
         blueprintsLearned = new ArrayList<>();
+        tempFactory = new BuildingFactory();
+
 
 
         isMoving = false;
+
         HexVector position = this.getPosition();
 
         /*        //Spawn projectile in front of character for now.
@@ -261,13 +278,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      *                 4 = South-West
      *                 5 = North-West
      */
-
     public MainCharacter(float col, float row, float speed,
                          String name, int health, String[] textures) {
         this(row, col, speed, name, health);
         this.setTexture(textures[2]);
     }
-
 
     /**
      * Switch the item the MainCharacter has equip.
@@ -380,7 +395,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         // Add the projectile entity to the game world.
         GameManager.get().getWorld().addEntity(projectile);
-
     }
 
     /**
@@ -392,7 +406,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         //Unselect the spell.
         this.spellSelected = SpellType.NONE;
-
 
         //Create the spell using the factory.
         Spell spell = SpellFactory.createSpell(spellType,mousePosition);
@@ -466,11 +479,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void dropInventory(String item) {
         this.inventories.drop(item);
     }
-    
+
     /**
      * Player takes damage from other entities/ by starving.
      */
-
     public void hurt(int damage) {
 
         if (this.isInvincible) return;
@@ -500,34 +512,33 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             recoverTime = 0;
             HexVector bounceBack = new HexVector();
 
-            switch (getPlayerDirectionCardinal()) {
-                case "North":
-                    bounceBack = new HexVector(position.getCol(), position.getRow() - 2);
-                    break;
-                case "North-East":
-                    bounceBack = new HexVector(position.getCol() - 2, position.getRow() - 2);
-                    break;
-                case "East":
-                    bounceBack = new HexVector(position.getCol() - 2, position.getRow());
-                    break;
-                case "South-East":
-                    bounceBack = new HexVector(position.getCol() - 2, position.getRow() + 2);
-                    break;
-                case "South":
-                    bounceBack = new HexVector(position.getCol(), position.getRow() + 2);
-                    break;
-                case "South-West":
-                    bounceBack = new HexVector(position.getCol() + 2, position.getRow() + 2);
-                    break;
-                case "West":
-                    bounceBack = new HexVector(position.getCol() - 2, position.getRow());
-                    break;
-                case "North-West":
-                    bounceBack = new HexVector(position.getCol() + 2, position.getRow() - 2);
-                    break;
-            }
-            position.moveToward(bounceBack, 1f);
-
+                switch (getPlayerDirectionCardinal()) {
+                    case "North":
+                        bounceBack = new HexVector(position.getCol(), position.getRow() - 2);
+                        break;
+                    case "North-East":
+                        bounceBack = new HexVector(position.getCol() - 2, position.getRow() - 2);
+                        break;
+                    case "East":
+                        bounceBack = new HexVector(position.getCol() - 2, position.getRow());
+                        break;
+                    case "South-East":
+                        bounceBack = new HexVector(position.getCol() - 2, position.getRow() + 2);
+                        break;
+                    case "South":
+                        bounceBack = new HexVector(position.getCol(), position.getRow() + 2);
+                        break;
+                    case "South-West":
+                        bounceBack = new HexVector(position.getCol() + 2, position.getRow() + 2);
+                        break;
+                    case "West":
+                        bounceBack = new HexVector(position.getCol() - 2, position.getRow());
+                        break;
+                    case "North-West":
+                        bounceBack = new HexVector(position.getCol() + 2, position.getRow() - 2);
+                        break;
+                }
+                position.moveToward(bounceBack, 1f);
 
                 SoundManager.playSound(HURT);
             }
@@ -551,7 +562,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
          */
         public boolean isRecovering () {
             return isRecovering;
-
         }
 
         public void setRecovering ( boolean isRecovering){
@@ -610,16 +620,16 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             this.isHurt = isHurt;
         }
 
-    /**
-     * Set the players inventory to a predefined inventory
-     * e.g for loading player saves
-     * @param inventoryContents the save for the inventory
-     */
-    public void setInventory (Map < String, List < Item >> inventoryContents,
-            List < String > quickAccessContent){
-        this.inventories = new InventoryManager(inventoryContents,
-                quickAccessContent);
-    }
+        /**
+         * Set the players inventory to a predefined inventory
+         * e.g for loading player saves
+         * @param inventoryContents the save for the inventory
+         */
+        public void setInventory (Map < String, List < Item >> inventoryContents,
+                List < String > quickAccessContent){
+            this.inventories = new InventoryManager(inventoryContents,
+                    quickAccessContent);
+        }
 
         /**
          * Gets the inventory manager of the character, so it can only be modified
@@ -674,38 +684,36 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             }
         }
 
-    /**
-     * See if the player is starving
-     * @return true if hunger points is <= 0, else false
-     */
-    public boolean isStarving () {
-        return foodLevel <= 0;
-    }
-
-    public void changeSwimming ( boolean swimmingAbility){
-        this.canSwim = swimmingAbility;
-    }
-
-
-    /**
-     * Change current level of character and increases health by 10
-     * @param change amount being added or subtracted
-     */
-    public void changeLevel ( int change){
-        if (level + change >= 1) {
-            this.level += change;
-            this.changeHealth(change * 10);
+        /**
+         * See if the player is starving
+         * @return true if hunger points is <= 0, else false
+         */
+        public boolean isStarving () {
+            return foodLevel <= 0;
         }
-    }
 
-    /**
-     * Gets the current level of character
-     * @return level of character
-     */
-    public int getLevel () {
-        return this.level;
-    }
+        public void changeSwimming ( boolean swimmingAbility){
+            this.canSwim = swimmingAbility;
+        }
 
+        /**
+         * Change current level of character and increases health by 10
+         * @param change amount being added or subtracted
+         */
+        public void changeLevel ( int change){
+            if (level + change >= 1) {
+                this.level += change;
+                this.changeHealth(change * 10);
+            }
+        }
+
+        /**
+         * Gets the current level of character
+         * @return level of character
+         */
+        public int getLevel () {
+            return this.level;
+        }
 
         /**
          * Change the player's appearance to the set texture
@@ -787,7 +795,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         @Override
         public void moveTowards (HexVector destination){
             position.moveToward(destination, this.currentSpeed);
-
         }
 
         /**
@@ -796,7 +803,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
          */
         private void setCurrentSpeed ( float cSpeed){
             this.currentSpeed = cSpeed;
-
         }
 
         /**
@@ -861,7 +867,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             this.spellSelected = type;
         }
 
-
         /**
          * Sets the appropriate movement flags to false on keyUp
          * @param keycode the key being released
@@ -900,49 +905,50 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             }
         }
 
-    /**
-     * Adds a piece of gold to the Gold Pouch
-     * @param gold The piece of gold to be added to the pouch
-     * @param count How many of that piece of gold should be added
-     */
-    public void addGold(GoldPiece gold, Integer count) {
-        // store the gold's value (5G, 10G etc) as a variable
-        Integer goldValue = gold.getValue();
+        /**
+         * Adds a piece of gold to the Gold Pouch
+         * @param gold The piece of gold to be added to the pouch
+         * @param count How many of that piece of gold should be added
+         */
+        public void addGold (GoldPiece gold, Integer count){
 
-        // if this gold value already exists in the pouch
-        if (goldPouch.containsKey(goldValue)) {
-            // add this piece to the already existing list of pieces
-            goldPouch.put(goldValue, goldPouch.get(goldValue) + count);
-        } else {
-            goldPouch.put(goldValue, count);
+            // store the gold's value (5G, 10G etc) as a variable
+            Integer goldValue = gold.getValue();
+
+            // if this gold value already exists in the pouch
+            if (goldPouch.containsKey(goldValue)) {
+                // add this piece to the already existing list of pieces
+                goldPouch.put(goldValue, goldPouch.get(goldValue) + count);
+            } else {
+                goldPouch.put(goldValue, count);
+            }
+
         }
 
-    }
+        /**
+         * Removes one instance of a gold piece in the pouch with a specific value.
+         * @param goldValue The value of the gold piece to be removed from the pouch.
+         */
+        public void removeGold(Integer goldValue) {
 
-    /**
-     * Removes one instance of a gold piece in the pouch with a specific value.
-     * @param goldValue The value of the gold piece to be removed from the pouch.
-     */
-    public void removeGold(Integer goldValue) {
-
-        // if this gold value does not exist in the pouch
-        if (!(goldPouch.containsKey(goldValue))) {
-            return;
-        } else if (goldPouch.get(goldValue) > 1) {
-            goldPouch.put(goldValue, goldPouch.get(goldValue) - 1);
-        } else {
-            goldPouch.remove(goldValue);
+            // if this gold value does not exist in the pouch
+            if (!(goldPouch.containsKey(goldValue))) {
+                return;
+            } else if (goldPouch.get(goldValue) > 1) {
+                goldPouch.put(goldValue, goldPouch.get(goldValue) - 1);
+            } else {
+                goldPouch.remove(goldValue);
+            }
         }
-    }
 
-    /**
-     * Returns the types of GoldPieces in the pouch and how many of each type
-     * exist
-     * @return The contents of the Main Character's gold pouch
-     */
-    public HashMap<Integer, Integer> getGoldPouch() {
-        return new HashMap<>(goldPouch);
-    }
+        /**
+         * Returns the types of GoldPieces in the pouch and how many of each type
+         * exist
+         * @return The contents of the Main Character's gold pouch
+         */
+        public HashMap<Integer, Integer> getGoldPouch () {
+            return new HashMap<>(goldPouch);
+        }
 
     /**
      * Returns the sum of the gold piece values in the Gold Pouch
@@ -958,25 +964,24 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         return totalValue;
     }
 
-    /**
-     * If the player is within 1m of a gold piece and presses G, it will
-     * be added to their Gold Pouch.
-     *
-     */
-    public void addClosestGoldPiece() {
-        for (AbstractEntity entity :
-                GameManager.get().getWorld().getEntities()) {
-            if (entity instanceof GoldPiece) {
-                if (this.getPosition().distance(entity.getPosition()) <= 1.5) {
-                    this.addGold((GoldPiece) entity, 1);
-                    logger.info("Gold piece added!");
-                    // entity.dispose doesn't work
-                    //entity.dispose();
+        /**
+         * If the player is within 2m of a gold piece and presses G, it will
+         * be added to their Gold Pouch.
+         *
+         */
+        public void addClosestGoldPiece () {
+            for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+                if (entity instanceof GoldPiece) {
+                    if (this.getPosition().distance(entity.getPosition()) <= 2) {
+                        this.addGold((GoldPiece) entity, 1);
+                        logger.info(this.inventories.toString());
+                    }
                 }
+
             }
+            logger.info("Sorry, you are not close enough to a gold piece!");
 
         }
-    }
 
         /**
          * Gets the tile at a position.
@@ -1251,41 +1256,65 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             }
         }
 
-    /***
-     * Creates a manufactured item. Checks if required resources are in the inventory.
-     * if yes, creates the item, adds it to the player's inventory
-     * and deducts the required resource from inventory
-     */
-    public void createItem(ManufacturedResources itemToCreate) {
-        // if (getBlueprintsLearned().contains(itemToCreate)) {
-        if (this.getInventoryManager().getAmount("Metal") < itemToCreate.getRequiredMetal()) {
-            logger.info("You don't have enough Metal");
+        /***
+         * This method enables the Main character to use Hatchet. The player's
+         * distance from the tree should not be more than 2.5.Every time a
+         * wood is collected a message is printed.
+         * This method will be changed later to increase efficiency.
+         */
+        public void useHatchet () {
 
-        } else if (this.getInventoryManager().getAmount("Wood") < itemToCreate.getRequiredWood()) {
-            logger.info("You don't have enough Wood");
+            if (this.inventories.getQuickAccess().containsKey("Hatchet")) {
+                Hatchet playerHatchet = new Hatchet(this);
 
-        } else if (this.getInventoryManager()
-                .getAmount("Stone") < itemToCreate.getRequiredStone()) {
-            logger.info("You don't have enough Stone");
+                for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
 
-        } else {
-            this.getInventoryManager().add(itemToCreate);
+                    if (entity instanceof Tree) {
 
-            this.getInventoryManager().dropMultiple("Metal", itemToCreate.getRequiredMetal());
-            this.getInventoryManager().dropMultiple("Stone", itemToCreate.getRequiredStone());
-            this.getInventoryManager().dropMultiple("Wood", itemToCreate.getRequiredWood());
-            //   }
 
+                        if (this.getPosition().distance(entity.getPosition()) <= 1) {
+                            playerHatchet.farmTree((Tree) entity);
+                            logger.info(this.inventories.toString());
+                        }
+                    }
+                }
+            }
         }
-    }
+
+        /***
+         * This method enables the Main character to use Hatchet. The player's
+         * distance from the tree should not be more than 2.5.Every time a
+         * wood is collected a message is printed.
+         * This method will be changed later to increase efficiency.
+         */
+        public void usePickAxe () {
+
+            if (this.inventories.getQuickAccess().containsKey("Pick Axe")) {
+                PickAxe playerPickAxe = new PickAxe(this);
+
+                for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+
+                    if (entity instanceof Rock) {
+
+                        if (this.getPosition().distance(entity.getPosition()) <= 1) {
+                            playerPickAxe.farmRock((Rock) entity);
+                            logger.info(this.inventories.toString());
+                        }
+                    }
+                }
+
+            }
+        }
 
         /***
          * A getter method for the blueprints that the player has learned.
          * @return the learned blueprints list
          */
-        public List<ManufacturedResources> getBlueprintsLearned () {
-            return this.blueprintsLearned;
-        }
+    public List<Blueprint> getBlueprintsLearned () {
+            blueprintsLearned.add(new Hatchet());
+
+        return this.blueprintsLearned;
+    }
 
         /***
          * A getter method to get the Item to be created.
@@ -1303,6 +1332,62 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             this.itemToCreate = item;
         }
 
+        /***
+         * Creates an item if the player has the blueprint. Checks if required resources
+         * are in the inventory. if yes, creates the item, adds it to the player's
+         * inventoryand deducts the required resource from inventory
+         */
+    public void createItem (Blueprint newItem) {
+
+            for (Blueprint blueprint: getBlueprintsLearned()){
+                if (blueprint.getClass()== newItem.getClass()) {
+
+                    if (newItem.getRequiredMetal() > this.getInventoryManager().
+                            getAmount("Metal")) {
+                        logger.info("You don't have enough Metal");
+
+                    } else if (newItem.getRequiredWood() > this.getInventoryManager().
+                            getAmount("Wood")) {
+                        logger.info("You don't have enough Wood");
+
+                    } else if (newItem.getRequiredStone() > this.getInventoryManager().
+                            getAmount("Stone")) {
+                        logger.info("You don't have enough Stone");
+
+                    } else {
+                        switch(newItem.getName()){
+                            case "Hatchet":
+                                this.getInventoryManager().add(new Hatchet());
+                            case "Pick Axe":
+                                this.getInventoryManager().add(new PickAxe());
+
+                                //These are only placeholders and will change once coordinated
+                                //with Building team
+                            case "Cabin":
+                                tempFactory.createCabin(this.getCol(),this.getRow());
+                            case "StorageUnit":
+                                tempFactory.createStorageUnit(this.getCol(),this.getRow());
+                            case "TownCentre":
+                                tempFactory.createTownCentreBuilding(this.getCol(),this.getRow());
+                            case "Fence":
+                                tempFactory.createFenceBuilding(this.getCol(),this.getRow());
+                            case "SafeHouse":
+                                tempFactory.createSafeHouse(this.getCol(),this.getRow());
+                            case "WatchTower":
+                                tempFactory.createWatchTower(this.getCol(),this.getRow());
+                            case "Castle":
+                                tempFactory.createCastle(this.getCol(),this.getRow());
+                        }
+                        this.getInventoryManager().dropMultiple
+                                ("Metal", newItem.getRequiredMetal());
+                        this.getInventoryManager().dropMultiple
+                                ("Stone", newItem.getRequiredStone());
+                        this.getInventoryManager().dropMultiple
+                                ("Wood", newItem.getRequiredWood());
+                    }
+                }
+            }
+    }
 
         /**
          * Sets the animations.
@@ -1410,5 +1495,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             }
 
         }
+
     }
 

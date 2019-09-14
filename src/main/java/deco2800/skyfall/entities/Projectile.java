@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import com.badlogic.gdx.math.Vector2;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 
@@ -14,7 +15,7 @@ public class Projectile extends AgentEntity {
     /**
      * How many game ticks all projectiles survive for before being removed.
      */
-    public static final int LIFE_TIME_TICKS = 40;
+    public static final int LIFE_TIME_TICKS = 50;
 
     /**
      * The amount of damage this projectile deals.
@@ -69,7 +70,6 @@ public class Projectile extends AgentEntity {
 
         this.setCollider();
 
-        //TODO: rotate sprite in angle facing.
     }
 
     /**
@@ -109,6 +109,11 @@ public class Projectile extends AgentEntity {
             position.moveToward(movementPosition,speed);
         }
 
+    }
+
+    @Override
+    public boolean collidesWith(AbstractEntity entity) {
+        return super.collidesWith(entity);
     }
 
     /**
