@@ -81,8 +81,6 @@ public class GameMenuManager extends TickableManager {
     @Override
     public void onTick(long i) {
         //Get the current state of the inventory on tick so that display can be updated
-        inventory = GameManager.get().getManager(InventoryManager.class);
-
         if (currentPopUpElement != null) {
             AbstractPopUpElement popUp = popUps.get(currentPopUpElement);
 
@@ -96,8 +94,6 @@ public class GameMenuManager extends TickableManager {
             AbstractUIElement uiElement = uiElements.get(key);
             uiElement.update();
         }
-
-
     }
 
     /**

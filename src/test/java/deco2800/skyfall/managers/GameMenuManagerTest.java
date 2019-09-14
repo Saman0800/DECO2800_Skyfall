@@ -7,23 +7,22 @@ import deco2800.skyfall.gamemenu.AbstractUIElement;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+
 public class GameMenuManagerTest {
-    GameMenuManager gmm;
-    TextureManager tm;
-    SoundManager sm;
-    InventoryManager im;
-    Stage stage;
-    Skin skin;
-    Map<String, AbstractPopUpElement> popUps;
-    Map<String, AbstractUIElement> uiElements;
+    private GameMenuManager gmm;
+    private TextureManager tm;
+    private SoundManager sm;
+    private InventoryManager im;
+    private Stage stage;
+    private Skin skin;
+    private Map<String, AbstractPopUpElement> popUps;
+    private Map<String, AbstractUIElement> uiElements;
 
 
     @Before
@@ -39,9 +38,43 @@ public class GameMenuManagerTest {
         gmm = new GameMenuManager(tm, sm, im, stage, skin, popUps, uiElements);
     }
 
+    @Test
+    public void onTickPopUpTest() {
+        AbstractPopUpElement mockPopUp = mock(AbstractPopUpElement.class);
+        gmm.setPopUp("mockPopUp");
+        when(popUps.get("mockPopUp")).thenReturn(mockPopUp);
+        when(mockPopUp.isVisible()).thenReturn(false);
+        doNothing().when(mockPopUp).update();
+        doNothing().when(mockPopUp).show();
 
-    public void onTickTest() {
+
+
         gmm.onTick(0);
+        verify(mockPopUp).update();
+        verify(mockPopUp).show();
+    }
+
+    @Test
+    public void onTickUpdateTest() {
+        gmm.setPopUp(null);
+        //AbstractPopUpElement is still
+        AbstractUIElement mockPopUp = mock(AbstractPopUpElement.class);
+
+        doNothing().when(mockPopUp).update();
+
+
+        HashMap<String, Object> actualMap = new HashMap<>();
+
+        actualMap.put("mock1", 2);
+        actualMap.put("mock2", 2);
+        actualMap.put("mock3", 2);
+
+        when(uiElements.keySet()).thenReturn(actualMap.keySet());
+        doReturn(mockPopUp).when(uiElements).get(anyString());
+
+        gmm.onTick(0);
+        verify(mockPopUp, times(3)).update();
+
     }
 
 
@@ -68,20 +101,6 @@ public class GameMenuManagerTest {
         verify(uiElements, never()).put(anyString(), any());
     }
 
-    @Test
-    @Ignore
-    public void drawAllElementsWithStatsManager() {
-        ///TODO : cannot get mocking for this test working
-        //when(popUps.put(anyString(), anyObject())).thenReturn(null);
-        when(popUps.put(eq("healthCircle"), anyObject())).thenReturn(null);
-        when(uiElements.put(anyString(), anyObject())).thenReturn(null);
-
-        StatisticsManager sm = mock(StatisticsManager.class);
-        gmm.addStatsManager(sm);
-        gmm.drawAllElements();
-        verify(popUps, atLeast(5)).put(anyString(),any(AbstractPopUpElement.class) );
-        verify(uiElements, atLeast(2)).put(anyString(), any());
-    }
 
     @After()
     public void tearDown() {
