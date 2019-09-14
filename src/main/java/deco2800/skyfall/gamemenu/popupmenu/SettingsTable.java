@@ -38,6 +38,10 @@ public class SettingsTable extends AbstractPopUpElement{
         this.soundManager = soundManager;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void hide() {
         super.hide();
@@ -45,6 +49,10 @@ public class SettingsTable extends AbstractPopUpElement{
         settingsTable.setVisible(false);
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void show() {
         super.show();
@@ -52,15 +60,25 @@ public class SettingsTable extends AbstractPopUpElement{
         settingsTable.setVisible(true);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updatePosition() {
         super.updatePosition();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void update() {
         super.update();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void draw() {
         super.draw();

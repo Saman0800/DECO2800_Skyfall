@@ -12,12 +12,18 @@ import deco2800.skyfall.managers.TextureManager;
 
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
+/**
+ * Generic Pop up element.
+ * By default just displays an exit button.
+ */
 public class AbstractPopUpElement extends AbstractUIElement {
     protected GameMenuManager gameMenuManager;
     private ImageButton exitButton;
     private boolean isVisible = false;
 
-
+    /**
+     * Hides all of the elements associated with the element.
+     */
     public void hide() {
         System.out.println("hiding exit");
         exitButton.setVisible(false);
@@ -42,12 +48,18 @@ public class AbstractPopUpElement extends AbstractUIElement {
         GameScreen.isPaused = true;
     }
 
+    /**
+     * Shows the element
+     */
     public void show(){
         exitButton.setVisible(true);
         isVisible = true;
         pause();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updatePosition() {
         float x  = stage.getCamera().position.x  + (stage.getCamera().viewportWidth / 2);
@@ -55,6 +67,14 @@ public class AbstractPopUpElement extends AbstractUIElement {
         exitButton.setPosition(x * 0.9f, y * 0.9f);
     }
 
+    /**
+     * Constructor
+     * @param stage Game stage
+     * @param exitButton Exit button to display
+     * @param textureNames Texture names to fetch
+     * @param tm The texture manager
+     * @param gameMenuManager The gamemenumanager
+     */
     public AbstractPopUpElement(Stage stage, ImageButton exitButton, String[] textureNames,
                                 TextureManager tm, GameMenuManager gameMenuManager) {
         super(stage, textureNames, tm);

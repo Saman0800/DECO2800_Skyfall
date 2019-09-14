@@ -17,14 +17,11 @@ public class HealthCircle extends AbstractUIElement {
     private float positionY;
     private float offset;
     private Label label;
-
-    // new stuff
-
     StatisticsManager sm;
 
 
     /**
-     * Updates
+     * Updates the inner circle.
      */
     private void updateInnerCircle() {
         float diff = currentHealth - newHealth;
@@ -59,8 +56,6 @@ public class HealthCircle extends AbstractUIElement {
     /**
      * Keeps the object on the top left of the screen
      */
-
-
     @Override
     public void updatePosition() {
         positionX = (stage.getCamera().position.x  + (stage.getCamera().viewportWidth / 2) - 100);
@@ -70,6 +65,10 @@ public class HealthCircle extends AbstractUIElement {
         label.setPosition(positionX + 15, positionY + 40);
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void draw() {
         BitmapFont bitmapFont  = new BitmapFont();
@@ -94,7 +93,13 @@ public class HealthCircle extends AbstractUIElement {
     }
 
 
-    //Uses new refactored system
+    /**
+     * Constructors
+     * @param stage The game stage
+     * @param textureNames The texture names to fetch
+     * @param tm The texture manager
+     * @param sm The statistics manager
+     */
     public HealthCircle(Stage stage, String[] textureNames, TextureManager tm, StatisticsManager sm) {
         super(stage, textureNames, tm);
         this.sm = sm;

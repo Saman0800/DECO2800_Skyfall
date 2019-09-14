@@ -26,12 +26,17 @@ public class GameMenuBar extends AbstractUIElement {
     }
 
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updatePosition() {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void draw() {
         TextureManager textureManager = this.tm;

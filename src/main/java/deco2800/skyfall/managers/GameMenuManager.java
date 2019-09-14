@@ -42,8 +42,6 @@ public class GameMenuManager extends TickableManager {
     private Map<String, AbstractPopUpElement> popUps;
     private String currentPopUpElement = null;
 
-    //TODO: REMOVE WHEN REFACTOR IS FINISHED
-    public final static boolean runRefactored  = true;
     private Logger logger = LoggerFactory.getLogger(GameMenuManager.class);
 
     /**
@@ -81,10 +79,15 @@ public class GameMenuManager extends TickableManager {
         this.uiElements = uiElements;
     }
 
+    /**
+     * Runs the update for all of the registered ui elements
+     * @param i Tick number
+     */
     @Override
     public void onTick(long i) {
         //Get the current state of the inventory on tick so that display can be updated
         if (currentPopUpElement != null) {
+            //Checks to see a new pop up needs to be displayed.
             AbstractPopUpElement popUp = popUps.get(currentPopUpElement);
 
             if (popUp != null && !popUp.isVisible()) {
@@ -228,66 +231,73 @@ public class GameMenuManager extends TickableManager {
     }
 
     //refactor
+
+    /**
+     * Before elements can be drawn a statistic manager needs to be added
+     * @param statsManager The initialized stats maanger to be added
+     */
     public void addStatsManager(StatisticsManager statsManager) {
         sm = statsManager;
     }
 
+    /**
+     * Draws all of the elements in UI
+     */
     public void drawAllElements(){
         if (sm == null) {
             System.out.println("Please add stats manager before drawing");
             return;
         }
-        if (runRefactored) {
-            uiElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm));
+        uiElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm));
 
-            uiElements.put("gameMenuBar", new GameMenuBar(stage, null, textureManager, this));
+        uiElements.put("gameMenuBar", new GameMenuBar(stage, null, textureManager, this));
 
-            popUps.put("inventoryTable",
-                    new InventoryTable(stage, new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                            null, textureManager, skin,this));
+        popUps.put("inventoryTable",
+                new InventoryTable(stage, new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                        null, textureManager, skin,this));
 
-            popUps.put("settingsTable", new SettingsTable(stage,
-                    new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                    null, textureManager, this,
-                    skin, soundManager));
+        popUps.put("settingsTable", new SettingsTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                null, textureManager, this,
+                skin, soundManager));
 
-            popUps.put("helpTable", new HelpTable(stage,
-                    new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                    null, textureManager, this,
-                    skin));
+        popUps.put("helpTable", new HelpTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                null, textureManager, this,
+                skin));
 
-            popUps.put("pauseTable", new PauseTable(stage,
-                    new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                    null, textureManager, this,
-                    skin));
+        popUps.put("pauseTable", new PauseTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                null, textureManager, this,
+                skin));
 
-            popUps.put("playerSelectTable", new PlayerSelectTable(stage,
-                    new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                    null, textureManager, this,
-                    skin));
+        popUps.put("playerSelectTable", new PlayerSelectTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                null, textureManager, this,
+                skin));
 
-            popUps.put("buildingTable", new BuildingTable(stage,
-                    new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                    null, textureManager, this,
-                    skin));
+        popUps.put("buildingTable", new BuildingTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                null, textureManager, this,
+                skin));
 
-            popUps.put("goldTable", new GoldTable(stage,
-                    new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                    null, textureManager, this, sm, skin));
+        popUps.put("goldTable", new GoldTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                null, textureManager, this, sm, skin));
 
-            popUps.put("chestTable",new ChestTable(stage,
-                    new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                    null, textureManager, this, sm, skin));
+        popUps.put("chestTable",new ChestTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                null, textureManager, this, sm, skin));
 
-            popUps.put("gameOverTable", new GameOverTable(stage,
-                    null,
-                    null, textureManager, this,
-                    skin));
+        popUps.put("gameOverTable", new GameOverTable(stage,
+                null,
+                null, textureManager, this,
+                skin));
 
 
-            uiElements.put("clock" , new Clock(stage));
-            //uiElements.put("weatherGUI", new WeatherGui(stage, EnvironmentManager.currentWeather()));
-        }
+        uiElements.put("clock" , new Clock(stage));
+        //uiElements.put("weatherGUI", new WeatherGui(stage, EnvironmentManager.currentWeather()));
+
     }
 
     /**
@@ -299,17 +309,22 @@ public class GameMenuManager extends TickableManager {
         return popUps.get(currentPopUpElement);
     }
 
+    /**
+     * Element associated with key
+     * @param key
+     * @return
+     */
     public AbstractUIElement getUIElement(String key) {
         return uiElements.get(key);
     }
 
     /**
-     * Getter of specific popup
-     * @param name the string name of the popup
-     * @return
+     * Gets a specific pop up
+     * @param key The key
+     * @return UI element associated with the
      */
-    public AbstractPopUpElement getPopUp(String name) {
-        return popUps.get(name);
+    public AbstractPopUpElement getPopUp(String key) {
+        return popUps.get(key);
     }
 
     /**
