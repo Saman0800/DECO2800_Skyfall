@@ -345,7 +345,10 @@ public class EnvironmentManager extends TickableManager {
             // Play BGM
             try {
                 bgmManager.initClip(currentFile);
-                bgmManager.play();
+                BGMManager.play();
+                if (BGMManager.paused) {
+                    BGMManager.mute();
+                }
             } catch (Exception e) {
                 /* Exception caught, if any */ }
         }

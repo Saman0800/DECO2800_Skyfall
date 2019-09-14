@@ -900,84 +900,83 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             }
         }
 
-        /**
-         * Adds a piece of gold to the Gold Pouch
-         * @param gold The piece of gold to be added to the pouch
-         * @param count How many of that piece of gold should be added
-         */
-        public void addGold (GoldPiece gold, Integer count){
+    /**
+     * Adds a piece of gold to the Gold Pouch
+     * @param gold The piece of gold to be added to the pouch
+     * @param count How many of that piece of gold should be added
+     */
+    public void addGold(GoldPiece gold, Integer count) {
+        // store the gold's value (5G, 10G etc) as a variable
+        Integer goldValue = gold.getValue();
 
-            // store the gold's value (5G, 10G etc) as a variable
-            Integer goldValue = gold.getValue();
-
-            // if this gold value already exists in the pouch
-            if (goldPouch.containsKey(goldValue)) {
-                // add this piece to the already existing list of pieces
-                goldPouch.put(goldValue, goldPouch.get(goldValue) + count);
-            } else {
-                goldPouch.put(goldValue, count);
-            }
-
+        // if this gold value already exists in the pouch
+        if (goldPouch.containsKey(goldValue)) {
+            // add this piece to the already existing list of pieces
+            goldPouch.put(goldValue, goldPouch.get(goldValue) + count);
+        } else {
+            goldPouch.put(goldValue, count);
         }
 
-        /**
-         * Removes one instance of a gold piece in the pouch.
-         * @param gold The gold piece to be removed from the pouch.
-         */
-        public void removeGold (GoldPiece gold){
-            // store the gold's value (5G, 10G etc) as a variable
-            Integer goldValue = gold.getValue();
+    }
 
-            // if this gold value does not exist in the pouch
-            if (!(goldPouch.containsKey(goldValue))) {
-                return;
-            } else if (goldPouch.get(goldValue) > 1) {
-                goldPouch.put(goldValue, goldPouch.get(goldValue) - 1);
-            } else {
-                goldPouch.remove(goldValue);
-            }
+    /**
+     * Removes one instance of a gold piece in the pouch with a specific value.
+     * @param goldValue The value of the gold piece to be removed from the pouch.
+     */
+    public void removeGold(Integer goldValue) {
+
+        // if this gold value does not exist in the pouch
+        if (!(goldPouch.containsKey(goldValue))) {
+            return;
+        } else if (goldPouch.get(goldValue) > 1) {
+            goldPouch.put(goldValue, goldPouch.get(goldValue) - 1);
+        } else {
+            goldPouch.remove(goldValue);
         }
+    }
 
-        /**
-         * Returns the types of GoldPieces in the pouch and how many of each type
-         * exist
-         * @return The contents of the Main Character's gold pouch
-         */
-        public HashMap<Integer, Integer> getGoldPouch () {
-            return new HashMap<>(goldPouch);
+    /**
+     * Returns the types of GoldPieces in the pouch and how many of each type
+     * exist
+     * @return The contents of the Main Character's gold pouch
+     */
+    public HashMap<Integer, Integer> getGoldPouch() {
+        return new HashMap<>(goldPouch);
+    }
+
+    /**
+     * Returns the sum of the gold piece values in the Gold Pouch
+     * @return The total value of the Gold Pouch
+     */
+    public int getGoldPouchTotalValue() {
+        int totalValue = 0;
+        for (Integer goldValue : goldPouch.keySet()) {
+            totalValue += goldValue * goldPouch.get(goldValue);
         }
+        logger.info("The total value of your Gold Pouch is: " + totalValue +
+                "G");
+        return totalValue;
+    }
 
-        /**
-         * Returns the sum of the gold piece values in the Gold Pouch
-         * @return The total value of the Gold Pouch
-         */
-        public Integer getGoldPouchTotalValue () {
-            Integer totalValue = 0;
-            for (Integer goldValue : goldPouch.keySet()) {
-                totalValue += goldValue * goldPouch.get(goldValue);
-            }
-            logger.info("The total value of your Gold Pouch is: " + totalValue + "G");
-            return totalValue;
-        }
-
-        /**
-         * If the player is within 2m of a gold piece and presses G, it will
-         * be added to their Gold Pouch.
-         *
-         */
-        public void addClosestGoldPiece () {
-            for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
-                if (entity instanceof GoldPiece) {
-                    if (this.getPosition().distance(entity.getPosition()) <= 2) {
-                        this.addGold((GoldPiece) entity, 1);
-                        logger.info(this.inventories.toString());
-                    }
+    /**
+     * If the player is within 1m of a gold piece and presses G, it will
+     * be added to their Gold Pouch.
+     *
+     */
+    public void addClosestGoldPiece() {
+        for (AbstractEntity entity :
+                GameManager.get().getWorld().getEntities()) {
+            if (entity instanceof GoldPiece) {
+                if (this.getPosition().distance(entity.getPosition()) <= 1.5) {
+                    this.addGold((GoldPiece) entity, 1);
+                    logger.info("Gold piece added!");
+                    // entity.dispose doesn't work
+                    //entity.dispose();
                 }
-
             }
-            logger.info("Sorry, you are not close enough to a gold piece!");
 
         }
+    }
 
         /**
          * Gets the tile at a position.

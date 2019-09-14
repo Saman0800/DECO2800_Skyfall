@@ -27,6 +27,8 @@ public class BGMManager extends AbstractManager {
 
     EnvironmentManager environmentManager;
 
+    public static boolean paused = false;
+
     /**
      * Background music constructor
      */
@@ -69,7 +71,8 @@ public class BGMManager extends AbstractManager {
      */
     public static void play()  {
         //Play the clip
-        clip.start();
+            System.out.println("pause is false play()");
+            clip.start();
     }
 
     /**
