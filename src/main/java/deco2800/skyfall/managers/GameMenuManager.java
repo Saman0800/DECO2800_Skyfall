@@ -27,8 +27,6 @@ public class GameMenuManager extends TickableManager {
     private MainCharacter mainCharacter;
     private InventoryManager inventory;
     private SoundManager soundManager;
-    private Clock clock;
-    private WeatherGui weather;
     private Skin skin;
     private String[] characters;
     private SkyfallGame game;
@@ -99,14 +97,7 @@ public class GameMenuManager extends TickableManager {
             uiElement.update();
         }
 
-        if (clock != null) {
-            clock.update();
-        }
 
-        // Update the weather
-        if (weather != null) {
-            weather.update();
-        }
     }
 
     /**
@@ -222,22 +213,6 @@ public class GameMenuManager extends TickableManager {
     public MainCharacter getMainCharacter() {
         return sm.getCharacter();
     }
-
-
-    /**
-     * Adds the circle to menu Screen
-     * @param clk
-     */
-    public void addClock(Clock clk) {
-        this.clock = clk;
-    }
-
-    /**
-     * Adds the current weather event to screen.
-     * @param weather
-     */
-    public void addWeather(WeatherGui weather){this.weather = weather;}
-
     /**
      * Getter of all characters in the game.
      *
@@ -303,6 +278,10 @@ public class GameMenuManager extends TickableManager {
                     null,
                     null, textureManager, this,
                     skin));
+
+
+            uiElements.put("clock" , new Clock(stage));
+            //uiElements.put("weatherGUI", new WeatherGui(stage, EnvironmentManager.currentWeather()));
         }
     }
 
