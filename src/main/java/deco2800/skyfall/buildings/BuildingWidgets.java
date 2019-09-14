@@ -110,6 +110,10 @@ public class BuildingWidgets {
         }
     }
 
+    /**
+     * Returns a health bar for showing current health of a building.
+     * @return a health bar
+     */
     private ProgressBar createHealthBar() {
         // progress bar style setup
         Pixmap bg = new Pixmap(100, 15, Pixmap.Format.RGBA8888);
@@ -143,13 +147,18 @@ public class BuildingWidgets {
     }
 
     /**
-     * Get the widget layout.
-     * @return an table object forms widget
+     * Returns the widget container.
+     * @return the table object forms the widget
      */
     public Table getMenu() {
         return menu;
     }
 
+    /**
+     * Checks building upgrade costs and inventory resources.
+     * @param building the building clicked on the world
+     * @return true if enough resources provided for a upgrade, otherwise false
+     */
     private boolean checkCost(BuildingEntity building) {
         InventoryManager inventoryManager = gm.getManager(InventoryManager.class);
         Map<String, Integer> resources = inventoryManager.getQuickAccess();
@@ -169,7 +178,11 @@ public class BuildingWidgets {
         return true;
     }
 
-    /* option is 0 remove resources, option is 1 add resource */
+    /**
+     * Based on option to remove or add building resources into the inventory.
+     * @param costs a list of resources with their amount
+     * @param option remove resources if is 0, add resources if is 1
+     */
     private void handleCost(Map<String, Integer> costs, int option) {
         InventoryManager inventoryManager = gm.getManager(InventoryManager.class);
         for (Map.Entry<String, Integer> cost : costs.entrySet()) {
@@ -274,6 +287,10 @@ public class BuildingWidgets {
         }
     }
 
+    /**
+     * Sets up a container of the building widget with correct position settings.
+     * @param building a building is selected on the world
+     */
     private void setMenu(BuildingEntity building) {
         float[] wCords = WorldUtil.colRowToWorldCords(building.getCol(), building.getRow());
         cameraPos.setCol(gm.getCamera().position.x);
@@ -282,6 +299,10 @@ public class BuildingWidgets {
                 stage.getHeight()/2 + wCords[1] - cameraPos.getRow() + menu.getMinHeight());
     }
 
+    /**
+     * Sets up a health bar inside the building widget with its relevant functions.
+     * @param building a building is selected on the world
+     */
     private void setHealthBar(BuildingEntity building) {
         float health = building.getCurrentHealth() / building.getInitialHealth();
         healthBar.setValue(health);
@@ -292,6 +313,10 @@ public class BuildingWidgets {
         }
     }
 
+    /**
+     * Sets up a upgrade button inside the building widget with its relevant functions.
+     * @param building a building is selected on the world
+     */
     private void setUpgradeBtn(BuildingEntity building) {
         if (upgradeListener != null) {
             upgradeBtn.removeListener(upgradeListener);
@@ -304,6 +329,10 @@ public class BuildingWidgets {
         });
     }
 
+    /**
+     * Sets up a interact button inside the building widget with its relevant functions.
+     * @param building a building is selected on the world
+     */
     private void setInteractBtn(BuildingEntity building) {
         if (interactListener != null) {
             interactBtn.removeListener(interactListener);
@@ -316,6 +345,10 @@ public class BuildingWidgets {
         });
     }
 
+    /**
+     * Sets up a destroy button inside the building widget with its relevant functions.
+     * @param building a building is selected on the world
+     */
     private void setDestroyBtn(BuildingEntity building) {
         if (destroyListener != null) {
             destroyBtn.removeListener(destroyListener);
