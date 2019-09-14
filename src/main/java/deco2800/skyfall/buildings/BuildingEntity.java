@@ -157,6 +157,12 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
         world.removeEntity(this);
     }
 
+    /**
+     * Get the type of building
+     * @return building type
+     */
+    public BuildingType getBuildingType() { return this.buildingType; }
+
 
     /**
      * Set the time needed to build a building entity.
@@ -389,6 +395,20 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
     public void toggleBlueprintLearned() {
         //do nothing
     }
+
+    //TODO: Empty interact methods need to not be empty wooo!
+
+    public void cabinInteract() {}
+
+    public void fenceInteract() {}
+
+    public void castleInteract() {}
+
+    public void safehouseInteract() {}
+
+    public void towncentreInteract() {}
+
+    public void watchtowerInteract() {}
 
 
 }
