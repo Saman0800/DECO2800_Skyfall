@@ -33,7 +33,7 @@ public class vec2 {
      * returns a vec2 with each component clamped
      * @param min minimum value for each component
      * @param max minimum value for each component
-     * @return must be caught, vec3 called against will not be changed
+     * @return must be caught, vec2 called against will not be changed
      */
     public vec2 getClampedComponents(float min, float max) {
         return new vec2( clamp(x, min, max), clamp(y, min, max) );
