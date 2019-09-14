@@ -4,18 +4,15 @@ import java.lang.Math;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.gamemenu.GameMenuScreen;
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.Peon;
 import deco2800.skyfall.graphics.PointLight;
 import deco2800.skyfall.graphics.ShaderWrapper;
 import deco2800.skyfall.graphics.types.*;
@@ -26,7 +23,6 @@ import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.renderers.OverlayRenderer;
 import deco2800.skyfall.renderers.Renderer3D;
-import deco2800.skyfall.util.SettingsFile;
 import deco2800.skyfall.worlds.*;
 import deco2800.skyfall.managers.EnvironmentManager;
 import deco2800.skyfall.util.lightinghelpers.*;
@@ -36,8 +32,6 @@ import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class GameScreen implements Screen, KeyDownObserver {
     private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
@@ -254,19 +248,12 @@ public class GameScreen implements Screen, KeyDownObserver {
         batch.setProjectionMatrix(camera.combined);
 
         // Clear the entire display as we are using lazy rendering
-
-        // Commented out by Cyrus
-        //        if (!isPaused) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         rerenderMapObjects(batch, camera);
-        //rendererDebug.setUsingShader();
         rendererDebug.render(batchDebug, cameraDebug);
         stage.act(delta);
         stage.draw();
-        //        }
-        //        stage.act(delta);
-        //        stage.draw();
 
         /* Refresh the experience UI for if information was updated */
 
@@ -312,7 +299,6 @@ public class GameScreen implements Screen, KeyDownObserver {
 
     @Override
     public void show() {
-
     }
 
     /**
@@ -372,9 +358,6 @@ public class GameScreen implements Screen, KeyDownObserver {
             Tile.resetID();
             GameManager gameManager = GameManager.get();
             gameManager.setWorld(world);
-
-            // Add first peon to the world
-            //            world.addEntity(new Peon(0f, 0f, 0.05f, "Side Piece", 10));
         }
 
         if (keycode == Input.Keys.F11) { // F11
