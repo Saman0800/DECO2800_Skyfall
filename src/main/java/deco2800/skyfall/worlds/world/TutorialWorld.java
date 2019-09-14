@@ -1,16 +1,12 @@
 package deco2800.skyfall.worlds.world;
 
-import deco2800.skyfall.entities.*;
-import deco2800.skyfall.entities.worlditems.*;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.worlditems.Tree;
 import deco2800.skyfall.gui.GuiMaster;
 import deco2800.skyfall.gui.ScrollingTextBox;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.observers.TouchDownObserver;
-import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import deco2800.skyfall.worlds.world.World;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * This is a tutorial world created to help the player understand the world

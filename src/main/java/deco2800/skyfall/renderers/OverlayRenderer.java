@@ -22,6 +22,7 @@ public class OverlayRenderer implements Renderer {
 
     long peakRAM = 0;
 
+    boolean usingExtendedShader = false;
 
     /**
      * Renders onto a batch, given a renderables with entities
@@ -72,6 +73,14 @@ public class OverlayRenderer implements Renderer {
 	private void chatLine(SpriteBatch batch, Camera camera, int line, String string) {
 		font.draw(batch, string, camera.position.x - camera.viewportWidth / 2 + 10,
 				camera.position.y - camera.viewportHeight / 2 + line * 25 + 25);
+	}
+
+	/**
+	 * Sets if extended shader is being used
+	 * @param usingExtendedShader true if being used
+	 */
+	public void setUsingShader(boolean usingExtendedShader) {
+    	this.usingExtendedShader = usingExtendedShader;
 	}
 
 	/**
@@ -133,6 +142,12 @@ public class OverlayRenderer implements Renderer {
 		debugLine(batch, camera, line++,
 				String.format("Username: %s", GameManager.get().getManager(NetworkManager.class).getUsername()));
 		debugLine(batch, camera, line++, String.format("World seed: %d", GameManager.get().getWorld().getSeed()));
+
+		line++;
+
+		debugLine(batch, camera, line++, "== Graphics ==");
+		debugLine(batch, camera, line++,
+				String.format("Extended shading: %s", usingExtendedShader ? "True" : "False"));
 
 	}
 }

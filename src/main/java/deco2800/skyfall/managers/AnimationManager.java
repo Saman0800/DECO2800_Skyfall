@@ -107,15 +107,16 @@ public class AnimationManager extends AbstractManager {
 
         this.generateAnimationObject("MainCharacter_Attack_E_Anim",
                 "MainCharacter_Attack_E_Anim",
-                678, 1029, 0.2f);
+                731, 1130, 0.08f);
+
 
         this.generateAnimationObject("MainCharacter_Hurt_E_Anim",
                 "MainCharacter_Hurt_E_Anim",
-                667, 1032, 0.2f);
+                750, 1161, 0.2f);
 
         this.generateAnimationObject("MainCharacter_Dead_E_Anim",
                 "MainCharacter_Dead_E_Anim",
-                727, 861, 0.2f);
+                940, 1093, 0.2f);
 
         System.out.println("All animations in game");
     }
@@ -152,7 +153,7 @@ public class AnimationManager extends AbstractManager {
                 animationFrames[index++] = tmpFrames[i][j];
             }
         }
-        
+
         return animationFrames;
     }
 

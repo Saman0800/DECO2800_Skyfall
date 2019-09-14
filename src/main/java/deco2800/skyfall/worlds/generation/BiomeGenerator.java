@@ -71,7 +71,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
         Objects.requireNonNull(worldParameters.getBiomeSizes(), "biomeSizes must not be null");
         Objects.requireNonNull(worldParameters.getBiomes(), "realBiomes must not be null");
         for (AbstractBiome realBiome : worldParameters.getBiomes()){
-            Objects.requireNonNull(worldParameters.getBiomes(), "Elements of realBiome must not be null");
+            Objects.requireNonNull(realBiome, "Elements of realBiome must not be null");
         }
 
         if (Arrays.stream(worldParameters.getBiomeSizes()).anyMatch(size -> size == 0)) {
