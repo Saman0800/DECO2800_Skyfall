@@ -11,13 +11,25 @@ import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
 
+/**
+ * A class for help table pop up.
+ */
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
 public class HelpTable extends AbstractPopUpElement{
     private Skin skin;
     private Table helpTable;
 
-
+    /**
+     * Constructs a help table.
+     *
+     * @param stage Current stage.
+     * @param exit Exit button if it has one.
+     * @param textureNames Names of the textures.
+     * @param tm Current texture manager.
+     * @param gameMenuManager Current game menu manager.
+     * @param skin Current skin.
+     */
     public HelpTable(Stage stage, ImageButton exit,
                      String[] textureNames, TextureManager tm,
                      GameMenuManager gameMenuManager, Skin skin) {
@@ -26,6 +38,9 @@ public class HelpTable extends AbstractPopUpElement{
         this.draw();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void hide() {
         super.hide();
@@ -33,6 +48,9 @@ public class HelpTable extends AbstractPopUpElement{
         helpTable.setVisible(false);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void show() {
         super.show();
@@ -40,11 +58,18 @@ public class HelpTable extends AbstractPopUpElement{
         helpTable.setVisible(true);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updatePosition() {
         super.updatePosition();
     }
 
+    /**
+     * {@inheritDoc}
+     * Draw help table.
+     */
     @Override
     public void draw() {
         super.draw();
@@ -82,7 +107,13 @@ public class HelpTable extends AbstractPopUpElement{
         //System.out.println("Finished Drawing HELPTABLE");
     }
 
-
+    /**
+     * Places description of the control key and the key itself.
+     *
+     * @param key Control key
+     * @param description Description of the key
+     * @param table Table to place on.
+     */
     private void setControl(String key, String description, Table table) {
         Label label = new Label(key, skin, "white-label");
         table.add(label).padLeft(25).width(50).height(50);

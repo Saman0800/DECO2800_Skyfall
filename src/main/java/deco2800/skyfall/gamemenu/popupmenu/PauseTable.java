@@ -1,6 +1,5 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -9,19 +8,30 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
-import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
 
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
+/**
+ * A class for pause table pop up.
+ */
 public class PauseTable extends AbstractPopUpElement{
     private Skin skin;
     private Table pauseTable;
 
 
+    /**
+     * Constructs a pause table.
+     *
+     * @param stage Current stage.
+     * @param exit Exit button if it has one.
+     * @param textureNames Names of the textures.
+     * @param tm Current texture manager.
+     * @param gameMenuManager Current game menu manager.
+     * @param skin Current skin.
+     */
     public PauseTable(Stage stage, ImageButton exit,
                      String[] textureNames, TextureManager tm,
                      GameMenuManager gameMenuManager, Skin skin) {
@@ -30,31 +40,40 @@ public class PauseTable extends AbstractPopUpElement{
         this.draw();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void hide() {
         super.hide();
-//        System.out.println("Hiding pause table");
         pauseTable.setVisible(false);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void show() {
         super.show();
-//        System.out.println("Showing pause table");
         pauseTable.setVisible(true);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updatePosition() {
         super.updatePosition();
     }
 
+    /**
+     * {@inheritDoc}
+     * Draw pause table.
+     */
     @Override
     public void draw() {
         super.draw();
-//        System.out.println("Drawing PAUSETABLE");
         pauseTable = new Table();
-//        pauseTable.setDebug(true);
         pauseTable.setSize(500, 500 * 1346 / 1862f);
         pauseTable.setPosition(Gdx.graphics.getWidth()/2f - pauseTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - pauseTable.getHeight()/2);
@@ -101,7 +120,6 @@ public class PauseTable extends AbstractPopUpElement{
         reset.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-//                gameMenuManager.getGame().setScreen(new GameScreen(new SkyfallGame(), 1, true));
             }
         });
 

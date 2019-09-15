@@ -9,7 +9,6 @@ import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.resources.Blueprint;
-import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 
@@ -19,14 +18,27 @@ import java.util.Map;
 
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
+/**
+ * A class for building table pop up.
+ */
 public class BuildingTable extends AbstractPopUpElement{
     private Skin skin;
     private Table buildingTable, itemInfo;
-    Blueprint selectedItem = null;
-    InventoryTable inventoryTable;
-    GameMenuManager gameMenuManager;
+    private Blueprint selectedItem = null;
+    private InventoryTable inventoryTable;
+    private GameMenuManager gameMenuManager;
 
 
+    /**
+     * Constructs a building table.
+     *
+     * @param stage Current stage.
+     * @param exit Exit button if it has one.
+     * @param textureNames Names of the textures.
+     * @param tm Current texture manager.
+     * @param gameMenuManager Current game menu manager.
+     * @param skin Current skin.
+     */
     public BuildingTable(Stage stage, ImageButton exit,
                       String[] textureNames, TextureManager tm,
                       GameMenuManager gameMenuManager, Skin skin) {
@@ -37,32 +49,42 @@ public class BuildingTable extends AbstractPopUpElement{
         this.draw();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void hide() {
         super.hide();
-//        System.out.println("Hiding building table");
         itemInfo.clearChildren();
         buildingTable.setVisible(false);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void show() {
         super.show();
-//        System.out.println("Showing building table");
         buildingTable.setVisible(true);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updatePosition() {
         super.updatePosition();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * Draw the whole building table.
+     */
     @Override
     public void draw() {
         super.draw();
-//        System.out.println("Drawing BUILDINGTABLE");
         buildingTable = new Table();
-//        buildingTable.setDebug(true);
         buildingTable.setSize(800, 800 * 1346 / 1862f);
         buildingTable.setPosition(Gdx.graphics.getWidth()/2f - buildingTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - buildingTable.getHeight()/2);
@@ -79,7 +101,6 @@ public class BuildingTable extends AbstractPopUpElement{
         buildingTable.row();
 
         Table blueprint = new Table();
-//        blueprint.setDebug(true);
         Label blueprintTitle = new Label("BLUEPRINT", skin, "black-label");
         blueprint.add(blueprintTitle).padTop(10);
         blueprint.row();
@@ -88,7 +109,6 @@ public class BuildingTable extends AbstractPopUpElement{
         blueprint.add(itemInfo);
 
         Table items = new Table();
-//        items.setDebug(true);
         Label number = new Label("1/12", skin, "black-label");
         items.add(number).padTop(10).colspan(4);
         items.row();
@@ -97,6 +117,7 @@ public class BuildingTable extends AbstractPopUpElement{
         gameMenuManager.getMainCharacter().addBlueprint(new Hatchet());
         gameMenuManager.getMainCharacter().addBlueprint(new PickAxe());
         List<Blueprint> blueprintsLearned = gameMenuManager.getMainCharacter().getBlueprintsLearned();
+        // Generating items in getBlueprintsLearned
         float itemWidth = 400/4f-10;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 4; j++) {
@@ -156,7 +177,6 @@ public class BuildingTable extends AbstractPopUpElement{
 
         Table itemsRequired = new Table();
         itemsRequired.top();
-//        itemsRequired.setDebug(true);
         itemsRequired.setBackground(generateTextureRegionDrawableObject("pop up screen"));
 
         Table infoBar = new Table();
@@ -176,6 +196,7 @@ public class BuildingTable extends AbstractPopUpElement{
             }
         }
 
+        // Generates items requried.
         for (int i = 0; i < 2; ++i) {
             itemsRequired.add().width(20);
             for (int j = 0; j < 4; ++j) {

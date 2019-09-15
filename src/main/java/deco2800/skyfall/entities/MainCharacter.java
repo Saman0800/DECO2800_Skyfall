@@ -774,6 +774,7 @@ public class MainCharacter extends Peon
          */
         @Override
         public void onTick ( long i){
+
             this.updatePosition();
             this.movementSound();
 
@@ -855,6 +856,7 @@ public class MainCharacter extends Peon
                     break;
                 case Input.Keys.SHIFT_LEFT:
                     isSprinting = true;
+                    System.out.println("SSS");
                     maxSpeed *= 2.f;
                     break;
                 case Input.Keys.SPACE:
