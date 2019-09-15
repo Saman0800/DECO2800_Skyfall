@@ -65,6 +65,8 @@ public class WorldDirector {
         builder.addEntity(new Flower(5f,5f,mainCharacter));
         builder.addEntity(new Treeman(3f,3f,mainCharacter));
 
+        builder.addEntity(new Camel(34,-7, mainCharacter));
+
         return builder;
     }
 
