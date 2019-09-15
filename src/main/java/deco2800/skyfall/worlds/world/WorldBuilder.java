@@ -244,8 +244,6 @@ public class WorldBuilder implements WorldBuilderInterface {
 
             case "desert":
 
-                Camel camel = new Camel(biome);
-                camel.putCharacter();
                 // Spawn some axes
                 Weapon startAxe = new Axe(startTile, true);
                 EntitySpawnRule axeRule = new EntitySpawnRule(0.05, 1, 10, biome);
@@ -256,6 +254,7 @@ public class WorldBuilder implements WorldBuilderInterface {
                 SpawnControl cactiControl = x -> (x * x * x * x) / 4.0;
                 EntitySpawnRule cactiRule = new EntitySpawnRule(biome, true, cactiControl);
                 EntitySpawnTable.spawnEntities(startDCacti, cactiRule, world);
+
                 break;
 
             case "snowy_mountains":
