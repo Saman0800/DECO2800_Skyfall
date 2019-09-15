@@ -1,5 +1,6 @@
 package deco2800.skyfall.worlds.biomes;
 
+import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 

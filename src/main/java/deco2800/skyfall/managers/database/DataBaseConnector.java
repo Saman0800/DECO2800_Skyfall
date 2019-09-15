@@ -26,7 +26,7 @@ import org.javatuples.Pair;
 import org.apache.derby.jdbc.EmbeddedDriver;
 
 public class DataBaseConnector {
-    Connection connection;
+    private Connection connection;
 
     //FIXME:jeffvan12 change to a method
     public static void main(String[] args) {
@@ -90,9 +90,7 @@ public class DataBaseConnector {
         }
     }
 
-    //FIXME:jeffvan12 Adding saving and updating functionality
-    //TODO:jeffvan change it so it doesn't take a connection
-    public void saveGame(Save save) throws SQLException {
+    public void saveGame(Save save) throws SQLException{
         //Given a save game
         long saveId = save.getSaveID();
         InsertDataQueries insertQueries = new InsertDataQueries(connection);
@@ -217,7 +215,7 @@ public class DataBaseConnector {
             return chunk;
         }
 
-        return new Chunk(gson.fromJson(result.getString(1), Chunk.ChunkMemento.class), world);
+        return new Chunk(world, gson.fromJson(result.getString(1), Chunk.ChunkMemento.class));
     }
 
     public void saveChunk(Chunk chunk) throws SQLException{
