@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.animation.AnimationLinker;
@@ -9,9 +10,8 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.renderers.Renderable;
-import deco2800.skyfall.util.Collider;
+import deco2800.skyfall.util.BodyEditorLoader;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,8 +41,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		return nextID++;
 	}
 
-    private Collider collider;
-
 	protected HexVector position;
 	private int height;
 	private float colRenderLength;
@@ -50,7 +48,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     //Box2D properties
     private Body body;
-    private Fixture fixture;
+    protected Fixture fixture;
     private Boolean isCollidable;
 
 	@Expose
@@ -58,9 +56,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
 	@Expose
 	private int entityID = 0;
-
-	/** Whether an entity should trigger a collision when */
-	private boolean collidable = true; 
 
 	private int renderOrder = 0;
 
@@ -102,6 +97,15 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         animations = new HashMap<>();
     }
 
+	public AbstractEntity(float col, float row, int renderOrder,
+						  String fixtureDef) {
+		this(col, row, renderOrder, 1f, 1f, fixtureDef);
+		entityID = AbstractEntity.getNextID();
+		this.setObjectName(ENTITY_ID_STRING);
+		this.renderOrder = renderOrder;
+		animations = new HashMap<>();
+	}
+
 	public AbstractEntity() {
 		this.position = new HexVector();
 		this.colRenderLength = 1f;
@@ -130,6 +134,18 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         changeCollideability(true);
 		this.initialiseBox2D(position.getCol(), position.getRow());
     }
+
+	public AbstractEntity(float col, float row, int height,
+						  float colRenderLength, float rowRenderLength,
+						  String fixtureDefFile) {
+		this.position = new HexVector(col, row);
+		this.height = height;
+		this.colRenderLength = colRenderLength;
+		this.rowRenderLength = rowRenderLength;
+		this.entityID = AbstractEntity.getNextID();
+		changeCollideability(true);
+		this.initialiseBox2D(position.getCol(), position.getRow(), fixtureDefFile);
+	}
 
 	/**
 	 * Get the column position of this AbstractWorld Entity
@@ -208,28 +224,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		return this.renderOrder - otherEntity.getRenderOrder();
 	}
 
-    /**
-     * Creates a new Collider object at (x,y) coordinates with size xLength x
-     * yLength.
-     * Called by all constructors in this class such that no AbstractEntity
-     * in the game has a Collider set to null.
-     */
-    public void setCollider() {
-        float[] coords = WorldUtil.colRowToWorldCords(position.getCol(), position.getRow());
-        //TODO: length and width of collider to be determined by actual size of texture
-        this.collider = new Collider(coords[0], coords[1], 100, 100);
-    }
-
-	/**
-	 * Tests to see if the item collides with another entity in the world
-	 * @param entity the entity to test collision with
-	 * @return true if they collide, false if they do not collide
-     */
-	public boolean collidesWith(AbstractEntity entity) {
-		//TODO: Implement this.
-		return this.collider.overlaps(entity.collider);
-	}
-
 	@Override
 	public float getColRenderLength() {
 		return this.colRenderLength;
@@ -276,7 +270,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 				Float.compare(entity.colRenderLength, colRenderLength) == 0 &&
 				Float.compare(entity.rowRenderLength, rowRenderLength) == 0 &&
 				entityID == entity.entityID &&
-				collidable == entity.collidable &&
 				Objects.equals(texture, entity.texture) &&
 				Objects.equals(position, entity.position);
 	}
@@ -330,13 +323,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	public void setEntityID(int id) {
 		this.entityID = id;
 	}
-
-    /**
-     * @return The collider for the AbstractEntity
-     */
-    public Collider getCollider() {
-        return this.collider;
-    }
 
     public void dispose() {
         body.destroyFixture(fixture);
@@ -423,7 +409,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 */
 	public void defineFixture(){
 		CircleShape shape = new CircleShape();
-		shape.setRadius(50);
+		shape.setRadius(0.4f);
 
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
@@ -445,6 +431,27 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 * @param fixtureDefFile file path to .JSON file defining the fixture
 	 */
 	public void defineFixture(String fixtureDefFile){
+		BodyEditorLoader loader =
+				new BodyEditorLoader(Gdx.files.internal("resources/HitBoxes/" + fixtureDefFile +
+						"HitBox.JSON"));
+
+		PhysicsManager manager = new PhysicsManager();
+		World world = manager.getBox2DWorld();
+		BodyDef bd = new BodyDef();
+		bd.type = BodyDef.BodyType.KinematicBody;
+		body = world.createBody(bd);
+
+		PolygonShape shape = new PolygonShape();
+
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.density = 1;
+		fixtureDef.friction = 0.5f;
+		fixtureDef.restitution = 0.3f;
+
+		fixture = body.createFixture(fixtureDef);
+		fixture.setSensor(!isCollidable);
+
+		loader.attachFixture(body, fixtureDefFile, fixtureDef, scale);
 		//TODO: Add code for defining code for custom body shape
 	}
 
@@ -466,11 +473,11 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 * Should be overwritten for each entity where something should occur
 	 * during a collision
 	 *
-	 * @param hitter the other object involved in the collision
+	 * @param other the other object involved in the collision
 	 */
-	public void handleCollision(Object hitter) {
+	public void handleCollision(Object other) {
         //Does nothing as collision logic should be case specific
-		log.info("I hit something");
+			log.info("I was hit: " + this.getClass() + "\n by: " + other.getClass());
     }
 
     /**

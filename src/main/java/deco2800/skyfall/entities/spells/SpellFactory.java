@@ -4,6 +4,19 @@ import deco2800.skyfall.util.HexVector;
 
 public class SpellFactory {
 
+    /**
+     * This class is a utility class and should not be instantiated.
+     */
+    private SpellFactory() {
+        throw new IllegalStateException("Utility class.");
+    }
+
+    /**
+     * Create a new spell.
+     * @param spellType The type of spell to create.
+     * @param mousePosition The position to create the spell at.
+     * @return A new spell.
+     */
     public static Spell createSpell(SpellType spellType, HexVector mousePosition){
         Spell spell = null;
 
@@ -14,7 +27,6 @@ public class SpellFactory {
                     0.1f,
                     0);
         } else if(spellType.equals(SpellType.SHIELD)){
-            System.out.println("Spawning shield.");
             spell = new Shield(mousePosition, "shield_placeholder",
                     "shield_spell", mousePosition.getCol(), mousePosition.getRow(),
                     1,

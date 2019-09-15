@@ -1,15 +1,12 @@
 package deco2800.skyfall.managers;
 
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.observers.DayNightObserver;
 import deco2800.skyfall.observers.TimeObserver;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.internal.matchers.Null;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -22,7 +19,11 @@ public class EnvironmentManagerTest {
 
     @Before
     public void initialize() {
-        manager = new EnvironmentManager();
+        try {
+            manager = new EnvironmentManager();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -71,52 +72,48 @@ public class EnvironmentManagerTest {
 
     @Test
     public void setTimeTest() {
-        manager.setTime(100000);
+        manager.setTime(1, 0);
         assertEquals(1, manager.getTime());
     }
 
     @Test
     public void isDayTest() {
-        manager.setTime(1000000);
+        manager.setTime(6, 0);
         assertTrue(manager.isDay());
-        manager.setTime(100000);
+        manager.setTime(18, 0);
         assertFalse(manager.isDay());
     }
 
     @Test
     public void amTest() {
-        manager.setTime(500000);
+        manager.setTime(6, 0);
         assertTrue(manager.isDay());
 
-        manager.getTOD();
-        assertEquals("am", manager.TOD);
+        assertEquals("6:00am", manager.getTOD());
 
-        manager.hours = 24;
+        manager.setTime(24,0);
         assertFalse(manager.isDay());
 
-        manager.getTOD();
-        assertEquals("am", manager.TOD);
+        assertEquals("12:00am", manager.getTOD());
     }
 
     @Test
     public void pmTest() {
-        manager.setTime(10000000);
+        manager.setTime(18, 0);
         assertFalse(manager.isDay());
 
         manager.getTOD();
-        assertEquals("pm", manager.TOD);
+        assertEquals("6:00pm", manager.getTOD());
 
-        manager.hours = 19;
+        manager.setTime(19,0);
         assertFalse(manager.isDay());
 
-        manager.getTOD();
-        assertEquals("pm", manager.TOD);
+        assertEquals("7:00pm", manager.getTOD());
     }
 
     @Test
     public void displayTODTest() {
-        manager.minutes = 9;
-        manager.hours = 10;
+        manager.setTime(10,9);
         manager.isDay();
 
         assertEquals(Long.toString(10) + ":" + "0" + Long.toString(9) + "am", manager.getTOD());
@@ -124,32 +121,32 @@ public class EnvironmentManagerTest {
 
     @Test
     public void setFilenameTest() {
-        manager.hours = 11;
+        manager.setTime(12,0);
         manager.isDay();
         manager.biome = "forest";
         manager.setFilename();
-        assertEquals("resources/sounds/forest_day.wav", manager.file);
+        assertEquals("resources/sounds/forest_day.wav", manager.getFilename());
 
-        manager.hours = 19;
+        manager.setTime(19,0);
         manager.isDay();
         manager.biome = "desert";
         manager.setFilename();
-        assertEquals("resources/sounds/desert_night.wav", manager.file);
+        assertEquals("resources/sounds/desert_night.wav", manager.getFilename());
 
         // Test defaulting ocean and lake biomes
         // Test day
-        manager.hours = 8;
+        manager.setTime(10,0);
         manager.isDay();
         manager.biome = "ocean";
         manager.setFilename();
-        assertEquals("resources/sounds/forest_day.wav", manager.file);
+        assertEquals("resources/sounds/forest_day.wav", manager.getFilename());
 
         // Test night
-        manager.hours = 23;
+        manager.setTime(24,0);
         manager.isDay();
         manager.biome = "lake";
         manager.setFilename();
-        assertEquals("resources/sounds/forest_night.wav", manager.file);
+        assertEquals("resources/sounds/forest_night.wav", manager.getFilename());
     }
 
     @Test
@@ -181,38 +178,36 @@ public class EnvironmentManagerTest {
 
     @Test
     public void getSeasonTest() {
-        // won't work because didn't use setMonth correctly
-        ArrayList<Integer> monthList = new ArrayList<>();
-        for (int i = 0; i < 13; i++) {
-            monthList.add(i);
-        }
 
-        for (int i = 3; i < 6; i++) {
-            manager.monthInt = monthList.get(i);
-            assertEquals("Autumn", manager.getSeason());
-        }
-
-        for (int i = 6; i < 9; i++) {
-            manager.monthInt = monthList.get(i);
-            assertEquals("Winter", manager.getSeason());
-        }
-
-        for (int i = 9; i < 12; i++) {
-            manager.monthInt = monthList.get(i);
-            assertEquals("Spring", manager.getSeason());
-        }
-
-        // Testing Summer:
-        manager.monthInt = 12;
-        assertEquals("Summer", manager.getSeason());
-
+        // Summer
         for (int i = 0; i < 3; i++) {
-            manager.monthInt = monthList.get(i);
+            manager.setMonthInt(i);
             assertEquals("Summer", manager.getSeason());
         }
 
+        manager.setMonthInt(12);
+        assertEquals("Summer", manager.getSeason());
+
+        // Autumn
+        for (int i = 3; i < 6; i++) {
+            manager.setMonthInt(i);
+            assertEquals("Autumn", manager.getSeason());
+        }
+
+        // Winter
+        for (int i = 6; i < 9; i++) {
+            manager.setMonthInt(i);
+            assertEquals("Winter", manager.getSeason());
+        }
+
+        // Spring
+        for (int i = 9; i < 12; i++) {
+            manager.setMonthInt(i);
+            assertEquals("Spring", manager.getSeason());
+        }
+
         // Check an index not within 0 to 12
-        manager.monthInt = 13;
+        manager.setMonthInt(13);
         assertEquals("Invalid season", manager.getSeason());
     }
 
@@ -234,31 +229,33 @@ public class EnvironmentManagerTest {
     }
 
     @Test
-    public void setTODMusicTest() {
+    public void setDayMusicTest() {
 
-        // test first if statement for file == current File
+        // test second if statement for file == currentFile
         try {
-            manager.file = "resources/sounds/forest_day.wav";
-            manager.currentFile = "resources/sounds/forest_day.wav";
-            manager.hours = 11;
-            manager.isDay();
-            manager.biome = "forest";
-            manager.setTODMusic();
-            assertEquals(manager.file, manager.currentFile);
-            assertEquals("resources/sounds/forest_day.wav", manager.file);
-
-        } catch (Exception e) { /* Exception caught */}
-
-        // test second if statement for file != currentFile
-        try {
-            manager.file = "resources/sounds/forest_day.wav";
-            manager.currentFile = "resources/sounds/forest_night.wav";
-            manager.hours = 11;
+            manager.setTime(11,0);
             manager.isDay();
             manager.biome = "forest";
             try {
+                manager.setFilename();
                 manager.setTODMusic();
-                assertEquals(manager.file, manager.currentFile);
+                assertEquals("resources/sounds/forest_day.wav",manager.getFilename());
+            } catch (Exception e) { /* Exception caught, if any */ }
+        } catch (Exception e) { /* Exception caught, if any */ }
+    }
+
+    @Test
+    public void setNightMusicTest() {
+
+        // test second if statement for file == currentFile
+        try {
+            manager.setTime(20,0);
+            manager.isDay();
+            manager.biome = "forest";
+            try {
+                manager.setFilename();
+                manager.setTODMusic();
+                assertEquals("resources/sounds/forest_night.wav",manager.getFilename());
             } catch (Exception e) { /* Exception caught, if any */ }
         } catch (Exception e) { /* Exception caught, if any */ }
     }
@@ -273,5 +270,80 @@ public class EnvironmentManagerTest {
 
         } catch (Exception e) { /* Exception caught, if any */ }
     }
+
+    @Test
+    public void biomeDisplayNameTest() {
+        manager.biome = "forest";
+        assertEquals("Forest", manager.biomeDisplayName());
+        manager.biome = "desert";
+        assertEquals("Desert", manager.biomeDisplayName());
+        manager.biome = "lake";
+        assertEquals("Lake", manager.biomeDisplayName());
+        manager.biome = "ocean";
+        assertEquals("Ocean", manager.biomeDisplayName());
+        manager.biome = "mountain";
+        assertEquals("Mountain", manager.biomeDisplayName());
+        manager.biome = "volcanic_mountains";
+        assertEquals("Volcanic Mountains", manager.biomeDisplayName());
+        manager.biome = "snowy_mountains";
+        assertEquals("Snowy Mountains", manager.biomeDisplayName());
+        manager.biome = "jungle";
+        assertEquals("Jungle", manager.biomeDisplayName());
+        manager.biome = "swamp";
+        assertEquals("Swamp", manager.biomeDisplayName());
+        manager.biome = "river";
+        assertEquals("River", manager.biomeDisplayName());
+        manager.biome = "beach";
+        assertEquals("Beach", manager.biomeDisplayName());
+    }
+
+    @Test
+    public void currentWeatherTest() {
+        manager.setWeather("snow");
+        assertEquals("snow", manager.getcurrentWeather());
+
+        manager.setWeather("rain");
+        assertEquals("rain", manager.getcurrentWeather());
+    }
+
+    @Test
+    public void randomWeatherEventTest() {
+        // Test default
+        manager.setWeather(null);
+        assertTrue(manager.getcurrentWeather()== null);
+
+        manager.setBiomeString("forest");
+        manager.randomWeatherEvent();
+
+        assertTrue(manager.getcurrentWeather()!= null);
+
+        // Test desert
+        manager.setWeather(null);
+        assertTrue(manager.getcurrentWeather()== null);
+
+        manager.setBiomeString("desert");
+        manager.randomWeatherEvent();
+
+        assertTrue(manager.getcurrentWeather()!= null);
+
+        // Test volcanic_mountains
+        manager.setWeather(null);
+        assertTrue(manager.getcurrentWeather()== null);
+
+        manager.setBiomeString("volcanic_mountains");
+        manager.randomWeatherEvent();
+
+        assertTrue(manager.getcurrentWeather()!= null);
+
+        // Test snowy_mountains
+        manager.setWeather(null);
+        assertTrue(manager.getcurrentWeather()== null);
+
+        manager.setBiomeString("snowy_mountains");
+        manager.randomWeatherEvent();
+
+        assertTrue(manager.getcurrentWeather()!= null);
+    }
+
 
 }

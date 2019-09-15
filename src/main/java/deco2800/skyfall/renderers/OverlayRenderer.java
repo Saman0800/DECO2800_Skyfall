@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import deco2800.skyfall.graphics.ShaderWrapper;
+import deco2800.skyfall.graphics.types.vec3;
 import deco2800.skyfall.gui.GuiMaster;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.util.WorldUtil;
@@ -22,7 +24,7 @@ public class OverlayRenderer implements Renderer {
 
     long peakRAM = 0;
 
-    boolean usingExtendedShader = false;
+    ShaderWrapper shader;
 
     /**
      * Renders onto a batch, given a renderables with entities
@@ -65,6 +67,14 @@ public class OverlayRenderer implements Renderer {
         batch.end();
     }
 
+	/**
+	 * Sets the current shader
+	 * @param shader shader to use
+	 */
+	public void setShader(ShaderWrapper shader) {
+		this.shader = shader;
+	}
+
 	private void debugLine(SpriteBatch batch, Camera camera, int line, String string) {
 		font.draw(batch, string, camera.position.x - camera.viewportWidth / 2 + 10,
 				camera.position.y + camera.viewportHeight / 2 - line * 20 - 10);
@@ -73,14 +83,6 @@ public class OverlayRenderer implements Renderer {
 	private void chatLine(SpriteBatch batch, Camera camera, int line, String string) {
 		font.draw(batch, string, camera.position.x - camera.viewportWidth / 2 + 10,
 				camera.position.y - camera.viewportHeight / 2 + line * 25 + 25);
-	}
-
-	/**
-	 * Sets if extended shader is being used
-	 * @param usingExtendedShader true if being used
-	 */
-	public void setUsingShader(boolean usingExtendedShader) {
-    	this.usingExtendedShader = usingExtendedShader;
 	}
 
 	/**
@@ -119,7 +121,12 @@ public class OverlayRenderer implements Renderer {
 		// Display current biome in game
 		debugLine(batch, camera, line++,
 				String.format("Biome: %s",
-						GameManager.get().getManager(EnvironmentManager.class).currentBiome()));
+						GameManager.get().getManager(EnvironmentManager.class).biomeDisplayName()));
+
+		// Display current weather in game
+		debugLine(batch, camera, line++,
+				String.format("Weather: %s",
+						GameManager.get().getManager(EnvironmentManager.class).getcurrentWeather()));
 
 		line++;
 
@@ -142,7 +149,15 @@ public class OverlayRenderer implements Renderer {
 
 		debugLine(batch, camera, line++, "== Graphics ==");
 		debugLine(batch, camera, line++,
-				String.format("Extended shading: %s", usingExtendedShader ? "True" : "False"));
-
+				String.format("Extended shading: %s", shader.getActive() ? "True" : "False"));
+		debugLine(batch, camera, line++,
+				String.format("Ambient Intensity: %f", shader.getAmbientIntensity()));
+		vec3 colour = shader.getAmbientColour();
+		debugLine(batch, camera, line++,
+				String.format("Ambient Colour: (%f, %f, %f)", colour.x, colour.y, colour.z));
+		debugLine(batch, camera, line++,
+				String.format("Point Light Intensity: %f", 1.0f - shader.getAmbientIntensity()));
+		debugLine(batch, camera, line,
+				String.format("Point Light Count: %d", shader.getPointLightCount()));
 	}
 }
