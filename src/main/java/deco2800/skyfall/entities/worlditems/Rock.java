@@ -25,6 +25,7 @@ public class Rock extends StaticEntity implements HasHealth {
         nextRock = randomGen.nextInt(3) + 1;
         this.setObjectName(ENTITY_ID_STRING);
         this.metalAmount = 15;
+        this.entityType = "Rock";
     }
 
     @Override

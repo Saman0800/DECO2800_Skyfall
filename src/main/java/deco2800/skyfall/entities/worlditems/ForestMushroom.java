@@ -18,6 +18,7 @@ public class ForestMushroom extends StaticEntity {
         super(tile, 2, "mushrooms" + nextImage, obstructed);
         this.setObjectName(ENTITY_ID_STRING);
         nextImage = randomGen.nextInt(2) + 1;
+        this.entityType = "ForestMushroom";
     }
 
     @Override

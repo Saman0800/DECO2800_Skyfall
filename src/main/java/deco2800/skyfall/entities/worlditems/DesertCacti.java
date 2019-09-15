@@ -26,6 +26,7 @@ public class DesertCacti extends StaticEntity implements Tickable, Harvestable {
         super(col, row, renderOrder, texture);
         this.setTexture("");
         this.woodAmount = 3;
+        this.entityType = "DesertCacti";
     }
 
     public DesertCacti(Tile tile, boolean obstructed) {

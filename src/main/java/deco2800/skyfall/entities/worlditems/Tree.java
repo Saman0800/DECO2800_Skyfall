@@ -33,6 +33,7 @@ public class Tree extends StaticEntity implements Tickable, Harvestable {
         super(tile, 5, "tree" + nextTreeTexture, obstructed);
         nextTreeTexture = randomGen.nextInt(3) + 1;
         this.woodAmount = 15;
+        this.entityType = "Tree";
     }
 
     /**

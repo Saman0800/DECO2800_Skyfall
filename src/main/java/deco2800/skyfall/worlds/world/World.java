@@ -713,7 +713,7 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         this.worldParameters.setNodeSpacing(worldMemento.nodeSpacing);
     }
 
-    class WorldMemento extends AbstractMemento {
+    public class WorldMemento extends AbstractMemento {
 
         private long saveID;
         private long worldID;

@@ -18,6 +18,7 @@ public class LongGrass extends StaticEntity {
         super(tile, 2, "bush" + nextRock, obstructed);
         this.setObjectName(ENTITY_ID_STRING);
         nextRock = randomGen.nextInt(3) + 1;
+        this.entityType = "LongGrass";
     }
 
     @Override

@@ -40,7 +40,6 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
      *
      * @param x the x coordinate of the node
      * @param y the y coordinate of the node
-     * @param
      */
     public WorldGenNode(double x, double y) {
         this.id = System.nanoTime();
@@ -754,6 +753,11 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
         this.biome = biome;
     }
 
+    /**
+     * Returns the ID of this world
+     *
+     * @return the ID of this world
+     */
     public long getID() {
         return this.id;
     }
@@ -770,7 +774,7 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
         this.y = memento.y;
     }
 
-    class WorldGenNodeMemento extends AbstractMemento {
+    public class WorldGenNodeMemento extends AbstractMemento {
 
         // The ID of this node
         private long nodeID;

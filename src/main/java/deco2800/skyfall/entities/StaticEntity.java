@@ -32,6 +32,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
     private static final String ENTITY_ID_STRING = "staticEntityID";
     private int renderOrder;
     private boolean obstructed;
+
     protected String entityType;
 
     public Map<HexVector, String> children;
@@ -219,6 +220,15 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         chunk.addEntity(this);
     }
 
+    /**
+     * Gets the entity type of this entity
+     *
+     * @return the entity type of this entity
+     */
+    protected String getEntityType() {
+        return this.entityType;
+    }
+
     @Override
     public StaticEntityMemento save() throws SaveException {
         return new StaticEntityMemento(this);
@@ -238,11 +248,8 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         this.setRowRenderLength(memento.rowRenderLength);
     }
 
-    class StaticEntityMemento extends AbstractMemento {
-        //private AbstractMemento subclassMemento;
-
+    public class StaticEntityMemento extends AbstractMemento {
         private String staticEntityType;
-
         private int height;
         private HexVector position;
         private int entityID;
@@ -256,6 +263,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         private String texture;
 
         public StaticEntityMemento(StaticEntity entity) {
+            this.staticEntityType = entity.entityType;
             this.height = entity.getHeight();
             this.position = entity.getPosition();
             this.entityID = entity.getEntityID();
