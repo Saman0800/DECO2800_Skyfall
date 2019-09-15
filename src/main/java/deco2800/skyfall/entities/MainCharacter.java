@@ -26,6 +26,7 @@ import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.Tile;
 
+import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -194,12 +195,12 @@ public class MainCharacter extends Peon
         //Initialises the players velocity properties
 
         setAcceleration(1.f);
-        setMaxSpeed(1.f);
+        setMaxSpeed(3.f);
 
         vel = 0;
         velHistoryX = new ArrayList<>();
         velHistoryY = new ArrayList<>();
-        speedFactor = 60f / 30f;
+        speedFactor = 40f / 30f;
 
         blueprintsLearned = new ArrayList<>();
         tempFactory = new BuildingFactory();
@@ -765,7 +766,6 @@ public class MainCharacter extends Peon
         }
         // Do hunger stuff here
 
-
         if (isMoving) {
             if (isSprinting) {
                 foodAccum += 0.1f;
@@ -878,15 +878,19 @@ public class MainCharacter extends Peon
         switch (keycode) {
             case Input.Keys.W:
                 yInput -= 1;
+                System.out.println("Up");
                 break;
             case Input.Keys.A:
                 xInput -= -1;
+                System.out.println("Left");
                 break;
             case Input.Keys.S:
                 yInput -= -1;
+                System.out.println("Down");
                 break;
             case Input.Keys.D:
                 xInput -= 1;
+                System.out.println("Right");
                 break;
             case Input.Keys.SHIFT_LEFT:
                 isSprinting = false;
@@ -1135,7 +1139,6 @@ public class MainCharacter extends Peon
         vel = getBody().getLinearVelocity().len();
     }
 
-
     /**
      * Gets the direction the player is currently facing
      * North: 0 deg
@@ -1147,13 +1150,19 @@ public class MainCharacter extends Peon
      */
     private double getPlayerDirectionAngle() {
         double val;
-        if (xInput != 0 || yInput != 0) {
-            val = Math.atan2(yInput, xInput);
-        } else if (velHistoryX != null && velHistoryY != null
-                && velHistoryX.size() > 1 && velHistoryY.size() > 1) {
-            val = Math.atan2(velHistoryY.get(0), velHistoryX.get(0));
+        if (xInput == 0 && yInput == 0) {
+            val = 180;
+        } else if (xInput < 0 || yInput < 0) {
+            val = Math.atan2(xInput, yInput);
+            val = Math.toDegrees(val);
+            val += 360;
         } else {
-            val = 0;
+            val = Math.atan2(xInput, yInput);
+            val = Math.toDegrees(val);
+        }
+
+        if (val < 0) {
+            val += 360;
         }
         return val;
     }
@@ -1190,8 +1199,10 @@ public class MainCharacter extends Peon
         } else if (292.5 <= playerDirectionAngle && playerDirectionAngle <= 337.5) {
             setCurrentDirection(Direction.NORTH_WEST);
             return "North-West";
+        } else if (0 == playerDirectionAngle) {
+            setCurrentDirection(Direction.NORTH_WEST);
+            return "North-West";
         }
-
         return "Invalid";
     }
 
