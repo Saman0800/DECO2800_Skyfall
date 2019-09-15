@@ -29,7 +29,7 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
     private ArrayList<AbstractEntity> entities;
 
     public static Chunk loadChunkAt(World world, int x, int y) {
-        // FIXME:Ontonator Implement.
+        // FIXME:Ontonator Load the chunk.
         Chunk chunk = new Chunk(world, x, y);
         chunk.generateEntities();
         return chunk;
@@ -191,7 +191,9 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
             tile.removeReferanceFromNeighbours();
         }
 
-        // FIXME:Ontonator Save.
+        world.getLoadedChunks().remove(new Pair<>(x, y));
+
+        // FIXME:Ontonator Save the chunk.
     }
 
     public List<Tile> getTiles() {
