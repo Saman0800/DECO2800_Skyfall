@@ -30,7 +30,6 @@ public class WoodCube extends AbstractEntity implements Collectable {
         if (entity instanceof MainCharacter) {
             return entity.getPosition().getInt().equals(getPosition().getInt());
         }
-
         return false;
     }
 
