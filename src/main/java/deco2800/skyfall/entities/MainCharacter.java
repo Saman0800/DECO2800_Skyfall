@@ -3,11 +3,6 @@ package deco2800.skyfall.entities;
 import com.badlogic.gdx.audio.Sound;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.spells.SpellFactory;
-import deco2800.skyfall.entities.structures.BuildingType;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import deco2800.skyfall.entities.spells.SpellFactory;
-import deco2800.skyfall.entities.weapons.Sword;
-import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.entities.worlditems.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.Vector2;
@@ -122,7 +117,6 @@ public class MainCharacter extends Peon
     private boolean isMoving;
     private boolean canSwim;
     private boolean isSprinting;
-    private float speedFactor;
 
     /*
         What stage of the game is the player on? Controls what blueprints
@@ -236,7 +230,6 @@ public class MainCharacter extends Peon
         vel = 0;
         velHistoryX = new ArrayList<>();
         velHistoryY = new ArrayList<>();
-        speedFactor = 60f / 30f;
 
         blueprintsLearned = new ArrayList<>();
         tempFactory = new BuildingFactory();
@@ -410,11 +403,8 @@ public class MainCharacter extends Peon
                 2,
                 0.1f,
                 this.itemSlotSelected == 1 ? 1 : 0);
-        // Get AbstractWorld from static class GameManager.
-        GameManager manager = GameManager.get();
-
         // Add the projectile entity to the game world.
-        manager.getWorld().addEntity(projectile);
+        GameManager.get().getWorld().addEntity(projectile);
     }
 
     /**
@@ -430,7 +420,7 @@ public class MainCharacter extends Peon
         //Create the spell using the factory.
         Spell spell = SpellFactory.createSpell(spellType, mousePosition);
 
-        System.out.println(spellType.toString());
+        logger.info("Spell Case: " + spellType.toString());
 
         int manaCost = spell.getManaCost();
 
@@ -555,7 +545,8 @@ public class MainCharacter extends Peon
         if (this.healthBar != null) {
             this.healthBar.update();
         }
-        System.out.println("Hurted: " + isRecovering);
+
+        logger.info("Hurted: " + isRecovering);
 
         if (!isRecovering) {
             setHurt(true);
@@ -598,6 +589,8 @@ public class MainCharacter extends Peon
                     case "North-West":
                         bounceBack = new HexVector(position.getCol() + 2, position.getRow() - 2);
                         break;
+                    default:
+                        break;
                 }
                 position.moveToward(bounceBack, 1f);
 
@@ -610,7 +603,7 @@ public class MainCharacter extends Peon
         hurtTime += 20; // hurt for 1 second
 
         if (hurtTime > 400) {
-            System.out.println("Hurt ended");
+            logger.info("Hurt ended");
             setHurt(false);
             setRecovering(true);
             hurtTime = 0;
@@ -639,7 +632,7 @@ public class MainCharacter extends Peon
 
     private void checkIfRecovered() {
         recoverTime += 20;
-        System.out.println("Character recovering");
+        logger.info("Character recovering");
         recoverTime += 20;
 
         this.changeCollideability(false);
@@ -656,10 +649,6 @@ public class MainCharacter extends Peon
      * has died and cannot do any actions in game anymore.
      */
     public void kill() {
-        // stop player controls
-        AnimationManager animationManager = GameManager.getManagerFromInstance(AnimationManager.class);
-
-
         // set health to 0.
         changeHealth(0);
 
@@ -676,7 +665,8 @@ public class MainCharacter extends Peon
     }
 
     /**
-     * @return if player is in the state of "hurt".
+     *
+     * @param isHurt the player's "hurt" status
      */
     public void setHurt(boolean isHurt) {
         this.isHurt = isHurt;
@@ -864,7 +854,7 @@ public class MainCharacter extends Peon
 
     @Override
     public void handleCollision(Object other) {
-
+        //Put specific collision logic here
     }
 
 
@@ -884,7 +874,6 @@ public class MainCharacter extends Peon
      */
     @Override
     public void notifyKeyDown(int keycode) {
-        GoldPiece g = new GoldPiece(5);
         //player cant move when paused
         if (GameManager.getPaused()) {
             return;
@@ -928,7 +917,6 @@ public class MainCharacter extends Peon
                 break;
             default:
                 switchItem(keycode);
-                //xInput += 1;
                 break;
         }
     }
@@ -976,6 +964,8 @@ public class MainCharacter extends Peon
             case Input.Keys.G:
                 break;
             case Input.Keys.M:
+                break;
+            default:
                 break;
         }
     }
@@ -1037,7 +1027,7 @@ public class MainCharacter extends Peon
      *
      * @return The contents of the Main Character's gold pouch
      */
-    public HashMap<Integer, Integer> getGoldPouch() {
+    public Map<Integer, Integer> getGoldPouch() {
         return new HashMap<>(goldPouch);
     }
 
@@ -1446,6 +1436,8 @@ public class MainCharacter extends Peon
 
                         case "Castle":
                             tempFactory.createCastle(this.getCol(), this.getRow());
+                            break;
+                        default:
                             break;
                     }
 

@@ -103,7 +103,6 @@ public class SoundManager extends AbstractManager {
      * Returns true if sound is looped.
      *
      * @param soundName Sound identifier/key
-     * @return true if sound is looped
      */
     public static void loopSound(String soundName){
         if (!paused) {
@@ -121,7 +120,7 @@ public class SoundManager extends AbstractManager {
     /**
      * Stop the sound.
      * @param soundName Sound identifier/key
-     * @return
+     * @return true if the sound was successfully stopped, false otherwise
      */
     public static boolean stopSound(String soundName) {
         if (soundMap.containsKey(soundName)) {

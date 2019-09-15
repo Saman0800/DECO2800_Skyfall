@@ -54,7 +54,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("flame_wall_placeholder", new Texture("resources/spells/fire_3.png"));
             textureMap.put("range_test", new Texture("resources/projectile.png"));
             textureMap.put("melee_test", new Texture("resources/punch.png"));
-            textureMap.put("camel_character", new Texture("resources/camel/camel-withplayer1(left).png"));
+            textureMap.put("camel_character", new Texture("resources/camel/camel-face(no-player).png"));
 
             // Tile textures
             // Goes through all the folders with tile_textures and adds the tile name to the

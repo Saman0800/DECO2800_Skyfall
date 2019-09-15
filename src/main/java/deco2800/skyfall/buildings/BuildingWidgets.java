@@ -14,7 +14,6 @@ import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.Tile;
-import org.lwjgl.Sys;
 
 /**
  *  A BuildingWidgets is a UI widgets for existing building entities, and provides some handling

@@ -2,6 +2,10 @@ package deco2800.skyfall.worlds.world;
 
 import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.AgentEntity;
+import deco2800.skyfall.entities.Harvestable;
+import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.gamemenu.popupmenu.BlueprintShopTable;
 import deco2800.skyfall.gamemenu.popupmenu.ChestTable;
@@ -10,7 +14,6 @@ import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
@@ -22,7 +25,6 @@ import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.graphics.HasPointLight;
-import deco2800.skyfall.graphics.types.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -100,7 +102,8 @@ public class World implements TouchDownObserver {
 
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
 
-    };
+        getTile(0,0).setObstructed(true);
+    }
 
     /**
      * Generates the tiles and biomes in a world
@@ -412,34 +415,9 @@ public class World implements TouchDownObserver {
             tiles.remove(t);
         }
 
-        // Collision detection for entities
-        for (AbstractEntity e1 : this.getEntities()) {
-            if (e1 instanceof StaticEntity) {
-                // Static entities can't move into other entities. Only worry
-                // about entities that can move themselves into other entities
-                continue;
-            }
+        for (AbstractEntity e1 : this.getEntities()){
             e1.onTick(0);
-            //if (e1.getCollider() == null) {
-            //    break;
-            //}
 
-//            Collider c1 = e1.getCollider();
-//            for (AbstractEntity e2 : this.getEntities()) {
-//                if (e2.getCollider() == null) {
-//                    break;
-//                }
-//                Collider c2 = e2.getCollider();
-//                if (e1 != e2 && c1.overlaps(c2)) {
-//                    if (e1 instanceof MainCharacter || e2 instanceof MainCharacter) {
-//                        break;
-//                    }
-//                    //collision handler
-//                    this.handleCollision(e1, e2);
-//                    //    break;
-//                }
-//            }
-            // no collision here
         }
     }
 
@@ -528,7 +506,7 @@ public class World implements TouchDownObserver {
     /**
      * Returns the seed used in the world
      *
-     * @return
+     * @return the seed for the world
      */
     public long getSeed() {
         return worldParameters.getSeed();

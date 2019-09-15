@@ -17,8 +17,9 @@ import java.util.Map;
  */
 public class Hatchet extends ManufacturedResources implements Item, Blueprint {
 
-    private Map<String, Integer> allRequirements;
-    private static boolean blueprintLearned = false;
+
+    private boolean blueprintLearned = false;
+
 
     /***
      * Create a Hatecht with the name Hatchet
@@ -162,7 +163,7 @@ public class Hatchet extends ManufacturedResources implements Item, Blueprint {
     @Override
     public Map<String, Integer> getAllRequirements() {
 
-        allRequirements = new HashMap<>();
+        Map<String, Integer> allRequirements = new HashMap<>();
         allRequirements.put("Wood", 25);
         allRequirements.put("Stone", 10);
         allRequirements.put("Metal", 0);

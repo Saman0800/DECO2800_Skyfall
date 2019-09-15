@@ -348,7 +348,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Gets the current animation to be run
-     * @return
+     * @return The animation to be run
      */
 	public AnimationLinker getToBeRun() {
 		return toBeRun;
@@ -441,8 +441,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		bd.type = BodyDef.BodyType.KinematicBody;
 		body = world.createBody(bd);
 
-		PolygonShape shape = new PolygonShape();
-
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.density = 1;
 		fixtureDef.friction = 0.5f;
@@ -485,7 +483,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      */
 	public void setGetToBeRunToNull() {
 		setCurrentState(AnimationRole.NULL);
-		//toBeRun = null;
 	}
 
     /**

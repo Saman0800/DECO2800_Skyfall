@@ -1,7 +1,5 @@
 package deco2800.skyfall.renderers;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -11,13 +9,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.*;
-import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -229,7 +225,6 @@ public class Renderer3D implements Renderer {
                     renderAbstractEntity(batch, entity, entityWorldCoord, tex);
                 } else {
                     Color c = batch.getColor();
-                    GameMenuManager gameMenuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
 
                     if (entity instanceof MainCharacter) {
                         if (((MainCharacter) entity).IsHurt() ||
