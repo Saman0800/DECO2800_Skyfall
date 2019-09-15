@@ -33,7 +33,7 @@ public class EnvironmentManagerTest {
     public void initialize() {
         try {
             manager = new EnvironmentManager();
-        } catch (NoSuchAlgorithmException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         gm.setWorld(mockWorld);

@@ -354,6 +354,14 @@ public class EnvironmentManager extends TickableManager {
     }
 
     /**
+     * Gets the filename in game.
+     * @return the file being played
+     */
+    public String getFilename() {
+        return file;
+    }
+
+    /**
      * Sets the music in game as per current time and biome the player resides in.
      */
     public void setTODMusic() {
