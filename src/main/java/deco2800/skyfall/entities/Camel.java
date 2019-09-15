@@ -50,12 +50,12 @@ public class Camel extends VehicleEntity {
             if ((colDistance * colDistance + rowDistance * rowDistance) < 4){
 
                 // Let main character get onto vehicle
-//                setTexture("camel_character");
-//                setObjectName("camel_character");
+//               setTexture("camel_character");
+//               setObjectName("camel_character");
 
 
             } else {
-                this.setCurrentState(AnimationRole.NULL);
+
             }
         } else {
             System.out.println("Main Character is null");
