@@ -112,7 +112,7 @@ public class WoodTest  {
      */
     @Test
     public void getDescriptionTest() {
-        assertEquals("This item can " +
-                "be found in the forest biome and can be used to create a pickaxe and start a fire.", wood.getDescription());
+        assertEquals("This item can be found in the forest biome " + "\n" +
+                "and can be used to create a pickaxe and start a fire.", wood.getDescription());
     }
 }
