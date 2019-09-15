@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -7,9 +8,13 @@ import java.util.Collections;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.world.Chunk;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +36,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
     private static final String ENTITY_ID_STRING = "staticEntityID";
     //private int renderOrder;
     private boolean obstructed;
+    private static TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
 
     // The type of entity this is (e.g. "Tree", "Axe" etc.)
     protected String entityType;
@@ -45,7 +51,16 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
      * @param memento the static entitiy to add
      */
     public StaticEntity(StaticEntityMemento memento) {
+        super(memento.col, memento.row, memento.renderOrder);
         this.load(memento);
+        children = new HashMap<>();
+        HexVector hexVector = new HexVector(memento.col, memento.row);
+        children.put(hexVector, memento.texture);
+        if (!WorldUtil.validColRow(hexVector)) {
+            log.debug("{} Is Invalid:", hexVector);
+            return;
+        }
+
     }
 
     public StaticEntity() {
@@ -57,7 +72,6 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         this.setObjectName(ENTITY_ID_STRING);
         this.setTexture(texture);
 
-        this.renderOrder = renderOrder;
         this.obstructed = obstructed;
 
         children = new HashMap<>();
@@ -76,7 +90,6 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         this.setObjectName(ENTITY_ID_STRING);
 
         Tile center = GameManager.get().getWorld().getTile(this.getPosition());
-        this.renderOrder = renderOrder;
         this.obstructed = true;
         this.textures = texture;
 
@@ -104,31 +117,6 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
 
             child.setObstructed(true);
         }
-    }
-
-    /**
-     * A simple getter function to retrieve the render order of the static object.
-     * 
-     * @return The render order of this instance.
-     */
-    public int getRenderorder() {
-        return this.renderOrder;
-    }
-
-    public void setRenderorder(int renderOrder) {
-        this.renderOrder = renderOrder;
-    }
-
-    /**
-     * A simple getter function to retrieve the obstruction value of this object
-     * 
-     * @return The obstruction value.
-     *
-     * @deprecated use {@link #isObstructed()}
-     */
-    @Deprecated()
-    public boolean getObstructed() {
-        return isObstructed();
     }
 
     /**
@@ -160,6 +148,8 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
                 child.setParent(this);
             }
         }
+
+        getBody().setType(BodyDef.BodyType.StaticBody);
     }
 
     /**
@@ -197,6 +187,19 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         return GameManager.get().getWorld().getTile(targetTile);
     }
 
+    public int[] getRenderCentre() {
+        float[] rowColValues = WorldUtil.colRowToWorldCords(getCol(), getRow());
+
+        int drawX = (int) (rowColValues[0] + TextureManager.TILE_WIDTH * WorldUtil.SCALE_X / 2);
+        int drawY = (int) (rowColValues[1] + TextureManager.TILE_HEIGHT * WorldUtil.SCALE_Y / 2);
+
+        int[] renderPos = new int[2];
+        renderPos[0] = drawX;
+        renderPos[1] = drawY;
+
+        return renderPos;
+    }
+
     public Set<HexVector> getChildrenPositions() {
         return children.keySet();
     }
@@ -204,7 +207,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
     public Texture getTexture(HexVector childPos) {
         String texture = children.get(childPos);
 
-        return GameManager.get().getManager(TextureManager.class).getTexture(texture);
+        return textureManager.getTexture(texture);
     }
 
     public void setChildren(Map<HexVector, String> children) {
@@ -236,9 +239,8 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
 
     @Override
     public void load(StaticEntityMemento memento) {
-        this.setPosition(memento.row, memento.col);
         this.setEntityID(memento.entityID);
-        this.renderOrder = memento.renderOrder;
+        setRenderOrder(memento.renderOrder);
         this.obstructed = memento.obstructed;
         /*
         this.setBody(memento.body);
@@ -248,18 +250,19 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         this.setTexture(memento.texture);
         this.setColRenderLength(memento.colRenderLength);
         this.setRowRenderLength(memento.rowRenderLength);
+        this.setPosition(memento.col, memento.row);
     }
 
     public class StaticEntityMemento extends AbstractMemento {
-        private String staticEntityType;
-        private int height;
-        private float row;
-        private float col;
-        private int entityID;
-        private float colRenderLength;
-        private float rowRenderLength;
-        private int renderOrder;
-        private boolean obstructed;
+        public String staticEntityType;
+        public int height;
+        public float row;
+        public float col;
+        public int entityID;
+        public float colRenderLength;
+        public float rowRenderLength;
+        public int renderOrder;
+        public boolean obstructed;
 
         // TODO:dannathan find out if these need to be saved (they cause a stack overflow in gson)
         /*
@@ -278,15 +281,16 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
             this.entityID = entity.getEntityID();
             this.colRenderLength = entity.getColRenderLength();
             this.rowRenderLength = entity.getRowRenderLength();
-            this.renderOrder = entity.renderOrder;
+            this.renderOrder = entity.getRenderOrder();
             this.obstructed = entity.obstructed;
+
 
             /*
             this.body = entity.getBody();
             this.fixture = entity.getFixture();
             */
 
-            this.isCollidable = entity.getIsCollidable();
+            this.isCollidable = entity.getCollidable();
             this.texture = entity.getTexture();
         }
     }

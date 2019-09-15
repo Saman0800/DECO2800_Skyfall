@@ -54,6 +54,26 @@ public class Peon extends AgentEntity implements Tickable {
 		this.deaths = 0;
 	}
 
+	public Peon(float row, float col, float speed, String name, int health,
+				String fixtureDef) {
+		super(row, col, 3, speed, fixtureDef);
+		this.setTexture("spacman_ded");
+
+		if (name == null || name.equals("")) {
+			setName("DEFAULT");
+		} else {
+			setName(name);
+		}
+
+		if (health <= 0){
+			this.health = 10;
+		} else {
+			this.health = health;
+		}
+
+		this.deaths = 0;
+	}
+
 	/**
 	 * Sets name of the character
 	 * @param name name being set
@@ -105,6 +125,9 @@ public class Peon extends AgentEntity implements Tickable {
 	 * Sets character to be dead
 	 */
 	public boolean setDead(boolean is_dead) {
+		if (is_dead) {
+			health = 0;
+		}
 		return is_dead;
 	}
 

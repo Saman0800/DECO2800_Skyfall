@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class WoodTest extends NaturalResources {
+public class WoodTest  {
 
     // create a Wood item
     private Wood wood;
@@ -112,7 +112,7 @@ public class WoodTest extends NaturalResources {
      */
     @Test
     public void getDescriptionTest() {
-        assertEquals("This item can " +
-                "be found in the forest biome and can be used to create a pickaxe and start a fire.", wood.getDescription());
+        assertEquals("This item can be found in the forest biome " + "\n" +
+                "and can be used to create a pickaxe and start a fire.", wood.getDescription());
     }
 }

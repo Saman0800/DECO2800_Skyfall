@@ -1,11 +1,9 @@
 package deco2800.skyfall.worlds.generation.perlinnoise;
 
 import deco2800.skyfall.worlds.Tile;
-import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Random;
 import java.util.function.BiConsumer;
-import java.util.stream.DoubleStream;
 
 /**
  * Used to generate noise values for biomes
@@ -26,7 +24,8 @@ public class TileNoiseGenerator {
      * attenuation - How much weight hte octaves have, the higher the value and the higher the octaves the more c
      * chaotic the land will be
       */
-    private double startPeriod, attenuation;
+    private double startPeriod;
+    private double attenuation;
     /**
      * The random generator given, allows for seeding
      */

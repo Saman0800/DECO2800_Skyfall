@@ -1,10 +1,8 @@
 package deco2800.skyfall.resources;
 
-import deco2800.skyfall.entities.AgentEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.util.HexVector;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**

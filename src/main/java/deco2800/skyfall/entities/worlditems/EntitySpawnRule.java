@@ -8,9 +8,6 @@ import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import java.util.Random;
 import java.util.function.Function;
 
-import com.esotericsoftware.kryo.NotNull;
-import jdk.nashorn.internal.ir.annotations.Immutable;
-
 /**
  * Used to set conditions about an entity template spawning distributions in
  * EntitySpawnTable Example conditions include probability, min to max, must be

@@ -1,12 +1,9 @@
 package deco2800.skyfall.managers;
 
-import deco2800.skyfall.gui.Tuple;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.*;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 
+import org.junit.*;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -34,7 +31,7 @@ public class InventoryManagerTest {
     public void inventoryDefaultConstructorTest(){
         InventoryManager inv = new InventoryManager();
 
-        assertEquals(4, inv.getInventoryContents().size());
+        assertEquals(4, inv.getContents().size());
         assertEquals(2, inv.getAmount("Stone"));
         assertEquals(2, inv.getAmount("Wood"));
 
@@ -43,26 +40,26 @@ public class InventoryManagerTest {
 
     @Test
     public void inventoryCustomConstructorTest(){
-        assertEquals(1, test.getInventoryContents().size());
+        assertEquals(1, test.getContents().size());
         assertEquals(1, test.getAmount("Stone"));
         assertEquals(1, test.getQuickAccess().size());
     }
 
     @Test
     public void getInventoryContentsTest(){
-        Map<String, List<Item>> contents = test.getInventoryContents();
+        Map<String, List<Item>> contents = test.getContents();
 
         assertNotNull(contents.get("Stone"));
         assertEquals(1, contents.get("Stone").size());
 
-        test.inventoryAdd(new Vine());
+        test.add(new Vine());
         assertNotNull(contents.get("Vine"));
         assertEquals(1, contents.get("Vine").size());
         assertEquals(2, contents.size());
 
 
-        test.inventoryDrop("Stone");
-        test.inventoryDrop("Vine");
+        test.drop("Stone");
+        test.drop("Vine");
         assertTrue(contents.isEmpty());
 
 
@@ -81,56 +78,63 @@ public class InventoryManagerTest {
     @Test
     public void getAmountsAddDropTest(){
 
-        assertEquals(1, test.getInventoryAmounts().size());
-        assertEquals((Integer)1, test.getInventoryAmounts().get("Stone"));
+        assertEquals(1, test.getAmounts().size());
+        assertEquals((Integer)1, test.getAmounts().get("Stone"));
         assertEquals(1, test.getAmount("Stone"));
 
-        test.inventoryDrop("Stone");
+        test.drop("Stone");
 
-        assertEquals(0, test.getInventoryAmounts().size());
+        assertEquals(0, test.getAmounts().size());
         assertEquals(0,test.getAmount("Stone"));
 
         Wood wood = new Wood();
-        test.inventoryAdd(wood);
-        test.inventoryAdd(new Wood());
-        test.inventoryAdd(new Vine());
-        test.inventoryAdd(new Stone());
-        test.inventoryAdd(new Stone());
-        test.inventoryAdd(new Sand());
-        test.inventoryAdd(new Sand());
-        test.inventoryAdd(new Sand());
+        test.add(wood);
+        test.add(new Wood());
+        test.add(new Vine());
+        test.add(new Stone());
+        test.add(new Stone());
+        test.add(new Sand());
+        test.add(new Sand());
+        test.add(new Sand());
+        test.add(new Metal());
+        test.add(new Metal());
 
-        assertEquals(4, test.getInventoryAmounts().size());
+        assertEquals(5, test.getAmounts().size());
         assertEquals(2, test.getAmount("Stone"));
         assertEquals(2, test.getAmount("Wood"));
+        assertEquals(2, test.getAmount("Metal"));
         assertEquals(1, test.getAmount("Vine"));
         assertEquals(3, test.getAmount("Sand"));
         assertEquals(0, test.getAmount("Apple"));
 
-        assertTrue(test.inventoryDrop("Stone") instanceof Stone);
+        assertTrue(test.drop("Stone") instanceof Stone);
         assertEquals(1, test.getAmount("Stone"));
-        test.inventoryDrop("Stone");
+        test.drop("Stone");
         assertEquals(0, test.getAmount("Stone"));
-        assertNull(test.inventoryDrop("Stone"));
+        assertNull(test.drop("Stone"));
 
-        assertEquals(3, test.getInventoryAmounts().size());
+        assertEquals(4, test.getAmounts().size());
         assertEquals(0, test.getAmount("Stone"));
 
-        test.inventoryDropMultiple("Wood", 2);
-        assertEquals(2, test.getInventoryAmounts().size());
+        test.dropMultiple("Wood", 2);
+        assertEquals(3, test.getAmounts().size());
         assertEquals(0, test.getAmount("Wood"));
 
-        test.inventoryDropMultiple("Sand", 2);
-        assertEquals(2, test.getInventoryAmounts().size());
+        test.dropMultiple("Sand", 2);
+        assertEquals(3, test.getAmounts().size());
         assertEquals(1, test.getAmount("Sand"));
 
-        assertNull(test.inventoryDropMultiple("Sand", 2));
-        assertNull(test.inventoryDropMultiple("Apple", 3));
+        assertNull(test.dropMultiple("Sand", 2));
+        assertNull(test.dropMultiple("Apple", 3));
+
+        test.dropAll("Metal");
+        assertEquals(0, test.getAmount("Metal"));
+        assertEquals(2, test.getAmounts().size());
     }
 
     @Test
     public void toStringTest(){
-        String toStringTest = "Inventory Contents " + test.getInventoryAmounts().toString();
+        String toStringTest = "Inventory Contents " + test.getAmounts().toString();
         assertEquals(test.toString(), toStringTest);
     }
 
@@ -146,15 +150,15 @@ public class InventoryManagerTest {
         assertEquals(1, test.getQuickAccess().size());
         assertEquals((Integer)1, test.getQuickAccess().get("Stone"));
 
-        test.inventoryAdd(new Wood());
-        test.inventoryAdd(new Wood());
-        test.inventoryAdd(new Vine());
-        test.inventoryAdd(new Stone());
-        test.inventoryAdd(new Stone());
-        test.inventoryAdd(new Sand());
-        test.inventoryAdd(new Apple());
-        test.inventoryAdd(new Berry());
-        test.inventoryAdd(new Metal());
+        test.add(new Wood());
+        test.add(new Wood());
+        test.add(new Vine());
+        test.add(new Stone());
+        test.add(new Stone());
+        test.add(new Sand());
+        test.add(new Apple());
+        test.add(new Berry());
+        test.add(new Metal());
 
         test.quickAccessAdd("Wood");
         test.quickAccessAdd("Vine");
@@ -179,7 +183,7 @@ public class InventoryManagerTest {
     @Test
     public void positionsTest() {
         assertEquals("{Stone=(0, 0)}", test.getPositions().toString());
-        test.inventoryAdd(new Apple());
+        test.add(new Apple());
         assertEquals("{Apple=(1, 0), Stone=(0, 0)}", test.getPositions().toString());
 
         Map<String, List<Item>> inventory = new HashMap<>();

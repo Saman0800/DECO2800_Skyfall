@@ -1,35 +1,38 @@
 package deco2800.skyfall;
 
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-
 import deco2800.skyfall.buildings.BuildingFactory;
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.gamemenu.GameMenuScreen;
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.Peon;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.graphics.HasPointLight;
+import deco2800.skyfall.graphics.PointLight;
+import deco2800.skyfall.graphics.ShaderWrapper;
+import deco2800.skyfall.graphics.types.vec3;
 import deco2800.skyfall.handlers.KeyboardManager;
 import deco2800.skyfall.managers.*;
-import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.observers.KeyDownObserver;
-import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.renderers.OverlayRenderer;
+import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.renderers.Renderer3D;
 import deco2800.skyfall.saving.Save;
-import deco2800.skyfall.worlds.*;
-import deco2800.skyfall.managers.EnvironmentManager;
-
+import deco2800.skyfall.util.lightinghelpers.*;
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class GameScreen implements Screen,KeyDownObserver {
 	private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
@@ -55,11 +58,26 @@ public class GameScreen implements Screen,KeyDownObserver {
 
     long lastGameTick = 0;
 
-	/**
-	 * Create an EnvironmentManager for ToD.
-	 */
-	EnvironmentManager timeOfDay;
-	public static boolean isPaused = false;
+    /**
+     * Create an EnvironmentManager for ToD.
+     */
+    EnvironmentManager timeOfDay;
+    public static boolean isPaused = false;
+
+    //A wrapper for shader
+    ShaderWrapper shader;
+
+    /**
+     * This hold the intensity for the ambient light for the ambient light.
+     */
+    SpectralValue ambientIntensity;
+
+    /**
+     * The will be the spectral values for the RBG values of the ambient light
+     */
+    SpectralValue ambientRed;
+    SpectralValue ambientBlue;
+    SpectralValue ambientGreen;
 
     public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
         /* Create an example world for the engine */
@@ -97,14 +115,14 @@ public class GameScreen implements Screen,KeyDownObserver {
             } else {
 
                 //Creating the world
-                world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 4).getWorld();
+                world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 4, true).getWorld();
                 save.getWorlds().add(world);
                 save.setCurrentWorld(world);
                 world.setSave(save);
                 DatabaseManager.get().getDataBaseConnector().saveGame(save);
-			}
-			GameManager.get().getManager(NetworkManager.class).startHosting("host");
-		}
+            }
+            GameManager.get().getManager(NetworkManager.class).startHosting("host");
+        }
 
         gameManager.setWorld(world);
 
@@ -113,10 +131,9 @@ public class GameScreen implements Screen,KeyDownObserver {
         cameraDebug = new PotateCamera(1920, 1080);
 
         /* Add the window to the stage */
-        GameManager.get().setSkin(skin);
+//        GameManager.get().setSkin(skin);
         GameManager.get().setStage(stage);
         GameManager.get().setCamera(camera);
-
 
         /* Add inventory to game manager */
         gameManager.addManager(new InventoryManager());
@@ -126,16 +143,72 @@ public class GameScreen implements Screen,KeyDownObserver {
         // testing requirement for widget, removed it later
         BuildingFactory bf = new BuildingFactory();
         GameManager.get().getWorld().addEntity(bf.createCabin(3f, 1.5f));
-        GameManager.get().getWorld().addEntity(bf.createCabin(0f, 0f));
+        GameManager.get().getWorld().addEntity(bf.createCabin(-5f, 2f));
 
-		/* Add environment to game manager */
-		gameManager.addManager(new EnvironmentManager());
+        /* Add environment to game manager */
+        EnvironmentManager gameEnvironManag = gameManager.getManager(EnvironmentManager.class);
+        // For debuggin only!
+        gameEnvironManag.setTime(17, 0);
 
-		/* Add BGM to game manager */
-		gameManager.addManager(new BGMManager());
+        /* Add BGM to game manager */
+        gameManager.addManager(new BGMManager());
 
-        GameMenuScreen gamemenuScreen = new GameMenuScreen(gameMenuManager);
-		gamemenuScreen.show();
+        /**
+         * NOTE: Now that the Environment Manager has been added start creating the
+         * SpectralValue instances for the Ambient Light.
+         */
+        IntensityFunction intensityFunction = (float x) -> {
+            double magnitude = 0.3;
+            double period = 6.7;
+            double vertShift = 2.38;
+
+            double cosEval = Math.cos(((x - 12) * Math.PI) / 12.0);
+            double normalise = magnitude * Math.sqrt((1 + period * period) / (1 + period * period * cosEval * cosEval));
+
+            return (float) (normalise * cosEval + magnitude * vertShift);
+        };
+
+        ambientIntensity = new FunctionalSpectralValue(intensityFunction, gameEnvironManag);
+
+        // Create the rgb spectral values
+        ArrayList<TFTuple> redKeyFrame = new ArrayList<>();
+        redKeyFrame.add(new TFTuple(0.0f, 0.15f));
+        redKeyFrame.add(new TFTuple(5.0f, 0.15f));
+        redKeyFrame.add(new TFTuple(5.5f, 0.2f));
+        redKeyFrame.add(new TFTuple(6.0f, 0.7f));
+        redKeyFrame.add(new TFTuple(6.3f, 0.6f));
+        redKeyFrame.add(new TFTuple(7.0f, 0.9f));
+        redKeyFrame.add(new TFTuple(17.0f, 0.9f));
+        redKeyFrame.add(new TFTuple(17.5f, 0.8f));
+        redKeyFrame.add(new TFTuple(18.5f, 0.6f));
+        redKeyFrame.add(new TFTuple(19.0f, 0.15f));
+        ambientRed = new LinearSpectralValue(redKeyFrame, gameEnvironManag);
+
+        ArrayList<TFTuple> greenKeyFrame = new ArrayList<>();
+        greenKeyFrame.add(new TFTuple(0.0f, 0.12f));
+        greenKeyFrame.add(new TFTuple(5.0f, 0.12f));
+        greenKeyFrame.add(new TFTuple(5.5f, 0.2f));
+        greenKeyFrame.add(new TFTuple(6.0f, 0.45f));
+        greenKeyFrame.add(new TFTuple(6.3f, 0.4f));
+        greenKeyFrame.add(new TFTuple(7.0f, 0.9f));
+        greenKeyFrame.add(new TFTuple(17.0f, 0.9f));
+        greenKeyFrame.add(new TFTuple(17.5f, 0.5f));
+        greenKeyFrame.add(new TFTuple(18.5f, 0.4f));
+        greenKeyFrame.add(new TFTuple(19.0f, 0.12f));
+        ambientGreen = new LinearSpectralValue(greenKeyFrame, gameEnvironManag);
+
+        ArrayList<TFTuple> blueKeyFrame = new ArrayList<>();
+        blueKeyFrame.add(new TFTuple(0.0f, 0.19f));
+        blueKeyFrame.add(new TFTuple(5.0f, 0.19f));
+        blueKeyFrame.add(new TFTuple(5.5f, 0.6f));
+        blueKeyFrame.add(new TFTuple(6.0f, 0.1f));
+        blueKeyFrame.add(new TFTuple(6.3f, 0.45f));
+        blueKeyFrame.add(new TFTuple(7.0f, 0.96f));
+        blueKeyFrame.add(new TFTuple(17.0f, 0.96f));
+        blueKeyFrame.add(new TFTuple(17.5f, 0.35f));
+        blueKeyFrame.add(new TFTuple(18.5f, 0.8f));
+        blueKeyFrame.add(new TFTuple(19.0f, 0.19f));
+        ambientBlue = new LinearSpectralValue(blueKeyFrame, gameEnvironManag);
 
         PathFindingService pathFindingService = new PathFindingService();
 
@@ -148,8 +221,13 @@ public class GameScreen implements Screen,KeyDownObserver {
         Gdx.input.setInputProcessor(multiplexer);
 
         GameManager.get().getManager(KeyboardManager.class).registerForKeyDown(this);
-    }
 
+        //Create the shader program from resource files
+        //Shader program will be attached later
+        shader = new ShaderWrapper("batch");
+        //add shader to rendererDebug
+        rendererDebug.setShader(shader);
+    }
 
     /**
      * Renderer thread
@@ -170,32 +248,27 @@ public class GameScreen implements Screen,KeyDownObserver {
             pause();
         }
 
-
         SpriteBatch batchDebug = new SpriteBatch();
         batchDebug.setProjectionMatrix(cameraDebug.combined);
+
+        shader.begin();
 
         SpriteBatch batch = new SpriteBatch();
         batch.setProjectionMatrix(camera.combined);
 
         // Clear the entire display as we are using lazy rendering
-
-        // Commented out by Cyrus
-//        if (!isPaused) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         rerenderMapObjects(batch, camera);
         rendererDebug.render(batchDebug, cameraDebug);
         stage.act(delta);
         stage.draw();
-//        }
-//        stage.act(delta);
-//        stage.draw();
 
+        /* Refresh the experience UI for if information was updated */
 
-		/* Refresh the experience UI for if information was updated */
-
-		batch.dispose();
-	}
+        batch.dispose();
+        shader.end();
+    }
 
     private void handleRenderables() {
         if (System.currentTimeMillis() - lastGameTick > 20) {
@@ -208,12 +281,32 @@ public class GameScreen implements Screen,KeyDownObserver {
      * Use the selected renderer to render objects onto the map
      */
     private void rerenderMapObjects(SpriteBatch batch, OrthographicCamera camera) {
+        //set ambient light
+        shader.setAmbientComponent(
+                new vec3(ambientRed.getIntensity(), ambientGreen.getIntensity(), ambientBlue.getIntensity()),
+                ambientIntensity.getIntensity());
+
+        // Add all the point lights of entities that implement the HasPointLight
+        // interface into the batch
+        for (AbstractEntity luminousEntity : GameManager.get().getWorld().getLuminousEntities()) {
+            if (luminousEntity instanceof HasPointLight) {
+                HasPointLight tempEntity = (HasPointLight) luminousEntity;
+                tempEntity.updatePointLight();
+                PointLight entityPointLight = tempEntity.getPointLight();
+                if (entityPointLight != null) {
+                    shader.addPointLight(entityPointLight);
+                }
+            }
+        }
+
+        //finalise shader parameters and attach to batch
+        shader.finaliseAndAttachShader(batch);
+        //render batch
         renderer.render(batch, camera);
     }
 
     @Override
     public void show() {
-
     }
 
     /**
@@ -267,7 +360,7 @@ public class GameScreen implements Screen,KeyDownObserver {
         if (keycode == Input.Keys.F5) {
 
             //Create a random world
-            world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 4).getWorld();
+            world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 4, true).getWorld();
 
             // Add this world to the save
             save.getWorlds().add(world);
@@ -279,10 +372,6 @@ public class GameScreen implements Screen,KeyDownObserver {
             Tile.resetID();
             GameManager gameManager = GameManager.get();
             gameManager.setWorld(world);
-
-
-            // Add first peon to the world
-//            world.addEntity(new Peon(0f, 0f, 0.05f, "Side Piece", 10));
         }
 
         if (keycode == Input.Keys.F11) { // F11

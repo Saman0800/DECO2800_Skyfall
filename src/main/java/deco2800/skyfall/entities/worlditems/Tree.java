@@ -1,10 +1,7 @@
 package deco2800.skyfall.entities.worlditems;
 
-import deco2800.skyfall.entities.StaticEntity;
-import deco2800.skyfall.Tickable;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.entities.Harvestable;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.WoodCube;
 import org.slf4j.Logger;
@@ -15,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class Tree extends StaticEntity implements Tickable, Harvestable {
+public class Tree extends StaticTree {
     private static final Logger LOG = LoggerFactory.getLogger(Tree.class);
     private int woodAmount; // amount of wood that each tree has
 
@@ -30,10 +27,16 @@ public class Tree extends StaticEntity implements Tickable, Harvestable {
     }
 
     public Tree(Tile tile, boolean obstructed) {
-        super(tile, 5, "tree" + nextTreeTexture, obstructed);
-        nextTreeTexture = randomGen.nextInt(3) + 1;
+        super(tile, obstructed, "tree" + nextTreeTexture);
         this.woodAmount = 15;
+
+        Tree.nextTreeTexture = randomGen.nextInt(3) + 1;
         this.entityType = "Tree";
+    }
+
+    public Tree (StaticEntityMemento memento){
+        super(memento);
+        this.woodAmount = 15;
     }
 
     /**
@@ -86,6 +89,7 @@ public class Tree extends StaticEntity implements Tickable, Harvestable {
      */
     @Override
     public void onTick(long tick) {
+        // Do nothing on tick
     }
 
     @Override

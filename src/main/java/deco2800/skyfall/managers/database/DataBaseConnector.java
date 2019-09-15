@@ -5,7 +5,11 @@ import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.saving.LoadException;
+import deco2800.skyfall.entities.worlditems.*;
+import deco2800.skyfall.entities.worlditems.ForestMushroom;
+import deco2800.skyfall.entities.worlditems.LongGrass;
 import deco2800.skyfall.saving.Save;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.*;
 import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
@@ -185,25 +189,20 @@ public class DataBaseConnector {
         }
     }
 
-    /**
-     * Saves the main character
-     *
-     * @param character the main character
-     * @throws SQLException if there is an error with the SQL queries
-     */
-    public void saveMainCharacter(MainCharacter character) throws SQLException {
-        ContainsDataQueries containsQueries = new ContainsDataQueries(connection);
-        InsertDataQueries insertQueries = new InsertDataQueries(connection);
-        UpdateDataQueries updateQueries = new UpdateDataQueries(connection);
-        Gson gson = new Gson();
-
-
-        if (containsQueries.containsMainCharacter(character.getID(), character.getSave().getSaveID())) {
-            updateQueries.updateMainCharacter(character.getID(), character.getSave().getSaveID(), gson.toJson(character.save()));
-        } else {
-            insertQueries.insertMainCharacter(character.getID(), character.getSave().getSaveID(), gson.toJson(character.save()));
-        }
-    }
+    // TODO:dannathan Fix or remove this.
+//    public void saveMainCharacter(MainCharacter character) throws SQLException {
+//            ContainsDataQueries containsQueries = new ContainsDataQueries(connection);
+//            InsertDataQueries insertQueries = new InsertDataQueries(connection);
+//            UpdateDataQueries updateQueries = new UpdateDataQueries(connection);
+//            Gson gson = new Gson();
+//
+//
+//            if (containsQueries.containsMainCharacter(character.getID(), character.getSave().getSaveID())) {
+//                updateQueries.updateMainCharacter(character.getID(), character.getSave().getSaveID(), gson.toJson(character.save()));
+//            } else {
+//                insertQueries.insertMainCharacter(character.getID(), character.getSave().getSaveID(), gson.toJson(character.save()));
+//            }
+//    }
 
     /**
      * Saves a chunk
@@ -225,7 +224,7 @@ public class DataBaseConnector {
             }
 
             for (AbstractEntity entity : chunk.getEntities()) {
-                if (entity instanceof StaticEntity) {
+                if (entity instanceof StaticEntity && ((StaticEntity) entity).getEntityType() != null) {
                     if (containsQueries.containsEntity(world.getID(), entity.getEntityID())) {
                         updateQueries.updateEntity(((StaticEntity) entity).getEntityType(), entity.getCol(), entity.getRow(),
                                 chunk.getX(), chunk.getY(), world.getID(), gson.toJson(((StaticEntity) entity).save()), entity.getEntityID());
@@ -235,6 +234,7 @@ public class DataBaseConnector {
                     }
                 }
             }
+            connection.commit();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -568,9 +568,50 @@ public class DataBaseConnector {
             }
             Chunk chunk = new Chunk(world, gson.fromJson(result.getString("DATA"), Chunk.ChunkMemento.class));
 
-            PreparedStatement entityquery = connection.prepareStatement("SELECT * FROM ENTITIES WHERE CHUNK_X = ? and CHUNK_Y = ?");
-//            entityquery.setInt(chunk.getX());
-//            ResultSet entityResult =
+            PreparedStatement entityquery = connection.prepareStatement("SELECT * FROM ENTITIES WHERE CHUNK_X = ? and CHUNK_Y = ? and WORLD_ID = ?");
+            entityquery.setInt(1,x);
+            entityquery.setInt(2,y);
+            entityquery.setLong(3, world.getID());
+            ResultSet entityResult = entityquery.executeQuery();
+
+
+            while (entityResult.next()){
+                StaticEntity entity;
+                StaticEntity.StaticEntityMemento memento = gson.fromJson(entityResult.getString("data"), StaticEntity.StaticEntityMemento.class);
+                switch (memento.staticEntityType) {
+                    case "DesertCacti":
+                        entity = new DesertCacti(memento);
+                        break;
+                    case "ForestMushRoom":
+                        entity = new ForestMushroom(memento);
+                        break;
+                    case "LongGrass":
+                        entity = new LongGrass(memento);
+                        break;
+                    case "MountainRock":
+                        entity = new MountainRock(memento);
+                        break;
+                    case "MountainTree":
+                        entity = new MountainTree(memento);
+                        break;
+                    case "Rock":
+                        entity = new Rock(memento);
+                        break;
+                    case "SnowClump":
+                        entity = new SnowClump(memento);
+                        break;
+                    case "SnowShrub":
+                        entity = new SnowShrub(memento);
+                        break;
+                    case "Tree":
+                        entity = new Tree(memento);
+                        break;
+                    default:
+                        throw new RuntimeException();
+                }
+                chunk.addEntity(entity);
+            }
+
 
 
 

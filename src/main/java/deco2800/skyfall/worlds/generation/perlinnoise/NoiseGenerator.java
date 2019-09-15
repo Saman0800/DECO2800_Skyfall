@@ -1,9 +1,6 @@
 package deco2800.skyfall.worlds.generation.perlinnoise;
 
-import java.security.InvalidParameterException;
-import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Used to allow for generation of perlin noise value for coordinates
@@ -30,7 +27,8 @@ public class NoiseGenerator {
      * attenuation - Determines how important the octaves are, the higher this value the more sporadic the generated
      * values will be
      */
-    private double startPeriod, attenuation;
+    private double startPeriod;
+    private double attenuation;
     /** Stores the gradient vectors for the octaves **/
 
     private int[] permutation = new int[512];

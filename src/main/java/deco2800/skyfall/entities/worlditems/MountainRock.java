@@ -1,11 +1,9 @@
 package deco2800.skyfall.entities.worlditems;
 
-import deco2800.skyfall.entities.StaticEntity;
-import deco2800.skyfall.entities.HasHealth;
 import deco2800.skyfall.worlds.Tile;
 import java.util.Random;
 
-public class MountainRock extends StaticEntity implements HasHealth {
+public class MountainRock extends StaticRock {
     private int health = 100;
     private static final String ENTITY_ID_STRING = "mountain_rock";
 
@@ -21,11 +19,16 @@ public class MountainRock extends StaticEntity implements HasHealth {
     }
 
     public MountainRock(Tile tile, boolean obstructed) {
-        super(tile, 2, "MRock" + nextRock, obstructed);
-        nextRock = randomGen.nextInt(3) + 1;
+        super(tile, obstructed, "MRock" + MountainRock.nextRock);
+        MountainRock.nextRock = randomGen.nextInt(3) + 1;
         this.setObjectName(ENTITY_ID_STRING);
         this.metalAmount = 15;
         this.entityType = "MountainRock";
+    }
+
+    public MountainRock (StaticEntityMemento memento){
+        super(memento);
+        this.metalAmount = 15;
     }
 
     @Override

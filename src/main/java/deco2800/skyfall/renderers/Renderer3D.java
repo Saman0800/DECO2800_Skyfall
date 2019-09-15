@@ -1,5 +1,8 @@
 package deco2800.skyfall.renderers;
 
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import java.util.*;
 
 import com.badlogic.gdx.Gdx;
@@ -28,7 +31,7 @@ import deco2800.skyfall.worlds.Tile;
 
 /**
  * A ~simple~ complex hex renderer for DECO2800 games
- * 
+ *
  * @Author Tim Hadwen & Lachlan Healey
  */
 public class Renderer3D implements Renderer {
@@ -53,7 +56,7 @@ public class Renderer3D implements Renderer {
     /**
      * Renders onto a batch, given a renderables with entities It is expected that
      * AbstractWorld contains some entities and a Map to read tiles from
-     * 
+     *
      * @param batch Batch to render onto
      */
     @Override
@@ -72,7 +75,7 @@ public class Renderer3D implements Renderer {
 
         batch.begin();
         // Render elements section by section
-        // tiles will render the static entity attaced to each tile after the tile is
+        // tiles will render the static entity attached to each tile after the tile is
         // rendered
 
         tilesSkipped = 0;
@@ -96,7 +99,7 @@ public class Renderer3D implements Renderer {
 
     /**
      * Render a single tile.
-     * 
+     *
      * @param batch            the sprite batch.
      * @param camera           the camera.
      * @param tileCount        the total number of tiles.
@@ -132,7 +135,7 @@ public class Renderer3D implements Renderer {
 
     /**
      * Render the tile under the mouse.
-     * 
+     *
      * @param batch the sprite batch.
      */
     private void renderMouse(SpriteBatch batch) {
@@ -159,12 +162,10 @@ public class Renderer3D implements Renderer {
 
     }
 
-
-
     /**
      * Render all the entities on in view, including movement tiles, and excluding
      * undiscovered area.
-     * 
+     *
      * @param batch  the sprite batch.
      * @param camera the camera.
      */
@@ -178,6 +179,19 @@ public class Renderer3D implements Renderer {
         // height of each tile is constant
         int w = TextureManager.TILE_WIDTH;
         int h = TextureManager.TILE_HEIGHT;
+
+        boolean renderDebug = true; // For debugging hitboxes
+        if (renderDebug) {
+            World box2DWorld = GameManager.get().getManager(PhysicsManager.class).getBox2DWorld();
+            Array<Body> bodies = new Array<>();
+            box2DWorld.getBodies(bodies);
+
+            for (Body body : bodies) {
+                float[] bodyWorldCoord = WorldUtil.colRowToWorldCords(body.getPosition().x, body.getPosition().y);
+
+                batch.draw(textureManager.getTexture("Select"), bodyWorldCoord[0], bodyWorldCoord[1], 10.f, 10.f);
+            }
+        }
 
         for (AbstractEntity entity : entities) {
             float[] entityWorldCoord = WorldUtil.colRowToWorldCords(entity.getCol(), entity.getRow());
@@ -212,7 +226,25 @@ public class Renderer3D implements Renderer {
                 if (!(entity instanceof Animatable)) {
                     renderAbstractEntity(batch, entity, entityWorldCoord, tex);
                 } else {
+                    Color c = batch.getColor();
+
+                    if (entity instanceof MainCharacter) {
+                        if (((MainCharacter) entity).IsHurt() || ((MainCharacter) entity).isDead()) {
+                            batch.setColor(Color.RED);
+                        } else if (((MainCharacter) entity).isRecovering()) {
+                            if (((MainCharacter) entity).isTexChanging()) {
+                                batch.setColor(c.r, c.g, c.b, 0f);
+                                ((MainCharacter) entity).setTexChanging(!((MainCharacter) entity).isTexChanging());
+                            } else {
+                                batch.setColor(c.r, c.g, c.b, 1f);
+                                ((MainCharacter) entity).setTexChanging(!((MainCharacter) entity).isTexChanging());
+                            }
+                        }
+                    } else {
+                        batch.setColor(c.r, c.g, c.b, 1f);
+                    }
                     runAnimation(batch, entity, entityWorldCoord);
+                    batch.setColor(c.r, c.g, c.b, 1f);
                 }
 
                 /* Draw Peon */
@@ -220,12 +252,8 @@ public class Renderer3D implements Renderer {
                 if (entity instanceof Peon && GameManager.get().showPath) {
                     renderPeonMovementTiles(batch, camera, entity, entityWorldCoord);
                 }
-
-
             }
-
         }
-
 
         GameManager.get().setEntitiesRendered(entities.size() - entitiesSkipped);
         GameManager.get().setEntitiesCount(entities.size());
@@ -268,19 +296,10 @@ public class Renderer3D implements Renderer {
                     continue;
                 }
                 batch.draw(tex, tileWorldCord[0], tileWorldCord[1]// + ((tile.getElevation() + 1) *
-                                                                  // elevationZeroThiccness * WorldUtil.SCALE_Y)
+                // elevationZeroThiccness * WorldUtil.SCALE_Y)
                         , tex.getWidth() * WorldUtil.SCALE_X, tex.getHeight() * WorldUtil.SCALE_Y);
 
             }
-            // if (!path.isEmpty()) {
-            // // draw Peon
-            // Texture tex = textureManager.getTexture(entity.getTexture());
-            // batch.draw(tex, entityWorldCord[0], entityWorldCord[1] +
-            // entity.getHeight(),// + path.get(0).getElevation()) * elevationZeroThiccness
-            // * WorldUtil.SCALE_Y,
-            // tex.getWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X,
-            // tex.getHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y);
-            // }
         }
     }
 
@@ -295,11 +314,7 @@ public class Renderer3D implements Renderer {
                     font.draw(batch, tile.toString(),
                             // String.format("%.0f, %.0f, %d",tileWorldCord[0], tileWorldCord[1],
                             // tileMap.indexOf(tile)),
-                            tileWorldCord[0] + WorldUtil.TILE_WIDTH / 4.5f, tileWorldCord[1]);// + ((tile.getElevation()
-                                                                                              // + 1) *
-                                                                                              // elevationZeroThiccness
-                                                                                              // * WorldUtil.SCALE_Y)
-                    // + WorldUtil.TILE_HEIGHT-10);
+                            tileWorldCord[0] + WorldUtil.TILE_WIDTH / 4.5f, tileWorldCord[1]);
                 }
 
             }
@@ -338,51 +353,52 @@ public class Renderer3D implements Renderer {
         }
     }
 
-
     /**
      * Runs an animation for the entity if it is applicable if there is
      * no animation to be run or it cannot be found a default texture is run
-     * 
+     *
      * @param batch            Sprite batch to draw onto
      * @param entity           Current entity
      * @param entityWorldCoord Where to draw.
      */
     private void runAnimation(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCoord) {
-            if (entity.getCurrentState() == AnimationRole.NULL) {
-                renderDefaultSprite(batch, entity, entityWorldCoord);
+        if (entity.getCurrentState() == AnimationRole.NULL) {
+            renderDefaultSprite(batch, entity, entityWorldCoord);
+        }
+
+        AnimationLinker aniLink = entity.getToBeRun();
+        if (aniLink == null) {
+            renderDefaultSprite(batch, entity, entityWorldCoord);
+            return;
+        }
+
+        Animation<TextureRegion> ani = aniLink.getAnimation();
+        float time = aniLink.getStartingTime();
+
+        if (ani == null) {
+            System.err.println("Animation is null");
+            renderDefaultSprite(batch, entity, entityWorldCoord);
+            return;
+        }
+
+        if (ani.isAnimationFinished(time)) {
+            aniLink.resetStartingTime();
+
+            if (!aniLink.isLooping()) {
+                entity.setGetToBeRunToNull();
             }
+            renderDefaultSprite(batch, entity, entityWorldCoord);
+            return;
+        }
 
-            AnimationLinker aniLink = entity.getToBeRun();
-            if (aniLink == null) {
-                renderDefaultSprite(batch, entity, entityWorldCoord);
-                return;
-            }
+        TextureRegion currentFrame = ani.getKeyFrame(time, true);
+        float width = currentFrame.getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X
+                * entity.getScale();
+        float height = currentFrame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y
+                * entity.getScale();
+        int[] offset = aniLink.getOffset();
 
-            Animation<TextureRegion> ani = aniLink.getAnimation();
-            float time = aniLink.getStartingTime();
-
-            if (ani == null) {
-                //System.out.println("Animation is null");
-                renderDefaultSprite(batch, entity, entityWorldCoord);
-                return;
-            }
-
-            if (ani.isAnimationFinished(time)) {
-                aniLink.resetStartingTime();
-
-                if (!aniLink.isLooping()) {
-                    entity.setGetToBeRunToNull();
-                }
-                renderDefaultSprite(batch, entity, entityWorldCoord);
-                return;
-            }
-
-            TextureRegion currentFrame = ani.getKeyFrame(time, true);
-            float width = currentFrame.getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X * entity.getScale() ;
-            float height = currentFrame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y * entity.getScale();
-            int[] offset = aniLink.getOffset();
-
-            batch.draw(currentFrame, entityWorldCoord[0] + offset[0], entityWorldCoord[1] + offset[0], width, height);
-            aniLink.incrTime(Gdx.graphics.getDeltaTime());
+        batch.draw(currentFrame, entityWorldCoord[0] + offset[0], entityWorldCoord[1] + offset[0], width, height);
+        aniLink.incrTime(Gdx.graphics.getDeltaTime());
     }
 }

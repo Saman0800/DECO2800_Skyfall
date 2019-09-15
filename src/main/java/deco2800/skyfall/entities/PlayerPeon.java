@@ -86,13 +86,11 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
      */
     public void attack() {
         //TODO: Need to calculate an angle that the character is facing.
-        HexVector position = this.getPosition();
 
         //Spawn projectile in front of character for now.
 
 
         //Get AbstractWorld from static class GameManager.
-        GameManager manager = GameManager.get();
 
         //Add the projectile entity to the game world.
         //manager.getWorld().addEntity(hitBox);

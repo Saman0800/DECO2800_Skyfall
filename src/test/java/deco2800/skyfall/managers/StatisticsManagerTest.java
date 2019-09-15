@@ -1,10 +1,14 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.resources.items.*;
 import deco2800.skyfall.resources.items.Stone;
+import deco2800.skyfall.worlds.Tile;
 
 import org.junit.*;
+
+import java.lang.reflect.Field;
 
 public class StatisticsManagerTest {
 
@@ -29,25 +33,28 @@ public class StatisticsManagerTest {
     /**
      * Set up all test variables
      */
-    public void setUp() {
+    public void setUp() throws NoSuchFieldException, IllegalAccessException {
 
-        testCharacter1 = MainCharacter.getInstance(4, 4,
-                0.5f, "Side Piece", 10);
+        testCharacter1 = MainCharacter.getInstance(4, 4, 0.5f, "Side Piece", 10);
+        // Reset the level, heath and deaths.
+        testCharacter1.changeLevel(1 - testCharacter1.getLevel());
+        testCharacter1.changeHealth(10 - testCharacter1.getHealth());
+        // There is no other way to modify this.
+        Field deathsField = Peon.class.getDeclaredField("deaths");
+        deathsField.setAccessible(true);
+        deathsField.setInt(testCharacter1, 0);
+
         testManager = new StatisticsManager(this.testCharacter1);
-        testEnemy1 = new Enemy(1,1,"SpiderAnimation.png",
+        testEnemy1 = new Enemy(1,1,"spider",
                 1,100,1);
-        testEnemy2 = new Enemy(2,2,"2800enemy.png",
+        testEnemy2 = new Enemy(2,2,"robot",
                 2,200,2);
-        testEnemy3 = new Enemy(3,3,"EnemyStone.png",
+        testEnemy3 = new Enemy(3,3,"stoneRS",
                 3,300,3);
-        sword = new Weapon("sword", "melee",
-                "slash", 3, 5, 6);
-        spear = new Weapon("spear", "range",
-                "splash", 5, 4, 7);
-        bow = new Weapon("bow", "range",
-                "splash", 4, 3, 10);
-        axe = new Weapon("axe", "melee",
-                "slash", 4, 4, 10);
+        sword = new Sword(new Tile(0, 0), false);
+        spear = new Spear(new Tile(0, 0), false);
+        bow = new Bow(new Tile(0, 0), false);
+        axe = new Axe(new Tile(0, 0), false);
     }
 
     @After
@@ -86,16 +93,16 @@ public class StatisticsManagerTest {
      * Private helper method to be called to record picked up weapons
      */
     private void pickUpWeapons() {
-        this.testManager.getCharacter().pickUpWeapon(sword);
-        this.testManager.getCharacter().pickUpWeapon(sword);
-        this.testManager.getCharacter().pickUpWeapon(sword);
-        this.testManager.getCharacter().pickUpWeapon(spear);
-        this.testManager.getCharacter().pickUpWeapon(spear);
-        this.testManager.getCharacter().pickUpWeapon(bow);
-        this.testManager.getCharacter().pickUpWeapon(bow);
-        this.testManager.getCharacter().pickUpWeapon(axe);
-        this.testManager.getCharacter().pickUpWeapon(axe);
-        this.testManager.getCharacter().pickUpWeapon(axe);
+        this.testManager.getCharacter().pickUpInventory(sword);
+        this.testManager.getCharacter().pickUpInventory(sword);
+        this.testManager.getCharacter().pickUpInventory(sword);
+        this.testManager.getCharacter().pickUpInventory(spear);
+        this.testManager.getCharacter().pickUpInventory(spear);
+        this.testManager.getCharacter().pickUpInventory(bow);
+        this.testManager.getCharacter().pickUpInventory(bow);
+        this.testManager.getCharacter().pickUpInventory(axe);
+        this.testManager.getCharacter().pickUpInventory(axe);
+        this.testManager.getCharacter().pickUpInventory(axe);
     }
 
     /**
@@ -152,7 +159,7 @@ public class StatisticsManagerTest {
         Assert.assertEquals(testManager.getAmountKilled(testEnemy3), 3);
         Assert.assertEquals(testManager.getKills(), 10);
 
-        Assert.assertEquals(testManager.getMoney(), 0);
+        Assert.assertEquals(testManager.getMoney(), 100);
     }
 
     @Test
@@ -169,15 +176,6 @@ public class StatisticsManagerTest {
         this.pickUpInventory();
 
         testManager.gainExperience();
-
-//        Assert.assertEquals(testManager.getExperience(), 30);
-
         testManager.levelUp();
-
-//        Assert.assertEquals(testManager.getLevel(), 2);
-//        Assert.assertEquals(testManager.getExperience(), 10);
-//        Assert.assertEquals(testManager.getExperienceCap(), 40);
-//
-//        Assert.assertEquals(testManager.getHealth(), 20);
     }
 }

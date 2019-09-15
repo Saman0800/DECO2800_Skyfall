@@ -329,7 +329,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                         }
                     }
                     // Don't attempt to add null
-                    if (growToCandidates.size() == 0) {
+                    if (growToCandidates.isEmpty()) {
                         break;
                     }
                     // Add a random candidate
@@ -416,7 +416,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             }
         }
         // If there are no lakes, there can't be any rivers
-        if (lakes.size() == 0) {
+        if (lakes.isEmpty()) {
             return;
         }
         for (int i = 0; i < noRivers; i++) {
