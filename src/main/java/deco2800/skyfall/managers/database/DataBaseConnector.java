@@ -82,32 +82,35 @@ public class DataBaseConnector {
         }
     }
 
-    public void saveGame(Save save) throws SQLException{
-        //Given a save game
-        long saveId = save.getSaveID();
-        ContainsDataQueries containsQueries = new ContainsDataQueries(connection);
-        InsertDataQueries insertQueries = new InsertDataQueries(connection);
-        UpdateDataQueries updateQueries = new UpdateDataQueries(connection);
-        Gson gson = new Gson();
+    public void saveGame(Save save) {
+        try {
+            //Given a save game
+            long saveId = save.getSaveID();
+            ContainsDataQueries containsQueries = new ContainsDataQueries(connection);
+            InsertDataQueries insertQueries = new InsertDataQueries(connection);
+            UpdateDataQueries updateQueries = new UpdateDataQueries(connection);
+            Gson gson = new Gson();
 
-        if (containsQueries.containsSave(saveId)) {
-            System.out.println("here2");
-            updateQueries.updateSave(saveId, gson.toJson(save.save()));
-        } else {
-            insertQueries.insertSave(saveId, gson.toJson(save.save()));
-        }
+            if (containsQueries.containsSave(saveId)) {
+                System.out.println("here2");
+                updateQueries.updateSave(saveId, gson.toJson(save.save()));
+            } else {
+                insertQueries.insertSave(saveId, gson.toJson(save.save()));
+            }
 
-        //Looping through the worlds in the save and saving them
-        for (World world : save.getWorlds()) {
-            saveWorld(world);
-            //TODO:Figuring out which world needs to be saved
+            //Looping through the worlds in the save and saving them
+            for (World world : save.getWorlds()) {
+                saveWorld(world);
+                //TODO:Figuring out which world needs to be saved
+            }
+            saveMainCharacter(save.getMainCharacter());
+        } catch (SQLException e) {
+            throw new RuntimeException();
         }
-        saveMainCharacter(save.getMainCharacter());
     }
 
     //Svaing the world and its parameters
-    public void saveWorld(World world) throws SQLException{
-        try {
+    public void saveWorld(World world) throws SQLException {
             ContainsDataQueries containsQueries = new ContainsDataQueries(connection);
             InsertDataQueries insertQueries = new InsertDataQueries(connection);
             UpdateDataQueries updateQueries = new UpdateDataQueries(connection);
@@ -174,24 +177,20 @@ public class DataBaseConnector {
             for (Chunk chunk : world.getLoadedChunks().values()) {
                 saveChunk(chunk, world);
             }
-        } catch (SQLException e){
-            throw new RuntimeException(e);
-        }
-
     }
 
     public void saveMainCharacter(MainCharacter character) throws SQLException {
-        ContainsDataQueries containsQueries = new ContainsDataQueries(connection);
-        InsertDataQueries insertQueries = new InsertDataQueries(connection);
-        UpdateDataQueries updateQueries = new UpdateDataQueries(connection);
-        Gson gson = new Gson();
+            ContainsDataQueries containsQueries = new ContainsDataQueries(connection);
+            InsertDataQueries insertQueries = new InsertDataQueries(connection);
+            UpdateDataQueries updateQueries = new UpdateDataQueries(connection);
+            Gson gson = new Gson();
 
 
-        if (containsQueries.containsMainCharacter(character.getID(), character.getSave().getSaveID())) {
-            updateQueries.updateMainCharacter(character.getID(), character.getSave().getSaveID(), gson.toJson(character.save()));
-        } else {
-            insertQueries.insertMainCharacter(character.getID(), character.getSave().getSaveID(), gson.toJson(character.save()));
-        }
+            if (containsQueries.containsMainCharacter(character.getID(), character.getSave().getSaveID())) {
+                updateQueries.updateMainCharacter(character.getID(), character.getSave().getSaveID(), gson.toJson(character.save()));
+            } else {
+                insertQueries.insertMainCharacter(character.getID(), character.getSave().getSaveID(), gson.toJson(character.save()));
+            }
     }
 
     public void saveChunk(Chunk chunk, World world) throws SQLException {
