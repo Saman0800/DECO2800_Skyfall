@@ -126,7 +126,7 @@ public class OverlayRenderer implements Renderer {
 		// Display current weather in game
 		debugLine(batch, camera, line++,
 				String.format("Weather: %s",
-						GameManager.get().getManager(EnvironmentManager.class).currentWeather()));
+						GameManager.get().getManager(EnvironmentManager.class).getcurrentWeather()));
 
 		line++;
 

@@ -191,6 +191,15 @@ public class EnvironmentManager extends TickableManager {
     }
 
     /**
+     * Sets a biome string
+     *
+     * @param location The current biome that will be set
+     */
+    public void setBiomeString(String location) {
+        biome = location;
+    }
+
+    /**
      * Gets current biome player is in
      *
      * @return String Current biome of player, or null if player is moving between tiles
