@@ -168,7 +168,6 @@ public class DataBaseConnector {
 
     }
 
-
 //    public World loadWorld(long worldId, Save save) throws SQLException{
 //        String query = String.format("SELECT * FROM WORLDS WHERE WORLD_ID = %s", worldId);
 //
@@ -221,6 +220,4 @@ public class DataBaseConnector {
             throw new RuntimeException(e);
         }
     }
-
-
 }

@@ -2,6 +2,7 @@ package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.BowMan;
+import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
@@ -39,10 +40,7 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
      * @return the loaded chunk
      */
     public static Chunk loadChunkAt(World world, int x, int y) {
-        // FIXME:Ontonator Load the chunk.
-        Chunk chunk = new Chunk(world, x, y);
-        chunk.generateEntities();
-        return chunk;
+        return DatabaseManager.get().getDataBaseConnector().loadChunk(world, x, y);
     }
 
     /**
@@ -235,9 +233,9 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
             tile.removeReferanceFromNeighbours();
         }
 
-        world.getLoadedChunks().remove(new Pair<>(x, y));
+        DatabaseManager.get().getDataBaseConnector().saveChunk(this);
 
-        // FIXME:Ontonator Save the chunk.
+        world.getLoadedChunks().remove(new Pair<>(x, y));
     }
 
     /**
