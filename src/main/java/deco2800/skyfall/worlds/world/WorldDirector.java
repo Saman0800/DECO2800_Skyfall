@@ -76,7 +76,7 @@ public class WorldDirector {
         builder.addEntity(new Treeman(3f,3f,mainCharacter));
 
         builder.addEntity(new Camel(34,-7, mainCharacter));
-
+        builder.addEntity(new Horse(-8,-6, mainCharacter));
         return builder;
     }
 

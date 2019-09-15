@@ -6,35 +6,27 @@ import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.DesertBiome;
 
-public class Camel extends VehicleEntity {
+public class Horse extends VehicleEntity {
     private AbstractBiome biomeType = new DesertBiome();
+    private static TextureManager textureManager;
+    private Stage stage;
     private static final transient String BIOME = "desert";
     private MainCharacter mc;
     private boolean available = true;
     private boolean moving=false;
-    private static final transient String VEHICLE = "camel";
+    private static final transient String VEHICLE = "horse";
     private static final transient int HEALTH = 10;
 
-    public Camel(float col, float row, MainCharacter mc) {
+    public Horse(float col, float row, MainCharacter mc) {
         super(col,row);
         this.mc = mc;
-        this.setTexture("camel");
-        this.setObjectName("camel");
+        this.setTexture("horse");
+        this.setObjectName("horse");
         this.setHeight(1);
         this.setAvailable(available);
         this.setHealth(HEALTH);
     }
 
-    public Camel(float col, float row) {
-        super(col,row);
-        this.setTexture("camel_character");
-        this.setObjectName("camel_character");
-        this.setHeight(1);
-    }
-
-    public Camel(float row, float col, String textureName, int damage) {
-        super(row, col, textureName, damage);
-    }
 
     public void setBiome(AbstractBiome biomeType){
         this.biomeType = biomeType;
@@ -48,17 +40,14 @@ public class Camel extends VehicleEntity {
     public void onTick(long i) {
         super.onTick(i);
         if (mc != null) {
-            float columnDis = mc.getCol() - this.getCol();
-            float rowDis = mc.getRow() - this.getRow();
-
             float colDistance = mc.getCol() - this.getCol();
             float rowDistance = mc.getRow() - this.getRow();
 
             if ((colDistance * colDistance + rowDistance * rowDistance) < 4){
 
-                // Let main character get onto vehicle
-               setTexture("camel_character");
-               setObjectName("camel_character");
+                //TODO: Let main character get onto vehicle
+                setTexture("horse_character");
+                setObjectName("horse_character");
 
 
             } else {
@@ -78,12 +67,5 @@ public class Camel extends VehicleEntity {
         return this.moving;
     }
 
-    public boolean checkAvailable(String bomie) {
-        if (!bomie.equals(BIOME)) {
-            available = false;
-        } else {
-            available = true;
-        }
-        return available;
-    }
+
 }
