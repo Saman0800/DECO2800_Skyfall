@@ -54,6 +54,10 @@ public class Vector2 {
      */
     public Vector2 add(Vector2 arg) { return new Vector2(this.x + arg.x, this.y + arg.y); }
 
+    public Vector2 mul(float arg){
+        return new Vector2(this.x*arg, this.y*arg);
+    }
+
     /**
      * Subtracts the argument vector and returns the result
      * @param arg the vector to be subtracted
