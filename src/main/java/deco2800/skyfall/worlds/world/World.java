@@ -107,7 +107,6 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         worldGenNodes = new CopyOnWriteArrayList<>();
     	voronoiEdges = new CopyOnWriteArrayList<>();
 
-    	// FIXME:Ontonator Sort this out.
         tileOffsetNoiseGeneratorX = Tile.getOffsetNoiseGenerator(random, worldParameters.getNodeSpacing());
         tileOffsetNoiseGeneratorY = Tile.getOffsetNoiseGenerator(random, worldParameters.getNodeSpacing());
 
@@ -155,7 +154,6 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
      * @throws DeadEndGenerationException
      * @throws WorldGenException
      */
-    // FIXME:Ontonator Make this work with chunks.
     private void generateTiles() throws NotEnoughPointsException, DeadEndGenerationException, WorldGenException {
         ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
         // TODO:Ontonator Sort this out.
@@ -196,13 +194,6 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
 
         BiomeGenerator biomeGenerator = new BiomeGenerator(this, worldGenNodes, voronoiEdges, random, worldParameters);
         biomeGenerator.generateBiomes();
-
-        // for (int q = -worldSize / Chunk.CHUNK_SIDE_LENGTH; q <= worldSize / Chunk.CHUNK_SIDE_LENGTH; q++) {
-        //     for (int r = -worldSize / Chunk.CHUNK_SIDE_LENGTH; r <= worldSize / Chunk.CHUNK_SIDE_LENGTH; r++) {
-        //         Chunk chunk = new Chunk(this, q, r);
-        //         loadedChunks.put(new Pair<>(q, r), chunk);
-        //     }
-        // }
     }
 
     // TODO:Ontonator Consider removing this method.

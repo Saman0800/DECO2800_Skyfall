@@ -165,7 +165,7 @@ public class WorldBuilder implements WorldBuilderInterface {
             case "forest":
 
                 // Create a new perlin noise map
-                SpawnControl treeControl = x -> (x * x * x) / 3.0;
+                SpawnControl treeControl = x -> x / 3 + 0.2;
                 EntitySpawnRule treeRule = new EntitySpawnRule(tile -> new Tree(tile, true), biome, true, treeControl);
                 biomeSpawnRules.add(treeRule);
 
