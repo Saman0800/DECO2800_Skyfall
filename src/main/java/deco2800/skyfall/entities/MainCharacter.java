@@ -1297,16 +1297,20 @@ public class MainCharacter extends Peon
         private int foodLevel;
         private float foodAccum;
 
-        private String inventory;
-        private String weapons;
-
+        private InventoryManager inventory;
+        private WeaponManager weapons;
         private HashMap<Integer, Integer> goldPouch;
+        private List<Item> hotbar;
+
         private List<String> blueprints;
 
+        // TODO implement
         private AbstractMemento entityMemento;
 
         public MainCharacterMemento(MainCharacter character) throws SaveException {
+            // FIXME
             this.saveID = saveInfo.getSaveID();
+
             this.mainCharacterID = character.id;
             this.equippedItem = character.equipped_item;
             this.level = character.level;
@@ -1314,9 +1318,9 @@ public class MainCharacter extends Peon
             this.foodAccum = character.foodAccum;
             this.goldPouch = character.goldPouch;
             this.blueprints = character.blueprintsLearned;
-
-            this.inventory = character.getInventoryManager().toString();
-            this.weapons = character.getWeaponManager().toString();
+            this.inventory = character.inventories;
+            this.weapons = character.weapons;
+            this.hotbar = character.hotbar;
         }
     }
 }

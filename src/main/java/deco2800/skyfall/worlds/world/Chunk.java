@@ -1,6 +1,7 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.BowMan;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.SaveException;
 import deco2800.skyfall.saving.Saveable;
@@ -44,6 +45,17 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
         int chunkY = (int) Math.floor(tileRow / CHUNK_SIDE_LENGTH);
 
         return new Pair<>(chunkX, chunkY);
+    }
+
+    /**
+     * Generate a new chunk from a save
+     *
+     * @param memento the memento to load from
+     * @param world the world this is in
+     */
+    public Chunk(ChunkMemento memento, World world) {
+        this(world, memento.x, memento.y);
+        this.load(memento);
     }
 
     public Chunk(World world, int x, int y, ArrayList<Tile> tiles, ArrayList<AbstractEntity> entities) {
@@ -231,27 +243,19 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
     public void load(ChunkMemento memento) {
         this.x = memento.x;
         this.y = memento.y;
-        // TODO
-        this.world = new World(new WorldParameters());
         this.tiles = memento.tiles;
     }
 
     class ChunkMemento extends AbstractMemento {
-        private long worldID;
         private int x;
         private int y;
         private ArrayList<Tile> tiles;
         private ArrayList<Integer> entities;
 
         public ChunkMemento(Chunk chunk) {
-            this.worldID = chunk.world.getID();
             this.x = chunk.x;
             this.y = chunk.y;
             this.tiles = chunk.tiles;
-            this.entities = new ArrayList<>();
-            for (AbstractEntity entity : chunk.entities) {
-                this.entities.add(entity.getEntityID());
-            }
         }
     }
 }

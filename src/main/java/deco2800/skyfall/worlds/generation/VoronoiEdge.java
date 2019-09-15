@@ -7,6 +7,7 @@ import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.BeachBiome;
 import deco2800.skyfall.worlds.biomes.RiverBiome;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
+import deco2800.skyfall.worlds.world.World;
 
 import java.util.*;
 
@@ -14,6 +15,8 @@ import java.util.*;
  * A class to represent an edge of a polygon in a Voronoi Diagram
  */
 public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
+    private World world;
+    private long edgeID;
 
     // The coordinates of the two endpoints of the edge
     private double[] pointA;
@@ -40,7 +43,6 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
      * @param memento the memento of the edge
      */
     public VoronoiEdge(VoronoiEdgeMemento memento) {
-        this.edgeNodes = new ArrayList<>();
         this.load(memento);
     }
 
@@ -49,8 +51,11 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
      *
      * @param pointA The first vertex of the edge
      * @param pointB The second vertex of the edge
+     * @param world The world the edge is in
      */
-    public VoronoiEdge(double[] pointA, double[] pointB) {
+    public VoronoiEdge(double[] pointA, double[] pointB, World world) {
+        this.world = world;
+        this.edgeID = System.nanoTime();
         this.pointA = pointA;
         this.pointB = pointB;
         this.pointANeighbours = new ArrayList<>();
@@ -495,6 +500,14 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
         return this.tiles;
     }
 
+    public void setWorld(World world) {
+        this.world = world;
+    }
+
+    public long getID() {
+        return this.edgeID;
+    }
+
     @Override
     public VoronoiEdgeMemento save() {
         return new VoronoiEdgeMemento(this);
@@ -502,36 +515,16 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
 
     @Override
     public void load(VoronoiEdgeMemento memento) {
-        // TODO
-        /*
-        this.edgeNodes.add(memento.nodeAID);
-        this.edgeNodes.add(memento.nodeBID);
-         */
         this.edgeNodes.add(new WorldGenNode(0, 0));
         this.edgeNodes.add(new WorldGenNode(0, 0));
 
         this.pointA = new double[] {memento.ax, memento.ay};
         this.pointB = new double[] {memento.bx, memento.by};
-        // TODO
-        /*
-        AbstractBiome biome = memento.biomeID;
-        if (memento.edgeType.equals("beach")) {
-            memento.nodeAID.worldID.getBeachEdges().put(this, biome);
-        } else if (memento.edgeType.equals("river")) {
-            memento.nodeAID.worldID.getRiverEdges().put(this, biome);
-        }
-        */
     }
 
     class VoronoiEdgeMemento extends AbstractMemento {
-        // The ID of the first edge node of this edge
-        private long nodeAID;
 
-        // The ID of the second edge node of this edge
-        private long nodeBID;
-
-        // null / river / beach
-        private String edgeType;
+        private long edgeID;
 
         private long biomeID;
 
@@ -548,20 +541,15 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
          * @param edge the edge this is for
          */
         public VoronoiEdgeMemento(VoronoiEdge edge) {
-            this.nodeAID = edge.getEdgeNodes().get(0).getID();
-            this.nodeAID = edge.getEdgeNodes().get(1).getID();
-            // Failsafe: world should never be null for a world that is being saved
 
-            // TODO Get this from world
-            if (beachEdges.containsKey(edge)) {
-                this.edgeType = "beach";
-                this.biomeID = beachEdges.get(edge).getID();
-            } else if (riverEdges.containsKey(edge)){
-                this.edgeType = "river";
-                this.biomeID = beachEdges.get(edge).getID();
+            this.edgeID = edge.edgeID;
+
+            if (edge.world.getBeachEdges().containsKey(edge)) {
+                this.biomeID = edge.world.getBeachEdges().get(edge).getBiomeID();
+            } else if (edge.world.getRiverEdges().containsKey(edge)){
+                this.biomeID = edge.world.getRiverEdges().get(edge).getBiomeID();
             } else {
                 // Failsafe: edges that aren't beaches or rivers shouldn't be saved
-                this.edgeType = "null";
                 this.biomeID = 0;
             }
             this.ax = edge.getA()[0];

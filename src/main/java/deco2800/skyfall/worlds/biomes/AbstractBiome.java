@@ -14,7 +14,7 @@ import java.util.Random;
  * Class that represents the biomes
  */
 public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBiomeMemento> {
-    private long id;
+    private int id;
     private long worldID;
 
     // The biome name, i.e forest, desert, mountain
@@ -43,7 +43,6 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
      * @param parentBiome The biome that the biome lives in, null if the biome has no parent
      */
     public AbstractBiome(String biomeName, AbstractBiome parentBiome) {
-        this.id = System.nanoTime();
         // this(biomeName, new ArrayList<>());
         this.biomeName = biomeName;
         setParentBiome(parentBiome);
@@ -166,6 +165,14 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
      */
     public abstract void setTileTexture(Tile tile);
 
+    public int getBiomeID() {
+        return this.id;
+    }
+
+    public void setBiomeID(int id) {
+        this.id = id;
+    }
+
     private void setWorldID(long worldID) {
         this.worldID = worldID;
     }
@@ -179,8 +186,6 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
     public void load(AbstractBiomeMemento memento) {
         this.worldID = memento.worldID;
         this.id = memento.biomeID;
-        // TODO
-        this.parentBiome = memento.parentBiomeID;
         // TODO type (could be done in switch statement in method that loads entire game)
     }
 
@@ -189,7 +194,7 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
         private long worldID;
 
         // The ID of this biome
-        private long biomeID;
+        private int biomeID;
 
         // The type of biome this is
         private String biomeType;

@@ -159,7 +159,6 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
             float x = (float) (random.nextFloat() - 0.5) * 2 * worldSize;
             float y = (float) (random.nextFloat() - 0.5) * 2 * worldSize;
             WorldGenNode node = new WorldGenNode(x, y);
-            node.setWorldID(this.id);
             worldGenNodes.add(node);
         }
         worldGenNodes.sort(null);
@@ -173,7 +172,7 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
 
         Tile.setNoiseGenerators(random, nodeSpacing);
         WorldGenNode.removeZeroTileNodes(worldGenNodes, nodeSpacing, worldSize);
-        WorldGenNode.assignNeighbours(worldGenNodes, voronoiEdges);
+        WorldGenNode.assignNeighbours(worldGenNodes, voronoiEdges, this);
         VoronoiEdge.assignNeighbours(voronoiEdges);
 
         BiomeGenerator biomeGenerator = new BiomeGenerator(this, worldGenNodes, voronoiEdges, random, worldParameters);

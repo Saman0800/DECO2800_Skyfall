@@ -207,6 +207,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
     private void growOcean() {
         OceanBiome realBiome = new OceanBiome(random);
         realBiomes.add(realBiome);
+        realBiome.setBiomeID(realBiomes.size() - 1);
 
         // All nodes on the outer edge of the map are ocean nodes.
         // Since the id is `biomeSizes.length`,
@@ -273,6 +274,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             AbstractBiome parentBiome = realBiomes.get(nodesBiomes.get(edge.getEdgeNodes().get(1 - oceanIndex)).id);
             BeachBiome beach = new BeachBiome(parentBiome, random);
             realBiomes.add(beach);
+            beach.setBiomeID(realBiomes.size() - 1);
             beachEdges.put(edge, beach);
         }
 
@@ -429,6 +431,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             // the list
             LakeBiome realBiome = new LakeBiome(realBiomes.get(maxNodesBiomes.get(i).id), random);
             realBiomes.add(realBiome);
+            realBiome.setBiomeID(realBiomes.size() - 1);
             lake.realBiome = realBiome;
             for (WorldGenNode node : chosenNodes.get(i)) {
                 // Update the BiomeInProgress that the node is in
@@ -536,6 +539,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             if (!nonDuplicateEdges.containsKey(allRiverEdges.get(i))) {
                 RiverBiome river = new RiverBiome(allParentBiomes.get(i), random);
                 realBiomes.add(river);
+                river.setBiomeID(realBiomes.size() - 1);
                 nonDuplicateEdges.put(allRiverEdges.get(i), river);
             }
         }

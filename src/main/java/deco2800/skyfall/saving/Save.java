@@ -14,11 +14,9 @@ public class Save implements Saveable<Save.SaveMemento> {
     // The ID of this save
     private long saveID;
 
-    // TODO delete
     // The worlds in this save
     private List<World> worlds;
 
-    // TODO delete
     // The ID of the main character in this save
     private MainCharacter mainCharacter;
 
@@ -29,7 +27,7 @@ public class Save implements Saveable<Save.SaveMemento> {
      * @param mainCharacter The main character in this save state
      */
     public Save(List<World> worlds, MainCharacter mainCharacter) {
-        // FIXME: this will become deprecated at 11:47:16pm AEST, Friday, April 11, 2262
+        // FIXME: this may break if a save is stored for ~293+ years
         this.saveID = System.nanoTime();
 
         this.worlds = worlds;
