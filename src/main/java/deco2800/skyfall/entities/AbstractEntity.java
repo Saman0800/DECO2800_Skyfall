@@ -51,7 +51,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     //Box2D properties
     private Body body;
-    private Fixture fixture;
+    protected Fixture fixture;
     private Boolean isCollidable;
 
 	@Expose
@@ -412,7 +412,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 */
 	public void defineFixture(){
 		CircleShape shape = new CircleShape();
-		shape.setRadius(0.2f);
+		shape.setRadius(0.4f);
 
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
@@ -483,7 +483,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 */
 	public void handleCollision(Object other) {
         //Does nothing as collision logic should be case specific
-		log.info("I was hit: " + this.getClass() + "\n by: " + other.getClass());
+			log.info("I was hit: " + this.getClass() + "\n by: " + other.getClass());
     }
 
     /**

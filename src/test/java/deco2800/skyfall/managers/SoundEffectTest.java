@@ -93,12 +93,12 @@ public class SoundEffectTest {
 
     @Test
     public void testPause() {
-        try {
+        try{
             SoundManager.playSound("people_walk_normal");
             TimeUnit.SECONDS.sleep(1);
             SoundManager.pauseSound("people_walk_normal");
             assertEquals(SoundManager.playSound("people_walk_normal"), false);
-        } catch (Exception e) {
+        } catch (Exception e){
             // exception caught
         }
     }

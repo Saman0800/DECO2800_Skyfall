@@ -1,12 +1,15 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.weapons.Axe;
+import deco2800.skyfall.entities.weapons.Bow;
+import deco2800.skyfall.entities.weapons.Spear;
+import deco2800.skyfall.entities.weapons.Sword;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.*;
 
-import java.lang.management.MonitorInfo;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -61,11 +64,16 @@ public class WorldDirector {
         builder.addEntity(mainCharacter);
         GameManager.getManagerFromInstance(GameMenuManager.class).setMainCharacter(mainCharacter);
 
-        builder.addEntity(new Spider(-4f, -1f, mainCharacter));
+        builder.addEntity(new Spider(-8f, -1f, mainCharacter));
         builder.addEntity(new Robot(-4, -2, mainCharacter));
-        builder.addEntity(new Stone(-4, -2, mainCharacter));
+        builder.addEntity(new Stone(-4, -3, mainCharacter));
         builder.addEntity(new Flower(2f,2f,mainCharacter));
         builder.addEntity(new Treeman(-2f,-3f,mainCharacter));
+
+//        builder.addEntity(new Sword(new Tile(-1f, 3f), "sword_tex", true));
+//        builder.addEntity(new Spear(new Tile(-1f, 5f), "spear_tex", true));
+//        builder.addEntity(new Bow(new Tile(-1f, 7f), "bow_tex", true));
+//        builder.addEntity(new Axe(new Tile(-1f, 9f), "axe_tex", true));
 
         return builder;
     }
