@@ -60,6 +60,9 @@ public class SoundManager extends AbstractManager {
                     (Gdx.files.internal(PATH + "be_hit.wav")));
             soundMap.put("player_died", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "died.wav")));
+            soundMap.put("beach_day", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "beach_day.wav")));
+
         } catch(Exception e) {
             LOGGER.error("no song be found");
         }
