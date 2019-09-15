@@ -273,6 +273,7 @@ public class GameScreen implements Screen,KeyDownObserver {
             save.getWorlds().add(world);
             save.setCurrentWorld(world);
             world.setSave(save);
+            DatabaseManager.get().getDataBaseConnector().saveGame(save);
 
             AbstractEntity.resetID();
             Tile.resetID();

@@ -265,6 +265,7 @@ public class DataBaseConnector {
 
 
             preparedStatement.close();
+            connection.setAutoCommit(true);
             return chunk;
         } catch (SQLException e){
             throw new RuntimeException(e);
