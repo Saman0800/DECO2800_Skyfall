@@ -57,6 +57,14 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
         this.load(memento);
     }
 
+    /**
+     * Gets the world of the chunk
+     * @return The world that the chunk is in
+     */
+    public World getWorld() {
+        return world;
+    }
+
     public Chunk(World world, int x, int y, ArrayList<Tile> tiles, ArrayList<AbstractEntity> entities) {
         this.world = world;
         this.x = x;
