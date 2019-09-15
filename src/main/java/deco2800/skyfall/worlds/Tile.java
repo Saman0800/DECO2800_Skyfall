@@ -170,7 +170,7 @@ public class Tile {
         int octaves = Math.max((int) Math.ceil(Math.log(startPeriod) / Math.log(2)) - 1, 1);
         double attenuation = Math.pow(0.9, 1d / octaves);
 
-        return new NoiseGenerator(random, octaves, startPeriod, attenuation);
+        return new NoiseGenerator(random.nextLong(), octaves, startPeriod, attenuation);
     }
 
     /**

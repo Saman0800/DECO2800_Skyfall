@@ -165,7 +165,7 @@ public class WorldBuilder implements WorldBuilderInterface {
             case "forest":
 
                 // Create a new perlin noise map
-                SpawnControl treeControl = x -> (x * x * x) / 3.0;
+                SpawnControl treeControl = x -> x / 3 + 0.2;
                 EntitySpawnRule treeRule = new EntitySpawnRule(tile -> new Tree(tile, true), biome, true, treeControl);
                 biomeSpawnRules.add(treeRule);
 
@@ -179,7 +179,7 @@ public class WorldBuilder implements WorldBuilderInterface {
                 biomeSpawnRules.add(rockRule);
 
                 // This generator will cause the mushrooms to clump togteher more
-                NoiseGenerator mushroomGen = new NoiseGenerator(new Random(worldSeed), 10, 20, 0.9);
+                NoiseGenerator mushroomGen = new NoiseGenerator(new Random(worldSeed).nextLong(), 10, 20, 0.9);
                 SpawnControl mushroomControl = x -> (x * x * x * x * x * x) / 3.0;
                 EntitySpawnRule mushroomRule =
                         new EntitySpawnRule(tile -> new ForestMushroom(tile, false), biome, true, mushroomControl);

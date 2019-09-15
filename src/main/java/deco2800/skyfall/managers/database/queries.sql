@@ -48,7 +48,6 @@ CREATE TABLE NODES
     data CLOB,
     biome_id bigint not null,
     primary key (node_id),
-    foreign key (world_id) references WORLDS(world_id),
     foreign key (biome_id, world_id) references BIOMES (biome_id,world_id)
 );
 
@@ -59,8 +58,7 @@ CREATE TABLE EDGES
     biome_id bigint,
     data clob,
     primary key (edge_id),
-    foreign key (biome_id, world_id) references BIOMES(biome_id),
-    foreign key (world_id) references WORLDS(world_id)
+    foreign key (biome_id, world_id) references BIOMES(biome_id, world_id)
 );
 
 

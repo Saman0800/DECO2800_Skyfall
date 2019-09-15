@@ -225,16 +225,26 @@ public class DataBaseConnector {
         return null;
     }
 
-    public Chunk loadChunk(int x, int y, World world) throws SQLException{
+    public Chunk loadChunk(World world,int x, int y) throws SQLException{
+
+        Gson gson = new Gson();
+
+
         String query = String.format("SELECT * FROM CHUNKS WHERE X=%s and Y=%s and WORLD_ID=%s", x, y, world.getID());
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(query);
 
 
 //        //FIXME:jeffvan12 create the chunk if the chunk does not exist and return the chunk
-//        if (!result.next()){
-        statement.close();
-        return new Chunk(world, x, y);
+        if (!result.next()) {
+            Chunk chunk = new Chunk(world, x, y);
+            chunk.generateEntities();
+            statement.close();
+            return chunk;
+        }
+
+        return new Chunk(gson.fromJson(result.getString(4), Chunk.ChunkMemento.class), world);
+
 
         //TODO:jeffvan12 else setup the chunks from the data
         //Adding the entities to the chunk
@@ -243,6 +253,12 @@ public class DataBaseConnector {
 
 
 
+    public static Chunk loadChunkAt(World world, int x, int y) {
+        // FIXME:Ontonator Implement.
+        Chunk chunk = new Chunk(world, x, y);
+        chunk.generateEntities();
+        return chunk;
+    }
 
 
 

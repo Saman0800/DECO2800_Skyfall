@@ -192,8 +192,8 @@ public class DelaunayTest {
         int startPeriod = nodeSpacing * 2;
         int octaves = Math.max((int) Math.ceil(Math.log(startPeriod) / Math.log(2)) - 1, 1);
         double attenuation = Math.pow(0.9, 1d / octaves);
-        NoiseGenerator xGen = new NoiseGenerator(noiseRandom2, octaves, startPeriod, attenuation);
-        NoiseGenerator yGen = new NoiseGenerator(noiseRandom2, octaves, startPeriod, attenuation);
+        NoiseGenerator xGen = new NoiseGenerator(noiseRandom2.nextLong(), octaves, startPeriod, attenuation);
+        NoiseGenerator yGen = new NoiseGenerator(noiseRandom2.nextLong(), octaves, startPeriod, attenuation);
 
         // Check that nodes are sorted
         for (int i = 0; i < nodes.size() - 1; i++) {

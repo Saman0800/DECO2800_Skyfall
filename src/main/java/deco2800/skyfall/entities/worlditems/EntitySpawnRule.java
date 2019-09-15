@@ -159,7 +159,7 @@ public class EntitySpawnRule {
         this.usePerlin = usePerlin;
 
         if (usePerlin) {
-            noiseGenerator = new NoiseGenerator(new Random(EntitySpawnRule.seed), 5, 20, 0.4);
+            noiseGenerator = new NoiseGenerator(new Random(EntitySpawnRule.seed).nextLong(), 5, 20, 0.4);
         }
     }
 

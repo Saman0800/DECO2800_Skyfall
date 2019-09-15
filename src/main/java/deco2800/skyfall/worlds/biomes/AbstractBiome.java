@@ -28,6 +28,8 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
     //The biomes id
     private long biomeId;
 
+    protected NoiseGenerator textureGenerator;
+
     /**
      * Constructor for a biome being loaded
      *
@@ -186,6 +188,7 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
         this.id = id;
     }
 
+
     private void setWorldID(long worldID) {
         this.worldID = worldID;
     }
@@ -214,10 +217,14 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
         // The ID of this Biome's parent
         private long parentBiomeID;
 
+        //Starting seed for the noise generator for the biome
+        protected long noiseGeneratorSeed ;
+
         private AbstractBiomeMemento(AbstractBiome biome) {
             this.worldID = biome.worldID;
             this.biomeID = biome.id;
             this.biomeType = biome.getBiomeName();
+            this.noiseGeneratorSeed = biome.textureGenerator.getSeed();
             if (biome.getParentBiome() == null) {
                 // TODO find a better value to represent null
                 this.parentBiomeID = -1;

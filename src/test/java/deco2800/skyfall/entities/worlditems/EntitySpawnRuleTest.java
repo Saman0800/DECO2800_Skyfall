@@ -55,7 +55,7 @@ public class EntitySpawnRuleTest {
         assertEquals(5.0, rule.getLimitAdjacentValue(), 0.001);
         assertTrue(rule.getLimitAdjacent());
 
-        NoiseGenerator newGenerator = new NoiseGenerator(new Random(), 2, 2.0, 0.3);
+        NoiseGenerator newGenerator = new NoiseGenerator(new Random().nextLong(), 2, 2.0, 0.3);
         rule.setNoiseGenerator(newGenerator);
         assertEquals(newGenerator, rule.getNoiseGenerator());
     }

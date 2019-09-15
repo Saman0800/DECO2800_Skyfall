@@ -61,7 +61,7 @@ public class TileNoiseGenerator {
      * Assigns each tile a perlin noise value
      */
     public void setTilesNoiseValues(BiConsumer<Tile, Double> setter){
-        NoiseGenerator noiseGenerator = new NoiseGenerator(random,  octaves, startPeriod, attenuation);
+        NoiseGenerator noiseGenerator = new NoiseGenerator(random.nextLong(),  octaves, startPeriod, attenuation);
         for (Tile tile : tiles){
             setter.accept(tile, noiseGenerator.getOctavedPerlinValue(tile.getRow() , tile.getCol()));
         }

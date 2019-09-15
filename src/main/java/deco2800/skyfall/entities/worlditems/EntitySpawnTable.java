@@ -70,7 +70,6 @@ public class EntitySpawnTable {
             chance = adjustChanceAdjacent(rule, nextTile, chance);
         }
 
-        // TODO:Ontonator Fix the distribution.
         if (world.getStaticEntityNoise().getOctavedPerlinValue(nextTile.getCol(), nextTile.getRow()) < chance) {
             StaticEntity newEntity = newInstance.apply(nextTile);
             int renderOrder = (int) (nextTile.getRow() * -2.0);

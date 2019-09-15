@@ -110,7 +110,7 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         tileOffsetNoiseGeneratorX = Tile.getOffsetNoiseGenerator(random, worldParameters.getNodeSpacing());
         tileOffsetNoiseGeneratorY = Tile.getOffsetNoiseGenerator(random, worldParameters.getNodeSpacing());
 
-        staticEntityNoise = new NoiseGenerator(random, 3, 4, 1.3);
+        staticEntityNoise = new NoiseGenerator(random.nextLong(), 3, 4, 1.3);
 
         loadedChunks = new HashMap<>();
 
