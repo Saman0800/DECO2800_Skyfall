@@ -215,7 +215,7 @@ public class EnvironmentManager extends TickableManager {
      */
     public void setTime(long i) {
         //Each day cycle goes for approx 24 minutes
-        long timeHours = (i / 600);
+        long timeHours = (i / 60000);
         //Check if observers need notifying, notifies if needed
         if (timeHours % 24 != hours) {
             updateTimeListeners(timeHours % 24);
