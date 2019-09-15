@@ -176,42 +176,40 @@ public class EnvironmentManagerTest {
         assertEquals(0, manager.getMonth());
     }
 
-//    @Test
-//    public void getSeasonTest() {
-//        // won't work because didn't use setMonth correctly
-//        ArrayList<Integer> monthList = new ArrayList<>();
-//        for (int i = 0; i < 13; i++) {
-//            monthList.add(i);
-//        }
-//
-//        for (int i = 3; i < 6; i++) {
-//            manager.monthInt = monthList.get(i);
-//            assertEquals("Autumn", manager.getSeason());
-//        }
-//
-//        for (int i = 6; i < 9; i++) {
-//            manager.monthInt = monthList.get(i);
-//            assertEquals("Winter", manager.getSeason());
-//        }
-//
-//        for (int i = 9; i < 12; i++) {
-//            manager.monthInt = monthList.get(i);
-//            assertEquals("Spring", manager.getSeason());
-//        }
-//
-//        // Testing Summer:
-//        manager.monthInt = 12;
-//        assertEquals("Summer", manager.getSeason());
-//
-//        for (int i = 0; i < 3; i++) {
-//            manager.monthInt = monthList.get(i);
-//            assertEquals("Summer", manager.getSeason());
-//        }
-//
-//        // Check an index not within 0 to 12
-//        manager.monthInt = 13;
-//        assertEquals("Invalid season", manager.getSeason());
-//    }
+    @Test
+    public void getSeasonTest() {
+
+        // Summer
+        for (int i = 0; i < 3; i++) {
+            manager.setMonthInt(i);
+            assertEquals("Summer", manager.getSeason());
+        }
+
+        manager.setMonthInt(12);
+        assertEquals("Summer", manager.getSeason());
+
+        // Autumn
+        for (int i = 3; i < 6; i++) {
+            manager.setMonthInt(i);
+            assertEquals("Autumn", manager.getSeason());
+        }
+
+        // Winter
+        for (int i = 6; i < 9; i++) {
+            manager.setMonthInt(i);
+            assertEquals("Winter", manager.getSeason());
+        }
+
+        // Spring
+        for (int i = 9; i < 12; i++) {
+            manager.setMonthInt(i);
+            assertEquals("Spring", manager.getSeason());
+        }
+
+        // Check an index not within 0 to 12
+        manager.setMonthInt(13);
+        assertEquals("Invalid season", manager.getSeason());
+    }
 
     @Test
     public void currentBiomeTest() {
@@ -273,15 +271,6 @@ public class EnvironmentManagerTest {
         } catch (Exception e) { /* Exception caught, if any */ }
     }
 
-//    @Test
-//    public void currentWeatherTest() {
-//        manager.weather = "snow";
-//        assertEquals(manager.currentWeather(), "snow");
-//
-//        manager.weather = "rain";
-//        assertEquals(manager.currentWeather(), "rain");
-//    }
-
     @Test
     public void biomeDisplayNameTest() {
         manager.biome = "forest";
@@ -307,4 +296,54 @@ public class EnvironmentManagerTest {
         manager.biome = "beach";
         assertEquals("Beach", manager.biomeDisplayName());
     }
+
+    @Test
+    public void currentWeatherTest() {
+        manager.setWeather("snow");
+        assertEquals("snow", manager.getcurrentWeather());
+
+        manager.setWeather("rain");
+        assertEquals("rain", manager.getcurrentWeather());
+    }
+
+    @Test
+    public void randomWeatherEventTest() {
+        // Test default
+        manager.setWeather(null);
+        assertTrue(manager.getcurrentWeather()== null);
+
+        manager.setBiomeString("forest");
+        manager.randomWeatherEvent();
+
+        assertTrue(manager.getcurrentWeather()!= null);
+
+        // Test desert
+        manager.setWeather(null);
+        assertTrue(manager.getcurrentWeather()== null);
+
+        manager.setBiomeString("desert");
+        manager.randomWeatherEvent();
+
+        assertTrue(manager.getcurrentWeather()!= null);
+
+        // Test volcanic_mountains
+        manager.setWeather(null);
+        assertTrue(manager.getcurrentWeather()== null);
+
+        manager.setBiomeString("volcanic_mountains");
+        manager.randomWeatherEvent();
+
+        assertTrue(manager.getcurrentWeather()!= null);
+
+        // Test snowy_mountains
+        manager.setWeather(null);
+        assertTrue(manager.getcurrentWeather()== null);
+
+        manager.setBiomeString("snowy_mountains");
+        manager.randomWeatherEvent();
+
+        assertTrue(manager.getcurrentWeather()!= null);
+    }
+
+
 }

@@ -63,6 +63,14 @@ public class Clock {
         }
     }
 
+    public String getClockTexture() {
+        return clockTexture;
+    }
+
+    public Image getClockDisplay() {
+        return clockDisplay;
+    }
+
     /**
      * Updates the clockDisplay and resizes if necessary
      */

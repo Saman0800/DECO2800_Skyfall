@@ -162,9 +162,9 @@ public class GameMenuScreen {
 
         gameMenuManager.addClock(clock);
 
-        //String currentWeather;
-        //currentWeather = EnvironmentManager.currentWeather();
-       // WeatherGui weather = new WeatherGui(stage, currentWeather); // need to have this for any weather
+        //String getcurrentWeather;
+        //getcurrentWeather = EnvironmentManager.getcurrentWeather();
+       // WeatherGui weather = new WeatherGui(stage, getcurrentWeather); // need to have this for any weather
         //gameMenuManager.addWeather(weather);
     }
 

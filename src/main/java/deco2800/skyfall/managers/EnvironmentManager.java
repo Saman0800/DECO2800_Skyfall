@@ -187,6 +187,13 @@ public class EnvironmentManager extends TickableManager {
     }
 
     /**
+     * Sets a biome string
+     */
+    public void setBiomeString(String location) {
+        biome = location;
+    }
+
+    /**
      * Gets current biome player is in
      *
      * @return String Current biome of player, or null if player is moving between tiles
@@ -302,6 +309,10 @@ public class EnvironmentManager extends TickableManager {
         //Each month goes for approx 30 days
         long timeMonth = (i / 60000) / 730;
         month = timeMonth % 12;
+    }
+
+    public void setMonthInt(int month) {
+        monthInt = month;
     }
 
     /**
@@ -436,12 +447,20 @@ public class EnvironmentManager extends TickableManager {
     }
 
     /**
-     * Gets current biome player is in
+     * The weather event that is happening
      *
-     * @return String Current biome of player, or null if player is moving between tiles
+     * @return The current weather event
      */
-    public String currentWeather() {
+    public String getcurrentWeather() {
         return weather;
+    }
+
+    /**
+     * Sets a weather event
+     * @param event the weather event to occur
+     */
+    public void setWeather(String event) {
+        weather = event;
     }
 
     /**
@@ -468,7 +487,7 @@ public class EnvironmentManager extends TickableManager {
                     previousBiome = biome;
                     break;
                 default:
-                    weatherList = Arrays.asList(defaultWeather, rain, storm, snow);
+                    weatherList = Arrays.asList(defaultWeather, rain, storm);
                     previousBiome = biome;
                     break;
             }
@@ -476,15 +495,6 @@ public class EnvironmentManager extends TickableManager {
 
         randomElement = weatherList.get(rand.nextInt(weatherList.size()));
         weather = randomElement;
-    }
-
-    /**
-     * Sets a certain weather event in game.
-     *
-     * @param event the weather event to occur
-     */
-    public void setRandomWeatherEvent(String event) {
-        weather = event;
     }
 
     /**
@@ -506,7 +516,7 @@ public class EnvironmentManager extends TickableManager {
         // Set Background music as per the specific biome and TOD
         setBiome();
         setTODMusic();
-        currentWeather();
+        getcurrentWeather();
 
         // Key mapping to mute volume
         // M for mute and U to un-mute
