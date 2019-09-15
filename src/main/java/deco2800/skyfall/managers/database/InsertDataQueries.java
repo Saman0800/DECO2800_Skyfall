@@ -42,10 +42,10 @@ public class InsertDataQueries {
         statement.executeUpdate(query);
     }
 
-    public void insertBiome(int biomeId, int worldId, String biomeType, String tileGenerator, String data) throws SQLException{
+    public void insertBiome(int biomeId, long worldId, String biomeType, String data) throws SQLException{
 
-        String query = String.format("insert into BIOMES (biome_id, world_id, biome_type, tile_generator, 'data) "
-            + "values (%s,%s, '%s', '%s', '%s')", biomeId, worldId, biomeType, tileGenerator, data);
+        String query = String.format("insert into BIOMES (biome_id, world_id, biome_type, 'data) "
+            + "values (%s,%s, '%s', '%s')", biomeId, worldId, biomeType, data);
         statement.executeUpdate(query);
     }
 

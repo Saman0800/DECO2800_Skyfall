@@ -6,6 +6,7 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.saving.Saveable;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.world.Chunk;
@@ -121,11 +122,26 @@ public class DataBaseConnector {
         insertQueries.insertWorld(world.getSave().getSaveID(), world.getID(),
                 world.getSave().getCurrentWorld().getID() == world.getID(), gson.toJson(world.save()));
 
+        for (AbstractBiome biome : world.getBiomes()) {
+            System.out.println("here0");
+            try {
+                insertQueries.insertBiome(biome.getBiomeID(), world.getID(), biome.getBiomeName(), gson.toJson(biome.save()));
+            } catch (SQLException e) {
+                System.out.println(e);
+                throw e;
+            }
+        }
+
         // Save nodes
         for (WorldGenNode worldGenNode : world.getWorldGenNodes()) {
             System.out.println("here1");
-            insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(),
-                    gson.toJson(worldGenNode.save()), worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
+            try {
+                insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(),
+                        gson.toJson(worldGenNode.save()), worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
+            } catch (SQLException e) {
+                System.out.println(e);
+                throw e;
+            }
         }
 
         // Save beach edges

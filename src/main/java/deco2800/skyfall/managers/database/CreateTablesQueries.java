@@ -36,7 +36,6 @@ public class CreateTablesQueries {
             "    biome_id       bigint not null ," +
             "    world_id       bigint not null ," +
             "    biome_type     CLOB ," +
-            "    tile_generator blob not null ," +
             "    data CLOB," +
             "    primary key (biome_id, world_id)," +
             "    foreign key (world_id) references WORLDS(world_id)" +
