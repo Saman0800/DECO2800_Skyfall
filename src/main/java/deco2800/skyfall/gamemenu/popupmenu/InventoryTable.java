@@ -38,7 +38,8 @@ public class InventoryTable extends AbstractPopUpElement {
             LoggerFactory.getLogger(InventoryManager.class);
 
 
-    public InventoryTable(Stage stage, ImageButton exitButton, String[] textureNames, TextureManager tm, Skin skin, GameMenuManager gameMenuManager) {
+    public InventoryTable(Stage stage, ImageButton exitButton, String[]
+            textureNames, TextureManager tm, Skin skin, GameMenuManager gameMenuManager) {
         super(stage, exitButton, textureNames, tm, gameMenuManager);
         this.skin = skin;
         this.gameMenuManager = gameMenuManager;
@@ -75,6 +76,62 @@ public class InventoryTable extends AbstractPopUpElement {
     public void draw() {
         super.draw();
 
+        inventoryTable = setBaseInventoryTable();
+        Table infoBar = setHeading();
+        Table infoPanel = setInfoPanel();
+        updateResourcePanel();
+        setButtons();
+
+        inventoryTable.addActor(infoBar);
+        inventoryTable.addActor(infoPanel);
+        inventoryTable.addActor(dropButton);
+        inventoryTable.addActor(inactiveDropButton);
+        inventoryTable.addActor(equipButton);
+        inventoryTable.addActor(inactiveEquipButton);
+        inventoryTable.addActor(addqaButton);
+        inventoryTable.addActor(inactiveAddqaButton);
+
+        inventoryTable.setVisible(false);
+        stage.addActor(inventoryTable);
+    }
+
+    /***
+     * Updates the resources panel to display the current inventory contents.
+     */
+    protected void updateResourcePanel(){
+        if(resourcePanel != null){
+            inventoryTable.removeActor(resourcePanel);
+        }
+
+        resourcePanel = setResourcePanel();
+
+        Map<String, Integer> inventoryAmounts = gameMenuManager.getInventory().getAmounts();
+
+        setCounts(inventoryAmounts, 115, 215, 80, 20);
+
+        inventoryTable.addActor(this.resourcePanel);
+
+    }
+
+    private void setButtonsActive(boolean active){
+        if(active){
+            inactiveAddqaButton.setVisible(false);
+            inactiveDropButton.setVisible(false);
+            inactiveEquipButton.setVisible(false);
+            addqaButton.setVisible(true);
+            equipButton.setVisible(true);
+            dropButton.setVisible(true);
+        }else{
+            inactiveAddqaButton.setVisible(true);
+            inactiveDropButton.setVisible(true);
+            inactiveEquipButton.setVisible(true);
+            addqaButton.setVisible(false);
+            equipButton.setVisible(false);
+            dropButton.setVisible(false);
+        }
+    }
+
+    private Table setBaseInventoryTable(){
         inventoryTable = new Table();
         inventoryTable.setSize(910, 510);
         inventoryTable.setPosition(Gdx.graphics.getWidth()/2f - inventoryTable.getWidth()/2,
@@ -84,6 +141,10 @@ public class InventoryTable extends AbstractPopUpElement {
         inventoryTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
         inventoryTable.setName("inventoryTable");
 
+        return inventoryTable;
+    }
+
+    private Table setHeading(){
         Table infoBar = new Table();
         infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
         infoBar.setSize(650, 55);
@@ -92,13 +153,19 @@ public class InventoryTable extends AbstractPopUpElement {
         Label text = new Label("INVENTORY", skin, "black-text");
         infoBar.add(text);
 
+        return infoBar;
+    }
+
+    private Table setInfoPanel(){
         Table infoPanel = new Table();
         infoPanel.setSize(410, 320);
         infoPanel.setPosition(25, 98);
         infoPanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
 
-        updateResourcePanel();
+        return infoPanel;
+    }
 
+    private void setButtons(){
         this.inactiveDropButton = new ImageButton(generateTextureRegionDrawableObject("drop inactive"));
         this.inactiveDropButton.setSize(100, 60);
         this.inactiveDropButton.setPosition(285, 20);
@@ -113,14 +180,7 @@ public class InventoryTable extends AbstractPopUpElement {
                 if(inventorySelected != null){
                     inventory.dropAll(inventorySelected);
                     inventorySelected = null;
-
-                    inactiveAddqaButton.setVisible(true);
-                    inactiveDropButton.setVisible(true);
-                    inactiveEquipButton.setVisible(true);
-                    addqaButton.setVisible(false);
-                    equipButton.setVisible(false);
-                    dropButton.setVisible(false);
-
+                    setButtonsActive(false);
                     updateResourcePanel();
                     gameMenuBar.removeQuickAccessPanel();
                     gameMenuBar.setQuickAccessPanel();
@@ -142,14 +202,7 @@ public class InventoryTable extends AbstractPopUpElement {
                 if(inventorySelected != null) {
                     mainCharacter.setEquippedItem(inventory.drop(inventorySelected));
                     inventorySelected = null;
-
-                    inactiveAddqaButton.setVisible(true);
-                    inactiveDropButton.setVisible(true);
-                    inactiveEquipButton.setVisible(true);
-                    addqaButton.setVisible(false);
-                    equipButton.setVisible(false);
-                    dropButton.setVisible(false);
-
+                    setButtonsActive(false);
                     updateResourcePanel();
                     gameMenuBar.removeQuickAccessPanel();
                     gameMenuBar.setQuickAccessPanel();
@@ -176,41 +229,20 @@ public class InventoryTable extends AbstractPopUpElement {
                 }
             }
         });
-
-        inventoryTable.addActor(infoBar);
-        inventoryTable.addActor(infoPanel);
-        inventoryTable.addActor(dropButton);
-        inventoryTable.addActor(inactiveDropButton);
-        inventoryTable.addActor(equipButton);
-        inventoryTable.addActor(inactiveEquipButton);
-        inventoryTable.addActor(addqaButton);
-        inventoryTable.addActor(inactiveAddqaButton);
-
-        inventoryTable.setVisible(false);
-        stage.addActor(inventoryTable);
     }
 
-    /***
-     * Updates the resources panel to display the current inventory contents.
-     */
-    protected void updateResourcePanel(){
-        if(resourcePanel != null){
-            inventoryTable.removeActor(resourcePanel);
-        }
-
+    private Table setResourcePanel(){
         resourcePanel = new Table();
         resourcePanel.setName("resourcePanel");
         resourcePanel.setSize(410, 320);
         resourcePanel.setPosition(475, 98);
         resourcePanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
 
-        Map<String, Integer> inventoryAmounts = gameMenuManager.getInventory().getAmounts();
+        return resourcePanel;
+    }
 
+    private void setCounts(Map<String, Integer> inventoryAmounts, int xpos, int ypos, int size, int xspace){
         int count = 0;
-        int xpos = 115;
-        int ypos = 215;
-        int size = 80;
-        int xspace = 20;
 
         for (Map.Entry<String, Integer> entry : inventoryAmounts.entrySet()) {
             Image selected = new Image(generateTextureRegionDrawableObject("selected"));
@@ -237,14 +269,7 @@ public class InventoryTable extends AbstractPopUpElement {
 
                     if(selected.isVisible()){
                         selected.setVisible(false);
-
-                        inactiveAddqaButton.setVisible(true);
-                        inactiveDropButton.setVisible(true);
-                        inactiveEquipButton.setVisible(true);
-
-                        addqaButton.setVisible(false);
-                        equipButton.setVisible(false);
-                        dropButton.setVisible(false);
+                        setButtonsActive(false);
 
                     }else{
                         for(Actor actor: resourcePanel.getChildren()){
@@ -256,13 +281,7 @@ public class InventoryTable extends AbstractPopUpElement {
 
                         selected.setVisible(true);
 
-                        inactiveAddqaButton.setVisible(false);
-                        inactiveDropButton.setVisible(false);
-                        inactiveEquipButton.setVisible(false);
-
-                        addqaButton.setVisible(true);
-                        equipButton.setVisible(true);
-                        dropButton.setVisible(true);
+                        setButtonsActive(true);
                     }
 
                 }
@@ -291,10 +310,6 @@ public class InventoryTable extends AbstractPopUpElement {
                 count = 0;
             }
         }
-
-        inventoryTable.addActor(this.resourcePanel);
-
     }
-
 
 }
