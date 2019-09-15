@@ -142,7 +142,7 @@ public class MainCharacter extends Peon
     /**
      * The spell the user currently has selected to cast.
      */
-    private SpellType spellSelected = SpellType.NONE;
+    protected SpellType spellSelected = SpellType.NONE;
 
     /**
      * How much mana the character has available for spellcasting.
@@ -310,10 +310,8 @@ public class MainCharacter extends Peon
      *
      * @param mousePosition The position of the user's mouse.
      */
-    private void fireProjectile(HexVector mousePosition) {
-        //TODO: Call weapon.Attack(); and move this logic to the weapon.
+    protected void fireProjectile(HexVector mousePosition) {
         HexVector position = this.getPosition();
-
 
         setCurrentState(AnimationRole.ATTACK);
         SoundManager.playSound(BOWATTACK);
@@ -331,7 +329,7 @@ public class MainCharacter extends Peon
         GameManager manager = GameManager.get();
 
         // Add the projectile entity to the game world.
-        GameManager.get().getWorld().addEntity(projectile);
+        manager.getWorld().addEntity(projectile);
     }
 
     /**
