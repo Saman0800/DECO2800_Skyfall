@@ -1417,8 +1417,10 @@ public class MainCharacter extends Peon
                         switch(newItem.getName()){
                             case "Hatchet":
                                 this.getInventoryManager().add(new Hatchet());
+                                break;
                             case "Pick Axe":
                                 this.getInventoryManager().add(new PickAxe());
+                                break;
 
                                 //These are only placeholders and will change once coordinated
                                 //with Building team
