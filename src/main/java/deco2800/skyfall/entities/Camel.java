@@ -25,6 +25,13 @@ public class Camel extends VehicleEntity {
         this.setHealth(HEALTH);
     }
 
+    public Camel(float col, float row) {
+        super(col,row);
+        this.setTexture("camel_character");
+        this.setObjectName("camel_character");
+        this.setHeight(1);
+    }
+
     public Camel(float row, float col, String textureName, int damage) {
         super(row, col, textureName, damage);
     }
