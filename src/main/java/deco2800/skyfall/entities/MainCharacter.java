@@ -369,6 +369,10 @@ public class MainCharacter extends Peon
         this.equipped = item;
     }
 
+    public void unequip() {
+        this.equipped = "no_weapon";
+    }
+
     /**
      * Set the mana the character has available.
      *

@@ -219,12 +219,7 @@ public class InventoryManager extends TickableManager {
      * @param item the item to add to the inventory, implements Item interface.
      */
     public boolean inventoryAdd(Item item) {
-        String name;
-        if (item instanceof Weapon) {
-            name = item.getName() + "_tex";
-        } else {
-            name = item.getName();
-        }
+        String name = item.getName();
 
         if (this.inventory.get(name) != null) {
             List<Item> itemsList = this.inventory.get(name);

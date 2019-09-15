@@ -23,10 +23,10 @@ public class WeaponManagerTest {
     public void setup() {
         testCharacter = new MainCharacter(0f, 0f,
                 0.05f, "Main Piece", 10);
-        sword = new Sword(new Tile(0, 0), false);
-        spear = new Spear(new Tile(0, 0), false);
-        bow = new Bow(new Tile(0, 0), false);
-        axe = new Axe(new Tile(0, 0), false);
+        sword = new Sword(new Tile(0, 0), true);
+        spear = new Spear(new Tile(0, 0), true);
+        bow = new Bow(new Tile(0, 0), true);
+        axe = new Axe(new Tile(0, 0), true);
     }
 
     @After
@@ -65,7 +65,7 @@ public class WeaponManagerTest {
         testCharacter.dropInventory("axe");
     }
 
-    @Ignore
+
     @Test
     /**
      * Tests basic pickup works
@@ -78,7 +78,7 @@ public class WeaponManagerTest {
         Assert.assertEquals(testCharacter.getInventoryManager().getTotalAmount(), 15);
     }
 
-    @Ignore
+
     @Test
     /**
      * Test that weapon dropping works
@@ -97,7 +97,7 @@ public class WeaponManagerTest {
         Assert.assertEquals(testCharacter.getInventoryManager().getTotalAmount(), 10);
     }
 
-    @Ignore
+
     @Test
     /**
      * Test return methods for weapons map, toString and equipped list are

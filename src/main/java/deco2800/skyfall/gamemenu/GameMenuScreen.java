@@ -444,7 +444,15 @@ public class GameMenuScreen {
 
         for (Map.Entry<String, Integer> entry : quickAccess.entrySet()) {
 
-            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey()));
+            ImageButton icon = null;
+            String[] weapons = {"axe", "bow", "spear", "sword"};
+            for (String weapon : weapons) {
+                if (weapon.equals(entry.getKey())) {
+                    icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey() + "_tex"));
+                } else {
+                    icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey()));
+                }
+            }
             icon.setSize(60, 60);
             icon.setPosition(xpos + 68*count, ypos);
 
