@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.pets.Dragon;
 import deco2800.skyfall.entities.pets.DragonHome;
+import deco2800.skyfall.entities.pets.Whitebear;
 import deco2800.skyfall.gamemenu.GameMenuScreen;
 
 import deco2800.skyfall.entities.AbstractEntity;
@@ -608,6 +609,13 @@ public class World implements TouchDownObserver {
                 gmm.getInventory().inventoryAdd((Item) entity);
                 removeEntity(entity);
             } else if (entity instanceof Dragon){
+                if (tile.getCoordinates().distance(gmm.getMainCharacter().getPosition()) > 2) {
+                    continue;
+                }
+                gmm.getInventory().inventoryAdd((Item) entity);
+                removeEntity(entity);
+            }
+            else if (entity instanceof Whitebear){
                 if (tile.getCoordinates().distance(gmm.getMainCharacter().getPosition()) > 2) {
                     continue;
                 }
