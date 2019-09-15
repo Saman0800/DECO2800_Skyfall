@@ -30,7 +30,7 @@ public class InsertDataQueries {
         statement.executeUpdate(query);
     }
 
-    public void insertNodes(int worldId, int xPos, int yPos, String data, int nodeId) throws SQLException{
+    public void insertNodes(long worldId, double xPos, double yPos, String data, long nodeId) throws SQLException{
         String query = String.format("insert into NODES (world_id, x_pos, y_pos, data, node_id) values (%s, %s, %s, "
                 + "'%s',%s)", worldId, xPos, yPos, data, nodeId);
         statement.executeUpdate(query);

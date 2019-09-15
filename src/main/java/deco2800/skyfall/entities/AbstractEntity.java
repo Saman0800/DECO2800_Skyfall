@@ -9,7 +9,10 @@ import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.PhysicsManager;
+import deco2800.skyfall.managers.SaveLoadInterface;
 import deco2800.skyfall.renderers.Renderable;
+import deco2800.skyfall.saving.AbstractMemento;
+import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
@@ -23,7 +26,7 @@ import java.util.*;
  * AbstractEntities are rendered by Render2D and Render3D An item that does not
  * need to be rendered should not be a WorldEntity
  */
-public abstract class AbstractEntity implements Comparable<AbstractEntity>, Renderable {
+public abstract class AbstractEntity implements Comparable<AbstractEntity>, Renderable, Saveable<AbstractEntity.AbstractEntityMemento> {
 	private static final String ENTITY_ID_STRING = "entityID";
 	
 	@Expose
@@ -35,8 +38,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		nextID = 0;
 	}
 
-	protected static int getNextID() {
-		return nextID++;
+	protected static long getNextID() {
+		return System.nanoTime();
 	}
 
     private Collider collider;
@@ -55,7 +58,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	private String texture = "error_box";
 
 	@Expose
-	private int entityID = 0;
+	private long entityID = 0;
 
 	/** Whether an entity should trigger a collision when */
 	private boolean collidable = true; 
@@ -348,7 +351,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	}
 	
 	
-	public int getEntityID() {
+	public long getEntityID() {
 		return entityID;
 	}
 
@@ -568,7 +571,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
 
-    /**
+
+	/**
      * How much to scale the texture by.
      * Used in MainCharacter to scale down the texture
      * @return Scale multiplicative factor.
@@ -585,6 +589,27 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		return body;
 	}
 
+	public AbstractEntityMemento save(){
+
+
+
+	    return new AbstractEntityMemento(this);
+	}
+
+	public void load(AbstractEntityMemento saveInfo){
+
+	}
+
+	class AbstractEntityMemento extends AbstractMemento {
+		private long entityID;
+
+
+		public AbstractEntityMemento(AbstractEntity entity){
+			entityID = entity.entityID;
+
+		}
+
+	}
 }
 
 

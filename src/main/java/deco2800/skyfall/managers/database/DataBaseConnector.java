@@ -2,6 +2,8 @@ package deco2800.skyfall.managers.database;
 
 import com.google.gson.Gson;
 import deco2800.skyfall.saving.Save;
+import deco2800.skyfall.worlds.generation.VoronoiEdge;
+import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
 import java.io.ByteArrayOutputStream;
@@ -101,43 +103,64 @@ public class DataBaseConnector {
 
         //Looping through the worlds in the save and saving them
         for (World world : save.getWorlds()){
-            long currentWorldId = world.getWorldId();
+            long currentWorldId = world.getID();
 
             //Saving the world
-            insertQueries.insertWorld(saveId, world.getWorldId(),
-                save.getCurrentWorld().getWorldId() == currentWorldId, gson.toJson(world.save()));
-
-
-
-
-
-
-            //Looping through each world and saving it's data
-
+            insertQueries.insertWorld(saveId, world.getID(),
+                save.getCurrentWorld().getID() == currentWorldId, gson.toJson(world.save()));
 
             //TODO:Figuring out which world needs to be saved
         }
         statement.close();
     }
 
-
-
-    public World loadWorld(long worldId) throws SQLException{
-        String query = String.format("SELECT * FROM WORLDS WHERE WORLD_ID = %s", worldId);
+    //Svaing the world and its parameters
+    public void SaveWorld(World world) throws SQLException{
         Statement statement = connection.createStatement();
-        ResultSet result = statement.executeQuery(query);
+        InsertDataQueries insertQueries = new InsertDataQueries(statement);
+        Gson gson = new Gson();
 
-        if (!result.next()){
-            return null;
+        insertQueries.insertWorld(world.getSave().getSaveID(), world.getID(),
+                world.getSave().getCurrentWorld().getID() == world.getID(), gson.toJson(world.save()));
+
+        for (WorldGenNode worldGenNode : world.getWorldGenNodes()) {
+            insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(),
+                    gson.toJson(worldGenNode.save()), worldGenNode.getID());
         }
 
-        //TODO load the nodes
-        // Load the edges
-        // Load the biomes
-        // Add all this stuff to the world class
 
+        for (VoronoiEdge voronoiEdge : world.getBeachEdges().keySet()) {
+            insertQueries.insertEdges();
+        }
+
+
+
+
+
+
+        statement.close();
 
     }
+
+
+//    public World loadWorld(long worldId) throws SQLException{
+//        String query = String.format("SELECT * FROM WORLDS WHERE WORLD_ID = %s", worldId);
+//        Statement statement = connection.createStatement();
+//        ResultSet result = statement.executeQuery(query);
+//
+//        if (!result.next()){
+//            return null;
+//        }
+//
+//        //TODO load the nodes
+//        // Load the edges
+//        // Load the biomes
+//        // Add all this stuff to the world class
+//
+//
+//        return new World();
+//
+//    }
 
 
     /**
@@ -161,7 +184,7 @@ public class DataBaseConnector {
     }
 
     public Chunk loadChunk(int x, int y, World world) throws SQLException{
-        String query = String.format("SELECT * FROM CHUNKS WHERE X=%s and Y=%s and WORLD_ID=%s", x, y, world.getWorldId());
+        String query = String.format("SELECT * FROM CHUNKS WHERE X=%s and Y=%s and WORLD_ID=%s", x, y, world.getID());
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(query);
 
