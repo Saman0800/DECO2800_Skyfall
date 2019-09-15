@@ -181,7 +181,7 @@ public class Renderer3D implements Renderer {
         int w = TextureManager.TILE_WIDTH;
         int h = TextureManager.TILE_HEIGHT;
 
-        boolean renderDebug = true; // For debugging hitboxes
+        boolean renderDebug = false; // For debugging hitboxes
         if (renderDebug) {
             World box2DWorld = GameManager.get().getManager(PhysicsManager.class).getBox2DWorld();
             Array<Body> bodies = new Array<>();
