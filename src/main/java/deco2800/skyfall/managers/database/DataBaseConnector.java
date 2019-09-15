@@ -594,7 +594,6 @@ public class DataBaseConnector {
     public Chunk loadChunk(World world,int x, int y){
         try{
             Gson gson = new Gson();
-            //TODO:jeffvan12 Make it so it uses a preparedStatement
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM CHUNKS WHERE X = ? and Y = ? and WORLD_ID = ?");
             preparedStatement.setInt(1,x);
