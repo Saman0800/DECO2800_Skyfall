@@ -1,6 +1,5 @@
 package deco2800.skyfall;
 
-import java.lang.Math;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.*;
@@ -135,7 +134,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         /* Add environment to game manager */
         EnvironmentManager gameEnvironManag = gameManager.getManager(EnvironmentManager.class);
         // For debuggin only!
-        gameEnvironManag.setTime(5, 0);
+        gameEnvironManag.setTime(12, 0);
 
         /* Add BGM to game manager */
         gameManager.addManager(new BGMManager());
@@ -158,7 +157,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         ambientIntensity = new FunctionalSpectralValue(intensityFunction, gameEnvironManag);
 
         // Create the rgb spectral values
-        ArrayList<TFTuple> redKeyFrame = new ArrayList<TFTuple>();
+        ArrayList<TFTuple> redKeyFrame = new ArrayList<>();
         redKeyFrame.add(new TFTuple(0.0f, 0.15f));
         redKeyFrame.add(new TFTuple(5.0f, 0.15f));
         redKeyFrame.add(new TFTuple(5.5f, 0.2f));
@@ -171,7 +170,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         redKeyFrame.add(new TFTuple(19.0f, 0.15f));
         ambientRed = new LinearSpectralValue(redKeyFrame, gameEnvironManag);
 
-        ArrayList<TFTuple> greenKeyFrame = new ArrayList<TFTuple>();
+        ArrayList<TFTuple> greenKeyFrame = new ArrayList<>();
         greenKeyFrame.add(new TFTuple(0.0f, 0.12f));
         greenKeyFrame.add(new TFTuple(5.0f, 0.12f));
         greenKeyFrame.add(new TFTuple(5.5f, 0.2f));
@@ -184,7 +183,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         greenKeyFrame.add(new TFTuple(19.0f, 0.12f));
         ambientGreen = new LinearSpectralValue(greenKeyFrame, gameEnvironManag);
 
-        ArrayList<TFTuple> blueKeyFrame = new ArrayList<TFTuple>();
+        ArrayList<TFTuple> blueKeyFrame = new ArrayList<>();
         blueKeyFrame.add(new TFTuple(0.0f, 0.19f));
         blueKeyFrame.add(new TFTuple(5.0f, 0.19f));
         blueKeyFrame.add(new TFTuple(5.5f, 0.6f));

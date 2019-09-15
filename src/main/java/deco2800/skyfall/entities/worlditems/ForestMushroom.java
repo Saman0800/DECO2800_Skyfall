@@ -6,7 +6,6 @@ import deco2800.skyfall.graphics.types.vec2;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.graphics.types.*;
 import deco2800.skyfall.graphics.*;
-import deco2800.skyfall.util.WorldUtil;
 import java.util.Random;
 
 public class ForestMushroom extends StaticEntity implements HasPointLight {

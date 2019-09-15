@@ -88,7 +88,7 @@ public class Tile {
     /**
      * Returns a integer to represent the tile type
      * @param tileType Name of tile texture
-     * @return
+     * @return int representation of the tile type
      */
     public static int getTileType(String tileType) {
         if (tileType.contains("ice")) {

@@ -697,7 +697,7 @@ public class GameMenuScreen {
      * @param characterTables Array of Tables for Images of character to add on.
      * @param characterTableWidth Width of each characterTable.
      */
-    private void updateCharacters(Table characterTables[], float characterTableWidth) {
+    private void updateCharacters(Table[] characterTables, float characterTableWidth) {
         for (int i = currentCharacter; i < currentCharacter + 3; i++) {
             Table characterTable = characterTables[i - currentCharacter];
             characterTable.clearChildren();

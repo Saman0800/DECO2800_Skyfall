@@ -121,10 +121,8 @@ public class EnvironmentManagerTest {
         manager.getTOD();
         assertEquals("6:00pm", manager.getTOD());
 
-        manager.setTime(19,0);
-        assertFalse(manager.isDay());
-
-        assertEquals("7:00pm", manager.getTOD());
+        manager.setTime(12,0);
+        assertEquals("12:00pm", manager.getTOD());
     }
 
     @Test
@@ -364,5 +362,9 @@ public class EnvironmentManagerTest {
         assertTrue(manager.getcurrentWeather()!= null);
     }
 
-
+    @Test
+    public void getHourDecimalTest() {
+        manager.setTime(24, 80);
+        assertEquals(1, manager.getHourDecimal(), 0);
+    }
 }

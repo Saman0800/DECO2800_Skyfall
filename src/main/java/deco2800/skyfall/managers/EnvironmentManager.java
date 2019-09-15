@@ -76,14 +76,19 @@ public class EnvironmentManager extends TickableManager {
 
 
     /**
-     * Constructor
+     * Constructor for setting up the environment
      */
     public EnvironmentManager() throws NoSuchAlgorithmException {
+        // Music file setup
         file = "resources/sounds/forest_day.wav";
         currentFile = "resources/sounds/forest_night.wav";
+
+        // Time setup
         timeListeners = new ArrayList<>();
         dayNightListeners = new ArrayList<>();
         currentMillis = System.currentTimeMillis();
+
+        // Weather setup
         previousBiome = null;
         weatherList = Arrays.asList(defaultWeather);
         weather = defaultWeather;
@@ -188,6 +193,8 @@ public class EnvironmentManager extends TickableManager {
 
     /**
      * Sets a biome string
+     *
+     * @param location The current biome that will be set
      */
     public void setBiomeString(String location) {
         biome = location;
@@ -233,8 +240,8 @@ public class EnvironmentManager extends TickableManager {
         //Check if observers need notifying, notifies if needed
         if (mins >= 60) {
             hours += 1;
-            if (hours == 24) {
-                hours = 0;
+            if (hours >= 24) {
+                hours = hours - 24;
             }
             minutes = 0;
             updateTimeListeners(hours);
@@ -311,7 +318,13 @@ public class EnvironmentManager extends TickableManager {
         month = timeMonth % 12;
     }
 
+    /**
+     * Sets the month in game as an integer.
+     *
+     * @param month the month (from 1-12)
+     */
     public void setMonthInt(int month) {
+        // Set month as int
         monthInt = month;
     }
 
@@ -331,7 +344,10 @@ public class EnvironmentManager extends TickableManager {
      * @return String The month
      */
     public String getSeason() {
+        // The current season
         String seasonString;
+
+        // Check month conditions
         if (monthInt == 1 || monthInt == 2 || monthInt == 12 || monthInt == 0) {
             seasonString = "Summer";
         } else if (monthInt == 3 || monthInt == 4 || monthInt == 5) {
@@ -351,9 +367,11 @@ public class EnvironmentManager extends TickableManager {
      * Format for filenames: "biome_day/night" e.g. "forest_day"
      */
     public void setFilename() {
+        // Check environment
         isDay();
-        currentBiome(); // Check current biome
+        currentBiome();
 
+        // Name file accordingly
         String filename = "day.wav";
         filename = isDay() ? filename : "night.wav";
 
@@ -378,6 +396,7 @@ public class EnvironmentManager extends TickableManager {
      */
     public void setTODMusic() {
 
+        // Check if there is a file
         if (!(file.contains(currentFile))) {
             setFilename();
 
@@ -449,7 +468,7 @@ public class EnvironmentManager extends TickableManager {
     /**
      * The weather event that is happening
      *
-     * @return The current weather event
+     * @return String The current weather event
      */
     public String getcurrentWeather() {
         return weather;
@@ -457,6 +476,7 @@ public class EnvironmentManager extends TickableManager {
 
     /**
      * Sets a weather event
+     *
      * @param event the weather event to occur
      */
     public void setWeather(String event) {
@@ -464,35 +484,41 @@ public class EnvironmentManager extends TickableManager {
     }
 
     /**
-     * Generates a random weather event based on biome
+     * Generates a random weather event based on current biome
      */
     public void randomWeatherEvent() {
+
+        // Random weather element
         String randomElement;
 
+        // Set default weather
         String storm = "Storm";
         String earthquake = "Earthquake";
         String rain = "Rain";
         String snow = "Snow";
+        String meteor = "Meteor";
 
+        // Check biome and set weather events accordingly
         if (!biome.equals(previousBiome)) {
             switch (biome) {
                 case "volcanic_mountains":
-                    weatherList = Arrays.asList(defaultWeather, storm, earthquake);
+                    weatherList = Arrays.asList(defaultWeather, storm, earthquake, meteor);
                     previousBiome = biome;
                     break;
                 case "desert":
                     //same as above
                 case "snowy_mountains":
-                    weatherList = Arrays.asList(defaultWeather, storm, earthquake, snow);
+                    weatherList = Arrays.asList(defaultWeather, storm, earthquake, snow, meteor);
                     previousBiome = biome;
                     break;
                 default:
-                    weatherList = Arrays.asList(defaultWeather, rain, storm);
+                    weatherList = Arrays.asList(defaultWeather, rain, storm, meteor);
                     previousBiome = biome;
                     break;
             }
         }
 
+        // Create a random weather event based on biome
         randomElement = weatherList.get(rand.nextInt(weatherList.size()));
         weather = randomElement;
     }

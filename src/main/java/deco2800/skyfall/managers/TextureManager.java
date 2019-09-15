@@ -49,9 +49,9 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bowman", new Texture("resources/bowman.png"));
             textureMap.put("dialogue_text_background", new Texture("resources/dialogue_text_background.png"));
 
-            textureMap.put("tornado_placeholder", new Texture("resources/spells/tornado_placeholder.png"));
-            textureMap.put("shield_placeholder", new Texture("resources/spells/shield_placeholder.png"));
-            textureMap.put("flame_wall_placeholder", new Texture("resources/spells/flame_wall_placeholder.png"));
+            textureMap.put("tornado_placeholder", new Texture("resources/spells/tornado_3.png"));
+            textureMap.put("shield_placeholder", new Texture("resources/spells/shield_3.png"));
+            textureMap.put("flame_wall_placeholder", new Texture("resources/spells/fire_3.png"));
             textureMap.put("range_test", new Texture("resources/projectile.png"));
             textureMap.put("melee_test", new Texture("resources/punch.png"));
             textureMap.put("camel_character", new Texture("resources/camel/camel-withplayer1(left).png"));
@@ -205,11 +205,16 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("big_circle", new Texture("resources/OrangeCircle.png"));
             textureMap.put("inner_circle", new Texture("resources/RedCircle.png"));
-            
+
+            // Clock/Season graphics
             textureMap.put("dawn", new Texture("resources/clock/dawn_clock.png"));
             textureMap.put("dusk", new Texture("resources/clock/dusk_clock.png"));
             textureMap.put("day", new Texture("resources/clock/day_clock.png"));
             textureMap.put("night", new Texture("resources/clock/night_clock.png"));
+            textureMap.put("summer", new Texture("resources/clock/summer.png"));
+            textureMap.put("winter", new Texture("resources/clock/winter.png"));
+            textureMap.put("spring", new Texture("resources/clock/spring.png"));
+            textureMap.put("autumn", new Texture("resources/clock/autumn.png"));
 
 
             textureMap.put("rain", new Texture("resources/weather/rain.png")); // weather
