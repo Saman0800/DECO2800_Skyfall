@@ -303,6 +303,16 @@ public class EnvironmentManager extends TickableManager {
     }
 
     /**
+     * Sets the month in game as an integer.
+     *
+     * @param month the month (from 1-12)
+     */
+    public void setMonthInt(int month) {
+        // Set month as int
+        monthInt = month;
+    }
+
+    /**
      * Gets the month in the game.
      *
      * @return month (int) (0 to 12)
