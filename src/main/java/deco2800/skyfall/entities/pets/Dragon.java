@@ -62,12 +62,15 @@ public class Dragon extends AbstractPet implements Animatable, Item {
         for(AbstractEntity ae:abstractEntityList){
             if(ae instanceof GoldPiece){
                 if(domesticated){
-                    if(ae.getPosition().distance(this.getPosition())<1){
+                    if(ae.getPosition().distance(this.getPosition())<3){
                         isOnTheWay=true;
-                        this.moveTowards(ae.getPosition());
-                        mc.addGold((GoldPiece) ae,((GoldPiece) ae).getValue());
-                        GameManager.get().getWorld().removeEntity(ae);
-                        isOnTheWay=false;
+                        HexVector aeposition =  ae.getPosition();
+                        this.moveTowards(aeposition);
+                        if(ae.getPosition().distance(this.getPosition())<0.1){
+                            mc.addGold((GoldPiece) ae,((GoldPiece) ae).getValue());
+                            GameManager.get().getWorld().removeEntity(ae);
+                            isOnTheWay=false;
+                        }
                     }
                 }
             }
