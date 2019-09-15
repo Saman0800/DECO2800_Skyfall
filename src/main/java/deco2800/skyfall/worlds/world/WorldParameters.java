@@ -6,6 +6,7 @@ import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public class WorldParameters {
 
@@ -43,8 +44,7 @@ public class WorldParameters {
     //The width of the beach
     private double beachWidth;
 
-    // The spawn rules to use when generating new chunks
-    private Map<AbstractBiome, List<EntitySpawnRule>> spawnRules;
+    private Function<World, Map<AbstractBiome, List<EntitySpawnRule>>> generateSpawnRules;
 
     /**
      * Adds an entity to the list of entities
@@ -181,11 +181,11 @@ public class WorldParameters {
     }
 
     /**
-     * Sets the spawn rules.
-     * @param spawnRules the spawn rules
+     * Sets the function to generate the spawn rules.
+     * @param generateSpawnRules the spawn rules
      */
-    public void setSpawnRules(Map<AbstractBiome, List<EntitySpawnRule>> spawnRules) {
-        this.spawnRules = spawnRules;
+    public void setGenerateSpawnRules(Function<World, Map<AbstractBiome, List<EntitySpawnRule>>> generateSpawnRules) {
+        this.generateSpawnRules = generateSpawnRules;
     }
 
     /**
@@ -296,11 +296,11 @@ public class WorldParameters {
     }
 
     /**
-     * Gets the beach width.
-     * @return the beach width
+     * Gets the function to generate the spawn rules.
+     * @return the functions to generate the spawn rules
      */
-    public Map<AbstractBiome, List<EntitySpawnRule>> getSpawnRules() {
-        return spawnRules;
+    public Function<World, Map<AbstractBiome, List<EntitySpawnRule>>> getGenerateSpawnRules() {
+        return generateSpawnRules;
     }
 
     /**

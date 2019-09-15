@@ -163,7 +163,7 @@ public class Chunk {
 
     public void generateEntities() {
         for (Tile tile : getTiles()) {
-            for (EntitySpawnRule rule : world.getWorldParameters().getSpawnRules().get(tile.getBiome())) {
+            for (EntitySpawnRule rule : world.getSpawnRules().get(tile.getBiome())) {
                 EntitySpawnTable.spawnEntity(rule, world, tile);
             }
         }

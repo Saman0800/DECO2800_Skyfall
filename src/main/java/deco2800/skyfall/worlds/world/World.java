@@ -64,6 +64,7 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
     protected LinkedHashMap<VoronoiEdge, RiverBiome> riverEdges;
     protected LinkedHashMap<VoronoiEdge, BeachBiome> beachEdges;
 
+    protected Map<AbstractBiome, List<EntitySpawnRule>> spawnRules;
     protected NoiseGenerator staticEntityNoise;
 
     // TODO:Ontonator Reconsider this for chunks.
@@ -630,6 +631,10 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
      */
     public LinkedHashMap<VoronoiEdge, BeachBiome> getBeachEdges() {
         return this.beachEdges;
+    }
+
+    public Map<AbstractBiome, List<EntitySpawnRule>> getSpawnRules() {
+        return spawnRules;
     }
 
     /**
