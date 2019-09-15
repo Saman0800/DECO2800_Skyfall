@@ -168,6 +168,12 @@ public class WorldBuilder implements WorldBuilderInterface {
         }
     }
 
+    public void spawnBlueprintShop(Tile startTile, AbstractBiome biome, World world) {
+        BlueprintShop blueprintShop = new BlueprintShop(startTile, true);
+        EntitySpawnRule chestRule = new EntitySpawnRule(0.04, 0, 1, biome);
+        EntitySpawnTable.spawnEntities(blueprintShop, chestRule, world);
+    }
+
     /**
      * Generates the static entities in a world
      * 
@@ -185,6 +191,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         for (AbstractBiome biome : world.getBiomes()) {
             switch (biome.getBiomeName()) {
             case "forest":
+                spawnBlueprintShop(startTile, biome, world);
 
                 // Spawn some swords
                 Weapon startSword = new Sword(startTile, true);
@@ -238,6 +245,7 @@ public class WorldBuilder implements WorldBuilderInterface {
                 break;
 
             case "mountain":
+                spawnBlueprintShop(startTile, biome, world);
 
                 // Spawn some spears
                 Weapon startSpear = new Spear(startTile, true);
@@ -266,6 +274,7 @@ public class WorldBuilder implements WorldBuilderInterface {
                 break;
 
             case "desert":
+                spawnBlueprintShop(startTile, biome, world);
 
                 // Spawn some axes
                 Weapon startAxe = new Axe(startTile,true);
@@ -284,6 +293,7 @@ public class WorldBuilder implements WorldBuilderInterface {
                 break;
 
             case "snowy_mountains":
+                spawnBlueprintShop(startTile, biome, world);
 
                 // Spawn some bows
                 Weapon startBow = new Bow(startTile,true);

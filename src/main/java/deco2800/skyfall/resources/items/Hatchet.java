@@ -182,6 +182,11 @@ public class Hatchet extends ManufacturedResources implements Item, Blueprint {
     }
 
     @Override
+    public int getCost() {
+        return 20;
+    }
+
+    @Override
     public void use(HexVector position){
         for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
             if (entity instanceof Tree) {
