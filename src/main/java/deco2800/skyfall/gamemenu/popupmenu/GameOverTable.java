@@ -43,14 +43,14 @@ public class GameOverTable extends AbstractPopUpElement{
     @Override
     public void hide() {
         super.hide();
-        System.out.println("Hiding gameover table");
+//        System.out.println("Hiding gameover table");
         gameOverTable.setVisible(false);
     }
 
     @Override
     public void show() {
         super.show();
-        System.out.println("Showing gameover table");
+//        System.out.println("Showing gameover table");
         gameOverTable.setVisible(true);
     }
 
@@ -62,7 +62,7 @@ public class GameOverTable extends AbstractPopUpElement{
     @Override
     public void draw() {
         super.draw();
-        System.out.println("Drawing GAMEOVERTABLE");
+//        System.out.println("Drawing GAMEOVERTABLE");
         gameOverTable = new Table();
         gameOverTable.top();
 //        buildingTable.setDebug(true);

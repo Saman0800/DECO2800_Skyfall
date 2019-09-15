@@ -64,9 +64,9 @@ public class HealthCircle extends AbstractUIElement {
         float diff = currentHealth - newHealth;
 
         if (smallerCircle == null) {
-            System.out.println("Smaller circle is null");
+//            System.out.println("Smaller circle is null");
             if (biggerCircle == null) {
-                System.out.println("Bigger circle is null");
+//                System.out.println("Bigger circle is null");
                 return;
             }
             return;

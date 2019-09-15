@@ -29,14 +29,14 @@ public class GoldTable extends AbstractPopUpElement{
     @Override
     public void hide() {
         super.hide();
-        System.out.println("Hiding gold table");
+//        System.out.println("Hiding gold table");
         goldTable.setVisible(false);
     }
 
     @Override
     public void show() {
         super.show();
-        System.out.println("Showing gold table");
+//        System.out.println("Showing gold table");
         goldTable.setVisible(true);
     }
 
@@ -57,7 +57,7 @@ public class GoldTable extends AbstractPopUpElement{
         goldTable.setSize(700,700);
         goldTable.setPosition(Gdx.graphics.getWidth()/2f - goldTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - goldTable.getHeight()/2);
-        goldTable.setDebug(true);
+//        goldTable.setDebug(true);
         goldTable.top();
         goldTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
         goldTable.setName("goldTable");
@@ -101,8 +101,8 @@ public class GoldTable extends AbstractPopUpElement{
         int ypos = 280;
 
         for (Map.Entry<Integer, Integer> entry : goldAmounts.entrySet()) {
-            System.out.println(entry.getKey());
-            System.out.println(entry.getValue());
+//            System.out.println(entry.getKey());
+//            System.out.println(entry.getValue());
             ImageButton icon = new ImageButton(generateTextureRegionDrawableObject("goldPiece" + entry.getKey()));
             icon.setName("icon");
             icon.setSize(100, 100);

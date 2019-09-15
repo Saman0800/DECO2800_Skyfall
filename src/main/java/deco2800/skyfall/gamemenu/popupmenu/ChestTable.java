@@ -33,14 +33,14 @@ public class ChestTable extends AbstractPopUpElement{
     @Override
     public void hide() {
         super.hide();
-        System.out.println("Hiding chest table");
+//        System.out.println("Hiding chest table");
         chestTable.setVisible(false);
     }
 
     @Override
     public void show() {
         super.show();
-        System.out.println("Showing chest table");
+//        System.out.println("Showing chest table");
         chestTable.setVisible(true);
     }
 
@@ -59,7 +59,7 @@ public class ChestTable extends AbstractPopUpElement{
         chestTable.setSize(910, 510);
         chestTable.setPosition(Gdx.graphics.getWidth()/2f - chestTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - chestTable.getHeight()/2);
-        chestTable.setDebug(true);
+//        chestTable.setDebug(true);
         chestTable.top();
         chestTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
         chestTable.setName("chestTable");

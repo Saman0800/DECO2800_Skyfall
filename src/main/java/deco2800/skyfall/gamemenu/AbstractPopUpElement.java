@@ -19,7 +19,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
 
 
     public void hide() {
-        System.out.println("hiding exit");
+//        System.out.println("hiding exit");
         exitButton.setVisible(false);
         isVisible = false;
         resume();
@@ -43,7 +43,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
     }
 
     public void show(){
-        System.out.println("showing exit");
+//        System.out.println("showing exit");
         exitButton.setVisible(true);
         isVisible = true;
         pause();
@@ -62,7 +62,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
             exitButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    System.out.println("Clicked exit");
+//                    System.out.println("Clicked exit");
                     hide();
                 }
             });
@@ -72,7 +72,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
     @Override
     public void draw() {
         if (exitButton != null) {
-            System.out.println("Drawing exit");
+//            System.out.println("Drawing exit");
             exitButton.setSize(80, 80 * 207f / 305);
             exitButton.setPosition(Gdx.graphics.getWidth() * 0.9f, Gdx.graphics.getHeight() * 0.9f);
             exitButton.setVisible(false);

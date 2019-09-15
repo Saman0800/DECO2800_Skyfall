@@ -9,6 +9,8 @@ import deco2800.skyfall.gui.WeatherGui;
 import deco2800.skyfall.managers.EnvironmentManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -20,6 +22,7 @@ public class GameMenuBar extends AbstractUIElement {
     private GameMenuManager gameMenuManager;
     Table quickAccessPanel;
     private Skin skin;
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameMenuBar.class);
 
     public GameMenuBar(Stage stage, String[] textureNames, TextureManager tm, GameMenuManager gameMenuManager) {
         super(stage, textureNames, tm);
@@ -143,7 +146,7 @@ public class GameMenuBar extends AbstractUIElement {
         WeatherGui weather = new WeatherGui(stage, currentWeather); // need to have this for any weather
         gameMenuManager.addWeather(weather);
 
-        System.out.println("Finished drawing menu bar");
+        LOGGER.info("Finished drawing menu bar");
     }
 
     /***

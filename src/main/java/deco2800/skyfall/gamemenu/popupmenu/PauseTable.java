@@ -33,14 +33,14 @@ public class PauseTable extends AbstractPopUpElement{
     @Override
     public void hide() {
         super.hide();
-        System.out.println("Hiding pause table");
+//        System.out.println("Hiding pause table");
         pauseTable.setVisible(false);
     }
 
     @Override
     public void show() {
         super.show();
-        System.out.println("Showing pause table");
+//        System.out.println("Showing pause table");
         pauseTable.setVisible(true);
     }
 
@@ -52,7 +52,7 @@ public class PauseTable extends AbstractPopUpElement{
     @Override
     public void draw() {
         super.draw();
-        System.out.println("Drawing PAUSETABLE");
+//        System.out.println("Drawing PAUSETABLE");
         pauseTable = new Table();
 //        pauseTable.setDebug(true);
         pauseTable.setSize(500, 500 * 1346 / 1862f);

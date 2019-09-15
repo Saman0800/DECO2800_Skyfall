@@ -29,14 +29,14 @@ public class HelpTable extends AbstractPopUpElement{
     @Override
     public void hide() {
         super.hide();
-        System.out.println("Hiding help table");
+//        System.out.println("Hiding help table");
         helpTable.setVisible(false);
     }
 
     @Override
     public void show() {
         super.show();
-        System.out.println("Showing help table");
+//        System.out.println("Showing help table");
         helpTable.setVisible(true);
     }
 
@@ -48,7 +48,7 @@ public class HelpTable extends AbstractPopUpElement{
     @Override
     public void draw() {
         super.draw();
-        System.out.println("Drawing HELPTABLE");
+//        System.out.println("Drawing HELPTABLE");
         helpTable = new Table();
         helpTable.setSize(600, 600 * 1346 / 1862f);
         helpTable.setPosition(Gdx.graphics.getWidth()/2f - helpTable.getWidth()/2,

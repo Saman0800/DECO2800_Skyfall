@@ -38,7 +38,7 @@ public class BuildingTable extends AbstractPopUpElement{
     @Override
     public void hide() {
         super.hide();
-        System.out.println("Hiding building table");
+//        System.out.println("Hiding building table");
         itemInfo.clearChildren();
         buildingTable.setVisible(false);
     }
@@ -46,7 +46,7 @@ public class BuildingTable extends AbstractPopUpElement{
     @Override
     public void show() {
         super.show();
-        System.out.println("Showing building table");
+//        System.out.println("Showing building table");
         buildingTable.setVisible(true);
     }
 
@@ -58,7 +58,7 @@ public class BuildingTable extends AbstractPopUpElement{
     @Override
     public void draw() {
         super.draw();
-        System.out.println("Drawing BUILDINGTABLE");
+//        System.out.println("Drawing BUILDINGTABLE");
         buildingTable = new Table();
 //        buildingTable.setDebug(true);
         buildingTable.setSize(800, 800 * 1346 / 1862f);

@@ -50,7 +50,7 @@ public class InventoryTable extends AbstractPopUpElement {
     @Override
     public void hide() {
         super.hide();
-        System.out.println("Hiding inventory table");
+//        System.out.println("Hiding inventory table");
         inventoryTable.setVisible(false);
     }
 
@@ -58,7 +58,7 @@ public class InventoryTable extends AbstractPopUpElement {
     public void show() {
         super.show();
         updateResourcePanel();
-        System.out.println("Showing inventory table");
+//        System.out.println("Showing inventory table");
         inventoryTable.setVisible(true);
     }
 
@@ -75,7 +75,7 @@ public class InventoryTable extends AbstractPopUpElement {
         inventoryTable.setSize(910, 510);
         inventoryTable.setPosition(Gdx.graphics.getWidth()/2f - inventoryTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - inventoryTable.getHeight()/2);
-        inventoryTable.setDebug(true);
+//        inventoryTable.setDebug(true);
         inventoryTable.top();
         inventoryTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
         inventoryTable.setName("inventoryTable");
