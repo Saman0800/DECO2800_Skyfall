@@ -210,7 +210,8 @@ public class Tile {
         // Assign node to the tile
         node = nodes.get(minDistanceIndex);
         // Assign tile to the node
-        node.addTile(this);
+        // TODO see if this is necessary
+        //node.addTile(this);
         node.getBiome().addTile(this);
     }
 

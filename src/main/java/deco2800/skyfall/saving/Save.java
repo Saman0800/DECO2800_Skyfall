@@ -3,23 +3,25 @@ package deco2800.skyfall.saving;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.worlds.world.World;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A class that stores all aspects of the game that require saving
+ * A class that stores all aspects of the game that require saving. An instance
+ * of this class represents a single save file
  */
-public class Save implements Saveable<Save.SaveMemento> {
+public class Save implements Saveable<Save.SaveMemento>, Serializable {
 
     // The ID of this save
-    private static int nextID;
-    private int saveID;
+    private long saveID;
 
-    // TODO delete
     // The worlds in this save
     private List<World> worlds;
 
-    // TODO delete
+    // The world the player is currently in
+    private World currentWorld;
+
     // The ID of the main character in this save
     private MainCharacter mainCharacter;
 
@@ -30,8 +32,8 @@ public class Save implements Saveable<Save.SaveMemento> {
      * @param mainCharacter The main character in this save state
      */
     public Save(List<World> worlds, MainCharacter mainCharacter) {
-        this.saveID = nextID;
-        nextID++;
+        // FIXME: this may break if a save is stored for ~293+ years
+        this.saveID = System.nanoTime();
 
         this.worlds = worlds;
 
@@ -44,12 +46,16 @@ public class Save implements Saveable<Save.SaveMemento> {
         this.mainCharacter = null;
     }
 
+    public World getCurrentWorld() {
+        return currentWorld;
+    }
+
     /**
      * Returns the ID of this save state
      *
      * @return the ID of this save state
      */
-    public int getSaveID() {
+    public long getSaveID() {
         return saveID;
     }
 
@@ -93,7 +99,7 @@ public class Save implements Saveable<Save.SaveMemento> {
      * A savestate for the save
      */
     class SaveMemento extends AbstractMemento {
-        private int saveID;
+        private long saveID;
 
         private SaveMemento(Save save) {
             saveID = save.getSaveID();

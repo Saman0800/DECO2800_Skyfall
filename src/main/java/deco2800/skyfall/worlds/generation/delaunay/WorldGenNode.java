@@ -17,7 +17,8 @@ import java.util.*;
  * <a href="http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/?fbclid=IwAR30I7ILTznH6YzYYqZfjIE3vcqPsed85ta9bohPZWi74SfWMwWpD8AVddQ#source">
  * This</a>
  */
-public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGenNode.NodeMemento> {
+public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGenNode.WorldGenNodeMemento> {
+    private long id;
 
     // position
     private double x;
@@ -29,9 +30,6 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
     // List of vertices for this polygon in the form [x, y]
     private List<double[]> vertices;
 
-    // List of tiles that are within the polygon defined by this node
-    private List<Tile> tiles;
-
     // Whether or not this node's polygon is on the edge of the map
     private boolean borderNode;
 
@@ -42,14 +40,19 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
      *
      * @param x the x coordinate of the node
      * @param y the y coordinate of the node
+     * @param
      */
     public WorldGenNode(double x, double y) {
+        this.id = System.nanoTime();
         this.x = x;
         this.y = y;
         this.neighbours = new ArrayList<>();
         this.vertices = new ArrayList<>();
-        this.tiles = new ArrayList<>();
         this.borderNode = false;
+    }
+
+    public WorldGenNode(WorldGenNodeMemento memento) {
+        this.load(memento);
     }
 
     @Override
@@ -114,15 +117,6 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
     }
 
     /**
-     * Associates a tile with this node
-     *
-     * @param tile the tile in question
-     */
-    public void addTile(Tile tile) {
-        this.tiles.add(tile);
-    }
-
-    /**
      * Uses a variation of Lloyd's Algorithm to make a list of nodes more evenly spread apart.
      * <p>
      * For info on what Lloyd's Algorithm is, see
@@ -153,7 +147,6 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
                 // Remove info that may change when moving nodes
                 node.vertices.clear();
                 node.neighbours.clear();
-                node.tiles.clear();
                 node.borderNode = false;
             }
             // Reapply the Delaunay Triangulation
@@ -167,10 +160,11 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
      *
      * @param nodes the list of nodes to assign neighbours
      * @param edges the list of edges between nodes
+     * @param world the world this node is in
      *
      * @throws InvalidCoordinatesException if any nodes have a vertex whose coordinates are not 2 dimensional
      */
-    public static void assignNeighbours(List<WorldGenNode> nodes, List<VoronoiEdge> edges)
+    public static void assignNeighbours(List<WorldGenNode> nodes, List<VoronoiEdge> edges, World world)
             throws InvalidCoordinatesException {
         // Compare each node with each other node
         for (int i = 0; i < nodes.size(); i++) {
@@ -183,7 +177,7 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
                 nodes.get(j).assignNeighbour(nodes.get(i));
                 double[] vertexB = sharedVertex(nodes.get(i), nodes.get(j), vertexA);
                 if (vertexB != null) {
-                    VoronoiEdge edge = new VoronoiEdge(vertexA, vertexB);
+                    VoronoiEdge edge = new VoronoiEdge(vertexA, vertexB, world);
                     edges.add(edge);
                     edge.addEdgeNode(nodes.get(i));
                     edge.addEdgeNode(nodes.get(j));
@@ -509,7 +503,6 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
         for (int i = 0; i < nodes.size(); i++) {
             WorldGenTriangle triangle =
                     triangleSoup.findContainingTriangle(nodes.get(i));
-
             if (triangle == null) {
                 // If no containing triangle exists, then the vertex is not
                 // inside a triangle (this can also happen due to numerical
@@ -686,30 +679,6 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
         }
     }
 
-    // TODO remove
-    /**
-     * Remove all nodes with no associated tile from a list
-     *
-     * @param nodes The list of nodes to check
-     * @param worldSize Half the side length of the world
-     * @throws WorldGenException If calculateVertices throws a WorldGenException
-     */
-    /*
-    public static void removeZeroTileNodes(List<WorldGenNode> nodes, int worldSize) throws WorldGenException {
-        // Set up iterator to allow nodes to be removed while looping through them
-
-        // Remove all nodes with no associated tiles
-        nodes.removeIf(node -> node.getTiles().isEmpty());
-        for (WorldGenNode node : nodes) {
-            // Clear all properties that may change with removing 0 tile nodes
-            node.vertices.clear();
-            node.neighbours.clear();
-            node.borderNode = false;
-        }
-        // Recalculate neighbours, borderNodes etc.
-        calculateVertices(nodes, worldSize);
-    }*/
-
     /* ------------------------------------------------------------------------
      * 				GETTERS AND SETTERS BELOW THIS COMMENT.
      * ------------------------------------------------------------------------ */
@@ -761,15 +730,6 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
     }
 
     /**
-     * Get the tiles within this node
-     *
-     * @return the tiles within this node
-     */
-    public List<Tile> getTiles() {
-        return this.tiles;
-    }
-
-    /**
      * Returns whether or not this is a border node
      *
      * @return whether or not this is a border node
@@ -795,17 +755,43 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
         this.biome = biome;
     }
 
-    @Override
-    public NodeMemento save() {
-        return null;
+    public long getID() {
+        return this.id;
     }
 
     @Override
-    public void load(NodeMemento saveInfo) {
-
+    public WorldGenNodeMemento save() {
+        return new WorldGenNodeMemento(this);
     }
 
-    class NodeMemento extends AbstractMemento {
+    @Override
+    public void load(WorldGenNodeMemento memento) {
+        this.id = memento.nodeID;
+        this.x = memento.x;
+        this.y = memento.y;
+    }
+
+    class WorldGenNodeMemento extends AbstractMemento {
+
+        // The ID of this node
+        private long nodeID;
+
+        // The coordinates of the node
+        private double x;
+        private double y;
+
+        private boolean borderNode;
+
+        /**
+         * Constructor for a new NodeSaveInfo
+         *
+         * @param node the node this is for
+         */
+        public WorldGenNodeMemento(WorldGenNode node) {
+            this.nodeID = node.id;
+            this.x = node.x;
+            this.y = node.y;
+        }
 
     }
 }

@@ -1,14 +1,20 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.BowMan;
+import deco2800.skyfall.saving.AbstractMemento;
+import deco2800.skyfall.saving.SaveException;
+import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
 import deco2800.skyfall.entities.worlditems.EntitySpawnTable;
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import org.javatuples.Pair;
 
 import java.util.*;
 
-public class Chunk {
+public class Chunk implements Saveable<Chunk.ChunkMemento> {
     /** The length of a side of the chunk (i.e. the chunk will contain this squared tiles). */
     public static final int CHUNK_SIDE_LENGTH = 10;
 
@@ -39,6 +45,17 @@ public class Chunk {
         int chunkY = (int) Math.floor(tileRow / CHUNK_SIDE_LENGTH);
 
         return new Pair<>(chunkX, chunkY);
+    }
+
+    /**
+     * Generate a new chunk from a save
+     *
+     * @param memento the memento to load from
+     * @param world the world this is in
+     */
+    public Chunk(ChunkMemento memento, World world) {
+        this(world, memento.x, memento.y);
+        this.load(memento);
     }
 
     public Chunk(World world, int x, int y, ArrayList<Tile> tiles, ArrayList<AbstractEntity> entities) {
@@ -215,5 +232,30 @@ public class Chunk {
 
     public int getY() {
         return y;
+    }
+
+    @Override
+    public ChunkMemento save() {
+        return new ChunkMemento(this);
+    }
+
+    @Override
+    public void load(ChunkMemento memento) {
+        this.x = memento.x;
+        this.y = memento.y;
+        this.tiles = memento.tiles;
+    }
+
+    class ChunkMemento extends AbstractMemento {
+        private int x;
+        private int y;
+        private ArrayList<Tile> tiles;
+        private ArrayList<Integer> entities;
+
+        public ChunkMemento(Chunk chunk) {
+            this.x = chunk.x;
+            this.y = chunk.y;
+            this.tiles = chunk.tiles;
+        }
     }
 }

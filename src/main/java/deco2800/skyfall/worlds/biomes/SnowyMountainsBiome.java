@@ -25,9 +25,9 @@ public class SnowyMountainsBiome extends AbstractBiome {
     @Override
     public void setTileTexture(Tile tile) {
         ArrayList<String> textures = new ArrayList<>();
-        textures.add("snowy_mountains_1");
-        textures.add("snowy_mountains_2");
-        textures.add("snowy_mountains_3");
+        textures.add("sMountain1");
+        textures.add("sMountain2");
+        textures.add("sMountain3");
 
         double perlinValue =
                 NoiseGenerator.fade(textureGenerator.getOctavedPerlinValue(tile.getCol(), tile.getRow()), 2);

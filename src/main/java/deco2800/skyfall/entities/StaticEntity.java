@@ -5,6 +5,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Collections;
 
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import deco2800.skyfall.saving.AbstractMemento;
+import deco2800.skyfall.saving.SaveException;
+import deco2800.skyfall.saving.Saveable;
+import deco2800.skyfall.worlds.world.Chunk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +18,6 @@ import java.util.Set;
 
 import com.badlogic.gdx.graphics.Texture;
 
-import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.util.HexVector;
@@ -21,17 +26,26 @@ import deco2800.skyfall.worlds.Tile;
 
 import com.google.gson.annotations.Expose;
 
-public class StaticEntity extends AbstractEntity implements NewInstance<StaticEntity> {
+public class StaticEntity extends AbstractEntity implements NewInstance<StaticEntity>, Saveable<StaticEntity.StaticEntityMemento> {
     private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
 
     private static final String ENTITY_ID_STRING = "staticEntityID";
     private int renderOrder;
     private boolean obstructed;
+    protected String entityType;
 
-    @Expose
     public Map<HexVector, String> children;
 
     private Map<HexVector, String> textures;
+
+    /**
+     * Loads a static entity from a memento
+     *
+     * @param memento the static entitiy to add
+     */
+    public StaticEntity(StaticEntityMemento memento) {
+        this.load(memento);
+    }
 
     public StaticEntity() {
         super();
@@ -194,5 +208,66 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
 
     public void setChildren(Map<HexVector, String> children) {
         this.children = children;
+    }
+
+    /**
+     * Adds this entity to a chunk
+     *
+     * @param chunk the chunk to add to
+     */
+    public void addToChunk(Chunk chunk) {
+        chunk.addEntity(this);
+    }
+
+    @Override
+    public StaticEntityMemento save() throws SaveException {
+        return new StaticEntityMemento(this);
+    }
+
+    @Override
+    public void load(StaticEntityMemento memento) {
+        this.setPosition(memento.position.getCol(), memento.position.getRow(), memento.height);
+        this.setEntityID(memento.entityID);
+        this.renderOrder = memento.renderOrder;
+        this.obstructed = memento.obstructed;
+        this.setBody(memento.body);
+        this.setFixture(memento.fixture);
+        this.setCollidable(memento.isCollidable);
+        this.setTexture(memento.texture);
+        this.setColRenderLength(memento.colRenderLength);
+        this.setRowRenderLength(memento.rowRenderLength);
+    }
+
+    class StaticEntityMemento extends AbstractMemento {
+        //private AbstractMemento subclassMemento;
+
+        private String staticEntityType;
+
+        private int height;
+        private HexVector position;
+        private int entityID;
+        private float colRenderLength;
+        private float rowRenderLength;
+        private int renderOrder;
+        private boolean obstructed;
+        private Body body;
+        private Fixture fixture;
+        private Boolean isCollidable;
+        private String texture;
+
+        public StaticEntityMemento(StaticEntity entity) {
+            this.height = entity.getHeight();
+            this.position = entity.getPosition();
+            this.entityID = entity.getEntityID();
+            this.colRenderLength = entity.getColRenderLength();
+            this.rowRenderLength = entity.getRowRenderLength();
+            this.renderOrder = entity.renderOrder;
+            this.obstructed = entity.obstructed;
+            this.body = entity.getBody();
+            this.fixture = entity.getFixture();
+            this.isCollidable = entity.getIsCollidable();
+            this.texture = entity.getTexture();
+            this.staticEntityType = entity.entityType;
+        }
     }
 }

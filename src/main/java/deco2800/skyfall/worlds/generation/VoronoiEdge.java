@@ -7,13 +7,16 @@ import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.BeachBiome;
 import deco2800.skyfall.worlds.biomes.RiverBiome;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
+import deco2800.skyfall.worlds.world.World;
 
 import java.util.*;
 
 /**
  * A class to represent an edge of a polygon in a Voronoi Diagram
  */
-public class VoronoiEdge implements Saveable<VoronoiEdge.EdgeMemento> {
+public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
+    private World world;
+    private long edgeID;
 
     // The coordinates of the two endpoints of the edge
     private double[] pointA;
@@ -35,12 +38,24 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.EdgeMemento> {
     private List<Tile> tiles;
 
     /**
+     * Constructor for a VoronoiEdge being loaded from a memento
+     *
+     * @param memento the memento of the edge
+     */
+    public VoronoiEdge(VoronoiEdgeMemento memento) {
+        this.load(memento);
+    }
+
+    /**
      * Constructor for a VoronoiEdge
      *
      * @param pointA The first vertex of the edge
      * @param pointB The second vertex of the edge
+     * @param world The world the edge is in
      */
-    public VoronoiEdge(double[] pointA, double[] pointB) {
+    public VoronoiEdge(double[] pointA, double[] pointB, World world) {
+        this.world = world;
+        this.edgeID = System.nanoTime();
         this.pointA = pointA;
         this.pointB = pointB;
         this.pointANeighbours = new ArrayList<>();
@@ -387,17 +402,63 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.EdgeMemento> {
         return this.tiles;
     }
 
-    @Override
-    public EdgeMemento save() {
-        return null;
+    public void setWorld(World world) {
+        this.world = world;
+    }
+
+    public long getID() {
+        return this.edgeID;
     }
 
     @Override
-    public void load(EdgeMemento saveInfo) {
-
+    public VoronoiEdgeMemento save() {
+        return new VoronoiEdgeMemento(this);
     }
 
-    class EdgeMemento extends AbstractMemento {
+    @Override
+    public void load(VoronoiEdgeMemento memento) {
+        this.edgeNodes.add(new WorldGenNode(0, 0));
+        this.edgeNodes.add(new WorldGenNode(0, 0));
 
+        this.pointA = new double[] {memento.ax, memento.ay};
+        this.pointB = new double[] {memento.bx, memento.by};
+    }
+
+    class VoronoiEdgeMemento extends AbstractMemento {
+
+        private long edgeID;
+
+        private long biomeID;
+
+        // The coordinates of the two vertices of this edge
+        private double ax;
+        private double ay;
+        private double bx;
+        private double by;
+
+
+        /**
+         * Constructor for a new VoronoiEdgeMemento
+         *
+         * @param edge the edge this is for
+         */
+        public VoronoiEdgeMemento(VoronoiEdge edge) {
+
+            this.edgeID = edge.edgeID;
+
+            if (edge.world.getBeachEdges().containsKey(edge)) {
+                this.biomeID = edge.world.getBeachEdges().get(edge).getBiomeID();
+            } else if (edge.world.getRiverEdges().containsKey(edge)){
+                this.biomeID = edge.world.getRiverEdges().get(edge).getBiomeID();
+            } else {
+                // Failsafe: edges that aren't beaches or rivers shouldn't be saved
+                this.biomeID = 0;
+            }
+            this.ax = edge.getA()[0];
+            this.ay = edge.getA()[1];
+            this.bx = edge.getB()[0];
+            this.by = edge.getB()[1];
+
+        }
     }
 }

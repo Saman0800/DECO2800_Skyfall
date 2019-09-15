@@ -46,7 +46,27 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	private float colRenderLength;
 	private float rowRenderLength;
 
-    //Box2D properties
+	public void setBody(Body body) {
+		this.body = body;
+	}
+
+	public void setFixture(Fixture fixture) {
+		this.fixture = fixture;
+	}
+
+	public void setColRenderLength(float colRenderLength) {
+		this.colRenderLength = colRenderLength;
+	}
+
+	public void setRowRenderLength(float rowRenderLength) {
+		this.rowRenderLength = rowRenderLength;
+	}
+
+	public void setCollidable(Boolean collidable) {
+		isCollidable = collidable;
+	}
+
+	//Box2D properties
     private Body body;
     private Fixture fixture;
     private Boolean isCollidable;
@@ -58,7 +78,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	private int entityID = 0;
 
 	/** Whether an entity should trigger a collision when */
-	private boolean collidable = true; 
+	// TODO: find out if both this and isCollidable need to be stored
+	private boolean collidable = true;
 
 	private int renderOrder = 0;
 
@@ -568,7 +589,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
 
-    /**
+
+	/**
      * How much to scale the texture by.
      * Used in MainCharacter to scale down the texture
      * @return Scale multiplicative factor.
@@ -583,6 +605,24 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 */
 	public Body getBody(){
 		return body;
+	}
+
+	/**
+	 * Gets the fixture for the entity
+	 *
+	 * @return fixture of the entity
+	 */
+	public Fixture getFixture() {
+		return this.fixture;
+	}
+
+	/**
+	 * Gets whether or not the entity is collidable
+	 *
+	 * @return whether or not the entity is collidable
+	 */
+	public Boolean getIsCollidable() {
+		return this.isCollidable;
 	}
 
 }

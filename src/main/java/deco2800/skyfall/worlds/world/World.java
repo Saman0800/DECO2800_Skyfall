@@ -41,6 +41,8 @@ import java.util.stream.Collectors;
  * items.
  */
 public class World implements TouchDownObserver , Serializable, SaveLoadInterface, Saveable<World.WorldMemento> {
+    protected long id;
+
     protected int width;
     protected int length;
 
@@ -73,11 +75,28 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
 
     protected WorldParameters worldParameters;
 
+    private Save save;
+
+    /**
+     * The constructor for a world being loaded from a memento
+     *
+     * @param memento the memento to load from
+     * @param save the save file this world is in
+     */
+    public World(WorldMemento memento, Save save) {
+        this.load(memento);
+        this.save = save;
+        // TODO:dannathan nodes and edges
+    }
+
     /**
      * The constructor for a world
      * @param worldParameters A class that contains the world parameters
      */
     public World(WorldParameters worldParameters){
+        // TODO:Ontonator Consider whether `worldSize` must be a multiple of `CHUNK_SIDE_LENGTH`.
+        // TODO:dannathan add the world to a save
+        this.id = System.nanoTime();
         this.worldParameters = worldParameters;
 
         random = new Random(worldParameters.getSeed());
@@ -96,6 +115,7 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         loadedChunks = new HashMap<>();
 
         generateWorld();
+
         generateTileIndices();
         initialiseFrictionmap();
     }
@@ -144,7 +164,8 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
             // Sets coordinates to a random number from -WORLD_SIZE to WORLD_SIZE
             float x = (float) (random.nextFloat() - 0.5) * 2 * worldSize;
             float y = (float) (random.nextFloat() - 0.5) * 2 * worldSize;
-            worldGenNodes.add(new WorldGenNode(x, y));
+            WorldGenNode node = new WorldGenNode(x, y);
+            worldGenNodes.add(node);
         }
         worldGenNodes.sort(null);
 
@@ -156,7 +177,7 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         this.worldGenNodes = new CopyOnWriteArrayList<>(worldGenNodes);
 
         WorldGenNode.removeZeroTileNodes(this, worldGenNodes, nodeSpacing, worldSize);
-        WorldGenNode.assignNeighbours(worldGenNodes, voronoiEdges);
+        WorldGenNode.assignNeighbours(worldGenNodes, voronoiEdges, this);
         VoronoiEdge.assignNeighbours(voronoiEdges);
 
         BiomeGenerator biomeGenerator = new BiomeGenerator(this, worldGenNodes, voronoiEdges, random, worldParameters);
@@ -564,6 +585,22 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         return worldParameters.getSeed();
     }
 
+    /**
+     * Gets the save the world is in
+     * @return The save
+     */
+    public Save getSave() {
+        return save;
+    }
+
+
+    /**
+     * Gets the nodes of the world
+     * @return The nodes of the world
+     */
+    public CopyOnWriteArrayList<WorldGenNode> getWorldGenNodes() {
+        return worldGenNodes;
+    }
 
     public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
         // only allow right clicks to collect resources
@@ -676,16 +713,38 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         return new Gson().toJson(this);
     }
 
+    public long getID() {
+        return this.id;
+    }
+
     @Override
     public WorldMemento save() {
-        return null;
+        return new WorldMemento(this);
     }
 
     @Override
     public void load(WorldMemento worldMemento) {
+        this.id = worldMemento.worldID;
+        // TODO
+        this.worldParameters.setBeachWidth(worldMemento.beachWidth);
+        this.worldParameters.setBeachWidth(worldMemento.riverWidth);
+        this.worldParameters.setNodeSpacing(worldMemento.nodeSpacing);
     }
 
     class WorldMemento extends AbstractMemento {
+        private long saveID;
+        private long worldID;
+        private int nodeSpacing;
+        private double riverWidth;
+        private double beachWidth;
 
+        public WorldMemento(World world) {
+            // TODO (probably in the main save method)
+            this.saveID = world.save.getSaveID();
+            this.worldID = world.id;
+            this.nodeSpacing = world.worldParameters.getNodeSpacing();
+            this.riverWidth = world.worldParameters.getRiverWidth();
+            this.beachWidth = world.worldParameters.getBeachWidth();
+        }
     }
 }
