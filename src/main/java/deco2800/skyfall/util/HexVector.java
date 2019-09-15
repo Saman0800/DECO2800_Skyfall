@@ -5,6 +5,8 @@ public class HexVector {
     private float row;
     private double angle;
 
+    // TODO:Ontonator Work out if the constructors should use the setter methods.
+
     /**
      * Constructor for a HexVector
      * 
@@ -68,6 +70,26 @@ public class HexVector {
     }
 
     /**
+     * Setter for the column and the row value at the same time.
+     *
+     * @param col the column value to be set
+     * @param row the row value to be set
+     */
+    public void set(float col, float row) {
+        this.col = col;
+        this.row = row;
+    }
+
+    /**
+     * Setter for the column and the row value at the same time.
+     *
+     * @param vector the vector containing th new column and row value
+     */
+    public void set(HexVector vector) {
+        set(vector.getCol(), vector.getRow());
+    }
+
+    /**
      * Calculates the distance between two coordinates on a 2D plane. Based off of
      * the cubeDistance function.
      * 
@@ -76,39 +98,37 @@ public class HexVector {
      * @return the distance between the two coordinates
      */
     public float distance(float vcol, float vrow) {
-        return distance(new HexVector(vcol, vrow));
-    }
-
-    public float distance(HexVector vector) {
-        Cube thisVector = Cube.oddqToCube(col, row);
-        Cube otherVector = Cube.oddqToCube(vector.col, vector.row);
+        Cube thisVector = Cube.oddqToCube(getCol(), getRow());
+        Cube otherVector = Cube.oddqToCube(vcol, vrow);
 
         return Cube.cubeDistance(thisVector, otherVector);
     }
 
+    public float distance(HexVector vector) {
+        return distance(vector.getCol(), vector.getRow());
+    }
+
     private float distanceAsCartesian(HexVector point) {
-        return (float) Math.sqrt((point.col - col) * (point.col - col) +  (point.row - row) * (point.row-row));
+        return (float) Math.sqrt((point.getCol() - getCol()) * (point.getCol() - getCol()) +
+                                         (point.getRow() - getRow()) * (point.getRow() - getRow()));
     }
 
     public void moveToward(HexVector point, double distance) {
-
         if (distanceAsCartesian(point) < distance) {
-            this.col = point.col;
-            this.row = point.row;
+            setCol(point.getCol());
+            setRow(point.getRow());
             return;
         }
 
-        double deltaCol = this.col - point.col;
-        double deltaRow = this.row - point.row;
+        double deltaCol = getCol() - point.getCol();
+        double deltaRow = getRow() - point.getRow();
 
         angle = Math.atan2(deltaRow, deltaCol) + Math.PI;
 
         double xShift = Math.cos(angle) * distance;
         double yShift = Math.sin(angle) * distance;
-        
 
-        this.col += xShift;
-        this.row += yShift;
+        set((float) (getCol() + xShift), (float) (getRow() + yShift));
     }
 
     public boolean isCloseEnoughToBeTheSame(HexVector vector) {
@@ -127,6 +147,8 @@ public class HexVector {
      */
     @Override
     public boolean equals(Object obj) {
+        // FIXME This isn't technically transitive (one of the properties required by the spec), since the values just
+        //  have to be "close enough".
         if (!(obj instanceof HexVector)) {
             return false;
         }
@@ -141,11 +163,11 @@ public class HexVector {
 
     @Override
     public String toString() {
-        return String.format("%f, %f", col, row);
+        return String.format("%f, %f", getCol(), getRow());
     }
 
     public HexVector getInt() {
-        return new HexVector(Math.round(col), Math.round(row));
+        return new HexVector(Math.round(getCol()), Math.round(getRow()));
     }
 
     public HexVector add(HexVector add) {

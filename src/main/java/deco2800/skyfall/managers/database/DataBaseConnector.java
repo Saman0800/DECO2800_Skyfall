@@ -181,8 +181,9 @@ public class DataBaseConnector {
     }
 
 
-//    public World loadWorld(long worldId) throws SQLException{
+//    public World loadWorld(long worldId, Save save) throws SQLException{
 //        String query = String.format("SELECT * FROM WORLDS WHERE WORLD_ID = %s", worldId);
+//
 //        Statement statement = connection.createStatement();
 //        ResultSet result = statement.executeQuery(query);
 //
@@ -190,51 +191,25 @@ public class DataBaseConnector {
 //            return null;
 //        }
 //
-//        //TODO load the nodes
-//        // Load the edges
-//        // Load the biomes
-//        // Add all this stuff to the world class
+//        Gson gson = new Gson();
 //
-//
-//        return new World();
-//
+//        World world = new World(gson.fromJson(result.getString(4), World.WorldMemento.class), save);
 //    }
 
-
-
-
-
     /**
-     * Class used to load multiple chunks
-     * @param x
-     * @param y
-     * @param world
-     * @param radius
-     * @return
+     * Loads a chunk
+     * @param world The world where the chunk is
+     * @param x The x position of the chunk
+     * @param y The y positoin of the chunk
+     * @return The chunk from the database if it exists in the database. A new chunk if the chunk does not exist in the database.
+     * @throws SQLException
      */
-    public HashMap<Pair<Integer, Integer>, Chunk> loadChunks(int x, int y, World world, int radius){
-        //Check if the chunk exists in the database
-        //Numbers should be calculated on the chunk the player will be in, not the player coordinates
-        for (int row = y-radius; row<y+radius; row++){
-            for (int col = x - radius; col<x+radius; col++){
-
-            }
-        }
-
-        return null;
-    }
-
     public Chunk loadChunk(World world,int x, int y) throws SQLException{
-
         Gson gson = new Gson();
-
-
         String query = String.format("SELECT * FROM CHUNKS WHERE X=%s and Y=%s and WORLD_ID=%s", x, y, world.getID());
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(query);
 
-
-//        //FIXME:jeffvan12 create the chunk if the chunk does not exist and return the chunk
         if (!result.next()) {
             Chunk chunk = new Chunk(world, x, y);
             chunk.generateEntities();
@@ -242,34 +217,14 @@ public class DataBaseConnector {
             return chunk;
         }
 
-        return new Chunk(gson.fromJson(result.getString(4), Chunk.ChunkMemento.class), world);
-
-
-        //TODO:jeffvan12 else setup the chunks from the data
-        //Adding the entities to the chunk
-        //Create the chunk from the table data if it does exist in the game
+        return new Chunk(gson.fromJson(result.getString(1), Chunk.ChunkMemento.class), world);
     }
 
-
-
-    public static Chunk loadChunkAt(World world, int x, int y) {
-        // FIXME:Ontonator Implement.
-        Chunk chunk = new Chunk(world, x, y);
-        chunk.generateEntities();
-        return chunk;
+    public void saveChunk(Chunk chunk) throws SQLException{
+        Gson gson = new Gson();
+        InsertDataQueries insertDataQueries = new InsertDataQueries(connection);
+        insertDataQueries.insertChunk(chunk.getWorld().getID(),chunk.getX(), chunk.getY(), gson.toJson(chunk.save()));
     }
-
-
-
-
-
-    public void  dynamicSavingChunks(){
-    }
-
-
-
-
-
 
 
 }

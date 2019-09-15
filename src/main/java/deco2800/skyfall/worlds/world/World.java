@@ -56,6 +56,11 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
     // TODO:Ontonator Does it matter that this is not `CopyOnWrite` like the tiles and entities used to be?
     protected HashMap<Pair<Integer, Integer>, Chunk> loadedChunks;
 
+    private int loadedAreaLowerX;
+    private int loadedAreaLowerY;
+    private int loadedAreaUpperX;
+    private int loadedAreaUpperY;
+
     //A list of all the tiles within a world
     protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
     protected CopyOnWriteArrayList<VoronoiEdge> voronoiEdges;
@@ -453,6 +458,45 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
 
     // TODO:Ontonator This whole system might need to be rethought.
     public void onTick(long i) {
+        // Don't tick the entities in the outer band. This allows entities to detect collisions with entities which
+        // are not in the loaded area, since nothing in the outer band will ever be able to move.
+        List<AbstractEntity> allEntities = getEntities();
+        List<AbstractEntity> activeEntities = getLoadedChunks().values().stream()
+                .filter(chunk -> chunk.getX() > loadedAreaLowerX && chunk.getY() > loadedAreaLowerY &&
+                        chunk.getX() < loadedAreaUpperX - 1 && chunk.getY() < loadedAreaUpperY - 1)
+                .flatMap(chunk -> chunk.getEntities().stream())
+                .collect(Collectors.toList());
+
+        // Collision detection for entities
+        for (AbstractEntity e1 : activeEntities) {
+            if (e1 instanceof StaticEntity) {
+                // Static entities can't move into other entities. Only worry
+                // about entities that can move themselves into other entities
+                continue;
+            }
+            e1.onTick(i);
+            //if (e1.getCollider() == null) {
+            //    break;
+            //}
+            Collider c1 = e1.getCollider();
+            for (AbstractEntity e2 : allEntities) {
+                if (e2.getCollider() == null) {
+                    break;
+                }
+                Collider c2 = e2.getCollider();
+                if (e1 != e2 && c1.overlaps(c2)) {
+                    if (e1 instanceof MainCharacter || e2 instanceof
+                            MainCharacter) {
+                        break;
+                    }
+                    //collision handler
+                    //    this.handleCollision(e1, e2);
+                    //    break;
+                }
+            }
+            // no collision here
+        }
+
         for (AbstractEntity e : entitiesToDelete) {
             removeEntity(e);
         }
@@ -461,35 +505,9 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
             deleteTile(t.getTileID());
         }
 
-        // Collision detection for entities
-        for (AbstractEntity e1 : this.getEntities()) {
-            if (e1 instanceof StaticEntity) {
-                // Static entities can't move into other entities. Only worry
-                // about entities that can move themselves into other entities
-                continue;
-            }
-            e1.onTick(0);
-            //if (e1.getCollider() == null) {
-            //    break;
-            //}
-            Collider c1 = e1.getCollider();
-            for (AbstractEntity e2 : this.getEntities()) {
-                if (e2.getCollider() == null) {
-                    break;
-                }
-                Collider c2 = e2.getCollider();
-                if (e1 != e2 && c1.overlaps(c2)) {
-                    if (e1 instanceof MainCharacter || e2 instanceof
-                    MainCharacter) {
-                        break;
-                    }
-                    //collision handler
-                //    this.handleCollision(e1, e2);
-                //    break;
-                }
-            }
-            // no collision here
-        }
+        // FIXME:Ontonator Check that this works.
+        MainCharacter mc = MainCharacter.getInstance();
+        setLoadedArea(mc.getCol() - 50, mc.getRow() - 50, mc.getCol() + 50, mc.getRow() + 50);
     }
 
     // TODO:Ontonator Why does this operate with an id?
@@ -711,6 +729,38 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
      */
     public WorldParameters getWorldParameters() {
         return worldParameters;
+    }
+
+    /**
+     * Sets the area loaded by the world.
+     *
+     * @param lowerCol the left bound of the area loaded
+     * @param lowerRow the bottom bound of the area loaded
+     * @param upperCol the right bound of the area loaded
+     * @param upperRow the top bound of the area loaded
+     */
+    public void setLoadedArea(double lowerCol, double lowerRow, double upperCol, double upperRow) {
+        // Add an extra band of chunks around the selected area which will be loaded but not active (entities will not
+        // be ticked).
+        loadedAreaLowerX = (int) Math.floor(lowerCol / Chunk.CHUNK_SIDE_LENGTH) - 1;
+        loadedAreaLowerY = (int) Math.floor(lowerRow / Chunk.CHUNK_SIDE_LENGTH) - 1;
+        loadedAreaUpperX = (int) Math.ceil(upperCol / Chunk.CHUNK_SIDE_LENGTH) + 1;
+        loadedAreaUpperY = (int) Math.ceil((upperRow + 0.5) / Chunk.CHUNK_SIDE_LENGTH) + 1;
+
+        HashSet<Pair<Integer, Integer>> removedChunks = new HashSet<>(loadedChunks.keySet());
+        for (int x = loadedAreaLowerX; x < loadedAreaUpperX; x++) {
+            for (int y = loadedAreaLowerY; y < loadedAreaUpperY; y++) {
+                Pair<Integer, Integer> pair = new Pair<>(x, y);
+                if (loadedChunks.containsKey(pair)) {
+                    removedChunks.remove(pair);
+                } else {
+                    Chunk.loadChunkAt(this, x, y);
+                }
+            }
+        }
+        for (Pair<Integer, Integer> pair : removedChunks) {
+            loadedChunks.get(pair).unload();
+        }
     }
 
     @Override

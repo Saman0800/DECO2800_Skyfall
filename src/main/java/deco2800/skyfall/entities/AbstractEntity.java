@@ -1,6 +1,5 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.animation.AnimationLinker;
@@ -13,8 +12,6 @@ import deco2800.skyfall.renderers.Renderable;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.world.Chunk;
-import org.javatuples.Pair;
 
 import java.util.*;
 
@@ -41,7 +38,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     private Collider collider;
 
-	protected HexVector position;
+	protected final EntityHexVector position;
 	private int height;
 	private float colRenderLength;
 	private float rowRenderLength;
@@ -122,7 +119,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
 	public AbstractEntity() {
-		this.position = new HexVector();
+		this.position = new EntityHexVector(this);
 		this.colRenderLength = 1f;
 		this.rowRenderLength = 1f;
 		this.setObjectName(ENTITY_ID_STRING);
@@ -141,7 +138,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      */
 	public AbstractEntity(float col, float row, int height,
 						  float colRenderLength, float rowRenderLength) {
-		this.position = new HexVector(col, row);
+		this.position = new EntityHexVector(this, col, row);
 		this.height = height;
 		this.colRenderLength = colRenderLength;
 		this.rowRenderLength = rowRenderLength;
@@ -200,19 +197,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 * @param row the new row of this entity
 	 */
 	public void setPosition(float col, float row) {
-		Pair<Integer, Integer> oldChunk = Chunk.getChunkForCoordinates(getCol(), getRow());
-		this.position.setCol(col);
-		this.position.setRow(row);
-		Pair<Integer, Integer> newChunk = Chunk.getChunkForCoordinates(getCol(), getRow());
-
-		if (!oldChunk.equals(newChunk)) {
-			// TODO:Ontonator Consider changing this from using `GameManger.getWorld()`.
-			deco2800.skyfall.worlds.world.World world = GameManager.get().getWorld();
-			if (world != null) {
-				world.getChunk(oldChunk.getValue0(), oldChunk.getValue1()).removeEntity(this);
-				world.getChunk(newChunk.getValue0(), newChunk.getValue1()).addEntity(this);
-			}
-		}
+		this.position.set(col, row);
 	}
 
 	/**
