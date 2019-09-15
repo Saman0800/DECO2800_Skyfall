@@ -21,8 +21,8 @@ public class MountainRock extends StaticRock {
     }
 
     public MountainRock(Tile tile, boolean obstructed) {
-        super(tile, obstructed, "MRock" + nextRock);
-        nextRock = randomGen.nextInt(3) + 1;
+        super(tile, obstructed, "MRock" + MountainRock.nextRock);
+        MountainRock.nextRock = randomGen.nextInt(3) + 1;
         this.setObjectName(ENTITY_ID_STRING);
         this.metalAmount = 15;
     }

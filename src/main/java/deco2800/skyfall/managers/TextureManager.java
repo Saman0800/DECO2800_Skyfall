@@ -205,16 +205,14 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("big_circle", new Texture("resources/OrangeCircle.png"));
             textureMap.put("inner_circle", new Texture("resources/RedCircle.png"));
-            
+
             textureMap.put("dawn", new Texture("resources/clock/dawn_clock.png"));
             textureMap.put("dusk", new Texture("resources/clock/dusk_clock.png"));
             textureMap.put("day", new Texture("resources/clock/day_clock.png"));
             textureMap.put("night", new Texture("resources/clock/night_clock.png"));
 
-
             textureMap.put("rain", new Texture("resources/weather/rain.png")); // weather
             textureMap.put("snow", new Texture("resources/weather/snow.png")); // weather
-
 
             textureMap.put("mana_bar", new Texture("resources/mana_bar.png"));
             textureMap.put("mana_bar_inner", new Texture("resources/mana_bar_inner.png"));
@@ -305,7 +303,6 @@ public class TextureManager extends AbstractManager {
         if (textureMap.containsKey(id)) {
             return textureMap.get(id);
         } else if (id != null && id.startsWith("__ANIMATION_")) {
-            // System.out.println("Getting animation texture");
             AnimationManager animationManager = GameManager.getManagerFromInstance(AnimationManager.class);
             Texture texture = this.getTextureFromAnimation(id, animationManager);
 
@@ -361,7 +358,6 @@ public class TextureManager extends AbstractManager {
     private Texture getTextureFromAnimation(String id, AnimationManager animationManager) {
         String id1 = id.replaceAll("__ANIMATION_", "");
         String[] split = id1.split(":");
-        // System.out.println(split[0] + " " + split[1]);
         Texture texture = animationManager.getKeyFrameFromAnimation(split[0], Integer.valueOf(split[1]));
         if (texture == null) {
             // System.out.println("getTextureFromAnimation did not find texture");

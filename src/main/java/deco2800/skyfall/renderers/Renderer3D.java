@@ -106,7 +106,7 @@ public class Renderer3D implements Renderer {
      * @param tile             the tile to render.
      */
     private void renderTile(SpriteBatch batch, OrthographicCamera camera, List<Tile> tileMap,
-                            List<Tile> tilesToBeSkipped, Tile tile) {
+            List<Tile> tilesToBeSkipped, Tile tile) {
 
         if (tilesToBeSkipped.contains(tile)) {
             return;
@@ -161,8 +161,6 @@ public class Renderer3D implements Renderer {
 
     }
 
-
-
     /**
      * Render all the entities on in view, including movement tiles, and excluding
      * undiscovered area.
@@ -190,8 +188,7 @@ public class Renderer3D implements Renderer {
             for (Body body : bodies) {
                 float[] bodyWorldCoord = WorldUtil.colRowToWorldCords(body.getPosition().x, body.getPosition().y);
 
-                batch.draw(textureManager.getTexture("Select"),
-                        bodyWorldCoord[0], bodyWorldCoord[1], 10.f, 10.f);
+                batch.draw(textureManager.getTexture("Select"), bodyWorldCoord[0], bodyWorldCoord[1], 10.f, 10.f);
             }
         }
 
@@ -202,7 +199,6 @@ public class Renderer3D implements Renderer {
                 entitiesSkipped++;
                 continue;
             }
-
 
             Texture tex = textureManager.getTexture(entity.getTexture());
             if (entity instanceof StaticEntity) {
@@ -233,9 +229,7 @@ public class Renderer3D implements Renderer {
                     GameMenuManager gameMenuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
 
                     if (entity instanceof MainCharacter) {
-                        if (((MainCharacter) entity).IsHurt() ||
-                                ((MainCharacter) entity).isDead()) {
-                            // System.out.println(entity.);
+                        if (((MainCharacter) entity).IsHurt() || ((MainCharacter) entity).isDead()) {
                             batch.setColor(Color.RED);
                         } else if (((MainCharacter) entity).isRecovering()) {
                             if (((MainCharacter) entity).isTexChanging()) {
@@ -284,7 +278,7 @@ public class Renderer3D implements Renderer {
     }
 
     private void renderPeonMovementTiles(SpriteBatch batch, OrthographicCamera camera, AbstractEntity entity,
-                                         float[] entityWorldCord) {
+            float[] entityWorldCord) {
         Peon actor = (Peon) entity;
         AbstractTask task = actor.getTask();
         if (task instanceof MovementTask) {
@@ -303,19 +297,10 @@ public class Renderer3D implements Renderer {
                     continue;
                 }
                 batch.draw(tex, tileWorldCord[0], tileWorldCord[1]// + ((tile.getElevation() + 1) *
-                        // elevationZeroThiccness * WorldUtil.SCALE_Y)
+                // elevationZeroThiccness * WorldUtil.SCALE_Y)
                         , tex.getWidth() * WorldUtil.SCALE_X, tex.getHeight() * WorldUtil.SCALE_Y);
 
             }
-            // if (!path.isEmpty()) {
-            // // draw Peon
-            // Texture tex = textureManager.getTexture(entity.getTexture());
-            // batch.draw(tex, entityWorldCord[0], entityWorldCord[1] +
-            // entity.getHeight(),// + path.get(0).getElevation()) * elevationZeroThiccness
-            // * WorldUtil.SCALE_Y,
-            // tex.getWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X,
-            // tex.getHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y);
-            // }
         }
     }
 
@@ -330,11 +315,7 @@ public class Renderer3D implements Renderer {
                     font.draw(batch, tile.toString(),
                             // String.format("%.0f, %.0f, %d",tileWorldCord[0], tileWorldCord[1],
                             // tileMap.indexOf(tile)),
-                            tileWorldCord[0] + WorldUtil.TILE_WIDTH / 4.5f, tileWorldCord[1]);// + ((tile.getElevation()
-                    // + 1) *
-                    // elevationZeroThiccness
-                    // * WorldUtil.SCALE_Y)
-                    // + WorldUtil.TILE_HEIGHT-10);
+                            tileWorldCord[0] + WorldUtil.TILE_WIDTH / 4.5f, tileWorldCord[1]);
                 }
 
             }
@@ -396,7 +377,7 @@ public class Renderer3D implements Renderer {
         float time = aniLink.getStartingTime();
 
         if (ani == null) {
-            //System.out.println("Animation is null");
+            System.err.println("Animation is null");
             renderDefaultSprite(batch, entity, entityWorldCoord);
             return;
         }
@@ -412,8 +393,10 @@ public class Renderer3D implements Renderer {
         }
 
         TextureRegion currentFrame = ani.getKeyFrame(time, true);
-        float width = currentFrame.getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X * entity.getScale() ;
-        float height = currentFrame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y * entity.getScale();
+        float width = currentFrame.getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X
+                * entity.getScale();
+        float height = currentFrame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y
+                * entity.getScale();
         int[] offset = aniLink.getOffset();
 
         batch.draw(currentFrame, entityWorldCoord[0] + offset[0], entityWorldCoord[1] + offset[0], width, height);

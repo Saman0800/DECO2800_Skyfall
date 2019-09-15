@@ -34,6 +34,7 @@ public class TikiTorch extends StaticEntity implements HasPointLight {
 
     @Override
     public void onTick(long i) {
+        // Do nothing on tick
     }
 
     /**

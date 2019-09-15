@@ -29,8 +29,8 @@ public class MountainTree extends StaticTree {
     }
 
     public MountainTree(Tile tile, boolean obstructed) {
-        super(tile, obstructed, "MTree" + nextTreeTexture);
-        nextTreeTexture = randomGen.nextInt(3) + 1;
+        super(tile, obstructed, "MTree" + MountainTree.nextTreeTexture);
+        MountainTree.nextTreeTexture = randomGen.nextInt(3) + 1;
         this.woodAmount = 15;
     }
 

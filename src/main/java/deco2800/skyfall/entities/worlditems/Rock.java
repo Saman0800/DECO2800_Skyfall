@@ -23,8 +23,8 @@ public class Rock extends StaticRock {
     }
 
     public Rock() {
-        super(new Tile(0.0f, 0.0f), true, "rock" + nextRock);
-        nextRock = randomGen.nextInt(3) + 1;
+        super(new Tile(0.0f, 0.0f), true, "rock" + Rock.nextRock);
+        Rock.nextRock = randomGen.nextInt(3) + 1;
         this.setObjectName(ENTITY_ID_STRING);
         this.metalAmount = 15;
     }

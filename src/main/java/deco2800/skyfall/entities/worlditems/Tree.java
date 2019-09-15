@@ -31,8 +31,9 @@ public class Tree extends StaticTree {
 
     public Tree(Tile tile, boolean obstructed) {
         super(tile, obstructed, "tree" + nextTreeTexture);
-        nextTreeTexture = randomGen.nextInt(3) + 1;
         this.woodAmount = 15;
+
+        Tree.nextTreeTexture = randomGen.nextInt(3) + 1;
     }
 
     /**
@@ -85,6 +86,7 @@ public class Tree extends StaticTree {
      */
     @Override
     public void onTick(long tick) {
+        // Do nothing on tick
     }
 
     @Override
