@@ -88,8 +88,8 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
     	voronoiEdges = new CopyOnWriteArrayList<>();
 
     	// FIXME:Ontonator Sort this out.
-        // tileOffsetNoiseGeneratorX = WorldGenNode.getOffsetNoiseGenerator(random, worldParameters.getNodeSpacing());
-        // tileOffsetNoiseGeneratorY = WorldGenNode.getOffsetNoiseGenerator(random, worldParameters.getNodeSpacing());
+        tileOffsetNoiseGeneratorX = Tile.getOffsetNoiseGenerator(random, worldParameters.getNodeSpacing());
+        tileOffsetNoiseGeneratorY = Tile.getOffsetNoiseGenerator(random, worldParameters.getNodeSpacing());
 
         staticEntityNoise = new NoiseGenerator(random, 3, 4, 1.3);
 
@@ -155,8 +155,7 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         WorldGenNode.lloydRelaxation(worldGenNodes, 2, worldSize);
         this.worldGenNodes = new CopyOnWriteArrayList<>(worldGenNodes);
 
-        Tile.setNoiseGenerators(random, nodeSpacing);
-        WorldGenNode.removeZeroTileNodes(worldGenNodes, nodeSpacing, worldSize);
+        WorldGenNode.removeZeroTileNodes(this, worldGenNodes, nodeSpacing, worldSize);
         WorldGenNode.assignNeighbours(worldGenNodes, voronoiEdges);
         VoronoiEdge.assignNeighbours(voronoiEdges);
 
@@ -595,6 +594,23 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
                 }
             }
         }
+    }
+
+    /**
+     * Gets the noise generator for the X coordinate used for selecting the {@code WorldGenNode} for the tiles.
+     * @return the noise generator for the X coordinate used for selecting the {@code WorldGenNode} for the tiles
+     */
+    public NoiseGenerator getTileOffsetNoiseGeneratorX() {
+        return tileOffsetNoiseGeneratorX;
+    }
+
+    /**
+     * Gets the noise generator for the Y coordinate used for selecting the {@code WorldGenNode} for the tiles.
+     *
+     * @return the noise generator for the Y coordinate used for selecting the {@code WorldGenNode} for the tiles
+     */
+    public NoiseGenerator getTileOffsetNoiseGeneratorY() {
+        return tileOffsetNoiseGeneratorY;
     }
 
     /**

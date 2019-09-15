@@ -7,6 +7,7 @@ import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
+import deco2800.skyfall.worlds.world.World;
 
 import java.util.*;
 
@@ -239,102 +240,19 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
         return null;
     }
 
-    // TODO delete this (It's now done in Tile)
-    /**
-     * Assigns each tile in the world to the nearest node.
-     *
-     * @param nodes The list of nodes that can be assigned to
-     * @param tiles The list of tiles to assign
-     *//*
-    public static void assignTiles(List<WorldGenNode> nodes, List<Tile> tiles, Random random, int nodeSpacing) {
-        int startPeriod = nodeSpacing * 2;
-        // TODO Fix possible divide-by-zero.
-        int octaves = Math.max((int) Math.ceil(Math.log(startPeriod) / Math.log(2)) - 1, 1);
-        double attenuation = Math.pow(0.9, 1d / octaves);
-
-        NoiseGenerator xGen = new NoiseGenerator(random, octaves, startPeriod, attenuation);
-        NoiseGenerator yGen = new NoiseGenerator(random,  octaves, startPeriod, attenuation);
-        // Ensure nodes are stored in order of Y value
-        nodes.sort(Comparable::compareTo);
-        for (Tile tile : tiles) {
-            // Offset the position of tiles used to calculate the nodes using
-            // Perlin noise to add noise to the edges.
-            double tileX =
-                    tile.getCol() + xGen.getOctavedPerlinValue(tile.getCol() , tile.getRow()) *
-                            (double) nodeSpacing - (double) nodeSpacing / 2;
-            double tileY =
-                    tile.getRow() + yGen.getOctavedPerlinValue(tile.getCol() , tile.getRow()) *
-                            (double) nodeSpacing - (double) nodeSpacing / 2;
-            // Find the index of the node with the node with one of the nearest
-            // Y values (note, if there is no node with the exact Y value, it)
-            // Can choose the node on either side, not the strictly closest one
-            int nearestIndex = binarySearch(tileY, nodes, 0, nodes.size() - 1);
-            boolean lowerLimitFound = false;
-            boolean upperLimitFound = false;
-
-            // Store the minimum distance to a node, and the index of that node
-            double minDistance = nodes.get(nearestIndex).distanceTo(tileX, tileY);
-            int minDistanceIndex = nearestIndex;
-            int iterations = 1;
-            // Starting from the initial index, this loop checks the 1st node on
-            // either side, then the 2nd node on either side, continuing
-            // outwards (kept track of by iterations).
-            while (!(upperLimitFound && lowerLimitFound)) {
-                int lower = nearestIndex - iterations;
-                int upper = nearestIndex + iterations;
-                // Stop the algorithm from checking off the end of the list
-                if (lower < 0) {
-                    lowerLimitFound = true;
-                }
-                if (upper > nodes.size() - 1) {
-                    upperLimitFound = true;
-                }
-
-                if (!lowerLimitFound) {
-                    double distance = nodes.get(lower).distanceTo(tileX, tileY);
-                    // Update the closest node if necessary
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        minDistanceIndex = lower;
-                    }
-                    // As distance to a node is necessarily >= the difference in
-                    // y value, if the difference in y value is greater than the
-                    // smallest distance to a node, all future nodes in that
-                    // direction will be further away
-                    if (nodes.get(lower).yDistanceTo(tileY) > minDistance) {
-                        lowerLimitFound = true;
-                    }
-                }
-                if (!upperLimitFound) {
-                    double distance = nodes.get(upper).distanceTo(tileX, tileY);
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        minDistanceIndex = upper;
-                    }
-                    if (nodes.get(upper).yDistanceTo(tileY) > minDistance) {
-                        upperLimitFound = true;
-                    }
-                }
-                iterations++;
-            }
-            // Assign tile to the node
-            nodes.get(minDistanceIndex).addTile(tile);
-        }
-    }*/
-
     // TODO redo this javadoc
     /**
      * Assigns each tile in the world to the nearest node.
      *
      * @param nodes The list of nodes that can be assigned to
      */
-    public static void removeZeroTileNodes(List<WorldGenNode> nodes, int nodeSpacing, int worldSize) throws WorldGenException {
+    public static void removeZeroTileNodes(World world, List<WorldGenNode> nodes, int nodeSpacing, int worldSize) throws WorldGenException {
         // TODO Make this more efficient by looping through only the tiles within the rectangle containing this node
         //  and stop on the first tile inside the border. Start iterating from the middle, which is more likely to
         //  be within the node.
 
-        NoiseGenerator xGen = Tile.getXNoiseGen();
-        NoiseGenerator yGen = Tile.getYNoiseGen();
+        NoiseGenerator xGen = world.getTileOffsetNoiseGeneratorX();
+        NoiseGenerator yGen = world.getTileOffsetNoiseGeneratorY();
         List<WorldGenNode> tempNodes = new ArrayList<>(nodes);
 
         for (int i = -1 * worldSize; i <= worldSize; i++) {

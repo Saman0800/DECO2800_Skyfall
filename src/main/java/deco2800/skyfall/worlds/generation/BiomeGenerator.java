@@ -146,7 +146,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 growOcean();
                 fillGaps();
                 generateLakes(lakeSizes, noLakes);
-                populateRealBiomes();
                 generateBeaches();
                 // FIXME:Ontonator Check that this still works.
                 generateRivers(noRivers, voronoiEdges);
@@ -511,7 +510,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
 
             List<AbstractBiome> parentBiomes = new ArrayList<>();
             // Create a river biome and add all tiles for each edge
-            // FIXME:Ontonator Check that this still works.
             for (VoronoiEdge edge : riverEdges) {
                 AbstractBiome parentBiome = realBiomes.get(nodesBiomes
                         .get(edge.getEdgeNodes().get(random.nextInt(2))).id);
@@ -519,54 +517,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             }
             rivers.add(riverEdges);
             riverParentBiomes.add(parentBiomes);
-
-            //TODO delete
-            /*
-            //List<Tile> riverTiles = new ArrayList<>();
-            for (VoronoiEdge riverEdge : riverEdges) {
-                riverTiles.addAll(riverEdge.getTiles());
-            }
-
-            // TODO delete
-            // Expand the river
-            for (int j = 0; j < riverWidth; j++) {
-                List<Tile> newTiles = new ArrayList<>();
-                // For each tile, expand to all it's non-river/ocean neighbours
-                for (Tile tile : riverTiles) {
-                    for (Integer neighbourID : tile.getNeighbours().keySet()) {
-                        Tile neighbour = tile.getNeighbours().get(neighbourID);
-                        // Don't expand to oceans or lakes
-                        if (!neighbour.getBiome().getBiomeName().equals("ocean") &&
-                                !neighbour.getBiome().getBiomeName().equals("lake") &&
-                                !riverTiles.contains(neighbour)) {
-                            newTiles.add(neighbour);
-                        }
-                    }
-                }
-                // Add the tiles found
-                riverTiles.addAll(newTiles);
-            }
-
-            // TODO handle this
-            boolean onSpawn = false;
-            // Add the river and all it's tiles
-            for (Tile tile : riverTiles) {
-                // If the river passes through the origin, it is invalid
-                if (tile.getRow() == 0 && tile.getCol() == 0) {
-                    onSpawn = true;
-                    break;
-                }
-                river.addTile(tile);
-            }
-            if (onSpawn) {
-                // Decrement i so that the program doesn't think the river has
-                // been added
-                i--;
-                // Don't add the biome
-                continue;
-            }
-            realBiomes.add(river);
-             */
         }
 
         List<VoronoiEdge> allRiverEdges = new ArrayList<>();
@@ -641,21 +591,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             }
         }
         return null;
-    }
-
-    /**
-     * Adds the tiles from the {@code BiomeInProgress}es to the {@code Biome}s provided.
-     */
-    private void populateRealBiomes() {
-        for (int i = 0; i < biomes.size(); i++) {
-            BiomeInProgress biome = biomes.get(i);
-            AbstractBiome realBiome = realBiomes.get(i);
-            for (WorldGenNode node : biome.nodes) {
-                for (Tile tile : node.getTiles()) {
-                    realBiome.addTile(tile);
-                }
-            }
-        }
     }
 
     /**

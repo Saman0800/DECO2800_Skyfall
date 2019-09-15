@@ -67,12 +67,12 @@ public class Chunk {
      * Creates blank tiles which fill the area of this chunk.
      */
     private void generateTiles() {
-        // TODO:Ontonator Does this need to check whether the chuk is completely within the world size?
+        // TODO:Ontonator Does this need to check whether the chunk is completely within the world size?
         for (int row = y * CHUNK_SIDE_LENGTH; row < (y + 1) * CHUNK_SIDE_LENGTH; row++) {
             for (int col = x * CHUNK_SIDE_LENGTH; col < (x + 1) * CHUNK_SIDE_LENGTH; col++) {
                 float oddCol = (col % 2 != 0 ? 0.5f : 0);
 
-                Tile tile = new Tile(col, row + oddCol);
+                Tile tile = new Tile(world, col, row + oddCol);
                 tiles.add(tile);
                 tile.assignNode(world.worldGenNodes, world.worldParameters.getNodeSpacing());
                 tile.assignEdge(world.riverEdges, world.beachEdges, world.worldParameters.getNodeSpacing(),

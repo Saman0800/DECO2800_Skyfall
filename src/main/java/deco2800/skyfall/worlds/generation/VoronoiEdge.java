@@ -140,8 +140,6 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.EdgeMemento> {
                             return path;
                         }
                         // Get the biome of the end node
-                        // FIXME:Ontonator Make sure this works without relying on the existence of tiles.
-                        // String biomeName = node.getTiles().get(0).getBiome().getBiomeName();
                         String biomeName = node.getBiome().getBiomeName();
                         // If the path is already at the ocean
                         if (biomeName.equals("ocean")) {
@@ -165,8 +163,6 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.EdgeMemento> {
                     if (node == null) {
                         return path;
                     }
-                    // TODO:Ontonator Remove this.
-                    // String biomeName = node.getTiles().get(0).getBiome().getBiomeName();
                     String biomeName = node.getBiome().getBiomeName();
                     // If the new edge ends with the ocean or a lake
                     if (biomeName.equals("ocean") || biomeName.equals("lake")) {
@@ -178,8 +174,6 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.EdgeMemento> {
                     if (node == null) {
                         return path;
                     }
-                    // TODO:Ontonator Remove this.
-                    // String biomeName = node.getTiles().get(0).getBiome().getBiomeName();
                     String biomeName = node.getBiome().getBiomeName();
                     // If the new edge ends with the ocean or a lake
                     if (biomeName.equals("ocean") || biomeName.equals("lake")) {
@@ -198,98 +192,6 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.EdgeMemento> {
                     previousNodes.remove(0);
                 }
                 previousNodes.add(edge.getEdgeNodes());
-            }
-        }
-    }
-
-    // FIXME:Ontonator Does this even need to exist anymore?
-    /**
-     * Assign tiles to each edge. A tile is considered to be on the edge if the
-     * square of the perpendicular distance between the edge and tile is less
-     * than 1/3 (approximately half a tile).
-     *
-     * @param edges The edges to assign tiles to
-     * @param tiles The tiles to be assigned
-     */
-    public static void assignTiles(List<VoronoiEdge> edges, List<Tile> tiles, int worldSize) {
-        // A tile is considered close to a line if the square of the distance
-        // between them is 1/3 (this number is roughly based on the proportions
-        // of the hex grid).
-        final double MIN_SQUARE_DISTANCE = 1f / 3f;
-        final double MIN_DISTANCE = Math.sqrt(MIN_SQUARE_DISTANCE);
-        // Put the tiles in an array for better control of getting subsets
-        Tile[][] tileArray = new Tile[2 * worldSize + 1][2 * worldSize + 1];
-        for (Tile tile : tiles) {
-            int x = (int)tile.getCol();
-            int y = (int)tile.getRow();
-            // transform the set of x/y values from -worldSize - worldSize
-            // -> 0 - 2*worldSize
-            tileArray[x + worldSize][y + worldSize] = tile;
-        }
-
-        for (VoronoiEdge edge : edges) {
-            // Get the coordinates of the vertices
-            double ax = edge.getA()[0];
-            double ay = edge.getA()[1];
-            double bx = edge.getB()[0];
-            double by = edge.getB()[1];
-
-            // Get the bottom left and top right corners of a rectangle fully
-            // containing the edge (plus a bit more space);
-            double smallX = Math.min(ax, bx) - MIN_DISTANCE;
-            double smallY = Math.min(ay, by) - MIN_DISTANCE;
-            double bigX = Math.max(ax, bx) + MIN_DISTANCE;
-            double bigY = Math.max(ay, by) + MIN_DISTANCE;
-
-            // Only check inside the rectangle
-            for (int x = (int)Math.floor(smallX); x < (int)Math.ceil(bigX); x++) {
-                // Don't check outside the world to avoid an ArrayIndexOutOfBoundsException
-                if (Math.abs(x) > worldSize) {
-                    continue;
-                }
-                for (int y = (int) Math.floor(smallY); y < (int) Math.ceil(bigY); y++) {
-                    if (Math.abs(y) > worldSize) {
-                        continue;
-                    }
-                    Tile tile = tileArray[x + worldSize][y + worldSize];
-                    if (tile == null) {
-                        continue;
-                    }
-
-                    // If the edge is vertical and has undefined gradient
-                    if (ax == bx) {
-                        // The length of the edge is the difference in y coordinate
-                        double length = Math.abs(ay - by);
-                        // If the tile is within MIN_DISTANCE of the line's x coordinate
-                        // and within the length of the line + MIN_DISTANCE from each vertex
-                        if (Math.abs(tile.getCol() - ax) < MIN_DISTANCE
-                                && Math.abs(tile.getRow() - ay) < MIN_DISTANCE + length
-                                && Math.abs(tile.getRow() - by) < MIN_DISTANCE + length) {
-                            edge.addTile(tile);
-                        }
-                        // If the edge is not vertical
-                    } else {
-                        double gradient = (ay - by) / (ax - bx);
-                        // A quantity used to calculate the distance
-                        double distanceNumerator = -1 * gradient * tile.getCol() + tile.getRow()
-                                + gradient * bx - by;
-                        // Get the square distance
-                        double squareDistance = distanceNumerator * distanceNumerator / (gradient * gradient + 1);
-                        // If the tile is within the valid distance
-                        if (squareDistance <= MIN_SQUARE_DISTANCE) {
-                            double dxA = ax - tile.getCol();
-                            double dxB = bx - tile.getCol();
-                            double dyA = ay - tile.getRow();
-                            double dyB = by - tile.getRow();
-                            // If the tile is near the edge (rather than near the line)
-                            // That passes through the edge
-                            if (dxA * dxA + dyA * dyA < edge.getSquareOfLength() + MIN_SQUARE_DISTANCE
-                                    && dxB * dxB + dyB * dyB < edge.getSquareOfLength() + MIN_SQUARE_DISTANCE) {
-                                edge.addTile(tile);
-                            }
-                        }
-                    }
-                }
             }
         }
     }
