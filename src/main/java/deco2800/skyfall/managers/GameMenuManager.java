@@ -293,6 +293,10 @@ public class GameMenuManager extends TickableManager {
                 null, textureManager, this,
                 skin));
 
+        popUps.put("blueprintShopTable", new BlueprintShopTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                null, textureManager, this, sm, skin));
+
 
         uiElements.put("clock" , new Clock(stage));
         //uiElements.put("weatherGUI", new WeatherGui(stage, EnvironmentManager.currentWeather()));
