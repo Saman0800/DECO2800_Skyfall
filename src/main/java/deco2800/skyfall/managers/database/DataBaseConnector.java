@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 public class DataBaseConnector {
     private Connection connection;
+    public String started = "";
 
     //FIXME:jeffvan12 change to a method
     public static void main(String[] args) {
@@ -26,6 +27,7 @@ public class DataBaseConnector {
     }
 
     public void start(){
+        started = "started";
         try {
             //Connects to the data base
             Driver derbyData = new EmbeddedDriver();
@@ -99,44 +101,48 @@ public class DataBaseConnector {
     }
 
     //Svaing the world and its parameters
-    public void saveWorld(World world) throws SQLException{
-        InsertDataQueries insertQueries = new InsertDataQueries(connection);
-        Gson gson = new Gson();
+    public void saveWorld(World world){
+        try {
+            InsertDataQueries insertQueries = new InsertDataQueries(connection);
+            Gson gson = new Gson();
 
-        insertQueries.insertWorld(world.getSave().getSaveID(), world.getID(),
-                world.getSave().getCurrentWorld().getID() == world.getID(), gson.toJson(world.save()));
+            insertQueries.insertWorld(world.getSave().getSaveID(), world.getID(),
+                    world.getSave().getCurrentWorld().getID() == world.getID(), gson.toJson(world.save()));
 
-        for (AbstractBiome biome : world.getBiomes()) {
-            try {
-                insertQueries.insertBiome(biome.getBiomeID(), world.getID(), biome.getBiomeName(), gson.toJson(biome.save()));
-            } catch (SQLException e) {
-                System.out.println(e);
-                throw e;
+            for (AbstractBiome biome : world.getBiomes()) {
+                try {
+                    insertQueries.insertBiome(biome.getBiomeID(), world.getID(), biome.getBiomeName(), gson.toJson(biome.save()));
+                } catch (SQLException e) {
+                    System.out.println(e);
+                    throw e;
+                }
             }
-        }
 
-        // Save nodes
-        for (WorldGenNode worldGenNode : world.getWorldGenNodes()) {
-            insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(),
+            // Save nodes
+            for (WorldGenNode worldGenNode : world.getWorldGenNodes()) {
+                insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(),
                         gson.toJson(worldGenNode.save()), worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
-        }
+            }
 
-        // Save beach edges
-        for (VoronoiEdge voronoiEdge : world.getBeachEdges().keySet()) {
-            insertQueries.insertEdges(world.getID(), voronoiEdge.getID(),
-                    world.getBeachEdges().get(voronoiEdge).getBiomeID(),
-                    gson.toJson(voronoiEdge.save()));
-        }
+            // Save beach edges
+            for (VoronoiEdge voronoiEdge : world.getBeachEdges().keySet()) {
+                insertQueries.insertEdges(world.getID(), voronoiEdge.getID(),
+                        world.getBeachEdges().get(voronoiEdge).getBiomeID(),
+                        gson.toJson(voronoiEdge.save()));
+            }
 
-        // Save river edges
-        for (VoronoiEdge voronoiEdge : world.getRiverEdges().keySet()) {
-            insertQueries.insertEdges(world.getID(), voronoiEdge.getID(),
-                    world.getRiverEdges().get(voronoiEdge).getBiomeID(),
-                    gson.toJson(voronoiEdge.save()));
-        }
+            // Save river edges
+            for (VoronoiEdge voronoiEdge : world.getRiverEdges().keySet()) {
+                insertQueries.insertEdges(world.getID(), voronoiEdge.getID(),
+                        world.getRiverEdges().get(voronoiEdge).getBiomeID(),
+                        gson.toJson(voronoiEdge.save()));
+            }
 
-        for (Chunk chunk : world.getLoadedChunks().values()) {
-            saveChunk(chunk, world);
+            for (Chunk chunk : world.getLoadedChunks().values()) {
+                saveChunk(chunk, world);
+            }
+        } catch (SQLException e){
+            throw new RuntimeException(e);
         }
 
     }
@@ -194,18 +200,22 @@ public class DataBaseConnector {
     public Chunk loadChunk(World world,int x, int y){
         try{
             Gson gson = new Gson();
-            String query = String.format("SELECT * FROM CHUNKS WHERE X=%s and Y=%s and WORLD_ID=%s", x, y, world.getID());
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(query);
+            //TODO:jeffvan12 Make it so it uses a preparedStatement
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM CHUNKS WHERE x = ? and y = ? and world_id = ?");
+            preparedStatement.setInt(1,x);
+            preparedStatement.setInt(2, y);
+            preparedStatement.setLong(3, world.getID());
+            ResultSet result = preparedStatement.executeQuery();
 
             if (!result.next()) {
                 Chunk chunk = new Chunk(world, x, y);
                 chunk.generateEntities();
-                statement.close();
+                preparedStatement.close();
                 return chunk;
             }
 
-            return new Chunk(world, gson.fromJson(result.getString(1), Chunk.ChunkMemento.class));
+            preparedStatement.close();
+            return new Chunk(world, gson.fromJson(result.getString(4), Chunk.ChunkMemento.class));
         } catch (SQLException e){
             throw new RuntimeException(e);
         }

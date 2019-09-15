@@ -309,12 +309,7 @@ public class GameScreen implements Screen,KeyDownObserver {
         }
 
         if (keycode == Input.Keys.P) {
-            try {
-
-                DatabaseManager.get().getDataBaseConnector().saveWorld(world);
-            } catch (SQLException e){
-                System.out.println(e);
-            }
+            DatabaseManager.get().getDataBaseConnector().saveWorld(world);
             // TODO:dannathan Save
         }
 
