@@ -335,7 +335,7 @@ public class InventoryTable extends AbstractPopUpElement {
      * what item is selected.
      */
     private void updateItemInfo(){
-        System.out.println(inventorySelected);
+        //System.out.println(inventorySelected);
         if (inventorySelected != null){
             String info = inventory.getItemDescription(inventorySelected);
             itemInfo.setText(info);
