@@ -126,7 +126,7 @@ public class DataBaseConnector {
 
         for (WorldGenNode worldGenNode : world.getWorldGenNodes()) {
             insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(),
-                    gson.toJson(worldGenNode.save()), worldGenNode.getID());
+                    gson.toJson(worldGenNode.save()), worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
         }
 
 
@@ -152,6 +152,8 @@ public class DataBaseConnector {
 
         insertQueries.insertMainCharacter(character.getID(), character.getSave().getSaveID(), gson.toJson(character.save()));
 
+
+
         statement.close();
     }
 
@@ -176,6 +178,9 @@ public class DataBaseConnector {
 //    }
 
 
+
+
+
     /**
      * Class used to load multiple chunks
      * @param x
@@ -184,7 +189,7 @@ public class DataBaseConnector {
      * @param radius
      * @return
      */
-    public HashMap<Pair<Integer, Integer>, Chunk> dynamicLoadingChunks(int x, int y, World world, int radius){
+    public HashMap<Pair<Integer, Integer>, Chunk> loadChunks(int x, int y, World world, int radius){
         //Check if the chunk exists in the database
         //Numbers should be calculated on the chunk the player will be in, not the player coordinates
         for (int row = y-radius; row<y+radius; row++){
@@ -207,16 +212,16 @@ public class DataBaseConnector {
         statement.close();
         return new Chunk(world, x, y);
 
-
         //TODO:jeffvan12 else setup the chunks from the data
-
         //Adding the entities to the chunk
-
-
-
-
         //Create the chunk from the table data if it does exist in the game
     }
+
+
+
+
+
+
 
 
     public void  dynamicSavingChunks(){
