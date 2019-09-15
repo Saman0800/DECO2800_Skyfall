@@ -316,7 +316,12 @@ public class GameScreen implements Screen,KeyDownObserver {
         }
 
         if (keycode == Input.Keys.O) {
-            // TODO:dannathan Load
+            this.save = DatabaseManager.get().getDataBaseConnector().loadGame();
+            this.world = save.getCurrentWorld();
+            AbstractEntity.resetID();
+            Tile.resetID();
+            GameManager gameManager = GameManager.get();
+            gameManager.setWorld(world);
         }
     }
 

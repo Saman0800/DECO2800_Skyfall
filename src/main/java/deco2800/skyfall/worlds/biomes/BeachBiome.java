@@ -7,6 +7,18 @@ import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import java.util.Random;
 
 public class BeachBiome extends AbstractBiome {
+
+    /**
+     * Constructor for a biome being loaded
+     *
+     * @param memento the memento this biome is being loaded from
+     */
+    public BeachBiome(AbstractBiomeMemento memento) {
+        super(memento);
+        Random random = new Random();
+        textureGenerator = new NoiseGenerator(random.nextInt(), 3, 40, 0.7);
+    }
+
     /**
      * Constructor for a BeachBiome
      *

@@ -61,11 +61,10 @@ public class ContainsDataQueries {
         return hasNext;
     }
 
-    public boolean containsEdge(long worldID, long edgeID) throws SQLException{
+    public boolean containsEdge(long edgeID) throws SQLException{
         connection.setAutoCommit(false);
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM EDGES  WHERE world_id = ? AND edge_id = ?");
-        preparedStatement.setLong(1, worldID);
-        preparedStatement.setLong(2, edgeID);
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM EDGES WHERE edge_id = ?");
+        preparedStatement.setLong(1, edgeID);
         ResultSet result = preparedStatement.executeQuery();
         boolean hasNext = result.next();
         preparedStatement.close();

@@ -35,7 +35,9 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
      */
     public AbstractBiome(AbstractBiomeMemento memento) {
         this.load(memento);
-        this.parentBiome.childBiomes.add(this);
+        this.childBiomes = new ArrayList<>();
+        this.biomeName = memento.biomeType;
+        this.tiles = new ArrayList<>();
     }
 
     /**
@@ -205,7 +207,7 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
         private long parentBiomeID;
 
         //Starting seed for the noise generator for the biome
-        protected long noiseGeneratorSeed ;
+        protected long noiseGeneratorSeed;
 
         private AbstractBiomeMemento(AbstractBiome biome) {
             this.worldID = biome.worldID;
@@ -221,6 +223,24 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
             } else {
                 this.parentBiomeID = biome.parentBiome.id;
             }
+        }
+
+        /**
+         * Get the biome type of this biome
+         *
+         * @return the biome type of this biome
+         */
+        public String getBiomeType() {
+            return this.biomeType;
+        }
+
+        /**
+         * Get the parent biome id of this biome
+         *
+         * @return the parent biome id of this biome
+         */
+        public long getParentBiomeID() {
+            return this.parentBiomeID;
         }
     }
 }

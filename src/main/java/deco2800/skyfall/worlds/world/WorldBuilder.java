@@ -151,7 +151,7 @@ public class WorldBuilder implements WorldBuilderInterface {
      * @param world The world that will get static entities
      * @author Micheal CC
      */
-    protected Map<AbstractBiome, List<EntitySpawnRule>> generateStartEntities(World world) {
+     Map<AbstractBiome, List<EntitySpawnRule>> generateStartEntities(World world) {
         HashMap<AbstractBiome, List<EntitySpawnRule>> spawnRules = new HashMap<>();
 
         long worldSeed = world.getSeed();

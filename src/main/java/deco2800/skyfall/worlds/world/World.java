@@ -3,7 +3,7 @@ package deco2800.skyfall.worlds.world;
 import com.badlogic.gdx.Gdx;
 import com.google.gson.Gson;
 import deco2800.skyfall.entities.*;
-import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
+import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
@@ -91,9 +91,25 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
      * @param save the save file this world is in
      */
     public World(WorldMemento memento, Save save) {
+        this.worldParameters = new WorldParameters();
         this.load(memento);
         this.save = save;
-        // TODO:dannathan nodes and edges
+        this.loadedChunks = new HashMap<>();
+
+        HashMap<AbstractBiome, List<EntitySpawnRule>> spawnRules = new HashMap<>();
+
+        EntitySpawnRule.setNoiseSeed(this.worldParameters.getSeed());
+        initialiseFrictionmap();
+        staticEntityNoise = new NoiseGenerator((new Random(this.worldParameters.getSeed())).nextLong(), 3, 4, 1.3);
+
+    }
+
+    private Map<AbstractBiome, List<EntitySpawnRule>> generateStartEntitiesInternal(World world) {
+        return new WorldBuilder().generateStartEntities(this);
+    }
+
+    public void generateStartEntities() {
+        this.spawnRules = this.generateStartEntitiesInternal(this);
     }
 
     /**
@@ -102,7 +118,6 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
      */
     public World(WorldParameters worldParameters){
         // TODO:Ontonator Consider whether `worldSize` must be a multiple of `CHUNK_SIDE_LENGTH`.
-        // TODO:dannathan add the world to a save
         this.id = System.nanoTime();
         this.worldParameters = worldParameters;
 
@@ -628,6 +643,15 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         return worldGenNodes;
     }
 
+    /**
+     * Sets the nodes in this world
+     *
+     * @param nodes the nodes in this world
+     */
+    public void setWorldGenNodes(List<WorldGenNode> nodes) {
+        this.worldGenNodes = new CopyOnWriteArrayList<>(nodes);
+    }
+
     public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
         // only allow right clicks to collect resources
         if (button != 1) {
@@ -801,6 +825,9 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         this.worldParameters.setBeachWidth(worldMemento.beachWidth);
         this.worldParameters.setBeachWidth(worldMemento.riverWidth);
         this.worldParameters.setNodeSpacing(worldMemento.nodeSpacing);
+        this.worldParameters.setSeed(worldMemento.seed);
+        this.tileOffsetNoiseGeneratorX = worldMemento.tileOffsetNoiseGeneratorX;
+        this.tileOffsetNoiseGeneratorY = worldMemento.tileOffsetNoiseGeneratorY;
     }
 
     public class WorldMemento extends AbstractMemento {
@@ -809,6 +836,9 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         private int nodeSpacing;
         private double riverWidth;
         private double beachWidth;
+        private NoiseGenerator tileOffsetNoiseGeneratorX;
+        private NoiseGenerator tileOffsetNoiseGeneratorY;
+        private long seed;
 
         public WorldMemento(World world) {
             // TODO (probably in the main save method)
@@ -817,6 +847,9 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
             this.nodeSpacing = world.worldParameters.getNodeSpacing();
             this.riverWidth = world.worldParameters.getRiverWidth();
             this.beachWidth = world.worldParameters.getBeachWidth();
+            this.tileOffsetNoiseGeneratorX = world.tileOffsetNoiseGeneratorX;
+            this.tileOffsetNoiseGeneratorY = world.tileOffsetNoiseGeneratorY;
+            this.seed = world.getWorldParameters().getSeed();
         }
     }
 }

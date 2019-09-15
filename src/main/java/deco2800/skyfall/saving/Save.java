@@ -68,6 +68,15 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
     }
 
     /**
+     * Sets the id of this save
+     *
+     * @param id the id of this save
+     */
+    public void setSaveID(long id) {
+        this.saveID = id;
+    }
+
+    /**
      * Returns a list of ID's of the worlds in this save state
      *
      * @return a list of ID's of the worlds in this save state
@@ -122,6 +131,10 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
         private SaveMemento(Save save) {
             this.saveID = save.getSaveID();
             this.currentWorld = save.currentWorld.getID();
+        }
+
+        public long getWorldID() {
+            return this.currentWorld;
         }
 
     }

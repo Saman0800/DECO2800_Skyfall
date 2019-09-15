@@ -54,11 +54,7 @@ public class MainCharacter extends Peon
     }
 
     public static MainCharacter loadMainCharacter(MainCharacterMemento memento, Save save) {
-        if (mainCharacterInstance == null) {
-            mainCharacterInstance = new MainCharacter(memento, save);
-        } else {
-            mainCharacterInstance.load(memento);
-        }
+        mainCharacterInstance = new MainCharacter(memento, save);
         return mainCharacterInstance;
     }
 
@@ -1339,6 +1335,7 @@ public class MainCharacter extends Peon
     public void load(MainCharacterMemento memento) {
         this.id = memento.mainCharacterID;
         this.equipped_item = memento.equippedItem;
+        this.setPosition(memento.x, memento.y);
         this.level = memento.level;
         this.foodLevel = memento.foodLevel;
         this.foodAccum = memento.foodAccum;
@@ -1346,7 +1343,6 @@ public class MainCharacter extends Peon
         this.blueprintsLearned = memento.blueprints;
         this.inventories = memento.inventory;
         this.weapons = memento.weapons;
-        this.hotbar = memento.hotbar;
     }
 
     public class MainCharacterMemento extends AbstractMemento {
@@ -1354,6 +1350,9 @@ public class MainCharacter extends Peon
         //TODO:dannathan add stuff for entitiy
         private long saveID;
         private long mainCharacterID;
+
+        private float x;
+        private float y;
 
         private int equippedItem;
         private int level;
@@ -1364,13 +1363,14 @@ public class MainCharacter extends Peon
         private InventoryManager inventory;
         private WeaponManager weapons;
         private HashMap<Integer, Integer> goldPouch;
-        private List<Item> hotbar;
 
         private List<String> blueprints;
 
         public MainCharacterMemento(MainCharacter character) {
             this.saveID = character.save.getSaveID();
             this.mainCharacterID = character.id;
+            this.x = character.getCol();
+            this.y = character.getRow();
             this.equippedItem = character.equipped_item;
             this.level = character.level;
             this.foodLevel = character.foodLevel;
@@ -1379,7 +1379,6 @@ public class MainCharacter extends Peon
             this.blueprints = character.blueprintsLearned;
             this.inventory = character.inventories;
             this.weapons = character.weapons;
-            this.hotbar = character.hotbar;
         }
     }
 }

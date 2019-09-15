@@ -417,9 +417,6 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
 
     @Override
     public void load(VoronoiEdgeMemento memento) {
-        this.edgeNodes.add(new WorldGenNode(0, 0));
-        this.edgeNodes.add(new WorldGenNode(0, 0));
-
         this.pointA = new double[] {memento.ax, memento.ay};
         this.pointB = new double[] {memento.bx, memento.by};
     }
