@@ -60,12 +60,11 @@ public class WorldDirector {
 
         builder.addEntity(mainCharacter);
         GameManager.getManagerFromInstance(GameMenuManager.class).setMainCharacter(mainCharacter);
-
-        builder.addEntity(new Spider(-8f, -1f, mainCharacter));
-        builder.addEntity(new Robot(-4, -2, mainCharacter));
+        
         builder.addEntity(new Stone(-4, -3, mainCharacter));
         builder.addEntity(new DragonHome(0, 2, mainCharacter));
         builder.addEntity(new Flower(2f,2f,mainCharacter));
+        builder.addEntity(new Flower(5f,2f,mainCharacter));
         builder.addEntity(new Treeman(-2f,-3f,mainCharacter));
 
         builder.addEntity(new GoldPiece(-6f,1f));
