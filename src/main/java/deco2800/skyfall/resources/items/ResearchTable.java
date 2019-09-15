@@ -1,15 +1,13 @@
 package deco2800.skyfall.resources.items;
 
-import com.badlogic.gdx.Game;
-import deco2800.skyfall.buildings.BuildingEntity;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.managers.ConstructionManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.ManufacturedResources;
+import deco2800.skyfall.util.HexVector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,9 +24,6 @@ public class ResearchTable extends ManufacturedResources implements Blueprint,
     private  int goldCost;
 
     private final Logger logger = LoggerFactory.getLogger(MainCharacter.class);
-
-    //a map of all the required resources to create this item
-    private Map<String, Integer> allRequirements;
 
     //the player inventory
     private InventoryManager playerInvenotry;
@@ -95,7 +90,8 @@ public class ResearchTable extends ManufacturedResources implements Blueprint,
      */
     @Override
     public Map<String, Integer> getAllRequirements() {
-        allRequirements = new HashMap<>();
+        //a map of all the required resources to create this item
+        Map<String, Integer> allRequirements = new HashMap<>();
         allRequirements.put("Wood", 100);
         allRequirements.put("Stone", 50);
         allRequirements.put("Metal", 30);
@@ -122,6 +118,11 @@ public class ResearchTable extends ManufacturedResources implements Blueprint,
         return "Research Table";
     }
 
+    @Override
+    public int getCost() {
+        return 0;
+    }
+
     /**
      * Returns the item description
      *
@@ -131,6 +132,11 @@ public class ResearchTable extends ManufacturedResources implements Blueprint,
     public String getDescription() {
         return "A research table is used to retrieve blueprints in exchange " +
                 "of resources or gold";
+    }
+
+    @Override
+    public void use(HexVector position) {
+
     }
 
     /**
@@ -162,23 +168,5 @@ public class ResearchTable extends ManufacturedResources implements Blueprint,
     public int getRequiredMetal() {
         return 30;
     }
-
-    /**
-     * a getter method to check if a player has learned the blueprint
-     *
-     * @return true if the player has learned the blueprint.
-     */
-    @Override
-    public boolean isBlueprintLearned() {
-        return super.isBlueprintLearned();
-    }
-
-    /**
-     * changes the boolean blueprintLearned to true.
-     */
-    @Override
-    public void toggleBlueprintLearned() {
-        super.toggleBlueprintLearned();
-    }
-
 }
+

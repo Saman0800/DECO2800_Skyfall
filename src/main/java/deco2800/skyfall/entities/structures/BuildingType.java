@@ -1,9 +1,7 @@
 package deco2800.skyfall.entities.structures;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -50,6 +48,8 @@ public enum BuildingType {
             case "Wall":
                 buildingTextures = initialiseFenceTextures();
                 break;
+            default:
+                break;
         }
     }
 
@@ -59,7 +59,7 @@ public enum BuildingType {
      * @return the Cabin textures
      */
     public List<String> initialiseCabinTextures() {
-        List<String> buildingTextures = new ArrayList<String>();
+        List<String> buildingTextures = new ArrayList<>();
         buildingTextures.add("cabin_0");
         buildingTextures.add("cabin_90");
         buildingTextures.add("cabin_180");
@@ -73,7 +73,7 @@ public enum BuildingType {
      * @return the StorageUnit textures
      */
     public List<String> initialiseStorageUnitTextures() {
-        List<String> storageUnitTextures = new ArrayList<String>();
+        List<String> storageUnitTextures = new ArrayList<>();
         storageUnitTextures.add("storage_unit");
         return storageUnitTextures;
     }
@@ -84,7 +84,7 @@ public enum BuildingType {
      * @return the TownCentre textures
      */
     public List<String> initialiseTownCentreTextures() {
-        List<String> townCentreTextures = new ArrayList<String>();
+        List<String> townCentreTextures = new ArrayList<>();
         townCentreTextures.add("town_centre");
         return townCentreTextures;
     }
@@ -95,7 +95,7 @@ public enum BuildingType {
      * @return the Castle textures
      */
     public List<String> initialiseCastleTextures() {
-        List<String> castleCentreTextures = new ArrayList<String>();
+        List<String> castleCentreTextures = new ArrayList<>();
         castleCentreTextures.add("castle_0");
         castleCentreTextures.add("castle_90");
         castleCentreTextures.add("castle_180");
@@ -109,7 +109,7 @@ public enum BuildingType {
      * @return the safe house textures
      */
     public List<String> initialiseSafeHouseTextures() {
-        List<String> safeHouseTextures = new ArrayList<String>();
+        List<String> safeHouseTextures = new ArrayList<>();
         safeHouseTextures.add("safe_house_0");
         safeHouseTextures.add("safe_house_90");
         safeHouseTextures.add("safe_house_180");
@@ -123,7 +123,7 @@ public enum BuildingType {
      * @return the watch tower textures
      */
     public List<String> initialiseWatchTowerTextures() {
-        List<String> watchTowerTextures = new ArrayList<String>();
+        List<String> watchTowerTextures = new ArrayList<>();
         watchTowerTextures.add("watchtower_0");
         watchTowerTextures.add("watchtower_90");
         watchTowerTextures.add("watchtower_180");
@@ -137,7 +137,7 @@ public enum BuildingType {
      * @return the Wall textures
      */
     public List<String> initialiseFenceTextures() {
-        List<String> fenceTextures = new ArrayList<String>();
+        List<String> fenceTextures = new ArrayList<>();
         fenceTextures.add("fenceN-S");
         fenceTextures.add("fenceNE-SW");
         fenceTextures.add("fenceNW-SE");

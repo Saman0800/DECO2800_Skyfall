@@ -43,7 +43,7 @@ public class LinearSpectralValue extends SpectralValue {
 
     public LinearSpectralValue(List<TFTuple> startTuples) {
 
-        if (startTuples.size() == 0) {
+        if (startTuples.isEmpty()) {
             throw new IllegalArgumentException("There must be at least two starting tuples.");
         }
 
@@ -166,5 +166,5 @@ public class LinearSpectralValue extends SpectralValue {
         calcLinearCoeff();
 
         return calcIntensity(time);
-    };
+    }
 }

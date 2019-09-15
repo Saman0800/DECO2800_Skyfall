@@ -121,7 +121,7 @@ public class ShaderWrapper {
      */
     public void setAmbientComponent(vec3 color, float intensity) {
         ambientColour = color.getClampedComponents(0.0f, 1.0f);
-        ambientIntensity = clamp(intensity, 0.0f, 1.0f);;
+        ambientIntensity = clamp(intensity, 0.0f, 1.0f);
         if (active) {
             shaderProgram.setUniformf("sunStrength", ambientIntensity);
             shaderProgram.setUniformf("sunColour", ambientColour.x, ambientColour.y, ambientColour.z);

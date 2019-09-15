@@ -78,7 +78,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         double[] centroid = { 0, 0 };
         // If there are no vertices, return the same position this node is
         // already in
-        if (this.vertices.size() == 0) {
+        if (this.vertices.isEmpty()) {
             centroid[0] = this.getX();
             centroid[1] = this.getY();
             return centroid;
