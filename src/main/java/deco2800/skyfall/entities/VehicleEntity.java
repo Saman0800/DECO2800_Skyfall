@@ -7,7 +7,7 @@ public abstract class VehicleEntity extends Peon {
 
     private final transient Logger log = LoggerFactory.getLogger(EnemyEntity.class);
 
-    private int damage;
+    private int health;
 
     private boolean available = true;
 
@@ -16,17 +16,13 @@ public abstract class VehicleEntity extends Peon {
         this.setCol(col);
     }
 
-    public VehicleEntity(float row, float col, String textureName,int damage) {
-        super(row, col, 0.2f, textureName, damage);
+    public VehicleEntity(float row, float col, String textureName,int health) {
+        super(row, col, 0.2f, textureName, health);
         this.setTexture(textureName);
     }
 
     public void onTick(long i) {
         // Do nothing on tick
-    }
-
-    public int getDamage() {
-        return damage;
     }
 
     public boolean isAvailable() {
@@ -35,5 +31,13 @@ public abstract class VehicleEntity extends Peon {
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    public int getHealth() {
+        return this.health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
     }
 }
