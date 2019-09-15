@@ -46,7 +46,7 @@ public class MainCharacter extends Peon
     //List of blueprints that the player has learned.
 
     private List<Blueprint> blueprintsLearned;
-
+    private PetsManager petsManager;
     private BuildingFactory tempFactory;
 
 
@@ -185,7 +185,7 @@ public class MainCharacter extends Peon
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
 
         this.inventories = GameManager.getManagerFromInstance(InventoryManager.class);
-
+        this.petsManager = GameManager.getManagerFromInstance(PetsManager.class);
         this.level = 1;
         this.foodLevel = 100;
         foodAccum = 0.f;
@@ -697,6 +697,7 @@ public class MainCharacter extends Peon
         public void onTick ( long i){
             this.updatePosition();
             this.movementSound();
+            this.petsManager.allPets();
 
             //this.setCurrentSpeed(this.direction.len());
             //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
@@ -800,7 +801,7 @@ public class MainCharacter extends Peon
                     selectSpell(SpellType.TORNADO);
                     break;
                 case Input.Keys.V:
-                    petOut();
+                    petsManager.replacePet(this);
                     break;
                 default:
                     switchItem(keycode);
