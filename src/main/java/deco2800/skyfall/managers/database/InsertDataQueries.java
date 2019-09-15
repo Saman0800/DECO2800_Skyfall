@@ -7,14 +7,16 @@ import java.sql.Statement;
 
 public class InsertDataQueries {
 
-    private Statement statement;
+    private Connection connection;
 
-    public InsertDataQueries(Statement statement) {
-        this.statement = statement;
+    public InsertDataQueries(Connection connection) {
+        this.connection = connection;
     }
 
     public void insertSave(long id, String data) throws SQLException{
-        String query = String.format("insert into SAVES (save_id, data) values (%s, '%s')", id, data);
+        String query = String.format(, id, data);
+        PreparedStatement preparedStatement = connection.prepareStatement("insert into SAVES (save_id, data) values (?, ?)");
+
         statement.executeUpdate(query);
     }
 
