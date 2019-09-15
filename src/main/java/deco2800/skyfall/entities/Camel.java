@@ -78,4 +78,12 @@ public class Camel extends VehicleEntity {
         return this.moving;
     }
 
+    public boolean checkAvailable(String bomie) {
+        if (!bomie.equals(BIOME)) {
+            available = false;
+        } else {
+            available = true;
+        }
+        return available;
+    }
 }
