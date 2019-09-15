@@ -249,7 +249,7 @@ public class Tiger extends EnemyEntity implements Animatable {
      *
      */
     public void followPlayer(MainCharacter player){
-        destination = new HexVector(player.getCol(), player.getRow());
+        destination = new HexVector(player.getCol()-1, player.getRow()-1);
         this.position.moveToward(destination, this.getSpeed());
 
     }
