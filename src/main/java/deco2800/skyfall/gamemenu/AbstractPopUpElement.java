@@ -12,12 +12,18 @@ import deco2800.skyfall.managers.TextureManager;
 
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
+/**
+ * Generic Pop up element.
+ * By default just displays an exit button.
+ */
 public class AbstractPopUpElement extends AbstractUIElement {
     protected GameMenuManager gameMenuManager;
-    ImageButton exitButton;
-    protected boolean isVisible = false;
+    private ImageButton exitButton;
+    private boolean isVisible = false;
 
-
+    /**
+     * Hides all of the elements associated with the element.
+     */
     public void hide() {
 //        System.out.println("hiding exit");
         exitButton.setVisible(false);
@@ -42,6 +48,9 @@ public class AbstractPopUpElement extends AbstractUIElement {
         GameScreen.isPaused = true;
     }
 
+    /**
+     * Shows the element
+     */
     public void show(){
 //        System.out.println("showing exit");
         exitButton.setVisible(true);
@@ -49,12 +58,26 @@ public class AbstractPopUpElement extends AbstractUIElement {
         pause();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updatePosition() {
-        exitButton.setPosition(Gdx.graphics.getWidth() * 0.9f, Gdx.graphics.getHeight() * 0.9f);
+        float x  = stage.getCamera().position.x  + (stage.getCamera().viewportWidth / 2);
+        float y = stage.getCamera().position.y  +  (stage.getCamera().viewportHeight / 2);
+        exitButton.setPosition(x * 0.9f, y * 0.9f);
     }
 
-    public AbstractPopUpElement(Stage stage, ImageButton exitButton, String[] textureNames, TextureManager tm, GameMenuManager gameMenuManager) {
+    /**
+     * Constructor
+     * @param stage Game stage
+     * @param exitButton Exit button to display
+     * @param textureNames Texture names to fetch
+     * @param tm The texture manager
+     * @param gameMenuManager The gamemenumanager
+     */
+    public AbstractPopUpElement(Stage stage, ImageButton exitButton, String[] textureNames,
+                                TextureManager tm, GameMenuManager gameMenuManager) {
         super(stage, textureNames, tm);
         this.exitButton = exitButton;
         this.gameMenuManager = gameMenuManager;
@@ -74,7 +97,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
         if (exitButton != null) {
 //            System.out.println("Drawing exit");
             exitButton.setSize(80, 80 * 207f / 305);
-            exitButton.setPosition(Gdx.graphics.getWidth() * 0.9f, Gdx.graphics.getHeight() * 0.9f);
+            updatePosition();
             exitButton.setVisible(false);
             stage.addActor(exitButton);
         }

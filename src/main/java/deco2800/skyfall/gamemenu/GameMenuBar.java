@@ -4,9 +4,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import deco2800.skyfall.gui.Clock;
-import deco2800.skyfall.gui.WeatherGui;
-import deco2800.skyfall.managers.EnvironmentManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
 import org.slf4j.Logger;
@@ -32,12 +29,17 @@ public class GameMenuBar extends AbstractUIElement {
     }
 
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updatePosition() {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void draw() {
         TextureManager textureManager = this.tm;
@@ -137,14 +139,8 @@ public class GameMenuBar extends AbstractUIElement {
             }
         });
 
-        Clock clock = new Clock(stage);
 
-        gameMenuManager.addClock(clock);
 
-        String currentWeather;
-        currentWeather = EnvironmentManager.currentWeather();
-        WeatherGui weather = new WeatherGui(stage, currentWeather); // need to have this for any weather
-        gameMenuManager.addWeather(weather);
 
         LOGGER.info("Finished drawing menu bar");
     }

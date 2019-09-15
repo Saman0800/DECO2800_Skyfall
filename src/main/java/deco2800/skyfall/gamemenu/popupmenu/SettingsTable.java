@@ -38,6 +38,10 @@ public class SettingsTable extends AbstractPopUpElement{
         this.soundManager = soundManager;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void hide() {
         super.hide();
@@ -45,6 +49,10 @@ public class SettingsTable extends AbstractPopUpElement{
         settingsTable.setVisible(false);
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void show() {
         super.show();
@@ -52,15 +60,25 @@ public class SettingsTable extends AbstractPopUpElement{
         settingsTable.setVisible(true);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updatePosition() {
         super.updatePosition();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void update() {
         super.update();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void draw() {
         super.draw();
@@ -70,6 +88,7 @@ public class SettingsTable extends AbstractPopUpElement{
         settingsTable.setPosition(Gdx.graphics.getWidth()/2f - settingsTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - settingsTable.getHeight()/2);
 //        settingsTable.setDebug(true);
+        settingsTable.setName("settingsTable");
         settingsTable.top();
         settingsTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
 

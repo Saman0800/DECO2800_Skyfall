@@ -57,4 +57,19 @@ public class ProjectileTest  {
         assertThat("", projectile.getRow(), is(equalTo(0.29289323f)));
     }
 
+    /**
+     * Test the onTick method of the projectile.
+     */
+    @Test
+    public void testOnTick() {
+        assertThat("", projectile.ticksAliveFor, is(equalTo(0L)));
+        projectile.onTick(0);
+        assertThat("", projectile.ticksAliveFor, is(equalTo(1L)));
+        projectile.onTick(99999);
+        assertThat("", projectile.ticksAliveFor, is(equalTo(2L)));
+        projectile.onTick(-1);
+        assertThat("", projectile.ticksAliveFor, is(equalTo(3L)));
+
+    }
+
 }

@@ -28,8 +28,6 @@ public class Shield extends Spell {
     @Override
     public void onTick(long tick) {
         super.onTick(tick);
-
-        //TODO: get the MC and keep locked on their position.
         this.setPosition(this.mc.getCol(),this.mc.getRow(),this.mc.getHeight());
     }
 
