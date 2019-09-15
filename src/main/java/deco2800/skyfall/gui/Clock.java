@@ -1,6 +1,5 @@
 package deco2800.skyfall.gui;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import deco2800.skyfall.managers.*;
@@ -90,11 +89,11 @@ public class Clock {
 
         // Monitor seasons
         if (season != null) {
-            if (season == "Summer") {
+            if (season.equals("Summer")) {
                 seasonTexture = "summer";
-            } else if (season == "Winter") {
+            } else if (season.equals("Winter")) {
                 seasonTexture = "winter";
-            } else if (season == "Autumn") {
+            } else if (season.equals("Autumn")) {
                 seasonTexture = "autumn";
             } else {
                 seasonTexture = "spring";
