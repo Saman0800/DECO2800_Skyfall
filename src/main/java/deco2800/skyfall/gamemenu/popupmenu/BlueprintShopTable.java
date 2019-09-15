@@ -131,10 +131,6 @@ public class BlueprintShopTable extends AbstractPopUpElement{
             }
             blueprintPanel.addActor(icon);
 
-            Label cost = new Label("$" + b.getCost(), skin, "white-label");
-            cost.setPosition(xpos + 85 + count * 130, ypos + 75);
-            blueprintPanel.addActor(cost);
-
             count++;
 
             if ((count) % 3 == 0) {
