@@ -1,20 +1,13 @@
 package deco2800.skyfall.gui;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import deco2800.skyfall.managers.*;
-import org.lwjgl.Sys;
 
 public class Clock {
-
-    private EnvironmentManager environmentManager;
-    private Image Clock;
+    private Image clockDisplay;
     private Stage stage;
-    private float positionX;
-    private float positionY;
     private String clockTexture;
 
 
@@ -23,8 +16,6 @@ public class Clock {
      * @param s Stage to display things on
      */
     public Clock(Stage s) {
-        this.environmentManager = GameManager.getManagerFromInstance(EnvironmentManager.class);
-
         stage = s;
 
         BitmapFont bitmapFont  = new BitmapFont();
@@ -32,59 +23,56 @@ public class Clock {
 
         clockTexture = "dawn";
 
-        this.Clock = new Image(GameMenuManager.generateTextureRegionDrawableObject(clockTexture));
+        this.clockDisplay = new Image(GameMenuManager.generateTextureRegionDrawableObject(clockTexture));
 
         updateWithViewportChanges();
 
-        stage.addActor(Clock);
+        stage.addActor(clockDisplay);
     }
 
     /**
-     * Maintains position of clock with resizes
+     * Maintains position of clockDisplay with resizes
      */
     private void updateWithViewportChanges() {
+        float positionX;
+        float positionY;
+
         positionX = (stage.getCamera().position.x  + (stage.getCamera().viewportWidth / 2) - 280);
         positionY = (stage.getCamera().position.y  +  (stage.getCamera().viewportHeight / 2) - 70);
 
-        Clock.setPosition(positionX, positionY);
+        clockDisplay.setPosition(positionX, positionY);
     }
 
     /**
-     * Updates clock arrow in accordance with time
+     * Updates clockDisplay arrow in accordance with time
      */
     private void updateDisplay() {
-        long time = GameManager.get().getManager(EnvironmentManager.class).hours;
+        int time = GameManager.get().getManager(EnvironmentManager.class).getTime();
 
         if (GameManager.get().getManager(EnvironmentManager.class).getTOD() != null) {
-            if (time >= 4 && time <= 9) {
+            if (time >= 5 && time <= 9) {
                 clockTexture = "dawn";
-                Clock.setDrawable(GameMenuManager.generateTextureRegionDrawableObject(clockTexture));
-            }
-
-            if (time >= 10 && time <= 16) {
+            } else if (time >= 10 && time <= 16) {
                 clockTexture = "day";
-                Clock.setDrawable(GameMenuManager.generateTextureRegionDrawableObject(clockTexture));
-            }
-
-            if (time >= 17 && time <= 19) {
+            } else if (time >= 17 && time <= 19) {
                 clockTexture = "dusk";
-                Clock.setDrawable(GameMenuManager.generateTextureRegionDrawableObject(clockTexture));
-            }
-
-            if (time >= 20 && time <=  23) {
+            } else {
                 clockTexture = "night";
-                Clock.setDrawable(GameMenuManager.generateTextureRegionDrawableObject(clockTexture));
             }
-
-            if (time >= 0 && time <=  3) {
-                clockTexture = "night";
-                Clock.setDrawable(GameMenuManager.generateTextureRegionDrawableObject(clockTexture));
-            }
+            clockDisplay.setDrawable(GameMenuManager.generateTextureRegionDrawableObject(clockTexture));
         }
     }
 
+    public String getClockTexture() {
+        return clockTexture;
+    }
+
+    public Image getClockDisplay() {
+        return clockDisplay;
+    }
+
     /**
-     * Updates the clock and resizes if necessary
+     * Updates the clockDisplay and resizes if necessary
      */
     public void update() {
         updateWithViewportChanges();
