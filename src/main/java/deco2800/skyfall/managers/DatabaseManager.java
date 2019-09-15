@@ -2,6 +2,7 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.worlditems.*;
+import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.util.HexVector;
@@ -32,6 +33,10 @@ public final class DatabaseManager extends AbstractManager {
     private static final String COLPOSSTRING = "colPos";
     private static String saveName = "";
     private static List<String> saveNameList = new ArrayList<>();
+
+    private static DatabaseManager instance = null;
+
+    private static DataBaseConnector dataBaseConnector;
 
     private DatabaseManager() {
         /*
@@ -246,6 +251,13 @@ public final class DatabaseManager extends AbstractManager {
                 | InvocationTargetException e) {
             return null;
         }
+    }
+
+    public static DatabaseManager get() {
+        if (instance == null) {
+            instance = new DatabaseManager();
+        }
+        return instance;
     }
 
     private static AbstractEntity checkBasicEntitySettings(AbstractEntity entity, String entityField,
@@ -517,5 +529,20 @@ public final class DatabaseManager extends AbstractManager {
         writeToJson(entireJsonAsString.toString());
         GameManager.get().getManager(OnScreenMessageManager.class).addMessage("Game saved to the database.");
     }
+
+    public void startDataBaseConnector(){
+        dataBaseConnector = new DataBaseConnector();
+        dataBaseConnector.start();
+    }
+
+    public void closeDataBaseConnector(){
+        dataBaseConnector.close();
+    }
+
+    public DataBaseConnector getDataBaseConnector() {
+        return dataBaseConnector;
+    }
+
+
 
 }

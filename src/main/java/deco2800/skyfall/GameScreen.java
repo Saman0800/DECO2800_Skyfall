@@ -65,15 +65,18 @@ public class GameScreen implements Screen,KeyDownObserver {
         /* Create an example world for the engine */
         this.game = game;
 
+
         this.save = new Save();
         MainCharacter.getInstance(0,0,0.05f, "Main Piece", 10);
         MainCharacter.getInstance().setSave(this.save);
         this.save.setMainCharacter(MainCharacter.getInstance());
         GameManager gameManager = GameManager.get();
         GameMenuManager gameMenuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+        DatabaseManager databaseManager = DatabaseManager.get();
         gameMenuManager.setStage(stage);
         gameMenuManager.setSkin(gameManager.getSkin());
         gameMenuManager.setGame(game);
+        databaseManager.startDataBaseConnector();
 
         //Used to create to the world
 
@@ -306,14 +309,15 @@ public class GameScreen implements Screen,KeyDownObserver {
         }
 
         if (keycode == Input.Keys.P) {
-            DataBaseConnector dataBaseConnector = new DataBaseConnector();
-            dataBaseConnector.start();
             try {
+
+                DatabaseManager.get().getDataBaseConnector().saveWorld(world);
+            } catch (SQLException e){
+                System.out.println(e);
                 dataBaseConnector.saveGame(save);
             } catch (SQLException e) {
                 System.out.println(e);
             }
-            dataBaseConnector.close();
             // TODO:dannathan Save
         }
 
