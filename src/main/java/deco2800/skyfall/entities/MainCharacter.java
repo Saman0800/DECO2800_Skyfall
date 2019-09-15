@@ -1,14 +1,10 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.audio.Sound;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.pets.AbstractPet;
-import deco2800.skyfall.entities.pets.Dragon;
+import deco2800.skyfall.entities.pets.Lizard;
+import deco2800.skyfall.entities.pets.Whitebear;
 import deco2800.skyfall.entities.spells.SpellFactory;
-import deco2800.skyfall.entities.structures.BuildingType;
-import deco2800.skyfall.entities.spells.SpellFactory;
-import deco2800.skyfall.entities.weapons.Sword;
-import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.entities.worlditems.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.Vector2;
@@ -697,7 +693,6 @@ public class MainCharacter extends Peon
         public void onTick ( long i){
             this.updatePosition();
             this.movementSound();
-            this.petsManager.allPets();
 
             //this.setCurrentSpeed(this.direction.len());
             //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
@@ -735,6 +730,10 @@ public class MainCharacter extends Peon
             }
         }
 
+        public PetsManager getPetsManager(){
+            return this.petsManager;
+        }
+
         /**
          * Move character towards a destination
          */
@@ -755,6 +754,7 @@ public class MainCharacter extends Peon
          * Sets the appropriate movement flags to true on keyDown
          * @param keycode the key being pressed
          */
+        boolean petout = false;
         @Override
         public void notifyKeyDown ( int keycode){
             GoldPiece g = new GoldPiece(5);
@@ -811,20 +811,36 @@ public class MainCharacter extends Peon
         }
         public void petOut(){
             List<Item> items=this.inventories.getInventoryContents().get("dragon");
+            List<Item> items1=this.inventories.getInventoryContents().get("whitebear");
             if(items!=null){
                 for(Item item:items){
                     if(item instanceof AbstractPet){
-                        Dragon d=(Dragon)item;
+                        Lizard d=(Lizard)item;
                         if(!d.getOutSide()){
                             System.out.println("hello");
                             this.inventories.quickAccessRemove("dragon");
-                            AbstractPet dragon=new Dragon(this.getCol()-2,this.getRow()-2,this);
-                            ((Dragon) dragon).setDomesticated(true);
+                            AbstractPet dragon=new Lizard(this.getCol()-2,this.getRow()-2,this);
+                            ((Lizard) dragon).setDomesticated(true);
                             GameManager.get().getWorld().addEntity(dragon);
                         }
                     }
                 }
             }
+            if(items1!=null){
+                for(Item item:items1){
+                    if(item instanceof AbstractPet){
+                        Whitebear wb=(Whitebear) item;
+                        if(!wb.getOutSide()){
+                            System.out.println("hello");
+                            this.inventories.quickAccessRemove("whitebear");
+                            AbstractPet whitebear=new Whitebear(this.getCol()-2,this.getRow()-2,this);
+                            ((Whitebear) whitebear).setDomesticated(true);
+                            GameManager.get().getWorld().addEntity(whitebear);
+                        }
+                    }
+                }
+            }
+
         }
         /**
          * Select the spell that the character is ready to cast.

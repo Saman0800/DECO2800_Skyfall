@@ -1,0 +1,24 @@
+
+tigerMovementFront.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+tiger_front
+  rotate: false
+  xy: 1, 1
+  size: 812, 865
+  orig: 812, 865
+  offset: 0, 0
+  index: -1
+
+tigerMovementFront2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+tiger_front1
+  rotate: false
+  xy: 1, 1
+  size: 812, 865
+  orig: 812, 865
+  offset: 0, 0
+  index: -1

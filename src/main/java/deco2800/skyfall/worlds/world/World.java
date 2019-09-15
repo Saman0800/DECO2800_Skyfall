@@ -2,8 +2,8 @@ package deco2800.skyfall.worlds.world;
 
 import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.*;
-import deco2800.skyfall.entities.pets.Dragon;
-import deco2800.skyfall.entities.pets.DragonHome;
+import deco2800.skyfall.entities.pets.AbstractPet;
+import deco2800.skyfall.entities.pets.LizardHome;
 import deco2800.skyfall.gamemenu.GameMenuScreen;
 
 import deco2800.skyfall.entities.AbstractEntity;
@@ -566,9 +566,10 @@ public class World implements TouchDownObserver {
                 continue;
             }
             if (entity instanceof Harvestable) {
-                if(entity instanceof DragonHome){
-                    ((DragonHome) entity).cutDragonHomeTree();
-                    if(((DragonHome) entity).getHealth()<=0){
+                //harvest
+                if(entity instanceof LizardHome){
+                    ((LizardHome) entity).cutlizardHomeTree();
+                    if(((LizardHome) entity).getHealth()<=0){
                         removeEntity(entity);
                         List<AbstractEntity> drops = ((Harvestable) entity).harvest(tile);
                         for (AbstractEntity drop : drops) {
@@ -607,13 +608,21 @@ public class World implements TouchDownObserver {
                 mc.addGold((GoldPiece) entity,((GoldPiece) entity).getValue());
                 gmm.getInventory().inventoryAdd((Item) entity);
                 removeEntity(entity);
-            } else if (entity instanceof Dragon){
+            } else if (entity instanceof AbstractPet && entity instanceof Item){
                 if (tile.getCoordinates().distance(gmm.getMainCharacter().getPosition()) > 2) {
                     continue;
                 }
                 gmm.getInventory().inventoryAdd((Item) entity);
+                gmm.getMainCharacter().getPetsManager().addPet((AbstractPet) entity);
                 removeEntity(entity);
             }
+//            else if (entity instanceof Whitebear){
+//                if (tile.getCoordinates().distance(gmm.getMainCharacter().getPosition()) > 2) {
+//                    continue;
+//                }
+//                gmm.getInventory().inventoryAdd((Item) entity);
+//                removeEntity(entity);
+//            }
         }
     }
 }

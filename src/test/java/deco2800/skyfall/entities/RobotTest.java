@@ -41,7 +41,7 @@ public class RobotTest {
      */
     @Test
     public void healTest(){
-        Assert.assertEquals(20,robot.getHealth());
+        Assert.assertEquals(10,robot.getHealth());
     }
 
 
