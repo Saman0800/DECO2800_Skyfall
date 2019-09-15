@@ -509,7 +509,7 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
 
         // FIXME:Ontonator Check that this works.
         MainCharacter mc = MainCharacter.getInstance();
-        int radius = 2;
+        int radius = 50;
         setLoadedArea(mc.getCol() - radius, mc.getRow() - radius, mc.getCol() + radius, mc.getRow() + radius);
     }
 

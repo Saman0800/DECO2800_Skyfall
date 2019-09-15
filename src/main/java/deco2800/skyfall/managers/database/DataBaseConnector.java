@@ -257,6 +257,13 @@ public class DataBaseConnector {
                 return chunk;
             }
             Chunk chunk = new Chunk(world, gson.fromJson(result.getString("DATA"), Chunk.ChunkMemento.class));
+
+            PreparedStatement entityquery = connection.prepareStatement("SELECT * FROM ENTITIES WHERE CHUNK_X = ? and CHUNK_Y = ?");
+//            entityquery.setInt(chunk.getX());
+//            ResultSet entityResult =
+
+
+
             preparedStatement.close();
             return chunk;
         } catch (SQLException e){
