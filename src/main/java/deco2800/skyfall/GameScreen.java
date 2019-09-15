@@ -310,7 +310,8 @@ public class GameScreen implements Screen,KeyDownObserver {
             dataBaseConnector.start();
             try {
                 dataBaseConnector.saveGame(save);
-            } catch (SQLException ignored) {
+            } catch (SQLException e) {
+                System.out.println(e);
             }
             dataBaseConnector.close();
             // TODO:dannathan Save

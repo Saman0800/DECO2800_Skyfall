@@ -236,7 +236,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
 
     @Override
     public void load(StaticEntityMemento memento) {
-        this.setPosition(memento.position.getCol(), memento.position.getRow(), memento.height);
+        this.setPosition(memento.row, memento.col);
         this.setEntityID(memento.entityID);
         this.renderOrder = memento.renderOrder;
         this.obstructed = memento.obstructed;
@@ -253,7 +253,8 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
     public class StaticEntityMemento extends AbstractMemento {
         private String staticEntityType;
         private int height;
-        private HexVector position;
+        private float row;
+        private float col;
         private int entityID;
         private float colRenderLength;
         private float rowRenderLength;
@@ -272,7 +273,8 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         public StaticEntityMemento(StaticEntity entity) {
             this.staticEntityType = entity.entityType;
             this.height = entity.getHeight();
-            this.position = entity.getPosition();
+            this.row = entity.getRow();
+            this.col = entity.getCol();
             this.entityID = entity.getEntityID();
             this.colRenderLength = entity.getColRenderLength();
             this.rowRenderLength = entity.getRowRenderLength();
