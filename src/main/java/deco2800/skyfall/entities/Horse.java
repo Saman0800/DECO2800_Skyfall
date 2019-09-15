@@ -10,7 +10,7 @@ public class Horse extends VehicleEntity {
     private AbstractBiome biomeType = new DesertBiome();
     private static TextureManager textureManager;
     private Stage stage;
-    private static final transient String BIOME = "desert";
+    private static final transient String BIOME = "forest";
     private MainCharacter mc;
     private boolean available = true;
     private boolean moving=false;

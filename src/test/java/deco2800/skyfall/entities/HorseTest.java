@@ -42,7 +42,7 @@ public class HorseTest {
      */
     @Test
     public void testBiome(){
-        Assert.assertEquals("desert", horse.getBiome());
+        Assert.assertEquals("forest", horse.getBiome());
     }
 
 
