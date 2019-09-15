@@ -23,10 +23,10 @@ public class PickAxeTest {
 
     @Before
     public void setUp() {
-        owner = MainCharacter.getInstance(1f, 1f, 0.05f, "player", 100);
+        owner = MainCharacter.getInstance(1f, 1f, 0.05f, "player", 10);
         position = new HexVector(1f, 1f);
         pickAxe = new PickAxe(owner, position);
-        testTile = new Tile(1f, 1f);
+        testTile = new Tile(null, 1f, 1f);
         rockToFarm = new Rock(testTile, true);
     }
 

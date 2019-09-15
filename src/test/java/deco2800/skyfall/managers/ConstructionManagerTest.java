@@ -1,29 +1,56 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.buildings.BuildingEntity;
+import deco2800.skyfall.entities.structures.AbstractBuilding;
 import deco2800.skyfall.entities.structures.TownCentreBuilding;
+import deco2800.skyfall.entities.structures.WallBuilding;
+import deco2800.skyfall.managers.database.DataBaseConnector;
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.After;
+import org.junit.runner.RunWith;
+import org.mockito.stubbing.Answer;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
-import deco2800.skyfall.entities.structures.AbstractBuilding;
-import deco2800.skyfall.entities.structures.WallBuilding;
-import deco2800.skyfall.worlds.Tile;
-
+import java.util.Random;
 import java.util.TreeMap;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.powermock.api.mockito.PowerMockito.*;
+
 //Add all tests related to the construction manager
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ WorldBuilder.class, WorldDirector.class, DatabaseManager.class, DataBaseConnector.class })
 public class ConstructionManagerTest {
     private GameManager gm;
     private ConstructionManager cmgr;
     private WorldBuilder wb;
 
     @Before
-    public void setup() {
+    public void setup() throws Exception {
+        Random random = new Random(0);
+        whenNew(Random.class).withAnyArguments().thenReturn(random);
+
+        DataBaseConnector connector = mock(DataBaseConnector.class);
+        when(connector.loadChunk(any(World.class), anyInt(), anyInt())).then(
+                (Answer<Chunk>) invocation -> new Chunk(invocation.getArgumentAt(0, World.class),
+                                                        invocation.getArgumentAt(1, Integer.class),
+                                                        invocation.getArgumentAt(2, Integer.class)));
+
+        DatabaseManager manager = mock(DatabaseManager.class);
+        when(manager.getDataBaseConnector()).thenReturn(connector);
+
+        mockStatic(DatabaseManager.class);
+        when(DatabaseManager.get()).thenReturn(manager);
+
         this.gm = GameManager.get();
         this.cmgr = new ConstructionManager();
         wb = new WorldBuilder();
@@ -127,7 +154,7 @@ public class ConstructionManagerTest {
     public void emptyTerrainTest() {
         String terrain = "";
         boolean bool = false;
-        Tile tile = new Tile(1, 1);
+        Tile tile = new Tile(null, 1, 1);
 
         tile.setTexture(terrain);
         this.cmgr.updateTerrainMap(terrain, bool);
@@ -139,7 +166,7 @@ public class ConstructionManagerTest {
     public void existTerrainTest() {
         String terrain = "River";
         boolean bool = false;
-        Tile tile = new Tile(1, 1);
+        Tile tile = new Tile(null, 1, 1);
 
         tile.setTexture(terrain);
         this.cmgr.updateTerrainMap(terrain, bool);
@@ -149,7 +176,7 @@ public class ConstructionManagerTest {
 
     @Test
     public void verifyBoimeTest() {
-        Tile tile = new Tile(1, 1);
+        Tile tile = new Tile(null, 1, 1);
         tile.setIsBuildable(false);
         Assert.assertFalse(this.cmgr.verifyBiome(tile));
         tile.setIsBuildable(true);

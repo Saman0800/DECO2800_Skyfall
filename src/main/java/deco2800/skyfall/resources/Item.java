@@ -47,6 +47,9 @@ public interface Item {
      */
     String getDescription();
 
-
+    /**
+     * Use the specific function associated with the item.
+     */
+    void use(HexVector position);
 
 }

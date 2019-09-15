@@ -8,16 +8,16 @@ public class LongGrass extends StaticEntity {
 
     private static final String ENTITY_ID_STRING = "long_grass";
     private static Random randomGen = new Random();
-    private static int nextRock = 1;
+    private static int nextTexture = 1;
 
     public LongGrass() {
         this.setObjectName(ENTITY_ID_STRING);
     }
 
     public LongGrass(Tile tile, boolean obstructed) {
-        super(tile, 2, "bush" + nextRock, obstructed);
+        super(tile, 2, "bush" + LongGrass.nextTexture, obstructed);
         this.setObjectName(ENTITY_ID_STRING);
-        nextRock = randomGen.nextInt(3) + 1;
+        LongGrass.nextTexture = randomGen.nextInt(3) + 1;
         this.entityType = "LongGrass";
     }
 

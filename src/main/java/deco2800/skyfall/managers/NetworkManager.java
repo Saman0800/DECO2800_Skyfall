@@ -23,7 +23,7 @@ import java.util.List;
  *
  * Handles both server and client side of the networking stack.
  */
-public class NetworkManager extends TickableManager  {
+public class NetworkManager extends TickableManager {
     private static final Logger logger = LoggerFactory.getLogger(NetworkManager.class);
 
     private boolean isConnected = false;
@@ -122,7 +122,7 @@ public class NetworkManager extends TickableManager  {
      * @return boolean - Was the connection successful?
      */
     @SuppressWarnings("rawtypes")
-	public boolean connectToHost(String ip, String username) {
+    public boolean connectToHost(String ip, String username) {
         this.localUsername = username;
         logger.info("Connecting with username {}", this.localUsername);
         if (isConnected || isHosting) {
@@ -136,8 +136,8 @@ public class NetworkManager extends TickableManager  {
         Kryo kyro = client.getKryo();
         // KYRO auto registration
         kyro.setRegistrationRequired(false);
-        ((Kryo.DefaultInstantiatorStrategy)
-                kyro.getInstantiatorStrategy()).setFallbackInstantiatorStrategy(new StdInstantiatorStrategy());
+        ((Kryo.DefaultInstantiatorStrategy) kyro.getInstantiatorStrategy())
+                .setFallbackInstantiatorStrategy(new StdInstantiatorStrategy());
 
         // Start the client on ports 54555 and 54777
         client.start();
@@ -151,7 +151,7 @@ public class NetworkManager extends TickableManager  {
 
         // Add all listeners for the client, allowing it to receive information from the host.
         client.addListener(new Listener() {
-            public void received (Connection connection, Object object) {
+            public void received(Connection connection, Object object) {
                 messagesReceived++;
                 if (object instanceof TileUpdateMessage) {
                     GameManager.get().getWorld().updateTile(((TileUpdateMessage) object).tile);
@@ -159,7 +159,7 @@ public class NetworkManager extends TickableManager  {
                     // GameManager.get().getWorld().generateNeighbours();
                 } else if (object instanceof ChatMessage) {
                     GameManager.get().getManager(OnScreenMessageManager.class).addMessage(object.toString());
-                } else if (object instanceof SingleEntityUpdateMessage){
+                } else if (object instanceof SingleEntityUpdateMessage) {
                     GameManager.get().getWorld().updateEntity(((SingleEntityUpdateMessage) object).entity);
                 } else if (object instanceof TileDeleteMessage) {
                     GameManager.get().getWorld().deleteTile(((TileDeleteMessage) object).tileID);
@@ -167,13 +167,11 @@ public class NetworkManager extends TickableManager  {
                     GameManager.get().getWorld().deleteEntity(((EntityDeleteMessage) object).entityID);
                 }
             }
-         });
+        });
 
-        
+        logger.info(
+                "Sending initial connect message to host, requesting initial information to be sent to this client.");
 
-
-        logger.info("Sending initial connect message to host, requesting initial information to be sent to this client.");
-        
         ConnectMessage request = new ConnectMessage();
         request.username = username;
         client.sendTCP(request);
@@ -193,7 +191,7 @@ public class NetworkManager extends TickableManager  {
      * @return true if
      */
     @SuppressWarnings("rawtypes")
-	public boolean startHosting(String username) {
+    public boolean startHosting(String username) {
         this.localUsername = username;
         logger.info("Hosting with username {}", this.localUsername);
         if (isConnected || isHosting) {
@@ -207,8 +205,8 @@ public class NetworkManager extends TickableManager  {
         Kryo kyro = server.getKryo();
         // KYRO auto registration
         kyro.setRegistrationRequired(false);
-        ((Kryo.DefaultInstantiatorStrategy)
-                kyro.getInstantiatorStrategy()).setFallbackInstantiatorStrategy(new StdInstantiatorStrategy());
+        ((Kryo.DefaultInstantiatorStrategy) kyro.getInstantiatorStrategy())
+                .setFallbackInstantiatorStrategy(new StdInstantiatorStrategy());
 
         // Start the server on ports 54555 and 54777
         server.start();
@@ -223,14 +221,14 @@ public class NetworkManager extends TickableManager  {
         logger.info("Attempting to add message listeners to server.");
         server.addListener(new Listener() {
             @Override
-            public void received (Connection connection, Object object) {
+            public void received(Connection connection, Object object) {
                 messagesReceived++;
-                System.out.println(object);
+                System.err.println(object);
 
                 if (object instanceof SingleEntityUpdateMessage) {
                     SingleEntityUpdateMessage message = (SingleEntityUpdateMessage) object;
 
-                    System.out.println(message);
+                    System.err.println(message);
 
                     GameManager.get().getWorld().updateEntity(((SingleEntityUpdateMessage) object).entity);
                 }
@@ -291,9 +289,9 @@ public class NetworkManager extends TickableManager  {
     /**
      * Runs each tick for clients.
      */
-    private void onTickClient(){
+    private void onTickClient() {
+        // Not implement. Do nothing on tick
     }
-
 
     /**
      * Sends a chat message to the network clients
@@ -301,7 +299,8 @@ public class NetworkManager extends TickableManager  {
      */
     public void sendChatMessage(String message) {
         if (isHosting) {
-            GameManager.get().getManager(OnScreenMessageManager.class).addMessage("[" + this.localUsername + "] " + message);
+            GameManager.get().getManager(OnScreenMessageManager.class)
+                    .addMessage("[" + this.localUsername + "] " + message);
             server.sendToAllTCP(new ChatMessage(this.localUsername, message));
         } else {
             client.sendTCP(new ChatMessage(this.localUsername, message));
@@ -343,8 +342,6 @@ public class NetworkManager extends TickableManager  {
             client.sendTCP(msg);
         }
     }
-
-
 
     /**
      * Delete the given entity.

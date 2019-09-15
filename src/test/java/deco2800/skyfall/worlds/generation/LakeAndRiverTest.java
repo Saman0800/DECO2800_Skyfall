@@ -1,25 +1,34 @@
 package deco2800.skyfall.worlds.generation;
 
+import deco2800.skyfall.managers.DatabaseManager;
+import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import deco2800.skyfall.worlds.biomes.ForestBiome;
-import deco2800.skyfall.worlds.biomes.OceanBiome;
-import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
-import deco2800.skyfall.worlds.world.WorldParameters;
+import deco2800.skyfall.worlds.world.Chunk;
+import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.world.WorldBuilder;
+import deco2800.skyfall.worlds.world.WorldDirector;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.stubbing.Answer;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.rmi.activation.UnknownGroupException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.powermock.api.mockito.PowerMockito.*;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({WorldBuilder.class, WorldDirector.class})
 public class LakeAndRiverTest {
-    private static WorldParameters WORLD_PARAMETERS;
+    private static List<World> worlds;
 
     private static final int TEST_COUNT = 5;
     private static final int[] NODE_COUNTS = { 10, 10, 10, 5, 5 };
@@ -39,126 +48,54 @@ public class LakeAndRiverTest {
 
     private static final int BEACH_WIDTH = 5;
 
-    private static ArrayList<ArrayList<AbstractBiome>> biomeLists;
-    private static ArrayList<ArrayList<WorldGenNode>> worldGenNodesList;
-    private static ArrayList<HashMap<WorldGenNode, AbstractBiome>> nodesBiomesList;
-    private static List<Tile> originTiles;
+    // private static ArrayList<ArrayList<AbstractBiome>> biomeLists;
+    // private static ArrayList<ArrayList<WorldGenNode>> worldGenNodesList;
+    // private static ArrayList<HashMap<WorldGenNode, AbstractBiome>> nodesBiomesList;
+    // private static List<Tile> originTiles;
 
     @BeforeClass
-    public static void setup() {
-        WORLD_PARAMETERS = new WorldParameters();
+    public static void setup() throws Exception {
         Random random = new Random(0);
-        WORLD_PARAMETERS.setWorldSize(WORLD_SIZE);
-        WORLD_PARAMETERS.setNodeSpacing(NODE_SPACING);
-        WORLD_PARAMETERS.setLakeSizes(LAKE_SIZES);
-        WORLD_PARAMETERS.setNumOfLakes(LAKE_COUNT);
-        WORLD_PARAMETERS.setRiverWidth(RIVER_WIDTH);
-        WORLD_PARAMETERS.setNoRivers(RIVER_COUNT);
-        WORLD_PARAMETERS.setBeachWidth(BEACH_WIDTH);
+        whenNew(Random.class).withNoArguments().thenReturn(random);
 
-        biomeLists = new ArrayList<>(TEST_COUNT);
-        worldGenNodesList = new ArrayList<>();
-        nodesBiomesList = new ArrayList<>();
-        originTiles = new ArrayList<>();
+        DataBaseConnector connector = mock(DataBaseConnector.class);
+        when(connector.loadChunk(any(World.class), anyInt(), anyInt())).then(
+                (Answer<Chunk>) invocation -> new Chunk(invocation.getArgumentAt(0, World.class),
+                                                        invocation.getArgumentAt(1, Integer.class),
+                                                        invocation.getArgumentAt(2, Integer.class)));
+
+        DatabaseManager manager = mock(DatabaseManager.class);
+        when(manager.getDataBaseConnector()).thenReturn(connector);
+
+        mockStatic(DatabaseManager.class);
+        when(DatabaseManager.get()).thenReturn(manager);
+
+        worlds = new ArrayList<>();
 
         for (int i = 0; i < TEST_COUNT; i++) {
-            while (true) {
-                ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
-
-                int nodeCount = Math.round((float) WORLD_SIZE * WORLD_SIZE * 4 / NODE_SPACING / NODE_SPACING);
-
-                for (int j = 0; j < nodeCount; j++) {
-                    // Sets coordinates to a random number from -WORLD_SIZE to WORLD_SIZE
-                    float x = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
-                    float y = (float) (random.nextFloat() - 0.5) * 2 * WORLD_SIZE;
-                    worldGenNodes.add(new WorldGenNode(x, y));
-                }
-
-                // Apply Delaunay triangulation to the nodes, so that vertices and
-                // adjacencies can be calculated. Also apply Lloyd Relaxation twice
-                // for more smooth looking polygons
-                try {
-                    WorldGenNode.calculateVertices(worldGenNodes, WORLD_SIZE);
-                    WorldGenNode.lloydRelaxation(worldGenNodes, 2, WORLD_SIZE);
-                } catch (WorldGenException e) {
-                    continue;
-                }
-                worldGenNodesList.add(worldGenNodes);
-
-                ArrayList<Tile> tiles = new ArrayList<>();
-                for (int q = -WORLD_SIZE; q <= WORLD_SIZE; q++) {
-                    for (int r = -WORLD_SIZE; r <= WORLD_SIZE; r++) {
-                        float oddCol = (q % 2 != 0 ? 0.5f : 0);
-
-                        Tile tile = new Tile(q, r + oddCol);
-                        tiles.add(tile);
-                        if (q == 0 && r == 0) {
-                            originTiles.add(tile);
-                        }
-                    }
-                }
-
-                generateTileNeighbours(tiles);
-                // TODO this
-                List<VoronoiEdge> edges = new ArrayList<>();
-
-                try {
-                    WorldGenNode.assignTiles(worldGenNodes, tiles, random, NODE_SPACING);
-                    WorldGenNode.removeZeroTileNodes(worldGenNodes, WORLD_SIZE);
-                    WorldGenNode.assignNeighbours(worldGenNodes, edges);
-                } catch (WorldGenException e) {
-                    continue;
-                }
-
-                ArrayList<AbstractBiome> biomes = new ArrayList<>(NODE_COUNTS.length + 1);
-                for (int j = 0; j < NODE_COUNTS.length; j++) {
-                    biomes.add(new ForestBiome());
-                }
-
-                VoronoiEdge.assignTiles(edges, tiles, WORLD_SIZE);
-                VoronoiEdge.assignNeighbours(edges);
-                WORLD_PARAMETERS.setBiomes(biomes);
-                WORLD_PARAMETERS.setBiomeSizes(NODE_COUNTS);
-
-                try {
-                    BiomeGenerator biomeGenerator =
-                            new BiomeGenerator(worldGenNodes, edges, random,   WORLD_PARAMETERS);
-                    biomeGenerator.generateBiomes();
-                } catch (NotEnoughPointsException | DeadEndGenerationException e) {
-                    continue;
-                }
-
-                biomeLists.add(biomes);
-
-                // Get the biome for each node by checking the biome of one if it's
-                // tiles
-                HashMap<WorldGenNode, AbstractBiome> nodesBiomes = new HashMap<>();
-                for (WorldGenNode node : worldGenNodes) {
-                    nodesBiomes.put(node, node.getTiles().get(0).getBiome());
-                }
-                nodesBiomesList.add(nodesBiomes);
-
-                break;
-            }
+            WorldBuilder builder = new WorldBuilder();
+            WorldDirector.constructNBiomeSinglePlayerWorld(builder, 3);
+            worlds.add(builder.getWorld());
         }
     }
 
     @AfterClass
     public static void tearDown() {
-        biomeLists = null;
-        worldGenNodesList = null;
-        nodesBiomesList = null;
+        // biomeLists = null;
+        // worldGenNodesList = null;
+        // nodesBiomesList = null;
+        worlds = null;
     }
 
     @Test
     public void lakeNotInOceanOrOtherLakeTest() {
-        for (HashMap<WorldGenNode, AbstractBiome> nodesBiomes : nodesBiomesList) {
-            for (WorldGenNode node : nodesBiomes.keySet()) {
-                if (nodesBiomes.get(node).getBiomeName().equals("lake")) {
+        for (World world : worlds) {
+            for (WorldGenNode node : world.getWorldGenNodes()) {
+                if (node.getBiome().getBiomeName().equals("lake")) {
                     for (WorldGenNode neighbour : node.getNeighbours()) {
-                        assertNotEquals("ocean", nodesBiomes.get(neighbour).getBiomeName());
-                        assertFalse(nodesBiomes.get(neighbour).getBiomeName().equals("lake")
-                                && nodesBiomes.get(neighbour) != nodesBiomes.get(node));
+                        assertNotEquals("ocean", neighbour.getBiome().getBiomeName());
+                        assertFalse(neighbour.getBiome().getBiomeName().equals("lake")
+                                && neighbour.getBiome() != node.getBiome());
                     }
                 }
             }
@@ -167,8 +104,8 @@ public class LakeAndRiverTest {
 
     @Test
     public void parentBiomeTest() {
-        for (List<AbstractBiome> biomes : biomeLists) {
-            for (AbstractBiome biome : biomes) {
+        for (World world : worlds) {
+            for (AbstractBiome biome : world.getBiomes()) {
                 if (biome.getBiomeName().equals("lake")) {
                     assertNotNull(biome.getParentBiome());
                 } else if (biome.getBiomeName().equals("river")) {
@@ -181,7 +118,8 @@ public class LakeAndRiverTest {
 
     @Test
     public void noWaterOnOriginTile() {
-        for (Tile tile : originTiles) {
+        for (World world : worlds) {
+            Tile tile = world.getTile(0, 0);
             assertFalse(tile.getBiome().getBiomeName().equals("lake")
                     || tile.getBiome().getBiomeName().equals("river"));
         }
@@ -189,10 +127,10 @@ public class LakeAndRiverTest {
 
     @Test
     public void correctNumberTest() {
-        for (List<AbstractBiome> biomes : biomeLists) {
+        for (World world : worlds) {
             int noLakes = 0;
             int noRivers = 0;
-            for (AbstractBiome biome : biomes) {
+            for (AbstractBiome biome : world.getBiomes()) {
                 if (biome.getBiomeName().equals("lake")) {
                     noLakes++;
                 }
@@ -208,8 +146,8 @@ public class LakeAndRiverTest {
     @Test
     @Ignore
     public void riverTerminatingBiomeTest() {
-        for (List<AbstractBiome> biomes : biomeLists) {
-            for (AbstractBiome biome : biomes) {
+        for (World world : worlds) {
+            for (AbstractBiome biome : world.getBiomes()) {
                 if (!biome.getBiomeName().equals("river")) {
                     continue;
                 }

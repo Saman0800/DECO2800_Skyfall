@@ -5,10 +5,20 @@ import com.google.gson.Gson;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
 import deco2800.skyfall.managers.DatabaseManager;
+import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.AgentEntity;
+import deco2800.skyfall.entities.Harvestable;
+import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.entities.weapons.Weapon;
+import deco2800.skyfall.gamemenu.popupmenu.BlueprintShopTable;
+import deco2800.skyfall.gamemenu.popupmenu.ChestTable;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.SaveLoadInterface;
 import deco2800.skyfall.observers.TouchDownObserver;
+import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.saving.Saveable;
@@ -28,6 +38,7 @@ import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import org.javatuples.Pair;
 
+import deco2800.skyfall.graphics.HasPointLight;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -82,6 +93,10 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
 
     protected WorldParameters worldParameters;
 
+    private GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
+
+    //private MainCharacter mc = gmm.getMainCharacter();
+
     private Save save;
 
     /**
@@ -100,7 +115,7 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
      * The constructor for a world
      * @param worldParameters A class that contains the world parameters
      */
-    public World(WorldParameters worldParameters){
+    public World(WorldParameters worldParameters) {
         // TODO:Ontonator Consider whether `worldSize` must be a multiple of `CHUNK_SIDE_LENGTH`.
         // TODO:dannathan add the world to a save
         this.id = System.nanoTime();
@@ -111,7 +126,7 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         riverEdges = new LinkedHashMap<>();
         beachEdges = new LinkedHashMap<>();
         worldGenNodes = new CopyOnWriteArrayList<>();
-    	voronoiEdges = new CopyOnWriteArrayList<>();
+        voronoiEdges = new CopyOnWriteArrayList<>();
 
         tileOffsetNoiseGeneratorX = Tile.getOffsetNoiseGenerator(random, worldParameters.getNodeSpacing());
         tileOffsetNoiseGeneratorY = Tile.getOffsetNoiseGenerator(random, worldParameters.getNodeSpacing());
@@ -153,6 +168,9 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         }
 
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
+
+        // TODO Is this the best way of doing this?
+        getTile(0,0).setObstructed(true);
     }
 
     /**
@@ -280,6 +298,16 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         chunk.addEntity(entity);
     }
 
+    // FIXME:Ontonator Make this work with chunks.
+    /**
+     * Gets all the luminous entities from the world.
+     *
+     * @return A list a luminous entities from the game world
+     */
+    public List<AbstractEntity> getLuminousEntities() {
+        return worldParameters.getLuminousEntities();
+    }
+
     /**
      * Removes an entity from the world
      *
@@ -310,6 +338,13 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         }
         for (AbstractEntity entity : entities) {
             addEntity(entity);
+        }
+
+        // FIXME:Ontonator Make this work with chunks.
+        for (AbstractEntity entity : entities) {
+            if ((entity instanceof HasPointLight) && !entities.contains(entity)) {
+                this.worldParameters.addLuminousEntity(entity);
+            }
         }
     }
 
@@ -462,41 +497,14 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
     public void onTick(long i) {
         // Don't tick the entities in the outer band. This allows entities to detect collisions with entities which
         // are not in the loaded area, since nothing in the outer band will ever be able to move.
-        List<AbstractEntity> allEntities = getEntities();
-        List<AbstractEntity> activeEntities = getLoadedChunks().values().stream()
+        List<AbstractEntity> entities = getLoadedChunks().values().stream()
                 .filter(chunk -> chunk.getX() > loadedAreaLowerX && chunk.getY() > loadedAreaLowerY &&
                         chunk.getX() < loadedAreaUpperX - 1 && chunk.getY() < loadedAreaUpperY - 1)
                 .flatMap(chunk -> chunk.getEntities().stream())
                 .collect(Collectors.toList());
 
-        // Collision detection for entities
-        for (AbstractEntity e1 : activeEntities) {
-            if (e1 instanceof StaticEntity) {
-                // Static entities can't move into other entities. Only worry
-                // about entities that can move themselves into other entities
-                continue;
-            }
-            e1.onTick(i);
-            //if (e1.getCollider() == null) {
-            //    break;
-            //}
-            Collider c1 = e1.getCollider();
-            for (AbstractEntity e2 : allEntities) {
-                if (e2.getCollider() == null) {
-                    break;
-                }
-                Collider c2 = e2.getCollider();
-                if (e1 != e2 && c1.overlaps(c2)) {
-                    if (e1 instanceof MainCharacter || e2 instanceof
-                            MainCharacter) {
-                        break;
-                    }
-                    //collision handler
-                    //    this.handleCollision(e1, e2);
-                    //    break;
-                }
-            }
-            // no collision here
+        for (AbstractEntity entity : entities) {
+            entity.onTick(i);
         }
 
         for (AbstractEntity e : entitiesToDelete) {
@@ -559,24 +567,22 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
 
         // TODO: this needs to be internalized into classes for cleaner code.
         if (e1 instanceof Projectile && e2 instanceof EnemyEntity) {
-            if(((EnemyEntity) e2).getHealth()>0){
+            if (((EnemyEntity) e2).getHealth() > 0) {
                 ((EnemyEntity) e2).takeDamage(((Projectile) e1).getDamage());
                 ((EnemyEntity) e2).setAttacked(true);
                 ((Projectile) e1).destroy();
-            }else{
+            } else {
                 ((EnemyEntity) e2).setDead(true);
             }
 
-
         } else if (e2 instanceof Projectile && e1 instanceof EnemyEntity) {
-            if(((EnemyEntity) e1).getHealth()>0){
+            if (((EnemyEntity) e1).getHealth() > 0) {
                 ((EnemyEntity) e1).takeDamage(((EnemyEntity) e1).getDamage());
                 ((EnemyEntity) e1).setAttacked(true);
                 ((Projectile) e2).destroy();
-            }else{
+            } else {
                 ((EnemyEntity) e1).setDead(true);
             }
-
 
         }
     }
@@ -655,6 +661,28 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
                 for (AbstractEntity drop : drops) {
                     addEntity(drop);
                 }
+            } else if (entity instanceof Weapon) {
+                MainCharacter mc = gmm.getMainCharacter();
+                if (tile.getCoordinates().distance(mc.getPosition()) > 2) {
+                    continue;
+                }
+                removeEntity(entity);
+                gmm.getInventory().add((Item) entity);
+                if (!mc.getEquipped().equals(((Weapon) entity).getName())) {
+                    gmm.getInventory().quickAccessRemove(mc.getEquipped());
+                    gmm.getInventory().quickAccessAdd(((Weapon) entity).getName());
+                    mc.setEquipped(((Weapon) entity).getName());
+                }
+            } else if (entity instanceof Chest) {
+                GameMenuManager menuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+                ChestTable chest = (ChestTable) menuManager.getPopUp("chestTable");
+                chest.updateChestPanel((Chest) entity);
+                menuManager.setPopUp("chestTable");
+            } else if (entity instanceof BlueprintShop) {
+                GameMenuManager menuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+                BlueprintShopTable bs = (BlueprintShopTable) menuManager.getPopUp("blueprintShopTable");
+                bs.updateBlueprintShopPanel();
+                menuManager.setPopUp("blueprintShopTable");
             }
         }
     }

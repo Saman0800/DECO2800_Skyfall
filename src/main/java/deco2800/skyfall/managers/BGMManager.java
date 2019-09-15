@@ -2,6 +2,8 @@ package deco2800.skyfall.managers;
 
 import java.io.File;
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sound.sampled.*;
 
@@ -25,12 +27,16 @@ public class BGMManager extends AbstractManager {
     /* Boolean mute control */
     public static BooleanControl muteVol;
 
-    EnvironmentManager environmentManager;
+    // Logger for class to display messages
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(BGMManager.class);
+
+    public static boolean paused = false;
 
     /**
      * Background music constructor
      */
-    public static void BGMManager() {
+    public BGMManager() {
         // Set parameters here
     }
 
@@ -58,8 +64,7 @@ public class BGMManager extends AbstractManager {
             volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 
         } catch (Exception e) {
-            System.out.println("Cannot play sound from given file.");
-            e.printStackTrace();
+            LOGGER.warn("Cannot play sound from given file.");
         }
 
     }
@@ -69,7 +74,8 @@ public class BGMManager extends AbstractManager {
      */
     public static void play()  {
         //Play the clip
-        clip.start();
+            System.out.println("pause is false play()");
+            clip.start();
     }
 
     /**
@@ -98,8 +104,7 @@ public class BGMManager extends AbstractManager {
     /**
      * Stops the clip.
      */
-    public static void stop() throws UnsupportedAudioFileException,
-            IOException, LineUnavailableException {
+    public static void stop() {
         //Reset clip
         currentPosition = 0L;
         clip.stop();
@@ -155,17 +160,18 @@ public class BGMManager extends AbstractManager {
      * Sets the volume of the clip.
      * @param x is the intended float value to set the clip to.
      */
-    public static void setVolume(float x) throws IndexOutOfBoundsException,
-            NullPointerException, IllegalArgumentException {
+    public static void setVolume(float x) {
         // Checks whether the given value is valid.
         try {
             volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 
-            if (!(x > volume.getMaximum()) && !(x < volume.getMinimum())) {
+            if ((x <= volume.getMaximum()) && (x >= volume.getMinimum())) {
                 volume.setValue(x);
             } else {
                 throw new IndexOutOfBoundsException();
             }
-        } catch (NullPointerException | IllegalArgumentException ex) { }
+        } catch (NullPointerException | IllegalArgumentException ex) {
+            LOGGER.warn(String.valueOf(ex));
+        }
     }
 }

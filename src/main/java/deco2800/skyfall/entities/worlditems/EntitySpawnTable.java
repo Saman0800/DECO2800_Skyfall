@@ -139,6 +139,7 @@ public class EntitySpawnTable {
      * @param newInstance a function which creates a new instance to place
      * @param chance      probability that the entity will be in a given tile
      * @param <T>         T must extend StaticEntity and have .newInstance inherited
+     * @param world  specified biome to spawn in, null for no specification
      */
     public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntity(
             Function<Tile, StaticEntity> newInstance, double chance, World world, Tile tile) {

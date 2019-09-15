@@ -1,7 +1,6 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -14,19 +13,12 @@ import deco2800.skyfall.buildings.BuildingEntity;
 import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.buildings.BuildingWidgets;
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.structures.AbstractBuilding;
 import deco2800.skyfall.entities.structures.BuildingType;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.Vector2;
-import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.entities.AbstractEntity;
-
-import javax.swing.*;
-
 
 /**
  * Managers the construction process
@@ -107,10 +99,7 @@ public class ConstructionManager extends AbstractManager {
         settingMenu.setPosition(width / 8, height / 8);
 
         buildMenu.setVisible(false);
-        Container<Table> tableContainer = new Container<Table>();
-
-        float sw = Gdx.graphics.getWidth();
-        float sh = Gdx.graphics.getHeight();
+        Container<Table> tableContainer = new Container<>();
 
         float cw = width * 0.7f;
         float ch = height * 0.5f;
@@ -536,7 +525,7 @@ public class ConstructionManager extends AbstractManager {
 
             String item = entry.getKey();
             Integer amount = entry.getValue();
-            inventoryManager.inventoryDropMultiple(item, amount);
+            inventoryManager.dropMultiple(item, amount);
         }
     }
 
@@ -548,7 +537,8 @@ public class ConstructionManager extends AbstractManager {
 
     /**
      *
-     * @param buildings
+     * @param buildings list of buildings to be merged
+     * @param inventoryManager the inventory manager of the player
      */
     public boolean mergeBuilding(AbstractBuilding[] buildings, InventoryManager inventoryManager) {
 
@@ -580,8 +570,6 @@ public class ConstructionManager extends AbstractManager {
      */
     public BuildingEntity selectBuilding(int index, float row, float col){
         switch (index){
-            default:
-                return null;
             case 0:
                 return buildingFactory.createCabin(row, col);
             case 1:
@@ -596,8 +584,8 @@ public class ConstructionManager extends AbstractManager {
                 return buildingFactory.createWatchTower(row, col);
             case 6:
                 return buildingFactory.createCastle(row, col);
-
-
+            default:
+                return null;
         }
     }
 }
