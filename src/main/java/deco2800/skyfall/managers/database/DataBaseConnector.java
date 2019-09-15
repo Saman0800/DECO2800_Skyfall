@@ -5,25 +5,15 @@ import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.saving.Save;
-import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import org.javatuples.Pair;
 import org.apache.derby.jdbc.EmbeddedDriver;
+
+import java.sql.*;
+import java.util.ArrayList;
 
 public class DataBaseConnector {
     private Connection connection;
@@ -202,26 +192,34 @@ public class DataBaseConnector {
      * @return The chunk from the database if it exists in the database. A new chunk if the chunk does not exist in the database.
      * @throws SQLException
      */
-    public Chunk loadChunk(World world,int x, int y) throws SQLException{
-        Gson gson = new Gson();
-        String query = String.format("SELECT * FROM CHUNKS WHERE X=%s and Y=%s and WORLD_ID=%s", x, y, world.getID());
-        Statement statement = connection.createStatement();
-        ResultSet result = statement.executeQuery(query);
+    public Chunk loadChunk(World world,int x, int y){
+        try{
+            Gson gson = new Gson();
+            String query = String.format("SELECT * FROM CHUNKS WHERE X=%s and Y=%s and WORLD_ID=%s", x, y, world.getID());
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(query);
 
-        if (!result.next()) {
-            Chunk chunk = new Chunk(world, x, y);
-            chunk.generateEntities();
-            statement.close();
-            return chunk;
+            if (!result.next()) {
+                Chunk chunk = new Chunk(world, x, y);
+                chunk.generateEntities();
+                statement.close();
+                return chunk;
+            }
+
+            return new Chunk(world, gson.fromJson(result.getString(1), Chunk.ChunkMemento.class));
+        } catch (SQLException e){
+            throw new RuntimeException(e);
         }
-
-        return new Chunk(world, gson.fromJson(result.getString(1), Chunk.ChunkMemento.class));
     }
 
-    public void saveChunk(Chunk chunk) throws SQLException{
-        Gson gson = new Gson();
-        InsertDataQueries insertDataQueries = new InsertDataQueries(connection);
-        insertDataQueries.insertChunk(chunk.getWorld().getID(),chunk.getX(), chunk.getY(), gson.toJson(chunk.save()));
+    public void saveChunk(Chunk chunk) {
+        try {
+            Gson gson = new Gson();
+            InsertDataQueries insertDataQueries = new InsertDataQueries(connection);
+            insertDataQueries.insertChunk(chunk.getWorld().getID(),chunk.getX(), chunk.getY(), gson.toJson(chunk.save()));
+        } catch (SQLException e){
+            throw new RuntimeException(e);
+        }
     }
 
 
