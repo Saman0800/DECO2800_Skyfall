@@ -19,8 +19,7 @@ public class DetectSand {
     public void putCharacter(){
         if(biomeType.getBiomeName()=="desert"){
             System.out.println("this is desert");
-            //Image menuBar = new Image(textureManager.getTexture("camel_character"));
-            //stage.addActor(menuBar);
+            
         }
     }
 }
