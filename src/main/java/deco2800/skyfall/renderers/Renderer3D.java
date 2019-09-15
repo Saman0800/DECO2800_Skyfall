@@ -1,5 +1,10 @@
 package deco2800.skyfall.renderers;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import java.util.*;
 
 import com.badlogic.gdx.Gdx;
@@ -175,6 +180,20 @@ public class Renderer3D implements Renderer {
         int w = TextureManager.TILE_WIDTH;
         int h = TextureManager.TILE_HEIGHT;
 
+        boolean renderDebug = true; // For debugging hitboxes
+        if (renderDebug) {
+            World box2DWorld = GameManager.get().getManager(PhysicsManager.class).getBox2DWorld();
+            Array<Body> bodies = new Array<>();
+            box2DWorld.getBodies(bodies);
+
+            for (Body body : bodies) {
+                float[] bodyWorldCoord = WorldUtil.colRowToWorldCords(body.getPosition().x, body.getPosition().y);
+
+                batch.draw(textureManager.getTexture("Select"),
+                        bodyWorldCoord[0], bodyWorldCoord[1], 10.f, 10.f);
+            }
+        }
+
         for (AbstractEntity entity : entities) {
             float[] entityWorldCoord = WorldUtil.colRowToWorldCords(entity.getCol(), entity.getRow());
             // If it's offscreen
@@ -182,6 +201,7 @@ public class Renderer3D implements Renderer {
                 entitiesSkipped++;
                 continue;
             }
+
 
             Texture tex = textureManager.getTexture(entity.getTexture());
             if (entity instanceof StaticEntity) {

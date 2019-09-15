@@ -424,21 +424,21 @@ public class World implements TouchDownObserver {
             //    break;
             //}
 
-            Collider c1 = e1.getCollider();
-            for (AbstractEntity e2 : this.getEntities()) {
-                if (e2.getCollider() == null) {
-                    break;
-                }
-                Collider c2 = e2.getCollider();
-                if (e1 != e2 && c1.overlaps(c2)) {
-                    if (e1 instanceof MainCharacter || e2 instanceof MainCharacter) {
-                        break;
-                    }
-                    //collision handler
-                    this.handleCollision(e1, e2);
-                    //    break;
-                }
-            }
+//            Collider c1 = e1.getCollider();
+//            for (AbstractEntity e2 : this.getEntities()) {
+//                if (e2.getCollider() == null) {
+//                    break;
+//                }
+//                Collider c2 = e2.getCollider();
+//                if (e1 != e2 && c1.overlaps(c2)) {
+//                    if (e1 instanceof MainCharacter || e2 instanceof MainCharacter) {
+//                        break;
+//                    }
+//                    //collision handler
+//                    this.handleCollision(e1, e2);
+//                    //    break;
+//                }
+//            }
             // no collision here
         }
     }

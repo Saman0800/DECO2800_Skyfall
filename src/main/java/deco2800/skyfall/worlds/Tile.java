@@ -85,6 +85,29 @@ public class Tile {
         return this.texture;
     }
 
+    /**
+     * Returns a integer to represent the tile type
+     * @param tileType Name of tile texture
+     * @return
+     */
+    public static int getTileType(String tileType) {
+        if (tileType.contains("ice")) {
+            return 0;
+        } else if (tileType.contains("desert")) {
+            return 1;
+        } else if (tileType.contains("mountain")) {
+            return 2;
+        } else if (tileType.contains("water") || tileType.contains("lake") || tileType.contains("ocean")) {
+            return 3;
+        } else if (tileType.contains("snow")) {
+            return 4;
+        } else if (tileType.contains("volcanic")) {
+            return 5;
+        } else {
+            return 6;
+        }
+    }
+
     public Texture getTexture() {
         return GameManager.get().getManager(TextureManager.class).getTexture(this.texture);
     }
@@ -120,26 +143,14 @@ public class Tile {
         //Gets the friction map for the world
         Map<String, Float> frictionMap = GameManager.get().getWorld().frictionMap;
         // Checks the type of the tile
-        if (tileType.contains("ice")) {
-            return frictionMap.get("ice");
-        } else if (tileType.contains("desert")) {
-            return frictionMap.get("desert");
-        } else if (tileType.contains("mountain")) {
-            return frictionMap.get("mountain");
-        } else if (tileType.contains("water")) {
-            return frictionMap.get("water");
-        } else if (tileType.contains("forest")) {
-            return frictionMap.get("forest");
-        } else if (tileType.contains("lake")) {
-            return frictionMap.get("lake");
-        } else if (tileType.contains("ocean")) {
-            return frictionMap.get("ocean");
-        } else if (tileType.contains("snow")) {
-            return frictionMap.get("snow");
-        } else if (tileType.contains("volcanic")) {
-            return frictionMap.get("volcanic");
-        } else {
-            return frictionMap.get("grass");
+        switch (Tile.getTileType(tileType)) {
+            case 0: return frictionMap.get("ice");
+            case 1: return frictionMap.get("desert");
+            case 2: return frictionMap.get("mountain");
+            case 3: return frictionMap.get("water");
+            case 4: return frictionMap.get("snow");
+            case 5: return frictionMap.get("volcanic");
+            default: return frictionMap.get("grass");
         }
     }
 

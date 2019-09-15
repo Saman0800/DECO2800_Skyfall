@@ -28,6 +28,10 @@ public class Spell extends Projectile {
         super(movementPosition, textureName, objectName, col, row, damage, speed, range);
     }
 
+    /**
+     * Get the mana cost of the spell.
+     * @return The mana cost of the spell.
+     */
     public int getManaCost() {
         return this.manaCost;
     }
