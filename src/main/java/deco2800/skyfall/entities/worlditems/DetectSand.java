@@ -18,7 +18,7 @@ public class DetectSand {
 
     public void putCharacter(){
         if(biomeType.getBiomeName()=="desert"){
-            System.out.println("this is desert");
+            //System.out.println("this is desert");
             
         }
     }
