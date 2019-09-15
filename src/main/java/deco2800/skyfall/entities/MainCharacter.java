@@ -1,40 +1,48 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.audio.Sound;
-import deco2800.skyfall.buildings.BuildingFactory;
-import deco2800.skyfall.entities.spells.SpellFactory;
-import deco2800.skyfall.entities.worlditems.*;
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.Tickable;
-import deco2800.skyfall.animation.*;
+import deco2800.skyfall.animation.Animatable;
+import deco2800.skyfall.animation.AnimationLinker;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.spells.Spell;
+import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
 import deco2800.skyfall.gui.ManaBar;
 import deco2800.skyfall.managers.*;
-import deco2800.skyfall.observers.*;
-import deco2800.skyfall.resources.*;
+import deco2800.skyfall.observers.KeyDownObserver;
+import deco2800.skyfall.observers.KeyUpObserver;
+import deco2800.skyfall.observers.TouchDownObserver;
+import deco2800.skyfall.resources.Blueprint;
+import deco2800.skyfall.resources.GoldPiece;
+import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
-import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Save;
-import deco2800.skyfall.saving.Saveable;
-import deco2800.skyfall.util.*;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Main character in the game
  */
 public class MainCharacter extends Peon
-        implements KeyDownObserver, KeyUpObserver, TouchDownObserver, Tickable, Animatable, Saveable<MainCharacter.MainCharacterMemento> {
+        implements KeyDownObserver, KeyUpObserver, TouchDownObserver, Tickable, Animatable {
 
     private static MainCharacter mainCharacterInstance = null;
 
@@ -59,14 +67,15 @@ public class MainCharacter extends Peon
         return mainCharacterInstance;
     }
 
-    public static MainCharacter loadMainCharacter(MainCharacterMemento memento, Save save) {
-        if (mainCharacterInstance == null) {
-            mainCharacterInstance = new MainCharacter(memento, save);
-        } else {
-            mainCharacterInstance.load(memento);
-        }
-        return mainCharacterInstance;
-    }
+    // TODO:dannathan Fix or remove this.
+    // public static MainCharacter loadMainCharacter(MainCharacterMemento memento, Save save) {
+    //     if (mainCharacterInstance == null) {
+    //         mainCharacterInstance = new MainCharacter(memento, save);
+    //     } else {
+    //         mainCharacterInstance.load(memento);
+    //     }
+    //     return mainCharacterInstance;
+    // }
 
     // The id of the character for storing in a database
     private long id;
@@ -242,15 +251,16 @@ public class MainCharacter extends Peon
 
     private GameOverTable gameOverTable = (GameOverTable) GameManager.getManagerFromInstance(GameMenuManager.class).getPopUp("gameOverTable");
 
-    /**
-     * Loads a main character from a memento
-     *
-     * @param memento the memento to load the character from
-     */
-    private MainCharacter(MainCharacterMemento memento, Save save) {
-        this.load(memento);
-        this.save = save;
-    }
+    // TODO:dannathan Fix or remove this.
+    // /**
+    //  * Loads a main character from a memento
+    //  *
+    //  * @param memento the memento to load the character from
+    //  */
+    // private MainCharacter(MainCharacterMemento memento, Save save) {
+    //     this.load(memento);
+    //     this.save = save;
+    // }
 
     /**
      * Base Main Character constructor
@@ -1637,59 +1647,57 @@ public class MainCharacter extends Peon
         return save;
     }
 
-    @Override
-    public MainCharacterMemento save() {
-        return new MainCharacterMemento(this);
-    }
-
-    @Override
-    public void load(MainCharacterMemento memento) {
-        this.id = memento.mainCharacterID;
-        this.equippedItem = memento.equippedItem;
-        this.level = memento.level;
-        this.foodLevel = memento.foodLevel;
-        this.foodAccum = memento.foodAccum;
-        this.goldPouch = memento.goldPouch;
-        this.blueprintsLearned = memento.blueprints;
-        this.inventories = memento.inventory;
-        this.weapons = memento.weapons;
-        this.hotbar = memento.hotbar;
-    }
-
-    public class MainCharacterMemento extends AbstractMemento {
-
-        //TODO:dannathan add stuff for entitiy
-        private long saveID;
-        private long mainCharacterID;
-
-        private int equippedItem;
-        private int level;
-
-        private int foodLevel;
-        private float foodAccum;
-
-        private InventoryManager inventory;
-        private WeaponManager weapons;
-        private HashMap<Integer, Integer> goldPouch;
-        private List<Item> hotbar;
-
-        private List<String> blueprints;
-
-        public MainCharacterMemento(MainCharacter character) {
-            this.saveID = character.save.getSaveID();
-            this.mainCharacterID = character.id;
-            this.equippedItem = character.equippedItem;
-            this.level = character.level;
-            this.foodLevel = character.foodLevel;
-            this.foodAccum = character.foodAccum;
-            this.goldPouch = character.goldPouch;
-            this.blueprints = character.blueprintsLearned;
-            this.inventory = character.inventories;
-            this.weapons = character.weapons;
-            this.hotbar = character.hotbar;
-        }
-    }
-
-
+    // FIXME:dannothan Fix or remove this.
+//    @Override
+//    public MainCharacterMemento save() {
+//        return new MainCharacterMemento(this);
+//    }
+//
+//    @Override
+//    public void load(MainCharacterMemento memento) {
+//        this.id = memento.mainCharacterID;
+//        this.equippedItem = memento.equippedItem;
+//        this.level = memento.level;
+//        this.foodLevel = memento.foodLevel;
+//        this.foodAccum = memento.foodAccum;
+//        this.goldPouch = memento.goldPouch;
+//        this.blueprintsLearned = memento.blueprints;
+//        this.inventories = memento.inventory;
+//        this.weapons = memento.weapons;
+//        this.hotbar = memento.hotbar;
+//    }
+//
+//    public class MainCharacterMemento extends AbstractMemento {
+//
+//        //TODO:dannathan add stuff for entitiy
+//        private long saveID;
+//        private long mainCharacterID;
+//
+//        private int equippedItem;
+//        private int level;
+//
+//        private int foodLevel;
+//        private float foodAccum;
+//
+//        private InventoryManager inventory;
+//        private WeaponManager weapons;
+//        private HashMap<Integer, Integer> goldPouch;
+//        private List<Item> hotbar;
+//
+//        private List<String> blueprints;
+//
+//        public MainCharacterMemento(MainCharacter character) {
+//            this.saveID = character.save.getSaveID();
+//            this.mainCharacterID = character.id;
+//            this.equippedItem = character.equippedItem;
+//            this.level = character.level;
+//            this.foodLevel = character.foodLevel;
+//            this.foodAccum = character.foodAccum;
+//            this.goldPouch = character.goldPouch;
+//            this.blueprints = character.blueprintsLearned;
+//            this.inventory = character.inventories;
+//            this.weapons = character.weapons;
+//            this.hotbar = character.hotbar;
+//        }
+//    }
 }
-

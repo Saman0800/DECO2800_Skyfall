@@ -100,7 +100,7 @@ public class DataBaseConnector {
                 saveWorld(world);
                 //TODO:Figuring out which world needs to be saved
             }
-            saveMainCharacter(save.getMainCharacter());
+            // saveMainCharacter(save.getMainCharacter());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -172,19 +172,20 @@ public class DataBaseConnector {
             }
     }
 
-    public void saveMainCharacter(MainCharacter character) throws SQLException {
-            ContainsDataQueries containsQueries = new ContainsDataQueries(connection);
-            InsertDataQueries insertQueries = new InsertDataQueries(connection);
-            UpdateDataQueries updateQueries = new UpdateDataQueries(connection);
-            Gson gson = new Gson();
-
-
-            if (containsQueries.containsMainCharacter(character.getID(), character.getSave().getSaveID())) {
-                updateQueries.updateMainCharacter(character.getID(), character.getSave().getSaveID(), gson.toJson(character.save()));
-            } else {
-                insertQueries.insertMainCharacter(character.getID(), character.getSave().getSaveID(), gson.toJson(character.save()));
-            }
-    }
+    // TODO:dannathan Fix or remove this.
+//    public void saveMainCharacter(MainCharacter character) throws SQLException {
+//            ContainsDataQueries containsQueries = new ContainsDataQueries(connection);
+//            InsertDataQueries insertQueries = new InsertDataQueries(connection);
+//            UpdateDataQueries updateQueries = new UpdateDataQueries(connection);
+//            Gson gson = new Gson();
+//
+//
+//            if (containsQueries.containsMainCharacter(character.getID(), character.getSave().getSaveID())) {
+//                updateQueries.updateMainCharacter(character.getID(), character.getSave().getSaveID(), gson.toJson(character.save()));
+//            } else {
+//                insertQueries.insertMainCharacter(character.getID(), character.getSave().getSaveID(), gson.toJson(character.save()));
+//            }
+//    }
 
     public void saveChunk(Chunk chunk) {
         try {
