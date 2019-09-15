@@ -19,19 +19,19 @@ import deco2800.skyfall.worlds.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Dragon extends AbstractPet implements Animatable, Item {
+public class Whitebear extends AbstractPet implements Animatable, Item {
     MainCharacter mc;
     private boolean domesticated=false;
     private boolean isOutSide=false;
     private boolean isOnTheWay=false;
-    public Dragon(float col, float row, MainCharacter mc){
+    public Whitebear(float col, float row, MainCharacter mc){
         super(col, row);
-        this.setTexture("dragon");
-        this.setObjectName("dragon");
+        this.setTexture("whitebear");
+        this.setObjectName("whitebear");
         this.setHeight(1);
         this.setHealth(10);
         this.setLevel(1);
-        this.setSpeed(0.08f);
+        this.setSpeed(0.04f);
         this.setArmour(1);
         this.mc = mc;
         this.configureAnimations();
@@ -98,7 +98,7 @@ public class Dragon extends AbstractPet implements Animatable, Item {
 
     @Override
     public String getName() {
-        return "dragon";
+        return "whitebear";
     }
 
     @Override
@@ -123,6 +123,7 @@ public class Dragon extends AbstractPet implements Animatable, Item {
 
     @Override
     public String getDescription() {
-        return "pet dragon";
+        return "pet whitebear";
     }
 }
+
