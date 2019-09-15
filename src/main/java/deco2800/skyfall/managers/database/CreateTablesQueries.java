@@ -41,7 +41,7 @@ public class CreateTablesQueries {
             "    primary key (biome_id, world_id)," +
             "    foreign key (world_id) references WORLDS(world_id)" +
             ")";
-    
+
     public String createNodesTableSql = "CREATE TABLE NODES" +
             "(" +
             "    node_id bigint not null," +
@@ -51,8 +51,7 @@ public class CreateTablesQueries {
             "    data CLOB," +
             "    biome_id bigint not null," +
             "    primary key (node_id)," +
-            "    foreign key (world_id) references WORLDS(world_id)," +
-            "    foreign key (biome_id, world_id) references BIOMES (biome_id, world_id)" +
+            "    foreign key (world_id) references WORLDS(world_id)" +
             ")";
 
     public String createEdgesTableSql = "CREATE TABLE EDGES" +
@@ -62,8 +61,7 @@ public class CreateTablesQueries {
             "    biome_id bigint not null," +
             "    data clob," +
             "    primary key (edge_id)," +
-            "    foreign key (biome_id, world_id) references BIOMES(biome_id, world_id)," +
-            "    foreign key (world_id) references WORLDS(world_id)" +
+            "    foreign key (biome_id, world_id) references BIOMES(biome_id, world_id)" +
             ")";
 
 
@@ -118,6 +116,4 @@ public class CreateTablesQueries {
         tableNames.add("ENTITIES");
         return tableNames;
     }
-
-
 }

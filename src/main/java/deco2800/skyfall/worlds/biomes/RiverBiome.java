@@ -11,7 +11,6 @@ import java.util.Random;
  * Biomes that gets assigned to rivers on the map
  */
 public class RiverBiome extends AbstractBiome {
-    private NoiseGenerator textureGenerator;
 
     /**
      * Constructor for the RiverBiome
@@ -19,7 +18,16 @@ public class RiverBiome extends AbstractBiome {
     public RiverBiome(AbstractBiome parentBiome, Random random) {
         super("river", parentBiome);
 
-        textureGenerator = new NoiseGenerator(random, 3, 40, 0.7);
+        textureGenerator = new NoiseGenerator(random.nextLong(), 3, 40, 0.7);
+    }
+
+    /**
+     * Loads a biome from a memento
+     * @param memento The memento that holds the save data
+     */
+    public RiverBiome(AbstractBiomeMemento memento){
+        super(memento);
+        textureGenerator = new NoiseGenerator(memento.noiseGeneratorSeed, 3, 40, 0.7);
     }
 
     @Override

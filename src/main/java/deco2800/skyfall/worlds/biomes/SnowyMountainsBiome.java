@@ -11,7 +11,6 @@ import java.util.Random;
  * Snowy Mountains biome
  */
 public class SnowyMountainsBiome extends AbstractBiome {
-    private NoiseGenerator textureGenerator;
 
     /**
      * Constructor for the snowy mountains biome
@@ -19,7 +18,16 @@ public class SnowyMountainsBiome extends AbstractBiome {
     public SnowyMountainsBiome(Random random) {
         super("snowy_mountains", null);
 
-        textureGenerator = new NoiseGenerator(random, 3, 60, 0.5);
+        textureGenerator = new NoiseGenerator(random.nextLong(), 3, 60, 0.5);
+    }
+
+    /**
+     * Loads a biome from a memento
+     * @param memento The memento that holds the save data
+     */
+    public SnowyMountainsBiome(AbstractBiomeMemento memento){
+        super(memento);
+        textureGenerator = new NoiseGenerator(memento.noiseGeneratorSeed, 3, 60, 0.5);
     }
 
     @Override

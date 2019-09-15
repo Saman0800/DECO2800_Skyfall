@@ -12,7 +12,6 @@ import java.util.Random;
  * Desert Biome
  */
 public class DesertBiome extends AbstractBiome {
-    private NoiseGenerator textureGenerator;
 
     /**
      * Constructor for the DesertBiome
@@ -20,7 +19,16 @@ public class DesertBiome extends AbstractBiome {
     public DesertBiome(Random random) {
         super("desert", null);
 
-        textureGenerator = new NoiseGenerator(random, 4, 50, 0.5);
+        textureGenerator = new NoiseGenerator(random.nextInt(), 4, 50, 0.5);
+    }
+
+    /**
+     * Loads a biome from a memento
+     * @param memento The memento that holds the save data
+     */
+    public DesertBiome(AbstractBiomeMemento memento){
+        super(memento);
+        textureGenerator = new NoiseGenerator(memento.noiseGeneratorSeed, 4, 50, 0.5);
     }
 
     @Override

@@ -16,7 +16,7 @@ public class PerlinNoiseTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void notEnoughOctavesTest(){
-        new NoiseGenerator(new Random(0), 0, 4, 0.5);
+        new NoiseGenerator(new Random(0).nextLong(), 0, 4, 0.5);
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
  * Ocean Biome
  */
 public class OceanBiome extends AbstractBiome {
-    private NoiseGenerator textureGenerator;
 
     /**
      * Constructor for a Biome
@@ -22,7 +21,16 @@ public class OceanBiome extends AbstractBiome {
     public OceanBiome(Random random) {
         super("ocean", null);
 
-        textureGenerator = new NoiseGenerator(random, 5, 160, 0.9);
+        textureGenerator = new NoiseGenerator(random.nextLong(), 5, 160, 0.9);
+    }
+
+    /**
+     * Loads a biome from a memento
+     * @param memento The memento that holds the save data
+     */
+    public OceanBiome(AbstractBiomeMemento memento){
+        super(memento);
+        textureGenerator = new NoiseGenerator(memento.noiseGeneratorSeed, 5, 160, 0.9);
     }
 
 
