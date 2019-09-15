@@ -13,7 +13,7 @@ import java.util.*;
 /**
  * A class to represent an edge of a polygon in a Voronoi Diagram
  */
-public class VoronoiEdge implements Saveable<VoronoiEdge.EdgeMemento> {
+public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
 
     // The coordinates of the two endpoints of the edge
     private double[] pointA;
@@ -33,6 +33,16 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.EdgeMemento> {
 
     // The tiles that this edge passes through
     private List<Tile> tiles;
+
+    /**
+     * Constructor for a VoronoiEdge being loaded from a memento
+     *
+     * @param memento the memento of the edge
+     */
+    public VoronoiEdge(VoronoiEdgeMemento memento) {
+        this.edgeNodes = new ArrayList<>();
+        this.load(memento);
+    }
 
     /**
      * Constructor for a VoronoiEdge
@@ -486,16 +496,79 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.EdgeMemento> {
     }
 
     @Override
-    public EdgeMemento save() {
-        return null;
+    public VoronoiEdgeMemento save() {
+        return new VoronoiEdgeMemento(this);
     }
 
     @Override
-    public void load(EdgeMemento saveInfo) {
+    public void load(VoronoiEdgeMemento memento) {
+        // TODO
+        /*
+        this.edgeNodes.add(memento.nodeAID);
+        this.edgeNodes.add(memento.nodeBID);
+         */
+        this.edgeNodes.add(new WorldGenNode(0, 0));
+        this.edgeNodes.add(new WorldGenNode(0, 0));
 
+        this.pointA = new double[] {memento.ax, memento.ay};
+        this.pointB = new double[] {memento.bx, memento.by};
+        // TODO
+        /*
+        AbstractBiome biome = memento.biomeID;
+        if (memento.edgeType.equals("beach")) {
+            memento.nodeAID.worldID.getBeachEdges().put(this, biome);
+        } else if (memento.edgeType.equals("river")) {
+            memento.nodeAID.worldID.getRiverEdges().put(this, biome);
+        }
+        */
     }
 
-    class EdgeMemento extends AbstractMemento {
+    class VoronoiEdgeMemento extends AbstractMemento {
+        // The ID of the first edge node of this edge
+        private long nodeAID;
 
+        // The ID of the second edge node of this edge
+        private long nodeBID;
+
+        // null / river / beach
+        private String edgeType;
+
+        private long biomeID;
+
+        // The coordinates of the two vertices of this edge
+        private double ax;
+        private double ay;
+        private double bx;
+        private double by;
+
+
+        /**
+         * Constructor for a new VoronoiEdgeMemento
+         *
+         * @param edge the edge this is for
+         */
+        public VoronoiEdgeMemento(VoronoiEdge edge) {
+            this.nodeAID = edge.getEdgeNodes().get(0).getID();
+            this.nodeAID = edge.getEdgeNodes().get(1).getID();
+            // Failsafe: world should never be null for a world that is being saved
+
+            // TODO Get this from world
+            if (beachEdges.containsKey(edge)) {
+                this.edgeType = "beach";
+                this.biomeID = beachEdges.get(edge).getID();
+            } else if (riverEdges.containsKey(edge)){
+                this.edgeType = "river";
+                this.biomeID = beachEdges.get(edge).getID();
+            } else {
+                // Failsafe: edges that aren't beaches or rivers shouldn't be saved
+                this.edgeType = "null";
+                this.biomeID = 0;
+            }
+            this.ax = edge.getA()[0];
+            this.ay = edge.getA()[1];
+            this.bx = edge.getB()[0];
+            this.by = edge.getB()[1];
+
+        }
     }
 }

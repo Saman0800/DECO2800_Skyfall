@@ -167,7 +167,7 @@ public class WorldParameters {
      * Sets the width of the rivers
      * @param riverWidth The width of the rivers
      */
-    public void setRiverWidth(int riverWidth) {
+    public void setRiverWidth(double riverWidth) {
         this.riverWidth = riverWidth;
     }
 
@@ -175,7 +175,7 @@ public class WorldParameters {
      * Sets the beach width
      * @param beachWidth The beach width
      */
-    public void setBeachWidth(int beachWidth) {
+    public void setBeachWidth(double beachWidth) {
         this.beachWidth = beachWidth;
     }
 

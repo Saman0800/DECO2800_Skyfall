@@ -520,53 +520,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             rivers.add(riverEdges);
             riverParentBiomes.add(parentBiomes);
 
-            //TODO delete
-            /*
-            //List<Tile> riverTiles = new ArrayList<>();
-            for (VoronoiEdge riverEdge : riverEdges) {
-                riverTiles.addAll(riverEdge.getTiles());
-            }
-
-            // TODO delete
-            // Expand the river
-            for (int j = 0; j < riverWidth; j++) {
-                List<Tile> newTiles = new ArrayList<>();
-                // For each tile, expand to all it's non-river/ocean neighbours
-                for (Tile tile : riverTiles) {
-                    for (Integer neighbourID : tile.getNeighbours().keySet()) {
-                        Tile neighbour = tile.getNeighbours().get(neighbourID);
-                        // Don't expand to oceans or lakes
-                        if (!neighbour.getBiome().getBiomeName().equals("ocean") &&
-                                !neighbour.getBiome().getBiomeName().equals("lake") &&
-                                !riverTiles.contains(neighbour)) {
-                            newTiles.add(neighbour);
-                        }
-                    }
-                }
-                // Add the tiles found
-                riverTiles.addAll(newTiles);
-            }
-
-            // TODO handle this
-            boolean onSpawn = false;
-            // Add the river and all it's tiles
-            for (Tile tile : riverTiles) {
-                // If the river passes through the origin, it is invalid
-                if (tile.getRow() == 0 && tile.getCol() == 0) {
-                    onSpawn = true;
-                    break;
-                }
-                river.addTile(tile);
-            }
-            if (onSpawn) {
-                // Decrement i so that the program doesn't think the river has
-                // been added
-                i--;
-                // Don't add the biome
-                continue;
-            }
-            realBiomes.add(river);
-             */
         }
 
         List<VoronoiEdge> allRiverEdges = new ArrayList<>();

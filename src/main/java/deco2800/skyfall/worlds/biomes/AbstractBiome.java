@@ -13,7 +13,10 @@ import java.util.Random;
 /**
  * Class that represents the biomes
  */
-public abstract class AbstractBiome implements Saveable<AbstractBiome.BiomeMemento> {
+public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBiomeMemento> {
+    private long id;
+    private long worldID;
+
     // The biome name, i.e forest, desert, mountain
     private String biomeName;
     // The tiles the biome contains
@@ -24,12 +27,23 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.BiomeMemen
     private ArrayList<AbstractBiome> childBiomes;
 
     /**
+     * Constructor for a biome being loaded
+     *
+     * @param memento the memento this biome is being loaded from
+     */
+    public AbstractBiome(AbstractBiomeMemento memento) {
+        this.load(memento);
+        this.parentBiome.childBiomes.add(this);
+    }
+
+    /**
      * Constructor for a Biome
      *
      * @param biomeName The biome name
      * @param parentBiome The biome that the biome lives in, null if the biome has no parent
      */
     public AbstractBiome(String biomeName, AbstractBiome parentBiome) {
+        this.id = System.nanoTime();
         // this(biomeName, new ArrayList<>());
         this.biomeName = biomeName;
         setParentBiome(parentBiome);
@@ -152,17 +166,47 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.BiomeMemen
      */
     public abstract void setTileTexture(Tile tile);
 
-    @Override
-    public BiomeMemento save() {
-        return null;
+    private void setWorldID(long worldID) {
+        this.worldID = worldID;
     }
 
     @Override
-    public void load(BiomeMemento saveInfo) {
-
+    public AbstractBiomeMemento save() {
+        return new AbstractBiomeMemento(this);
     }
 
-    class BiomeMemento extends AbstractMemento {
+    @Override
+    public void load(AbstractBiomeMemento memento) {
+        this.worldID = memento.worldID;
+        this.id = memento.biomeID;
+        // TODO
+        this.parentBiome = memento.parentBiomeID;
+        // TODO type (could be done in switch statement in method that loads entire game)
+    }
 
+    class AbstractBiomeMemento extends AbstractMemento {
+        // The ID of the world this is in
+        private long worldID;
+
+        // The ID of this biome
+        private long biomeID;
+
+        // The type of biome this is
+        private String biomeType;
+
+        // The ID of this Biome's parent
+        private long parentBiomeID;
+
+        private AbstractBiomeMemento(AbstractBiome biome) {
+            this.worldID = biome.worldID;
+            this.biomeID = biome.id;
+            this.biomeType = biome.getBiomeName();
+            if (biome.getParentBiome() == null) {
+                // TODO find a better value to represent null
+                this.parentBiomeID = -1;
+            } else {
+                this.parentBiomeID = biome.parentBiome.id;
+            }
+        }
     }
 }

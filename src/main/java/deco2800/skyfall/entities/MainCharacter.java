@@ -15,6 +15,7 @@ import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.saving.AbstractMemento;
+import deco2800.skyfall.saving.SaveException;
 import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.Tile;
@@ -22,6 +23,7 @@ import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -31,8 +33,7 @@ public class MainCharacter extends Peon
         implements KeyDownObserver, KeyUpObserver, TouchDownObserver, Tickable, Animatable, Saveable<MainCharacter.MainCharacterMemento> {
 
     // The id of the character for storing in a database
-    private static int nextID = 0;
-    private int saveID;
+    private long id;
 
     private final Logger logger = LoggerFactory.getLogger(MainCharacter.class);
 
@@ -146,12 +147,20 @@ public class MainCharacter extends Peon
     }
 
     /**
+     * Loads a main character from a memento
+     *
+     * @param memento the memento to load the character from
+     */
+    public MainCharacter(MainCharacterMemento memento) {
+        this.load(memento);
+    }
+
+    /**
      * Base Main Character constructor
      */
     public MainCharacter(float col, float row, float speed, String name, int health) {
         super(row, col, speed, name, health);
-        saveID = nextID;
-        nextID++;
+        this.id = System.nanoTime();
         this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
         this.setHeight(1);
         this.setObjectName("MainPiece");
@@ -1262,26 +1271,52 @@ public class MainCharacter extends Peon
 
     }
 
-    /**
-     * Returns the save ID of the player
-     *
-     * @return the save ID of the player
-     */
-    public int getSaveID() {
-        return this.saveID;
+    @Override
+    public MainCharacterMemento save() throws SaveException{
+        return new MainCharacterMemento(this);
     }
 
     @Override
-    public MainCharacterMemento save() {
-        return null;
-    }
-
-    @Override
-    public void load(MainCharacterMemento saveInfo) {
-
+    public void load(MainCharacterMemento memento) {
+        this.id = memento.mainCharacterID;
+        this.equipped_item = memento.equippedItem;
+        this.level = memento.level;
+        this.foodLevel = memento.foodLevel;
+        this.foodAccum = memento.foodAccum;
+        this.goldPouch = memento.goldPouch;
+        this.blueprintsLearned = memento.blueprints;
     }
 
     class MainCharacterMemento extends AbstractMemento {
+        private long saveID;
+        private long mainCharacterID;
 
+        private int equippedItem;
+        private int level;
+
+        private int foodLevel;
+        private float foodAccum;
+
+        private String inventory;
+        private String weapons;
+
+        private HashMap<Integer, Integer> goldPouch;
+        private List<String> blueprints;
+
+        private AbstractMemento entityMemento;
+
+        public MainCharacterMemento(MainCharacter character) throws SaveException {
+            this.saveID = saveInfo.getSaveID();
+            this.mainCharacterID = character.id;
+            this.equippedItem = character.equipped_item;
+            this.level = character.level;
+            this.foodLevel = character.foodLevel;
+            this.foodAccum = character.foodAccum;
+            this.goldPouch = character.goldPouch;
+            this.blueprints = character.blueprintsLearned;
+
+            this.inventory = character.getInventoryManager().toString();
+            this.weapons = character.getWeaponManager().toString();
+        }
     }
 }

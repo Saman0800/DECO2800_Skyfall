@@ -7,6 +7,7 @@ import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
+import deco2800.skyfall.worlds.world.World;
 
 import java.util.*;
 
@@ -16,7 +17,9 @@ import java.util.*;
  * <a href="http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/?fbclid=IwAR30I7ILTznH6YzYYqZfjIE3vcqPsed85ta9bohPZWi74SfWMwWpD8AVddQ#source">
  * This</a>
  */
-public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGenNode.NodeMemento> {
+public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGenNode.WorldGenNodeMemento> {
+    private long id;
+    private long worldID;
 
     // position
     private double x;
@@ -41,14 +44,20 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
      *
      * @param x the x coordinate of the node
      * @param y the y coordinate of the node
+     * @param
      */
     public WorldGenNode(double x, double y) {
+        this.id = System.nanoTime();
         this.x = x;
         this.y = y;
         this.neighbours = new ArrayList<>();
         this.vertices = new ArrayList<>();
         this.tiles = new ArrayList<>();
         this.borderNode = false;
+    }
+
+    public WorldGenNode(WorldGenNodeMemento memento) {
+        this.load(memento);
     }
 
     @Override
@@ -877,17 +886,50 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
         this.biome = biome;
     }
 
-    @Override
-    public NodeMemento save() {
-        return null;
+    public long getID() {
+        return this.id;
+    }
+
+    public void setWorldID(long worldID) {
+        this.worldID = worldID;
     }
 
     @Override
-    public void load(NodeMemento saveInfo) {
-
+    public WorldGenNodeMemento save() {
+        return new WorldGenNodeMemento(this);
     }
 
-    class NodeMemento extends AbstractMemento {
+    @Override
+    public void load(WorldGenNodeMemento memento) {
+        this.id = memento.nodeID;
+        this.x = memento.x;
+        this.y = memento.y;
+        this.worldID = worldID;
+    }
+
+    class WorldGenNodeMemento extends AbstractMemento {
+
+        // The ID of this node
+        private long nodeID;
+
+        // The ID of the world
+        private long worldID;
+
+        // The coordinates of the node
+        private double x;
+        private double y;
+
+        /**
+         * Constructor for a new NodeSaveInfo
+         *
+         * @param node the node this is for
+         */
+        public WorldGenNodeMemento(WorldGenNode node) {
+            this.nodeID = node.id;
+            this.worldID = node.worldID;
+            this.x = node.x;
+            this.y = node.y;
+        }
 
     }
 }

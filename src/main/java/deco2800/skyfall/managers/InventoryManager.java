@@ -4,9 +4,11 @@ import deco2800.skyfall.gui.Tuple;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.*;
+
+import java.io.Serializable;
 import java.util.*;
 
-public class InventoryManager extends TickableManager {
+public class InventoryManager extends TickableManager implements Serializable {
 
     // Map that stores the inventory contents
     private Map<String, List<Item>> inventory;

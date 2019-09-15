@@ -12,8 +12,7 @@ import java.util.List;
 public class Save implements Saveable<Save.SaveMemento> {
 
     // The ID of this save
-    private static int nextID;
-    private int saveID;
+    private long saveID;
 
     // TODO delete
     // The worlds in this save
@@ -30,8 +29,8 @@ public class Save implements Saveable<Save.SaveMemento> {
      * @param mainCharacter The main character in this save state
      */
     public Save(List<World> worlds, MainCharacter mainCharacter) {
-        this.saveID = nextID;
-        nextID++;
+        // FIXME: this will become deprecated at 11:47:16pm AEST, Friday, April 11, 2262
+        this.saveID = System.nanoTime();
 
         this.worlds = worlds;
 
@@ -49,7 +48,7 @@ public class Save implements Saveable<Save.SaveMemento> {
      *
      * @return the ID of this save state
      */
-    public int getSaveID() {
+    public long getSaveID() {
         return saveID;
     }
 
@@ -93,7 +92,7 @@ public class Save implements Saveable<Save.SaveMemento> {
      * A savestate for the save
      */
     class SaveMemento extends AbstractMemento {
-        private int saveID;
+        private long saveID;
 
         private SaveMemento(Save save) {
             saveID = save.getSaveID();

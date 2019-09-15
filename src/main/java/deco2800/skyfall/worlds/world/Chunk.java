@@ -1,13 +1,17 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.saving.AbstractMemento;
+import deco2800.skyfall.saving.SaveException;
+import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import org.javatuples.Pair;
 
 import java.util.*;
 
-public class Chunk {
+public class Chunk implements Saveable<Chunk.ChunkMemento> {
     /** The length of a side of the chunk (i.e. the chunk will contain this squared tiles). */
     public static final int CHUNK_SIDE_LENGTH = 10;
 
@@ -205,5 +209,30 @@ public class Chunk {
 
     public int getY() {
         return y;
+    }
+
+    @Override
+    public ChunkMemento save() {
+        return new ChunkMemento(this);
+    }
+
+    @Override
+    public void load(ChunkMemento memento) {
+        this.x = memento.x;
+        this.y = memento.y;
+        // TODO
+        this.world = new World(new WorldParameters());
+    }
+
+    class ChunkMemento extends AbstractMemento {
+        private long worldID;
+        private int x;
+        private int y;
+
+        public ChunkMemento(Chunk chunk) {
+            this.worldID = chunk.world.getID();
+            this.x = chunk.x;
+            this.y = chunk.y;
+        }
     }
 }
