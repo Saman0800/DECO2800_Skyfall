@@ -34,7 +34,7 @@ public class Tornado extends Spell {
         this.mc = GameManager.getManagerFromInstance(GameMenuManager.class).getMainCharacter();
 
         if (this.mc != null) {
-            this.position = new HexVector(this.mc.getCol(), this.mc.getRow());
+            setPosition(mc.getCol(), mc.getRow());
         }
 
         this.manaCost = 10;

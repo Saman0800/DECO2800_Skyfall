@@ -7,7 +7,6 @@ import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.DesertBiome;
 
 public class Horse extends VehicleEntity {
-    private AbstractBiome biomeType = new DesertBiome();
     private static TextureManager textureManager;
     private Stage stage;
     private static final transient String BIOME = "forest";
@@ -25,11 +24,6 @@ public class Horse extends VehicleEntity {
         this.setHeight(1);
         this.setAvailable(available);
         this.setHealth(HEALTH);
-    }
-
-
-    public void setBiome(AbstractBiome biomeType){
-        this.biomeType = biomeType;
     }
 
     public String getBiome() {

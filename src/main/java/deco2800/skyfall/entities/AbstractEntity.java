@@ -65,7 +65,11 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		isCollidable = collidable;
 	}
 
-	//Box2D properties
+    public Boolean getCollidable() {
+        return isCollidable;
+    }
+
+    //Box2D properties
     private Body body;
     protected Fixture fixture;
     private Boolean isCollidable;
