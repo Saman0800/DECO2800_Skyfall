@@ -101,6 +101,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("enemyTreeman", new Texture("resources/Treeman.png"));
             textureMap.put("treemanDead", new Texture("resources/TreemanDead.png"));
 
+            textureMap.put("petTiger", new Texture("resources/tiger_front1.png"));
+
             textureMap.put("flowerDead", new Texture("resources/flowerDead.png"));
 
             textureMap.put("grass_tuff", new Texture("resources/world_details/grass1.png"));
