@@ -32,7 +32,9 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
     // TODO:Ontonator Make this take the world as a parameter or something.
     public static Chunk loadChunkAt(World world, int x, int y) {
         // FIXME:Ontonator Implement.
-        return new Chunk(world, x, y);
+        Chunk chunk = new Chunk(world, x, y);
+        chunk.generateEntities();
+        return chunk;
     }
 
     public static Pair<Integer, Integer> getChunkForCoordinates(double col, double row) {
@@ -71,13 +73,7 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
 
     public Chunk(World world, int x, int y) {
         this(world, x, y, new ArrayList<>(), new ArrayList<>());
-        generateChunk();
-    }
-
-    public void generateChunk() {
-        // TODO:Ontonator Check that this works.
         generateTiles();
-        generateEntities();
     }
 
     /**

@@ -215,11 +215,11 @@ public class Tile {
         node.getBiome().addTile(this);
     }
 
-    private VoronoiEdge findNearestEdge(VoronoiEdge currentEdge,
-            List<VoronoiEdge> edges, double maxDistance, double noiseFactor) {
+    private VoronoiEdge findNearestEdge(VoronoiEdge currentEdge, List<VoronoiEdge> edges, double maxDistance,
+                                        int nodeSpacing, double noiseFactor) {
         // TODO make noise contiguous
-        double tileX = getNoisyCol(noiseFactor);
-        double tileY = getNoisyRow(noiseFactor);
+        double tileX = getNoisyCol(nodeSpacing);
+        double tileY = getNoisyRow(nodeSpacing);
 
         VoronoiEdge closestEdge = currentEdge;
         double closestDistance = Double.POSITIVE_INFINITY;
@@ -300,9 +300,11 @@ public class Tile {
             return;
         }
         // FIXME:Ontonator Fix the beaches' noise.
-        VoronoiEdge closestEdge = findNearestEdge(null, new ArrayList<>(beachEdges.keySet()), beachWidth, beachWidth * 2);
+        VoronoiEdge closestEdge = findNearestEdge(null, new ArrayList<>(beachEdges.keySet()), beachWidth, nodeSpacing,
+                                                  beachWidth * 2);
         if (!(Math.abs(getCol()) < riverWidth && Math.abs(getRow()) < riverWidth)) {
-            closestEdge = findNearestEdge(closestEdge, new ArrayList<>(riverEdges.keySet()), riverWidth, riverWidth * 2);
+            closestEdge = findNearestEdge(closestEdge, new ArrayList<>(riverEdges.keySet()), riverWidth, nodeSpacing,
+                                          riverWidth * 2);
         }
         this.edge = closestEdge;
         // Add the tile to the biome for the beach/river

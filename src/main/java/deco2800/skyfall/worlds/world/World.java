@@ -119,6 +119,19 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
 
         generateTileIndices();
         initialiseFrictionmap();
+
+        spawnRules = worldParameters.getGenerateSpawnRules().apply(this);
+
+        for (AbstractEntity entity : worldParameters.getEntities()) {
+            addEntity(entity);
+        }
+
+        // Set this to null once generation is complete since using this after construction is likely not deterministic
+        // due to ordering of events being affected by external factors like player movement. If you just want to
+        // generate random numbers, then this isn't appropriate either, since it is seeded, so not properly random.
+        // DON'T REMOVE THIS JUST BECAUSE YOUR CODE IS THROWING `NullPointerException`, YOU PROBABLY HAND DEEP AND
+        // FUNDAMENTAL ISSUES WITH WHAT YOU ARE DOING.
+        random = null;
     }
 
     /**
