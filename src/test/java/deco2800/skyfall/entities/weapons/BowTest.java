@@ -20,7 +20,7 @@ public class BowTest {
 
   @Test
   public void getDurabilityTest() {
-    assert(bow.getDurability() == 10);
+    assert(bow.getDurability() == 100);
   }
 
   @Test
