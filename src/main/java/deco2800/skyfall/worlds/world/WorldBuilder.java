@@ -2,6 +2,7 @@ package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.ChestManager;
+import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.resources.LootRarity;
 import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.entities.worlditems.*;
@@ -244,6 +245,8 @@ public class WorldBuilder implements WorldBuilderInterface {
 
             case "desert":
 
+                DetectSand sand = new DetectSand(biome);
+                sand.putCharacter();
                 // Spawn some axes
                 Weapon startAxe = new Axe(startTile, true);
                 EntitySpawnRule axeRule = new EntitySpawnRule(0.05, 1, 10, biome);

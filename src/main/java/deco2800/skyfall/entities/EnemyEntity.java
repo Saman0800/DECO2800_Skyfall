@@ -1,6 +1,8 @@
 package deco2800.skyfall.entities;
 
 
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.tasks.AbstractTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,18 +40,20 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
     public EnemyEntity(float col, float row){
         this.setRow(row);
         this.setCol(col);
-        this.setCollider();
     }
     public EnemyEntity(float row, float col, String texturename,int health,int armour,int damage) {
         super(row, col, 0.2f,texturename,health);
         this.setTexture(texturename);
-        this.setCollider();
-
     }
 
     public void onTick(long i) {
+        if (toBeDestroyed) {
+            destroy();
+        }
+
+        getBody().setTransform(position.getCol(), position.getRow(), getBody().getAngle());
+
         //@TODO
-        //this.updateCollider();
         if (task != null && task.isAlive()) {
             task.onTick(i);
 
@@ -131,15 +135,22 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
      * Damage taken
      * @param damage hero danage
      */
+    protected boolean toBeDestroyed = false;
     public void takeDamage(int damage) {
         //TODO: perform damage calculation factoring in status indicators, armour and resistance attributes.
         this.health -= damage;
         log.info("Enemy took " + damage + " damage.");
         log.info("Enemy has " + this.health + " health remaining.");
+        System.out.println(this.getClass().getName());
         //If the health of this enemy is <= 0, remove it from the game world.
         if (this.health <= 0) {
-            this.destroy();
+            toBeDestroyed = true;
         }
+    }
+
+    @Override
+    public void handleCollision(Object other) {
+        speed /= 2;
     }
 
     /**
@@ -194,8 +205,13 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
     /**
      * Remove this enemy from the game world.
      */
-    private void destroy() {
-        this.setDead(true);
-        log.info("Enemy destroyed.");
+    private boolean beenDestroyed = false;
+    protected void destroy() {
+        if (!beenDestroyed) {
+            this.setDead(true);
+            log.info("Enemy destroyed.");
+            getBody().getWorld().destroyBody(getBody());
+            beenDestroyed = true;
+        }
     }
 }
