@@ -90,7 +90,6 @@ public class Tree extends StaticTree {
     @Override
     public List<AbstractEntity> harvest(Tile tile) {
         Random random = new Random();
-
         int dropCount = random.nextInt(15);
         List<AbstractEntity> drops = new ArrayList<>();
         for (int i = 0; i < dropCount; i++) {
