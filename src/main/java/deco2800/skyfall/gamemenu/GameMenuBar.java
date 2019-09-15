@@ -191,7 +191,7 @@ public class GameMenuBar extends AbstractUIElement {
 
         for (Map.Entry<String, Integer> entry : quickAccess.entrySet()) {
 
-            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey()));
+            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey() + "_inv"));
             icon.setSize(size, size);
             icon.setPosition((xpos*count) + size*(count-1), ypos);
 

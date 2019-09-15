@@ -93,7 +93,6 @@ public class SandTest {
      */
     @Test
     public void getDescriptionTest() {
-        assertEquals("This resource can be found in the Desert or Beach " +
-                "biomes.", sand.getDescription());
+        assertEquals("This resource can be found in the" + "\n" + " Desert or Beach biomes.", sand.getDescription());
     }
 }

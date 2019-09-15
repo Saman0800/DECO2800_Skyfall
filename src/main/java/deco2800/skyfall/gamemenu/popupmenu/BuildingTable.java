@@ -123,7 +123,7 @@ public class BuildingTable extends AbstractPopUpElement{
             for (int j = 0; j < 4; j++) {
                 try {
                     Blueprint item = blueprintsLearned.get(4 * i + j);
-                    ImageButton testt = new ImageButton(generateTextureRegionDrawableObject(item.getName()));
+                    ImageButton testt = new ImageButton(generateTextureRegionDrawableObject(item.getName() + "_inv"));
                     testt.addListener(new ClickListener() {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
@@ -152,7 +152,7 @@ public class BuildingTable extends AbstractPopUpElement{
             public void clicked(InputEvent event, float x, float y) {
                 if (selectedItem != null) {
                     gameMenuManager.getMainCharacter().createItem(selectedItem);
-                    inventoryTable.updateResourcePanel();
+                    inventoryTable.updatePanels();
                     hide();
                 }
             }
@@ -171,7 +171,7 @@ public class BuildingTable extends AbstractPopUpElement{
      */
     private void showInfo(Table table, Blueprint item) {
         table.clearChildren();
-        Image test = new Image(generateTextureRegionDrawableObject(item.getName()));
+        Image test = new Image(generateTextureRegionDrawableObject(item.getName() + "_inv"));
         table.add(test).width(110).height(110).padTop(10).padBottom(10);
         table.row();
 
@@ -202,7 +202,7 @@ public class BuildingTable extends AbstractPopUpElement{
             for (int j = 0; j < 4; ++j) {
                 try {
                     String itemName = itemsNeeded.get(4 * i + j);
-                    itemsRequired.add(new Image(generateTextureRegionDrawableObject(itemName))).width((250 - 20 - 20) / 4f - 5).height((250 - 20 - 20) / 4f - 5).pad(5).expandY();
+                    itemsRequired.add(new Image(generateTextureRegionDrawableObject(itemName + "_inv"))).width((250 - 20 - 20) / 4f - 5).height((250 - 20 - 20) / 4f - 5).pad(5).expandY();
                     Label number = new Label(String.valueOf(item.getAllRequirements().get(itemName)), skin, "white-label");
                     number.setFontScale(0.3f);
                     itemsRequired.add(number).top().padLeft(-15).padTop(5);

@@ -1,11 +1,9 @@
 package deco2800.skyfall.managers;
 
-import deco2800.skyfall.entities.weapons.Sword;
 import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.gui.Tuple;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.*;
-import deco2800.skyfall.worlds.Tile;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +12,7 @@ import java.util.*;
 public class InventoryManager extends TickableManager {
 
     // Logger for class to display messages
-    private final transient Logger LOGGER =
+    private final transient Logger logger =
             LoggerFactory.getLogger(InventoryManager.class);
 
     // Map that stores the inventory contents
@@ -169,7 +167,7 @@ public class InventoryManager extends TickableManager {
                 && (this.quickAccess.size() < QA_MAX_SIZE)) {
             this.quickAccess.add(item);
         } else {
-            LOGGER.warn("Sorry I can't add that!");
+            logger.warn("Sorry I can't add that!");
         }
     }
 
@@ -239,7 +237,7 @@ public class InventoryManager extends TickableManager {
                 pos.add(entry.getValue());
             }
 
-            if (pos.size() == 0) {
+            if (pos.isEmpty()) {
                 positions.put(name, new Tuple(0, 0));
                 inventory.put(name, itemsList);
                 return true;
@@ -254,7 +252,7 @@ public class InventoryManager extends TickableManager {
                     }
                 }
             }
-            LOGGER.warn("Not enough space in inventory");
+            logger.warn("Not enough space in inventory");
             return false;
         }
     }
@@ -293,7 +291,7 @@ public class InventoryManager extends TickableManager {
             }
         }
 
-        LOGGER.warn("You can't remove what you don't have!");
+        logger.warn("You can't remove what you don't have!");
 
         return null;
     }
@@ -312,7 +310,7 @@ public class InventoryManager extends TickableManager {
             return items;
         }
 
-        LOGGER.warn("You can't remove what you don't have!");
+        logger.warn("You can't remove what you don't have!");
 
         return null;
     }
@@ -345,7 +343,7 @@ public class InventoryManager extends TickableManager {
                 itemsDropped.addAll(itemsList);
                 remove(itemName);
             } else {
-                LOGGER.warn("You don't have that many " + itemName +
+                logger.warn("You don't have that many " + itemName +
                         "s!");
                 itemsDropped = null;
             }
@@ -362,5 +360,29 @@ public class InventoryManager extends TickableManager {
         this.inventory.remove(itemName);
         this.quickAccessRemove((itemName));
         this.positions.remove(itemName);
+    }
+
+    /**
+     * Returns the description of item
+     * @param itemName String name of item
+     * @return Description of item
+     */
+    public String getItemDescription(String itemName){
+        if(this.inventory.get(itemName) != null){
+            int num = this.inventory.get(itemName).size();
+
+            if (num == 1) {
+                Item item = this.inventory.get(itemName).get(0);
+                return item.getDescription();
+            } else if(num > 1) {
+                List<Item> itemsList = this.inventory.get(itemName);
+                Item item = itemsList.get(num - 1);
+                return item.getDescription();
+            }
+        }
+
+        logger.warn("You don't have that!");
+
+        return null;
     }
 }

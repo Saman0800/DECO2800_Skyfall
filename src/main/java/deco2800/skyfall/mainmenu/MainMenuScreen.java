@@ -51,15 +51,15 @@ public class MainMenuScreen implements Screen {
         TextButton newGameBtn = new TextButton("SINGLE PLAYER", skin, "main_menu");
         newGameBtn.getStyle().fontColor = Color.BLACK;
 
-        newGameBtn.setPosition(100, MIN_HEIGHT - 100);
+        newGameBtn.setPosition(50, MIN_HEIGHT - 220);
         stage.addActor(newGameBtn);
 
         Button connectToServerButton = new TextButton("CONNECT TO SERVER", skin, "main_menu");
-        connectToServerButton.setPosition(100, MIN_HEIGHT - 50);
+        connectToServerButton.setPosition(50, MIN_HEIGHT - 170);
         stage.addActor(connectToServerButton);
 
         Button tutorialButton = new TextButton("TUTORIAL", skin, "main_menu");
-        tutorialButton.setPosition(100, MIN_HEIGHT - 150);
+        tutorialButton.setPosition(50, MIN_HEIGHT - 270);
         stage.addActor(tutorialButton);
 
         //Button startServerButton = new TextButton("START SERVER", skin, "main_menu");

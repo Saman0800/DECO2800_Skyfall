@@ -69,7 +69,7 @@ public class Apple extends HealthResources implements Item {
      */
     @Override
     public String getDescription() {
-        return "This item can be used to satisfy the Main Character's hunger.";
+        return "This item can be used to satisfy the" + "\n" + "Main Character's hunger.";
     }
 
     @Override

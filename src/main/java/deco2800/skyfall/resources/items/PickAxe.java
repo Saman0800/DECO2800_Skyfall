@@ -18,8 +18,8 @@ import java.util.Map;
  */
 public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
-    private Map<String, Integer> allRequirements;
-    private static boolean blueprintLearned = false;
+    private boolean blueprintLearned = false;
+
 
     /***
      * Create a Pick Axe with the name Pick Axe.
@@ -131,7 +131,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
      */
     @Override
     public String getDescription() {
-        return "This item can be constructed using stone and wood. " + "It can farm stone from biomes.";
+        return "This item can be constructed using stone and wood. " + "\n" + "It can farm stone from biomes.";
     }
 
     /**
@@ -173,7 +173,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
     @Override
     public Map<String, Integer> getAllRequirements() {
 
-        allRequirements = new HashMap<>();
+        Map<String, Integer> allRequirements = new HashMap<>();
         allRequirements.put("Wood", 50);
         allRequirements.put("Stone", 30);
         allRequirements.put("Metal", 10);

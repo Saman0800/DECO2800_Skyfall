@@ -3,7 +3,6 @@ package deco2800.skyfall.resources.items;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.NaturalResources;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.worlds.Tile;
 
 /**
  * A class representing a Vine Natural Resource item
@@ -47,7 +46,7 @@ public class Vine extends NaturalResources implements Item {
      */
     @Override
     public String getDescription() {
-        return "This item can be found in the forest biome and can " +
+        return "This item can be found in the forest biome and can " + "\n" +
                 "be used to produce rope.";
     }
 

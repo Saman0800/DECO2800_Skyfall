@@ -3,7 +3,6 @@ package deco2800.skyfall.resources.items;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.worlds.Tile;
 
 public class PoisonousMushroom extends HealthResources implements Item {
     // the name of the item
@@ -61,9 +60,10 @@ public class PoisonousMushroom extends HealthResources implements Item {
         return hasFoodEffect;
     }
 
-
-
-
+    @Override
+    public String getDescription(){
+        return "This is a poisonous mushroom." + "\n" + " It is bad for your health";
+    }
 
     @Override
     public String toString() {

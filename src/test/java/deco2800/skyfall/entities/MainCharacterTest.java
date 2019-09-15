@@ -1,5 +1,7 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.entities.spells.Spell;
+import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
@@ -13,6 +15,7 @@ import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.Stone;
 import deco2800.skyfall.resources.items.*;
 import deco2800.skyfall.util.Collider;
+import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
@@ -21,8 +24,6 @@ import deco2800.skyfall.worlds.world.WorldDirector;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import static org.mockito.Mockito.verify;
-
 
 
 import org.junit.After;
@@ -39,8 +40,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static junit.framework.TestCase.assertTrue;
+import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
@@ -436,8 +437,16 @@ public class MainCharacterTest {
 
     }
 
-    //These methods no longer exist so tests are commented out, will be replaced with a more generic
-    //useEquippedItem test.
+    @Test
+    public void equippedItemTest(){
+        Item toEquip = testCharacter.getInventoryManager().drop("Wood");
+        testCharacter.setEquippedItem(toEquip);
+
+        Assert.assertEquals(testCharacter.getEquippedItem(), toEquip);;
+        Assert.assertEquals(testCharacter.displayEquippedItem(), "Natural Resource:Wood");
+    }
+
+    //These methods no longer exist so tests are commented out
 //    @Test
 //    public void useHatchetTest() {
 //
@@ -515,6 +524,37 @@ public class MainCharacterTest {
 
     }
 
+    @Test
+    public void testAttack() {
+
+       HexVector pos = new HexVector();
+
+        GameManager gm = GameManager.get();
+        World world = mock(World.class);
+        gm.setWorld(world);
+        testCharacter.attack(pos);
+        //Assert that projectile was added to game world.
+        assertTrue(gm.getWorld().getEntities().stream().anyMatch(e -> e instanceof Projectile));
+
+        //Assert that a spell was cast and is in the world.
+        testCharacter.spellSelected = SpellType.FLAME_WALL;
+        testCharacter.attack(pos);
+        assertTrue(gm.getWorld().getEntities().stream().anyMatch(e -> e instanceof Spell));
+        Assert.assertEquals(this.testCharacter.spellSelected,SpellType.NONE);
+    }
+
+    @Test
+    public void testGetItemSlot() {
+        Assert.assertEquals(this.testCharacter.getItemSlotSelected(),1);
+        this.testCharacter.switchItem(9);
+        Assert.assertEquals(this.testCharacter.getItemSlotSelected(),2);
+        this.testCharacter.switchItem(1);
+        Assert.assertEquals(this.testCharacter.getItemSlotSelected(),2);
+        this.testCharacter.switchItem(10);
+        Assert.assertEquals(this.testCharacter.getItemSlotSelected(),3);
+
+    }
+    
     @After
     public void cleanup() {
         testCharacter = null;

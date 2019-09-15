@@ -49,12 +49,12 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bowman", new Texture("resources/bowman.png"));
             textureMap.put("dialogue_text_background", new Texture("resources/dialogue_text_background.png"));
 
-            textureMap.put("tornado_placeholder", new Texture("resources/spells/tornado_placeholder.png"));
-            textureMap.put("shield_placeholder", new Texture("resources/spells/shield_placeholder.png"));
-            textureMap.put("flame_wall_placeholder", new Texture("resources/spells/flame_wall_placeholder.png"));
+            textureMap.put("tornado_placeholder", new Texture("resources/spells/tornado_3.png"));
+            textureMap.put("shield_placeholder", new Texture("resources/spells/shield_3.png"));
+            textureMap.put("flame_wall_placeholder", new Texture("resources/spells/fire_3.png"));
             textureMap.put("range_test", new Texture("resources/projectile.png"));
             textureMap.put("melee_test", new Texture("resources/punch.png"));
-            textureMap.put("camel_character", new Texture("resources/camel/camel-withplayer1(left).png"));
+            textureMap.put("camel_character", new Texture("resources/camel/camel-face(no-player).png"));
 
             // Tile textures
             // Goes through all the folders with tile_textures and adds the tile name to the
@@ -209,11 +209,16 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("big_circle", new Texture("resources/OrangeCircle.png"));
             textureMap.put("inner_circle", new Texture("resources/RedCircle.png"));
-            
+
+            // Clock/Season graphics
             textureMap.put("dawn", new Texture("resources/clock/dawn_clock.png"));
             textureMap.put("dusk", new Texture("resources/clock/dusk_clock.png"));
             textureMap.put("day", new Texture("resources/clock/day_clock.png"));
             textureMap.put("night", new Texture("resources/clock/night_clock.png"));
+            textureMap.put("summer", new Texture("resources/clock/summer.png"));
+            textureMap.put("winter", new Texture("resources/clock/winter.png"));
+            textureMap.put("spring", new Texture("resources/clock/spring.png"));
+            textureMap.put("autumn", new Texture("resources/clock/autumn.png"));
 
 
             textureMap.put("rain", new Texture("resources/weather/rain.png")); // weather
@@ -224,8 +229,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("mana_bar_inner", new Texture("resources/mana_bar_inner.png"));
 
             textureMap.put("inventory_banner", new Texture("resources/inventory_banner.png"));
-            textureMap.put("Stone", new Texture("resources/items_icons/stone.png"));
-            textureMap.put("Wood", new Texture("resources/items_icons/wood.png"));
             textureMap.put("goldPiece5", new Texture("resources/goldPieces/goldPieceFive.png"));
             textureMap.put("goldPiece10", new Texture("resources/goldPieces/goldPieceTen.png"));
             textureMap.put("goldPiece50", new Texture("resources/goldPieces/goldPieceFifty.png"));
@@ -236,11 +239,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("exit", new Texture("resources/exit.png"));
             textureMap.put("exitButton", new Texture("resources/exit_button.png"));
             textureMap.put("inv_button", new Texture("resources/inv_button.png"));
-            textureMap.put("Vine", new Texture("resources/items_icons/vine.png"));
             textureMap.put("Sand", new Texture("resources/temp_sand.png"));
-            textureMap.put("Metal", new Texture("resources/items_icons/metal.png"));
-            textureMap.put("Pick Axe", new Texture("resources/items_icons/pickaxe.png"));
-            textureMap.put("Hatchet", new Texture("resources/items_icons/hatchet.png"));
             textureMap.put("Select", new Texture("resources/item_selected.png"));
             textureMap.put("quick_access_panel", new Texture("quick_access_panel.png"));
             textureMap.put("drop", new Texture("resources/temp_drop_button.png"));
@@ -254,6 +253,20 @@ public class TextureManager extends AbstractManager {
             textureMap.put("item_background", new Texture("resources/items_icons/item_background.png"));
             textureMap.put("checked", new Texture("resources/checked.png"));
             textureMap.put("unchecked", new Texture("resources/unchecked.png"));
+
+            //Inventory Item Icons
+            textureMap.put("Stone_inv", new Texture("resources/items_icons/stone.png"));
+            textureMap.put("Wood_inv", new Texture("resources/items_icons/wood.png"));
+            textureMap.put("Vine_inv", new Texture("resources/items_icons/vine.png"));
+            textureMap.put("Metal_inv", new Texture("resources/items_icons/metal.png"));
+            textureMap.put("Pick Axe_inv", new Texture("resources/items_icons/pickaxe.png"));
+            textureMap.put("Hatchet_inv", new Texture("resources/items_icons/hatchet.png"));
+            textureMap.put("sword_tex_inv", new Texture("resources/items_icons/sword.png"));
+            textureMap.put("Aloe_Vera_inv", new Texture("resources/items_icons/aloevera.png"));
+            textureMap.put("Apple_inv", new Texture("resources/items_icons/apple.png"));
+            textureMap.put("Berry_inv", new Texture("resources/items_icons/berry.png"));
+            textureMap.put("PoisonousMushroom_inv", new Texture("resources/items_icons/poisonous_mushroom.png"));
+
 
             // Inventory items
             textureMap.put("Apple", new Texture("resources/inventory/apple-1.png"));

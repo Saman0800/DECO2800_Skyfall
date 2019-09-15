@@ -101,8 +101,7 @@ public class StoneTest {
      */
     @Test
     public void getDescriptionTest() {
-        assertEquals("This resource can be found in the forest and " +
-                "mountain biomes and can be used to build a " +
-                "Pickaxe.", stone.getDescription());
+        assertEquals("This resource can be found in the forest and mountain" + "\n" +
+                " biomes and can be used to build a Pickaxe.", stone.getDescription());
     }
 }
