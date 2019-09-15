@@ -436,32 +436,36 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 * @param fixtureDefName file path to .JSON file defining the fixture
 	 */
 	public void defineFixture(String fixtureDefName){
-		// Creates the loader to load the complex hitbox
-		BodyEditorLoader loader =
-				new BodyEditorLoader(Gdx.files.internal("resources/HitBoxes" +
-						"/"+ fixtureDefName + "HitBox.json"));
+		try {
+			// Creates the loader to load the complex hitbox
+			BodyEditorLoader loader =
+					new BodyEditorLoader(Gdx.files.internal("resources/HitBoxes" +
+							"/" + fixtureDefName + "HitBox.json"));
 
-		// Creates a world for the hit box to inhabit
-		//PhysicsManager manager = new PhysicsManager();
-		//World world = manager.getBox2DWorld();
+			// Creates a world for the hit box to inhabit
+			//PhysicsManager manager = new PhysicsManager();
+			//World world = manager.getBox2DWorld();
 
-		// Create the hit box body
-		//BodyDef bd = new BodyDef();
-		//bd.type = BodyDef.BodyType.DynamicBody;
-		//body = world.createBody(bd);
+			// Create the hit box body
+			//BodyDef bd = new BodyDef();
+			//bd.type = BodyDef.BodyType.DynamicBody;
+			//body = world.createBody(bd);
 
-		// Assigns all the aspects of the fixture
-		FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.density = 1;
-		fixtureDef.friction = 0.5f;
-		fixtureDef.restitution = 0.3f;
+			// Assigns all the aspects of the fixture
+			FixtureDef fixtureDef = new FixtureDef();
+			fixtureDef.density = 1;
+			fixtureDef.friction = 0.5f;
+			fixtureDef.restitution = 0.3f;
 
-		// Gets the hit box from the loader
-		loader.attachFixture(body, "Character", fixtureDef, scale);
+			// Gets the hit box from the loader
+			loader.attachFixture(body, "Character", fixtureDef, scale);
 
-		// Set the collision of the body
-		//fixture = body.createFixture(fixtureDef);
-		//fixture.setSensor(!isCollidable);
+			// Set the collision of the body
+			//fixture = body.createFixture(fixtureDef);
+			//fixture.setSensor(!isCollidable);
+		}catch (NullPointerException e){
+			defineFixture();
+		}
 	}
 
 	/**
