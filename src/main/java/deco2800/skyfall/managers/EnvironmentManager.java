@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.observers.DayNightObserver;
+import deco2800.skyfall.observers.SeasonObserver;
 import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.worlds.Tile;
 
@@ -53,6 +54,9 @@ public class EnvironmentManager extends TickableManager {
     //List of objects implementing DayNightObserver
     private ArrayList<DayNightObserver> dayNightListeners;
 
+    //List of objects implementing SeasonObserver
+    private ArrayList<SeasonObserver> seasonListeners;
+
     // Correct biome name to display on screen
     private String biomeDisplay;
 
@@ -74,6 +78,9 @@ public class EnvironmentManager extends TickableManager {
     // Random event
     private Random rand = SecureRandom.getInstanceStrong();
 
+    // Current season
+    private String season;
+
 
     /**
      * Constructor for setting up the environment
@@ -86,7 +93,9 @@ public class EnvironmentManager extends TickableManager {
         // Time setup
         timeListeners = new ArrayList<>();
         dayNightListeners = new ArrayList<>();
+        seasonListeners = new ArrayList<>();
         currentMillis = System.currentTimeMillis();
+        season = "";
 
         // Weather setup
         previousBiome = null;
@@ -167,6 +176,44 @@ public class EnvironmentManager extends TickableManager {
     public void updateDayNightListeners(boolean isDay) {
         for (DayNightObserver observer : dayNightListeners) {
             observer.notifyDayNightUpdate(isDay);
+        }
+    }
+
+    /**
+     * Adds an observer to observe season change
+     *
+     * @param observer The observer to add
+     */
+    public void addSeasonListener(SeasonObserver observer) {
+        seasonListeners.add(observer);
+    }
+
+    /**
+     * Removes and observer from observing season change
+     *
+     * @param observer The observer to remove
+     */
+    public void removeSeasonListener(SeasonObserver observer) {
+        seasonListeners.remove(observer);
+    }
+
+    /**
+     * Gets list of observers observing season change
+     *
+     * @return The list of observers currently observing the season change
+     */
+    public List<SeasonObserver> getSeasonListeners() {
+        return seasonListeners;
+    }
+
+    /**
+     * Notifies all observers in seasonListeners list of season change
+     *
+     * @param season The new season
+     */
+    public void updateSeasonListeners(String season) {
+        for (SeasonObserver observer : seasonListeners) {
+            observer.notifySeasonUpdate(season);
         }
     }
 
@@ -358,6 +405,12 @@ public class EnvironmentManager extends TickableManager {
             seasonString = "Spring";
         } else {
             seasonString = "Invalid season";
+        }
+
+        //Check if season has changed, updates observers
+        if (!season.equals(seasonString)) {
+            updateSeasonListeners(seasonString);
+            season = seasonString;
         }
         return seasonString;
     }

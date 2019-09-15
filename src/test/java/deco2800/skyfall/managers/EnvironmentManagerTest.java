@@ -3,6 +3,7 @@ package deco2800.skyfall.managers;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.observers.DayNightObserver;
+import deco2800.skyfall.observers.SeasonObserver;
 import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
@@ -22,6 +23,7 @@ public class EnvironmentManagerTest {
     EnvironmentManager manager;
     TimeObserver mockTimeObserver = mock(TimeObserver.class);
     DayNightObserver mockDayNightObserver = mock(DayNightObserver.class);
+    SeasonObserver mockSeasonObserver = mock(SeasonObserver.class);
     GameManager gm = GameManager.get();
     World mockWorld = mock(World.class);
     List<AbstractEntity> mockEntities = mock(List.class);
@@ -81,6 +83,28 @@ public class EnvironmentManagerTest {
         manager.addDayNightListener(mockDayNightObserver);
         manager.updateDayNightListeners(true);
         verify(mockDayNightObserver).notifyDayNightUpdate(true);
+    }
+
+    @Test
+    public void addSeasonListenerTest() {
+        manager.addSeasonListener(mockSeasonObserver);
+        assertTrue(manager.getSeasonListeners().contains(mockSeasonObserver));
+    }
+
+    @Test
+    public void removeSeasonListenerTest() {
+        manager.addSeasonListener(mockSeasonObserver);
+        assertTrue(manager.getSeasonListeners().contains(mockSeasonObserver));
+        manager.removeSeasonListener(mockSeasonObserver);
+        assertFalse(manager.getSeasonListeners().contains(mockSeasonObserver));
+    }
+
+    @Test
+    public void updateSeasonListenersTest() {
+        doNothing().when(mockSeasonObserver).notifySeasonUpdate("Summer");
+        manager.addSeasonListener(mockSeasonObserver);
+        manager.updateSeasonListeners("Summer");
+        verify(mockSeasonObserver).notifySeasonUpdate("Summer");
     }
 
     @Test
