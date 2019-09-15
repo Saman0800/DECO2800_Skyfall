@@ -12,6 +12,8 @@ import deco2800.skyfall.gamemenu.GameMenuBar;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.managers.TextureManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -32,6 +34,8 @@ public class InventoryTable extends AbstractPopUpElement {
     private ImageButton inactiveDropButton;
     private ImageButton inactiveAddqaButton;
     private ImageButton inactiveEquipButton;
+    private final transient Logger LOGGER =
+            LoggerFactory.getLogger(InventoryManager.class);
 
 
     public InventoryTable(Stage stage, ImageButton exitButton, String[] textureNames, TextureManager tm, Skin skin, GameMenuManager gameMenuManager) {
@@ -50,7 +54,7 @@ public class InventoryTable extends AbstractPopUpElement {
     @Override
     public void hide() {
         super.hide();
-        System.out.println("Hiding inventory table");
+        LOGGER.info("Hiding inventory table");
         inventoryTable.setVisible(false);
     }
 
@@ -58,7 +62,7 @@ public class InventoryTable extends AbstractPopUpElement {
     public void show() {
         super.show();
         updateResourcePanel();
-        System.out.println("Showing inventory table");
+        LOGGER.info("Showing inventory table");
         inventoryTable.setVisible(true);
     }
 
@@ -75,7 +79,7 @@ public class InventoryTable extends AbstractPopUpElement {
         inventoryTable.setSize(910, 510);
         inventoryTable.setPosition(Gdx.graphics.getWidth()/2f - inventoryTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - inventoryTable.getHeight()/2);
-        inventoryTable.setDebug(true);
+        inventoryTable.setDebug(false);
         inventoryTable.top();
         inventoryTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
         inventoryTable.setName("inventoryTable");
@@ -271,6 +275,9 @@ public class InventoryTable extends AbstractPopUpElement {
             num.setFontScale((float)0.4);
             int numWidth = 18;
             if(entry.getValue()>9){
+                numWidth += 8;
+            }
+            if(entry.getValue()>99){
                 numWidth += 8;
             }
             num.setSize(numWidth, 25);

@@ -200,7 +200,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
     @Override
     public void use(HexVector position){
         for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
-            if (entity instanceof Rock) {
+            if (entity instanceof StaticRock) {
                 if (position.distance(entity.getPosition()) <= 1.5) {
                     this.farmRock((Rock) entity);
                 }

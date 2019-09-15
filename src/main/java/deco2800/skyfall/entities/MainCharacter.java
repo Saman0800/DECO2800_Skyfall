@@ -753,10 +753,13 @@ public class MainCharacter extends Peon
          */
         public void notifyTouchDown ( int screenX, int screenY, int pointer, int button){
             // only allow left clicks to move player
+
+            System.out.println(button);
             if (GameScreen.isPaused) {
                 return;
             }
-            if (button == 0) {
+            if (button == 1) {
+
                 float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
                 float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 
@@ -855,7 +858,9 @@ public class MainCharacter extends Peon
                     maxSpeed *= 2.f;
                     break;
                 case Input.Keys.SPACE:
-                    this.equippedItem.use(position);
+                    if(this.equippedItem != null){
+                        this.equippedItem.use(position);
+                    }
                     break;
                 case Input.Keys.G:
                     addClosestGoldPiece();
@@ -869,7 +874,7 @@ public class MainCharacter extends Peon
                 case Input.Keys.X:
                     selectSpell(SpellType.SHIELD);
                     break;
-                case Input.Keys.C:
+                case Input.Keys.V:
                     selectSpell(SpellType.TORNADO);
                     break;
                 default:
@@ -986,23 +991,28 @@ public class MainCharacter extends Peon
     }
 
         /**
-         * If the player is within 2m of a gold piece and presses G, it will
+         * If the player is within 1.5m of a gold piece and presses G, it will
          * be added to their Gold Pouch.
          *
          */
         public void addClosestGoldPiece () {
             for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
                 if (entity instanceof GoldPiece) {
-                    if (this.getPosition().distance(entity.getPosition()) <= 2) {
+                    if (this.getPosition().distance(entity.getPosition()) <= 1.5) {
                         this.addGold((GoldPiece) entity, 1);
                         logger.info(this.inventories.toString());
+                        // entity.dispose doesn't work
+                        //entity.dispose();
                     }
                 }
 
             }
-            logger.info("Sorry, you are not close enough to a gold piece!");
+
 
         }
+
+
+
 
         /**
          * Gets the tile at a position.

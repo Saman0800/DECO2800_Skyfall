@@ -15,9 +15,7 @@ import deco2800.skyfall.gamemenu.popupmenu.SettingsTable;
 import deco2800.skyfall.gamemenu.popupmenu.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.*;
-
 
 /**
  * Manages the menu bar during the game
@@ -94,6 +92,7 @@ public class GameMenuManager extends TickableManager {
                 popUp.update();
                 popUp.show();
             }
+
         }
 
         for (String key: uiElements.keySet()) {

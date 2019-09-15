@@ -1,11 +1,11 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.managers.ChestManager;
+import deco2800.skyfall.resources.LootRarity;
 import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.entities.worlditems.*;
-import deco2800.skyfall.managers.ChestManager;
 import deco2800.skyfall.resources.GoldPiece;
-import deco2800.skyfall.resources.LootRarity;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
@@ -84,7 +84,7 @@ public class WorldBuilder implements WorldBuilderInterface {
      */
     @Override
     public void addLake(int size) {
-        worldParameters.setNumOfLakes(worldParameters.getNumOfLakes()+1);
+        worldParameters.setNumOfLakes(worldParameters.getNumOfLakes() + 1);
         lakeSizes.add(size);
     }
 
@@ -127,7 +127,7 @@ public class WorldBuilder implements WorldBuilderInterface {
      * Adds a single river to the world
      */
     public void addRiver() {
-        worldParameters.setNoRivers(worldParameters.getNoRivers()+1);
+        worldParameters.setNoRivers(worldParameters.getNoRivers() + 1);
     }
 
     /**
@@ -188,6 +188,13 @@ public class WorldBuilder implements WorldBuilderInterface {
         // Nothing will ever be placed on this tile. Only a dummy tile.
         Tile startTile = world.getTile(0.0f, 1.0f);
 
+        Tile torchTile1 = world.getTile(0.0f, 5.0f);
+        world.addEntity(new TikiTorch(torchTile1, false));
+
+        Tile torchTile2 = world.getTile(0.0f, -3.0f);
+        world.addEntity(new TikiTorch(torchTile2, false));
+        // Tile startTile = world.getTile(0.0f, 1.0f);
+
         for (AbstractBiome biome : world.getBiomes()) {
             switch (biome.getBiomeName()) {
             case "forest":
@@ -197,7 +204,6 @@ public class WorldBuilder implements WorldBuilderInterface {
                 Weapon startSword = new Sword(startTile, true);
                 EntitySpawnRule swordRule = new EntitySpawnRule(0.04, 10, 20, biome);
                 EntitySpawnTable.spawnEntities(startSword, swordRule, world);
-
 
                 Tree startTree = new Tree(startTile, true);
                 // Create a new perlin noise map
@@ -219,7 +225,7 @@ public class WorldBuilder implements WorldBuilderInterface {
                 // This generator will cause the mushrooms to clump togteher more
                 NoiseGenerator mushroomGen = new NoiseGenerator(new Random(worldSeed), 10, 20, 0.9);
                 SpawnControl mushroomControl = x -> (x * x * x * x * x * x) / 3.0;
-                EntitySpawnRule mushroomRule = new EntitySpawnRule(biome, true, mushroomControl);
+                EntitySpawnRule mushroomRule = new EntitySpawnRule(5, 7, biome, true, mushroomControl);
                 mushroomRule.setNoiseGenerator(mushroomGen);
                 EntitySpawnTable.spawnEntities(startMushroom, mushroomRule, world);
 
@@ -276,10 +282,11 @@ public class WorldBuilder implements WorldBuilderInterface {
             case "desert":
                 spawnBlueprintShop(startTile, biome, world);
 
+                DetectSand sand = new DetectSand(biome);
+                sand.putCharacter();
                 // Spawn some axes
-                Weapon startAxe = new Axe(startTile,true);
-                EntitySpawnRule axeRule = new EntitySpawnRule(0.05, 1, 10,
-                        biome);
+                Weapon startAxe = new Axe(startTile, true);
+                EntitySpawnRule axeRule = new EntitySpawnRule(0.05, 1, 10, biome);
                 EntitySpawnTable.spawnEntities(startAxe, axeRule, world);
 
                 DesertCacti startDCacti = new DesertCacti(startTile, true);
@@ -296,9 +303,8 @@ public class WorldBuilder implements WorldBuilderInterface {
                 spawnBlueprintShop(startTile, biome, world);
 
                 // Spawn some bows
-                Weapon startBow = new Bow(startTile,true);
-                EntitySpawnRule bowRule = new EntitySpawnRule(0.05, 1, 10,
-                        biome);
+                Weapon startBow = new Bow(startTile, true);
+                EntitySpawnRule bowRule = new EntitySpawnRule(0.05, 1, 10, biome);
                 EntitySpawnTable.spawnEntities(startBow, bowRule, world);
 
                 SnowClump startSnowyMountainSnow = new SnowClump(startTile, false);
@@ -318,6 +324,7 @@ public class WorldBuilder implements WorldBuilderInterface {
             }
         }
     }
+
 
     /**
      * Creates a world based on the values set in the builder

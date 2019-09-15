@@ -189,7 +189,7 @@ public class Hatchet extends ManufacturedResources implements Item, Blueprint {
     @Override
     public void use(HexVector position){
         for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
-            if (entity instanceof Tree) {
+            if (entity instanceof StaticTree) {
                 if (position.distance(entity.getPosition()) <= 1.5) {
                     this.farmTree((Tree) entity);
                 }

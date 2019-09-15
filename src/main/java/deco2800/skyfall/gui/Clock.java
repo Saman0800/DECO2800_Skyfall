@@ -24,7 +24,7 @@ public class Clock extends AbstractUIElement{
      * @param s Stage to display things on
      */
     public Clock(Stage s) {
-        this.environmentManager = new EnvironmentManager();
+        this.environmentManager = GameManager.getManagerFromInstance(EnvironmentManager.class);
 
         stage = s;
 
