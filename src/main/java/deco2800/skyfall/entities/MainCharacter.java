@@ -136,7 +136,7 @@ public class MainCharacter extends Peon
     /**
      * The spell the user currently has selected to cast.
      */
-    private SpellType spellSelected = SpellType.NONE;
+    protected SpellType spellSelected = SpellType.NONE;
 
     /**
      * How much mana the character has available for spellcasting.
@@ -303,10 +303,8 @@ public class MainCharacter extends Peon
      *
      * @param mousePosition The position of the user's mouse.
      */
-    private void fireProjectile(HexVector mousePosition) {
-        //TODO: Call weapon.Attack(); and move this logic to the weapon.
+    protected void fireProjectile(HexVector mousePosition) {
         HexVector position = this.getPosition();
-
 
         setCurrentState(AnimationRole.ATTACK);
         SoundManager.playSound(BOWATTACK);
@@ -321,7 +319,7 @@ public class MainCharacter extends Peon
                 0.1f,
                 this.itemSlotSelected == 1 ? 1 : 0);
         // Add the projectile entity to the game world.
-        GameManager.get().getWorld().addEntity(projectile);
+        manager.getWorld().addEntity(projectile);
     }
 
     /**
@@ -1158,6 +1156,11 @@ public class MainCharacter extends Peon
      */
     private String getPlayerDirectionCardinal() {
         double playerDirectionAngle = getPlayerDirectionAngle();
+        playerDirectionAngle = 90 - Math.toDegrees(playerDirectionAngle);
+
+        if (playerDirectionAngle < 0) {
+            playerDirectionAngle += 360;
+        }
         if (playerDirectionAngle <= 22.5 || playerDirectionAngle >= 337.5) {
             setCurrentDirection(Direction.NORTH);
             return "North";
@@ -1216,7 +1219,7 @@ public class MainCharacter extends Peon
     public List<Float> getVelocity() {
         ArrayList<Float> velocity = new ArrayList<>();
         velocity.add(getBody().getLinearVelocity().x);
-        velocity.add(getBody().getLinearVelocity().x);
+        velocity.add(getBody().getLinearVelocity().y);
         velocity.add((float) vel);
         return velocity;
     }
