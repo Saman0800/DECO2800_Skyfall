@@ -80,92 +80,140 @@ public class DataBaseConnector {
         }
     }
 
-    public void saveGame(Save save) throws SQLException{
-        //Given a save game
-        long saveId = save.getSaveID();
-        InsertDataQueries insertQueries = new InsertDataQueries(connection);
-        Gson gson = new Gson();
+    public void saveGame(Save save) {
+        try {
+            //Given a save game
+            long saveId = save.getSaveID();
+            ContainsDataQueries containsQueries = new ContainsDataQueries(connection);
+            InsertDataQueries insertQueries = new InsertDataQueries(connection);
+            UpdateDataQueries updateQueries = new UpdateDataQueries(connection);
+            Gson gson = new Gson();
 
-        insertQueries.insertSave(saveId, gson.toJson(save.save()));
+            if (containsQueries.containsSave(saveId)) {
+                updateQueries.updateSave(saveId, gson.toJson(save.save()));
+            } else {
+                insertQueries.insertSave(saveId, gson.toJson(save.save()));
+            }
 
-
-        //Looping through the worlds in the save and saving them
-        for (World world : save.getWorlds()) {
-            saveWorld(world);
-            //TODO:Figuring out which world needs to be saved
+            //Looping through the worlds in the save and saving them
+            for (World world : save.getWorlds()) {
+                saveWorld(world);
+                //TODO:Figuring out which world needs to be saved
+            }
+            saveMainCharacter(save.getMainCharacter());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        saveMainCharacter(save.getMainCharacter());
-
     }
 
     //Svaing the world and its parameters
-    public void saveWorld(World world) throws SQLException{
-        InsertDataQueries insertQueries = new InsertDataQueries(connection);
-        Gson gson = new Gson();
+    public void saveWorld(World world) throws SQLException {
+            ContainsDataQueries containsQueries = new ContainsDataQueries(connection);
+            InsertDataQueries insertQueries = new InsertDataQueries(connection);
+            UpdateDataQueries updateQueries = new UpdateDataQueries(connection);
+            Gson gson = new Gson();
 
-        insertQueries.insertWorld(world.getSave().getSaveID(), world.getID(),
-                world.getSave().getCurrentWorld().getID() == world.getID(), gson.toJson(world.save()));
-
-        for (AbstractBiome biome : world.getBiomes()) {
-            try {
-                insertQueries.insertBiome(biome.getBiomeID(), world.getID(), biome.getBiomeName(), gson.toJson(biome.save()));
-            } catch (SQLException e) {
-                System.out.println(e);
-                throw e;
+            if (containsQueries.containsWorld(world.getSave().getSaveID(), world.getID())) {
+                updateQueries.updateWorld(world.getSave().getSaveID(), world.getID(),
+                        world.getSave().getCurrentWorld().getID() == world.getID(), gson.toJson(world.save()));
+            } else {
+                insertQueries.insertWorld(world.getSave().getSaveID(), world.getID(),
+                        world.getSave().getCurrentWorld().getID() == world.getID(), gson.toJson(world.save()));
             }
-        }
 
-        // Save nodes
-        for (WorldGenNode worldGenNode : world.getWorldGenNodes()) {
-            insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(),
-                        gson.toJson(worldGenNode.save()), worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
-        }
+            for (AbstractBiome biome : world.getBiomes()) {
+                if (containsQueries.containsBiome(biome.getBiomeID(), world.getID())) {
+                    updateQueries.updateBiome(biome.getBiomeID(), world.getID(), biome.getBiomeName(), gson.toJson(biome.save()));
+                } else {
+                    insertQueries.insertBiome(biome.getBiomeID(), world.getID(), biome.getBiomeName(), gson.toJson(biome.save()));
+                }
+            }
 
-        // Save beach edges
-        for (VoronoiEdge voronoiEdge : world.getBeachEdges().keySet()) {
-            insertQueries.insertEdges(world.getID(), voronoiEdge.getID(),
-                    world.getBeachEdges().get(voronoiEdge).getBiomeID(),
-                    gson.toJson(voronoiEdge.save()));
-        }
 
-        // Save river edges
-        for (VoronoiEdge voronoiEdge : world.getRiverEdges().keySet()) {
-            insertQueries.insertEdges(world.getID(), voronoiEdge.getID(),
-                    world.getRiverEdges().get(voronoiEdge).getBiomeID(),
-                    gson.toJson(voronoiEdge.save()));
-        }
+            // Save nodes
+            for (WorldGenNode worldGenNode : world.getWorldGenNodes()) {
+                if (containsQueries.containsNode(world.getID(), worldGenNode.getX(), worldGenNode.getY())) {
+                    updateQueries.updateNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(),
+                            gson.toJson(worldGenNode.save()), worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
+                } else {
+                    insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(),
+                            gson.toJson(worldGenNode.save()), worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
+                }
+            }
 
-        for (Chunk chunk : world.getLoadedChunks().values()) {
-            saveChunk(chunk, world);
-        }
+            // Save beach edges
+            for (VoronoiEdge voronoiEdge : world.getBeachEdges().keySet()) {
+                if (containsQueries.containsEdge(world.getID(), voronoiEdge.getID())) {
+                    updateQueries.updateEdges(world.getID(), voronoiEdge.getID(),
+                            world.getBeachEdges().get(voronoiEdge).getBiomeID(),
+                            gson.toJson(voronoiEdge.save()));
+                } else {
+                    insertQueries.insertEdges(world.getID(), voronoiEdge.getID(),
+                            world.getBeachEdges().get(voronoiEdge).getBiomeID(),
+                            gson.toJson(voronoiEdge.save()));
+                }
+            }
 
+            // Save river edges
+            for (VoronoiEdge voronoiEdge : world.getRiverEdges().keySet()) {
+                if (containsQueries.containsEdge(world.getID(), voronoiEdge.getID())) {
+                    updateQueries.updateEdges(world.getID(), voronoiEdge.getID(),
+                            world.getRiverEdges().get(voronoiEdge).getBiomeID(),
+                            gson.toJson(voronoiEdge.save()));
+                } else {
+                    insertQueries.insertEdges(world.getID(), voronoiEdge.getID(),
+                            world.getRiverEdges().get(voronoiEdge).getBiomeID(),
+                            gson.toJson(voronoiEdge.save()));
+                }
+            }
+
+            for (Chunk chunk : world.getLoadedChunks().values()) {
+                saveChunk(chunk);
+            }
     }
 
     public void saveMainCharacter(MainCharacter character) throws SQLException {
-        InsertDataQueries insertQueries = new InsertDataQueries(connection);
-        Gson gson = new Gson();
+            ContainsDataQueries containsQueries = new ContainsDataQueries(connection);
+            InsertDataQueries insertQueries = new InsertDataQueries(connection);
+            UpdateDataQueries updateQueries = new UpdateDataQueries(connection);
+            Gson gson = new Gson();
 
-        try{
-            insertQueries.insertMainCharacter(character.getID(), character.getSave().getSaveID(), gson.toJson(character.save()));
-        } catch (SQLException e) {
-            System.out.println(e);
-            throw e;
-        }
+
+            if (containsQueries.containsMainCharacter(character.getID(), character.getSave().getSaveID())) {
+                updateQueries.updateMainCharacter(character.getID(), character.getSave().getSaveID(), gson.toJson(character.save()));
+            } else {
+                insertQueries.insertMainCharacter(character.getID(), character.getSave().getSaveID(), gson.toJson(character.save()));
+            }
     }
 
-    public void saveChunk(Chunk chunk, World world) throws SQLException {
-        InsertDataQueries insertQueries = new InsertDataQueries(connection);
-        Gson gson = new Gson();
+    public void saveChunk(Chunk chunk) {
+        try {
+            World world = chunk.getWorld();
+            ContainsDataQueries containsQueries = new ContainsDataQueries(connection);
+            InsertDataQueries insertQueries = new InsertDataQueries(connection);
+            UpdateDataQueries updateQueries = new UpdateDataQueries(connection);
+            Gson gson = new Gson();
 
-        insertQueries.insertChunk(world.getID(), chunk.getX(), chunk.getY(), gson.toJson(chunk.save()));
-
-        for (AbstractEntity entity : chunk.getEntities()) {
-            if (entity instanceof StaticEntity) {
-                insertQueries.insertEntity(((StaticEntity)entity).getEntityType(), entity.getCol(), entity.getRow(),
-                        chunk.getX(), chunk.getY(), world.getID(), gson.toJson(((StaticEntity)entity).save()), entity.getEntityID());
+            if (containsQueries.containsChunk(world.getID(), chunk.getX(), chunk.getY())) {
+                updateQueries.updateChunk(world.getID(), chunk.getX(), chunk.getY(), gson.toJson(chunk.save()));
+            } else {
+                insertQueries.insertChunk(world.getID(), chunk.getX(), chunk.getY(), gson.toJson(chunk.save()));
             }
-        }
 
+            for (AbstractEntity entity : chunk.getEntities()) {
+                if (entity instanceof StaticEntity) {
+                    if (containsQueries.containsEntity(world.getID(), entity.getEntityID())) {
+                        updateQueries.updateEntity(((StaticEntity) entity).getEntityType(), entity.getCol(), entity.getRow(),
+                                chunk.getX(), chunk.getY(), world.getID(), gson.toJson(((StaticEntity) entity).save()), entity.getEntityID());
+                    } else {
+                        insertQueries.insertEntity(((StaticEntity) entity).getEntityType(), entity.getCol(), entity.getRow(),
+                                chunk.getX(), chunk.getY(), world.getID(), gson.toJson(((StaticEntity) entity).save()), entity.getEntityID());
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 //    public World loadWorld(long worldId, Save save) throws SQLException{
@@ -194,30 +242,34 @@ public class DataBaseConnector {
     public Chunk loadChunk(World world,int x, int y){
         try{
             Gson gson = new Gson();
-            String query = String.format("SELECT * FROM CHUNKS WHERE X=%s and Y=%s and WORLD_ID=%s", x, y, world.getID());
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(query);
+            //TODO:jeffvan12 Make it so it uses a preparedStatement
+            connection.setAutoCommit(false);
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM CHUNKS WHERE X = ? and Y = ? and WORLD_ID = ?");
+            preparedStatement.setInt(1,x);
+            preparedStatement.setInt(2, y);
+            preparedStatement.setLong(3, world.getID());
+            ResultSet result = preparedStatement.executeQuery();
 
             if (!result.next()) {
                 Chunk chunk = new Chunk(world, x, y);
                 chunk.generateEntities();
-                statement.close();
+                preparedStatement.close();
                 return chunk;
             }
+            Chunk chunk = new Chunk(world, gson.fromJson(result.getString("DATA"), Chunk.ChunkMemento.class));
 
-            return new Chunk(world, gson.fromJson(result.getString(1), Chunk.ChunkMemento.class));
+            PreparedStatement entityquery = connection.prepareStatement("SELECT * FROM ENTITIES WHERE CHUNK_X = ? and CHUNK_Y = ?");
+//            entityquery.setInt(chunk.getX());
+//            ResultSet entityResult =
+
+
+
+            preparedStatement.close();
+            connection.setAutoCommit(true);
+            return chunk;
         } catch (SQLException e){
             throw new RuntimeException(e);
         }
     }
 
-    public void saveChunk(Chunk chunk) {
-        try {
-            Gson gson = new Gson();
-            InsertDataQueries insertDataQueries = new InsertDataQueries(connection);
-            insertDataQueries.insertChunk(chunk.getWorld().getID(),chunk.getX(), chunk.getY(), gson.toJson(chunk.save()));
-        } catch (SQLException e){
-            throw new RuntimeException(e);
-        }
-    }
 }

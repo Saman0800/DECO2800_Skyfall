@@ -101,6 +101,7 @@ public class GameScreen implements Screen,KeyDownObserver {
                 save.getWorlds().add(world);
                 save.setCurrentWorld(world);
                 world.setSave(save);
+                DatabaseManager.get().getDataBaseConnector().saveGame(save);
 			}
 			GameManager.get().getManager(NetworkManager.class).startHosting("host");
 		}
@@ -272,6 +273,7 @@ public class GameScreen implements Screen,KeyDownObserver {
             save.getWorlds().add(world);
             save.setCurrentWorld(world);
             world.setSave(save);
+            DatabaseManager.get().getDataBaseConnector().saveGame(save);
 
             AbstractEntity.resetID();
             Tile.resetID();
@@ -309,12 +311,7 @@ public class GameScreen implements Screen,KeyDownObserver {
         }
 
         if (keycode == Input.Keys.P) {
-            try {
-
-                DatabaseManager.get().getDataBaseConnector().saveWorld(world);
-            } catch (SQLException e){
-                System.out.println(e);
-            }
+            DatabaseManager.get().getDataBaseConnector().saveGame(this.save);
             // TODO:dannathan Save
         }
 
