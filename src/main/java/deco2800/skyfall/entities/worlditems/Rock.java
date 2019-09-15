@@ -29,6 +29,11 @@ public class Rock extends StaticRock {
         this.entityType = "Rock";
     }
 
+    public Rock (StaticEntityMemento memento){
+        super(memento);
+        this.metalAmount = 15;
+    }
+
     @Override
     public void onTick(long i) {
         // Do nothing on tick

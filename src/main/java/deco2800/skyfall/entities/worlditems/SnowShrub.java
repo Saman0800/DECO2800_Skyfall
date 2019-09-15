@@ -21,6 +21,11 @@ public class SnowShrub extends StaticEntity {
         this.entityType = "SnowShrub";
     }
 
+
+    public SnowShrub (StaticEntityMemento memento){
+        super(memento);
+    }
+
     @Override
     public void onTick(long i) {
 

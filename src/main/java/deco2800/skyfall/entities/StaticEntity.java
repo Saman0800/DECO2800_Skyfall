@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -7,6 +8,9 @@ import java.util.Collections;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.world.Chunk;
@@ -47,7 +51,16 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
      * @param memento the static entitiy to add
      */
     public StaticEntity(StaticEntityMemento memento) {
+        super(memento.col, memento.row, memento.renderOrder);
         this.load(memento);
+        children = new HashMap<>();
+        HexVector hexVector = new HexVector(memento.col, memento.row);
+        children.put(hexVector, memento.texture);
+        if (!WorldUtil.validColRow(hexVector)) {
+            log.debug("{} Is Invalid:", hexVector);
+            return;
+        }
+
     }
 
     public StaticEntity() {
@@ -226,7 +239,6 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
 
     @Override
     public void load(StaticEntityMemento memento) {
-        this.setPosition(memento.row, memento.col);
         this.setEntityID(memento.entityID);
         setRenderOrder(memento.renderOrder);
         this.obstructed = memento.obstructed;
@@ -238,18 +250,19 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         this.setTexture(memento.texture);
         this.setColRenderLength(memento.colRenderLength);
         this.setRowRenderLength(memento.rowRenderLength);
+        this.setPosition(memento.col, memento.row);
     }
 
     public class StaticEntityMemento extends AbstractMemento {
-        private String staticEntityType;
-        private int height;
-        private float row;
-        private float col;
-        private int entityID;
-        private float colRenderLength;
-        private float rowRenderLength;
-        private int renderOrder;
-        private boolean obstructed;
+        public String staticEntityType;
+        public int height;
+        public float row;
+        public float col;
+        public int entityID;
+        public float colRenderLength;
+        public float rowRenderLength;
+        public int renderOrder;
+        public boolean obstructed;
 
         // TODO:dannathan find out if these need to be saved (they cause a stack overflow in gson)
         /*
@@ -270,6 +283,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
             this.rowRenderLength = entity.getRowRenderLength();
             this.renderOrder = entity.getRenderOrder();
             this.obstructed = entity.obstructed;
+
 
             /*
             this.body = entity.getBody();

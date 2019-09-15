@@ -405,7 +405,7 @@ public class GameScreen implements Screen,KeyDownObserver {
         }
 
         if (keycode == Input.Keys.O) {
-            // TODO:dannathan Load
+            DatabaseManager.get().getDataBaseConnector().close();
         }
     }
 
