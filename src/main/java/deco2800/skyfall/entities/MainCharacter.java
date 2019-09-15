@@ -1166,6 +1166,11 @@ public class MainCharacter extends Peon
      */
     private String getPlayerDirectionCardinal() {
         double playerDirectionAngle = getPlayerDirectionAngle();
+        playerDirectionAngle = 90 - Math.toDegrees(playerDirectionAngle);
+
+        if (playerDirectionAngle < 0) {
+            playerDirectionAngle += 360;
+        }
         if (playerDirectionAngle <= 22.5 || playerDirectionAngle >= 337.5) {
             setCurrentDirection(Direction.NORTH);
             return "North";
@@ -1224,7 +1229,7 @@ public class MainCharacter extends Peon
     public List<Float> getVelocity() {
         ArrayList<Float> velocity = new ArrayList<>();
         velocity.add(getBody().getLinearVelocity().x);
-        velocity.add(getBody().getLinearVelocity().x);
+        velocity.add(getBody().getLinearVelocity().y);
         velocity.add((float) vel);
         return velocity;
     }
