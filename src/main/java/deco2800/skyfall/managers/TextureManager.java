@@ -177,6 +177,10 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("pop up screen", new Texture("resources/pop_up_screen_background.png"));
             textureMap.put("game menu bar", new Texture("resources/pop_up_screen_title_background.png"));
+            textureMap.put("game over temp bg", new Texture("resources/game_over_background.png"));
+            textureMap.put("game over retry temp", new Texture("resources/game_over_retry.png"));
+            textureMap.put("game over home temp", new Texture("resources/game_over_home_button.png"));
+
 
             textureMap.put("pause", new Texture("resources/pause_icon.png"));
             textureMap.put("settings", new Texture("resources/settings.png"));

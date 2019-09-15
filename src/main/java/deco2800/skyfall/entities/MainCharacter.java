@@ -222,6 +222,7 @@ public class MainCharacter extends Peon
         // create the starting gold pouch with 1 x 100G
         GoldPiece initialPiece = new GoldPiece(100);
         this.addGold(initialPiece, 1);
+
         // Initialises the players velocity properties
         xInput = 0;
         yInput = 0;
@@ -656,7 +657,6 @@ public class MainCharacter extends Peon
             gameOverTable.show();
         }
 
-
     /**
      * @return if player is in the state of "hurt".
      */
@@ -1031,7 +1031,6 @@ public class MainCharacter extends Peon
         return new HashMap<>(goldPouch);
     }
 
-
     /**
      * Returns the sum of the gold piece values in the Gold Pouch
      *
@@ -1058,7 +1057,6 @@ public class MainCharacter extends Peon
                     logger.info(this.inventories.toString());
                 }
             }
-
         }
         logger.info("Sorry, you are not close enough to a gold piece!");
 
