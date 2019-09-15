@@ -25,7 +25,7 @@ import java.util.*;
  */
 public abstract class AbstractEntity implements Comparable<AbstractEntity>, Renderable {
 	private static final String ENTITY_ID_STRING = "entityID";
-	
+
 	@Expose
 	private String objectName = null;
 		

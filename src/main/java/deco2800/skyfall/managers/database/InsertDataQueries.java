@@ -49,13 +49,13 @@ public class InsertDataQueries {
         statement.executeUpdate(query);
     }
 
-    public void insertChunk(int worldId, int x, int y, String data) throws SQLException{
+    public void insertChunk(long worldId, int x, int y, String data) throws SQLException{
         String query = String.format("insert into CHUNKS (world_id, x, y, data) values (%s,%s,%s,'%s')", worldId, x, y,
             data);
         statement.executeUpdate(query);
     }
 
-    public void insertEntity(String type, int x, int y, int chunkX, int chunkY, int worldId, String data) throws SQLException{
+    public void insertEntity(String type, double x, double y, int chunkX, int chunkY, long worldId, String data) throws SQLException{
         String query = String.format("insert into ENTITIES (type, x, y, chunk_x, chunk_y, world_id, data) values (%s,"
                 + "%s,%s,%s,%s,%s,'%s')", type, x, y, chunkX, chunkY, worldId, data);
         statement.executeUpdate(query);

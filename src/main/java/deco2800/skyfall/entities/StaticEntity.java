@@ -33,6 +33,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
     private int renderOrder;
     private boolean obstructed;
 
+    // The type of entity this is (e.g. "Tree", "Axe" etc.)
     protected String entityType;
 
     public Map<HexVector, String> children;
@@ -225,12 +226,12 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
      *
      * @return the entity type of this entity
      */
-    protected String getEntityType() {
+    public String getEntityType() {
         return this.entityType;
     }
 
     @Override
-    public StaticEntityMemento save() throws SaveException {
+    public StaticEntityMemento save() {
         return new StaticEntityMemento(this);
     }
 

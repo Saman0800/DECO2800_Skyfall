@@ -1,8 +1,11 @@
 package deco2800.skyfall.managers.database;
 
 import com.google.gson.Gson;
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.saving.Save;
+import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.world.Chunk;
@@ -104,14 +107,10 @@ public class DataBaseConnector {
 
         //Looping through the worlds in the save and saving them
         for (World world : save.getWorlds()){
-
             saveWorld(world);
-
             //TODO:Figuring out which world needs to be saved
         }
-
-
-
+        saveMainCharacter(save.getMainCharacter());
         statement.close();
     }
 
@@ -124,21 +123,28 @@ public class DataBaseConnector {
         insertQueries.insertWorld(world.getSave().getSaveID(), world.getID(),
                 world.getSave().getCurrentWorld().getID() == world.getID(), gson.toJson(world.save()));
 
+        // Save nodes
         for (WorldGenNode worldGenNode : world.getWorldGenNodes()) {
             insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(),
                     gson.toJson(worldGenNode.save()), worldGenNode.getID());
         }
 
-
+        // Save beach edges
         for (VoronoiEdge voronoiEdge : world.getBeachEdges().keySet()) {
             insertQueries.insertEdges(world.getID(), voronoiEdge.getID(),
                     world.getBeachEdges().get(voronoiEdge).getBiomeID(),
                     gson.toJson(voronoiEdge.save()));
         }
+
+        // Save river edges
         for (VoronoiEdge voronoiEdge : world.getRiverEdges().keySet()) {
             insertQueries.insertEdges(world.getID(), voronoiEdge.getID(),
                     world.getRiverEdges().get(voronoiEdge).getBiomeID(),
                     gson.toJson(voronoiEdge.save()));
+        }
+
+        for (Chunk chunk : world.getLoadedChunks().values()) {
+            saveChunk(chunk, world);
         }
 
         statement.close();
@@ -151,6 +157,23 @@ public class DataBaseConnector {
         Gson gson = new Gson();
 
         insertQueries.insertMainCharacter(character.getID(), character.getSave().getSaveID(), gson.toJson(character.save()));
+
+        statement.close();
+    }
+
+    public void saveChunk(Chunk chunk, World world) throws SQLException {
+        Statement statement = connection.createStatement();
+        InsertDataQueries insertQueries = new InsertDataQueries(statement);
+        Gson gson = new Gson();
+
+        insertQueries.insertChunk(world.getID(), chunk.getX(), chunk.getY(), gson.toJson(chunk.save()));
+
+        for (AbstractEntity entity : chunk.getEntities()) {
+            if (entity instanceof StaticEntity) {
+                insertQueries.insertEntity(((StaticEntity)entity).getEntityType(), entity.getCol(), entity.getRow(),
+                        chunk.getX(), chunk.getY(), world.getID(), gson.toJson(((StaticEntity)entity).save()));
+            }
+        }
 
         statement.close();
     }

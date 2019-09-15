@@ -4,14 +4,13 @@ import deco2800.skyfall.worlds.biomes.ForestBiome;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
+import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.world.WorldParameters;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -118,7 +117,7 @@ public class DelaunayTest {
 
         try {
             WorldGenNode.calculateVertices(nodes, worldSize);
-            WorldGenNode.assignNeighbours(nodes, new ArrayList<>());
+            WorldGenNode.assignNeighbours(nodes, new ArrayList<>(), new World(new WorldParameters()));
         } catch (WorldGenException e) {
             fail();
         }
@@ -163,7 +162,7 @@ public class DelaunayTest {
             nodes.add(new WorldGenNode(x, y));
         }
 
-        ForestBiome biome = new ForestBiome();
+        ForestBiome biome = new ForestBiome(new Random(0));
 
         // Fill world with tiles
         for (int q = -worldSize; q < worldSize; q++) {
@@ -180,8 +179,13 @@ public class DelaunayTest {
         long noiseSeed = random.nextLong();
         Random noiseRandom1 = new Random(noiseSeed);
         Tile.setNoiseGenerators(noiseRandom1, nodeSpacing);
+        nodes.sort(null);
+
+        HashMap<Tile, WorldGenNode> tileNodes = new HashMap<>();
+
         for (Tile tile : tiles) {
             tile.assignNode(nodes, nodeSpacing);
+            tileNodes.put(tile, tile.getNode());
         }
 
         Random noiseRandom2 = new Random(noiseSeed);
@@ -220,9 +224,9 @@ public class DelaunayTest {
             // other node
             for (WorldGenNode node : nodes) {
                 if (node == nodes.get(index)) {
-                    assertTrue(node.getTiles().contains(tile));
+                    assertSame(tile.getNode(), node);
                 } else {
-                    assertFalse(node.getTiles().contains(tile));
+                    assertNotSame(tile.getNode(), node);
                 }
             }
         }
@@ -233,7 +237,7 @@ public class DelaunayTest {
         WorldGenNode node1 = new WorldGenNode(2, 5);
         WorldGenNode node2 = new WorldGenNode(-3.26, 1.00492);
 
-        ForestBiome biome = new ForestBiome();
+        ForestBiome biome = new ForestBiome(new Random(0));
         Tile tile1 = new Tile(0, 2);
         Tile tile2 = new Tile(-1, 1.5f);
 
