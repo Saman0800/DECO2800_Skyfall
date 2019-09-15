@@ -1,5 +1,6 @@
 package deco2800.skyfall.managers;
 
+import deco2800.skyfall.entities.pets.AbstractPet;
 import deco2800.skyfall.entities.weapons.Sword;
 import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.gui.Tuple;
