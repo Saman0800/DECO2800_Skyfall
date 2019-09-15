@@ -167,12 +167,62 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("tikitorch", new Texture("resources/world_details/flame.gif"));
 
+            // adding weapon texture
             textureMap.put("sword_tex", new Texture("resources/weapons/sword.png"));
             textureMap.put("sword", new Texture("resources/weapons/sword.png"));
             textureMap.put("axe_tex", new Texture("resources/weapons/axe.png"));
             textureMap.put("bow_tex", new Texture("resources/weapons/bow.png"));
             textureMap.put("spear_tex", new Texture("resources/weapons/spear.png"));
             textureMap.put("no_weapon_tex", new Texture("resources/weapons/noweapon.png"));
+            textureMap.put("ArrowEast", new Texture("resources" +
+                    "/weapons/ArrowEast.png"));
+            textureMap.put("ArrowSouth", new Texture("resources" +
+                    "/weapons/ArrowSouth.png"));
+            textureMap.put("ArrowWest", new Texture("resources" +
+                    "/weapons/ArrowWest.png"));
+
+            textureMap.put("ArrowNorth", new Texture("resources" +
+                    "/weapons/ArrowNorth.png"));
+
+            textureMap.put("ArrowNorthEast", new Texture("resources" +
+                    "/weapons/ArrowNorthEast.png"));
+
+            textureMap.put("ArrowMoreNorthEast", new Texture("resources" +
+                    "/weapons/ArrowMoreNorthEast.png"));
+
+            textureMap.put("ArrowMoreEastNorth", new Texture("resources" +
+                    "/weapons/ArrowMoreEastNorth.png"));
+
+            textureMap.put("ArrowSouthEast", new Texture("resources" +
+                    "/weapons/ArrowSouthEast.png"));
+
+            textureMap.put("ArrowMoreSouthEast", new Texture("resources" +
+                    "/weapons/ArrowMoreSouthEast.png"));
+
+            textureMap.put("ArrowMoreEastSouth", new Texture("resources" +
+                    "/weapons/ArrowMoreEastSouth.png"));
+
+            textureMap.put("ArrowSouthWest", new Texture("resources" +
+                    "/weapons/ArrowSouthWest.png"));
+
+            textureMap.put("ArrowMoreSouthWest", new Texture("resources" +
+                    "/weapons/ArrowMoreSouthWest.png"));
+
+            textureMap.put("ArrowMoreWestSouth", new Texture("resources" +
+                    "/weapons/ArrowMoreWestSouth.png"));
+
+            textureMap.put("ArrowNorthWest", new Texture("resources" +
+                    "/weapons/ArrowNorthWest.png"));
+
+            textureMap.put("ArrowMoreNorthWest", new Texture("resources" +
+                    "/weapons/ArrowMoreNorthWest.png"));
+
+            textureMap.put("ArrowMoreWestNorth", new Texture("resources" +
+                    "/weapons/ArrowMoreWestNorth.png"));
+
+            // adding spell texture
+            textureMap.put("fire_1", new Texture("resources/spells" +
+                    "/fire_1.png"));
 
             textureMap.put("pop up screen", new Texture("resources/pop_up_screen_background.png"));
             textureMap.put("game menu bar", new Texture("resources/pop_up_screen_title_background.png"));
@@ -205,7 +255,7 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("big_circle", new Texture("resources/OrangeCircle.png"));
             textureMap.put("inner_circle", new Texture("resources/RedCircle.png"));
-            
+
             textureMap.put("dawn", new Texture("resources/clock/dawn_clock.png"));
             textureMap.put("dusk", new Texture("resources/clock/dusk_clock.png"));
             textureMap.put("day", new Texture("resources/clock/day_clock.png"));
@@ -279,6 +329,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("watchtower_180", new Texture("resources/world_structures/watchtower_180.png"));
             textureMap.put("watchtower_270", new Texture("resources/world_structures/watchtower_270.png"));
 
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -286,7 +337,7 @@ public class TextureManager extends AbstractManager {
 
     /**
      * Used for testing only.
-     * 
+     *
      * @param test
      */
     public TextureManager(boolean test) {
@@ -298,7 +349,6 @@ public class TextureManager extends AbstractManager {
      * __ANIMATION it will try and retrieve a sprite from an animation.
      *
      * @param id Texture identifier
-     *
      * @return Texture for given id
      */
     public Texture getTexture(String id) {
@@ -330,7 +380,6 @@ public class TextureManager extends AbstractManager {
      * Checks whether or not a texture is available.
      *
      * @param id Texture identifier
-     *
      * @return If texture is available or not.
      */
     public boolean hasTexture(String id) {
@@ -352,7 +401,7 @@ public class TextureManager extends AbstractManager {
 
     /**
      * Gets a texture from an animation.
-     * 
+     *
      * @param id               The string id of the form
      *                         __ANIMATION_<animation_name>:<index>
      * @param animationManager The animation manager

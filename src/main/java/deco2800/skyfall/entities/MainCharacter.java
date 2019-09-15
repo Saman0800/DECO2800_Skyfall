@@ -43,11 +43,9 @@ public class MainCharacter extends Peon
     private InventoryManager inventories;
 
     //List of blueprints that the player has learned.
-
     private List<Blueprint> blueprintsLearned;
 
     private BuildingFactory tempFactory;
-
 
     //The name of the item to be created.
     private String itemToCreate;
@@ -301,8 +299,84 @@ public class MainCharacter extends Peon
         if (this.spellSelected != SpellType.NONE) {
             this.castSpell(mousePosition, spellSelected);
         } else {
-            this.fireProjectile(mousePosition);
+//            this.fireProjectile(mousePosition);
+            this.fireArrow(mousePosition);
         }
+    }
+
+    /**
+     * Return the right texture for the arrow base on mouse position
+     *
+     * @param mousePosition the position of the mouse when click
+     * @return a String represent the texture of the arrow.
+     */
+    private String getArrowTexture(HexVector mousePosition) {
+        String texture = "";
+        float row = mousePosition.getRow();
+        float col = mousePosition.getCol();
+        if (row == 0 && col < 0) {
+            return texture = "ArrowWest";
+        } else if (row == 0 && col > 0) {
+            return texture = "ArrowEast";
+        } else if (col == 0 && row > 0) {
+            return texture = "ArrowNorth";
+        } else if (col == 0 && row < 0) {
+            return texture = "ArrowSouth";
+        } else if (col > 0 && row < 0) {
+            if ((col + row) > 2) {
+                return texture = "ArrowMoreEastSouth";
+            } else if ((col + row) < -2) {
+                return texture = "ArrowMoreSouthEast";
+            } else {
+                return texture = "ArrowSouthEast";
+            }
+        } else if (col > 0 && row > 0) {
+            if ((row - col) > 2) {
+                return texture = "ArrowMoreNorthEast";
+            } else if ((row - col) < -2) {
+                return texture = "ArrowMoreEastNorth";
+            } else {
+                return texture = "ArrowNorthEast";
+            }
+        } else if (row > 0 && col < 0) {
+            if(col+row>2) {
+                return texture = "ArrowMoreNorthWest";
+            } else if((col+row) <-2) {
+                return texture = "ArrowMoreWestNorth";
+            }
+            return texture = "ArrowNorthWest";
+        } else if (row < 0 && col < 0) {
+            if ((col-row)>2) {
+                return texture = "ArrowMoreSouthWest";
+            } else if((col-row)<-2) {
+                return texture = "ArrowMoreWestSouth";
+            } else {
+                return texture = "ArrowSouthWest";
+            }
+        }
+        return texture;
+    }
+
+    /**
+     * Firing an arrow from the bow when click on left mouse.
+     *
+     * @param mousePosition the mouse position to fire the arrow.
+     */
+    private void fireArrow(HexVector mousePosition) {
+
+        System.out.println(mousePosition.getCol() + " " + mousePosition.getRow());
+        HexVector position = this.getPosition();
+        setCurrentState(AnimationRole.ATTACK);
+        SoundManager.playSound(BOWATTACK);
+        String texture = getArrowTexture(mousePosition);
+        Projectile arrow = new Projectile(mousePosition, texture,
+                "Arrow", position.getCol() + 1, position.getRow(), 4
+                , 0.4f,
+                this.itemSlotSelected == 1 ? 1 : 0);
+        // Get AbstractWorld from static class GameManager.
+        GameManager manager = GameManager.get();
+        // Add the projectile entity to the game world.
+        GameManager.get().getWorld().addEntity(arrow);
     }
 
     /**
