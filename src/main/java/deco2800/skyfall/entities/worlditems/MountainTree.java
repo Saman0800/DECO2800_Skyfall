@@ -36,6 +36,11 @@ public class MountainTree extends StaticEntity implements Tickable, Harvestable 
         this.entityType = "MountainTree";
     }
 
+    public MountainTree (StaticEntityMemento memento){
+        super(memento);
+        this.woodAmount = 15;
+    }
+
     /**
      * The newInstance method implemented for the MountainTree class to allow for
      * item dispersal on game start up. This function is implemented with the

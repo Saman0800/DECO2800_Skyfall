@@ -21,6 +21,10 @@ public class LongGrass extends StaticEntity {
         this.entityType = "LongGrass";
     }
 
+    public LongGrass (StaticEntityMemento memento){
+        super(memento);
+    }
+
     @Override
     public void onTick(long i) {
 

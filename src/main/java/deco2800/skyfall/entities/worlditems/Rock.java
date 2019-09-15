@@ -28,6 +28,11 @@ public class Rock extends StaticEntity implements HasHealth {
         this.entityType = "Rock";
     }
 
+    public Rock (StaticEntityMemento memento){
+        super(memento);
+        this.metalAmount = 15;
+    }
+
     @Override
     public void onTick(long i) {
         // Do nothing on tick

@@ -21,6 +21,11 @@ public class ForestMushroom extends StaticEntity {
         this.entityType = "ForestMushroom";
     }
 
+
+    public ForestMushroom (StaticEntityMemento memento){
+        super(memento);
+    }
+
     @Override
     public void onTick(long i) {
 

@@ -26,6 +26,10 @@ public class SnowClump extends StaticEntity implements HasHealth {
         this.entityType = "SnowClump";
     }
 
+    public SnowClump (StaticEntityMemento memento){
+        super(memento);
+    }
+
     @Override
     public void onTick(long i) {
         // Do nothing on tick
