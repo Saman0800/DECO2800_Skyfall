@@ -47,3 +47,6 @@ EngineDB/*
 
 # vscode files
 .vscode/
+
+# settings folder is ignored
+settings/

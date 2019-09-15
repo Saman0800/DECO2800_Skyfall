@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import com.badlogic.gdx.math.Vector2;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 
@@ -14,7 +15,7 @@ public class Projectile extends AgentEntity {
     /**
      * How many game ticks all projectiles survive for before being removed.
      */
-    public static final int LIFE_TIME_TICKS = 40;
+    public static final int LIFE_TIME_TICKS = 50;
 
     /**
      * The amount of damage this projectile deals.
@@ -29,7 +30,7 @@ public class Projectile extends AgentEntity {
     /**
      * How many game ticks this object has survived.
      */
-    private long ticksAliveFor = 0;
+    protected long ticksAliveFor = 0;
 
     /**
      *
@@ -40,7 +41,7 @@ public class Projectile extends AgentEntity {
     /**
      * How far this projectile will travel.
      */
-    private int range;
+    protected int range;
 
     /**
      * Construct a new projectile.
@@ -66,6 +67,8 @@ public class Projectile extends AgentEntity {
 
         //Position the projectile correctly.
         position.moveToward(movementPosition,speed);
+
+        //fixture.setFilterData()
 
         //TODO: rotate sprite in angle facing.
     }
@@ -93,7 +96,10 @@ public class Projectile extends AgentEntity {
      */
     @Override
     public void onTick(long tick) {
-        this.updateCollider();
+
+        if (toBeDestroyed) {
+            destroy();
+        }
 
         //Each game tick add to counter.
         this.ticksAliveFor++;
@@ -103,9 +109,23 @@ public class Projectile extends AgentEntity {
             this.destroy();
         }
 
-        //TODO: Move to range max.
         if (this.range >= 1) {
             position.moveToward(movementPosition,speed);
+            getBody().setTransform(position.getCol(), position.getRow(), getBody().getAngle());
+        }
+
+    }
+
+    private boolean toBeDestroyed = false;
+    @Override
+    public void handleCollision(Object other) {
+        if (other instanceof EnemyEntity) {
+            ((EnemyEntity) other).takeDamage(this.getDamage());
+            ((EnemyEntity) other).setAttacked(true);
+            toBeDestroyed = true;
+            ((EnemyEntity)other).getBody().setLinearVelocity(
+                    (((EnemyEntity)other).getBody().getLinearVelocity()
+                    .lerp(new Vector2(0.f, 0.f), 0.5f)));
         }
 
     }
@@ -113,7 +133,12 @@ public class Projectile extends AgentEntity {
     /**
      * Remove the projectile from the game world.
      */
+    private boolean beenDestroyed = false;
     public void destroy() {
-        GameManager.get().getWorld().removeEntity(this);
+        if (!beenDestroyed) {
+            GameManager.get().getWorld().removeEntity(this);
+            getBody().getWorld().destroyBody(getBody());
+            beenDestroyed = true;
+        }
     }
 }

@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
  * Ocean Biome
  */
 public class OceanBiome extends AbstractBiome {
-    private ArrayList<String> textures = new ArrayList<>();
 
     /**
      * Constructor for a Biome

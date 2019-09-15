@@ -1,6 +1,6 @@
 package deco2800.skyfall.managers;
 
-import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.weapons.Weapon;
 
 import java.util.*;
 
@@ -13,7 +13,7 @@ public class WeaponManager extends TickableManager {
     private List<Weapon> equipped;
 
     // Maximum number of equipped weapons
-    private static final int MAX_EQUIPPED = 2;
+    private static final int MAX_EQUIPPED = 1;
 
     /**
      * Creates a new Weapon Manager and adds default items to the weapons map

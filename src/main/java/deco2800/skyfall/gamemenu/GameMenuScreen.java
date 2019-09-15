@@ -6,8 +6,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import deco2800.skyfall.entities.Chest;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.gui.Clock;
 import deco2800.skyfall.gui.HealthCircle;
+import deco2800.skyfall.gui.WeatherGui;
+import deco2800.skyfall.managers.EnvironmentManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.managers.TextureManager;
@@ -16,15 +20,24 @@ import java.util.Map;
 
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
+/**
+ * GUI of the Menu Screen in the game.
+ */
 public class GameMenuScreen {
 
+    // Current stage of the game.
     private Stage stage;
+    // Skin used for the game.
     private Skin skin;
     private static TextureManager textureManager;
     private GameMenuManager gameMenuManager;
+    // Game Paused screen pop up
     private PopUpTable pauseTable;
+    // Help screen pop up
     private PopUpTable helpTable;
+    // Settings screen pop up
     private PopUpTable settingsTable;
+    // Player Select screen pop up
     private PopUpTable playerSelect;
     private MainCharacter mainCharacter;
 
@@ -35,12 +48,21 @@ public class GameMenuScreen {
     private Table resourcePanel;
     public static int currentCharacter;
 
+    private Table chestPanel;
+
     //Table in hot bar containing quick access resources
     private Table quickAccessPanel;
 
     //Inventory pop up
     private PopUpTable inventoryTable;
 
+    private PopUpTable chestTable;
+
+    /**
+     * Construct the menu screen in the game.
+     *
+     * @param gameMenuManager Current GameMenuManager
+     */
     public GameMenuScreen(GameMenuManager gameMenuManager) {
         this.gameMenuManager = gameMenuManager;
         this.stage = gameMenuManager.getStage();
@@ -48,10 +70,11 @@ public class GameMenuScreen {
         this.textureManager = gameMenuManager.getTextureManager();
         inventory = gameMenuManager.getInventory();
         mainCharacter = gameMenuManager.getMainCharacter();
+        mainCharacter.setUpGUI();
     }
 
     /**
-     * Display menu bar at the bottom of the game
+     * Display menu bar at the bottom of the game.
      */
     private void showMenu() {
         Image menuBar = new Image(textureManager.getTexture("game menu bar"));
@@ -62,7 +85,7 @@ public class GameMenuScreen {
     }
 
     /**
-     * Display buttons in the menu bar
+     * Display buttons in the menu bar.
      */
     private void showButtons() {
         int width;
@@ -128,20 +151,27 @@ public class GameMenuScreen {
         radar.setSize(219 * 0.55f, 207 * 0.55f);
         radar.setPosition(440, 30 * 1000 / 800f);
         stage.addActor(radar);
+//        HealthCircle healthCircle = new HealthCircle(stage,
+//                "big_circle",
+//                "inner_circle",
+//                mainCharacter);
 
+//        gameMenuManager.addHealthCircle(healthCircle);
 
-        HealthCircle healthCircle = new HealthCircle(stage,
-                "big_circle",
-                "inner_circle",
-                mainCharacter);
+        Clock clock = new Clock(stage);
 
-        gameMenuManager.addHealthCircle(healthCircle);
+        gameMenuManager.addClock(clock);
+
+        //String getcurrentWeather;
+        //getcurrentWeather = EnvironmentManager.getcurrentWeather();
+       // WeatherGui weather = new WeatherGui(stage, getcurrentWeather); // need to have this for any weather
+        //gameMenuManager.addWeather(weather);
     }
 
     /**
-     * Getter of pause pop up table
+     * Getter of Game Paused screen.
      *
-     * @return pauseTable
+     * @return Game Paused screen.
      */
     private PopUpTable getPauseTable() {
         if (pauseTable == null) {
@@ -154,7 +184,7 @@ public class GameMenuScreen {
     }
 
     /**
-     * Sets the pause pop up table
+     * Initialise Game Paused Screen pop up.
      */
     private void setPauseTable() {
         PopUpTable pauseTable = new PopUpTable(500, 500 * 1346 / 1862f, "p");
@@ -172,10 +202,13 @@ public class GameMenuScreen {
         ImageButton toHome = new ImageButton(generateTextureRegionDrawableObject("goHome"));
         toHome.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
-
-            }
-        });
+        public void clicked(InputEvent event, float x, float y) {
+//                gameMenuManager.getGame().batch = new SpriteBatch();
+//                gameMenuManager.getGame().setScreen(new MainMenuScreen(gameMenuManager.getGame()));
+//            System.out.println(gameMenuManager.getGame().batch == null);
+//            gameMenuManager.getGame().create();
+        }
+    });
 
         Label homeText = new Label("HOME", skin, "pop-up");
 
@@ -192,6 +225,13 @@ public class GameMenuScreen {
         ImageButton reset = new ImageButton(generateTextureRegionDrawableObject("reset"));
         Label resetText = new Label("RESET", skin, "pop-up");
 
+        reset.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+//                gameMenuManager.getGame().setScreen(new GameScreen(new SkyfallGame(), 1, true));
+            }
+        });
+
         pauseTable.row();
         pauseTable.add(homeText).expandY().right().bottom().padRight(25);
         pauseTable.add(resumeText).expandY().bottom().padBottom(12.5f);
@@ -204,6 +244,11 @@ public class GameMenuScreen {
         this.pauseTable = pauseTable;
     }
 
+    /**
+     * Getter of Help Screen.
+     *
+     * @return Help Screen.
+     */
     private PopUpTable getHelpTable() {
         if (helpTable == null) {
             setHelpTable();
@@ -214,6 +259,9 @@ public class GameMenuScreen {
         return helpTable;
     }
 
+    /**
+     * Initialise Help Screen pop up.
+     */
     private void setHelpTable() {
         PopUpTable helpTable = new PopUpTable(600, 600 * 1346 / 1862f, "h");
 //        helpTable.setDebug(true);
@@ -242,6 +290,13 @@ public class GameMenuScreen {
         this.helpTable = helpTable;
     }
 
+    /**
+     * Setup the label of control keys and their description.
+     *
+     * @param key Control key.
+     * @param description Function of the key.
+     * @param table Table to add on.
+     */
     private void setControl(String key, String description, PopUpTable table) {
         Label label = new Label(key, skin, "WASD");
         table.add(label).width(50).height(50).padLeft(25);
@@ -252,8 +307,23 @@ public class GameMenuScreen {
         table.row().padTop(15);
     }
 
+    public PopUpTable getChestTable(Chest chest) {
+        if (chestTable == null) {
+            setChestTable(chest);
+            setExitButton(chestTable);
+            stage.addActor(chestTable);
+            stage.addActor(chestTable.getExit());
+        } else {
+            chestTable.removeActor(chestPanel);
+            updateChestPanel(chest);
+            chestTable.addActor(chestTable);
+        }
+        return chestTable;
+    }
+
     /***
      * Updates and returns current state of the inventory table.
+     *
      * @return inventoryTable
      */
     private PopUpTable getInventoryTable() {
@@ -294,6 +364,76 @@ public class GameMenuScreen {
         inventoryTable.addActor(this.resourcePanel);
 
         this.inventoryTable = inventoryTable;
+    }
+
+    private void setChestTable(Chest chest) {
+        PopUpTable chestTable = new PopUpTable(910, 510, "i");
+        chestTable.setName("chestTable");
+
+        Image infoBar = new Image(generateTextureRegionDrawableObject("inventory_banner"));
+        infoBar.setSize(650, 55);
+        infoBar.setPosition(130, 435);
+
+        Table infoPanel = new Table();
+        infoPanel.setSize(410, 400);
+        infoPanel.setPosition(25, 18);
+        infoPanel.setBackground(generateTextureRegionDrawableObject("info_panel"));
+
+
+        updateChestPanel(chest);
+
+        chestTable.addActor(infoBar);
+        chestTable.addActor(infoPanel);
+        chestTable.addActor(this.resourcePanel);
+
+        this.chestTable = chestTable;
+    }
+
+    private void updateChestPanel(Chest chest) {
+        resourcePanel = new Table();
+        resourcePanel.setName("resourcePanel");
+        resourcePanel.setSize(410, 400);
+        resourcePanel.setPosition(475, 18);
+        resourcePanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
+
+        Map<String, Integer> inventoryAmounts = chest.getManager().getInventoryAmounts();
+
+        int count = 0;
+        int xpos = 20;
+        int ypos = 280;
+
+        for (Map.Entry<String, Integer> entry : inventoryAmounts.entrySet()) {
+
+            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey()));
+            icon.setName("icon");
+            icon.setSize(100, 100);
+            icon.setPosition(xpos + count * 130, ypos);
+
+            resourcePanel.addActor(icon);
+
+            Label num = new Label(entry.getValue().toString(), skin, "WASD");
+            num.setPosition(xpos + 85 + count * 130, ypos + 75);
+            resourcePanel.addActor(num);
+
+            count++;
+
+            if ((count) % 3 == 0) {
+                ypos -= 120;
+                count = 0;
+            }
+        }
+
+        ImageButton button = new ImageButton(generateTextureRegionDrawableObject("takeall"));
+        button.setName("Take all");
+        button.setSize(100, 100);
+        button.setPosition(xpos + count * 130, ypos);
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                mainCharacter.getInventoryManager().inventoryAddMultiple(chest.getManager().getInventoryContents());
+            }
+        });
+        resourcePanel.addActor(button);
     }
 
     /***
@@ -439,6 +579,7 @@ public class GameMenuScreen {
     }
 
     /**
+     * Initialise Settings Screen pop up.
      * Sets the settings table to be the current table. (Currently incomplete)
      */
     private void setSettingsTable() {
@@ -459,6 +600,11 @@ public class GameMenuScreen {
         this.settingsTable = settingsTable;
     }
 
+    /**
+     * Getter of Player Select Screen.
+     *
+     * @return Player Select Screen.
+     */
     private PopUpTable getPlayerSelect() {
         if (playerSelect == null) {
             setPlayerSelect();
@@ -469,7 +615,9 @@ public class GameMenuScreen {
         return playerSelect;
     }
 
-
+    /**
+     * Initialise Player Select Screen pop up.
+     */
     private void setPlayerSelect() {
         PopUpTable playerSelect = new PopUpTable(600, 600f * 1346 / 1862, "playerSelect");
 //        playerSelect.setDebug(true);
@@ -511,7 +659,7 @@ public class GameMenuScreen {
         leftArrow.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                currentCharacter = (currentCharacter + 1) % gameMenuManager.NUMBEROFCHARACTERS;
+                currentCharacter = (currentCharacter + gameMenuManager.NUMBEROFCHARACTERS - 1) % gameMenuManager.NUMBEROFCHARACTERS;
                 updateCharacters(characterTables, characterTableWidth);
             }
         });
@@ -519,7 +667,7 @@ public class GameMenuScreen {
         rightArrow.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                currentCharacter = (currentCharacter + gameMenuManager.NUMBEROFCHARACTERS - 1) % gameMenuManager.NUMBEROFCHARACTERS;
+                currentCharacter = (currentCharacter + 1) % gameMenuManager.NUMBEROFCHARACTERS;
                 updateCharacters(characterTables, characterTableWidth);
             }
         });
@@ -543,7 +691,13 @@ public class GameMenuScreen {
         this.playerSelect = playerSelect;
     }
 
-    private void updateCharacters(Table[] characterTables, float characterTableWidth) {
+    /**
+     * Updates the characters displayed on the pop up screen.
+     *
+     * @param characterTables Array of Tables for Images of character to add on.
+     * @param characterTableWidth Width of each characterTable.
+     */
+    private void updateCharacters(Table characterTables[], float characterTableWidth) {
         for (int i = currentCharacter; i < currentCharacter + 3; i++) {
             Table characterTable = characterTables[i - currentCharacter];
             characterTable.clearChildren();
@@ -563,6 +717,11 @@ public class GameMenuScreen {
         }
     }
 
+    /**
+     * Initialise the Exit button for given PopUpTable
+     *
+     * @param table PopUpTable of the Exit Button
+     */
     private void setExitButton(PopUpTable table) {
         ImageButton exit = table.getExit();
         exit.addListener(new ClickListener() {
@@ -574,7 +733,7 @@ public class GameMenuScreen {
     }
 
     /**
-     * Display eveything created
+     * Display everything created
      */
     public void show() {
         showMenu();
