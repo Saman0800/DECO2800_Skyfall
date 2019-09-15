@@ -240,7 +240,7 @@ public class EnvironmentManager extends TickableManager {
         if (mins >= 60) {
             hours += 1;
             if (hours >= 24) {
-                hours = 0;
+                hours = hours - 24;
             }
             minutes = 0;
             updateTimeListeners(hours);
