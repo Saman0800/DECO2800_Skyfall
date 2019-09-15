@@ -1,6 +1,5 @@
 package deco2800.skyfall.managers;
 
-import com.badlogic.gdx.Game;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.observers.DayNightObserver;
@@ -10,7 +9,6 @@ import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.world.World;
 import org.junit.Before;
 import org.junit.Test;
-import sun.applet.Main;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -18,7 +16,6 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 public class EnvironmentManagerTest {
 
