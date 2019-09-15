@@ -6,7 +6,7 @@ public class CreateTablesQueries {
 
     public String createSaveTableSql = "CREATE TABLE SAVES"
         + "("
-        + "    save_id       int not null,"
+        + "    save_id       bigint not null,"
         + "    data clob,"
         + "    PRIMARY KEY (save_id)"
         + ")";
@@ -22,71 +22,75 @@ public class CreateTablesQueries {
             ")";
 
 
-    public String createMainCharacterTableSql = "CREATE TABLE MAIN_CHARACTER("
-        + "    character_id        int NOT NULL,"
-        + "    save_id             int not null ,"
-        + "    data blob,"
-        + "    PRIMARY KEY (character_id),"
-        + "    FOREIGN KEY (save_id) references SAVES (save_id))";
+    public String createMainCharacterTableSql = "CREATE TABLE MAIN_CHARACTER" +
+            "(" +
+            "    character_id        bigint NOT NULL," +
+            "    save_id             bigint not null ," +
+            "    data blob," +
+            "    PRIMARY KEY (character_id)," +
+            "    FOREIGN KEY (save_id) references SAVES (save_id)" +
+            ")";
+
+    public String createBiomesTableSql = "CREATE table BIOMES" +
+            "(" +
+            "    biome_id       bigint not null ," +
+            "    world_id       bigint not null ," +
+            "    biome_type     CLOB ," +
+            "    tile_generator blob not null ," +
+            "    data CLOB," +
+            "    primary key (biome_id, world_id)," +
+            "    foreign key (world_id) references WORLDS(world_id)" +
+            ")";
+    
+    public String createNodesTableSql = "CREATE TABLE NODES" +
+            "(" +
+            "    node_id bigint not null," +
+            "    world_id bigint not null ," +
+            "    x_pos double not null ," +
+            "    y_pos double not null ," +
+            "    data CLOB," +
+            "    biome_id bigint not null," +
+            "    primary key (node_id)," +
+            "    foreign key (world_id) references WORLDS(world_id)," +
+            "    foreign key (biome_id, world_id) references BIOMES (biome_id, world_id)" +
+            ")";
+
+    public String createEdgesTableSql = "CREATE TABLE EDGES" +
+            "(" +
+            "    world_id bigint not null," +
+            "    edge_id bigint not null," +
+            "    biome_id bigint not null," +
+            "    data clob," +
+            "    primary key (edge_id)," +
+            "    foreign key (biome_id, world_id) references BIOMES(biome_id, world_id)," +
+            "    foreign key (world_id) references WORLDS(world_id)" +
+            ")";
 
 
-    public String createNodesTableSql = "CREATE TABLE NODES("
-        + "    world_id int not null ,"
-        + "    x_pos int not null ,"
-        + "    y_pos int not null ,"
-        + "    data CLOB,"
-        + "    node_id int,"
-        + "    primary key (node_id),"
-        + "    foreign key (world_id) references WORLDS(world_id))";
 
+    public String createChunksTableSql = "CREATE TABLE CHUNKS" +
+            "(" +
+            "    world_id bigint not null ," +
+            "    x int not null ," +
+            "    y int not null ," +
+            "    data CLOB," +
+            "    PRIMARY KEY (world_id, x, y)," +
+            "    FOREIGN KEY (world_id) references WORLDS(world_id)" +
+            ")";
 
-    public String createEdgesTableSql = "CREATE TABLE EDGES"
-        + "("
-        + "    node_one_id int,"
-        + "    node_two_id int,"
-        + "    primary key (node_one_id, node_two_id),"
-        + "    foreign key (node_two_id) references NODES(node_id),"
-        + "    foreign key (node_one_id) references NODES(node_id)"
-        + ")";
-
-
-
-
-    public String createBiomesTableSql = "CREATE table BIOMES"
-        + "("
-        + "    biome_id       int not null ,"
-        + "    world_id       int not null ,"
-        + "    biome_type     VARCHAR(30) not null ,"
-        + "    tile_generator blob not null ,"
-        + "    data CLOB,"
-        + "    primary key (biome_id, world_id),"
-        + "    foreign key (world_id) references WORLDS(world_id)"
-        + ")";
-
-
-    public String createChunksTableSql = "CREATE TABLE CHUNKS"
-        + "("
-        + "    world_id int not null ,"
-        + "    x int not null ,"
-        + "    y int not null ,"
-        + "    data CLOB,"
-        + "    PRIMARY KEY (world_id, x, y),"
-        + "    FOREIGN KEY (world_id) references WORLDS(world_id)"
-        + ")";
-
-
-    public String createEntitiesSql = "CREATE TABLE ENTITIES"
-        + "("
-        + "    type clob,"
-        + "    x int not null ,"
-        + "    y int not null ,"
-        + "    chunk_x int not null,"
-        + "    chunk_y int not null,"
-        + "    world_id int not null,"
-        + "    data clob,"
-        + "    PRIMARY KEY (world_id,chunk_x, chunk_y, x, y),"
-        + "    foreign key (world_id, chunk_x, chunk_y) references CHUNKS(world_id, x, y)"
-        + ")";
+    public String createEntitiesSql = "CREATE TABLE ENTITIES" +
+            "(" +
+            "    entity_id bigint," +
+            "    type clob," +
+            "    x double not null ," +
+            "    y double not null ," +
+            "    chunk_x int not null," +
+            "    chunk_y int not null," +
+            "    world_id bigint not null," +
+            "    data clob," +
+            "    PRIMARY KEY (entity_id, world_id)," +
+            "    foreign key (world_id, chunk_x, chunk_y) references CHUNKS(world_id, x, y)" +
+            ")";
 
 
     public ArrayList<String> getQueries(){
@@ -94,9 +98,9 @@ public class CreateTablesQueries {
         queries.add(createSaveTableSql);
         queries.add(createWorldsTableSql);
         queries.add(createMainCharacterTableSql);
+        queries.add(createBiomesTableSql);
         queries.add(createNodesTableSql);
         queries.add(createEdgesTableSql);
-        queries.add(createBiomesTableSql);
         queries.add(createChunksTableSql);
         queries.add(createEntitiesSql);
         return queries;
@@ -107,9 +111,9 @@ public class CreateTablesQueries {
         tableNames.add("SAVES");
         tableNames.add("WORLDS");
         tableNames.add("MAIN_CHARACTER");
+        tableNames.add("BIOMES");
         tableNames.add("NODES");
         tableNames.add("EDGES");
-        tableNames.add("BIOMES");
         tableNames.add("CHUNKS");
         tableNames.add("ENTITIES");
         return tableNames;

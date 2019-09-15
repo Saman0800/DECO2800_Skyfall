@@ -245,6 +245,18 @@ public class WorldBuilder implements WorldBuilderInterface {
     public World getWorld() {
         World world;
 
+        if (staticEntities) {
+            worldParameters.setGenerateSpawnRules(this::generateStartEntities);
+        } else {
+            worldParameters.setGenerateSpawnRules(generatedWorld -> {
+                HashMap<AbstractBiome, List<EntitySpawnRule>> rules = new HashMap<>();
+                for (AbstractBiome biome : generatedWorld.getBiomes()) {
+                    rules.put(biome, Collections.emptyList());
+                }
+                return rules;
+            });
+        }
+
         switch (type) {
         case "single_player":
             world = new World(worldParameters);
@@ -262,11 +274,6 @@ public class WorldBuilder implements WorldBuilderInterface {
             throw new IllegalArgumentException("The world type is not valid");
         }
 
-        if (staticEntities) {
-            worldParameters.setSpawnRules(generateStartEntities(world));
-        } else {
-            worldParameters.setSpawnRules(Collections.emptyMap());
-        }
         return world;
     }
 }

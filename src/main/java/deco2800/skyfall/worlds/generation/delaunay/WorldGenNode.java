@@ -239,12 +239,13 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
      *
      * @param nodes The list of nodes that can be assigned to
      */
-    public static void removeZeroTileNodes(List<WorldGenNode> nodes, int nodeSpacing, int worldSize) throws WorldGenException {
+    public static void removeZeroTileNodes(World world, List<WorldGenNode> nodes, int nodeSpacing, int worldSize) throws WorldGenException {
         // TODO Make this more efficient by looping through only the tiles within the rectangle containing this node
         //  and stop on the first tile inside the border. Start iterating from the middle, which is more likely to
         //  be within the node.
-        NoiseGenerator xGen = Tile.getXNoiseGen();
-        NoiseGenerator yGen = Tile.getYNoiseGen();
+
+        NoiseGenerator xGen = world.getTileOffsetNoiseGeneratorX();
+        NoiseGenerator yGen = world.getTileOffsetNoiseGeneratorY();
         List<WorldGenNode> tempNodes = new ArrayList<>(nodes);
 
         for (int i = -1 * worldSize; i <= worldSize; i++) {

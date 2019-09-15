@@ -159,7 +159,8 @@ public final class DatabaseManager extends AbstractManager {
                 reader.beginObject();
 
                 // TODO This looks broken.
-                Tile tile = new Tile(0, 0);
+                // Tile tile = new Tile(0, 0);
+                Tile tile = null;
                 while (reader.hasNext()) {
                     checkBasicTileSettings(tile, reader.nextName(), reader);
                 }

@@ -67,6 +67,7 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
     protected LinkedHashMap<VoronoiEdge, RiverBiome> riverEdges;
     protected LinkedHashMap<VoronoiEdge, BeachBiome> beachEdges;
 
+    protected Map<AbstractBiome, List<EntitySpawnRule>> spawnRules;
     protected NoiseGenerator staticEntityNoise;
 
     // TODO:Ontonator Reconsider this for chunks.
@@ -106,9 +107,8 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         worldGenNodes = new CopyOnWriteArrayList<>();
     	voronoiEdges = new CopyOnWriteArrayList<>();
 
-    	// FIXME:Ontonator Sort this out.
-        // tileOffsetNoiseGeneratorX = WorldGenNode.getOffsetNoiseGenerator(random, worldParameters.getNodeSpacing());
-        // tileOffsetNoiseGeneratorY = WorldGenNode.getOffsetNoiseGenerator(random, worldParameters.getNodeSpacing());
+        tileOffsetNoiseGeneratorX = Tile.getOffsetNoiseGenerator(random, worldParameters.getNodeSpacing());
+        tileOffsetNoiseGeneratorY = Tile.getOffsetNoiseGenerator(random, worldParameters.getNodeSpacing());
 
         staticEntityNoise = new NoiseGenerator(random, 3, 4, 1.3);
 
@@ -118,6 +118,19 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
 
         generateTileIndices();
         initialiseFrictionmap();
+
+        spawnRules = worldParameters.getGenerateSpawnRules().apply(this);
+
+        for (AbstractEntity entity : worldParameters.getEntities()) {
+            addEntity(entity);
+        }
+
+        // Set this to null once generation is complete since using this after construction is likely not deterministic
+        // due to ordering of events being affected by external factors like player movement. If you just want to
+        // generate random numbers, then this isn't appropriate either, since it is seeded, so not properly random.
+        // DON'T REMOVE THIS JUST BECAUSE YOUR CODE IS THROWING `NullPointerException`, YOU PROBABLY HAND DEEP AND
+        // FUNDAMENTAL ISSUES WITH WHAT YOU ARE DOING.
+        random = null;
     }
 
     /**
@@ -141,7 +154,6 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
      * @throws DeadEndGenerationException
      * @throws WorldGenException
      */
-    // FIXME:Ontonator Make this work with chunks.
     private void generateTiles() throws NotEnoughPointsException, DeadEndGenerationException, WorldGenException {
         ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
         // TODO:Ontonator Sort this out.
@@ -176,20 +188,12 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         WorldGenNode.lloydRelaxation(worldGenNodes, 2, worldSize);
         this.worldGenNodes = new CopyOnWriteArrayList<>(worldGenNodes);
 
-        Tile.setNoiseGenerators(random, nodeSpacing);
-        WorldGenNode.removeZeroTileNodes(worldGenNodes, nodeSpacing, worldSize);
+        WorldGenNode.removeZeroTileNodes(this, worldGenNodes, nodeSpacing, worldSize);
         WorldGenNode.assignNeighbours(worldGenNodes, voronoiEdges, this);
         VoronoiEdge.assignNeighbours(voronoiEdges);
 
         BiomeGenerator biomeGenerator = new BiomeGenerator(this, worldGenNodes, voronoiEdges, random, worldParameters);
         biomeGenerator.generateBiomes();
-
-        // for (int q = -worldSize / Chunk.CHUNK_SIDE_LENGTH; q <= worldSize / Chunk.CHUNK_SIDE_LENGTH; q++) {
-        //     for (int r = -worldSize / Chunk.CHUNK_SIDE_LENGTH; r <= worldSize / Chunk.CHUNK_SIDE_LENGTH; r++) {
-        //         Chunk chunk = new Chunk(this, q, r);
-        //         loadedChunks.put(new Pair<>(q, r), chunk);
-        //     }
-        // }
     }
 
     // TODO:Ontonator Consider removing this method.
@@ -635,6 +639,23 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
     }
 
     /**
+     * Gets the noise generator for the X coordinate used for selecting the {@code WorldGenNode} for the tiles.
+     * @return the noise generator for the X coordinate used for selecting the {@code WorldGenNode} for the tiles
+     */
+    public NoiseGenerator getTileOffsetNoiseGeneratorX() {
+        return tileOffsetNoiseGeneratorX;
+    }
+
+    /**
+     * Gets the noise generator for the Y coordinate used for selecting the {@code WorldGenNode} for the tiles.
+     *
+     * @return the noise generator for the Y coordinate used for selecting the {@code WorldGenNode} for the tiles
+     */
+    public NoiseGenerator getTileOffsetNoiseGeneratorY() {
+        return tileOffsetNoiseGeneratorY;
+    }
+
+    /**
      * Sets the list of river edges with their associated biomes
      *
      * @param edges the list of edges that are rivers
@@ -670,6 +691,10 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         return this.beachEdges;
     }
 
+    public Map<AbstractBiome, List<EntitySpawnRule>> getSpawnRules() {
+        return spawnRules;
+    }
+
     /**
      * Gets the noise generator used to generate the static entities.
      *
@@ -687,8 +712,6 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
     public WorldParameters getWorldParameters() {
         return worldParameters;
     }
-
-
 
     @Override
     public String formatData() {
@@ -714,7 +737,6 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
     }
 
     public class WorldMemento extends AbstractMemento {
-
         private long saveID;
         private long worldID;
         private int nodeSpacing;
@@ -729,8 +751,5 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
             this.riverWidth = world.worldParameters.getRiverWidth();
             this.beachWidth = world.worldParameters.getBeachWidth();
         }
-
     }
-
-
 }

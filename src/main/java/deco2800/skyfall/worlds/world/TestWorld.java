@@ -103,7 +103,7 @@ public class TestWorld extends World {
 
                     int rand = random.nextInt(8);
 
-                    Tile tile = new Tile(q, r + oddCol);
+                    Tile tile = new Tile(this, q, r + oddCol);
                     addTile(tile);
                     biome.addTile(tile);
                 }

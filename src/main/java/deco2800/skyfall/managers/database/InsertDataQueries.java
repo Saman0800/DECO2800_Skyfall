@@ -30,9 +30,9 @@ public class InsertDataQueries {
         statement.executeUpdate(query);
     }
 
-    public void insertNodes(long worldId, double xPos, double yPos, String data, long nodeId) throws SQLException{
-        String query = String.format("insert into NODES (world_id, x_pos, y_pos, data, node_id) values (%s, %s, %s, "
-                + "'%s',%s)", worldId, xPos, yPos, data, nodeId);
+    public void insertNodes(long worldId, double xPos, double yPos, String data, long nodeId, long biomeId) throws SQLException{
+        String query = String.format("insert into NODES (node_id, world_id, x_pos, y_pos, data, biome_id) values (%s, %s, %s, "
+                + "'%s',%s , %s)", nodeId, worldId, xPos, yPos, data, biomeId);
         statement.executeUpdate(query);
     }
 
@@ -55,9 +55,9 @@ public class InsertDataQueries {
         statement.executeUpdate(query);
     }
 
-    public void insertEntity(String type, double x, double y, int chunkX, int chunkY, long worldId, String data) throws SQLException{
-        String query = String.format("insert into ENTITIES (type, x, y, chunk_x, chunk_y, world_id, data) values (%s,"
-                + "%s,%s,%s,%s,%s,'%s')", type, x, y, chunkX, chunkY, worldId, data);
+    public void insertEntity(String type, double x, double y, int chunkX, int chunkY, int worldId, String data, long entityId) throws SQLException {
+        String query = String.format("insert into ENTITIES (type, x, y, chunk_x, chunk_y, world_id, data, entity_id) values (%s,"
+                + "%s,%s,%s,%s,%s,'%s')", type, x, y, chunkX, chunkY, worldId, data, entityId);
         statement.executeUpdate(query);
     }
 }

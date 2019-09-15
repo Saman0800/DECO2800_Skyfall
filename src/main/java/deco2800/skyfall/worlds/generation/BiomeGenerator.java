@@ -146,9 +146,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 growOcean();
                 fillGaps();
                 generateLakes(lakeSizes, noLakes);
-                //populateRealBiomes();
                 generateBeaches();
-                // FIXME:Ontonator Check that this still works.
                 generateRivers(noRivers, voronoiEdges);
                 // FIXME:Ontonator Adapt this to work with chunks.
                 // ensureContiguity();
@@ -249,7 +247,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      * Converts the coastal region of the island into a beach biome.
      */
     private void generateBeaches() {
-        // FIXME:Ontonator Check that this still works.
         LinkedHashMap<VoronoiEdge, BeachBiome> beachEdges = new LinkedHashMap<>();
 
         for (VoronoiEdge edge : voronoiEdges) {
@@ -259,7 +256,8 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             }
             if (realBiomes.get(nodesBiomes.get(edge.getEdgeNodes().get(1)).id).getBiomeName().equals("ocean")) {
 
-                if (realBiomes.get(nodesBiomes.get(edge.getEdgeNodes().get(0)).id).getBiomeName().equals("ocean") || oceanIndex == 0) {
+                if (realBiomes.get(nodesBiomes.get(edge.getEdgeNodes().get(0)).id).getBiomeName().equals("ocean") ||
+                        oceanIndex == 0) {
                     oceanIndex = -1;
                 } else {
                     oceanIndex = 1;
@@ -279,55 +277,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
         }
 
         world.setBeachEdges(beachEdges);
-
-        /*
-        ArrayList<Tile> coast = new ArrayList<>();
-        for (WorldGenNode node : nodes) {
-            if (!realBiomes.get(biomes.indexOf(nodesBiomes.get(node))).getBiomeName().equals("ocean") &&
-                    node.getNeighbours().stream().anyMatch(
-                            neighbour -> realBiomes.get(biomes.indexOf(nodesBiomes.get(neighbour))).getBiomeName()
-                                    .equals("ocean"))) {
-                for (Tile tile : node.getTiles()) {
-                    if (tile.getNeighbours().values().stream()
-                            .anyMatch(neighbour -> neighbour.getBiome().getBiomeName().equals("ocean"))) {
-                        coast.add(tile);
-                    }
-                }
-            }
-        }
-
-        NoiseGenerator distanceGen = new NoiseGenerator(random, 3, 10, 0.6);
-
-        HashMap<AbstractBiome, BeachBiome> beachesForBiomes = new HashMap<>();
-        HashSet<Tile> checkedTiles = new HashSet<>();
-        for (int distance = 0; distance < beachWidth; distance++) {
-            ArrayList<Tile> nextCoastLayer = new ArrayList<>();
-
-            for (Tile tile : coast) {
-                if (distance <= beachWidth *
-                        NoiseGenerator.fade(distanceGen.getOctavedPerlinValue(tile.getCol(), tile.getRow()))) {
-                    BeachBiome biome = beachesForBiomes.computeIfAbsent(tile.getBiome(), parentBiome -> {
-                        BeachBiome beachBiome = new BeachBiome(parentBiome, random);
-                        realBiomes.add(beachBiome);
-                        return beachBiome;
-                    });
-
-                    biome.addTile(tile);
-                }
-
-                if (distance != beachWidth - 1) {
-                    for (Tile neighbour : tile.getNeighbours().values()) {
-                        if (!checkedTiles.contains(neighbour) && !neighbour.getBiome().getBiomeName().equals("ocean")) {
-                            checkedTiles.add(neighbour);
-                            nextCoastLayer.add(neighbour);
-                        }
-                    }
-                }
-            }
-
-            coast = nextCoastLayer;
-        }
-        */
     }
 
     /**
@@ -514,7 +463,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
 
             List<AbstractBiome> parentBiomes = new ArrayList<>();
             // Create a river biome and add all tiles for each edge
-            // FIXME:Ontonator Check that this still works.
             for (VoronoiEdge edge : riverEdges) {
                 AbstractBiome parentBiome = realBiomes.get(nodesBiomes
                         .get(edge.getEdgeNodes().get(random.nextInt(2))).id);
@@ -522,7 +470,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             }
             rivers.add(riverEdges);
             riverParentBiomes.add(parentBiomes);
-
         }
 
         List<VoronoiEdge> allRiverEdges = new ArrayList<>();
