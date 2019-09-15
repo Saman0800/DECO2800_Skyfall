@@ -19,12 +19,9 @@ import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.Tile;
-import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.applet.Main;
 
-import java.io.*;
 import java.util.*;
 
 /**
@@ -913,12 +910,9 @@ public class MainCharacter extends Peon
      * @param nextTile The tile that will be moved to
      */
     public void findNewPosition(HexVector position, HexVector destination, Tile nextTile) {
-        if (nextTile == null) {
-            // Prevents the player from walking into the void
-            position.moveToward(destination, 0);
-        } else if (nextTile.getTextureName().contains("water") && !canSwim) {
-            // Prevents the player back if they try to enter water when they
-            // can't swim
+        if (nextTile == null || nextTile.getTextureName().contains("water") && !canSwim) {
+            // Prevents the player from walking into the void and prevents the player back if they try to enter water
+            // when they can't swim
             position.moveToward(destination, 0);
         } else {
             position.moveToward(destination, vel);
