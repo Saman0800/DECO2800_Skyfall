@@ -436,8 +436,16 @@ public class MainCharacterTest {
 
     }
 
-    //These methods no longer exist so tests are commented out, will be replaced with a more generic
-    //useEquippedItem test.
+    @Test
+    public void equippedItemTest(){
+        Item toEquip = testCharacter.getInventoryManager().drop("Wood");
+        testCharacter.setEquippedItem(toEquip);
+
+        Assert.assertEquals(testCharacter.getEquippedItem(), toEquip);;
+        Assert.assertEquals(testCharacter.displayEquippedItem(), "Natural Resource:Wood");
+    }
+
+    //These methods no longer exist so tests are commented out
 //    @Test
 //    public void useHatchetTest() {
 //

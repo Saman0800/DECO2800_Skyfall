@@ -355,11 +355,10 @@ public class MainCharacter extends Peon
     public void useEquipped(){
         if(equippedItem != null){
             equippedItem.use(this.getPosition());
-        } else{
-            //collect nearby resources
+        }
+            //else: collect nearby resources
             //Will be adjusted in following sprint when it is possible to spawn
             //non-static entities
-        }
     }
 
     /**
@@ -864,7 +863,7 @@ public class MainCharacter extends Peon
                     break;
                 case Input.Keys.SPACE:
                     if(this.equippedItem != null){
-                        this.equippedItem.use(position);
+                        useEquipped();
                     }
                     break;
                 case Input.Keys.G:

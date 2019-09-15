@@ -363,8 +363,7 @@ public class InventoryTable extends AbstractPopUpElement {
             selected.setSize((float) size + 20, (float) size + 20);
             selected.setPosition((float)(xpos + -10 + (size+xspace)*(count-1)), ypos -10);
             selected.setVisible(false);
-
-            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey()));
+            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey() + "_inv"));
             icon.setName(entry.getKey());
             icon.setSize((float)size, (float)size);
             icon.setPosition((float)(xpos + (size+xspace)*(count-1)), ypos);

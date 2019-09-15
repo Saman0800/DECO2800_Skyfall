@@ -96,10 +96,13 @@ public class InventoryManagerTest {
         test.add(new Sand());
         test.add(new Sand());
         test.add(new Sand());
+        test.add(new Metal());
+        test.add(new Metal());
 
-        assertEquals(4, test.getAmounts().size());
+        assertEquals(5, test.getAmounts().size());
         assertEquals(2, test.getAmount("Stone"));
         assertEquals(2, test.getAmount("Wood"));
+        assertEquals(2, test.getAmount("Metal"));
         assertEquals(1, test.getAmount("Vine"));
         assertEquals(3, test.getAmount("Sand"));
         assertEquals(0, test.getAmount("Apple"));
@@ -110,19 +113,23 @@ public class InventoryManagerTest {
         assertEquals(0, test.getAmount("Stone"));
         assertNull(test.drop("Stone"));
 
-        assertEquals(3, test.getAmounts().size());
+        assertEquals(4, test.getAmounts().size());
         assertEquals(0, test.getAmount("Stone"));
 
         test.dropMultiple("Wood", 2);
-        assertEquals(2, test.getAmounts().size());
+        assertEquals(3, test.getAmounts().size());
         assertEquals(0, test.getAmount("Wood"));
 
         test.dropMultiple("Sand", 2);
-        assertEquals(2, test.getAmounts().size());
+        assertEquals(3, test.getAmounts().size());
         assertEquals(1, test.getAmount("Sand"));
 
         assertNull(test.dropMultiple("Sand", 2));
         assertNull(test.dropMultiple("Apple", 3));
+
+        test.dropAll("Metal");
+        assertEquals(0, test.getAmount("Metal"));
+        assertEquals(2, test.getAmounts().size());
     }
 
     @Test
