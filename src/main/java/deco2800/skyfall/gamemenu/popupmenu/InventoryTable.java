@@ -75,7 +75,7 @@ public class InventoryTable extends AbstractPopUpElement {
         inventoryTable.setSize(910, 510);
         inventoryTable.setPosition(Gdx.graphics.getWidth()/2f - inventoryTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - inventoryTable.getHeight()/2);
-        inventoryTable.setDebug(true);
+        inventoryTable.setDebug(false);
         inventoryTable.top();
         inventoryTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
         inventoryTable.setName("inventoryTable");
@@ -271,6 +271,9 @@ public class InventoryTable extends AbstractPopUpElement {
             num.setFontScale((float)0.4);
             int numWidth = 18;
             if(entry.getValue()>9){
+                numWidth += 8;
+            }
+            if(entry.getValue()>99){
                 numWidth += 8;
             }
             num.setSize(numWidth, 25);
