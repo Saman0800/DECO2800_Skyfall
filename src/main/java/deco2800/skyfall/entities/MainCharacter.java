@@ -801,7 +801,10 @@ public class MainCharacter extends Peon
                     selectSpell(SpellType.TORNADO);
                     break;
                 case Input.Keys.V:
-                    petOut();
+                    if(!petout){
+                        petOut();
+                        petout = true;
+                    }
                     break;
                 default:
                     switchItem(keycode);
