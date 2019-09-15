@@ -13,6 +13,7 @@ import deco2800.skyfall.worlds.biomes.ForestBiome;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.function.UnaryOperator;
 
 @SuppressWarnings("unused")
 public class TestWorld extends World {
@@ -21,8 +22,10 @@ public class TestWorld extends World {
 
     private static int RADIUS = 25;
 
+    private static final UnaryOperator<WorldParameters> THROWER = wp -> {throw new UnsupportedOperationException();};
+
     public TestWorld(WorldParameters worldParameters) {
-        super(worldParameters);
+        super(THROWER.apply(worldParameters));
     }
 
     // 5 tile building

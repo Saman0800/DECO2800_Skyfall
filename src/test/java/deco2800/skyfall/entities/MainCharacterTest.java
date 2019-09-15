@@ -75,7 +75,7 @@ public class MainCharacterTest {
         testHatchet = new Hatchet();
         testHatchet2 = new Hatchet();
 
-        testTile = new Tile(0f, 0f);
+        testTile = new Tile(null, 0f, 0f);
         testTree = new Tree(testTile, true);
         testRock = new Rock(testTile, true);
 

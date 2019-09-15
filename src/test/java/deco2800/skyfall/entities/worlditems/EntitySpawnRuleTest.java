@@ -1,25 +1,20 @@
 package deco2800.skyfall.entities.worlditems;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
+import org.junit.Test;
 
 import java.util.Random;
+
+import static org.junit.Assert.*;
 
 public class EntitySpawnRuleTest {
     AbstractBiome biome;
 
     @Test
     public void testAccessorsAndMutators() {
-        ForestBiome biome = new ForestBiome();
+        ForestBiome biome = new ForestBiome(new Random(0));
 
         SpawnControl pieceWise = x -> {
             if ((0 < x) && (x <= 0.5)) {
@@ -31,7 +26,7 @@ public class EntitySpawnRuleTest {
             }
         };
 
-        EntitySpawnRule rule = new EntitySpawnRule(10, 100, biome, true, pieceWise);
+        EntitySpawnRule rule = new EntitySpawnRule(tile -> null, 10, 100, biome, true, pieceWise);
         rule.setChance(0.1);
 
         assertEquals(0.1, rule.getChance(), 0.001);
@@ -62,24 +57,26 @@ public class EntitySpawnRuleTest {
 
     @Test
     public void testConstructors() {
-        EntitySpawnRule rule = new EntitySpawnRule(0);
+        // FIXME:Ontonator Test for the `newInstance` value.
+
+        EntitySpawnRule rule = new EntitySpawnRule(tile -> null, 0);
         assertEquals(0.0, rule.getChance(), 0.001);
 
-        rule = new EntitySpawnRule(5, 10);
+        rule = new EntitySpawnRule(tile -> null, 5, 10);
         assertEquals(5, rule.getMin());
         assertEquals(10, rule.getMax());
 
-        rule = new EntitySpawnRule(0.5, 5, 10);
+        rule = new EntitySpawnRule(tile -> null, 0.5, 5, 10);
         assertEquals(0.5, rule.getChance(), 0.001);
         assertEquals(5, rule.getMin());
         assertEquals(10, rule.getMax());
 
-        biome = new ForestBiome();
-        rule = new EntitySpawnRule(0.5, biome);
+        biome = new ForestBiome(new Random(0));
+        rule = new EntitySpawnRule(tile -> null, 0.5, biome);
         assertEquals(0.5, rule.getChance(), 0.001);
         assertEquals(biome, rule.getBiome());
 
-        rule = new EntitySpawnRule(0.5, 2, 100, biome);
+        rule = new EntitySpawnRule(tile -> null, 0.5, 2, 100, biome);
         assertEquals(0.5, rule.getChance(), 0.001);
         assertEquals(2, rule.getMin());
         assertEquals(100, rule.getMax());

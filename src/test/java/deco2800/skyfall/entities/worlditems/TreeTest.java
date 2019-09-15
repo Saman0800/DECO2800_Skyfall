@@ -69,7 +69,7 @@ public class TreeTest {
     public void TestConstruction() {
         // Populate the world with tiles
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        Tile tile1 = new Tile(0.0f, 0.0f);
+        Tile tile1 = new Tile(null, 0.0f, 0.0f);
         tileMap.add(tile1);
         w.setTileMap(tileMap);
 
@@ -96,10 +96,10 @@ public class TreeTest {
     public void TestnewInstance() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
         // Populate world with tiles
-        Tile tile1 = new Tile(0.0f, 0.0f);
-        Tile tile2 = new Tile(0.0f, 1.0f);
-        Tile tile3 = new Tile(1.0f, -0.5f);
-        Tile tile4 = new Tile(1.0f, 0.5f);
+        Tile tile1 = new Tile(null, 0.0f, 0.0f);
+        Tile tile2 = new Tile(null, 0.0f, 1.0f);
+        Tile tile3 = new Tile(null, 1.0f, -0.5f);
+        Tile tile4 = new Tile(null, 1.0f, 0.5f);
         tileMap.add(tile1);
         tileMap.add(tile2);
         tileMap.add(tile4);
@@ -128,10 +128,10 @@ public class TreeTest {
     public void TestHarvest() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
         // Populate world with tiles
-        Tile tile1 = new Tile(0.0f, 0.0f);
-        Tile tile2 = new Tile(0.0f, 1.0f);
-        Tile tile3 = new Tile(1.0f, -0.5f);
-        Tile tile4 = new Tile(1.0f, 0.5f);
+        Tile tile1 = new Tile(null, 0.0f, 0.0f);
+        Tile tile2 = new Tile(null, 0.0f, 1.0f);
+        Tile tile3 = new Tile(null, 1.0f, -0.5f);
+        Tile tile4 = new Tile(null, 1.0f, 0.5f);
         tileMap.add(tile1);
         tileMap.add(tile2);
         tileMap.add(tile4);
@@ -155,7 +155,7 @@ public class TreeTest {
     @Test
     public void TestHashCode() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        Tile tile1 = new Tile(0.0f, 0.0f);
+        Tile tile1 = new Tile(null, 0.0f, 0.0f);
         tileMap.add(tile1);
         w.setTileMap(tileMap);
 
@@ -174,8 +174,8 @@ public class TreeTest {
     @Test
     public void TestWoodAmount() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        Tile tile1 = new Tile(0.0f, 0.0f);
-        Tile tile2 = new Tile(0.0f, 0.5f);
+        Tile tile1 = new Tile(null, 0.0f, 0.0f);
+        Tile tile2 = new Tile(null, 0.0f, 0.5f);
         tileMap.add(tile1);
         tileMap.add(tile2);
         w.setTileMap(tileMap);
