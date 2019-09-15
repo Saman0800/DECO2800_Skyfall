@@ -730,6 +730,22 @@ public class MainCharacter extends Peon
         if (GameScreen.isPaused) {
             return;
         }
+
+        //Check if player wants to place a building
+        if (button == 0) {
+
+            float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
+            float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
+
+            //Check we have permission to build
+            if(GameManager.getManagerFromInstance(ConstructionManager.class).getStatus() == 1) {
+                System.out.println(clickedPosition[0]);
+                System.out.println(clickedPosition[1]);
+                GameManager.getManagerFromInstance(ConstructionManager.class).build(GameManager.get().getWorld(),
+                        (int)clickedPosition[0], (int)clickedPosition[1]);
+            }
+        }
+
         if (button == 1) {
 
             float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());

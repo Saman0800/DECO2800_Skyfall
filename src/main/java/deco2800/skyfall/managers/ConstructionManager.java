@@ -18,6 +18,7 @@ import deco2800.skyfall.buildings.BuildingType;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.entities.AbstractEntity;
+import org.lwjgl.Sys;
 
 
 /**
@@ -306,15 +307,14 @@ public class ConstructionManager extends TickableManager {
      */
     public void build(World world, int x, int y) {
         BuildingEntity buildingToBePlaced = selectBuilding(buildingID, x, y);
+        //buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
         //Permissions
         if (invCheck(buildingToBePlaced, GameManager.getManagerFromInstance(InventoryManager.class))){
             buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
             invRemove(buildingToBePlaced,GameManager.getManagerFromInstance(InventoryManager.class));
         } else {
-            // TO DO:outprint that a building cant be selected!
+            //TODO: User does not have enough materials.
         }
-
-
         setNull();
     }
 
