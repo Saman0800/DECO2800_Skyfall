@@ -6,11 +6,17 @@ import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.SoundManager;
+import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.Tile;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class Stone extends EnemyEntity implements Animatable {
-    private static final transient int HEALTH = 3;
+    private static final transient int HEALTH = 20;
 
     //the speed in normal situation
     private static final transient float NORMALSPEED = 0.01f;
@@ -23,7 +29,7 @@ public class Stone extends EnemyEntity implements Animatable {
 
     //frequency of attack
     private static final transient int ATTACK_FREQUENCY = 50;
-    private static final transient String BIOME = "desert";
+    private static final transient String BIOME = "forest";
     private boolean moving = false;
     private float originalCol;
     private float orriginalRow;
@@ -210,7 +216,6 @@ public class Stone extends EnemyEntity implements Animatable {
     public void randomMoving() {
         if (!attacking) {
             movingDirection = movementDirection(this.position.getAngle());
-
             if (moving == false) {
                 sound.loopSound("stoneWalk");
                 targetPosition = new float[2];
@@ -270,6 +275,19 @@ public class Stone extends EnemyEntity implements Animatable {
         return movingDirection;
     }
 
+
+
+    public List<AbstractEntity> dropGold(float col, float row) {
+        Random random = new Random();
+        int dropCount = random.nextInt(5);
+        System.out.println(dropCount);
+        List<AbstractEntity> golds = new ArrayList<>();
+        for (int i = 0; i < dropCount; i++) {
+            golds.add(new GoldPiece((int)Math.random()*10+col, (int)Math.random()*10+row));
+        }
+
+        return golds;
+    }
     //to count dead time
     private int time = 0;
 
@@ -287,6 +305,9 @@ public class Stone extends EnemyEntity implements Animatable {
             this.setTexture("stoneDead");
             this.setObjectName("stoneDead");
         } else {
+            System.out.println("hello");
+            System.out.println((int)this.getCol()+","+(int)this.getRow());
+            GameManager.get().getWorld().addEntity(new GoldPiece((int)getCol(),(int)getRow()));
             GameManager.get().getWorld().removeEntity(this);
             sound.stopSound("stoneDie");
         }
