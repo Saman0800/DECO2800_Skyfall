@@ -33,6 +33,7 @@ public class MountainTree extends StaticEntity implements Tickable, Harvestable 
         super(tile, 5, "MTree" + nextTreeTexture, obstructed);
         nextTreeTexture = randomGen.nextInt(3) + 1;
         this.woodAmount = 15;
+        this.entityType = "MountainTree";
     }
 
     /**

@@ -36,7 +36,7 @@ public class MainCharacter extends Peon
     // The id of the character for storing in a database
     private long id;
 
-    // The save file the character is in
+    // The save file of this character
     private Save save;
 
     private final Logger logger = LoggerFactory.getLogger(MainCharacter.class);
@@ -1277,8 +1277,26 @@ public class MainCharacter extends Peon
 
     }
 
+    /**
+     * Returns the id of this character
+     *
+     * @return the id of this character
+     */
+    public long getID() {
+        return this.id;
+    }
+
+    /**
+     * Returns the save this character is for
+     *
+     * @return the save this character is for
+     */
+    public Save getSave() {
+        return save;
+    }
+
     @Override
-    public MainCharacterMemento save() throws SaveException{
+    public MainCharacterMemento save() {
         return new MainCharacterMemento(this);
     }
 
@@ -1296,7 +1314,9 @@ public class MainCharacter extends Peon
         this.hotbar = memento.hotbar;
     }
 
-    class MainCharacterMemento extends AbstractMemento {
+    public class MainCharacterMemento extends AbstractMemento {
+
+        //TODO:dannathan add stuff for entitiy
         private long saveID;
         private long mainCharacterID;
 
@@ -1313,7 +1333,7 @@ public class MainCharacter extends Peon
 
         private List<String> blueprints;
 
-        public MainCharacterMemento(MainCharacter character) throws SaveException {
+        public MainCharacterMemento(MainCharacter character) {
             this.saveID = character.save.getSaveID();
             this.mainCharacterID = character.id;
             this.equippedItem = character.equipped_item;

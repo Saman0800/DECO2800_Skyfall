@@ -24,7 +24,7 @@ public class InsertDataQueries {
         statement.executeUpdate(query);
     }
 
-    public void insertMainCharacter(int id, int saveId, String data) throws SQLException{
+    public void insertMainCharacter(long id, long saveId, String data) throws SQLException{
         String query = String.format("insert into MAIN_CHARACTER (character_id, save_id, data) values (%s,%s,'%s')", id
             , saveId, data);
         statement.executeUpdate(query);
@@ -36,9 +36,9 @@ public class InsertDataQueries {
         statement.executeUpdate(query);
     }
 
-    public void insertEdges(int nodeOneId, int nodeTwoId) throws SQLException{
-        String query = String.format("insert into EDGES (node_one_id, node_two_id) values (%s,%s)", nodeOneId,
-            nodeTwoId);
+    public void insertEdges(long worldID, long edgeID, int biomeID, String data) throws SQLException{
+        String query = String.format("insert into EDGES (world_id, edge_id, biome_id, data) values (%s,%s,%s,'%s')", worldID,
+            edgeID, biomeID, data);
         statement.executeUpdate(query);
     }
 

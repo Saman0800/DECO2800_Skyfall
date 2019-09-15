@@ -199,10 +199,9 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
     public void load(AbstractBiomeMemento memento) {
         this.worldID = memento.worldID;
         this.id = memento.biomeID;
-        // TODO type (could be done in switch statement in method that loads entire game)
     }
 
-    class AbstractBiomeMemento extends AbstractMemento {
+    public class AbstractBiomeMemento extends AbstractMemento {
         // The ID of the world this is in
         private long worldID;
 

@@ -246,7 +246,7 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
         this.tiles = memento.tiles;
     }
 
-    class ChunkMemento extends AbstractMemento {
+    public class ChunkMemento extends AbstractMemento {
         private int x;
         private int y;
         private ArrayList<Tile> tiles;

@@ -18,6 +18,7 @@ public class SnowShrub extends StaticEntity {
         super(tile, 2, "MBush" + nextRock, obstructed);
         this.setObjectName(ENTITY_ID_STRING);
         nextRock = randomGen.nextInt(3) + 1;
+        this.entityType = "SnowShrub";
     }
 
     @Override

@@ -1,6 +1,7 @@
 package deco2800.skyfall.managers.database;
 
 import com.google.gson.Gson;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
@@ -103,19 +104,19 @@ public class DataBaseConnector {
 
         //Looping through the worlds in the save and saving them
         for (World world : save.getWorlds()){
-            long currentWorldId = world.getID();
 
-            //Saving the world
-            insertQueries.insertWorld(saveId, world.getID(),
-                save.getCurrentWorld().getID() == currentWorldId, gson.toJson(world.save()));
+            saveWorld(world);
 
             //TODO:Figuring out which world needs to be saved
         }
+
+
+
         statement.close();
     }
 
     //Svaing the world and its parameters
-    public void SaveWorld(World world) throws SQLException{
+    public void saveWorld(World world) throws SQLException{
         Statement statement = connection.createStatement();
         InsertDataQueries insertQueries = new InsertDataQueries(statement);
         Gson gson = new Gson();
@@ -130,16 +131,28 @@ public class DataBaseConnector {
 
 
         for (VoronoiEdge voronoiEdge : world.getBeachEdges().keySet()) {
-            //insertQueries.insertEdges();
+            insertQueries.insertEdges(world.getID(), voronoiEdge.getID(),
+                    world.getBeachEdges().get(voronoiEdge).getBiomeID(),
+                    gson.toJson(voronoiEdge.save()));
         }
-
-
-
-
-
+        for (VoronoiEdge voronoiEdge : world.getRiverEdges().keySet()) {
+            insertQueries.insertEdges(world.getID(), voronoiEdge.getID(),
+                    world.getRiverEdges().get(voronoiEdge).getBiomeID(),
+                    gson.toJson(voronoiEdge.save()));
+        }
 
         statement.close();
 
+    }
+
+    public void saveMainCharacter(MainCharacter character) throws SQLException {
+        Statement statement = connection.createStatement();
+        InsertDataQueries insertQueries = new InsertDataQueries(statement);
+        Gson gson = new Gson();
+
+        insertQueries.insertMainCharacter(character.getID(), character.getSave().getSaveID(), gson.toJson(character.save()));
+
+        statement.close();
     }
 
 

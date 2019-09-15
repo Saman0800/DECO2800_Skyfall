@@ -9,6 +9,7 @@ import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.SaveLoadInterface;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.saving.AbstractMemento;
+import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
@@ -731,7 +732,7 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         this.worldParameters.setNodeSpacing(worldMemento.nodeSpacing);
     }
 
-    class WorldMemento extends AbstractMemento {
+    public class WorldMemento extends AbstractMemento {
         private long saveID;
         private long worldID;
         private int nodeSpacing;

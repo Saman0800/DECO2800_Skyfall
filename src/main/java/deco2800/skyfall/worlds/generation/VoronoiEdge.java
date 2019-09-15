@@ -424,7 +424,7 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
         this.pointB = new double[] {memento.bx, memento.by};
     }
 
-    class VoronoiEdgeMemento extends AbstractMemento {
+    public class VoronoiEdgeMemento extends AbstractMemento {
 
         private long edgeID;
 

@@ -98,7 +98,7 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
     /**
      * A savestate for the save
      */
-    class SaveMemento extends AbstractMemento {
+    public class SaveMemento extends AbstractMemento {
         private long saveID;
 
         private SaveMemento(Save save) {
