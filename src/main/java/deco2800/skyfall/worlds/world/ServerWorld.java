@@ -1,7 +1,5 @@
 package deco2800.skyfall.worlds.world;   //Whether the world is a tutorial world
 
-import java.util.Random;
-
 /**
  * Server world acts as the husk of an actual world, controlled by a server connection.
  * <p>

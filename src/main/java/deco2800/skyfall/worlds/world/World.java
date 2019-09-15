@@ -2,21 +2,18 @@ package deco2800.skyfall.worlds.world;
 
 import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.*;
-import deco2800.skyfall.gamemenu.GameMenuScreen;
-
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.AgentEntity;
-import deco2800.skyfall.entities.EnemyEntity;
 import deco2800.skyfall.entities.Harvestable;
-import deco2800.skyfall.entities.Projectile;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.entities.weapons.Weapon;
+import deco2800.skyfall.gamemenu.popupmenu.BlueprintShopTable;
+import deco2800.skyfall.gamemenu.popupmenu.ChestTable;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
@@ -28,7 +25,6 @@ import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.graphics.HasPointLight;
-import deco2800.skyfall.graphics.types.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -106,6 +102,7 @@ public class World implements TouchDownObserver {
 
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
 
+        getTile(0,0).setObstructed(true);
     }
 
     /**
@@ -418,9 +415,9 @@ public class World implements TouchDownObserver {
             tiles.remove(t);
         }
 
-        //
         for (AbstractEntity e1 : this.getEntities()){
-            e1.onTick(i);
+            e1.onTick(0);
+
         }
     }
 
@@ -463,6 +460,33 @@ public class World implements TouchDownObserver {
         return this.worldParameters.getBiomes();
     }
 
+    public void handleCollision(AbstractEntity e1, AbstractEntity e2) {
+        // TODO: implement proper game logic for collisions between different types of
+        // entities.
+
+        System.out.println("Handle collision");
+        // TODO: this needs to be internalized into classes for cleaner code.
+        if (e1 instanceof Projectile && e2 instanceof EnemyEntity) {
+            if (((EnemyEntity) e2).getHealth() > 0) {
+                ((EnemyEntity) e2).takeDamage(((Projectile) e1).getDamage());
+                ((EnemyEntity) e2).setAttacked(true);
+                ((Projectile) e1).destroy();
+            } else {
+                ((EnemyEntity) e2).setDead(true);
+            }
+
+        } else if (e2 instanceof Projectile && e1 instanceof EnemyEntity) {
+            if (((EnemyEntity) e1).getHealth() > 0) {
+                ((EnemyEntity) e1).takeDamage(((EnemyEntity) e1).getDamage());
+                ((EnemyEntity) e1).setAttacked(true);
+                ((Projectile) e2).destroy();
+            } else {
+                ((EnemyEntity) e1).setDead(true);
+            }
+
+        }
+    }
+
     public void saveWorld(String filename) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             writer.write(worldToString());
@@ -482,7 +506,7 @@ public class World implements TouchDownObserver {
     /**
      * Returns the seed used in the world
      *
-     * @return
+     * @return the seed for the world
      */
     public long getSeed() {
         return worldParameters.getSeed();
@@ -515,21 +539,28 @@ public class World implements TouchDownObserver {
                 for (AbstractEntity drop : drops) {
                     addEntity(drop);
                 }
-            } else if (entity instanceof Chest) {
-                GameMenuManager menuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
-                menuManager.open(new GameMenuScreen(menuManager).getChestTable((Chest) entity));
             } else if (entity instanceof Weapon) {
                 MainCharacter mc = gmm.getMainCharacter();
                 if (tile.getCoordinates().distance(mc.getPosition()) > 2) {
                     continue;
                 }
                 removeEntity(entity);
-                gmm.getInventory().inventoryAdd((Item) entity);
+                gmm.getInventory().add((Item) entity);
                 if (!mc.getEquipped().equals(((Weapon) entity).getName())) {
                     gmm.getInventory().quickAccessRemove(mc.getEquipped());
                     gmm.getInventory().quickAccessAdd(((Weapon) entity).getName());
                     mc.setEquipped(((Weapon) entity).getName());
                 }
+            } else if (entity instanceof Chest) {
+                GameMenuManager menuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+                ChestTable chest = (ChestTable) menuManager.getPopUp("chestTable");
+                chest.updateChestPanel((Chest) entity);
+                menuManager.setPopUp("chestTable");
+            } else if (entity instanceof BlueprintShop) {
+                GameMenuManager menuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+                BlueprintShopTable bs = (BlueprintShopTable) menuManager.getPopUp("blueprintShopTable");
+                bs.updateBlueprintShopPanel();
+                menuManager.setPopUp("blueprintShopTable");
             }
         }
     }

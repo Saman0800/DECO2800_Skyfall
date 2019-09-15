@@ -59,7 +59,7 @@ public class WeaponManagerTest {
      * Private helper method for the test character to drop weapons
      */
     private void dropWeapons() {
-        testCharacter.getInventoryManager().inventoryDropMultiple("sword", 2);
+        testCharacter.getInventoryManager().dropMultiple("sword", 2);
         testCharacter.dropInventory("spear");
         testCharacter.dropInventory("bow");
         testCharacter.dropInventory("axe");
@@ -106,6 +106,6 @@ public class WeaponManagerTest {
     public void returnTest() {
         this.pickUpWeapons();
 
-        Assert.assertEquals(testCharacter.getInventoryManager().getInventoryAmounts().size(), 8);
+        Assert.assertEquals(testCharacter.getInventoryManager().getAmounts().size(), 8);
     }
 }

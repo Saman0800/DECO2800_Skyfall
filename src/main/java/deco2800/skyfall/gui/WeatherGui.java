@@ -2,13 +2,14 @@ package deco2800.skyfall.gui;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import deco2800.skyfall.gamemenu.AbstractUIElement;
 import deco2800.skyfall.managers.*;
 
-public class WeatherGui {
+public class WeatherGui extends AbstractUIElement{
 
     private Stage stage;
     private ImageButton weatherEvent;
-
+    private String weatherTexture;
     /**
      * Constructor
      * @param s is the stage to display weather textures on.
@@ -17,10 +18,9 @@ public class WeatherGui {
     public WeatherGui(Stage s, String weatherTexture) {
         stage = s;
 
-        this.weatherEvent = new ImageButton(GameMenuManager.generateTextureRegionDrawableObject(weatherTexture));
-        weatherEvent.setSize(1500, 1500);
-
-        updateWithViewportChanges();
+        this.weatherTexture = weatherTexture;
+        this.draw();
+        update();
 
         stage.addActor(weatherEvent);
     }
@@ -28,17 +28,21 @@ public class WeatherGui {
     /**
      * Keeps the object on the screen.
      */
-    private void updateWithViewportChanges() {
+    @Override
+    public void updatePosition() {
         float positionX = (stage.getCamera().position.x + (stage.getCamera().viewportWidth) - 2000);
         float positionY = (stage.getCamera().position.y + (stage.getCamera().viewportHeight) - 1500);
 
         weatherEvent.setPosition(positionX, positionY);
     }
 
-    /**
-     * Updates the screen with current weather event.
-     */
-    public void update() {
-        updateWithViewportChanges();
+    @Override
+
+    public void draw() {
+        this.weatherEvent = new ImageButton(GameMenuManager.generateTextureRegionDrawableObject(weatherTexture));
+        weatherEvent.setSize(1500, 1500);
+        stage.addActor(weatherEvent);
     }
+
+
 }

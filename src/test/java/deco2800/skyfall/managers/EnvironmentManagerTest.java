@@ -1,12 +1,19 @@
 package deco2800.skyfall.managers;
 
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.observers.DayNightObserver;
+import deco2800.skyfall.observers.SeasonObserver;
 import deco2800.skyfall.observers.TimeObserver;
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.world.World;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -16,14 +23,22 @@ public class EnvironmentManagerTest {
     EnvironmentManager manager;
     TimeObserver mockTimeObserver = mock(TimeObserver.class);
     DayNightObserver mockDayNightObserver = mock(DayNightObserver.class);
+    SeasonObserver mockSeasonObserver = mock(SeasonObserver.class);
+    GameManager gm = GameManager.get();
+    World mockWorld = mock(World.class);
+    List<AbstractEntity> mockEntities = mock(List.class);
+    MainCharacter mockPlayer = mock(MainCharacter.class);
+    AbstractBiome mockBiome = mock(AbstractBiome.class);
+    Tile mockTile = mock(Tile.class);
 
     @Before
     public void initialize() {
         try {
             manager = new EnvironmentManager();
-        } catch (NoSuchAlgorithmException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        gm.setWorld(mockWorld);
     }
 
     @Test
@@ -71,6 +86,28 @@ public class EnvironmentManagerTest {
     }
 
     @Test
+    public void addSeasonListenerTest() {
+        manager.addSeasonListener(mockSeasonObserver);
+        assertTrue(manager.getSeasonListeners().contains(mockSeasonObserver));
+    }
+
+    @Test
+    public void removeSeasonListenerTest() {
+        manager.addSeasonListener(mockSeasonObserver);
+        assertTrue(manager.getSeasonListeners().contains(mockSeasonObserver));
+        manager.removeSeasonListener(mockSeasonObserver);
+        assertFalse(manager.getSeasonListeners().contains(mockSeasonObserver));
+    }
+
+    @Test
+    public void updateSeasonListenersTest() {
+        doNothing().when(mockSeasonObserver).notifySeasonUpdate("Summer");
+        manager.addSeasonListener(mockSeasonObserver);
+        manager.updateSeasonListeners("Summer");
+        verify(mockSeasonObserver).notifySeasonUpdate("Summer");
+    }
+
+    @Test
     public void setTimeTest() {
         manager.setTime(1, 0);
         assertEquals(1, manager.getTime());
@@ -105,10 +142,8 @@ public class EnvironmentManagerTest {
         manager.getTOD();
         assertEquals("6:00pm", manager.getTOD());
 
-        manager.setTime(19,0);
-        assertFalse(manager.isDay());
-
-        assertEquals("7:00pm", manager.getTOD());
+        manager.setTime(12,0);
+        assertEquals("12:00pm", manager.getTOD());
     }
 
     @Test
@@ -262,13 +297,16 @@ public class EnvironmentManagerTest {
 
     @Test
     public void setBiomeTest() {
-        // This test is not at all comprehensive, will need to be redone in next sprint
+        when(mockWorld.getEntities()).thenReturn(mockEntities);
+        when(mockEntities.size()).thenReturn(1);
+        when(mockEntities.get(anyInt())).thenReturn(mockPlayer);
+        when(mockWorld.getTile(Math.round(mockPlayer.getCol()),
+                Math.round(mockPlayer.getRow()))).thenReturn(mockTile);
+        when(mockTile.getBiome()).thenReturn(mockBiome);
+        when(mockBiome.getBiomeName()).thenReturn("forest");
 
-        try {
-            manager.biome = "forest";
-            assertEquals("forest", manager.currentBiome());
-
-        } catch (Exception e) { /* Exception caught, if any */ }
+        manager.setBiome();
+        assertEquals("forest", manager.currentBiome());
     }
 
     @Test
@@ -345,5 +383,9 @@ public class EnvironmentManagerTest {
         assertTrue(manager.getcurrentWeather()!= null);
     }
 
-
+    @Test
+    public void getHourDecimalTest() {
+        manager.setTime(24, 80);
+        assertEquals(1, manager.getHourDecimal(), 0);
+    }
 }

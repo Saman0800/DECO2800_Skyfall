@@ -27,8 +27,8 @@ public class PhysicsManager extends TickableManager {
     }
 
     @Override
-    public void onTick(long i){
-        getBox2DWorld().step(1/30f,6,2);
+    public void onTick(long i) {
+        getBox2DWorld().step(1 / 30f, 6, 2);
     }
 
     public void initialiseCollision() {
@@ -42,20 +42,20 @@ public class PhysicsManager extends TickableManager {
                 Object o2 = contact.getFixtureB().getBody().getUserData();
 
                 if (o1 == o2) {
-                    System.out.println("If this is ever printed I hope I'm not the one debugging it");
+                    logger.warn("If this is ever printed I hope I'm not the one debugging it");
                     return;
                 }
 
                 boolean reactionOccurred = !contact.getFixtureA().isSensor()
                         && !contact.getFixtureB().isSensor();
 
-                if (reactionOccurred && (o1 instanceof MainCharacter || o2 instanceof  MainCharacter)){
+                if (reactionOccurred && (o1 instanceof MainCharacter || o2 instanceof MainCharacter)) {
                     logger.info("Collision has occurred");
                 }
 
                 //Runs collision handler defined in class
                 if (o1 instanceof AbstractEntity && reactionOccurred) {
-                    ((AbstractEntity)o1).handleCollision(o2);
+                    ((AbstractEntity) o1).handleCollision(o2);
                 }
 
                 if (o2 instanceof AbstractEntity && reactionOccurred) {
@@ -67,21 +67,21 @@ public class PhysicsManager extends TickableManager {
             //Usually nothing
             @Override
             public void endContact(Contact contact) {
-
+                //Nothing should happen as everything is handled in begin contact
             }
 
             //What to do just before a collision
             //Usually nothing
             @Override
             public void preSolve(Contact contact, Manifold oldManifold) {
-
+                //Nothing should happen as everything is handled in begin contact
             }
 
             //What to do just after a collision
             //Usually nothing
             @Override
             public void postSolve(Contact contact, ContactImpulse impulse) {
-
+                //Nothing should happen as everything is handled in begin contact
             }
         });
         logger.info("Collision Initialised");

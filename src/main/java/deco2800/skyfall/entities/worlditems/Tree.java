@@ -1,10 +1,7 @@
 package deco2800.skyfall.entities.worlditems;
 
-import deco2800.skyfall.entities.StaticEntity;
-import deco2800.skyfall.Tickable;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.entities.Harvestable;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.WoodCube;
 import org.slf4j.Logger;
@@ -31,8 +28,9 @@ public class Tree extends StaticTree {
 
     public Tree(Tile tile, boolean obstructed) {
         super(tile, obstructed, "tree" + nextTreeTexture);
-        nextTreeTexture = randomGen.nextInt(3) + 1;
         this.woodAmount = 15;
+
+        Tree.nextTreeTexture = randomGen.nextInt(3) + 1;
     }
 
     /**
@@ -85,6 +83,7 @@ public class Tree extends StaticTree {
      */
     @Override
     public void onTick(long tick) {
+        // Do nothing on tick
     }
 
     @Override

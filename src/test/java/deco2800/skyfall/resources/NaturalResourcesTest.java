@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 /**
  * A test class for the NaturalResources Abstract Class.
  */
-public class NaturalResourcesTest extends NaturalResources {
+public class NaturalResourcesTest {
 
     // create Wood, Sand, Stone, Metal and Vine instances of Natural Resource
     private NaturalResources wood;

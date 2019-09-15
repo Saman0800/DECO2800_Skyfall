@@ -35,12 +35,33 @@ public class vec3 {
     }
 
     /**
+     * @return Returns the x component of the vector
+     */
+    public float getX() {
+        return this.x;
+    }
+
+    /**
+     * @return Returns the y component of the vector
+     */
+    public float getY() {
+        return this.y;
+    }
+
+    /**
+     * @return Returns the z component of the vector
+     */
+    public float getZ() {
+        return this.z;
+    }
+
+    /**
      * returns a vec3 with each component clamped
      * @param min minimum value for each component
      * @param max minimum value for each component
      * @return must be caught, vec3 called against will not be changed
      */
     public vec3 getClampedComponents(float min, float max) {
-        return new vec3( clamp(x, min, max), clamp(y, min, max), clamp(z, min, max) );
+        return new vec3(clamp(x, min, max), clamp(y, min, max), clamp(z, min, max));
     }
 }

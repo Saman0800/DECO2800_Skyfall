@@ -48,7 +48,7 @@ public interface Blueprint {
      */
     void toggleBlueprintLearned();
 
-
+    int getCost();
 
 
 
