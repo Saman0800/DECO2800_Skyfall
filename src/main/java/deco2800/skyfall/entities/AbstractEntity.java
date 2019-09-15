@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.animation.AnimationLinker;

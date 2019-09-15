@@ -1645,7 +1645,7 @@ public class MainCharacter extends Peon
     @Override
     public void load(MainCharacterMemento memento) {
         this.id = memento.mainCharacterID;
-        this.equipped_item = memento.equippedItem;
+        this.equippedItem = memento.equippedItem;
         this.level = memento.level;
         this.foodLevel = memento.foodLevel;
         this.foodAccum = memento.foodAccum;
@@ -1678,7 +1678,7 @@ public class MainCharacter extends Peon
         public MainCharacterMemento(MainCharacter character) {
             this.saveID = character.save.getSaveID();
             this.mainCharacterID = character.id;
-            this.equippedItem = character.equipped_item;
+            this.equippedItem = character.equippedItem;
             this.level = character.level;
             this.foodLevel = character.foodLevel;
             this.foodAccum = character.foodAccum;
