@@ -726,7 +726,7 @@ public class MainCharacter extends Peon
     public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
         // only allow left clicks to move player
 
-        System.out.println(button);
+        logger.info(String.valueOf(button));
         if (GameScreen.isPaused) {
             return;
         }
