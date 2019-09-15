@@ -87,6 +87,7 @@ public class AnimationManager extends AbstractManager {
 
         this.generateAnimationObject("treemanDead","resources/enemyTreemanDeadSheet/TreemanDead.atlas",0.2f);
 
+        this.generateAnimationObject("tigerFront","resources/petTigerMovement/tigerMovementFront/tigerMovementFront.atlas",0.2f);
 
         this.generateAnimationObject("flower_melee","resources/enemyFlowerMelee/FlowerMelee.atlas",0.2f);
         this.generateAnimationObject("flower_close","resources/enemyFlowerClose/FlowerClose.atlas",0.2f);
