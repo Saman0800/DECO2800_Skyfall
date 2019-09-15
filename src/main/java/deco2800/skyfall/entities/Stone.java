@@ -103,12 +103,12 @@ public class Stone extends EnemyEntity implements Animatable {
      */
     @Override
     public void onTick(long i) {
-        this.setCollider();
-        this.randomMoving();
-        this.resetFeeling();
-        if (isDead() == true) {
+        getBody().setTransform(position.getCol(), position.getRow(), getBody().getAngle());
+        if (isDead()) {
             this.stoneDead();
         } else {
+            this.randomMoving();
+            this.resetFeeling();
             this.angryAttacking();
         }
     }
@@ -282,10 +282,13 @@ public class Stone extends EnemyEntity implements Animatable {
         this.destination = new HexVector(this.getCol(), this.getRow());
         if (time <= 100) {
             sound.loopSound("stoneDie");
+            if (time == 0) {
+                setCurrentState(AnimationRole.NULL);
+                this.setTexture("stoneDead");
+                this.setObjectName("stoneDead");
+                destroy();
+            }
             time++;
-            setCurrentState(AnimationRole.NULL);
-            this.setTexture("stoneDead");
-            this.setObjectName("stoneDead");
         } else {
             GameManager.get().getWorld().removeEntity(this);
             sound.stopSound("stoneDie");

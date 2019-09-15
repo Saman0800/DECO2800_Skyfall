@@ -11,6 +11,12 @@ public class SpellFactory {
         throw new IllegalStateException("Utility class.");
     }
 
+    /**
+     * Create a new spell.
+     * @param spellType The type of spell to create.
+     * @param mousePosition The position to create the spell at.
+     * @return A new spell.
+     */
     public static Spell createSpell(SpellType spellType, HexVector mousePosition){
         Spell spell = null;
 

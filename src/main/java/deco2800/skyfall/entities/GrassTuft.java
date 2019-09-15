@@ -19,6 +19,7 @@ public class GrassTuft extends AbstractEntity {
         super(col, row, 0);
         setTexture("grass_tuft");
         setObjectName(ENTITY_ID_STRING);
+        changeCollideability(false);
     }
 
     @Override
