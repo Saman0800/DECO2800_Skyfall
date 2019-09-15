@@ -18,6 +18,7 @@ import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import deco2800.skyfall.worlds.world.Chunk;
+import deco2800.skyfall.worlds.world.World;
 import org.javatuples.Pair;
 
 public class Tile {
@@ -37,6 +38,8 @@ public class Tile {
     private HexVector coords;
     // Class that stores the tiles biome and its texture
     private StaticEntity parent;
+    // The world the tile is in
+    private World world;
     // The Biome the tile is in
     private AbstractBiome biome;
     // Determines whether a tile can be built on, main use is for the construction
@@ -58,11 +61,6 @@ public class Tile {
 
     private transient Map<Integer, Tile> neighbours;
 
-    // FIXME:Ontonator Should these really be in Tile?
-    // Noise generators for use in edges and nodes
-    private static NoiseGenerator xNoiseGen;
-    private static NoiseGenerator yNoiseGen;
-
     @Expose
     private int index = -1;
 
@@ -73,15 +71,16 @@ public class Tile {
     private WorldGenNode node;
     private VoronoiEdge edge;
 
-    public Tile() {
-        this(0, 0);
+    public Tile(World world) {
+        this(world, 0, 0);
     }
 
-    public Tile(float col, float row) {
+    public Tile(World world, float col, float row) {
         coords = new HexVector(col, row);
         this.neighbours = new HashMap<>();
         this.tileID = Tile.getNextID();
         this.node = null;
+        this.world = world;
     }
 
     public float getCol() {
@@ -159,35 +158,41 @@ public class Tile {
     }
 
     /**
-     * Sets up the perlin noise generators for the tiles to be used for nodes
-     * and edges
+     * Gets a {@link NoiseGenerator} that is appropriate for generating tile offset noise for biome determination.
      *
-     * @param random The instance of Random for the world
-     * @param nodeSpacing The node spacing for the world
+     * @param random      the instance of {@link Random} for the world
+     * @param nodeSpacing the node spacing for the world
+     *
+     * @return the offset noise generator
      */
-    public static void setNoiseGenerators(Random random, int nodeSpacing) {
+    public static NoiseGenerator getOffsetNoiseGenerator(Random random, int nodeSpacing) {
         int startPeriod = nodeSpacing * 2;
         int octaves = Math.max((int) Math.ceil(Math.log(startPeriod) / Math.log(2)) - 1, 1);
         double attenuation = Math.pow(0.9, 1d / octaves);
 
-        xNoiseGen = new NoiseGenerator(random, octaves, startPeriod, attenuation);
-        yNoiseGen = new NoiseGenerator(random, octaves, startPeriod, attenuation);
+        return new NoiseGenerator(random, octaves, startPeriod, attenuation);
     }
 
-    public static NoiseGenerator getXNoiseGen() {
-        return xNoiseGen;
-    }
-
-    public static NoiseGenerator getYNoiseGen() {
-        return yNoiseGen;
-    }
-
+    /**
+     * Gets the location of the tile with noise added.
+     * @param noiseFactor the amplitude of the noise
+     * @return the new column coordinate
+     */
     private double getNoisyCol(double noiseFactor) {
-        return getCol() + xNoiseGen.getOctavedPerlinValue(getCol(), getRow()) * noiseFactor - noiseFactor / 2d;
+        return getCol() + world.getTileOffsetNoiseGeneratorX().getOctavedPerlinValue(getCol(), getRow()) * noiseFactor -
+                noiseFactor / 2d;
     }
 
+    /**
+     * Gets the location of the tile with noise added.
+     *
+     * @param noiseFactor the amplitude of the noise
+     *
+     * @return the new row coordinate
+     */
     private double getNoisyRow(double noiseFactor) {
-        return getRow() + yNoiseGen.getOctavedPerlinValue(getCol(), getRow()) * noiseFactor - noiseFactor / 2d;
+        return getRow() + world.getTileOffsetNoiseGeneratorY().getOctavedPerlinValue(getCol(), getRow()) * noiseFactor -
+                noiseFactor / 2d;
     }
 
     /**
@@ -210,11 +215,11 @@ public class Tile {
         node.getBiome().addTile(this);
     }
 
-    private VoronoiEdge findNearestEdge(VoronoiEdge currentEdge,
-            List<VoronoiEdge> edges, double maxDistance, double noiseFactor) {
+    private VoronoiEdge findNearestEdge(VoronoiEdge currentEdge, List<VoronoiEdge> edges, double maxDistance,
+                                        int nodeSpacing, double noiseFactor) {
         // TODO make noise contiguous
-        double tileX = getNoisyCol(noiseFactor);
-        double tileY = getNoisyRow(noiseFactor);
+        double tileX = getNoisyCol(nodeSpacing);
+        double tileY = getNoisyRow(nodeSpacing);
 
         VoronoiEdge closestEdge = currentEdge;
         double closestDistance = Double.POSITIVE_INFINITY;
@@ -295,9 +300,11 @@ public class Tile {
             return;
         }
         // FIXME:Ontonator Fix the beaches' noise.
-        VoronoiEdge closestEdge = findNearestEdge(null, new ArrayList<>(beachEdges.keySet()), beachWidth, beachWidth * 2);
+        VoronoiEdge closestEdge = findNearestEdge(null, new ArrayList<>(beachEdges.keySet()), beachWidth, nodeSpacing,
+                                                  beachWidth * 2);
         if (!(Math.abs(getCol()) < riverWidth && Math.abs(getRow()) < riverWidth)) {
-            closestEdge = findNearestEdge(closestEdge, new ArrayList<>(riverEdges.keySet()), riverWidth, riverWidth * 2);
+            closestEdge = findNearestEdge(closestEdge, new ArrayList<>(riverEdges.keySet()), riverWidth, nodeSpacing,
+                                          riverWidth * 2);
         }
         this.edge = closestEdge;
         // Add the tile to the biome for the beach/river

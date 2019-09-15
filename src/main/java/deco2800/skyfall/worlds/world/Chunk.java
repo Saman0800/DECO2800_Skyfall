@@ -32,7 +32,9 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
     // TODO:Ontonator Make this take the world as a parameter or something.
     public static Chunk loadChunkAt(World world, int x, int y) {
         // FIXME:Ontonator Implement.
-        return new Chunk(world, x, y);
+        Chunk chunk = new Chunk(world, x, y);
+        chunk.generateEntities();
+        return chunk;
     }
 
     public static Pair<Integer, Integer> getChunkForCoordinates(double col, double row) {
@@ -71,25 +73,19 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
 
     public Chunk(World world, int x, int y) {
         this(world, x, y, new ArrayList<>(), new ArrayList<>());
-        generateChunk();
-    }
-
-    public void generateChunk() {
-        // TODO:Ontonator Check that this works.
         generateTiles();
-        generateEntities();
     }
 
     /**
      * Creates blank tiles which fill the area of this chunk.
      */
     private void generateTiles() {
-        // TODO:Ontonator Does this need to check whether the chuk is completely within the world size?
+        // TODO:Ontonator Does this need to check whether the chunk is completely within the world size?
         for (int row = y * CHUNK_SIDE_LENGTH; row < (y + 1) * CHUNK_SIDE_LENGTH; row++) {
             for (int col = x * CHUNK_SIDE_LENGTH; col < (x + 1) * CHUNK_SIDE_LENGTH; col++) {
                 float oddCol = (col % 2 != 0 ? 0.5f : 0);
 
-                Tile tile = new Tile(col, row + oddCol);
+                Tile tile = new Tile(world, col, row + oddCol);
                 tiles.add(tile);
                 tile.assignNode(world.worldGenNodes, world.worldParameters.getNodeSpacing());
                 tile.assignEdge(world.riverEdges, world.beachEdges, world.worldParameters.getNodeSpacing(),
@@ -180,7 +176,7 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
 
     public void generateEntities() {
         for (Tile tile : getTiles()) {
-            for (EntitySpawnRule rule : world.getWorldParameters().getSpawnRules().get(tile.getBiome())) {
+            for (EntitySpawnRule rule : world.getSpawnRules().get(tile.getBiome())) {
                 EntitySpawnTable.spawnEntity(rule, world, tile);
             }
         }
