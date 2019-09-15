@@ -10,6 +10,8 @@ import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.ManufacturedResources;
+import deco2800.skyfall.resources.items.Hatchet;
+import deco2800.skyfall.resources.items.PickAxe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +40,7 @@ public class BuildingTable extends AbstractPopUpElement{
     @Override
     public void hide() {
         super.hide();
-        System.out.println("Hiding building table");
+//        System.out.println("Hiding building table");
         itemInfo.clearChildren();
         buildingTable.setVisible(false);
     }
@@ -46,7 +48,7 @@ public class BuildingTable extends AbstractPopUpElement{
     @Override
     public void show() {
         super.show();
-        System.out.println("Showing building table");
+//        System.out.println("Showing building table");
         buildingTable.setVisible(true);
     }
 
@@ -58,7 +60,7 @@ public class BuildingTable extends AbstractPopUpElement{
     @Override
     public void draw() {
         super.draw();
-        System.out.println("Drawing BUILDINGTABLE");
+//        System.out.println("Drawing BUILDINGTABLE");
         buildingTable = new Table();
 //        buildingTable.setDebug(true);
         buildingTable.setSize(800, 800 * 1346 / 1862f);
@@ -91,6 +93,9 @@ public class BuildingTable extends AbstractPopUpElement{
         items.add(number).padTop(10).colspan(4);
         items.row();
 
+        //testing
+        gameMenuManager.getMainCharacter().addBlueprint(new Hatchet());
+        gameMenuManager.getMainCharacter().addBlueprint(new PickAxe());
         List<Blueprint> blueprintsLearned = gameMenuManager.getMainCharacter().getBlueprintsLearned();
         float itemWidth = 400/4f-10;
         for (int i = 0; i < 3; i++) {
@@ -161,7 +166,7 @@ public class BuildingTable extends AbstractPopUpElement{
         text.setFontScale(0.5f);
         infoBar.add(text);
 
-        itemsRequired.add(infoBar).width(230).height(230 * 188f / 1756).colspan(6).padTop(5);
+        itemsRequired.add(infoBar).width(230).height(230 * 188f / 1756).colspan(10).padTop(5);
         itemsRequired.row();
 
         List<String> itemsNeeded= new ArrayList<>();
@@ -177,8 +182,12 @@ public class BuildingTable extends AbstractPopUpElement{
                 try {
                     String itemName = itemsNeeded.get(4 * i + j);
                     itemsRequired.add(new Image(generateTextureRegionDrawableObject(itemName))).width((250 - 20 - 20) / 4f - 5).height((250 - 20 - 20) / 4f - 5).pad(5).expandY();
+                    Label number = new Label(String.valueOf(item.getAllRequirements().get(itemName)), skin, "white-label");
+                    number.setFontScale(0.3f);
+                    itemsRequired.add(number).top().padLeft(-15).padTop(5);
                 } catch (IndexOutOfBoundsException e) {
                     itemsRequired.add(new Image(generateTextureRegionDrawableObject("item_background"))).width((250 - 20 - 20) / 4f - 5).height((250 - 20 - 20) / 4f - 5).pad(5).expandY();
+                    itemsRequired.add();
                 }
             }
             itemsRequired.add().width(20);

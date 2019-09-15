@@ -43,7 +43,7 @@ public abstract class AbstractUIElement {
      */
     private void getTextures(String[] textureName, TextureManager textureManager) {
         if (textureManager == null) {
-            System.out.println("Texture manager is null (fine for testing)");
+//            System.out.println("Texture manager is null (fine for testing)");
             return;
         }
 

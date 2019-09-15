@@ -38,14 +38,14 @@ public class PlayerSelectTable extends AbstractPopUpElement{
     @Override
     public void hide() {
         super.hide();
-        System.out.println("Hiding player select table");
+//        System.out.println("Hiding player select table");
         playerSelectTable.setVisible(false);
     }
 
     @Override
     public void show() {
         super.show();
-        System.out.println("Showing player select table");
+//        System.out.println("Showing player select table");
         playerSelectTable.setVisible(true);
     }
 
@@ -57,7 +57,7 @@ public class PlayerSelectTable extends AbstractPopUpElement{
     @Override
     public void draw() {
         super.draw();
-        System.out.println("Drawing PLAYERSELECTTABLE");
+//        System.out.println("Drawing PLAYERSELECTTABLE");
         playerSelectTable = new Table();
 //        playerSelectTable.setDebug(true);
         playerSelectTable.setSize(600, 600 * 1346 / 1862f);

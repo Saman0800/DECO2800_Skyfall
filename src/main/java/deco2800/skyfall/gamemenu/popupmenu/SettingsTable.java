@@ -22,6 +22,7 @@ import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDra
 
 public class SettingsTable extends AbstractPopUpElement{
     private SoundManager soundManager;
+
     private Skin skin;
     private Table settingsTable;
     private CheckBox soundFX;
@@ -43,7 +44,7 @@ public class SettingsTable extends AbstractPopUpElement{
     @Override
     public void hide() {
         super.hide();
-        System.out.println("Hiding settings table");
+//        System.out.println("Hiding settings table");
         settingsTable.setVisible(false);
     }
 
@@ -54,7 +55,7 @@ public class SettingsTable extends AbstractPopUpElement{
     @Override
     public void show() {
         super.show();
-        System.out.println("Showing settings table");
+//        System.out.println("Showing settings table");
         settingsTable.setVisible(true);
     }
 
@@ -80,12 +81,12 @@ public class SettingsTable extends AbstractPopUpElement{
     @Override
     public void draw() {
         super.draw();
-        System.out.println("Drawing settingsTable");
+//        System.out.println("Drawing settingsTable");
         settingsTable = new Table();
         settingsTable.setSize(600, 600 * 1346 / 1862f);
         settingsTable.setPosition(Gdx.graphics.getWidth()/2f - settingsTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - settingsTable.getHeight()/2);
-        settingsTable.setDebug(true);
+//        settingsTable.setDebug(true);
         settingsTable.setName("settingsTable");
         settingsTable.top();
         settingsTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
