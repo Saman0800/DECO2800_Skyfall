@@ -47,15 +47,15 @@ public class WeaponInventoryIntegrationTest {
     public void pickupTest() {
         // inventory starts with 6 items
 
-        inventory.inventoryAdd(axe);
+        inventory.add(axe);
         Assert.assertEquals(1, inventory.getAmount(axe.getName()));
         Assert.assertEquals(7, inventory.getTotalAmount());
 
-        inventory.inventoryAdd(axe);
+        inventory.add(axe);
         Assert.assertEquals(2, inventory.getAmount("axe"));
         Assert.assertEquals(8, inventory.getTotalAmount());
 
-        inventory.inventoryAdd(sword);
+        inventory.add(sword);
         Assert.assertEquals(1, inventory.getAmount("sword"));
         Assert.assertEquals(2, inventory.getAmount("axe"));
         Assert.assertEquals(9, inventory.getTotalAmount());
@@ -66,16 +66,16 @@ public class WeaponInventoryIntegrationTest {
      */
     @Test
     public void dropTest() {
-        inventory.inventoryAdd(axe);
-        inventory.inventoryAdd(axe);
-        inventory.inventoryAdd(sword);
+        inventory.add(axe);
+        inventory.add(axe);
+        inventory.add(sword);
 
-        inventory.inventoryDrop("sword");
+        inventory.drop("sword");
         Assert.assertEquals(2, inventory.getAmount("axe"));
         Assert.assertEquals(0, inventory.getAmount("sword"));
         Assert.assertEquals(8, inventory.getTotalAmount());
 
-        inventory.inventoryDropMultiple("axe", 2);
+        inventory.dropMultiple("axe", 2);
         Assert.assertEquals(0, inventory.getAmount("axe"));
         Assert.assertEquals(6, inventory.getTotalAmount());
     }
@@ -111,7 +111,7 @@ public class WeaponInventoryIntegrationTest {
      */
     @Test
     public void quickAccessTest() {
-        inventory.inventoryAdd(axe);
+        inventory.add(axe);
         inventory.quickAccessAdd("axe");
         Assert.assertTrue(inventory.getQuickAccess().containsKey("axe"));
 

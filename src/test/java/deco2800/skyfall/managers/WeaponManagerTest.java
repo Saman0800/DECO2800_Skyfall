@@ -65,7 +65,7 @@ public class WeaponManagerTest {
         testCharacter.dropInventory("axe");
     }
 
-
+    @Ignore
     @Test
     /**
      * Tests basic pickup works
@@ -78,7 +78,7 @@ public class WeaponManagerTest {
         Assert.assertEquals(testCharacter.getInventoryManager().getTotalAmount(), 15);
     }
 
-
+    @Ignore
     @Test
     /**
      * Test that weapon dropping works
@@ -97,7 +97,7 @@ public class WeaponManagerTest {
         Assert.assertEquals(testCharacter.getInventoryManager().getTotalAmount(), 10);
     }
 
-
+    @Ignore
     @Test
     /**
      * Test return methods for weapons map, toString and equipped list are
