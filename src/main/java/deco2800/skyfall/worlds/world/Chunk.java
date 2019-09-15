@@ -222,17 +222,25 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
         this.y = memento.y;
         // TODO
         this.world = new World(new WorldParameters());
+        this.tiles = memento.tiles;
     }
 
     class ChunkMemento extends AbstractMemento {
         private long worldID;
         private int x;
         private int y;
+        private ArrayList<Tile> tiles;
+        private ArrayList<Integer> entities;
 
         public ChunkMemento(Chunk chunk) {
             this.worldID = chunk.world.getID();
             this.x = chunk.x;
             this.y = chunk.y;
+            this.tiles = chunk.tiles;
+            this.entities = new ArrayList<>();
+            for (AbstractEntity entity : chunk.entities) {
+                this.entities.add(entity.getEntityID());
+            }
         }
     }
 }
