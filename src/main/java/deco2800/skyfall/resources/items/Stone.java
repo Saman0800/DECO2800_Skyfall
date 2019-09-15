@@ -58,7 +58,7 @@ public class Stone extends NaturalResources implements Item {
      */
     @Override
     public String getDescription() {
-        return "This resource can be found in the forest and mountain" +
+        return "This resource can be found in the forest and mountain" + "\n" +
                 " biomes and can be used to build a Pickaxe.";
     }
 

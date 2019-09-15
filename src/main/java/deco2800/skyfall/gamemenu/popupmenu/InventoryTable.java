@@ -23,6 +23,7 @@ public class InventoryTable extends AbstractPopUpElement {
     private Skin skin;
     private Table inventoryTable;
     private Table resourcePanel;
+    private Table infoPanel;
     private GameMenuManager gameMenuManager;
     private InventoryManager inventory;
     private String inventorySelected;
@@ -34,6 +35,7 @@ public class InventoryTable extends AbstractPopUpElement {
     private ImageButton inactiveDropButton;
     private ImageButton inactiveAddqaButton;
     private ImageButton inactiveEquipButton;
+    private Label itemInfo;
     private final transient Logger LOGGER =
             LoggerFactory.getLogger(InventoryManager.class);
 
@@ -55,6 +57,7 @@ public class InventoryTable extends AbstractPopUpElement {
     @Override
     public void hide() {
         super.hide();
+        inventorySelected = null;
         LOGGER.info("Hiding inventory table");
         inventoryTable.setVisible(false);
     }
@@ -62,7 +65,7 @@ public class InventoryTable extends AbstractPopUpElement {
     @Override
     public void show() {
         super.show();
-        updateResourcePanel();
+        updatePanels();
         LOGGER.info("Showing inventory table");
         inventoryTable.setVisible(true);
     }
@@ -78,8 +81,8 @@ public class InventoryTable extends AbstractPopUpElement {
 
         inventoryTable = setBaseInventoryTable();
         Table infoBar = setHeading();
-        Table infoPanel = setInfoPanel();
-        updateResourcePanel();
+        infoPanel = setInfoPanel();
+        updatePanels();
         setButtons();
 
         inventoryTable.addActor(infoBar);
@@ -96,9 +99,9 @@ public class InventoryTable extends AbstractPopUpElement {
     }
 
     /***
-     * Updates the resources panel to display the current inventory contents.
+     * Updates the resources and info panels to display the current inventory contents.
      */
-    protected void updateResourcePanel(){
+    protected void updatePanels(){
         if(resourcePanel != null){
             inventoryTable.removeActor(resourcePanel);
         }
@@ -106,6 +109,8 @@ public class InventoryTable extends AbstractPopUpElement {
         resourcePanel = setResourcePanel();
 
         Map<String, Integer> inventoryAmounts = gameMenuManager.getInventory().getAmounts();
+
+        updateItemInfo();
 
         setCounts(inventoryAmounts, 115, 215, 80, 20);
 
@@ -162,6 +167,12 @@ public class InventoryTable extends AbstractPopUpElement {
         infoPanel.setPosition(25, 98);
         infoPanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
 
+        itemInfo = new Label("Click on an item to use it, and " + "\n" + "find out more information.", skin, "default");
+        itemInfo.setSize(350, 200);
+        itemInfo.setPosition(90, 70);
+
+        infoPanel.addActor(itemInfo);
+
         return infoPanel;
     }
 
@@ -181,7 +192,7 @@ public class InventoryTable extends AbstractPopUpElement {
                     inventory.dropAll(inventorySelected);
                     inventorySelected = null;
                     setButtonsActive(false);
-                    updateResourcePanel();
+                    updatePanels();
                     gameMenuBar.removeQuickAccessPanel();
                     gameMenuBar.setQuickAccessPanel();
                 }
@@ -203,7 +214,7 @@ public class InventoryTable extends AbstractPopUpElement {
                     mainCharacter.setEquippedItem(inventory.drop(inventorySelected));
                     inventorySelected = null;
                     setButtonsActive(false);
-                    updateResourcePanel();
+                    updatePanels();
                     gameMenuBar.removeQuickAccessPanel();
                     gameMenuBar.setQuickAccessPanel();
                 }
@@ -224,6 +235,7 @@ public class InventoryTable extends AbstractPopUpElement {
                 if(inventorySelected != null) {
                     inventory.quickAccessAdd(inventorySelected);
                     inventorySelected = null;
+                    updatePanels();
                     gameMenuBar.removeQuickAccessPanel();
                     gameMenuBar.setQuickAccessPanel();
                 }
@@ -239,6 +251,18 @@ public class InventoryTable extends AbstractPopUpElement {
         resourcePanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
 
         return resourcePanel;
+    }
+
+    private void updateItemInfo(){
+        System.out.println(inventorySelected);
+        if (inventorySelected != null){
+            String info = inventory.getItemDescription(inventorySelected);
+            itemInfo.setText(info);
+        } else{
+            itemInfo.setText("Click on an item to use it, and " + "\n" + "find out more information.");
+        }
+        infoPanel.removeActor(itemInfo);
+        infoPanel.add(itemInfo);
     }
 
     private void setCounts(Map<String, Integer> inventoryAmounts, int xpos, int ypos, int size, int xspace){
@@ -259,6 +283,7 @@ public class InventoryTable extends AbstractPopUpElement {
             icon.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
+
                     if(inventorySelected != icon.getName()){
                         inventorySelected = icon.getName();
                     }else{
@@ -282,7 +307,10 @@ public class InventoryTable extends AbstractPopUpElement {
                         selected.setVisible(true);
 
                         setButtonsActive(true);
+
                     }
+
+                    updateItemInfo();
 
                 }
             });

@@ -44,7 +44,7 @@ public class Wood extends NaturalResources implements Item {
      */
     @Override
     public String getDescription() {
-        return "This item can be found in the forest biome " +
+        return "This item can be found in the forest biome " + "\n" +
                 "and can be used to create a pickaxe and start a fire.";
     }
 

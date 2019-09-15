@@ -61,9 +61,10 @@ public class PoisonousMushroom extends HealthResources implements Item {
         return hasFoodEffect;
     }
 
-
-
-
+    @Override
+    public String getDescription(){
+        return "This is a poisonous mushroom." + "\n" + " It is bad for your health";
+    }
 
     @Override
     public String toString() {

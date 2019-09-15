@@ -131,7 +131,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
      */
     @Override
     public String getDescription() {
-        return "This item can be constructed using stone and wood. " + "It can farm stone from biomes.";
+        return "This item can be constructed using stone and wood. " + "\n" + "It can farm stone from biomes.";
     }
 
     /**

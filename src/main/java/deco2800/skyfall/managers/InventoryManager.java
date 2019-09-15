@@ -363,4 +363,23 @@ public class InventoryManager extends TickableManager {
         this.quickAccessRemove((itemName));
         this.positions.remove(itemName);
     }
+
+    public String getItemDescription(String itemName){
+        if(this.inventory.get(itemName) != null){
+            int num = this.inventory.get(itemName).size();
+
+            if (num == 1) {
+                Item item = this.inventory.get(itemName).get(0);
+                return item.getDescription();
+            } else if(num > 1) {
+                List<Item> itemsList = this.inventory.get(itemName);
+                Item item = itemsList.get(num - 1);
+                return item.getDescription();
+            }
+        }
+
+        LOGGER.warn("You don't have that!");
+
+        return null;
+    }
 }

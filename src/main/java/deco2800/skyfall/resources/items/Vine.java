@@ -47,7 +47,7 @@ public class Vine extends NaturalResources implements Item {
      */
     @Override
     public String getDescription() {
-        return "This item can be found in the forest biome and can " +
+        return "This item can be found in the forest biome and can " + "\n" +
                 "be used to produce rope.";
     }
 

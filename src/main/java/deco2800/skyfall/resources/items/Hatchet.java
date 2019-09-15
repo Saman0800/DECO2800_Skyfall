@@ -125,7 +125,7 @@ public class Hatchet extends ManufacturedResources implements Item, Blueprint {
      */
     @Override
     public String getDescription() {
-        return "This item is similar to an axe. It can be used to " + "cut down trees and retrieve wood.";
+        return "This item is similar to an axe." + "\n" + " It can be used to " + "cut down trees and retrieve wood.";
     }
 
     @Override

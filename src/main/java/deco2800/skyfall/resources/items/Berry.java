@@ -70,7 +70,7 @@ public class Berry extends HealthResources implements Item {
      */
     @Override
     public String getDescription() {
-        return "This item can be used to satisfy the Main Character's hunger";
+        return "This item can be used to satisfy" + "\n" + "the Main Character's hunger";
     }
 
     @Override

@@ -98,12 +98,12 @@ public class Sword extends Weapon implements Item, IWeapon {
      * @return a description about the weapon
      */
     public String getDescription() {
-        return this.getName() + " is a " + this.getSubtype() + " weapon which" +
-                " can be used to help the Main Character defeat enemies." +
+        return this.getName() + " is a " + "\n" + this.getSubtype() + " weapon which" + "\n" +
+                " can be used to help the Main" + "\n" + " Character defeat enemies." +
                 " It has deals " + this.getDamage() + " " + this.getDamageType()
-                + " damages each time it is used. It also has an attack rate " +
-                "of: " + this.getAttackRate() + " and a durability of: " +
-                this.getDurability() + " before it become useless. "
+                + "\n" + " damages each time it is used. " + "\n" + "It also has an attack rate " +
+                "of: " + this.getAttackRate() + "\n" + " and a durability of: " +
+                this.getDurability() + " before it become useless. " + "\n"
                 + this.getName() + "is carryable, but exchangeable.";
     }
 
