@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.world.Chunk;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +32,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
     private static final String ENTITY_ID_STRING = "staticEntityID";
     //private int renderOrder;
     private boolean obstructed;
+    private static TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
 
     // The type of entity this is (e.g. "Tree", "Axe" etc.)
     protected String entityType;
@@ -121,18 +123,6 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
 
     /**
      * A simple getter function to retrieve the obstruction value of this object
-     * 
-     * @return The obstruction value.
-     *
-     * @deprecated use {@link #isObstructed()}
-     */
-    @Deprecated()
-    public boolean getObstructed() {
-        return isObstructed();
-    }
-
-    /**
-     * A simple getter function to retrieve the obstruction value of this object
      *
      * @return The obstruction value.
      */
@@ -160,6 +150,8 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
                 child.setParent(this);
             }
         }
+
+        getBody().setType(BodyDef.BodyType.StaticBody);
     }
 
     /**
@@ -197,6 +189,19 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         return GameManager.get().getWorld().getTile(targetTile);
     }
 
+    public int[] getRenderCentre() {
+        float[] rowColValues = WorldUtil.colRowToWorldCords(getCol(), getRow());
+
+        int drawX = (int) (rowColValues[0] + TextureManager.TILE_WIDTH * WorldUtil.SCALE_X / 2);
+        int drawY = (int) (rowColValues[1] + TextureManager.TILE_HEIGHT * WorldUtil.SCALE_Y / 2);
+
+        int[] renderPos = new int[2];
+        renderPos[0] = drawX;
+        renderPos[1] = drawY;
+
+        return renderPos;
+    }
+
     public Set<HexVector> getChildrenPositions() {
         return children.keySet();
     }
@@ -204,7 +209,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
     public Texture getTexture(HexVector childPos) {
         String texture = children.get(childPos);
 
-        return GameManager.get().getManager(TextureManager.class).getTexture(texture);
+        return textureManager.getTexture(texture);
     }
 
     public void setChildren(Map<HexVector, String> children) {

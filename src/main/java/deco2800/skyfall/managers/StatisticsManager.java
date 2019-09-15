@@ -19,15 +19,11 @@ public class StatisticsManager  extends TickableManager {
     // The amount of experience needed to level up
     private int experienceCap;
 
-    // Amount of in-game currency owned by the character
-    private int money;
-
     public StatisticsManager(MainCharacter character) {
         this.character = character;
         this.kills = new HashMap<>();
         this.experience = 0;
         this.experienceCap = 20;
-        this.money = 0;
     }
 
     /**
@@ -39,31 +35,40 @@ public class StatisticsManager  extends TickableManager {
     }
 
     /**
+     * Gets the inventory manager for character
+     * @return the character's inventory manager
+     */
+    public InventoryManager getInventory() {
+        return this.getCharacter().getInventoryManager();
+    }
+
+    /**
      * Increases experience of character due to certain achievements such as
      * collecting weapons, inventory, money and getting kills
      */
     public void gainExperience() {
-        if ((this.character.getWeaponManager().getNumWeapons() - 2)
-                % 10 == 0) {
+        // Every 10 inventory items collected by the character will give them
+        // 10 experience points
+        if (this.getInventory().getTotalAmount() != 0 &&
+                this.getInventory().getTotalAmount() % 10 == 0) {
             experience += 10;
         }
 
-        if ((this.character.getInventoryManager().getTotalAmount() - 4)
-                % 10 == 0) {
-            experience += 10;
-        }
-
+        // Every 10 enemies killed by the character will given them 10
+        // experience points
         if (this.getKills() != 0 && this.getKills() % 10 == 0) {
             experience += 10;
         }
 
-        if (this.getMoney() != 0 && this.getMoney() % 10 == 0) {
+        // Every 100 gold collected by the character will given them 10
+        // experience points
+        if (this.getMoney() != 0 && this.getMoney() % 100 == 0) {
             experience += 10;
         }
     }
 
     /**
-     * Decreases experience of character due sustained deaths
+     * Decreases experience by 5 of character due every sustained 5 deaths
      */
     public void loseExperience() {
         if (this.getDeaths() != 0 && this.getDeaths() % 5 == 0) {
@@ -109,6 +114,14 @@ public class StatisticsManager  extends TickableManager {
     }
 
     /**
+     * Gets the level of character
+     * @return level of character
+     */
+    public int getLevel() {
+        return this.character.getLevel();
+    }
+
+    /**
      * Gets the total number of enemies killed by character
      * @return number of kills
      */
@@ -148,15 +161,7 @@ public class StatisticsManager  extends TickableManager {
      * @return health of character
      */
     public int getHealth() {
-        return this.character.getHealth();
-    }
-
-    /**
-     * Gets the level of character
-     * @return level of character
-     */
-    public int getLevel() {
-        return this.character.getLevel();
+        return this.getCharacter().getHealth();
     }
 
     /**
@@ -164,7 +169,7 @@ public class StatisticsManager  extends TickableManager {
      * @return the amount of deaths of the character
      */
     public int getDeaths() {
-        return this.character.getDeaths();
+        return this.getCharacter().getDeaths();
     }
 
     /**
@@ -172,7 +177,7 @@ public class StatisticsManager  extends TickableManager {
      * @return the amount of money the character has
      */
     public int getMoney() {
-        return this.money;
+        return this.getCharacter().getGoldPouchTotalValue();
     }
 
     @Override

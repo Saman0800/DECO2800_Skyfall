@@ -15,5 +15,5 @@ public interface Renderer {
      * Renderers must be able to render a world given a list of Entities and a batch renderer
      * @param batch Batch to render onto
      */
-    void render(SpriteBatch batc, OrthographicCamera camera);
+    void render(SpriteBatch batch, OrthographicCamera camera);
 }

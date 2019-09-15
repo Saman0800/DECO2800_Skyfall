@@ -3,7 +3,6 @@ package deco2800.skyfall.resources.items;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.NaturalResources;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.worlds.Tile;
 
 /**
  * A class representing a Stone Natural Resource item
@@ -58,7 +57,7 @@ public class Stone extends NaturalResources implements Item {
      */
     @Override
     public String getDescription() {
-        return "This resource can be found in the forest and mountain" +
+        return "This resource can be found in the forest and mountain" + "\n" +
                 " biomes and can be used to build a Pickaxe.";
     }
 
@@ -80,5 +79,10 @@ public class Stone extends NaturalResources implements Item {
         return "" + subtype + ":" + name;
     }
 
+
+    @Override
+    public void use(HexVector position){
+
+    }
 
 }

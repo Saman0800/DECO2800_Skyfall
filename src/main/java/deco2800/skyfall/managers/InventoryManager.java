@@ -1,14 +1,21 @@
 package deco2800.skyfall.managers;
 
+import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.gui.Tuple;
-import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.*;
 
 import java.io.Serializable;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.*;
 
-public class InventoryManager extends TickableManager implements Serializable {
+public class InventoryManager extends TickableManager {
+
+    // Logger for class to display messages
+    private final transient Logger logger =
+            LoggerFactory.getLogger(InventoryManager.class);
 
     // Map that stores the inventory contents
     private Map<String, List<Item>> inventory;
@@ -28,23 +35,23 @@ public class InventoryManager extends TickableManager implements Serializable {
 
     @Override
     public void onTick(long i) {
-        // TODO Auto-generated method stub
+        // Auto-generated method stub
     }
 
-    /***
-     * Creates Inventory Manager and adds default items to the inventory (2x Stone, 2x Wood),
-     * as well as initialises an empty quick access inventory.
+    /**
+     * Creates Inventory Manager and adds default items to the inventory (2x
+     * Stone, 2x Wood), as well as initialises an empty quick access inventory.
      */
-    public InventoryManager(){
+    public InventoryManager() {
         initInventory(new HashMap<>());
 
         // Add default items to inventory
-        this.inventoryAdd(new Stone());
-        this.inventoryAdd(new Stone());
-        this.inventoryAdd(new Wood());
-        this.inventoryAdd(new Wood());
-        this.inventoryAdd(new Hatchet());
-        this.inventoryAdd(new PickAxe());
+        this.add(new Stone());
+        this.add(new Stone());
+        this.add(new Wood());
+        this.add(new Wood());
+        this.add(new Hatchet());
+        this.add(new PickAxe());
         this.quickAccessAdd("Hatchet");
         this.quickAccessAdd("Pick Axe");
     }
@@ -54,7 +61,7 @@ public class InventoryManager extends TickableManager implements Serializable {
         quickAccess = new ArrayList<>();
         positions = new HashMap<>();
         List<String> items = new ArrayList<>();
-        for(Map.Entry<String, List<Item>> e : inventory.entrySet()) {
+        for (Map.Entry<String, List<Item>> e : inventory.entrySet()) {
             items.add(e.getKey());
         }
         int counter = 0;
@@ -72,8 +79,9 @@ public class InventoryManager extends TickableManager implements Serializable {
         }
     }
 
-    /***
-     * Create an Inventory Manager and adds a custom map of items to the inventory.
+    /**
+     * Create an Inventory Manager and adds a custom map of items to the
+     * inventory.
      * Creates a quick access inventory and adds items to it.
      *
      * @param inventoryContents a Map<String, List<Item>> where String is the
@@ -83,7 +91,8 @@ public class InventoryManager extends TickableManager implements Serializable {
      *                            item in quick access inventory
      */
 
-    public InventoryManager(Map<String, List<Item>> inventoryContents, List<String> quickAccessContents){
+    public InventoryManager(Map<String, List<Item>> inventoryContents,
+                            List<String> quickAccessContents){
         initInventory(inventoryContents);
 
         for (String quickAccessContent : quickAccessContents) {
@@ -91,12 +100,11 @@ public class InventoryManager extends TickableManager implements Serializable {
         }
     }
 
-
     /**
      * Get a copy of the inventory contents.
      * @return a copy of the inventory
      */
-    public Map<String, List<Item>> getInventoryContents() {
+    public Map<String, List<Item>> getContents() {
         return Collections.unmodifiableMap(this.inventory);
     }
 
@@ -105,8 +113,7 @@ public class InventoryManager extends TickableManager implements Serializable {
      * @return a map of item name to the integer amount in the inventory for
      * all inventory items.
      */
-    public Map<String, Integer> getInventoryAmounts() {
-
+    public Map<String, Integer> getAmounts() {
         Map<String, Integer> inventoryAmounts = new HashMap<>();
 
         for (Map.Entry<String, List<Item>> entry : this.inventory.entrySet()) {
@@ -125,7 +132,7 @@ public class InventoryManager extends TickableManager implements Serializable {
         int total = 0;
 
         List<Integer> inventoryAmount =
-                new ArrayList<>(this.getInventoryAmounts().values());
+                new ArrayList<>(this.getAmounts().values());
 
         for (Integer count: inventoryAmount) {
             total += count;
@@ -149,7 +156,6 @@ public class InventoryManager extends TickableManager implements Serializable {
         return qai;
     }
 
-
     /**
      * Add an item type from the full inventory to the quick access inventory.
      * Ensures that the item being added to quick access inventory is in full
@@ -163,7 +169,7 @@ public class InventoryManager extends TickableManager implements Serializable {
                 && (this.quickAccess.size() < QA_MAX_SIZE)) {
             this.quickAccess.add(item);
         } else {
-            System.out.println("Sorry I can't add that!");
+            logger.warn("Sorry I can't add that!");
         }
     }
 
@@ -181,23 +187,22 @@ public class InventoryManager extends TickableManager implements Serializable {
      * @return the integer number of that item type in the inventory
      */
     public int getAmount(String item) {
-        Map<String, Integer> inventoryAmounts = this.getInventoryAmounts();
+        Map<String, Integer> inventoryAmounts = this.getAmounts();
 
         if (inventoryAmounts.get(item) != null) {
             return inventoryAmounts.get(item);
         } else {
             return 0;
         }
-
     }
 
-    /***
+    /**
      * Get the full inventory as a string.
      * @return a string representation of the inventory.
      */
     @Override
     public String toString() {
-        Map<String, Integer> inventoryAmounts = this.getInventoryAmounts();
+        Map<String, Integer> inventoryAmounts = this.getAmounts();
         return "Inventory Contents " + inventoryAmounts.toString();
     }
 
@@ -209,19 +214,19 @@ public class InventoryManager extends TickableManager implements Serializable {
         this.positions = positions;
     }
 
-    /***
+    /**
      * Add an item to the full inventory.
      * @param item the item to add to the inventory, implements Item interface.
      */
-    public boolean inventoryAdd(Item item){
+    public boolean add(Item item) {
         String name = item.getName();
 
-        if(this.inventory.get(name) != null){
+        if (this.inventory.get(name) != null) {
             List<Item> itemsList = this.inventory.get(name);
             itemsList.add(item);
             this.inventory.put(name, itemsList);
             return true;
-        } else{
+        } else {
             List<Item> itemsList = new ArrayList<>();
             itemsList.add(item);
             List<Tuple> pos = new ArrayList<>();
@@ -229,7 +234,7 @@ public class InventoryManager extends TickableManager implements Serializable {
                 pos.add(entry.getValue());
             }
 
-            if (pos.size() == 0) {
+            if (pos.isEmpty()) {
                 positions.put(name, new Tuple(0, 0));
                 inventory.put(name, itemsList);
                 return true;
@@ -244,9 +249,18 @@ public class InventoryManager extends TickableManager implements Serializable {
                     }
                 }
             }
-
-            System.out.println("Not enough space in inventory");
+            logger.warn("Not enough space in inventory");
             return false;
+        }
+    }
+
+    public void inventoryAddMultiple(Map<String, List<Item>> items) {
+        for (Map.Entry<String, List<Item>> e : items.entrySet()) {
+            if (inventory.get(e.getKey()) != null) {
+                inventory.get(e.getKey()).addAll(e.getValue());
+            } else {
+                inventory.put(e.getKey(), e.getValue());
+            }
         }
     }
 
@@ -257,13 +271,13 @@ public class InventoryManager extends TickableManager implements Serializable {
      * @param itemName the String name of the item to drop from the inventory.
      * @return the Item dropped from the inventory
      */
-    public Item inventoryDrop(String itemName) {
+    public Item drop(String itemName) {
         if(this.inventory.get(itemName) != null){
             int num = this.inventory.get(itemName).size();
 
             if (num == 1) {
                 Item item = this.inventory.get(itemName).get(0);
-                removeFromInventory(itemName);
+                remove(itemName);
                 return item;
             } else if(num > 1) {
                 List<Item> itemsList = this.inventory.get(itemName);
@@ -274,7 +288,26 @@ public class InventoryManager extends TickableManager implements Serializable {
             }
         }
 
-        System.out.println("You can't remove what you don't have!");
+        logger.warn("You can't remove what you don't have!");
+
+        return null;
+    }
+
+
+    /**
+     * Removes all of a specific item type from the inventory, and quick access inventory.
+     * Returns as a list of items.
+     * @param itemName the String name of the item type to drop from the inventory.
+     * @return List of instances of item type dropped from inventory
+     */
+    public List<Item> dropAll(String itemName) {
+        if(this.inventory.get(itemName) != null){
+            List<Item> items = this.inventory.get(itemName);
+            remove(itemName);
+            return items;
+        }
+
+        logger.warn("You can't remove what you don't have!");
 
         return null;
     }
@@ -289,7 +322,7 @@ public class InventoryManager extends TickableManager implements Serializable {
      * @param amount the number of the item type to drop from the inventory
      * @return a list of the items dropped from the inventory
      */
-    public List<Item> inventoryDropMultiple(String itemName, int amount){
+    public List<Item> dropMultiple(String itemName, int amount){
         List<Item> itemsDropped = new ArrayList<>();
         List<Item> itemsList = this.inventory.get(itemName);
 
@@ -297,33 +330,56 @@ public class InventoryManager extends TickableManager implements Serializable {
             int num = this.inventory.get(itemName).size();
 
             if (amount < num) {
-
-                for(int i = 1; i <= amount; i++) {
+                for (int i = 1; i <= amount; i++) {
                     Item item = itemsList.get(num - i);
                     itemsDropped.add(item);
                     itemsList.remove(num - i);
                 }
-
                 this.inventory.put(itemName, itemsList);
-
-            } else if(amount == num) {
+            } else if (amount == num) {
                 itemsDropped.addAll(itemsList);
-                removeFromInventory(itemName);
+                remove(itemName);
             } else {
-                System.out.println("You don't have that many " + itemName +
+                logger.warn("You don't have that many " + itemName +
                         "s!");
                 itemsDropped = null;
             }
-        } else{
-
+        } else {
             itemsDropped = null;
         }
         return itemsDropped;
     }
 
-    private void removeFromInventory(String itemName) {
+    /**
+     * Removes an item from the inventory
+     */
+    private void remove(String itemName) {
         this.inventory.remove(itemName);
         this.quickAccessRemove((itemName));
         this.positions.remove(itemName);
+    }
+
+    /**
+     * Returns the description of item
+     * @param itemName String name of item
+     * @return Description of item
+     */
+    public String getItemDescription(String itemName){
+        if(this.inventory.get(itemName) != null){
+            int num = this.inventory.get(itemName).size();
+
+            if (num == 1) {
+                Item item = this.inventory.get(itemName).get(0);
+                return item.getDescription();
+            } else if(num > 1) {
+                List<Item> itemsList = this.inventory.get(itemName);
+                Item item = itemsList.get(num - 1);
+                return item.getDescription();
+            }
+        }
+
+        logger.warn("You don't have that!");
+
+        return null;
     }
 }

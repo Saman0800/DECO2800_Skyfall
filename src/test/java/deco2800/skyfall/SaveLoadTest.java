@@ -12,6 +12,7 @@ import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -31,7 +32,7 @@ import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({GameManager.class, DatabaseManager.class, PlayerPeon.class})
+@PrepareForTest({ GameManager.class, DatabaseManager.class, PlayerPeon.class })
 public class SaveLoadTest {
     // FIXME:jeffvan12 Implement these tests with the new saving methods.
 //    private PhysicsManager physics;

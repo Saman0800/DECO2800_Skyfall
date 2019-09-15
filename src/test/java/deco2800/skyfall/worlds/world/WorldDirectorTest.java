@@ -38,7 +38,7 @@ public class WorldDirectorTest {
     @Test
     public void constructNBiomeSinglePlayerWorldTest(){
         WorldBuilder builder = Mockito.mock(WorldBuilder.class);
-        WorldDirector.constructNBiomeSinglePlayerWorld(builder, 3);
+        WorldDirector.constructNBiomeSinglePlayerWorld(builder, 3, false);
         verify(builder).setType("single_player");
         verify(builder).setWorldSize(300);
         verify(builder).setNodeSpacing(25);
