@@ -170,7 +170,7 @@ public class DataBaseConnector {
             }
 
             for (Chunk chunk : world.getLoadedChunks().values()) {
-                saveChunk(chunk, world);
+                saveChunk(chunk);
             }
     }
 
@@ -188,8 +188,9 @@ public class DataBaseConnector {
             }
     }
 
-    public void saveChunk(Chunk chunk, World world) {
+    public void saveChunk(Chunk chunk) {
         try {
+            World world = chunk.getWorld();
             ContainsDataQueries containsQueries = new ContainsDataQueries(connection);
             InsertDataQueries insertQueries = new InsertDataQueries(connection);
             UpdateDataQueries updateQueries = new UpdateDataQueries(connection);
@@ -264,13 +265,4 @@ public class DataBaseConnector {
         }
     }
 
-    public void saveChunk(Chunk chunk) {
-        try {
-            Gson gson = new Gson();
-            InsertDataQueries insertDataQueries = new InsertDataQueries(connection);
-            insertDataQueries.insertChunk(chunk.getWorld().getID(),chunk.getX(), chunk.getY(), gson.toJson(chunk.save()));
-        } catch (SQLException e){
-            throw new RuntimeException(e);
-        }
-    }
 }
