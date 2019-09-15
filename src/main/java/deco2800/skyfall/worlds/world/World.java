@@ -533,8 +533,6 @@ public class World implements TouchDownObserver {
             }
 
             if (entity instanceof Harvestable) {
-                System.out.println(entity.getPosition());
-                System.out.println();
                 removeEntity(entity);
                 List<AbstractEntity> drops = ((Harvestable) entity).harvest(tile);
 

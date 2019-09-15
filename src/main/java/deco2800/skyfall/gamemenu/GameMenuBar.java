@@ -189,9 +189,16 @@ public class GameMenuBar extends AbstractUIElement {
         int ypos = 28;
         int size = 55;
 
-        for (Map.Entry<String, Integer> entry : quickAccess.entrySet()) {
+        String[] weapons = {"axe", "box", "spear", "sword"};
 
-            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey() + "_inv"));
+        for (Map.Entry<String, Integer> entry : quickAccess.entrySet()) {
+            String weaponName = entry.getKey();
+            for (String weapon : weapons) {
+                if (weapon.equals(entry.getKey())) {
+                    weaponName = entry.getKey() + "_tex";
+                }
+            }
+            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(weaponName + "_inv"));
             icon.setSize(size, size);
             icon.setPosition((xpos*count) + size*(count-1), ypos);
 

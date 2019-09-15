@@ -335,7 +335,7 @@ public class InventoryTable extends AbstractPopUpElement {
      * what item is selected.
      */
     private void updateItemInfo(){
-        System.out.println(inventorySelected);
+        //System.out.println(inventorySelected);
         if (inventorySelected != null){
             String info = inventory.getItemDescription(inventorySelected);
             itemInfo.setText(info);
@@ -357,13 +357,21 @@ public class InventoryTable extends AbstractPopUpElement {
     private void setCounts(Map<String, Integer> inventoryAmounts, int xpos, int ypos, int size, int xspace){
         int count = 0;
 
+        String[] weapons = {"axe", "box", "spear", "sword"};
+
         for (Map.Entry<String, Integer> entry : inventoryAmounts.entrySet()) {
             Image selected = new Image(generateTextureRegionDrawableObject("selected"));
             selected.setName(entry.getKey() + "-selected");
             selected.setSize((float) size + 20, (float) size + 20);
             selected.setPosition((float)(xpos + -10 + (size+xspace)*(count-1)), ypos -10);
             selected.setVisible(false);
-            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey() + "_inv"));
+            String weaponName = entry.getKey();
+            for (String weapon : weapons) {
+                if (weapon.equals(entry.getKey())) {
+                    weaponName = entry.getKey() + "_tex";
+                }
+            }
+            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(weaponName + "_inv"));
             icon.setName(entry.getKey());
             icon.setSize((float)size, (float)size);
             icon.setPosition((float)(xpos + (size+xspace)*(count-1)), ypos);
