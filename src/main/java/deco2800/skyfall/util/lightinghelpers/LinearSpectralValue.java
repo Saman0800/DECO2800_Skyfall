@@ -63,7 +63,7 @@ public class LinearSpectralValue extends SpectralValue {
     }
 
     /**
-     * Adds in tuples at hours 0 and 24 to assist with interpolation.
+     * Adds in tuples at HOURS 0 and 24 to assist with interpolation.
      * 
      * @param startTuples User input tuples
      */

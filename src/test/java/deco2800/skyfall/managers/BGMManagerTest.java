@@ -192,6 +192,7 @@ public class BGMManagerTest {
             IOException, LineUnavailableException {
         try {
             bgmManager.initClip("resources/sounds/09-running-in-the-90-s.mp3");
+            assertFalse(bgmManager.getClip().isRunning());
         } catch (Exception e) {
             //exception caught
         }

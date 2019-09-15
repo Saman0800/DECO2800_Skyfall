@@ -8,6 +8,8 @@ import deco2800.skyfall.observers.DayNightObserver;
 import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.worlds.Tile;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.List;
@@ -16,22 +18,19 @@ import java.util.Arrays;
 public class EnvironmentManager extends TickableManager {
 
     //Hours in a game day
-    public int hours;
+    private int hours;
 
     // Seconds in a game day
-    public int minutes;
+    private int minutes;
 
     // Milliseconds since last time update
     private long currentMillis;
-
-    // Seasons in game
-    private String season;
 
     // Month in game
     private long month;
 
     // Month in game represented as an int
-    public int monthInt;
+    private int monthInt;
 
     // Day/Night tracker
     private boolean isDay;
@@ -39,20 +38,11 @@ public class EnvironmentManager extends TickableManager {
     // Biome player is currently in
     public String biome;
 
-    // Time to display on screen
-    private long displayHours;
-
-    // Time of day: AM or PM
-    public String TOD;
-
     // Music filename
-    public String file;
+    private String file;
 
     // Current music file being played
-    public String currentFile;
-
-    // List of entities in the game
-    public List<AbstractEntity> entities;
+    private String currentFile;
 
     // Abstract entity within entities list. (Public for testing)
     public AbstractEntity player;
@@ -70,30 +60,33 @@ public class EnvironmentManager extends TickableManager {
     private String previousBiome;
 
     // Current weather in the game
-    public static String weather;
+    private String weather;
 
     // Weather event to happen after a certain amount of ticks
-    public int weatherEvent = 0;
+    private int weatherEvent = 0;
 
     // List of weather events
     private List<String> weatherList;
 
-    // Background music manager
-    private BGMManager bgmManager;
+    // Default weather
+    private String defaultWeather = "Clear";
+
+    // Random event
+    private Random rand = SecureRandom.getInstanceStrong();
 
 
     /**
      * Constructor
      */
-    public EnvironmentManager() {
+    public EnvironmentManager() throws NoSuchAlgorithmException {
         file = "resources/sounds/forest_day.wav";
         currentFile = "resources/sounds/forest_night.wav";
         timeListeners = new ArrayList<>();
         dayNightListeners = new ArrayList<>();
         currentMillis = System.currentTimeMillis();
         previousBiome = null;
-        weatherList = Arrays.asList("Clear");
-        weather = "Clear";
+        weatherList = Arrays.asList(defaultWeather);
+        weather = defaultWeather;
     }
 
     /**
@@ -119,7 +112,7 @@ public class EnvironmentManager extends TickableManager {
      *
      * @return The list of observers currently observing the time update
      */
-    public ArrayList<TimeObserver> getTimeListeners() {
+    public List<TimeObserver> getTimeListeners() {
         return timeListeners;
     }
 
@@ -157,7 +150,7 @@ public class EnvironmentManager extends TickableManager {
      *
      * @return The list of observers currently observing the day/night change
      */
-    public ArrayList<DayNightObserver> getDayNightListeners() {
+    public List<DayNightObserver> getDayNightListeners() {
         return dayNightListeners;
     }
 
@@ -177,6 +170,9 @@ public class EnvironmentManager extends TickableManager {
      * the corresponding tile, and the corresponding biome.
      */
     public void setBiome() {
+        // List of entities in the game
+        List<AbstractEntity> entities;
+
         entities = GameManager.get().getWorld().getEntities();
         for (int i = 0; i < entities.size(); i++) {
             if (entities.get(i) instanceof MainCharacter) {
@@ -202,9 +198,9 @@ public class EnvironmentManager extends TickableManager {
     /**
      * Gets time of day in game
      *
-     * @return long The time of day in hours
+     * @return int The time of day in hours
      */
-    public long getTime() {
+    public int getTime() {
         return hours;
     }
 
@@ -230,7 +226,7 @@ public class EnvironmentManager extends TickableManager {
         //Check if observers need notifying, notifies if needed
         if (mins >= 60) {
             hours += 1;
-            if (hours >= 24) {
+            if (hours == 24) {
                 hours = 0;
             }
             minutes = 0;
@@ -271,24 +267,30 @@ public class EnvironmentManager extends TickableManager {
      * @return String am or pm depending on TOD
      */
     public String getTOD() {
+        // Time of day: AM or PM
+        String tod;
+
+        // Time to display on screen
+        int displayHours;
+
         // Set hours to be displayed
         if (hours > 12 && hours < 24) {
             displayHours = hours - 12;
-            TOD = "pm";
+            tod = "pm";
         } else if (hours == 24) {
             displayHours = hours - 12;
-            TOD = "am";
+            tod = "am";
         } else if (hours == 12) {
             displayHours = hours;
-            TOD = "pm";
+            tod = "pm";
         } else {
             displayHours = hours;
-            TOD = "am";
+            tod = "am";
         }
 
         String prefix = minutes < 10 ? "0" : "";
 
-        return Long.toString(displayHours) + ":" + prefix + Long.toString(minutes) + TOD;
+        return Long.toString(displayHours) + ":" + prefix + Long.toString(minutes) + tod;
     }
 
     /**
@@ -341,8 +343,7 @@ public class EnvironmentManager extends TickableManager {
         isDay();
         currentBiome(); // Check current biome
 
-        String filename = file.split("_", 4)[1];
-        filename = "day.wav";
+        String filename = "day.wav";
         filename = isDay() ? filename : "night.wav";
 
         // Until lake music created and ocean biome is restricted, play forest for now
@@ -351,6 +352,14 @@ public class EnvironmentManager extends TickableManager {
         } else {
             file = "resources/sounds/" + biome + "_" + filename;
         }
+    }
+
+    /**
+     * Gets the filename in game.
+     * @return the file being played
+     */
+    public String getFilename() {
+        return file;
     }
 
     /**
@@ -363,7 +372,7 @@ public class EnvironmentManager extends TickableManager {
 
             // Stop current music
             try {
-                bgmManager.stop();
+                BGMManager.stop();
             } catch (Exception e) {
                 /* Exception caught, if any */
             }
@@ -372,8 +381,8 @@ public class EnvironmentManager extends TickableManager {
 
             // Play BGM
             try {
-                bgmManager.initClip(currentFile);
-                bgmManager.play();
+                BGMManager.initClip(currentFile);
+                BGMManager.play();
             } catch (Exception e) {
                 /* Exception caught, if any */
             }
@@ -431,7 +440,7 @@ public class EnvironmentManager extends TickableManager {
      *
      * @return String Current biome of player, or null if player is moving between tiles
      */
-    public static String currentWeather() {
+    public String currentWeather() {
         return weather;
     }
 
@@ -440,30 +449,31 @@ public class EnvironmentManager extends TickableManager {
      */
     public void randomWeatherEvent() {
         String randomElement;
-        Random rand = new Random();
 
-        if (biome != previousBiome) {
+        String storm = "Storm";
+        String earthquake = "Earthquake";
+        String rain = "Rain";
+        String snow = "Snow";
+
+        if (!biome.equals(previousBiome)) {
             switch (biome) {
                 case "volcanic_mountains":
-                    weatherList = Arrays.asList("Clear", "Storm", "Clear", "Earthquake", "Clear");
-                    previousBiome = biome;
-                    break;
-                case "snowy_mountains":
-                    weatherList = Arrays.asList("Clear", "Storm", "Clear", "Earthquake", "Snow", "Clear");
+                    weatherList = Arrays.asList(defaultWeather, storm, earthquake);
                     previousBiome = biome;
                     break;
                 case "desert":
-                    weatherList = Arrays.asList("Clear", "Storm", "Clear", "Earthquake", "Clear");
+                    //same as above
+                case "snowy_mountains":
+                    weatherList = Arrays.asList(defaultWeather, storm, earthquake, snow);
                     previousBiome = biome;
                     break;
                 default:
-                    weatherList = Arrays.asList("Clear", "Rain", "Storm", "Clear", "Earthquake", "Clear");
+                    weatherList = Arrays.asList(defaultWeather, rain, storm, snow);
                     previousBiome = biome;
                     break;
             }
         }
 
-        System.out.println(weatherList);
         randomElement = weatherList.get(rand.nextInt(weatherList.size()));
         weather = randomElement;
     }
@@ -484,8 +494,6 @@ public class EnvironmentManager extends TickableManager {
      */
     @Override
     public void onTick(long i) {
-        long time = i;
-
         if (System.currentTimeMillis() - currentMillis >= 1000) {
             currentMillis = System.currentTimeMillis();
             minutes += 1;
