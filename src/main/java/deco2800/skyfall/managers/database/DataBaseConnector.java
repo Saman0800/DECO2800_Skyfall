@@ -188,30 +188,33 @@ public class DataBaseConnector {
             }
     }
 
-    public void saveChunk(Chunk chunk, World world) throws SQLException {
-        ContainsDataQueries containsQueries = new ContainsDataQueries(connection);
-        InsertDataQueries insertQueries = new InsertDataQueries(connection);
-        UpdateDataQueries updateQueries = new UpdateDataQueries(connection);
-        Gson gson = new Gson();
+    public void saveChunk(Chunk chunk, World world) {
+        try {
+            ContainsDataQueries containsQueries = new ContainsDataQueries(connection);
+            InsertDataQueries insertQueries = new InsertDataQueries(connection);
+            UpdateDataQueries updateQueries = new UpdateDataQueries(connection);
+            Gson gson = new Gson();
 
-        if (containsQueries.containsChunk(world.getID(), chunk.getX(), chunk.getY())) {
-            updateQueries.updateChunk(world.getID(), chunk.getX(), chunk.getY(), gson.toJson(chunk.save()));
-        } else {
-            insertQueries.insertChunk(world.getID(), chunk.getX(), chunk.getY(), gson.toJson(chunk.save()));
-        }
+            if (containsQueries.containsChunk(world.getID(), chunk.getX(), chunk.getY())) {
+                updateQueries.updateChunk(world.getID(), chunk.getX(), chunk.getY(), gson.toJson(chunk.save()));
+            } else {
+                insertQueries.insertChunk(world.getID(), chunk.getX(), chunk.getY(), gson.toJson(chunk.save()));
+            }
 
-        for (AbstractEntity entity : chunk.getEntities()) {
-            if (entity instanceof StaticEntity) {
-                if (containsQueries.containsEntity(world.getID(), entity.getEntityID())) {
-                    updateQueries.updateEntity(((StaticEntity) entity).getEntityType(), entity.getCol(), entity.getRow(),
-                            chunk.getX(), chunk.getY(), world.getID(), gson.toJson(((StaticEntity) entity).save()), entity.getEntityID());
-                } else {
-                    insertQueries.insertEntity(((StaticEntity) entity).getEntityType(), entity.getCol(), entity.getRow(),
-                            chunk.getX(), chunk.getY(), world.getID(), gson.toJson(((StaticEntity) entity).save()), entity.getEntityID());
+            for (AbstractEntity entity : chunk.getEntities()) {
+                if (entity instanceof StaticEntity) {
+                    if (containsQueries.containsEntity(world.getID(), entity.getEntityID())) {
+                        updateQueries.updateEntity(((StaticEntity) entity).getEntityType(), entity.getCol(), entity.getRow(),
+                                chunk.getX(), chunk.getY(), world.getID(), gson.toJson(((StaticEntity) entity).save()), entity.getEntityID());
+                    } else {
+                        insertQueries.insertEntity(((StaticEntity) entity).getEntityType(), entity.getCol(), entity.getRow(),
+                                chunk.getX(), chunk.getY(), world.getID(), gson.toJson(((StaticEntity) entity).save()), entity.getEntityID());
+                    }
                 }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-
     }
 
 //    public World loadWorld(long worldId, Save save) throws SQLException{
