@@ -7,22 +7,8 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import deco2800.skyfall.animation.AnimationLinker;
-import deco2800.skyfall.animation.AnimationRole;
-import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.managers.DatabaseManager;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.worlds.world.World;
-import deco2800.skyfall.worlds.world.WorldBuilder;
-import deco2800.skyfall.worlds.world.WorldDirector;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
+import deco2800.skyfall.animation.Direction;
 
 public class TreemanTest {
     Treeman treeman;
@@ -71,7 +57,7 @@ public class TreemanTest {
      */
     @Test
     public void getEnemyTypeTest() {
-        String type=treeman.getEnemyType();
+        String type = treeman.getEnemyType();
         Assert.assertEquals("treeman",type);
 
     }
