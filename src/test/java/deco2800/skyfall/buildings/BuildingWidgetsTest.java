@@ -1,38 +1,34 @@
 package deco2800.skyfall.buildings;
 
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.worlds.world.WorldBuilder;
-import deco2800.skyfall.worlds.world.WorldDirector;
-import deco2800.skyfall.worlds.world.World;
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.After;
 
-import static org.mockito.Mockito.*;
+import deco2800.skyfall.BaseGDXTest;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.worlds.world.WorldDirector;
+import deco2800.skyfall.worlds.world.WorldBuilder;
 
-public class BuildingWidgetsTest {
+public class BuildingWidgetsTest extends BaseGDXTest {
 
-    private GameManager gm;
     private BuildingWidgets widget;
 
     @Before
     public void setup() {
-        this.gm = GameManager.get();
-        WorldBuilder wb = new WorldBuilder();
-        WorldDirector.constructTestWorld(wb);
-        this.gm.setWorld(wb.getWorld());
+        WorldBuilder worldBuilder = new WorldBuilder();
+        WorldDirector.constructTestWorld(worldBuilder);
+        GameManager.get().setWorld(worldBuilder.getWorld());
+        widget = BuildingWidgets.get(GameManager.get());
     }
 
     @Test
-    public void OnlyOneWidgetTest() {
-        // so far no idea how to test
-        Assert.assertEquals(BuildingWidgets.class, BuildingWidgets.class);
+    public void testOnlyOneWidget() {
+        BuildingWidgets widget2 = BuildingWidgets.get(GameManager.get());
+        assertEquals(widget, widget2);
     }
 
-    @After
-    public void cleanup() {
-        this.gm = null;
-        this.widget = null;
+    @Test
+    public void testWidgetComponentSize() {
+        assertEquals(5, widget.getMenu().getChildren().size);
     }
 }

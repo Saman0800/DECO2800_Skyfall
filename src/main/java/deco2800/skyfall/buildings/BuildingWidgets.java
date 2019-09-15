@@ -65,7 +65,7 @@ public class BuildingWidgets {
      */
     public static BuildingWidgets get(GameManager gm) {
         if (instance == null) {
-            return new BuildingWidgets(gm);
+            instance = new BuildingWidgets(gm);
         }
         return instance;
     }
