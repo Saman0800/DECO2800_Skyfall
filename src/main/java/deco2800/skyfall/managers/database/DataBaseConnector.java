@@ -92,7 +92,6 @@ public class DataBaseConnector {
             Gson gson = new Gson();
 
             if (containsQueries.containsSave(saveId)) {
-                System.out.println("here2");
                 updateQueries.updateSave(saveId, gson.toJson(save.save()));
             } else {
                 insertQueries.insertSave(saveId, gson.toJson(save.save()));
@@ -105,7 +104,7 @@ public class DataBaseConnector {
             }
             saveMainCharacter(save.getMainCharacter());
         } catch (SQLException e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 
@@ -117,7 +116,6 @@ public class DataBaseConnector {
             Gson gson = new Gson();
 
             if (containsQueries.containsWorld(world.getSave().getSaveID(), world.getID())) {
-                System.out.println("here1");
                 updateQueries.updateWorld(world.getSave().getSaveID(), world.getID(),
                         world.getSave().getCurrentWorld().getID() == world.getID(), gson.toJson(world.save()));
             } else {
@@ -126,7 +124,6 @@ public class DataBaseConnector {
             }
 
             for (AbstractBiome biome : world.getBiomes()) {
-                System.out.println("here3");
                 if (containsQueries.containsBiome(biome.getBiomeID(), world.getID())) {
                     updateQueries.updateBiome(biome.getBiomeID(), world.getID(), biome.getBiomeName(), gson.toJson(biome.save()));
                 } else {
@@ -138,7 +135,6 @@ public class DataBaseConnector {
             // Save nodes
             for (WorldGenNode worldGenNode : world.getWorldGenNodes()) {
                 if (containsQueries.containsNode(world.getID(), worldGenNode.getX(), worldGenNode.getY())) {
-                    System.out.println("here4");
                     updateQueries.updateNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(),
                             gson.toJson(worldGenNode.save()), worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
                 } else {
@@ -150,7 +146,6 @@ public class DataBaseConnector {
             // Save beach edges
             for (VoronoiEdge voronoiEdge : world.getBeachEdges().keySet()) {
                 if (containsQueries.containsEdge(world.getID(), voronoiEdge.getID())) {
-                    System.out.println("here5");
                     updateQueries.updateEdges(world.getID(), voronoiEdge.getID(),
                             world.getBeachEdges().get(voronoiEdge).getBiomeID(),
                             gson.toJson(voronoiEdge.save()));

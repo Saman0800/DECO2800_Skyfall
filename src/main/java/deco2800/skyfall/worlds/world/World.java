@@ -132,7 +132,6 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         }
 
         System.out.println(DatabaseManager.get().getDataBaseConnector().started);
-        DatabaseManager.get().getDataBaseConnector().saveWorld(this);
 
         // Set this to null once generation is complete since using this after construction is likely not deterministic
         // due to ordering of events being affected by external factors like player movement. If you just want to
