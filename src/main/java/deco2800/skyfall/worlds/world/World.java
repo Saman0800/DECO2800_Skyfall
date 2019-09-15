@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.google.gson.Gson;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
+import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.SaveLoadInterface;
@@ -129,6 +130,9 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         for (AbstractEntity entity : worldParameters.getEntities()) {
             addEntity(entity);
         }
+
+        System.out.println(DatabaseManager.get().getDataBaseConnector().started);
+        DatabaseManager.get().getDataBaseConnector().saveWorld(this);
 
         // Set this to null once generation is complete since using this after construction is likely not deterministic
         // due to ordering of events being affected by external factors like player movement. If you just want to
@@ -507,7 +511,8 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
 
         // FIXME:Ontonator Check that this works.
         MainCharacter mc = MainCharacter.getInstance();
-        setLoadedArea(mc.getCol() - 50, mc.getRow() - 50, mc.getCol() + 50, mc.getRow() + 50);
+        int radius = 0;
+        setLoadedArea(mc.getCol() - radius, mc.getRow() - radius, mc.getCol() + radius, mc.getRow() + radius);
     }
 
     // TODO:Ontonator Why does this operate with an id?
