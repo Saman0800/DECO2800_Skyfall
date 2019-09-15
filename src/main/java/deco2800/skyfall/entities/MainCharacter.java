@@ -3,10 +3,6 @@ package deco2800.skyfall.entities;
 import com.badlogic.gdx.audio.Sound;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.spells.SpellFactory;
-import deco2800.skyfall.entities.structures.BuildingType;
-import deco2800.skyfall.entities.spells.SpellFactory;
-import deco2800.skyfall.entities.weapons.Sword;
-import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.entities.worlditems.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.Vector2;
@@ -47,7 +43,6 @@ public class MainCharacter extends Peon
     private List<Blueprint> blueprintsLearned;
 
     private BuildingFactory tempFactory;
-
 
     //The name of the item to be created.
     private String itemToCreate;
@@ -103,7 +98,6 @@ public class MainCharacter extends Peon
     private boolean isMoving;
     private boolean canSwim;
     private boolean isSprinting;
-    private float speedFactor;
 
     /*
      * Used for combat testing melee/range weapons.
@@ -142,7 +136,7 @@ public class MainCharacter extends Peon
     /**
      * The spell the user currently has selected to cast.
      */
-    private SpellType spellSelected = SpellType.NONE;
+    protected SpellType spellSelected = SpellType.NONE;
 
     /**
      * How much mana the character has available for spellcasting.
@@ -199,7 +193,6 @@ public class MainCharacter extends Peon
         vel = 0;
         velHistoryX = new ArrayList<>();
         velHistoryY = new ArrayList<>();
-        speedFactor = 60f / 30f;
 
         blueprintsLearned = new ArrayList<>();
         tempFactory = new BuildingFactory();
@@ -310,10 +303,8 @@ public class MainCharacter extends Peon
      *
      * @param mousePosition The position of the user's mouse.
      */
-    private void fireProjectile(HexVector mousePosition) {
-        //TODO: Call weapon.Attack(); and move this logic to the weapon.
+    protected void fireProjectile(HexVector mousePosition) {
         HexVector position = this.getPosition();
-
 
         setCurrentState(AnimationRole.ATTACK);
         SoundManager.playSound(BOWATTACK);
@@ -327,9 +318,6 @@ public class MainCharacter extends Peon
                 2,
                 0.1f,
                 this.itemSlotSelected == 1 ? 1 : 0);
-        // Get AbstractWorld from static class GameManager.
-        GameManager manager = GameManager.get();
-
         // Add the projectile entity to the game world.
         GameManager.get().getWorld().addEntity(projectile);
     }
@@ -347,7 +335,7 @@ public class MainCharacter extends Peon
         //Create the spell using the factory.
         Spell spell = SpellFactory.createSpell(spellType, mousePosition);
 
-        System.out.println(spellType.toString());
+        logger.info("Spell Case: " + spellType.toString());
 
         int manaCost = spell.getManaCost();
 
@@ -460,7 +448,8 @@ public class MainCharacter extends Peon
         if (this.healthBar != null) {
             this.healthBar.update(this.getHealth());
         }
-        System.out.println("Hurted: " + isRecovering);
+
+        logger.info("Hurted: " + isRecovering);
 
         if (!isRecovering) {
             setHurt(true);
@@ -502,6 +491,8 @@ public class MainCharacter extends Peon
                     case "North-West":
                         bounceBack = new HexVector(position.getCol() + 2, position.getRow() - 2);
                         break;
+                    default:
+                        break;
                 }
                 position.moveToward(bounceBack, 1f);
 
@@ -514,7 +505,7 @@ public class MainCharacter extends Peon
         hurtTime += 20; // hurt for 1 second
 
         if (hurtTime > 400) {
-            System.out.println("Hurt ended");
+            logger.info("Hurt ended");
             setHurt(false);
             setRecovering(true);
             hurtTime = 0;
@@ -543,7 +534,7 @@ public class MainCharacter extends Peon
 
     private void checkIfRecovered() {
         recoverTime += 20;
-        System.out.println("Character recovering");
+        logger.info("Character recovering");
         recoverTime += 20;
 
         this.changeCollideability(false);
@@ -560,10 +551,6 @@ public class MainCharacter extends Peon
      * has died and cannot do any actions in game anymore.
      */
     public void kill() {
-        // stop player controls
-        AnimationManager animationManager = GameManager.getManagerFromInstance(AnimationManager.class);
-
-
         // set health to 0.
         changeHealth(0);
 
@@ -579,7 +566,8 @@ public class MainCharacter extends Peon
     }
 
     /**
-     * @return if player is in the state of "hurt".
+     *
+     * @param isHurt the player's "hurt" status
      */
     public void setHurt(boolean isHurt) {
         this.isHurt = isHurt;
@@ -786,7 +774,7 @@ public class MainCharacter extends Peon
 
     @Override
     public void handleCollision(Object other) {
-
+        //Put specific collision logic here
     }
 
 
@@ -806,7 +794,6 @@ public class MainCharacter extends Peon
      */
     @Override
     public void notifyKeyDown(int keycode) {
-        GoldPiece g = new GoldPiece(5);
         //player cant move when paused
         if (GameManager.getPaused()) {
             return;
@@ -851,7 +838,6 @@ public class MainCharacter extends Peon
                 break;
             default:
                 switchItem(keycode);
-                //xInput += 1;
                 break;
         }
     }
@@ -902,6 +888,8 @@ public class MainCharacter extends Peon
                 break;
             case Input.Keys.M:
                 break;
+            default:
+                break;
         }
     }
 
@@ -948,7 +936,7 @@ public class MainCharacter extends Peon
      *
      * @return The contents of the Main Character's gold pouch
      */
-    public HashMap<Integer, Integer> getGoldPouch() {
+    public Map<Integer, Integer> getGoldPouch() {
         return new HashMap<>(goldPouch);
     }
 
@@ -1168,6 +1156,11 @@ public class MainCharacter extends Peon
      */
     private String getPlayerDirectionCardinal() {
         double playerDirectionAngle = getPlayerDirectionAngle();
+        playerDirectionAngle = 90 - Math.toDegrees(playerDirectionAngle);
+
+        if (playerDirectionAngle < 0) {
+            playerDirectionAngle += 360;
+        }
         if (playerDirectionAngle <= 22.5 || playerDirectionAngle >= 337.5) {
             setCurrentDirection(Direction.NORTH);
             return "North";
@@ -1226,7 +1219,7 @@ public class MainCharacter extends Peon
     public List<Float> getVelocity() {
         ArrayList<Float> velocity = new ArrayList<>();
         velocity.add(getBody().getLinearVelocity().x);
-        velocity.add(getBody().getLinearVelocity().x);
+        velocity.add(getBody().getLinearVelocity().y);
         velocity.add((float) vel);
         return velocity;
     }
@@ -1390,6 +1383,8 @@ public class MainCharacter extends Peon
 
                         case "Castle":
                             tempFactory.createCastle(this.getCol(), this.getRow());
+                            break;
+                        default:
                             break;
                     }
 

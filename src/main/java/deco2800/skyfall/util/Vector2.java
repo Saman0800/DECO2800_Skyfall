@@ -67,7 +67,7 @@ public class Vector2 {
     /**
      * Equals Method returns true iff the two objects are equal 
      * based on their X and Y Value.
-     * @return 
+     * @return true if the two objects are the same, false otherwise
      */
     @Override
     public boolean equals(Object obj) {

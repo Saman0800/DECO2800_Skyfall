@@ -8,8 +8,6 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.graphics.types.*;
 import deco2800.skyfall.graphics.*;
-import java.lang.Math;
-import deco2800.skyfall.util.WorldUtil;
 import java.util.Random;
 
 public class TikiTorch extends StaticEntity implements HasPointLight {

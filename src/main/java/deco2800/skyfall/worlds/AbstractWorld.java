@@ -357,7 +357,7 @@ public abstract class AbstractWorld {
 
     /**
      * Returns the seed used in the world
-     * @return
+     * @return the seed of the world
      */
     public long getSeed() {
         return seed;

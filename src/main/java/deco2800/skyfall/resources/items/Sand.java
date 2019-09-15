@@ -2,8 +2,6 @@ package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.NaturalResources;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.worlds.Tile;
 
 /**
  * A class representing a Sand Natural Resource item
