@@ -448,12 +448,21 @@ public class EnvironmentManager extends TickableManager {
     }
 
     /**
-     * Gets current biome player is in
+     * The weather event that is happening
      *
-     * @return String Current biome of player, or null if player is moving between tiles
+     * @return String The current weather event
      */
-    public static String currentWeather() {
+    public String getcurrentWeather() {
         return weather;
+    }
+
+    /**
+     * Sets a weather event
+     *
+     * @param event the weather event to occur
+     */
+    public void setWeather(String event) {
+        weather = event;
     }
 
     /**
@@ -519,7 +528,7 @@ public class EnvironmentManager extends TickableManager {
         // Set Background music as per the specific biome and TOD
         setBiome();
         setTODMusic();
-        currentWeather();
+        getcurrentWeather();
 
         // Key mapping to mute volume
         // M for mute and U to un-mute
