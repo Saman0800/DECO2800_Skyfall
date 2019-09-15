@@ -55,7 +55,7 @@ public class InsertDataQueries {
         statement.executeUpdate(query);
     }
 
-    public void insertEntity(String type, double x, double y, int chunkX, int chunkY, int worldId, String data, long entityId) throws SQLException {
+    public void insertEntity(String type, double x, double y, int chunkX, int chunkY, long worldId, String data, long entityId) throws SQLException {
         String query = String.format("insert into ENTITIES (type, x, y, chunk_x, chunk_y, world_id, data, entity_id) values (%s,"
                 + "%s,%s,%s,%s,%s,'%s')", type, x, y, chunkX, chunkY, worldId, data, entityId);
         statement.executeUpdate(query);

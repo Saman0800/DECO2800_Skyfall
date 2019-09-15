@@ -25,7 +25,7 @@ public class WeaponManagerTest {
      * Sets up all variables to be used for testing
      */
     public void setup() {
-        testCharacter = new MainCharacter(0f, 0f,
+        testCharacter = MainCharacter.getInstance(0f, 0f,
                 0.05f, "Main Piece", 10);
 
         testWeaponManager = new WeaponManager();

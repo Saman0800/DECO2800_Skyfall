@@ -26,18 +26,26 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
     private MainCharacter mainCharacter;
 
     /**
+     * Constructor for a save without parameters
+     */
+    public Save() {
+        this(new ArrayList<>(), null, null);
+    }
+
+    /**
      * Constructor for a save state
      *
      * @param worlds The worlds in the save state
      * @param mainCharacter The main character in this save state
      */
-    public Save(List<World> worlds, MainCharacter mainCharacter) {
+    public Save(List<World> worlds, MainCharacter mainCharacter, World currentWorld) {
         // FIXME: this may break if a save is stored for ~293+ years
         this.saveID = System.nanoTime();
 
         this.worlds = worlds;
 
         this.mainCharacter = mainCharacter;
+        this.currentWorld = currentWorld;
     }
 
     public Save(SaveMemento saveMemento) {
@@ -77,6 +85,15 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
         return this.mainCharacter;
     }
 
+    /**
+     * Sets the current world
+     *
+     * @param currentWorld the current world
+     */
+    public void setCurrentWorld(World currentWorld) {
+        this.currentWorld = currentWorld;
+    }
+
     public void setMainCharacter(MainCharacter mainCharacter) {
         this.mainCharacter = mainCharacter;
     }
@@ -100,9 +117,11 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
      */
     public class SaveMemento extends AbstractMemento {
         private long saveID;
+        private long currentWorld;
 
         private SaveMemento(Save save) {
-            saveID = save.getSaveID();
+            this.saveID = save.getSaveID();
+            this.currentWorld = save.currentWorld.getID();
         }
 
     }

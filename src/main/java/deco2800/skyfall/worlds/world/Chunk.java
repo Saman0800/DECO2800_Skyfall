@@ -3,7 +3,6 @@ package deco2800.skyfall.worlds.world;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.BowMan;
 import deco2800.skyfall.saving.AbstractMemento;
-import deco2800.skyfall.saving.SaveException;
 import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
 import deco2800.skyfall.entities.worlditems.EntitySpawnTable;

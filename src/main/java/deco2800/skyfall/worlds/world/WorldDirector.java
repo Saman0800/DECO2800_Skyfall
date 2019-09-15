@@ -65,7 +65,9 @@ public class WorldDirector {
 
         builder.setStaticEntities(true);
 
-        MainCharacter mainCharacter = new MainCharacter(0,0,0.05f, "Main Piece", 10);
+        MainCharacter mainCharacter = MainCharacter.getInstance(0,0,0.05f, "Main Piece", 10);
+        mainCharacter.setCol(0);
+        mainCharacter.setRow(0);
 
         builder.addEntity(mainCharacter);
         GameManager.getManagerFromInstance(GameMenuManager.class).setMainCharacter(mainCharacter);
@@ -85,7 +87,9 @@ public class WorldDirector {
      */
     public static void constructTutorialWorld(WorldBuilder builder){
 
-        MainCharacter mainCharacter = new MainCharacter(0,0,0.05f, "Main Piece", 10);
+        MainCharacter mainCharacter = MainCharacter.getInstance(0,0,0.05f, "Main Piece", 10);
+        mainCharacter.setCol(0);
+        mainCharacter.setRow(0);
 
         builder.addEntity(mainCharacter);
         GameManager.getManagerFromInstance(GameMenuManager.class).setMainCharacter(mainCharacter);
@@ -104,7 +108,6 @@ public class WorldDirector {
         builder.setSeed(2);
         builder.setStaticEntities(true);
         builder.addEntity(new Spider(-4f, -1f));
-        builder.addEntity(new MainCharacter(0f,0f,0.05f, "Main Piece", 10));
         builder.addBiome(new ForestBiome(random), 20);
         builder.addBiome(new DesertBiome(random), 20);
         builder.addBiome(new MountainBiome(random), 20);

@@ -30,7 +30,8 @@ public class StatisticsManagerTest {
      * Set up all test variables
      */
     public void setUp() {
-        testCharacter1 = new MainCharacter(4, 4,
+
+        testCharacter1 = MainCharacter.getInstance(4, 4,
                 0.5f, "Side Piece", 10);
         testManager = new StatisticsManager(this.testCharacter1);
         testEnemy1 = new Enemy(1,1,"SpiderAnimation.png",

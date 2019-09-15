@@ -35,7 +35,6 @@ public class DataBaseConnector {
     }
 
     public void start(){
-        System.out.println(String.format("%s", true));
         try {
             //Connects to the data base
             Driver derbyData = new EmbeddedDriver();
@@ -95,7 +94,6 @@ public class DataBaseConnector {
     public void saveGame(Save save) throws SQLException{
         //Given a save game
         long saveId = save.getSaveID();
-
         Statement statement = connection.createStatement();
 
         InsertDataQueries insertQueries = new InsertDataQueries(statement);
@@ -125,12 +123,14 @@ public class DataBaseConnector {
 
         // Save nodes
         for (WorldGenNode worldGenNode : world.getWorldGenNodes()) {
+            System.out.println("here1");
             insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(),
                     gson.toJson(worldGenNode.save()), worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
         }
 
         // Save beach edges
         for (VoronoiEdge voronoiEdge : world.getBeachEdges().keySet()) {
+            System.out.println("here2");
             insertQueries.insertEdges(world.getID(), voronoiEdge.getID(),
                     world.getBeachEdges().get(voronoiEdge).getBiomeID(),
                     gson.toJson(voronoiEdge.save()));
@@ -144,6 +144,7 @@ public class DataBaseConnector {
         }
 
         for (Chunk chunk : world.getLoadedChunks().values()) {
+            System.out.println("here3");
             saveChunk(chunk, world);
         }
 
@@ -173,7 +174,7 @@ public class DataBaseConnector {
         for (AbstractEntity entity : chunk.getEntities()) {
             if (entity instanceof StaticEntity) {
                 insertQueries.insertEntity(((StaticEntity)entity).getEntityType(), entity.getCol(), entity.getRow(),
-                        chunk.getX(), chunk.getY(), world.getID(), gson.toJson(((StaticEntity)entity).save()));
+                        chunk.getX(), chunk.getY(), world.getID(), gson.toJson(((StaticEntity)entity).save()), entity.getEntityID());
             }
         }
 

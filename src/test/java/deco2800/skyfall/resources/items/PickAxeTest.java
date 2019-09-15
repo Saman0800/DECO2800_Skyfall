@@ -23,7 +23,7 @@ public class PickAxeTest {
 
     @Before
     public void setUp() {
-        owner = new MainCharacter(1f, 1f, 0.05f, "player", 100);
+        owner = MainCharacter.getInstance(1f, 1f, 0.05f, "player", 100);
         position = new HexVector(1f, 1f);
         pickAxe = new PickAxe(owner, position);
         testTile = new Tile(1f, 1f);

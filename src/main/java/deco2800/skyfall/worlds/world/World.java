@@ -718,8 +718,22 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         return new Gson().toJson(this);
     }
 
+    /**
+     * Gets the id of this world
+     *
+     * @return the id of this world
+     */
     public long getID() {
         return this.id;
+    }
+
+    /**
+     * Sets the save for this world
+     *
+     * @param save the save for this world
+     */
+    public void setSave(Save save) {
+        this.save = save;
     }
 
     @Override

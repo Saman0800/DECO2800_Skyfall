@@ -8,15 +8,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import deco2800.skyfall.buildings.BuildingFactory;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gamemenu.GameMenuScreen;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.Peon;
 import deco2800.skyfall.handlers.KeyboardManager;
 import deco2800.skyfall.managers.*;
+import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.renderers.OverlayRenderer;
 import deco2800.skyfall.renderers.Renderer3D;
+import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.worlds.*;
 import deco2800.skyfall.managers.EnvironmentManager;
 
@@ -25,6 +28,8 @@ import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.sql.SQLException;
 
 public class GameScreen implements Screen,KeyDownObserver {
 	private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
@@ -37,6 +42,7 @@ public class GameScreen implements Screen,KeyDownObserver {
     Renderer3D renderer = new Renderer3D();
     OverlayRenderer rendererDebug = new OverlayRenderer();
     World world;
+    Save save;
     static Skin skin;
 
     /**
@@ -59,6 +65,9 @@ public class GameScreen implements Screen,KeyDownObserver {
         /* Create an example world for the engine */
         this.game = game;
 
+        this.save = new Save();
+        MainCharacter.getInstance(0,0,0.05f, "Main Piece", 10);
+        MainCharacter.getInstance().setSave(this.save);
         GameManager gameManager = GameManager.get();
         GameMenuManager gameMenuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
         gameMenuManager.setStage(stage);
@@ -85,6 +94,9 @@ public class GameScreen implements Screen,KeyDownObserver {
 
                 //Creating the world
                 world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 4).getWorld();
+                save.getWorlds().add(world);
+                save.setCurrentWorld(world);
+                world.setSave(save);
 			}
 			GameManager.get().getManager(NetworkManager.class).startHosting("host");
 		}
@@ -252,6 +264,10 @@ public class GameScreen implements Screen,KeyDownObserver {
             //Create a random world
             world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 4).getWorld();
 
+            // Add this world to the save
+            save.getWorlds().add(world);
+            save.setCurrentWorld(world);
+            world.setSave(save);
 
             AbstractEntity.resetID();
             Tile.resetID();
@@ -286,6 +302,22 @@ public class GameScreen implements Screen,KeyDownObserver {
         if (keycode == Input.Keys.F4) { // F4
             // Load the world to the DB
             DatabaseManager.loadWorld(null);
+        }
+
+        if (keycode == Input.Keys.P) {
+            DataBaseConnector dataBaseConnector = new DataBaseConnector();
+            dataBaseConnector.start();
+            try {
+                dataBaseConnector.saveGame(save);
+            } catch (SQLException ignored) {
+
+            }
+            dataBaseConnector.close();
+            // TODO:dannathan Save
+        }
+
+        if (keycode == Input.Keys.O) {
+            // TODO:dannathan Load
         }
     }
 

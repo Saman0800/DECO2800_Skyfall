@@ -64,7 +64,7 @@ public class MainCharacterTest {
      * Sets up all variables to be used for testing
      */
     public void setup() {
-        testCharacter = new MainCharacter(0f, 0f, 0.05f, "Main Piece", 10);
+        testCharacter = MainCharacter.getInstance();
 
         // Weapons being used for testing
         sword = new Weapon("sword", "melee", "slash", 3, 5, 6);

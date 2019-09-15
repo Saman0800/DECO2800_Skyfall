@@ -8,7 +8,6 @@ import java.util.Collections;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import deco2800.skyfall.saving.AbstractMemento;
-import deco2800.skyfall.saving.SaveException;
 import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.world.Chunk;
 import org.slf4j.Logger;

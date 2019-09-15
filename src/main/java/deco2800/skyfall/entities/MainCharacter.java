@@ -16,13 +16,13 @@ import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Save;
-import deco2800.skyfall.saving.SaveException;
 import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.util.*;
 import deco2800.skyfall.worlds.Tile;
 import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.applet.Main;
 
 import java.io.*;
 import java.util.*;
@@ -33,8 +33,49 @@ import java.util.*;
 public class MainCharacter extends Peon
         implements KeyDownObserver, KeyUpObserver, TouchDownObserver, Tickable, Animatable, Saveable<MainCharacter.MainCharacterMemento> {
 
+    private static MainCharacter mainCharacterInstance = null;
+
+    public static MainCharacter getInstance(float col, float row, float speed, String name, int health, String[] textures) {
+        if (mainCharacterInstance == null) {
+            mainCharacterInstance = new MainCharacter(col, row, speed, name, health, textures);
+        }
+        return mainCharacterInstance;
+    }
+
+    public static MainCharacter getInstance(float col, float row, float speed, String name, int health) {
+        if (mainCharacterInstance == null) {
+            mainCharacterInstance = new MainCharacter(col, row, speed, name, health);
+        }
+        return mainCharacterInstance;
+    }
+
+    public static MainCharacter getInstance() {
+        if (mainCharacterInstance == null) {
+            mainCharacterInstance = new MainCharacter(0,0,0.05f, "Main Piece", 10);
+        }
+        return mainCharacterInstance;
+    }
+
+    public static MainCharacter loadMainCharacter(MainCharacterMemento memento, Save save) {
+        if (mainCharacterInstance == null) {
+            mainCharacterInstance = new MainCharacter(memento, save);
+        } else {
+            mainCharacterInstance.load(memento);
+        }
+        return mainCharacterInstance;
+    }
+
     // The id of the character for storing in a database
     private long id;
+
+    /**
+     * Sets the save of the main character
+     *
+     * @param save the save of the main character
+     */
+    public void setSave(Save save) {
+        this.save = save;
+    }
 
     // The save file of this character
     private Save save;
@@ -155,7 +196,7 @@ public class MainCharacter extends Peon
      *
      * @param memento the memento to load the character from
      */
-    public MainCharacter(MainCharacterMemento memento, Save save) {
+    private MainCharacter(MainCharacterMemento memento, Save save) {
         this.load(memento);
         this.save = save;
     }
@@ -163,8 +204,8 @@ public class MainCharacter extends Peon
     /**
      * Base Main Character constructor
      */
-    public MainCharacter(float col, float row, float speed, String name, int health) {
-        // TODO:dannathan assign save
+    private MainCharacter(float col, float row, float speed, String name, int health) {
+
         super(row, col, speed, name, health);
         this.id = System.nanoTime();
         this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
@@ -228,7 +269,7 @@ public class MainCharacter extends Peon
      *                 4 = South-West
      *                 5 = North-West
      */
-    public MainCharacter(float col, float row, float speed, String name, int health, String[] textures) {
+    private MainCharacter(float col, float row, float speed, String name, int health, String[] textures) {
         this(row, col, speed, name, health);
         this.setTexture(textures[2]);
     }
