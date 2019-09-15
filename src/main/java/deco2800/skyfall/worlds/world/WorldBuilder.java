@@ -2,6 +2,7 @@ package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.ChestManager;
+import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.resources.LootRarity;
 import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.entities.worlditems.*;
@@ -149,22 +150,20 @@ public class WorldBuilder implements WorldBuilderInterface {
         this.staticEntities = staticEntities;
     }
 
-    // FIXME:Ontonator Make this work with chunks.
-    public void spawnChests(int num, Tile startTile, AbstractBiome biome, World world) {
+    public void spawnChests(AbstractBiome biome, World world, List<EntitySpawnRule> biomeSpawnRules) {
         // Spawn chests
-        Random random = new Random();
-        for (int i = 0; i < num; i++) {
-            Chest chest = new Chest(startTile, true, ChestManager.generateRandomLoot(random.nextInt(10) + 5, LootRarity.LEGENDARY));
-            EntitySpawnRule chestRule = new EntitySpawnRule(0.04, 0, 1, biome);
-            EntitySpawnTable.spawnEntities(chest, chestRule, world);
-        }
+        // FIXME:Ontonator Adjust weighting.
+        EntitySpawnRule chestRule = new EntitySpawnRule(tile -> new Chest(tile, true, ChestManager.generateRandomLoot(
+                (int) Math.floor(NoiseGenerator.fade(world.getStaticEntityNoise()
+                                                             .getOctavedPerlinValue(tile.getCol(), tile.getRow()), 2)) +
+                        5, LootRarity.LEGENDARY)), 0.04, 0, 1, biome);
+        biomeSpawnRules.add(chestRule);
     }
 
-    // FIXME:Ontonator Make this work with chunks.
-    public void spawnBlueprintShop(Tile startTile, AbstractBiome biome, World world) {
-        BlueprintShop blueprintShop = new BlueprintShop(startTile, true);
-        EntitySpawnRule chestRule = new EntitySpawnRule(0.04, 0, 1, biome);
-        EntitySpawnTable.spawnEntities(blueprintShop, chestRule, world);
+    public void spawnBlueprintShop(AbstractBiome biome, List<EntitySpawnRule> biomeSpawnRules) {
+        // FIXME:Ontonator Adjust weighting.
+        EntitySpawnRule chestRule = new EntitySpawnRule(tile -> new BlueprintShop(tile, true), 0.04, 0, 1, biome);
+        biomeSpawnRules.add(chestRule);
     }
 
     /**
@@ -218,7 +217,7 @@ public class WorldBuilder implements WorldBuilderInterface {
                     biomeSpawnRules.add(rockRule);
 
                     // FIXME:Ontonator Make this work with chunks.
-                    spawnChests(10, startTile, biome, world);
+                    spawnChests(biome, world, biomeSpawnRules);
 
                     // This generator will cause the mushrooms to clump togteher more
                     NoiseGenerator mushroomGen = new NoiseGenerator(new Random(worldSeed).nextLong(), 10, 20, 0.9);
@@ -242,7 +241,7 @@ public class WorldBuilder implements WorldBuilderInterface {
                     biomeSpawnRules.add(mTreeControl);
 
                     // FIXME:Ontonator Make this work with chunks.
-                    spawnChests(10, startTile, biome, world);
+                    spawnChests(biome, world, biomeSpawnRules);
 
                     // Create a new perlin noise map
                     // Create a new perlin noise map
