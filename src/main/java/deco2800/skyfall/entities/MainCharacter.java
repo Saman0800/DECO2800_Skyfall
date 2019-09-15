@@ -166,7 +166,7 @@ public class MainCharacter extends Peon
      * Base Main Character constructor
      */
     public MainCharacter(float col, float row, float speed, String name, int health) {
-        super(row, col, speed, name, health);
+        super(row, col, speed, name, health, "MainCharacter");
         this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
         this.setHeight(1);
         this.setObjectName("MainPiece");
@@ -213,7 +213,7 @@ public class MainCharacter extends Peon
 
         isSprinting = false;
         equipped = "no_weapon";
-        canSwim = true;
+        canSwim = false;
         this.scale = 0.4f;
         setDirectionTextures();
         configureAnimations();

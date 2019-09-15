@@ -55,14 +55,6 @@ public class ScrollingTextBox extends AbstractGui {
         guiImage.setHeight(guiGroup.getHeight());
         guiImage.setScaling(Scaling.stretch);
 
-        // Portrait for the scrolling text box
-        guiPortrait =
-                new Image(GameManager.get().getManager(TextureManager.class).getTexture("Karen"));
-        guiPortrait.setWidth(100);
-        guiPortrait.setPosition(0, -guiGroup.getHeight());
-        guiPortrait.setHeight(guiGroup.getHeight());
-        guiPortrait.setScaling(Scaling.stretch);
-
         // Label for the text
         guiLabel = new Label("", guiLabelStyle);
         guiLabel.setWrap(true);
@@ -73,7 +65,6 @@ public class ScrollingTextBox extends AbstractGui {
         // Add all the gui elements
         guiGroup.addActor(guiImage);
         guiGroup.addActor(guiLabel);
-        guiGroup.addActor(guiPortrait);
 
         GameManager.get().getStage().addActor(guiGroup);
     }
