@@ -754,6 +754,7 @@ public class MainCharacter extends Peon
          * Sets the appropriate movement flags to true on keyDown
          * @param keycode the key being pressed
          */
+        boolean petout = false;
         @Override
         public void notifyKeyDown ( int keycode){
             GoldPiece g = new GoldPiece(5);
@@ -800,7 +801,10 @@ public class MainCharacter extends Peon
                     selectSpell(SpellType.TORNADO);
                     break;
                 case Input.Keys.V:
-                    petOut();
+                    if(!petout){
+                        petOut();
+                        petout = true;
+                    }
                     break;
                 default:
                     switchItem(keycode);
