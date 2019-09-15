@@ -255,11 +255,16 @@ public class DataBaseConnector {
 //        World world = new World(gson.fromJson(result.getString(4), World.WorldMemento.class), save);
 //    }
 
+    /**
+     * Load the game
+     *
+     * @return loads the most recent save
+     */
     public Save loadGame() {
         try {
             Gson gson = new Gson();
             connection.setAutoCommit(false);
-            // TODO:dannathan make this work for any savefile
+            // TODO:dannathan make this work for any savefile, not just the most recent
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM SAVES");
             ResultSet result = preparedStatement.executeQuery();
             if (!result.next()) {
@@ -286,6 +291,8 @@ public class DataBaseConnector {
         }
     }
 
+    // TODO:dannathan
+    /*
     public void loadMainCharacter(Save save) throws SQLException, LoadException {
         Gson gson = new Gson();
         connection.setAutoCommit(false);
@@ -303,7 +310,17 @@ public class DataBaseConnector {
         connection.setAutoCommit(true);
         save.setMainCharacter(MainCharacter.getInstance());
     }
+    */
 
+    /**
+     * Loads the world of a save
+     *
+     * @param save the save to load from
+     * @param saveMemento the memento of the save
+     * @return the save's current world
+     * @throws SQLException If there is unexpected behaviour with the SQL queries
+     * @throws LoadException If the save cannot construct a valid world
+     */
     public World loadWorlds(Save save, Save.SaveMemento saveMemento) throws SQLException, LoadException {
         Gson gson = new Gson();
         connection.setAutoCommit(false);
@@ -342,10 +359,17 @@ public class DataBaseConnector {
         return currentWorld;
     }
 
+    /**
+     * Loads the biomes in a world being loaded
+     *
+     * @param world the world being loaded
+     * @return A list of biomes in the world
+     * @throws SQLException If there is unexpected behaviour with the SQL queries
+     * @throws LoadException If the save cannot construct a valid world
+     */
     public List<AbstractBiome> loadBiomes(World world) throws SQLException, LoadException {
         Gson gson = new Gson();
         connection.setAutoCommit(false);
-        // TODO:dannathan make this work for any savefile
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM biomes WHERE world_id = ?");
         preparedStatement.setLong(1, world.getID());
         ResultSet result = preparedStatement.executeQuery();
@@ -464,6 +488,15 @@ public class DataBaseConnector {
         return nodes;
     }
 
+    /**
+     * Loads the beach edges of a world
+     *
+     * @param world the world being loaded
+     * @param biomes the biomes in the world
+     * @return a mapping from edges to beach biomes
+     * @throws SQLException If there is unexpected behaviour with the SQL queries
+     * @throws LoadException If the save cannot construct a valid world
+     */
     public LinkedHashMap<VoronoiEdge, BeachBiome> loadBeachEdges(World world, List<AbstractBiome> biomes) throws SQLException, LoadException {
         Gson gson = new Gson();
         connection.setAutoCommit(false);
@@ -507,6 +540,15 @@ public class DataBaseConnector {
         return edges;
     }
 
+    /**
+     * Loads the river edges of a world
+     *
+     * @param world the world being loaded
+     * @param biomes the biomes in the world
+     * @return a mapping from edges to river biomes
+     * @throws SQLException If there is unexpected behaviour with the SQL queries
+     * @throws LoadException If the save cannot construct a valid world
+     */
     public LinkedHashMap<VoronoiEdge, RiverBiome> loadRiverEdges(World world, List<AbstractBiome> biomes) throws SQLException, LoadException {
         Gson gson = new Gson();
         connection.setAutoCommit(false);
