@@ -2,6 +2,8 @@ package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.audio.Sound;
 import deco2800.skyfall.buildings.BuildingFactory;
+import deco2800.skyfall.entities.pets.AbstractPet;
+import deco2800.skyfall.entities.pets.Dragon;
 import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.structures.BuildingType;
 import deco2800.skyfall.entities.spells.SpellFactory;
@@ -797,13 +799,32 @@ public class MainCharacter extends Peon
                 case Input.Keys.C:
                     selectSpell(SpellType.TORNADO);
                     break;
+                case Input.Keys.V:
+                    petOut();
+                    break;
                 default:
                     switchItem(keycode);
                     //xInput += 1;
                     break;
             }
         }
-
+        public void petOut(){
+            List<Item> items=this.inventories.getInventoryContents().get("dragon");
+            if(items!=null){
+                for(Item item:items){
+                    if(item instanceof AbstractPet){
+                        Dragon d=(Dragon)item;
+                        if(!d.getOutSide()){
+                            System.out.println("hello");
+                            this.inventories.quickAccessRemove("dragon");
+                            AbstractPet dragon=new Dragon(this.getCol()-2,this.getRow()-2,this);
+                            ((Dragon) dragon).setDomesticated(true);
+                            GameManager.get().getWorld().addEntity(dragon);
+                        }
+                    }
+                }
+            }
+        }
         /**
          * Select the spell that the character is ready to cast.
          * When they next click attack, this spell will cast.
@@ -847,6 +868,8 @@ public class MainCharacter extends Peon
                 case Input.Keys.G:
                     break;
                 case Input.Keys.M:
+                    break;
+                case Input.Keys.V:
                     break;
             }
         }
