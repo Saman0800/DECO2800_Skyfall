@@ -287,7 +287,7 @@ public class TextureManager extends AbstractManager {
             //TODO fix the issue where tiles are not getting added to lakes correctly,
             //Temporary fix is just to assign tiles without a texture the lake texture so that the
             //issue isn't as noticable
-            return textureMap.get("lake_1");
+            return textureMap.get("lake1.1");
         }
 
     }

@@ -146,7 +146,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 growOcean();
                 fillGaps();
                 generateLakes(lakeSizes, noLakes);
-                populateRealBiomes();
+                //populateRealBiomes();
                 generateBeaches();
                 // FIXME:Ontonator Check that this still works.
                 generateRivers(noRivers, voronoiEdges);

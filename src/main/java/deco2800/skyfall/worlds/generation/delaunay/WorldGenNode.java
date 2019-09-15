@@ -244,7 +244,6 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
         // TODO Make this more efficient by looping through only the tiles within the rectangle containing this node
         //  and stop on the first tile inside the border. Start iterating from the middle, which is more likely to
         //  be within the node.
-
         NoiseGenerator xGen = Tile.getXNoiseGen();
         NoiseGenerator yGen = Tile.getYNoiseGen();
         List<WorldGenNode> tempNodes = new ArrayList<>(nodes);
@@ -503,7 +502,6 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
         for (int i = 0; i < nodes.size(); i++) {
             WorldGenTriangle triangle =
                     triangleSoup.findContainingTriangle(nodes.get(i));
-
             if (triangle == null) {
                 // If no containing triangle exists, then the vertex is not
                 // inside a triangle (this can also happen due to numerical

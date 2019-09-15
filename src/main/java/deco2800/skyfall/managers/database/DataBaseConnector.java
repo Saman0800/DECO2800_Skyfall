@@ -130,7 +130,7 @@ public class DataBaseConnector {
 
 
         for (VoronoiEdge voronoiEdge : world.getBeachEdges().keySet()) {
-            insertQueries.insertEdges();
+            //insertQueries.insertEdges();
         }
 
 

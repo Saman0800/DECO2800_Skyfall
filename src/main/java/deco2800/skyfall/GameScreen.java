@@ -84,7 +84,7 @@ public class GameScreen implements Screen,KeyDownObserver {
             } else {
 
                 //Creating the world
-                world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 1).getWorld();
+                world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 4).getWorld();
 			}
 			GameManager.get().getManager(NetworkManager.class).startHosting("host");
 		}
@@ -250,7 +250,7 @@ public class GameScreen implements Screen,KeyDownObserver {
         if (keycode == Input.Keys.F5) {
 
             //Create a random world
-            world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 1).getWorld();
+            world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 4).getWorld();
 
 
             AbstractEntity.resetID();

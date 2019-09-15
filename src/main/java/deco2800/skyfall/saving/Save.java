@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A class that stores all aspects of the game that require saving
+ * A class that stores all aspects of the game that require saving. An instance
+ * of this class represents a single save file
  */
 public class Save implements Saveable<Save.SaveMemento>, Serializable {
 
@@ -18,11 +19,9 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
     // The worlds in this save
     private List<World> worlds;
 
-
+    // The world the player is currently in
     private World currentWorld;
 
-
-    // TODO delete
     // The ID of the main character in this save
     private MainCharacter mainCharacter;
 

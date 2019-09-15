@@ -15,6 +15,7 @@ import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.saving.AbstractMemento;
+import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.saving.SaveException;
 import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.util.*;
@@ -34,6 +35,9 @@ public class MainCharacter extends Peon
 
     // The id of the character for storing in a database
     private long id;
+
+    // The save file the character is in
+    private Save save;
 
     private final Logger logger = LoggerFactory.getLogger(MainCharacter.class);
 
@@ -151,14 +155,16 @@ public class MainCharacter extends Peon
      *
      * @param memento the memento to load the character from
      */
-    public MainCharacter(MainCharacterMemento memento) {
+    public MainCharacter(MainCharacterMemento memento, Save save) {
         this.load(memento);
+        this.save = save;
     }
 
     /**
      * Base Main Character constructor
      */
     public MainCharacter(float col, float row, float speed, String name, int health) {
+        // TODO:dannathan assign save
         super(row, col, speed, name, health);
         this.id = System.nanoTime();
         this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
@@ -1285,6 +1291,9 @@ public class MainCharacter extends Peon
         this.foodAccum = memento.foodAccum;
         this.goldPouch = memento.goldPouch;
         this.blueprintsLearned = memento.blueprints;
+        this.inventories = memento.inventory;
+        this.weapons = memento.weapons;
+        this.hotbar = memento.hotbar;
     }
 
     class MainCharacterMemento extends AbstractMemento {
@@ -1304,13 +1313,8 @@ public class MainCharacter extends Peon
 
         private List<String> blueprints;
 
-        // TODO implement
-        private AbstractMemento entityMemento;
-
         public MainCharacterMemento(MainCharacter character) throws SaveException {
-            // FIXME
-            this.saveID = saveInfo.getSaveID();
-
+            this.saveID = character.save.getSaveID();
             this.mainCharacterID = character.id;
             this.equippedItem = character.equipped_item;
             this.level = character.level;

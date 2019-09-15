@@ -47,13 +47,13 @@ public class WorldDirector {
 
         for (int i = 0; i < n; i++) {
             // builder.addBiome(choices.remove(random.nextInt(choices.size())), 40);
-            builder.addBiome(choices.remove(random.nextInt(choices.size())), 100);
+            builder.addBiome(choices.remove(random.nextInt(choices.size())), 25);
         }
 
         // builder.setWorldSize(160);
-        builder.setWorldSize(1200);
+        builder.setWorldSize(300);
         // builder.setNodeSpacing(15);
-        builder.setNodeSpacing(30);
+        builder.setNodeSpacing(25);
         builder.setSeed(random.nextInt());
 
         builder.addLake(5);

@@ -77,19 +77,16 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
 
     private Save save;
 
-
-
-
-
-
     /**
      * The constructor for a world being loaded from a memento
      *
      * @param memento the memento to load from
+     * @param save the save file this world is in
      */
-    public World(WorldMemento memento) {
+    public World(WorldMemento memento, Save save) {
         this.load(memento);
-        // TODO nodes and edges
+        this.save = save;
+        // TODO:dannathan nodes and edges
     }
 
     /**
@@ -98,7 +95,7 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
      */
     public World(WorldParameters worldParameters){
         // TODO:Ontonator Consider whether `worldSize` must be a multiple of `CHUNK_SIDE_LENGTH`.
-
+        // TODO:dannathan add the world to a save
         this.id = System.nanoTime();
         this.worldParameters = worldParameters;
 
@@ -118,6 +115,7 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         loadedChunks = new HashMap<>();
 
         generateWorld();
+
         generateTileIndices();
         initialiseFrictionmap();
     }
