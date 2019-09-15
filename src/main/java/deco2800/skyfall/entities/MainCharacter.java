@@ -50,7 +50,19 @@ public class MainCharacter extends Peon
 
     private BuildingFactory tempFactory;
 
-
+    /**
+     * Please feel free to change, this is not accurate as to the stages of
+     * the game
+     */
+    public enum GameStage {
+        FOREST,
+        MOUNTAIN,
+        ICE,
+        LAVA,
+        RIVER,
+        VALLEY,
+        GRAVEYARD
+    }
 
 
     //The name of the item to be created.
@@ -86,6 +98,8 @@ public class MainCharacter extends Peon
     private float foodAccum;
 
     // Textures for all 6 directions to correspond to movement of character
+
+    // TODO: change this to an integer to support removing currency which is not just 100g or 50g or 20g
     // A goldPouch to store the character's gold pieces.
     private HashMap<Integer, Integer> goldPouch;
 
@@ -110,6 +124,12 @@ public class MainCharacter extends Peon
     private boolean isMoving;
     private boolean canSwim;
     private boolean isSprinting;
+
+    /*
+        What stage of the game is the player on? Controls what blueprints
+        the player can buy and make.
+     */
+    private GameStage gameStage;
 
     /*
      * Used for combat testing melee/range weapons.
@@ -186,6 +206,7 @@ public class MainCharacter extends Peon
     public MainCharacter(float col, float row, float speed, String name,
                          int health) {
         super(row, col, speed, name, health);
+        gameStage = GameStage.FOREST;
         this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
         this.setHeight(1);
         this.setObjectName("MainPiece");
@@ -1321,9 +1342,37 @@ public class MainCharacter extends Peon
          * @return the learned blueprints list
          */
     public List<Blueprint> getBlueprintsLearned () {
-            blueprintsLearned.add(new Hatchet());
-
         return this.blueprintsLearned;
+    }
+
+    public void addBlueprint(Blueprint blueprint) {
+        if (blueprint != null) {
+            this.blueprintsLearned.add(blueprint);
+        }
+    }
+
+    public List<Blueprint> getUnlockedBlueprints() {
+        List<Blueprint> unlocked = new ArrayList<>();
+        switch(gameStage) {
+            case GRAVEYARD:
+                // e.g. unlocked.add(new Spaceship())
+                // fall through
+            case VALLEY:
+                // e.g. unlocked.add(new Factory())
+                // fall through
+            case RIVER:
+                // fall through
+            case LAVA:
+                // fall through
+            case ICE:
+                // fall through
+            case MOUNTAIN:
+                // fall through
+            case FOREST:
+                unlocked.add(new Hatchet());
+                unlocked.add(new PickAxe());
+        }
+        return unlocked;
     }
 
         /***
