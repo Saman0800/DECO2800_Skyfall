@@ -1,6 +1,6 @@
 CREATE TABLE SAVES
 (
-    save_id       bigint not null,
+    save_id bigint not null,
     data clob,
     PRIMARY KEY (save_id)
 );
@@ -41,16 +41,15 @@ CREATE table BIOMES
 
 CREATE TABLE NODES
 (
-    node_id bigint,
+    node_id bigint not null,
     world_id bigint not null ,
     x_pos double not null ,
     y_pos double not null ,
     data CLOB,
-    biome_id bigint,
+    biome_id bigint not null,
     primary key (node_id),
     foreign key (world_id) references WORLDS(world_id),
-    foreign key (biome_id, world_id) references BIOMES (biome_id)
-
+    foreign key (biome_id, world_id) references BIOMES (biome_id,world_id)
 );
 
 CREATE TABLE EDGES
