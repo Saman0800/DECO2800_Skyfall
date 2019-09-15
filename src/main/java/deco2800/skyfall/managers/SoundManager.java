@@ -20,6 +20,8 @@ public class SoundManager extends AbstractManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SoundManager.class);
 
+    int i = 0;
+
     /**
      * Initialize SoundManager by adding different sounds in a map
      */
@@ -31,7 +33,7 @@ public class SoundManager extends AbstractManager {
             soundMap.put("people_walk_normal", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "pick up.wav")));
             soundMap.put("spider", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "spider.wav")));
+                    (Gdx.files.internal(PATH + "spider.wav"))); //
             soundMap.put("robot", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "robot.wav")));
             soundMap.put("sword", Gdx.audio.newSound
@@ -39,7 +41,7 @@ public class SoundManager extends AbstractManager {
             soundMap.put("stoneWalk", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "stone_walk.wav")));
             soundMap.put("stoneDie", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "stone_die.wav")));
+                    (Gdx.files.internal(PATH + "stone_die.wav"))); //
             soundMap.put("collectStone", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "collect-stone.wav")));
             soundMap.put("menu", Gdx.audio.newSound
@@ -54,6 +56,13 @@ public class SoundManager extends AbstractManager {
                     (Gdx.files.internal(PATH + "bow and arrow attack.wav")));
             soundMap.put("axe_attack", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "axe attack.wav")));
+            soundMap.put("player_hurt", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "be_hit.wav")));
+            soundMap.put("player_died", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "died.wav")));
+            soundMap.put("beach_day", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "beach_day.wav")));
+
         } catch(Exception e) {
             LOGGER.error("no song be found");
         }

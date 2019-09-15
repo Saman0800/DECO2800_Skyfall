@@ -1,6 +1,10 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.managers.ChestManager;
+import deco2800.skyfall.managers.SoundManager;
+import deco2800.skyfall.resources.LootRarity;
+import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
@@ -15,26 +19,11 @@ import java.util.Random;
  */
 public class WorldBuilder implements WorldBuilderInterface {
 
-    // List of biomes
-    private ArrayList<AbstractBiome> biomes;
-
     // List of biomes size
     private ArrayList<Integer> biomeSizes;
 
-    // Seed that is going to be used for world gen
-    private long seed;
-
-    // Number of lakes
-    private int numOfLakes;
-
     // Corresponding sizes of the lakes
     private ArrayList<Integer> lakeSizes;
-
-    // The side length/2 of the world, (worldSize* 2)^2 to get the number of tiles
-    private int worldSize;
-
-    // The spacing/distance between the nodes
-    private int nodeSpacing;
 
     // The entities in the world
     private CopyOnWriteArrayList<AbstractEntity> entities;
@@ -42,29 +31,26 @@ public class WorldBuilder implements WorldBuilderInterface {
     // The world type, can either be single_player, server, tutorial or test
     private String type;
 
-    // The number of rivers
-    private int rivers;
-
-    // The size of the rivers
-    private int riverSize;
-
-    // The size of the beach
-    private int beachSize;
-
     // Determines whether static entities are on
     private boolean staticEntities;
+
+    //Contains parameters for the world
+    private WorldParameters worldParameters;
 
     /**
      * Constructor for the WorldBuilder
      */
     public WorldBuilder() {
-        numOfLakes = 0;
-        seed = 0;
-        rivers = 0;
+        worldParameters = new WorldParameters();
+        worldParameters.setNumOfLakes(0);
+        worldParameters.setSeed(0);
+        worldParameters.setNoRivers(0);
+        worldParameters.setNoRivers(0);
+        worldParameters.setEntities(new CopyOnWriteArrayList<>());
+        worldParameters.setBiomes(new ArrayList<>());
+
         biomeSizes = new ArrayList<>();
         lakeSizes = new ArrayList<>();
-        entities = new CopyOnWriteArrayList<>();
-        biomes = new ArrayList<>();
         type = "single_player";
         staticEntities = false;
     }
@@ -76,7 +62,7 @@ public class WorldBuilder implements WorldBuilderInterface {
      */
     @Override
     public void addEntity(AbstractEntity entity) {
-        entities.add(entity);
+        worldParameters.addEntity(entity);
     }
 
     /**
@@ -87,7 +73,7 @@ public class WorldBuilder implements WorldBuilderInterface {
      */
     @Override
     public void addBiome(AbstractBiome biome, int size) {
-        biomes.add(biome);
+        worldParameters.addBiome(biome);
         biomeSizes.add(size);
     }
 
@@ -98,13 +84,13 @@ public class WorldBuilder implements WorldBuilderInterface {
      */
     @Override
     public void addLake(int size) {
-        numOfLakes++;
+        worldParameters.setNumOfLakes(worldParameters.getNumOfLakes() + 1);
         lakeSizes.add(size);
     }
 
     @Override
     public void setWorldSize(int size) {
-        this.worldSize = size;
+        worldParameters.setWorldSize(size);
     }
 
     /**
@@ -114,7 +100,7 @@ public class WorldBuilder implements WorldBuilderInterface {
      */
     @Override
     public void setNodeSpacing(int nodeSpacing) {
-        this.nodeSpacing = nodeSpacing;
+        worldParameters.setNodeSpacing(nodeSpacing);
     }
 
     /**
@@ -124,7 +110,7 @@ public class WorldBuilder implements WorldBuilderInterface {
      */
     @Override
     public void setSeed(long seed) {
-        this.seed = seed;
+        worldParameters.setSeed(seed);
     }
 
     /**
@@ -141,7 +127,7 @@ public class WorldBuilder implements WorldBuilderInterface {
      * Adds a single river to the world
      */
     public void addRiver() {
-        rivers++;
+        worldParameters.setNoRivers(worldParameters.getNoRivers() + 1);
     }
 
     /**
@@ -150,7 +136,7 @@ public class WorldBuilder implements WorldBuilderInterface {
      * @param size The size which the rivers will be, in node width
      */
     public void setRiverSize(int size) {
-        riverSize = size;
+        worldParameters.setRiverWidth(size);
     }
 
     /**
@@ -159,7 +145,7 @@ public class WorldBuilder implements WorldBuilderInterface {
      * @param size The size which the beach will be, in tiles
      */
     public void setBeachSize(int size) {
-        beachSize = size;
+        worldParameters.setBeachWidth(size);
     }
 
     /**
@@ -180,14 +166,27 @@ public class WorldBuilder implements WorldBuilderInterface {
      */
     protected void generateStartEntities(World world) {
 
-        EntitySpawnRule.setNoiseSeed(world.getSeed());
+        long worldSeed = world.getSeed();
+        EntitySpawnRule.setNoiseSeed(worldSeed);
 
         // Nothing will ever be placed on this tile. Only a dummy tile.
         Tile startTile = world.getTile(0.0f, 1.0f);
 
+        Tile torchTile1 = world.getTile(0.0f, 5.0f);
+        world.addEntity(new TikiTorch(torchTile1, false));
+
+        Tile torchTile2 = world.getTile(0.0f, -3.0f);
+        world.addEntity(new TikiTorch(torchTile2, false));
+        // Tile startTile = world.getTile(0.0f, 1.0f);
+
         for (AbstractBiome biome : world.getBiomes()) {
             switch (biome.getBiomeName()) {
             case "forest":
+
+                // Spawn some swords
+                Weapon startSword = new Sword(startTile, true);
+                EntitySpawnRule swordRule = new EntitySpawnRule(0.04, 10, 20, biome);
+                EntitySpawnTable.spawnEntities(startSword, swordRule, world);
 
                 Tree startTree = new Tree(startTile, true);
                 // Create a new perlin noise map
@@ -205,15 +204,23 @@ public class WorldBuilder implements WorldBuilderInterface {
                 EntitySpawnRule rockRule = new EntitySpawnRule(0.04, 10, 50, biome);
                 EntitySpawnTable.spawnEntities(startRock, rockRule, world);
 
+                spawnChests(10, startTile, biome, world);
+
                 ForestMushroom startMushroom = new ForestMushroom(startTile, false);
                 // This generator will cause the mushrooms to clump togteher more
-                NoiseGenerator mushroomGen = new NoiseGenerator(new Random(), 10, 20, 0.9);
+                NoiseGenerator mushroomGen = new NoiseGenerator(new Random(worldSeed), 10, 20, 0.9);
                 SpawnControl mushroomControl = x -> (x * x * x * x * x * x) / 3.0;
-                EntitySpawnRule mushroomRule = new EntitySpawnRule(biome, true, mushroomControl);
+                EntitySpawnRule mushroomRule = new EntitySpawnRule(5, 7, biome, true, mushroomControl);
                 mushroomRule.setNoiseGenerator(mushroomGen);
                 EntitySpawnTable.spawnEntities(startMushroom, mushroomRule, world);
                 break;
+
             case "mountain":
+
+                // Spawn some spears
+                Weapon startSpear = new Spear(startTile, true);
+                EntitySpawnRule spearRule = new EntitySpawnRule(0.05, 1, 10, biome);
+                EntitySpawnTable.spawnEntities(startSpear, spearRule, world);
 
                 MountainTree startMTree = new MountainTree(startTile, true);
                 // Create a new perlin noise map
@@ -221,13 +228,68 @@ public class WorldBuilder implements WorldBuilderInterface {
                 EntitySpawnRule mTreeControl = new EntitySpawnRule(biome, true, cubic);
                 EntitySpawnTable.spawnEntities(startMTree, mTreeControl, world);
 
+                spawnChests(10, startTile, biome, world);
+
                 MountainRock startMRock = new MountainRock(startTile, true);
                 // Create a new perlin noise map
                 SpawnControl rockControl = x -> (x * x * x * x) / 2.0;
-                EntitySpawnRule mRockControl = new EntitySpawnRule(biome, true, rockControl);
-                EntitySpawnTable.spawnEntities(startMRock, mRockControl, world);
+                EntitySpawnRule mRockRule = new EntitySpawnRule(biome, true, rockControl);
+                EntitySpawnTable.spawnEntities(startMRock, mRockRule, world);
+
+                // Spawn some Snow uniformly
+                SnowClump startMountainSnow = new SnowClump(startTile, false);
+                EntitySpawnRule mSnowRule = new EntitySpawnRule(0.07, 30, 200, biome);
+                EntitySpawnTable.spawnEntities(startMountainSnow, mSnowRule, world);
+
+                break;
+
+            case "desert":
+
+                DetectSand sand = new DetectSand(biome);
+                sand.putCharacter();
+                // Spawn some axes
+                Weapon startAxe = new Axe(startTile, true);
+                EntitySpawnRule axeRule = new EntitySpawnRule(0.05, 1, 10, biome);
+                EntitySpawnTable.spawnEntities(startAxe, axeRule, world);
+
+                DesertCacti startDCacti = new DesertCacti(startTile, true);
+                // Create a new perlin noise map
+                SpawnControl cactiControl = x -> (x * x * x * x) / 4.0;
+                EntitySpawnRule cactiRule = new EntitySpawnRule(biome, true, cactiControl);
+                EntitySpawnTable.spawnEntities(startDCacti, cactiRule, world);
+                break;
+
+            case "snowy_mountains":
+
+                // Spawn some bows
+                Weapon startBow = new Bow(startTile, true);
+                EntitySpawnRule bowRule = new EntitySpawnRule(0.05, 1, 10, biome);
+                EntitySpawnTable.spawnEntities(startBow, bowRule, world);
+
+                SnowClump startSnowyMountainSnow = new SnowClump(startTile, false);
+                // Create a new perlin noise map
+                SpawnControl sSnowControl = x -> (x * x * x);
+                EntitySpawnRule sSnowRule = new EntitySpawnRule(biome, true, sSnowControl);
+                EntitySpawnTable.spawnEntities(startSnowyMountainSnow, sSnowRule, world);
+
+                // Spawn some Snow Shrubs uniformly
+                SnowShrub startSnowShrub = new SnowShrub(startTile, true);
+                EntitySpawnRule snowShrubRule = new EntitySpawnRule(0.07, 20, 200, biome);
+                EntitySpawnTable.spawnEntities(startSnowShrub, snowShrubRule, world);
+
                 break;
             }
+        }
+    }
+
+    public void spawnChests(int num, Tile startTile, AbstractBiome biome, World world) {
+        // Spawn chests
+        Random random = new Random();
+        for (int i = 0; i < num; i++) {
+            Chest chest = new Chest(startTile, true,
+                    ChestManager.generateRandomLoot(random.nextInt(10) + 5, LootRarity.LEGENDARY));
+            EntitySpawnRule chestRule = new EntitySpawnRule(0.04, 0, 1, biome);
+            EntitySpawnTable.spawnEntities(chest, chestRule, world);
         }
     }
 
@@ -238,27 +300,23 @@ public class WorldBuilder implements WorldBuilderInterface {
      */
     public World getWorld() {
         // Converting the ArrayLists to arrays
-        int[] biomeSizesArray = biomeSizes.stream().mapToInt(biomeSize -> biomeSize).toArray();
-        int[] lakeSizesArray = lakeSizes.stream().mapToInt(lakeSize -> lakeSize).toArray();
+        worldParameters.setBiomeSizes(biomeSizes.stream().mapToInt(biomeSize -> biomeSize).toArray());
+        worldParameters.setLakeSizes(lakeSizes.stream().mapToInt(lakeSize -> lakeSize).toArray());
 
         World world;
 
         switch (type) {
         case "single_player":
-            world = new World(seed, worldSize, nodeSpacing, biomeSizesArray, numOfLakes, lakeSizesArray, biomes,
-                    entities, rivers, riverSize, beachSize);
+            world = new World(worldParameters);
             break;
         case "tutorial":
-            world = new TutorialWorld(seed, worldSize, nodeSpacing, biomeSizesArray, numOfLakes, lakeSizesArray, biomes,
-                    entities, rivers, riverSize, beachSize);
+            world = new TutorialWorld(worldParameters);
             break;
         case "test":
-            world = new TestWorld(seed, worldSize, nodeSpacing, biomeSizesArray, numOfLakes, lakeSizesArray, biomes,
-                    entities, rivers, riverSize, beachSize);
+            world = new TestWorld(worldParameters);
             break;
         case "server":
-            world = new ServerWorld(seed, worldSize, nodeSpacing, biomeSizesArray, numOfLakes, lakeSizesArray, biomes,
-                    entities, rivers, riverSize, beachSize);
+            world = new ServerWorld(worldParameters);
             break;
         default:
             throw new IllegalArgumentException("The world type is not valid");

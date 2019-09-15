@@ -1,16 +1,12 @@
 package deco2800.skyfall.worlds.world;
 
-import deco2800.skyfall.entities.*;
-import deco2800.skyfall.entities.worlditems.*;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.worlditems.Tree;
 import deco2800.skyfall.gui.GuiMaster;
 import deco2800.skyfall.gui.ScrollingTextBox;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.observers.TouchDownObserver;
-import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import deco2800.skyfall.worlds.world.World;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * This is a tutorial world created to help the player understand the world
@@ -24,22 +20,10 @@ public class TutorialWorld extends World implements TouchDownObserver {
 
     /**
      * Constructs a tutorial world using the Rocket World constructor
-     * @param seed The random seed that identifies the world
-     * @param worldSize The size of the world
-     * @param nodeSpacing The distance between the nodes
-     * @param biomeSizes The number of nodes each biomes uses, determines the biome sizes
-     * @param numOfLakes The number of lakes
-     * @param lakeSizes The size of each lake
-     * @param biomes A list of biomes that the world has
-     * @param entities The entities that the world has
-     * @param noRivers The number of rivers
-     * @param riverWidth The size of all the rivers
+     * @param worldParameters Class that contains all the world parameters
      */
-    public TutorialWorld(long seed, int worldSize, int nodeSpacing, int[] biomeSizes, int numOfLakes, int[] lakeSizes,
-            ArrayList<AbstractBiome> biomes, CopyOnWriteArrayList<AbstractEntity> entities, int noRivers,
-            int riverWidth, int beachSize) {
-        super(seed, worldSize, nodeSpacing, biomeSizes, numOfLakes, lakeSizes, biomes, entities, noRivers, riverWidth,
-                beachSize);
+    public TutorialWorld(WorldParameters worldParameters) {
+        super(worldParameters);
     }
 
     @Override
