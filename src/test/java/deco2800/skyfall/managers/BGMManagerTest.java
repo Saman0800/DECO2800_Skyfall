@@ -97,7 +97,7 @@ public class BGMManagerTest {
                 Clip clipTest2 = Mockito.mock(Clip.class); // mock clip
                 clipTest2.start();
                 clipTest2.stop();
-                assertEquals(clipTest2.getLongFramePosition(),0);
+                assertEquals(0,clipTest2.getLongFramePosition());
 
             } catch (Exception e) { /* Catch exceptions */ }
         } catch (Exception e) { /* Catch exceptions */ }
@@ -205,7 +205,7 @@ public class BGMManagerTest {
             bgmManager.initClip(file);
             bgmManager.play();
             TimeUnit.SECONDS.sleep(1);
-            assertEquals(bgmManager.getClip().isRunning(), true);
+            assertEquals(true,bgmManager.getClip().isRunning());
         } catch (Exception e) {
             //exception caught
         }
@@ -218,7 +218,7 @@ public class BGMManagerTest {
             bgmManager.play();
             TimeUnit.SECONDS.sleep(1);
             bgmManager.pause();
-            assertEquals(bgmManager.getClip().isRunning(), false);
+            assertEquals(false, bgmManager.getClip().isRunning());
         } catch (Exception e) {
             //exception caught
         }
@@ -234,7 +234,7 @@ public class BGMManagerTest {
             TimeUnit.SECONDS.sleep(1);
             bgmManager.resume();
             TimeUnit.SECONDS.sleep(1);
-            assertEquals(bgmManager.getClip().isRunning(), true);
+            assertEquals(true, bgmManager.getClip().isRunning());
         } catch (Exception e) {
             //exception caught
         }
@@ -251,10 +251,10 @@ public class BGMManagerTest {
             bgmManager.resetClip();
             TimeUnit.SECONDS.sleep(1);
             bgmManager.initClip(file);
-            assertEquals(bgmManager.getClip().getLongFramePosition(), 0);
+            assertEquals(0, bgmManager.getClip().getLongFramePosition());
 
             // Test that current clip is reset to the start
-            assertEquals(bgmManager.getClip().getLongFramePosition(),0);
+            assertEquals(0, bgmManager.getClip().getLongFramePosition());
         } catch (Exception e) {
             //exception caught
         }
@@ -267,10 +267,10 @@ public class BGMManagerTest {
             bgmManager.play();
             TimeUnit.SECONDS.sleep(1);
             BGMManager.mute();
-            assertEquals(bgmManager.muteVol.getValue(), true);
+            assertEquals(true, bgmManager.muteVol.getValue());
 
             // Test that sound is muted
-            assertEquals(bgmManager.muteVol.getValue(),true);
+            assertEquals(true, bgmManager.muteVol.getValue());
         } catch (Exception e) {
             //exception caught
         }
@@ -286,10 +286,10 @@ public class BGMManagerTest {
             TimeUnit.SECONDS.sleep(1);
             bgmManager.unmute();
             TimeUnit.SECONDS.sleep(1);
-            assertEquals(bgmManager.muteVol.getValue(), false);
+            assertEquals(false, bgmManager.muteVol.getValue());
 
             // Test that sound is unmuted
-            assertEquals(bgmManager.muteVol.getValue(),false);
+            assertEquals(false, bgmManager.muteVol.getValue());
         } catch (Exception e) {
             //exception caught
         }
