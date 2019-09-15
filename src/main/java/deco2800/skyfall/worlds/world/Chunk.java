@@ -235,19 +235,15 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
     public void load(ChunkMemento memento) {
         this.x = memento.x;
         this.y = memento.y;
-        this.tiles = memento.tiles;
     }
 
     public class ChunkMemento extends AbstractMemento {
         private int x;
         private int y;
-        private ArrayList<Tile> tiles;
-        private ArrayList<Integer> entities;
 
         public ChunkMemento(Chunk chunk) {
             this.x = chunk.x;
             this.y = chunk.y;
-            this.tiles = chunk.tiles;
         }
     }
 }

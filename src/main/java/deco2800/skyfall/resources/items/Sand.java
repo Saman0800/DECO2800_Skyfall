@@ -11,7 +11,7 @@ import deco2800.skyfall.worlds.Tile;
 public class Sand extends NaturalResources implements Item {
 
     // the name of the item
-    private String name;
+    //private String name;
 
     // the biome the sand is in
     private String biome;

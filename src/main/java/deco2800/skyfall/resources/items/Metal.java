@@ -10,7 +10,7 @@ import deco2800.skyfall.resources.NaturalResources;
 public class Metal extends NaturalResources implements Item {
 
     // the name of the item
-    private String name;
+    //private String name;
 
     // the biome the metal is in
     private String biome;

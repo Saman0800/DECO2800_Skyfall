@@ -81,7 +81,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	// TODO: find out if both this and isCollidable need to be stored
 	private boolean collidable = true;
 
-	private int renderOrder = 0;
+	protected int renderOrder = 0;
 
 	//For animations
 	/**

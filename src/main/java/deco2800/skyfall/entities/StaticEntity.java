@@ -29,7 +29,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
     private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
 
     private static final String ENTITY_ID_STRING = "staticEntityID";
-    private int renderOrder;
+    //private int renderOrder;
     private boolean obstructed;
 
     // The type of entity this is (e.g. "Tree", "Axe" etc.)
@@ -240,8 +240,10 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         this.setEntityID(memento.entityID);
         this.renderOrder = memento.renderOrder;
         this.obstructed = memento.obstructed;
+        /*
         this.setBody(memento.body);
         this.setFixture(memento.fixture);
+         */
         this.setCollidable(memento.isCollidable);
         this.setTexture(memento.texture);
         this.setColRenderLength(memento.colRenderLength);
@@ -257,8 +259,13 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         private float rowRenderLength;
         private int renderOrder;
         private boolean obstructed;
+
+        // TODO:dannathan find out if these need to be saved (they cause a stack overflow in gson)
+        /*
         private Body body;
         private Fixture fixture;
+         */
+
         private Boolean isCollidable;
         private String texture;
 
@@ -271,11 +278,14 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
             this.rowRenderLength = entity.getRowRenderLength();
             this.renderOrder = entity.renderOrder;
             this.obstructed = entity.obstructed;
+
+            /*
             this.body = entity.getBody();
             this.fixture = entity.getFixture();
+            */
+
             this.isCollidable = entity.getIsCollidable();
             this.texture = entity.getTexture();
-            this.staticEntityType = entity.entityType;
         }
     }
 }

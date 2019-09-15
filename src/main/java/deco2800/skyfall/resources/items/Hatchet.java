@@ -14,8 +14,8 @@ import java.util.Map;
  */
 public class Hatchet extends ManufacturedResources implements Item {
 
-    private Map<String, Integer> allRequirements;
-    private boolean blueprintLearned = false;
+    //private Map<String, Integer> allRequirements;
+    //private boolean blueprintLearned = false;
 
     /***
      * Create a Hatecht with the name Hatchet

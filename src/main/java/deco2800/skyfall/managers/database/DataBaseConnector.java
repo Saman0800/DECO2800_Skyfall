@@ -92,22 +92,22 @@ public class DataBaseConnector {
 
     //FIXME:jeffvan12 Adding saving and updating functionality
     //TODO:jeffvan change it so it doesn't take a connection
-    public void saveGame(Save save) throws SQLException{
+    public void saveGame(Save save) throws SQLException {
         //Given a save game
         long saveId = save.getSaveID();
         InsertDataQueries insertQueries = new InsertDataQueries(connection);
         Gson gson = new Gson();
 
-
         insertQueries.insertSave(saveId, gson.toJson(save.save()));
 
 
         //Looping through the worlds in the save and saving them
-        for (World world : save.getWorlds()){
+        for (World world : save.getWorlds()) {
             saveWorld(world);
             //TODO:Figuring out which world needs to be saved
         }
         saveMainCharacter(save.getMainCharacter());
+
     }
 
     //Svaing the world and its parameters
@@ -119,7 +119,6 @@ public class DataBaseConnector {
                 world.getSave().getCurrentWorld().getID() == world.getID(), gson.toJson(world.save()));
 
         for (AbstractBiome biome : world.getBiomes()) {
-            System.out.println("here0");
             try {
                 insertQueries.insertBiome(biome.getBiomeID(), world.getID(), biome.getBiomeName(), gson.toJson(biome.save()));
             } catch (SQLException e) {
@@ -130,19 +129,12 @@ public class DataBaseConnector {
 
         // Save nodes
         for (WorldGenNode worldGenNode : world.getWorldGenNodes()) {
-            System.out.println("here1");
-            try {
-                insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(),
+            insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(),
                         gson.toJson(worldGenNode.save()), worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
-            } catch (SQLException e) {
-                System.out.println(e);
-                throw e;
-            }
         }
 
         // Save beach edges
         for (VoronoiEdge voronoiEdge : world.getBeachEdges().keySet()) {
-            System.out.println("here2");
             insertQueries.insertEdges(world.getID(), voronoiEdge.getID(),
                     world.getBeachEdges().get(voronoiEdge).getBiomeID(),
                     gson.toJson(voronoiEdge.save()));
@@ -156,7 +148,6 @@ public class DataBaseConnector {
         }
 
         for (Chunk chunk : world.getLoadedChunks().values()) {
-            System.out.println("here3");
             saveChunk(chunk, world);
         }
 
@@ -166,7 +157,12 @@ public class DataBaseConnector {
         InsertDataQueries insertQueries = new InsertDataQueries(connection);
         Gson gson = new Gson();
 
-        insertQueries.insertMainCharacter(character.getID(), character.getSave().getSaveID(), gson.toJson(character.save()));
+        try{
+            insertQueries.insertMainCharacter(character.getID(), character.getSave().getSaveID(), gson.toJson(character.save()));
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw e;
+        }
     }
 
     public void saveChunk(Chunk chunk, World world) throws SQLException {

@@ -14,7 +14,7 @@ import java.util.Random;
  * Class that represents the biomes
  */
 public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBiomeMemento> {
-    private int id;
+    private long id;
     private long worldID;
 
     // The biome name, i.e forest, desert, mountain
@@ -25,8 +25,6 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
     private AbstractBiome parentBiome;
     // The biomes which have this biome as a parent
     private ArrayList<AbstractBiome> childBiomes;
-    //The biomes id
-    private long biomeId;
 
     protected NoiseGenerator textureGenerator;
 
@@ -52,7 +50,7 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
         setParentBiome(parentBiome);
         tiles = new ArrayList<>();
         childBiomes = new ArrayList<>();
-        biomeId = System.nanoTime();
+        this.id = System.nanoTime();
     }
 
     /**
@@ -63,17 +61,6 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
     public List<Tile> getTiles() {
         return tiles;
     }
-
-    /**
-     * Gets the biomes id
-     * @return The biome id
-     */
-    public long getBiomeId() {
-        return biomeId;
-    }
-
-
-
 
     /**
      * Sets the tiles in the biome
@@ -180,7 +167,7 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
      */
     public abstract void setTileTexture(Tile tile);
 
-    public int getBiomeID() {
+    public long getBiomeID() {
         return this.id;
     }
 
@@ -209,7 +196,7 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
         private long worldID;
 
         // The ID of this biome
-        private int biomeID;
+        private long biomeID;
 
         // The type of biome this is
         private String biomeType;
@@ -224,6 +211,9 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
             this.worldID = biome.worldID;
             this.biomeID = biome.id;
             this.biomeType = biome.getBiomeName();
+            if (biome.textureGenerator == null) {
+                System.out.println(biome.getBiomeName());
+            }
             this.noiseGeneratorSeed = biome.textureGenerator.getSeed();
             if (biome.getParentBiome() == null) {
                 // TODO find a better value to represent null

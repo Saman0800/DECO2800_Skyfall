@@ -13,6 +13,7 @@ public class BeachBiome extends AbstractBiome {
      */
     public BeachBiome(AbstractBiome parentBiome, Random random) {
         super("beach", parentBiome);
+        textureGenerator = new NoiseGenerator(random.nextLong(), 3, 40, 0.7);
     }
 
     @Override

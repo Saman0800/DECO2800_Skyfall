@@ -41,7 +41,7 @@ public class InsertDataQueries {
     }
 
     public void insertNodes(long worldId, double xPos, double yPos, String data, long nodeId, long biomeId) throws SQLException{
-        PreparedStatement preparedStatement = connection.prepareStatement("insert into NODES (node_id, world_id, x_pos, y_pos, data, biome_id) values "
+        PreparedStatement preparedStatement = connection.prepareStatement("insert into NODES (world_id, x_pos, y_pos, data, node_id, biome_id) values "
                 + "(?,?,?,?,?,?)");
         preparedStatement.setLong(1,worldId);
         preparedStatement.setDouble(2, xPos);
@@ -53,21 +53,21 @@ public class InsertDataQueries {
         preparedStatement.close();
     }
 
-    public void insertEdges(long worldID, long edgeID, int biomeID, String data) throws SQLException{
+    public void insertEdges(long worldID, long edgeID, long biomeID, String data) throws SQLException{
         PreparedStatement preparedStatement = connection.prepareStatement("insert into EDGES (world_id, edge_id, biome_id, data) values (?, ?, ?, ?)");
         preparedStatement.setLong(1, worldID);
         preparedStatement.setLong(2, edgeID);
-        preparedStatement.setInt(3, biomeID);
+        preparedStatement.setLong(3, biomeID);
         preparedStatement.setString(4, data);
 
         preparedStatement.executeUpdate();
         preparedStatement.close();
     }
 
-    public void insertBiome(int biomeId, long worldId, String biomeType, String data) throws SQLException{
+    public void insertBiome(long biomeId, long worldId, String biomeType, String data) throws SQLException{
 
         PreparedStatement preparedStatement = connection.prepareStatement("insert into BIOMES (biome_id, world_id, biome_type, data) values (?, ?, ?, ?)");
-        preparedStatement.setInt(1, biomeId);
+        preparedStatement.setLong(1, biomeId);
         preparedStatement.setLong(2, worldId);
         preparedStatement.setString(3, biomeType);
         preparedStatement.setString(4, data);

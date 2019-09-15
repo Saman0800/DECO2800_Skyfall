@@ -16,8 +16,8 @@ import java.util.Map;
  */
 public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
-    private Map<String, Integer> allRequirements;
-    private boolean blueprintLearned = false;
+    //private Map<String, Integer> allRequirements;
+    //private boolean blueprintLearned = false;
 
     /***
      * Create a Pick Axe with the name Pick Axe.

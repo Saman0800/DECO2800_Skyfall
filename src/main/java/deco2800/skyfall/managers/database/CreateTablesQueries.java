@@ -26,7 +26,7 @@ public class CreateTablesQueries {
             "(" +
             "    character_id        bigint NOT NULL," +
             "    save_id             bigint not null ," +
-            "    data blob," +
+            "    data clob," +
             "    PRIMARY KEY (character_id)," +
             "    FOREIGN KEY (save_id) references SAVES (save_id)" +
             ")";

@@ -10,7 +10,7 @@ import deco2800.skyfall.worlds.Tile;
  */
 public class Stone extends NaturalResources implements Item {
     // the name of the item
-    private String name;
+    //private String name;
 
       // the colour of the stone
     private String colour;

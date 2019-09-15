@@ -28,9 +28,9 @@ public abstract class ManufacturedResources implements Item, Blueprint {
     protected MainCharacter owner;
 
     // a list of all required resources needed to create a manufactured resource item.
-    private Map<String, Integer> allRequirements;
+    protected Map<String, Integer> allRequirements;
 
-    private  boolean blueprintLearned=false;
+    protected boolean blueprintLearned=false;
 
 
 
