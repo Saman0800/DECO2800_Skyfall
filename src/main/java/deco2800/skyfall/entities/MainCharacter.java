@@ -165,7 +165,7 @@ public class MainCharacter extends Peon
      */
     private boolean isAttacking = false;
 
-    /*
+    /**
      * Item player is currently equipped with/holding.
      */
     private Item equippedItem;
@@ -349,11 +349,16 @@ public class MainCharacter extends Peon
         }
     }
 
+    /**
+     * Use the function of equipped item
+     */
     public void useEquipped(){
         if(equippedItem != null){
             equippedItem.use(this.getPosition());
         } else{
             //collect nearby resources
+            //Will be adjusted in following sprint when it is possible to spawn
+            //non-static entities
         }
     }
 

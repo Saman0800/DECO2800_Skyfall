@@ -364,6 +364,11 @@ public class InventoryManager extends TickableManager {
         this.positions.remove(itemName);
     }
 
+    /**
+     * Returns the description of item
+     * @param itemName String name of item
+     * @return Description of item
+     */
     public String getItemDescription(String itemName){
         if(this.inventory.get(itemName) != null){
             int num = this.inventory.get(itemName).size();

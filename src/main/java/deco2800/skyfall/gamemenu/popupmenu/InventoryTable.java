@@ -20,26 +20,68 @@ import java.util.Map;
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
 public class InventoryTable extends AbstractPopUpElement {
-    private Skin skin;
+    //The inventory table
     private Table inventoryTable;
+
+    //Resource panel on right side of inventory table
     private Table resourcePanel;
+
+    //Item information panel on left side of inventory table
     private Table infoPanel;
+
+    //Game skin
+    private Skin skin;
+
+    //GameMenuManager being used by GameManager
     private GameMenuManager gameMenuManager;
+
+    //InventoryManager being used by GameManager
     private InventoryManager inventory;
+
+    //Current item selected in inventory user interface
     private String inventorySelected;
+
+    //Main Character being used by GameManager
     private MainCharacter mainCharacter;
+
+    //Current GameMenuBar in game, from GameMenuManager
     private GameMenuBar gameMenuBar;
+
+    //Inventory user interface drop item button (active)
     private ImageButton dropButton;
+
+    //Inventory user interface add to quick access button (active)
     private ImageButton addqaButton;
+
+    //Inventory user interface equip item button (active)
     private ImageButton equipButton;
+
+    //Inventory user interface drop item button (inactive)
     private ImageButton inactiveDropButton;
+
+    //Inventory user interface add to quick access button (inactive)
     private ImageButton inactiveAddqaButton;
+
+    //Inventory user interface equip item button (inactive)
     private ImageButton inactiveEquipButton;
+
+    //Item information currently displayed in the info panel
     private Label itemInfo;
+
+    //Logger for Inventory Table
     private final transient Logger LOGGER =
-            LoggerFactory.getLogger(InventoryManager.class);
+            LoggerFactory.getLogger(InventoryTable.class);
 
 
+    /**
+     * Constructs an Inventory Table pop up.
+     * @param stage Game stage
+     * @param exitButton ImageButton used to hide the pop up
+     * @param textureNames Array of texture names (strings)
+     * @param tm Texture manager used in the game
+     * @param skin Game skin
+     * @param gameMenuManager GameMenuManager used in the game
+     */
     public InventoryTable(Stage stage, ImageButton exitButton, String[]
             textureNames, TextureManager tm, Skin skin, GameMenuManager gameMenuManager) {
         super(stage, exitButton, textureNames, tm, gameMenuManager);
@@ -54,6 +96,9 @@ public class InventoryTable extends AbstractPopUpElement {
         this.draw();
     }
 
+    /**
+     * Hides the inventory pop up
+     */
     @Override
     public void hide() {
         super.hide();
@@ -62,6 +107,9 @@ public class InventoryTable extends AbstractPopUpElement {
         inventoryTable.setVisible(false);
     }
 
+    /**
+     * Shows the inventory pop up
+     */
     @Override
     public void show() {
         super.show();
@@ -70,11 +118,17 @@ public class InventoryTable extends AbstractPopUpElement {
         inventoryTable.setVisible(true);
     }
 
+    /**
+     * Updates the pop up position
+     */
     @Override
     public void updatePosition() {
         super.updatePosition();
     }
 
+    /**
+     * Draws the pop up
+     */
     @Override
     public void draw() {
         super.draw();
@@ -99,7 +153,7 @@ public class InventoryTable extends AbstractPopUpElement {
     }
 
     /***
-     * Updates the resources and info panels to display the current inventory contents.
+     * Updates the resources and info panels to display the current inventory contents and information.
      */
     protected void updatePanels(){
         if(resourcePanel != null){
@@ -118,6 +172,10 @@ public class InventoryTable extends AbstractPopUpElement {
 
     }
 
+    /**
+     * Sets the buttons in the inventory pop up to active or inactive forms
+     * @param active boolean whether buttons are active
+     */
     private void setButtonsActive(boolean active){
         if(active){
             inactiveAddqaButton.setVisible(false);
@@ -136,6 +194,10 @@ public class InventoryTable extends AbstractPopUpElement {
         }
     }
 
+    /**
+     * Sets the base of the inventory table
+     * @return inventoryTable
+     */
     private Table setBaseInventoryTable(){
         inventoryTable = new Table();
         inventoryTable.setSize(910, 510);
@@ -149,6 +211,10 @@ public class InventoryTable extends AbstractPopUpElement {
         return inventoryTable;
     }
 
+    /**
+     * Sets the heading of the inventory table
+     * @return infoBar containing Inventory heading
+     */
     private Table setHeading(){
         Table infoBar = new Table();
         infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
@@ -161,6 +227,10 @@ public class InventoryTable extends AbstractPopUpElement {
         return infoBar;
     }
 
+    /**
+     * Sets the information panel on left hand side of inventory pop up
+     * @return infoPanel
+     */
     private Table setInfoPanel(){
         Table infoPanel = new Table();
         infoPanel.setSize(410, 320);
@@ -176,6 +246,9 @@ public class InventoryTable extends AbstractPopUpElement {
         return infoPanel;
     }
 
+    /**
+     * Sets the buttons in the inventory pop up, with corresponding click events.
+     */
     private void setButtons(){
         this.inactiveDropButton = new ImageButton(generateTextureRegionDrawableObject("drop inactive"));
         this.inactiveDropButton.setSize(100, 60);
@@ -243,6 +316,10 @@ public class InventoryTable extends AbstractPopUpElement {
         });
     }
 
+    /**
+     * Sets the resource panel on the right hand side of inventory pop up
+     * @return resourcePanel
+     */
     private Table setResourcePanel(){
         resourcePanel = new Table();
         resourcePanel.setName("resourcePanel");
@@ -253,6 +330,10 @@ public class InventoryTable extends AbstractPopUpElement {
         return resourcePanel;
     }
 
+    /**
+     * Updates the item information displayed in the info panel, depending on
+     * what item is selected.
+     */
     private void updateItemInfo(){
         System.out.println(inventorySelected);
         if (inventorySelected != null){
@@ -265,6 +346,14 @@ public class InventoryTable extends AbstractPopUpElement {
         infoPanel.add(itemInfo);
     }
 
+    /**
+     * Sets the item icons and counts in the resource panel.
+     * @param inventoryAmounts Map<String, Integer> of inventory contents
+     * @param xpos x position for item icon
+     * @param ypos y position for item icon
+     * @param size size of item icon
+     * @param xspace space between icons
+     */
     private void setCounts(Map<String, Integer> inventoryAmounts, int xpos, int ypos, int size, int xspace){
         int count = 0;
 
