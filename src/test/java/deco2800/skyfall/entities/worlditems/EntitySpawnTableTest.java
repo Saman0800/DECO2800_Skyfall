@@ -4,7 +4,6 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
-import deco2800.skyfall.worlds.world.TestWorld;
 
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.World;
@@ -111,7 +110,7 @@ public class EntitySpawnTableTest {
         // check basic spawnEntities
         final double chance = 0.95;
         Rock rock = new Rock();
-        EntitySpawnTable.spawnEntities(rock, chance, testWorld);
+        EntitySpawnTable.spawnEntity(rock, chance, testWorld);
 
         // count after spawning
         assertTrue(countWorldEntities() > 0);
@@ -142,7 +141,7 @@ public class EntitySpawnTableTest {
         newRule.setChance(1.0);
 
         Rock rock = new Rock();
-        EntitySpawnTable.spawnEntities(rock, newRule, newWorld);
+        EntitySpawnTable.spawnEntity(rock, newRule, newWorld);
 
         int count = 0;
         for (Tile tile : newWorld.getTileMap()) {

@@ -6,9 +6,8 @@ import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 
-import java.util.ArrayList;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.Random;
 
 /**
  * Allows for step by step creation of a world
@@ -152,89 +151,90 @@ public class WorldBuilder implements WorldBuilderInterface {
      * @param world The world that will get static entities
      * @author Micheal CC
      */
-    protected void generateStartEntities(World world) {
+    protected Map<AbstractBiome, List<EntitySpawnRule>> generateStartEntities(World world) {
+        HashMap<AbstractBiome, List<EntitySpawnRule>> spawnRules = new HashMap<>();
 
         long worldSeed = world.getSeed();
         EntitySpawnRule.setNoiseSeed(worldSeed);
 
-        // Nothing will ever be placed on this tile. Only a dummy tile.
-        Tile startTile = world.getTile(0.0f, 1.0f);
-
+        // FIXME:Ontonator Fix the weightings on these so they actually spawn often enough.
         for (AbstractBiome biome : world.getBiomes()) {
+            ArrayList<EntitySpawnRule> biomeSpawnRules = new ArrayList<>();
+
             switch (biome.getBiomeName()) {
             case "forest":
 
-                Tree startTree = new Tree(startTile, true);
                 // Create a new perlin noise map
                 SpawnControl treeControl = x -> (x * x * x) / 3.0;
-                EntitySpawnRule treeRule = new EntitySpawnRule(biome, true, treeControl);
-                EntitySpawnTable.spawnEntities(startTree, treeRule, world);
+                EntitySpawnRule treeRule = new EntitySpawnRule(tile -> new Tree(tile, true), biome, true, treeControl);
+                biomeSpawnRules.add(treeRule);
 
                 // Spawn some LongGrass uniformly
-                LongGrass startLongGrass = new LongGrass(startTile, true);
-                EntitySpawnRule longGrassRule = new EntitySpawnRule(0.07, 30, 200, biome);
-                EntitySpawnTable.spawnEntities(startLongGrass, longGrassRule, world);
+                EntitySpawnRule longGrassRule =
+                        new EntitySpawnRule(tile -> new LongGrass(tile, true), 0.07, 30, 200, biome);
+                biomeSpawnRules.add(longGrassRule);
 
                 // Spawn some Rocks uniformly
-                Rock startRock = new Rock(startTile, true);
-                EntitySpawnRule rockRule = new EntitySpawnRule(0.04, 10, 50, biome);
-                EntitySpawnTable.spawnEntities(startRock, rockRule, world);
+                EntitySpawnRule rockRule = new EntitySpawnRule(tile -> new Rock(tile, true), 0.04, 10, 50, biome);
+                biomeSpawnRules.add(rockRule);
 
-                ForestMushroom startMushroom = new ForestMushroom(startTile, false);
                 // This generator will cause the mushrooms to clump togteher more
                 NoiseGenerator mushroomGen = new NoiseGenerator(new Random(worldSeed), 10, 20, 0.9);
                 SpawnControl mushroomControl = x -> (x * x * x * x * x * x) / 3.0;
-                EntitySpawnRule mushroomRule = new EntitySpawnRule(biome, true, mushroomControl);
+                EntitySpawnRule mushroomRule =
+                        new EntitySpawnRule(tile -> new ForestMushroom(tile, false), biome, true, mushroomControl);
                 mushroomRule.setNoiseGenerator(mushroomGen);
-                EntitySpawnTable.spawnEntities(startMushroom, mushroomRule, world);
+                biomeSpawnRules.add(mushroomRule);
                 break;
 
             case "mountain":
 
-                MountainTree startMTree = new MountainTree(startTile, true);
                 // Create a new perlin noise map
                 SpawnControl cubic = x -> (x * x * x * x * x) / 4.0;
-                EntitySpawnRule mTreeControl = new EntitySpawnRule(biome, true, cubic);
-                EntitySpawnTable.spawnEntities(startMTree, mTreeControl, world);
+                EntitySpawnRule mTreeControl =
+                        new EntitySpawnRule(tile -> new MountainTree(tile, true), biome, true, cubic);
+                biomeSpawnRules.add(mTreeControl);
 
-                MountainRock startMRock = new MountainRock(startTile, true);
                 // Create a new perlin noise map
                 SpawnControl rockControl = x -> (x * x * x * x) / 2.0;
-                EntitySpawnRule mRockRule = new EntitySpawnRule(biome, true, rockControl);
-                EntitySpawnTable.spawnEntities(startMRock, mRockRule, world);
+                EntitySpawnRule mRockRule = new EntitySpawnRule(tile -> new MountainRock(tile, true), biome, true,
+                                                                rockControl);
+                biomeSpawnRules.add(mRockRule);
 
                 // Spawn some Snow uniformly
-                SnowClump startMountainSnow = new SnowClump(startTile, false);
-                EntitySpawnRule mSnowRule = new EntitySpawnRule(0.07, 30, 200, biome);
-                EntitySpawnTable.spawnEntities(startMountainSnow, mSnowRule, world);
+                EntitySpawnRule mSnowRule = new EntitySpawnRule(tile -> new SnowClump(tile, false), 0.07, 30, 200, biome);
+                biomeSpawnRules.add(mSnowRule);
 
                 break;
 
             case "desert":
 
-                DesertCacti startDCacti = new DesertCacti(startTile, true);
                 // Create a new perlin noise map
                 SpawnControl cactiControl = x -> (x * x * x * x) / 4.0;
-                EntitySpawnRule cactiRule = new EntitySpawnRule(biome, true, cactiControl);
-                EntitySpawnTable.spawnEntities(startDCacti, cactiRule, world);
+                EntitySpawnRule cactiRule =
+                        new EntitySpawnRule(tile -> new DesertCacti(tile, true), biome, true, cactiControl);
+                biomeSpawnRules.add(cactiRule);
                 break;
 
             case "snowy_mountains":
 
-                SnowClump startSnowyMountainSnow = new SnowClump(startTile, false);
                 // Create a new perlin noise map
-                SpawnControl sSnowControl = x -> (x * x * x);
-                EntitySpawnRule sSnowRule = new EntitySpawnRule(biome, true, sSnowControl);
-                EntitySpawnTable.spawnEntities(startSnowyMountainSnow, sSnowRule, world);
+                SpawnControl sSnowControl = x -> x / 2 + 0.15;
+                EntitySpawnRule sSnowRule =
+                        new EntitySpawnRule(tile -> new SnowClump(tile, false), biome, true, sSnowControl);
+                biomeSpawnRules.add(sSnowRule);
 
                 // Spawn some Snow Shrubs uniformly
-                SnowShrub startSnowShrub = new SnowShrub(startTile, true);
-                EntitySpawnRule snowShrubRule = new EntitySpawnRule(0.07, 20, 200, biome);
-                EntitySpawnTable.spawnEntities(startSnowShrub, snowShrubRule, world);
+                EntitySpawnRule snowShrubRule = new EntitySpawnRule(tile -> new SnowShrub(tile, true), 0.07, 20, 200, biome);
+                biomeSpawnRules.add(snowShrubRule);
 
                 break;
             }
+
+            spawnRules.put(biome, biomeSpawnRules);
         }
+
+        return spawnRules;
     }
 
     /**
@@ -263,7 +263,9 @@ public class WorldBuilder implements WorldBuilderInterface {
         }
 
         if (staticEntities) {
-            generateStartEntities(world);
+            worldParameters.setSpawnRules(generateStartEntities(world));
+        } else {
+            worldParameters.setSpawnRules(Collections.emptyMap());
         }
         return world;
     }

@@ -28,7 +28,8 @@ public class SwampBiome extends AbstractBiome{
         textures.add("swamp_2");
         textures.add("swamp_3");
 
-        double perlinValue = textureGenerator.getOctavedPerlinValue(tile.getCol(), tile.getRow());
+        double perlinValue =
+                NoiseGenerator.fade(textureGenerator.getOctavedPerlinValue(tile.getCol(), tile.getRow()), 2);
         int adjustedPerlinValue = (int) Math.floor(perlinValue * textures.size());
         if (adjustedPerlinValue >= textures.size()) {
             adjustedPerlinValue = textures.size() - 1;

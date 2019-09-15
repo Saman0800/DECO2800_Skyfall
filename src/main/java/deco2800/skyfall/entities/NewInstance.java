@@ -22,7 +22,7 @@ public interface NewInstance<E extends StaticEntity> {
     public E newInstance(Tile tile);
 
     /**
-     * In a simliar fashion this function will also create a deep copy of the
+     * In a similar fashion this function will also create a deep copy of the
      * instance, although this function is intended for entities that spread across
      * multiple and thus need the centring change (as opposed to the tile).
      * 

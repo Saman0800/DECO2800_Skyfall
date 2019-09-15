@@ -28,7 +28,8 @@ public class LakeBiome extends AbstractBiome {
         textures.add("lake_1");
         textures.add("lake_2");
 
-        double perlinValue = textureGenerator.getOctavedPerlinValue(tile.getCol(), tile.getRow());
+        double perlinValue =
+                NoiseGenerator.fade(textureGenerator.getOctavedPerlinValue(tile.getCol(), tile.getRow()), 2);
         int adjustedPerlinValue = (int) Math.floor(perlinValue * textures.size());
         if (adjustedPerlinValue >= textures.size()) {
             adjustedPerlinValue = textures.size() - 1;

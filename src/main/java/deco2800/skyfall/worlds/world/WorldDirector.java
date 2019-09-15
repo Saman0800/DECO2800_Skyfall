@@ -46,11 +46,14 @@ public class WorldDirector {
         choices.add(new SnowyMountainsBiome(random));
 
         for (int i = 0; i < n; i++) {
-            builder.addBiome(choices.remove(random.nextInt(choices.size())), 40);
+            // builder.addBiome(choices.remove(random.nextInt(choices.size())), 40);
+            builder.addBiome(choices.remove(random.nextInt(choices.size())), 100);
         }
 
-        builder.setWorldSize(160);
-        builder.setNodeSpacing(15);
+        // builder.setWorldSize(160);
+        builder.setWorldSize(800);
+        // builder.setNodeSpacing(15);
+        builder.setNodeSpacing(30);
         builder.setSeed(random.nextInt());
 
         builder.addLake(5);

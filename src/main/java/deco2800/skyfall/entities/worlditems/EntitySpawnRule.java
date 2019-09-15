@@ -1,9 +1,12 @@
 package deco2800.skyfall.entities.worlditems;
 
+import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 
 import java.util.Random;
+import java.util.function.Function;
 
 import com.esotericsoftware.kryo.NotNull;
 import jdk.nashorn.internal.ir.annotations.Immutable;
@@ -75,12 +78,18 @@ public class EntitySpawnRule {
     private double limitAdjacentValue = 4.0;
 
     /**
+     * A function that returns a new instance to place.
+     */
+    private Function<Tile, StaticEntity> newInstance;
+
+    /**
      * Sets spawn rule based on chance. This distributes the entities in a uniform
      * manner.
      * 
      * @param chance The likelihood of spawning an ent in a given tile of the world
      */
-    public EntitySpawnRule(double chance) {
+    public EntitySpawnRule(Function<Tile, StaticEntity> newInstance, double chance) {
+        setNewInstance(newInstance);
         setChance(chance);
     }
 
@@ -90,7 +99,8 @@ public class EntitySpawnRule {
      * @param min minimum number of entities to spawn into the world inclusive
      * @param max maximum number of entities to spawn into the world inclusive
      */
-    public EntitySpawnRule(int min, int max) {
+    public EntitySpawnRule(Function<Tile, StaticEntity> newInstance, int min, int max) {
+        setNewInstance(newInstance);
         setChance(-1); // entity spawn handler will deal with this
         setMin(min);
         setMax(max);
@@ -103,7 +113,8 @@ public class EntitySpawnRule {
      * @param min minimum number of entities to spawn into the world inclusive
      * @param max maximum number of entities to spawn into the world inclusive
      */
-    public EntitySpawnRule(double chance, int min, int max) {
+    public EntitySpawnRule(Function<Tile, StaticEntity> newInstance, double chance, int min, int max) {
+        setNewInstance(newInstance);
         setChance(chance); // entity spawn handler will deal with this
         setMin(min);
         setMax(max);
@@ -115,7 +126,8 @@ public class EntitySpawnRule {
      * @param chance The chance that a tile will uniformly be placed on a tile.
      * @param biome  The biome the tile will be placed in.
      */
-    public EntitySpawnRule(double chance, AbstractBiome biome) {
+    public EntitySpawnRule(Function<Tile, StaticEntity> newInstance, double chance, AbstractBiome biome) {
+        this.newInstance = newInstance;
         this.chance = chance;
         this.biome = biome;
     }
@@ -128,8 +140,8 @@ public class EntitySpawnRule {
      * @param max    Maximum count
      * @param biome  A reference to a biome
      */
-    public EntitySpawnRule(double chance, int min, int max, AbstractBiome biome) {
-        this(chance, min, max);
+    public EntitySpawnRule(Function<Tile, StaticEntity> newInstance, double chance, int min, int max, AbstractBiome biome) {
+        this(newInstance, chance, min, max);
         this.biome = biome;
     }
 
@@ -141,7 +153,8 @@ public class EntitySpawnRule {
      *                  tile is to used to determine the likeliness of a entity to
      *                  be placed down on a tile.
      */
-    public EntitySpawnRule(AbstractBiome biome, boolean usePerlin) {
+    public EntitySpawnRule(Function<Tile, StaticEntity> newInstance, AbstractBiome biome, boolean usePerlin) {
+        this.newInstance = newInstance;
         this.biome = biome;
         this.usePerlin = usePerlin;
 
@@ -160,8 +173,8 @@ public class EntitySpawnRule {
      * @param map       A lambda experssion to adjust the perlin noise value when
      *                  using it as the likeliness to spawn an entity
      */
-    public EntitySpawnRule(AbstractBiome biome, boolean usePerlin, SpawnControl map) {
-        this(biome, usePerlin);
+    public EntitySpawnRule(Function<Tile, StaticEntity> newInstance, AbstractBiome biome, boolean usePerlin, SpawnControl map) {
+        this(newInstance, biome, usePerlin);
         this.map = map;
     }
 
@@ -175,8 +188,8 @@ public class EntitySpawnRule {
      *                  tile is to used to determine the likeliness of a entity to
      *                  be placed down on a tile.
      */
-    public EntitySpawnRule(int min, int max, AbstractBiome biome, boolean usePerlin) {
-        this(biome, usePerlin);
+    public EntitySpawnRule(Function<Tile, StaticEntity> newInstance, int min, int max, AbstractBiome biome, boolean usePerlin) {
+        this(newInstance, biome, usePerlin);
         setMin(min);
         setMax(max);
     }
@@ -193,8 +206,8 @@ public class EntitySpawnRule {
      * @param map       A lambda experssion to adjust the perlin noise value when
      *                  using it as the likeliness to spawn an entity
      */
-    public EntitySpawnRule(int min, int max, AbstractBiome biome, boolean usePerlin, SpawnControl map) {
-        this(min, max, biome, usePerlin);
+    public EntitySpawnRule(Function<Tile, StaticEntity> newInstance, int min, int max, AbstractBiome biome, boolean usePerlin, SpawnControl map) {
+        this(newInstance, min, max, biome, usePerlin);
         this.map = map;
     }
 
@@ -321,5 +334,22 @@ public class EntitySpawnRule {
      */
     public void setNoiseGenerator(NoiseGenerator noiseGen) {
         this.noiseGenerator = noiseGen;
+    }
+
+    /**
+     * Gets the function that returns a new instance to place.
+     * @return gets the function that returns a new instance to place
+     */
+    public Function<Tile, StaticEntity> getNewInstance() {
+        return newInstance;
+    }
+
+    /**
+     * Sets the function that returns a new instance to place.
+     * @return sets the function that returns a new instance to place
+     */
+    public void setNewInstance(
+            Function<Tile, StaticEntity> newInstance) {
+        this.newInstance = newInstance;
     }
 }

@@ -29,7 +29,8 @@ public class MountainBiome extends AbstractBiome {
         textures.add("mountain_2");
         textures.add("mountain_3");
 
-        double perlinValue = textureGenerator.getOctavedPerlinValue(tile.getCol(), tile.getRow());
+        double perlinValue =
+                NoiseGenerator.fade(textureGenerator.getOctavedPerlinValue(tile.getCol(), tile.getRow()), 2);
         int adjustedPerlinValue = (int) Math.floor(perlinValue * textures.size());
         if (adjustedPerlinValue >= textures.size()) {
             adjustedPerlinValue = textures.size() - 1;

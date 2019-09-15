@@ -48,7 +48,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         children = new HashMap<>();
         children.put(tile.getCoordinates(), texture);
         if (!WorldUtil.validColRow(tile.getCoordinates())) {
-            log.debug(tile.getCoordinates() + "%s Is Invalid:");
+            log.debug("{} Is Invalid:", tile.getCoordinates());
             return;
         }
 
