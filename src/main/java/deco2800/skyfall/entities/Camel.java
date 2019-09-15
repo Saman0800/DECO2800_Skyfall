@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.DesertBiome;
@@ -17,8 +18,8 @@ public class Camel extends VehicleEntity {
     public Camel(float col, float row, MainCharacter mc) {
         super(col,row);
         this.mc = mc;
-        this.setTexture("camel_character");
-        this.setObjectName("camel_character");
+        this.setTexture("camel");
+        this.setObjectName("camel");
         this.setHeight(1);
         this.setAvailable(available);
         this.setHealth(HEALTH);
@@ -38,18 +39,23 @@ public class Camel extends VehicleEntity {
 
     @Override
     public void onTick(long i) {
-        //super.onTick(i);
+        super.onTick(i);
         if (mc != null) {
             float columnDis = mc.getCol() - this.getCol();
             float rowDis = mc.getRow() - this.getRow();
 
-            if ((columnDis * rowDis + rowDis * rowDis) < 4) {
-                if (available){
-                    //TODO: Let main character get onto vehicle
+            float colDistance = mc.getCol() - this.getCol();
+            float rowDistance = mc.getRow() - this.getRow();
 
-                }
+            if ((colDistance * colDistance + rowDistance * rowDistance) < 4){
+
+                // Let main character get onto vehicle
+               setTexture("camel_character");
+               setObjectName("camel_character");
+
+
             } else {
-
+                this.setCurrentState(AnimationRole.NULL);
             }
         } else {
             System.out.println("Main Character is null");
