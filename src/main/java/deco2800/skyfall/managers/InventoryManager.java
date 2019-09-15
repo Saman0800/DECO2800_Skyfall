@@ -312,7 +312,7 @@ public class InventoryManager extends TickableManager {
             return items;
         }
 
-        System.out.println("You can't remove what you don't have!");
+        LOGGER.warn("You can't remove what you don't have!");
 
         return null;
     }

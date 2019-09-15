@@ -837,7 +837,9 @@ public class MainCharacter extends Peon
                     maxSpeed *= 2.f;
                     break;
                 case Input.Keys.SPACE:
-                    this.equippedItem.use(position);
+                    if(this.equippedItem != null){
+                        this.equippedItem.use(position);
+                    }
                     break;
                 case Input.Keys.G:
                     addClosestGoldPiece();
