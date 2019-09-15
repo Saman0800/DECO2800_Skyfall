@@ -95,9 +95,7 @@ public class DataBaseConnector {
     public void saveGame(Save save) throws SQLException{
         //Given a save game
         long saveId = save.getSaveID();
-        Statement statement = connection.createStatement();
-
-        InsertDataQueries insertQueries = new InsertDataQueries(statement);
+        InsertDataQueries insertQueries = new InsertDataQueries(connection);
         Gson gson = new Gson();
 
 
@@ -110,13 +108,11 @@ public class DataBaseConnector {
             //TODO:Figuring out which world needs to be saved
         }
         saveMainCharacter(save.getMainCharacter());
-        statement.close();
     }
 
     //Svaing the world and its parameters
     public void saveWorld(World world) throws SQLException{
-        Statement statement = connection.createStatement();
-        InsertDataQueries insertQueries = new InsertDataQueries(statement);
+        InsertDataQueries insertQueries = new InsertDataQueries(connection);
         Gson gson = new Gson();
 
         insertQueries.insertWorld(world.getSave().getSaveID(), world.getID(),
@@ -164,25 +160,17 @@ public class DataBaseConnector {
             saveChunk(chunk, world);
         }
 
-        statement.close();
-
     }
 
     public void saveMainCharacter(MainCharacter character) throws SQLException {
-        Statement statement = connection.createStatement();
-        InsertDataQueries insertQueries = new InsertDataQueries(statement);
+        InsertDataQueries insertQueries = new InsertDataQueries(connection);
         Gson gson = new Gson();
 
         insertQueries.insertMainCharacter(character.getID(), character.getSave().getSaveID(), gson.toJson(character.save()));
-
-
-
-        statement.close();
     }
 
     public void saveChunk(Chunk chunk, World world) throws SQLException {
-        Statement statement = connection.createStatement();
-        InsertDataQueries insertQueries = new InsertDataQueries(statement);
+        InsertDataQueries insertQueries = new InsertDataQueries(connection);
         Gson gson = new Gson();
 
         insertQueries.insertChunk(world.getID(), chunk.getX(), chunk.getY(), gson.toJson(chunk.save()));
@@ -194,7 +182,6 @@ public class DataBaseConnector {
             }
         }
 
-        statement.close();
     }
 
 
