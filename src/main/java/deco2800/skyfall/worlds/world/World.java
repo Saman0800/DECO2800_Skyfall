@@ -106,6 +106,7 @@ public class World implements TouchDownObserver {
 
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
 
+        getTile(0,0).setObstructed(true);
     }
 
     /**
