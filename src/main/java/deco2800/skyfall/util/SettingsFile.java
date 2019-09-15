@@ -34,8 +34,7 @@ public class SettingsFile {
     public SettingsFile(String path) {
         this.path = path;
         values = new HashMap<String, String>();
-        try {
-            BufferedReader file = new BufferedReader( new FileReader(path) );
+        try ( BufferedReader file = new BufferedReader( new FileReader(path) ) ) {
             //File found, attempt to read it
             String line;
             //read line and set values
@@ -47,7 +46,6 @@ public class SettingsFile {
                 }
                 values.put( vec[0], line.substring(vec[0].length()+1) );
             }
-            file.close();
         }
         catch (FileNotFoundException ex) {
             //File not found

@@ -71,21 +71,21 @@ public class EnvironmentManagerTest {
 
     @Test
     public void setTimeTest() {
-        manager.setTime(100000);
+        manager.setTime(1, 0);
         assertEquals(1, manager.getTime());
     }
 
     @Test
     public void isDayTest() {
-        manager.setTime(1000000);
+        manager.setTime(6, 0);
         assertTrue(manager.isDay());
-        manager.setTime(100000);
+        manager.setTime(18, 0);
         assertFalse(manager.isDay());
     }
 
     @Test
     public void amTest() {
-        manager.setTime(500000);
+        manager.setTime(6, 0);
         assertTrue(manager.isDay());
 
         manager.getTOD();
@@ -100,7 +100,7 @@ public class EnvironmentManagerTest {
 
     @Test
     public void pmTest() {
-        manager.setTime(10000000);
+        manager.setTime(18, 0);
         assertFalse(manager.isDay());
 
         manager.getTOD();
@@ -274,4 +274,38 @@ public class EnvironmentManagerTest {
         } catch (Exception e) { /* Exception caught, if any */ }
     }
 
+    @Test
+    public void currentWeatherTest() {
+        manager.weather = "snow";
+        assertEquals(manager.currentWeather(), "snow");
+
+        manager.weather = "rain";
+        assertEquals(manager.currentWeather(), "rain");
+    }
+
+    @Test
+    public void biomeDisplayNameTest() {
+        manager.biome = "forest";
+        assertEquals("Forest", manager.biomeDisplayName());
+        manager.biome = "desert";
+        assertEquals("Desert", manager.biomeDisplayName());
+        manager.biome = "lake";
+        assertEquals("Lake", manager.biomeDisplayName());
+        manager.biome = "ocean";
+        assertEquals("Ocean", manager.biomeDisplayName());
+        manager.biome = "mountain";
+        assertEquals("Mountain", manager.biomeDisplayName());
+        manager.biome = "volcanic_mountains";
+        assertEquals("Volcanic Mountains", manager.biomeDisplayName());
+        manager.biome = "snowy_mountains";
+        assertEquals("Snowy Mountains", manager.biomeDisplayName());
+        manager.biome = "jungle";
+        assertEquals("Jungle", manager.biomeDisplayName());
+        manager.biome = "swamp";
+        assertEquals("Swamp", manager.biomeDisplayName());
+        manager.biome = "river";
+        assertEquals("River", manager.biomeDisplayName());
+        manager.biome = "beach";
+        assertEquals("Beach", manager.biomeDisplayName());
+    }
 }
