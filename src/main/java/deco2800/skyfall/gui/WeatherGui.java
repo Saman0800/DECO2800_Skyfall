@@ -19,6 +19,7 @@ public class WeatherGui extends AbstractUIElement{
         stage = s;
 
         this.weatherTexture = weatherTexture;
+        this.draw();
         update();
 
         stage.addActor(weatherEvent);
