@@ -143,14 +143,14 @@ public class GameScreen implements Screen, KeyDownObserver {
          * SpectralValue instances for the Ambient Light.
          */
         IntensityFunction intensityFunction = (float x) -> {
-            double A = 0.3;
-            double B = 6.7;
-            double C = 2.38;
+            double magnitude = 0.3;
+            double period = 6.7;
+            double vertShift = 2.38;
 
             double cosEval = Math.cos(((x - 12) * Math.PI) / 12.0);
-            double normalise = A * Math.sqrt((1 + B * B) / (1 + B * B * cosEval * cosEval));
+            double normalise = magnitude * Math.sqrt((1 + period * period) / (1 + period * period * cosEval * cosEval));
 
-            return (float) (normalise * cosEval + A * C);
+            return (float) (normalise * cosEval + magnitude * vertShift);
         };
 
         ambientIntensity = new FunctionalSpectralValue(intensityFunction, gameEnvironManag);
@@ -270,7 +270,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         shader.setAmbientComponent(
                 new vec3(ambientRed.getIntensity(), ambientGreen.getIntensity(), ambientBlue.getIntensity()),
                 ambientIntensity.getIntensity());
-        // shader.addPointLight(new PointLight(new vec2(0.0f, 0.0f), new vec3(1.0f, 0.729f, 0.3372f), 0.9f, 0.5f));
 
         // Add all the point lights of entities that implement the HasPointLight
         // interface into the batch

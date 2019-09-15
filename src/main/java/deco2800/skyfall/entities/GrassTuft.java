@@ -24,6 +24,6 @@ public class GrassTuft extends AbstractEntity {
 
     @Override
     public void onTick(long i) {
-        // Should not do anything
+        // Do nothing on tick
     }
 }
