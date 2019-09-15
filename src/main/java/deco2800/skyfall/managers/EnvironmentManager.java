@@ -16,10 +16,16 @@ import java.util.Arrays;
 public class EnvironmentManager extends TickableManager {
 
     //Hours in a game day
-    public long hours;
+    public int hours;
 
     // Seconds in a game day
-    public long minutes;
+    public int minutes;
+
+    // Milliseconds since last time update
+    private long currentMillis;
+
+    // Seasons in game
+    private String season;
 
     // Month in game
     private long month;
@@ -34,7 +40,7 @@ public class EnvironmentManager extends TickableManager {
     public String biome;
 
     // Time to display on screen
-    public long displayHours;
+    private long displayHours;
 
     // Time of day: AM or PM
     public String TOD;
@@ -78,13 +84,13 @@ public class EnvironmentManager extends TickableManager {
 
     /**
      * Constructor
-     *
      */
     public EnvironmentManager() {
         file = "resources/sounds/forest_day.wav";
         currentFile = "resources/sounds/forest_night.wav";
         timeListeners = new ArrayList<>();
         dayNightListeners = new ArrayList<>();
+        currentMillis = System.currentTimeMillis();
         previousBiome = null;
         weatherList = Arrays.asList("Clear");
         weather = "Clear";
@@ -92,6 +98,7 @@ public class EnvironmentManager extends TickableManager {
 
     /**
      * Adds an observer to observe the time update
+     *
      * @param observer the observer to add
      */
     public void addTimeListener(TimeObserver observer) {
@@ -100,6 +107,7 @@ public class EnvironmentManager extends TickableManager {
 
     /**
      * Removes an observer from observing the time update
+     *
      * @param observer the observer to remove
      */
     public void removeTimeListener(TimeObserver observer) {
@@ -108,6 +116,7 @@ public class EnvironmentManager extends TickableManager {
 
     /**
      * Get list of observers observing time update
+     *
      * @return The list of observers currently observing the time update
      */
     public ArrayList<TimeObserver> getTimeListeners() {
@@ -116,6 +125,7 @@ public class EnvironmentManager extends TickableManager {
 
     /**
      * Notifies all observers in timeListeners list of time change
+     *
      * @param i The hour the game has updated to
      */
     public void updateTimeListeners(long i) {
@@ -126,6 +136,7 @@ public class EnvironmentManager extends TickableManager {
 
     /**
      * Adds an observer to observe day/night change
+     *
      * @param observer The observer to add
      */
     public void addDayNightListener(DayNightObserver observer) {
@@ -134,6 +145,7 @@ public class EnvironmentManager extends TickableManager {
 
     /**
      * Removes and observer from observing day/night change
+     *
      * @param observer The observer to remove
      */
     public void removeDayNightListener(DayNightObserver observer) {
@@ -142,6 +154,7 @@ public class EnvironmentManager extends TickableManager {
 
     /**
      * Gets list of observers observing day/night change
+     *
      * @return The list of observers currently observing the day/night change
      */
     public ArrayList<DayNightObserver> getDayNightListeners() {
@@ -150,6 +163,7 @@ public class EnvironmentManager extends TickableManager {
 
     /**
      * Notifies all observers in dayNightListeners list of day/night change
+     *
      * @param isDay true if day, false if night
      */
     public void updateDayNightListeners(boolean isDay) {
@@ -161,7 +175,6 @@ public class EnvironmentManager extends TickableManager {
     /**
      * Tracks the biome the player is currently in by retrieving the player's coordinates,
      * the corresponding tile, and the corresponding biome.
-     *
      */
     public void setBiome() {
         entities = GameManager.get().getWorld().getEntities();
@@ -170,13 +183,8 @@ public class EnvironmentManager extends TickableManager {
                 player = entities.get(i);
                 Tile currentTile = GameManager.get().getWorld().getTile(Math.round(player.getCol()),
                         Math.round(player.getRow()));
-                // If player coords don't match tile coords, currentTile returns null
-                // eg if player isn't exactly in the middle of a tile (walking between tiles), coords don't match
-                // So below if statement is needed
                 if (currentTile != null) {
                     biome = currentTile.getBiome().getBiomeName();
-                } else {
-                    // Do nothing
                 }
             }
         }
@@ -211,27 +219,31 @@ public class EnvironmentManager extends TickableManager {
     /**
      * Sets the time of day in game
      *
-     * @param i The time of day to be set
+     * @param hour The hour of day to be set. Must be between 0-23 inclusive.
+     * @param mins The minutes of the hour of day to be set. Must be between 0-59 inclusive.
      */
-    public void setTime(long i) {
-        //Each day cycle goes for approx 24 minutes
-        long timeHours = (i / 60000);
-        //Check if observers need notifying, notifies if needed
-        if (timeHours % 24 != hours) {
-            updateTimeListeners(timeHours % 24);
-        }
-        hours = timeHours % 24;
 
-        //Each minute equals one second
-        long timeMins = (i / 1000);
-        minutes = timeMins % 60;
+    public void setTime(int hour, int mins) {
+        hours = hour;
+        minutes = mins;
+
+        //Check if observers need notifying, notifies if needed
+        if (mins >= 60) {
+            hours += 1;
+            if (hours >= 24) {
+                hours = 0;
+            }
+            minutes = 0;
+            updateTimeListeners(hours);
+        }
 
         //Update isDay boolean
         isDay();
     }
-
+    
     /**
      * Returns whether it is day or not
+     *
      * @return boolean True if it is day, False if night
      */
     public boolean isDay() {
@@ -255,6 +267,7 @@ public class EnvironmentManager extends TickableManager {
 
     /**
      * Returns whether it is day or not
+     *
      * @return String am or pm depending on TOD
      */
     public String getTOD() {
@@ -280,6 +293,7 @@ public class EnvironmentManager extends TickableManager {
 
     /**
      * Sets the season in game, starting with summer.
+     *
      * @param i the time in milliseconds
      */
     public void setMonth(long i) {
@@ -290,8 +304,8 @@ public class EnvironmentManager extends TickableManager {
 
     /**
      * Gets the month in the game.
-     * @return month (int) (0 to 12)
      *
+     * @return month (int) (0 to 12)
      */
     public int getMonth() {
         monthInt = (int) month;
@@ -322,7 +336,6 @@ public class EnvironmentManager extends TickableManager {
     /**
      * Sets the filename in game.
      * Format for filenames: "biome_day/night" e.g. "forest_day"
-     *
      */
     public void setFilename() {
         isDay();
@@ -352,7 +365,8 @@ public class EnvironmentManager extends TickableManager {
             try {
                 bgmManager.stop();
             } catch (Exception e) {
-                /* Exception caught, if any */ }
+                /* Exception caught, if any */
+            }
 
             currentFile = file;
 
@@ -361,7 +375,8 @@ public class EnvironmentManager extends TickableManager {
                 bgmManager.initClip(currentFile);
                 bgmManager.play();
             } catch (Exception e) {
-                /* Exception caught, if any */ }
+                /* Exception caught, if any */
+            }
         }
 
         setFilename();
@@ -428,13 +443,13 @@ public class EnvironmentManager extends TickableManager {
         Random rand = new Random();
 
         if (biome != previousBiome) {
-            switch(biome) {
+            switch (biome) {
                 case "volcanic_mountains":
                     weatherList = Arrays.asList("Clear", "Storm", "Clear", "Earthquake", "Clear");
                     previousBiome = biome;
                     break;
                 case "snowy_mountains":
-                    weatherList = Arrays.asList("Clear", "Storm",  "Clear", "Earthquake", "Snow", "Clear");
+                    weatherList = Arrays.asList("Clear", "Storm", "Clear", "Earthquake", "Snow", "Clear");
                     previousBiome = biome;
                     break;
                 case "desert":
@@ -455,13 +470,14 @@ public class EnvironmentManager extends TickableManager {
 
     /**
      * Sets a certain weather event in game.
+     *
      * @param event the weather event to occur
      */
     public void setRandomWeatherEvent(String event) {
         weather = event;
     }
 
-    /*
+    /**
      * On tick method for ticking managers with the TickableManager interface
      *
      * @param i
@@ -470,24 +486,19 @@ public class EnvironmentManager extends TickableManager {
     public void onTick(long i) {
         long time = i;
 
-        if (System.currentTimeMillis() - time > 20) {
-            time = System.currentTimeMillis();
-        }
-
-        weatherEvent++;
-
-        if (weatherEvent == 10000) {
-            randomWeatherEvent();
-            weatherEvent = 0;
+        if (System.currentTimeMillis() - currentMillis >= 1000) {
+            currentMillis = System.currentTimeMillis();
+            minutes += 1;
         }
 
         // Set the TOD and month in game
-        setTime(time);
-        setMonth(time);
+        setTime(hours, minutes);
+        setMonth(currentMillis);
 
         // Set Background music as per the specific biome and TOD
         setBiome();
         setTODMusic();
+        currentWeather();
 
         // Key mapping to mute volume
         // M for mute and U to un-mute
@@ -496,6 +507,13 @@ public class EnvironmentManager extends TickableManager {
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
             BGMManager.unmute();
+        }
+
+        weatherEvent++;
+
+        if (weatherEvent == 10000) {
+            randomWeatherEvent();
+            weatherEvent = 0;
         }
     }
 }

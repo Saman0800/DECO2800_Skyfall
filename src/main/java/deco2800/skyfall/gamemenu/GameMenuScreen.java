@@ -12,7 +12,6 @@ import deco2800.skyfall.gui.Clock;
 import deco2800.skyfall.gui.HealthCircle;
 import deco2800.skyfall.gui.WeatherGui;
 import deco2800.skyfall.managers.EnvironmentManager;
-import deco2800.skyfall.managers.ChestManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.managers.TextureManager;
@@ -152,6 +151,12 @@ public class GameMenuScreen {
         radar.setSize(219 * 0.55f, 207 * 0.55f);
         radar.setPosition(440, 30 * 1000 / 800f);
         stage.addActor(radar);
+//        HealthCircle healthCircle = new HealthCircle(stage,
+//                "big_circle",
+//                "inner_circle",
+//                mainCharacter);
+
+//        gameMenuManager.addHealthCircle(healthCircle);
 
         Clock clock = new Clock(stage);
 

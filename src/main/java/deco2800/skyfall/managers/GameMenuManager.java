@@ -9,11 +9,8 @@ import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.SkyfallGame;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gamemenu.GameMenuScreen;
-import deco2800.skyfall.gui.Clock;
-import deco2800.skyfall.gui.HealthCircle;
-import deco2800.skyfall.gui.SettingsTable;
+import deco2800.skyfall.gui.*;
 import deco2800.skyfall.gamemenu.PopUpTable;
-import deco2800.skyfall.gui.WeatherGui;
 
 
 /**
@@ -60,6 +57,10 @@ public class GameMenuManager extends TickableManager {
     public void onTick(long i) {
         //Get the current state of the inventory on tick so that display can be updated
         inventory = GameManager.get().getManager(InventoryManager.class);
+
+        if (healthCircle != null) {
+ //           healthCircle.update();
+        }
 
         if (clock != null) {
             clock.update();
