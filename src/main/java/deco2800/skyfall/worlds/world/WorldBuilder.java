@@ -185,8 +185,15 @@ public class WorldBuilder implements WorldBuilderInterface {
 
                 // Spawn some swords
                 Weapon startSword = new Sword(startTile, true);
-                EntitySpawnRule swordRule = new EntitySpawnRule(0.04, 10, 20, biome);
+                EntitySpawnRule swordRule = new EntitySpawnRule(0.05, 10, 20,
+                        biome);
                 EntitySpawnTable.spawnEntities(startSword, swordRule, world);
+
+                // Spawn some axes
+                Weapon startAxe = new Axe(startTile, true);
+                EntitySpawnRule axeRule = new EntitySpawnRule(0.5, 1, 5,
+                        biome);
+                EntitySpawnTable.spawnEntities(startAxe, axeRule, world);
 
                 Tree startTree = new Tree(startTile, true);
                 // Create a new perlin noise map
@@ -219,7 +226,8 @@ public class WorldBuilder implements WorldBuilderInterface {
 
                 // Spawn some spears
                 Weapon startSpear = new Spear(startTile, true);
-                EntitySpawnRule spearRule = new EntitySpawnRule(0.05, 1, 10, biome);
+                EntitySpawnRule spearRule = new EntitySpawnRule(0.04, 5, 20,
+                        biome);
                 EntitySpawnTable.spawnEntities(startSpear, spearRule, world);
 
                 MountainTree startMTree = new MountainTree(startTile, true);
@@ -247,10 +255,12 @@ public class WorldBuilder implements WorldBuilderInterface {
 
                 DetectSand sand = new DetectSand(biome);
                 sand.putCharacter();
+
                 // Spawn some axes
-                Weapon startAxe = new Axe(startTile, true);
-                EntitySpawnRule axeRule = new EntitySpawnRule(0.05, 1, 10, biome);
-                EntitySpawnTable.spawnEntities(startAxe, axeRule, world);
+                Weapon startAxe2 = new Axe(startTile, true);
+                EntitySpawnRule axeRule2 = new EntitySpawnRule(0.1, 1, 30,
+                        biome);
+                EntitySpawnTable.spawnEntities(startAxe2, axeRule2, world);
 
                 DesertCacti startDCacti = new DesertCacti(startTile, true);
                 // Create a new perlin noise map
@@ -263,8 +273,15 @@ public class WorldBuilder implements WorldBuilderInterface {
 
                 // Spawn some bows
                 Weapon startBow = new Bow(startTile, true);
-                EntitySpawnRule bowRule = new EntitySpawnRule(0.05, 1, 10, biome);
+                EntitySpawnRule bowRule = new EntitySpawnRule(0.2, 30, 50,
+                        biome);
                 EntitySpawnTable.spawnEntities(startBow, bowRule, world);
+
+                // Spawn some spears
+                Weapon startSpear2 = new Spear(startTile, true);
+                EntitySpawnRule spearRule2 = new EntitySpawnRule(0.5, 1, 5,
+                        biome);
+                EntitySpawnTable.spawnEntities(startSpear2, spearRule2, world);
 
                 SnowClump startSnowyMountainSnow = new SnowClump(startTile, false);
                 // Create a new perlin noise map
