@@ -319,7 +319,7 @@ public class MainCharacter extends Peon
                 0.1f,
                 this.itemSlotSelected == 1 ? 1 : 0);
         // Add the projectile entity to the game world.
-        manager.getWorld().addEntity(projectile);
+        GameManager.get().getWorld().addEntity(projectile);
     }
 
     /**
