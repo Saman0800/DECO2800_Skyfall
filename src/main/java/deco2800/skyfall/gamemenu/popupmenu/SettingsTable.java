@@ -22,7 +22,6 @@ import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDra
 
 public class SettingsTable extends AbstractPopUpElement{
     private SoundManager soundManager;
-    private BGMManager backgroundMusicManager;
 
     private Skin skin;
     private Table settingsTable;
