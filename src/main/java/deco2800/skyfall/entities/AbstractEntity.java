@@ -79,7 +79,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
 	/** Whether an entity should trigger a collision when */
 	// TODO: find out if both this and isCollidable need to be stored
-	private boolean collidable = true; 
+	private boolean collidable = true;
 
 	private int renderOrder = 0;
 
@@ -589,7 +589,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
 
-    /**
+
+	/**
      * How much to scale the texture by.
      * Used in MainCharacter to scale down the texture
      * @return Scale multiplicative factor.

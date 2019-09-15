@@ -51,7 +51,7 @@ public class WorldDirector {
         }
 
         // builder.setWorldSize(160);
-        builder.setWorldSize(800);
+        builder.setWorldSize(1200);
         // builder.setNodeSpacing(15);
         builder.setNodeSpacing(30);
         builder.setSeed(random.nextInt());

@@ -9,6 +9,7 @@ import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.SaveLoadInterface;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.saving.AbstractMemento;
+import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
@@ -73,6 +74,13 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
     protected List<Tile> tilesToDelete = new CopyOnWriteArrayList<>();
 
     protected WorldParameters worldParameters;
+
+    private Save save;
+
+
+
+
+
 
     /**
      * The constructor for a world being loaded from a memento
@@ -580,6 +588,22 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         return worldParameters.getSeed();
     }
 
+    /**
+     * Gets the save the world is in
+     * @return The save
+     */
+    public Save getSave() {
+        return save;
+    }
+
+
+    /**
+     * Gets the nodes of the world
+     * @return The nodes of the world
+     */
+    public CopyOnWriteArrayList<WorldGenNode> getWorldGenNodes() {
+        return worldGenNodes;
+    }
 
     public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
         // only allow right clicks to collect resources
@@ -666,6 +690,8 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         return worldParameters;
     }
 
+
+
     @Override
     public String formatData() {
         return new Gson().toJson(this);
@@ -684,7 +710,6 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
     public void load(WorldMemento worldMemento) {
         this.id = worldMemento.worldID;
         // TODO
-        this.saveID = worldMemento.saveID;
         this.worldParameters.setBeachWidth(worldMemento.beachWidth);
         this.worldParameters.setBeachWidth(worldMemento.riverWidth);
         this.worldParameters.setNodeSpacing(worldMemento.nodeSpacing);
@@ -700,7 +725,7 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
 
         public WorldMemento(World world) {
             // TODO (probably in the main save method)
-            this.saveID = world.saveID;
+            this.saveID = world.save.getSaveID();
             this.worldID = world.id;
             this.nodeSpacing = world.worldParameters.getNodeSpacing();
             this.riverWidth = world.worldParameters.getRiverWidth();
@@ -708,4 +733,6 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         }
 
     }
+
+
 }

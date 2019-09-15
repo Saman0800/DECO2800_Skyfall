@@ -25,6 +25,8 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
     private AbstractBiome parentBiome;
     // The biomes which have this biome as a parent
     private ArrayList<AbstractBiome> childBiomes;
+    //The biomes id
+    private long biomeId;
 
     /**
      * Constructor for a biome being loaded
@@ -48,6 +50,7 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
         setParentBiome(parentBiome);
         tiles = new ArrayList<>();
         childBiomes = new ArrayList<>();
+        biomeId = System.nanoTime();
     }
 
     /**
@@ -58,6 +61,16 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
     public List<Tile> getTiles() {
         return tiles;
     }
+
+    /**
+     * Gets the biomes id
+     * @return The biome id
+     */
+    public long getBiomeId() {
+        return biomeId;
+    }
+
+
 
 
     /**
