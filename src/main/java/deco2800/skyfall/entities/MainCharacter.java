@@ -715,31 +715,30 @@ public class MainCharacter extends Peon
         this.setTexture(texture);
     }
 
-        /**
-         * Handles mouse click events
-         * @param screenX the x position the mouse was pressed at
-         * @param screenY the y position the mouse was pressed at
-         * @param pointer mouse pointer
-         * @param button the button which was pressed
-         */
-        public void notifyTouchDown ( int screenX, int screenY, int pointer, int button){
-            // only allow left clicks to move player
+    /**
+     * Handles mouse click events
+     *
+     * @param screenX the x position the mouse was pressed at
+     * @param screenY the y position the mouse was pressed at
+     * @param pointer mouse pointer
+     * @param button  the button which was pressed
+     */
+    public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
+        // only allow left clicks to move player
 
-            System.out.println(button);
-            if (GameScreen.isPaused) {
-                return;
-            }
-            if (button == 1) {
+        System.out.println(button);
+        if (GameScreen.isPaused) {
+            return;
+        }
+        if (button == 1) {
 
-                float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
-                float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
+            float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
+            float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 
-                HexVector mousePos = new HexVector(clickedPosition[0], clickedPosition[1]);
-                this.attack(mousePos);
-            }
+            HexVector mousePos = new HexVector(clickedPosition[0], clickedPosition[1]);
+            this.attack(mousePos);
         }
     }
-
 
     /**
      * Handles tick based stuff, e.g. movement

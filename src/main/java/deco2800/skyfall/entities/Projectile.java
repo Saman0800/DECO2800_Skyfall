@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import com.badlogic.gdx.math.Vector2;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 
