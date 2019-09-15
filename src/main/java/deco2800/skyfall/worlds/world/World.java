@@ -616,13 +616,6 @@ public class World implements TouchDownObserver {
                 gmm.getMainCharacter().getPetsManager().addPet((AbstractPet) entity);
                 removeEntity(entity);
             }
-//            else if (entity instanceof Whitebear){
-//                if (tile.getCoordinates().distance(gmm.getMainCharacter().getPosition()) > 2) {
-//                    continue;
-//                }
-//                gmm.getInventory().inventoryAdd((Item) entity);
-//                removeEntity(entity);
-//            }
         }
     }
 }

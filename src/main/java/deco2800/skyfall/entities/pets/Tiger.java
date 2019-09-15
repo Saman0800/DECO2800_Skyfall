@@ -197,9 +197,9 @@ public class Tiger extends EnemyEntity implements Animatable {
     public void runAway(){
         targetPosition = new float[2];
         targetPosition[0] = (float)
-                (Math.random() * 700 + orginalPosition[0]);
+                (Math.random() * 800 + orginalPosition[0]);
         targetPosition[1]=(float)
-                (Math.random() * 700 + orginalPosition[1]);
+                (Math.random() * 800 + orginalPosition[1]);
         float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow
                 (targetPosition[0], targetPosition[1]);
         destination = new HexVector(randomPositionWorld[0],
@@ -223,11 +223,11 @@ public class Tiger extends EnemyEntity implements Animatable {
      *
      */
     private void randomMoving() {
-        if(moving==false){
+        if(moving == false){
             targetPosition = new float[2];
             targetPosition[0] = (float)
                     (Math.random() * 200 + orginalPosition[0]);
-            targetPosition[1]=(float)
+            targetPosition[1] = (float)
                     (Math.random() * 200 + orginalPosition[1]);
             float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow
                     (targetPosition[0], targetPosition[1]);
@@ -262,7 +262,7 @@ public class Tiger extends EnemyEntity implements Animatable {
      */
     int time=0;
     private void tigerDead(){
-        if(time<=100){
+        if(time <= 100){
             time++;
             this.setTexture("tigerDead");
             this.setObjectName("tigerDead");
