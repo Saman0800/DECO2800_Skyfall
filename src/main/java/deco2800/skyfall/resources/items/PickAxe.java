@@ -16,7 +16,6 @@ import java.util.Map;
  */
 public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
-    private Map<String, Integer> allRequirements;
     private boolean blueprintLearned = false;
 
     /***
@@ -171,7 +170,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
     @Override
     public Map<String, Integer> getAllRequirements() {
 
-        allRequirements = new HashMap<>();
+        Map<String, Integer> allRequirements = new HashMap<>();
         allRequirements.put("Wood", 50);
         allRequirements.put("Stone", 30);
         allRequirements.put("Metal", 10);

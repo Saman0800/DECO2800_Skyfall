@@ -1,13 +1,8 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.*;
-import deco2800.skyfall.entities.weapons.Axe;
-import deco2800.skyfall.entities.weapons.Bow;
-import deco2800.skyfall.entities.weapons.Spear;
-import deco2800.skyfall.entities.weapons.Sword;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.*;
 
 import java.util.ArrayList;

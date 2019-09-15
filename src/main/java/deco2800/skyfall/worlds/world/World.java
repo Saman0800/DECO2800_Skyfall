@@ -6,9 +6,7 @@ import deco2800.skyfall.gamemenu.GameMenuScreen;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.AgentEntity;
-import deco2800.skyfall.entities.EnemyEntity;
 import deco2800.skyfall.entities.Harvestable;
-import deco2800.skyfall.entities.Projectile;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.managers.GameManager;
@@ -16,7 +14,6 @@ import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
@@ -28,7 +25,6 @@ import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.graphics.HasPointLight;
-import deco2800.skyfall.graphics.types.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -421,7 +417,7 @@ public class World implements TouchDownObserver {
 
         //
         for (AbstractEntity e1 : this.getEntities()){
-            e1.onTick(i);
+            e1.onTick(0);
         }
     }
 
@@ -483,7 +479,7 @@ public class World implements TouchDownObserver {
     /**
      * Returns the seed used in the world
      *
-     * @return
+     * @return the seed for the world
      */
     public long getSeed() {
         return worldParameters.getSeed();
