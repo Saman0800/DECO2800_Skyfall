@@ -200,7 +200,14 @@ public class GameMenuBar extends AbstractUIElement {
             Label num = new Label(entry.getValue().toString(), skin, "white-label");
             num.setPosition(xpos*count + size*count - 10, ypos + 40);
             num.setFontScale((float)0.4);
-            num.setSize(18, 25);
+            int numWidth = 18;
+            if(entry.getValue()>9){
+                numWidth += 8;
+            }
+            if(entry.getValue()>99){
+                numWidth += 8;
+            }
+            num.setSize(numWidth, 25);
             quickAccessPanel.addActor(num);
 
             count++;

@@ -98,14 +98,6 @@ public class Axe extends Weapon implements Item, IWeapon {
      * @return a description about the weapon
      */
     public String getDescription() {
-        return this.toString();
-    }
-
-    @Override
-    /**
-     * A paragraph describing the weapon
-     */
-    public String toString() {
         return this.getName() + " is a " + this.getSubtype() + " weapon which" +
                 " can be used to help the Main Character defeat enemies." +
                 " It has deals " + this.getDamage() + " " + this.getDamageType()
@@ -113,6 +105,14 @@ public class Axe extends Weapon implements Item, IWeapon {
                 "of: " + this.getAttackRate() + " and a durability of: " +
                 this.getDurability() + " before it become useless. "
                 + this.getName() + "is carryable, but exchangeable.";
+    }
+
+    @Override
+    /**
+     * A paragraph describing the weapon
+     */
+    public String toString() {
+        return "" + this.getSubtype() + ":" + this.getName();
     }
 
     /**
