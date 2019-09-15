@@ -21,7 +21,6 @@ import java.util.List;
 
 public class Dragon extends AbstractPet implements Animatable, Item {
     MainCharacter mc;
-    private boolean domesticated=false;
     private boolean isOutSide=false;
     private boolean isOnTheWay=false;
     public Dragon(float col, float row, MainCharacter mc){
@@ -40,9 +39,7 @@ public class Dragon extends AbstractPet implements Animatable, Item {
 //        this.setCurrentState(AnimationRole.NULL);
     }
 
-    public void setDomesticated(boolean domesticated){
-        this.domesticated=domesticated;
-    }
+
 
     public boolean getOutSide(){
         return this.isOutSide;
@@ -61,7 +58,7 @@ public class Dragon extends AbstractPet implements Animatable, Item {
         List<AbstractEntity> abstractEntityList=GameManager.get().getWorld().getSortedEntities();
         for(AbstractEntity ae:abstractEntityList){
             if(ae instanceof GoldPiece){
-                if(domesticated){
+                if(this.getDomesticated()){
                     if(ae.getPosition().distance(this.getPosition())<1){
                         isOnTheWay=true;
                         this.moveTowards(ae.getPosition());
@@ -76,7 +73,7 @@ public class Dragon extends AbstractPet implements Animatable, Item {
 
 
     public void followingCharacter(){
-        if(domesticated){
+        if(this.getDomesticated()){
             if(!isOnTheWay){
                 HexVector destination=new HexVector(mc.getCol()-1,mc.getRow()-1);
                 moveTowards(destination);
