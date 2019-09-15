@@ -3,7 +3,7 @@ package deco2800.skyfall.entities;
 import com.badlogic.gdx.audio.Sound;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.spells.SpellFactory;
-import deco2800.skyfall.entities.structures.BuildingType;
+import deco2800.skyfall.buildings.BuildingType;
 import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.weapons.Sword;
 import deco2800.skyfall.entities.weapons.Weapon;

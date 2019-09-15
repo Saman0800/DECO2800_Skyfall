@@ -410,7 +410,7 @@ public class BuildingWidgets {
 
             for (AbstractEntity entity : world.getEntities()) {
                 if (entity instanceof BuildingEntity) {
-                    Collider collider = entity.getCollider();
+                    Collider collider = ((BuildingEntity)entity).getCollider();
                     if ((collider != null) && !(collider.getX() <= mousePos[0] && collider.getY() <= mousePos[1]
                             && collider.getX() + collider.getXLength() >= mousePos[0]
                             && collider.getY() + collider.getYLength() >= mousePos[1])) {

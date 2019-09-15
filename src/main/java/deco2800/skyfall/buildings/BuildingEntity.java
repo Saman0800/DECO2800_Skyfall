@@ -98,7 +98,6 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
     * Called by building factory before returning a building such that no building
     * in the game has a Collider set to null.
     */
-    @Override
     public void setCollider() {
         float[] cords = WorldUtil.colRowToWorldCords(position.getCol(), position.getRow());
 
@@ -127,7 +126,6 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
     /**
      * @return The collider for the building entity
      */
-    @Override
     public Collider getCollider() {
         return collider;
     }
@@ -373,6 +371,11 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
         buildCost.put("Stone", 30);
         buildCost.put("Metal", 10);
         return buildCost;
+    }
+
+    @Override
+    public String getName() {
+        return null;
     }
 
     /**
