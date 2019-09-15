@@ -219,9 +219,15 @@ public class BuildingWidgets {
                 menu.setVisible(false);
                 return;
             }
+
+            // to notify not enough resources for a upgrade
+            upgradeBtn.setText("Fail upgrade");
+        } else {
+            // max level or no relevant level texture provided
+            upgradeBtn.setText("Max Level");
         }
 
-        upgradeBtn.setText("Max Level");
+        // upgrade button text back to normal after notice
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
