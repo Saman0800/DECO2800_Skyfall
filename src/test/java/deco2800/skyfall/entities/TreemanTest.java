@@ -7,13 +7,28 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import deco2800.skyfall.animation.AnimationLinker;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.managers.DatabaseManager;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.world.WorldBuilder;
+import deco2800.skyfall.worlds.world.WorldDirector;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 
 public class TreemanTest {
     Treeman treeman;
     @Before
-    public void setup() throws Exception {
-        treeman=new Treeman(2f,3f);
+    public void setup(){
+        treeman = new Treeman(2f,3f);
     }
 
     /**
@@ -23,6 +38,7 @@ public class TreemanTest {
     public void positionTest(){
         assertThat("", treeman.getCol(), is(equalTo(2f)));
         assertThat("", treeman.getRow(), is(equalTo(3f)));
+
     }
 
     /**
@@ -92,6 +108,16 @@ public class TreemanTest {
     @Test
     public void testLevel(){
         Assert.assertEquals(2,treeman.getLevel());
+    }
+
+
+    /**
+     * To test movement direction
+     */
+    @Test
+    public void movementDirection() {
+        Assert.assertEquals(treeman.movementDirection
+                (this.treeman.position.getAngle()),Direction.SOUTH_EAST);
     }
 
 
