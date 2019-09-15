@@ -8,6 +8,10 @@ public abstract class AbstractPet extends Peon implements ICombatEntity{
     private int damage;
     private int health;
     private int armour;
+    private boolean domesticated=false;
+    private boolean isOutSide=false;
+    private boolean isOnTheWay=false;
+    private boolean isSummoned=false;
 
     public AbstractPet(float col, float row){
         this.setRow(row);
@@ -19,6 +23,23 @@ public abstract class AbstractPet extends Peon implements ICombatEntity{
         this.setTexture(texturename);
         this.setCollider();
 
+    }
+
+
+    public boolean isSummoned(){
+        return isSummoned;
+    }
+
+    public void setSummoned(boolean summoned){
+        this.isSummoned=summoned;
+    }
+
+    public void setDomesticated(boolean domesticated){
+        this.domesticated=domesticated;
+    }
+
+    public boolean getDomesticated(){
+        return this.domesticated;
     }
 
     public int getLevel(){
