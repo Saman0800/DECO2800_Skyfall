@@ -601,21 +601,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
     }
 
     /**
-     * Adds the tiles from the {@code BiomeInProgress}es to the {@code Biome}s provided.
-     */
-    private void populateRealBiomes() {
-        for (int i = 0; i < biomes.size(); i++) {
-            BiomeInProgress biome = biomes.get(i);
-            AbstractBiome realBiome = realBiomes.get(i);
-            for (WorldGenNode node : biome.nodes) {
-                for (Tile tile : node.getTiles()) {
-                    realBiome.addTile(tile);
-                }
-            }
-        }
-    }
-
-    /**
      * Ensures that biomes are contiguous. For small non-contiguous groups of tiles, they are just removed, but for
      * large groups, the generation must be restarted, as the biome size could lose too many tiles.
      *

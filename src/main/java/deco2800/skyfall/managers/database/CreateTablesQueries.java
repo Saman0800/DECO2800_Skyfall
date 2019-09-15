@@ -11,13 +11,15 @@ public class CreateTablesQueries {
         + "    PRIMARY KEY (save_id)"
         + ")";
 
-    public String createWorldsTableSql = "CREATE TABLE WORLDS("
-        + "    save_id int not null ,"
-        + "    world_id int not null ,"
-        + "    is_current_world boolean,"
-        + "    data clob,"
-        + "    primary key (world_id) ,"
-        + "    foreign key (save_id) references SAVES(save_id))";
+    public String createWorldsTableSql = "CREATE TABLE WORLDS" +
+            "(" +
+            "    save_id bigint not null ," +
+            "    world_id bigint not null ," +
+            "    is_current_world boolean," +
+            "    data clob," +
+            "    primary key (world_id) ," +
+            "    foreign key (save_id) references SAVES(save_id)" +
+            ")";
 
 
     public String createMainCharacterTableSql = "CREATE TABLE MAIN_CHARACTER("

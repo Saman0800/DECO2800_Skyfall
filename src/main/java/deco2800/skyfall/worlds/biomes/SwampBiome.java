@@ -24,9 +24,9 @@ public class SwampBiome extends AbstractBiome{
     @Override
     public void setTileTexture(Tile tile) {
         ArrayList<String> textures = new ArrayList<>();
-        textures.add("swamp_1");
-        textures.add("swamp_2");
-        textures.add("swamp_3");
+        textures.add("swamp1.1");
+        textures.add("swamp1.2");
+        textures.add("swamp1.3");
 
         double perlinValue =
                 NoiseGenerator.fade(textureGenerator.getOctavedPerlinValue(tile.getCol(), tile.getRow()), 2);

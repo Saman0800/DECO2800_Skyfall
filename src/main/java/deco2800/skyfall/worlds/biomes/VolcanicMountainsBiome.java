@@ -24,9 +24,9 @@ public class VolcanicMountainsBiome extends AbstractBiome {
     @Override
     public void setTileTexture(Tile tile) {
         ArrayList<String> textures = new ArrayList<>();
-        textures.add("volcanic_mountains_1");
-        textures.add("volcanic_mountains_2");
-        textures.add("volcanic_mountains_3");
+        textures.add("vmountain1.1");
+        textures.add("vmountain1.2");
+        textures.add("vmountain1.3");
 
         double perlinValue =
                 NoiseGenerator.fade(textureGenerator.getOctavedPerlinValue(tile.getCol(), tile.getRow()), 2);
