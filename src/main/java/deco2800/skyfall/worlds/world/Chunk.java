@@ -29,7 +29,6 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
     private ArrayList<Tile> tiles;
     private ArrayList<AbstractEntity> entities;
 
-    // TODO:Ontonator Make this take the world as a parameter or something.
     public static Chunk loadChunkAt(World world, int x, int y) {
         // FIXME:Ontonator Implement.
         Chunk chunk = new Chunk(world, x, y);
@@ -38,7 +37,6 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
     }
 
     public static Pair<Integer, Integer> getChunkForCoordinates(double col, double row) {
-        // TODO:Ontonator Check that this works.
         double tileCol = Math.round(col);
         double tileRowOffset = tileCol % 2 == 0 ? 0 : 0.5;
         double tileRow = Math.round(row - tileRowOffset);
@@ -80,7 +78,6 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
      * Creates blank tiles which fill the area of this chunk.
      */
     private void generateTiles() {
-        // TODO:Ontonator Does this need to check whether the chunk is completely within the world size?
         for (int row = y * CHUNK_SIDE_LENGTH; row < (y + 1) * CHUNK_SIDE_LENGTH; row++) {
             for (int col = x * CHUNK_SIDE_LENGTH; col < (x + 1) * CHUNK_SIDE_LENGTH; col++) {
                 float oddCol = (col % 2 != 0 ? 0.5f : 0);

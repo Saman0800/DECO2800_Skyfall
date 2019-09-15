@@ -67,7 +67,7 @@ public class Tile {
     @Expose
     private int tileID = 0;
 
-    // FIXME:Ontonator Does this really need to be stored?
+    // FIXME:Ontonator Consider removing these; they are only useful for tests.
     private WorldGenNode node;
     private VoronoiEdge edge;
 
