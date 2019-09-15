@@ -18,7 +18,7 @@ public class Bow extends Weapon implements Item, IWeapon {
 
         this.name = "bow";
         this.weaponType = "range";
-        this.durability = 10;
+        this.durability = 100;
         this.damageType = "splash";
         this.damage = 4;
         this.attackRate = 3;

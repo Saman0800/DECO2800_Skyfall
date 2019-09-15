@@ -6,6 +6,7 @@ import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.structures.BuildingType;
 import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.weapons.Sword;
+import deco2800.skyfall.entities.weapons.Bow;
 import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.entities.worlditems.*;
 import com.badlogic.gdx.*;
@@ -364,13 +365,19 @@ public class MainCharacter extends Peon
      */
     private void fireArrow(HexVector mousePosition) {
 
-        System.out.println(mousePosition.getCol() + " " + mousePosition.getRow());
         HexVector position = this.getPosition();
+
+//        Bow bow = new Bow();
+//        System.out.println(bow);
+
         setCurrentState(AnimationRole.ATTACK);
         SoundManager.playSound(BOWATTACK);
+
+        // getting the texture of the arrow base on position
         String texture = getArrowTexture(mousePosition);
+
         Projectile arrow = new Projectile(mousePosition, texture,
-                "Arrow", position.getCol() + 1, position.getRow(), 4
+                "Arrow", position.getCol() + 1, position.getRow(), 2
                 , 0.4f,
                 this.itemSlotSelected == 1 ? 1 : 0);
         // Get AbstractWorld from static class GameManager.
