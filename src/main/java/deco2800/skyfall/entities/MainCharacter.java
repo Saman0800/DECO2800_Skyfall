@@ -4,6 +4,7 @@ import com.badlogic.gdx.audio.Sound;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.pets.AbstractPet;
 import deco2800.skyfall.entities.pets.Dragon;
+import deco2800.skyfall.entities.pets.Whitebear;
 import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.structures.BuildingType;
 import deco2800.skyfall.entities.spells.SpellFactory;
@@ -814,6 +815,7 @@ public class MainCharacter extends Peon
         }
         public void petOut(){
             List<Item> items=this.inventories.getInventoryContents().get("dragon");
+            List<Item> items1=this.inventories.getInventoryContents().get("whitebear");
             if(items!=null){
                 for(Item item:items){
                     if(item instanceof AbstractPet){
@@ -828,6 +830,21 @@ public class MainCharacter extends Peon
                     }
                 }
             }
+            if(items1!=null){
+                for(Item item:items1){
+                    if(item instanceof AbstractPet){
+                        Whitebear wb=(Whitebear) item;
+                        if(!wb.getOutSide()){
+                            System.out.println("hello");
+                            this.inventories.quickAccessRemove("whitebear");
+                            AbstractPet whitebear=new Whitebear(this.getCol()-2,this.getRow()-2,this);
+                            ((Whitebear) whitebear).setDomesticated(true);
+                            GameManager.get().getWorld().addEntity(whitebear);
+                        }
+                    }
+                }
+            }
+
         }
         /**
          * Select the spell that the character is ready to cast.
