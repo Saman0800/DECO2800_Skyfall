@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.physics.box2d.MassData;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.structures.BuildingType;
@@ -459,7 +460,6 @@ public class MainCharacter extends Peon
         if (this.healthBar != null) {
             this.healthBar.update(this.getHealth());
         }
-        System.out.println("Hurted: " + isRecovering);
 
         if (!isRecovering) {
             setHurt(true);
@@ -474,6 +474,13 @@ public class MainCharacter extends Peon
             } else {
                 hurtTime = 0;
                 recoverTime = 0;
+
+
+                MassData massData = new MassData();
+                // massData.mass =
+                // getBody().set
+
+                /*
                 HexVector bounceBack = new HexVector();
 
                 switch (getPlayerDirectionCardinal()) {
@@ -503,6 +510,7 @@ public class MainCharacter extends Peon
                         break;
                 }
                 position.moveToward(bounceBack, 1f);
+                */
 
                 SoundManager.playSound(HURT);
             }
@@ -513,7 +521,7 @@ public class MainCharacter extends Peon
         hurtTime += 20; // hurt for 1 second
 
         if (hurtTime > 400) {
-            System.out.println("Hurt ended");
+            logger.info("Hurt ended");
             setHurt(false);
             setRecovering(true);
             hurtTime = 0;
@@ -787,7 +795,6 @@ public class MainCharacter extends Peon
 
     }
 
-
     /**
      * Sets the Player's current movement speed
      *
@@ -926,7 +933,6 @@ public class MainCharacter extends Peon
         }
     }
 
-
     /**
      * Removes one instance of a gold piece in the pouch with a specific value.
      *
@@ -980,7 +986,6 @@ public class MainCharacter extends Peon
                     logger.info(this.inventories.toString());
                 }
             }
-
         }
         logger.info("Sorry, you are not close enough to a gold piece!");
 
