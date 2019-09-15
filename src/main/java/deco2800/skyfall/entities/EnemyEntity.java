@@ -44,6 +44,12 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
         this.setTexture(texturename);
     }
 
+    public EnemyEntity(float row, float col, String texturename,int health,
+                       int armour,int damage, String fixtureDef) {
+        super(row, col, 0.2f,texturename,health, fixtureDef);
+        this.setTexture(texturename);
+    }
+
     public void onTick(long i) {
         getBody().setTransform(position.getCol(), position.getRow(), getBody().getAngle());
 

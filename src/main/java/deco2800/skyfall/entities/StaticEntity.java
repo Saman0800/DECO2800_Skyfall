@@ -91,6 +91,62 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         }
     }
 
+    public StaticEntity(Tile tile, int renderOrder, String texture,
+                        boolean obstructed, String fixtureDef) {
+        super(tile.getCol(), tile.getRow(), renderOrder, fixtureDef);
+        this.setObjectName(ENTITY_ID_STRING);
+        this.setTexture(texture);
+
+        this.renderOrder = renderOrder;
+        this.obstructed = obstructed;
+
+        children = new HashMap<>();
+        children.put(tile.getCoordinates(), texture);
+        if (!WorldUtil.validColRow(tile.getCoordinates())) {
+            log.debug(tile.getCoordinates() + "%s Is Invalid:");
+            return;
+        }
+
+        tile.setParent(this);
+        tile.setObstructed(obstructed);
+    }
+
+    public StaticEntity(float col, float row, int renderOrder, Map<HexVector,
+            String> texture, String fixtureDef) {
+        super(col, row, renderOrder, fixtureDef);
+        this.setObjectName(ENTITY_ID_STRING);
+
+        Tile center = GameManager.get().getWorld().getTile(this.getPosition());
+        this.renderOrder = renderOrder;
+        this.obstructed = true;
+        this.textures = texture;
+
+        if (center == null) {
+            log.debug("Center is null");
+            return;
+        }
+
+        if (!WorldUtil.validColRow(center.getCoordinates())) {
+            log.debug(center.getCoordinates() + " Is Invalid:");
+            return;
+        }
+
+        children = new HashMap<>();
+
+        for (Entry<HexVector, String> tex : texture.entrySet()) {
+            Tile tile = textureToTile(tex.getKey(), this.getPosition());
+            if (tile != null) {
+                children.put(tile.getCoordinates(), tex.getValue());
+            }
+        }
+
+        for (HexVector childPos : children.keySet()) {
+            Tile child = GameManager.get().getWorld().getTile(childPos);
+
+            child.setObstructed(true);
+        }
+    }
+
     /**
      * A simple getter function to retrieve the render order of the static object.
      * 

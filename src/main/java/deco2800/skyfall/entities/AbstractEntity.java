@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.animation.AnimationLinker;
@@ -10,15 +11,13 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.renderers.Renderable;
-import deco2800.skyfall.util.BodyEditorLoader;
-import deco2800.skyfall.util.Collider;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.util.*;
 import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.security.KeyStore;
+import java.sql.Array;
 import java.util.*;
 
 /**
@@ -432,13 +431,12 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 * the entity's constructor after the fixture is created.
 	 * Sets the fixtures shape and size based on a .JSON file
 	 *
-	 * @param fixtureDefFile file path to .JSON file defining the fixture
+	 * @param fixtureDefName file path to .JSON file defining the fixture
 	 */
-	public void defineFixture(String fixtureDefFile){
+	public void defineFixture(String fixtureDefName){
 		BodyEditorLoader loader =
-				new BodyEditorLoader(Gdx.files.internal("resources/HitBoxes/" + fixtureDefFile +
+				new BodyEditorLoader(Gdx.files.internal("resources/HitBoxes/" + fixtureDefName +
 						"HitBox.JSON"));
-
 		PhysicsManager manager = new PhysicsManager();
 		World world = manager.getBox2DWorld();
 		BodyDef bd = new BodyDef();
@@ -446,17 +444,21 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 		body = world.createBody(bd);
 
 		PolygonShape shape = new PolygonShape();
+		for (Object e : loader.getInternalModel().rigidBodies.entrySet()) {
+			System.out.println(e.toString());
+		}
+		//shape.set(loader.getInternalModel().rigidBodies.get(fixtureDefName)
+		// .polygons.get(0).vertices);
 
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.density = 1;
 		fixtureDef.friction = 0.5f;
 		fixtureDef.restitution = 0.3f;
-
+		fixtureDef.shape = shape;
 		fixture = body.createFixture(fixtureDef);
 		fixture.setSensor(!isCollidable);
 
-		loader.attachFixture(body, fixtureDefFile, fixtureDef, scale);
-		//TODO: Add code for defining code for custom body shape
+		loader.attachFixture(body, fixtureDefName, fixtureDef, scale);
 	}
 
 	/**
