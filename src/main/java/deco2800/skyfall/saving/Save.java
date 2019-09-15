@@ -3,13 +3,14 @@ package deco2800.skyfall.saving;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.worlds.world.World;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A class that stores all aspects of the game that require saving
  */
-public class Save implements Saveable<Save.SaveMemento> {
+public class Save implements Saveable<Save.SaveMemento>, Serializable {
 
     // The ID of this save
     private long saveID;
@@ -17,6 +18,10 @@ public class Save implements Saveable<Save.SaveMemento> {
     // TODO delete
     // The worlds in this save
     private List<World> worlds;
+
+
+    private World currentWorld;
+
 
     // TODO delete
     // The ID of the main character in this save
@@ -41,6 +46,10 @@ public class Save implements Saveable<Save.SaveMemento> {
         this.load(saveMemento);
         this.worlds = new ArrayList<>();
         this.mainCharacter = null;
+    }
+
+    public World getCurrentWorld() {
+        return currentWorld;
     }
 
     /**

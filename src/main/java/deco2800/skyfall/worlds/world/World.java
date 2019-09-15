@@ -74,6 +74,14 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
 
     protected WorldParameters worldParameters;
 
+    private long worldId;
+
+
+    //FIXME:jeffvan Setup world from saved data
+    public World(WorldMemento worldMemento){
+
+    }
+
     /**
      * The constructor for a world being loaded from a memento
      *
@@ -112,6 +120,7 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         generateWorld();
         generateTileIndices();
         initialiseFrictionmap();
+        setWorldId();
     }
 
     /**
@@ -666,6 +675,17 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
     public WorldParameters getWorldParameters() {
         return worldParameters;
     }
+    public void setWorldId(){
+        worldId = System.nanoTime();
+    }
+
+    public void setWorldId(long id){
+        worldId = id;
+    }
+
+    public long getWorldId() {
+        return worldId;
+    }
 
     @Override
     public String formatData() {
@@ -709,4 +729,6 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         }
 
     }
+
+
 }

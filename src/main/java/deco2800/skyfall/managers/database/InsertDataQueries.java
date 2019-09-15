@@ -13,12 +13,12 @@ public class InsertDataQueries {
         this.statement = statement;
     }
 
-    public void insertSave(int id, String data) throws SQLException{
+    public void insertSave(long id, String data) throws SQLException{
         String query = String.format("insert into SAVES (save_id, data) values (%s, '%s')", id, data);
         statement.executeUpdate(query);
     }
 
-    public void insertWorld(int saveId, int worldId, boolean isCurrentWorld, String data) throws SQLException{
+    public void insertWorld(long saveId, long worldId, boolean isCurrentWorld, String data) throws SQLException{
         String query = String.format("insert into WORLDS (save_id, world_id, is_current_world, data) values (%s,%s,"
                 + "%s,'%s')", saveId, worldId, isCurrentWorld, data);
         statement.executeUpdate(query);
