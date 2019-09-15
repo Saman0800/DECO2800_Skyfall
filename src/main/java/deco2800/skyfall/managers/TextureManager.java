@@ -43,7 +43,7 @@ public class TextureManager extends AbstractManager {
      */
     public TextureManager() {
         try {
-            textureMap.put("background", new Texture("resources/background.jpg"));
+            textureMap.put("background", new Texture("resources/actualbackground.jpg"));
             textureMap.put("spacman_ded", new Texture("resources/spacman_ded.png"));
             textureMap.put("spacman_blue", new Texture("resources/spacman_blue.png"));
             textureMap.put("bowman", new Texture("resources/bowman.png"));
