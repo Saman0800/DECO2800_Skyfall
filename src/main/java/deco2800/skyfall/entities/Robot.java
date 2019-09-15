@@ -112,4 +112,11 @@ public class Robot extends EnemyEntity implements Animatable {
     public void setDirectionTextures() {
 
     }
+
+    @Override
+    public void dealDamage(MainCharacter player) {
+        if (!player.isRecovering()) {
+            player.hurt(getDamage());
+        }
+    }
 }

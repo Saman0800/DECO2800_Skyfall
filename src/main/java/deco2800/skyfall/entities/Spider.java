@@ -148,4 +148,10 @@ public class Spider extends EnemyEntity implements Animatable {
         return String.format("%s at (%d, %d) %s biome", getEnemyType(),(int) getCol(),(int) getRow(),getBiome());
     }
 
+    @Override
+    public void dealDamage(MainCharacter player) {
+        if (!player.isRecovering()) {
+            player.hurt(getDamage());
+        }
+    }
 }

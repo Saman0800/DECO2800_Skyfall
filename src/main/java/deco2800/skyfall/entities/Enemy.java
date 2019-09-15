@@ -127,16 +127,15 @@ public class Enemy extends AgentEntity implements ICombatEntity {
         this.health -= damage;
     }
 
+    @Override
+    public void dealDamage(MainCharacter player) {
+
+    }
+
     /**
      * Deal damage to another ICombatEntity.
      * @param entity The combat entity that has been selected to deal damage to.
      */
-    @Override
-    public void dealDamage(ICombatEntity entity) {
-        if (this.canDealDamage()) {
-            entity.takeDamage(this.getDamage());
-        }
-    }
 
     /**
      * Return whether this enemy can deal damage.

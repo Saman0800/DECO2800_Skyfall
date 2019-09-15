@@ -88,21 +88,6 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
         return this.statusIndicators;
     }
 
-
-
-    /**
-     * Deal damage to another ICombatEntity.
-     * @param entity The combat entity that has been selected to deal damage to.
-     */
-    @Override
-    public void dealDamage(ICombatEntity entity) {
-        if (this.canDealDamage()) {
-            entity.takeDamage(this.damage);
-        }
-    }
-
-
-
     /**
      * Return whether this enemy can deal damage.
      * @return Can this enemy deal damage.

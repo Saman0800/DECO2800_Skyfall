@@ -354,5 +354,12 @@ public class Stone extends EnemyEntity implements Animatable {
     @Override
     public void setDirectionTextures() {
     }
+
+    @Override
+    public void dealDamage(MainCharacter player) {
+        if (!player.isRecovering()) {
+            player.hurt(getDamage());
+        }
+    }
 }
 

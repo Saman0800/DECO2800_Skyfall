@@ -475,42 +475,40 @@ public class MainCharacter extends Peon
                 hurtTime = 0;
                 recoverTime = 0;
 
-
-                MassData massData = new MassData();
-                // massData.mass =
-                // getBody().set
-
-                /*
-                HexVector bounceBack = new HexVector();
+                float newCol = position.getCol();
+                float newRow = position.getRow();
 
                 switch (getPlayerDirectionCardinal()) {
                     case "North":
-                        bounceBack = new HexVector(position.getCol(), position.getRow() - 2);
+                        newRow = newRow - 1;
                         break;
                     case "North-East":
-                        bounceBack = new HexVector(position.getCol() - 2, position.getRow() - 2);
+                        newCol = newCol - 1;
+                        newRow = newRow - 1;
                         break;
                     case "East":
-                        bounceBack = new HexVector(position.getCol() - 2, position.getRow());
+                        newCol = newCol - 1;
                         break;
                     case "South-East":
-                        bounceBack = new HexVector(position.getCol() - 2, position.getRow() + 2);
+                        newCol = newCol - 1;
+                        newRow = newRow + 1;
                         break;
                     case "South":
-                        bounceBack = new HexVector(position.getCol(), position.getRow() + 2);
+                        newRow = newRow + 1;
                         break;
                     case "South-West":
-                        bounceBack = new HexVector(position.getCol() + 2, position.getRow() + 2);
+                        newCol = newCol + 1;
+                        newRow = newRow + 1;
                         break;
                     case "West":
-                        bounceBack = new HexVector(position.getCol() - 2, position.getRow());
+                        newCol = newCol - 1;
                         break;
                     case "North-West":
-                        bounceBack = new HexVector(position.getCol() + 2, position.getRow() - 2);
+                        newCol = newCol + 1;
+                        newRow = newRow - 1;
                         break;
                 }
-                position.moveToward(bounceBack, 1f);
-                */
+                getBody().setTransform(newCol, newRow, getBody().getAngle());
 
                 SoundManager.playSound(HURT);
             }
@@ -550,8 +548,6 @@ public class MainCharacter extends Peon
 
     private void checkIfRecovered() {
         recoverTime += 20;
-        System.out.println("Character recovering");
-        recoverTime += 20;
 
         this.changeCollideability(false);
 
@@ -569,7 +565,6 @@ public class MainCharacter extends Peon
     public void kill() {
         // stop player controls
         AnimationManager animationManager = GameManager.getManagerFromInstance(AnimationManager.class);
-
 
         // set health to 0.
         changeHealth(0);
@@ -744,6 +739,7 @@ public class MainCharacter extends Peon
 
             HexVector mousePos = new HexVector(clickedPosition[0], clickedPosition[1]);
             this.attack(mousePos);
+            System.out.println("attacked");
         }
     }
 
@@ -1155,9 +1151,12 @@ public class MainCharacter extends Peon
      */
     private double getPlayerDirectionAngle() {
         double val;
-        if (xInput == 0 && yInput == 0) {
+        if (xInput > 0 && yInput < 0) {
+            val = 135;
+        } else if (xInput == 0 && yInput == 0 ||
+            xInput == 0 && yInput < 0) {
             val = 180;
-        } else if (xInput < 0 || yInput < 0) {
+        } else if (xInput < 0) {
             val = Math.atan2(xInput, yInput);
             val = Math.toDegrees(val);
             val += 360;
@@ -1165,7 +1164,6 @@ public class MainCharacter extends Peon
             val = Math.atan2(xInput, yInput);
             val = Math.toDegrees(val);
         }
-
         if (val < 0) {
             val += 360;
         }
@@ -1194,6 +1192,7 @@ public class MainCharacter extends Peon
             return "South-East";
         } else if (157.5 <= playerDirectionAngle && playerDirectionAngle <= 202.5) {
             setCurrentDirection(Direction.SOUTH);
+            System.out.println(playerDirectionAngle);
             return "South";
         } else if (202.5 <= playerDirectionAngle && playerDirectionAngle <= 247.5) {
             setCurrentDirection(Direction.SOUTH_WEST);

@@ -186,6 +186,11 @@ public class Flower extends EnemyEntity implements Animatable {
     }
 
 
-
+    @Override
+    public void dealDamage(MainCharacter player) {
+        if (!player.isRecovering()) {
+            player.hurt(getDamage());
+        }
+    }
 }
 
