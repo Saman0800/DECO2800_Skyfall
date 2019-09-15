@@ -434,31 +434,32 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 	 * @param fixtureDefName file path to .JSON file defining the fixture
 	 */
 	public void defineFixture(String fixtureDefName){
+		// Creates the loader to load the complex hitbox
 		BodyEditorLoader loader =
-				new BodyEditorLoader(Gdx.files.internal("resources/HitBoxes/" + fixtureDefName +
-						"HitBox.JSON"));
+				new BodyEditorLoader(Gdx.files.internal("resources/HitBoxes" +
+						"/"+ fixtureDefName + "HitBox.json"));
+
+		// Creates a world for the hit box to inhabit
 		PhysicsManager manager = new PhysicsManager();
 		World world = manager.getBox2DWorld();
+
+		// Create the hit box body
 		BodyDef bd = new BodyDef();
 		bd.type = BodyDef.BodyType.KinematicBody;
 		body = world.createBody(bd);
 
-		PolygonShape shape = new PolygonShape();
-		for (Object e : loader.getInternalModel().rigidBodies.entrySet()) {
-			System.out.println(e.toString());
-		}
-		//shape.set(loader.getInternalModel().rigidBodies.get(fixtureDefName)
-		// .polygons.get(0).vertices);
-
+		// Assigns all the aspects of the fixture
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.density = 1;
 		fixtureDef.friction = 0.5f;
 		fixtureDef.restitution = 0.3f;
-		fixtureDef.shape = shape;
+
+		// Gets the hit box from the loader
+		loader.attachFixture(body, "Character", fixtureDef, scale);
+
+		// Set the collision of the body
 		fixture = body.createFixture(fixtureDef);
 		fixture.setSensor(!isCollidable);
-
-		loader.attachFixture(body, fixtureDefName, fixtureDef, scale);
 	}
 
 	/**

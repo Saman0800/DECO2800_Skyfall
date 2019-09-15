@@ -1,12 +1,7 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.audio.Sound;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.spells.SpellFactory;
-import deco2800.skyfall.entities.structures.BuildingType;
-import deco2800.skyfall.entities.spells.SpellFactory;
-import deco2800.skyfall.entities.weapons.Sword;
-import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.entities.worlditems.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.Vector2;
@@ -405,7 +400,7 @@ public class MainCharacter extends Peon
     public void enterVehicle(String vehicle) {
         // Determine the vehicle they are entering and set their new speed and
         // texture
-        if (vehicle.equals("Horse")) {
+        if (vehicle.equals("Camel")) {
             //this.setTexture();
             setAcceleration(0.1f);
             setMaxSpeed(0.8f);
