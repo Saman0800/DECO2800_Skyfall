@@ -59,7 +59,6 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         this.setObjectName(ENTITY_ID_STRING);
         this.setTexture(texture);
 
-        this.renderOrder = renderOrder;
         this.obstructed = obstructed;
 
         children = new HashMap<>();
@@ -78,7 +77,6 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         this.setObjectName(ENTITY_ID_STRING);
 
         Tile center = GameManager.get().getWorld().getTile(this.getPosition());
-        this.renderOrder = renderOrder;
         this.obstructed = true;
         this.textures = texture;
 
@@ -106,19 +104,6 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
 
             child.setObstructed(true);
         }
-    }
-
-    /**
-     * A simple getter function to retrieve the render order of the static object.
-     * 
-     * @return The render order of this instance.
-     */
-    public int getRenderorder() {
-        return this.renderOrder;
-    }
-
-    public void setRenderorder(int renderOrder) {
-        this.renderOrder = renderOrder;
     }
 
     /**
@@ -243,7 +228,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
     public void load(StaticEntityMemento memento) {
         this.setPosition(memento.row, memento.col);
         this.setEntityID(memento.entityID);
-        this.renderOrder = memento.renderOrder;
+        setRenderOrder(memento.renderOrder);
         this.obstructed = memento.obstructed;
         /*
         this.setBody(memento.body);
@@ -283,7 +268,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
             this.entityID = entity.getEntityID();
             this.colRenderLength = entity.getColRenderLength();
             this.rowRenderLength = entity.getRowRenderLength();
-            this.renderOrder = entity.renderOrder;
+            this.renderOrder = entity.getRenderOrder();
             this.obstructed = entity.obstructed;
 
             /*
@@ -291,7 +276,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
             this.fixture = entity.getFixture();
             */
 
-            this.isCollidable = entity.getIsCollidable();
+            this.isCollidable = entity.getCollidable();
             this.texture = entity.getTexture();
         }
     }

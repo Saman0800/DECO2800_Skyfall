@@ -63,10 +63,10 @@ public class HexVector {
     /**
      * Setter for the row value
      * 
-     * @param col the row value to be set
+     * @param row the row value to be set
      */
-    public void setRow(float col) {
-        this.row = col;
+    public void setRow(float row) {
+        this.row = row;
     }
 
     /**

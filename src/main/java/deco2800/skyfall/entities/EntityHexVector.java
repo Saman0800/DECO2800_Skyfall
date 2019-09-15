@@ -63,8 +63,8 @@ public class EntityHexVector extends HexVector {
     }
 
     @Override
-    public void setRow(float col) {
-        checkChunk(() -> super.setRow(col));
+    public void setRow(float row) {
+        checkChunk(() -> super.setRow(row));
     }
 
     @Override

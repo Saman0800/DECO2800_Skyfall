@@ -200,12 +200,8 @@ public class WorldBuilder implements WorldBuilderInterface {
                     biomeSpawnRules.add(swordRule);
 
                     // Spawn some axes
-                    Weapon startAxe = new Axe(startTile, true);
-                    EntitySpawnRule axeRule = new EntitySpawnRule(0.5, 1, 5,
-                            biome);
-                    EntitySpawnTable.spawnEntities(startAxe, axeRule, world);
-
-                    Tree startTree = new Tree(startTile, true);
+                    EntitySpawnRule axeRule = new EntitySpawnRule(tile -> new Axe(tile, true), 0.5, 1, 5, biome);
+                    biomeSpawnRules.add(axeRule);
 
                     // Create a new perlin noise map
                     SpawnControl treeControl = x -> x / 3 + 0.2;
@@ -224,7 +220,6 @@ public class WorldBuilder implements WorldBuilderInterface {
                     // FIXME:Ontonator Make this work with chunks.
                     spawnChests(10, startTile, biome, world);
 
-                    ForestMushroom startMushroom = new ForestMushroom(startTile, false);
                     // This generator will cause the mushrooms to clump togteher more
                     NoiseGenerator mushroomGen = new NoiseGenerator(new Random(worldSeed).nextLong(), 10, 20, 0.9);
                     SpawnControl mushroomControl = x -> (x * x * x * x * x * x) / 3.0;
@@ -238,9 +233,7 @@ public class WorldBuilder implements WorldBuilderInterface {
 
                     // Spawn some spears
                     EntitySpawnRule spearRule = new EntitySpawnRule(tile -> new Spear(tile, true), 0.04, 5, 20, biome);
-                    biomeSpawnRules(spearRule);
-
-                    MountainTree startMTree = new MountainTree(startTile, true);
+                    biomeSpawnRules.add(spearRule);
 
                     // Create a new perlin noise map
                     SpawnControl cubic = x -> (x * x * x * x * x) / 4.0;
@@ -266,15 +259,9 @@ public class WorldBuilder implements WorldBuilderInterface {
 
                 case "desert":
 
-                    // FIXME:Ontonator WTF is this‽
-                    DetectSand sand = new DetectSand(biome);
-                    sand.putCharacter();
-
                     // Spawn some axes
                     EntitySpawnRule axeRule2 = new EntitySpawnRule(tile -> new Axe(tile, true), 0.1, 1, 30, biome);
                     biomeSpawnRules.add(axeRule2);
-
-                    DesertCacti startDCacti = new DesertCacti(startTile, true);
 
                     // Create a new perlin noise map
                     SpawnControl cactiControl = x -> (x * x * x * x) / 4.0;
@@ -292,8 +279,6 @@ public class WorldBuilder implements WorldBuilderInterface {
                     // Spawn some spears
                     EntitySpawnRule spearRule2 = new EntitySpawnRule(tile -> new Spear(tile, true), 0.5, 1, 5, biome);
                     biomeSpawnRules.add(spearRule2);
-
-                    SnowClump startSnowyMountainSnow = new SnowClump(startTile, false);
 
                     // Create a new perlin noise map
                     SpawnControl sSnowControl = x -> x / 2 + 0.15;

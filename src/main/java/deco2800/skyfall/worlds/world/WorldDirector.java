@@ -1,11 +1,6 @@
 package deco2800.skyfall.worlds.world;
 
-import deco2800.skyfall.entities.Flower;
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.Robot;
-import deco2800.skyfall.entities.Spider;
-import deco2800.skyfall.entities.Stone;
-import deco2800.skyfall.entities.Treeman;
+import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
@@ -87,10 +82,10 @@ public class WorldDirector {
         builder.addEntity(new Spider(-8f, -1f, mainCharacter));
         builder.addEntity(new Robot(-15, -15, mainCharacter));
         builder.addEntity(new Stone(-4, -3, mainCharacter));
-        builder.addEntity(new Flower(5f,5f,mainCharacter));
-        builder.addEntity(new Treeman(3f,3f,mainCharacter));
+        builder.addEntity(new Flower(5f, 5f, mainCharacter));
+        builder.addEntity(new Treeman(3f, 3f, mainCharacter));
 
-        builder.addEntity(new Camel(34,-7, mainCharacter));
+        builder.addEntity(new Camel(34, -7, mainCharacter));
         builder.addEntity(new Horse(-8,-6, mainCharacter));
         return builder;
     }
