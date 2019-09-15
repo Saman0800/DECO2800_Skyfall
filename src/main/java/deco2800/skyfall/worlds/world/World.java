@@ -622,6 +622,13 @@ public class World implements TouchDownObserver {
                 gmm.getInventory().inventoryAdd((Item) entity);
                 removeEntity(entity);
             }
+            else if (entity instanceof Tiger){
+                if (tile.getCoordinates().distance(gmm.getMainCharacter().getPosition()) > 2) {
+                    continue;
+                }
+                gmm.getInventory().inventoryAdd((Item) entity);
+                removeEntity(entity);
+            }
         }
     }
 }
