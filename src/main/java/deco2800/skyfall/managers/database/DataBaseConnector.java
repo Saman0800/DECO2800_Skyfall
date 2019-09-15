@@ -17,7 +17,6 @@ import java.util.ArrayList;
 
 public class DataBaseConnector {
     private Connection connection;
-    public String started = "";
 
     //FIXME:jeffvan12 change to a method
     public static void main(String[] args) {
@@ -27,7 +26,6 @@ public class DataBaseConnector {
     }
 
     public void start(){
-        started = "started";
         try {
             //Connects to the data base
             Driver derbyData = new EmbeddedDriver();
@@ -245,7 +243,8 @@ public class DataBaseConnector {
         try{
             Gson gson = new Gson();
             //TODO:jeffvan12 Make it so it uses a preparedStatement
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM CHUNKS WHERE x = ? and y = ? and world_id = ?");
+            connection.setAutoCommit(false);
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM CHUNKS WHERE X = ? and Y = ? and WORLD_ID = ?");
             preparedStatement.setInt(1,x);
             preparedStatement.setInt(2, y);
             preparedStatement.setLong(3, world.getID());
@@ -257,9 +256,9 @@ public class DataBaseConnector {
                 preparedStatement.close();
                 return chunk;
             }
-
+            Chunk chunk = new Chunk(world, gson.fromJson(result.getString("DATA"), Chunk.ChunkMemento.class));
             preparedStatement.close();
-            return new Chunk(world, gson.fromJson(result.getString(4), Chunk.ChunkMemento.class));
+            return chunk;
         } catch (SQLException e){
             throw new RuntimeException(e);
         }

@@ -131,7 +131,6 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
             addEntity(entity);
         }
 
-        System.out.println(DatabaseManager.get().getDataBaseConnector().started);
 
         // Set this to null once generation is complete since using this after construction is likely not deterministic
         // due to ordering of events being affected by external factors like player movement. If you just want to
@@ -510,7 +509,7 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
 
         // FIXME:Ontonator Check that this works.
         MainCharacter mc = MainCharacter.getInstance();
-        int radius = 0;
+        int radius = 2;
         setLoadedArea(mc.getCol() - radius, mc.getRow() - radius, mc.getCol() + radius, mc.getRow() + radius);
     }
 
