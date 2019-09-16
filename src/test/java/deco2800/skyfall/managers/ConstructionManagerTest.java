@@ -46,32 +46,6 @@ public class ConstructionManagerTest {
 
         //character.notifyTouchDown( 1, 1, 1,);
 
-        InventoryManager inventoryManager = new InventoryManager();
-
-
-        Stone stone1 = new Stone();
-        inventoryManager.add(stone1);
-        Stone stone2 = new Stone();
-        inventoryManager.add(stone2);
-        Wood wood1 = new Wood();
-        inventoryManager.add(wood1);
-        Wood wood2 = new Wood();
-        inventoryManager.add(wood2);
-        Wood wood3 = new Wood();
-        inventoryManager.add(wood3);
-        Wood wood4 = new Wood();
-        inventoryManager.add(wood4);
-        Wood wood5 = new Wood();
-        inventoryManager.add(wood5);
-
-
-        //Assert.assertEquals(1f, cabin.getCol(), 0.0);
-
-        //BuildingEntity cabin = factory.createCabin(1,1);
-
-        //Boolean result = cmgr.invCheck(cabin, inventoryManager);
-
-        //Assert.assertTrue(result);
 
     }
 
@@ -97,14 +71,12 @@ public class ConstructionManagerTest {
         Wood wood5 = new Wood();
         inventoryManager.add(wood5);
 
+        cmgr.setBuilding(0);
 
-        //Assert.assertEquals(1f, cabin.getCol(), 0.0);
+        BuildingEntity cabin = factory.createCabin(1,1);
+        Boolean result = cmgr.invCheck(inventoryManager);
 
-        //BuildingEntity cabin = factory.createCabin(1,1);
-
-       //Boolean result = cmgr.invCheck(cabin, inventoryManager);
-
-        //Assert.assertTrue(result);
+        Assert.assertTrue(result);
 
     }
 
@@ -119,8 +91,9 @@ public class ConstructionManagerTest {
         buildingCost.put("Stone",4);
 
         InventoryManager inventoryManager = new InventoryManager();
+        cmgr.setBuilding(4);
 
-        //Boolean result = cmgr.invCheck(cabin, inventoryManager);
+        //Boolean result = cmgr.invCheck(inventoryManager);
 
         //Assert.assertFalse(result);
     }
@@ -146,8 +119,9 @@ public class ConstructionManagerTest {
         Wood wood5 = new Wood();
         inventoryManager.add(wood5);
 
-        //Assert.assertEquals(7.0, inventoryManager.getAmount("Wood"), 0.0);
-        //Assert.assertEquals(4.0, inventoryManager.getAmount("Stone"), 0.0);
+        Assert.assertEquals(10.0, inventoryManager.getAmount("Wood"), 0.0);
+        Assert.assertEquals(4.0, inventoryManager.getAmount("Stone"), 0.0);
+        cmgr.setBuilding(0);
 
 
         BuildingFactory factory = new BuildingFactory();
@@ -156,8 +130,8 @@ public class ConstructionManagerTest {
 
         cmgr.build(gm.getWorld(),2,2);
 
-        //Assert.assertEquals(0.0, inventoryManager.getAmount("Wood"), 0.0);
-        //Assert.assertEquals(0.0, inventoryManager.getAmount("Stone"), 0.0);
+        Assert.assertEquals(5.0, inventoryManager.getAmount("Wood"), 0.0);
+        Assert.assertEquals(2.0, inventoryManager.getAmount("Stone"), 0.0);
 
     }
 
