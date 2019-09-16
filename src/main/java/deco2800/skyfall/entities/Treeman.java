@@ -68,7 +68,7 @@ public class Treeman extends EnemyEntity implements Animatable {
         this.setHeight(5);
         this.setHealth(HEALTH);
         this.setLevel(2);
-        this.setSpeed(2);
+        this.setSpeed(0.01f);
         this.setArmour(5);
         this.setDamage(1);
         this.mc = mc;
@@ -158,12 +158,24 @@ public class Treeman extends EnemyEntity implements Animatable {
      */
     @Override
     public void onTick(long i) {
-        this.setCollider();
         randomMoving();
         setCurrentState(AnimationRole.MOVE);
         if (isDead() == true) {
             this.treemanDead();
+        getBody().setTransform(position.getCol(), position.getRow(), getBody().getAngle());
+        /**if(angerTimeAccount<10){
+         angerTimeAccount++;
+         }else{
+         angerTimeAccount=0;
+         this.setAttacked(false);
+         }**/
         } else {
+            if (this.attackStatus == false) {
+                randomMoving();
+                setCurrentState(AnimationRole.MOVE);
+                //movingDirection=movementDirection(this.position.getAngle());
+            }
+
             float colDistance = mc.getCol() - this.getCol();
             float rowDistance = mc.getRow() - this.getRow();
             if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
@@ -314,14 +326,19 @@ public class Treeman extends EnemyEntity implements Animatable {
      */
     int time=0;
     private void treemanDead(){
-        if(time<=100){
+        if (time<=100) {
+            if (time == 0) {
+                this.setTexture("treemanDead");
+                this.setObjectName("treemanDead");
+                setCurrentState(AnimationRole.DEFENCE);
+                destroy();
+            }
             time++;
             this.setTexture("treemanDead");
             this.setObjectName("treemanDead");
             setCurrentState(AnimationRole.NULL);
         }else{
             GameManager.get().getWorld().removeEntity(this);
-
         }
 
     }

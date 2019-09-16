@@ -64,9 +64,7 @@ public class TestWorld extends World {
         textures.put(new HexVector(2, 1), "fenceNW-S");
         // textures.put(new HexVector(2, 0), "fenceN-S");
         textures.put(new HexVector(2, -1), "fenceN-SW");
-        StaticEntity building = new StaticEntity(col, row, 1, textures);
-
-        return building;
+        return new StaticEntity(col, row, 1, textures);
 
     }
 

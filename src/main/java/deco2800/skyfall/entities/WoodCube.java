@@ -24,16 +24,7 @@ public class WoodCube extends AbstractEntity implements Collectable {
         this.setObjectName("WoodCube");
     }
 
-    @Override
-    public boolean collidesWith(AbstractEntity entity) {
-        // TODO: you will want to make collisions more generic and manageable
-        if (entity instanceof MainCharacter) {
-            return entity.getPosition().getInt().equals(getPosition().getInt());
-        }
-        return false;
-    }
 
-    @Override
     public void onTick(long i) {
         // a little wiggle to disperse the cubes
         // this would ideally be replaced with slowly moving up and down as

@@ -39,7 +39,6 @@ public class LizardHome extends AbstractPet implements Animatable, Harvestable {
 
     @Override
     public void onTick(long i) {
-        this.setCollider();
     }
 
     /**

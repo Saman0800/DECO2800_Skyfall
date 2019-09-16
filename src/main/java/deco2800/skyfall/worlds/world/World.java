@@ -4,23 +4,19 @@ import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.pets.AbstractPet;
 import deco2800.skyfall.entities.pets.LizardHome;
-import deco2800.skyfall.gamemenu.GameMenuScreen;
-
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.AgentEntity;
-import deco2800.skyfall.entities.EnemyEntity;
 import deco2800.skyfall.entities.Harvestable;
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.Projectile;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.entities.weapons.Weapon;
+import deco2800.skyfall.gamemenu.popupmenu.BlueprintShopTable;
+import deco2800.skyfall.gamemenu.popupmenu.ChestTable;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
@@ -31,6 +27,7 @@ import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
+import deco2800.skyfall.graphics.HasPointLight;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -51,7 +48,6 @@ import java.util.stream.Collectors;
  */
 public class World implements TouchDownObserver {
 
-
     protected int width;
     protected int length;
 
@@ -68,26 +64,24 @@ public class World implements TouchDownObserver {
     protected List<AbstractEntity> entitiesToDelete = new CopyOnWriteArrayList<>();
     protected List<Tile> tilesToDelete = new CopyOnWriteArrayList<>();
 
-
     protected WorldParameters worldParameters;
 
     private GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
 
     //private MainCharacter mc = gmm.getMainCharacter();
 
-
     /**
      * The constructor for a world
      * @param worldParameters A class that contains the world parameters
      */
-    public World(WorldParameters worldParameters){
+    public World(WorldParameters worldParameters) {
         this.worldParameters = worldParameters;
 
         random = new Random(worldParameters.getSeed());
 
         tiles = new CopyOnWriteArrayList<>();
         worldGenNodes = new CopyOnWriteArrayList<>();
-    	voronoiEdges = new CopyOnWriteArrayList<>();
+        voronoiEdges = new CopyOnWriteArrayList<>();
 
         generateWorld();
         generateTileTypes();
@@ -100,20 +94,19 @@ public class World implements TouchDownObserver {
      * Generates the tiles and biomes in the world and adds the world to a listener to allow for interaction.
      * Continuously repeats generation until it reaches a stable world
      */
-    protected void generateWorld(){
-        while (true){
+    protected void generateWorld() {
+        while (true) {
             try {
                 generateTiles();
                 break;
-            } catch (WorldGenException | DeadEndGenerationException | NotEnoughPointsException ignored){
+            } catch (WorldGenException | DeadEndGenerationException | NotEnoughPointsException ignored) {
             }
         }
 
-
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
 
-    };
-
+        getTile(0,0).setObstructed(true);
+    }
 
     /**
      * Generates the tiles and biomes in a world
@@ -121,77 +114,71 @@ public class World implements TouchDownObserver {
      * @throws DeadEndGenerationException
      * @throws WorldGenException
      */
-    private void generateTiles() throws NotEnoughPointsException, DeadEndGenerationException, WorldGenException{
-            //TODO clean the biomes and tiles on every iteration
-            ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
-            ArrayList<Tile> tiles = new ArrayList<>();
+    private void generateTiles() throws NotEnoughPointsException, DeadEndGenerationException, WorldGenException {
+        //TODO clean the biomes and tiles on every iteration
+        ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
+        ArrayList<Tile> tiles = new ArrayList<>();
 
-            for (Tile tile : getTileMap()){
-                tile.setBiome(null);
+        for (Tile tile : getTileMap()) {
+            tile.setBiome(null);
+        }
+
+        for (AbstractBiome biome : worldParameters.getBiomes()) {
+            biome.getTiles().clear();
+        }
+
+        int worldSize = worldParameters.getWorldSize();
+        int nodeSpacing = worldParameters.getNodeSpacing();
+        int nodeCount = Math.round((float) worldSize * worldSize * 4 / nodeSpacing / nodeSpacing);
+        // TODO: if nodeCount is less than the number of biomes, throw an exception
+
+        for (int i = 0; i < nodeCount; i++) {
+            // Sets coordinates to a random number from -WORLD_SIZE to WORLD_SIZE
+            float x = (float) (random.nextFloat() - 0.5) * 2 * worldSize;
+            float y = (float) (random.nextFloat() - 0.5) * 2 * worldSize;
+            worldGenNodes.add(new WorldGenNode(x, y));
+        }
+
+        // Apply Delaunay triangulation to the nodes, so that vertices and
+        // adjacencies can be calculated. Also apply Lloyd Relaxation twice
+        // for more smooth looking polygons
+        try {
+            WorldGenNode.calculateVertices(worldGenNodes, worldSize);
+            WorldGenNode.lloydRelaxation(worldGenNodes, 2, worldSize);
+        } catch (WorldGenException e) {
+            throw e;
+        }
+
+        for (int q = -worldSize; q <= worldSize; q++) {
+            for (int r = -worldSize; r <= worldSize; r++) {
+                float oddCol = (q % 2 != 0 ? 0.5f : 0);
+                Tile tile = new Tile(q, r + oddCol);
+                tiles.add(tile);
             }
+        }
+        // TODO Fix this.
+        generateNeighbours(tiles);
 
-            for (AbstractBiome biome : worldParameters.getBiomes()) {
-                biome.getTiles().clear();
-            }
+        try {
+            WorldGenNode.assignTiles(worldGenNodes, tiles, random, nodeSpacing);
+            WorldGenNode.removeZeroTileNodes(worldGenNodes, worldSize);
+            WorldGenNode.assignNeighbours(worldGenNodes, voronoiEdges);
+        } catch (WorldGenException e) {
+            throw e;
+        }
+        VoronoiEdge.assignTiles(voronoiEdges, tiles, worldSize);
+        VoronoiEdge.assignNeighbours(voronoiEdges);
 
-            int worldSize = worldParameters.getWorldSize();
-            int nodeSpacing = worldParameters.getNodeSpacing();
-            int nodeCount = Math.round((float) worldSize * worldSize * 4 / nodeSpacing / nodeSpacing);
-            // TODO: if nodeCount is less than the number of biomes, throw an exception
+        try {
+            BiomeGenerator biomeGenerator = new BiomeGenerator(worldGenNodes, voronoiEdges, random, worldParameters);
+            biomeGenerator.generateBiomes();
+        } catch (NotEnoughPointsException | DeadEndGenerationException e) {
+            throw e;
+        }
 
-            for (int i = 0; i < nodeCount; i++) {
-                // Sets coordinates to a random number from -WORLD_SIZE to WORLD_SIZE
-                float x = (float) (random.nextFloat() - 0.5) * 2 * worldSize;
-                float y = (float) (random.nextFloat() - 0.5) * 2 * worldSize;
-                worldGenNodes.add(new WorldGenNode(x, y));
-            }
-
-            // Apply Delaunay triangulation to the nodes, so that vertices and
-            // adjacencies can be calculated. Also apply Lloyd Relaxation twice
-            // for more smooth looking polygons
-            try {
-                WorldGenNode.calculateVertices(worldGenNodes, worldSize);
-                WorldGenNode.lloydRelaxation(worldGenNodes, 2, worldSize);
-            } catch (WorldGenException e) {
-                throw e;
-            }
-
-            for (int q = -worldSize; q <= worldSize; q++) {
-                for (int r = -worldSize; r <= worldSize; r++) {
-                    float oddCol = (q % 2 != 0 ? 0.5f : 0);
-                    Tile tile = new Tile(q, r + oddCol);
-                    tiles.add(tile);
-                }
-            }
-            // TODO Fix this.
-            generateNeighbours(tiles);
-
-            try {
-                WorldGenNode.assignTiles(worldGenNodes, tiles, random, nodeSpacing);
-                WorldGenNode.removeZeroTileNodes(worldGenNodes, worldSize);
-                WorldGenNode.assignNeighbours(worldGenNodes, voronoiEdges);
-            } catch (WorldGenException e) {
-                throw e;
-            }
-            VoronoiEdge.assignTiles(voronoiEdges, tiles, worldSize);
-            VoronoiEdge.assignNeighbours(voronoiEdges);
-
-
-
-            try {
-                BiomeGenerator biomeGenerator = new BiomeGenerator(worldGenNodes, voronoiEdges, random,worldParameters);
-                biomeGenerator.generateBiomes();
-            } catch (NotEnoughPointsException | DeadEndGenerationException e) {
-                 throw e;
-            }
-
-            this.worldGenNodes.addAll(worldGenNodes);
-            this.tiles.addAll(tiles);
+        this.worldGenNodes.addAll(worldGenNodes);
+        this.tiles.addAll(tiles);
     }
-
-
-
-
 
     /**
      * Loops through all the biomes within the world and adds textures to the tiles
@@ -212,7 +199,6 @@ public class World implements TouchDownObserver {
         // multiply coords by 2 to remove floats
         Map<Integer, Map<Integer, Tile>> tileMap = new HashMap<>();
         Map<Integer, Tile> columnMap;
-
 
         for (Tile tile : tiles) {
             columnMap = tileMap.getOrDefault((int) tile.getCol() * 2, new HashMap<Integer, Tile>());
@@ -313,8 +299,8 @@ public class World implements TouchDownObserver {
      * @return all entities in the world
      */
     public List<AgentEntity> getSortedAgentEntities() {
-        List<AgentEntity> e = this.worldParameters.getEntities().stream().filter(p -> p instanceof AgentEntity).map(p -> (AgentEntity) p)
-                .collect(Collectors.toList());
+        List<AgentEntity> e = this.worldParameters.getEntities().stream().filter(p -> p instanceof AgentEntity)
+                .map(p -> (AgentEntity) p).collect(Collectors.toList());
 
         Collections.sort(e);
         return e;
@@ -326,9 +312,18 @@ public class World implements TouchDownObserver {
      * @param entity the entity to add
      */
     public void addEntity(AbstractEntity entity) {
-        worldParameters.getEntities().add(entity);
+        worldParameters.addEntity(entity);
         // Keep the entities sorted by render order
         Collections.sort(worldParameters.getEntities());
+    }
+
+    /**
+     * Gets all the luminous entities from the world.
+     * 
+     * @return A list a luminous entities from the game world
+     */
+    public List<AbstractEntity> getLuminousEntities() {
+        return worldParameters.getLuminousEntities();
     }
 
     /**
@@ -337,13 +332,19 @@ public class World implements TouchDownObserver {
      * @param entity the entity to remove
      */
     public void removeEntity(AbstractEntity entity) {
-        worldParameters.getEntities().remove(entity);
+        worldParameters.removeEntity(entity);
         // Keep the entities sorted by render order
         Collections.sort(worldParameters.getEntities());
     }
 
     public void setEntities(List<AbstractEntity> entities) {
         this.worldParameters.setEntities(entities);
+
+        for (AbstractEntity entity : entities) {
+            if ((entity instanceof HasPointLight) && !entities.contains(entity)) {
+                this.worldParameters.addLuminousEntity(entity);
+            }
+        }
     }
 
     public List<Tile> getTileMap() {
@@ -417,38 +418,11 @@ public class World implements TouchDownObserver {
             tiles.remove(t);
         }
 
-        // Collision detection for entities
-        for (AbstractEntity e1 : this.getEntities()) {
-            if (e1 instanceof StaticEntity) {
-                // Static entities can't move into other entities. Only worry
-                // about entities that can move themselves into other entities
-                continue;
-            }
+        for (AbstractEntity e1 : this.getEntities()){
             e1.onTick(0);
-            //if (e1.getCollider() == null) {
-            //    break;
-            //}
 
-            Collider c1 = e1.getCollider();
-            for (AbstractEntity e2 : this.getEntities()) {
-                if (e2.getCollider() == null || c1==null) {
-//                    break;
-                }else {
-                    Collider c2 = e2.getCollider();
-                    if (e1 != e2 && c1.overlaps(c2)) {
-                        if (e1 instanceof MainCharacter || e2 instanceof
-                                MainCharacter) {
-                            break;
-                        }
-                        //collision handler
-                        this.handleCollision(e1, e2);
-                        //    break;
-                    }
-                }
-
-            }
-            // no collision here
         }
+
     }
 
     public void deleteTile(int tileid) {
@@ -497,25 +471,22 @@ public class World implements TouchDownObserver {
 //        System.out.println("Handle collision");
         // TODO: this needs to be internalized into classes for cleaner code.
         if (e1 instanceof Projectile && e2 instanceof EnemyEntity) {
-            if(((EnemyEntity) e2).getHealth()>0){
+            if (((EnemyEntity) e2).getHealth() > 0) {
                 ((EnemyEntity) e2).takeDamage(((Projectile) e1).getDamage());
                 ((EnemyEntity) e2).setAttacked(true);
                 ((Projectile) e1).destroy();
-            }else{
+            } else {
                 ((EnemyEntity) e2).setDead(true);
             }
 
-
         } else if (e2 instanceof Projectile && e1 instanceof EnemyEntity) {
-            if(((EnemyEntity) e1).getHealth()>0){
+            if (((EnemyEntity) e1).getHealth() > 0) {
                 ((EnemyEntity) e1).takeDamage(((EnemyEntity) e1).getDamage());
                 ((EnemyEntity) e1).setAttacked(true);
                 ((Projectile) e2).destroy();
-                System.out.println(e1.getObjectName()+","+((EnemyEntity) e1).getHealth());
-            }else{
+            } else {
                 ((EnemyEntity) e1).setDead(true);
             }
-
 
         }
     }
@@ -539,12 +510,11 @@ public class World implements TouchDownObserver {
     /**
      * Returns the seed used in the world
      *
-     * @return
+     * @return the seed for the world
      */
     public long getSeed() {
         return worldParameters.getSeed();
     }
-
 
     public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
         // only allow right clicks to collect resources
@@ -579,22 +549,17 @@ public class World implements TouchDownObserver {
                 }else{
                     removeEntity(entity);
                     List<AbstractEntity> drops = ((Harvestable) entity).harvest(tile);
-
                     for (AbstractEntity drop : drops) {
                         addEntity(drop);
                     }
                 }
-
-            } else if (entity instanceof Chest) {
-                GameMenuManager menuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
-                menuManager.open(new GameMenuScreen(menuManager).getChestTable((Chest)entity));
             } else if (entity instanceof Weapon) {
                 MainCharacter mc = gmm.getMainCharacter();
                 if (tile.getCoordinates().distance(mc.getPosition()) > 2) {
                     continue;
                 }
                 removeEntity(entity);
-                gmm.getInventory().inventoryAdd((Item) entity);
+                gmm.getInventory().add((Item) entity);
                 if (!mc.getEquipped().equals(((Weapon) entity).getName())) {
                     gmm.getInventory().quickAccessRemove(mc.getEquipped());
                     gmm.getInventory().quickAccessAdd(((Weapon) entity).getName());
@@ -606,15 +571,25 @@ public class World implements TouchDownObserver {
                     continue;
                 }
                 mc.addGold((GoldPiece) entity,((GoldPiece) entity).getValue());
-                gmm.getInventory().inventoryAdd((Item) entity);
+                gmm.getInventory().add((Item) entity);
                 removeEntity(entity);
             } else if (entity instanceof AbstractPet && entity instanceof Item){
                 if (tile.getCoordinates().distance(gmm.getMainCharacter().getPosition()) > 2) {
                     continue;
                 }
-                gmm.getInventory().inventoryAdd((Item) entity);
+                gmm.getInventory().add((Item) entity);
                 gmm.getMainCharacter().getPetsManager().addPet((AbstractPet) entity);
                 removeEntity(entity);
+            } else if (entity instanceof Chest) {
+                GameMenuManager menuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+                ChestTable chest = (ChestTable) menuManager.getPopUp("chestTable");
+                chest.updateChestPanel((Chest) entity);
+                menuManager.setPopUp("chestTable");
+            } else if (entity instanceof BlueprintShop) {
+                GameMenuManager menuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+                BlueprintShopTable bs = (BlueprintShopTable) menuManager.getPopUp("blueprintShopTable");
+                bs.updateBlueprintShopPanel();
+                menuManager.setPopUp("blueprintShopTable");
             }
         }
     }

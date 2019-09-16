@@ -21,6 +21,8 @@ public abstract class Weapon extends StaticEntity implements Item {
     public Weapon(Tile tile, String texture, boolean obstructed) {
         super(tile, 5, texture, obstructed);
 
+        changeCollideability(false);
+
         this.carryable = true;
         this.position = tile.getCoordinates();
         this.exchangeable = false;

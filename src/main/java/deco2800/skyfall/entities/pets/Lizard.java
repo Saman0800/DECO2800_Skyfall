@@ -78,7 +78,6 @@ public class Lizard extends AbstractPet implements Animatable, Item {
         findNearbyGold();
         followingCharacter();
         this.setCurrentDirection(movementDirection(position.getAngle()));
-        this.setCollider();
 
     }
 
@@ -226,5 +225,10 @@ public class Lizard extends AbstractPet implements Animatable, Item {
     @Override
     public String getDescription() {
         return "pet lizard";
+    }
+
+    @Override
+    public void use(HexVector position) {
+
     }
 }

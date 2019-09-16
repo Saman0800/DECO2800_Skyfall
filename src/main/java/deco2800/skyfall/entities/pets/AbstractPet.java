@@ -29,13 +29,11 @@ public abstract class AbstractPet extends Peon implements ICombatEntity {
     public AbstractPet(float col, float row) {
         this.setRow(row);
         this.setCol(col);
-        this.setCollider();
     }
 
     public AbstractPet(float row, float col, String texturename, int health, int armour, int damage) {
         super(row, col, 0.2f, texturename, health);
         this.setTexture(texturename);
-        this.setCollider();
 
     }
 

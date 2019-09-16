@@ -76,11 +76,11 @@ public class Robot extends EnemyEntity implements Animatable {
 
     @Override
     public void onTick(long i) {
-        this.setCollider();
         if(this.isDead()){
             GameManager.get().getWorld().removeEntity(this);
             sound.stopSound("robot");
-        }else{
+
+        }else {
             defence();
         }
         super.onTick(i);

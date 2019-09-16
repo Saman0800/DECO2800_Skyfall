@@ -157,7 +157,6 @@ public class Tiger extends EnemyEntity implements Animatable {
      */
     @Override
     public void onTick(long i) {
-        this.setCollider();
         randomMoving();
         setCurrentState(AnimationRole.MOVE);
         if (isDead() == true) {

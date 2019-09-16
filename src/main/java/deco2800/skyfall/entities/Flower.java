@@ -6,7 +6,6 @@ import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
 
 public class Flower extends EnemyEntity implements Animatable {
     private static transient int HEALTH = 5000;

@@ -102,11 +102,11 @@ public class PetsManager extends AbstractManager {
     private void summonNext(int i,MainCharacter mc){
         if(i==0){
             petList.getLast().setSummoned(false);
-            this.inventoryManager.inventoryAdd((Item) petList.getLast());
+            this.inventoryManager.add((Item) petList.getLast());
             GameManager.get().getWorld().removeEntity(petList.getLast());
         }else{
             petList.get(i-1).setSummoned(false);
-            this.inventoryManager.inventoryAdd((Item) petList.get(i-1));
+            this.inventoryManager.add((Item) petList.get(i-1));
             GameManager.get().getWorld().removeEntity(petList.get(i-1));
         }
         //the new pet appear in the world

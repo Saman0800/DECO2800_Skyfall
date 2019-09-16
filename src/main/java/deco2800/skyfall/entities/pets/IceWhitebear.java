@@ -30,7 +30,6 @@ public class IceWhitebear extends AbstractPet implements Animatable, Harvestable
 
     @Override
     public void onTick(long i) {
-        this.setCollider();
     }
     @Override
     public void configureAnimations() {

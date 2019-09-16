@@ -1,44 +1,64 @@
 package deco2800.skyfall.resources;
 
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.worlds.Tile;
+
 
 /**
  * The civilisation's currency is Gold Pieces valued as either 5G,
  * 10G, 50G or 100G
  */
-public class GoldPiece extends AbstractEntity implements Item{
+public class GoldPiece extends StaticEntity {
+
+    private static final String ENTITY_ID_STRING = "gold_piece";
+
 
     // the value of the piece of gold (either 5G,10G,50G or 100G)
     public int value;
 
-    /**
-     * Create a gold piece with a random value at col,row
-     * @param col coordinate x
-     * @param row coordinate y
-     */
-    public GoldPiece(float col, float row) {
-        super(col, row, 2);
-        this.setTexture("gold");
-        this.setHeight(1);
-        this.setObjectName("gold");
-        value=(int)(Math.random()*10)+1;
-    }
+
 
     /**
      * Creates a gold piece with a particular value.
      * @param value The value of the piece of gold, either 5G, 10G, 50G or 100G.
      */
     public GoldPiece(int value){
+        this.setObjectName(ENTITY_ID_STRING);
+        changeCollideability(false);
+
         // if the GoldPiece is of value of 5,10,50 or 100
         if (value == 5 || value == 10 || value == 50 || value == 100){
             this.value = value;
         } else {
             System.out.println("Invalid piece of gold");
         }
+    }
+
+    /**
+     * Creates a gold piece with a specific title, whether or not it is
+     * obstructed and its value
+     * @param tile the entity's ID (gold piece)
+     * @param obstructed true or false depending on whether or not the object
+     *                   is obstructed
+     * @param value the value of the gold piece being constructed
+     */
+    public GoldPiece(Tile tile, boolean obstructed, int value) {
+        super(tile, 2, "goldPiece" + value, obstructed);
+        this.setObjectName(ENTITY_ID_STRING);
+        this.value = value;
+        changeCollideability(false);
+    }
 
 
-
+    /**
+     * The newInstance method implemented for the GoldPiece class to allow for item
+     * dispersal on game start up.
+     *
+     * @return Duplicate goldPiece instance with modified position.
+     */
+    @Override
+    public GoldPiece newInstance(Tile tile) {
+        return new GoldPiece(tile, this.isObstructed(), value);
     }
     /**
      * Returns the value of the piece of gold.
@@ -57,34 +77,6 @@ public class GoldPiece extends AbstractEntity implements Item{
         // Do nothing on tick
     }
 
-    @Override
-    public String getName() {
-        return getObjectName();
-    }
 
-    @Override
-    public String getSubtype() {
-        return getName();
-    }
 
-    @Override
-    public Boolean isCarryable() {
-        return true;
-    }
-
-    @Override
-    public HexVector getCoords() {
-
-        return new HexVector(this.getCol(),this.getRow());
-    }
-
-    @Override
-    public Boolean isExchangeable() {
-        return true;
-    }
-
-    @Override
-    public String getDescription() {
-        return "Sky fall world currency";
-    }
 }

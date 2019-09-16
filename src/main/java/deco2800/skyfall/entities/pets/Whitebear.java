@@ -48,7 +48,6 @@ public class Whitebear extends AbstractPet implements Animatable, Item {
     public void onTick(long i) {
         findNearbyGold();
         followingCharacter();
-        this.setCollider();
     }
 
     public void findNearbyGold(){
@@ -186,7 +185,10 @@ public class Whitebear extends AbstractPet implements Animatable, Item {
         return "pet whitebear";
     }
 
+    @Override
+    public void use(HexVector position) {
 
+    }
 
 
 }

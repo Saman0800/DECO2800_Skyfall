@@ -30,7 +30,7 @@ public class Projectile extends AgentEntity {
     /**
      * How many game ticks this object has survived.
      */
-    private long ticksAliveFor = 0;
+    protected long ticksAliveFor = 0;
 
     /**
      *
@@ -68,8 +68,9 @@ public class Projectile extends AgentEntity {
         //Position the projectile correctly.
         position.moveToward(movementPosition,speed);
 
-        this.setCollider();
+        //fixture.setFilterData()
 
+        //TODO: rotate sprite in angle facing.
     }
 
     /**
@@ -96,6 +97,10 @@ public class Projectile extends AgentEntity {
     @Override
     public void onTick(long tick) {
 
+        if (toBeDestroyed) {
+            destroy();
+        }
+
         //Each game tick add to counter.
         this.ticksAliveFor++;
 
@@ -104,22 +109,36 @@ public class Projectile extends AgentEntity {
             this.destroy();
         }
 
-        //TODO: Move to range max.
         if (this.range >= 1) {
             position.moveToward(movementPosition,speed);
+            getBody().setTransform(position.getCol(), position.getRow(), getBody().getAngle());
         }
 
     }
 
+    private boolean toBeDestroyed = false;
     @Override
-    public boolean collidesWith(AbstractEntity entity) {
-        return super.collidesWith(entity);
+    public void handleCollision(Object other) {
+        if (other instanceof EnemyEntity) {
+            ((EnemyEntity) other).takeDamage(this.getDamage());
+            ((EnemyEntity) other).setAttacked(true);
+            toBeDestroyed = true;
+            ((EnemyEntity)other).getBody().setLinearVelocity(
+                    (((EnemyEntity)other).getBody().getLinearVelocity()
+                    .lerp(new Vector2(0.f, 0.f), 0.5f)));
+        }
+
     }
 
     /**
      * Remove the projectile from the game world.
      */
+    private boolean beenDestroyed = false;
     public void destroy() {
-        GameManager.get().getWorld().removeEntity(this);
+        if (!beenDestroyed) {
+            GameManager.get().getWorld().removeEntity(this);
+            getBody().getWorld().destroyBody(getBody());
+            beenDestroyed = true;
+        }
     }
 }
