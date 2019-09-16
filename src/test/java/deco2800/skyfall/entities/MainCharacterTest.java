@@ -39,6 +39,7 @@ import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +53,8 @@ import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ WorldBuilder.class, WorldDirector.class, DatabaseManager.class, DataBaseConnector.class })
+@PrepareForTest(
+        { WorldBuilder.class, WorldDirector.class, DatabaseManager.class, DataBaseConnector.class, GameManager.class })
 public class MainCharacterTest {
 
     private GoldPiece goldpiece;
@@ -102,6 +104,16 @@ public class MainCharacterTest {
         when(DatabaseManager.get()).thenReturn(manager);
 
         testCharacter = MainCharacter.getInstance();
+        while (!testCharacter.getGoldPouch().isEmpty()) {
+            testCharacter.removeGold(testCharacter.getGoldPouch().keySet().iterator().next());
+        }
+        testCharacter.addGold(new GoldPiece(100), 1);
+        testCharacter.setMana(100);
+        Field deathsField = Peon.class.getDeclaredField("deaths");
+        deathsField.setAccessible(true);
+        deathsField.setInt(testCharacter, 0);
+        testCharacter.switchItem(8);
+        testCharacter.setHurt(false);
 
         testHatchet = new Hatchet();
         testHatchet2 = new Hatchet();
@@ -437,9 +449,9 @@ public class MainCharacterTest {
         Assert.assertTrue(testCharacter.getGoldPouch().containsKey(5));
         Assert.assertTrue(testCharacter.getGoldPouch().containsKey(10));
         Assert.assertTrue(testCharacter.getGoldPouch().containsKey(50));
-        Assert.assertTrue(testCharacter.getGoldPouch().get(5).equals(3));
-        Assert.assertTrue(testCharacter.getGoldPouch().get(10).equals(1));
-        Assert.assertTrue(testCharacter.getGoldPouch().get(50).equals(2));
+        Assert.assertEquals(3, (int) testCharacter.getGoldPouch().get(5));
+        Assert.assertEquals(1, (int) testCharacter.getGoldPouch().get(10));
+        Assert.assertEquals(2, (int) testCharacter.getGoldPouch().get(50));
 
     }
 
@@ -456,8 +468,7 @@ public class MainCharacterTest {
         testCharacter.addGold(g50, 3);
 
         // ensure all the pieces have been added
-        Assert.assertTrue(testCharacter.getGoldPouchTotalValue() == 280);
-
+        Assert.assertEquals(280, (int) testCharacter.getGoldPouchTotalValue());
     }
 
     @Test
@@ -515,7 +526,7 @@ public class MainCharacterTest {
         testGoldPiece.setRow(1f);
         testCharacter.addClosestGoldPiece();
         Assert.assertTrue(testCharacter.getGoldPouch().containsKey(5));
-        Assert.assertTrue(testCharacter.getGoldPouchTotalValue() == 105);
+        Assert.assertEquals(105, (int) testCharacter.getGoldPouchTotalValue());
 
     }
 

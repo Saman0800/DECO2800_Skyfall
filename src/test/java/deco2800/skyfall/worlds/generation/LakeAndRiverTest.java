@@ -26,43 +26,26 @@ import static org.mockito.Matchers.anyInt;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({WorldBuilder.class, WorldDirector.class})
+@PrepareForTest({ WorldBuilder.class, WorldDirector.class, DatabaseManager.class, DataBaseConnector.class })
 public class LakeAndRiverTest {
-    private static List<World> worlds;
-
     private static final int TEST_COUNT = 5;
-    private static final int[] NODE_COUNTS = { 10, 10, 10, 5, 5 };
 
-    private static final int WORLD_SIZE = 80;
-
-    private static final int NODE_SPACING = 5;
-
-    // private static final int[] LAKE_SIZES = { 2, 2 };
-    // private static final int LAKE_COUNT = 2;
-    private static final int[] LAKE_SIZES = { 2, 2 };
-    private static final int LAKE_COUNT = 2;
-
-    // Rivers split biomes and break contiguity so they must be disabled for these tests.
-    private static final int RIVER_WIDTH = 1;
-    private static final int RIVER_COUNT = 2;
-
-    private static final int BEACH_WIDTH = 5;
-
-    // private static ArrayList<ArrayList<AbstractBiome>> biomeLists;
-    // private static ArrayList<ArrayList<WorldGenNode>> worldGenNodesList;
-    // private static ArrayList<HashMap<WorldGenNode, AbstractBiome>> nodesBiomesList;
-    // private static List<Tile> originTiles;
+    private static List<World> worlds;
 
     @BeforeClass
     public static void setup() throws Exception {
         Random random = new Random(0);
-        whenNew(Random.class).withNoArguments().thenReturn(random);
+        whenNew(Random.class).withAnyArguments().thenReturn(random);
 
         DataBaseConnector connector = mock(DataBaseConnector.class);
         when(connector.loadChunk(any(World.class), anyInt(), anyInt())).then(
-                (Answer<Chunk>) invocation -> new Chunk(invocation.getArgumentAt(0, World.class),
-                                                        invocation.getArgumentAt(1, Integer.class),
-                                                        invocation.getArgumentAt(2, Integer.class)));
+                (Answer<Chunk>) invocation -> {
+                    Chunk chunk = new Chunk(invocation.getArgumentAt(0, World.class),
+                                            invocation.getArgumentAt(1, Integer.class),
+                                            invocation.getArgumentAt(2, Integer.class));
+                    chunk.generateEntities();
+                    return chunk;
+                });
 
         DatabaseManager manager = mock(DatabaseManager.class);
         when(manager.getDataBaseConnector()).thenReturn(connector);
@@ -74,16 +57,13 @@ public class LakeAndRiverTest {
 
         for (int i = 0; i < TEST_COUNT; i++) {
             WorldBuilder builder = new WorldBuilder();
-            WorldDirector.constructNBiomeSinglePlayerWorld(builder, 3, true);
+            WorldDirector.constructNBiomeSinglePlayerWorld(builder, 3, false);
             worlds.add(builder.getWorld());
         }
     }
 
     @AfterClass
     public static void tearDown() {
-        // biomeLists = null;
-        // worldGenNodesList = null;
-        // nodesBiomesList = null;
         worlds = null;
     }
 
@@ -108,9 +88,6 @@ public class LakeAndRiverTest {
             for (AbstractBiome biome : world.getBiomes()) {
                 if (biome.getBiomeName().equals("lake")) {
                     assertNotNull(biome.getParentBiome());
-                } else if (biome.getBiomeName().equals("river")) {
-                    assertNotNull(biome.getParentBiome());
-                    assertEquals("lake", biome.getParentBiome().getBiomeName());
                 }
             }
         }
@@ -127,19 +104,16 @@ public class LakeAndRiverTest {
 
     @Test
     public void correctNumberTest() {
+        // This is not calculated for rivers anymore as the number of biomes that constitute a single river is now
+        // random, and multiple rivers may be conjoined into one randomly as well.
         for (World world : worlds) {
             int noLakes = 0;
-            int noRivers = 0;
             for (AbstractBiome biome : world.getBiomes()) {
                 if (biome.getBiomeName().equals("lake")) {
                     noLakes++;
                 }
-                if (biome.getBiomeName().equals("river")) {
-                    noRivers++;
-                }
             }
-            assertEquals(LAKE_COUNT, noLakes);
-            assertEquals(RIVER_COUNT, noRivers);
+            assertEquals(world.getWorldParameters().getNumOfLakes(), noLakes);
         }
     }
 

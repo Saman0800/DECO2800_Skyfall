@@ -93,6 +93,7 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
         if (tile.getBiome() != null) {
             tile.getBiome().tiles.remove(tile);
         }
+        // FIXME:Ontonator Make this work with chunks.
         tiles.add(tile);
         tile.setBiome(this);
         setTileTexture(tile);

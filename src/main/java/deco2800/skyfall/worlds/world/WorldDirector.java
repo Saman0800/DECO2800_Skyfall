@@ -35,6 +35,8 @@ public class WorldDirector {
             throw new IllegalArgumentException("n must be between 1 and 5");
         }
 
+        assert new Random(0) != null;
+
         ArrayList<AbstractBiome> choices = new ArrayList<>();
         choices.add(new ForestBiome(random));
         choices.add(new DesertBiome(random));

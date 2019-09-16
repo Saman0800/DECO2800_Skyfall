@@ -13,6 +13,7 @@ import org.junit.Test;
 import java.util.*;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyDouble;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -104,6 +105,7 @@ public class DelaunayTest {
 
     @Test
     public void testAllNeighboursShareAVertex() {
+        World world = mock(World.class);
 
         int nodeCount = 200;
         int worldSize = 500;
@@ -119,7 +121,7 @@ public class DelaunayTest {
 
         try {
             WorldGenNode.calculateVertices(nodes, worldSize);
-            WorldGenNode.assignNeighbours(nodes, new ArrayList<>(), new World(new WorldParameters()));
+            WorldGenNode.assignNeighbours(nodes, new ArrayList<>(), world);
         } catch (WorldGenException e) {
             fail();
         }
@@ -373,16 +375,19 @@ public class DelaunayTest {
     public void removeZeroTileNodesTest() {
         // TODO simulate noise
 
+        NoiseGenerator zeroGenerator = mock(NoiseGenerator.class);
+        when(zeroGenerator.getOctavedPerlinValue(anyDouble(), anyDouble())).thenReturn(0d);
+
         World world = mock(World.class);
-        when(world.getTileOffsetNoiseGeneratorX()).thenReturn(new NoiseGenerator(0, 1, 1, 1));
-        when(world.getTileOffsetNoiseGeneratorY()).thenReturn(new NoiseGenerator(0, 1, 1, 1));
+        when(world.getTileOffsetNoiseGeneratorX()).thenReturn(zeroGenerator);
+        when(world.getTileOffsetNoiseGeneratorY()).thenReturn(zeroGenerator);
 
         List<WorldGenNode> nodes = new ArrayList<>();
         WorldGenNode nodeToRemove = new WorldGenNode(0.5, 0.5);
         nodes.add(nodeToRemove);
-        nodes.add(new WorldGenNode(0.6, 0.6));
-        nodes.add(new WorldGenNode(0.4, 0.4));
-        nodes.add(new WorldGenNode(0.55, 0.45));
+        nodes.add(new WorldGenNode(0.6, 0.5));
+        nodes.add(new WorldGenNode(0.4, 0.5));
+        nodes.add(new WorldGenNode(0.5, 0.4));
         nodes.add(new WorldGenNode(0.5, 0.6));
         try {
             WorldGenNode.removeZeroTileNodes(world, nodes, 0, 5);

@@ -97,6 +97,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
             log.debug("Center is null");
             return;
         }
+        center.setObstructed(true);
 
         if (!WorldUtil.validColRow(center.getCoordinates())) {
             log.debug(center.getCoordinates() + " Is Invalid:");

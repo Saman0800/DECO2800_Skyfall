@@ -4,23 +4,20 @@ import com.google.gson.Gson;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.StaticEntity;
-import deco2800.skyfall.saving.LoadException;
 import deco2800.skyfall.entities.worlditems.*;
-import deco2800.skyfall.entities.worlditems.ForestMushroom;
-import deco2800.skyfall.entities.worlditems.LongGrass;
+import deco2800.skyfall.saving.LoadException;
 import deco2800.skyfall.saving.Save;
-import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.*;
 import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
 import org.apache.derby.jdbc.EmbeddedDriver;
-import sun.applet.Main;
 
 import java.sql.*;
-import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class DataBaseConnector {
     /* The connection to the database */

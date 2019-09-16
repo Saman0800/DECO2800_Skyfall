@@ -74,8 +74,8 @@ public class BGMManager extends AbstractManager {
      */
     public static void play()  {
         //Play the clip
-            System.out.println("pause is false play()");
-            clip.start();
+        LOGGER.debug("pause is false play()");
+        clip.start();
     }
 
     /**

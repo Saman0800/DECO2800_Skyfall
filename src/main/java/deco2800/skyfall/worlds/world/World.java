@@ -645,7 +645,7 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
      * Gets the nodes of the world
      * @return The nodes of the world
      */
-    public CopyOnWriteArrayList<WorldGenNode> getWorldGenNodes() {
+    public List<WorldGenNode> getWorldGenNodes() {
         return worldGenNodes;
     }
 
@@ -698,12 +698,12 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
                     mc.setEquipped(((Weapon) entity).getName());
                 }
             } else if (entity instanceof Chest) {
-                GameMenuManager menuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+                GameMenuManager menuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
                 ChestTable chest = (ChestTable) menuManager.getPopUp("chestTable");
                 chest.updateChestPanel((Chest) entity);
                 menuManager.setPopUp("chestTable");
             } else if (entity instanceof BlueprintShop) {
-                GameMenuManager menuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+                GameMenuManager menuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
                 BlueprintShopTable bs = (BlueprintShopTable) menuManager.getPopUp("blueprintShopTable");
                 bs.updateBlueprintShopPanel();
                 menuManager.setPopUp("blueprintShopTable");
