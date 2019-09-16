@@ -51,7 +51,7 @@ public class HorseTest {
      */
     @Test
     public void getVehicleTest() {
-        Assert.assertEquals("horse",horse.getVehicleType());
+        Assert.assertEquals("horse_images", horse.getVehicleType());
 
     }
 

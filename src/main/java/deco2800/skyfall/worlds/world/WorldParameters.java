@@ -1,10 +1,13 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
 import deco2800.skyfall.graphics.HasPointLight;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 public class WorldParameters {
 
@@ -18,10 +21,10 @@ public class WorldParameters {
     private int nodeSpacing;
 
     // Biomes size
-    private int[] biomeSizes;
+    private ArrayList<Integer> biomeSizes;
 
     //Sizes of the lakes
-    private int[] lakeSizes;
+    private ArrayList<Integer> lakeSizes;
 
     //The number of lakes
     private int numOfLakes;
@@ -29,20 +32,20 @@ public class WorldParameters {
     //List of the biomes in the world
     private List<AbstractBiome> biomes;
 
+    // TODO:Ontonator Consider removing this.
     //List of the entities in the world
     private List<AbstractEntity> entities;
-
-    //A List of all the entities with a point light
-    private List<AbstractEntity> luminousEntities = new LinkedList<>();
 
     //The number of rivers
     private int noRivers;
 
     //The width of the rivers
-    private int riverWidth;
+    private double riverWidth;
 
     //The width of the beach
-    private int beachWidth;
+    private double beachWidth;
+
+    private Function<World, Map<AbstractBiome, List<EntitySpawnRule>>> generateSpawnRules;
 
     /**
      * Adds an entity to the list of entities
@@ -50,18 +53,6 @@ public class WorldParameters {
      */
     public void addEntity(AbstractEntity entity) {
         entities.add(entity);
-
-        if (entity instanceof HasPointLight) {
-            addLuminousEntity(entity);
-        }
-    }
-
-    /**
-     * Adds an luminous entities to the list of luminous entities
-     * @param entity The entity to be added
-     */
-    public void addLuminousEntity(AbstractEntity entity) {
-        luminousEntities.add(entity);
     }
 
     /**
@@ -70,6 +61,22 @@ public class WorldParameters {
      */
     public void addBiome(AbstractBiome biome) {
         biomes.add(biome);
+    }
+
+    /**
+     * Adds a corresponding biome size
+     * @param size The biome size to be added
+     */
+    public void addBiomeSize(int size){
+        biomeSizes.add(size);
+    }
+
+    /**
+     * Adds a corresponding lake size
+     * @param size The size of the lake
+     */
+    public void addLakeSize(int size){
+        lakeSizes.add(size);
     }
 
     /**
@@ -100,7 +107,7 @@ public class WorldParameters {
      * Sets the sizes of the corresponding biomes
      * @param biomeSizes A list of of corresponding biomessizes for each biome
      */
-    public void setBiomeSizes(int[] biomeSizes) {
+    public void setBiomeSizes(ArrayList<Integer> biomeSizes) {
         this.biomeSizes = biomeSizes;
     }
 
@@ -108,8 +115,22 @@ public class WorldParameters {
      * Sets the sizes of the lakes
      * @param lakeSizes The size of the lakes
      */
-    public void setLakeSizes(int[] lakeSizes) {
+    public void setLakeSizes(ArrayList<Integer> lakeSizes) {
         this.lakeSizes = lakeSizes;
+    }
+
+    public void setLakeSizes(int[] lakeSizes){
+        this.lakeSizes = new ArrayList<>();
+        for (int lakeSize : lakeSizes){
+            this.lakeSizes.add(lakeSize);
+        }
+    }
+
+    public void setBiomeSizes(int[] biomeSizes){
+        this.biomeSizes = new ArrayList<>();
+        for (int biomeSize : biomeSizes) {
+            this.biomeSizes.add(biomeSize);
+        }
     }
 
     /**
@@ -137,14 +158,6 @@ public class WorldParameters {
     }
 
     /**
-     * Sets the luminous entities
-     * @param entities A list of entities
-     */
-    public void setLuminousEntities(List<AbstractEntity> entities) {
-        this.luminousEntities = entities;
-    }
-
-    /**
      * Sets the number of rivers
      * @param noRivers The number of rivers
      */
@@ -156,7 +169,7 @@ public class WorldParameters {
      * Sets the width of the rivers
      * @param riverWidth The width of the rivers
      */
-    public void setRiverWidth(int riverWidth) {
+    public void setRiverWidth(double riverWidth) {
         this.riverWidth = riverWidth;
     }
 
@@ -164,8 +177,16 @@ public class WorldParameters {
      * Sets the beach width
      * @param beachWidth The beach width
      */
-    public void setBeachWidth(int beachWidth) {
+    public void setBeachWidth(double beachWidth) {
         this.beachWidth = beachWidth;
+    }
+
+    /**
+     * Sets the function to generate the spawn rules.
+     * @param generateSpawnRules the spawn rules
+     */
+    public void setGenerateSpawnRules(Function<World, Map<AbstractBiome, List<EntitySpawnRule>>> generateSpawnRules) {
+        this.generateSpawnRules = generateSpawnRules;
     }
 
     /**
@@ -193,18 +214,37 @@ public class WorldParameters {
     }
 
     /**
-     * Gets the biomes sizes
+     * Gets the biomes sizes as an array
      * @return The biome sizes
      */
-    public int[] getBiomeSizes() {
+    public int[] getBiomeSizesArray() {
+        return biomeSizes.stream().mapToInt(biomeSize -> biomeSize).toArray();
+    }
+
+
+    /**
+     * Gets the lake sizes as an array
+     * @return The sizes of the lakes
+     */
+    public int[] getLakeSizesArray() {
+        return lakeSizes.stream().mapToInt(lakeSize -> lakeSize).toArray();
+    }
+
+
+    /**
+     * Gets the biome sizes
+     * @return The biome sizes
+     */
+    public ArrayList<Integer> getBiomeSizes(){
         return biomeSizes;
     }
 
+
     /**
      * Gets the lake sizes
-     * @return The sizes of the lakes
+     * @return The lake sizes
      */
-    public int[] getLakeSizes() {
+    public ArrayList<Integer> getLakeSizes(){
         return lakeSizes;
     }
 
@@ -233,14 +273,6 @@ public class WorldParameters {
     }
 
     /**
-     * Gets the luminous entities
-     * @return The entities
-     */
-    public List<AbstractEntity> getLuminousEntities() {
-        return luminousEntities;
-    }
-
-    /**
      * Gets the number of rivers
      * @return The number of rivers
      */
@@ -252,7 +284,7 @@ public class WorldParameters {
      * Gets the river width
      * @return The river width
      */
-    public int getRiverWidth() {
+    public double getRiverWidth() {
         return riverWidth;
     }
 
@@ -260,8 +292,16 @@ public class WorldParameters {
      * Gets the beach width
      * @return The beach width
      */
-    public int getBeachWidth() {
+    public double getBeachWidth() {
         return beachWidth;
+    }
+
+    /**
+     * Gets the function to generate the spawn rules.
+     * @return the functions to generate the spawn rules
+     */
+    public Function<World, Map<AbstractBiome, List<EntitySpawnRule>>> getGenerateSpawnRules() {
+        return generateSpawnRules;
     }
 
     /**
@@ -270,17 +310,5 @@ public class WorldParameters {
      */
     public void removeEntity(AbstractEntity entity) {
         entities.remove(entity);
-
-        if (entity instanceof HasPointLight) {
-            removeLuminousEntity(entity);
-        }
-    }
-
-    /**
-     * Removes an luminous entity
-     * @param entity The entity to be removed
-     */
-    public void removeLuminousEntity(AbstractEntity entity) {
-        luminousEntities.remove(entity);
     }
 }

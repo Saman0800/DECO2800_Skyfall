@@ -18,6 +18,11 @@ public class LongGrass extends StaticEntity {
         super(tile, 2, "bush" + LongGrass.nextTexture, obstructed);
         this.setObjectName(ENTITY_ID_STRING);
         LongGrass.nextTexture = randomGen.nextInt(3) + 1;
+        this.entityType = "LongGrass";
+    }
+
+    public LongGrass (StaticEntityMemento memento){
+        super(memento);
     }
 
     @Override

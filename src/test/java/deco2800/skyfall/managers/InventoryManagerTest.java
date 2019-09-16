@@ -33,7 +33,7 @@ public class InventoryManagerTest {
 
         assertEquals(4, inv.getContents().size());
         assertEquals(2, inv.getAmount("Stone"));
-        assertEquals(2, inv.getAmount("Wood"));
+        assertEquals(5, inv.getAmount("Wood"));
 
     }
 

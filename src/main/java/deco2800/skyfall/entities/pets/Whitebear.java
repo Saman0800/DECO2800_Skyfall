@@ -51,10 +51,12 @@ public class Whitebear extends AbstractPet implements Animatable, Item {
         for(AbstractEntity ae:abstractEntityList){
             if(ae instanceof GoldPiece){
                 if(this.getDomesticated()){
+                    //if the pet is close to the coin, then pick up and come back to mc
                     if(ae.getPosition().distance(this.getPosition())<3){
                         isOnTheWay=true;
                         HexVector aeposition =  ae.getPosition();
                         this.moveTowards(aeposition);
+                        //when the pet is close enough to the coin, then pick up, otherwise move to the coin
                         if(ae.getPosition().distance(this.getPosition())<0.1){
                             mc.addGold((GoldPiece) ae,((GoldPiece) ae).getValue());
                             GameManager.get().getWorld().removeEntity(ae);
@@ -72,6 +74,7 @@ public class Whitebear extends AbstractPet implements Animatable, Item {
         setCurrentState(AnimationRole.MOVE);
         if(this.getDomesticated()){
             if(!isOnTheWay){
+                //keep at the right hand side of the mc
                 HexVector destination = new HexVector(mc.getCol() - 1, mc.getRow() - 1);
                 setCurrentDirection(movementDirection(this.position.getAngle()));
                 this.position.moveToward(destination, this.getSpeed());

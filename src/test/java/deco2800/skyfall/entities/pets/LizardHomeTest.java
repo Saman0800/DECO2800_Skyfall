@@ -4,7 +4,9 @@ import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.managers.*;
+import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
@@ -13,19 +15,25 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ GameManager.class, DatabaseManager.class, PlayerPeon.class })
+@PrepareForTest({ GameManager.class, PlayerPeon.class, WorldBuilder.class, WorldDirector.class, DatabaseManager.class,
+                  DataBaseConnector.class })
 public class LizardHomeTest {
 
     private World w = null;
@@ -39,9 +47,28 @@ public class LizardHomeTest {
      * set up world
      */
     @Before
-    public void Setup() {
+    public void Setup() throws Exception {
+        Random random = new Random(0);
+        whenNew(Random.class).withAnyArguments().thenReturn(random);
+
+        DataBaseConnector connector = mock(DataBaseConnector.class);
+        when(connector.loadChunk(any(World.class), anyInt(), anyInt())).then(
+                (Answer<Chunk>) invocation -> {
+                    Chunk chunk = new Chunk(invocation.getArgumentAt(0, World.class),
+                                            invocation.getArgumentAt(1, Integer.class),
+                                            invocation.getArgumentAt(2, Integer.class));
+                    chunk.generateEntities();
+                    return chunk;
+                });
+
+        DatabaseManager manager = mock(DatabaseManager.class);
+        when(manager.getDataBaseConnector()).thenReturn(connector);
+
+        mockStatic(DatabaseManager.class);
+        when(DatabaseManager.get()).thenReturn(manager);
+
         lizardHome=new LizardHome(0,0,mc);
-        mc = new MainCharacter(1f, 1f, 1f, "Main Piece", 2);
+        mc = MainCharacter.getInstance(1f, 1f, 1f, "Main Piece", 2);
         WorldBuilder worldBuilder = new WorldBuilder();
         WorldDirector.constructTestWorld(worldBuilder);
         w = worldBuilder.getWorld();
@@ -66,17 +93,6 @@ public class LizardHomeTest {
      */
     @Test
     public void cutlizardHomeTree() {
-        CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        // generate world with tiles
-        Tile tile1 = new Tile(0.0f, 0.0f);
-        Tile tile2 = new Tile(0.0f, 1.0f);
-        Tile tile3 = new Tile(1.0f, -1f);
-        Tile tile4 = new Tile(2f, 1f);
-        tileMap.add(tile1);
-        tileMap.add(tile2);
-        tileMap.add(tile4);
-        tileMap.add(tile3);
-        w.setTileMap(tileMap);
         lizardHome.setHealth(10);
         lizardHome.cutlizardHomeTree();
         Assert.assertEquals(lizardHome.getHealth(),9);
@@ -87,17 +103,8 @@ public class LizardHomeTest {
      */
     @Test
     public void harvest() {
-        CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
         // Populate world with tiles
-        Tile tile1 = new Tile(0.0f, 0.0f);
-        Tile tile2 = new Tile(0.0f, 1.0f);
-        Tile tile3 = new Tile(1.0f, -1f);
-        Tile tile4 = new Tile(2f, 1f);
-        tileMap.add(tile1);
-        tileMap.add(tile2);
-        tileMap.add(tile4);
-        tileMap.add(tile3);
-        w.setTileMap(tileMap);
+        Tile tile1 = w.getTile(0.0f, 0.0f);
         lizardHome.setHealth(0);
         List<AbstractEntity> drops = lizardHome.harvest(tile1);
         Assert.assertEquals(drops.get(0) instanceof Lizard,true);

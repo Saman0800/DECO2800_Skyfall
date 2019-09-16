@@ -56,7 +56,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("melee_test", new Texture("resources/punch.png"));
             textureMap.put("camel", new Texture("resources/camel/camel-face(no-player).png"));
             textureMap.put("camel_character", new Texture("resources/camel/camel-withplayer1(left).png"));
-            textureMap.put("horse", new Texture("resources/horse_images/horse-left-walk1.png"));
+            textureMap.put("horse_images", new Texture("resources/horse_images/horse-left-walk1.png"));
             textureMap.put("horse_character", new Texture("resources/horse_images/horse-left-walk-with-player1.png"));
 
             // Tile textures
@@ -275,6 +275,9 @@ public class TextureManager extends AbstractManager {
             textureMap.put("Apple_inv", new Texture("resources/items_icons/apple.png"));
             textureMap.put("Berry_inv", new Texture("resources/items_icons/berry.png"));
             textureMap.put("PoisonousMushroom_inv", new Texture("resources/items_icons/poisonous_mushroom.png"));
+            textureMap.put("Hatchet", new Texture("resources/items_icons/hatchet.png"));
+            textureMap.put("Pick Axe", new Texture("resources/items_icons/pickaxe.png"));
+
             textureMap.put("Sand_inv", new Texture("resources/temp_sand.png"));
 
 
@@ -362,7 +365,7 @@ public class TextureManager extends AbstractManager {
             //TODO fix the issue where tiles are not getting added to lakes correctly,
             //Temporary fix is just to assign tiles without a texture the lake texture so that the
             //issue isn't as noticable
-            return textureMap.get("lake_1");
+            return textureMap.get("lake1.1");
         }
 
     }

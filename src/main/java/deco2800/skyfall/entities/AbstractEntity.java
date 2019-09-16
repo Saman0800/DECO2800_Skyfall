@@ -47,10 +47,34 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         return nextID++;
     }
 
-    protected HexVector position;
+	protected final EntityHexVector position;
     private int height;
     private float colRenderLength;
     private float rowRenderLength;
+
+	public void setBody(Body body) {
+		this.body = body;
+	}
+
+	public void setFixture(Fixture fixture) {
+		this.fixture = fixture;
+	}
+
+	public void setColRenderLength(float colRenderLength) {
+		this.colRenderLength = colRenderLength;
+	}
+
+	public void setRowRenderLength(float rowRenderLength) {
+		this.rowRenderLength = rowRenderLength;
+	}
+
+	public void setCollidable(Boolean collidable) {
+		isCollidable = collidable;
+	}
+
+    public Boolean getCollidable() {
+        return isCollidable;
+    }
 
     //Box2D properties
     private Body body;
@@ -113,7 +137,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
     public AbstractEntity() {
-        this.position = new HexVector();
+		this.position = new EntityHexVector(this);
         this.colRenderLength = 1f;
         this.rowRenderLength = 1f;
         this.setObjectName(ENTITY_ID_STRING);
@@ -130,8 +154,9 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * @param colRenderLength the rendered length in col direction
      * @param rowRenderLength the rendered length in the row direction
      */
-    public AbstractEntity(float col, float row, int height, float colRenderLength, float rowRenderLength) {
-        this.position = new HexVector(col, row);
+	public AbstractEntity(float col, float row, int height,
+						  float colRenderLength, float rowRenderLength) {
+		this.position = new EntityHexVector(this, col, row);
         this.height = height;
         this.colRenderLength = colRenderLength;
         this.rowRenderLength = rowRenderLength;
@@ -142,7 +167,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     public AbstractEntity(float col, float row, int height, float colRenderLength, float rowRenderLength,
             String fixtureDefFile) {
-        this.position = new HexVector(col, row);
+        this.position = new EntityHexVector(this, col, row);
         this.height = height;
         this.colRenderLength = colRenderLength;
         this.rowRenderLength = rowRenderLength;
@@ -165,27 +190,43 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         return position.getRow();
     }
 
-    /**
-     * Get the Z position of this AbstractWorld Entity
-     * 
-     * @return The Z position
-     */
-    public int getHeight() {
-        return height;
+	/**
+	 * Get the Z position of this AbstractWorld Entity
+	 * 
+	 * @return The Z position
+	 */
+	public int getHeight() {
+		return height;
+	}
+
+	/**
+	 * Sets the col coordinate for the entity. If you are setting both the row and the column of the entity, use {@link
+	 * #setPosition(float, float)} instead.
+	 *
+	 * @param col the new column of this entity
+	 */
+	public void setCol(float col) {
+		setPosition(col, getRow());
     }
 
-    /**
-     * Sets the col coordinate for the entity
-     */
-    public void setCol(float col) {
-        this.position.setCol(col);
-    }
-
-    /**
-     * Sets the row coordinate for the entity
+	/**
+	 * Sets the row coordinate for the entity. If you are setting both the row and the column of the entity, use {@link
+	 * #setPosition(float, float)} instead.
+	 *
+	 * @param row the new row of this entity
      */
     public void setRow(float row) {
-        this.position.setRow(row);
+		setPosition(getCol(), row);
+	}
+
+	/**
+	 * Sets the position of this entity.
+	 *
+	 * @param col the new column of this entity
+	 * @param row the new row of this entity
+	 */
+	public void setPosition(float col, float row) {
+		this.position.set(col, row);
     }
 
     /**
@@ -202,8 +243,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * @param height the z coordinate for the entity
      */
     public void setPosition(float col, float row, int height) {
-        setCol(col);
-        setRow(row);
+		setPosition(col, row);
         setHeight(height);
     }
 
@@ -241,7 +281,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     /**
      * Gives the string for the texture of this entity. This does not mean the
      * texture is currently registered
-     * 
+     *
      * @return texture string
      */
     public String getTexture() {
@@ -251,7 +291,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     /**
      * Sets the texture string for this entity. Check the texture is registered with
      * the TextureRegister
-     * 
+     *
      * @param texture
      *            String texture id
      */
