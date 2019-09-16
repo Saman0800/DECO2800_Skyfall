@@ -10,7 +10,7 @@ import deco2800.skyfall.util.HexVector;
 public class Wood extends NaturalResources implements Item {
 
     // the name of the item
-    private String name;
+    //private String name;
 
     // the colour of the wood
     private String colour;

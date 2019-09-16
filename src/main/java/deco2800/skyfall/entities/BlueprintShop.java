@@ -7,6 +7,9 @@ import deco2800.skyfall.worlds.Tile;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * An blueprint shop entity that spawns in the game.
+ */
 public class BlueprintShop extends StaticEntity implements HasHealth {
     private int health = 100;
     private static final String ENTITY_ID_STRING = "blueprintShop";
@@ -14,6 +17,11 @@ public class BlueprintShop extends StaticEntity implements HasHealth {
     // TODO Remove this and replace the Random instance with the seeded Random as a
     // parameter.
 
+    /**
+     * constructs a blueprint shop to be put into the game
+     * @param tile tile to place on
+     * @param obstructed
+     */
     public BlueprintShop(Tile tile, boolean obstructed) {
         super(tile, 2, ENTITY_ID_STRING, obstructed);
         this.setObjectName(ENTITY_ID_STRING);

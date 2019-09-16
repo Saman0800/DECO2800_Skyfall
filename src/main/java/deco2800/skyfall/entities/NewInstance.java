@@ -2,6 +2,7 @@ package deco2800.skyfall.entities;
 
 import deco2800.skyfall.worlds.Tile;
 
+// TODO:Ontonator Consider removing this, since it isn't needed anymore.
 /**
  * This interface is required to be implement if a entity is to be randomly
  * dispersed on game start up.
@@ -22,7 +23,7 @@ public interface NewInstance<E extends StaticEntity> {
     public E newInstance(Tile tile);
 
     /**
-     * In a simliar fashion this function will also create a deep copy of the
+     * In a similar fashion this function will also create a deep copy of the
      * instance, although this function is intended for entities that spread across
      * multiple and thus need the centring change (as opposed to the tile).
      * 

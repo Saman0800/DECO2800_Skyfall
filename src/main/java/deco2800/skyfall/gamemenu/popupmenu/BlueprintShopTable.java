@@ -14,12 +14,25 @@ import java.util.List;
 
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
+/**
+ * A class for blueprint shop table pop up.
+ */
 public class BlueprintShopTable extends AbstractPopUpElement{
     private final Skin skin;
     private final StatisticsManager sm;
     private Table blueprintTable;
     private Table blueprintPanel;
 
+    /**
+     * Constructs a blueprint shop table.
+     *
+     * @param stage Current stage.
+     * @param exit Exit button if it has one.
+     * @param textureNames Names of the textures.
+     * @param tm Current texture manager.
+     * @param gameMenuManager Current game menu manager.
+     * @param skin Current skin.
+     */
     public BlueprintShopTable(Stage stage, ImageButton exit, String[] textureNames,
                               TextureManager tm, GameMenuManager gameMenuManager,
                               StatisticsManager sm, Skin skin) {
@@ -29,18 +42,41 @@ public class BlueprintShopTable extends AbstractPopUpElement{
         this.sm = sm;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void hide() {
         super.hide();
         blueprintTable.setVisible(false);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void show() {
         super.show();
         blueprintTable.setVisible(true);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updatePosition() {
+        super.updatePosition();
+    }
+
+    public void update() {
+        super.update();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Draw the whole blueprint shop table.
+     */
     public void draw() {
         super.draw();
         blueprintTable = new Table();
@@ -71,6 +107,9 @@ public class BlueprintShopTable extends AbstractPopUpElement{
         stage.addActor(blueprintTable);
     }
 
+    /**
+     * Actually display the blueprints and their prices (if not bought)
+     */
     public void updateBlueprintShopPanel() {
         blueprintPanel.clear();
         blueprintPanel.setName("resourcePanel");
@@ -125,6 +164,11 @@ public class BlueprintShopTable extends AbstractPopUpElement{
         }
     }
 
+    /**
+     * Check if a blueprint has been bought already
+     * @param b blueprint to check
+     * @return true if bought, else false
+     */
     private boolean isBought(Blueprint b) {
         for (Blueprint bt : sm.getCharacter().getBlueprintsLearned()) {
             if (b.getName().equals(bt.getName())) {

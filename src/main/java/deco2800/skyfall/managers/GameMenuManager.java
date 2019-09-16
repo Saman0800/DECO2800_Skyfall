@@ -217,7 +217,7 @@ public class GameMenuManager extends TickableManager {
         } catch (NullPointerException npe) {
             //TODO: Change to logger
             logger.error("Please add stats manager returning default c");
-            return new MainCharacter(0,0,0.05f, "Main Piece", 10);
+            return MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
         }
     }
     /**

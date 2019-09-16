@@ -24,9 +24,9 @@ public class HatchetTest {
     @Before
     public void setUp() {
         position = new HexVector(1f, 1f);
-        owner = new MainCharacter(1f, 1f, 0.05f, "player", 100);
+        owner = MainCharacter.getInstance(1f, 1f, 0.05f, "player", 10);
         hatchet = new Hatchet(owner, position);
-        testTile = new Tile(1f, 1f);
+        testTile = new Tile(null, 1f, 1f);
         treeToFarm = new Tree(testTile, true);
     }
 

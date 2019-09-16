@@ -1,6 +1,9 @@
 package deco2800.skyfall.worlds.biomes;
 
+import deco2800.skyfall.saving.AbstractMemento;
+import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -10,7 +13,10 @@ import java.util.Random;
 /**
  * Class that represents the biomes
  */
-public abstract class AbstractBiome {
+public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBiomeMemento> {
+    private long id;
+    private long worldID;
+
     // The biome name, i.e forest, desert, mountain
     private String biomeName;
     // The tiles the biome contains
@@ -19,6 +25,20 @@ public abstract class AbstractBiome {
     private AbstractBiome parentBiome;
     // The biomes which have this biome as a parent
     private ArrayList<AbstractBiome> childBiomes;
+
+    protected NoiseGenerator textureGenerator;
+
+    /**
+     * Constructor for a biome being loaded
+     *
+     * @param memento the memento this biome is being loaded from
+     */
+    public AbstractBiome(AbstractBiomeMemento memento) {
+        this.load(memento);
+        this.childBiomes = new ArrayList<>();
+        this.biomeName = memento.biomeType;
+        this.tiles = new ArrayList<>();
+    }
 
     /**
      * Constructor for a Biome
@@ -32,6 +52,7 @@ public abstract class AbstractBiome {
         setParentBiome(parentBiome);
         tiles = new ArrayList<>();
         childBiomes = new ArrayList<>();
+        this.id = System.nanoTime();
     }
 
     /**
@@ -42,7 +63,6 @@ public abstract class AbstractBiome {
     public List<Tile> getTiles() {
         return tiles;
     }
-
 
     /**
      * Sets the tiles in the biome
@@ -73,8 +93,10 @@ public abstract class AbstractBiome {
         if (tile.getBiome() != null) {
             tile.getBiome().tiles.remove(tile);
         }
+        // FIXME:Ontonator Make this work with chunks.
         tiles.add(tile);
         tile.setBiome(this);
+        setTileTexture(tile);
     }
 
     /**
@@ -122,9 +144,9 @@ public abstract class AbstractBiome {
     }
 
     /**
+     * Adds this biome its descendants to the provided list.
      *
-     *
-     * @param biomes
+     * @param biomes the list to which the biomes are added
      */
     private void aggregateDescendantBiomes(List<AbstractBiome> biomes) {
         biomes.add(this);
@@ -144,9 +166,82 @@ public abstract class AbstractBiome {
     }
 
     /**
-     * Sets all the textures within a biome.
-     *
-     * @param random the RNG to use to generate the textures
+     * Sets the texture of the given tile assuming it is in this biome.
      */
-    public abstract void setTileTextures(Random random);
+    public abstract void setTileTexture(Tile tile);
+
+    public long getBiomeID() {
+        return this.id;
+    }
+
+    public void setBiomeID(int id) {
+        this.id = id;
+    }
+
+
+    private void setWorldID(long worldID) {
+        this.worldID = worldID;
+    }
+
+    @Override
+    public AbstractBiomeMemento save() {
+        return new AbstractBiomeMemento(this);
+    }
+
+    @Override
+    public void load(AbstractBiomeMemento memento) {
+        this.worldID = memento.worldID;
+        this.id = memento.biomeID;
+    }
+
+    public class AbstractBiomeMemento extends AbstractMemento {
+        // The ID of the world this is in
+        private long worldID;
+
+        // The ID of this biome
+        private long biomeID;
+
+        // The type of biome this is
+        private String biomeType;
+
+        // The ID of this Biome's parent
+        private long parentBiomeID;
+
+        //Starting seed for the noise generator for the biome
+        protected long noiseGeneratorSeed;
+
+        private AbstractBiomeMemento(AbstractBiome biome) {
+            this.worldID = biome.worldID;
+            this.biomeID = biome.id;
+            this.biomeType = biome.getBiomeName();
+            if (biome.textureGenerator == null) {
+                System.out.println(biome.getBiomeName());
+            }
+            this.noiseGeneratorSeed = biome.textureGenerator.getSeed();
+            if (biome.getParentBiome() == null) {
+                // TODO find a better value to represent null
+                this.parentBiomeID = -1;
+            } else {
+                this.parentBiomeID = biome.parentBiome.id;
+            }
+        }
+
+        /**
+         * Get the biome type of this biome
+         *
+         * @return the biome type of this biome
+         */
+        public String getBiomeType() {
+            return this.biomeType;
+        }
+
+        /**
+         * Get the parent biome id of this biome
+         *
+         * @return the parent biome id of this biome
+         */
+        public long getParentBiomeID() {
+            return this.parentBiomeID;
+        }
+    }
 }

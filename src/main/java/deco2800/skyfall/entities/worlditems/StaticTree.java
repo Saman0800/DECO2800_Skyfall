@@ -12,6 +12,10 @@ public abstract class StaticTree extends StaticEntity implements Tickable, Harve
 
     protected static final String ENTITY_ID_STRING = "tree";
 
+    public StaticTree(StaticEntityMemento memento){
+        super(memento);
+    }
+
     public StaticTree() {
         this.setObjectName(ENTITY_ID_STRING);
     }

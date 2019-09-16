@@ -4,6 +4,8 @@ import deco2800.skyfall.gui.Tuple;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.*;
 
+import java.io.Serializable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.*;
@@ -47,10 +49,15 @@ public class InventoryManager extends TickableManager {
         this.add(new Stone());
         this.add(new Wood());
         this.add(new Wood());
+        this.add(new Wood());
+        this.add(new Wood());
+        this.add(new Wood());
         this.add(new Hatchet());
         this.add(new PickAxe());
         this.quickAccessAdd("Hatchet");
         this.quickAccessAdd("Pick Axe");
+        this.quickAccessAdd("Wood");
+        this.quickAccessAdd("Stone");
     }
 
     public void initInventory(Map<String, List<Item>> inventory) {
