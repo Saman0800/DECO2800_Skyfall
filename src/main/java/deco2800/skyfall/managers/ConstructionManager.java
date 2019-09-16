@@ -1,6 +1,7 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -187,7 +188,6 @@ public class ConstructionManager extends TickableManager {
             house.setBounds(50, 450, 140, 40);
             storageUnit.setBounds(50, 350, 140, 40);
 
-
             buildMenu.addActor(house);
             buildMenu.addActor(storageUnit);
             buildMenu.addActor(setting);
@@ -212,7 +212,13 @@ public class ConstructionManager extends TickableManager {
                 building.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y){
 
-                        displayWindow();
+//                        displayWindow();
+                        hideBuildMenu();
+//                        System.out.println(building.getText());
+                        Pixmap pm = new Pixmap(Gdx.files.internal("resources/world_structures/house2.png"));
+//                        System.out.println(pm.getFormat());
+                        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
+                        pm.dispose();
 
                         //Sets building to be enabled
                         buildTrue = 1;
