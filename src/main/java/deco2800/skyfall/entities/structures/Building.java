@@ -4,7 +4,6 @@ package deco2800.skyfall.entities.structures;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.worlds.world.World;
 
-import javax.print.attribute.IntegerSyntax;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,18 +21,20 @@ public class Building extends AbstractEntity {
     private int sizeY;
     private int buildTime;
     private String texture;
-    private Map<String, Integer> buildCost = new HashMap<String, Integer>();
+    private Map<String, Integer> buildCost = new HashMap<>();
 
 
     private float xcoord;
     private float ycoord;
 
-
-
     /**
      * The Constructor for a building
-     * @param name - The name of the building type
-     * @param
+     * @param name The name of the building type
+     * @param maxHealth The max health of the building
+     * @param sizeX the size of the building in the x direction
+     * @param sizeY the size of the building in the y direction
+     * @param buildTime the build time for the building
+     * @param texture the texture for the building
      */
     public Building(String name, int maxHealth, int sizeX, int sizeY, int buildTime, String texture) {
         this.name = name;

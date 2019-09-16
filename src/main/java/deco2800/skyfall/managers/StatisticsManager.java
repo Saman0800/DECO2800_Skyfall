@@ -47,7 +47,6 @@ public class StatisticsManager  extends TickableManager {
      * collecting weapons, inventory, money and getting kills
      */
     public void gainExperience() {
-
         // Every 10 inventory items collected by the character will give them
         // 10 experience points
         if (this.getInventory().getTotalAmount() != 0 &&

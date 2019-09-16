@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities.weapons;
 
 import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 
 public class Sword extends Weapon implements Item, IWeapon {
@@ -97,7 +98,13 @@ public class Sword extends Weapon implements Item, IWeapon {
      * @return a description about the weapon
      */
     public String getDescription() {
-        return this.toString();
+        return this.getName() + " is a " + "\n" + this.getSubtype() + " weapon which" + "\n" +
+                " can be used to help the Main" + "\n" + " Character defeat enemies." +
+                " It has deals " + this.getDamage() + " " + this.getDamageType()
+                + "\n" + " damages each time it is used. " + "\n" + "It also has an attack rate " +
+                "of: " + this.getAttackRate() + "\n" + " and a durability of: " +
+                this.getDurability() + " before it become useless. " + "\n"
+                + this.getName() + "is carryable, but exchangeable.";
     }
 
     @Override
@@ -105,13 +112,7 @@ public class Sword extends Weapon implements Item, IWeapon {
      * A paragraph describing the weapon
      */
     public String toString() {
-        return this.getName() + " is a " + this.getSubtype() + " weapon which" +
-                " can be used to help the Main Character defeat enemies." +
-                " It has deals " + this.getDamage() + " " + this.getDamageType()
-                + " damages each time it is used. It also has an attack rate " +
-                "of: " + this.getAttackRate() + " and a durability of: " +
-                this.getDurability() + " before it become useless. "
-                + this.getName() + "is carryable, but exchangeable.";
+        return "" + this.getSubtype() + ":" + this.getName();
     }
 
     /**
@@ -124,6 +125,11 @@ public class Sword extends Weapon implements Item, IWeapon {
     @Override
     public void onTick(long i) {
         // Auto-generated method stub
+    }
+
+    @Override
+    public void use(HexVector position){
+
     }
 }
 

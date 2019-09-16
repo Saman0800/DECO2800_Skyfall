@@ -40,11 +40,6 @@ public class SpearTest {
 
   @Test
   public void toStringTest() {
-    Assert.assertEquals(spear.toString(), "spear is a range weapon " +
-            "which can be used to help the Main Character" +
-            " defeat enemies. It has deals 5 splash damages each time it is" +
-            " used. It also has an attack rate " +
-            "of: 4 and a durability of: 7 before it become useless. "
-            + "spear" + "is carryable, but exchangeable.");
+    Assert.assertEquals(spear.toString(), "" + "range" + ":" + "spear");
   }
 }

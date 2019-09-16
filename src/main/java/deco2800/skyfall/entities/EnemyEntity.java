@@ -1,8 +1,5 @@
 package deco2800.skyfall.entities;
 
-
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.tasks.AbstractTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +33,7 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
     //The amount of damage this enemy deals.
     private int damage;
 
+    protected boolean toBeDestroyed = false;
 
     public EnemyEntity(float col, float row){
         this.setRow(row);
@@ -59,7 +57,6 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
 
         getBody().setTransform(position.getCol(), position.getRow(), getBody().getAngle());
 
-        //@TODO
         if (task != null && task.isAlive()) {
             task.onTick(i);
 
@@ -67,8 +64,6 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
                 this.task = null;
             }
         }
-
-//        GameManager.get().getWorld().getPlayer();
     }
 
     /**
@@ -139,15 +134,15 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
 
     /**
      * Damage taken
-     * @param damage hero danage
+     * @param damage hero damage
      */
-    protected boolean toBeDestroyed = false;
     public void takeDamage(int damage) {
-        //TODO: perform damage calculation factoring in status indicators, armour and resistance attributes.
+        // perform damage calculation factoring in status indicators, armour
+        // and resistance attributes.
         this.health -= damage;
         log.info("Enemy took " + damage + " damage.");
         log.info("Enemy has " + this.health + " health remaining.");
-        System.out.println(this.getClass().getName());
+        log.info(this.getClass().getName());
         //If the health of this enemy is <= 0, remove it from the game world.
         if (this.health <= 0) {
             toBeDestroyed = true;
@@ -177,7 +172,7 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
 
     /**
      * To get the level of Enemy
-     * @return
+     * @return the player's level
      */
     public int getLevel() {
         return level;
@@ -185,7 +180,7 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
 
     /**
      * Set Enemy level
-     * @param level
+     * @param level the level the player is to be set to
      */
     public void setLevel(int level) {
         this.level = level;
