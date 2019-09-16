@@ -120,7 +120,7 @@ public class ConstructionManagerTest {
         inventoryManager.add(wood5);
 
         Assert.assertEquals(11.0, inventoryManager.getAmount("Wood"), 0.0);
-        Assert.assertEquals(4.0, inventoryManager.getAmount("Stone"), 0.0);
+        Assert.assertEquals(5.0, inventoryManager.getAmount("Stone"), 0.0);
         cmgr.setBuilding(0);
 
 
@@ -130,8 +130,8 @@ public class ConstructionManagerTest {
 
         cmgr.build(gm.getWorld(),2,2);
 
-        Assert.assertEquals(5.0, inventoryManager.getAmount("Wood"), 0.0);
-        Assert.assertEquals(2.0, inventoryManager.getAmount("Stone"), 0.0);
+        Assert.assertEquals(6.0, inventoryManager.getAmount("Wood"), 0.0);
+        Assert.assertEquals(3.0, inventoryManager.getAmount("Stone"), 0.0);
 
     }
 
