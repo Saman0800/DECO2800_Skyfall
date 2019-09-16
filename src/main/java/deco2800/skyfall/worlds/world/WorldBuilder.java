@@ -181,12 +181,12 @@ public class WorldBuilder implements WorldBuilderInterface {
         // FIXME:Ontonator Fix the weightings on these so they actually spawn often enough.
 
         // FIXME:Ontonator Make this work properly.
-        Tile torchTile1 = world.getTile(0.0f, 5.0f);
-        world.addEntity(new TikiTorch(torchTile1, false));
-
-        Tile torchTile2 = world.getTile(0.0f, -3.0f);
-        world.addEntity(new TikiTorch(torchTile2, false));
-        // Tile startTile = world.getTile(0.0f, 1.0f);
+        // You can't spawn things here.
+//        Tile torchTile1 = world.getTile(0.0f, 5.0f);
+//        world.addEntity(new TikiTorch(torchTile1, false));
+//
+//        Tile torchTile2 = world.getTile(0.0f, -3.0f);
+//        world.addEntity(new TikiTorch(torchTile2, false));
 
         for (AbstractBiome biome : world.getBiomes()) {
             ArrayList<EntitySpawnRule> biomeSpawnRules = new ArrayList<>();
@@ -216,7 +216,6 @@ public class WorldBuilder implements WorldBuilderInterface {
                     EntitySpawnRule rockRule = new EntitySpawnRule(tile -> new Rock(tile, true), 0.04, 10, 50, biome);
                     biomeSpawnRules.add(rockRule);
 
-                    // FIXME:Ontonator Make this work with chunks.
                     spawnChests(biome, world, biomeSpawnRules);
 
                     // This generator will cause the mushrooms to clump togteher more
@@ -240,7 +239,6 @@ public class WorldBuilder implements WorldBuilderInterface {
                             new EntitySpawnRule(tile -> new MountainTree(tile, true), biome, true, cubic);
                     biomeSpawnRules.add(mTreeControl);
 
-                    // FIXME:Ontonator Make this work with chunks.
                     spawnChests(biome, world, biomeSpawnRules);
 
                     // Create a new perlin noise map
