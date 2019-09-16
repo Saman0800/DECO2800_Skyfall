@@ -457,7 +457,7 @@ public class BuildingEntity extends AbstractEntity {  //Implements Blueprint at 
      * @return true if added successfully, otherwise false
      */
     public boolean AddInventory(Item item){
-        return this.inventoryManager.inventoryAdd(item);
+        return this.inventoryManager.add(item);
     }
 
     /**

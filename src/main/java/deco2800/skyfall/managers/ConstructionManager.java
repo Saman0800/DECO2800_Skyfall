@@ -305,14 +305,14 @@ public class ConstructionManager extends TickableManager {
      */
     public void build(World world, float x, float y) {
         buildingToBePlaced = selectBuilding(buildingID, x, y);
-        buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
+        //buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
         //Permissions
-        //if (invCheck(buildingToBePlaced, GameManager.getManagerFromInstance(InventoryManager.class))){
-        //    buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
-        //    invRemove(buildingToBePlaced,GameManager.getManagerFromInstance(InventoryManager.class));
-        //} else {
+        if (invCheck(GameManager.getManagerFromInstance(InventoryManager.class))){
+            buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
+            invRemove(buildingToBePlaced, GameManager.getManagerFromInstance(InventoryManager.class));
+        } else {
             //TODO: User does not have enough materials.
-        //}
+        }
         setNull();
     }
 
@@ -540,7 +540,8 @@ public class ConstructionManager extends TickableManager {
      */
     public Boolean invCheck( InventoryManager inventoryManager) {
 
-        Map<String, Integer> buildingCost;
+        Map<String, Integer> buildingCost = new HashMap<>();
+        boolean invvalid = true;
 
         switch (buildingID){
             case 0:
@@ -565,7 +566,7 @@ public class ConstructionManager extends TickableManager {
                 buildingCost = BuildingType.CASTLE.getBuildCost();
                 break;
             default:
-                return null;
+                invvalid = false;
         }
 
         for (Map.Entry<String, Integer> entry : buildingCost.entrySet()) {
@@ -575,11 +576,11 @@ public class ConstructionManager extends TickableManager {
             // System.out.println(item + " => " + value);
 
             if (value.intValue() > inventoryManager.getAmount(item)) {
-                return false;
+                invvalid = false;
             }
         }
 
-        return true;
+        return invvalid;
     }
 
 
