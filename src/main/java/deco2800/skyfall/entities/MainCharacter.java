@@ -141,6 +141,12 @@ public class MainCharacter extends Peon
     private long recoverTime = 3000;
 
     /**
+     * How long does MainCharacter take to dead before
+     * game over screen shows,
+     */
+    private long deadTime = 500;
+
+    /**
      * Check whether MainCharacter is hurt.
      */
     private boolean isHurt = false;
@@ -250,7 +256,6 @@ public class MainCharacter extends Peon
         this.scale = 0.4f;
         setDirectionTextures();
         configureAnimations();
-        setUpGUI();
     }
 
     /**
@@ -664,6 +669,7 @@ public class MainCharacter extends Peon
         changeHealth(0);
         SoundManager.playSound(DIED);
         setCurrentState(AnimationRole.DEAD);
+        deadTime = 0;
         // gameOverTable.show();
     }
 
@@ -857,6 +863,14 @@ public class MainCharacter extends Peon
             checkIfRecovered();
         }
         this.updateAnimation();
+
+        if (isDead()) {
+            if (deadTime < 500) {
+                deadTime += 20;
+            } else {
+                GameManager.setPaused(true);
+            }
+        }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();

@@ -22,10 +22,6 @@ public class Peon extends AgentEntity implements Tickable {
 	// Boolean of whether character is dead
 	private int deaths;
 
-	// Game Over screen
-	private GameOverTable gameOverTable =
-			(GameOverTable) GameManager.getManagerFromInstance(GameMenuManager.class).getPopUp("gameOverTable");
-
 	/**
 	 * Constructor with no parameters
 	 */
@@ -105,7 +101,7 @@ public class Peon extends AgentEntity implements Tickable {
 		this.health += amount;
 
 		if (this.isDead()) {
-			 this.health = 0;
+			 this.health = currentHealth;
 			// gameOverTable.show();
 
 			this.deaths += 1;
