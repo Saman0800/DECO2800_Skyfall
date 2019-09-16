@@ -158,6 +158,13 @@ public class WorldBuilder implements WorldBuilderInterface {
         this.staticEntities = staticEntities;
     }
 
+    /**
+     * Spawn a specified number of chests into the world
+     * @param num number of chests to spawn
+     * @param startTile
+     * @param biome
+     * @param world
+     */
     public void spawnChests(int num, Tile startTile, AbstractBiome biome, World world) {
         // Spawn chests
         Random random = new Random();
@@ -168,6 +175,12 @@ public class WorldBuilder implements WorldBuilderInterface {
         }
     }
 
+    /**
+     * Spawns a blueprint shop in the world
+     * @param startTile
+     * @param biome
+     * @param world
+     */
     public void spawnBlueprintShop(Tile startTile, AbstractBiome biome, World world) {
         BlueprintShop blueprintShop = new BlueprintShop(startTile, true);
         EntitySpawnRule chestRule = new EntitySpawnRule(0.04, 0, 1, biome);
@@ -198,6 +211,8 @@ public class WorldBuilder implements WorldBuilderInterface {
         for (AbstractBiome biome : world.getBiomes()) {
             switch (biome.getBiomeName()) {
                 case "forest":
+                    // spawn a shop for blueprints
+                    spawnBlueprintShop(startTile, biome, world);
 
                     // Spawn some swords
                     Weapon startSword = new Sword(startTile, true);
@@ -257,6 +272,8 @@ public class WorldBuilder implements WorldBuilderInterface {
                     break;
 
                 case "mountain":
+                    // spawn a shop for blueprints
+                    spawnBlueprintShop(startTile, biome, world);
 
                     // Spawn some spears
                     Weapon startSpear = new Spear(startTile, true);
@@ -286,6 +303,9 @@ public class WorldBuilder implements WorldBuilderInterface {
                     break;
 
                 case "desert":
+
+                    // spawn a shop for blueprints
+                    spawnBlueprintShop(startTile, biome, world);
 
                     DetectSand sand = new DetectSand(biome);
                     sand.putCharacter();
