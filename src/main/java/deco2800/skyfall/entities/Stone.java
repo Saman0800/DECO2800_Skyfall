@@ -305,7 +305,6 @@ public class Stone extends EnemyEntity implements Animatable {
             this.setTexture("stoneDead");
             this.setObjectName("stoneDead");
         } else {
-            System.out.println("hello");
             System.out.println((int)this.getCol()+","+(int)this.getRow());
             GameManager.get().getWorld().addEntity(new GoldPiece((int)getCol(),(int)getRow()));
             GameManager.get().getWorld().removeEntity(this);

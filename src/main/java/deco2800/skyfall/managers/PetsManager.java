@@ -1,12 +1,10 @@
 package deco2800.skyfall.managers;
 
-import deco2800.skyfall.Tickable;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.pets.AbstractPet;
 import deco2800.skyfall.resources.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.*;
 
 public class PetsManager extends AbstractManager {
@@ -71,6 +69,7 @@ public class PetsManager extends AbstractManager {
         if(petList.size()>0){
             //if no pet was summoned then call the first pet
             if(currentSummonedPet()==null){
+                System.out.println(this.inventoryManager);
                 this.inventoryManager.quickAccessRemove(petList.get(0).getName());
                 AbstractPet pet=petList.get(0);
                 pet.setCol(mc.getCol()-1);

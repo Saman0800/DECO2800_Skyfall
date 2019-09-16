@@ -809,39 +809,39 @@ public class MainCharacter extends Peon
                     break;
             }
         }
-        public void petOut(){
-            List<Item> items=this.inventories.getInventoryContents().get("dragon");
-            List<Item> items1=this.inventories.getInventoryContents().get("whitebear");
-            if(items!=null){
-                for(Item item:items){
-                    if(item instanceof AbstractPet){
-                        Lizard d=(Lizard)item;
-                        if(!d.getOutSide()){
-                            System.out.println("hello");
-                            this.inventories.quickAccessRemove("dragon");
-                            AbstractPet dragon=new Lizard(this.getCol()-2,this.getRow()-2,this);
-                            ((Lizard) dragon).setDomesticated(true);
-                            GameManager.get().getWorld().addEntity(dragon);
-                        }
-                    }
-                }
-            }
-            if(items1!=null){
-                for(Item item:items1){
-                    if(item instanceof AbstractPet){
-                        Whitebear wb=(Whitebear) item;
-                        if(!wb.getOutSide()){
-                            System.out.println("hello");
-                            this.inventories.quickAccessRemove("whitebear");
-                            AbstractPet whitebear=new Whitebear(this.getCol()-2,this.getRow()-2,this);
-                            ((Whitebear) whitebear).setDomesticated(true);
-                            GameManager.get().getWorld().addEntity(whitebear);
-                        }
-                    }
-                }
-            }
-
-        }
+//        public void petOut(){
+//            List<Item> items=this.inventories.getInventoryContents().get("dragon");
+//            List<Item> items1=this.inventories.getInventoryContents().get("whitebear");
+//            if(items!=null){
+//                for(Item item:items){
+//                    if(item instanceof AbstractPet){
+//                        Lizard d=(Lizard)item;
+//                        if(!d.getOutSide()){
+//                            System.out.println("hello");
+//                            this.inventories.quickAccessRemove("dragon");
+//                            AbstractPet dragon=new Lizard(this.getCol()-2,this.getRow()-2,this);
+//                            ((Lizard) dragon).setDomesticated(true);
+//                            GameManager.get().getWorld().addEntity(dragon);
+//                        }
+//                    }
+//                }
+//            }
+//            if(items1!=null){
+//                for(Item item:items1){
+//                    if(item instanceof AbstractPet){
+//                        Whitebear wb=(Whitebear) item;
+//                        if(!wb.getOutSide()){
+//                            System.out.println("hello");
+//                            this.inventories.quickAccessRemove("whitebear");
+//                            AbstractPet whitebear=new Whitebear(this.getCol()-2,this.getRow()-2,this);
+//                            ((Whitebear) whitebear).setDomesticated(true);
+//                            GameManager.get().getWorld().addEntity(whitebear);
+//                        }
+//                    }
+//                }
+//            }
+//
+//        }
         /**
          * Select the spell that the character is ready to cast.
          * When they next click attack, this spell will cast.
