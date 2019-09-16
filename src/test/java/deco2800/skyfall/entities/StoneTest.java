@@ -72,7 +72,7 @@ public class StoneTest {
      */
     @Test
     public void getBiome() {
-        Assert.assertEquals(stone.getBiome(),"desert");
+        Assert.assertEquals(stone.getBiome(),"forest");
     }
 
     /**
@@ -135,7 +135,7 @@ public class StoneTest {
      */
     @Test
     public void toStringTest() {
-        Assert.assertEquals(stone.toString(),"stone at (-3, -1) desert biome");
+        Assert.assertEquals(stone.toString(),"stone at (-3, -1) forest biome");
     }
 
     /**

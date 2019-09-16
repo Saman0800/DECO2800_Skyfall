@@ -49,7 +49,7 @@ public class MainCharacter extends Peon
     //List of blueprints that the player has learned.
 
     private List<Blueprint> blueprintsLearned;
-
+    private PetsManager petsManager;
     private BuildingFactory tempFactory;
 
     /**
@@ -217,6 +217,8 @@ public class MainCharacter extends Peon
         GameManager.getManagerFromInstance(InputManager.class)
                 .addTouchDownListener(this);
 
+        this.petsManager = GameManager.getManagerFromInstance(PetsManager.class);
+
         this.inventories = GameManager.getManagerFromInstance(InventoryManager.class);
 
         this.level = 1;
@@ -333,6 +335,14 @@ public class MainCharacter extends Peon
     }
 
     /**
+     * Gets pestManager
+     * @return
+     */
+    public PetsManager getPetsManager(){
+        return this.petsManager;
+    }
+
+    /**
      * Returns string of players equipped item, or "No item equipped" if equippedItem == null
      * @return String of equipped item
      */
@@ -353,9 +363,9 @@ public class MainCharacter extends Peon
         if(equippedItem != null){
             equippedItem.use(this.getPosition());
         }
-            //else: collect nearby resources
-            //Will be adjusted in following sprint when it is possible to spawn
-            //non-static entities
+        //else: collect nearby resources
+        //Will be adjusted in following sprint when it is possible to spawn
+        //non-static entities
     }
 
     /**
@@ -563,17 +573,17 @@ public class MainCharacter extends Peon
             setHurt(true);
             this.changeHealth(-damage);
 
-        if (this.healthBar != null) {
-            this.healthBar.update();
+            if (this.healthBar != null) {
+                this.healthBar.update();
             }
 
             System.out.println("CURRENT HEALTH:" + String.valueOf(getHealth()));
-        if (this.getHealth() <= 0) {
-            kill();
-        } else {
-            hurtTime = 0;
-            recoverTime = 0;
-            HexVector bounceBack = new HexVector();
+            if (this.getHealth() <= 0) {
+                kill();
+            } else {
+                hurtTime = 0;
+                recoverTime = 0;
+                HexVector bounceBack = new HexVector();
 
                 switch (getPlayerDirectionCardinal()) {
                     case "North":
@@ -664,8 +674,8 @@ public class MainCharacter extends Peon
         changeHealth(0);
 
         // AS.PlayOneShot(dieSound);
-            gameOverTable.show();
-        }
+        gameOverTable.show();
+    }
 
     /**
      * @return if player is in the state of "hurt".
@@ -892,7 +902,7 @@ public class MainCharacter extends Peon
     private void setCurrentSpeed(float cSpeed) {
         this.currentSpeed = cSpeed;
     }
-
+    boolean petout = false;
     /**
      * Sets the appropriate movement flags to true on keyDown
      *
@@ -917,6 +927,10 @@ public class MainCharacter extends Peon
             case Input.Keys.D:
                 xInput += 1;
                 break;
+            case Input.Keys.V:
+                petsManager.replacePet(this);
+                break;
+
             case Input.Keys.SHIFT_LEFT:
                 isSprinting = true;
                 maxSpeed *= 2.f;
