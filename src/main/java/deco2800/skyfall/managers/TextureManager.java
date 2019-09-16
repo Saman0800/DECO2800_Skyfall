@@ -178,6 +178,55 @@ public class TextureManager extends AbstractManager {
             textureMap.put("spear_tex", new Texture("resources/weapons/spear.png"));
             textureMap.put("no_weapon_tex", new Texture("resources/weapons/noweapon.png"));
 
+            textureMap.put("ArrowEast", new Texture("resources" +
+                    "/weapons/ArrowEast.png"));
+            textureMap.put("ArrowSouth", new Texture("resources" +
+                    "/weapons/ArrowSouth.png"));
+            textureMap.put("ArrowWest", new Texture("resources" +
+                    "/weapons/ArrowWest.png"));
+            textureMap.put("ArrowNorth", new Texture("resources" +
+                    "/weapons/ArrowNorth.png"));
+
+            textureMap.put("ArrowNorthEast", new Texture("resources" +
+                    "/weapons/ArrowNorthEast.png"));
+
+            textureMap.put("ArrowMoreNorthEast", new Texture("resources" +
+                    "/weapons/ArrowMoreNorthEast.png"));
+
+            textureMap.put("ArrowMoreEastNorth", new Texture("resources" +
+                    "/weapons/ArrowMoreEastNorth.png"));
+
+            textureMap.put("ArrowSouthEast", new Texture("resources" +
+                    "/weapons/ArrowSouthEast.png"));
+
+            textureMap.put("ArrowMoreSouthEast", new Texture("resources" +
+                    "/weapons/ArrowMoreSouthEast.png"));
+
+            textureMap.put("ArrowMoreEastSouth", new Texture("resources" +
+                    "/weapons/ArrowMoreEastSouth.png"));
+
+            textureMap.put("ArrowSouthWest", new Texture("resources" +
+                    "/weapons/ArrowSouthWest.png"));
+
+            textureMap.put("ArrowMoreSouthWest", new Texture("resources" +
+                    "/weapons/ArrowMoreSouthWest.png"));
+
+            textureMap.put("ArrowMoreWestSouth", new Texture("resources" +
+                    "/weapons/ArrowMoreWestSouth.png"));
+
+            textureMap.put("ArrowNorthWest", new Texture("resources" +
+                    "/weapons/ArrowNorthWest.png"));
+
+            textureMap.put("ArrowMoreNorthWest", new Texture("resources" +
+                    "/weapons/ArrowMoreNorthWest.png"));
+
+            textureMap.put("ArrowMoreWestNorth", new Texture("resources" +
+                    "/weapons/ArrowMoreWestNorth.png"));
+
+            // adding spell texture
+            textureMap.put("fire_1", new Texture("resources/spells" +
+                    "/fire_1.png"));
+
             textureMap.put("pop up screen", new Texture("resources/pop_up_screen_background.png"));
             textureMap.put("game menu bar", new Texture("resources/pop_up_screen_title_background.png"));
             textureMap.put("game over temp bg", new Texture("resources/game_over_background.png"));

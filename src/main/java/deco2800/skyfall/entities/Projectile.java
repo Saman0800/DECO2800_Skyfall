@@ -73,6 +73,7 @@ public class Projectile extends AgentEntity {
         //TODO: rotate sprite in angle facing.
     }
 
+
     /**
      * Get the damage this projectile will deal.
      * @return The amount of damage this projectile will deal.
