@@ -8,6 +8,8 @@ import com.google.gson.JsonParser;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.entities.structures.Structure;
 import deco2800.skyfall.managers.SaveLoadInterface;
+import com.badlogic.gdx.graphics.Texture;
+import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.worlds.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +28,14 @@ import deco2800.skyfall.entities.AbstractEntity;
  */
 public class BuildingEntity extends AbstractEntity implements Structure, SaveLoadInterface {
 
-    // a debug logger
+    // a logger
     private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);
     // a building object name
     private static final String ENTITY_ID_STRING = "buildingEntityID";
+    private Collider collider;
+
+    //The type of building to be created
+    private BuildingType buildingType;
 
     // consistent information for a specific building
     private int buildTime;
@@ -51,21 +57,18 @@ public class BuildingEntity extends AbstractEntity implements Structure, SaveLoa
     private int currentHealth;
 
     /**
-     * Constructor for an building entity.
+     * Constructor for an building entity with normal rendering size.
      * @param col the col position on the world
      * @param row the row position on the world
      * @param renderOrder the height position on the world
+     * @param buildingType specific building information container
      */
-    public BuildingEntity(float col, float row, int renderOrder) {
-        super(col, row, renderOrder, 1, 1);
-        this.setObjectName(ENTITY_ID_STRING);
-        this.setRenderOrder(renderOrder);
-        this.animations = new HashMap<>();
+    public BuildingEntity(float col, float row, int renderOrder, BuildingType buildingType) {
+        this(col, row, renderOrder, buildingType, 1, 1);
 
         if (!WorldUtil.validColRow(new HexVector(col, row))) {
             log.debug("Invalid position");
         }
-        setDefault();
     }
 
     /**
@@ -73,39 +76,67 @@ public class BuildingEntity extends AbstractEntity implements Structure, SaveLoa
      * @param col the col position on the world
      * @param row the row position on the world
      * @param renderOrder the height position on the world
+     * @param buildingType specific building information container
      * @param colRenderLength factor to scale the texture length
      * @param rowRenderLength factor to scale the texture width
      */
-    public BuildingEntity(float col, float row, int renderOrder, float colRenderLength, float rowRenderLength) {
+    public BuildingEntity(float col, float row, int renderOrder, BuildingType buildingType,
+                          float colRenderLength, float rowRenderLength) {
         super(col, row, renderOrder, colRenderLength, rowRenderLength);
         this.setObjectName(ENTITY_ID_STRING);
         this.setRenderOrder(renderOrder);
         this.animations = new HashMap<>();
+        this.buildingType = buildingType;
+        this.buildCost = buildingType.getBuildCost();
+        this.setObjectName(buildingType.getName());
+        this.setTexture(buildingType.getMainTexture());
+        this.setBuildTime(buildingType.getBuildTime());
+        this.setInitialHealth(buildingType.getMaxHealth());
+        this.setWidth(buildingType.getSizeY());
+        this.setLength(buildingType.getSizeX());
+        this.setBuildingLevel(1);
+        this.setCollider();
 
         if (!WorldUtil.validColRow(new HexVector(col, row))) {
             log.debug("Invalid position");
         }
-        setDefault();
     }
 
     /**
-     * Set default information for a building entity, and it should be overridden inside
-     * a building entity subclass for setting different basic information.
-     */
-    private void setDefault() {
-        // default consistent information of the building type
-        setTexture("error_build");
-        setBuildTime(1);
-        addBuildCost("", 0);
-        addBuildCost("", 0);
-        setInitialHealth(1000);
+    * Creates a new Collider object at (x,y) coordinates with size xLength x yLength.
+    * Called by building factory before returning a building such that no building
+    * in the game has a Collider set to null.
+    */
+    public void setCollider() {
+        float[] cords = WorldUtil.colRowToWorldCords(position.getCol(), position.getRow());
 
-        // default changeable information of the building type
-        length = 1;
-        width = 1;
-        level = 1;
-        upgradable = false;
-        currentHealth = getInitialHealth();
+        // preferred way as setting a collider based on texture size
+        try {
+            Texture texture = new Texture(getTexture());
+            collider = new Collider(cords[0], cords[1],
+                    texture.getWidth(), texture.getHeight());
+            return;
+        } catch (Exception e) {
+            log.info("Building {} can't set a collider with its texture",
+                    getObjectName() + getEntityID());
+        }
+
+        // preferred way is blocked, setting a collider based on tile
+        try {
+            float tileSize = 100;
+            collider = new Collider(cords[0], cords[1],
+                    tileSize * getLength(), tileSize * getWidth());
+        } catch (Exception e2) {
+            log.info("Building {} has a null collider",
+                    getObjectName() + getEntityID());
+        }
+    }
+
+    /**
+     * @return The collider for the building entity
+     */
+    public Collider getCollider() {
+        return collider;
     }
 
     @Override
@@ -114,6 +145,7 @@ public class BuildingEntity extends AbstractEntity implements Structure, SaveLoa
         // run building animation here if provided (e.g. show build time left)
         // do nothing so far
     }
+
 
     /**
      * @param x - X coordinate
@@ -132,6 +164,12 @@ public class BuildingEntity extends AbstractEntity implements Structure, SaveLoa
     public void removeBuilding(World world) {
         world.removeEntity(this);
     }
+
+    /**
+     * Get the type of building
+     * @return building type
+     */
+    public BuildingType getBuildingType() { return this.buildingType; }
 
 
     /**
@@ -163,12 +201,12 @@ public class BuildingEntity extends AbstractEntity implements Structure, SaveLoa
             buildCost.put(resource, cost);
         }
     }
+
     /**
      * @return - cost of building the building
      */
-    public Map<String, Integer> getCost(){
-        return buildCost;
-    }
+    public Map<String, Integer> getCost(){ return buildCost; }
+
 
     /**
      * Adds a texture to the buildings list of textures.
@@ -209,7 +247,7 @@ public class BuildingEntity extends AbstractEntity implements Structure, SaveLoa
 
     /**
      * Set a building entity length related to number of tile in terms of column.
-     * @param length a building's length
+     * @param length a building's length (x length)
      */
     public void setLength(int length) {
         if (length != 0) {
@@ -219,7 +257,7 @@ public class BuildingEntity extends AbstractEntity implements Structure, SaveLoa
 
     /**
      * Get a building entity length related to number of tile in terms of column.
-     * @return a building's length
+     * @return a building's length (x length)
      */
     public int getLength() {
         return this.length;
@@ -227,7 +265,7 @@ public class BuildingEntity extends AbstractEntity implements Structure, SaveLoa
 
     /**
      * Set a building entity width related to number of tile in terms of row.
-     * @param width a building's width
+     * @param width a building's width (y length)
      */
     public void setWidth(int width) {
         if (width != 0) {
@@ -237,7 +275,7 @@ public class BuildingEntity extends AbstractEntity implements Structure, SaveLoa
 
     /**
      * Get a building entity width related to number of tile in terms of row.
-     * @return a building's width
+     * @return a building's width (y length)
      */
     public int getWidth() {
         return this.width;
@@ -298,10 +336,94 @@ public class BuildingEntity extends AbstractEntity implements Structure, SaveLoa
     }
 
 
+
+    /**
+     * Returns the number of wood required for the item.
+     *
+     * @return The name of the item
+     */
+    //@Override
+    public int getRequiredWood() {
+        return 1;
+    }
+
+    /**
+     * Returns the number of stones required for the item.
+     *
+     * @return The name of the item
+     */
+    //@Override
+    public int getRequiredStone() {
+        return 30;
+    }
+
+    /**
+     * Returns the number of metal required for the item.
+     *
+     * @return The name of the item
+     */
+    //@Override
+    public int getRequiredMetal() {
+        return 10;
+    }
+
+    /**
+     * Returns a map of the name of the required resource and
+     * the required number of each resource to create the item.
+     *
+     * @return a hashamp of the required resources and their number.
+     */
+    //@Override
+    public Map<String, Integer> getAllRequirements() {
+
+        buildCost.put("Wood", 50);
+        buildCost.put("Stone", 30);
+        buildCost.put("Metal", 10);
+        return buildCost;
+    }
+
+    //@Override
+    public String getName() {
+        return null;
+    }
+
+    /**
+     * Returns the number of metal required for the item.
+     *
+     * @return The name of the item
+     */
+    //@Override
+    public boolean isBlueprintLearned() {
+        //do nothing
+        return true;
+    }
+
+    /**
+     * Returns the number of metal required for the item.
+     *
+     * @return The name of the item
+     */
+    //@Override
+    public void toggleBlueprintLearned() {
+        //do nothing
+    }
+
+    //TODO: Empty interact methods need to not be empty wooo!
+
+    public void cabinInteract() {}
     @Override
     public String formatData() {
         Gson gson = new Gson();
         return gson.toJson(this);
-
     }
+
+    public void fenceInteract() {}
+
+    public void castleInteract() {}
+
+    public void safehouseInteract() {}
+
+    public void towncentreInteract() {}
+
+    public void watchtowerInteract() {}
 }

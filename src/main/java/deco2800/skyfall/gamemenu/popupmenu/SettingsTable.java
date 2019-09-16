@@ -61,22 +61,6 @@ public class SettingsTable extends AbstractPopUpElement{
      * {@inheritDoc}
      */
     @Override
-    public void updatePosition() {
-        super.updatePosition();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void update() {
-        super.update();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void draw() {
         super.draw();
         settingsTable = new Table();
