@@ -1,5 +1,7 @@
 package deco2800.skyfall.entities.structures;
 
+import deco2800.skyfall.buildings.BuildingEntity;
+import deco2800.skyfall.buildings.BuildingType;
 import deco2800.skyfall.entities.AbstractEntity;
 
 public class BuildingInteractions {
@@ -17,7 +19,7 @@ public class BuildingInteractions {
      * @return - True if building, else false.
      */
     public boolean checkIfBuilding(AbstractEntity input) {
-        return (input instanceof Structure);
+        return (input instanceof BuildingEntity);
     }
 
     /**

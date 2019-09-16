@@ -2,6 +2,8 @@ package deco2800.skyfall.worlds.world;
 
 import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.pets.AbstractPet;
+import deco2800.skyfall.entities.pets.LizardHome;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.AgentEntity;
 import deco2800.skyfall.entities.Harvestable;
@@ -13,6 +15,7 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
+import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
@@ -419,6 +422,7 @@ public class World implements TouchDownObserver {
             e1.onTick(0);
 
         }
+
     }
 
     public void deleteTile(int tileid) {
@@ -464,7 +468,7 @@ public class World implements TouchDownObserver {
         // TODO: implement proper game logic for collisions between different types of
         // entities.
 
-        System.out.println("Handle collision");
+//        System.out.println("Handle collision");
         // TODO: this needs to be internalized into classes for cleaner code.
         if (e1 instanceof Projectile && e2 instanceof EnemyEntity) {
             if (((EnemyEntity) e2).getHealth() > 0) {
@@ -531,13 +535,23 @@ public class World implements TouchDownObserver {
             if (!tile.getCoordinates().equals(entity.getPosition())) {
                 continue;
             }
-
             if (entity instanceof Harvestable) {
-                removeEntity(entity);
-                List<AbstractEntity> drops = ((Harvestable) entity).harvest(tile);
-
-                for (AbstractEntity drop : drops) {
-                    addEntity(drop);
+                //harvest
+                if(entity instanceof LizardHome){
+                    ((LizardHome) entity).cutlizardHomeTree();
+                    if(((LizardHome) entity).getHealth()<=0){
+                        removeEntity(entity);
+                        List<AbstractEntity> drops = ((Harvestable) entity).harvest(tile);
+                        for (AbstractEntity drop : drops) {
+                            addEntity(drop);
+                        }
+                    }
+                }else{
+                    removeEntity(entity);
+                    List<AbstractEntity> drops = ((Harvestable) entity).harvest(tile);
+                    for (AbstractEntity drop : drops) {
+                        addEntity(drop);
+                    }
                 }
             } else if (entity instanceof Weapon) {
                 MainCharacter mc = gmm.getMainCharacter();
@@ -551,6 +565,21 @@ public class World implements TouchDownObserver {
                     gmm.getInventory().quickAccessAdd(((Weapon) entity).getName());
                     mc.setEquipped(((Weapon) entity).getName());
                 }
+            } else if (entity instanceof GoldPiece){
+                MainCharacter mc = gmm.getMainCharacter();
+                if (tile.getCoordinates().distance(mc.getPosition()) > 2) {
+                    continue;
+                }
+                mc.addGold((GoldPiece) entity,((GoldPiece) entity).getValue());
+                gmm.getInventory().add((Item) entity);
+                removeEntity(entity);
+            } else if (entity instanceof AbstractPet && entity instanceof Item){
+                if (tile.getCoordinates().distance(gmm.getMainCharacter().getPosition()) > 2) {
+                    continue;
+                }
+                gmm.getInventory().add((Item) entity);
+                gmm.getMainCharacter().getPetsManager().addPet((AbstractPet) entity);
+                removeEntity(entity);
             } else if (entity instanceof Chest) {
                 GameMenuManager menuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
                 ChestTable chest = (ChestTable) menuManager.getPopUp("chestTable");

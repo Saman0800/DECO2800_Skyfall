@@ -32,7 +32,7 @@ public class GoldPiece extends StaticEntity {
         } else {
             System.out.println("Invalid piece of gold");
         }
-            }
+    }
 
     /**
      * Creates a gold piece with a specific title, whether or not it is
