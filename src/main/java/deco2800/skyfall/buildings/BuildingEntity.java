@@ -192,12 +192,13 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
             buildCost.put(resource, cost);
         }
     }
+
     /**
      * @return - cost of building the building
      */
-    public Map<String, Integer> getCost(){
-        return buildCost;
-    }
+    @Override
+    public Map<String, Integer> getCost(){ return buildCost; }
+
 
     /**
      * Adds a texture to the buildings list of textures.
@@ -388,7 +389,6 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
         //do nothing
         return true;
     }
-
 
     /**
      * Returns the number of metal required for the item.
