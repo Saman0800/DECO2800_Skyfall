@@ -32,6 +32,7 @@ public class ConstructionManagerTest {
         WorldDirector.constructTestWorld(wb);
         gm.setWorld(wb.getWorld());
 
+
     }
 
 
@@ -113,7 +114,7 @@ public class ConstructionManagerTest {
         BuildingEntity cabin = factory.createCabin(1,1);
         cmgr.setBuildingToBePlaced(cabin);
 
-        cmgr.build(wb.getWorld(),2,2);
+        cmgr.build(gm.getWorld(),2,2);
 
         Assert.assertEquals(0.0, inventoryManager.getAmount("Wood"), 0.0);
         Assert.assertEquals(0.0, inventoryManager.getAmount("Stone"), 0.0);
