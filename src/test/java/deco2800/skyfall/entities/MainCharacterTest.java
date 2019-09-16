@@ -153,7 +153,7 @@ public class MainCharacterTest {
         Assert.assertFalse(testCharacter.isDead());
         Assert.assertEquals(testCharacter.getHealth(), 10);
         testCharacter.changeHealth(5);
-        Assert.assertEquals(testCharacter.getHealth(), 15);
+        Assert.assertEquals(testCharacter.getHealth(), 10);
         testCharacter.changeHealth(-20);
        // Assert.assertEquals(testCharacter.getHealth(), 15);
         Assert.assertEquals(testCharacter.getDeaths(), 1);
