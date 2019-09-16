@@ -51,7 +51,7 @@ public interface Blueprint {
     /**
      * @return - cost of building the building
      */
-    Map<String, Integer> getCost();
+    int getCost();
 
 
 

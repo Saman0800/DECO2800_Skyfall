@@ -61,7 +61,7 @@ public enum BuildingType {
      */
     public void initialiseCabin() {
         buildingTextures = new ArrayList<>();
-
+        //Need to add initialise textures back.
 
         buildingTextures.add("cabin_0");
         buildingTextures.add("cabin_90");
@@ -71,6 +71,15 @@ public enum BuildingType {
         buildingCost = new HashMap<>();
         buildingCost.put("Wood", 7);
         buildingCost.put("Stone",4);
+    }
+
+    public ArrayList<String> initialiseCabinTextures() {
+        ArrayList<String> cabinTextures = new ArrayList<>();
+        cabinTextures.add("cabin_0");
+        cabinTextures.add("cabin_90");
+        cabinTextures.add("cabin_180");
+        cabinTextures.add("cabin_270");
+        return cabinTextures;
     }
 
     /**
