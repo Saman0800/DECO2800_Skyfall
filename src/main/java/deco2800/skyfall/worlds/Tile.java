@@ -88,7 +88,7 @@ public class Tile {
     /**
      * Returns a integer to represent the tile type
      * @param tileType Name of tile texture
-     * @return
+     * @return int representation of the tile type
      */
     public static int getTileType(String tileType) {
         if (tileType.contains("ice")) {
@@ -144,13 +144,20 @@ public class Tile {
         Map<String, Float> frictionMap = GameManager.get().getWorld().frictionMap;
         // Checks the type of the tile
         switch (Tile.getTileType(tileType)) {
-            case 0: return frictionMap.get("ice");
-            case 1: return frictionMap.get("desert");
-            case 2: return frictionMap.get("mountain");
-            case 3: return frictionMap.get("water");
-            case 4: return frictionMap.get("snow");
-            case 5: return frictionMap.get("volcanic");
-            default: return frictionMap.get("grass");
+        case 0:
+            return frictionMap.get("ice");
+        case 1:
+            return frictionMap.get("desert");
+        case 2:
+            return frictionMap.get("mountain");
+        case 3:
+            return frictionMap.get("water");
+        case 4:
+            return frictionMap.get("snow");
+        case 5:
+            return frictionMap.get("volcanic");
+        default:
+            return frictionMap.get("grass");
         }
     }
 
@@ -167,10 +174,6 @@ public class Tile {
     }
 
     public String toString() {
-        // return String.format("[%.0f, %.1f: %d]", coords.getCol(), coords.getRow(),
-        // index);
-//        return String.format("%f", getPerlinValue());
-//        return textureBackup;
         return getBiome().getBiomeName();
     }
 

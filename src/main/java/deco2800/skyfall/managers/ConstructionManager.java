@@ -19,7 +19,10 @@ import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.entities.AbstractEntity;
 import org.lwjgl.Sys;
-
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.entities.AbstractEntity;
 
 /**
  * Managers the construction process
@@ -103,10 +106,7 @@ public class ConstructionManager extends TickableManager {
         settingMenu.setPosition(width / 8, height / 8);
 
         buildMenu.setVisible(false);
-        Container<Table> tableContainer = new Container<Table>();
-
-        float sw = Gdx.graphics.getWidth();
-        float sh = Gdx.graphics.getHeight();
+        Container<Table> tableContainer = new Container<>();
 
         float cw = width * 0.7f;
         float ch = height * 0.5f;
@@ -195,7 +195,8 @@ public class ConstructionManager extends TickableManager {
             World world = GameManager.get().getWorld();
 
             for(int i = 0; i < buildingFactory.getCount(); i++){
-                String name = BuildingType.values()[i].getName();
+                //String name = BuildingType.values()[i].getName();
+                String name = BuildingType.values()[i].name();
                 TextButton building = new TextButton(name, skin);
                 if (i < 3){
                     building.setBounds(50, 450 - i * 100, 140, 40);
@@ -212,15 +213,6 @@ public class ConstructionManager extends TickableManager {
                     public void clicked(InputEvent event, float x, float y){
 
                         displayWindow();
-
-                        //Place at character
-                        //AbstractEntity mc = world.getSortedAgentEntities().get(world.getSortedAgentEntities().size() - 1);
-                        //HexVector position = mc.getPosition();
-
-                        //float row = 5;
-                        //float col = 5;
-
-                        //BuildingEntity toBePlaced = selectBuilding(FINALi, 0, 0);
 
                         //Sets building to be enabled
                         buildTrue = 1;
@@ -572,7 +564,7 @@ public class ConstructionManager extends TickableManager {
 
             String item = entry.getKey();
             Integer amount = entry.getValue();
-            inventoryManager.inventoryDropMultiple(item, amount);
+            inventoryManager.dropMultiple(item, amount);
         }
     }
 
@@ -599,7 +591,8 @@ public class ConstructionManager extends TickableManager {
 
     /**
      *
-     * @param buildings
+     * @param buildings list of buildings to be merged
+     * @param inventoryManager the inventory manager of the player
      */
     public boolean mergeBuilding(BuildingEntity[] buildings, InventoryManager inventoryManager) {
 
@@ -631,8 +624,6 @@ public class ConstructionManager extends TickableManager {
      */
     public BuildingEntity selectBuilding(int index, float row, float col){
         switch (index){
-            default:
-                return null;
             case 0:
                 return buildingFactory.createCabin(row, col);
             case 1:
@@ -647,8 +638,8 @@ public class ConstructionManager extends TickableManager {
                 return buildingFactory.createWatchTower(row, col);
             case 6:
                 return buildingFactory.createCastle(row, col);
-
-
+            default:
+                return null;
         }
     }
 

@@ -2,7 +2,6 @@ package deco2800.skyfall.gui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.SoundManager;
