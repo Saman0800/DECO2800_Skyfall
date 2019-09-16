@@ -23,15 +23,13 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class DataBaseConnector {
+    /* The connection to the database */
     private Connection connection;
 
-    //FIXME:jeffvan12 change to a method
-    public static void main(String[] args) {
-        DataBaseConnector dbConnector = new DataBaseConnector();
-        dbConnector.start();
-        dbConnector.close();
-    }
 
+    /**
+     * Starts a connection to the database
+     */
     public void start(){
         try {
             //Connects to the data base
@@ -47,6 +45,9 @@ public class DataBaseConnector {
         }
     }
 
+    /**
+     * Closes the connection to the database
+     */
     public void close() {
         try {
             connection.close();
@@ -57,8 +58,8 @@ public class DataBaseConnector {
     }
 
     /**
-     * Creates the table if they do not already exit
-     * @throws SQLException
+     * Creates the table if they do not already exist
+     * @throws SQLException If an sqlexception occurs when creating the tables
      */
     public void createTables() throws SQLException {
         //If there are any missing tables, then drop all the tables and add them all back
@@ -240,20 +241,6 @@ public class DataBaseConnector {
         }
     }
 
-//    public World loadWorld(long worldId, Save save) throws SQLException{
-//        String query = String.format("SELECT * FROM WORLDS WHERE WORLD_ID = %s", worldId);
-//
-//        Statement statement = connection.createStatement();
-//        ResultSet result = statement.executeQuery(query);
-//
-//        if (!result.next()){
-//            return null;
-//        }
-//
-//        Gson gson = new Gson();
-//
-//        World world = new World(gson.fromJson(result.getString(4), World.WorldMemento.class), save);
-//    }
 
     /**
      * Load the game
@@ -584,7 +571,7 @@ public class DataBaseConnector {
     }
 
     /**
-     * Loads a chunk
+     * Loads a chunk and the entities in chunk
      * @param world The world where the chunk is
      * @param x The x position of the chunk
      * @param y The y positoin of the chunk
@@ -609,6 +596,7 @@ public class DataBaseConnector {
             }
             Chunk chunk = new Chunk(world, gson.fromJson(result.getString("DATA"), Chunk.ChunkMemento.class));
 
+            //Gets the entities within the chunk from the database and add them to the chunk
             PreparedStatement entityquery = connection.prepareStatement("SELECT * FROM ENTITIES WHERE CHUNK_X = ? and CHUNK_Y = ? and WORLD_ID = ?");
             entityquery.setInt(1,x);
             entityquery.setInt(2,y);
@@ -652,9 +640,6 @@ public class DataBaseConnector {
                 }
                 chunk.addEntity(entity);
             }
-
-
-
 
             preparedStatement.close();
             connection.setAutoCommit(true);

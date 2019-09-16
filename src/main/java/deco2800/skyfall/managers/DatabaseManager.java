@@ -34,8 +34,10 @@ public final class DatabaseManager extends AbstractManager {
     private static String saveName = "";
     private static List<String> saveNameList = new ArrayList<>();
 
+    //The current instance of the DataBaseManager
     private static DatabaseManager instance = null;
 
+    //An instance of DataBaseConnector that is used to connect and manage data in the database
     private static DataBaseConnector dataBaseConnector;
 
     private DatabaseManager() {
@@ -253,6 +255,10 @@ public final class DatabaseManager extends AbstractManager {
         }
     }
 
+    /**
+     * Gets the current DatabaseManger, and if it does exist create it and return it
+     * @return A DataBaseManager
+     */
     public static DatabaseManager get() {
         if (instance == null) {
             instance = new DatabaseManager();
@@ -530,15 +536,25 @@ public final class DatabaseManager extends AbstractManager {
         GameManager.get().getManager(OnScreenMessageManager.class).addMessage("Game saved to the database.");
     }
 
+    /**
+     * Creates and starts and new DataBaseConnector
+     */
     public void startDataBaseConnector(){
         dataBaseConnector = new DataBaseConnector();
         dataBaseConnector.start();
     }
 
+    /**
+     * Closes the connection of the DataBaseConnector to the database
+     */
     public void closeDataBaseConnector(){
         dataBaseConnector.close();
     }
 
+    /**
+     * Gets the Database connector
+     * @return The database connector
+     */
     public DataBaseConnector getDataBaseConnector() {
         return dataBaseConnector;
     }

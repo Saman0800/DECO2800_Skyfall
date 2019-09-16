@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class CreateTablesQueries {
 
+    //Used to create the SAVES table
     public String createSaveTableSql = "CREATE TABLE SAVES"
         + "("
         + "    save_id       bigint not null,"
@@ -11,6 +12,7 @@ public class CreateTablesQueries {
         + "    PRIMARY KEY (save_id)"
         + ")";
 
+    //Used to create the WORLDS table
     public String createWorldsTableSql = "CREATE TABLE WORLDS" +
             "(" +
             "    save_id bigint not null ," +
@@ -22,6 +24,7 @@ public class CreateTablesQueries {
             ")";
 
 
+    //Used to create the MAIN_CHARACTER table
     public String createMainCharacterTableSql = "CREATE TABLE MAIN_CHARACTER" +
             "(" +
             "    character_id        bigint NOT NULL," +
@@ -31,6 +34,7 @@ public class CreateTablesQueries {
             "    FOREIGN KEY (save_id) references SAVES (save_id)" +
             ")";
 
+    //Used to create the BIOMES table
     public String createBiomesTableSql = "CREATE table BIOMES" +
             "(" +
             "    biome_id       bigint not null ," +
@@ -41,6 +45,7 @@ public class CreateTablesQueries {
             "    foreign key (world_id) references WORLDS(world_id)" +
             ")";
 
+    //Used to create the NODES table
     public String createNodesTableSql = "CREATE TABLE NODES" +
             "(" +
             "    node_id bigint not null," +
@@ -50,9 +55,11 @@ public class CreateTablesQueries {
             "    data CLOB," +
             "    biome_id bigint not null," +
             "    primary key (node_id)," +
-            "    foreign key (world_id) references WORLDS(world_id)" +
+            "    foreign key (world_id) references WORLDS(world_id)," +
+            "    foreign key (biome_id, world_id) references BIOMES(biome_id, world_id)" +
             ")";
 
+    //Used to create the EDGES table
     public String createEdgesTableSql = "CREATE TABLE EDGES" +
             "(" +
             "    world_id bigint not null," +
@@ -65,6 +72,7 @@ public class CreateTablesQueries {
 
 
 
+    //Used to create the CHUNKS table
     public String createChunksTableSql = "CREATE TABLE CHUNKS" +
             "(" +
             "    world_id bigint not null ," +
@@ -75,6 +83,7 @@ public class CreateTablesQueries {
             "    FOREIGN KEY (world_id) references WORLDS(world_id)" +
             ")";
 
+    //Used to create the ENTITIES table
     public String createEntitiesSql = "CREATE TABLE ENTITIES" +
             "(" +
             "    entity_id bigint," +
@@ -90,6 +99,10 @@ public class CreateTablesQueries {
             ")";
 
 
+    /**
+     * Gets a list of queries that create table in the order that they should be run
+     * @return A list of database queries
+     */
     public ArrayList<String> getQueries(){
         ArrayList<String> queries = new ArrayList<>();
         queries.add(createSaveTableSql);
@@ -103,6 +116,10 @@ public class CreateTablesQueries {
         return queries;
     }
 
+    /**
+     * Gets the names of the tables
+     * @return An arraylist of the names of the tables
+     */
     public ArrayList<String> getTableNames(){
         ArrayList<String> tableNames = new ArrayList<>();
         tableNames.add("SAVES");
