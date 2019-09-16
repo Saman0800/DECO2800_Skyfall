@@ -26,7 +26,7 @@ public class ShaderWrapper {
 
     //used for counting number of light points allocated
     int pointLightCount = 0;
-    //used for final pointLight debuging
+    //used for final pointLight debugging
     int finalPointLightCount = 0;
 
     /**
@@ -121,7 +121,7 @@ public class ShaderWrapper {
      */
     public void setAmbientComponent(vec3 color, float intensity) {
         ambientColour = color.getClampedComponents(0.0f, 1.0f);
-        ambientIntensity = clamp(intensity, 0.0f, 1.0f);;
+        ambientIntensity = clamp(intensity, 0.0f, 1.0f);
         if (active) {
             shaderProgram.setUniformf("sunStrength", ambientIntensity);
             shaderProgram.setUniformf("sunColour", ambientColour.x, ambientColour.y, ambientColour.z);

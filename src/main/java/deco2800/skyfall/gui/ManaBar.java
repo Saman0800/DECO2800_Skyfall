@@ -1,14 +1,5 @@
 package deco2800.skyfall.gui;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.Align;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.GameMenuManager;
-
 /**
  * This should be used by the MainCharacter class, and only called when damage is taken in order to update it.
  *
@@ -27,7 +18,6 @@ public class ManaBar extends StatBar {
      * Updates
      */
     protected void updateInnerCircle(int newValue) {
-        float diff = initialValue - newValue;
 
         if (smallerCircle == null) {
             System.out.println("Smaller circle is null");

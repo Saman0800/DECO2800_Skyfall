@@ -31,5 +31,5 @@ public class FunctionalSpectralValue extends SpectralValue {
     @Override
     public float getIntensity(float time) {
         return intensityFunction.intensityMap(time);
-    };
+    }
 }

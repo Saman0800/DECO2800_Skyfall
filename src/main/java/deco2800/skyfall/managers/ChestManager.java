@@ -43,6 +43,8 @@ public class ChestManager extends InventoryManager {
             case COMMON:
                 itemPool.add(new Metal());
                 break;
+            default:
+                break;
         }
 
         for (int i = 0; i < amount; i++) {

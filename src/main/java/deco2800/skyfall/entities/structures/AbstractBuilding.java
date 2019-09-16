@@ -130,5 +130,4 @@ public abstract class AbstractBuilding extends AbstractEntity {
      */
     public int getBuildTime() {return this.buildTime;}
 
-
 }

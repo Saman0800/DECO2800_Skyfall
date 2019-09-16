@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
+
 /**
  *  A BuildingWidgets is a UI widgets for existing building entities, and provides some handling
  *  methods shown on the screen to the existing building entities.
@@ -190,7 +191,9 @@ public class BuildingWidgets {
             Integer amount = cost.getValue();
             switch (option) {
                 case 0:
-                    inventoryManager.inventoryDropMultiple(resource, amount);
+                    for (int i = 0; i < amount; i++) {
+                        inventoryManager.quickAccessRemove(resource);
+                    }
                     break;
                 case 1:
                     for (int i = 0; i < amount; i++) {

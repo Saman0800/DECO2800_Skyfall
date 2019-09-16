@@ -1,6 +1,5 @@
 package deco2800.skyfall;
 
-import java.lang.Math;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.*;
@@ -11,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import deco2800.skyfall.buildings.BuildingFactory;
-import deco2800.skyfall.gamemenu.GameMenuScreen;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.graphics.PointLight;
 import deco2800.skyfall.graphics.ShaderWrapper;
@@ -106,7 +104,7 @@ public class GameScreen implements Screen, KeyDownObserver {
             } else {
 
                 //Creating the world
-                world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 5).getWorld();
+                world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 5, true).getWorld();
             }
             GameManager.get().getManager(NetworkManager.class).startHosting("host");
         }
@@ -118,7 +116,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         cameraDebug = new PotateCamera(1920, 1080);
 
         /* Add the window to the stage */
-        GameManager.get().setSkin(skin);
+//        GameManager.get().setSkin(skin);
         GameManager.get().setStage(stage);
         GameManager.get().setCamera(camera);
 
@@ -131,7 +129,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         /* Add environment to game manager */
         EnvironmentManager gameEnvironManag = gameManager.getManager(EnvironmentManager.class);
         // For debuggin only!
-        gameEnvironManag.setTime(5, 0);
+        gameEnvironManag.setTime(17, 0);
 
         /* Add BGM to game manager */
         gameManager.addManager(new BGMManager());
@@ -141,20 +139,20 @@ public class GameScreen implements Screen, KeyDownObserver {
          * SpectralValue instances for the Ambient Light.
          */
         IntensityFunction intensityFunction = (float x) -> {
-            double A = 0.3;
-            double B = 6.7;
-            double C = 2.38;
+            double magnitude = 0.3;
+            double period = 6.7;
+            double vertShift = 2.38;
 
             double cosEval = Math.cos(((x - 12) * Math.PI) / 12.0);
-            double normalise = A * Math.sqrt((1 + B * B) / (1 + B * B * cosEval * cosEval));
+            double normalise = magnitude * Math.sqrt((1 + period * period) / (1 + period * period * cosEval * cosEval));
 
-            return (float) (normalise * cosEval + A * C);
+            return (float) (normalise * cosEval + magnitude * vertShift);
         };
 
         ambientIntensity = new FunctionalSpectralValue(intensityFunction, gameEnvironManag);
 
         // Create the rgb spectral values
-        ArrayList<TFTuple> redKeyFrame = new ArrayList<TFTuple>();
+        ArrayList<TFTuple> redKeyFrame = new ArrayList<>();
         redKeyFrame.add(new TFTuple(0.0f, 0.15f));
         redKeyFrame.add(new TFTuple(5.0f, 0.15f));
         redKeyFrame.add(new TFTuple(5.5f, 0.2f));
@@ -167,7 +165,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         redKeyFrame.add(new TFTuple(19.0f, 0.15f));
         ambientRed = new LinearSpectralValue(redKeyFrame, gameEnvironManag);
 
-        ArrayList<TFTuple> greenKeyFrame = new ArrayList<TFTuple>();
+        ArrayList<TFTuple> greenKeyFrame = new ArrayList<>();
         greenKeyFrame.add(new TFTuple(0.0f, 0.12f));
         greenKeyFrame.add(new TFTuple(5.0f, 0.12f));
         greenKeyFrame.add(new TFTuple(5.5f, 0.2f));
@@ -180,7 +178,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         greenKeyFrame.add(new TFTuple(19.0f, 0.12f));
         ambientGreen = new LinearSpectralValue(greenKeyFrame, gameEnvironManag);
 
-        ArrayList<TFTuple> blueKeyFrame = new ArrayList<TFTuple>();
+        ArrayList<TFTuple> blueKeyFrame = new ArrayList<>();
         blueKeyFrame.add(new TFTuple(0.0f, 0.19f));
         blueKeyFrame.add(new TFTuple(5.0f, 0.19f));
         blueKeyFrame.add(new TFTuple(5.5f, 0.6f));
@@ -192,9 +190,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         blueKeyFrame.add(new TFTuple(18.5f, 0.8f));
         blueKeyFrame.add(new TFTuple(19.0f, 0.19f));
         ambientBlue = new LinearSpectralValue(blueKeyFrame, gameEnvironManag);
-
-        GameMenuScreen gamemenuScreen = new GameMenuScreen(gameMenuManager);
-        gamemenuScreen.show();
 
         PathFindingService pathFindingService = new PathFindingService();
 
@@ -271,7 +266,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         shader.setAmbientComponent(
                 new vec3(ambientRed.getIntensity(), ambientGreen.getIntensity(), ambientBlue.getIntensity()),
                 ambientIntensity.getIntensity());
-        // shader.addPointLight(new PointLight(new vec2(0.0f, 0.0f), new vec3(1.0f, 0.729f, 0.3372f), 0.9f, 0.5f));
 
         // Add all the point lights of entities that implement the HasPointLight
         // interface into the batch
@@ -347,7 +341,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         if (keycode == Input.Keys.F5) {
 
             //Create a random world
-            world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 3).getWorld();
+            world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 3, true).getWorld();
 
             AbstractEntity.resetID();
             Tile.resetID();

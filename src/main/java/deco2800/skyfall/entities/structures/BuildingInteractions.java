@@ -49,6 +49,8 @@ public class BuildingInteractions {
             case "Castle":
                 castleInteract();
                 break;
+            default:
+                break;
         }
         System.out.println("Failed");
     }

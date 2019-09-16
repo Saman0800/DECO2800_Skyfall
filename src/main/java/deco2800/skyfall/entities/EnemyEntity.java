@@ -33,6 +33,7 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
     //The amount of damage this enemy deals.
     private int damage;
 
+    protected boolean toBeDestroyed = false;
 
     public EnemyEntity(float col, float row){
         this.setRow(row);
@@ -127,9 +128,8 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
 
     /**
      * Damage taken
-     * @param damage hero danage
+     * @param damage hero damage
      */
-    protected boolean toBeDestroyed = false;
     public void takeDamage(int damage) {
         // perform damage calculation factoring in status indicators, armour
         // and resistance attributes.
@@ -166,7 +166,7 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
 
     /**
      * To get the level of Enemy
-     * @return
+     * @return the player's level
      */
     public int getLevel() {
         return level;
@@ -174,7 +174,7 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
 
     /**
      * Set Enemy level
-     * @param level
+     * @param level the level the player is to be set to
      */
     public void setLevel(int level) {
         this.level = level;
