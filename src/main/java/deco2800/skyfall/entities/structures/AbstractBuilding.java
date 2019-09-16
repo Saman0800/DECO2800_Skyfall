@@ -1,8 +1,11 @@
 package deco2800.skyfall.entities.structures;
 
 import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.worlds.world.World;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -20,7 +23,11 @@ public abstract class AbstractBuilding extends AbstractEntity {
 
     private int buildTime;
 
-    private Map<String, Integer> buildCost = new TreeMap<>();
+    private Map<String, Integer> buildCost = new HashMap<>();
+
+    private InventoryManager inventoryManager;
+
+//    private Boolean hasPlayer;
 
     /**
      *
@@ -123,4 +130,30 @@ public abstract class AbstractBuilding extends AbstractEntity {
      */
     public int getBuildTime() {return this.buildTime;}
 
+    /**
+     * getter method
+     * @return InventoryManager of the Building
+     */
+    public InventoryManager getInventoryManager() {
+        return this.inventoryManager;
+    }
+
+    /**
+     *
+     * @param inventoryManager
+     */
+    public void setInventoryManager(InventoryManager inventoryManager) {
+        this.inventoryManager = inventoryManager;
+    }
+
+    //This needs to be updated to use a different inventory add method I think.
+    //public boolean AddInvetory(Item item){return this.inventoryManager.inventoryAdd(item);}
+
+    /**
+     *
+     * @param item
+     */
+    public void quickAccessRemove(Item item){
+        this.inventoryManager.quickAccessRemove(item.getName());
+    }
 }

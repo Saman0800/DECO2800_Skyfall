@@ -24,7 +24,7 @@ public class WoodCube extends AbstractEntity implements Collectable {
         this.setObjectName("WoodCube");
     }
 
-    @Override
+
     public void onTick(long i) {
         // a little wiggle to disperse the cubes
         // this would ideally be replaced with slowly moving up and down as

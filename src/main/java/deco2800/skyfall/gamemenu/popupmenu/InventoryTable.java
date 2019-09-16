@@ -118,13 +118,6 @@ public class InventoryTable extends AbstractPopUpElement {
         inventoryTable.setVisible(true);
     }
 
-    /**
-     * Updates the pop up position
-     */
-    @Override
-    public void updatePosition() {
-        super.updatePosition();
-    }
 
     /**
      * Draws the pop up

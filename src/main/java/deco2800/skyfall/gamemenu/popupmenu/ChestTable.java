@@ -33,14 +33,12 @@ public class ChestTable extends AbstractPopUpElement{
     @Override
     public void hide() {
         super.hide();
-//        System.out.println("Hiding chest table");
         chestTable.setVisible(false);
     }
 
     @Override
     public void show() {
         super.show();
-//        System.out.println("Showing chest table");
         chestTable.setVisible(true);
     }
 

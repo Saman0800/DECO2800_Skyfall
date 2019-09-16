@@ -27,9 +27,7 @@ public class HealthCircle extends AbstractUIElement {
         float diff = currentHealth - newHealth;
 
         if (smallerCircle == null) {
-//            System.out.println("Smaller circle is null");
             if (biggerCircle == null) {
-//                System.out.println("Bigger circle is null");
                 return;
             }
             return;
@@ -75,8 +73,8 @@ public class HealthCircle extends AbstractUIElement {
         bitmapFont.getData().setScale(1f);
         label = new Label("Health: 10", new Label.LabelStyle(bitmapFont, Color.WHITE));
 
-        int OUTER_CIRCLE = 1;
-        int INNER_CIRCLE = 0;
+        final int OUTER_CIRCLE = 1;
+        final int INNER_CIRCLE = 0;
 
         this.biggerCircle = new ImageButton(textures[OUTER_CIRCLE]);
         biggerCircle.setSize(100, 100);

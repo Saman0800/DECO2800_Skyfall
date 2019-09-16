@@ -48,6 +48,9 @@ public interface Blueprint {
      */
     void toggleBlueprintLearned();
 
+    /**
+     * @return - cost of building the building
+     */
     int getCost();
 
 
