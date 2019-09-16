@@ -16,7 +16,7 @@ public class WhitebearTest {
     private Whitebear whitebear = null;
     @Before
     public void setUp() throws Exception {
-        mc = new MainCharacter(5f, 5f, 2f, "Main Char", 10);
+        mc = MainCharacter.getInstance(5f, 5f, 2f, "Main Char", 10);
         whitebear = new Whitebear(5, 2, mc);
     }
 
