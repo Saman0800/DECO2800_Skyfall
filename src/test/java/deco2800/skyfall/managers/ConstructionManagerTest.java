@@ -67,7 +67,7 @@ public class ConstructionManagerTest {
         BuildingFactory factory = new BuildingFactory();
         float x = 1f;
         float y = 1f;
-        MainCharacter character = new MainCharacter( 1f, 1f, 1f, "character", 1);
+        //MainCharacter character = new MainCharacter( 1f, 1f, 1f, "character", 1);
 
         //character.notifyTouchDown( 1, 1, 1,);
 
@@ -143,8 +143,8 @@ public class ConstructionManagerTest {
 
 
 
-        Assert.assertEquals(11.0, inventoryManager.getAmount("Wood"), 0.0);
-        Assert.assertEquals(5.0, inventoryManager.getAmount("Stone"), 0.0);
+        Assert.assertEquals(10.0, inventoryManager.getAmount("Wood"), 0.0);
+        Assert.assertEquals(4.0, inventoryManager.getAmount("Stone"), 0.0);
         cmgr.setBuilding(0);
 
 
@@ -156,8 +156,8 @@ public class ConstructionManagerTest {
         cmgr.build(gm.getWorld(),2,2);
 
 
-        Assert.assertEquals(6.0, inventoryManager.getAmount("Wood"), 0.0);
-        Assert.assertEquals(3.0, inventoryManager.getAmount("Stone"), 0.0);
+        Assert.assertEquals(5.0, inventoryManager.getAmount("Wood"), 0.0);
+        Assert.assertEquals(2.0, inventoryManager.getAmount("Stone"), 0.0);
 
     }
 

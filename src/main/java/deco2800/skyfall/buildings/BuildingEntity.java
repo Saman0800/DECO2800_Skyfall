@@ -2,9 +2,8 @@ package deco2800.skyfall.buildings;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.google.gson.annotations.Expose;
-<<<<<<< HEAD
+
 import deco2800.skyfall.entities.AbstractEntity;
-=======
 
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameManager;
@@ -14,7 +13,7 @@ import deco2800.skyfall.managers.InventoryManager;
 
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.Item;
->>>>>>> building-231
+
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
@@ -453,8 +452,6 @@ public class BuildingEntity extends AbstractEntity {
     public void towncentreInteract() {}
 
     public void watchtowerInteract() {}
-<<<<<<< HEAD
-=======
 
     /**
      * getter method
@@ -489,5 +486,5 @@ public class BuildingEntity extends AbstractEntity {
         this.inventoryManager.quickAccessRemove(item.getName());
     }
 
->>>>>>> building-231
+
 }
