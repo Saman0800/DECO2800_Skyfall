@@ -1,13 +1,8 @@
 package deco2800.skyfall.worlds.world;
 
 import com.badlogic.gdx.Gdx;
-import com.google.gson.Gson;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.worlditems.*;
-import deco2800.skyfall.managers.DatabaseManager;
-import deco2800.skyfall.entities.*;
-import deco2800.skyfall.entities.pets.AbstractPet;
-import deco2800.skyfall.entities.pets.LizardHome;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.AgentEntity;
 import deco2800.skyfall.entities.Harvestable;
@@ -18,14 +13,11 @@ import deco2800.skyfall.gamemenu.popupmenu.ChestTable;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InputManager;
-import deco2800.skyfall.managers.SaveLoadInterface;
 import deco2800.skyfall.observers.TouchDownObserver;
-import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.saving.Saveable;
-import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
@@ -57,6 +49,7 @@ import java.util.stream.Collectors;
  * items.
  */
 public class World implements TouchDownObserver , Serializable, Saveable<World.WorldMemento> {
+    public static final int LOADED_RADIUS = 50;
     protected long id;
 
     protected int width;
@@ -525,10 +518,9 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
             deleteTile(t.getTileID());
         }
 
-        // FIXME:Ontonator Check that this works.
         MainCharacter mc = MainCharacter.getInstance();
-        int radius = 50;
-        setLoadedArea(mc.getCol() - radius, mc.getRow() - radius, mc.getCol() + radius, mc.getRow() + radius);
+        setLoadedArea(mc.getCol() - LOADED_RADIUS, mc.getRow() - LOADED_RADIUS,
+                      mc.getCol() + LOADED_RADIUS, mc.getRow() + LOADED_RADIUS);
     }
 
     // TODO:Ontonator Why does this operate with an id?
