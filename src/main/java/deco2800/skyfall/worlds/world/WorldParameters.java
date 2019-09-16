@@ -3,10 +3,8 @@ package deco2800.skyfall.worlds.world;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.graphics.HasPointLight;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class WorldParameters {
 

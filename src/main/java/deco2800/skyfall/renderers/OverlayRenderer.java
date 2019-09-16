@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import deco2800.skyfall.graphics.ShaderWrapper;
 import deco2800.skyfall.graphics.types.vec3;
@@ -127,7 +126,15 @@ public class OverlayRenderer implements Renderer {
 		// Display current weather in game
 		debugLine(batch, camera, line++,
 				String.format("Weather: %s",
-						GameManager.get().getManager(EnvironmentManager.class).currentWeather()));
+						GameManager.get().getManager(EnvironmentManager.class).getcurrentWeather()));
+
+		line++;
+
+		// Display player's current equipped item
+
+		debugLine(batch, camera, line++,
+				String.format("Equipped Item: %s",
+						GameManager.get().getManager(StatisticsManager.class).getCharacter().displayEquippedItem()));
 
 		line++;
 

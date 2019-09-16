@@ -215,7 +215,7 @@ public class GameManager {
 	/**
 	 * Gets the current game world
 	 *
-	 * @return
+	 * @return the game world
 	 */
 	public World getWorld() {
 		return gameWorld;

@@ -111,6 +111,20 @@ public class Stone extends EnemyEntity implements Animatable {
             this.resetFeeling();
             this.angryAttacking();
         }
+
+        // Only make sound if close to Main Character
+        if (mc != null) {
+            float colDistance = mc.getCol() - this.getCol();
+            float rowDistance = mc.getRow() - this.getRow();
+
+            if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
+                sound.loopSound("stoneWalk");
+                this.setCurrentState(AnimationRole.DEFENCE);
+            } else {
+                sound.stopSound("stoneWalk");
+                this.setCurrentState(AnimationRole.NULL);
+            }
+        }
     }
 
 
@@ -211,8 +225,7 @@ public class Stone extends EnemyEntity implements Animatable {
         if (!attacking) {
             movingDirection = movementDirection(this.position.getAngle());
 
-            if (moving == false) {
-                sound.loopSound("stoneWalk");
+            if (!moving) {
                 targetPosition = new float[2];
                 //random movement range
                 targetPosition[0] = (float) (Math.random() * 100 + originalPosition[0]);
@@ -286,6 +299,7 @@ public class Stone extends EnemyEntity implements Animatable {
                 setCurrentState(AnimationRole.NULL);
                 this.setTexture("stoneDead");
                 this.setObjectName("stoneDead");
+                sound.stopSound("stoneDie");
                 destroy();
             }
             time++;

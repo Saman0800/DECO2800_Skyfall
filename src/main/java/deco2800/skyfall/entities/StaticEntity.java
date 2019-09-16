@@ -163,18 +163,6 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
 
     /**
      * A simple getter function to retrieve the obstruction value of this object
-     * 
-     * @return The obstruction value.
-     *
-     * @deprecated use {@link #isObstructed()}
-     */
-    @Deprecated()
-    public boolean getObstructed() {
-        return isObstructed();
-    }
-
-    /**
-     * A simple getter function to retrieve the obstruction value of this object
      *
      * @return The obstruction value.
      */

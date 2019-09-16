@@ -122,7 +122,8 @@ public class Enemy extends AgentEntity implements ICombatEntity {
      */
     @Override
     public void takeDamage(int damage) {
-        //TODO: perform damage calculation factoring in status indicators, armour and resistance attributes.
+        // perform damage calculation factoring in status indicators, armour
+        // and resistance attributes.
         this.health -= damage;
     }
 

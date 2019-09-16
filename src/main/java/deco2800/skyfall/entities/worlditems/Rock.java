@@ -1,9 +1,7 @@
 package deco2800.skyfall.entities.worlditems;
 
-import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.worlds.Tile;
 import java.util.Random;
-import deco2800.skyfall.entities.HasHealth;
 
 public class Rock extends StaticRock {
     private int health = 100;
@@ -23,8 +21,8 @@ public class Rock extends StaticRock {
     }
 
     public Rock() {
-        super(new Tile(0.0f, 0.0f), true, "rock" + nextRock);
-        nextRock = randomGen.nextInt(3) + 1;
+        super(new Tile(0.0f, 0.0f), true, "rock" + Rock.nextRock);
+        Rock.nextRock = randomGen.nextInt(3) + 1;
         this.setObjectName(ENTITY_ID_STRING);
         this.metalAmount = 15;
     }
