@@ -230,7 +230,9 @@ public class WorldBuilder implements WorldBuilderInterface {
                 case "mountain":
 
                     // Spawn some spears
-                    EntitySpawnRule spearRule = new EntitySpawnRule(tile -> new Spear(tile, true), 0.04, 5, 20, biome);
+                    SpawnControl spearControl = x -> x * x * x * x * x * x * x;
+                    EntitySpawnRule spearRule =
+                            new EntitySpawnRule(tile -> new Spear(tile, true), biome, true, spearControl);
                     biomeSpawnRules.add(spearRule);
 
                     // Create a new perlin noise map
@@ -274,7 +276,9 @@ public class WorldBuilder implements WorldBuilderInterface {
                     biomeSpawnRules.add(bowRule);
 
                     // Spawn some spears
-                    EntitySpawnRule spearRule2 = new EntitySpawnRule(tile -> new Spear(tile, true), 0.5, 1, 5, biome);
+                    SpawnControl spearControl2 = x -> x * x * x * x;
+                    EntitySpawnRule spearRule2 =
+                            new EntitySpawnRule(tile -> new Spear(tile, true), biome, true, spearControl2);
                     biomeSpawnRules.add(spearRule2);
 
                     // Create a new perlin noise map

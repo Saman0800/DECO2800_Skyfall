@@ -1,15 +1,12 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.buildings.BuildingEntity;
-import deco2800.skyfall.entities.structures.AbstractBuilding;
-import deco2800.skyfall.entities.structures.TownCentreBuilding;
-import deco2800.skyfall.entities.structures.WallBuilding;
-import deco2800.skyfall.managers.database.DataBaseConnector;
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.buildings.BuildingFactory;
+import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.resources.items.Stone;
 import deco2800.skyfall.resources.items.Wood;
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
@@ -22,12 +19,8 @@ import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.Random;
-import deco2800.skyfall.entities.structures.AbstractBuilding;
-import deco2800.skyfall.worlds.Tile;
-
 import java.util.HashMap;
-import java.util.TreeMap;
+import java.util.Random;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;

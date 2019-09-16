@@ -40,7 +40,7 @@ public class PetsManagerTest {
      */
     @Before
     public void Setup() {
-        mc = new MainCharacter(0f, 0f, 0.05f, "Main Piece", 10);
+        mc = MainCharacter.getInstance(0f, 0f, 0.05f, "Main Piece", 10);
         bear = new Whitebear(0, 0, mc);
         lizard = new Lizard(0, 0, mc);
         WorldBuilder worldBuilder = new WorldBuilder();

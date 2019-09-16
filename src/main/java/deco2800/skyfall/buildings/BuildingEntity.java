@@ -1,15 +1,11 @@
 package deco2800.skyfall.buildings;
 
-import com.badlogic.gdx.utils.Json;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.google.gson.annotations.Expose;
-import deco2800.skyfall.entities.structures.Structure;
-import deco2800.skyfall.managers.SaveLoadInterface;
 import com.badlogic.gdx.graphics.Texture;
+import com.google.gson.annotations.Expose;
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.util.Collider;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,15 +14,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.entities.AbstractEntity;
-
 /**
  *  A BuildingEntity is an base class for all building entity subclass,
  *  including basic information that a building object should contains.
  */
-public class BuildingEntity extends AbstractEntity implements Structure, SaveLoadInterface {
+public class BuildingEntity extends AbstractEntity {
 
     // a logger
     private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);
@@ -411,11 +403,6 @@ public class BuildingEntity extends AbstractEntity implements Structure, SaveLoa
     //TODO: Empty interact methods need to not be empty wooo!
 
     public void cabinInteract() {}
-    @Override
-    public String formatData() {
-        Gson gson = new Gson();
-        return gson.toJson(this);
-    }
 
     public void fenceInteract() {}
 

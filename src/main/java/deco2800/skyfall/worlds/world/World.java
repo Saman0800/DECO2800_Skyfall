@@ -56,7 +56,7 @@ import java.util.stream.Collectors;
  * It provides storage for the WorldEntities and other universal world level
  * items.
  */
-public class World implements TouchDownObserver , Serializable, SaveLoadInterface, Saveable<World.WorldMemento> {
+public class World implements TouchDownObserver , Serializable, Saveable<World.WorldMemento> {
     protected long id;
 
     protected int width;
@@ -819,11 +819,6 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
         for (Pair<Integer, Integer> pair : removedChunks) {
             loadedChunks.get(pair).unload();
         }
-    }
-
-    @Override
-    public String formatData() {
-        return new Gson().toJson(this);
     }
 
     /**

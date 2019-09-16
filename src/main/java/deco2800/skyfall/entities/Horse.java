@@ -3,8 +3,6 @@ package deco2800.skyfall.entities;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.managers.TextureManager;
-import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import deco2800.skyfall.worlds.biomes.DesertBiome;
 
 public class Horse extends VehicleEntity {
     private static TextureManager textureManager;
@@ -13,14 +11,14 @@ public class Horse extends VehicleEntity {
     private MainCharacter mc;
     private boolean available = true;
     private boolean moving=false;
-    private static final transient String VEHICLE = "horse";
+    private static final transient String VEHICLE = "horse_images";
     private static final transient int HEALTH = 10;
 
     public Horse(float col, float row, MainCharacter mc) {
         super(col,row);
         this.mc = mc;
-        this.setTexture("horse");
-        this.setObjectName("horse");
+        this.setTexture("horse_images");
+        this.setObjectName("horse_images");
         this.setHeight(1);
         this.setAvailable(available);
         this.setHealth(HEALTH);

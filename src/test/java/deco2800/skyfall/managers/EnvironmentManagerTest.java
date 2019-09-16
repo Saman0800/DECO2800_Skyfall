@@ -17,6 +17,7 @@ import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.world.World;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.security.NoSuchAlgorithmException;
@@ -193,11 +194,12 @@ public class EnvironmentManagerTest {
     }
 
     @Test
+    @Ignore // Currently only passes because it throws an exception.
     public void onTickTest() {
         try {
             manager.onTick(1000000);
 
-            long time = (System.currentTimeMillis() / 60000) % 24;
+            long time = (System.currentTimeMillis() / 60_000) % 24;
 
             assertEquals(time, manager.getTime());
 

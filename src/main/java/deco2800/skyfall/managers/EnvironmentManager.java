@@ -279,7 +279,6 @@ public class EnvironmentManager extends TickableManager {
      * @param hour The hour of day to be set. Must be between 0-23 inclusive.
      * @param mins The minutes of the hour of day to be set. Must be between 0-59 inclusive.
      */
-
     public void setTime(int hour, int mins) {
         hours = hour;
         minutes = mins;

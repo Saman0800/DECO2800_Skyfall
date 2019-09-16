@@ -71,7 +71,6 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         super(tile.getCol(), tile.getRow(), renderOrder);
         this.setObjectName(ENTITY_ID_STRING);
         this.setTexture(texture);
-        this.renderOrder = renderOrder;
         this.obstructed = obstructed;
         children = new HashMap<>();
         children.put(tile.getCoordinates(), texture);
