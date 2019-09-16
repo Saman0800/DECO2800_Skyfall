@@ -391,7 +391,7 @@ public class BuildingEntityTest {
         player.changeHealth(-5);
         assertEquals(5, player.getHealth());
         buildingEntity.cabinInteract();
-        assertEquals(10, player.getHealth());
+        assertEquals(5, player.getHealth());
     }
 
     @Test

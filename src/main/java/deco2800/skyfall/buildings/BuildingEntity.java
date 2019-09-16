@@ -435,7 +435,7 @@ public class BuildingEntity extends AbstractEntity {  //Implements Blueprint at 
         MainCharacter player = GameManager.getManagerFromInstance(GameMenuManager.class).getMainCharacter();
         player.changeHealth(+player.getMaxHealth());
         //TODO: Update player health GUI.
-        player.updateHealth();
+        //player.updateHealth();
         //TODO: Needs to change game time.
     }
 
