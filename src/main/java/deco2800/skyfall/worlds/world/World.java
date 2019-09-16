@@ -316,14 +316,13 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
         chunk.addEntity(entity);
     }
 
-    // FIXME:Ontonator Make this work with chunks.
     /**
      * Gets all the luminous entities from the world.
      *
      * @return A list a luminous entities from the game world
      */
     public List<AbstractEntity> getLuminousEntities() {
-        return worldParameters.getLuminousEntities();
+        return getEntities().stream().filter(HasPointLight.class::isInstance).collect(Collectors.toList());
     }
 
     /**
@@ -356,13 +355,6 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
         }
         for (AbstractEntity entity : entities) {
             addEntity(entity);
-        }
-
-        // FIXME:Ontonator Make this work with chunks.
-        for (AbstractEntity entity : entities) {
-            if ((entity instanceof HasPointLight) && !entities.contains(entity)) {
-                this.worldParameters.addLuminousEntity(entity);
-            }
         }
     }
 

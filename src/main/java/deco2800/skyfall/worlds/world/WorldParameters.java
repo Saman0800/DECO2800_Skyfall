@@ -36,9 +36,6 @@ public class WorldParameters {
     //List of the entities in the world
     private List<AbstractEntity> entities;
 
-    //A List of all the entities with a point light
-    private List<AbstractEntity> luminousEntities = new ArrayList<>();
-
     //The number of rivers
     private int noRivers;
 
@@ -56,19 +53,6 @@ public class WorldParameters {
      */
     public void addEntity(AbstractEntity entity) {
         entities.add(entity);
-
-        // FIXME:Ontonator I don't think this needs to be split here.
-        if (entity instanceof HasPointLight) {
-            addLuminousEntity(entity);
-        }
-    }
-
-    /**
-     * Adds an luminous entities to the list of luminous entities
-     * @param entity The entity to be added
-     */
-    public void addLuminousEntity(AbstractEntity entity) {
-        luminousEntities.add(entity);
     }
 
     /**
@@ -171,14 +155,6 @@ public class WorldParameters {
      */
     public void setEntities(List<AbstractEntity> entities) {
         this.entities = entities;
-    }
-
-    /**
-     * Sets the luminous entities
-     * @param entities A list of entities
-     */
-    public void setLuminousEntities(List<AbstractEntity> entities) {
-        this.luminousEntities = entities;
     }
 
     /**
@@ -297,14 +273,6 @@ public class WorldParameters {
     }
 
     /**
-     * Gets the luminous entities
-     * @return The entities
-     */
-    public List<AbstractEntity> getLuminousEntities() {
-        return luminousEntities;
-    }
-
-    /**
      * Gets the number of rivers
      * @return The number of rivers
      */
@@ -342,17 +310,5 @@ public class WorldParameters {
      */
     public void removeEntity(AbstractEntity entity) {
         entities.remove(entity);
-
-        if (entity instanceof HasPointLight) {
-            removeLuminousEntity(entity);
-        }
-    }
-
-    /**
-     * Removes an luminous entity
-     * @param entity The entity to be removed
-     */
-    public void removeLuminousEntity(AbstractEntity entity) {
-        luminousEntities.remove(entity);
     }
 }
