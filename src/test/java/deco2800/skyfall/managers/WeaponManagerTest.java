@@ -21,12 +21,12 @@ public class WeaponManagerTest {
      * Sets up all variables to be used for testing
      */
     public void setup() {
-        testCharacter = new MainCharacter(0f, 0f,
+        testCharacter = MainCharacter.getInstance(0f, 0f,
                 0.05f, "Main Piece", 10);
-        sword = new Sword(new Tile(0, 0), true);
-        spear = new Spear(new Tile(0, 0), true);
-        bow = new Bow(new Tile(0, 0), true);
-        axe = new Axe(new Tile(0, 0), true);
+        sword = new Sword(new Tile(null, 0, 0), true);
+        spear = new Spear(new Tile(null, 0, 0), true);
+        bow = new Bow(new Tile(null, 0, 0), true);
+        axe = new Axe(new Tile(null, 0, 0), true);
     }
 
     @After

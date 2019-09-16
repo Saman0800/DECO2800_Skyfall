@@ -30,6 +30,12 @@ public class MountainTree extends StaticTree {
         super(tile, obstructed, "MTree" + MountainTree.nextTreeTexture);
         MountainTree.nextTreeTexture = randomGen.nextInt(3) + 1;
         this.woodAmount = 15;
+        this.entityType = "MountainTree";
+    }
+
+    public MountainTree (StaticEntityMemento memento){
+        super(memento);
+        this.woodAmount = 15;
     }
 
     /**

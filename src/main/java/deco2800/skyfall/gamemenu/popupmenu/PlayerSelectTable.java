@@ -62,13 +62,6 @@ public class PlayerSelectTable extends AbstractPopUpElement{
         playerSelectTable.setVisible(true);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void updatePosition() {
-        super.updatePosition();
-    }
 
     /**
      * {@inheritDoc}

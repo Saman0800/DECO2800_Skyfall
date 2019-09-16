@@ -10,7 +10,7 @@ import deco2800.skyfall.util.HexVector;
 public class Vine extends NaturalResources implements Item {
 
     // the name of the item
-    private String name;
+    //private String name;
 
     // the biome the vine is in
     private String biome;

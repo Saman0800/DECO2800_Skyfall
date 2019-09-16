@@ -44,7 +44,6 @@ public class HelpTable extends AbstractPopUpElement{
     @Override
     public void hide() {
         super.hide();
-//        System.out.println("Hiding help table");
         helpTable.setVisible(false);
     }
 
@@ -54,17 +53,9 @@ public class HelpTable extends AbstractPopUpElement{
     @Override
     public void show() {
         super.show();
-//        System.out.println("Showing help table");
         helpTable.setVisible(true);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void updatePosition() {
-        super.updatePosition();
-    }
 
     /**
      * {@inheritDoc}

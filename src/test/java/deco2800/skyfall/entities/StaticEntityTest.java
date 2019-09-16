@@ -5,8 +5,10 @@ import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.OnScreenMessageManager;
+import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
@@ -14,6 +16,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.stubbing.Answer;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -24,12 +28,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ GameManager.class, DatabaseManager.class, PlayerPeon.class })
+@PrepareForTest({ GameManager.class, PlayerPeon.class, WorldBuilder.class, WorldDirector.class, DatabaseManager.class,
+                  DataBaseConnector.class })
 public class StaticEntityTest {
     private World w;
 
@@ -39,12 +47,29 @@ public class StaticEntityTest {
     private GameManager mockGM;
 
     @Before
-    public void Setup() {
+    public void Setup() throws Exception {
+        Random random = new Random(0);
+        whenNew(Random.class).withAnyArguments().thenReturn(random);
+
+        DataBaseConnector connector = PowerMockito.mock(DataBaseConnector.class);
+        PowerMockito.when(connector.loadChunk(any(World.class), anyInt(), anyInt())).then(
+                (Answer<Chunk>) invocation -> {
+                    Chunk chunk = new Chunk(invocation.getArgumentAt(0, World.class),
+                                            invocation.getArgumentAt(1, Integer.class),
+                                            invocation.getArgumentAt(2, Integer.class));
+                    chunk.generateEntities();
+                    return chunk;
+                });
+
+        DatabaseManager manager = PowerMockito.mock(DatabaseManager.class);
+        PowerMockito.when(manager.getDataBaseConnector()).thenReturn(connector);
+
+        mockStatic(DatabaseManager.class);
+        PowerMockito.when(DatabaseManager.get()).thenReturn(manager);
+
         WorldBuilder worldBuilder = new WorldBuilder();
         WorldDirector.constructTestWorld(worldBuilder);
         w = worldBuilder.getWorld();
-
-
 
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);
@@ -67,7 +92,7 @@ public class StaticEntityTest {
     @Test
     public void SetPropertiesTileConstructor() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        Tile tile1 = new Tile(0.0f, 0.0f);
+        Tile tile1 = new Tile(null, 0.0f, 0.0f);
         tileMap.add(tile1);
         System.out.println("World " + w);
         w.setTileMap(tileMap);
@@ -88,7 +113,7 @@ public class StaticEntityTest {
     @Test
     public void SetPropertiesRowColConstructor() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        Tile tile1 = new Tile(0.0f, 0.0f);
+        Tile tile1 = new Tile(null, 0.0f, 0.0f);
         tileMap.add(tile1);
         w.setTileMap(tileMap);
 
@@ -117,24 +142,10 @@ public class StaticEntityTest {
 
     @Test
     public void PlaceDownTest() {
-        CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        // Populate world with tiles
-        Tile tile1 = new Tile(0.0f, 0.0f);
-        Tile tile2 = new Tile(0.0f, 1.0f);
-        Tile tile3 = new Tile(1.0f, -0.5f);
-        Tile tile4 = new Tile(1.0f, 0.5f);
-        tileMap.add(tile1);
-        tileMap.add(tile2);
-        tileMap.add(tile4);
-        tileMap.add(tile3);
-        tileMap.add(new Tile(-1.0f, 0.5f));
-        tileMap.add(new Tile(-1.0f, -0.5f));
-        tileMap.add(new Tile(0.0f, -1.f));
-        w.setTileMap(tileMap);
-
-        // Just check that the tiles have indeed been placed into the world
-        Tile tileGet1 = w.getTile(0.0f, 0.0f);
-        assertNotNull(tileGet1);
+        Tile tile1 = w.getTile(0, 0);
+        Tile tile2 = w.getTile(0, 1);
+        Tile tile3 = w.getTile(1, -0.5f);
+        Tile tile4 = w.getTile(1, 0.5f);
 
         StaticEntity rock1 = new StaticEntity(tile1, 2, "rock", true);
 
@@ -170,8 +181,8 @@ public class StaticEntityTest {
     public void NewInstanceTest() {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
         // Populate world with tiles
-        Tile tile1 = new Tile(0.0f, 0.0f);
-        Tile tile2 = new Tile(0.0f, 1.0f);
+        Tile tile1 = new Tile(null, 0.0f, 0.0f);
+        Tile tile2 = new Tile(null, 0.0f, 1.0f);
         tileMap.add(tile1);
         tileMap.add(tile2);
         w.setTileMap(tileMap);

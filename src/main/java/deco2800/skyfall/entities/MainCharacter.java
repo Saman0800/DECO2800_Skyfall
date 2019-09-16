@@ -1,38 +1,99 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.audio.Sound;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.spells.SpellFactory;
-import deco2800.skyfall.entities.worlditems.*;
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.Tickable;
-import deco2800.skyfall.animation.*;
+import deco2800.skyfall.animation.Animatable;
+import deco2800.skyfall.animation.AnimationLinker;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.spells.Spell;
+import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
 import deco2800.skyfall.gui.ManaBar;
 import deco2800.skyfall.managers.*;
-import deco2800.skyfall.observers.*;
-import deco2800.skyfall.resources.*;
+import deco2800.skyfall.observers.KeyDownObserver;
+import deco2800.skyfall.observers.KeyUpObserver;
+import deco2800.skyfall.observers.TouchDownObserver;
+import deco2800.skyfall.resources.Blueprint;
+import deco2800.skyfall.resources.GoldPiece;
+import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
-import deco2800.skyfall.util.*;
+import deco2800.skyfall.saving.Save;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Main character in the game
  */
 public class MainCharacter extends Peon
         implements KeyDownObserver, KeyUpObserver, TouchDownObserver, Tickable, Animatable {
+
+    private static MainCharacter mainCharacterInstance = null;
+
+    public static MainCharacter getInstance(float col, float row, float speed, String name, int health, String[] textures) {
+        if (mainCharacterInstance == null) {
+            mainCharacterInstance = new MainCharacter(col, row, speed, name, health, textures);
+        }
+        return mainCharacterInstance;
+    }
+
+    public static MainCharacter getInstance(float col, float row, float speed, String name, int health) {
+        if (mainCharacterInstance == null) {
+            mainCharacterInstance = new MainCharacter(col, row, speed, name, health);
+        }
+        return mainCharacterInstance;
+    }
+
+    public static MainCharacter getInstance() {
+        if (mainCharacterInstance == null) {
+            mainCharacterInstance = new MainCharacter(0,0,0.05f, "Main Piece", 10);
+        }
+        return mainCharacterInstance;
+    }
+
+    // TODO:dannathan Fix or remove this.
+    // public static MainCharacter loadMainCharacter(MainCharacterMemento memento, Save save) {
+    //     if (mainCharacterInstance == null) {
+    //         mainCharacterInstance = new MainCharacter(memento, save);
+    //     } else {
+    //         mainCharacterInstance.load(memento);
+    //     }
+    //     return mainCharacterInstance;
+    // }
+
+    // The id of the character for storing in a database
+    private long id;
+
+    /**
+     * Sets the save of the main character
+     *
+     * @param save the save of the main character
+     */
+    public void setSave(Save save) {
+        this.save = save;
+    }
+
+    // The save file of this character
+    private Save save;
 
     // Logger to show messages
     private final Logger logger = LoggerFactory.getLogger(MainCharacter.class);
@@ -43,7 +104,7 @@ public class MainCharacter extends Peon
     //List of blueprints that the player has learned.
 
     private List<Blueprint> blueprintsLearned;
-
+    private PetsManager petsManager;
     private BuildingFactory tempFactory;
 
     /**
@@ -193,12 +254,24 @@ public class MainCharacter extends Peon
 
     private GameOverTable gameOverTable = (GameOverTable) GameManager.getManagerFromInstance(GameMenuManager.class).getPopUp("gameOverTable");
 
+    // TODO:dannathan Fix or remove this.
+    // /**
+    //  * Loads a main character from a memento
+    //  *
+    //  * @param memento the memento to load the character from
+    //  */
+    // private MainCharacter(MainCharacterMemento memento, Save save) {
+    //     this.load(memento);
+    //     this.save = save;
+    // }
+
     /**
      * Base Main Character constructor
      */
-    public MainCharacter(float col, float row, float speed, String name,
-                         int health) {
+    private MainCharacter(float col, float row, float speed, String name, int health) {
+
         super(row, col, speed, name, health);
+        this.id = System.nanoTime();
         gameStage = GameStage.FOREST;
         this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
         this.setHeight(1);
@@ -210,6 +283,8 @@ public class MainCharacter extends Peon
                 .addKeyUpListener(this);
         GameManager.getManagerFromInstance(InputManager.class)
                 .addTouchDownListener(this);
+
+        this.petsManager = GameManager.getManagerFromInstance(PetsManager.class);
 
         this.inventories = GameManager.getManagerFromInstance(InventoryManager.class);
 
@@ -239,13 +314,6 @@ public class MainCharacter extends Peon
         isMoving = false;
 
         HexVector position = this.getPosition();
-
-        /*        //Spawn projectile in front of character for now.
-        this.hitBox = new Projectile("slash",
-                "test hitbox",
-                position.getCol() + 1,
-                position.getRow(),
-                1, 1);*/
 
         isSprinting = false;
         equipped = "no_weapon";
@@ -290,8 +358,7 @@ public class MainCharacter extends Peon
      *                 4 = South-West
      *                 5 = North-West
      */
-    public MainCharacter(float col, float row, float speed,
-                         String name, int health, String[] textures) {
+    private MainCharacter(float col, float row, float speed, String name, int health, String[] textures) {
         this(row, col, speed, name, health);
         this.setTexture(textures[2]);
     }
@@ -327,6 +394,14 @@ public class MainCharacter extends Peon
     }
 
     /**
+     * Gets pestManager
+     * @return
+     */
+    public PetsManager getPetsManager(){
+        return this.petsManager;
+    }
+
+    /**
      * Returns string of players equipped item, or "No item equipped" if equippedItem == null
      * @return String of equipped item
      */
@@ -347,9 +422,9 @@ public class MainCharacter extends Peon
         if(equippedItem != null){
             equippedItem.use(this.getPosition());
         }
-            //else: collect nearby resources
-            //Will be adjusted in following sprint when it is possible to spawn
-            //non-static entities
+        //else: collect nearby resources
+        //Will be adjusted in following sprint when it is possible to spawn
+        //non-static entities
     }
 
     /**
@@ -557,17 +632,17 @@ public class MainCharacter extends Peon
             setHurt(true);
             this.changeHealth(-damage);
 
-        if (this.healthBar != null) {
-            this.healthBar.update();
+            if (this.healthBar != null) {
+                this.healthBar.update();
             }
 
             System.out.println("CURRENT HEALTH:" + String.valueOf(getHealth()));
-        if (this.getHealth() <= 0) {
-            kill();
-        } else {
-            hurtTime = 0;
-            recoverTime = 0;
-            HexVector bounceBack = new HexVector();
+            if (this.getHealth() <= 0) {
+                kill();
+            } else {
+                hurtTime = 0;
+                recoverTime = 0;
+                HexVector bounceBack = new HexVector();
 
                 switch (getPlayerDirectionCardinal()) {
                     case "North":
@@ -637,13 +712,12 @@ public class MainCharacter extends Peon
 
     private void checkIfRecovered() {
         recoverTime += 20;
-        logger.info("Character recovering");
         recoverTime += 20;
 
         this.changeCollideability(false);
 
         if (recoverTime > 2000) {
-            System.out.println("Recovered");
+            logger.info("Recovered");
             setRecovering(false);
             changeCollideability(true);
         }
@@ -658,8 +732,8 @@ public class MainCharacter extends Peon
         changeHealth(0);
 
         // AS.PlayOneShot(dieSound);
-            gameOverTable.show();
-        }
+        gameOverTable.show();
+    }
 
     /**
      * @return if player is in the state of "hurt".
@@ -669,7 +743,6 @@ public class MainCharacter extends Peon
     }
 
     /**
-     *
      * @param isHurt the player's "hurt" status
      */
     public void setHurt(boolean isHurt) {
@@ -804,6 +877,22 @@ public class MainCharacter extends Peon
         if (GameScreen.isPaused) {
             return;
         }
+
+        //Check if player wants to place a building
+        if (button == 0) {
+
+            float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
+            float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
+
+            //Check we have permission to build
+            if(GameManager.getManagerFromInstance(ConstructionManager.class).getStatus() == 1) {
+                System.out.println(clickedPosition[0]);
+                System.out.println(clickedPosition[1]);
+                GameManager.getManagerFromInstance(ConstructionManager.class).build(GameManager.get().getWorld(),
+                        (int)clickedPosition[0], (int)clickedPosition[1]);
+            }
+        }
+
         if (button == 1) {
 
             float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
@@ -870,7 +959,7 @@ public class MainCharacter extends Peon
     private void setCurrentSpeed(float cSpeed) {
         this.currentSpeed = cSpeed;
     }
-
+    boolean petout = false;
     /**
      * Sets the appropriate movement flags to true on keyDown
      *
@@ -895,6 +984,10 @@ public class MainCharacter extends Peon
             case Input.Keys.D:
                 xInput += 1;
                 break;
+            case Input.Keys.V:
+                petsManager.replacePet(this);
+                break;
+
             case Input.Keys.SHIFT_LEFT:
                 isSprinting = true;
                 maxSpeed *= 2.f;
@@ -1332,7 +1425,7 @@ public class MainCharacter extends Peon
 
     public List<Blueprint> getUnlockedBlueprints() {
         List<Blueprint> unlocked = new ArrayList<>();
-        switch(gameStage) {
+        switch (gameStage) {
             case GRAVEYARD:
                 // e.g. unlocked.add(new Spaceship())
                 // fall through
@@ -1352,6 +1445,7 @@ public class MainCharacter extends Peon
                 unlocked.add(new PickAxe());
         }
         return unlocked;
+
     }
 
     /***
@@ -1440,6 +1534,7 @@ public class MainCharacter extends Peon
                             tempFactory.createCastle(this.getCol(), this.getRow());
                             break;
                         default:
+                            logger.info("Invalid Item");
                             break;
                     }
 
@@ -1561,6 +1656,75 @@ public class MainCharacter extends Peon
 
     }
 
+    /**
+     * Returns the id of this character
+     *
+     * @return the id of this character
+     */
+    public long getID() {
+        return this.id;
+    }
 
+    /**
+     * Returns the save this character is for
+     *
+     * @return the save this character is for
+     */
+    public Save getSave() {
+        return save;
+    }
+
+    // FIXME:dannothan Fix or remove this.
+//    @Override
+//    public MainCharacterMemento save() {
+//        return new MainCharacterMemento(this);
+//    }
+//
+//    @Override
+//    public void load(MainCharacterMemento memento) {
+//        this.id = memento.mainCharacterID;
+//        this.equippedItem = memento.equippedItem;
+//        this.level = memento.level;
+//        this.foodLevel = memento.foodLevel;
+//        this.foodAccum = memento.foodAccum;
+//        this.goldPouch = memento.goldPouch;
+//        this.blueprintsLearned = memento.blueprints;
+//        this.inventories = memento.inventory;
+//        this.weapons = memento.weapons;
+//        this.hotbar = memento.hotbar;
+//    }
+//
+//    public class MainCharacterMemento extends AbstractMemento {
+//
+//        //TODO:dannathan add stuff for entitiy
+//        private long saveID;
+//        private long mainCharacterID;
+//
+//        private int equippedItem;
+//        private int level;
+//
+//        private int foodLevel;
+//        private float foodAccum;
+//
+//        private InventoryManager inventory;
+//        private WeaponManager weapons;
+//        private HashMap<Integer, Integer> goldPouch;
+//        private List<Item> hotbar;
+//
+//        private List<String> blueprints;
+//
+//        public MainCharacterMemento(MainCharacter character) {
+//            this.saveID = character.save.getSaveID();
+//            this.mainCharacterID = character.id;
+//            this.equippedItem = character.equippedItem;
+//            this.level = character.level;
+//            this.foodLevel = character.foodLevel;
+//            this.foodAccum = character.foodAccum;
+//            this.goldPouch = character.goldPouch;
+//            this.blueprints = character.blueprintsLearned;
+//            this.inventory = character.inventories;
+//            this.weapons = character.weapons;
+//            this.hotbar = character.hotbar;
+//        }
+//    }
 }
-

@@ -23,6 +23,12 @@ public class MountainRock extends StaticRock {
         MountainRock.nextRock = randomGen.nextInt(3) + 1;
         this.setObjectName(ENTITY_ID_STRING);
         this.metalAmount = 15;
+        this.entityType = "MountainRock";
+    }
+
+    public MountainRock (StaticEntityMemento memento){
+        super(memento);
+        this.metalAmount = 15;
     }
 
     @Override

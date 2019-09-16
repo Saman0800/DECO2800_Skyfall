@@ -10,7 +10,7 @@ public class BowTest {
 
   @Before
   public void setUp() {
-    bow = new Bow(new Tile(0, 0), false);
+    bow = new Bow(new Tile(null, 0, 0), false);
   }
 
   @After

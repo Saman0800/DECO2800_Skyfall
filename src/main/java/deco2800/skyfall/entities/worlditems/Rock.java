@@ -20,10 +20,17 @@ public class Rock extends StaticRock {
         this.metalAmount = 15;
     }
 
+    @Deprecated // This really doesn't make sense anymore.
     public Rock() {
-        super(new Tile(0.0f, 0.0f), true, "rock" + Rock.nextRock);
+        super(new Tile(null, 0.0f, 0.0f), true, "rock" + Rock.nextRock);
         Rock.nextRock = randomGen.nextInt(3) + 1;
         this.setObjectName(ENTITY_ID_STRING);
+        this.metalAmount = 15;
+        this.entityType = "Rock";
+    }
+
+    public Rock (StaticEntityMemento memento){
+        super(memento);
         this.metalAmount = 15;
     }
 

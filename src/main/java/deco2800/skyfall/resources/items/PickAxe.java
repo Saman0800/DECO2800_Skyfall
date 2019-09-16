@@ -20,7 +20,6 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
     private boolean blueprintLearned = false;
 
-
     /***
      * Create a Pick Axe with the name Pick Axe.
      *
