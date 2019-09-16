@@ -174,19 +174,6 @@ public class Renderer3D implements Renderer {
         int w = TextureManager.TILE_WIDTH;
         int h = TextureManager.TILE_HEIGHT;
 
-        boolean renderDebug = false; // For debugging hitboxes
-        if (renderDebug) {
-            World box2DWorld = GameManager.get().getManager(PhysicsManager.class).getBox2DWorld();
-            Array<Body> bodies = new Array<>();
-            box2DWorld.getBodies(bodies);
-
-            for (Body body : bodies) {
-                float[] bodyWorldCoord = WorldUtil.colRowToWorldCords(body.getPosition().x, body.getPosition().y);
-
-                batch.draw(textureManager.getTexture("Select"), bodyWorldCoord[0], bodyWorldCoord[1], 10.f, 10.f);
-            }
-        }
-
         for (AbstractEntity entity : entities) {
             float[] entityWorldCoord = WorldUtil.colRowToWorldCords(entity.getCol(), entity.getRow());
             // If it's offscreen
@@ -299,6 +286,19 @@ public class Renderer3D implements Renderer {
     }
 
     private void debugRender(SpriteBatch batch, OrthographicCamera camera) {
+
+        boolean hitboxRenderDebug = false; // For debugging hitboxes
+        if (hitboxRenderDebug) {
+            World box2DWorld = GameManager.get().getManager(PhysicsManager.class).getBox2DWorld();
+            Array<Body> bodies = new Array<>();
+            box2DWorld.getBodies(bodies);
+
+            for (Body body : bodies) {
+                float[] bodyWorldCoord = WorldUtil.colRowToWorldCords(body.getPosition().x, body.getPosition().y);
+
+                batch.draw(textureManager.getTexture("Select"), bodyWorldCoord[0], bodyWorldCoord[1], 10.f, 10.f);
+            }
+        }
 
         if (GameManager.get().showCoords) {
             List<Tile> tileMap = GameManager.get().getWorld().getTileMap();
