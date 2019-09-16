@@ -58,13 +58,6 @@ public class PauseTable extends AbstractPopUpElement{
         pauseTable.setVisible(true);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void updatePosition() {
-        super.updatePosition();
-    }
 
     /**
      * {@inheritDoc}

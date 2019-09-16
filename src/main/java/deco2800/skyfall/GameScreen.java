@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
-import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.graphics.PointLight;
 import deco2800.skyfall.graphics.ShaderWrapper;
@@ -116,7 +115,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         cameraDebug = new PotateCamera(1920, 1080);
 
         /* Add the window to the stage */
-//        GameManager.get().setSkin(skin);
         GameManager.get().setStage(stage);
         GameManager.get().setCamera(camera);
 

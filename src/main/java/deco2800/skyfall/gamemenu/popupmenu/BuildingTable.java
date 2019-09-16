@@ -70,14 +70,6 @@ public class BuildingTable extends AbstractPopUpElement{
 
     /**
      * {@inheritDoc}
-     */
-    @Override
-    public void updatePosition() {
-        super.updatePosition();
-    }
-
-    /**
-     * {@inheritDoc}
      *
      * Draw the whole building table.
      */

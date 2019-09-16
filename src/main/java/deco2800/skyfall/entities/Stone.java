@@ -9,7 +9,6 @@ import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.Tile;
 
 import java.util.ArrayList;
 import java.util.List;
