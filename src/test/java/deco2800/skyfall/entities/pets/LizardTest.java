@@ -77,7 +77,7 @@ public class LizardTest {
      */
     @Test
     public void findNearbyGold() {
-        GoldPiece goldPiece = new GoldPiece(1, 1);
+        GoldPiece goldPiece = new GoldPiece(1);
         w.addEntity(goldPiece);
         w.addEntity(lizard);
         lizard.findNearbyGold();
