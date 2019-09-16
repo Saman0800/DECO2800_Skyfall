@@ -10,7 +10,7 @@ import java.util.List;
 import deco2800.skyfall.resources.items.*;
 
 public class OnScreenMessageManager extends AbstractManager implements KeyTypedObserver {
-    private List<String> messages = new ArrayList<String>();
+    private List<String> messages = new ArrayList<>();
     boolean isTyping = false;
     String unsentMessage = "";
 

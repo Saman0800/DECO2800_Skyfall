@@ -2,22 +2,21 @@ package deco2800.skyfall.worlds.world;
 
 import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.*;
-import deco2800.skyfall.gamemenu.GameMenuScreen;
-
+import deco2800.skyfall.entities.pets.AbstractPet;
+import deco2800.skyfall.entities.pets.LizardHome;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.AgentEntity;
-import deco2800.skyfall.entities.EnemyEntity;
 import deco2800.skyfall.entities.Harvestable;
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.Projectile;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.entities.weapons.Weapon;
+import deco2800.skyfall.gamemenu.popupmenu.BlueprintShopTable;
+import deco2800.skyfall.gamemenu.popupmenu.ChestTable;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
+import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
@@ -29,7 +28,6 @@ import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.graphics.HasPointLight;
-import deco2800.skyfall.graphics.types.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -107,7 +105,8 @@ public class World implements TouchDownObserver {
 
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
 
-    };
+        getTile(0,0).setObstructed(true);
+    }
 
     /**
      * Generates the tiles and biomes in a world
@@ -419,35 +418,11 @@ public class World implements TouchDownObserver {
             tiles.remove(t);
         }
 
-        // Collision detection for entities
-        for (AbstractEntity e1 : this.getEntities()) {
-            if (e1 instanceof StaticEntity) {
-                // Static entities can't move into other entities. Only worry
-                // about entities that can move themselves into other entities
-                continue;
-            }
+        for (AbstractEntity e1 : this.getEntities()){
             e1.onTick(0);
-            //if (e1.getCollider() == null) {
-            //    break;
-            //}
 
-            Collider c1 = e1.getCollider();
-            for (AbstractEntity e2 : this.getEntities()) {
-                if (e2.getCollider() == null) {
-                    break;
-                }
-                Collider c2 = e2.getCollider();
-                if (e1 != e2 && c1.overlaps(c2)) {
-                    if (e1 instanceof MainCharacter || e2 instanceof MainCharacter) {
-                        break;
-                    }
-                    //collision handler
-                    this.handleCollision(e1, e2);
-                    //    break;
-                }
-            }
-            // no collision here
         }
+
     }
 
     public void deleteTile(int tileid) {
@@ -493,7 +468,7 @@ public class World implements TouchDownObserver {
         // TODO: implement proper game logic for collisions between different types of
         // entities.
 
-        System.out.println("Handle collision");
+//        System.out.println("Handle collision");
         // TODO: this needs to be internalized into classes for cleaner code.
         if (e1 instanceof Projectile && e2 instanceof EnemyEntity) {
             if (((EnemyEntity) e2).getHealth() > 0) {
@@ -535,7 +510,7 @@ public class World implements TouchDownObserver {
     /**
      * Returns the seed used in the world
      *
-     * @return
+     * @return the seed for the world
      */
     public long getSeed() {
         return worldParameters.getSeed();
@@ -560,31 +535,61 @@ public class World implements TouchDownObserver {
             if (!tile.getCoordinates().equals(entity.getPosition())) {
                 continue;
             }
-
             if (entity instanceof Harvestable) {
-                System.out.println(entity.getPosition());
-                System.out.println();
-                removeEntity(entity);
-                List<AbstractEntity> drops = ((Harvestable) entity).harvest(tile);
-
-                for (AbstractEntity drop : drops) {
-                    addEntity(drop);
+                //harvest
+                if(entity instanceof LizardHome){
+                    ((LizardHome) entity).cutlizardHomeTree();
+                    if(((LizardHome) entity).getHealth()<=0){
+                        removeEntity(entity);
+                        List<AbstractEntity> drops = ((Harvestable) entity).harvest(tile);
+                        for (AbstractEntity drop : drops) {
+                            addEntity(drop);
+                        }
+                    }
+                }else{
+                    removeEntity(entity);
+                    List<AbstractEntity> drops = ((Harvestable) entity).harvest(tile);
+                    for (AbstractEntity drop : drops) {
+                        addEntity(drop);
+                    }
                 }
-            } else if (entity instanceof Chest) {
-                GameMenuManager menuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
-                menuManager.open(new GameMenuScreen(menuManager).getChestTable((Chest) entity));
             } else if (entity instanceof Weapon) {
                 MainCharacter mc = gmm.getMainCharacter();
                 if (tile.getCoordinates().distance(mc.getPosition()) > 2) {
                     continue;
                 }
                 removeEntity(entity);
-                gmm.getInventory().inventoryAdd((Item) entity);
+                gmm.getInventory().add((Item) entity);
                 if (!mc.getEquipped().equals(((Weapon) entity).getName())) {
                     gmm.getInventory().quickAccessRemove(mc.getEquipped());
                     gmm.getInventory().quickAccessAdd(((Weapon) entity).getName());
                     mc.setEquipped(((Weapon) entity).getName());
                 }
+            } else if (entity instanceof GoldPiece){
+                MainCharacter mc = gmm.getMainCharacter();
+                if (tile.getCoordinates().distance(mc.getPosition()) > 2) {
+                    continue;
+                }
+                mc.addGold((GoldPiece) entity,((GoldPiece) entity).getValue());
+                gmm.getInventory().add((Item) entity);
+                removeEntity(entity);
+            } else if (entity instanceof AbstractPet && entity instanceof Item){
+                if (tile.getCoordinates().distance(gmm.getMainCharacter().getPosition()) > 2) {
+                    continue;
+                }
+                gmm.getInventory().add((Item) entity);
+                gmm.getMainCharacter().getPetsManager().addPet((AbstractPet) entity);
+                removeEntity(entity);
+            } else if (entity instanceof Chest) {
+                GameMenuManager menuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+                ChestTable chest = (ChestTable) menuManager.getPopUp("chestTable");
+                chest.updateChestPanel((Chest) entity);
+                menuManager.setPopUp("chestTable");
+            } else if (entity instanceof BlueprintShop) {
+                GameMenuManager menuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+                BlueprintShopTable bs = (BlueprintShopTable) menuManager.getPopUp("blueprintShopTable");
+                bs.updateBlueprintShopPanel();
+                menuManager.setPopUp("blueprintShopTable");
             }
         }
     }

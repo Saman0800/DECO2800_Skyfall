@@ -40,11 +40,6 @@ public class SwordTest {
 
   @Test
   public void toStringTest() {
-    Assert.assertEquals(sword.toString(), "sword is a melee weapon " +
-            "which can be used to help the Main Character" +
-            " defeat enemies. It has deals 3 slash damages each time it is" +
-            " used. It also has an attack rate " +
-            "of: 5 and a durability of: 6 before it become useless. "
-            + "sword" + "is carryable, but exchangeable.");
+    Assert.assertEquals(sword.toString(), "" + "melee" + ":" + "sword");
   }
 }

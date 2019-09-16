@@ -1,0 +1,31 @@
+
+northAttack.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+TreemanNorthAttack1
+  rotate: false
+  xy: 1, 403
+  size: 550, 400
+  orig: 550, 400
+  offset: 0, 0
+  index: -1
+TreemanNorthAttack2
+  rotate: false
+  xy: 1, 1
+  size: 550, 400
+  orig: 550, 400
+  offset: 0, 0
+  index: -1
+
+northAttack2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+TreemanNorthAttack3
+  rotate: false
+  xy: 1, 1
+  size: 550, 400
+  orig: 550, 400
+  offset: 0, 0
+  index: -1

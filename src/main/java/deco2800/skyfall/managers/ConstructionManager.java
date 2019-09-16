@@ -1,7 +1,6 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -14,27 +13,28 @@ import deco2800.skyfall.buildings.BuildingEntity;
 import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.buildings.BuildingWidgets;
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.structures.AbstractBuilding;
-import deco2800.skyfall.entities.structures.BuildingType;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.Vector2;
-import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.buildings.BuildingType;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.entities.AbstractEntity;
-
-import javax.swing.*;
-
+import org.lwjgl.Sys;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.entities.AbstractEntity;
 
 /**
  * Managers the construction process
  * Only a single instance should exist
  * Sets all build properties to false as nothing has been set up yet
  */
-public class ConstructionManager extends AbstractManager {
+public class ConstructionManager extends TickableManager {
     //This manager while control all features related to construction
+
+    //lmao
+    private int buildTrue = 0;
+    private int buildingID;
 
     private BuildingWidgets buildingWidgets;
     private BuildingFactory buildingFactory;
@@ -61,8 +61,7 @@ public class ConstructionManager extends AbstractManager {
         menuSetUp = false;
 
         buildingFactory = new BuildingFactory();
-        buildingWidgets = BuildingWidgets.get(GameManager.get().getStage(), GameManager.get().getSkin(),
-                GameManager.get().getWorld(), GameManager.getManagerFromInstance(InputManager.class));
+        buildingWidgets = BuildingWidgets.get(GameManager.get());
     }
 
     //Start of UI
@@ -107,10 +106,7 @@ public class ConstructionManager extends AbstractManager {
         settingMenu.setPosition(width / 8, height / 8);
 
         buildMenu.setVisible(false);
-        Container<Table> tableContainer = new Container<Table>();
-
-        float sw = Gdx.graphics.getWidth();
-        float sh = Gdx.graphics.getHeight();
+        Container<Table> tableContainer = new Container<>();
 
         float cw = width * 0.7f;
         float ch = height * 0.5f;
@@ -199,7 +195,8 @@ public class ConstructionManager extends AbstractManager {
             World world = GameManager.get().getWorld();
 
             for(int i = 0; i < buildingFactory.getCount(); i++){
-                String name = BuildingType.values()[i].getName();
+                //String name = BuildingType.values()[i].getName();
+                String name = BuildingType.values()[i].name();
                 TextButton building = new TextButton(name, skin);
                 if (i < 3){
                     building.setBounds(50, 450 - i * 100, 140, 40);
@@ -217,16 +214,11 @@ public class ConstructionManager extends AbstractManager {
 
                         displayWindow();
 
-                        AbstractEntity mc = world.getSortedAgentEntities().get(world.getSortedAgentEntities().size() - 1);
-                        HexVector position = mc.getPosition();
+                        //Sets building to be enabled
+                        buildTrue = 1;
+                        //ID of the building we want
+                        buildingID = FINALi;
 
-                        float row = position.getRow();
-                        float col = position.getCol();
-
-
-                        BuildingEntity toBePlaced = selectBuilding(FINALi, row, col);
-
-                        toBePlaced.placeBuilding(toBePlaced.getRow(), toBePlaced.getCol(), toBePlaced.getHeight(), world);
                     }
                 });
             }
@@ -287,6 +279,42 @@ public class ConstructionManager extends AbstractManager {
                 }
                 });
         }
+    }
+
+    /**
+     *
+     * @return 1 if building is allowed, else 0
+     */
+    public int getStatus() {
+        int returnValue = buildTrue;
+        buildTrue = 0;
+        return returnValue;
+    }
+
+    /**
+     * Places a structure in the world.
+     * @param world - World to place in
+     * @param x - x coordinate
+     * @param y - y coordinate
+     */
+    public void build(World world, int x, int y) {
+        BuildingEntity buildingToBePlaced = selectBuilding(buildingID, x, y);
+        //buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
+        //Permissions
+        if (invCheck(buildingToBePlaced, GameManager.getManagerFromInstance(InventoryManager.class))){
+            buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
+            invRemove(buildingToBePlaced,GameManager.getManagerFromInstance(InventoryManager.class));
+        } else {
+            //TODO: User does not have enough materials.
+        }
+        setNull();
+    }
+
+    /**
+     * Resets current building by setting to null.
+     */
+    public void setNull() {
+        buildingToBePlaced = null;
     }
 
     /**
@@ -500,11 +528,11 @@ public class ConstructionManager extends AbstractManager {
      * return a list of how much of each relevant resources the player owns
      * When given a structure class gets its cost and compares it to the players inventory
      *
-     * @param building         - AbstractBuilding
+     * @param building         - Building
      * @param inventoryManager - player's inventory
      * @return True, if the player's inventory meets the inventory requirements, otherwise false
      */
-    public Boolean invCheck(AbstractBuilding building, InventoryManager inventoryManager) {
+    public Boolean invCheck(BuildingEntity building, InventoryManager inventoryManager) {
 
         Map<String, Integer> buildingCost = building.getCost();
 
@@ -526,20 +554,35 @@ public class ConstructionManager extends AbstractManager {
     /**
      * Takes in a structure class and removes the material cost from player inventory
      *
-     * @param building         - AbstractBuilding
+     * @param building         - Building
      * @param inventoryManager - player's inventory
      * @pre: Assume that building has been verified against inventoryAmount in inventoryManager
      */
-    public void invRemove(AbstractBuilding building, InventoryManager inventoryManager) {
+    public void invRemove(BuildingEntity building, InventoryManager inventoryManager) {
         Map<String, Integer> buildingCost = building.getCost();
         for (Map.Entry<String, Integer> entry : buildingCost.entrySet()) {
 
             String item = entry.getKey();
             Integer amount = entry.getValue();
-            inventoryManager.inventoryDropMultiple(item, amount);
+            inventoryManager.dropMultiple(item, amount);
         }
     }
 
+    /**
+     * Sets the building to be placed
+     * @param buildingID - the building to change to
+     *
+     */
+    public void setBuilding(int buildingID) {
+        this.buildingID = buildingID;
+
+    }
+
+    /**
+     * Sets the building to be placed
+     * @param building - the building to change to
+     *
+     */
     public void setBuildingToBePlaced (BuildingEntity building){
         buildingToBePlaced = building;
     }
@@ -548,9 +591,10 @@ public class ConstructionManager extends AbstractManager {
 
     /**
      *
-     * @param buildings
+     * @param buildings list of buildings to be merged
+     * @param inventoryManager the inventory manager of the player
      */
-    public boolean mergeBuilding(AbstractBuilding[] buildings, InventoryManager inventoryManager) {
+    public boolean mergeBuilding(BuildingEntity[] buildings, InventoryManager inventoryManager) {
 
         if (buildings.length == 0) return false;
         String className = buildings[0].getClass().getName();
@@ -565,7 +609,7 @@ public class ConstructionManager extends AbstractManager {
             }
         }
 
-        buildings[0].placeBuilding(buildings[0].getXcoord(), buildings[0].getYcoord(),
+        buildings[0].placeBuilding(buildings[0].getCol(), buildings[0].getRow(),
                 buildings.length, GameManager.get().getWorld());
 
         return true;
@@ -580,8 +624,6 @@ public class ConstructionManager extends AbstractManager {
      */
     public BuildingEntity selectBuilding(int index, float row, float col){
         switch (index){
-            default:
-                return null;
             case 0:
                 return buildingFactory.createCabin(row, col);
             case 1:
@@ -596,8 +638,15 @@ public class ConstructionManager extends AbstractManager {
                 return buildingFactory.createWatchTower(row, col);
             case 6:
                 return buildingFactory.createCastle(row, col);
-
-
+            default:
+                return null;
         }
+    }
+
+    // This method will be run per frame handled by GameManager automatically
+    @Override
+    public void onTick(long tick) {
+        buildingWidgets.apply();
+        buildingWidgets.update();
     }
 }

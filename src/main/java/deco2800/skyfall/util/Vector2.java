@@ -54,6 +54,10 @@ public class Vector2 {
      */
     public Vector2 add(Vector2 arg) { return new Vector2(this.x + arg.x, this.y + arg.y); }
 
+    public Vector2 mul(float arg){
+        return new Vector2(this.x*arg, this.y*arg);
+    }
+
     /**
      * Subtracts the argument vector and returns the result
      * @param arg the vector to be subtracted
@@ -63,7 +67,7 @@ public class Vector2 {
     /**
      * Equals Method returns true iff the two objects are equal 
      * based on their X and Y Value.
-     * @return 
+     * @return true if the two objects are the same, false otherwise
      */
     @Override
     public boolean equals(Object obj) {

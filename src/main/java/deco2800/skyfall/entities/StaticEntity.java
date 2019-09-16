@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Collections;
 
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,10 +42,8 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         super(tile.getCol(), tile.getRow(), renderOrder);
         this.setObjectName(ENTITY_ID_STRING);
         this.setTexture(texture);
-
         this.renderOrder = renderOrder;
         this.obstructed = obstructed;
-
         children = new HashMap<>();
         children.put(tile.getCoordinates(), texture);
         if (!WorldUtil.validColRow(tile.getCoordinates())) {
@@ -106,18 +105,6 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
 
     /**
      * A simple getter function to retrieve the obstruction value of this object
-     * 
-     * @return The obstruction value.
-     *
-     * @deprecated use {@link #isObstructed()}
-     */
-    @Deprecated()
-    public boolean getObstructed() {
-        return isObstructed();
-    }
-
-    /**
-     * A simple getter function to retrieve the obstruction value of this object
      *
      * @return The obstruction value.
      */
@@ -145,6 +132,8 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
                 child.setParent(this);
             }
         }
+
+        getBody().setType(BodyDef.BodyType.StaticBody);
     }
 
     /**

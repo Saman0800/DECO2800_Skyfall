@@ -3,7 +3,6 @@ package deco2800.skyfall.resources.items;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.NaturalResources;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.worlds.Tile;
 
 /**
  * A class representing a Sand Natural Resource item
@@ -66,6 +65,11 @@ public class Sand extends NaturalResources implements Item {
      */
     @Override
     public String getDescription() {
-        return "This resource can be found in the Desert or Beach biomes.";
+        return "This resource can be found in the" + "\n" + " Desert or Beach biomes.";
+    }
+
+    @Override
+    public void use(HexVector position){
+
     }
 }

@@ -3,8 +3,6 @@ package deco2800.skyfall.util;
 import deco2800.skyfall.entities.structures.AbstractBuilding;
 import deco2800.skyfall.worlds.Tile;
 
-import java.util.HashMap;
-
 public class ConstructionPermissions {
 
 
@@ -14,11 +12,11 @@ public class ConstructionPermissions {
     /**
      * To be called by the Construction Manager to check a if a player has the
      * right permissions and inventory to create the selected building.
-     * @params building - the building being passed into
+     * @param building - the building being passed into
      *
      * @return boolean - true if the building can be created, false otherwise.
      */
-     public <T extends AbstractBuilding> boolean BuildingCreation( T bulding, Tile tile){
+     public <T extends AbstractBuilding> boolean BuildingCreation( T building, Tile tile){
 
          // Should I use wildcards or something here?
          return true;
@@ -29,8 +27,7 @@ public class ConstructionPermissions {
      * To be called by the Construction Manager to check if a building can be placed
      * on the specified tile
      * g.
-     * @params building - the building trying to be placed
-     * @params tile - the main tile to place the building on.
+     * @param building - the building trying to be placed
      *
      * @return boolean - true if the building can be placed there, false otherwise.
      */
