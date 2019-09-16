@@ -285,8 +285,9 @@ public class Treeman extends EnemyEntity implements Animatable {
                 period++;
             }else{
                 period=0;
-                player.setHurt(true);
-                player.hurt(this.getDamage());
+                if (!(mc.isRecovering())) {
+                    player.hurt(this.getDamage());
+                }
             }
             if (this.getInjure() == true) {
                 this.position.moveToward(destination,this.INJURE_ANGRY_SPEED);
@@ -404,6 +405,10 @@ public class Treeman extends EnemyEntity implements Animatable {
 
     }
 
-
-
+    @Override
+    public void dealDamage(ICombatEntity entity) {
+        if (entity.canDealDamage()) {
+            entity.dealDamage(entity);
+        }
+    }
 }

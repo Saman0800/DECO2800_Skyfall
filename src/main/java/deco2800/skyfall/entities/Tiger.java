@@ -292,6 +292,9 @@ public class Tiger extends EnemyEntity implements Animatable {
     }
 
 
+    @Override
+    public void dealDamage(ICombatEntity entity) {
 
+    }
 }
 

@@ -129,15 +129,36 @@ public class AnimationManager extends AbstractManager {
 
         this.generateAnimationObject("MainCharacter_Attack_E_Anim",
                 "MainCharacter_Attack_E_Anim",
-                678, 1029, 0.2f);
+                731, 1130, 0.09f);
 
         this.generateAnimationObject("MainCharacter_Hurt_E_Anim",
                 "MainCharacter_Hurt_E_Anim",
-                667, 1032, 0.2f);
+                750, 1161, 0.2f);
 
         this.generateAnimationObject("MainCharacter_Dead_E_Anim",
                 "MainCharacter_Dead_E_Anim",
-                727, 861, 0.2f);
+                1020, 1167, 0.2f);
+        this.generateAnimationObject("MainCharacter_Dead_E_Still",
+                "MainCharacter_Dead_E_Still",
+                1216, 1293, 50f);
+
+        this.generateAnimationObject("Spells_Fire_Anim",
+                "spells_fire_Anim",
+                184, 278, 0.12f);
+
+        this.generateAnimationObject("Spells_Shield_Anim",
+                "spells_shield_Anim",
+                638, 515, 0.12f);
+        this.generateAnimationObject("Spells_Shield_Still",
+                "spells_shield_Still",
+                629, 515, 50f);
+
+        this.generateAnimationObject("Spells_Tornado_Anim",
+                "spells_tornado_Anim",
+                303, 337, 0.12f);
+
+        System.out.println("All animations in game");
+
 
         System.out.println("All animations in game");
     }

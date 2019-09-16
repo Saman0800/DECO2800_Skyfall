@@ -1,8 +1,14 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.math.Vector2;
+import deco2800.skyfall.animation.Animatable;
+import deco2800.skyfall.animation.AnimationLinker;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
+
+import java.util.List;
 
 /**
  * An entity that is shot from a weapon.
@@ -10,12 +16,12 @@ import deco2800.skyfall.util.HexVector;
  *
  * E.g. a bow shoots an arrow.
  */
-public class Projectile extends AgentEntity {
+public class Projectile extends AgentEntity implements Animatable {
 
     /**
      * How many game ticks all projectiles survive for before being removed.
      */
-    public static final int LIFE_TIME_TICKS = 50;
+    public static final int LIFE_TIME_TICKS = 100;
 
     /**
      * The amount of damage this projectile deals.
@@ -37,6 +43,10 @@ public class Projectile extends AgentEntity {
      */
     private HexVector movementPosition;
 
+    /**
+     *
+     */
+    private String textureName;
 
     /**
      * How far this projectile will travel.
@@ -62,6 +72,7 @@ public class Projectile extends AgentEntity {
         this.movementPosition = movementPosition;
         this.range = range;
 
+        this.textureName = textureName;
         this.setTexture(textureName);
         this.setObjectName(objectName);
 
@@ -69,6 +80,8 @@ public class Projectile extends AgentEntity {
         position.moveToward(movementPosition,speed);
 
         //fixture.setFilterData()
+
+        configureAnimations();
 
         //TODO: rotate sprite in angle facing.
     }
@@ -127,7 +140,6 @@ public class Projectile extends AgentEntity {
                     (((EnemyEntity)other).getBody().getLinearVelocity()
                     .lerp(new Vector2(0.f, 0.f), 0.5f)));
         }
-
     }
 
     /**
@@ -139,6 +151,15 @@ public class Projectile extends AgentEntity {
             GameManager.get().getWorld().removeEntity(this);
             getBody().getWorld().destroyBody(getBody());
             beenDestroyed = true;
+            setCurrentState(AnimationRole.NULL);
         }
+    }
+
+    @Override
+    public void configureAnimations() {
+    }
+
+    @Override
+    public void setDirectionTextures() {
     }
 }

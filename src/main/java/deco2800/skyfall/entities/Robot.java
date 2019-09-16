@@ -119,4 +119,11 @@ public class Robot extends EnemyEntity implements Animatable {
     public void setDirectionTextures() {
 
     }
+
+    @Override
+    public void dealDamage(ICombatEntity entity) {
+        if (entity.canDealDamage()) {
+            entity.dealDamage(entity);
+        }
+    }
 }

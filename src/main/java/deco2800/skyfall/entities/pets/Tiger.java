@@ -5,6 +5,7 @@ import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.EnemyEntity;
+import deco2800.skyfall.entities.ICombatEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
@@ -294,5 +295,8 @@ public class Tiger extends EnemyEntity implements Animatable {
     }
 
 
+    @Override
+    public void dealDamage(ICombatEntity entity) {
 
+    }
 }

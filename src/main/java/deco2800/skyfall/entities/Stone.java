@@ -204,8 +204,9 @@ public class Stone extends EnemyEntity implements Animatable {
                 period++;
             } else {
                 period = 0;
-                player.hurt(this.getDamage());
-
+                if (!(mc.isRecovering())) {
+                    player.hurt(this.getDamage());
+                }
             }
         }
     }
@@ -373,6 +374,13 @@ public class Stone extends EnemyEntity implements Animatable {
 
     @Override
     public void setDirectionTextures() {
+    }
+
+    @Override
+    public void dealDamage(ICombatEntity entity) {
+        if (entity.canDealDamage()) {
+            entity.dealDamage(entity);
+        }
     }
 }
 

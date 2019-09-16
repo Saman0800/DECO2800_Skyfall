@@ -18,6 +18,8 @@ import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
+import deco2800.skyfall.gamemenu.popupmenu.PauseTable;
+import deco2800.skyfall.gamemenu.popupmenu.SettingsTable;
 import deco2800.skyfall.gui.ManaBar;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
@@ -126,11 +128,9 @@ public class MainCharacter extends Peon
 
     // Variables to sound effects
     public static final String WALK_NORMAL = "people_walk_normal";
-
     public static final String HURT = "player_hurt";
     public static final String DIED = "player_died";
 
-    private SoundManager soundManager = GameManager.get().getManager(SoundManager.class);
 
     public static final String BOWATTACK = "bow_and_arrow_attack";
 
@@ -204,6 +204,12 @@ public class MainCharacter extends Peon
     private long recoverTime = 3000;
 
     /**
+     * How long does MainCharacter take to dead before
+     * game over screen shows,
+     */
+    private long deadTime = 500;
+
+    /**
      * Check whether MainCharacter is hurt.
      */
     private boolean isHurt = false;
@@ -252,7 +258,10 @@ public class MainCharacter extends Peon
 
     private String equipped;
 
-    private GameOverTable gameOverTable = (GameOverTable) GameManager.getManagerFromInstance(GameMenuManager.class).getPopUp("gameOverTable");
+    /**
+     *  Game Over screen.
+     */
+    private GameOverTable gameOverTable;
 
     // TODO:dannathan Fix or remove this.
     // /**
@@ -329,6 +338,7 @@ public class MainCharacter extends Peon
     public void setUpGUI() {
         this.setupHealthBar();
         this.setUpManaBar();
+        this.setupGameOverScreen();
     }
 
     /**
@@ -343,7 +353,17 @@ public class MainCharacter extends Peon
      * Set up the health bar.
      */
     private void setupHealthBar() {
-        this.healthBar = (HealthCircle) GameManager.getManagerFromInstance(GameMenuManager.class).getUIElement("healthCircle");
+        this.healthBar = (HealthCircle) GameManager.getManagerFromInstance(GameMenuManager.class).
+                getUIElement("healthCircle");
+    }
+
+    /**
+     * Set up the game over screen.
+     */
+    private void setupGameOverScreen() {
+        this.gameOverTable = (GameOverTable) GameManager.get().getManagerFromInstance(GameMenuManager.class).
+                getPopUp("gameOverTable");
+        System.out.println(gameOverTable);
     }
 
     /**
@@ -490,7 +510,7 @@ public class MainCharacter extends Peon
      */
     private void castSpell(HexVector mousePosition, SpellType spellType) {
 
-        //Unselect the spell.
+        // Unselect the spell.
         this.spellSelected = SpellType.NONE;
 
         //Create the spell using the factory.
@@ -616,67 +636,58 @@ public class MainCharacter extends Peon
      */
     public void hurt(int damage) {
 
-        if (this.isInvincible) return;
+        // if (this.isInvincible) return;
         if (this.isRecovering) return;
 
         setHurt(true);
+        logger.info("Hurted: " + isHurt);
         this.changeHealth(-damage);
 
         if (this.healthBar != null) {
             this.healthBar.update();
         }
 
-        logger.info("Hurted: " + isRecovering);
+        System.out.println("CURRENT HEALTH:" + String.valueOf(getHealth()));
+        if (this.getHealth() <= 0) {
+            kill();
+        } else {
+            hurtTime = 0;
+            recoverTime = 0;
+            HexVector bounceBack = new HexVector(position.getCol(), position.getRow() - 2);
 
-        if (!isRecovering) {
-            setHurt(true);
-            this.changeHealth(-damage);
-
-            if (this.healthBar != null) {
-                this.healthBar.update();
+            switch (getPlayerDirectionCardinal()) {
+                case "North":
+                    bounceBack = new HexVector(position.getCol(), position.getRow() - 2);
+                    break;
+                case "North-East":
+                    bounceBack = new HexVector(position.getCol() - 2, position.getRow() - 2);
+                    break;
+                case "East":
+                    bounceBack = new HexVector(position.getCol() - 2, position.getRow());
+                    break;
+                case "South-East":
+                    bounceBack = new HexVector(position.getCol() - 2, position.getRow() + 2);
+                    break;
+                case "South":
+                    bounceBack = new HexVector(position.getCol(), position.getRow() + 2);
+                    break;
+                case "South-West":
+                    bounceBack = new HexVector(position.getCol() + 2, position.getRow() + 2);
+                    break;
+                case "West":
+                    bounceBack = new HexVector(position.getCol() - 2, position.getRow());
+                    break;
+                case "North-West":
+                    bounceBack = new HexVector(position.getCol() + 2, position.getRow() - 2);
+                    break;
+                default:
+                    break;
             }
+            position.moveToward(bounceBack, 1f);
 
-            System.out.println("CURRENT HEALTH:" + String.valueOf(getHealth()));
-            if (this.getHealth() <= 0) {
-                kill();
-            } else {
-                hurtTime = 0;
-                recoverTime = 0;
-                HexVector bounceBack = new HexVector();
-
-                switch (getPlayerDirectionCardinal()) {
-                    case "North":
-                        bounceBack = new HexVector(position.getCol(), position.getRow() - 2);
-                        break;
-                    case "North-East":
-                        bounceBack = new HexVector(position.getCol() - 2, position.getRow() - 2);
-                        break;
-                    case "East":
-                        bounceBack = new HexVector(position.getCol() - 2, position.getRow());
-                        break;
-                    case "South-East":
-                        bounceBack = new HexVector(position.getCol() - 2, position.getRow() + 2);
-                        break;
-                    case "South":
-                        bounceBack = new HexVector(position.getCol(), position.getRow() + 2);
-                        break;
-                    case "South-West":
-                        bounceBack = new HexVector(position.getCol() + 2, position.getRow() + 2);
-                        break;
-                    case "West":
-                        bounceBack = new HexVector(position.getCol() - 2, position.getRow());
-                        break;
-                    case "North-West":
-                        bounceBack = new HexVector(position.getCol() + 2, position.getRow() - 2);
-                        break;
-                    default:
-                        break;
-                }
-                position.moveToward(bounceBack, 1f);
-
-                SoundManager.playSound(HURT);
-            }
+            SoundManager.playSound(HURT);
         }
+
     }
 
     private void checkIfHurtEnded() {
@@ -739,9 +750,10 @@ public class MainCharacter extends Peon
     public void kill() {
         // set health to 0.
         changeHealth(0);
-
-        // AS.PlayOneShot(dieSound);
-        gameOverTable.show();
+        SoundManager.playSound(DIED);
+        setCurrentState(AnimationRole.DEAD);
+        deadTime = 0;
+        // gameOverTable.show();
     }
 
     /**
@@ -942,6 +954,14 @@ public class MainCharacter extends Peon
             checkIfRecovered();
         }
         this.updateAnimation();
+
+        if (isDead()) {
+            if (deadTime < 500) {
+                deadTime += 20;
+            } else {
+                GameManager.setPaused(true);
+            }
+        }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
@@ -1620,6 +1640,11 @@ public class MainCharacter extends Peon
         addAnimations(AnimationRole.DEAD, Direction.DEFAULT,
                 new AnimationLinker("MainCharacter_Dead_E_Anim",
                         AnimationRole.DEAD, Direction.DEFAULT, false, true));
+
+        // Dead animation
+        addAnimations(AnimationRole.STILL, Direction.DEFAULT,
+                new AnimationLinker("MainCharacter_Dead_E_Still",
+                        AnimationRole.STILL, Direction.DEFAULT, false, true));
     }
 
     /**
@@ -1655,24 +1680,27 @@ public class MainCharacter extends Peon
 
         /* Short Animations */
         if (getToBeRun() != null) {
-            if (getToBeRun().getType() == AnimationRole.ATTACK) {
-                return;
-            } else if (getToBeRun().getType() == AnimationRole.DEAD) {
+            if (getToBeRun().getType() == AnimationRole.DEAD) {
+                setCurrentState(AnimationRole.STILL);
+            } else if (getToBeRun().getType() == AnimationRole.ATTACK) {
                 return;
             }
-        }
-
-        if (isHurt) {
-            setCurrentState(AnimationRole.HURT);
         } else {
-            if (vel.get(2) == 0f) {
-                setCurrentState(AnimationRole.NULL);
+
+            if (isDead()) {
+                setCurrentState(AnimationRole.STILL);
+            } else if (isHurt) {
+                setCurrentState(AnimationRole.HURT);
             } else {
-                setCurrentState(AnimationRole.MOVE);
+                if (vel.get(2) == 0f) {
+                    setCurrentState(AnimationRole.NULL);
+                } else {
+                    setCurrentState(AnimationRole.MOVE);
+                }
             }
         }
-
     }
+
 
     /**
      * Returns the id of this character

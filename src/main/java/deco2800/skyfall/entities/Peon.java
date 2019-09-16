@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities;
 
 import deco2800.skyfall.Tickable;
+import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.tasks.*;
 
@@ -108,7 +109,9 @@ public class Peon extends AgentEntity implements Tickable {
 		}
 
 		if (this.isDead()) {
-			this.health = currentHealth;
+			 this.health = currentHealth;
+			// gameOverTable.show();
+
 			this.deaths += 1;
 		}
 	}

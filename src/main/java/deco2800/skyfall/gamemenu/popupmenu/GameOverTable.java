@@ -69,7 +69,7 @@ public class GameOverTable extends AbstractPopUpElement{
         gameOverTable.setSize(500, 500 * 1346 / 1862f);
         gameOverTable.setPosition(Gdx.graphics.getWidth()/2f - gameOverTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - gameOverTable.getHeight()/2);
-        gameOverTable.setBackground(generateTextureRegionDrawableObject("game over temp bg"));
+        gameOverTable.setBackground(generateTextureRegionDrawableObject("game_over_temp_bg"));
 
         ImageButton retry = new ImageButton(generateTextureRegionDrawableObject("game over retry temp"));
         gameOverTable.add(retry).padBottom(15).width(450).height(450*302/2313f);
@@ -95,6 +95,7 @@ public class GameOverTable extends AbstractPopUpElement{
 
         gameOverTable.setVisible(false);
         stage.addActor(gameOverTable);
+        System.out.println(gameOverTable);
     }
 
 }
