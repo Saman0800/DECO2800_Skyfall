@@ -571,5 +571,4 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     public Body getBody() {
         return body;
     }
-
 }

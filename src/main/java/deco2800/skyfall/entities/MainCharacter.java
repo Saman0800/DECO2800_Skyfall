@@ -1,5 +1,7 @@
 package deco2800.skyfall.entities;
 
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.worlditems.*;
@@ -224,7 +226,7 @@ public class MainCharacter extends Peon
         // Initialises the players velocity properties
         xInput = 0;
         yInput = 0;
-        setAcceleration(1.f);
+        setAcceleration(10.f);
         setMaxSpeed(1.f);
         vel = 0;
         velHistoryX = new ArrayList<>();
@@ -244,6 +246,14 @@ public class MainCharacter extends Peon
                 position.getCol() + 1,
                 position.getRow(),
                 1, 1);*/
+
+        for (Fixture fix : getBody().getFixtureList()) {
+            Filter filter = fix.getFilterData();
+            filter.categoryBits = (short) 0x2; // Set filter category to 2
+            filter.maskBits = (short) (0xFFFF
+                    ^ 0x4); // remove mask category 4 (projectiles)
+            fix.setFilterData(filter);
+        }
 
         isSprinting = false;
         equipped = "no_weapon";

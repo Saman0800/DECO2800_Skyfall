@@ -1,6 +1,8 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 
@@ -65,10 +67,16 @@ public class Projectile extends AgentEntity {
         this.setTexture(textureName);
         this.setObjectName(objectName);
 
+        for (Fixture fix : getBody().getFixtureList()) {
+            Filter filter = fix.getFilterData();
+            filter.categoryBits = (short) 0x4; // Set filter category to 2
+            filter.maskBits = (short) (0xFFFF
+                    ^ 0x2); // remove mask category 2 (Main Character)
+            fix.setFilterData(filter);
+        }
+
         //Position the projectile correctly.
         position.moveToward(movementPosition,speed);
-
-        //fixture.setFilterData()
 
         //TODO: rotate sprite in angle facing.
     }
