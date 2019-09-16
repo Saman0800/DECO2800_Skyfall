@@ -23,7 +23,9 @@ public class AbstractPopUpElement extends AbstractUIElement {
      * Hides all of the elements associated with the element.
      */
     public void hide() {
-        exitButton.setVisible(false);
+        if (exitButton != null) {
+            exitButton.setVisible(false);
+        }
         isVisible = false;
         resume();
         gameMenuManager.setPopUp(null);
@@ -49,7 +51,9 @@ public class AbstractPopUpElement extends AbstractUIElement {
      * Shows the element
      */
     public void show(){
-        exitButton.setVisible(true);
+        if (exitButton != null) {
+            exitButton.setVisible(true);
+        }
         isVisible = true;
         pause();
     }
@@ -61,7 +65,9 @@ public class AbstractPopUpElement extends AbstractUIElement {
     public void updatePosition() {
         float x  = stage.getCamera().position.x  + (stage.getCamera().viewportWidth / 2);
         float y = stage.getCamera().position.y  +  (stage.getCamera().viewportHeight / 2);
-        exitButton.setPosition(x * 0.9f, y * 0.9f);
+        if (exitButton != null) {
+            exitButton.setPosition(x * 0.9f, y * 0.9f);
+        }
     }
 
     /**
@@ -81,7 +87,6 @@ public class AbstractPopUpElement extends AbstractUIElement {
             exitButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-//                    System.out.println("Clicked exit");
                     hide();
                 }
             });

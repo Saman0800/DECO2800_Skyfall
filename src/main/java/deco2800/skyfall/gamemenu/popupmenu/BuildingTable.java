@@ -106,8 +106,8 @@ public class BuildingTable extends AbstractPopUpElement{
         items.row();
 
         //testing
-//        gameMenuManager.getMainCharacter().addBlueprint(new Hatchet());
-//        gameMenuManager.getMainCharacter().addBlueprint(new PickAxe());
+        gameMenuManager.getMainCharacter().addBlueprint(new Hatchet());
+        gameMenuManager.getMainCharacter().addBlueprint(new PickAxe());
         List<Blueprint> blueprintsLearned = gameMenuManager.getMainCharacter().getBlueprintsLearned();
         // Generating items in getBlueprintsLearned
         float itemWidth = 400/4f-10;

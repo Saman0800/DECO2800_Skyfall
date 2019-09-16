@@ -1425,7 +1425,7 @@ public class MainCharacter extends Peon
 
     public List<Blueprint> getUnlockedBlueprints() {
         List<Blueprint> unlocked = new ArrayList<>();
-        switch(gameStage) {
+        switch (gameStage) {
             case GRAVEYARD:
                 // e.g. unlocked.add(new Spaceship())
                 // fall through
@@ -1445,6 +1445,7 @@ public class MainCharacter extends Peon
                 unlocked.add(new PickAxe());
         }
         return unlocked;
+
     }
 
     /***
@@ -1533,6 +1534,7 @@ public class MainCharacter extends Peon
                             tempFactory.createCastle(this.getCol(), this.getRow());
                             break;
                         default:
+                            logger.info("Invalid Item");
                             break;
                     }
 
