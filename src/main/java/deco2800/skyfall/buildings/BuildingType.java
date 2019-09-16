@@ -73,8 +73,8 @@ public enum BuildingType {
         buildingCost.put("Stone",4);
     }
 
-    public ArrayList<String> initialiseCabinTextures() {
-        ArrayList<String> cabinTextures = new ArrayList<>();
+    public List<String> initialiseCabinTextures() {
+        List<String> cabinTextures = new ArrayList<>();
         cabinTextures.add("cabin_0");
         cabinTextures.add("cabin_90");
         cabinTextures.add("cabin_180");
@@ -95,6 +95,12 @@ public enum BuildingType {
         buildingCost.put("Stone",2);
     }
 
+    public List<String> initialiseStorageUnitTextures() {
+        List<String> storageTextures = new ArrayList<>();
+        storageTextures.add("storage_unit");
+        return storageTextures;
+    }
+
     /**
      * Initialises the textures and building costs for the TownCentre Building Tpe
      *
@@ -109,22 +115,30 @@ public enum BuildingType {
         buildingCost.put("Metal",2);
     }
 
+    public List<String> initialiseTownCentreTextures() {
+        List<String> townTextures = new ArrayList<>();
+        townTextures.add("town_centre");
+        return townTextures;
+    }
+
     /**
      * Initialises the textures and building costs for the Castle Building Tpe
      *
      */
     public void initialiseCastle() {
-        List<String> castleCentreTextures = new ArrayList<String>();
-
-        castleCentreTextures.add("castle_0");
-        castleCentreTextures.add("castle_90");
-        castleCentreTextures.add("castle_180");
-        castleCentreTextures.add("castle_270");
-
         buildingCost = new HashMap<>();
         buildingCost.put("Wood", 20);
         buildingCost.put("Stone",10);
         buildingCost.put("Metal",5);
+    }
+
+    public List<String> initialiseCastleTextures() {
+        List<String> castleTextures = new ArrayList<>();
+        castleTextures.add("castle_0");
+        castleTextures.add("castle_90");
+        castleTextures.add("castle_180");
+        castleTextures.add("castle_270");
+        return castleTextures;
     }
 
     /**
@@ -132,34 +146,40 @@ public enum BuildingType {
      *
      */
     public void initialiseSafeHouse() {
-        List<String> safeHouseTextures = new ArrayList<String>();
-        safeHouseTextures.add("safe_house_0");
-        safeHouseTextures.add("safe_house_90");
-        safeHouseTextures.add("safe_house_180");
-        safeHouseTextures.add("safe_house_270");
-
         buildingCost = new HashMap<>();
         buildingCost.put("Wood", 10);
         buildingCost.put("Stone",5);
         buildingCost.put("Metal",2);
     }
 
+    public List<String> initialiseSafeHouseTextures() {
+        List<String> safeHouseTextures = new ArrayList<>();
+        safeHouseTextures.add("safe_house_0");
+        safeHouseTextures.add("safe_house_90");
+        safeHouseTextures.add("safe_house_180");
+        safeHouseTextures.add("safe_house_270");
+        return safeHouseTextures;
+    }
+
+
     /**
      * Initialises the textures and building costs for the Watch tower Building Tpe
      *
      */
     public void initialiseWatchTower() {
-        List<String> watchTowerTextures = new ArrayList<String>();
-
-        watchTowerTextures.add("watchtower_0");
-        watchTowerTextures.add("watchtower_90");
-        watchTowerTextures.add("watchtower_180");
-        watchTowerTextures.add("watchtower_270");
-
         buildingCost = new HashMap<>();
         buildingCost.put("Wood", 10);
         buildingCost.put("Stone",7);
         buildingCost.put("Metal",3);
+    }
+
+    public List<String> initialiseWatchTowerTextures() {
+        List<String> watchTowerTextures = new ArrayList<String>();
+        watchTowerTextures.add("watchtower_0");
+        watchTowerTextures.add("watchtower_90");
+        watchTowerTextures.add("watchtower_180");
+        watchTowerTextures.add("watchtower_270");
+        return watchTowerTextures;
     }
 
     /**
@@ -167,6 +187,11 @@ public enum BuildingType {
      *
      */
     public void initialiseFence() {
+        buildingCost = new HashMap<>();
+        buildingCost.put("Wood", 2);
+    }
+
+    public List<String> initialiseFenceTextures() {
         List<String> fenceTextures = new ArrayList<String>();
 
         fenceTextures.add("fenceN-S");
@@ -180,8 +205,7 @@ public enum BuildingType {
         fenceTextures.add("fenceSE-SW");
         fenceTextures.add("fenceNW-S");
 
-        buildingCost = new HashMap<>();
-        buildingCost.put("Wood", 2);
+        return fenceTextures; 
     }
 
     /**
