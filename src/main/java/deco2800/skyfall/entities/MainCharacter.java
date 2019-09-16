@@ -1,15 +1,7 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.audio.Sound;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.spells.SpellFactory;
-
-import deco2800.skyfall.buildings.BuildingType;
-import deco2800.skyfall.entities.spells.SpellFactory;
-import deco2800.skyfall.entities.weapons.Sword;
-import deco2800.skyfall.entities.weapons.Weapon;
-
-import deco2800.skyfall.entities.worlditems.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.Vector2;
 import deco2800.skyfall.GameScreen;
@@ -248,12 +240,6 @@ public class MainCharacter extends Peon
 
         HexVector position = this.getPosition();
 
-        /*        //Spawn projectile in front of character for now.
-        this.hitBox = new Projectile("slash",
-                "test hitbox",
-                position.getCol() + 1,
-                position.getRow(),
-                1, 1);*/
 
         isSprinting = false;
         equipped = "no_weapon";
@@ -653,13 +639,12 @@ public class MainCharacter extends Peon
 
     private void checkIfRecovered() {
         recoverTime += 20;
-        logger.info("Character recovering");
         recoverTime += 20;
 
         this.changeCollideability(false);
 
         if (recoverTime > 2000) {
-            System.out.println("Recovered");
+            logger.info("Recovered");
             setRecovering(false);
             changeCollideability(true);
         }

@@ -1,8 +1,6 @@
 package deco2800.skyfall.buildings;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.google.gson.annotations.Expose;
-import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.worlds.world.World;
 import org.slf4j.Logger;

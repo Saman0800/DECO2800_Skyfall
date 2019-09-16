@@ -5,28 +5,24 @@ import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.Harvestable;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.Spider;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.world.World;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class Whitebear extends AbstractPet implements Animatable, Item {
     MainCharacter mc;
-    private boolean isOutSide=false;
-    private boolean isOnTheWay=false;
+    private boolean isOutSide = false;
+    private boolean isOnTheWay = false;
+    private final String textureName = "whitebear";
+    private Direction movingDirection;
+
     public Whitebear(float col, float row, MainCharacter mc){
         super(col, row);
-        this.setTexture("whitebear");
-        this.setObjectName("whitebear");
+        this.setTexture(textureName);
+        this.setObjectName(textureName);
         this.setHeight(1);
         this.setHealth(10);
         this.setLevel(1);
@@ -71,17 +67,16 @@ public class Whitebear extends AbstractPet implements Animatable, Item {
     }
 
 
-    private HexVector destination = null;
-    private Direction movingDirection;
-    private boolean complete = false;
+
     public void followingCharacter(){
         setCurrentState(AnimationRole.MOVE);
         if(this.getDomesticated()){
             if(!isOnTheWay){
-                destination = new HexVector(mc.getCol()-1, mc.getRow()-1);
+                HexVector destination = new HexVector(mc.getCol() - 1, mc.getRow() - 1);
                 setCurrentDirection(movementDirection(this.position.getAngle()));
                 this.position.moveToward(destination, this.getSpeed());
                 //when the pet arrive then make it face to the player
+                boolean complete = false;
                 if (destination.getCol() == this.getCol() && destination.getRow() == this.getRow()) {
                     complete = true;
                     if (movingDirection == Direction.NORTH_EAST) {
@@ -157,7 +152,7 @@ public class Whitebear extends AbstractPet implements Animatable, Item {
 
     @Override
     public String getName() {
-        return "whitebear";
+        return textureName;
     }
 
     @Override

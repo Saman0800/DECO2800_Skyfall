@@ -34,7 +34,7 @@ public class GameMenuBar extends AbstractUIElement {
      */
     @Override
     public void updatePosition() {
-
+        //TODO : make menu bar scale with window size;
     }
 
     /**
