@@ -10,5 +10,6 @@ public enum AnimationRole {
     ATTACK,
     HURT,
     DEAD,
+    STILL,
     NULL
 }

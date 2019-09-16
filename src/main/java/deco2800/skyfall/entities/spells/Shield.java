@@ -1,15 +1,21 @@
 package deco2800.skyfall.entities.spells;
 
+import deco2800.skyfall.animation.Animatable;
+import deco2800.skyfall.animation.AnimationLinker;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.util.HexVector;
 
-public class Shield extends Spell {
+public class Shield extends Spell implements Animatable {
 
 
     //Keep a reference to the maincharacter so this spell can stay on it's position.
     protected MainCharacter mc;
+
+    private int shieldTime = 0;
 
     /**
      * Construct a new spell.
@@ -30,22 +36,43 @@ public class Shield extends Spell {
 
         //Shield must stay in place on the player.
         this.range = 0;
+        this.speed = 0;
         this.manaCost = 30;
         this.mc = GameManager.getManagerFromInstance(GameMenuManager.class).getMainCharacter();
         if (this.mc != null) {
             this.mc.setInvincible(true);
         }
+        setCurrentState(AnimationRole.STILL);
     }
 
     @Override
     public void onTick(long tick) {
         super.onTick(tick);
         this.setPosition(this.mc.getCol(),this.mc.getRow(),this.mc.getHeight());
+
+        if (shieldTime < 80) {
+            shieldTime += 20;
+            setCurrentState(AnimationRole.ATTACK);
+        } else {
+            setCurrentState(AnimationRole.STILL);
+        }
     }
 
     @Override
     public void destroy() {
         this.mc.setInvincible(false);
         super.destroy();
+    }
+
+    @Override
+    public void configureAnimations() {
+        // Shield spell animation
+        addAnimations(AnimationRole.ATTACK, Direction.DEFAULT,
+                new AnimationLinker("Spells_Shield_Anim",
+                        AnimationRole.ATTACK, Direction.DEFAULT, true, true));
+
+        addAnimations(AnimationRole.STILL, Direction.DEFAULT,
+                new AnimationLinker("Spells_Shield_Still",
+                        AnimationRole.STILL, Direction.DEFAULT, true, true));
     }
 }

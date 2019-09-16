@@ -9,7 +9,7 @@ import deco2800.skyfall.tasks.AbstractTask;
  * The enemy class implements the ICombatEntity interface, allowing it to engage in combat
  * with other combat entities.
  */
-public class Enemy extends AgentEntity implements ICombatEntity {
+public class Enemy extends EnemyEntity implements ICombatEntity {
 
     /**
      * The task this Enemy is set to perform.
@@ -55,7 +55,7 @@ public class Enemy extends AgentEntity implements ICombatEntity {
     public Enemy(float col, float row, String texture, int damage, int health,
                  int armour) {
 
-        super(col, row, 2, 0.2f);
+        super(col, row);
 
         this.damage = damage;
         this.health = health;

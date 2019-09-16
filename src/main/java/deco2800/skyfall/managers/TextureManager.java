@@ -56,8 +56,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("melee_test", new Texture("resources/punch.png"));
             textureMap.put("camel", new Texture("resources/camel/camel-face(no-player).png"));
             textureMap.put("camel_character", new Texture("resources/camel/camel-withplayer1(left).png"));
-            textureMap.put("horse", new Texture("resources/horse/horse-left-walk1.png"));
-            textureMap.put("horse_character", new Texture("resources/horse/horse-left-walk-with-player1.png"));
+            textureMap.put("horse", new Texture("resources/horse_images/horse-left-walk1.png"));
+            textureMap.put("horse_character", new Texture("resources/horse_images/horse-left-walk-with-player1.png"));
 
             // Tile textures
             // Goes through all the folders with tile_textures and adds the tile name to the
@@ -292,6 +292,14 @@ public class TextureManager extends AbstractManager {
 
             // Main character Dead animation
             textureMap.put("MainCharacter_Dead_E_Anim", new Texture("resources/Main_Character_Dead_E.png"));
+            textureMap.put("MainCharacter_Dead_E_Still", new Texture("resources/Main_Character_Dead_E_3.png"));
+
+            // Spells
+            textureMap.put("spells_fire_Anim", new Texture("resources/spells/fire_spritesheet.png"));
+            textureMap.put("spells_shield_Anim", new Texture("resources/spells/shield_spritesheet.png"));
+            textureMap.put("spells_shield_Still", new Texture("resources/spells/shield_3.png"));
+            textureMap.put("spells_tornado_Anim", new Texture("resources/spells/tornado_spritesheet.png"));
+
 
             System.out.println("ALL TEXTURES LOADED SUCCESSFULLY");
 
@@ -319,7 +327,7 @@ public class TextureManager extends AbstractManager {
 
     /**
      * Used for testing only.
-     * 
+     *
      * @param test
      */
     public TextureManager(boolean test) {
@@ -384,7 +392,7 @@ public class TextureManager extends AbstractManager {
 
     /**
      * Gets a texture from an animation.
-     * 
+     *
      * @param id               The string id of the form
      *                         __ANIMATION_<animation_name>:<index>
      * @param animationManager The animation manager

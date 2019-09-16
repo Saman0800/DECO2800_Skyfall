@@ -21,19 +21,19 @@ public class SpellFactory {
         Spell spell = null;
 
         if(spellType.equals(SpellType.FLAME_WALL)){
-            spell = new FlameWall(mousePosition, "flame_wall_placeholder",
+            spell = new FlameWall(mousePosition, "__ANIMATION_Spells_Fire_Anim:0",
                     "spell", mousePosition.getCol(), mousePosition.getRow(),
                     1,
                     0.1f,
                     0);
         } else if(spellType.equals(SpellType.SHIELD)){
-            spell = new Shield(mousePosition, "shield_placeholder",
+            spell = new Shield(mousePosition, "__ANIMATION_Spells_Shield_Anim:0",
                     "shield_spell", mousePosition.getCol(), mousePosition.getRow(),
                     1,
                     0.1f,
                     0);
         } else if(spellType.equals(SpellType.TORNADO)){
-            spell = new Tornado(mousePosition, "tornado_placeholder",
+            spell = new Tornado(mousePosition, "__ANIMATION_Spells_Tornado_Anim:0",
                     "spell", mousePosition.getCol(), mousePosition.getRow(),
                     20,
                     0.1f,

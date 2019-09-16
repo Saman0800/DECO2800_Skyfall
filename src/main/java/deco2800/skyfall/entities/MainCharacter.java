@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.physics.box2d.MassData;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.worlditems.*;
@@ -415,7 +416,7 @@ public class MainCharacter extends Peon
      */
     private void castSpell(HexVector mousePosition, SpellType spellType) {
 
-        //Unselect the spell.
+        // Unselect the spell.
         this.spellSelected = SpellType.NONE;
 
         //Create the spell using the factory.
@@ -551,7 +552,7 @@ public class MainCharacter extends Peon
             this.healthBar.update();
         }
 
-        logger.info("Hurted: " + isRecovering);
+        logger.info("Hurted: " + isHurt);
 
         if (!isRecovering) {
             setHurt(true);
@@ -567,7 +568,7 @@ public class MainCharacter extends Peon
             } else {
                 hurtTime = 0;
                 recoverTime = 0;
-                HexVector bounceBack = new HexVector();
+                HexVector bounceBack = new HexVector(position.getCol(), position.getRow() - 2);
 
                 switch (getPlayerDirectionCardinal()) {
                     case "North":
@@ -1507,6 +1508,11 @@ public class MainCharacter extends Peon
         addAnimations(AnimationRole.DEAD, Direction.DEFAULT,
                 new AnimationLinker("MainCharacter_Dead_E_Anim",
                         AnimationRole.DEAD, Direction.DEFAULT, false, true));
+
+        // Dead animation
+        addAnimations(AnimationRole.STILL, Direction.DEFAULT,
+                new AnimationLinker("MainCharacter_Dead_E_Still",
+                        AnimationRole.STILL, Direction.DEFAULT, false, true));
     }
 
     /**
@@ -1545,7 +1551,7 @@ public class MainCharacter extends Peon
             if (getToBeRun().getType() == AnimationRole.ATTACK) {
                 return;
             } else if (getToBeRun().getType() == AnimationRole.DEAD) {
-                return;
+                setCurrentState(AnimationRole.STILL);
             }
         }
 
