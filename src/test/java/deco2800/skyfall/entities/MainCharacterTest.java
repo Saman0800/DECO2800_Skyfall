@@ -21,6 +21,7 @@ import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
 
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -41,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
@@ -61,9 +63,6 @@ public class MainCharacterTest {
     private World w = null;
     @Mock
     private GameManager mockGM;
-
-
-
 
     private PhysicsManager physics;
 
@@ -529,6 +528,9 @@ public class MainCharacterTest {
 
        HexVector pos = new HexVector();
 
+       // Save the players position before attacking
+       HexVector player_pos = new HexVector(testCharacter.getPosition().getRow(), testCharacter.getPosition().getCol());
+
         GameManager gm = GameManager.get();
         World world = mock(World.class);
         gm.setWorld(world);
@@ -541,6 +543,11 @@ public class MainCharacterTest {
         testCharacter.attack(pos);
         assertTrue(gm.getWorld().getEntities().stream().anyMatch(e -> e instanceof Spell));
         Assert.assertEquals(this.testCharacter.spellSelected,SpellType.NONE);
+
+        w.onTick(100);
+
+        // Check if the player's position has remained the same and thus they aren't colliding
+        Assert.assertTrue(player_pos.equals(testCharacter.getPosition()));
     }
 
     @Test
@@ -553,6 +560,30 @@ public class MainCharacterTest {
         this.testCharacter.switchItem(10);
         Assert.assertEquals(this.testCharacter.getItemSlotSelected(),3);
 
+    }
+
+    @Test
+    /**
+     * Checks to see if the player is actually colliding with entities
+     */
+    public void MainCharacterCollisionTest() {
+        GameManager gm = GameManager.get();
+        World world = mock(World.class);
+        gm.setWorld(world);
+
+        world.addEntity(testCharacter);
+
+        testCharacter.setPosition(123.f, 234.f, 0);
+
+        HexVector old_pos = new HexVector(testCharacter.getPosition().getRow(), testCharacter.getPosition().getCol());
+
+        world.addEntity(new Treeman(old_pos.getRow() + 0.1f, old_pos.getCol() + 0.1f));
+
+        for (int i = 0; i < 100; ++i) {
+            world.onTick(100);
+        }
+
+        assertFalse(testCharacter.getPosition().getRow() == old_pos.getRow() && testCharacter.getPosition().getCol() == old_pos.getCol());
     }
     
     @After
