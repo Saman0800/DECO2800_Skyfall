@@ -819,8 +819,16 @@ public class MainCharacter extends Peon
 
             //Check we have permission to build
             if(GameManager.getManagerFromInstance(ConstructionManager.class).getStatus() == 1) {
-                System.out.println(clickedPosition[0]);
-                System.out.println(clickedPosition[1]);
+            //    System.out.println(clickedPosition[0]);
+            //    System.out.println(clickedPosition[1]);
+                //cheking inventories
+            //    if (GameManager.getManagerFromInstance(ConstructionManager.class).invCheck(inventories)){
+            //        GameManager.getManagerFromInstance(ConstructionManager.class).build(GameManager.get().getWorld(),clickedPosition[0], clickedPosition[1]);
+            //    }
+
+                // REMOVE THE INVENTORIES
+                    //    buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
+                    //    invRemove(buildingToBePlaced,GameManager.getManagerFromInstance(InventoryManager.class));
                 GameManager.getManagerFromInstance(ConstructionManager.class).build(GameManager.get().getWorld(),
                         (int)clickedPosition[0], (int)clickedPosition[1]);
             }

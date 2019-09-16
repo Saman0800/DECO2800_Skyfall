@@ -297,16 +297,16 @@ public class ConstructionManager extends TickableManager {
      * @param x - x coordinate
      * @param y - y coordinate
      */
-    public void build(World world, int x, int y) {
-        BuildingEntity buildingToBePlaced = selectBuilding(buildingID, x, y);
-        //buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
+    public void build(World world, float x, float y) {
+        buildingToBePlaced = selectBuilding(buildingID, x, y);
+        buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
         //Permissions
-        if (invCheck(buildingToBePlaced, GameManager.getManagerFromInstance(InventoryManager.class))){
-            buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
-            invRemove(buildingToBePlaced,GameManager.getManagerFromInstance(InventoryManager.class));
-        } else {
+        //if (invCheck(buildingToBePlaced, GameManager.getManagerFromInstance(InventoryManager.class))){
+        //    buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
+        //    invRemove(buildingToBePlaced,GameManager.getManagerFromInstance(InventoryManager.class));
+        //} else {
             //TODO: User does not have enough materials.
-        }
+        //}
         setNull();
     }
 
@@ -528,13 +528,39 @@ public class ConstructionManager extends TickableManager {
      * return a list of how much of each relevant resources the player owns
      * When given a structure class gets its cost and compares it to the players inventory
      *
-     * @param building         - Building
+     * //@param buildingID         - Building
      * @param inventoryManager - player's inventory
      * @return True, if the player's inventory meets the inventory requirements, otherwise false
      */
-    public Boolean invCheck(BuildingEntity building, InventoryManager inventoryManager) {
+    public Boolean invCheck( InventoryManager inventoryManager) {
 
-        Map<String, Integer> buildingCost = building.getCost();
+        Map<String, Integer> buildingCost;
+
+        switch (buildingID){
+            case 0:
+                buildingCost = BuildingType.CABIN.getBuildCost();
+                break;
+            case 1:
+                buildingCost = BuildingType.STORAGE_UNIT.getBuildCost();
+                break;
+            case 2:
+                buildingCost = BuildingType.TOWNCENTRE.getBuildCost();
+                break;
+            case 3:
+                buildingCost = BuildingType.FENCE.getBuildCost();
+                break;
+            case 4:
+                buildingCost = BuildingType.SAFEHOUSE.getBuildCost();
+                break;
+            case 5:
+                buildingCost = BuildingType.WATCHTOWER.getBuildCost();
+                break;
+            case 6:
+                buildingCost = BuildingType.CASTLE.getBuildCost();
+                break;
+            default:
+                return null;
+        }
 
         for (Map.Entry<String, Integer> entry : buildingCost.entrySet()) {
 
@@ -585,6 +611,15 @@ public class ConstructionManager extends TickableManager {
      */
     public void setBuildingToBePlaced (BuildingEntity building){
         buildingToBePlaced = building;
+    }
+
+    /**
+     * Gets the building to be placed
+     * @return building to be placed - the building to change to
+     *
+     */
+    public BuildingEntity getBuildingToBePlaced (){
+        return buildingToBePlaced;
     }
 
     // End of inventory code
