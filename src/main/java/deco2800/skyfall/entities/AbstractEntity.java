@@ -458,6 +458,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 			//fixture = body.createFixture(fixtureDef);
 			//fixture.setSensor(!isCollidable);
 		}catch (NullPointerException e){
+		    log.warn("Failed to load custom hit box");
 			defineFixture();
 		}
 	}

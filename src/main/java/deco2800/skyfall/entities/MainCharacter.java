@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import deco2800.skyfall.buildings.BuildingFactory;
@@ -117,6 +118,9 @@ public class MainCharacter extends Peon
     private boolean isMoving;
     private boolean canSwim;
     private boolean isSprinting;
+
+    //Is the camera locked onto the main character
+    private boolean cameraLock = true;
 
     /*
         What stage of the game is the player on? Controls what blueprints
@@ -242,7 +246,6 @@ public class MainCharacter extends Peon
         HexVector position = this.getPosition();
 
 
-
         // Sets the filters so that MainCharacter doesn't collide with projectile.
         for (Fixture fix : getBody().getFixtureList()) {
             Filter filter = fix.getFilterData();
@@ -317,38 +320,40 @@ public class MainCharacter extends Peon
 
     /**
      * Sets the player's equipped item
+     *
      * @param item the item to equip
      */
-    public void setEquippedItem(Item item){
+    public void setEquippedItem(Item item) {
         this.equippedItem = item;
     }
 
     /**
      * Returns the players equipped item
+     *
      * @return Item object that player is equipped with
      */
-    public Item getEquippedItem (){
+    public Item getEquippedItem() {
         return equippedItem;
     }
 
     /**
      * Gets pestManager
+     *
      * @return
      */
-    public PetsManager getPetsManager(){
+    public PetsManager getPetsManager() {
         return this.petsManager;
     }
 
     /**
      * Returns string of players equipped item, or "No item equipped" if equippedItem == null
+     *
      * @return String of equipped item
      */
-    public String displayEquippedItem(){
-        if(equippedItem != null){
+    public String displayEquippedItem() {
+        if (equippedItem != null) {
             return equippedItem.toString();
-        }
-
-        else{
+        } else {
             return "No item equipped";
         }
     }
@@ -356,8 +361,8 @@ public class MainCharacter extends Peon
     /**
      * Use the function of equipped item
      */
-    public void useEquipped(){
-        if(equippedItem != null){
+    public void useEquipped() {
+        if (equippedItem != null) {
             equippedItem.use(this.getPosition());
         }
         //else: collect nearby resources
@@ -543,6 +548,7 @@ public class MainCharacter extends Peon
 
     /**
      * Attempts to drop given item from inventory
+     *
      * @param item item to be dropped from inventory
      */
     public void dropInventory(String item) {
@@ -681,7 +687,6 @@ public class MainCharacter extends Peon
     }
 
     /**
-     *
      * @param isHurt the player's "hurt" status
      */
     public void setHurt(boolean isHurt) {
@@ -824,11 +829,11 @@ public class MainCharacter extends Peon
             float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 
             //Check we have permission to build
-            if(GameManager.getManagerFromInstance(ConstructionManager.class).getStatus() == 1) {
+            if (GameManager.getManagerFromInstance(ConstructionManager.class).getStatus() == 1) {
                 System.out.println(clickedPosition[0]);
                 System.out.println(clickedPosition[1]);
                 GameManager.getManagerFromInstance(ConstructionManager.class).build(GameManager.get().getWorld(),
-                        (int)clickedPosition[0], (int)clickedPosition[1]);
+                        (int) clickedPosition[0], (int) clickedPosition[1]);
             }
         }
 
@@ -849,6 +854,7 @@ public class MainCharacter extends Peon
     public void onTick(long i) {
         this.updatePosition();
         this.movementSound();
+        this.centreCameraAuto();
 
         //this.setCurrentSpeed(this.direction.len());
         //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
@@ -898,7 +904,9 @@ public class MainCharacter extends Peon
     private void setCurrentSpeed(float cSpeed) {
         this.currentSpeed = cSpeed;
     }
+
     boolean petout = false;
+
     /**
      * Sets the appropriate movement flags to true on keyDown
      *
@@ -932,7 +940,7 @@ public class MainCharacter extends Peon
                 maxSpeed *= 2.f;
                 break;
             case Input.Keys.SPACE:
-                if(this.equippedItem != null){
+                if (this.equippedItem != null) {
                     useEquipped();
                 }
                 break;
@@ -950,6 +958,12 @@ public class MainCharacter extends Peon
                 break;
             case Input.Keys.C:
                 selectSpell(SpellType.TORNADO);
+                break;
+            case Input.Keys.L:
+                toggleCameraLock();
+                break;
+            case Input.Keys.K:
+                centreCameraManual();
                 break;
             default:
                 switchItem(keycode);
@@ -1008,6 +1022,7 @@ public class MainCharacter extends Peon
 
     /**
      * Adds a piece of gold to the Gold Pouch
+     *
      * @Param gold The piece of gold to be added to the pouch
      * @Param count How many of that piece of gold should be added
      */
@@ -1043,11 +1058,12 @@ public class MainCharacter extends Peon
 
     /**
      * Gets the tile at a position.
+     *
      * @param xPos The x position
      * @param yPos The y position
      * @return The Tile at that position
      */
-    public Tile getTile ( float xPos, float yPos){
+    public Tile getTile(float xPos, float yPos) {
         //Returns tile at left arm (our perspective) of the player
         float tileCol = (float) Math.round(xPos);
         float tileRow = (float) Math.round(yPos);
@@ -1364,7 +1380,7 @@ public class MainCharacter extends Peon
 
     public List<Blueprint> getUnlockedBlueprints() {
         List<Blueprint> unlocked = new ArrayList<>();
-        switch(gameStage) {
+        switch (gameStage) {
             case GRAVEYARD:
                 // e.g. unlocked.add(new Spaceship())
                 // fall through
@@ -1593,6 +1609,38 @@ public class MainCharacter extends Peon
 
     }
 
+    /**
+     * Toggles if the camera should follow the player
+     */
+    private void toggleCameraLock() {
+        if (!cameraLock) {
+            cameraLock = true;
+            centreCameraManual();
+        } else {
+            cameraLock = false;
+        }
+    }
+
+    /**
+     * Centres the camera onto the player
+     * Designed to called on a loop
+     */
+    private void centreCameraAuto() {
+        if (cameraLock) {
+            float[] coords = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
+            GameManager.get().getCamera().position.set(coords[0], coords[1], 0);
+
+        }
+    }
+
+    /**
+     * Centres the camera onto the player
+     * Not supposed to be called on a loop
+     */
+    private void centreCameraManual() {
+        float[] coords = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
+        GameManager.get().getCamera().position.set(coords[0], coords[1], 0);
+    }
 
 }
 
