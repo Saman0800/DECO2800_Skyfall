@@ -54,6 +54,15 @@ public class DataBaseConnector {
         }
     }
 
+
+    /**
+     * Gets the database connection
+     * @return The database connection
+     */
+    public Connection getConnection() {
+        return connection;
+    }
+
     /**
      * Creates the table if they do not already exist
      * @throws SQLException If an sqlexception occurs when creating the tables
