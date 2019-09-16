@@ -44,7 +44,12 @@ public class AnimationManager extends AbstractManager {
         this.generateAnimationObject("mario_left",
                 "mario_left", 100, 138, DEFAULT_FRAME_RATE);
 
-
+        this.generateAnimationObject("whitebearNE","resources/whitebearright/whitebearright.atlas",0.05f);
+        this.generateAnimationObject("whitebearN","resources/whitebearback/whitebearback.atlas",0.05f);
+        this.generateAnimationObject("whitebearNW","resources/whitebearleft/whitebearleft.atlas",0.05f);
+        this.generateAnimationObject("whitebearS","resources/whitebearfront/whitebearfront.atlas",0.05f);
+        this.generateAnimationObject("whitebearSW","resources/whitebearleft/whitebearleft.atlas",0.05f);
+        this.generateAnimationObject("whitebearSE","resources/whitebearright/whitebearright.atlas",0.05f);
         this.generateAnimationObject("spider_defence","resources/spiderSheet/SpiderAnimation.atlas",DEFAULT_FRAME_RATE);
         this.generateAnimationObject("robot_defence","resources/robotSheet/robotAnimation.atlas",DEFAULT_FRAME_RATE);
         this.generateAnimationObject("stoneJNE","resources/EnemyAnimationPacked/northEastJump/stoneJNE.atlas",0.2f);
