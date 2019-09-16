@@ -169,8 +169,8 @@ public class World implements TouchDownObserver , Serializable, SaveLoadInterfac
 
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
 
-        // TODO Is this the best way of doing this?
-        getTile(0,0).setObstructed(true);
+        // This does not work because it forces a chunk to be generated before the world is properly initialised.
+        // getTile(0,0).setObstructed(true);
     }
 
     /**
