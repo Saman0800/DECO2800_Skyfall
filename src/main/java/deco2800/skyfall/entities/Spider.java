@@ -149,9 +149,9 @@ public class Spider extends EnemyEntity implements Animatable {
     }
 
     @Override
-    public void dealDamage(MainCharacter player) {
-        if (!player.isRecovering()) {
-            player.hurt(getDamage());
+    public void dealDamage(ICombatEntity entity) {
+        if (entity.canDealDamage()) {
+            entity.dealDamage(entity);
         }
     }
 }

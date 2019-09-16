@@ -289,9 +289,7 @@ public class GameMenuManager extends TickableManager {
                 null, textureManager, this, sm, skin));
 
         popUps.put("gameOverTable", new GameOverTable(stage,
-                null,
-                null, textureManager, this,
-                skin));
+                null, null, textureManager, this, skin));
 
         popUps.put("blueprintShopTable", new BlueprintShopTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),

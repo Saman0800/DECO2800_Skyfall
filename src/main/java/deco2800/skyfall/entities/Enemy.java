@@ -128,8 +128,10 @@ public class Enemy extends EnemyEntity implements ICombatEntity {
     }
 
     @Override
-    public void dealDamage(MainCharacter player) {
-
+    public void dealDamage(ICombatEntity entity) {
+        if (entity.canDealDamage()) {
+            entity.dealDamage(entity);
+        }
     }
 
     /**

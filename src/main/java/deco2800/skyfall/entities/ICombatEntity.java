@@ -14,7 +14,7 @@ public interface ICombatEntity extends HasHealth {
     /**
      * Deal damage to another ICombatEntity so damage calculation can be applied.
      */
-    void dealDamage(MainCharacter player);
+    void dealDamage(ICombatEntity entity);
 
     /**
      * Some combat entities will only be able to be attacked.

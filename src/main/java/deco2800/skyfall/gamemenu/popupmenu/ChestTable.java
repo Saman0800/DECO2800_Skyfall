@@ -15,12 +15,25 @@ import java.util.Map;
 
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
+/**
+ * A class for chest table pop up.
+ */
 public class ChestTable extends AbstractPopUpElement{
     private final Skin skin;
     private final StatisticsManager sm;
     private Table chestTable;
     private Table resourcePanel;
 
+    /**
+     * Constructs a chest table.
+     *
+     * @param stage Current stage.
+     * @param exit Exit button if it has one.
+     * @param textureNames Names of the textures.
+     * @param tm Current texture manager.
+     * @param gameMenuManager Current game menu manager.
+     * @param skin Current skin.
+     */
     public ChestTable(Stage stage, ImageButton exit, String[] textureNames,
                          TextureManager tm, GameMenuManager gameMenuManager,
                       StatisticsManager sm, Skin skin) {
@@ -30,20 +43,27 @@ public class ChestTable extends AbstractPopUpElement{
         this.sm = sm;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void hide() {
         super.hide();
-//        System.out.println("Hiding chest table");
         chestTable.setVisible(false);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void show() {
         super.show();
-//        System.out.println("Showing chest table");
         chestTable.setVisible(true);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updatePosition() {
         super.updatePosition();
@@ -53,6 +73,11 @@ public class ChestTable extends AbstractPopUpElement{
         super.update();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * Draw the whole chest table.
+     */
     public void draw() {
         super.draw();
         chestTable = new Table();
@@ -83,6 +108,10 @@ public class ChestTable extends AbstractPopUpElement{
         stage.addActor(chestTable);
     }
 
+    /**
+     * Display the items in the chest and allow the player to 'takeall' said items
+     * @param chest chest to display
+     */
     public void updateChestPanel(Chest chest) {
         resourcePanel.clear();
         resourcePanel.setName("resourcePanel");
