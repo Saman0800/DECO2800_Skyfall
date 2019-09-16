@@ -19,12 +19,12 @@ public class WeaponInventoryIntegrationTest {
      */
     @Before
     public void setup() {
-        mc = new MainCharacter(0f, 0f, 0.05f, "Main Piece", 10);
+        mc = MainCharacter.getInstance(0f, 0f, 0.05f, "Main Piece", 10);
         inventory = new InventoryManager();
-        sword = new Sword(new Tile(0, 0), false);
-        spear = new Spear(new Tile(0, 0), false);
-        bow = new Bow(new Tile(0, 0), false);
-        axe = new Axe(new Tile(0, 0), false);
+        sword = new Sword(new Tile(null, 0, 0), false);
+        spear = new Spear(new Tile(null, 0, 0), false);
+        bow = new Bow(new Tile(null, 0, 0), false);
+        axe = new Axe(new Tile(null, 0, 0), false);
     }
 
     /**

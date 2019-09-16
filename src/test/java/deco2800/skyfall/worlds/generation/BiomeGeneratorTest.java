@@ -56,7 +56,7 @@ public class BiomeGeneratorTest {
 
         for (int i = 0; i < TEST_COUNT; i++) {
             WorldBuilder builder = new WorldBuilder();
-            WorldDirector.constructNBiomeSinglePlayerWorld(builder, 3);
+            WorldDirector.constructNBiomeSinglePlayerWorld(builder, 3, true);
             worlds.add(builder.getWorld());
         }
     }

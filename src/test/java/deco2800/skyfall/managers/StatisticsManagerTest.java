@@ -51,10 +51,10 @@ public class StatisticsManagerTest {
                 2,200,2);
         testEnemy3 = new Enemy(3,3,"stoneRS",
                 3,300,3);
-        sword = new Sword(new Tile(0, 0), false);
-        spear = new Spear(new Tile(0, 0), false);
-        bow = new Bow(new Tile(0, 0), false);
-        axe = new Axe(new Tile(0, 0), false);
+        sword = new Sword(new Tile(null, 0, 0), false);
+        spear = new Spear(new Tile(null, 0, 0), false);
+        bow = new Bow(new Tile(null, 0, 0), false);
+        axe = new Axe(new Tile(null, 0, 0), false);
     }
 
     @After
