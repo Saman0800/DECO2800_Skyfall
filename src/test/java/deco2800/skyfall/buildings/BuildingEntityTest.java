@@ -1,6 +1,7 @@
 package deco2800.skyfall.buildings;
-<<<<<<< HEAD
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.Stone;
@@ -385,6 +386,12 @@ public class BuildingEntityTest {
 
     @Test
     public void cabinInteract() {
+        MainCharacter player = GameManager.getManagerFromInstance(GameMenuManager.class).getMainCharacter();
+        assertEquals(10, player.getHealth());
+        player.changeHealth(-5);
+        assertEquals(5, player.getHealth());
+        buildingEntity.cabinInteract();
+        assertEquals(10, player.getHealth());
     }
 
     @Test
