@@ -191,8 +191,9 @@ public class BuildingWidgets {
             Integer amount = cost.getValue();
             switch (option) {
                 case 0:
-                    //Method inventoryDrop doesn't exist at time of merge.
-                    //inventoryManager.inventoryDropMultiple(resource, amount);
+                    for (int i = 0; i < amount; i++) {
+                        inventoryManager.quickAccessRemove(resource);
+                    }
                     break;
                 case 1:
                     for (int i = 0; i < amount; i++) {
