@@ -2,6 +2,7 @@ package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.HealthResources;
+import deco2800.skyfall.util.HexVector;
 
 public class Aloe_Vera extends HealthResources implements Item {
     // the name of the item
@@ -54,7 +55,12 @@ public class Aloe_Vera extends HealthResources implements Item {
      */
     @Override
     public String getDescription() {
-        return "This item can be used to heal the Main Character.";
+        return "This item can be used to heal" + "\n" + "the Main Character.";
+    }
+
+    @Override
+    public void use(HexVector position){
+
     }
 }
 

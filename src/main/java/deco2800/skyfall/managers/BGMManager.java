@@ -31,6 +31,8 @@ public class BGMManager extends AbstractManager {
     private static final Logger LOGGER =
             LoggerFactory.getLogger(BGMManager.class);
 
+    public static boolean paused = false;
+
     /**
      * Background music constructor
      */
@@ -72,7 +74,7 @@ public class BGMManager extends AbstractManager {
      */
     public static void play()  {
         //Play the clip
-        clip.start();
+            clip.start();
     }
 
     /**

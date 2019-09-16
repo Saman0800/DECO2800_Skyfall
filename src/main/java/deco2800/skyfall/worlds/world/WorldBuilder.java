@@ -5,6 +5,7 @@ import deco2800.skyfall.managers.ChestManager;
 import deco2800.skyfall.resources.LootRarity;
 import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.entities.worlditems.*;
+import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
@@ -158,6 +159,35 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
 
     /**
+     * Spawn a specified number of chests into the world
+     * @param num number of chests to spawn
+     * @param startTile
+     * @param biome
+     * @param world
+     */
+    public void spawnChests(int num, Tile startTile, AbstractBiome biome, World world) {
+        // Spawn chests
+        Random random = new Random();
+        for (int i = 0; i < num; i++) {
+            Chest chest = new Chest(startTile, true, ChestManager.generateRandomLoot(random.nextInt(10) + 5, LootRarity.LEGENDARY));
+            EntitySpawnRule chestRule = new EntitySpawnRule(0.04, 0, 1, biome);
+            EntitySpawnTable.spawnEntities(chest, chestRule, world);
+        }
+    }
+
+    /**
+     * Spawns a blueprint shop in the world
+     * @param startTile
+     * @param biome
+     * @param world
+     */
+    public void spawnBlueprintShop(Tile startTile, AbstractBiome biome, World world) {
+        BlueprintShop blueprintShop = new BlueprintShop(startTile, true);
+        EntitySpawnRule chestRule = new EntitySpawnRule(0.04, 0, 1, biome);
+        EntitySpawnTable.spawnEntities(blueprintShop, chestRule, world);
+    }
+
+    /**
      * Generates the static entities in a world
      *
      * @param world The world that will get static entities
@@ -181,6 +211,8 @@ public class WorldBuilder implements WorldBuilderInterface {
         for (AbstractBiome biome : world.getBiomes()) {
             switch (biome.getBiomeName()) {
                 case "forest":
+                    // spawn a shop for blueprints
+                    spawnBlueprintShop(startTile, biome, world);
 
                     // Spawn some swords
                     Weapon startSword = new Sword(startTile, true);
@@ -212,6 +244,24 @@ public class WorldBuilder implements WorldBuilderInterface {
 
                     spawnChests(10, startTile, biome, world);
 
+                    // create a loop to generate different coin values
+                    for (int i = 0; i < 4; i++){
+                        int goldValue = 5;
+                        if (i == 1){
+                            goldValue = 10;
+                        }
+                        if (i == 2){
+                            goldValue = 50;
+                        }
+                        if (i == 3){
+                            goldValue = 100;
+                        }
+                        // Spawn gold pieces uniformly
+                        GoldPiece startGoldPiece = new GoldPiece(startTile, true, goldValue);
+                        EntitySpawnRule goldRule = new EntitySpawnRule(0.15 - (goldValue/1000), 10, 50, biome);
+                        EntitySpawnTable.spawnEntities(startGoldPiece, goldRule, world);
+                    }
+
                     ForestMushroom startMushroom = new ForestMushroom(startTile, false);
                     // This generator will cause the mushrooms to clump togteher more
                     NoiseGenerator mushroomGen = new NoiseGenerator(new Random(worldSeed), 10, 20, 0.9);
@@ -222,6 +272,8 @@ public class WorldBuilder implements WorldBuilderInterface {
                     break;
 
                 case "mountain":
+                    // spawn a shop for blueprints
+                    spawnBlueprintShop(startTile, biome, world);
 
                     // Spawn some spears
                     Weapon startSpear = new Spear(startTile, true);
@@ -251,6 +303,9 @@ public class WorldBuilder implements WorldBuilderInterface {
                     break;
 
                 case "desert":
+
+                    // spawn a shop for blueprints
+                    spawnBlueprintShop(startTile, biome, world);
 
                     DetectSand sand = new DetectSand(biome);
                     sand.putCharacter();
@@ -300,16 +355,6 @@ public class WorldBuilder implements WorldBuilderInterface {
         }
     }
 
-    public void spawnChests(int num, Tile startTile, AbstractBiome biome, World world) {
-        // Spawn chests
-        Random random = new Random();
-        for (int i = 0; i < num; i++) {
-            Chest chest = new Chest(startTile, true,
-                    ChestManager.generateRandomLoot(random.nextInt(10) + 5, LootRarity.LEGENDARY));
-            EntitySpawnRule chestRule = new EntitySpawnRule(0.04, 0, 1, biome);
-            EntitySpawnTable.spawnEntities(chest, chestRule, world);
-        }
-    }
 
     /**
      * Creates a world based on the values set in the builder

@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * An chest entity that spawns in the game.
+ */
 public class Chest extends StaticEntity implements HasHealth {
     private int health = 100;
     private static final String ENTITY_ID_STRING = "chestClosed";
@@ -15,8 +18,15 @@ public class Chest extends StaticEntity implements HasHealth {
     // TODO Remove this and replace the Random instance with the seeded Random as a
     // parameter.
 
+    // The chest to be stored
     private ChestManager manager;
 
+    /**
+     * Constructs a chest to be put into the game
+     * @param tile tile to place chest on
+     * @param obstructed does the chest obstruct the player's movement?
+     * @param contents contents of the chest
+     */
     public Chest(Tile tile, boolean obstructed, Map<String, List<Item>> contents) {
         super(tile, 2, ENTITY_ID_STRING, obstructed);
         this.manager = new ChestManager(contents);
@@ -47,7 +57,7 @@ public class Chest extends StaticEntity implements HasHealth {
      */
     @Override
     public Chest newInstance(Tile tile) {
-        return new Chest(tile, this.isObstructed(), manager.getInventoryContents());
+        return new Chest(tile, this.isObstructed(), manager.getContents());
     }
 
     public ChestManager getManager() {

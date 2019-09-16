@@ -26,7 +26,7 @@ public class ShaderWrapper {
 
     //used for counting number of light points allocated
     int pointLightCount = 0;
-    //used for final pointLight debuging
+    //used for final pointLight debugging
     int finalPointLightCount = 0;
 
     /**
