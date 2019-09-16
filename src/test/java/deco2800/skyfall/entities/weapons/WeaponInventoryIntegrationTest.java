@@ -49,16 +49,16 @@ public class WeaponInventoryIntegrationTest {
 
         inventory.add(axe);
         Assert.assertEquals(1, inventory.getAmount(axe.getName()));
-        Assert.assertEquals(7, inventory.getTotalAmount());
+        Assert.assertEquals(10, inventory.getTotalAmount());
 
         inventory.add(axe);
         Assert.assertEquals(2, inventory.getAmount("axe"));
-        Assert.assertEquals(8, inventory.getTotalAmount());
+        Assert.assertEquals(11, inventory.getTotalAmount());
 
         inventory.add(sword);
         Assert.assertEquals(1, inventory.getAmount("sword"));
         Assert.assertEquals(2, inventory.getAmount("axe"));
-        Assert.assertEquals(9, inventory.getTotalAmount());
+        Assert.assertEquals(12, inventory.getTotalAmount());
     }
 
     /**
@@ -73,11 +73,11 @@ public class WeaponInventoryIntegrationTest {
         inventory.drop("sword");
         Assert.assertEquals(2, inventory.getAmount("axe"));
         Assert.assertEquals(0, inventory.getAmount("sword"));
-        Assert.assertEquals(8, inventory.getTotalAmount());
+        Assert.assertEquals(11, inventory.getTotalAmount());
 
         inventory.dropMultiple("axe", 2);
         Assert.assertEquals(0, inventory.getAmount("axe"));
-        Assert.assertEquals(6, inventory.getTotalAmount());
+        Assert.assertEquals(9, inventory.getTotalAmount());
     }
 
 
