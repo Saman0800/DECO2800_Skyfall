@@ -69,8 +69,8 @@ public enum BuildingType {
         buildingTextures.add("cabin_270");
 
         buildingCost = new HashMap<>();
-        buildingCost.put("Wood", 7);
-        buildingCost.put("Stone",4);
+        buildingCost.put("Wood", 5);
+        buildingCost.put("Stone",2);
     }
 
     public List<String> initialiseCabinTextures() {

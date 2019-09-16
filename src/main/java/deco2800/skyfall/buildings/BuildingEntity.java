@@ -2,11 +2,24 @@ package deco2800.skyfall.buildings;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.google.gson.annotations.Expose;
+<<<<<<< HEAD
 import deco2800.skyfall.entities.AbstractEntity;
+=======
+
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.GameMenuManager;
+
+import deco2800.skyfall.managers.InventoryManager;
+
+import deco2800.skyfall.resources.Blueprint;
+import deco2800.skyfall.resources.Item;
+>>>>>>> building-231
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.world.World;
+import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +60,26 @@ public class BuildingEntity extends AbstractEntity {
     private int level;
     private boolean upgradable;
     private int currentHealth;
+
+    private int maxInventorySize;
+    private InventoryManager inventoryManager;
+
+    private boolean canAttack;
+    private boolean canDefend;
+    private AttackLevel attackLevel;
+    private DefendLevel defendLevel;
+
+    enum AttackLevel {
+        LOW,
+        MEDIUM,
+        HIGH
+    }
+
+    enum DefendLevel {
+        LOW,
+        MEDIUM,
+        HIGH
+    }
 
     /**
      * Constructor for an building entity with normal rendering size.
@@ -402,7 +435,14 @@ public class BuildingEntity extends AbstractEntity {
 
     //TODO: Empty interact methods need to not be empty wooo!
 
-    public void cabinInteract() {}
+    public void cabinInteract() {
+        //Resting at the cabin restores a players health.
+        MainCharacter player = GameManager.getManagerFromInstance(GameMenuManager.class).getMainCharacter();
+        player.changeHealth(+player.getMaxHealth());
+        //TODO: Update player health GUI.
+        //player.updateHealth();
+        //TODO: Needs to change game time.
+    }
 
     public void fenceInteract() {}
 
@@ -413,4 +453,41 @@ public class BuildingEntity extends AbstractEntity {
     public void towncentreInteract() {}
 
     public void watchtowerInteract() {}
+<<<<<<< HEAD
+=======
+
+    /**
+     * getter method
+     * @return InventoryManager of the Building
+     */
+    public InventoryManager getInventoryManager() {
+        return this.inventoryManager;
+    }
+
+    /**
+     * setter method
+     * @param inventoryManager InventoryManager of the Building
+     */
+    public void setInventoryManager(InventoryManager inventoryManager) {
+        this.inventoryManager = inventoryManager;
+    }
+
+    /**
+     * Add item into inventory of the building
+     * @param item the item added into inventory of the building
+     * @return true if added successfully, otherwise false
+     */
+    public boolean AddInventory(Item item){
+        return this.inventoryManager.add(item);
+    }
+
+    /**
+     *
+     * @param item
+     */
+    public void quickAccessRemove(Item item){
+        this.inventoryManager.quickAccessRemove(item.getName());
+    }
+
+>>>>>>> building-231
 }
