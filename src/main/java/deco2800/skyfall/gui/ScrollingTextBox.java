@@ -135,9 +135,6 @@ public class ScrollingTextBox extends AbstractGui {
     @Override
     public void render(BitmapFont font, SpriteBatch batch,
             OrthographicCamera camera, ShapeRenderer shapeRenderer) {
-            //font.draw(batch, printedString.substring(0, currentIndex),
-            //        camera.position.x - camera.viewportWidth / 2 + 10,
-            //        camera.position.y - camera.viewportHeight / 2 + 100);
         renderChildren(font, batch, camera, shapeRenderer);
     }
 
