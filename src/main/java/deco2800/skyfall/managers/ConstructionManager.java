@@ -299,7 +299,7 @@ public class ConstructionManager extends TickableManager {
      */
     public void build(World world, int x, int y) {
         BuildingEntity buildingToBePlaced = selectBuilding(buildingID, x, y);
-        //buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
+        buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
         //Permissions
         if (invCheck(buildingToBePlaced, GameManager.getManagerFromInstance(InventoryManager.class))){
             buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);

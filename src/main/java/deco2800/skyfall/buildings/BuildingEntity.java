@@ -2,9 +2,13 @@ package deco2800.skyfall.buildings;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.google.gson.annotations.Expose;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.worlds.world.World;
+import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -401,7 +405,14 @@ public class BuildingEntity extends AbstractEntity {  //Implements Blueprint at 
 
     //TODO: Empty interact methods need to not be empty wooo!
 
-    public void cabinInteract() {}
+    public void cabinInteract() {
+        //Resting at the cabin restores a players health.
+        MainCharacter player = GameManager.getManagerFromInstance(GameMenuManager.class).getMainCharacter();
+        player.changeHealth(+player.getMaxHealth());
+        //TODO: Update player health GUI.
+        player.updateHealth();
+        //TODO: Needs to change game time.
+    }
 
     public void fenceInteract() {}
 

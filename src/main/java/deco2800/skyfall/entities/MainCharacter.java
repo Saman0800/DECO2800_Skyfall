@@ -622,6 +622,15 @@ public class MainCharacter extends Peon
     }
 
     /**
+     * Helper function to update healthBar outside of class.
+     */
+    public void updateHealth() {
+        if (this.!= null) {
+            this.healthBar.update();
+        }
+    }
+
+    /**
      * Player recovers from being attacked. It removes player 's
      * hurt effect (e.g. sprite flashing in red), in hurt().
      */
@@ -773,6 +782,7 @@ public class MainCharacter extends Peon
     public void changeLevel(int change) {
         if (level + change >= 1) {
             this.level += change;
+            this.setMaxHealth(getHealth() * 10);
             this.changeHealth(change * 10);
         }
     }
