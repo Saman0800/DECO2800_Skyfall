@@ -212,6 +212,7 @@ public class ConstructionManager extends TickableManager {
 
 //                        displayWindow();
                         hideBuildMenu();
+//                        System.out.println(building.getText());
                         Pixmap pm = new Pixmap(Gdx.files.internal("resources/world_structures/house2.png"));
 //                        System.out.println(pm.getFormat());
                         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
