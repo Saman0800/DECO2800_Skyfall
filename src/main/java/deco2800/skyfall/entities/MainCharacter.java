@@ -1,5 +1,8 @@
 package deco2800.skyfall.entities;
 
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.spells.SpellFactory;
 import com.badlogic.gdx.*;
@@ -179,6 +182,9 @@ public class MainCharacter extends Peon
     private boolean canSwim;
     private boolean isSprinting;
 
+    //Is the camera locked onto the main character
+    private boolean cameraLock = true;
+
     /*
         What stage of the game is the player on? Controls what blueprints
         the player can buy and make.
@@ -277,9 +283,8 @@ public class MainCharacter extends Peon
     /**
      * Base Main Character constructor
      */
-    private MainCharacter(float col, float row, float speed, String name, int health) {
-
-        super(row, col, speed, name, health);
+    public MainCharacter(float col, float row, float speed, String name, int health) {
+        super(row, col, speed, name, health, "MainCharacter");
         this.id = System.nanoTime();
         gameStage = GameStage.FOREST;
         this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
@@ -310,7 +315,7 @@ public class MainCharacter extends Peon
         // Initialises the players velocity properties
         xInput = 0;
         yInput = 0;
-        setAcceleration(1.f);
+        setAcceleration(10.f);
         setMaxSpeed(1.f);
         vel = 0;
         velHistoryX = new ArrayList<>();
@@ -324,9 +329,18 @@ public class MainCharacter extends Peon
 
         HexVector position = this.getPosition();
 
+        // Sets the filters so that MainCharacter doesn't collide with projectile.
+        for (Fixture fix : getBody().getFixtureList()) {
+            Filter filter = fix.getFilterData();
+            filter.categoryBits = (short) 0x2; // Set filter category to 2
+            filter.maskBits = (short) (0xFFFF
+                    ^ 0x4); // remove mask category 4 (projectiles)
+            fix.setFilterData(filter);
+        }
+
         isSprinting = false;
         equipped = "no_weapon";
-        canSwim = true;
+        canSwim = false;
         this.scale = 0.4f;
         setDirectionTextures();
         configureAnimations();
@@ -399,38 +413,40 @@ public class MainCharacter extends Peon
 
     /**
      * Sets the player's equipped item
+     *
      * @param item the item to equip
      */
-    public void setEquippedItem(Item item){
+    public void setEquippedItem(Item item) {
         this.equippedItem = item;
     }
 
     /**
      * Returns the players equipped item
+     *
      * @return Item object that player is equipped with
      */
-    public Item getEquippedItem (){
+    public Item getEquippedItem() {
         return equippedItem;
     }
 
     /**
      * Gets pestManager
+     *
      * @return
      */
-    public PetsManager getPetsManager(){
+    public PetsManager getPetsManager() {
         return this.petsManager;
     }
 
     /**
      * Returns string of players equipped item, or "No item equipped" if equippedItem == null
+     *
      * @return String of equipped item
      */
-    public String displayEquippedItem(){
-        if(equippedItem != null){
+    public String displayEquippedItem() {
+        if (equippedItem != null) {
             return equippedItem.toString();
-        }
-
-        else{
+        } else {
             return "No item equipped";
         }
     }
@@ -438,8 +454,8 @@ public class MainCharacter extends Peon
     /**
      * Use the function of equipped item
      */
-    public void useEquipped(){
-        if(equippedItem != null){
+    public void useEquipped() {
+        if (equippedItem != null) {
             equippedItem.use(this.getPosition());
         }
         //else: collect nearby resources
@@ -578,7 +594,7 @@ public class MainCharacter extends Peon
     public void enterVehicle(String vehicle) {
         // Determine the vehicle they are entering and set their new speed and
         // texture
-        if (vehicle.equals("Horse")) {
+        if (vehicle.equals("Camel")) {
             //this.setTexture();
             setAcceleration(0.1f);
             setMaxSpeed(0.8f);
@@ -625,6 +641,7 @@ public class MainCharacter extends Peon
 
     /**
      * Attempts to drop given item from inventory
+     *
      * @param item item to be dropped from inventory
      */
     public void dropInventory(String item) {
@@ -907,6 +924,7 @@ public class MainCharacter extends Peon
             float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 
             //Check we have permission to build
+
             if(GameManager.getManagerFromInstance(ConstructionManager.class).getStatus() == 1) {
             //    System.out.println(clickedPosition[0]);
             //    System.out.println(clickedPosition[1]);
@@ -918,8 +936,9 @@ public class MainCharacter extends Peon
                 // REMOVE THE INVENTORIES
                     //    buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
                     //    invRemove(buildingToBePlaced,GameManager.getManagerFromInstance(InventoryManager.class));
+
                 GameManager.getManagerFromInstance(ConstructionManager.class).build(GameManager.get().getWorld(),
-                        (int)clickedPosition[0], (int)clickedPosition[1]);
+                        (int) clickedPosition[0], (int) clickedPosition[1]);
             }
         }
 
@@ -940,6 +959,7 @@ public class MainCharacter extends Peon
     public void onTick(long i) {
         this.updatePosition();
         this.movementSound();
+        this.centreCameraAuto();
 
         //this.setCurrentSpeed(this.direction.len());
         //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
@@ -997,7 +1017,9 @@ public class MainCharacter extends Peon
     private void setCurrentSpeed(float cSpeed) {
         this.currentSpeed = cSpeed;
     }
+
     boolean petout = false;
+
     /**
      * Sets the appropriate movement flags to true on keyDown
      *
@@ -1031,7 +1053,7 @@ public class MainCharacter extends Peon
                 maxSpeed *= 2.f;
                 break;
             case Input.Keys.SPACE:
-                if(this.equippedItem != null){
+                if (this.equippedItem != null) {
                     useEquipped();
                 }
                 break;
@@ -1049,6 +1071,12 @@ public class MainCharacter extends Peon
                 break;
             case Input.Keys.C:
                 selectSpell(SpellType.TORNADO);
+                break;
+            case Input.Keys.L:
+                toggleCameraLock();
+                break;
+            case Input.Keys.K:
+                centreCameraManual();
                 break;
             default:
                 switchItem(keycode);
@@ -1107,6 +1135,7 @@ public class MainCharacter extends Peon
 
     /**
      * Adds a piece of gold to the Gold Pouch
+     *
      * @Param gold The piece of gold to be added to the pouch
      * @Param count How many of that piece of gold should be added
      */
@@ -1142,11 +1171,12 @@ public class MainCharacter extends Peon
 
     /**
      * Gets the tile at a position.
+     *
      * @param xPos The x position
      * @param yPos The y position
      * @return The Tile at that position
      */
-    public Tile getTile ( float xPos, float yPos){
+    public Tile getTile(float xPos, float yPos) {
         //Returns tile at left arm (our perspective) of the player
         float tileCol = (float) Math.round(xPos);
         float tileRow = (float) Math.round(yPos);
@@ -1703,7 +1733,40 @@ public class MainCharacter extends Peon
 
 
     /**
-     * Returns the id of this character
+     * Toggles if the camera should follow the player
+     */
+    private void toggleCameraLock() {
+        if (!cameraLock) {
+            cameraLock = true;
+            centreCameraManual();
+        } else {
+            cameraLock = false;
+        }
+    }
+
+    /**
+     * Centres the camera onto the player
+     * Designed to called on a loop
+     */
+    private void centreCameraAuto() {
+        if (cameraLock) {
+            float[] coords = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
+            GameManager.get().getCamera().position.set(coords[0], coords[1], 0);
+
+        }
+    }
+
+    /**
+     * Centres the camera onto the player
+     * Not supposed to be called on a loop
+     */
+    private void centreCameraManual() {
+        float[] coords = WorldUtil
+                .colRowToWorldCords(this.getCol(), this.getRow());
+        GameManager.get().getCamera().position.set(coords[0], coords[1], 0);
+    }
+
+     /** Returns the id of this character
      *
      * @return the id of this character
      */

@@ -1,6 +1,8 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.animation.AnimationLinker;
@@ -10,11 +12,16 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.renderers.Renderable;
+import deco2800.skyfall.renderers.Renderer;
+import deco2800.skyfall.util.*;
+import org.lwjgl.Sys;
 import deco2800.skyfall.util.BodyEditorLoader;
 import deco2800.skyfall.util.HexVector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.KeyStore;
+import java.sql.Array;
 import java.util.*;
 
 /**
@@ -80,7 +87,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     @Expose
     private int entityID = 0;
 
-    private int renderOrder = 0;
+    protected int renderOrder = 0;
 
     //For animations
     /**
@@ -455,41 +462,52 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         shape.dispose();
     }
 
-    /**
-     * Defines the body's fixture with default values which can be changes in
-     * the entity's constructor after the fixture is created.
-     * Sets the fixtures shape and size based on a .JSON file
-     *
-     * @param fixtureDefFile file path to .JSON file defining the fixture
-     */
-    public void defineFixture(String fixtureDefFile) {
-        BodyEditorLoader loader = new BodyEditorLoader(
-                Gdx.files.internal("resources/HitBoxes/" + fixtureDefFile + "HitBox.JSON"));
+	/**
+	 * Defines the body's fixture with default values which can be changes in
+	 * the entity's constructor after the fixture is created.
+	 * Sets the fixtures shape and size based on a .JSON file
+	 *
+	 * @param fixtureDefName file path to .JSON file defining the fixture
+	 */
+	public void defineFixture(String fixtureDefName){
+		try {
+			// Creates the loader to load the complex hitbox
+			BodyEditorLoader loader =
+					new BodyEditorLoader(Gdx.files.internal("resources/HitBoxes" +
+							"/" + fixtureDefName + "HitBox.json"));
 
-        PhysicsManager manager = new PhysicsManager();
-        World world = manager.getBox2DWorld();
-        BodyDef bd = new BodyDef();
-        bd.type = BodyDef.BodyType.KinematicBody;
-        body = world.createBody(bd);
+			// Creates a world for the hit box to inhabit
+			//PhysicsManager manager = new PhysicsManager();
+			//World world = manager.getBox2DWorld();
 
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.density = 1;
-        fixtureDef.friction = 0.5f;
-        fixtureDef.restitution = 0.3f;
+			// Create the hit box body
+			//BodyDef bd = new BodyDef();
+			//bd.type = BodyDef.BodyType.DynamicBody;
+			//body = world.createBody(bd);
 
-        fixture = body.createFixture(fixtureDef);
-        fixture.setSensor(!isCollidable);
+			// Assigns all the aspects of the fixture
+			FixtureDef fixtureDef = new FixtureDef();
+			fixtureDef.density = 1;
+			fixtureDef.friction = 0.5f;
+			fixtureDef.restitution = 0.3f;
 
-        loader.attachFixture(body, fixtureDefFile, fixtureDef, scale);
-        //TODO: Add code for defining code for custom body shape
-    }
+			// Gets the hit box from the loader
+			loader.attachFixture(body, "Character", fixtureDef, scale);
 
+			// Set the collision of the body
+			//fixture = body.createFixture(fixtureDef);
+			//fixture.setSensor(!isCollidable);
+		}catch (NullPointerException e){
+		    log.warn("Failed to load custom hit box");
+			defineFixture();
+		}
+	}
+    
     /**
      * Controls if the entity can be collided with
      *
      * @param collidable boolean value if entities can collide with this entity
      */
-
     public void changeCollideability(Boolean collidable) {
         isCollidable = collidable;
         if (fixture != null) {
@@ -594,5 +612,4 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     public Body getBody() {
         return body;
     }
-
 }

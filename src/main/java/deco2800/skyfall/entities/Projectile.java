@@ -5,6 +5,8 @@ import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 
@@ -75,6 +77,16 @@ public class Projectile extends AgentEntity implements Animatable {
         this.textureName = textureName;
         this.setTexture(textureName);
         this.setObjectName(objectName);
+
+
+        // Sets the filters so that Projectile doesn't collide with MainCharacter.
+        for (Fixture fix : getBody().getFixtureList()) {
+            Filter filter = fix.getFilterData();
+            filter.categoryBits = (short) 0x4; // Set filter category to 2
+            filter.maskBits = (short) (0xFFFF
+                    ^ 0x2); // remove mask category 2 (Main Character)
+            fix.setFilterData(filter);
+        }
 
         //Position the projectile correctly.
         position.moveToward(movementPosition,speed);
