@@ -58,6 +58,8 @@ public class LakeAndRiverTest {
         for (int i = 0; i < TEST_COUNT; i++) {
             WorldBuilder builder = new WorldBuilder();
             WorldDirector.constructNBiomeSinglePlayerWorld(builder, 3, false);
+            builder.setNodeSpacing(5);
+            builder.setWorldSize(60);
             worlds.add(builder.getWorld());
         }
     }

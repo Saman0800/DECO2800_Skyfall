@@ -59,6 +59,8 @@ public class BiomeGeneratorTest {
         for (int i = 0; i < TEST_COUNT; i++) {
             WorldBuilder builder = new WorldBuilder();
             WorldDirector.constructNBiomeSinglePlayerWorld(builder, 3, false);
+            builder.setNodeSpacing(5);
+            builder.setWorldSize(60);
             World world = builder.getWorld();
 
             // Ensure that all of the chunks are loaded.
