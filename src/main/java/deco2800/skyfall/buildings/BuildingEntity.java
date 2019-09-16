@@ -2,10 +2,15 @@ package deco2800.skyfall.buildings;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.google.gson.annotations.Expose;
+
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
+
+import deco2800.skyfall.managers.InventoryManager;
+
 import deco2800.skyfall.resources.Blueprint;
+import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.worlds.world.World;
 import org.lwjgl.Sys;
@@ -50,6 +55,26 @@ public class BuildingEntity extends AbstractEntity {  //Implements Blueprint at 
     private int level;
     private boolean upgradable;
     private int currentHealth;
+
+    private int maxInventorySize;
+    private InventoryManager inventoryManager;
+
+    private boolean canAttack;
+    private boolean canDefend;
+    private AttackLevel attackLevel;
+    private DefendLevel defendLevel;
+
+    enum AttackLevel {
+        LOW,
+        MEDIUM,
+        HIGH
+    }
+
+    enum DefendLevel {
+        LOW,
+        MEDIUM,
+        HIGH
+    }
 
     /**
      * Constructor for an building entity with normal rendering size.
@@ -424,5 +449,37 @@ public class BuildingEntity extends AbstractEntity {  //Implements Blueprint at 
 
     public void watchtowerInteract() {}
 
+    /**
+     * getter method
+     * @return InventoryManager of the Building
+     */
+    public InventoryManager getInventoryManager() {
+        return this.inventoryManager;
+    }
+
+    /**
+     * setter method
+     * @param inventoryManager InventoryManager of the Building
+     */
+    public void setInventoryManager(InventoryManager inventoryManager) {
+        this.inventoryManager = inventoryManager;
+    }
+
+    /**
+     * Add item into inventory of the building
+     * @param item the item added into inventory of the building
+     * @return true if added successfully, otherwise false
+     */
+    public boolean AddInventory(Item item){
+        return this.inventoryManager.add(item);
+    }
+
+    /**
+     *
+     * @param item
+     */
+    public void quickAccessRemove(Item item){
+        this.inventoryManager.quickAccessRemove(item.getName());
+    }
 
 }

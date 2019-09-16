@@ -48,6 +48,9 @@ public class InventoryManager extends TickableManager {
         this.add(new Stone());
         this.add(new Wood());
         this.add(new Wood());
+        this.add(new Wood());
+        this.add(new Wood());
+        this.add(new Wood());
         this.add(new Hatchet());
         this.add(new PickAxe());
         this.quickAccessAdd("Hatchet");

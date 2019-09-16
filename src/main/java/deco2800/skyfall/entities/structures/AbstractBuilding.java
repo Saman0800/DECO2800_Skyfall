@@ -130,30 +130,4 @@ public abstract class AbstractBuilding extends AbstractEntity {
      */
     public int getBuildTime() {return this.buildTime;}
 
-    /**
-     * getter method
-     * @return InventoryManager of the Building
-     */
-    public InventoryManager getInventoryManager() {
-        return this.inventoryManager;
-    }
-
-    /**
-     *
-     * @param inventoryManager
-     */
-    public void setInventoryManager(InventoryManager inventoryManager) {
-        this.inventoryManager = inventoryManager;
-    }
-
-    //This needs to be updated to use a different inventory add method I think.
-    //public boolean AddInvetory(Item item){return this.inventoryManager.inventoryAdd(item);}
-
-    /**
-     *
-     * @param item
-     */
-    public void quickAccessRemove(Item item){
-        this.inventoryManager.quickAccessRemove(item.getName());
-    }
 }
