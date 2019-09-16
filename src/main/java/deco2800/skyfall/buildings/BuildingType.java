@@ -50,6 +50,8 @@ public enum BuildingType {
             case "Wall":
                 initialiseFence();
                 break;
+            default:
+                break;
         }
     }
 
@@ -59,6 +61,8 @@ public enum BuildingType {
      */
     public void initialiseCabin() {
         buildingTextures = new ArrayList<>();
+        //Need to add initialise textures back.
+
         buildingTextures.add("cabin_0");
         buildingTextures.add("cabin_90");
         buildingTextures.add("cabin_180");
@@ -67,6 +71,15 @@ public enum BuildingType {
         buildingCost = new HashMap<>();
         buildingCost.put("Wood", 7);
         buildingCost.put("Stone",4);
+    }
+
+    public ArrayList<String> initialiseCabinTextures() {
+        ArrayList<String> cabinTextures = new ArrayList<>();
+        cabinTextures.add("cabin_0");
+        cabinTextures.add("cabin_90");
+        cabinTextures.add("cabin_180");
+        cabinTextures.add("cabin_270");
+        return cabinTextures;
     }
 
     /**
@@ -87,8 +100,8 @@ public enum BuildingType {
      *
      */
     public void initialiseTownCentre() {
-        List<String> townCentreTextures = new ArrayList<>();
-        townCentreTextures.add("town_centre");
+        buildingTextures = new ArrayList<>();
+        buildingTextures.add("town_centre");
 
         buildingCost = new HashMap<>();
         buildingCost.put("Wood", 10);
@@ -102,6 +115,7 @@ public enum BuildingType {
      */
     public void initialiseCastle() {
         List<String> castleCentreTextures = new ArrayList<String>();
+
         castleCentreTextures.add("castle_0");
         castleCentreTextures.add("castle_90");
         castleCentreTextures.add("castle_180");
@@ -136,6 +150,7 @@ public enum BuildingType {
      */
     public void initialiseWatchTower() {
         List<String> watchTowerTextures = new ArrayList<String>();
+
         watchTowerTextures.add("watchtower_0");
         watchTowerTextures.add("watchtower_90");
         watchTowerTextures.add("watchtower_180");
@@ -153,6 +168,7 @@ public enum BuildingType {
      */
     public void initialiseFence() {
         List<String> fenceTextures = new ArrayList<String>();
+
         fenceTextures.add("fenceN-S");
         fenceTextures.add("fenceNE-SW");
         fenceTextures.add("fenceNW-SE");

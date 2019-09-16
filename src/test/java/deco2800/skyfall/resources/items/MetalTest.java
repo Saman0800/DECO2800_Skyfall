@@ -92,7 +92,6 @@ public class MetalTest {
      */
     @Test
     public void getDescriptionTest() {
-        assertEquals("This item can be collected by destroying " +
-                "an enemy.", metal.getDescription());
+        assertEquals("This item can be collected" + "\n" + " by destroying an enemy.", metal.getDescription());
     }
 }

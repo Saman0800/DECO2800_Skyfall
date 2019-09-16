@@ -133,7 +133,7 @@ class TriangleSoup {
      * @param vertex The vertex
      */
     void removeTrianglesUsing(WorldGenNode vertex) {
-        List<WorldGenTriangle> trianglesToBeRemoved = new ArrayList<WorldGenTriangle>();
+        List<WorldGenTriangle> trianglesToBeRemoved = new ArrayList<>();
 
         for (WorldGenTriangle triangle : triangleSoup) {
             if (triangle.hasVertex(vertex)) {

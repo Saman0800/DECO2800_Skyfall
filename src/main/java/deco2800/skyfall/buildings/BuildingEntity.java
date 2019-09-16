@@ -20,7 +20,7 @@ import deco2800.skyfall.entities.AbstractEntity;
  *  A BuildingEntity is an base class for all building entity subclass,
  *  including basic information that a building object should contains.
  */
-public class BuildingEntity extends AbstractEntity implements Blueprint {
+public class BuildingEntity extends AbstractEntity {  //Implements Blueprint at some point
 
     // a logger
     private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);
@@ -192,12 +192,12 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
             buildCost.put(resource, cost);
         }
     }
+
     /**
      * @return - cost of building the building
      */
-    public Map<String, Integer> getCost(){
-        return buildCost;
-    }
+    public Map<String, Integer> getCost(){ return buildCost; }
+
 
     /**
      * Adds a texture to the buildings list of textures.
@@ -333,7 +333,7 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
      *
      * @return The name of the item
      */
-    @Override
+    //@Override
     public int getRequiredWood() {
         return 1;
     }
@@ -343,7 +343,7 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
      *
      * @return The name of the item
      */
-    @Override
+    //@Override
     public int getRequiredStone() {
         return 30;
     }
@@ -353,7 +353,7 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
      *
      * @return The name of the item
      */
-    @Override
+    //@Override
     public int getRequiredMetal() {
         return 10;
     }
@@ -364,7 +364,7 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
      *
      * @return a hashamp of the required resources and their number.
      */
-    @Override
+    //@Override
     public Map<String, Integer> getAllRequirements() {
 
         buildCost.put("Wood", 50);
@@ -373,7 +373,7 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
         return buildCost;
     }
 
-    @Override
+    //@Override
     public String getName() {
         return null;
     }
@@ -383,19 +383,18 @@ public class BuildingEntity extends AbstractEntity implements Blueprint {
      *
      * @return The name of the item
      */
-    @Override
+    //@Override
     public boolean isBlueprintLearned() {
         //do nothing
         return true;
     }
-
 
     /**
      * Returns the number of metal required for the item.
      *
      * @return The name of the item
      */
-    @Override
+    //@Override
     public void toggleBlueprintLearned() {
         //do nothing
     }

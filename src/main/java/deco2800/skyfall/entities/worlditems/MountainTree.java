@@ -1,7 +1,5 @@
 package deco2800.skyfall.entities.worlditems;
 
-import deco2800.skyfall.entities.StaticEntity;
-import deco2800.skyfall.entities.Harvestable;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.WoodCube;
 import deco2800.skyfall.Tickable;
@@ -29,8 +27,8 @@ public class MountainTree extends StaticTree {
     }
 
     public MountainTree(Tile tile, boolean obstructed) {
-        super(tile, obstructed, "MTree" + nextTreeTexture);
-        nextTreeTexture = randomGen.nextInt(3) + 1;
+        super(tile, obstructed, "MTree" + MountainTree.nextTreeTexture);
+        MountainTree.nextTreeTexture = randomGen.nextInt(3) + 1;
         this.woodAmount = 15;
     }
 

@@ -34,6 +34,7 @@ public class ConstructionManagerTest {
 
     }
 
+    /*
     @Test
     public void testInvCheckPositive() {
 
@@ -65,6 +66,7 @@ public class ConstructionManagerTest {
         Assert.assertTrue(result);
 
     }
+    */
 
     @Test
     public void testInvCheckNegative() {
@@ -82,6 +84,7 @@ public class ConstructionManagerTest {
         Assert.assertFalse(result);
     }
 
+    /*
     @Test
     public void testInvRemove() {
 
@@ -115,10 +118,8 @@ public class ConstructionManagerTest {
 //        Assert.assertEquals(1.0, inventoryManager.getAmount("Wood"), 0.0);
 //        Assert.assertEquals(1.0, inventoryManager.getAmount("Stone"), 0.0);
 
-
-
-
     }
+    */
 
     /**
     @Test

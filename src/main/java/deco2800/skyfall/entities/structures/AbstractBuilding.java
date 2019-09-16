@@ -146,9 +146,8 @@ public abstract class AbstractBuilding extends AbstractEntity {
         this.inventoryManager = inventoryManager;
     }
 
-    public boolean AddInvetory(Item item){
-        return this.inventoryManager.inventoryAdd(item);
-    }
+    //This needs to be updated to use a different inventory add method I think.
+    //public boolean AddInvetory(Item item){return this.inventoryManager.inventoryAdd(item);}
 
     /**
      *
