@@ -625,7 +625,7 @@ public class MainCharacter extends Peon
      * Helper function to update healthBar outside of class.
      */
     public void updateHealth() {
-        if (this.!= null) {
+        if (this.healthBar != null) {
             this.healthBar.update();
         }
     }
