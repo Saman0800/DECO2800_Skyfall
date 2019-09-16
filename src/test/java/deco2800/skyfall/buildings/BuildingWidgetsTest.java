@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 import deco2800.skyfall.BaseGDXTest;
 import deco2800.skyfall.managers.GameManager;
@@ -66,6 +65,6 @@ public class BuildingWidgetsTest extends BaseGDXTest {
 
     @Test
     public void testWidgetPerformance() {
-        // inner testing pains
+        // inner performance (UI click events) testing pains
     }
 }
