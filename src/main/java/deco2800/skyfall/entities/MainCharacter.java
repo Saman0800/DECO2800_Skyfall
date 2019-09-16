@@ -247,6 +247,8 @@ public class MainCharacter extends Peon
                 position.getRow(),
                 1, 1);*/
 
+
+        // Sets the filters so that MainCharacter doesn't collide with projectile.
         for (Fixture fix : getBody().getFixtureList()) {
             Filter filter = fix.getFilterData();
             filter.categoryBits = (short) 0x2; // Set filter category to 2

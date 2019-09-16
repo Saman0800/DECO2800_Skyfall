@@ -67,6 +67,8 @@ public class Projectile extends AgentEntity {
         this.setTexture(textureName);
         this.setObjectName(objectName);
 
+
+        // Sets the filters so that Projectile doesn't collide with MainCharacter.
         for (Fixture fix : getBody().getFixtureList()) {
             Filter filter = fix.getFilterData();
             filter.categoryBits = (short) 0x4; // Set filter category to 2
