@@ -215,7 +215,7 @@ public class ConstructionManager extends TickableManager {
 //                        displayWindow();
                         hideBuildMenu();
 //                        System.out.println(building.getText());
-                        Pixmap pm = new Pixmap(Gdx.files.internal("resources/world_structures/house2.png"));
+                        Pixmap pm = new Pixmap(Gdx.files.internal("resources/world_structures/house3.png"));
 //                        System.out.println(pm.getFormat());
                         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
                         pm.dispose();
@@ -306,6 +306,8 @@ public class ConstructionManager extends TickableManager {
     public void build(World world, float x, float y) {
         buildingToBePlaced = selectBuilding(buildingID, x, y);
         //buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
+
+
         //Permissions
         if (invCheck(GameManager.getManagerFromInstance(InventoryManager.class))){
             buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
