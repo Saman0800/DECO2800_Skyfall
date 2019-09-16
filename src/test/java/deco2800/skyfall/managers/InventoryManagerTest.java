@@ -32,8 +32,8 @@ public class InventoryManagerTest {
         InventoryManager inv = new InventoryManager();
 
         assertEquals(4, inv.getContents().size());
-        assertEquals(5, inv.getAmount("Stone"));
-        assertEquals(2, inv.getAmount("Wood"));
+        assertEquals(2, inv.getAmount("Stone"));
+        assertEquals(5, inv.getAmount("Wood"));
 
     }
 

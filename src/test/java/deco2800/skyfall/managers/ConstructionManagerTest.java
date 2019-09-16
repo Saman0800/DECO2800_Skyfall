@@ -119,7 +119,7 @@ public class ConstructionManagerTest {
         Wood wood5 = new Wood();
         inventoryManager.add(wood5);
 
-        Assert.assertEquals(10.0, inventoryManager.getAmount("Wood"), 0.0);
+        Assert.assertEquals(11.0, inventoryManager.getAmount("Wood"), 0.0);
         Assert.assertEquals(4.0, inventoryManager.getAmount("Stone"), 0.0);
         cmgr.setBuilding(0);
 
