@@ -31,6 +31,12 @@ public class Tree extends StaticTree {
         this.woodAmount = 15;
 
         Tree.nextTreeTexture = randomGen.nextInt(3) + 1;
+        this.entityType = "Tree";
+    }
+
+    public Tree (StaticEntityMemento memento){
+        super(memento);
+        this.woodAmount = 15;
     }
 
     /**

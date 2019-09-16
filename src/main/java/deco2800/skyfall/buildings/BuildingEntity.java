@@ -1,7 +1,11 @@
 package deco2800.skyfall.buildings;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.google.gson.annotations.Expose;
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.util.Collider;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,15 +14,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.entities.AbstractEntity;
-
 /**
  *  A BuildingEntity is an base class for all building entity subclass,
  *  including basic information that a building object should contains.
  */
-public class BuildingEntity extends AbstractEntity {  //Implements Blueprint at some point
+public class BuildingEntity extends AbstractEntity {
 
     // a logger
     private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);
@@ -33,13 +33,16 @@ public class BuildingEntity extends AbstractEntity {  //Implements Blueprint at 
     private int buildTime;
     private Map<String, Integer> buildCost;
     private Map<String, String> buildingTextures;
+    @Expose
     private int maxHealth;
 
     // changeable information for a specific building
     private float col;
     private float row;
 
+    @Expose
     private int length;
+
     private int width;
     private int level;
     private boolean upgradable;
@@ -410,6 +413,4 @@ public class BuildingEntity extends AbstractEntity {  //Implements Blueprint at 
     public void towncentreInteract() {}
 
     public void watchtowerInteract() {}
-
-
 }
