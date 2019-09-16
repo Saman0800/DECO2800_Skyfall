@@ -49,10 +49,15 @@ public class InventoryManager extends TickableManager {
         this.add(new Stone());
         this.add(new Wood());
         this.add(new Wood());
+        this.add(new Wood());
+        this.add(new Wood());
+        this.add(new Wood());
         this.add(new Hatchet());
         this.add(new PickAxe());
         this.quickAccessAdd("Hatchet");
         this.quickAccessAdd("Pick Axe");
+        this.quickAccessAdd("Wood");
+        this.quickAccessAdd("Stone");
     }
 
     public void initInventory(Map<String, List<Item>> inventory) {
