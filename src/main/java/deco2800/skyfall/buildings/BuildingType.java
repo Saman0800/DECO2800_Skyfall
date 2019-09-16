@@ -205,7 +205,7 @@ public enum BuildingType {
         fenceTextures.add("fenceSE-SW");
         fenceTextures.add("fenceNW-S");
 
-        return fenceTextures; 
+        return fenceTextures;
     }
 
     /**
