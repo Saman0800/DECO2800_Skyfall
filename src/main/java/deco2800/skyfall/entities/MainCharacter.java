@@ -3,6 +3,12 @@ package deco2800.skyfall.entities;
 import com.badlogic.gdx.audio.Sound;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.spells.SpellFactory;
+
+import deco2800.skyfall.buildings.BuildingType;
+import deco2800.skyfall.entities.spells.SpellFactory;
+import deco2800.skyfall.entities.weapons.Sword;
+import deco2800.skyfall.entities.weapons.Weapon;
+
 import deco2800.skyfall.entities.worlditems.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.Vector2;
@@ -804,6 +810,22 @@ public class MainCharacter extends Peon
         if (GameScreen.isPaused) {
             return;
         }
+
+        //Check if player wants to place a building
+        if (button == 0) {
+
+            float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
+            float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
+
+            //Check we have permission to build
+            if(GameManager.getManagerFromInstance(ConstructionManager.class).getStatus() == 1) {
+                System.out.println(clickedPosition[0]);
+                System.out.println(clickedPosition[1]);
+                GameManager.getManagerFromInstance(ConstructionManager.class).build(GameManager.get().getWorld(),
+                        (int)clickedPosition[0], (int)clickedPosition[1]);
+            }
+        }
+
         if (button == 1) {
 
             float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
