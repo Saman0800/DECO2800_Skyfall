@@ -56,8 +56,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("melee_test", new Texture("resources/punch.png"));
             textureMap.put("camel", new Texture("resources/camel/camel-face(no-player).png"));
             textureMap.put("camel_character", new Texture("resources/camel/camel-withplayer1(left).png"));
-            textureMap.put("horse", new Texture("resources/horse/horse-left-walk1.png"));
-            textureMap.put("horse_character", new Texture("resources/horse/horse-left-walk-with-player1.png"));
+            textureMap.put("horse", new Texture("resources/horse_images/horse-left-walk1.png"));
+            textureMap.put("horse_character", new Texture("resources/horse_images/horse-left-walk-with-player1.png"));
 
             // Tile textures
             // Goes through all the folders with tile_textures and adds the tile name to the
