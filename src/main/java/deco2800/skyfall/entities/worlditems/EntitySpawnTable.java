@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities.worlditems;
 
 import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.Tile;
@@ -43,9 +44,9 @@ public class EntitySpawnTable {
         // Tiles always have 6 neighbours, so always just put it to the power of 6 instead of checking the number of
         // neighbours each time.
         double adjustmentFactor = rule.getLimitAdjacentValue();
-        adjustmentFactor =
-                adjustmentFactor * adjustmentFactor * adjustmentFactor * adjustmentFactor * adjustmentFactor *
-                        adjustmentFactor;
+        // FIXME:Ontonator Check that this actualy works with chunks.
+        adjustmentFactor = Math.pow(adjustmentFactor,
+                                    nextTile.getNeighbours().values().stream().filter(Tile::isObstructed).count());
 
         return currentChance / adjustmentFactor;
 
@@ -70,7 +71,7 @@ public class EntitySpawnTable {
             chance = adjustChanceAdjacent(rule, nextTile, chance);
         }
 
-        if (world.getStaticEntityNoise().getOctavedPerlinValue(nextTile.getCol(), nextTile.getRow()) < chance) {
+        if (NoiseGenerator.fade(world.getStaticEntityNoise().getOctavedPerlinValue(nextTile.getCol(), nextTile.getRow()), 2) < chance) {
             StaticEntity newEntity = newInstance.apply(nextTile);
             int renderOrder = (int) (nextTile.getRow() * -2.0);
             newEntity.setRenderOrder(renderOrder);

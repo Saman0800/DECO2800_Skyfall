@@ -39,7 +39,7 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
      *
      * @return the loaded chunk
      */
-    public static Chunk loadChunkAt(World world, int x, int y) {
+    static Chunk loadChunkAt(World world, int x, int y) {
         return DatabaseManager.get().getDataBaseConnector().loadChunk(world, x, y);
     }
 

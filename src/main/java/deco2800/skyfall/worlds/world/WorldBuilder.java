@@ -152,7 +152,6 @@ public class WorldBuilder implements WorldBuilderInterface {
 
     public void spawnChests(AbstractBiome biome, World world, List<EntitySpawnRule> biomeSpawnRules) {
         // Spawn chests
-        // FIXME:Ontonator Adjust weighting.
         EntitySpawnRule chestRule = new EntitySpawnRule(tile -> new Chest(tile, true, ChestManager.generateRandomLoot(
                 (int) Math.floor(NoiseGenerator.fade(world.getStaticEntityNoise()
                                                              .getOctavedPerlinValue(tile.getCol(), tile.getRow()), 2)) +
@@ -161,7 +160,6 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
 
     public void spawnBlueprintShop(AbstractBiome biome, List<EntitySpawnRule> biomeSpawnRules) {
-        // FIXME:Ontonator Adjust weighting.
         EntitySpawnRule chestRule = new EntitySpawnRule(tile -> new BlueprintShop(tile, true), 0.04, 0, 1, biome);
         biomeSpawnRules.add(chestRule);
     }
