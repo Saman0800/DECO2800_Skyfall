@@ -2,15 +2,11 @@ package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.math.Vector2;
 import deco2800.skyfall.animation.Animatable;
-import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
-import deco2800.skyfall.animation.Direction;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
-
-import java.util.List;
 
 /**
  * An entity that is shot from a weapon.

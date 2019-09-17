@@ -1,9 +1,5 @@
 package deco2800.skyfall.entities.spells;
 
-import deco2800.skyfall.animation.AnimationLinker;
-import deco2800.skyfall.animation.AnimationRole;
-import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.Projectile;
 import deco2800.skyfall.util.HexVector;
 

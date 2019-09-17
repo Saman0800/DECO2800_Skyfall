@@ -1,7 +1,6 @@
 package deco2800.skyfall.entities;
 
 import deco2800.skyfall.Tickable;
-import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.tasks.*;
 

@@ -203,7 +203,7 @@ public class WorldBuilder implements WorldBuilderInterface {
                     biomeSpawnRules.add(axeRule);
 
                     // Create a new perlin noise map
-                    SpawnControl treeControl = x -> x / 3 + 0.2;
+                    SpawnControl treeControl = x -> x / 3d + 0.2;
                     EntitySpawnRule treeRule = new EntitySpawnRule(tile -> new Tree(tile, true), biome, true, treeControl);
                     biomeSpawnRules.add(treeRule);
 
@@ -282,7 +282,7 @@ public class WorldBuilder implements WorldBuilderInterface {
                     biomeSpawnRules.add(spearRule2);
 
                     // Create a new perlin noise map
-                    SpawnControl sSnowControl = x -> x / 2 + 0.15;
+                    SpawnControl sSnowControl = x -> x / 2d + 0.15;
                     EntitySpawnRule sSnowRule =
                             new EntitySpawnRule(tile -> new SnowClump(tile, false), biome, true, sSnowControl);
                     biomeSpawnRules.add(sSnowRule);

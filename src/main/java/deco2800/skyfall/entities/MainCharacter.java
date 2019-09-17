@@ -1,11 +1,9 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.spells.SpellFactory;
-import com.badlogic.gdx.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
@@ -15,14 +13,10 @@ import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.spells.Spell;
-import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
-import deco2800.skyfall.gamemenu.popupmenu.PauseTable;
-import deco2800.skyfall.gamemenu.popupmenu.SettingsTable;
 import deco2800.skyfall.gui.ManaBar;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
