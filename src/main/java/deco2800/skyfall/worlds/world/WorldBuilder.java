@@ -155,7 +155,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         EntitySpawnRule chestRule = new EntitySpawnRule(tile -> new Chest(tile, true, ChestManager.generateRandomLoot(
                 (int) Math.floor(NoiseGenerator.fade(world.getStaticEntityNoise()
                                                              .getOctavedPerlinValue(tile.getCol(), tile.getRow()), 2)) +
-                        5, LootRarity.LEGENDARY)), 0.04, 0, 1, biome);
+                        5, LootRarity.LEGENDARY)), 0.005, biome);
         biomeSpawnRules.add(chestRule);
     }
 

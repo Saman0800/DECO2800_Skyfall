@@ -2,7 +2,6 @@ package deco2800.skyfall.entities;
 
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.spells.SpellFactory;
-import com.badlogic.gdx.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
@@ -12,9 +11,7 @@ import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.spells.Spell;
-import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
@@ -48,6 +45,14 @@ public class MainCharacter extends Peon
         implements KeyDownObserver, KeyUpObserver, TouchDownObserver, Tickable, Animatable {
 
     private static MainCharacter mainCharacterInstance = null;
+
+    /**
+     * Removes the stored main character instance so that the next call to any of the {@code getInstance} methods will
+     * create a new {@code MainCharacter}.
+     */
+    public static void resetInstance() {
+        mainCharacterInstance = null;
+    }
 
     public static MainCharacter getInstance(float col, float row, float speed, String name, int health, String[] textures) {
         if (mainCharacterInstance == null) {
@@ -127,8 +132,8 @@ public class MainCharacter extends Peon
     // Variables to sound effects
     public static final String WALK_NORMAL = "people_walk_normal";
 
-    public static final String HURT = "player_hurt";
-    public static final String DIED = "player_died";
+    public static final String HURT_SOUND_NAME = "player_hurt";
+    public static final String DIED_SOUND_NAME = "player_died";
 
     private SoundManager soundManager = GameManager.get().getManager(SoundManager.class);
 
@@ -674,7 +679,7 @@ public class MainCharacter extends Peon
                 }
                 position.moveToward(bounceBack, 1f);
 
-                SoundManager.playSound(HURT);
+                SoundManager.playSound(HURT_SOUND_NAME);
             }
         }
     }
@@ -1344,38 +1349,37 @@ public class MainCharacter extends Peon
      */
     private String getPlayerDirectionCardinal() {
         double playerDirectionAngle = getPlayerDirectionAngle();
-        playerDirectionAngle = 90 - Math.toDegrees(playerDirectionAngle);
 
-        if (playerDirectionAngle < 0) {
-            playerDirectionAngle += 360;
-        }
-        if (playerDirectionAngle <= 22.5 || playerDirectionAngle >= 337.5) {
-            setCurrentDirection(Direction.NORTH);
-            return "North";
-        } else if (22.5 <= playerDirectionAngle && playerDirectionAngle <= 67.5) {
-            setCurrentDirection(Direction.NORTH_EAST);
-            return "North-East";
-        } else if (67.5 <= playerDirectionAngle && playerDirectionAngle <= 112.5) {
-            setCurrentDirection(Direction.EAST);
-            return "East";
-        } else if (112.5 <= playerDirectionAngle && playerDirectionAngle <= 157.5) {
-            setCurrentDirection(Direction.SOUTH_EAST);
-            return "South-East";
-        } else if (157.5 <= playerDirectionAngle && playerDirectionAngle <= 202.5) {
-            setCurrentDirection(Direction.SOUTH);
-            return "South";
-        } else if (202.5 <= playerDirectionAngle && playerDirectionAngle <= 247.5) {
-            setCurrentDirection(Direction.SOUTH_WEST);
-            return "South-West";
-        } else if (247.5 <= playerDirectionAngle && playerDirectionAngle <= 292.5) {
-            setCurrentDirection(Direction.WEST);
-            return "West";
-        } else if (292.5 <= playerDirectionAngle && playerDirectionAngle <= 337.5) {
-            setCurrentDirection(Direction.NORTH_WEST);
-            return "North-West";
-        }
+        int playerDirectionIndex = Math.floorMod((int) Math.floor(((playerDirectionAngle + 22.5) / 45)), 8);
 
-        return "Invalid";
+        switch (playerDirectionIndex) {
+        case 0:
+                setCurrentDirection(Direction.NORTH);
+                return "North";
+        case 1:
+                setCurrentDirection(Direction.NORTH_EAST);
+                return "North-East";
+        case 2:
+                setCurrentDirection(Direction.EAST);
+                return "East";
+        case 3:
+                setCurrentDirection(Direction.SOUTH_EAST);
+                return "South-East";
+        case 4:
+                setCurrentDirection(Direction.SOUTH);
+                return "South";
+        case 5:
+                setCurrentDirection(Direction.SOUTH_WEST);
+                return "South-West";
+        case 6:
+                setCurrentDirection(Direction.WEST);
+                return "West";
+        case 7:
+                setCurrentDirection(Direction.NORTH_WEST);
+                return "North-West";
+        default:
+            return "Invalid";
+        }
     }
 
     /**
@@ -1644,7 +1648,6 @@ public class MainCharacter extends Peon
      */
     private void updateAnimation() {
         getPlayerDirectionCardinal();
-        List<Float> vel = getVelocity();
 
         /*
         if(isAttacking) {
@@ -1654,18 +1657,15 @@ public class MainCharacter extends Peon
         }
 
         /* Short Animations */
-        if (getToBeRun() != null) {
-            if (getToBeRun().getType() == AnimationRole.ATTACK) {
-                return;
-            } else if (getToBeRun().getType() == AnimationRole.DEAD) {
-                return;
-            }
+        if (getToBeRun() != null &&
+                (getToBeRun().getType() == AnimationRole.ATTACK || getToBeRun().getType() == AnimationRole.DEAD)) {
+            return;
         }
 
         if (isHurt) {
             setCurrentState(AnimationRole.HURT);
         } else {
-            if (vel.get(2) == 0f) {
+            if (getVelocity().get(2) == 0f) {
                 setCurrentState(AnimationRole.NULL);
             } else {
                 setCurrentState(AnimationRole.MOVE);
