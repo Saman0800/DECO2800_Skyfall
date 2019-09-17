@@ -1,6 +1,5 @@
 package deco2800.skyfall.entities.spells;
 
-import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.Projectile;
 import deco2800.skyfall.util.HexVector;
 
@@ -10,6 +9,9 @@ public class Spell extends Projectile {
 
     //Default mana cost.
     protected int manaCost = 20;
+
+    // Name of the spell's texture sprite
+    private String textureName;
 
     /**
      * Construct a new spell.

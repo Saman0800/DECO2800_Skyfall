@@ -44,6 +44,12 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
         this.setTexture(texturename);
     }
 
+    public EnemyEntity(float row, float col, String texturename,int health,
+                       int armour,int damage, String fixtureDef) {
+        super(row, col, 0.2f,texturename,health, fixtureDef);
+        this.setTexture(texturename);
+    }
+
     public void onTick(long i) {
         if (toBeDestroyed) {
             destroy();
@@ -88,21 +94,6 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
     public String[] getStatusIndicators() {
         return this.statusIndicators;
     }
-
-
-
-    /**
-     * Deal damage to another ICombatEntity.
-     * @param entity The combat entity that has been selected to deal damage to.
-     */
-    @Override
-    public void dealDamage(ICombatEntity entity) {
-        if (this.canDealDamage()) {
-            entity.takeDamage(this.damage);
-        }
-    }
-
-
 
     /**
      * Return whether this enemy can deal damage.

@@ -122,9 +122,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("selection", new Texture("resources/blue_selection.png"));
             textureMap.put("path", new Texture("resources/yellow_selection.png"));
 
-            // Portrait of the tutorial AI, replace later with custom art
-            textureMap.put("Karen", new Texture("resources/Karen(replace)" + ".png"));
-
             textureMap.put("buildingB", new Texture("resources/building3x2.png"));
 
             textureMap.put("buildingA", new Texture("resources/buildingA.png"));
@@ -191,7 +188,7 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("pop up screen", new Texture("resources/pop_up_screen_background.png"));
             textureMap.put("game menu bar", new Texture("resources/pop_up_screen_title_background.png"));
-            textureMap.put("game over temp bg", new Texture("resources/game_over_background.png"));
+            textureMap.put("game_over_temp_bg", new Texture("resources/game_over_background.png"));
             textureMap.put("game over retry temp", new Texture("resources/game_over_retry.png"));
             textureMap.put("game over home temp", new Texture("resources/game_over_home_button.png"));
 
@@ -307,6 +304,14 @@ public class TextureManager extends AbstractManager {
 
             // Main character Dead animation
             textureMap.put("MainCharacter_Dead_E_Anim", new Texture("resources/Main_Character_Dead_E.png"));
+            textureMap.put("MainCharacter_Dead_E_Still", new Texture("resources/Main_Character_Dead_E_3.png"));
+
+            // Spells
+            textureMap.put("spells_fire_Anim", new Texture("resources/spells/fire_spritesheet.png"));
+            textureMap.put("spells_shield_Anim", new Texture("resources/spells/shield_spritesheet.png"));
+            textureMap.put("spells_shield_Still", new Texture("resources/spells/shield_3.png"));
+            textureMap.put("spells_tornado_Anim", new Texture("resources/spells/tornado_spritesheet.png"));
+
 
             System.out.println("ALL TEXTURES LOADED SUCCESSFULLY");
 
@@ -334,7 +339,7 @@ public class TextureManager extends AbstractManager {
 
     /**
      * Used for testing only.
-     * 
+     *
      * @param test
      */
     public TextureManager(boolean test) {
@@ -399,7 +404,7 @@ public class TextureManager extends AbstractManager {
 
     /**
      * Gets a texture from an animation.
-     * 
+     *
      * @param id               The string id of the form
      *                         __ANIMATION_<animation_name>:<index>
      * @param animationManager The animation manager

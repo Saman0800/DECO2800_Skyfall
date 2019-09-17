@@ -1,5 +1,8 @@
 package deco2800.skyfall.entities.spells;
 
+import deco2800.skyfall.animation.AnimationLinker;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.EnemyEntity;
 import deco2800.skyfall.entities.MainCharacter;
@@ -44,6 +47,8 @@ public class Tornado extends Spell {
     public void onTick(long tick) {
         super.onTick(tick);
 
+        setCurrentState(AnimationRole.ATTACK);
+
         //Loop through enemies.
         List<AbstractEntity> entities =  GameManager.get().getWorld().getEntities();
 
@@ -56,5 +61,17 @@ public class Tornado extends Spell {
             }
         }
 
+    }
+
+    @Override
+    public void configureAnimations() {
+        // Tornado spell animation
+        addAnimations(AnimationRole.ATTACK, Direction.DEFAULT,
+                new AnimationLinker("Spells_Tornado_Anim",
+                        AnimationRole.ATTACK, Direction.DEFAULT, true, true));
+    }
+
+    @Override
+    public void setDirectionTextures() {
     }
 }

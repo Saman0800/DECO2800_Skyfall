@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.entities.pets.Tiger;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -202,12 +202,18 @@ public class Flower extends EnemyEntity implements Animatable {
                 period++;
             } else {
                 period = 0;
-                player.hurt(this.getDamage());
-
+                if (!(mc.isRecovering())) {
+                    player.hurt(this.getDamage());
+                }
             }
         }
     }
 
-
+    @Override
+    public void dealDamage(ICombatEntity entity) {
+        if (entity.canDealDamage()) {
+            entity.dealDamage(entity);
+        }
+    }
 }
 
