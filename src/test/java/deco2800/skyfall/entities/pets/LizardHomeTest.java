@@ -19,6 +19,7 @@ import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -66,6 +67,11 @@ public class LizardHomeTest {
 
         mockStatic(DatabaseManager.class);
         when(DatabaseManager.get()).thenReturn(manager);
+
+        Field field = MainCharacter.class.getDeclaredField("mainCharacterInstance");
+        field.setAccessible(true);
+        field.set(null, null);
+
 
         lizardHome=new LizardHome(0,0,mc);
         mc = MainCharacter.getInstance(1f, 1f, 1f, "Main Piece", 2);

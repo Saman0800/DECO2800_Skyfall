@@ -6,6 +6,8 @@ import deco2800.skyfall.worlds.Tile;
 
 import org.junit.*;
 
+import java.lang.reflect.Field;
+
 public class WeaponManagerTest {
     // MainCharacter being used for testing
     private MainCharacter testCharacter;
@@ -20,7 +22,11 @@ public class WeaponManagerTest {
     /**
      * Sets up all variables to be used for testing
      */
-    public void setup() {
+    public void setup() throws NoSuchFieldException, IllegalAccessException {
+        Field field = MainCharacter.class.getDeclaredField("mainCharacterInstance");
+        field.setAccessible(true);
+        field.set(null, null);
+
         testCharacter = MainCharacter.getInstance(0f, 0f,
                 0.05f, "Main Piece", 10);
         sword = new Sword(new Tile(null, 0, 0), true);

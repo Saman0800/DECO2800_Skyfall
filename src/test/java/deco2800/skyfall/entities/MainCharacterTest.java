@@ -96,17 +96,11 @@ public class MainCharacterTest {
         mockStatic(DatabaseManager.class);
         when(DatabaseManager.get()).thenReturn(manager);
 
+        Field field = MainCharacter.class.getDeclaredField("mainCharacterInstance");
+        field.setAccessible(true);
+        field.set(null, null);
+
         testCharacter = MainCharacter.getInstance();
-        while (!testCharacter.getGoldPouch().isEmpty()) {
-            testCharacter.removeGold(testCharacter.getGoldPouch().keySet().iterator().next());
-        }
-        testCharacter.addGold(new GoldPiece(100), 1);
-        testCharacter.setMana(100);
-        Field deathsField = Peon.class.getDeclaredField("deaths");
-        deathsField.setAccessible(true);
-        deathsField.setInt(testCharacter, 0);
-        testCharacter.switchItem(8);
-        testCharacter.setHurt(false);
 
         testHatchet = new Hatchet();
         testHatchet2 = new Hatchet();

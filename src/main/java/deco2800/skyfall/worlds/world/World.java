@@ -596,11 +596,11 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
     }
 
     public String worldToString() {
-        // TODO:Ontonator Check that this works.
         StringBuilder string = new StringBuilder();
         loadedChunks.entrySet().stream()
                 .sorted(Comparator.comparing(Map.Entry::getKey))
-                .flatMap(entry -> entry.getValue().getTiles().stream())
+                .flatMap(entry -> entry.getValue().getTiles().stream()
+                        .sorted(Comparator.comparing(tile -> new Pair<>(tile.getCol(), tile.getRow()))))
                 .forEachOrdered(tile -> {
                     String out = String.format("%f, %f, %s, %s\n", tile.getCol(), tile.getRow(),
                                                tile.getBiome().getBiomeName(),

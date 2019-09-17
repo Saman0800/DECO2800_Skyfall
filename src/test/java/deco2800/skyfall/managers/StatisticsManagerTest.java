@@ -34,15 +34,11 @@ public class StatisticsManagerTest {
      * Set up all test variables
      */
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
+        Field field = MainCharacter.class.getDeclaredField("mainCharacterInstance");
+        field.setAccessible(true);
+        field.set(null, null);
 
         testCharacter1 = MainCharacter.getInstance(4, 4, 0.5f, "Side Piece", 10);
-        // Reset the level, heath and deaths.
-        testCharacter1.changeLevel(1 - testCharacter1.getLevel());
-        testCharacter1.changeHealth(10 - testCharacter1.getHealth());
-        // There is no other way to modify this.
-        Field deathsField = Peon.class.getDeclaredField("deaths");
-        deathsField.setAccessible(true);
-        deathsField.setInt(testCharacter1, 0);
 
         testManager = new StatisticsManager(this.testCharacter1);
         testEnemy1 = new Enemy(1,1,"spider",

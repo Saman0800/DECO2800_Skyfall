@@ -15,6 +15,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.lang.reflect.Field;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -28,7 +31,11 @@ public class StoneTest {
     private World world;
     private MainCharacter mainCharacter;
     @Before
-    public void setup() {
+    public void setup() throws NoSuchFieldException, IllegalAccessException {
+        Field field = MainCharacter.class.getDeclaredField("mainCharacterInstance");
+        field.setAccessible(true);
+        field.set(null, null);
+
         mainCharacter = MainCharacter.getInstance(0,0,0.05f, "Main Piece", 10);
         stone=new Stone(-4, -2, mainCharacter);
         HexVector destination=new HexVector(mainCharacter.getCol(),mainCharacter.getRow());

@@ -11,6 +11,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
+
 import static org.junit.Assert.*;
 
 public class HatchetTest {
@@ -22,7 +24,11 @@ public class HatchetTest {
     private Tile testTile;
 
     @Before
-    public void setUp() {
+    public void setUp() throws NoSuchFieldException, IllegalAccessException {
+        Field field = MainCharacter.class.getDeclaredField("mainCharacterInstance");
+        field.setAccessible(true);
+        field.set(null, null);
+
         position = new HexVector(1f, 1f);
         owner = MainCharacter.getInstance(1f, 1f, 0.05f, "player", 10);
         hatchet = new Hatchet(owner, position);

@@ -19,6 +19,7 @@ import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.lang.reflect.Field;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -64,6 +65,10 @@ public class LizardTest {
 
         mockStatic(DatabaseManager.class);
         when(DatabaseManager.get()).thenReturn(manager);
+
+        Field field = MainCharacter.class.getDeclaredField("mainCharacterInstance");
+        field.setAccessible(true);
+        field.set(null, null);
 
         mc = MainCharacter.getInstance(1f, 1f, 1f, "Main Piece", 2);
         lizard = new Lizard(1, 1, mc);
