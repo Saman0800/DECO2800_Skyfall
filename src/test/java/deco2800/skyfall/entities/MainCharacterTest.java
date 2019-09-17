@@ -96,10 +96,7 @@ public class MainCharacterTest {
         mockStatic(DatabaseManager.class);
         when(DatabaseManager.get()).thenReturn(manager);
 
-        Field field = MainCharacter.class.getDeclaredField("mainCharacterInstance");
-        field.setAccessible(true);
-        field.set(null, null);
-
+        MainCharacter.resetInstance();
         testCharacter = MainCharacter.getInstance();
 
         testHatchet = new Hatchet();

@@ -34,10 +34,7 @@ public class StatisticsManagerTest {
      * Set up all test variables
      */
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
-        Field field = MainCharacter.class.getDeclaredField("mainCharacterInstance");
-        field.setAccessible(true);
-        field.set(null, null);
-
+        MainCharacter.resetInstance();
         testCharacter1 = MainCharacter.getInstance(4, 4, 0.5f, "Side Piece", 10);
 
         testManager = new StatisticsManager(this.testCharacter1);

@@ -32,10 +32,7 @@ public class StoneTest {
     private MainCharacter mainCharacter;
     @Before
     public void setup() throws NoSuchFieldException, IllegalAccessException {
-        Field field = MainCharacter.class.getDeclaredField("mainCharacterInstance");
-        field.setAccessible(true);
-        field.set(null, null);
-
+        MainCharacter.resetInstance();
         mainCharacter = MainCharacter.getInstance(0,0,0.05f, "Main Piece", 10);
         stone=new Stone(-4, -2, mainCharacter);
         HexVector destination=new HexVector(mainCharacter.getCol(),mainCharacter.getRow());

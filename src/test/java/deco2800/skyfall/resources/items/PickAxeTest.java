@@ -25,10 +25,7 @@ public class PickAxeTest {
 
     @Before
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
-        Field field = MainCharacter.class.getDeclaredField("mainCharacterInstance");
-        field.setAccessible(true);
-        field.set(null, null);
-
+        MainCharacter.resetInstance();
         owner = MainCharacter.getInstance(1f, 1f, 0.05f, "player", 10);
         position = new HexVector(1f, 1f);
         pickAxe = new PickAxe(owner, position);

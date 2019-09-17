@@ -42,10 +42,7 @@ public class PetsManagerTest {
      */
     @Before
     public void Setup() throws NoSuchFieldException, IllegalAccessException {
-        Field field = MainCharacter.class.getDeclaredField("mainCharacterInstance");
-        field.setAccessible(true);
-        field.set(null, null);
-
+        MainCharacter.resetInstance();
         mc = MainCharacter.getInstance(0f, 0f, 0.05f, "Main Piece", 10);
         bear = new Whitebear(0, 0, mc);
         lizard = new Lizard(0, 0, mc);

@@ -49,10 +49,7 @@ public class ChunkTest {
         mockStatic(DatabaseManager.class);
         when(DatabaseManager.get()).thenReturn(manager);
 
-        Field field = MainCharacter.class.getDeclaredField("mainCharacterInstance");
-        field.setAccessible(true);
-        field.set(null, null);
-
+        MainCharacter.resetInstance();
         WorldBuilder builder = new WorldBuilder();
         WorldDirector.constructTestWorld(builder);
         MainCharacter mainCharacter = MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);

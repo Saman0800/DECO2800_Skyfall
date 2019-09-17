@@ -68,10 +68,7 @@ public class LizardHomeTest {
         mockStatic(DatabaseManager.class);
         when(DatabaseManager.get()).thenReturn(manager);
 
-        Field field = MainCharacter.class.getDeclaredField("mainCharacterInstance");
-        field.setAccessible(true);
-        field.set(null, null);
-
+        MainCharacter.resetInstance();
 
         lizardHome=new LizardHome(0,0,mc);
         mc = MainCharacter.getInstance(1f, 1f, 1f, "Main Piece", 2);

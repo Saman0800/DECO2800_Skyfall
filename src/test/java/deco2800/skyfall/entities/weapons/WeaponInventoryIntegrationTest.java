@@ -21,10 +21,7 @@ public class WeaponInventoryIntegrationTest {
      */
     @Before
     public void setup() throws NoSuchFieldException, IllegalAccessException {
-        Field field = MainCharacter.class.getDeclaredField("mainCharacterInstance");
-        field.setAccessible(true);
-        field.set(null, null);
-
+        MainCharacter.resetInstance();
         mc = MainCharacter.getInstance(0f, 0f, 0.05f, "Main Piece", 10);
         inventory = new InventoryManager();
         sword = new Sword(new Tile(null, 0, 0), false);

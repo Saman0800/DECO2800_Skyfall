@@ -66,10 +66,7 @@ public class LizardTest {
         mockStatic(DatabaseManager.class);
         when(DatabaseManager.get()).thenReturn(manager);
 
-        Field field = MainCharacter.class.getDeclaredField("mainCharacterInstance");
-        field.setAccessible(true);
-        field.set(null, null);
-
+        MainCharacter.resetInstance();
         mc = MainCharacter.getInstance(1f, 1f, 1f, "Main Piece", 2);
         lizard = new Lizard(1, 1, mc);
         WorldBuilder worldBuilder = new WorldBuilder();

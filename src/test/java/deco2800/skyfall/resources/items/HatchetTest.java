@@ -25,10 +25,7 @@ public class HatchetTest {
 
     @Before
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
-        Field field = MainCharacter.class.getDeclaredField("mainCharacterInstance");
-        field.setAccessible(true);
-        field.set(null, null);
-
+        MainCharacter.resetInstance();
         position = new HexVector(1f, 1f);
         owner = MainCharacter.getInstance(1f, 1f, 0.05f, "player", 10);
         hatchet = new Hatchet(owner, position);

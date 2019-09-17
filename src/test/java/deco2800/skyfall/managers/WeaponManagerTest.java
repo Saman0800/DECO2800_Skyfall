@@ -23,10 +23,7 @@ public class WeaponManagerTest {
      * Sets up all variables to be used for testing
      */
     public void setup() throws NoSuchFieldException, IllegalAccessException {
-        Field field = MainCharacter.class.getDeclaredField("mainCharacterInstance");
-        field.setAccessible(true);
-        field.set(null, null);
-
+        MainCharacter.resetInstance();
         testCharacter = MainCharacter.getInstance(0f, 0f,
                 0.05f, "Main Piece", 10);
         sword = new Sword(new Tile(null, 0, 0), true);
