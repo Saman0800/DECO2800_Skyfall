@@ -12,7 +12,10 @@ import java.util.function.Function;
  * EntitySpawnRule for precise spawning however, simpler methods exist that will
  * handle this for you
  */
-public class EntitySpawnTable {
+public final class EntitySpawnTable {
+    // Private constructor to prevent construction.
+    private EntitySpawnTable() {}
+
     /**
      * Simple static method for placing static items. Takes the given entity and
      * places a deep copy within the world at a given tile
@@ -62,6 +65,26 @@ public class EntitySpawnTable {
         return 1 - 1 / (1 + Math.exp(23 * (x - 0.5)));
     }
 
+    public static double getRandomValue(World world, EntitySpawnRule spawnRule, Tile tile) {
+        return normalizeStaticEntityNoise(world.getStaticEntityNoise()
+                                                  .getOctavedPerlinValue(tile.getCol() + spawnRule.getIndex()%100,
+                                                                         tile.getRow() + spawnRule.getIndex()%100));
+    }
+
+    private static void placeWithChance(Function<Tile, StaticEntity> newInstance, EntitySpawnRule rule, Tile nextTile,
+                                        World world, double chance) {
+        if (rule.getLimitAdjacent()) {
+            chance = adjustChanceAdjacent(rule, nextTile, chance);
+        }
+
+        if (getRandomValue(world, rule, nextTile) < chance) {
+            StaticEntity newEntity = newInstance.apply(nextTile);
+            int renderOrder = (int) (nextTile.getRow() * -2.0);
+            newEntity.setRenderOrder(renderOrder);
+            world.addEntity(newEntity);
+        }
+    }
+
     /**
      * Places down a entity uniformly into the world.
      *
@@ -75,17 +98,7 @@ public class EntitySpawnTable {
         // Get the uniform chance from the rule
         double chance = rule.getChance();
 
-        if (rule.getLimitAdjacent()) {
-            chance = adjustChanceAdjacent(rule, nextTile, chance);
-        }
-
-        if (normalizeStaticEntityNoise(
-                world.getStaticEntityNoise().getOctavedPerlinValue(nextTile.getCol(), nextTile.getRow())) < chance) {
-            StaticEntity newEntity = newInstance.apply(nextTile);
-            int renderOrder = (int) (nextTile.getRow() * -2.0);
-            newEntity.setRenderOrder(renderOrder);
-            world.addEntity(newEntity);
-        }
+        placeWithChance(newInstance, rule, nextTile, world, chance);
     }
 
     /**
@@ -98,22 +111,12 @@ public class EntitySpawnTable {
     public static void placePerlin(Function<Tile, StaticEntity> newInstance,
                                    EntitySpawnRule rule, Tile nextTile,
                                    World world) {
-
         // Get the perlin noise value of the tile and apply the perlin map
         double noise = rule.getNoiseGenerator().getOctavedPerlinValue(nextTile.getRow(), nextTile.getCol());
         SpawnControl perlinMap = rule.getAdjustMap();
         double adjustedProb = perlinMap.probabilityMap(noise);
 
-        if (rule.getLimitAdjacent()) {
-            adjustedProb = adjustChanceAdjacent(rule, nextTile, adjustedProb);
-        }
-
-        if (world.getStaticEntityNoise().getOctavedPerlinValue(nextTile.getCol(), nextTile.getRow()) < adjustedProb) {
-            StaticEntity newEntity = newInstance.apply(nextTile);
-            int renderOrder = (int) (nextTile.getRow() * -2.0);
-            newEntity.setRenderOrder(renderOrder);
-            world.addEntity(newEntity);
-        }
+        placeWithChance(newInstance, rule, nextTile, world, adjustedProb);
     }
 
     /**
@@ -137,20 +140,5 @@ public class EntitySpawnTable {
         } else {
             placeUniform(rule.getNewInstance(), rule, tile, world);
         }
-    }
-
-    // TODO:Ontonator Consider changing the signature of this method and/or deprecating it.
-
-    /**
-     * Does entity placing with a simple probability, with no need for a EntitySpawnRule
-     *
-     * @param newInstance a function which creates a new instance to place
-     * @param chance      probability that the entity will be in a given tile
-     * @param world  specified biome to spawn in, null for no specification
-     */
-    public static void spawnEntity(
-            Function<Tile, StaticEntity> newInstance, double chance, World world, Tile tile) {
-        EntitySpawnRule spawnRule = new EntitySpawnRule(newInstance, chance);
-        EntitySpawnTable.spawnEntity(spawnRule, world, tile);
     }
 }

@@ -115,12 +115,12 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
 
     }
 
-    private Map<AbstractBiome, List<EntitySpawnRule>> generateStartEntitiesInternal(World world) {
+    private Map<AbstractBiome, List<EntitySpawnRule>> generateStartEntitiesInternal() {
         return new WorldBuilder().generateStartEntities(this);
     }
 
     public void generateStartEntities() {
-        this.spawnRules = this.generateStartEntitiesInternal(this);
+        this.spawnRules = this.generateStartEntitiesInternal();
     }
 
     /**
