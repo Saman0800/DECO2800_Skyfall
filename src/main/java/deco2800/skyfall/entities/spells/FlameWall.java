@@ -3,6 +3,7 @@ package deco2800.skyfall.entities.spells;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.entities.AbstractEnemy;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.EnemyEntity;
 import deco2800.skyfall.managers.GameManager;
@@ -51,9 +52,9 @@ public class FlameWall extends Spell {
 
             for (AbstractEntity entity : entities) {
                 //If close enough, deal damage to the enemy over time.
-                if (entity instanceof EnemyEntity &&
+                if (entity instanceof AbstractEnemy &&
                         this.position.isCloseEnoughToBeTheSameByDistance(entity.getPosition(),1)) {
-                        ((EnemyEntity) entity).takeDamage(this.getDamage());
+                        ((AbstractEnemy) entity).takeDamage(this.getDamage());
                     }
                 }
             this.ticksSinceAttacked = 0;

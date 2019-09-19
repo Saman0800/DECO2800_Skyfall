@@ -19,9 +19,9 @@ public class StatisticsManagerTest {
     private StatisticsManager testManager;
 
     // Enemies used for testing
-    private Enemy testEnemy1;
-    private Enemy testEnemy2;
-    private Enemy testEnemy3;
+    private AbstractEnemy testEnemy1;
+    private AbstractEnemy testEnemy2;
+    private AbstractEnemy testEnemy3;
 
     // Weapons being used for testing
     private Weapon sword;
@@ -45,12 +45,9 @@ public class StatisticsManagerTest {
         deathsField.setInt(testCharacter1, 0);
 
         testManager = new StatisticsManager(this.testCharacter1);
-        testEnemy1 = new Enemy(1,1,"spider",
-                1,100,1);
-        testEnemy2 = new Enemy(2,2,"robot",
-                2,200,2);
-        testEnemy3 = new Enemy(3,3,"stoneRS",
-                3,300,3);
+        testEnemy1 = new Treeman(1,1, testCharacter1);
+        testEnemy2 = new Treeman(2,2, testCharacter1);
+        testEnemy3 = new Treeman(3,3, testCharacter1);
         sword = new Sword(new Tile(null, 0, 0), false);
         spear = new Spear(new Tile(null, 0, 0), false);
         bow = new Bow(new Tile(null, 0, 0), false);

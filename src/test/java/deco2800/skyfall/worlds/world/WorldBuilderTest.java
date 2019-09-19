@@ -1,5 +1,6 @@
 package deco2800.skyfall.worlds.world;
 
+import deco2800.skyfall.entities.AbstractEnemy;
 import deco2800.skyfall.entities.EnemyEntity;
 import deco2800.skyfall.entities.Robot;
 import deco2800.skyfall.entities.StaticEntity;
@@ -89,7 +90,7 @@ public class WorldBuilderTest {
 
         assertEquals(0, world.getSeed());
 
-        int enemyEntities = (int) world.getEntities().stream().filter(EnemyEntity.class::isInstance).count();
+        int enemyEntities = (int) world.getEntities().stream().filter(AbstractEnemy.class::isInstance).count();
         int staticEntities = (int) world.getEntities().stream().filter(StaticEntity.class::isInstance).count();
 
         assertTrue(staticEntities > 0);

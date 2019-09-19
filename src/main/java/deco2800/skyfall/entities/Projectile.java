@@ -140,12 +140,12 @@ public class Projectile extends AgentEntity implements Animatable {
     private boolean toBeDestroyed = false;
     @Override
     public void handleCollision(Object other) {
-        if (other instanceof EnemyEntity) {
-            ((EnemyEntity) other).takeDamage(this.getDamage());
-            ((EnemyEntity) other).setAttacked(true);
+        if (other instanceof AbstractEnemy) {
+            ((AbstractEnemy) other).takeDamage(this.getDamage());
+            ((AbstractEnemy) other).setHurt(true);
             toBeDestroyed = true;
-            ((EnemyEntity)other).getBody().setLinearVelocity(
-                    (((EnemyEntity)other).getBody().getLinearVelocity()
+            ((AbstractEnemy)other).getBody().setLinearVelocity(
+                    (((AbstractEnemy)other).getBody().getLinearVelocity()
                     .lerp(new Vector2(0.f, 0.f), 0.5f)));
         }
     }

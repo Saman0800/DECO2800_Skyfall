@@ -16,12 +16,15 @@ public class Flower extends EnemyEntity implements Animatable {
     private static final transient String ENEMY_TYPE="flower";
     //savage animation
     private MainCharacter mc;
+
+    /*
     public Flower(float row, float col, String texturename, int health, int armour, int damage) {
         super(row, col, texturename, health, armour, damage);
     }
+    */
 
     public Flower(float col, float row, MainCharacter mc) {
-        super(col,row);
+        super(col, row);
         this.setTexture("flower");
         this.setObjectName("flower");
         this.setHeight(1);
@@ -29,12 +32,14 @@ public class Flower extends EnemyEntity implements Animatable {
         this.setDamage(4);
         this.setLevel(2);
         this.setSpeed(1);
-        this.setArmour(2);
+        //this.setArmour(2);
         this.mc = mc;
+        // this.enemyAnimationName = "flower";
         this.configureAnimations();
         this.setDirectionTextures();
     }
 
+    /*
     public Flower(float col, float row) {
         super(col,row);
         this.setDamage(4);
@@ -46,6 +51,7 @@ public class Flower extends EnemyEntity implements Animatable {
         this.setSpeed(1);
         this.setArmour(2);
     }
+    */
 
     public String getEnemyType(){
         return ENEMY_TYPE;
@@ -161,6 +167,17 @@ public class Flower extends EnemyEntity implements Animatable {
         }
 
     }
+
+    /**
+     * Return a list of resistance attributes.
+     *
+     * @return A list of resistance attributes.
+     */
+    @Override
+    public int[] getResistanceAttributes() {
+        return new int[0];
+    }
+
 
     @Override
     public void configureAnimations() {

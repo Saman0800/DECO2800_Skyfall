@@ -54,7 +54,6 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
         if (toBeDestroyed) {
             destroy();
         }
-
         getBody().setTransform(position.getCol(), position.getRow(), getBody().getAngle());
 
         if (task != null && task.isAlive()) {
@@ -70,30 +69,20 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
      * Return the armour this enemy has.
      * @return The amount of armour this enemy has.
      */
-    @Override
-    public int getArmour() {
-        return this.armour;
-    }
+    //@Override
+    //public int getArmour() {
+    //    return this.armour;
+    //}
 
 
     /**
      * Return a list of resistance attributes.
      * @return A list of resistance attributes.
      */
-    @Override
-    public int[] getResistanceAttributes() {
-        return this.resistanceAttributes;
-    }
-
-    /**
-     * Return a list of status indicators.
-     * @return A list of status indicators.
-     */
-
-    @Override
-    public String[] getStatusIndicators() {
-        return this.statusIndicators;
-    }
+    //@Override
+    //public int[] getResistanceAttributes() {
+    //    return this.resistanceAttributes;
+    //}
 
     /**
      * Return whether this enemy can deal damage.

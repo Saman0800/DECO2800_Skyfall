@@ -84,8 +84,6 @@ public class Robot extends EnemyEntity implements Animatable {
             defence();
         }
         super.onTick(i);
-
-
     }
 
     private void defence(){
@@ -104,6 +102,17 @@ public class Robot extends EnemyEntity implements Animatable {
             System.out.println("Mc is null");
         }
     }
+
+    /**
+     * Return a list of resistance attributes.
+     *
+     * @return A list of resistance attributes.
+     */
+    @Override
+    public int[] getResistanceAttributes() {
+        return new int[0];
+    }
+
 
     @Override
     public void configureAnimations() {

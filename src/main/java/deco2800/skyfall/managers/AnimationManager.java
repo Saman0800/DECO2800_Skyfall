@@ -71,10 +71,14 @@ public class AnimationManager extends AbstractManager {
         //Animation of treeman
         this.generateAnimationObject("treemanME","resources/enemyTreemanMovementSheet/eastMovement/eastMovement.atlas",0.2f);
         this.generateAnimationObject("treemanMN","resources/enemyTreemanMovementSheet/northMovement/northMovement.atlas",0.2f);
+        // TODO: make NE direction spritesheet
+        this.generateAnimationObject("treemanMNE","resources/enemyTreemanMovementSheet/northMovement/northMovement.atlas",0.2f);
         this.generateAnimationObject("treemanMSE","resources/enemyTreemanMovementSheet/southEastMovement/southEastMovement.atlas",0.2f);
         this.generateAnimationObject("treemanMS","resources/enemyTreemanMovementSheet/southMovement/southMovement.atlas",0.2f);
         this.generateAnimationObject("treemanMSW","resources/enemyTreemanMovementSheet/southWestMovement/southWestMovement.atlas",0.2f);
         this.generateAnimationObject("treemanMW","resources/enemyTreemanMovementSheet/westMovement/westMovement.atlas",0.2f);
+        this.generateAnimationObject("treemanMNW","resources/enemyTreemanMovementSheet/westMovement/westMovement.atlas",0.2f);
+
         this.generateAnimationObject("treemanAE","resources/EnemyAnimationPacked/TreemanAttackAnimation/" +
                 "eastAttack/eastAttack.atlas",0.2f);
         this.generateAnimationObject("treemanAN","resources/EnemyAnimationPacked/TreemanAttackAnimation/" +

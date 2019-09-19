@@ -8,28 +8,23 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 
-public class Treeman extends EnemyEntity implements Animatable {
+public class Treeman extends AbstractEnemy implements Animatable {
     //The health of treeman
     private static final transient int HEALTH = 10;
     //The attack range of treeman
     private static final transient float ATTACK_RANGE = 1f;
-    //The attack speed of treeman
-    private static final transient int ATTACK_SPEED = 1000;
     //The speed of treeman if it is angry and attack
-    private static final transient float ANGRYSPEED = 0.03f;
-    //The normal speed of treeman, if it is not in attack
-    private static final transient float NORMALSPEED = 0.01f;
+    private static final transient float ANGRYSPEED = 0.01f;
     //The speed of treeman, if it get injure
     private static final transient float INJURESPEED = 0.00001f;
     private static final transient float INJURE_ANGRY_SPEED = 0.00005f;
     //The attack frequency of treeman
-    private static final transient int ATTACK_FREQUENCY = 50;
+    private static final transient int ATTACK_FREQUENCY = 0;
     //The biome of treeman
     private static final transient String BIOME = "forest";
     //Moving direction
     private Direction movingDirection;
-    //Set boolean moving
-    private boolean moving = false;
+
     //Set the period equal to zero , to account attack time
     private int period = 0;
     //Set the type
@@ -45,51 +40,25 @@ public class Treeman extends EnemyEntity implements Animatable {
     //a routine for destination
     private HexVector destination = null;
 
-    //target position
-    private float[] targetPosition = null;
-
-    //world coordinate of this enemy
-    private float[] orginalPosition = WorldUtil.colRowToWorldCords
-            (this.getCol(), this.getRow());
-
-
-    public Treeman(float row, float col, String texturename,
-                   int health, int armour, int damage) {
-        super(row, col, texturename, health, armour, damage);
-    }
     /**
      * Initialization value of enemy treeman, and set the initial image in
      * the game
      */
     public Treeman(float col, float row, MainCharacter mc) {
-        super(col, row);
+        super(col, row, mc);
         this.setTexture("enemyTreeman");
         this.setObjectName("enemyTreeman");
         this.setHeight(5);
         this.setHealth(HEALTH);
         this.setLevel(2);
         this.setSpeed(0.01f);
-        this.setArmour(5);
+        //this.setArmour(5);
         this.setDamage(1);
         this.mc = mc;
-        this.setDirectionTextures();
+        this.enemyAnimationName = "treeman";
         this.configureAnimations();
+        this.setDirectionTextures();
     }
-
-    /**
-     * Initialization value of enemy treeman
-     */
-    public Treeman(float col, float row) {
-        super(col, row);
-        this.setTexture("enemyTreeman");
-        this.setObjectName("enemyTreeman");
-        this.setHeight(5);
-        this.setHealth(HEALTH);
-        this.setLevel(2);
-        this.setSpeed(2);
-        this.setArmour(5);
-    }
-
 
     /**
      * get enemy type
@@ -99,13 +68,6 @@ public class Treeman extends EnemyEntity implements Animatable {
         return ENEMY_TYPE;
     }
 
-    /**
-     * get enemy moving
-     * @return boolean moving
-     */
-    public boolean getMoving() {
-        return moving;
-    }
 
     /**
      * get biome
@@ -147,109 +109,6 @@ public class Treeman extends EnemyEntity implements Animatable {
                 (int) getCol(), (int) getRow(), getBiome());
     }
 
-
-    /**
-     * If the enemy treem man not attack, it will do the random movement, if
-     * the treeman is dead, then it is dead. Otherwise, if the main character
-     * close to the treeman, the treeman will attack the character and chase
-     * the character at angry speed, if the treeman get injure, it will slow
-     * down the speed
-     *
-     */
-    @Override
-    public void onTick(long i) {
-        randomMoving();
-        setCurrentState(AnimationRole.MOVE);
-        if (isDead() == true) {
-            this.treemanDead();
-        getBody().setTransform(position.getCol(), position.getRow(), getBody().getAngle());
-        /**if(angerTimeAccount<10){
-         angerTimeAccount++;
-         }else{
-         angerTimeAccount=0;
-         this.setAttacked(false);
-         }**/
-        } else {
-            if (this.attackStatus == false) {
-                randomMoving();
-                setCurrentState(AnimationRole.MOVE);
-                //movingDirection=movementDirection(this.position.getAngle());
-            }
-
-            float colDistance = mc.getCol() - this.getCol();
-            float rowDistance = mc.getRow() - this.getRow();
-            if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
-                this.SetAttackStatus(true);
-                this.attackPlayer(mc);
-                if(this.getMovingDirection()==Direction.NORTH||
-                this.getMovingDirection()==Direction.NORTH_EAST){
-                    setCurrentDirection(movementDirection
-                        (this.position.getAngle()));
-                    setCurrentState(AnimationRole.MOVE);
-
-                }else {
-                    setCurrentDirection(movingDirection);
-                    setCurrentState(AnimationRole.MELEE);
-                }
-            } else {
-                this.SetAttackStatus(false);
-                setCurrentState(AnimationRole.MOVE);
-                if (getInjure() == true) {
-                    this.position.moveToward(destination,this.INJURESPEED);
-                    setCurrentDirection(movementDirection
-                            (this.position.getAngle()));
-
-                } else {
-                    this.position.moveToward(destination,this.NORMALSPEED);
-                    setCurrentDirection(movementDirection
-                            (this.position.getAngle()));
-
-                }
-
-
-            }
-        }
-    }
-
-
-
-
-    /**
-     * get the moving direction
-     * @return moving direction
-     */
-    public Direction getMovingDirection(){
-        return movingDirection;
-    }
-
-    /**
-     * Make the enemy tree man do the random movement
-     *
-     */
-    private void randomMoving() {
-        if(moving==false){
-            targetPosition = new float[2];
-            targetPosition[0] = (float)
-                    (Math.random() * 800 + orginalPosition[0]);
-            targetPosition[1]=(float)
-                    (Math.random() * 800 + orginalPosition[1]);
-            float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow
-                    (targetPosition[0], targetPosition[1]);
-            destination = new HexVector(randomPositionWorld[0],
-                    randomPositionWorld[1]);
-            moving = true;
-        }
-        if(destination.getCol() == this.getCol() &&
-                destination.getRow() == this.getRow()){
-            moving = false;
-        }
-        if (getInjure() == true) {
-            this.position.moveToward(destination,this.INJURESPEED);
-        }
-        this.position.moveToward(destination,this.NORMALSPEED);
-
-    }
-
     /**
      * The tree man will attack the player in angry speed and chase character as
      * well
@@ -274,58 +133,42 @@ public class Treeman extends EnemyEntity implements Animatable {
                 movingDirection = Direction.EAST;
                 setCurrentDirection(movingDirection);
             }
-
         } else {
             complete = false;
             movingDirection = movementDirection(this.position.getAngle());
         }
         if(this.position.isCloseEnoughToBeTheSameByDistance
                 (destination,ATTACK_RANGE)){
-            if(period <=ATTACK_FREQUENCY){
-                period++;
+            if(period <= ATTACK_FREQUENCY){
+                period ++;
             }else{
-                period=0;
+                period = 0;
                 if (!(mc.isRecovering())) {
                     player.hurt(this.getDamage());
                 }
             }
-            if (this.getInjure() == true) {
+            if (this.getInjure()) {
                 this.position.moveToward(destination,this.INJURE_ANGRY_SPEED);
             }else{
-                this.position.moveToward(destination,this.ANGRYSPEED);
+                this.position.moveToward(destination,this.chaseSpeed);
             }
-
         }
     }
 
-
-
-    public Direction movementDirection(double angle){
-        angle=Math.toDegrees(angle-Math.PI);
-        if (angle<0){
-            angle+=360;
-        }
-        if(angle>=0 && angle<=60){
-            return Direction.SOUTH_WEST;
-        }else if(angle>60 && angle<=120){
-            return Direction.SOUTH;
-        }else if (angle>120 && angle<=180){
-            return  Direction.SOUTH_EAST;
-        }else if (angle>180 && angle<=240){
-            return  Direction.NORTH_EAST;
-        }else if (angle>240 && angle<=300){
-            return  Direction.NORTH;
-        }else if (angle>300 && angle <360){
-            return Direction.NORTH_WEST;
-        }
-        return null;
-
+    /**
+     * Return a list of resistance attributes.
+     *
+     * @return A list of resistance attributes.
+     */
+    @Override
+    public int[] getResistanceAttributes() {
+        return new int[0];
     }
 
     /**
      * if this enemy is dead then will show dead texture for a while
      */
-    int time=0;
+    int time =0;
     private void treemanDead(){
         if (time<=100) {
             if (time == 0) {
@@ -341,67 +184,6 @@ public class Treeman extends EnemyEntity implements Animatable {
         }else{
             GameManager.get().getWorld().removeEntity(this);
         }
-
-    }
-
-    /**
-     * add treeman animations
-     */
-    @Override
-    public void configureAnimations() {
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.NORTH, new AnimationLinker("treemanMN", AnimationRole.MOVE, Direction.NORTH,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.NORTH_EAST, new AnimationLinker("treemanME", AnimationRole.MOVE, Direction.NORTH_EAST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.NORTH_WEST, new AnimationLinker("treemanMW", AnimationRole.MOVE, Direction.NORTH_WEST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.EAST, new AnimationLinker("treemanME", AnimationRole.MOVE, Direction.EAST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.WEST, new AnimationLinker("treemanMW", AnimationRole.MOVE, Direction.WEST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.SOUTH, new AnimationLinker("treemanMS", AnimationRole.MOVE, Direction.SOUTH,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.SOUTH_EAST, new AnimationLinker("treemanMSE", AnimationRole.MOVE, Direction.SOUTH_EAST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.SOUTH_WEST, new AnimationLinker("treemanMSW", AnimationRole.MOVE, Direction.SOUTH_WEST,
-                        true, true));
-
-        this.addAnimations(
-                AnimationRole.MELEE, Direction.EAST, new AnimationLinker("treemanAE", AnimationRole.MELEE, Direction.EAST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MELEE, Direction.NORTH, new AnimationLinker("treemanAN", AnimationRole.MELEE, Direction.NORTH,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MELEE, Direction.SOUTH, new AnimationLinker("treemanAS", AnimationRole.MELEE, Direction.SOUTH,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MELEE, Direction.SOUTH_EAST, new AnimationLinker("treemanASE", AnimationRole.MELEE, Direction.SOUTH_EAST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MELEE, Direction.SOUTH_WEST, new AnimationLinker("treemanASW", AnimationRole.MELEE, Direction.SOUTH_WEST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MELEE, Direction.WEST, new AnimationLinker("treemanAW", AnimationRole.MELEE, Direction.WEST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.NULL, Direction.DEFAULT, new AnimationLinker("treemanDead", AnimationRole.DEFENCE, Direction.DEFAULT,
-                        true, true));
-    }
-
-    /**
-     * Set the direction textures of the enemy treeman
-     */
-    @Override
-    public void setDirectionTextures() {
 
     }
 
