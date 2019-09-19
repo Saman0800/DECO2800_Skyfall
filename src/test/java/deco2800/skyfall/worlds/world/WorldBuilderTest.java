@@ -1,9 +1,6 @@
 package deco2800.skyfall.worlds.world;
 
-import deco2800.skyfall.entities.AbstractEnemy;
-import deco2800.skyfall.entities.EnemyEntity;
-import deco2800.skyfall.entities.Robot;
-import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
@@ -60,7 +57,7 @@ public class WorldBuilderTest {
         builder.addLake(1);
         builder.setRiverSize(2);
         builder.addRiver();
-        builder.addEntity(new Robot(0,0));
+        builder.addEntity(new Treeman(0,0));
         builder.setStaticEntities(true);
         builder.setBeachSize(1);
 
