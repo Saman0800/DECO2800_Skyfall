@@ -40,6 +40,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static deco2800.skyfall.buildings.BuildingType.CASTLE;
+
 /**
  * Main character in the game
  */
@@ -1487,6 +1489,7 @@ public class MainCharacter extends Peon
 
     public List<Blueprint> getUnlockedBlueprints() {
         List<Blueprint> unlocked = new ArrayList<>();
+        BuildingFactory factory = new BuildingFactory();
         switch (gameStage) {
             case GRAVEYARD:
                 // e.g. unlocked.add(new Spaceship())
@@ -1505,6 +1508,7 @@ public class MainCharacter extends Peon
             case FOREST:
                 unlocked.add(new Hatchet());
                 unlocked.add(new PickAxe());
+                unlocked.add(CASTLE);
         }
         return unlocked;
 

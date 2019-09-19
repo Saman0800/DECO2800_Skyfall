@@ -1,15 +1,14 @@
 package deco2800.skyfall.buildings;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import deco2800.skyfall.resources.Blueprint;
+
+import java.util.*;
 
 
 /**
  * A BuildingTime Enum outlines all of the building types available in the skyfall game as well as their set values/attributes
  */
-public enum BuildingType {
+public enum BuildingType implements Blueprint {
 
     CABIN("Cabin", 10, 1, 1, 7, "cabin_0"),
     STORAGE_UNIT("StorageUnit", 5, 2, 2, 6, "storage_unit"),
@@ -49,6 +48,15 @@ public enum BuildingType {
                 break;
             case "Wall":
                 initialiseFence();
+                break;
+            case "WatchTower":
+                initialiseWatchTower();
+                break;
+            case "Castle":
+                initialiseCastle();
+                break;
+            case "SafeHouse":
+                initialiseSafeHouse();
                 break;
             default:
                 break;
@@ -208,6 +216,26 @@ public enum BuildingType {
         return fenceTextures;
     }
 
+    @Override
+    public int getRequiredWood() {
+        return buildingCost.get("Wood");
+    }
+
+    @Override
+    public int getRequiredStone() {
+        return buildingCost.get("Stone");
+    }
+
+    @Override
+    public int getRequiredMetal() {
+        return buildingCost.get("Metal");
+    }
+
+    @Override
+    public Map<String, Integer> getAllRequirements() {
+        return Collections.unmodifiableMap(buildingCost);
+    }
+
     /**
      * Gets the name of the Building Type
      *
@@ -215,6 +243,32 @@ public enum BuildingType {
      */
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean isBlueprintLearned() {
+        return false;
+    }
+
+    @Override
+    public void toggleBlueprintLearned() {
+
+    }
+
+    @Override
+    public int getCost() {
+        switch(name){
+            case "Cabin":
+                return 100;
+            case "StorageUnit":
+                return 150;
+            case "TownCentre":
+                return 200;
+            case "Wall":
+                return 250;
+            default:
+                return 0;
+        }
     }
 
     /**
@@ -268,7 +322,7 @@ public enum BuildingType {
      * @return Building Cost
      */
     public Map<String, Integer> getBuildCost() {
-        return buildingCost;
+        return getAllRequirements();
     }
 }
 
