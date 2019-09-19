@@ -20,22 +20,32 @@ public class AxeTest {
 
     @Test
     public void getDurabilityTest() {
-        assert(axe.getDurability() == 10);
+        Assert.assertEquals(10, axe.getDurability());
+    }
+
+    @Test
+    public void changeDurabilityTest() {
+        Assert.assertTrue(axe.isUsable());
+        for (int i = 0; i < 10; i++) {
+            axe.decreaseDurability();
+        }
+        System.out.println(axe.getDurability());
+        Assert.assertFalse(axe.isUsable());
     }
 
     @Test
     public void getAttackRateTest() {
-        assert (axe.getAttackRate() == 4);
+        Assert.assertEquals(4, axe.getAttackRate());
     }
 
     @Test
     public void getDamageTest() {
-        assert(axe.getDamage() == 4);
+        Assert.assertEquals(4, axe.getDamage());
     }
 
     @Test
     public void getNameTest() {
-        assert (axe.getName().equals("axe"));
+        Assert.assertEquals("axe", axe.getName());
     }
 
     @Test

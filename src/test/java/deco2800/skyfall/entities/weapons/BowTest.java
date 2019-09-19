@@ -20,22 +20,31 @@ public class BowTest {
 
     @Test
     public void getDurabilityTest() {
-        assert(bow.getDurability() == 10);
+        Assert.assertEquals(10, bow.getDurability());
+    }
+
+    @Test
+    public void changeDurabilityTest() {
+        Assert.assertTrue(bow.isUsable());
+        for (int i = 0; i < 10; i++) {
+            bow.decreaseDurability();
+        }
+        Assert.assertFalse(bow.isUsable());
     }
 
     @Test
     public void getAttackRateTest() {
-        assert (bow.getAttackRate() == 3);
+        Assert.assertEquals(3, bow.getAttackRate());
     }
 
     @Test
     public void getDamageTest() {
-        assert(bow.getDamage() == 4);
+        Assert.assertEquals(4, bow.getDamage());
     }
 
     @Test
     public void getNameTest() {
-        assert (bow.getName().equals("bow"));
+        Assert.assertEquals("bow", bow.getName());
     }
 
     @Test

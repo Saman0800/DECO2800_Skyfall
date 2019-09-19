@@ -20,22 +20,31 @@ public class SpearTest {
 
     @Test
     public void getDurabilityTest() {
-        assert(spear.getDurability() == 7);
+        Assert.assertEquals(7, spear.getDurability());
+    }
+
+    @Test
+    public void changeDurabilityTest() {
+        Assert.assertTrue(spear.isUsable());
+        for (int i = 0; i < 7; i++) {
+            spear.decreaseDurability();
+        }
+        Assert.assertFalse(spear.isUsable());
     }
 
     @Test
     public void getAttackRateTest() {
-        assert (spear.getAttackRate() == 4);
+        Assert.assertEquals(4, spear.getAttackRate());
     }
 
     @Test
     public void getDamageTest() {
-        assert(spear.getDamage() == 5);
+        Assert.assertEquals(5, spear.getDamage());
     }
 
     @Test
     public void getNameTest() {
-        assert (spear.getName().equals("spear"));
+        Assert.assertEquals("spear", spear.getName());
     }
 
     @Test

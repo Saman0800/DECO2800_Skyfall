@@ -20,22 +20,31 @@ public class SwordTest {
 
     @Test
     public void getDurabilityTest() {
-        assert(sword.getDurability() == 6);
+        Assert.assertEquals(6, sword.getDurability());
+    }
+
+    @Test
+    public void changeDurabilityTest() {
+        Assert.assertTrue(sword.isUsable());
+        for (int i = 0; i < 6; i++) {
+            sword.decreaseDurability();
+        }
+        Assert.assertFalse(sword.isUsable());
     }
 
     @Test
     public void getAttackRateTest() {
-        assert (sword.getAttackRate() == 5);
+        Assert.assertEquals(5, sword.getAttackRate());
     }
 
     @Test
     public void getDamageTest() {
-        assert(sword.getDamage() == 3);
+        Assert.assertEquals(3, sword.getDamage());
     }
 
     @Test
     public void getName() {
-        assert (sword.getName().equals("sword"));
+        Assert.assertEquals("sword", sword.getName());
     }
 
     @Test

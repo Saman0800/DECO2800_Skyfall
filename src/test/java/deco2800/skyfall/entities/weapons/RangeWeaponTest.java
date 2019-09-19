@@ -22,7 +22,7 @@ public class RangeWeaponTest {
     }
 
     @Test
-    public void getWeaponType() {
+    public void getWeaponTypeTest() {
         Assert.assertEquals(bow.getWeaponType(), bow.getSubtype());
         Assert.assertEquals(spear.getWeaponType(), spear.getSubtype());
 
@@ -31,8 +31,19 @@ public class RangeWeaponTest {
     }
 
     @Test
-    public void getDamageType() {
+    public void getDamageTypeTest() {
         Assert.assertEquals(spear.getDamageType(), bow.getDamageType());
         Assert.assertEquals("splash", spear.getDamageType());
+    }
+
+    @Test
+    public void itemMethodTest() {
+        Assert.assertEquals(spear.isCarryable(), bow.isCarryable());
+        Assert.assertTrue(spear.isCarryable());
+        Assert.assertTrue(bow.isCarryable());
+
+        Assert.assertEquals(spear.isExchangeable(), bow.isExchangeable());
+        Assert.assertFalse(spear.isExchangeable());
+        Assert.assertFalse(bow.isExchangeable());
     }
 }

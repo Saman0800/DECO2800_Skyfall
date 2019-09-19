@@ -22,7 +22,7 @@ public class MeleeWeaponTest {
     }
 
     @Test
-    public void getWeaponType() {
+    public void getWeaponTypeTest() {
         Assert.assertEquals(axe.getWeaponType(), axe.getSubtype());
         Assert.assertEquals(sword.getWeaponType(), sword.getSubtype());
 
@@ -31,8 +31,19 @@ public class MeleeWeaponTest {
     }
 
     @Test
-    public void getDamageType() {
+    public void getDamageTypeTest() {
         Assert.assertEquals(axe.getDamageType(), sword.getDamageType());
         Assert.assertEquals("slash", axe.getDamageType());
+    }
+
+    @Test
+    public void itemMethodTest() {
+        Assert.assertEquals(axe.isCarryable(), sword.isCarryable());
+        Assert.assertTrue(axe.isCarryable());
+        Assert.assertTrue(sword.isCarryable());
+
+        Assert.assertEquals(axe.isExchangeable(), sword.isExchangeable());
+        Assert.assertFalse(axe.isExchangeable());
+        Assert.assertFalse(sword.isExchangeable());
     }
 }
