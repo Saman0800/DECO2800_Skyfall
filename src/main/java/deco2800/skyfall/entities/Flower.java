@@ -39,7 +39,6 @@ public class Flower extends EnemyEntity implements Animatable {
         this.setDirectionTextures();
     }
 
-    /*
     public Flower(float col, float row) {
         super(col,row);
         this.setDamage(4);
@@ -51,7 +50,6 @@ public class Flower extends EnemyEntity implements Animatable {
         this.setSpeed(1);
         this.setArmour(2);
     }
-    */
 
     public String getEnemyType(){
         return ENEMY_TYPE;

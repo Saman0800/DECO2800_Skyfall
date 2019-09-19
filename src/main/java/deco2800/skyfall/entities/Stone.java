@@ -54,6 +54,20 @@ public class Stone extends AbstractEnemy implements Animatable {
         this.setDirectionTextures();
     }
 
+    public Stone(float col, float row) {
+        super(col,row);
+        this.setDamage(4);
+        this.setTexture("stone");
+        this.setObjectName("stone");
+        this.setHeight(1);
+        this.setHealth(30);
+        this.setLevel(2);
+        this.setSpeed(1);
+        this.enemyAnimationName = "stone";
+        this.configureAnimations();
+        this.setDirectionTextures();
+        //this.setArmour(2);
+    }
 
     //public Stone(float row, float col, String textureName, int health, int armour, int damage) {
     //    super(row, col, textureName, health, armour, damage);

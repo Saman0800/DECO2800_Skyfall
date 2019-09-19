@@ -59,6 +59,10 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
     // Direction
     private Direction movingDirection;
 
+    public AbstractEnemy (float col, float row) {
+        this.setRow(row);
+        this.setCol(col);
+    }
 
     public AbstractEnemy (float col, float row, MainCharacter mc) {
         this.setRow(row);
@@ -75,11 +79,6 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
         this.speed = speed;
         this.level = level;
         this.mc = mc;
-    }
-
-    public AbstractEnemy (float col, float row) {
-        this.setRow(row);
-        this.setCol(col);
     }
 
     /**

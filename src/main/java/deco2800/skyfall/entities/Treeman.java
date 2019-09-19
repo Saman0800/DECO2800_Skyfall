@@ -60,6 +60,21 @@ public class Treeman extends AbstractEnemy implements Animatable {
         this.setDirectionTextures();
     }
 
+    public Treeman(float col, float row) {
+        super(col,row);
+        this.setDamage(4);
+        this.setTexture("enemyTreeman");
+        this.setObjectName("enemyTreeman");
+        this.setHeight(1);
+        this.setHealth(HEALTH);
+        this.setLevel(2);
+        this.setSpeed(1);
+        this.enemyAnimationName = "treeman";
+        this.configureAnimations();
+        this.setDirectionTextures();
+        // this.setArmour(2);
+    }
+
     /**
      * get enemy type
      * @return enemy type
