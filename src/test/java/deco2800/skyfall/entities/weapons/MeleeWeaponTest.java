@@ -26,13 +26,13 @@ public class MeleeWeaponTest {
         Assert.assertEquals(axe.getWeaponType(), axe.getSubtype());
         Assert.assertEquals(sword.getWeaponType(), sword.getSubtype());
 
-        Assert.assertEquals(axe.getWeaponType(), "melee");
-        Assert.assertEquals(sword.getWeaponType(), "melee");
+        Assert.assertEquals("melee", axe.getWeaponType());
+        Assert.assertEquals("melee", sword.getWeaponType());
     }
 
     @Test
     public void getDamageType() {
         Assert.assertEquals(axe.getDamageType(), sword.getDamageType());
-        Assert.assertEquals(axe.getDamageType(), "slash");
+        Assert.assertEquals("slash", axe.getDamageType());
     }
 }
