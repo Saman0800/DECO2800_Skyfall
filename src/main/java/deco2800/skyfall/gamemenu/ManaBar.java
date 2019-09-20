@@ -1,4 +1,6 @@
-package deco2800.skyfall.gui;
+package deco2800.skyfall.gamemenu;
+
+import deco2800.skyfall.gamemenu.StatBar;
 
 /**
  * This should be used by the MainCharacter class, and only called when damage is taken in order to update it.
