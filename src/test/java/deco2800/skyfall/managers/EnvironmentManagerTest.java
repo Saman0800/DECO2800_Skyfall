@@ -194,7 +194,7 @@ public class EnvironmentManagerTest {
         manager.setFilename();
         assertEquals("resources/sounds/forest_night.wav", manager.getFilename());
     }
-    
+
     @Test
     public void onTickTest() {
         manager.onTick(0);
