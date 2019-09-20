@@ -341,6 +341,23 @@ public class MainCharacter extends Peon
     }
 
     /**
+     * Constructor with various textures
+     *
+     * @param textures A array of length 6 with string names corresponding to
+     *                 different orientation
+     *                 0 = North
+     *                 1 = North-East
+     *                 2 = South-East
+     *                 3 = South
+     *                 4 = South-West
+     *                 5 = North-West
+     */
+    private MainCharacter(float col, float row, float speed, String name, int health, String[] textures) {
+        this(row, col, speed, name, health);
+        this.setTexture(textures[2]);
+    }
+
+    /**
      * Setup the character specific gui elements.
      */
     public void setUpGUI() {
@@ -374,22 +391,7 @@ public class MainCharacter extends Peon
         System.out.println(gameOverTable);
     }
 
-    /**
-     * Constructor with various textures
-     *
-     * @param textures A array of length 6 with string names corresponding to
-     *                 different orientation
-     *                 0 = North
-     *                 1 = North-East
-     *                 2 = South-East
-     *                 3 = South
-     *                 4 = South-West
-     *                 5 = North-West
-     */
-    private MainCharacter(float col, float row, float speed, String name, int health, String[] textures) {
-        this(row, col, speed, name, health);
-        this.setTexture(textures[2]);
-    }
+
 
     /**
      * Switch the item the MainCharacter has equip.
@@ -652,11 +654,9 @@ public class MainCharacter extends Peon
 
         setHurt(true);
         logger.info("Hurted: " + isHurt);
-        this.changeHealth(-damage);
-
-        if (this.healthBar != null) {
-            this.healthBar.update();
-        }
+        changeHealth(-damage);
+        updateHealth();
+        logger.info("Hurted: " + getHealth());
 
         System.out.println("CURRENT HEALTH:" + String.valueOf(getHealth()));
         if (this.getHealth() <= 0) {
@@ -664,6 +664,8 @@ public class MainCharacter extends Peon
         } else {
             hurtTime = 0;
             recoverTime = 0;
+
+            /*
             HexVector bounceBack = new HexVector(position.getCol(), position.getRow() - 2);
 
             switch (getPlayerDirectionCardinal()) {
@@ -695,10 +697,10 @@ public class MainCharacter extends Peon
                     break;
             }
             position.moveToward(bounceBack, 1f);
+            */
 
             SoundManager.playSound(HURT);
         }
-
     }
 
     private void checkIfHurtEnded() {
@@ -1357,7 +1359,6 @@ public class MainCharacter extends Peon
         vel = getBody().getLinearVelocity().len();
     }
 
-
     /**
      * Gets the direction the player is currently facing
      * North: 0 deg
@@ -1709,7 +1710,7 @@ public class MainCharacter extends Peon
             } else if (getToBeRun().getType() == AnimationRole.ATTACK) {
                 return;
             }
-        } else {
+        }
 
             if (isDead()) {
                 setCurrentState(AnimationRole.STILL);
@@ -1722,7 +1723,6 @@ public class MainCharacter extends Peon
                     setCurrentState(AnimationRole.MOVE);
                 }
             }
-        }
     }
 
 

@@ -10,9 +10,12 @@ import static org.junit.Assert.*;
 
 public class FlowerTest {
     Flower flower;
+    MainCharacter mc;
+
     @Before
     public void setUp() throws Exception {
-        flower = new Flower(2f,2f);
+        mc = new MainCharacter(2, 4, 0.3f, "fh", 20);
+        flower = new Flower(2f,2f, mc);
     }
 
     /**

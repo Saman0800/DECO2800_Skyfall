@@ -88,6 +88,7 @@ public class TextureManager extends AbstractManager {
             //EnemyEntity
             textureMap.put("flower", new Texture("resources/flower.png"));
             textureMap.put("enemyStone", new Texture("resources/enemyStone.png"));
+            textureMap.put("enemyTreeman", new Texture("resources/enemyTreeman.png"));
             textureMap.put("spider", new Texture("resources/spider.png"));
             textureMap.put("robot", new Texture("resources/robot.png"));
             textureMap.put("whitebear", new Texture("resources/whitebear.png"));
@@ -108,7 +109,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("chestClosed", new Texture("resources/chest_icon.png"));
             textureMap.put("blueprintShop", new Texture("resources/shopkeeper.png"));
 
-            textureMap.put("enemyTreeman", new Texture("resources/Treeman.png"));
             textureMap.put("treemanDead", new Texture("resources/TreemanDead.png"));
 
             textureMap.put("petTiger", new Texture("resources/tiger_front1.png"));
