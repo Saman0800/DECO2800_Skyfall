@@ -10,7 +10,7 @@
   red: { a: 1, b: 0, g: 0, r: 1 },
   black: { a: 1, b: 0, g: 0, r: 0 },
   dark-blue: {a: 1, b: 64, g: 29, r: 7},
-  light-blue: {a: 1, b: 255, g: 252, r: 158};
+  light-blue: {a: 1, b: 255, g: 252, r: 158},
 },
   com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
   dialogDim: { name: white, color: { r: 0, g: 0, b: 0, a: 0.45 } },
@@ -61,7 +61,6 @@
   white-text: { font: game-font, fontColor: white}
   white-label: { font: game-font, fontColor: white , background: default-round}
   black-label: { font: game-font, fontColor: black , background: default-round}
-  dark-blue-label: {font: game-font, fontColor: white , background: default-round}
 },
   com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
   default: { selection: selection, background: textfield, font: default-font, fontColor: white, cursor: cursor }
