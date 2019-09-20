@@ -1,7 +1,5 @@
 package deco2800.skyfall.managers;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.observers.DayNightObserver;

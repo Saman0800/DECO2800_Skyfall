@@ -178,7 +178,7 @@ public class BGMManager extends AbstractManager implements KeyTypedObserver {
 
     /**
      * Calls mute or unmute methods if appropriate keyboard input is given.
-     * 
+     *
      * @param character the character of the key
      */
     @Override
