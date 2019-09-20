@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
 
@@ -18,7 +19,7 @@ public class HealthCircle extends AbstractUIElement {
     private float offset;
     private Label label;
     StatisticsManager sm;
-
+    Skin skin;
 
     /**
      * Updates the inner circle.
@@ -69,9 +70,9 @@ public class HealthCircle extends AbstractUIElement {
      */
     @Override
     public void draw() {
-        BitmapFont bitmapFont  = new BitmapFont();
-        bitmapFont.getData().setScale(1f);
-        label = new Label("Health: 10", new Label.LabelStyle(bitmapFont, Color.WHITE));
+
+        label = new Label("Health: 10", skin,  "blue-pill");
+        label.setFontScale(0.5f);
 
         final int OUTER_CIRCLE = 1;
         final int INNER_CIRCLE = 0;
@@ -98,9 +99,10 @@ public class HealthCircle extends AbstractUIElement {
      * @param tm The texture manager
      * @param sm The statistics manager
      */
-    public HealthCircle(Stage stage, String[] textureNames, TextureManager tm, StatisticsManager sm) {
+    public HealthCircle(Stage stage, String[] textureNames, TextureManager tm, StatisticsManager sm, Skin skin) {
         super(stage, textureNames, tm);
         this.sm = sm;
+        this.skin = skin;
         this.draw();
         currentHealth = sm.getHealth();
     }

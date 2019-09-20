@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.SkyfallGame;
@@ -243,11 +244,18 @@ public class GameMenuManager extends TickableManager {
      * Draws all of the elements in UI
      */
     public void drawAllElements(){
-        if (sm == null) {
-            System.out.println("Please add stats manager before drawing");
+        if (sm == null || skin == null) {
+            System.out.println("Please add skin and stats manager before drawing");
             return;
         }
-        uiElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm));
+        Label.LabelStyle bluePill = new Label.LabelStyle();
+        bluePill.font = skin.getFont("game-font");
+        bluePill.fontColor = skin.getColor("white");
+        bluePill.background = generateTextureRegionDrawableObject("blue_pill");
+        skin.add("blue-pill", bluePill);
+
+
+        uiElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm, skin));
 
         uiElements.put("gameMenuBar", new GameMenuBar(stage, null, textureManager, this));
 

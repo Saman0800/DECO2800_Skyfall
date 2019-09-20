@@ -218,8 +218,9 @@ public class TextureManager extends AbstractManager {
             textureMap.put("fence_top_left", new Texture("resources/world_structures/fence_top_left.png"));
             textureMap.put("fence_top_right", new Texture("resources/world_structures/fence_top_right.png"));
 
-            textureMap.put("big_circle", new Texture("resources/OrangeCircle.png"));
-            textureMap.put("inner_circle", new Texture("resources/RedCircle.png"));
+            textureMap.put("big_circle", new Texture("resources/new_ui/OrangeCircle.png"));
+            textureMap.put("inner_circle", new Texture("resources/new_ui/RedCircle.png"));
+            textureMap.put("blue_pill", new Texture("resources/new_ui/blue_pill_background.png"));
 
             // Clock/Season graphics
             textureMap.put("dawn", new Texture("resources/clock/dawn_clock.png"));
