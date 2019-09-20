@@ -164,7 +164,7 @@ public class AnimationManager extends AbstractManager {
 
             System.out.println("All animations in game");
 
-           } catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

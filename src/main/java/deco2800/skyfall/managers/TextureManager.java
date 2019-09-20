@@ -94,13 +94,14 @@ public class TextureManager extends AbstractManager {
             textureMap.put("lizardS", new Texture("resources/lizard/lizardS.png"));
 
             //AbstractEnemy
-            textureMap.put("enemyStone", new Texture("resources/enemyOld/enemyStone.png"));
-            textureMap.put("enemyTreeman", new Texture("resources/enemyOld/Treeman.png"));
-            textureMap.put("treemanDead", new Texture("resources/enemyOld/TreemanDead.png"));
-            textureMap.put("flower", new Texture("resources/enemyOld/flower.png"));
-            textureMap.put("flowerDead", new Texture("resources/flowerDead.png"));
             textureMap.put("robot", new Texture("resources/enemyOld/robot.png"));
             textureMap.put("spider", new Texture("resources/enemyOld/spider.png"));
+            textureMap.put("flower", new Texture("resources/enemyOld/flower.png"));
+            textureMap.put("enemyStone", new Texture("resources/enemyOld/enemyStone.png"));
+            textureMap.put("flowerDead", new Texture("resources/enemyOld/flowerDead.png"));
+            textureMap.put("treemanDead", new Texture("resources/enemyOld/TreemanDead.png"));
+            textureMap.put("enemyTreeman", new Texture("resources/enemyOld/Treeman.png"));
+
             textureMap.put("stoneRS", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRS.png"));
             textureMap.put("stoneRSE", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRSE.png"));
             textureMap.put("stoneRSW", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRSW.png"));
@@ -406,7 +407,7 @@ public class TextureManager extends AbstractManager {
      * @param id               The string id of the form
      *                         __ANIMATION_<animation_name>:<index>
      * @param animationManager The animation manager
-     * @return The texture needed for the given animation.
+     * @return
      */
     private Texture getTextureFromAnimation(String id, AnimationManager animationManager) {
         String id1 = id.replaceAll("__ANIMATION_", "");
@@ -420,5 +421,4 @@ public class TextureManager extends AbstractManager {
         textureMap.put(id, texture);
         return texture;
     }
-
 }
