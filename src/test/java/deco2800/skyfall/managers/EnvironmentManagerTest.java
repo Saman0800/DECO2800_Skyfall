@@ -194,9 +194,7 @@ public class EnvironmentManagerTest {
         manager.setFilename();
         assertEquals("resources/sounds/forest_night.wav", manager.getFilename());
     }
-
-    // Because time tracking has been changed, the following test no longer works as intended
-    // Didn't catch this til the very end of the sprint, so will need to fix next sprint
+    
     @Test
     public void onTickTest() {
         manager.onTick(0);
