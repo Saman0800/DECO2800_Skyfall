@@ -20,8 +20,6 @@ public class Stone extends AbstractEnemy implements Animatable {
     private float originalCol;
     private float originalRow;
 
-    private MainCharacter mc;
-
     public Stone(float col, float row, MainCharacter mc) {
         super(col, row);
         this.originalCol = col;
@@ -35,6 +33,7 @@ public class Stone extends AbstractEnemy implements Animatable {
         this.setAllSpeed(0.008f, 0.009f, 0.007f);
         this.setDamage(3);
         this.setRange(1);
+        this.setCanMove(true);
         this.setCharacter(mc);
         this.enemyType = "stone";
         this.configureAnimations();
@@ -52,8 +51,7 @@ public class Stone extends AbstractEnemy implements Animatable {
         this.setLevel(2);
         this.setSpeed(1);
         this.setAllSpeed(0.01f, 0.02f, 0.02f);
-        this.setRange(3);
-        this.setCharacter(mc);
+        this.setRange(1);
         this.configureAnimations();
         this.setDirectionTextures();
         this.configureSounds();

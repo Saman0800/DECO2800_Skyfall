@@ -166,6 +166,7 @@ public class Projectile extends AgentEntity implements Animatable {
 
     @Override
     public void configureAnimations() {
+
     }
 
     @Override

@@ -54,7 +54,6 @@ public class Peon extends AgentEntity implements Tickable {
 			this.health = health;
 			this.maxHealth = health;
 		}
-
 		this.deaths = 0;
 	}
 
@@ -100,17 +99,15 @@ public class Peon extends AgentEntity implements Tickable {
 	 */
 	public void changeHealth(int amount) {
 		int currentHealth = this.getHealth();
+		this.maxHealth = 10;
 
-		if(this.health + amount > maxHealth) {
+		if(currentHealth + amount > maxHealth) {
 			this.health = maxHealth;
 		} else {
 			this.health += amount;
 		}
-
 		if (this.isDead()) {
 			 this.health = currentHealth;
-			// gameOverTable.show();
-
 			this.deaths += 1;
 		}
 	}

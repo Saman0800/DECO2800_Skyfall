@@ -1,7 +1,6 @@
 package deco2800.skyfall.entities.enemies;
 
 import deco2800.skyfall.animation.Animatable;
-import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.ICombatEntity;
@@ -12,7 +11,6 @@ import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.tasks.AbstractTask;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
-import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,12 +42,12 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
     // How long does Enemy take to initiate animation.
     protected long attackTime = 0;
     protected long hurtTime = 0;
-    protected long deadTime = 500;
+    protected long deadTime = 0;
 
     // Speed of the enemy
-    protected float normalSpeed = 0.01f;
-    protected float chaseSpeed = 0.02f;
-    protected float slowSpeed = 0.009f;
+    protected float normalSpeed = 0.02f;
+    protected float chaseSpeed = 0.03f;
+    protected float slowSpeed = 0.09f;
 
     // Sound of the enemy
     protected String chasingSound;
@@ -118,21 +116,28 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
      * @param player Main character
      */
     public void attackPlayer(MainCharacter player) {
-        System.out.println(isAttacking && !(this.mc.isRecovering() && this.mc.isDead()));
-        if(isAttacking && !(this.mc.isRecovering() && this.mc.isDead())) {
+        if(isAttacking && !(this.mc.isRecovering() ||
+                this.mc.isDead() || this.mc.IsHurt())) {
             this.setSpeed(this.chaseSpeed);
             this.destination = new HexVector(player.getCol(), player.getRow());
-            this.position.moveToward(destination, this.chaseSpeed);
-            movingDirection = movementDirection(this.position.getAngle());
 
+            if(canMove) {
+                this.position.moveToward(destination, this.chaseSpeed);
+            }
+
+            movingDirection = movementDirection(this.position.getAngle());
             //if the player in attack range then attack player
-            if (this.position.isCloseEnoughToBeTheSameByDistance(destination, range)) {
+            if (distance(mc) < range) {
+                setAttacking(false);
+                setCurrentState(AnimationRole.ATTACK);
                 player.hurt(this.getDamage());
+                player.setRecovering(true);
             }
         }
     }
 
     private void checkIfAttackEnded() {
+        setAttacking(false);
         attackTime += 20; // hurt for 1 second
         if (attackTime > 400) {
             log.info("Attack ended");
@@ -305,7 +310,7 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
      */
     public void randomMoving() {
         if(enemyType.equals("stone")) {
-            if (!isAttacking && mc.isRecovering() && mc.isDead()) {
+            if (!isAttacking || isAttacking && (mc.isRecovering() || mc.isDead())) {
                 movingDirection = movementDirection(this.position.getAngle());
 
                 if (!isMoving) {
@@ -376,20 +381,13 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
             randomMoving();
             updateAnimation();
 
-            colDistance = mc.getCol() - this.getCol();
-            rowDistance = mc.getRow() - this.getRow();
-
-            System.out.println(mc.isRecovering());
             //if the player in angry distance or the enemy is attacked by player then turning to angry model
-            if ((colDistance * colDistance + rowDistance * rowDistance) < 4 &&
-                    !mc.isDead() && !mc.isRecovering()) {
+            if (distance(mc) < 2 ||
+                    isAttacking && !(mc.isDead() || mc.isRecovering() || mc.IsHurt())) {
                 setAttacking(true);
                 attackPlayer(mc);
-                setSpeed(chaseSpeed);
                 attackTime = 0;
-                setCurrentState(AnimationRole.ATTACK);
                 SoundManager.loopSound(chasingSound);
-
                 checkIfAttackEnded();
 
             } else {

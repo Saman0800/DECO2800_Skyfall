@@ -14,9 +14,6 @@ import deco2800.skyfall.managers.SoundManager;
 public class Robot extends AbstractEnemy implements Animatable {
     private static final transient int HEALTH = 10;
 
-    //savage animation
-    private MainCharacter mc;
-
     public Robot(float col, float row, MainCharacter mc) {
         super(col,row);
         this.setTexture("robot");
@@ -25,7 +22,8 @@ public class Robot extends AbstractEnemy implements Animatable {
         this.setHealth(HEALTH);
         this.setLevel(2);
         this.setSpeed(1);
-        this.setRange(2);
+        this.setRange(1);
+        this.setCanMove(true);
         this.setCharacter(mc);
         this.enemyType = "robot";
         this.configureAnimations();
@@ -40,7 +38,7 @@ public class Robot extends AbstractEnemy implements Animatable {
         this.setHealth(HEALTH);
         this.setLevel(2);
         this.setSpeed(1);
-        this.setRange(2);
+        this.setRange(1);
         this.enemyType = "robot";
         this.configureAnimations();
         this.setDirectionTextures();

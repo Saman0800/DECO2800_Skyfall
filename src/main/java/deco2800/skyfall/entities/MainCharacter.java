@@ -656,7 +656,6 @@ public class MainCharacter extends Peon
         logger.info("Hurted: " + isHurt);
         changeHealth(-damage);
         updateHealth();
-        logger.info("Hurted: " + getHealth());
 
         System.out.println("CURRENT HEALTH:" + String.valueOf(getHealth()));
         if (this.getHealth() <= 0) {

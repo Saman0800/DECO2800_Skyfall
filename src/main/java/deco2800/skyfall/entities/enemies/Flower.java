@@ -26,7 +26,8 @@ public class Flower extends AbstractEnemy implements Animatable {
         this.setLevel(2);
         this.setSpeed(1);
         this.setAllSpeed(0.04f, 0.05f, 0.02f);
-        this.setRange(4);
+        this.setRange(2);
+        this.setCanMove(false);
         this.setCharacter(mc);
         this.enemyType = "flower";
         this.configureAnimations();
@@ -45,7 +46,6 @@ public class Flower extends AbstractEnemy implements Animatable {
         this.setSpeed(1);
         this.setAllSpeed(0.04f, 0.05f, 0.02f);
         this.setRange(4);
-        this.setCharacter(mc);
         this.enemyType = "flower";
         this.configureAnimations();
         this.setDirectionTextures();

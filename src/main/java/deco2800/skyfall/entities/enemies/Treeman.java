@@ -11,40 +11,6 @@ public class Treeman extends AbstractEnemy implements Animatable, Tickable {
     //The health of treeman
     private static final transient int HEALTH = 1;
 
-    /*
-    //The attack range of treeman
-    private static final transient float ATTACK_RANGE = 1f;
-    //The speed of treeman if it is angry and attack
-    private static final transient float ANGRYSPEED = 0.01f;
-    //The speed of treeman, if it get injure
-    private static final transient float INJURESPEED = 0.00001f;
-    private static final transient float INJURE_ANGRY_SPEED = 0.00005f;
-    //The attack frequency of treeman
-    private static final transient int ATTACK_FREQUENCY = 0;
-    //The biome of treeman
-    private static final transient String BIOME = "forest";
-    //Moving direction
-    private Direction movingDirection;
-
-
-    //Set the period equal to zero , to account attack time
-    private int period = 0;
-    //Set the type
-    private static final transient String ENEMY_TYPE = "treeman";
-
-    private boolean attackStatus = false;
-    //if the enemy is attacked by player or the player closed enough to the
-    // enemy than the enemy will be in angry situation
-    private int angerTimeAccount = 0;
-    //To indicate whether the enemy arrives player's location
-    private boolean complete = false;
-    //a routine for destination
-    private HexVector destination = null;
-    */
-
-    //savage animation
-    private MainCharacter mc;
-
     /**
      * Initialization value of enemy treeman, and set the initial image in
      * the game
@@ -57,7 +23,8 @@ public class Treeman extends AbstractEnemy implements Animatable, Tickable {
         this.setHealth(HEALTH);
         this.setLevel(2);
         this.setSpeed(0.01f);
-        this.setRange(3);
+        this.setAllSpeed(0.02f, 0.05f, 0.02f);
+        this.setRange(1);
         this.setDamage(1);
         this.setCharacter(mc);
         this.enemyType = "treeman";
@@ -76,6 +43,7 @@ public class Treeman extends AbstractEnemy implements Animatable, Tickable {
         this.setLevel(2);
         this.setAllSpeed(0.02f, 0.05f, 0.02f);
         this.setRange(1);
+        this.setCanMove(true);
         this.enemyType = "treeman";
         this.configureAnimations();
         this.setDirectionTextures();
