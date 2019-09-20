@@ -1,55 +1,68 @@
 package deco2800.skyfall.entities.enemies;
 
-
-
-import deco2800.skyfall.animation.Animatable;
-import deco2800.skyfall.animation.AnimationLinker;
-import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.entities.ICombatEntity;
+import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.SoundManager;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.AnimationLinker;
 
+/**
+ * Instance of a robot enemy.
+  */
 public class Robot extends AbstractEnemy implements Animatable {
-    private static final transient int HEALTH = 10;
 
+    /**
+     * Basic constructor to create a robot enemy.
+      */
     public Robot(float col, float row, MainCharacter mc) {
         super(col,row);
-        this.setTexture("robot");
-        this.setObjectName("robot");
-        this.setHeight(1);
-        this.setHealth(HEALTH);
+
         this.setLevel(2);
         this.setSpeed(1);
         this.setRange(1);
+        this.setHeight(1);
+        this.setHealth(10);
         this.setCanMove(true);
         this.setCharacter(mc);
-        this.enemyType = "robot";
-        this.configureAnimations();
-        this.setDirectionTextures();
-    }
-
-    public Robot(float col, float row) {
-        super(col,row);
         this.setTexture("robot");
         this.setObjectName("robot");
-        this.setHeight(1);
-        this.setHealth(HEALTH);
-        this.setLevel(2);
-        this.setSpeed(1);
-        this.setRange(1);
-        this.enemyType = "robot";
+
         this.configureAnimations();
         this.setDirectionTextures();
         this.configureSounds();
     }
 
+    /**
+     * Constructor used for testing robot enemy.
+      */
+    public Robot(float col, float row) {
+        super(col,row);
+
+        this.setLevel(2);
+        this.setSpeed(1);
+        this.setRange(1);
+        this.setHeight(1);
+        this.setHealth(10);
+        this.setCanMove(true);
+        this.setTexture("robot");
+        this.setObjectName("robot");
+
+        this.configureAnimations();
+        this.setDirectionTextures();
+        this.configureSounds();
+    }
+
+    /**
+     * Set up robot sounds.
+      */
     private void configureSounds() {
         chasingSound = "robotWalk";
         diedSound = "robotDie";
     }
 
+    /**
+     * Set up robot animations
+      */
     @Override
     public void configureAnimations() {
         this.addAnimations(

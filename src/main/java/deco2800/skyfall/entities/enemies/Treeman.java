@@ -1,15 +1,15 @@
 package deco2800.skyfall.entities.enemies;
 
-import deco2800.skyfall.Tickable;
-import deco2800.skyfall.animation.Animatable;
-import deco2800.skyfall.animation.AnimationLinker;
-import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.AnimationLinker;
 
-public class Treeman extends AbstractEnemy implements Animatable, Tickable {
-    //The health of treeman
-    private static final transient int HEALTH = 10;
+/**
+ * Instance of a treeman enemy.
+ */
+public class Treeman extends AbstractEnemy implements Animatable {
 
     /**
      * Initialization value of enemy treeman, and set the initial image in
@@ -17,44 +17,58 @@ public class Treeman extends AbstractEnemy implements Animatable, Tickable {
      */
     public Treeman(float col, float row, MainCharacter mc) {
         super(col, row);
-        this.setTexture("enemyTreeman");
-        this.setObjectName("enemyTreeman");
-        this.setHeight(5);
-        this.setHealth(HEALTH);
+
         this.setLevel(2);
-        this.setSpeed(0.01f);
-        this.setAllSpeed(0.02f, 0.05f, 0.02f);
         this.setRange(1);
         this.setDamage(1);
+        this.setHeight(5);
+        this.setHealth(10);
+        this.setSpeed(0.01f);
+        this.setCanMove(true);
         this.setCharacter(mc);
-        this.enemyType = "treeman";
+        this.setObjectName("treeman");
+        this.setTexture("enemyTreeman");
+        this.setAllSpeed(0.02f, 0.05f, 0.02f);
+
         this.configureAnimations();
         this.setDirectionTextures();
         this.configureSounds();
     }
 
-
+    /**
+     * Constrcutor used for testing treeman enemy.
+     *
+     * @param col x-corrdinatr of the treeman instance.
+     * @param row y-corrdinatr of the treeman instance.
+     */
     public Treeman(float col, float row) {
         super(col,row);
-        this.setTexture("enemyTreeman");
-        this.setObjectName("enemyTreeman");
-        this.setHeight(1);
-        this.setHealth(HEALTH);
+
         this.setLevel(2);
-        this.setAllSpeed(0.02f, 0.05f, 0.02f);
         this.setRange(1);
+        this.setHeight(1);
+        this.setHealth(10);
         this.setCanMove(true);
-        this.enemyType = "treeman";
+        this.setObjectName("treeman");
+        this.setTexture("enemyTreeman");
+        this.setAllSpeed(0.02f, 0.05f, 0.02f);
+
         this.configureAnimations();
         this.setDirectionTextures();
         this.configureSounds();
     }
 
+    /**
+     * Set up treeman sounds.
+     */
     private void configureSounds() {
         chasingSound = "treeWalk";
         diedSound = "treeDie";
     }
 
+    /**
+     * Set up treeman animation.
+     */
     @Override
     public void configureAnimations() {
         this.addAnimations(

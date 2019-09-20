@@ -1,18 +1,18 @@
 package deco2800.skyfall.entities.enemies;
 
-import deco2800.skyfall.animation.Animatable;
-import deco2800.skyfall.animation.AnimationRole;
-import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.entities.ICombatEntity;
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.Peon;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.SoundManager;
-import deco2800.skyfall.tasks.AbstractTask;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import deco2800.skyfall.entities.Peon;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.tasks.AbstractTask;
+import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.animation.Animatable;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.SoundManager;
+import deco2800.skyfall.entities.ICombatEntity;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.animation.AnimationRole;
 
 public abstract class AbstractEnemy extends Peon implements Animatable, ICombatEntity {
 
@@ -25,7 +25,6 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
     private int strength;
     protected int health;
     protected int range;
-    protected String enemyType;
 
     // The level of Enemy
     private int level = 0;
@@ -117,7 +116,7 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
      *
      * @param player Main character
      */
-    public void attackPlayer(MainCharacter player) {
+    private void attackPlayer(MainCharacter player) {
         if(isAttacking && !(this.mc.isRecovering() ||
                 this.mc.isDead() || this.mc.IsHurt())) {
             this.setSpeed(this.chaseSpeed);
@@ -276,10 +275,6 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
         return isMoving;
     }
 
-    public Direction getMovingDirection() {
-        return movingDirection;
-    }
-
     public void setCanMove(boolean canMove) {
         this.canMove = canMove;
     }
@@ -290,7 +285,7 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
      * @param angle the angle between to tile
      * @return direction
      */
-    public Direction movementDirection(double angle) {
+    private Direction movementDirection(double angle) {
         angle = Math.toDegrees(angle - Math.PI);
         if (angle < 0) {
             angle += 360;
@@ -315,8 +310,8 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
      * under normal situation the enemy will random wandering in 100 radius circle
      */
     public void randomMoving() {
-        if(enemyType.equals("stone")) {
-            if (!isAttacking || isAttacking && (mc.isRecovering() || mc.isDead())) {
+        if(getObjectName().equals("stone")) {
+            if (!isAttacking || mc.isRecovering() || mc.isDead()) {
                 movingDirection = movementDirection(this.position.getAngle());
 
                 if (!isMoving) {
@@ -335,7 +330,7 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
                 }
                 this.position.moveToward(destination, this.getSpeed());
             }
-        } else if(enemyType.equals("treeman")) {
+        } else if(getObjectName().equals("treeman")) {
             if (!isAttacking || mc.isRecovering() || mc.isDead()) {
                 if (!isMoving) {
                     targetPosition = new float[2];
@@ -454,7 +449,7 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
      */
     @Override
     public String toString() {
-        return String.format("%s at (%d, %d) %s biome", enemyType, (int)getCol(), (int)getRow(), getBiomeLocated());
+        return String.format("%s at (%d, %d) %s biome", getObjectName(), (int)getCol(), (int)getRow(), getBiomeLocated());
     }
 
 }

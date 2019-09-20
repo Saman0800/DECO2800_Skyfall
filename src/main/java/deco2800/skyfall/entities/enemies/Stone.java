@@ -1,78 +1,94 @@
 package deco2800.skyfall.entities.enemies;
 
-import deco2800.skyfall.animation.Animatable;
-import deco2800.skyfall.animation.AnimationLinker;
-import deco2800.skyfall.animation.AnimationRole;
-import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.MainCharacter;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.ArrayList;
+import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.animation.Animatable;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.animation.AnimationLinker;
+
+/**
+ * Instance of a stone enemy.
+  */
 
 public class Stone extends AbstractEnemy implements Animatable {
 
-    //frequency of attack
-    private float originalCol;
-    private float originalRow;
-
+    /**
+     * Basic constructor for creating a stone enemy.
+      */
     public Stone(float col, float row, MainCharacter mc) {
         super(col, row);
-        this.originalCol = col;
-        this.originalRow = row;
-        this.setTexture("enemyStone");
-        this.setObjectName("enemyStone");
-        this.setHeight(1);
-        this.setHealth(10);
+
         this.setLevel(2);
-        this.setSpeed(0.008f);
-        this.setAllSpeed(0.008f, 0.009f, 0.007f);
-        this.setDamage(3);
         this.setRange(1);
+        this.setHeight(1);
+        this.setDamage(3);
+        this.setHealth(10);
+        this.setSpeed(0.008f);
         this.setCanMove(true);
         this.setCharacter(mc);
-        this.enemyType = "stone";
+        this.setTexture("enemyStone");
+        this.setObjectName("stone");
+        this.setAllSpeed(0.008f, 0.009f, 0.007f);
+
+        this.configureSounds();
         this.configureAnimations();
         this.setDirectionTextures();
-        this.configureSounds();
+
     }
 
-    // This constructor is for testing
+    /**
+     * This constructor is for testing stone enemy.
+      */
     public Stone(float col, float row) {
         super(col,row);
-        this.setTexture("enemyStone");
-        this.setObjectName("enemyStone");
-        this.setHeight(1);
-        this.setHealth(13);
+
         this.setLevel(2);
         this.setSpeed(1);
-        this.setAllSpeed(0.01f, 0.02f, 0.02f);
         this.setRange(1);
-        this.enemyType = "stone";
+        this.setHeight(1);
+        this.setHealth(13);
+        this.setTexture("enemyStone");
+        this.setObjectName("stone");
+        this.setAllSpeed(0.01f, 0.02f, 0.02f);
+
         this.configureAnimations();
         this.setDirectionTextures();
         this.configureSounds();
     }
 
+    /**
+     * Drop harvestables after defeated.
+     *
+     * @param col The x-coordinate the gold is dropped.
+     * @param row The y-coordinate the gold is dropped.
+     * @return List of items that are dropped.
+     */
     public List<AbstractEntity> dropGold(float col, float row) {
         Random random = new Random();
         int dropCount = random.nextInt(5);
         System.out.println(dropCount);
         List<AbstractEntity> golds = new ArrayList<>();
         for (int i = 0; i < dropCount; i++) {
+            System.out.println("Item is dropped");
 //            golds.add(new GoldPiece((int)Math.random()*10+col, (int)Math.random()*10+row));
         }
         return golds;
     }
 
+    /**
+     * Set up stone sounds.
+     */
     private void configureSounds() {
         chasingSound = "stoneWalk";
         diedSound = "stoneDie";
     }
 
     /**
-     * loading stone animations
+     * loading stone animations.
      */
     @Override
     public void configureAnimations() {

@@ -100,7 +100,6 @@ public abstract class Peon extends AgentEntity implements Tickable {
 	 */
 	public void changeHealth(int amount) {
 		int currentHealth = this.getHealth();
-		maxHealth = getHealth();
 
 		if(currentHealth + amount > maxHealth) {
 			this.health = maxHealth;

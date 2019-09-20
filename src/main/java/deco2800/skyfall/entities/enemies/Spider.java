@@ -1,67 +1,74 @@
 package deco2800.skyfall.entities.enemies;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import deco2800.skyfall.animation.Animatable;
-import deco2800.skyfall.animation.AnimationLinker;
-import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.entities.ICombatEntity;
+import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.enemies.AbstractEnemy;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.SoundManager;
-import deco2800.skyfall.tasks.MovementTask;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.AnimationLinker;
 
+/**
+ * Instance of a spider enemy.
+  */
 public class Spider extends AbstractEnemy implements Animatable {
-    private static final transient int HEALTH = 10;
-    private float originalCol;
-    private float orriginalRow;
 
+    // Health of the spider.
+    private static final transient int HEALTH = 10;
+
+    // Main character in the game
     private MainCharacter mc;
 
+    /**
+     * Basic constructor for creating a spider enemy.
+      */
     public Spider(float col, float row, MainCharacter mc) {
         super(col, row);
-        this.originalCol = col;
-        this.orriginalRow = row;
-        this.setTexture("spider");
-        this.setObjectName("spider");
-        this.setHeight(1);
-        this.setHealth(HEALTH);
+
         this.setLevel(1);
         this.setSpeed(1);
         this.setRange(4);
+        this.setHeight(1);
         this.setCanMove(true);
-        this.enemyType = "spider";
-        this.mc = mc;
+        this.setCharacter(mc);
+        this.setHealth(HEALTH);
+        this.setTexture("spider");
+        this.setObjectName("spider");
+
         this.configureAnimations();
         this.setDirectionTextures();
+        this.setAllSpeed(0.04f, 0.05f, 0.02f);
     }
 
+    /**
+     * Constructor used for testing spider enemy.
+      */
     public Spider(float col, float row) {
         super(col, row);
-        this.originalCol = col;
-        this.orriginalRow = row;
-        this.setTexture("spider");
-        this.setObjectName("spider");
-        this.setHeight(1);
-        this.setHealth(HEALTH);
+
         this.setLevel(1);
         this.setSpeed(1);
         this.setRange(4);
-        this.enemyType = "spider";
+        this.setHeight(1);
+        this.setCanMove(true);
+        this.setHealth(HEALTH);
+        this.setTexture("spider");
+        this.setObjectName("spider");
+
         this.configureSounds();
         this.configureAnimations();
+        this.setAllSpeed(0.04f, 0.05f, 0.02f);
     }
 
+    /**
+     * Set up spider sounds.
+      */
     private void configureSounds() {
         chasingSound = "spiderWalk";
         diedSound = "spiderDie";
     }
 
+    /**
+     * Set up spider animations.
+      */
     @Override
     public void configureAnimations() {
         this.addAnimations(AnimationRole.DEFENCE, Direction.DEFAULT,
