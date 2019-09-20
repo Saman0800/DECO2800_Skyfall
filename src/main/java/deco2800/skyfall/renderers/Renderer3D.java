@@ -213,6 +213,7 @@ public class Renderer3D implements Renderer {
                 if (!(entity instanceof Animatable)) {
                     renderAbstractEntity(batch, entity, entityWorldCoord, tex);
                 } else {
+
                     Color c = batch.getColor();
 
                     if (entity instanceof MainCharacter) {

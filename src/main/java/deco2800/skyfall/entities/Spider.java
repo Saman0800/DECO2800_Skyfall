@@ -13,7 +13,7 @@ import deco2800.skyfall.tasks.MovementTask;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 
-public class Spider extends EnemyEntity implements Animatable {
+public class Spider extends AbstractEnemy implements Animatable {
     private static final transient int HEALTH = 10;
     private static final transient float ATTACK_RANGE = 0.5f;
     private static final transient int ATTACK_SPEED = 2000;
@@ -34,7 +34,7 @@ public class Spider extends EnemyEntity implements Animatable {
     private TextureAtlas textureAtlas;
     private MainCharacter mc;
     public Spider(float col, float row, MainCharacter mc) {
-        super(col, row);
+        super(col, row, mc);
         this.originalCol=col;
         this.orriginalRow=row;
         this.setTexture("spider");
@@ -43,7 +43,7 @@ public class Spider extends EnemyEntity implements Animatable {
         this.setHealth(HEALTH);
         this.setLevel(1);
         this.setSpeed(1);
-        this.setArmour(1);
+        // this.setArmour(1);
         this.mc = mc;
         this.configureAnimations();
         this.setDirectionTextures();
@@ -59,11 +59,14 @@ public class Spider extends EnemyEntity implements Animatable {
         this.setHealth(HEALTH);
         this.setLevel(1);
         this.setSpeed(1);
-        this.setArmour(1);
+        //this.setArmour(1);
     }
+
+    /*
     public Spider(float row, float col, String texturename, int health, int armour, int damage) {
         super(row, col, texturename, health, armour, damage);
     }
+    */
 
 
 
@@ -110,7 +113,7 @@ public class Spider extends EnemyEntity implements Animatable {
         }
     }
 
-    private void randomMoving() {
+    public void randomMoving() {
 
         if (this.getCol() == this.originalCol && this.getRow() == this.orriginalRow) {
             float[] currentPosition = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
@@ -122,6 +125,16 @@ public class Spider extends EnemyEntity implements Animatable {
         }
 
 
+    }
+
+    /**
+     * Return a list of resistance attributes.
+     *
+     * @return A list of resistance attributes.
+     */
+    @Override
+    public int[] getResistanceAttributes() {
+        return new int[0];
     }
 
 

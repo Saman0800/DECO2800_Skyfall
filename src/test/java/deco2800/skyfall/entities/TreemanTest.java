@@ -12,9 +12,12 @@ import deco2800.skyfall.animation.Direction;
 
 public class TreemanTest {
     Treeman treeman;
+    MainCharacter mc;
+
     @Before
     public void setup(){
-        treeman = new Treeman(2f,3f);
+        mc = new MainCharacter(2, 4, 0.3f, "fh", 20);
+        treeman = new Treeman(2f,3f, mc);
     }
 
     /**
@@ -46,10 +49,12 @@ public class TreemanTest {
     /**
      * To test treeman armour
      */
+    /*
     @Test
     public void testArmour(){
         Assert.assertEquals(5,treeman.getArmour());
     }
+    */
 
 
     /**

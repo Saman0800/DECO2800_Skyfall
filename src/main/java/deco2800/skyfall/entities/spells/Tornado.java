@@ -3,6 +3,7 @@ package deco2800.skyfall.entities.spells;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.entities.AbstractEnemy;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.EnemyEntity;
 import deco2800.skyfall.entities.MainCharacter;
@@ -53,10 +54,10 @@ public class Tornado extends Spell {
         List<AbstractEntity> entities =  GameManager.get().getWorld().getEntities();
 
         for (AbstractEntity entity : entities) {
-            if (entity instanceof EnemyEntity
+            if (entity instanceof AbstractEnemy
                     && this.position.isCloseEnoughToBeTheSameByDistance(entity.getPosition(),1)) {
                 //If close enough, deal damage to the enemy over time.
-                ((EnemyEntity) entity).takeDamage(this.getDamage());
+                ((AbstractEnemy) entity).takeDamage(this.getDamage());
                 this.destroy();
             }
         }
