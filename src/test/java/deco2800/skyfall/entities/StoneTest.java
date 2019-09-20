@@ -3,6 +3,7 @@ package deco2800.skyfall.entities;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.entities.enemies.Stone;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
@@ -43,14 +44,6 @@ public class StoneTest {
     }
 
     /**
-     * To test the enemy type
-     */
-    @Test
-    public void getEnemyType() {
-        Assert.assertEquals(stone.getEnemyType(),"stone");
-    }
-
-    /**
      * To test the height of stone
      */
     @Test
@@ -59,22 +52,11 @@ public class StoneTest {
     }
 
     /**
-     * To test stone armour
-     */
-    /*
-    @Test
-    public void testArmour(){
-        Assert.assertEquals(1,stone.getArmour());
-    }
-    */
-
-
-    /**
      * To test biome
      */
     @Test
     public void getBiome() {
-        Assert.assertEquals(stone.getBiome(),"forest");
+        Assert.assertEquals(stone.getBiomeLocated(),"forest");
     }
 
     /**

@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.entities.enemies.Treeman;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,17 +57,6 @@ public class TreemanTest {
     }
     */
 
-
-    /**
-     * To test treeman enemy type
-     */
-    @Test
-    public void getEnemyTypeTest() {
-        String type = treeman.getEnemyType();
-        Assert.assertEquals("treeman",type);
-
-    }
-
     /**
      * To test whether treeman moving
      */
@@ -80,9 +70,8 @@ public class TreemanTest {
      */
     @Test
     public void getBiome() {
-        Assert.assertEquals("forest",treeman.getBiome());
+        Assert.assertEquals("forest",treeman.getBiomeLocated());
     }
-
 
     /**
      * Test treeman toString method
@@ -110,7 +99,4 @@ public class TreemanTest {
         Assert.assertEquals(treeman.movementDirection
                 (this.treeman.position.getAngle()),Direction.SOUTH_EAST);
     }
-
-
-
 }

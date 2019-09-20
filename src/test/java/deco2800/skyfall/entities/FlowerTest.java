@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.entities.enemies.Flower;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,14 +19,6 @@ public class FlowerTest {
         flower = new Flower(2f,2f, mc);
     }
 
-    /**
-     * Test the type of flower
-     */
-    @Test
-    public void getEnemyType() {
-        assertEquals("flower", flower.getEnemyType());
-    }
-
     @Test
     public void getMoving() {
     }
@@ -34,7 +27,7 @@ public class FlowerTest {
      */
     @Test
     public void getBiome() {
-        assertEquals("forest", flower.getBiome());
+        assertEquals("forest", flower.getBiomeLocated());
     }
 
     /**

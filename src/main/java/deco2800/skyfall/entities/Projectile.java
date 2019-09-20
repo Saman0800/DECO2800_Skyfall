@@ -5,6 +5,7 @@ import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationRole;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import deco2800.skyfall.entities.enemies.AbstractEnemy;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 

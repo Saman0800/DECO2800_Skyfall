@@ -1,6 +1,8 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.enemies.AbstractEnemy;
+import deco2800.skyfall.entities.enemies.Treeman;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.worlds.biomes.ForestBiome;

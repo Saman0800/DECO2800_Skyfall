@@ -1,13 +1,12 @@
 package deco2800.skyfall.entities;
 
 
-import org.junit.After;
+import deco2800.skyfall.entities.enemies.Robot;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -44,28 +43,6 @@ public class RobotTest {
         Assert.assertEquals(10,robot.getHealth());
     }
 
-
-    /**
-     * To test robot armour
-     */
-    /*
-    @Test
-    public void testArmour(){
-        Assert.assertEquals(2,robot.getArmour());
-    }
-    */
-
-
-    /**
-     * To test robot enemy type
-     */
-    @Test
-    public void getEnemyTypeTest() {
-        String type=robot.getEnemyType();
-        Assert.assertEquals("robot",type);
-
-    }
-
     /**
      * To test whether moving
      */
@@ -79,7 +56,7 @@ public class RobotTest {
      */
     @Test
     public void getBiome() {
-        Assert.assertEquals("forest",robot.getBiome());
+        Assert.assertEquals("forest",robot.getBiomeLocated());
     }
 
 

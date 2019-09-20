@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.entities.enemies.Treeman;
 import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.entities.worlditems.*;
@@ -22,8 +23,6 @@ import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
 
-import java.util.concurrent.CopyOnWriteArrayList;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
 

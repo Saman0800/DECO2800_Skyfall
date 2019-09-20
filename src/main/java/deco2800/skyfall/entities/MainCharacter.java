@@ -700,6 +700,10 @@ public class MainCharacter extends Peon
             */
 
             SoundManager.playSound(HURT);
+
+            if (hurtTime == 400) {
+                setRecovering(true);
+            }
         }
     }
 
@@ -745,14 +749,14 @@ public class MainCharacter extends Peon
 
     private void checkIfRecovered() {
         recoverTime += 20;
-        recoverTime += 20;
 
         this.changeCollideability(false);
 
-        if (recoverTime > 2000) {
+        if (recoverTime > 1000) {
             logger.info("Recovered");
             setRecovering(false);
             changeCollideability(true);
+            recoverTime = 0;
         }
     }
 

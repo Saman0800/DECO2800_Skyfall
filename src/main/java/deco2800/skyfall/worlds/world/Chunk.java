@@ -1,15 +1,12 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.BowMan;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
 import deco2800.skyfall.entities.worlditems.EntitySpawnTable;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import org.javatuples.Pair;
 
 import java.util.*;

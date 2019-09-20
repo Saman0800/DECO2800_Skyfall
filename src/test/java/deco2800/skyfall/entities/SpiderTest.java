@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.entities.enemies.Spider;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,17 +52,6 @@ public class SpiderTest {
     }
     */
 
-
-    /**
-     * To test spider enemy type
-     */
-    @Test
-    public void getEnemyTypeTest() {
-        String type=spider.getEnemyType();
-        Assert.assertEquals("spider",type);
-
-    }
-
     /**
      * To test whether moving
      */
@@ -75,7 +65,7 @@ public class SpiderTest {
      */
     @Test
     public void getBiome() {
-        Assert.assertEquals("forest",spider.getBiome());
+        Assert.assertEquals("forest",spider.getBiomeLocated());
     }
 
 

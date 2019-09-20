@@ -36,135 +36,137 @@ public class AnimationManager extends AbstractManager {
     public AnimationManager() {
         textureManager = GameManager.getManagerFromInstance(TextureManager.class);
         animationMap = new HashMap<>();
-
         final float DEFAULT_FRAME_RATE  = 1f/4f;
-        //These are simply test objects.
-        this.generateAnimationObject("mario_right",
-                "mario_right", 100, 138, DEFAULT_FRAME_RATE);
-        this.generateAnimationObject("mario_left",
-                "mario_left", 100, 138, DEFAULT_FRAME_RATE);
 
-        this.generateAnimationObject("whitebearNE","resources/whitebearright/whitebearright.atlas",0.05f);
-        this.generateAnimationObject("whitebearN","resources/whitebearback/whitebearback.atlas",0.05f);
-        this.generateAnimationObject("whitebearNW","resources/whitebearleft/whitebearleft.atlas",0.05f);
-        this.generateAnimationObject("whitebearS","resources/whitebearfront/whitebearfront.atlas",0.05f);
-        this.generateAnimationObject("whitebearSW","resources/whitebearleft/whitebearleft.atlas",0.05f);
-        this.generateAnimationObject("whitebearSE","resources/whitebearright/whitebearright.atlas",0.05f);
-        this.generateAnimationObject("spider_defence","resources/spiderSheet/SpiderAnimation.atlas",DEFAULT_FRAME_RATE);
-        this.generateAnimationObject("robot_defence","resources/robotSheet/robotAnimation.atlas",DEFAULT_FRAME_RATE);
-        this.generateAnimationObject("stoneJNE","resources/EnemyAnimationPacked/northEastJump/stoneJNE.atlas",0.2f);
-        this.generateAnimationObject("stoneJN","resources/EnemyAnimationPacked/northJump/stoneJN.atlas",0.2f);
-        this.generateAnimationObject("stoneJNW","resources/EnemyAnimationPacked/northWestJump/stoneJNW.atlas",0.2f);
-        this.generateAnimationObject("stoneJS","resources/EnemyAnimationPacked/southJump/stoneJS.atlas",0.2f);
-        this.generateAnimationObject("stoneJSW","resources/EnemyAnimationPacked/southWestJump/stoneJSW.atlas",0.2f);
-        this.generateAnimationObject("stoneJSE","resources/EnemyAnimationPacked/southEastJump/stoneJSE.atlas",0.2f);
-        this.generateAnimationObject("stoneANW","resources/EnemyAnimationPacked/attackAnimation/" +
-                "stoneAttackNorthWest/stoneANW.atlas",0.2f);
-        this.generateAnimationObject("stoneAS","resources/EnemyAnimationPacked/attackAnimation/" +
-                "stoneAttackSouth/stoneAS.atlas",0.2f);
-        this.generateAnimationObject("stoneASE","resources/EnemyAnimationPacked/attackAnimation/" +
-                "stoneAttackSouthEast/stoneASE.atlas",0.2f);
-        this.generateAnimationObject("stoneASW","resources/EnemyAnimationPacked/attackAnimation/" +
-                "stoneAttackSouthWest/stoneASW.atlas",0.2f);
-        this.generateAnimationObject("flower_defence","resources/enemyFlowerSheet/flower.atlas",0.2f);
+        try {
+            //These are simply test objects.
+            this.generateAnimationObject("mario_right",
+                    "mario_right", 100, 138, DEFAULT_FRAME_RATE);
+            this.generateAnimationObject("mario_left",
+                    "mario_left", 100, 138, DEFAULT_FRAME_RATE);
 
-        //Animation of treeman
-        this.generateAnimationObject("treemanME","resources/enemyTreemanMovementSheet/eastMovement/eastMovement.atlas",0.2f);
-        this.generateAnimationObject("treemanMN","resources/enemyTreemanMovementSheet/northMovement/northMovement.atlas",0.2f);
-        // TODO: make NE direction spritesheet
-        this.generateAnimationObject("treemanMNE","resources/enemyTreemanMovementSheet/northMovement/northMovement.atlas",0.2f);
-        this.generateAnimationObject("treemanMSE","resources/enemyTreemanMovementSheet/southEastMovement/southEastMovement.atlas",0.2f);
-        this.generateAnimationObject("treemanMS","resources/enemyTreemanMovementSheet/southMovement/southMovement.atlas",0.2f);
-        this.generateAnimationObject("treemanMSW","resources/enemyTreemanMovementSheet/southWestMovement/southWestMovement.atlas",0.2f);
-        this.generateAnimationObject("treemanMW","resources/enemyTreemanMovementSheet/westMovement/westMovement.atlas",0.2f);
-        this.generateAnimationObject("treemanMNW","resources/enemyTreemanMovementSheet/westMovement/westMovement.atlas",0.2f);
+            this.generateAnimationObject("whitebearNE","resources/whitebearright/whitebearright.atlas",0.05f);
+            this.generateAnimationObject("whitebearN","resources/whitebearback/whitebearback.atlas",0.05f);
+            this.generateAnimationObject("whitebearNW","resources/whitebearleft/whitebearleft.atlas",0.05f);
+            this.generateAnimationObject("whitebearS","resources/whitebearfront/whitebearfront.atlas",0.05f);
+            this.generateAnimationObject("whitebearSW","resources/whitebearleft/whitebearleft.atlas",0.05f);
+            this.generateAnimationObject("whitebearSE","resources/whitebearright/whitebearright.atlas",0.05f);
 
-        this.generateAnimationObject("treemanAE","resources/EnemyAnimationPacked/TreemanAttackAnimation/" +
-                "eastAttack/eastAttack.atlas",0.2f);
-        this.generateAnimationObject("treemanAN","resources/EnemyAnimationPacked/TreemanAttackAnimation/" +
-                "northAttack/northAttack.atlas",0.2f);
-        this.generateAnimationObject("treemanAS","resources/EnemyAnimationPacked/TreemanAttackAnimation/" +
-                "southAttack/southAttack.atlas",0.2f);
-        this.generateAnimationObject("treemanASE","resources/EnemyAnimationPacked/TreemanAttackAnimation/" +
-                "southEastAttack/southEastAttack.atlas",0.2f);
-        this.generateAnimationObject("treemanASW","resources/EnemyAnimationPacked/TreemanAttackAnimation/" +
-                "southWestAttack/southWestAttack.atlas",0.2f);
-        this.generateAnimationObject("treemanAW","resources/EnemyAnimationPacked/TreemanAttackAnimation/" +
-                "westAttack/westAttack.atlas",0.2f);
+            // Enemies
+            this.generateAnimationObject("spider_defence","resources/enemyOld/spiderSheet/SpiderAnimation.atlas",DEFAULT_FRAME_RATE);
+            this.generateAnimationObject("robot_defence","resources/enemyOld/robotSheet/robotAnimation.atlas",DEFAULT_FRAME_RATE);
+            this.generateAnimationObject("stoneJNE","resources/enemyOld/EnemyAnimationPacked/northEastJump/stoneJNE.atlas",0.2f);
+            this.generateAnimationObject("stoneJN", "resources/enemyOld/EnemyAnimationPacked/northJump/stoneJN.atlas",0.2f);
+            this.generateAnimationObject("stoneJNW","resources/enemyOld/EnemyAnimationPacked/northWestJump/stoneJNW.atlas",0.2f);
+            this.generateAnimationObject("stoneJS", "resources/enemyOld/EnemyAnimationPacked/southJump/stoneJS.atlas",0.2f);
+            this.generateAnimationObject("stoneJSW","resources/enemyOld/EnemyAnimationPacked/southWestJump/stoneJSW.atlas",0.2f);
+            this.generateAnimationObject("stoneJSE","resources/enemyOld/EnemyAnimationPacked/southEastJump/stoneJSE.atlas",0.2f);
+            this.generateAnimationObject("stoneANW","resources/enemyOld/EnemyAnimationPacked/attackAnimation/" +
+                    "stoneAttackNorthWest/stoneANW.atlas",0.2f);
+            this.generateAnimationObject("stoneAS","resources/enemyOld/EnemyAnimationPacked/attackAnimation/" +
+                    "stoneAttackSouth/stoneAS.atlas",0.2f);
+            this.generateAnimationObject("stoneASE","resources/enemyOld/EnemyAnimationPacked/attackAnimation/" +
+                    "stoneAttackSouthEast/stoneASE.atlas",0.2f);
+            this.generateAnimationObject("stoneASW","resources/enemyOld/EnemyAnimationPacked/attackAnimation/" +
+                    "stoneAttackSouthWest/stoneASW.atlas",0.2f);
 
-        this.generateAnimationObject("treemanDead","resources/enemyTreemanDeadSheet/TreemanDead.atlas",0.2f);
+            this.generateAnimationObject("treemanME","resources/enemyOld/enemyTreemanMovementSheet/eastMovement/eastMovement.atlas",0.2f);
+            this.generateAnimationObject("treemanMN","resources/enemyOld/enemyTreemanMovementSheet/northMovement/northMovement.atlas",0.2f);
+            this.generateAnimationObject("treemanMNE","resources/enemyOld/enemyTreemanMovementSheet/northMovement/northMovement.atlas",0.2f);
+            this.generateAnimationObject("treemanMSE","resources/enemyOld/enemyTreemanMovementSheet/southEastMovement/southEastMovement.atlas",0.2f);
+            this.generateAnimationObject("treemanMS","resources/enemyOld/enemyTreemanMovementSheet/southMovement/southMovement.atlas",0.2f);
+            this.generateAnimationObject("treemanMSW","resources/enemyOld/enemyTreemanMovementSheet/southWestMovement/southWestMovement.atlas",0.2f);
+            this.generateAnimationObject("treemanMW","resources/enemyOld/enemyTreemanMovementSheet/westMovement/westMovement.atlas",0.2f);
+            this.generateAnimationObject("treemanMNW","resources/enemyOld/enemyTreemanMovementSheet/westMovement/westMovement.atlas",0.2f);
+            this.generateAnimationObject("treemanAE","resources/enemyOld/EnemyAnimationPacked/TreemanAttackAnimation/" +
+                    "eastAttack/eastAttack.atlas",0.2f);
+            this.generateAnimationObject("treemanAN","resources/enemyOld/EnemyAnimationPacked/TreemanAttackAnimation/" +
+                    "northAttack/northAttack.atlas",0.2f);
+            this.generateAnimationObject("treemanAS","resources/enemyOld/EnemyAnimationPacked/TreemanAttackAnimation/" +
+                    "southAttack/southAttack.atlas",0.2f);
+            this.generateAnimationObject("treemanASE","resources/enemyOld/EnemyAnimationPacked/TreemanAttackAnimation/" +
+                    "southEastAttack/southEastAttack.atlas",0.2f);
+            this.generateAnimationObject("treemanASW","resources/enemyOld/EnemyAnimationPacked/TreemanAttackAnimation/" +
+                    "southWestAttack/southWestAttack.atlas",0.2f);
+            this.generateAnimationObject("treemanAW","resources/enemyOld/EnemyAnimationPacked/TreemanAttackAnimation/" +
+                    "westAttack/westAttack.atlas",0.2f);
+            this.generateAnimationObject("treemanDead","resources/enemyOld/enemyTreemanDeadSheet/TreemanDead.atlas",0.2f);
 
-        this.generateAnimationObject("tigerFront","resources/petTigerMovement/tigerMovementFront/tigerMovementFront.atlas",0.2f);
+            this.generateAnimationObject("flower_defence","resources/enemyOld/enemyFlowerSheet/flower.atlas",0.2f);
+            this.generateAnimationObject("flower_melee","resources/enemyOld/enemyFlowerMelee/FlowerMelee.atlas",0.2f);
+            this.generateAnimationObject("flower_close","resources/enemyOld/enemyFlowerClose/FlowerClose.atlas",0.2f);
 
-        this.generateAnimationObject("flower_melee","resources/enemyFlowerMelee/FlowerMelee.atlas",0.2f);
-        this.generateAnimationObject("flower_close","resources/enemyFlowerClose/FlowerClose.atlas",0.2f);
+            // Pets
+            this.generateAnimationObject("tigerFront","resources/petTigerMovement/tigerMovementFront/tigerMovementFront.atlas",0.2f);
 
-        this.generateAnimationObject("MainCharacterN_Anim",
-                "MainCharacterN_Anim",
-                729, 1134, 0.2f);
+            // Main Character
+            this.generateAnimationObject("MainCharacterN_Anim",
+                    "MainCharacterN_Anim",
+                    729, 1134, 0.11f);
 
-        this.generateAnimationObject("MainCharacterNE_Anim",
-                "MainCharacterNE_Anim",
-                740, 1143, 0.2f);
+            this.generateAnimationObject("MainCharacterNE_Anim",
+                    "MainCharacterNE_Anim",
+                    740, 1143, 0.11f);
 
-        this.generateAnimationObject("MainCharacterE_Anim",
-                "MainCharacterE_Anim",
-                714, 1125, 0.2f);
+            this.generateAnimationObject("MainCharacterE_Anim",
+                    "MainCharacterE_Anim",
+                    714, 1125, 0.11f);
 
-        this.generateAnimationObject("MainCharacterSE_Anim",
-                "MainCharacterSE_Anim",
-                729, 1128, 0.2f);
+            this.generateAnimationObject("MainCharacterSE_Anim",
+                    "MainCharacterSE_Anim",
+                    729, 1128, 0.11f);
 
-        this.generateAnimationObject("MainCharacterS_Anim",
-                "MainCharacterS_Anim",
-                729, 1134, 0.2f);
+            this.generateAnimationObject("MainCharacterS_Anim",
+                    "MainCharacterS_Anim",
+                    729, 1134, 0.11f);
 
-        this.generateAnimationObject("MainCharacterSW_Anim",
-                "MainCharacterSW_Anim",
-                729, 1129, 0.2f);
+            this.generateAnimationObject("MainCharacterSW_Anim",
+                    "MainCharacterSW_Anim",
+                    729, 1129, 0.11f);
 
-        this.generateAnimationObject("MainCharacterW_Anim",
-                "MainCharacterW_Anim",
-                714, 1125, 0.2f);
+            this.generateAnimationObject("MainCharacterW_Anim",
+                    "MainCharacterW_Anim",
+                    714, 1125, 0.11f);
 
-        this.generateAnimationObject("MainCharacterNW_Anim",
-                "MainCharacterNW_Anim",
-                743, 1147, 0.2f);
+            this.generateAnimationObject("MainCharacterNW_Anim",
+                    "MainCharacterNW_Anim",
+                    743, 1147, 0.11f);
 
-        this.generateAnimationObject("MainCharacter_Attack_E_Anim",
-                "MainCharacter_Attack_E_Anim",
-                731, 1130, 0.09f);
+            this.generateAnimationObject("MainCharacter_Attack_E_Anim",
+                    "MainCharacter_Attack_E_Anim",
+                    731, 1130, 0.09f);
 
-        this.generateAnimationObject("MainCharacter_Hurt_E_Anim",
-                "MainCharacter_Hurt_E_Anim",
-                750, 1161, 0.2f);
+            this.generateAnimationObject("MainCharacter_Hurt_E_Anim",
+                    "MainCharacter_Hurt_E_Anim",
+                    750, 1161, 0.2f);
 
-        this.generateAnimationObject("MainCharacter_Dead_E_Anim",
-                "MainCharacter_Dead_E_Anim",
-                1020, 1167, 0.2f);
-        this.generateAnimationObject("MainCharacter_Dead_E_Still",
-                "MainCharacter_Dead_E_Still",
-                1216, 1293, 50f);
+            this.generateAnimationObject("MainCharacter_Dead_E_Anim",
+                    "MainCharacter_Dead_E_Anim",
+                    1020, 1167, 0.2f);
+            this.generateAnimationObject("MainCharacter_Dead_E_Still",
+                    "MainCharacter_Dead_E_Still",
+                    1216, 1293, 50f);
 
-        this.generateAnimationObject("Spells_Fire_Anim",
-                "spells_fire_Anim",
-                184, 278, 0.12f);
+            this.generateAnimationObject("Spells_Fire_Anim",
+                    "spells_fire_Anim",
+                    184, 278, 0.12f);
 
-        this.generateAnimationObject("Spells_Shield_Anim",
-                "spells_shield_Anim",
-                638, 515, 0.12f);
-        this.generateAnimationObject("Spells_Shield_Still",
-                "spells_shield_Still",
-                629, 515, 50f);
+            this.generateAnimationObject("Spells_Shield_Anim",
+                    "spells_shield_Anim",
+                    638, 515, 0.12f);
+            this.generateAnimationObject("Spells_Shield_Still",
+                    "spells_shield_Still",
+                    629, 515, 50f);
 
-        this.generateAnimationObject("Spells_Tornado_Anim",
-                "spells_tornado_Anim",
-                303, 337, 0.12f);
+            this.generateAnimationObject("Spells_Tornado_Anim",
+                    "spells_tornado_Anim",
+                    303, 337, 0.12f);
 
-        System.out.println("All animations in game");
+            System.out.println("All animations in game");
 
-
-        System.out.println("All animations in game");
+           } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

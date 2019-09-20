@@ -4,8 +4,7 @@ import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.entities.AbstractEnemy;
-import deco2800.skyfall.entities.EnemyEntity;
+import deco2800.skyfall.entities.enemies.AbstractEnemy;
 import deco2800.skyfall.entities.ICombatEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameManager;
@@ -68,7 +67,7 @@ public class Tiger extends AbstractEnemy implements Animatable {
      * the game
      */
     public Tiger(float col, float row, MainCharacter mc) {
-        super(col, row, mc);
+        super(col, row);
         this.setTexture("petTiger");
         this.setObjectName("petTiger");
         this.setHeight(5);
@@ -86,7 +85,6 @@ public class Tiger extends AbstractEnemy implements Animatable {
     /**
      * Initialization value of pet tiger
      */
-    /*
     public Tiger(float col, float row) {
         super(col, row);
         this.setTexture("petTiger");
@@ -95,9 +93,7 @@ public class Tiger extends AbstractEnemy implements Animatable {
         this.setHealth(HEALTH);
         this.setLevel(2);
         this.setSpeed(2);
-        this.setArmour(5);
     }
-    */
 
 
     /**

@@ -1,14 +1,14 @@
 package deco2800.skyfall.entities.spells;
 
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.enemies.AbstractEnemy;
+import deco2800.skyfall.entities.enemies.Treeman;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.world.World;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.LinkedList;
 import java.util.List;
