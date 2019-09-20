@@ -56,7 +56,7 @@ public class SoundEffectTest {
     @Test
     public void testHasSound() {
         try {
-            assertEquals(sound.getSoundMap().get("spider"),
+            assertEquals(sound.getSoundMap().get("spiderWalk"),
                     Gdx.audio.newSound(Gdx.files.internal(path + "spider" + ".wav")));
         } catch (NullPointerException npe) {
         }

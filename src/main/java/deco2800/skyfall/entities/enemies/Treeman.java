@@ -9,7 +9,7 @@ import deco2800.skyfall.entities.MainCharacter;
 
 public class Treeman extends AbstractEnemy implements Animatable, Tickable {
     //The health of treeman
-    private static final transient int HEALTH = 1;
+    private static final transient int HEALTH = 10;
 
     /**
      * Initialization value of enemy treeman, and set the initial image in
@@ -49,8 +49,6 @@ public class Treeman extends AbstractEnemy implements Animatable, Tickable {
         this.setDirectionTextures();
         this.configureSounds();
     }
-
-
 
     private void configureSounds() {
         chasingSound = "treeWalk";

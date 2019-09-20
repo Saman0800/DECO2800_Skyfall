@@ -11,7 +11,7 @@ import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.util.HexVector;
 
 public class Flower extends AbstractEnemy implements Animatable {
-    private static transient int HEALTH = 1;
+    private static transient int HEALTH = 13;
 
     //savage animation
     public MainCharacter mc;
@@ -21,7 +21,7 @@ public class Flower extends AbstractEnemy implements Animatable {
         this.setTexture("flower");
         this.setObjectName("flower");
         this.setHeight(1);
-        this.setHealth(HEALTH);
+        this.setHealth(13);
         this.setDamage(4);
         this.setLevel(2);
         this.setSpeed(1);
@@ -41,7 +41,7 @@ public class Flower extends AbstractEnemy implements Animatable {
         this.setTexture("flower");
         this.setObjectName("flower");
         this.setHeight(1);
-        this.setHealth(HEALTH);
+        this.setHealth(13);
         this.setLevel(2);
         this.setSpeed(1);
         this.setAllSpeed(0.04f, 0.05f, 0.02f);

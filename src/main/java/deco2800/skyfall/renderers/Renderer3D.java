@@ -16,6 +16,7 @@ import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.worlds.world.Chunk;
 import org.javatuples.Pair;
+import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -218,6 +219,7 @@ public class Renderer3D implements Renderer {
 
                     if (entity instanceof MainCharacter) {
                         if (((MainCharacter) entity).IsHurt() || ((MainCharacter) entity).isDead()) {
+                            System.out.println("Changed to red");
                             batch.setColor(Color.RED);
                         } else if (((MainCharacter) entity).isRecovering()) {
                             if (((MainCharacter) entity).isTexChanging()) {

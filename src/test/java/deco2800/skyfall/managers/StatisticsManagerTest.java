@@ -37,7 +37,7 @@ public class StatisticsManagerTest {
      */
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
 
-        testCharacter1 = MainCharacter.getInstance(4, 4, 0.5f, "Side Piece", 10);
+        testCharacter1 = MainCharacter.getInstance(4, 4, 0.5f, "Side Piece", 60);
         // Reset the level, heath and deaths.
         testCharacter1.changeLevel(1 - testCharacter1.getLevel());
         testCharacter1.changeHealth(10 - testCharacter1.getHealth());
@@ -120,10 +120,10 @@ public class StatisticsManagerTest {
         this.testManager.getCharacter().pickUpInventory(new Aloe_Vera());
     }
 
-    @Test
     /**
      * Test that deaths causes loss of level correctly
      */
+    @Test
     public void loseLevelTest() {
         this.testManager.getCharacter().changeLevel(5);
 

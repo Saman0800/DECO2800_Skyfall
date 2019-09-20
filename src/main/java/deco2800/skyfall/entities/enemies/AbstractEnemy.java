@@ -40,14 +40,14 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
     private boolean isHurt = false;
 
     // How long does Enemy take to initiate animation.
-    protected long attackTime = 0;
-    protected long hurtTime = 0;
-    protected long deadTime = 0;
+    private long attackTime = 0;
+    private long hurtTime = 0;
+    private long deadTime = 0;
 
     // Speed of the enemy
-    protected float normalSpeed = 0.02f;
-    protected float chaseSpeed = 0.03f;
-    protected float slowSpeed = 0.09f;
+    private float normalSpeed = 0.02f;
+    private float chaseSpeed = 0.03f;
+    private float slowSpeed = 0.09f;
 
     // Sound of the enemy
     protected String chasingSound;
@@ -77,6 +77,8 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
         super(row, col, speed, textureName,health);
         this.setTexture(textureName);
         this.level = level;
+        this.setHealth(health);
+        this.setMaxHealth(health);
     }
 
     public AbstractEnemy (float col, float row) {
@@ -154,9 +156,10 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
         hurtTime = 0;
         setHurt(true);
         changeHealth(-damage);
+        health -= damage;
 
         // In Peon.class, when the health = 0, isDead will be set true automatically.
-        if (health == 0) {
+        if (health <= 0) {
             destroy();
         }
     }
@@ -189,18 +192,21 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
      * Remove this enemy from the game world.
      */
     private void destroy() {
-        if(chasingSound != null) {
-            SoundManager.stopSound(chasingSound);
-        }
-        if(diedSound != null) {
-            SoundManager.playSound(diedSound);
-        }
+        if (isDead()) {
+            if(chasingSound != null) {
+                SoundManager.stopSound(chasingSound);
+            }
+            if(diedSound != null) {
+                SoundManager.playSound(diedSound);
 
-        isMoving = false;
-        this.destination = new HexVector(this.getCol(), this.getRow());
-        this.setDead(true);
-        log.info("Enemy destroyed.");
-        GameManager.get().getWorld().removeEntity(this);
+            isMoving = false;
+            this.destination = new HexVector(this.getCol(), this.getRow());
+            this.setDead(true);
+            log.info("Enemy destroyed.");}
+
+            GameManager.get().getWorld().removeEntity(this);
+            setCurrentState(AnimationRole.NULL);
+        }
     }
 
     /**
@@ -362,7 +368,7 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
     public void setAllSpeed(float normalSpeed,
                             float chasingSpeed, float slowSpeed) {
         this.normalSpeed = normalSpeed;
-        this.chaseSpeed = chaseSpeed;
+        this.chaseSpeed = chasingSpeed;
         this.slowSpeed = slowSpeed;
     }
 
@@ -423,7 +429,6 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
                 setCurrentState(AnimationRole.STILL);
             } else if (getToBeRun().getType() == AnimationRole.ATTACK) {
                 setAttacking(false);
-                return;
             }
         } else {
             if (isDead()) {
@@ -449,7 +454,7 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
      */
     @Override
     public String toString() {
-        return String.format("%s at (%d, %d) %s biome", (int)getCol(), (int)getRow(), getBiomeLocated());
+        return String.format("%s at (%d, %d) %s biome", enemyType, (int)getCol(), (int)getRow(), getBiomeLocated());
     }
 
 }

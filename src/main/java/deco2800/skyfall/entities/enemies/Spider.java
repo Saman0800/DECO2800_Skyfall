@@ -35,6 +35,7 @@ public class Spider extends AbstractEnemy implements Animatable {
         this.setSpeed(1);
         this.setRange(4);
         this.setCanMove(true);
+        this.enemyType = "spider";
         this.mc = mc;
         this.configureAnimations();
         this.setDirectionTextures();
@@ -51,6 +52,7 @@ public class Spider extends AbstractEnemy implements Animatable {
         this.setLevel(1);
         this.setSpeed(1);
         this.setRange(4);
+        this.enemyType = "spider";
         this.configureSounds();
         this.configureAnimations();
     }

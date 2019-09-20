@@ -3,6 +3,7 @@ package deco2800.skyfall.entities;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import deco2800.skyfall.buildings.BuildingFactory;
+import deco2800.skyfall.entities.enemies.Treeman;
 import deco2800.skyfall.entities.spells.SpellFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -284,6 +285,7 @@ public class MainCharacter extends Peon
         this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
         this.setHeight(1);
         this.setObjectName("MainPiece");
+        this.setMaxHealth(health);
 
         GameManager.getManagerFromInstance(InputManager.class)
                 .addKeyDownListener(this);
@@ -656,6 +658,9 @@ public class MainCharacter extends Peon
         logger.info("Hurted: " + isHurt);
         changeHealth(-damage);
         updateHealth();
+
+        getBody().setLinearVelocity(getBody().getLinearVelocity()
+                        .lerp(new Vector2(0.f, 0.f), 0.5f));
 
         System.out.println("CURRENT HEALTH:" + String.valueOf(getHealth()));
         if (this.getHealth() <= 0) {

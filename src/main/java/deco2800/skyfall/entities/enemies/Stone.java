@@ -6,9 +6,6 @@ import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.SoundManager;
-import deco2800.skyfall.resources.GoldPiece;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +26,7 @@ public class Stone extends AbstractEnemy implements Animatable {
         this.setHeight(1);
         this.setHealth(10);
         this.setLevel(2);
-        this.setSpeed(slowSpeed);
+        this.setSpeed(0.008f);
         this.setAllSpeed(0.008f, 0.009f, 0.007f);
         this.setDamage(3);
         this.setRange(1);
@@ -47,11 +44,12 @@ public class Stone extends AbstractEnemy implements Animatable {
         this.setTexture("enemyStone");
         this.setObjectName("enemyStone");
         this.setHeight(1);
-        this.setHealth(3);
+        this.setHealth(13);
         this.setLevel(2);
         this.setSpeed(1);
         this.setAllSpeed(0.01f, 0.02f, 0.02f);
         this.setRange(1);
+        this.enemyType = "stone";
         this.configureAnimations();
         this.setDirectionTextures();
         this.configureSounds();

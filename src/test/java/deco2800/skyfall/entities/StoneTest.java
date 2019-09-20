@@ -122,13 +122,4 @@ public class StoneTest {
         Assert.assertEquals(stone.toString(),"stone at (-3, -1) forest biome");
     }
 
-    /**
-     * To test moving direction
-     */
-    @Test
-    public void getMovingDirection() {
-        stone.attackPlayer(mainCharacter);
-        Assert.assertEquals(stone.getMovingDirection(), Direction.NORTH_EAST);
-    }
-
 }
