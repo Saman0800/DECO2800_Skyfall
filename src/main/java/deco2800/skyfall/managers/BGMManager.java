@@ -2,12 +2,14 @@ package deco2800.skyfall.managers;
 
 import java.io.File;
 import java.io.IOException;
+
+import deco2800.skyfall.observers.KeyTypedObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sound.sampled.*;
 
-public class BGMManager extends AbstractManager {
+public class BGMManager extends AbstractManager implements KeyTypedObserver {
 
     /* Audio input stream */
     private static AudioInputStream audioInputStream;
@@ -171,6 +173,15 @@ public class BGMManager extends AbstractManager {
             }
         } catch (NullPointerException | IllegalArgumentException ex) {
             LOGGER.warn(String.valueOf(ex));
+        }
+    }
+
+    @Override
+    public void notifyKeyTyped(char character) {
+        if (character == 'm') {
+            mute();
+        } else if (character == 'u') {
+            unmute();
         }
     }
 }
