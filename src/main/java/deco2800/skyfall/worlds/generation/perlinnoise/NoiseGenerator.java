@@ -13,6 +13,8 @@ public class NoiseGenerator {
 
     private static final double NORMALISATION_VALUE = 1;
 
+    private long seed;
+
     //The random given, allows for seeding
     private Random random;
     /**
@@ -33,7 +35,7 @@ public class NoiseGenerator {
 
     /**
      * The Constructor used to create a perlin noise generator
-     * @param random The random number generator, allows for seeding
+     * @param seed The random number generator, allows for seeding
      * @param octaves The number of sets of perlin values that will be generated and than combined. The higher the value
      *                The more small details and anomlies in the world there will and there more perceived realism
      *                world will have, as it will have small bits of chaos.
@@ -41,8 +43,9 @@ public class NoiseGenerator {
      * @param attenuation The weight of the octaves, the higher the value the more sporatic the land will be when there
      *                    are many octaves
      */
-    public NoiseGenerator(Random random,   int octaves, double startPeriod, double attenuation) {
-        this.random = random;
+    public NoiseGenerator(long seed, int octaves, double startPeriod, double attenuation) {
+        this.seed = seed;
+        this.random = new Random(seed);
         if (octaves < 1){
             throw new IllegalArgumentException("The number of octaves must be greater than 0");
         }
@@ -97,6 +100,21 @@ public class NoiseGenerator {
      */
     public static double fade(double x) {
         return x * x * x * (x * (x * 6 - 15) + 10);
+    }
+
+    /**
+     * Repeatedly smooths a value using {@link #fade(double)} {@code n} times.
+     *
+     * @param x the value to fade
+     * @param n the number of times to apply the fade function
+     *
+     * @return the result of the fade
+     */
+    public static double fade(double x, int n) {
+        for (int i = 0; i < n; i++) {
+            x = fade(x);
+        }
+        return x;
     }
 
 
@@ -173,4 +191,12 @@ public class NoiseGenerator {
         return perlinValue / attenuationSum;
     }
 
+
+    /**
+     * Returns the seed
+     * @return The seed
+     */
+    public long getSeed() {
+        return seed;
+    }
 }

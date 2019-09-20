@@ -29,7 +29,7 @@ public class StoneTest {
     private MainCharacter mainCharacter;
     @Before
     public void setup() {
-        mainCharacter= new MainCharacter(0,0,0.05f, "Main Piece", 10);
+        mainCharacter = MainCharacter.getInstance(0,0,0.05f, "Main Piece", 10);
         stone=new Stone(-4, -2, mainCharacter);
         HexVector destination=new HexVector(mainCharacter.getCol(),mainCharacter.getRow());
         stone.moveTowards(destination);
@@ -61,10 +61,12 @@ public class StoneTest {
     /**
      * To test stone armour
      */
+    /*
     @Test
     public void testArmour(){
         Assert.assertEquals(1,stone.getArmour());
     }
+    */
 
 
     /**
@@ -72,7 +74,7 @@ public class StoneTest {
      */
     @Test
     public void getBiome() {
-        Assert.assertEquals(stone.getBiome(),"desert");
+        Assert.assertEquals(stone.getBiome(),"forest");
     }
 
     /**
@@ -135,7 +137,7 @@ public class StoneTest {
      */
     @Test
     public void toStringTest() {
-        Assert.assertEquals(stone.toString(),"stone at (-3, -1) desert biome");
+        Assert.assertEquals(stone.toString(),"stone at (-3, -1) forest biome");
     }
 
     /**

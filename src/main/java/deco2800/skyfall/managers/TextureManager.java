@@ -56,7 +56,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("melee_test", new Texture("resources/punch.png"));
             textureMap.put("camel", new Texture("resources/camel/camel-face(no-player).png"));
             textureMap.put("camel_character", new Texture("resources/camel/camel-withplayer1(left).png"));
-            textureMap.put("horse", new Texture("resources/horse_images/horse-left-walk1.png"));
+            textureMap.put("horse_images", new Texture("resources/horse_images/horse-left-walk1.png"));
             textureMap.put("horse_character", new Texture("resources/horse_images/horse-left-walk-with-player1.png"));
 
             // Tile textures
@@ -83,11 +83,21 @@ public class TextureManager extends AbstractManager {
 
             }
 
-            //EnemyEntity robot
+
+            textureMap.put("gold", new Texture("resources/gold.png"));
+            //EnemyEntity
             textureMap.put("flower", new Texture("resources/flower.png"));
             textureMap.put("enemyStone", new Texture("resources/enemyStone.png"));
+            textureMap.put("enemyTreeman", new Texture("resources/enemyTreeman.png"));
             textureMap.put("spider", new Texture("resources/spider.png"));
             textureMap.put("robot", new Texture("resources/robot.png"));
+            textureMap.put("whitebear", new Texture("resources/whitebear.png"));
+            textureMap.put("icewhitebear", new Texture("resources/icewhitebear.png"));
+            textureMap.put("lizardHome", new Texture("resources/lizard/home.png"));
+            textureMap.put("lizard", new Texture("resources/lizard/lizard.png"));
+            textureMap.put("lizardE", new Texture("resources/lizard/lizardE.png"));
+            textureMap.put("lizardN", new Texture("resources/lizard/lizardN.png"));
+            textureMap.put("lizardS", new Texture("resources/lizard/lizardS.png"));
             textureMap.put("stoneRS", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/stoneRS.png"));
             textureMap.put("stoneRSE", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/stoneRSE.png"));
             textureMap.put("stoneRSW", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/stoneRSW.png"));
@@ -99,8 +109,9 @@ public class TextureManager extends AbstractManager {
             textureMap.put("chestClosed", new Texture("resources/chest_icon.png"));
             textureMap.put("blueprintShop", new Texture("resources/shopkeeper.png"));
 
-            textureMap.put("enemyTreeman", new Texture("resources/Treeman.png"));
             textureMap.put("treemanDead", new Texture("resources/TreemanDead.png"));
+
+            textureMap.put("petTiger", new Texture("resources/tiger_front1.png"));
 
             textureMap.put("flowerDead", new Texture("resources/flowerDead.png"));
 
@@ -110,9 +121,6 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("selection", new Texture("resources/blue_selection.png"));
             textureMap.put("path", new Texture("resources/yellow_selection.png"));
-
-            // Portrait of the tutorial AI, replace later with custom art
-            textureMap.put("Karen", new Texture("resources/Karen(replace)" + ".png"));
 
             textureMap.put("buildingB", new Texture("resources/building3x2.png"));
 
@@ -180,7 +188,7 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("pop up screen", new Texture("resources/pop_up_screen_background.png"));
             textureMap.put("game menu bar", new Texture("resources/pop_up_screen_title_background.png"));
-            textureMap.put("game over temp bg", new Texture("resources/game_over_background.png"));
+            textureMap.put("game_over_temp_bg", new Texture("resources/game_over_background.png"));
             textureMap.put("game over retry temp", new Texture("resources/game_over_retry.png"));
             textureMap.put("game over home temp", new Texture("resources/game_over_home_button.png"));
 
@@ -267,6 +275,10 @@ public class TextureManager extends AbstractManager {
             textureMap.put("Apple_inv", new Texture("resources/items_icons/apple.png"));
             textureMap.put("Berry_inv", new Texture("resources/items_icons/berry.png"));
             textureMap.put("PoisonousMushroom_inv", new Texture("resources/items_icons/poisonous_mushroom.png"));
+            textureMap.put("Hatchet", new Texture("resources/items_icons/hatchet.png"));
+            textureMap.put("Pick Axe", new Texture("resources/items_icons/pickaxe.png"));
+
+            textureMap.put("Sand_inv", new Texture("resources/temp_sand.png"));
 
 
             // Inventory items
@@ -292,6 +304,14 @@ public class TextureManager extends AbstractManager {
 
             // Main character Dead animation
             textureMap.put("MainCharacter_Dead_E_Anim", new Texture("resources/Main_Character_Dead_E.png"));
+            textureMap.put("MainCharacter_Dead_E_Still", new Texture("resources/Main_Character_Dead_E_3.png"));
+
+            // Spells
+            textureMap.put("spells_fire_Anim", new Texture("resources/spells/fire_spritesheet.png"));
+            textureMap.put("spells_shield_Anim", new Texture("resources/spells/shield_spritesheet.png"));
+            textureMap.put("spells_shield_Still", new Texture("resources/spells/shield_3.png"));
+            textureMap.put("spells_tornado_Anim", new Texture("resources/spells/tornado_spritesheet.png"));
+
 
             System.out.println("ALL TEXTURES LOADED SUCCESSFULLY");
 
@@ -319,7 +339,7 @@ public class TextureManager extends AbstractManager {
 
     /**
      * Used for testing only.
-     * 
+     *
      * @param test
      */
     public TextureManager(boolean test) {
@@ -353,7 +373,7 @@ public class TextureManager extends AbstractManager {
             //TODO fix the issue where tiles are not getting added to lakes correctly,
             //Temporary fix is just to assign tiles without a texture the lake texture so that the
             //issue isn't as noticable
-            return textureMap.get("lake_1");
+            return textureMap.get("lake1.1");
         }
 
     }
@@ -384,7 +404,7 @@ public class TextureManager extends AbstractManager {
 
     /**
      * Gets a texture from an animation.
-     * 
+     *
      * @param id               The string id of the form
      *                         __ANIMATION_<animation_name>:<index>
      * @param animationManager The animation manager

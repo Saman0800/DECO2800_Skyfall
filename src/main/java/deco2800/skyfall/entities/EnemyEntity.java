@@ -44,11 +44,16 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
         this.setTexture(texturename);
     }
 
+    public EnemyEntity(float row, float col, String texturename,int health,
+                       int armour,int damage, String fixtureDef) {
+        super(row, col, 0.2f,texturename,health, fixtureDef);
+        this.setTexture(texturename);
+    }
+
     public void onTick(long i) {
         if (toBeDestroyed) {
             destroy();
         }
-
         getBody().setTransform(position.getCol(), position.getRow(), getBody().getAngle());
 
         if (task != null && task.isAlive()) {
@@ -64,45 +69,20 @@ public abstract class EnemyEntity extends Peon implements ICombatEntity{
      * Return the armour this enemy has.
      * @return The amount of armour this enemy has.
      */
-    @Override
-    public int getArmour() {
-        return this.armour;
-    }
+    //@Override
+    //public int getArmour() {
+    //    return this.armour;
+    //}
 
 
     /**
      * Return a list of resistance attributes.
      * @return A list of resistance attributes.
      */
-    @Override
-    public int[] getResistanceAttributes() {
-        return this.resistanceAttributes;
-    }
-
-    /**
-     * Return a list of status indicators.
-     * @return A list of status indicators.
-     */
-
-    @Override
-    public String[] getStatusIndicators() {
-        return this.statusIndicators;
-    }
-
-
-
-    /**
-     * Deal damage to another ICombatEntity.
-     * @param entity The combat entity that has been selected to deal damage to.
-     */
-    @Override
-    public void dealDamage(ICombatEntity entity) {
-        if (this.canDealDamage()) {
-            entity.takeDamage(this.damage);
-        }
-    }
-
-
+    //@Override
+    //public int[] getResistanceAttributes() {
+    //    return this.resistanceAttributes;
+    //}
 
     /**
      * Return whether this enemy can deal damage.

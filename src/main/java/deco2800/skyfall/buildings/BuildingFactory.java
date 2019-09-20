@@ -33,8 +33,7 @@ public class BuildingFactory {
      * @return a storage unit building object
      */
     public BuildingEntity createStorageUnit(float col, float row) {
-        BuildingEntity storage = new BuildingEntity(col, row, 2, BuildingType.STORAGE_UNIT);
-        return storage;
+        return new BuildingEntity(col, row, 2, BuildingType.STORAGE_UNIT);
     }
 
     /**
@@ -44,8 +43,7 @@ public class BuildingFactory {
      * @return a town centre object
      */
     public BuildingEntity createTownCentreBuilding(float col, float row) {
-        BuildingEntity town = new BuildingEntity(col, row, 2, BuildingType.TOWNCENTRE);
-        return town;
+        return new BuildingEntity(col, row, 2, BuildingType.TOWNCENTRE);
     }
 
     /**
@@ -55,8 +53,7 @@ public class BuildingFactory {
      * @return a fence object
      */
     public BuildingEntity createFenceBuilding(float col, float row) {
-        BuildingEntity fence = new BuildingEntity(col, row, 2, BuildingType.FENCE);
-        return fence;
+        return new BuildingEntity(col, row, 2, BuildingType.FENCE);
     }
 
     /**
@@ -66,8 +63,7 @@ public class BuildingFactory {
      * @return a safeHouse object
      */
     public BuildingEntity createSafeHouse(float col, float row) {
-        BuildingEntity safeHouse = new BuildingEntity(col, row, 2, BuildingType.SAFEHOUSE);
-        return safeHouse;
+        return new BuildingEntity(col, row, 2, BuildingType.SAFEHOUSE);
     }
 
     /**
@@ -77,8 +73,7 @@ public class BuildingFactory {
      * @return a safeHouse object
      */
     public BuildingEntity createWatchTower(float col, float row) {
-        BuildingEntity watchTower = new BuildingEntity(col, row, 2, BuildingType.WATCHTOWER);
-        return watchTower;
+        return new BuildingEntity(col, row, 2, BuildingType.WATCHTOWER);
     }
 
     /**
@@ -88,7 +83,6 @@ public class BuildingFactory {
      * @return a safeHouse object
      */
     public BuildingEntity createCastle(float col, float row) {
-        BuildingEntity castle = new BuildingEntity(col, row, 2, BuildingType.CASTLE);
-        return castle;
+        return new BuildingEntity(col, row, 2, BuildingType.CASTLE);
     }
 }

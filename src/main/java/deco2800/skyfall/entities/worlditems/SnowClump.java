@@ -23,6 +23,11 @@ public class SnowClump extends StaticEntity implements HasHealth {
         super(tile, 2, "MSnow" + nextImage, obstructed);
         nextImage = randomGen.nextInt(3) + 1;
         this.setObjectName(ENTITY_ID_STRING);
+        this.entityType = "SnowClump";
+    }
+
+    public SnowClump (StaticEntityMemento memento){
+        super(memento);
     }
 
     @Override

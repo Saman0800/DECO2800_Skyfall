@@ -8,12 +8,16 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import deco2800.skyfall.animation.Direction;
 
 public class TreemanTest {
     Treeman treeman;
+    MainCharacter mc;
+
     @Before
-    public void setup() throws Exception {
-        treeman=new Treeman(2f,3f);
+    public void setup(){
+        mc = new MainCharacter(2, 4, 0.3f, "fh", 20);
+        treeman = new Treeman(2f,3f, mc);
     }
 
     /**
@@ -23,6 +27,7 @@ public class TreemanTest {
     public void positionTest(){
         assertThat("", treeman.getCol(), is(equalTo(2f)));
         assertThat("", treeman.getRow(), is(equalTo(3f)));
+
     }
 
     /**
@@ -38,16 +43,18 @@ public class TreemanTest {
      */
     @Test
     public void healTest(){
-        Assert.assertEquals(3,treeman.getHealth());
+        Assert.assertEquals(10,treeman.getHealth());
     }
 
     /**
      * To test treeman armour
      */
+    /*
     @Test
     public void testArmour(){
         Assert.assertEquals(5,treeman.getArmour());
     }
+    */
 
 
     /**
@@ -55,7 +62,7 @@ public class TreemanTest {
      */
     @Test
     public void getEnemyTypeTest() {
-        String type=treeman.getEnemyType();
+        String type = treeman.getEnemyType();
         Assert.assertEquals("treeman",type);
 
     }
@@ -92,6 +99,16 @@ public class TreemanTest {
     @Test
     public void testLevel(){
         Assert.assertEquals(2,treeman.getLevel());
+    }
+
+
+    /**
+     * To test movement direction
+     */
+    @Test
+    public void movementDirection() {
+        Assert.assertEquals(treeman.movementDirection
+                (this.treeman.position.getAngle()),Direction.SOUTH_EAST);
     }
 
 

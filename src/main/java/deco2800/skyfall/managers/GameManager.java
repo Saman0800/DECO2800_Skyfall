@@ -266,10 +266,10 @@ public class GameManager {
 	public void onTick(long i) {
 		for (AbstractManager m : managers) {
 			if (m instanceof TickableManager) {
-				((TickableManager) m).onTick(0);
+				((TickableManager) m).onTick(i);
 			}
 		}
-		gameWorld.onTick(0);
+		gameWorld.onTick(i);
 	}
 
     /**

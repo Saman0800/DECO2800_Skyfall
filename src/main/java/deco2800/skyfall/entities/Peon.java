@@ -17,6 +17,8 @@ public class Peon extends AgentEntity implements Tickable {
 
 	// Health of the character
 	private int health;
+	// Max Health of the character
+	private int maxHealth;
 
 	// Boolean of whether character is dead
 	private int deaths;
@@ -47,8 +49,10 @@ public class Peon extends AgentEntity implements Tickable {
 
 		if (health <= 0){
 			this.health = 10;
+			this.maxHealth = 10;
 		} else {
 			this.health = health;
+			this.maxHealth = health;
 		}
 
 		this.deaths = 0;
@@ -97,10 +101,16 @@ public class Peon extends AgentEntity implements Tickable {
 	public void changeHealth(int amount) {
 		int currentHealth = this.getHealth();
 
-		this.health += amount;
+		if(this.health + amount > maxHealth) {
+			this.health = maxHealth;
+		} else {
+			this.health += amount;
+		}
 
 		if (this.isDead()) {
-			this.health = currentHealth;
+			 this.health = currentHealth;
+			// gameOverTable.show();
+
 			this.deaths += 1;
 		}
 	}
@@ -112,6 +122,20 @@ public class Peon extends AgentEntity implements Tickable {
 	public int getHealth() {
 		return health;
 	}
+
+	/**
+	 * Returns max health of character
+	 * @return - max health of character.
+	 */
+	public int getMaxHealth() {
+		return maxHealth;
+	}
+
+	/**
+	 *
+	 * @param newMaxHealth - New max health for the player.
+	 */
+	public void setMaxHealth(int newMaxHealth) { this.maxHealth = newMaxHealth; }
 
 	/**
 	 * Checks if character is dead

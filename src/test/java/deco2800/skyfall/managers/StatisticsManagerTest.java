@@ -8,6 +8,8 @@ import deco2800.skyfall.worlds.Tile;
 
 import org.junit.*;
 
+import java.lang.reflect.Field;
+
 public class StatisticsManagerTest {
 
     // MainCharacter used for testing
@@ -17,9 +19,9 @@ public class StatisticsManagerTest {
     private StatisticsManager testManager;
 
     // Enemies used for testing
-    private Enemy testEnemy1;
-    private Enemy testEnemy2;
-    private Enemy testEnemy3;
+    private AbstractEnemy testEnemy1;
+    private AbstractEnemy testEnemy2;
+    private AbstractEnemy testEnemy3;
 
     // Weapons being used for testing
     private Weapon sword;
@@ -31,20 +33,25 @@ public class StatisticsManagerTest {
     /**
      * Set up all test variables
      */
-    public void setUp() {
-        testCharacter1 = new MainCharacter(4, 4,
-                0.5f, "Side Piece", 10);
+    public void setUp() throws NoSuchFieldException, IllegalAccessException {
+
+        testCharacter1 = MainCharacter.getInstance(4, 4, 0.5f, "Side Piece", 10);
+        // Reset the level, heath and deaths.
+        testCharacter1.changeLevel(1 - testCharacter1.getLevel());
+        testCharacter1.changeHealth(10 - testCharacter1.getHealth());
+        // There is no other way to modify this.
+        Field deathsField = Peon.class.getDeclaredField("deaths");
+        deathsField.setAccessible(true);
+        deathsField.setInt(testCharacter1, 0);
+
         testManager = new StatisticsManager(this.testCharacter1);
-        testEnemy1 = new Enemy(1,1,"spider",
-                1,100,1);
-        testEnemy2 = new Enemy(2,2,"robot",
-                2,200,2);
-        testEnemy3 = new Enemy(3,3,"stoneRS",
-                3,300,3);
-        sword = new Sword(new Tile(0, 0), false);
-        spear = new Spear(new Tile(0, 0), false);
-        bow = new Bow(new Tile(0, 0), false);
-        axe = new Axe(new Tile(0, 0), false);
+        testEnemy1 = new Treeman(1,1, testCharacter1);
+        testEnemy2 = new Treeman(2,2, testCharacter1);
+        testEnemy3 = new Treeman(3,3, testCharacter1);
+        sword = new Sword(new Tile(null, 0, 0), false);
+        spear = new Spear(new Tile(null, 0, 0), false);
+        bow = new Bow(new Tile(null, 0, 0), false);
+        axe = new Axe(new Tile(null, 0, 0), false);
     }
 
     @After

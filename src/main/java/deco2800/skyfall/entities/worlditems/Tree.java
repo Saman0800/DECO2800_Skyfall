@@ -31,6 +31,12 @@ public class Tree extends StaticTree {
         this.woodAmount = 15;
 
         Tree.nextTreeTexture = randomGen.nextInt(3) + 1;
+        this.entityType = "Tree";
+    }
+
+    public Tree (StaticEntityMemento memento){
+        super(memento);
+        this.woodAmount = 15;
     }
 
     /**
@@ -89,7 +95,6 @@ public class Tree extends StaticTree {
     @Override
     public List<AbstractEntity> harvest(Tile tile) {
         Random random = new Random();
-
         int dropCount = random.nextInt(15);
         List<AbstractEntity> drops = new ArrayList<>();
         for (int i = 0; i < dropCount; i++) {

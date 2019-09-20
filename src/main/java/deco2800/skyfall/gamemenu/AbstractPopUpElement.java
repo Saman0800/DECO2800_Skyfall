@@ -1,6 +1,6 @@
 package deco2800.skyfall.gamemenu;
 
-import com.badlogic.gdx.Gdx;
+
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -9,8 +9,6 @@ import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
-
-import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
 /**
  * Generic Pop up element.
@@ -25,8 +23,9 @@ public class AbstractPopUpElement extends AbstractUIElement {
      * Hides all of the elements associated with the element.
      */
     public void hide() {
-//        System.out.println("hiding exit");
-        exitButton.setVisible(false);
+        if (exitButton != null) {
+            exitButton.setVisible(false);
+        }
         isVisible = false;
         resume();
         gameMenuManager.setPopUp(null);
@@ -52,8 +51,9 @@ public class AbstractPopUpElement extends AbstractUIElement {
      * Shows the element
      */
     public void show(){
-//        System.out.println("showing exit");
-        exitButton.setVisible(true);
+        if (exitButton != null) {
+            exitButton.setVisible(true);
+        }
         isVisible = true;
         pause();
     }
@@ -65,7 +65,9 @@ public class AbstractPopUpElement extends AbstractUIElement {
     public void updatePosition() {
         float x  = stage.getCamera().position.x  + (stage.getCamera().viewportWidth / 2);
         float y = stage.getCamera().position.y  +  (stage.getCamera().viewportHeight / 2);
-        exitButton.setPosition(x * 0.9f, y * 0.9f);
+        if (exitButton != null) {
+            exitButton.setPosition(x * 0.9f, y * 0.9f);
+        }
     }
 
     /**
@@ -85,7 +87,6 @@ public class AbstractPopUpElement extends AbstractUIElement {
             exitButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-//                    System.out.println("Clicked exit");
                     hide();
                 }
             });
@@ -95,7 +96,6 @@ public class AbstractPopUpElement extends AbstractUIElement {
     @Override
     public void draw() {
         if (exitButton != null) {
-//            System.out.println("Drawing exit");
             exitButton.setSize(80, 80 * 207f / 305);
             updatePosition();
             exitButton.setVisible(false);

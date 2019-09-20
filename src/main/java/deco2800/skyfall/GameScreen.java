@@ -1,47 +1,52 @@
 package deco2800.skyfall;
 
-import java.util.ArrayList;
-
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-
 import deco2800.skyfall.buildings.BuildingFactory;
+
 import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.graphics.HasPointLight;
 import deco2800.skyfall.graphics.PointLight;
 import deco2800.skyfall.graphics.ShaderWrapper;
-import deco2800.skyfall.graphics.types.*;
-import deco2800.skyfall.graphics.*;
+import deco2800.skyfall.graphics.types.vec3;
 import deco2800.skyfall.handlers.KeyboardManager;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
-import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.renderers.OverlayRenderer;
+import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.renderers.Renderer3D;
-import deco2800.skyfall.worlds.*;
-import deco2800.skyfall.managers.EnvironmentManager;
+import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.util.lightinghelpers.*;
-
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GameScreen implements Screen, KeyDownObserver {
-    private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
-    @SuppressWarnings("unused")
-    private final SkyfallGame game;
-    /**
+import java.util.ArrayList;
+
+public class GameScreen implements Screen,KeyDownObserver {
+	private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
+	@SuppressWarnings("unused")
+	private final SkyfallGame game;
+	/**
      * Set the renderer. 3D is for Isometric worlds Check the documentation for each
      * renderer to see how it handles WorldEntity coordinates
      */
     Renderer3D renderer = new Renderer3D();
     OverlayRenderer rendererDebug = new OverlayRenderer();
     World world;
+    Save save;
     static Skin skin;
 
     /**
@@ -79,11 +84,18 @@ public class GameScreen implements Screen, KeyDownObserver {
         /* Create an example world for the engine */
         this.game = game;
 
+
+        this.save = new Save();
+        MainCharacter.getInstance(0,0,0.05f, "Main Piece", 10);
+        MainCharacter.getInstance().setSave(this.save);
+        this.save.setMainCharacter(MainCharacter.getInstance());
         GameManager gameManager = GameManager.get();
         GameMenuManager gameMenuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+        DatabaseManager databaseManager = DatabaseManager.get();
         gameMenuManager.setStage(stage);
         gameMenuManager.setSkin(gameManager.getSkin());
         gameMenuManager.setGame(game);
+        databaseManager.startDataBaseConnector();
 
         //Used to create to the world
 
@@ -104,7 +116,11 @@ public class GameScreen implements Screen, KeyDownObserver {
             } else {
 
                 //Creating the world
-                world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 5, true).getWorld();
+                world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 4, true).getWorld();
+                save.getWorlds().add(world);
+                save.setCurrentWorld(world);
+                world.setSave(save);
+                DatabaseManager.get().getDataBaseConnector().saveGame(save);
             }
             GameManager.get().getManager(NetworkManager.class).startHosting("host");
         }
@@ -116,7 +132,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         cameraDebug = new PotateCamera(1920, 1080);
 
         /* Add the window to the stage */
-//        GameManager.get().setSkin(skin);
         GameManager.get().setStage(stage);
         GameManager.get().setCamera(camera);
 
@@ -129,7 +144,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         /* Add environment to game manager */
         EnvironmentManager gameEnvironManag = gameManager.getManager(EnvironmentManager.class);
         // For debuggin only!
-        gameEnvironManag.setTime(17, 0);
+        gameEnvironManag.setTime(12, 0);
 
         /* Add BGM to game manager */
         gameManager.addManager(new BGMManager());
@@ -341,7 +356,13 @@ public class GameScreen implements Screen, KeyDownObserver {
         if (keycode == Input.Keys.F5) {
 
             //Create a random world
-            world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 3, true).getWorld();
+            world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 4, true).getWorld();
+
+            // Add this world to the save
+            save.getWorlds().add(world);
+            save.setCurrentWorld(world);
+            world.setSave(save);
+            DatabaseManager.get().getDataBaseConnector().saveGame(save);
 
             AbstractEntity.resetID();
             Tile.resetID();
@@ -373,6 +394,20 @@ public class GameScreen implements Screen, KeyDownObserver {
             // Load the world to the DB
             DatabaseManager.loadWorld(null);
         }
+
+        if (keycode == Input.Keys.P) {
+            DatabaseManager.get().getDataBaseConnector().saveGame(this.save);
+            // TODO:dannathan Save
+        }
+
+        if (keycode == Input.Keys.O) {
+            this.save = DatabaseManager.get().getDataBaseConnector().loadGame();
+            this.world = save.getCurrentWorld();
+            AbstractEntity.resetID();
+            Tile.resetID();
+            GameManager gameManager = GameManager.get();
+            gameManager.setWorld(world);
+        }
     }
 
     public void moveCamera() {
@@ -401,6 +436,10 @@ public class GameScreen implements Screen, KeyDownObserver {
 
             if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
                 camera.translate(0, goFastSpeed, 0);
+            }
+
+            if (Gdx.input.isKeyPressed(Input.Keys.P)) {
+                //FIXME:jeffvan12 Implement saving the game when this is pretty
             }
 
             if (Gdx.input.isKeyPressed(Input.Keys.EQUALS)) {

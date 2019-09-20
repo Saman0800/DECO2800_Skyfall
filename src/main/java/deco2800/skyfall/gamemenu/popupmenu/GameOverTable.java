@@ -59,14 +59,6 @@ public class GameOverTable extends AbstractPopUpElement{
 
     /**
      * {@inheritDoc}
-     */
-    @Override
-    public void updatePosition() {
-        super.updatePosition();
-    }
-
-    /**
-     * {@inheritDoc}
      * Draws the game over table.
      */
     @Override
@@ -77,17 +69,8 @@ public class GameOverTable extends AbstractPopUpElement{
         gameOverTable.setSize(500, 500 * 1346 / 1862f);
         gameOverTable.setPosition(Gdx.graphics.getWidth()/2f - gameOverTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - gameOverTable.getHeight()/2);
-        gameOverTable.setBackground(generateTextureRegionDrawableObject("game over temp bg"));
+        gameOverTable.setBackground(generateTextureRegionDrawableObject("game_over_temp_bg"));
 
-//        Image gameOver = new Image(generateTextureRegionDrawableObject("build"));
-//        gameOverTable.add(gameOver).width(125).height(125).padTop(-30);
-//        gameOverTable.row();
-
-//        Label gameOverText = new Label("GAME OVER", skin, "white-text");
-//        gameOverTable.add(gameOverText).expandY();
-//        gameOverTable.row();
-
-//        TextButton retry = new TextButton("RETRY", skin, "game");
         ImageButton retry = new ImageButton(generateTextureRegionDrawableObject("game over retry temp"));
         gameOverTable.add(retry).padBottom(15).width(450).height(450*302/2313f);
         gameOverTable.row();
@@ -100,7 +83,6 @@ public class GameOverTable extends AbstractPopUpElement{
             }
         });
 
-//        TextButton toHome = new TextButton("HOME", skin, "game");
         ImageButton toHome = new ImageButton(generateTextureRegionDrawableObject("game over home temp"));
         gameOverTable.add(toHome).padBottom(15).width(450).height(450*302/2313f);;
         gameOverTable.row();
@@ -113,6 +95,7 @@ public class GameOverTable extends AbstractPopUpElement{
 
         gameOverTable.setVisible(false);
         stage.addActor(gameOverTable);
+        System.out.println(gameOverTable);
     }
 
 }

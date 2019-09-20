@@ -38,11 +38,6 @@ public class GoldTable extends AbstractPopUpElement{
         goldTable.setVisible(true);
     }
 
-    @Override
-    public void updatePosition() {
-        super.updatePosition();
-    }
-
     public void update() {
         super.update();
         updateGoldPanel();

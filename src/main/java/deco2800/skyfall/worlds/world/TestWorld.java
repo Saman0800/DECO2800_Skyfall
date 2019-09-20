@@ -13,6 +13,7 @@ import deco2800.skyfall.worlds.biomes.ForestBiome;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.function.UnaryOperator;
 
 @SuppressWarnings("unused")
 public class TestWorld extends World {
@@ -21,8 +22,10 @@ public class TestWorld extends World {
 
     private static int RADIUS = 25;
 
+    private static final UnaryOperator<WorldParameters> THROWER = wp -> {throw new UnsupportedOperationException();};
+
     public TestWorld(WorldParameters worldParameters) {
-        super(worldParameters);
+        super(THROWER.apply(worldParameters));
     }
 
     // 5 tile building
@@ -38,12 +41,10 @@ public class TestWorld extends World {
         textures.put(new HexVector(0, 0), "spacman_ded");
 
         return new StaticEntity(col, row, 1, textures);
-
     }
 
     // building with a fence
     private StaticEntity createBuilding2(float col, float row) {
-
         Map<HexVector, String> textures = new HashMap<>();
         textures.put(new HexVector(0, 0), "buildingA");
 
@@ -64,37 +65,35 @@ public class TestWorld extends World {
         textures.put(new HexVector(2, 1), "fenceNW-S");
         // textures.put(new HexVector(2, 0), "fenceN-S");
         textures.put(new HexVector(2, -1), "fenceN-SW");
-        return new StaticEntity(col, row, 1, textures);
+        StaticEntity building = new StaticEntity(col, row, 1, textures);
 
+        return building;
     }
 
     private void addTree(float col, float row) {
         Map<HexVector, String> textures = new HashMap<>();
         Tile t = GameManager.get().getWorld().getTile(col, row);
         Tree tree = new Tree(t, true);
-        worldParameters.addEntity(tree);
+        addEntity(tree);
     }
 
     // this get ran on first game tick so the world tiles exist.
     public void createBuildings() {
-
         Random random = new Random();
         int tileCount = GameManager.get().getWorld().getTileMap().size();
         // Generate some rocks to mine later
         for (int i = 0; i < 200; i++) {
             Tile t = GameManager.get().getWorld().getTile(random.nextInt(tileCount));
             if (t != null) {
-                worldParameters.addEntity(new Rock(t, true));
-
+                addEntity(new Rock(t, true));
             }
         }
-        worldParameters.addEntity(createBuilding2(-5, 0.5f));
-
+        addEntity(createBuilding2(-5, 0.5f));
     }
 
     @Override
     protected void generateWorld() {
-        AbstractBiome biome = new ForestBiome();
+        AbstractBiome biome = new ForestBiome(random);
         for (int q = -1000; q < 1000; q++) {
             for (int r = -1000; r < 1000; r++) {
                 if (Cube.cubeDistance(Cube.oddqToCube(q, r), Cube.oddqToCube(0, 0)) <= RADIUS) {
@@ -107,17 +106,12 @@ public class TestWorld extends World {
 
                     int rand = random.nextInt(8);
 
-                    Tile tile = new Tile(q, r + oddCol);
-                    tiles.add(tile);
+                    Tile tile = new Tile(this, q, r + oddCol);
+                    addTile(tile);
                     biome.addTile(tile);
                 }
             }
         }
-
-        // Create the entities in the game
-        //		addEntity(new MainCharacter(0f,
-        //                0f, 0.05f, "Main Piece", 10));
-
     }
 
     @Override
@@ -137,18 +131,3 @@ public class TestWorld extends World {
     }
 
 }
-
-/*
- * print out Neighbours for (Tile tile : tiles) { System.out.println();
- * System.out.println(tile); for (Entry<Integer, Tile> firend :
- * tile.getNeighbours().entrySet()) { switch (firend.getKey()) { case
- * Tile.north: System.out.println("north " +(firend.getValue())); break; case
- * Tile.north_east: System.out.println("north_east " + (firend.getValue()));
- * break; case Tile.north_west: System.out.println("north_west " +
- * (firend.getValue())); break; case Tile.south: System.out.println("south " +
- * (firend.getValue())); break; case Tile.south_east:
- * System.out.println("south_east " +(firend.getValue())); break; case
- * Tile.south_west: System.out.println("south_west " + (firend.getValue()));
- * break; } } }
- *
- */

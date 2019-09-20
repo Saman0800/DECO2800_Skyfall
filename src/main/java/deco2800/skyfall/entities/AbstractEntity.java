@@ -1,6 +1,8 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.animation.AnimationLinker;
@@ -10,11 +12,16 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.renderers.Renderable;
+import deco2800.skyfall.renderers.Renderer;
+import deco2800.skyfall.util.*;
+import org.lwjgl.Sys;
 import deco2800.skyfall.util.BodyEditorLoader;
 import deco2800.skyfall.util.HexVector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.KeyStore;
+import java.sql.Array;
 import java.util.*;
 
 /**
@@ -40,10 +47,34 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         return nextID++;
     }
 
-    protected HexVector position;
+	protected final EntityHexVector position;
     private int height;
     private float colRenderLength;
     private float rowRenderLength;
+
+	public void setBody(Body body) {
+		this.body = body;
+	}
+
+	public void setFixture(Fixture fixture) {
+		this.fixture = fixture;
+	}
+
+	public void setColRenderLength(float colRenderLength) {
+		this.colRenderLength = colRenderLength;
+	}
+
+	public void setRowRenderLength(float rowRenderLength) {
+		this.rowRenderLength = rowRenderLength;
+	}
+
+	public void setCollidable(Boolean collidable) {
+		isCollidable = collidable;
+	}
+
+    public Boolean getCollidable() {
+        return isCollidable;
+    }
 
     //Box2D properties
     private Body body;
@@ -56,7 +87,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     @Expose
     private int entityID = 0;
 
-    private int renderOrder = 0;
+    protected int renderOrder = 0;
 
     //For animations
     /**
@@ -106,7 +137,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
     public AbstractEntity() {
-        this.position = new HexVector();
+		this.position = new EntityHexVector(this);
         this.colRenderLength = 1f;
         this.rowRenderLength = 1f;
         this.setObjectName(ENTITY_ID_STRING);
@@ -123,8 +154,9 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * @param colRenderLength the rendered length in col direction
      * @param rowRenderLength the rendered length in the row direction
      */
-    public AbstractEntity(float col, float row, int height, float colRenderLength, float rowRenderLength) {
-        this.position = new HexVector(col, row);
+	public AbstractEntity(float col, float row, int height,
+						  float colRenderLength, float rowRenderLength) {
+		this.position = new EntityHexVector(this, col, row);
         this.height = height;
         this.colRenderLength = colRenderLength;
         this.rowRenderLength = rowRenderLength;
@@ -135,7 +167,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     public AbstractEntity(float col, float row, int height, float colRenderLength, float rowRenderLength,
             String fixtureDefFile) {
-        this.position = new HexVector(col, row);
+        this.position = new EntityHexVector(this, col, row);
         this.height = height;
         this.colRenderLength = colRenderLength;
         this.rowRenderLength = rowRenderLength;
@@ -158,27 +190,43 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         return position.getRow();
     }
 
-    /**
-     * Get the Z position of this AbstractWorld Entity
-     * 
-     * @return The Z position
-     */
-    public int getHeight() {
-        return height;
+	/**
+	 * Get the Z position of this AbstractWorld Entity
+	 * 
+	 * @return The Z position
+	 */
+	public int getHeight() {
+		return height;
+	}
+
+	/**
+	 * Sets the col coordinate for the entity. If you are setting both the row and the column of the entity, use {@link
+	 * #setPosition(float, float)} instead.
+	 *
+	 * @param col the new column of this entity
+	 */
+	public void setCol(float col) {
+		setPosition(col, getRow());
     }
 
-    /**
-     * Sets the col coordinate for the entity
-     */
-    public void setCol(float col) {
-        this.position.setCol(col);
-    }
-
-    /**
-     * Sets the row coordinate for the entity
+	/**
+	 * Sets the row coordinate for the entity. If you are setting both the row and the column of the entity, use {@link
+	 * #setPosition(float, float)} instead.
+	 *
+	 * @param row the new row of this entity
      */
     public void setRow(float row) {
-        this.position.setRow(row);
+		setPosition(getCol(), row);
+	}
+
+	/**
+	 * Sets the position of this entity.
+	 *
+	 * @param col the new column of this entity
+	 * @param row the new row of this entity
+	 */
+	public void setPosition(float col, float row) {
+		this.position.set(col, row);
     }
 
     /**
@@ -195,8 +243,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * @param height the z coordinate for the entity
      */
     public void setPosition(float col, float row, int height) {
-        setCol(col);
-        setRow(row);
+		setPosition(col, row);
         setHeight(height);
     }
 
@@ -234,7 +281,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     /**
      * Gives the string for the texture of this entity. This does not mean the
      * texture is currently registered
-     * 
+     *
      * @return texture string
      */
     public String getTexture() {
@@ -244,7 +291,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     /**
      * Sets the texture string for this entity. Check the texture is registered with
      * the TextureRegister
-     * 
+     *
      * @param texture
      *            String texture id
      */
@@ -415,41 +462,52 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         shape.dispose();
     }
 
-    /**
-     * Defines the body's fixture with default values which can be changes in
-     * the entity's constructor after the fixture is created.
-     * Sets the fixtures shape and size based on a .JSON file
-     *
-     * @param fixtureDefFile file path to .JSON file defining the fixture
-     */
-    public void defineFixture(String fixtureDefFile) {
-        BodyEditorLoader loader = new BodyEditorLoader(
-                Gdx.files.internal("resources/HitBoxes/" + fixtureDefFile + "HitBox.JSON"));
+	/**
+	 * Defines the body's fixture with default values which can be changes in
+	 * the entity's constructor after the fixture is created.
+	 * Sets the fixtures shape and size based on a .JSON file
+	 *
+	 * @param fixtureDefName file path to .JSON file defining the fixture
+	 */
+	public void defineFixture(String fixtureDefName){
+		try {
+			// Creates the loader to load the complex hitbox
+			BodyEditorLoader loader =
+					new BodyEditorLoader(Gdx.files.internal("resources/HitBoxes" +
+							"/" + fixtureDefName + "HitBox.json"));
 
-        PhysicsManager manager = new PhysicsManager();
-        World world = manager.getBox2DWorld();
-        BodyDef bd = new BodyDef();
-        bd.type = BodyDef.BodyType.KinematicBody;
-        body = world.createBody(bd);
+			// Creates a world for the hit box to inhabit
+			//PhysicsManager manager = new PhysicsManager();
+			//World world = manager.getBox2DWorld();
 
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.density = 1;
-        fixtureDef.friction = 0.5f;
-        fixtureDef.restitution = 0.3f;
+			// Create the hit box body
+			//BodyDef bd = new BodyDef();
+			//bd.type = BodyDef.BodyType.DynamicBody;
+			//body = world.createBody(bd);
 
-        fixture = body.createFixture(fixtureDef);
-        fixture.setSensor(!isCollidable);
+			// Assigns all the aspects of the fixture
+			FixtureDef fixtureDef = new FixtureDef();
+			fixtureDef.density = 1;
+			fixtureDef.friction = 0.5f;
+			fixtureDef.restitution = 0.3f;
 
-        loader.attachFixture(body, fixtureDefFile, fixtureDef, scale);
-        //TODO: Add code for defining code for custom body shape
-    }
+			// Gets the hit box from the loader
+			loader.attachFixture(body, "Character", fixtureDef, scale);
 
+			// Set the collision of the body
+			//fixture = body.createFixture(fixtureDef);
+			//fixture.setSensor(!isCollidable);
+		}catch (NullPointerException e){
+		    log.warn("Failed to load custom hit box");
+			defineFixture();
+		}
+	}
+    
     /**
      * Controls if the entity can be collided with
      *
      * @param collidable boolean value if entities can collide with this entity
      */
-
     public void changeCollideability(Boolean collidable) {
         isCollidable = collidable;
         if (fixture != null) {
@@ -554,5 +612,4 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     public Body getBody() {
         return body;
     }
-
 }

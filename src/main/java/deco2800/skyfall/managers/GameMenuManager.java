@@ -217,7 +217,7 @@ public class GameMenuManager extends TickableManager {
         } catch (NullPointerException npe) {
             //TODO: Change to logger
             logger.error("Please add stats manager returning default c");
-            return new MainCharacter(0,0,0.05f, "Main Piece", 10);
+            return MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
         }
     }
     /**
@@ -289,9 +289,7 @@ public class GameMenuManager extends TickableManager {
                 null, textureManager, this, sm, skin));
 
         popUps.put("gameOverTable", new GameOverTable(stage,
-                null,
-                null, textureManager, this,
-                skin));
+                null, null, textureManager, this, skin));
 
         popUps.put("blueprintShopTable", new BlueprintShopTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),

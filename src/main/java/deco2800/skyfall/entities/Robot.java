@@ -10,7 +10,7 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.SoundManager;
 
 public class Robot extends EnemyEntity implements Animatable {
-    private static final transient int HEALTH = 20;
+    private static final transient int HEALTH = 10;
     private static final transient float ATTACK_RANGE = 1f;
     private static final transient int ATTACK_SPEED = 1000;
     private static final transient String BIOME="forest";
@@ -79,8 +79,14 @@ public class Robot extends EnemyEntity implements Animatable {
         if(this.isDead()){
             GameManager.get().getWorld().removeEntity(this);
             sound.stopSound("robot");
+
+        }else {
+            defence();
         }
         super.onTick(i);
+    }
+
+    private void defence(){
         if (mc != null) {
             float colDistance = mc.getCol() - this.getCol();
             float rowDistance = mc.getRow() - this.getRow();
@@ -95,8 +101,18 @@ public class Robot extends EnemyEntity implements Animatable {
         } else {
             System.out.println("Mc is null");
         }
-
     }
+
+    /**
+     * Return a list of resistance attributes.
+     *
+     * @return A list of resistance attributes.
+     */
+    @Override
+    public int[] getResistanceAttributes() {
+        return new int[0];
+    }
+
 
     @Override
     public void configureAnimations() {
@@ -111,5 +127,12 @@ public class Robot extends EnemyEntity implements Animatable {
     @Override
     public void setDirectionTextures() {
 
+    }
+
+    @Override
+    public void dealDamage(ICombatEntity entity) {
+        if (entity.canDealDamage()) {
+            entity.dealDamage(entity);
+        }
     }
 }

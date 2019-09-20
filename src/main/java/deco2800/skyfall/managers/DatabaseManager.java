@@ -2,6 +2,7 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.worlditems.*;
+import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.util.HexVector;
@@ -32,6 +33,12 @@ public final class DatabaseManager extends AbstractManager {
     private static final String COLPOSSTRING = "colPos";
     private static String saveName = "";
     private static List<String> saveNameList = new ArrayList<>();
+
+    //The current instance of the DataBaseManager
+    private static DatabaseManager instance = null;
+
+    //An instance of DataBaseConnector that is used to connect and manage data in the database
+    private static DataBaseConnector dataBaseConnector;
 
     private DatabaseManager() {
         /*
@@ -111,7 +118,7 @@ public final class DatabaseManager extends AbstractManager {
      * @param reader the JsonReader that tracks where we ar ein the file.
      * @return The string of that token.
      */
-    private static String readGsonToken(com.google.gson.stream.JsonReader reader) {
+    private static String readGsonToken(JsonReader reader) {
         try {
             return reader.nextName();
         } catch (IOException e) {
@@ -127,7 +134,7 @@ public final class DatabaseManager extends AbstractManager {
      * @param reader the JsonReader that tracks where we are in the file
      * @return A string representing the main array name
      */
-    private static String readOuterJson(com.google.gson.stream.JsonReader reader) {
+    private static String readOuterJson(JsonReader reader) {
         try {
             return readGsonToken(reader);
         } catch (IllegalStateException e) {
@@ -151,7 +158,7 @@ public final class DatabaseManager extends AbstractManager {
      * @param reader the JsonReader object for loading JsonTokens
      * @param newTiles the list of new tiles.
      */
-    private static void processTileJson(com.google.gson.stream.JsonReader reader, List<Tile> newTiles) {
+    private static void processTileJson(JsonReader reader, List<Tile> newTiles) {
         try {
             reader.nextName();
             reader.beginArray();
@@ -159,7 +166,8 @@ public final class DatabaseManager extends AbstractManager {
                 reader.beginObject();
 
                 // TODO This looks broken.
-                Tile tile = new Tile(0, 0);
+                // Tile tile = new Tile(0, 0);
+                Tile tile = null;
                 while (reader.hasNext()) {
                     checkBasicTileSettings(tile, reader.nextName(), reader);
                 }
@@ -247,6 +255,17 @@ public final class DatabaseManager extends AbstractManager {
         }
     }
 
+    /**
+     * Gets the current DatabaseManger, and if it does exist create it and return it
+     * @return A DataBaseManager
+     */
+    public static DatabaseManager get() {
+        if (instance == null) {
+            instance = new DatabaseManager();
+        }
+        return instance;
+    }
+
     private static AbstractEntity checkBasicEntitySettings(AbstractEntity entity, String entityField,
             JsonReader reader) {
         try {
@@ -331,8 +350,8 @@ public final class DatabaseManager extends AbstractManager {
 
     }
 
-    private static boolean startArrayReading(com.google.gson.stream.JsonReader reader,
-            CopyOnWriteArrayList<Tile> newTiles) {
+    private static boolean startArrayReading(JsonReader reader,
+                                             CopyOnWriteArrayList<Tile> newTiles) {
         try {
             reader.beginArray();
             return true;
@@ -420,8 +439,7 @@ public final class DatabaseManager extends AbstractManager {
         CopyOnWriteArrayList<Tile> newTiles = new CopyOnWriteArrayList<>();
 
         try {
-            com.google.gson.stream.JsonReader reader = new com.google.gson.stream.JsonReader(
-                    new FileReader(saveLocationAndFilename));
+            JsonReader reader = new JsonReader(new FileReader(saveLocationAndFilename));
             descendThroughSaveFile(reader, newEntities, newTiles);
         } catch (FileNotFoundException e) {
             logger.error("Somehow failed to load the JSON file even after checking", e);
@@ -429,7 +447,8 @@ public final class DatabaseManager extends AbstractManager {
         }
 
         world.setTileMap(newTiles);
-        world.generateNeighbours();
+        // FIXME This is broken, but I haven't fixed given this is going to be overhauled later.
+        // world.generateNeighbours();
         world.setEntities(new CopyOnWriteArrayList<>(newEntities.values()));
         logger.info("Load succeeded");
         GameManager.get().getManager(OnScreenMessageManager.class).addMessage("Loaded game from the database.");
@@ -516,5 +535,30 @@ public final class DatabaseManager extends AbstractManager {
         writeToJson(entireJsonAsString.toString());
         GameManager.get().getManager(OnScreenMessageManager.class).addMessage("Game saved to the database.");
     }
+
+    /**
+     * Creates and starts and new DataBaseConnector
+     */
+    public void startDataBaseConnector(){
+        dataBaseConnector = new DataBaseConnector();
+        dataBaseConnector.start();
+    }
+
+    /**
+     * Closes the connection of the DataBaseConnector to the database
+     */
+    public void closeDataBaseConnector(){
+        dataBaseConnector.close();
+    }
+
+    /**
+     * Gets the Database connector
+     * @return The database connector
+     */
+    public DataBaseConnector getDataBaseConnector() {
+        return dataBaseConnector;
+    }
+
+
 
 }

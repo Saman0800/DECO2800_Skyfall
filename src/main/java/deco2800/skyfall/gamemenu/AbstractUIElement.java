@@ -33,8 +33,6 @@ public abstract class AbstractUIElement {
      */
     public abstract void draw() ;
 
-    //public abstract void hideElement();
-
     /**
      * Helper method to fill
      * @param textureName Array of string names associated with the texture
@@ -43,7 +41,6 @@ public abstract class AbstractUIElement {
      */
     private void getTextures(String[] textureName, TextureManager textureManager) {
         if (textureManager == null) {
-//            System.out.println("Texture manager is null (fine for testing)");
             return;
         }
 

@@ -5,6 +5,7 @@ import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.util.HexVector;
 
 public class Flower extends EnemyEntity implements Animatable {
     private static transient int HEALTH = 5000;
@@ -15,26 +16,33 @@ public class Flower extends EnemyEntity implements Animatable {
     private static final transient String ENEMY_TYPE="flower";
     //savage animation
     private MainCharacter mc;
+
+    /*
     public Flower(float row, float col, String texturename, int health, int armour, int damage) {
         super(row, col, texturename, health, armour, damage);
     }
+    */
 
     public Flower(float col, float row, MainCharacter mc) {
-        super(col,row);
+        super(col, row);
         this.setTexture("flower");
         this.setObjectName("flower");
         this.setHeight(1);
         this.setHealth(HEALTH);
+        this.setDamage(4);
         this.setLevel(2);
         this.setSpeed(1);
-        this.setArmour(2);
+        //this.setArmour(2);
         this.mc = mc;
+        // this.enemyAnimationName = "flower";
         this.configureAnimations();
         this.setDirectionTextures();
     }
 
+    /*
     public Flower(float col, float row) {
         super(col,row);
+        this.setDamage(4);
         this.setTexture("flower");
         this.setObjectName("flower");
         this.setHeight(1);
@@ -43,6 +51,7 @@ public class Flower extends EnemyEntity implements Animatable {
         this.setSpeed(1);
         this.setArmour(2);
     }
+    */
 
     public String getEnemyType(){
         return ENEMY_TYPE;
@@ -80,6 +89,7 @@ public class Flower extends EnemyEntity implements Animatable {
     private int time3 = 0;
     @Override
     public void onTick(long i) {
+        this.attackPlayer(mc);
         if (this.isDead()) {
             this.flowerDead();
         }
@@ -91,6 +101,7 @@ public class Flower extends EnemyEntity implements Animatable {
 
                 //check the distance between main character and flower
                 if ((colDistance * colDistance + rowDistance * rowDistance) < 4 || mcnear) {
+
                     //boolean mcnear is to make sure it goes to next step (melee)
                     mcnear = true;
                     //flower open
@@ -157,6 +168,17 @@ public class Flower extends EnemyEntity implements Animatable {
 
     }
 
+    /**
+     * Return a list of resistance attributes.
+     *
+     * @return A list of resistance attributes.
+     */
+    @Override
+    public int[] getResistanceAttributes() {
+        return new int[0];
+    }
+
+
     @Override
     public void configureAnimations() {
         this.addAnimations(
@@ -184,8 +206,31 @@ public class Flower extends EnemyEntity implements Animatable {
     public void setDirectionTextures() {
 
     }
+    int period = 0;
+    //frequency of attack
+    private static final transient int ATTACK_FREQUENCY = 50;
+    //a routine for destination
+    private HexVector destination = null;
 
+    public void attackPlayer(MainCharacter player) {
+        destination = new HexVector(player.getCol(), player.getRow());
+        if (this.position.isCloseEnoughToBeTheSameByDistance(destination, ATTACK_RANGE)) {
+            if (period <= ATTACK_FREQUENCY) {
+                period++;
+            } else {
+                period = 0;
+                if (!(mc.isRecovering())) {
+                    player.hurt(this.getDamage());
+                }
+            }
+        }
+    }
 
-
+    @Override
+    public void dealDamage(ICombatEntity entity) {
+        if (entity.canDealDamage()) {
+            entity.dealDamage(entity);
+        }
+    }
 }
 

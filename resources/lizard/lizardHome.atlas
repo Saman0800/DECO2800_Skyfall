@@ -1,0 +1,57 @@
+
+dragonHome.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+World Tree attecked0001
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+World Tree attecked0002
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+dragonHome2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+World Tree attecked0003
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+World Tree attecked0004
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+
+dragonHome3.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+World Tree attecked0005
+  rotate: false
+  xy: 0, 482
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+World Tree attecked0006
+  rotate: false
+  xy: 0, 0
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
