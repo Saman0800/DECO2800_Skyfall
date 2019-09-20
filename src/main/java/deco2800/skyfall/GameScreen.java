@@ -120,7 +120,8 @@ public class GameScreen implements Screen,KeyDownObserver {
                 save.getWorlds().add(world);
                 save.setCurrentWorld(world);
                 world.setSave(save);
-                DatabaseManager.get().getDataBaseConnector().saveGame(save);
+                //TODO: Uncomment this before merging
+               // DatabaseManager.get().getDataBaseConnector().saveGame(save);
             }
             GameManager.get().getManager(NetworkManager.class).startHosting("host");
         }
