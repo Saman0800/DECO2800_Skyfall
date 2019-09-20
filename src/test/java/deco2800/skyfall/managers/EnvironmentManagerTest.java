@@ -199,9 +199,8 @@ public class EnvironmentManagerTest {
     // Didn't catch this til the very end of the sprint, so will need to fix next sprint
     @Test
     public void onTickTest() {
-
         manager.onTick(0);
-
+        verify(mockWorld).getEntities();
     }
 
     @Test

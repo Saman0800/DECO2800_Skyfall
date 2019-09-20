@@ -597,15 +597,6 @@ public class EnvironmentManager extends TickableManager {
         setTODMusic();
         getcurrentWeather();
 
-        // Key mapping to mute volume
-        // M for mute and U to un-mute
-        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-            BGMManager.mute();
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
-            BGMManager.unmute();
-        }
-
         weatherEvent++;
 
         if (weatherEvent == 10000) {
