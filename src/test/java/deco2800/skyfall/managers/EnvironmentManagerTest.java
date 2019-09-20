@@ -7,6 +7,8 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.observers.DayNightObserver;
@@ -195,17 +197,12 @@ public class EnvironmentManagerTest {
 
     // Because time tracking has been changed, the following test no longer works as intended
     // Didn't catch this til the very end of the sprint, so will need to fix next sprint
-//    @Test
-//    public void onTickTest() {
-//        try {
-//            manager.onTick(1000000);
-//
-//            long time = (System.currentTimeMillis() / 60000) % 24;
-//
-//            assertEquals(time, manager.getTime());
-//
-//        } catch (Exception e) { /* Exception caught, if any */ }
-//    }
+    @Test
+    public void onTickTest() {
+
+        manager.onTick(0);
+
+    }
 
     @Test
     public void setMonthTest() {
