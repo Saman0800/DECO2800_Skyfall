@@ -124,7 +124,7 @@ public class MainCharacter extends Peon
 
     // Variables to sound effects
     private static final String WALK_NORMAL = "people_walk_normal";
-    private static final String HURT = "player_hurt";
+    private static final String PLAYER_HURT = "player_hurt";
     private static final String DIED = "player_died";
 
 
@@ -641,18 +641,15 @@ public class MainCharacter extends Peon
      */
     public void hurt(int damage) {
 
-        // if (this.isInvincible) return;
         if (this.isRecovering) return;
 
         setHurt(true);
-        logger.info("Hurted: " + isHurt);
         changeHealth(-damage);
         updateHealth();
 
         getBody().setLinearVelocity(getBody().getLinearVelocity()
                         .lerp(new Vector2(0.f, 0.f), 0.5f));
 
-        System.out.println("CURRENT HEALTH:" + getHealth());
         if (this.getHealth() <= 0) {
             kill();
         } else {
@@ -693,7 +690,7 @@ public class MainCharacter extends Peon
             position.moveToward(bounceBack, 1f);
             */
 
-            SoundManager.playSound(HURT);
+            SoundManager.playSound(PLAYER_HURT);
 
             if (hurtTime > 400) {
                 setRecovering(true);
@@ -768,7 +765,6 @@ public class MainCharacter extends Peon
         SoundManager.playSound(DIED);
         setCurrentState(AnimationRole.DEAD);
         deadTime = 0;
-        // gameOverTable.show();
     }
 
     /**
@@ -1697,7 +1693,7 @@ public class MainCharacter extends Peon
      */
     private void updateAnimation() {
         getPlayerDirectionCardinal();
-        List<Float> vel = getVelocity();
+        List<Float> velocity = getVelocity();
 
         /* Short Animations */
         if (getToBeRun() != null) {
@@ -1708,17 +1704,17 @@ public class MainCharacter extends Peon
             }
         }
 
-            if (isDead()) {
-                setCurrentState(AnimationRole.STILL);
-            } else if (isHurt) {
-                setCurrentState(AnimationRole.HURT);
+        if (isDead()) {
+            setCurrentState(AnimationRole.STILL);
+        } else if (isHurt) {
+            setCurrentState(AnimationRole.HURT);
+        } else {
+            if (velocity.get(2) == 0f) {
+                setCurrentState(AnimationRole.NULL);
             } else {
-                if (vel.get(2) == 0f) {
-                    setCurrentState(AnimationRole.NULL);
-                } else {
-                    setCurrentState(AnimationRole.MOVE);
-                }
+                setCurrentState(AnimationRole.MOVE);
             }
+        }
     }
 
 
