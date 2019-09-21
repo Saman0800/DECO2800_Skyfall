@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Collections;
 
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -63,10 +61,20 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
 
     }
 
+    /**
+     * Initialises a default static entity
+     */
     public StaticEntity() {
         super();
     }
 
+    /**
+     * Initialises a static entity
+     * @param tile The tile it spawns on
+     * @param renderOrder The position is has in the render order
+     * @param texture The texture it is given
+     * @param obstructed Whether the entity is obstructed by something
+     */
     public StaticEntity(Tile tile, int renderOrder, String texture, boolean obstructed) {
         super(tile.getCol(), tile.getRow(), renderOrder);
         this.setObjectName(ENTITY_ID_STRING);
@@ -83,6 +91,13 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         tile.setObstructed(obstructed);
     }
 
+    /**
+     * Initialises a static entity
+     * @param col The tile col it spawns on
+     * @param row The tile row it spawns on
+     * @param renderOrder The position it has in the render order
+     * @param texture The texture the entity is given
+     */
     public StaticEntity(float col, float row, int renderOrder, Map<HexVector, String> texture) {
         super(col, row, renderOrder);
         this.setObjectName(ENTITY_ID_STRING);
@@ -118,6 +133,14 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         }
     }
 
+    /**
+     * Initialises a static entity with a custom hit box
+     * @param tile The tile it spawns on
+     * @param renderOrder The position it has in the render order
+     * @param texture The texture the entity is given
+     * @param obstructed Whether the entity is obstructed by something
+     * @param fixtureDef The name of the hit box given to the entity
+     */
     public StaticEntity(Tile tile, int renderOrder, String texture,
                         boolean obstructed, String fixtureDef) {
         super(tile.getCol(), tile.getRow(), renderOrder, fixtureDef);
@@ -138,6 +161,14 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         tile.setObstructed(obstructed);
     }
 
+    /**
+     * Initialises a static entity with a custom hit box
+     * @param col The tile col it spawns on
+     * @param row The tile row it spawns on
+     * @param renderOrder The position it has in the render order
+     * @param texture The texture the entity is given
+     * @param fixtureDef The name of the hit box given to the entity
+     */
     public StaticEntity(float col, float row, int renderOrder, Map<HexVector,
             String> texture, String fixtureDef) {
         super(col, row, renderOrder, fixtureDef);
@@ -192,6 +223,10 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         return Collections.unmodifiableMap(this.textures);
     }
 
+    /**
+     * Gives all the static entities in a world a parent and sets there hit
+     * box to be that of the parent
+     */
     public void setup() {
         if (children == null) {
             return;
@@ -233,6 +268,12 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         // Do the AI for the building in here
     }
 
+    /**
+     * Gets the tile for a position on the map
+     * @param offset The offset from the center of the map
+     * @param center The center of the map
+     * @return The Tile at the given location
+     */
     private Tile textureToTile(HexVector offset, HexVector center) {
         if (!WorldUtil.validColRow(offset)) {
             log.debug(offset + " Is Invaid:");
@@ -242,6 +283,10 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         return GameManager.get().getWorld().getTile(targetTile);
     }
 
+    /**
+     * Gets the position to render
+     * @return The x and y value for the position to render
+     */
     public int[] getRenderCentre() {
         float[] rowColValues = WorldUtil.colRowToWorldCords(getCol(), getRow());
 
@@ -255,16 +300,29 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         return renderPos;
     }
 
+    /**
+     * Get the position of the child static entities
+     * @return Key set of all the child positions
+     */
     public Set<HexVector> getChildrenPositions() {
         return children.keySet();
     }
 
+    /**
+     * Gets the texture for a child position
+     * @param childPos The position of the child
+     * @return The Texture for that child
+     */
     public Texture getTexture(HexVector childPos) {
         String texture = children.get(childPos);
 
         return textureManager.getTexture(texture);
     }
 
+    /**
+     * Sets a map of child entities
+     * @param children Map with there position and name
+     */
     public void setChildren(Map<HexVector, String> children) {
         this.children = children;
     }
