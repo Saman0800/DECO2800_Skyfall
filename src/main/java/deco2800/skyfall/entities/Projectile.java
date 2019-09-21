@@ -1,12 +1,13 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.math.Vector2;
+import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.animation.Animatable;
-import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.managers.GameManager;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.entities.enemies.AbstractEnemy;
 
 /**
  * An entity that is shot from a weapon.
@@ -42,7 +43,7 @@ public class Projectile extends AgentEntity implements Animatable {
     private HexVector movementPosition;
 
     /**
-     *
+     * The texture of the projectile.
      */
     private String textureName;
 
@@ -110,6 +111,10 @@ public class Projectile extends AgentEntity implements Animatable {
         return this.range;
     }
 
+    public String getTextureName() {
+        return textureName;
+    }
+
     /**
      * Checks how long the projectile has been alive
      * for and deletes after a set number of game ticks.
@@ -144,7 +149,7 @@ public class Projectile extends AgentEntity implements Animatable {
             ((AbstractEnemy) other).takeDamage(this.getDamage());
             ((AbstractEnemy) other).setHurt(true);
             toBeDestroyed = true;
-            ((AbstractEnemy)other).getBody().setLinearVelocity(
+            ((AbstractEnemy) other).getBody().setLinearVelocity(
                     (((AbstractEnemy)other).getBody().getLinearVelocity()
                     .lerp(new Vector2(0.f, 0.f), 0.5f)));
         }
@@ -165,6 +170,7 @@ public class Projectile extends AgentEntity implements Animatable {
 
     @Override
     public void configureAnimations() {
+
     }
 
     @Override

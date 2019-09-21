@@ -1,7 +1,7 @@
 package deco2800.skyfall.worlds.world;
 
 
-import deco2800.skyfall.entities.PlayerPeon;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import org.junit.Before;
@@ -15,7 +15,7 @@ import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ GameManager.class, DatabaseManager.class, PlayerPeon.class })
+@PrepareForTest({ GameManager.class, DatabaseManager.class, MainCharacter.class })
 public class WorldDirectorTest {
     @Before
     public void setup() {

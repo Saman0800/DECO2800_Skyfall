@@ -218,6 +218,7 @@ public class Renderer3D implements Renderer {
 
                     if (entity instanceof MainCharacter) {
                         if (((MainCharacter) entity).IsHurt() || ((MainCharacter) entity).isDead()) {
+                            System.out.println("Changed to red");
                             batch.setColor(Color.RED);
                         } else if (((MainCharacter) entity).isRecovering()) {
                             if (((MainCharacter) entity).isTexChanging()) {

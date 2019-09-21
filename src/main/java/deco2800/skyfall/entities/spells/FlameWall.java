@@ -3,9 +3,8 @@ package deco2800.skyfall.entities.spells;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.entities.AbstractEnemy;
+import deco2800.skyfall.entities.enemies.AbstractEnemy;
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.EnemyEntity;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 
@@ -15,7 +14,7 @@ public class FlameWall extends Spell {
 
     //How long since the spell last dealt damage.
     protected int ticksSinceAttacked = 0;
-    //How long it takes to cooldown.
+    //How long it takes to cool down.
     private int attackCD = 10;
 
     /**

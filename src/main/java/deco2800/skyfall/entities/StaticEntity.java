@@ -1,16 +1,9 @@
 package deco2800.skyfall.entities;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Collections;
-
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.world.Chunk;
@@ -41,7 +34,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
     // The type of entity this is (e.g. "Tree", "Axe" etc.)
     protected String entityType;
 
-    public Map<HexVector, String> children;
+    private Map<HexVector, String> children;
 
     private Map<HexVector, String> textures;
 

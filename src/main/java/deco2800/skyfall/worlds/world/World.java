@@ -2,6 +2,7 @@ package deco2800.skyfall.worlds.world;
 
 import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.enemies.AbstractEnemy;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.AgentEntity;

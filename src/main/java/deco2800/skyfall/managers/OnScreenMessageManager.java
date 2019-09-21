@@ -1,13 +1,10 @@
 package deco2800.skyfall.managers;
 
-import deco2800.skyfall.entities.Peon;
+import java.util.List;
+import java.util.ArrayList;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.handlers.KeyboardManager;
 import deco2800.skyfall.observers.KeyTypedObserver;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import deco2800.skyfall.resources.items.*;
 
 public class OnScreenMessageManager extends AbstractManager implements KeyTypedObserver {
     private List<String> messages = new ArrayList<>();
@@ -60,11 +57,11 @@ public class OnScreenMessageManager extends AbstractManager implements KeyTypedO
 				isTyping = false;
 				if (unsentMessage.startsWith("/duck")) { // enable GOD mode
 					for (int i = 0; i < 1000; ++i) {
-						GameManager.get().getWorld().addEntity(new Peon(0f, 0f, 0.05f, "DUCK",1));
+						GameManager.get().getWorld().addEntity(new MainCharacter(0f, 0f, 0.05f, "DUCK",1));
 					} 
 
 				} else	if (unsentMessage.startsWith("/1")) { // enable GOD mode
-					GameManager.get().getWorld().addEntity(new Peon(0f, 0f, 0.05f,"GOD",10000000));
+					GameManager.get().getWorld().addEntity(new MainCharacter(0f, 0f, 0.05f,"GOD",10000000));
 				} else if (unsentMessage.startsWith("/inventory")) {
 					// Display inventory in the console
 					this.addMessage(String.format(GameManager.getManagerFromInstance(InventoryManager.class).toString()));

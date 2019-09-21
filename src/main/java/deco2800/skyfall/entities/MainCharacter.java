@@ -1,44 +1,43 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.physics.box2d.Filter;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import deco2800.skyfall.buildings.BuildingFactory;
-import deco2800.skyfall.entities.spells.SpellFactory;
+import java.util.Map;
+import java.util.List;
+import org.slf4j.Logger;
+import java.util.HashMap;
+import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.math.Vector2;
-import deco2800.skyfall.GameScreen;
+import org.slf4j.LoggerFactory;
 import deco2800.skyfall.Tickable;
-import deco2800.skyfall.animation.Animatable;
-import deco2800.skyfall.animation.AnimationLinker;
-import deco2800.skyfall.animation.AnimationRole;
-import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.entities.spells.Spell;
-import deco2800.skyfall.entities.spells.SpellType;
-import deco2800.skyfall.gamemenu.HealthCircle;
-import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
-import deco2800.skyfall.gui.ManaBar;
 import deco2800.skyfall.managers.*;
-import deco2800.skyfall.observers.KeyDownObserver;
-import deco2800.skyfall.observers.KeyUpObserver;
-import deco2800.skyfall.observers.TouchDownObserver;
-import deco2800.skyfall.resources.Blueprint;
-import deco2800.skyfall.resources.GoldPiece;
-import deco2800.skyfall.resources.HealthResources;
-import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.resources.items.Hatchet;
-import deco2800.skyfall.resources.items.PickAxe;
+import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.saving.Save;
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.gui.ManaBar;
+import com.badlogic.gdx.math.Vector2;
+import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.Tile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import deco2800.skyfall.resources.Blueprint;
+import deco2800.skyfall.resources.GoldPiece;
+import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.animation.Animatable;
+import com.badlogic.gdx.physics.box2d.Filter;
+import deco2800.skyfall.entities.spells.Spell;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import deco2800.skyfall.gamemenu.HealthCircle;
+import deco2800.skyfall.resources.items.Hatchet;
+import deco2800.skyfall.resources.items.PickAxe;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.observers.KeyUpObserver;
+import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.animation.AnimationLinker;
+import deco2800.skyfall.buildings.BuildingFactory;
+import deco2800.skyfall.observers.KeyDownObserver;
+import deco2800.skyfall.resources.HealthResources;
+import deco2800.skyfall.observers.TouchDownObserver;
+import deco2800.skyfall.entities.spells.SpellFactory;
+import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
 
 /**
  * Main character in the game
@@ -124,12 +123,12 @@ public class MainCharacter extends Peon
     private String itemToCreate;
 
     // Variables to sound effects
-    public static final String WALK_NORMAL = "people_walk_normal";
-    public static final String HURT = "player_hurt";
-    public static final String DIED = "player_died";
+    private static final String WALK_NORMAL = "people_walk_normal";
+    private static final String HURT = "player_hurt";
+    private static final String DIED = "player_died";
 
 
-    public static final String BOWATTACK = "bow_and_arrow_attack";
+    private static final String BOWATTACK = "bow_and_arrow_attack";
 
     //The pick Axe that is going to be created
     private Hatchet hatchetToCreate;
@@ -210,19 +209,11 @@ public class MainCharacter extends Peon
     private long deadTime = 500;
 
     /**
-     * Check whether MainCharacter is hurt.
+     * Check whether MainCharacter is in a certain state.
      */
     private boolean isHurt = false;
-
-    /**
-     * Check id player is recovering
-     */
     private boolean isRecovering = false;
     private boolean isTexChanging = false;
-
-    /**
-     * Check id player is attacking
-     */
     private boolean isAttacking = false;
 
     /**
@@ -258,11 +249,6 @@ public class MainCharacter extends Peon
 
     private String equipped;
 
-    /**
-     *  Game Over screen.
-     */
-    private GameOverTable gameOverTable;
-
     // TODO:dannathan Fix or remove this.
     // /**
     //  * Loads a main character from a memento
@@ -284,6 +270,7 @@ public class MainCharacter extends Peon
         this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
         this.setHeight(1);
         this.setObjectName("MainPiece");
+        this.setMaxHealth(health);
 
         GameManager.getManagerFromInstance(InputManager.class)
                 .addKeyDownListener(this);
@@ -386,7 +373,8 @@ public class MainCharacter extends Peon
      * Set up the game over screen.
      */
     private void setupGameOverScreen() {
-        this.gameOverTable = (GameOverTable) GameManager.get().getManagerFromInstance(GameMenuManager.class).
+        // Game Over screen.
+        GameOverTable gameOverTable = (GameOverTable) GameManager.get().getManagerFromInstance(GameMenuManager.class).
                 getPopUp("gameOverTable");
         System.out.println(gameOverTable);
     }
@@ -578,7 +566,11 @@ public class MainCharacter extends Peon
         return this.mana;
     }
 
-    public void setAttacking(boolean isAttacking) {
+    public boolean isAttacking() {
+        return isAttacking;
+    }
+
+    private void setAttacking(boolean isAttacking) {
         this.isAttacking = isAttacking;
     }
 
@@ -656,9 +648,11 @@ public class MainCharacter extends Peon
         logger.info("Hurted: " + isHurt);
         changeHealth(-damage);
         updateHealth();
-        logger.info("Hurted: " + getHealth());
 
-        System.out.println("CURRENT HEALTH:" + String.valueOf(getHealth()));
+        getBody().setLinearVelocity(getBody().getLinearVelocity()
+                        .lerp(new Vector2(0.f, 0.f), 0.5f));
+
+        System.out.println("CURRENT HEALTH:" + getHealth());
         if (this.getHealth() <= 0) {
             kill();
         } else {
@@ -700,6 +694,10 @@ public class MainCharacter extends Peon
             */
 
             SoundManager.playSound(HURT);
+
+            if (hurtTime > 400) {
+                setRecovering(true);
+            }
         }
     }
 
@@ -717,7 +715,7 @@ public class MainCharacter extends Peon
     /**
      * Helper function to update healthBar outside of class.
      */
-    public void updateHealth() {
+    private void updateHealth() {
         if (this.healthBar != null) {
             this.healthBar.update();
         }
@@ -735,6 +733,10 @@ public class MainCharacter extends Peon
         this.isRecovering = isRecovering;
     }
 
+    public boolean isInvincible() {
+        return isInvincible;
+    }
+
     public boolean isTexChanging() {
         return isTexChanging;
     }
@@ -745,14 +747,14 @@ public class MainCharacter extends Peon
 
     private void checkIfRecovered() {
         recoverTime += 20;
-        recoverTime += 20;
 
         this.changeCollideability(false);
 
-        if (recoverTime > 2000) {
+        if (recoverTime > 1000) {
             logger.info("Recovered");
             setRecovering(false);
             changeCollideability(true);
+            recoverTime = 0;
         }
     }
 
@@ -760,7 +762,7 @@ public class MainCharacter extends Peon
      * Kills the player. and notifying the game that the player
      * has died and cannot do any actions in game anymore.
      */
-    public void kill() {
+    private void kill() {
         // set health to 0.
         changeHealth(0);
         SoundManager.playSound(DIED);
@@ -779,6 +781,7 @@ public class MainCharacter extends Peon
     /**
      * @param isHurt the player's "hurt" status
      */
+    @SuppressWarnings("WeakerAccess")
     public void setHurt(boolean isHurt) {
         this.isHurt = isHurt;
     }
@@ -1132,8 +1135,8 @@ public class MainCharacter extends Peon
     /**
      * Adds a piece of gold to the Gold Pouch
      *
-     * @Param gold The piece of gold to be added to the pouch
-     * @Param count How many of that piece of gold should be added
+     * @param gold The piece of gold to be added to the pouch
+     * @param count How many of that piece of gold should be added
      */
     public void addGold(GoldPiece gold, Integer count) {
         // store the gold's value (5G, 10G etc) as a variable
@@ -1197,8 +1200,8 @@ public class MainCharacter extends Peon
      *
      * @return The total value of the Gold Pouch
      */
-    public Integer getGoldPouchTotalValue() {
-        Integer totalValue = 0;
+    public int getGoldPouchTotalValue() {
+        int totalValue = 0;
         for (Integer goldValue : goldPouch.keySet()) {
             totalValue += goldValue * goldPouch.get(goldValue);
         }
@@ -1695,13 +1698,6 @@ public class MainCharacter extends Peon
     private void updateAnimation() {
         getPlayerDirectionCardinal();
         List<Float> vel = getVelocity();
-
-        /*
-        if(isAttacking) {
-            setCurrentState(AnimationRole.ATTACK);
-           // System.out.println(isAttacking);
-            setAttacking(false);
-        }
 
         /* Short Animations */
         if (getToBeRun() != null) {

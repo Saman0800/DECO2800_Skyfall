@@ -1,6 +1,6 @@
 package deco2800.skyfall.entities.worlditems;
 
-import deco2800.skyfall.entities.PlayerPeon;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.util.HexVector;
@@ -28,7 +28,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ GameManager.class, PlayerPeon.class, WorldBuilder.class, WorldDirector.class, DatabaseManager.class,
+@PrepareForTest({ GameManager.class, MainCharacter.class, WorldBuilder.class, WorldDirector.class, DatabaseManager.class,
                   DataBaseConnector.class })
 public class LongGrassTest {
     private World w = null;

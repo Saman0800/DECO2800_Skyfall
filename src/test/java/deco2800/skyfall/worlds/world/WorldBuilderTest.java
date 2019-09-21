@@ -1,6 +1,8 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.enemies.AbstractEnemy;
+import deco2800.skyfall.entities.enemies.Treeman;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
@@ -87,7 +89,7 @@ public class WorldBuilderTest {
 
         assertEquals(0, world.getSeed());
 
-        int enemyEntities = (int) world.getEntities().stream().filter(EnemyEntity.class::isInstance).count();
+        int enemyEntities = (int) world.getEntities().stream().filter(AbstractEnemy.class::isInstance).count();
         int staticEntities = (int) world.getEntities().stream().filter(StaticEntity.class::isInstance).count();
 
         assertTrue(staticEntities > 0);

@@ -4,8 +4,7 @@ import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.entities.AbstractEnemy;
-import deco2800.skyfall.entities.EnemyEntity;
+import deco2800.skyfall.entities.enemies.AbstractEnemy;
 import deco2800.skyfall.entities.ICombatEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameManager;
@@ -15,19 +14,12 @@ import deco2800.skyfall.util.WorldUtil;
 public class Tiger extends AbstractEnemy implements Animatable {
     //The health of tiger
     private static final transient int HEALTH = 10;
-    //The attack range of tiger
-    private static final transient float ATTACK_RANGE = 1f;
     //The attack speed of tiger
     private static final transient float RUNAWAYSPEED = 5f;
-    //The speed of tiger if it is angry and attack
-    private static final transient float ANGRYSPEED = 0.03f;
     //The normal speed of tiger, if it is not in attack
     private static final transient float NORMALSPEED = 0.01f;
     //The speed of tiger, if it get injure
     private static final transient float INJURESPEED = 0.00001f;
-    private static final transient float INJURE_ANGRY_SPEED = 0.00005f;
-    //The attack frequency of tiger
-    private static final transient int ATTACK_FREQUENCY = 50;
     //The biome of tiger
     private static final transient String BIOME = "forest";
     //Moving direction
@@ -41,11 +33,7 @@ public class Tiger extends AbstractEnemy implements Animatable {
     //savage animation
     private MainCharacter mc;
     private boolean attackStatus = false;
-    //if the pet is attacked by enemies or the enemy closed enough to the
-    // pet, then the pet will be in angry situation
-    private int angerTimeAccount = 0;
-    //To indicate whether the enemy arrives pet's location
-    private boolean complete = false;
+
     //a routine for destination
     private HexVector destination = null;
 
@@ -68,7 +56,7 @@ public class Tiger extends AbstractEnemy implements Animatable {
      * the game
      */
     public Tiger(float col, float row, MainCharacter mc) {
-        super(col, row, mc);
+        super(col, row);
         this.setTexture("petTiger");
         this.setObjectName("petTiger");
         this.setHeight(5);
@@ -86,7 +74,6 @@ public class Tiger extends AbstractEnemy implements Animatable {
     /**
      * Initialization value of pet tiger
      */
-    /*
     public Tiger(float col, float row) {
         super(col, row);
         this.setTexture("petTiger");
@@ -95,9 +82,7 @@ public class Tiger extends AbstractEnemy implements Animatable {
         this.setHealth(HEALTH);
         this.setLevel(2);
         this.setSpeed(2);
-        this.setArmour(5);
     }
-    */
 
 
     /**
