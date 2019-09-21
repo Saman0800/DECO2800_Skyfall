@@ -1,6 +1,5 @@
 package deco2800.skyfall.entities;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -39,7 +38,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
     // The type of entity this is (e.g. "Tree", "Axe" etc.)
     protected String entityType;
 
-    public Map<HexVector, String> children;
+    private Map<HexVector, String> children;
 
     private Map<HexVector, String> textures;
 

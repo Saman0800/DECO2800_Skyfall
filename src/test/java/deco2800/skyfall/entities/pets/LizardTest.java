@@ -1,7 +1,6 @@
 package deco2800.skyfall.entities.pets;
 
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.resources.GoldPiece;
@@ -21,7 +20,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Random;
 
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
@@ -30,7 +28,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ GameManager.class, DatabaseManager.class, PlayerPeon.class, WorldBuilder.class, WorldDirector.class,
+@PrepareForTest({ GameManager.class, DatabaseManager.class, MainCharacter.class, WorldBuilder.class, WorldDirector.class,
                   DatabaseManager.class, DataBaseConnector.class })
 public class LizardTest {
 

@@ -95,6 +95,8 @@ public class GameScreen implements Screen,KeyDownObserver {
         gameMenuManager.setGame(game);
         databaseManager.startDataBaseConnector();
 
+
+
         //Used to create to the world
 
         // Create main world

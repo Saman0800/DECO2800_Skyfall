@@ -1,8 +1,6 @@
 package deco2800.skyfall.resources;
 
-import deco2800.skyfall.entities.AgentEntity;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.resources.items.*;
 import deco2800.skyfall.util.HexVector;
 import org.junit.After;

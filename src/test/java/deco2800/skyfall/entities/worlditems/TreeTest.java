@@ -1,7 +1,7 @@
 package deco2800.skyfall.entities.worlditems;
 
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.PlayerPeon;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.WoodCube;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.managers.database.DataBaseConnector;
@@ -34,7 +34,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ GameManager.class, PlayerPeon.class, WorldBuilder.class, WorldDirector.class, DatabaseManager.class,
+@PrepareForTest({ GameManager.class, MainCharacter.class, WorldBuilder.class, WorldDirector.class, DatabaseManager.class,
                   DataBaseConnector.class })
 public class TreeTest {
     private World w = null;

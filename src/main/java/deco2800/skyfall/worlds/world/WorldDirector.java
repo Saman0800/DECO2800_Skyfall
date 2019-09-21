@@ -1,6 +1,7 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.enemies.*;
 import deco2800.skyfall.entities.pets.LizardHome;
 import deco2800.skyfall.entities.pets.IceWhitebear;
 import deco2800.skyfall.entities.pets.Tiger;
@@ -13,9 +14,7 @@ import deco2800.skyfall.worlds.biomes.MountainBiome;
 import deco2800.skyfall.worlds.biomes.SnowyMountainsBiome;
 import deco2800.skyfall.worlds.biomes.SwampBiome;
 import deco2800.skyfall.worlds.biomes.VolcanicMountainsBiome;
-import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.managers.StatisticsManager;
-import deco2800.skyfall.worlds.biomes.*;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -83,13 +82,12 @@ public class WorldDirector {
             gmm.drawAllElements();
         }
 
-
         builder.addEntity(mainCharacter);
         builder.addEntity(new Stone(-4, -3, mainCharacter));
         builder.addEntity(new LizardHome(0, 2, mainCharacter));
         builder.addEntity(new IceWhitebear(-2, 0, mainCharacter));
         builder.addEntity(new Flower(2f,2f,mainCharacter));
-        builder.addEntity(new Flower(5f,2f,mainCharacter));
+        builder.addEntity(new Flower(8f,2f,mainCharacter));
         builder.addEntity(new Treeman(-2f,-3f,mainCharacter));
         builder.addEntity(new Tiger(-4f,-2f,mainCharacter));
 
