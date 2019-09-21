@@ -22,7 +22,7 @@ public class HealthCircle extends AbstractUIElement {
     StatisticsManager sm;
     Skin skin;
 
-    final int offsetNewGuiX = 160;
+    final int offsetNewGuiX = 175;
     /**
      * Updates the inner circle.
      */
@@ -74,7 +74,7 @@ public class HealthCircle extends AbstractUIElement {
 
         label = new Label("Health: 10", skin,  "blue-pill");
         label.setAlignment(Align.center);
-        label.setFontScale(0.75f);
+        label.setFontScale(0.7f);
 
         final int OUTER_CIRCLE = 1;
         final int INNER_CIRCLE = 0;

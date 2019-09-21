@@ -613,4 +613,8 @@ public class EnvironmentManager extends TickableManager {
             weatherEvent = 0;
         }
     }
+
+    public int getMinutes() {
+        return minutes;
+    }
 }
