@@ -941,7 +941,7 @@ public class MainCharacter extends Peon
         if (button == 1) {
 
             float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
-            float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
+            float[] clickedPosition = WorldUtil.worldCoordinatesToSubColRow(mouse[0], mouse[1]);
 
             HexVector mousePos = new HexVector(clickedPosition[0], clickedPosition[1]);
             this.attack(mousePos);

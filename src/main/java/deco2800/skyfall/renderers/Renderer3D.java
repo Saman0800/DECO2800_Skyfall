@@ -293,7 +293,7 @@ public class Renderer3D implements Renderer {
 
     private void debugRender(SpriteBatch batch, OrthographicCamera camera) {
 
-        boolean hitboxRenderDebug = false; // For debugging hitboxes
+        boolean hitboxRenderDebug = true; // For debugging hitboxes
         if (hitboxRenderDebug) {
             World box2DWorld = GameManager.get().getManager(PhysicsManager.class).getBox2DWorld();
             Array<Body> bodies = new Array<>();
