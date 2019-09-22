@@ -12,10 +12,8 @@ public class GoldPiece extends StaticEntity {
 
     private static final String ENTITY_ID_STRING = "gold_piece";
 
-
     // the value of the piece of gold (either 5G,10G,50G or 100G)
     public int value;
-
 
 
     /**
@@ -46,9 +44,23 @@ public class GoldPiece extends StaticEntity {
         super(tile, 2, "goldPiece" + value, obstructed);
         this.setObjectName(ENTITY_ID_STRING);
         this.value = value;
+        this.entityType = "GoldPiece";
         changeCollideability(false);
+
     }
 
+    public GoldPiece (StaticEntityMemento memento){
+        super(memento);
+    }
+
+    /**
+     * Override the method provided in AbstractEntity
+     * @param i
+     */
+    @Override
+    public void onTick(long i) {
+        // Do nothing on tick
+    }
 
     /**
      * The newInstance method implemented for the GoldPiece class to allow for item
@@ -68,14 +80,7 @@ public class GoldPiece extends StaticEntity {
         return this.value;
     }
 
-    /**
-     * Override the method provided in AbstractEntity
-     * @param i
-     */
-    @Override
-    public void onTick(long i) {
-        // Do nothing on tick
-    }
+
 
 
 

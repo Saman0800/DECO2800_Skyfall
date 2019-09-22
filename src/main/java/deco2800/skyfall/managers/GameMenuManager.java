@@ -1,16 +1,13 @@
 package deco2800.skyfall.managers;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.SkyfallGame;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.gui.Clock;
-import deco2800.skyfall.gui.WeatherGui;
+import deco2800.skyfall.gamemenu.Clock;
 import deco2800.skyfall.gamemenu.*;
 import deco2800.skyfall.gamemenu.popupmenu.SettingsTable;
 import deco2800.skyfall.gamemenu.popupmenu.*;
@@ -43,6 +40,12 @@ public class GameMenuManager extends TickableManager {
 
     private Logger logger = LoggerFactory.getLogger(GameMenuManager.class);
 
+
+    private float topRightX = 0;
+    private float topRightY = 0;
+
+    private float topLeftX = 0;
+    private float topLeftY = 0;
     /**
      * Initialise a new GameMenuManager with stage and skin including the characters in the game.
      * And construct Manager instances for later use.
@@ -84,6 +87,14 @@ public class GameMenuManager extends TickableManager {
      */
     @Override
     public void onTick(long i) {
+        if (stage != null) {
+            topRightX = stage.getCamera().position.x  + (stage.getCamera().viewportWidth / 2);
+            topRightY = stage.getCamera().position.y  +  (stage.getCamera().viewportHeight / 2);
+
+            topLeftX = stage.getCamera().position.x  - (stage.getCamera().viewportWidth / 2);
+            topLeftY = topRightY;
+
+        }
         //Get the current state of the inventory on tick so that display can be updated
         if (currentPopUpElement != null) {
             //Checks to see a new pop up needs to be displayed.
@@ -193,19 +204,19 @@ public class GameMenuManager extends TickableManager {
         return new TextureRegionDrawable((new TextureRegion(textureManager.getTexture(sName))));
     }
 
-//    /**
-//     * Set main character of the game to be {mainCharacter}.
-//     *
-//     * @param mainCharacter Main character of the game.
-//     */
-//    public void setMainCharacter(MainCharacter mainCharacter) {
-//        if (stage == null) {
-//            System.out.println("Please set stage before adding character");
-//            return;
-//        }
-//        this.mainCharacter = mainCharacter;
-//
-//    }
+    /**
+     * Set main character of the game to be {mainCharacter}.
+     *
+     * @param mainCharacter Main character of the game.
+     */
+    public void setMainCharacter(MainCharacter mainCharacter) {
+        if (stage == null) {
+            System.out.println("Please set stage before adding character");
+            return;
+        }
+        this.mainCharacter = mainCharacter;
+
+    }
 
     /**
      * Getter of main character of the game.
@@ -240,6 +251,7 @@ public class GameMenuManager extends TickableManager {
         sm = statsManager;
     }
 
+
     /**
      * Draws all of the elements in UI
      */
@@ -255,7 +267,8 @@ public class GameMenuManager extends TickableManager {
         skin.add("blue-pill", bluePill);
 
 
-        uiElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm, skin));
+        uiElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm, skin, this));
+        uiElements.put("goldPill", new GoldStatusBar(stage, null, textureManager,  mainCharacter, skin, this));
 
         uiElements.put("gameMenuBar", new GameMenuBar(stage, null, textureManager, this));
 
@@ -304,7 +317,7 @@ public class GameMenuManager extends TickableManager {
                 null, textureManager, this, sm, skin));
 
 
-        uiElements.put("clock" , new Clock(stage));
+        uiElements.put("clock" , new Clock(stage, skin, this));
         //uiElements.put("weatherGUI", new WeatherGui(stage, EnvironmentManager.currentWeather()));
 
     }
@@ -344,7 +357,21 @@ public class GameMenuManager extends TickableManager {
         currentPopUpElement = popUpName;
     }
 
+    public float getTopRightX() {
+        return topRightX;
+    }
 
+    public float getTopRightY() {
+        return topRightY;
+    }
+
+    public float getTopLeftX() {
+        return topLeftX;
+    }
+
+    public float getTopLeftY() {
+        return topLeftY;
+    }
 }
 
 

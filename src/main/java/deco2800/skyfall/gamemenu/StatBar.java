@@ -1,4 +1,4 @@
-package deco2800.skyfall.gui;
+package deco2800.skyfall.gamemenu;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
