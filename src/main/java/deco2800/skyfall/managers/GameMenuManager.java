@@ -227,7 +227,6 @@ public class GameMenuManager extends TickableManager {
         try {
             return sm.getCharacter();
         } catch (NullPointerException npe) {
-            //TODO: Change to logger
             logger.error("Please add stats manager returning default c");
             return MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
         }
@@ -268,7 +267,7 @@ public class GameMenuManager extends TickableManager {
 
 
         uiElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm, skin, this));
-        uiElements.put("goldPill", new GoldStatusBar(stage, null, textureManager,  mainCharacter, skin, this));
+        uiElements.put("goldPill", new GoldStatusBar(stage, null, textureManager,  skin, this));
 
         uiElements.put("gameMenuBar", new GameMenuBar(stage, null, textureManager, this));
 

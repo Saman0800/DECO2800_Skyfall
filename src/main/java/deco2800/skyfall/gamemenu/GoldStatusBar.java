@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
 import sun.applet.Main;
 
@@ -17,13 +18,11 @@ public class GoldStatusBar extends AbstractUIElement {
     private final GameMenuManager gmm;
     private Label goldLabel;
     private ImageButton goldPouchButton;
-    MainCharacter mainCharacter;
 
-    public GoldStatusBar(Stage stage, String[] textureNames, TextureManager tm, MainCharacter mainCharacter, Skin skin, GameMenuManager gmm) {
+    public GoldStatusBar(Stage stage, String[] textureNames, TextureManager tm, Skin skin, GameMenuManager gmm) {
         super(stage, textureNames, tm);
         this.gmm = gmm;
         this.skin = skin;
-        this.mainCharacter = mainCharacter;
         this.draw();
     }
 
@@ -31,12 +30,9 @@ public class GoldStatusBar extends AbstractUIElement {
     @Override
     public void updatePosition() {
         float positionX = stage.getCamera().position.x - goldLabel.getWidth();
-        float positionY = stage.getCamera().position.y  +  (stage.getCamera().viewportHeight / 2);
 
         goldLabel.setPosition(positionX + 100, gmm.getTopLeftY() - 70);
         goldPouchButton.setPosition(positionX + goldLabel.getWidth() + 60, gmm.getTopLeftY() - 80);
-        //goldLabel.setPosition(positionX + 30, positionY + 40 + 10);
-
     }
 
     @Override
@@ -57,9 +53,8 @@ public class GoldStatusBar extends AbstractUIElement {
     @Override
     public void update() {
         super.update();
-        //mainCharacter.getGoldPouchTotalValue();
-        //label.setText("Health: " + sm.getHealth());
-        //TODO: How to update gold count
 
+        int total = gmm.getMainCharacter().getGoldPouchTotalValue();
+        goldLabel.setText("$ " + total);
     }
 }
