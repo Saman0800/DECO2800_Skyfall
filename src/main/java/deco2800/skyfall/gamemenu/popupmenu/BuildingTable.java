@@ -23,7 +23,8 @@ import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDra
  */
 public class BuildingTable extends AbstractPopUpElement{
     private Skin skin;
-    private Table buildingTable, itemInfo;
+    private Table mainTable;
+    private Table itemInfo;
     private Blueprint selectedItem = null;
     private InventoryTable inventoryTable;
     private GameMenuManager gameMenuManager;
@@ -56,7 +57,7 @@ public class BuildingTable extends AbstractPopUpElement{
     public void hide() {
         super.hide();
         itemInfo.clearChildren();
-        buildingTable.setVisible(false);
+        mainTable.setVisible(false);
     }
 
     /**
@@ -65,7 +66,7 @@ public class BuildingTable extends AbstractPopUpElement{
     @Override
     public void show() {
         super.show();
-        buildingTable.setVisible(true);
+        mainTable.setVisible(true);
     }
 
     /**
@@ -76,11 +77,11 @@ public class BuildingTable extends AbstractPopUpElement{
     @Override
     public void draw() {
         super.draw();
-        buildingTable = new Table();
-        buildingTable.setSize(800, 800 * 1346 / 1862f);
-        buildingTable.setPosition(Gdx.graphics.getWidth()/2f - buildingTable.getWidth()/2,
-                (Gdx.graphics.getHeight() + 160) / 2f - buildingTable.getHeight()/2);
-        buildingTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
+        mainTable = new Table();
+        mainTable.setSize(800, 800 * 1346 / 1862f);
+        mainTable.setPosition(Gdx.graphics.getWidth()/2f - mainTable.getWidth()/2,
+                (Gdx.graphics.getHeight() + 160) / 2f - mainTable.getHeight()/2);
+        mainTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
 
         Table infoBar = new Table();
         infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
@@ -89,8 +90,8 @@ public class BuildingTable extends AbstractPopUpElement{
         text.setFontScale(1.2f);
         infoBar.add(text);
 
-        buildingTable.add(infoBar).width(750).height(750 * 188f / 1756).padTop(20).colspan(2);
-        buildingTable.row();
+        mainTable.add(infoBar).width(750).height(750 * 188f / 1756).padTop(20).colspan(2);
+        mainTable.row();
 
         Table blueprint = new Table();
         Label blueprintTitle = new Label("BLUEPRINT", skin, "black-label");
@@ -134,9 +135,9 @@ public class BuildingTable extends AbstractPopUpElement{
             items.row();
         }
 
-        buildingTable.add(blueprint).width(400).top().expand();
-        buildingTable.add(items).width(400).top().expand();
-        buildingTable.row();
+        mainTable.add(blueprint).width(400).top().expand();
+        mainTable.add(items).width(400).top().expand();
+        mainTable.row();
 
         TextButton buildIt = new TextButton("BUILD IT", skin, "game");
         buildIt.addListener(new ClickListener() {
@@ -150,10 +151,10 @@ public class BuildingTable extends AbstractPopUpElement{
             }
         });
 
-        buildingTable.add(buildIt).colspan(2).expand();
+        mainTable.add(buildIt).colspan(2).expand();
 
-        buildingTable.setVisible(false);
-        stage.addActor(buildingTable);
+        mainTable.setVisible(false);
+        stage.addActor(mainTable);
     }
 
     /**
