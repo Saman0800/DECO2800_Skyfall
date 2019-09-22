@@ -204,19 +204,19 @@ public class GameMenuManager extends TickableManager {
         return new TextureRegionDrawable((new TextureRegion(textureManager.getTexture(sName))));
     }
 
-//    /**
-//     * Set main character of the game to be {mainCharacter}.
-//     *
-//     * @param mainCharacter Main character of the game.
-//     */
-//    public void setMainCharacter(MainCharacter mainCharacter) {
-//        if (stage == null) {
-//            System.out.println("Please set stage before adding character");
-//            return;
-//        }
-//        this.mainCharacter = mainCharacter;
-//
-//    }
+    /**
+     * Set main character of the game to be {mainCharacter}.
+     *
+     * @param mainCharacter Main character of the game.
+     */
+    public void setMainCharacter(MainCharacter mainCharacter) {
+        if (stage == null) {
+            System.out.println("Please set stage before adding character");
+            return;
+        }
+        this.mainCharacter = mainCharacter;
+
+    }
 
     /**
      * Getter of main character of the game.
@@ -251,6 +251,7 @@ public class GameMenuManager extends TickableManager {
         sm = statsManager;
     }
 
+
     /**
      * Draws all of the elements in UI
      */
@@ -267,7 +268,7 @@ public class GameMenuManager extends TickableManager {
 
 
         uiElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm, skin, this));
-        uiElements.put("goldPill", new GoldStatusBar(stage, null, textureManager,  skin, this));
+        uiElements.put("goldPill", new GoldStatusBar(stage, null, textureManager,  mainCharacter, skin, this));
 
         uiElements.put("gameMenuBar", new GameMenuBar(stage, null, textureManager, this));
 
