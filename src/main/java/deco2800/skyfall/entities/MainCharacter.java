@@ -241,6 +241,12 @@ public class MainCharacter extends Peon
      */
     private int mana = 100;
 
+    //Current time in interval to restore mana.
+    private int manaCD = 0;
+
+    //Tick interval to restore mana.
+    private int MANACOOLDOWN = 10;
+
     /**
      * The GUI mana bar that can be updated when mana is restored/lost.
      */
@@ -949,6 +955,20 @@ public class MainCharacter extends Peon
     }
 
     /**
+     * Reset the mana cooldown period and restore 1 mana to the MainCharacter.
+     */
+    private void restoreMana() {
+
+        //Reset the cooldown period.
+        this.manaCD = 0;
+
+        //Time interval has passed so restore some mana.
+        if (this.mana < 100) {
+            this.mana++;
+        }
+    }
+
+    /**
      * Handles tick based stuff, e.g. movement
      */
     @Override
@@ -956,6 +976,11 @@ public class MainCharacter extends Peon
         this.updatePosition();
         this.movementSound();
         this.centreCameraAuto();
+
+        this.manaCD++;
+        if (this.manaCD > MANACOOLDOWN) {
+            this.restoreMana();
+        }
 
         //this.setCurrentSpeed(this.direction.len());
         //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
