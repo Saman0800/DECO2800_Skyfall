@@ -21,22 +21,21 @@ public class HealthCircle extends StatBar {
      * Updates
      */
     protected void updateInnerCircle(int newValue) {
-        float diff = currentValue - newValue;
+        float diff = (float)(currentValue - newValue);
 
-        if (smallerCircle == null) {
-            System.out.println("Smaller circle is null");
-            if (biggerCircle == null) {
-                System.out.println("Bigger circle is null");
-                return;
-            }
+        if (smallerCircle == null || biggerCircle == null) {
             return;
         }
 
-        smallerCircle.setSize(10 * newValue, 10 * newValue);
+        smallerCircle.setSize(10 * (float)newValue, 10 * (float)newValue);
         offset += (diff * 10) / 2;
         smallerCircle.setPosition(positionX + offset, positionY + offset);
         currentValue = newValue;
-        label.setText("Health: " + newValue);
+        if (newValue >= 0) {
+            label.setText("Health: " + newValue);
+        } else {
+            label.setText("DEAD");
+        }
     }
 
 }

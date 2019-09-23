@@ -451,6 +451,7 @@ public class MainCharacter extends Peon
 
         logger.info("Hurted: " + isRecovering);
 
+
         if (!isRecovering) {
             setHurt(true);
             this.changeHealth(-damage);

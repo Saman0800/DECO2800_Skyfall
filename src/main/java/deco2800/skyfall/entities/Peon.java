@@ -97,7 +97,9 @@ public class Peon extends AgentEntity implements Tickable {
 	public void changeHealth(int amount) {
 		int currentHealth = this.getHealth();
 
-		this.health += amount;
+		currentHealth += amount;
+
+		this.health = currentHealth;
 
 		if (this.isDead()) {
 			this.health = currentHealth;
@@ -110,7 +112,7 @@ public class Peon extends AgentEntity implements Tickable {
 	 * @return health of character
 	 */
 	public int getHealth() {
-		return health;
+		return this.health;
 	}
 
 	/**

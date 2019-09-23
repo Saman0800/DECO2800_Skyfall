@@ -55,10 +55,6 @@ public class GameScreen implements Screen, KeyDownObserver {
 
     long lastGameTick = 0;
 
-    /**
-     * Create an EnvironmentManager for ToD.
-     */
-    EnvironmentManager timeOfDay;
     public static boolean isPaused = false;
 
     //A wrapper for shader

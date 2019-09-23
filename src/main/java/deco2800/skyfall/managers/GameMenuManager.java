@@ -59,7 +59,7 @@ public class GameMenuManager extends TickableManager {
         inventory = GameManager.get().getManager(InventoryManager.class);
 
         if (healthCircle != null) {
- //           healthCircle.update();
+           // healthCircle.u();
         }
 
         if (clock != null) {
