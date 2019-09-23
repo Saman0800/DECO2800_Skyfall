@@ -393,8 +393,10 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * @param y the entities y coordinate
      */
     private void initialiseBox2D(float x, float y) {
-        defineBody(x, y);
-        defineFixture();
+        if (!(this instanceof StaticEntity)) {
+            defineBody(x, y);
+            defineFixture();
+        }
     }
 
     /**
@@ -406,8 +408,10 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * @param fixtureDefFile file path the .JSON file
      */
     public void initialiseBox2D(float x, float y, String fixtureDefFile) {
-        defineBody(x, y);
-        defineFixture(fixtureDefFile);
+        if (!(this instanceof StaticEntity)) {
+            defineBody(x, y);
+            defineFixture(fixtureDefFile);
+        }
     }
 
     /**
