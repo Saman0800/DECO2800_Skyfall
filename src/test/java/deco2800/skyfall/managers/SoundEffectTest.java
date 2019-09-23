@@ -4,8 +4,6 @@ import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import deco2800.skyfall.entities.Spider;
-import deco2800.skyfall.entities.Stone;
 import org.junit.Test;
 
 import javax.sound.sampled.LineUnavailableException;
@@ -58,7 +56,7 @@ public class SoundEffectTest {
     @Test
     public void testHasSound() {
         try {
-            assertEquals(sound.getSoundMap().get("spider"),
+            assertEquals(sound.getSoundMap().get("spiderWalk"),
                     Gdx.audio.newSound(Gdx.files.internal(path + "spider" + ".wav")));
         } catch (NullPointerException npe) {
         }

@@ -5,6 +5,9 @@ import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationRole;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import deco2800.skyfall.entities.enemies.AbstractEnemy;
+import deco2800.skyfall.entities.enemies.Stone;
+import deco2800.skyfall.entities.enemies.Treeman;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 
@@ -144,7 +147,7 @@ public class Projectile extends AgentEntity implements Animatable {
             ((AbstractEnemy) other).takeDamage(this.getDamage());
             ((AbstractEnemy) other).setHurt(true);
             toBeDestroyed = true;
-            ((AbstractEnemy)other).getBody().setLinearVelocity(
+            ((AbstractEnemy) other).getBody().setLinearVelocity(
                     (((AbstractEnemy)other).getBody().getLinearVelocity()
                     .lerp(new Vector2(0.f, 0.f), 0.5f)));
         }
@@ -165,6 +168,7 @@ public class Projectile extends AgentEntity implements Animatable {
 
     @Override
     public void configureAnimations() {
+
     }
 
     @Override

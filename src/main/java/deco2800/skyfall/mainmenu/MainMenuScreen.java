@@ -46,8 +46,6 @@ public class MainMenuScreen implements Screen {
         // logo.setPosition(1280/2 - 225, 720/2 + 100);
         // stage.addActor(logo);
 
-
-
         TextButton newGameBtn = new TextButton("SINGLE PLAYER", skin, "main_menu");
         newGameBtn.getStyle().fontColor = Color.BLACK;
 
