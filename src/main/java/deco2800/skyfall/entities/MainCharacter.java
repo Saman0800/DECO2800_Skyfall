@@ -484,12 +484,6 @@ public class MainCharacter extends Peon
         setAttacking(true);
         setCurrentState(AnimationRole.ATTACK);
 
-        Projectile projectile = new Projectile(mousePosition,
-                this.itemSlotSelected == 1 ? "range_test" : "melee_test",
-                "test hitbox", position.getCol() + 1,
-                position.getRow(), 1,
-                0.1f, this.itemSlotSelected == 1 ? 1 : 0);
-
         //If there is a spell selected, spawn the spell.
         //else, just fire off a normal projectile.
         if (this.spellSelected != SpellType.NONE) {
@@ -512,7 +506,7 @@ public class MainCharacter extends Peon
         // Make projectile move toward the angle
         // Spawn projectile in front of character for now.
         Projectile projectile = new Projectile(mousePosition,
-                this.itemSlotSelected == 1 ? "range_test" : "melee_test",
+                this.itemSlotSelected == 1 ? "arrow_north" : "sword_tex",
                 "test hitbox",
                 position.getCol() + 1,
                 position.getRow(),
