@@ -503,17 +503,18 @@ public class MainCharacter extends Peon
      * @param mousePosition The position of the user's mouse.
      */
     protected void fireProjectile(HexVector mousePosition) {
-        HexVector position = this.getPosition();
+        HexVector unitDirection = mousePosition.subtract(this.getPosition()).normalized();
 
         setCurrentState(AnimationRole.ATTACK);
         SoundManager.playSound(BOWATTACK);
+
         // Make projectile move toward the angle
         // Spawn projectile in front of character for now.
         Projectile projectile = new Projectile(mousePosition,
                 this.itemSlotSelected == 1 ? "arrow_north" : "sword_tex",
                 "test hitbox",
-                position.getCol() + 1,
-                position.getRow(),
+                position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
+                position.getRow() + 0.5f + 1.5f * unitDirection.getRow(),
                 2,
                 0.1f,
                 this.itemSlotSelected == 1 ? 1 : 0);
