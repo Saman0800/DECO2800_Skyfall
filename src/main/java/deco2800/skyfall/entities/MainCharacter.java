@@ -40,7 +40,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static deco2800.skyfall.buildings.BuildingType.CABIN;
 import static deco2800.skyfall.buildings.BuildingType.CASTLE;
+import static deco2800.skyfall.buildings.BuildingType.WATCHTOWER;
 
 /**
  * Main character in the game
@@ -114,12 +116,10 @@ public class MainCharacter extends Peon
      */
     public enum GameStage {
         FOREST,
+        DESERT,
         MOUNTAIN,
-        ICE,
-        LAVA,
-        RIVER,
-        VALLEY,
-        GRAVEYARD
+        SNOW,
+        LAVA
     }
 
     //The name of the item to be created.
@@ -1489,22 +1489,15 @@ public class MainCharacter extends Peon
 
     public List<Blueprint> getUnlockedBlueprints() {
         List<Blueprint> unlocked = new ArrayList<>();
-        BuildingFactory factory = new BuildingFactory();
         switch (gameStage) {
-            case GRAVEYARD:
-                // e.g. unlocked.add(new Spaceship())
-                // fall through
-            case VALLEY:
-                // e.g. unlocked.add(new Factory())
-                // fall through
-            case RIVER:
-                // fall through
             case LAVA:
-                // fall through
-            case ICE:
-                // fall through
+
+            case SNOW:
+                unlocked.add(CABIN);
             case MOUNTAIN:
-                // fall through
+                unlocked.add(WATCHTOWER);
+            case DESERT:
+                unlocked.add(CABIN);
             case FOREST:
                 unlocked.add(new Hatchet());
                 unlocked.add(new PickAxe());

@@ -315,6 +315,13 @@ public class TextureManager extends AbstractManager {
 
             System.out.println("ALL TEXTURES LOADED SUCCESSFULLY");
 
+            // Textures for structure blueprints
+            textureMap.put("Cabin", new Texture("resources/world_structures/cabin_0.png"));
+            textureMap.put("Castle", new Texture("resources/world_structures/castle_0.png"));
+            textureMap.put("SafeHouse", new Texture("resources/world_structures/safe_house_0.png"));
+            textureMap.put("WatchTower", new Texture("resources/world_structures/watchtower_0.png"));
+
+
             textureMap.put("cabin_0", new Texture("resources/world_structures/cabin_0.png"));
             textureMap.put("cabin_90", new Texture("resources/world_structures/cabin_90.png"));
             textureMap.put("cabin_180", new Texture("resources/world_structures/cabin_180.png"));
