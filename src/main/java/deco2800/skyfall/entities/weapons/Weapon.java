@@ -168,5 +168,6 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon {
     @Override
     public void use(HexVector position){
         // Use the specific function associated with the item
+        this.decreaseDurability();
     }
 }

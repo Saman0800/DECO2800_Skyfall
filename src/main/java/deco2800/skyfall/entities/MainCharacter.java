@@ -16,6 +16,7 @@ import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
 import deco2800.skyfall.gui.ManaBar;
@@ -459,6 +460,14 @@ public class MainCharacter extends Peon
      * Use the function of equipped item
      */
     public void useEquipped() {
+        // TODO Add durability into other inventory so it can be consistent
+
+        if (equippedItem instanceof Weapon
+                && !((Weapon) equippedItem).isUsable()) {
+                this.unequip();
+                return;
+        }
+
         if (equippedItem != null) {
             equippedItem.use(this.getPosition());
         }
@@ -1078,6 +1087,9 @@ public class MainCharacter extends Peon
                 }
                 break;
             case Input.Keys.ALT_LEFT:
+                if (this.equippedItem != null) {
+                    useEquipped();
+                }
                 float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
                 float[] clickedPosition = WorldUtil.worldCoordinatesToSubColRow(mouse[0], mouse[1]);
                 HexVector mousePosition = new HexVector(clickedPosition[0], clickedPosition[1]);
