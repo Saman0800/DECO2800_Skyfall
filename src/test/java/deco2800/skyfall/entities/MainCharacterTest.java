@@ -561,13 +561,13 @@ public class MainCharacterTest {
         GameManager gm = GameManager.get();
         World world = mock(World.class);
         gm.setWorld(world);
-        testCharacter.attack();
+        testCharacter.attack(new HexVector(0,0));
         //Assert that projectile was added to game world.
         assertTrue(gm.getWorld().getEntities().stream().anyMatch(e -> e instanceof Projectile));
 
         //Assert that a spell was cast and is in the world.
         testCharacter.spellSelected = SpellType.FLAME_WALL;
-        testCharacter.attack();
+        testCharacter.attack(new HexVector(0,0));
         assertTrue(gm.getWorld().getEntities().stream().anyMatch(e -> e instanceof Spell));
         Assert.assertEquals(this.testCharacter.spellSelected,SpellType.NONE);
 

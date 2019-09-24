@@ -462,7 +462,8 @@ public class MainCharacter extends Peon
         if (equippedItem != null) {
             equippedItem.use(this.getPosition());
         }
-        this.attack();
+
+        //this.attack();
         //else: collect nearby resources
         //Will be adjusted in following sprint when it is possible to spawn
         //non-static entities
@@ -480,12 +481,9 @@ public class MainCharacter extends Peon
     /**
      * Attack with the weapon the character has equip.
      */
-    public void attack() {
+    public void attack(HexVector mousePosition) {
         //Animation control
         logger.debug("Attacking");
-        float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
-        float[] clickedPosition = WorldUtil.worldCoordinatesToSubColRow(mouse[0], mouse[1]);
-        HexVector mousePosition = new HexVector(clickedPosition[0], clickedPosition[1]);
 
         setAttacking(true);
         setCurrentState(AnimationRole.ATTACK);
@@ -1079,7 +1077,11 @@ public class MainCharacter extends Peon
                 }
                 break;
             case Input.Keys.ALT_LEFT:
-                this.attack();
+                float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
+                float[] clickedPosition = WorldUtil.worldCoordinatesToSubColRow(mouse[0], mouse[1]);
+                HexVector mousePosition = new HexVector(clickedPosition[0], clickedPosition[1]);
+
+                this.attack(mousePosition);
                 break;
             case Input.Keys.G:
                 addClosestGoldPiece();
