@@ -612,4 +612,19 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     public Body getBody() {
         return body;
     }
+
+    /**
+     * Check if given value is in range.
+     *
+     * @param i the value to be checked.
+     * @param minValue the minimum value i should not be less then.
+     * @param maxValue the minimum value i should not exceed.
+     * @return If the value is between minValue and maxValue, return true, else false.
+     */
+    public static boolean between(double i, double minValue, double maxValue) {
+        if (i >= minValue && i <= maxValue)
+            return true;
+        else
+            return false;
+    }
 }

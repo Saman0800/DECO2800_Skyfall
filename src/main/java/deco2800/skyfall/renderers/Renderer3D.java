@@ -41,7 +41,7 @@ public class Renderer3D implements Renderer {
 
     SoundManager sound = new SoundManager();
 
-    BitmapFont font;
+    private BitmapFont font;
 
     // mouse cursor
     private static final String TEXTURE_SELECTION = "selection";
@@ -217,7 +217,7 @@ public class Renderer3D implements Renderer {
                     Color c = batch.getColor();
 
                     if (entity instanceof MainCharacter) {
-                        if (((MainCharacter) entity).IsHurt() || ((MainCharacter) entity).isDead()) {
+                        if (((MainCharacter) entity).isHurt() || ((MainCharacter) entity).isDead()) {
                             System.out.println("Changed to red");
                             batch.setColor(Color.RED);
                         } else if (((MainCharacter) entity).isRecovering()) {
