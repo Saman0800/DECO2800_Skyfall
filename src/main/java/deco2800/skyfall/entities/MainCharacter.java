@@ -318,7 +318,9 @@ public class MainCharacter extends Peon
         xInput = 0;
         yInput = 0;
         setAcceleration(10.f);
-        setMaxSpeed(1.f);
+        // FIXME:Ontonator Change this back.
+        // setMaxSpeed(1.f);
+        setMaxSpeed(5.f);
         vel = 0;
         velHistoryX = new ArrayList<>();
         velHistoryY = new ArrayList<>();

@@ -657,7 +657,7 @@ public class DataBaseConnector {
                     case "DesertCacti":
                         entity = new DesertCacti(memento);
                         break;
-                    case "ForestMushRoom":
+                    case "ForestMushroom":
                         entity = new ForestMushroom(memento);
                         break;
                     case "LongGrass":
@@ -682,7 +682,8 @@ public class DataBaseConnector {
                         entity = new Tree(memento);
                         break;
                     default:
-                        throw new RuntimeException();
+                        throw new RuntimeException(
+                                String.format("Could not create %s from memento", memento.staticEntityType));
                 }
                 chunk.addEntity(entity);
             }
