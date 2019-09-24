@@ -17,14 +17,10 @@ import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.world.World;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class EnvironmentManagerTest {
@@ -193,19 +189,11 @@ public class EnvironmentManagerTest {
         assertEquals("resources/sounds/forest_night.wav", manager.getFilename());
     }
 
-    // Because time tracking has been changed, the following test no longer works as intended
-    // Didn't catch this til the very end of the sprint, so will need to fix next sprint
-//    @Test
-//    public void onTickTest() {
-//        try {
-//            manager.onTick(1000000);
-//
-//            long time = (System.currentTimeMillis() / 60000) % 24;
-//
-//            assertEquals(time, manager.getTime());
-//
-//        } catch (Exception e) { /* Exception caught, if any */ }
-//    }
+    @Test
+    public void onTickTest() {
+        manager.onTick(0);
+        verify(mockWorld).getEntities();
+    }
 
     @Test
     public void setMonthTest() {

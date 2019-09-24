@@ -2,6 +2,7 @@ package deco2800.skyfall.worlds.world;
 
 import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.enemies.AbstractEnemy;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.AgentEntity;
@@ -568,22 +569,22 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
         // entities.
 
         // TODO: this needs to be internalized into classes for cleaner code.
-        if (e1 instanceof Projectile && e2 instanceof EnemyEntity) {
-            if (((EnemyEntity) e2).getHealth() > 0) {
-                ((EnemyEntity) e2).takeDamage(((Projectile) e1).getDamage());
-                ((EnemyEntity) e2).setAttacked(true);
+        if (e1 instanceof Projectile && e2 instanceof AbstractEnemy) {
+            if (((AbstractEnemy) e2).getHealth() > 0) {
+                ((AbstractEnemy) e2).takeDamage(((Projectile) e1).getDamage());
+                ((AbstractEnemy) e2).setHurt(true);
                 ((Projectile) e1).destroy();
             } else {
-                ((EnemyEntity) e2).setDead(true);
+                ((AbstractEnemy) e2).setDead(true);
             }
 
-        } else if (e2 instanceof Projectile && e1 instanceof EnemyEntity) {
-            if (((EnemyEntity) e1).getHealth() > 0) {
-                ((EnemyEntity) e1).takeDamage(((EnemyEntity) e1).getDamage());
-                ((EnemyEntity) e1).setAttacked(true);
+        } else if (e2 instanceof Projectile && e1 instanceof AbstractEnemy) {
+            if (((AbstractEnemy) e1).getHealth() > 0) {
+                ((AbstractEnemy) e1).takeDamage(((AbstractEnemy) e1).getDamage());
+                ((AbstractEnemy) e1).setHurt(true);
                 ((Projectile) e2).destroy();
             } else {
-                ((EnemyEntity) e1).setDead(true);
+                ((AbstractEnemy) e1).setDead(true);
             }
 
         }

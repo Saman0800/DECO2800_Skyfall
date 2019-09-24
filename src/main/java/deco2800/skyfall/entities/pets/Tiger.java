@@ -4,14 +4,14 @@ import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.entities.EnemyEntity;
+import deco2800.skyfall.entities.enemies.AbstractEnemy;
 import deco2800.skyfall.entities.ICombatEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 
-public class Tiger extends EnemyEntity implements Animatable {
+public class Tiger extends AbstractEnemy implements Animatable {
     //The health of tiger
     private static final transient int HEALTH = 10;
     //The attack range of tiger
@@ -55,11 +55,13 @@ public class Tiger extends EnemyEntity implements Animatable {
     private float[] orginalPosition = WorldUtil.colRowToWorldCords
             (this.getCol(), this.getRow());
 
-
+    /*
     public Tiger(float row, float col, String texturename,
-                   int health, int armour, int damage) {
-        super(row, col, texturename, health, armour, damage);
+                   int health, int armour, int strngth) {
+        super(row, col, texturename, health, strngth);
     }
+    */
+
     /**
      * Initialization value of pet tiger, and set the initial image in
      * the game
@@ -72,12 +74,13 @@ public class Tiger extends EnemyEntity implements Animatable {
         this.setHealth(HEALTH);
         this.setLevel(2);
         this.setSpeed(2);
-        this.setArmour(5);
+        //this.setArmour(5);
         this.setDamage(1);
         this.mc = mc;
         this.setDirectionTextures();
         this.configureAnimations();
     }
+
 
     /**
      * Initialization value of pet tiger
@@ -90,7 +93,6 @@ public class Tiger extends EnemyEntity implements Animatable {
         this.setHealth(HEALTH);
         this.setLevel(2);
         this.setSpeed(2);
-        this.setArmour(5);
     }
 
 
@@ -222,7 +224,7 @@ public class Tiger extends EnemyEntity implements Animatable {
      * Make the pet tiger do the random movement
      *
      */
-    private void randomMoving() {
+    public void randomMoving() {
         if(moving == false){
             targetPosition = new float[2];
             targetPosition[0] = (float)
@@ -273,6 +275,17 @@ public class Tiger extends EnemyEntity implements Animatable {
         }
 
     }
+
+    /**
+     * Return a list of resistance attributes.
+     *
+     * @return A list of resistance attributes.
+     */
+    @Override
+    public int[] getResistanceAttributes() {
+        return new int[0];
+    }
+
 
     /**
      * add pet tiger animations

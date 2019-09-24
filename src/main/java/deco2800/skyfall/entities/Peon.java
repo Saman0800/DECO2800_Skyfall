@@ -8,9 +8,9 @@ import deco2800.skyfall.tasks.*;
  * Base class of character in game where main characters and enemies will
  * inherit from
  */
-public class Peon extends AgentEntity implements Tickable {
+public abstract class Peon extends AgentEntity implements Tickable {
 	// Task being completed by character
-	protected transient AbstractTask task;
+	private transient AbstractTask task;
 
 	// Name of the character
 	private String name;
@@ -54,7 +54,7 @@ public class Peon extends AgentEntity implements Tickable {
 			this.health = health;
 			this.maxHealth = health;
 		}
-
+		System.out.println(name + " has " + maxHealth);
 		this.deaths = 0;
 	}
 
@@ -101,16 +101,16 @@ public class Peon extends AgentEntity implements Tickable {
 	public void changeHealth(int amount) {
 		int currentHealth = this.getHealth();
 
-		if(this.health + amount > maxHealth) {
+		if(currentHealth + amount > maxHealth) {
 			this.health = maxHealth;
 		} else {
 			this.health += amount;
 		}
-
-		if (this.isDead()) {
-			 this.health = currentHealth;
-			// gameOverTable.show();
-
+		if (this instanceof MainCharacter && this.isDead()) {
+			this.health = currentHealth;
+			this.deaths += 1;
+		} else if (this.isDead()){
+			this.health = 0;
 			this.deaths += 1;
 		}
 	}
@@ -135,7 +135,7 @@ public class Peon extends AgentEntity implements Tickable {
 	 *
 	 * @param newMaxHealth - New max health for the player.
 	 */
-	public void setMaxHealth(int newMaxHealth) { this.maxHealth = newMaxHealth; }
+	protected void setMaxHealth(int newMaxHealth) { this.maxHealth = newMaxHealth; }
 
 	/**
 	 * Checks if character is dead
@@ -171,10 +171,10 @@ public class Peon extends AgentEntity implements Tickable {
 		return task;
 	}
 
-    @Override
     /**
      * Handles tick based stuff, e.g. movement
      */
+    @Override
     public void onTick(long i) {
         if(task != null && task.isAlive()) {
             if(task.isComplete()) {
