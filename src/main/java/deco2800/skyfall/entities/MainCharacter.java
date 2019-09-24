@@ -241,6 +241,12 @@ public class MainCharacter extends Peon
      */
     private int mana = 100;
 
+    //Current time in interval to restore mana.
+    private int manaCD = 0;
+
+    //Tick interval to restore mana.
+    private int MANACOOLDOWN = 10;
+
     /**
      * The GUI mana bar that can be updated when mana is restored/lost.
      */
@@ -456,6 +462,8 @@ public class MainCharacter extends Peon
         if (equippedItem != null) {
             equippedItem.use(this.getPosition());
         }
+
+        //this.attack();
         //else: collect nearby resources
         //Will be adjusted in following sprint when it is possible to spawn
         //non-static entities
@@ -475,14 +483,10 @@ public class MainCharacter extends Peon
      */
     public void attack(HexVector mousePosition) {
         //Animation control
+        logger.debug("Attacking");
+
         setAttacking(true);
         setCurrentState(AnimationRole.ATTACK);
-
-        Projectile projectile = new Projectile(mousePosition,
-                this.itemSlotSelected == 1 ? "range_test" : "melee_test",
-                "test hitbox", position.getCol() + 1,
-                position.getRow(), 1,
-                0.1f, this.itemSlotSelected == 1 ? 1 : 0);
 
         //If there is a spell selected, spawn the spell.
         //else, just fire off a normal projectile.
@@ -506,7 +510,7 @@ public class MainCharacter extends Peon
         // Make projectile move toward the angle
         // Spawn projectile in front of character for now.
         Projectile projectile = new Projectile(mousePosition,
-                this.itemSlotSelected == 1 ? "range_test" : "melee_test",
+                this.itemSlotSelected == 1 ? "arrow_north" : "sword_tex",
                 "test hitbox",
                 position.getCol() + 1,
                 position.getRow(),
@@ -946,13 +950,19 @@ public class MainCharacter extends Peon
             }
         }
 
-        if (button == 1) {
+    }
 
-            float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
-            float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
+    /**
+     * Reset the mana cooldown period and restore 1 mana to the MainCharacter.
+     */
+    private void restoreMana() {
 
-            HexVector mousePos = new HexVector(clickedPosition[0], clickedPosition[1]);
-            this.attack(mousePos);
+        //Reset the cooldown period.
+        this.manaCD = 0;
+
+        //Time interval has passed so restore some mana.
+        if (this.mana < 100) {
+            this.mana++;
         }
     }
 
@@ -964,6 +974,11 @@ public class MainCharacter extends Peon
         this.updatePosition();
         this.movementSound();
         this.centreCameraAuto();
+
+        this.manaCD++;
+        if (this.manaCD > MANACOOLDOWN) {
+            this.restoreMana();
+        }
 
         //this.setCurrentSpeed(this.direction.len());
         //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
@@ -1060,6 +1075,13 @@ public class MainCharacter extends Peon
                 if (this.equippedItem != null) {
                     useEquipped();
                 }
+                break;
+            case Input.Keys.ALT_LEFT:
+                float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
+                float[] clickedPosition = WorldUtil.worldCoordinatesToSubColRow(mouse[0], mouse[1]);
+                HexVector mousePosition = new HexVector(clickedPosition[0], clickedPosition[1]);
+
+                this.attack(mousePosition);
                 break;
             case Input.Keys.G:
                 addClosestGoldPiece();

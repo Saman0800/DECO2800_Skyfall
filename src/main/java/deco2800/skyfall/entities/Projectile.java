@@ -74,6 +74,7 @@ public class Projectile extends AgentEntity implements Animatable {
         this.range = range;
 
         this.textureName = textureName;
+
         this.setTexture(textureName);
         this.setObjectName(objectName);
 
