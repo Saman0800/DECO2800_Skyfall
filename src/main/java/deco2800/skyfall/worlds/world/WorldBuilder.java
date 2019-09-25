@@ -296,7 +296,7 @@ public class WorldBuilder implements WorldBuilderInterface {
                     biomeSpawnRules.add(bowRule);
 
                     // Spawn gold pieces uniformly
-                    EntitySpawnRule goldRule = new EntitySpawnRule(tile -> new GoldPiece(tile, true, 10), 0.2, 30, 50, biome);
+                    EntitySpawnRule goldRule = new EntitySpawnRule(tile -> new GoldPiece(tile, true, 10), 0.5, 30, 50, biome);
                     biomeSpawnRules.add(goldRule);
 
                     // Spawn some spears

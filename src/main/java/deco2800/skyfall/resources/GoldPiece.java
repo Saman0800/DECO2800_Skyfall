@@ -3,6 +3,9 @@ package deco2800.skyfall.resources;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.worlds.Tile;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 /**
  * The civilisation's currency is Gold Pieces valued as either 5G,
@@ -14,6 +17,9 @@ public class GoldPiece extends StaticEntity {
 
     // the value of the piece of gold (either 5G,10G,50G or 100G)
     public int value;
+
+    // all possible gold piece values in a list
+    public static final List<Integer> goldValues = Arrays.asList(5,10,50,100);
 
 
     /**
@@ -70,6 +76,7 @@ public class GoldPiece extends StaticEntity {
      */
     @Override
     public GoldPiece newInstance(Tile tile) {
+
         return new GoldPiece(tile, this.isObstructed(), value);
     }
     /**
