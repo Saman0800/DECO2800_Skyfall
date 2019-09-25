@@ -37,7 +37,7 @@ public class GoldStatusBar extends AbstractUIElement {
 
     @Override
     public void draw() {
-        this.goldLabel = new Label("Gold: " + MainCharacter.getInstance().getGoldPouchTotalValue() + " ", skin,  "blue-pill");
+        this.goldLabel = new Label(" " + MainCharacter.getInstance().getGoldPouchTotalValue() + " G   ", skin,  "blue-pill");
         goldLabel.setAlignment(Align.center);
         goldLabel.setFontScale(0.7f);
 
@@ -55,6 +55,6 @@ public class GoldStatusBar extends AbstractUIElement {
         super.update();
 
         int total = gmm.getMainCharacter().getGoldPouchTotalValue();
-        goldLabel.setText("$ " + total);
+        goldLabel.setText(" " + total + " G   ");
     }
 }
