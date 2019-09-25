@@ -51,12 +51,14 @@ public class GoldPiece extends StaticEntity {
     public GoldPiece(Tile tile, boolean obstructed) {
         super(tile, 2, "goldPiece" + GoldPiece.nextValue, obstructed);
         this.setObjectName(ENTITY_ID_STRING);
+        this.value = GoldPiece.nextValue;
 
         // generate a random index between 0 and 3
         int index = (int)(Math.random()*4);
 
         // update the gold piece value using the randomly generated index
         GoldPiece.nextValue = goldValues.get(index);
+
         this.entityType = "GoldPiece";
         changeCollideability(false);
 
