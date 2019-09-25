@@ -7,7 +7,7 @@ import deco2800.skyfall.managers.GameManager;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import deco2800.skyfall.animation.AnimationRole;
-import deco2800.skyfall.entities.enemies.AbstractEnemy;
+import deco2800.skyfall.entities.enemies.Enemy;
 
 /**
  * An entity that is shot from a weapon.
@@ -145,12 +145,12 @@ public class Projectile extends AgentEntity implements Animatable {
     private boolean toBeDestroyed = false;
     @Override
     public void handleCollision(Object other) {
-        if (other instanceof AbstractEnemy) {
-            ((AbstractEnemy) other).takeDamage(this.getDamage());
-            ((AbstractEnemy) other).setHurt(true);
+        if (other instanceof Enemy) {
+            ((Enemy) other).takeDamage(this.getDamage());
+            ((Enemy) other).setHurt(true);
             toBeDestroyed = true;
-            ((AbstractEnemy) other).getBody().setLinearVelocity(
-                    (((AbstractEnemy)other).getBody().getLinearVelocity()
+            ((Enemy) other).getBody().setLinearVelocity(
+                    (((Enemy)other).getBody().getLinearVelocity()
                     .lerp(new Vector2(0.f, 0.f), 0.5f)));
         }
     }

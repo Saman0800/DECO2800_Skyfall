@@ -1,7 +1,7 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.*;
-import deco2800.skyfall.entities.enemies.AbstractEnemy;
+import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.enemies.Treeman;
 import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.resources.items.*;
@@ -21,9 +21,9 @@ public class StatisticsManagerTest {
     private StatisticsManager testManager;
 
     // Enemies used for testing
-    private AbstractEnemy testEnemy1;
-    private AbstractEnemy testEnemy2;
-    private AbstractEnemy testEnemy3;
+    private Enemy testEnemy1;
+    private Enemy testEnemy2;
+    private Enemy testEnemy3;
 
     // Weapons being used for testing
     private Weapon sword;
