@@ -371,6 +371,15 @@ public class GameMenuManager extends TickableManager {
     public float getTopLeftY() {
         return topLeftY;
     }
+
+    /**
+     * If there is any opened popup, closes it.
+     */
+    public void hideOpened() {
+        if (this.getCurrentPopUp() != null) {
+            this.getCurrentPopUp().hide();
+        }
+    }
 }
 
 
