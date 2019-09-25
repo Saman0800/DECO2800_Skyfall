@@ -1214,6 +1214,7 @@ public class MainCharacter extends Peon
                 if (this.getPosition().distance(entity.getPosition()) <= 1) {
                     this.addGold((GoldPiece) entity, 1);
                     logger.info(this.inventories.toString());
+                    //entity.dispose();
                 }
             }
         }
