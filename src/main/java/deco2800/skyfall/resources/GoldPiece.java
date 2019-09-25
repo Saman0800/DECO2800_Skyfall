@@ -21,6 +21,9 @@ public class GoldPiece extends StaticEntity {
     // all possible gold piece values in a list
     public static final List<Integer> goldValues = Arrays.asList(5,10,50,100);
 
+    // have the value of the first gold piece be equal to 5
+    private static int nextValue = 5;
+
 
     /**
      * Creates a gold piece with a particular value.
@@ -44,12 +47,13 @@ public class GoldPiece extends StaticEntity {
      * @param tile the entity's ID (gold piece)
      * @param obstructed true or false depending on whether or not the object
      *                   is obstructed
-     * @param value the value of the gold piece being constructed
      */
-    public GoldPiece(Tile tile, boolean obstructed, int value) {
-        super(tile, 2, "goldPiece" + value, obstructed);
+    public GoldPiece(Tile tile, boolean obstructed) {
+        super(tile, 2, "goldPiece" + GoldPiece.nextValue, obstructed);
         this.setObjectName(ENTITY_ID_STRING);
-        this.value = value;
+        int index = (int)(Math.random()*4);
+        GoldPiece.nextValue = goldValues.get(index);
+        //this.value = value;
         this.entityType = "GoldPiece";
         changeCollideability(false);
 
@@ -77,7 +81,7 @@ public class GoldPiece extends StaticEntity {
     @Override
     public GoldPiece newInstance(Tile tile) {
 
-        return new GoldPiece(tile, this.isObstructed(), value);
+        return new GoldPiece(tile, this.isObstructed());
     }
     /**
      * Returns the value of the piece of gold.
