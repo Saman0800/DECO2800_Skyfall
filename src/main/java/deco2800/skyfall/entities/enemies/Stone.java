@@ -14,7 +14,7 @@ import deco2800.skyfall.animation.AnimationLinker;
  * Instance of a stone enemy.
   */
 
-public class Stone extends AbstractEnemy implements Animatable {
+public class Stone extends AbstractEnemy {
 
     /**
      * Basic constructor for creating a stone enemy.
@@ -35,8 +35,6 @@ public class Stone extends AbstractEnemy implements Animatable {
 
         this.configureSounds();
         this.configureAnimations();
-        this.setDirectionTextures();
-
     }
 
     /**
@@ -55,7 +53,6 @@ public class Stone extends AbstractEnemy implements Animatable {
         this.setAllSpeed(0.01f, 0.02f, 0.02f);
 
         this.configureAnimations();
-        this.setDirectionTextures();
         this.configureSounds();
     }
 
@@ -89,7 +86,6 @@ public class Stone extends AbstractEnemy implements Animatable {
     /**
      * loading stone animations.
      */
-    @Override
     public void configureAnimations() {
         this.addAnimations(
                 AnimationRole.MOVE, Direction.NORTH, new AnimationLinker("stoneJN", AnimationRole.MOVE, Direction.NORTH,

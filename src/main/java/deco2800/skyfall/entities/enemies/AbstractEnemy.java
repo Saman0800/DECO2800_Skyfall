@@ -7,7 +7,6 @@ import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.entities.ICombatEntity;
@@ -256,9 +255,9 @@ public abstract class AbstractEnemy extends Peon implements ICombatEntity {
     }
 
     @Override
-    public void dealDamage(ICombatEntity entity) {
-        if (entity.canDealDamage()) {
-            entity.dealDamage(entity);
+    public void dealDamage(MainCharacter mc) {
+        if (mc.isRecovering()) {
+            mc.hurt(getDamage());
         }
     }
 

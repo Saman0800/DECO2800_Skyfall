@@ -570,6 +570,7 @@ public class MainCharacter extends Peon
     }
 
     /**
+<<<<<<< HEAD
      * Lets the player enter a vehicle, by changing there speed and there sprite
      *
      * @param vehicle The vehicle they are entering
@@ -637,6 +638,7 @@ public class MainCharacter extends Peon
 
         getBody().setLinearVelocity(getBody().getLinearVelocity()
                 .lerp(new Vector2(0.f, 0.f), 0.5f));
+
         if (this.getHealth() <= 0) {
             kill();
         } else {
@@ -1326,6 +1328,78 @@ public class MainCharacter extends Peon
     }
 
     /**
+     * Checks if the direction of the player is North
+     *
+     * @return true if player direction is North, false otherwise
+     */
+    private boolean checkIfDirectionNorth(double playerDirectionAngle){
+        return (playerDirectionAngle <= 22.5 || playerDirectionAngle >= 337.5);
+    }
+
+    /**
+     * Checks if the direction of the player is NorthEast
+     *
+     * @return true if player direction is NorthEast, false otherwise
+     */
+    private boolean checkIfDirectionNorthEast(double playerDirectionAngle){
+        return (22.5 <= playerDirectionAngle && playerDirectionAngle <= 67.5);
+    }
+
+    /**
+     * Checks if the direction of the player is East
+     *
+     * @return true if player direction is East, false otherwise
+     */
+    private boolean checkIfDirectionEast(double playerDirectionAngle){
+        return (67.5 <= playerDirectionAngle && playerDirectionAngle <= 112.5);
+    }
+
+    /**
+     * Checks if the direction of the player is SouthEast
+     *
+     * @return true if player direction is SouthEast, false otherwise
+     */
+    private boolean checkIfDirectionSouthEast(double playerDirectionAngle){
+        return (112.5 <= playerDirectionAngle && playerDirectionAngle <= 157.5);
+    }
+
+    /**
+     * Checks if the direction of the player is South
+     *
+     * @return true if player direction is South, false otherwise
+     */
+    private boolean checkIfDirectionSouth(double playerDirectionAngle){
+        return (157.5 <= playerDirectionAngle && playerDirectionAngle <= 202.5);
+    }
+
+    /**
+     * Checks if the direction of the player is SouthWest
+     *
+     * @return true if player direction is SouthWest, false otherwise
+     */
+    private boolean checkIfDirectionSouthWest(double playerDirectionAngle){
+        return (202.5 <= playerDirectionAngle && playerDirectionAngle <= 247.5);
+    }
+
+    /**
+     * Checks if the direction of the player is West
+     *
+     * @return true if player direction is West, false otherwise
+     */
+    private boolean checkIfDirectionWest(double playerDirectionAngle){
+        return  (247.5 <= playerDirectionAngle && playerDirectionAngle <= 292.5);
+    }
+
+    /**
+     * Checks if the direction of the player is NorthWest
+     *
+     * @return true if player direction is NorthWest, false otherwise
+     */
+    private boolean checkIfDirectionNorthWest(double playerDirectionAngle){
+        return  (292.5 <= playerDirectionAngle && playerDirectionAngle <= 337.5);
+    }
+
+    /**
      * Converts the current players direction into a cardinal direction
      * North, South-West, etc.
      *
@@ -1660,7 +1734,6 @@ public class MainCharacter extends Peon
                 }
             }
         }
-
 
         /**
          * Toggles if the camera should follow the player

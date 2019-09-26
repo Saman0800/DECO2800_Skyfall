@@ -1,7 +1,6 @@
 package deco2800.skyfall.entities.enemies;
 
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.AnimationLinker;
@@ -9,7 +8,7 @@ import deco2800.skyfall.animation.AnimationLinker;
 /**
  * Instance of a flower enemy.
  */
-public class Flower extends AbstractEnemy implements Animatable {
+public class Flower extends AbstractEnemy {
 
     /**
      * Basic Constructor for creating a flower enemy.
@@ -28,7 +27,7 @@ public class Flower extends AbstractEnemy implements Animatable {
         this.setObjectName("flower");
 
         this.configureAnimations();
-        this.setDirectionTextures();
+       // this.setDirectionTextures();
         this.configureSounds();
         this.setAllSpeed(0.04f, 0.05f, 0.02f);
     }
@@ -69,7 +68,6 @@ public class Flower extends AbstractEnemy implements Animatable {
     /**
      * Set up flower animations.
       */
-    @Override
     public void configureAnimations() {
         this.addAnimations(
                 AnimationRole.MOVE, Direction.DEFAULT,
