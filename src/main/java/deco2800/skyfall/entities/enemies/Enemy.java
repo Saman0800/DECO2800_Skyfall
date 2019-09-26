@@ -175,22 +175,22 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
                         true, true));
 
         this.addAnimations(
-                AnimationRole.MELEE, Direction.EAST, new AnimationLinker(name_biome + "AE", AnimationRole.MELEE, Direction.EAST,
+                AnimationRole.ATTACK, Direction.EAST, new AnimationLinker(name_biome + "AE", AnimationRole.ATTACK, Direction.EAST,
                         true, true));
         this.addAnimations(
-                AnimationRole.MELEE, Direction.NORTH, new AnimationLinker(name_biome + "AN", AnimationRole.MELEE, Direction.NORTH,
+                AnimationRole.ATTACK, Direction.NORTH, new AnimationLinker(name_biome + "AN", AnimationRole.ATTACK, Direction.NORTH,
                         true, true));
         this.addAnimations(
-                AnimationRole.MELEE, Direction.SOUTH, new AnimationLinker(name_biome + "AS", AnimationRole.MELEE, Direction.SOUTH,
+                AnimationRole.ATTACK, Direction.SOUTH, new AnimationLinker(name_biome + "AS", AnimationRole.ATTACK, Direction.SOUTH,
                         true, true));
         this.addAnimations(
-                AnimationRole.MELEE, Direction.SOUTH_EAST, new AnimationLinker(name_biome + "ASE", AnimationRole.MELEE, Direction.SOUTH_EAST,
+                AnimationRole.ATTACK, Direction.SOUTH_EAST, new AnimationLinker(name_biome + "ASE", AnimationRole.ATTACK, Direction.SOUTH_EAST,
                         true, true));
         this.addAnimations(
-                AnimationRole.MELEE, Direction.SOUTH_WEST, new AnimationLinker(name_biome + "ASW", AnimationRole.MELEE, Direction.SOUTH_WEST,
+                AnimationRole.ATTACK, Direction.SOUTH_WEST, new AnimationLinker(name_biome + "ASW", AnimationRole.ATTACK, Direction.SOUTH_WEST,
                         true, true));
         this.addAnimations(
-                AnimationRole.MELEE, Direction.WEST, new AnimationLinker(name_biome + "AW", AnimationRole.MELEE, Direction.WEST,
+                AnimationRole.ATTACK, Direction.WEST, new AnimationLinker(name_biome + "AW", AnimationRole.ATTACK, Direction.WEST,
                         true, true));
         this.addAnimations(
                 AnimationRole.NULL, Direction.DEFAULT, new AnimationLinker(name_biome + "Dead", AnimationRole.DEFENCE, Direction.DEFAULT,
