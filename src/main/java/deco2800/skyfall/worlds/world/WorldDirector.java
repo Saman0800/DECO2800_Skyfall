@@ -83,7 +83,7 @@ public class WorldDirector {
         }
 
         builder.addEntity(mainCharacter);
-        builder.addEntity(new Stone(-4, -3, mainCharacter));
+        builder.addEntity(new Scout(-4, -3, "forest", mainCharacter));
         builder.addEntity(new LizardHome(0, 2, mainCharacter));
         builder.addEntity(new IceWhitebear(-2, 0, mainCharacter));
         builder.addEntity(new Flower(2f,2f,mainCharacter));

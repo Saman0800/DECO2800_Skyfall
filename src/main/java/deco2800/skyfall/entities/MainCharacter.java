@@ -62,7 +62,7 @@ public class MainCharacter extends Peon
 
     public static MainCharacter getInstance() {
         if (mainCharacterInstance == null) {
-            mainCharacterInstance = new MainCharacter(0,0,0.05f, "Main Piece", 10);
+            mainCharacterInstance = new MainCharacter(0, 0, 0.05f, "Main Piece", 10);
         }
         return mainCharacterInstance;
     }
@@ -244,7 +244,7 @@ public class MainCharacter extends Peon
     /**
      * The GUI health bar for the character.
      */
-   // private GameOverTable gameOverTable;
+    // private GameOverTable gameOverTable;
 
     private String equipped;
 
@@ -371,10 +371,9 @@ public class MainCharacter extends Peon
      */
     private void setupGameOverScreen() {
         // Game Over screen.
-       // gameOverTable = (GameOverTable) GameManager.getManagerFromInstance(GameMenuManager.class).
-       //         getPopUp("gameOverTable");
+        // gameOverTable = (GameOverTable) GameManager.getManagerFromInstance(GameMenuManager.class).
+        //         getPopUp("gameOverTable");
     }
-
 
 
     /**
@@ -637,8 +636,7 @@ public class MainCharacter extends Peon
         updateHealth();
 
         getBody().setLinearVelocity(getBody().getLinearVelocity()
-                        .lerp(new Vector2(0.f, 0.f), 0.5f));
-
+                .lerp(new Vector2(0.f, 0.f), 0.5f));
         if (this.getHealth() <= 0) {
             kill();
         } else {
@@ -870,17 +868,17 @@ public class MainCharacter extends Peon
 
             //Check we have permission to build
 
-            if(GameManager.getManagerFromInstance(ConstructionManager.class).getStatus() == 1) {
-            //    System.out.println(clickedPosition[0]);
-            //    System.out.println(clickedPosition[1]);
+            if (GameManager.getManagerFromInstance(ConstructionManager.class).getStatus() == 1) {
+                //    System.out.println(clickedPosition[0]);
+                //    System.out.println(clickedPosition[1]);
                 //cheking inventories
-            //    if (GameManager.getManagerFromInstance(ConstructionManager.class).invCheck(inventories)){
-            //        GameManager.getManagerFromInstance(ConstructionManager.class).build(GameManager.get().getWorld(),clickedPosition[0], clickedPosition[1]);
-            //    }
+                //    if (GameManager.getManagerFromInstance(ConstructionManager.class).invCheck(inventories)){
+                //        GameManager.getManagerFromInstance(ConstructionManager.class).build(GameManager.get().getWorld(),clickedPosition[0], clickedPosition[1]);
+                //    }
 
                 // REMOVE THE INVENTORIES
-                    //    buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
-                    //    invRemove(buildingToBePlaced,GameManager.getManagerFromInstance(InventoryManager.class));
+                //    buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
+                //    invRemove(buildingToBePlaced,GameManager.getManagerFromInstance(InventoryManager.class));
 
                 GameManager.getManagerFromInstance(ConstructionManager.class).build(GameManager.get().getWorld(),
                         (int) clickedPosition[0], (int) clickedPosition[1]);
@@ -952,7 +950,6 @@ public class MainCharacter extends Peon
     public void handleCollision(Object other) {
         //Put specific collision logic here
     }
-
 
     /**
      * Sets the Player's current movement speed
@@ -1081,7 +1078,7 @@ public class MainCharacter extends Peon
     /**
      * Adds a piece of gold to the Gold Pouch
      *
-     * @param gold The piece of gold to be added to the pouch
+     * @param gold  The piece of gold to be added to the pouch
      * @param count How many of that piece of gold should be added
      */
     public void addGold(GoldPiece gold, Integer count) {
@@ -1161,11 +1158,9 @@ public class MainCharacter extends Peon
      */
     public void addClosestGoldPiece() {
         for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
-            if (entity instanceof GoldPiece) {
-                if (this.getPosition().distance(entity.getPosition()) <= 2) {
-                    this.addGold((GoldPiece) entity, 1);
-                    logger.info(this.inventories.toString());
-                }
+            if (entity instanceof GoldPiece && this.getPosition().distance(entity.getPosition()) <= 2) {
+                this.addGold((GoldPiece) entity, 1);
+                logger.info(this.inventories.toString());
             }
         }
         logger.info("Sorry, you are not close enough to a gold piece!");
@@ -1343,32 +1338,32 @@ public class MainCharacter extends Peon
         if (playerDirectionAngle < 0) {
             playerDirectionAngle += 360;
         }
-        if (between(playerDirectionAngle, 22.5, 337.5)) {
+        if (between(playerDirectionAngle, 67.5, 112.5)) {
             setCurrentDirection(Direction.NORTH);
             return "North";
         } else if (between(playerDirectionAngle, 22.5, 67.5)) {
             setCurrentDirection(Direction.NORTH_EAST);
             return "North-East";
-        } else if (between(playerDirectionAngle, 67.5, 112.5)) {
+        } else if (between(playerDirectionAngle, 0, 22.5) ||
+                between(playerDirectionAngle, 337.5, 360) ) {
             setCurrentDirection(Direction.EAST);
             return "East";
-        } else if (between(playerDirectionAngle, 112.5, 157.5)) {
+        } else if (between(playerDirectionAngle, 292.5, 337.5)) {
             setCurrentDirection(Direction.SOUTH_EAST);
             return "South-East";
-        } else if (between(playerDirectionAngle, 157.5, 202.5)) {
+        } else if (between(playerDirectionAngle, 247.5, 292.5)) {
             setCurrentDirection(Direction.SOUTH);
             return "South";
         } else if (between(playerDirectionAngle, 202.5, 247.5)) {
             setCurrentDirection(Direction.SOUTH_WEST);
             return "South-West";
-        } else if (between(playerDirectionAngle, 247.5, 292.5)) {
+        } else if (between(playerDirectionAngle, 157.5, 202.5)) {
             setCurrentDirection(Direction.WEST);
             return "West";
-        } else if (between(playerDirectionAngle, 292.5, 337.5)) {
+        } else if (between(playerDirectionAngle, 112.5, 157.5)) {
             setCurrentDirection(Direction.NORTH_WEST);
             return "North-West";
         }
-
         return "Invalid";
     }
 
@@ -1653,37 +1648,36 @@ public class MainCharacter extends Peon
                 return;
             }
         }
-
         if (isDead()) {
             setCurrentState(AnimationRole.STILL);
         } else if (isHurt) {
             setCurrentState(AnimationRole.HURT);
         } else {
             if (velocity.get(2) == 0f) {
-                setCurrentState(AnimationRole.NULL);
-            } else {
-                setCurrentState(AnimationRole.MOVE);
+                    setCurrentState(AnimationRole.NULL);
+                } else {
+                    setCurrentState(AnimationRole.MOVE);
+                }
             }
         }
-    }
 
 
-    /**
-     * Toggles if the camera should follow the player
-     */
-    private void toggleCameraLock() {
-        if (!cameraLock) {
-            cameraLock = true;
-            centreCameraManual();
-        } else {
-            cameraLock = false;
+        /**
+         * Toggles if the camera should follow the player
+         */
+        private void toggleCameraLock () {
+            if (!cameraLock) {
+                cameraLock = true;
+                centreCameraManual();
+            } else {
+                cameraLock = false;
+            }
         }
-    }
 
-    /**
-     * Centres the camera onto the player
-     * Designed to called on a loop
-     */
+        /**
+         * Centres the camera onto the player
+         * Designed to called on a loop
+         */
     private void centreCameraAuto() {
         if (cameraLock) {
             float[] coords = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
@@ -1693,33 +1687,33 @@ public class MainCharacter extends Peon
     }
 
     /**
-     * Centres the camera onto the player
-     * Not supposed to be called on a loop
-     */
-    private void centreCameraManual() {
-        float[] coords = WorldUtil
-                .colRowToWorldCords(this.getCol(), this.getRow());
-        GameManager.get().getCamera().position.set(coords[0], coords[1], 0);
-    }
+         * Centres the camera onto the player
+         * Not supposed to be called on a loop
+         */
+        private void centreCameraManual () {
+            float[] coords = WorldUtil
+                    .colRowToWorldCords(this.getCol(), this.getRow());
+            GameManager.get().getCamera().position.set(coords[0], coords[1], 0);
+        }
 
-     /** Returns the id of this character
-     *
-     * @return the id of this character
-     */
-    public long getID() {
-        return this.id;
-    }
+        /** Returns the id of this character
+         *
+         * @return the id of this character
+         */
+        public long getID () {
+            return this.id;
+        }
 
-    /**
-     * Returns the save this character is for
-     *
-     * @return the save this character is for
-     */
-    public Save getSave() {
-        return save;
-    }
+        /**
+         * Returns the save this character is for
+         *
+         * @return the save this character is for
+         */
+        public Save getSave () {
+            return save;
+        }
 
-    // FIXME:dannothan Fix or remove this.
+        // FIXME:dannothan Fix or remove this.
 //    @Override
 //    public MainCharacterMemento save() {
 //        return new MainCharacterMemento(this);

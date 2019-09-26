@@ -93,22 +93,18 @@ public class TextureManager extends AbstractManager {
             textureMap.put("lizardN", new Texture("resources/lizard/lizardN.png"));
             textureMap.put("lizardS", new Texture("resources/lizard/lizardS.png"));
 
-            //AbstractEnemy
-            textureMap.put("robot", new Texture("resources/enemyOld/robot.png"));
-            textureMap.put("spider", new Texture("resources/enemyOld/spider.png"));
-            textureMap.put("flower", new Texture("resources/enemyOld/flower.png"));
-            textureMap.put("enemyStone", new Texture("resources/enemyOld/enemyStone.png"));
-            textureMap.put("flowerDead", new Texture("resources/enemyOld/flowerDead.png"));
-            textureMap.put("treemanDead", new Texture("resources/enemyOld/TreemanDead.png"));
-            textureMap.put("enemyTreeman", new Texture("resources/enemyOld/Treeman.png"));
 
-            textureMap.put("stoneRS", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRS.png"));
-            textureMap.put("stoneRSE", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRSE.png"));
-            textureMap.put("stoneRSW", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRSW.png"));
-            textureMap.put("stoneRNE", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRNE.png"));
-            textureMap.put("stoneRNW", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRNW.png"));
-            textureMap.put("stoneRN", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRN.png"));
-            textureMap.put("stoneDead", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/Dead.png"));
+            /*
+            // New Enemies (Scout, Heavy, Abductor)
+            textureMap.put("enemyScout_Move_N", new Texture("resources/Enemies/Abductor/enemy3_B.png"));
+            textureMap.put("enemyScout_Move_NW", new Texture("resources/Enemies/Abductor/enemy3_BL.png"));
+            textureMap.put("enemyScout_Move_NE", new Texture("resources/Enemies/Abductor/enemy3_NE.png"));
+            textureMap.put("enemyScout_Move_S", new Texture("resources/Enemies/Abductor/enemy3_F.png"));
+            textureMap.put("enemyScout_Move_SW", new Texture("resources/Enemies/Abductor/enemy3_FL.png"));
+            textureMap.put("enemyScout_Move_SE", new Texture("resources/Enemies/Abductor/enemy3_FR.png"));
+            textureMap.put("enemyScout_Move_W", new Texture("resources/Enemies/Abductor/enemy3_L.png"));
+            textureMap.put("enemyScout_Move_E", new Texture("resources/Enemies/Abductor/enemy3_R.png"));
+            */
 
             textureMap.put("chestClosed", new Texture("resources/chest_icon.png"));
             textureMap.put("blueprintShop", new Texture("resources/shopkeeper.png"));
@@ -328,6 +324,22 @@ public class TextureManager extends AbstractManager {
             textureMap.put("watchtower_90", new Texture("resources/world_structures/watchtower_90.png"));
             textureMap.put("watchtower_180", new Texture("resources/world_structures/watchtower_180.png"));
             textureMap.put("watchtower_270", new Texture("resources/world_structures/watchtower_270.png"));
+
+            // Old Enemy
+            textureMap.put("robot", new Texture("resources/enemyOld/robot.png"));
+            textureMap.put("spider", new Texture("resources/enemyOld/spider.png"));
+            textureMap.put("flower", new Texture("resources/enemyOld/flower.png"));
+            textureMap.put("enemyStone", new Texture("resources/enemyOld/enemyStone.png"));
+            textureMap.put("flowerDead", new Texture("resources/enemyOld/flowerDead.png"));
+            textureMap.put("treemanDead", new Texture("resources/enemyOld/TreemanDead.png"));
+            textureMap.put("enemyTreeman", new Texture("resources/enemyOld/Treeman.png"));
+            textureMap.put("stoneRS", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRS.png"));
+            textureMap.put("stoneRSE", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRSE.png"));
+            textureMap.put("stoneRSW", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRSW.png"));
+            textureMap.put("stoneRNE", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRNE.png"));
+            textureMap.put("stoneRNW", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRNW.png"));
+            textureMap.put("stoneRN", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRN.png"));
+            textureMap.put("stoneDead", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/Dead.png"));
 
             System.out.println("ALL TEXTURES LOADED SUCCESSFULLY");
 

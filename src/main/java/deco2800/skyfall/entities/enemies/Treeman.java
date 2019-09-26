@@ -23,7 +23,6 @@ public class Treeman extends AbstractEnemy implements Animatable {
         this.setDamage(1);
         this.setHeight(5);
         this.setHealth(10);
-        this.setSpeed(0.01f);
         this.setCanMove(true);
         this.setCharacter(mc);
         this.setObjectName("treeman");

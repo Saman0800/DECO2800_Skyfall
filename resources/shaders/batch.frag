@@ -104,7 +104,7 @@ void main() {
     //do the normalisation
     pointLightComponent = fragmentPointLightStrength*(pointLightComponent/sumPointLightStrength) * texColor.rgb;
 
-    gl_FragColor = vec4(
+    gl_FragColor = vec4(v_color.rgb, 1.0f) * vec4(
         //Add the two components together
         sunStrength * ambientComponent + (1 - sunStrength) * pointLightComponent,
         1.0

@@ -17,7 +17,7 @@ import deco2800.skyfall.animation.AnimationRole;
 /**
  * An instance to abstract the basic variables and  methods of an enemy.
  */
-public abstract class AbstractEnemy extends Peon implements Animatable, ICombatEntity {
+public abstract class AbstractEnemy extends Peon implements ICombatEntity {
 
     private final Logger log = LoggerFactory.getLogger(AbstractEnemy.class);
 
@@ -113,6 +113,7 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
      * @param player Main character
      */
     private void attackPlayer(MainCharacter player) {
+        System.out.println(mc.isRecovering());
         if(isAttacking && !(this.mc.isRecovering() ||
                 this.mc.isDead() || this.mc.isHurt())) {
             this.setSpeed(this.chaseSpeed);
@@ -223,6 +224,14 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
      */
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    /**
+     * Get the biome the enemy appears
+     * @param biome name oof the biome.
+     */
+    public void setBiomeLocated(String biome){
+        biomeLocated = biome;
     }
 
     /**
@@ -373,14 +382,6 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
             }
             this.updateAnimation();
         }
-    }
-
-    /**
-     * Sets default direction textures uses the get index for Animation feature
-     * as described in the animation documentation section 4.
-     */
-    @Override
-    public void setDirectionTextures() {
     }
 
     /**

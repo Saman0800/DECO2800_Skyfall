@@ -10,7 +10,7 @@ import deco2800.skyfall.tasks.*;
  */
 public abstract class Peon extends AgentEntity implements Tickable {
 	// Task being completed by character
-	private transient AbstractTask task;
+	protected transient AbstractTask task;
 
 	// Name of the character
 	private String name;

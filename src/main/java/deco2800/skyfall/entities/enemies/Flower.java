@@ -17,7 +17,6 @@ public class Flower extends AbstractEnemy implements Animatable {
     public Flower(float col, float row, MainCharacter mc) {
         super(col, row);
 
-        this.setSpeed(1);
         this.setRange(2);
         this.setLevel(2);
         this.setHeight(1);

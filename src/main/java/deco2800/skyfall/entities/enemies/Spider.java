@@ -44,7 +44,6 @@ public class Spider extends AbstractEnemy implements Animatable {
         super(col, row);
 
         this.setLevel(1);
-        this.setSpeed(1);
         this.setRange(4);
         this.setHeight(1);
         this.setCanMove(true);

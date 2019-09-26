@@ -27,7 +27,6 @@ public class Stone extends AbstractEnemy implements Animatable {
         this.setHeight(1);
         this.setDamage(3);
         this.setHealth(10);
-        this.setSpeed(0.008f);
         this.setCanMove(true);
         this.setCharacter(mc);
         this.setTexture("enemyStone");
