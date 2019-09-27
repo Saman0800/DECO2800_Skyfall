@@ -270,6 +270,7 @@ public class GameMenuManager extends TickableManager {
         uiElements.put("goldPill", new GoldStatusBar(stage, null, textureManager,  skin, this));
 
         uiElements.put("gameMenuBar", new GameMenuBar(stage, null, textureManager, this));
+        //uiElements.put("gameMenuBar2", new GameMenuBar2(stage, null, textureManager, skin, this));
 
         popUps.put("inventoryTable",
                 new InventoryTable(stage, new ImageButton(generateTextureRegionDrawableObject("exitButton")),

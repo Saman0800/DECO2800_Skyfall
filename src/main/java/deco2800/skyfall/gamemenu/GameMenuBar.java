@@ -17,7 +17,7 @@ public class GameMenuBar extends AbstractUIElement {
 
 
     private GameMenuManager gameMenuManager;
-    Table quickAccessPanel;
+    private Table quickAccessPanel;
     private Skin skin;
     private static final Logger LOGGER = LoggerFactory.getLogger(GameMenuBar.class);
 
@@ -135,9 +135,9 @@ public class GameMenuBar extends AbstractUIElement {
     public void setQuickAccessPanel(){
         //Set Quick Access Panel
         quickAccessPanel = new Table();
-        quickAccessPanel.setBackground(generateTextureRegionDrawableObject("quick_access_panel"));
         quickAccessPanel.setSize(450, 207 * 0.55f);
         quickAccessPanel.setPosition(560, 30 * 1000 / 800f);
+        quickAccessPanel.setBackground(generateTextureRegionDrawableObject("quick_access_panel"));
 
         //Populate quick access GUI with resources
         updateQuickAccess();
