@@ -1051,12 +1051,6 @@ public class MainCharacter extends Peon
                     useEquipped();
                 }
                 break;
-            case Input.Keys.G:
-                addClosestGoldPiece();
-                break;
-            case Input.Keys.M:
-                getGoldPouchTotalValue();
-                break;
             case Input.Keys.Z:
                 selectSpell(SpellType.FLAME_WALL);
                 break;
@@ -1117,10 +1111,6 @@ public class MainCharacter extends Peon
                 maxSpeed /= 2.f;
                 break;
             case Input.Keys.SPACE:
-                break;
-            case Input.Keys.G:
-                break;
-            case Input.Keys.M:
                 break;
             default:
                 break;
@@ -1204,22 +1194,24 @@ public class MainCharacter extends Peon
         return totalValue;
     }
 
-    /**
-     * If the player is within 2m of a gold piece and presses G, it will
+/*    *//**
+     * If the player is within 1m of a gold piece and presses G, it will
      * be added to their Gold Pouch.
-     */
+     *//*
     public void addClosestGoldPiece() {
         for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
             if (entity instanceof GoldPiece) {
-                if (this.getPosition().distance(entity.getPosition()) <= 2) {
+                if (this.getPosition().distance(entity.getPosition()) <= 1) {
                     this.addGold((GoldPiece) entity, 1);
                     logger.info(this.inventories.toString());
+
+                    //entity.dispose();
                 }
             }
         }
         logger.info("Sorry, you are not close enough to a gold piece!");
 
-    }
+    }*/
 
     /**
      * Moves the player based on current key inputs

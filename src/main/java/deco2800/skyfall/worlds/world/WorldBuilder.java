@@ -276,27 +276,12 @@ public class WorldBuilder implements WorldBuilderInterface {
 
                 case "snowy_mountains":
 
-                    // create a loop to generate different coin values
-                    for (int i = 0; i < 4; i++){
-                        int goldValue = 5;
-                        if (i == 1){
-                            goldValue = 10;
-                        }
-                        if (i == 2){
-                            goldValue = 50;
-                        }
-                        if (i == 3){
-                            goldValue = 100;
-                        }
-
-                    }
-
                     // Spawn some bows
                     EntitySpawnRule bowRule = new EntitySpawnRule(tile -> new Bow(tile, true), 0.2, 30, 50, biome);
                     biomeSpawnRules.add(bowRule);
 
                     // Spawn gold pieces uniformly
-                    EntitySpawnRule goldRule = new EntitySpawnRule(tile -> new GoldPiece(tile, true, 10), 0.2, 30, 50, biome);
+                    EntitySpawnRule goldRule = new EntitySpawnRule(tile -> new GoldPiece(tile, true), 0.2, 30, 50, biome);
                     biomeSpawnRules.add(goldRule);
 
                     // Spawn some spears

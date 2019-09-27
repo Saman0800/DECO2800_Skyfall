@@ -3,6 +3,9 @@ package deco2800.skyfall.resources;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.worlds.Tile;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 /**
  * The civilisation's currency is Gold Pieces valued as either 5G,
@@ -14,6 +17,12 @@ public class GoldPiece extends StaticEntity {
 
     // the value of the piece of gold (either 5G,10G,50G or 100G)
     public int value;
+
+    // all possible gold piece values in a list
+    public static final List<Integer> goldValues = Arrays.asList(5,10,50,100);
+
+    // have the value of the first gold piece be equal to 5
+    private static int nextValue = 5;
 
 
     /**
@@ -38,17 +47,27 @@ public class GoldPiece extends StaticEntity {
      * @param tile the entity's ID (gold piece)
      * @param obstructed true or false depending on whether or not the object
      *                   is obstructed
-     * @param value the value of the gold piece being constructed
      */
-    public GoldPiece(Tile tile, boolean obstructed, int value) {
-        super(tile, 2, "goldPiece" + value, obstructed);
+    public GoldPiece(Tile tile, boolean obstructed) {
+        super(tile, 2, "goldPiece" + GoldPiece.nextValue, obstructed);
         this.setObjectName(ENTITY_ID_STRING);
-        this.value = value;
+        this.value = GoldPiece.nextValue;
+
+        // generate a random index between 0 and 3
+        int index = (int)(Math.random()*4);
+
+        // update the gold piece value using the randomly generated index
+        GoldPiece.nextValue = goldValues.get(index);
+
         this.entityType = "GoldPiece";
         changeCollideability(false);
 
     }
 
+    /**
+     *
+     * @param memento
+     */
     public GoldPiece (StaticEntityMemento memento){
         super(memento);
     }
@@ -70,7 +89,8 @@ public class GoldPiece extends StaticEntity {
      */
     @Override
     public GoldPiece newInstance(Tile tile) {
-        return new GoldPiece(tile, this.isObstructed(), value);
+
+        return new GoldPiece(tile, this.isObstructed());
     }
     /**
      * Returns the value of the piece of gold.
