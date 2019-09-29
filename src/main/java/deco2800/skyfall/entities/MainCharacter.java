@@ -241,7 +241,7 @@ public class MainCharacter extends Peon
     /**
      * Used to cast spells.
      */
-    protected SpellCaster spellCaster = new SpellCaster();
+    protected SpellCaster spellCaster = null;
 
     /**
      * How much mana the character has available for spellcasting.
@@ -353,6 +353,8 @@ public class MainCharacter extends Peon
         this.scale = 0.4f;
         setDirectionTextures();
         configureAnimations();
+
+        spellCaster = new SpellCaster(this);
     }
 
     /**
@@ -1127,6 +1129,8 @@ public class MainCharacter extends Peon
                 switchItem(keycode);
                 break;
         }
+        //Let the SpellCaster know a key was pressed.
+        spellCaster.onKeyPressed(keycode);
     }
 
     /**
@@ -1135,7 +1139,7 @@ public class MainCharacter extends Peon
      *
      * @param type The SpellType to cast.
      */
-    private void selectSpell(SpellType type) {
+    public void selectSpell(SpellType type) {
         this.spellSelected = type;
     }
 
