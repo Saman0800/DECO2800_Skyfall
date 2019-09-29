@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities.spells;
 
+import com.badlogic.gdx.Input;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
@@ -16,6 +17,17 @@ public class FlameWall extends Spell {
     protected int ticksSinceAttacked = 0;
     //How long it takes to cooldown.
     private int attackCD = 10;
+
+    /**
+     * Key sequence required to cast this spell.
+     */
+    public static int[] keySequence = new int[] {
+            Input.Keys.UP,
+            Input.Keys.DOWN,
+            Input.Keys.UP,
+            Input.Keys.DOWN,
+            Input.Keys.LEFT
+    };
 
     /**
      * Construct a new spell.

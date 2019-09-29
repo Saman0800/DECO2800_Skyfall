@@ -4,6 +4,7 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.enemies.Treeman;
+import deco2800.skyfall.entities.spells.SpellCaster;
 import deco2800.skyfall.entities.spells.SpellFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -236,6 +237,11 @@ public class MainCharacter extends Peon
      * The spell the user currently has selected to cast.
      */
     protected SpellType spellSelected = SpellType.NONE;
+
+    /**
+     * Used to cast spells.
+     */
+    protected SpellCaster spellCaster = new SpellCaster();
 
     /**
      * How much mana the character has available for spellcasting.
