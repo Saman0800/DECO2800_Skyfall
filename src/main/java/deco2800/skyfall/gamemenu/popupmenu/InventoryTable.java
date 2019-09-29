@@ -228,7 +228,13 @@ public class InventoryTable extends AbstractPopUpElement {
         Table infoPanel = new Table();
         infoPanel.setSize(410, 320);
         infoPanel.setPosition(25, 98);
-        infoPanel.setBackground(generateTextureRegionDrawableObject("Description_Panel"));
+        infoPanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
+
+        itemInfo = new Label("Click on an item to use it, and " + "\n" + "find out more information.", skin, "default");
+        itemInfo.setSize(350, 200);
+        itemInfo.setPosition(90, 70);
+
+        infoPanel.addActor(itemInfo);
 
         return infoPanel;
     }
@@ -324,11 +330,13 @@ public class InventoryTable extends AbstractPopUpElement {
     private void updateItemInfo(){
         //System.out.println(inventorySelected);
         if (inventorySelected != null){
-            infoPanel.setBackground(generateTextureRegionDrawableObject(inventorySelected + "_desc"));
+            String info = inventory.getItemDescription(inventorySelected);
+            itemInfo.setText(info);
         } else{
-            infoPanel.setBackground(generateTextureRegionDrawableObject("Description_Panel"));
+            itemInfo.setText("Click on an item to use it, and " + "\n" + "find out more information.");
         }
-
+        infoPanel.removeActor(itemInfo);
+        infoPanel.add(itemInfo);
     }
 
     /**
