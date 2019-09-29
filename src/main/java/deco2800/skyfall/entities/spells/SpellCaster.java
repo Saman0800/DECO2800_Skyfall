@@ -10,10 +10,10 @@ import org.slf4j.LoggerFactory;
 public class SpellCaster {
 
     //Combo of keystrokes recorded.
-    private int index = 0;
+    protected int index = 0;
 
     //Record keystrokes here.
-    private int[] keyLog = new int[5];
+    protected int[] keyLog = new int[5];
 
     //Reference to the mainCharacter so a spell can be selected.
     private MainCharacter mainCharacter;
