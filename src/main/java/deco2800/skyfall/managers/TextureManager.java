@@ -281,6 +281,14 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("Sand_inv", new Texture("resources/temp_sand.png"));
 
+            //Inventory Item Descriptions
+            textureMap.put("Wood_desc", new Texture("resources/items_icons/wood_desc.png"));
+            textureMap.put("Stone_desc", new Texture("resources/items_icons/stone_desc.png"));
+            textureMap.put("Metal_desc", new Texture("resources/items_icons/metal_desc.png"));
+            textureMap.put("Vine_desc", new Texture("resources/items_icons/vine_desc.png"));
+
+            //Inventory Description Panel
+            textureMap.put("Description_Panel", new Texture("resources/desc_panel.png"));
 
             // Inventory items
             textureMap.put("Apple", new Texture("resources/inventory/apple-1.png"));
