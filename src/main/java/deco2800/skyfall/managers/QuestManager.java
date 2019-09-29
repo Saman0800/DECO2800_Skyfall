@@ -3,7 +3,7 @@ package deco2800.skyfall.managers;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestManager {
+public class QuestManager extends AbstractManager{
 
     //Current level of quest
     private int questLevel;
