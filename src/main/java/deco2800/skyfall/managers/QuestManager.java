@@ -47,7 +47,6 @@ public class QuestManager extends AbstractManager{
      * Sets goals to be achieved at each level
      */
     private void setMilestones() {
-        buildingsTotal.clear();
         switch (questLevel) {
             case 1 :
                 setGoldTotal(300);
