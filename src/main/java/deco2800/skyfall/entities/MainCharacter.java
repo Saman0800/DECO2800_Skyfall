@@ -1194,7 +1194,7 @@ public class MainCharacter extends Peon
     }
 
     /**
-     * If the player is within 1m of a gold piece and presses G, it will
+     * If the player is within 1m of a gold piece, it will
      *  be added to their Gold Pouch.
      */
     public void addClosestGoldPiece() {
