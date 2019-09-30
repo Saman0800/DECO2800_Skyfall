@@ -1190,7 +1190,6 @@ public class MainCharacter extends Peon
         for (Integer goldValue : goldPouch.keySet()) {
             totalValue += goldValue * goldPouch.get(goldValue);
         }
-        logger.info("The total value of your Gold Pouch is: " + totalValue + "G");
         return totalValue;
     }
 
@@ -1203,14 +1202,9 @@ public class MainCharacter extends Peon
             if (entity instanceof GoldPiece) {
                 if (this.getPosition().distance(entity.getPosition()) <= 1) {
                     this.addGold((GoldPiece) entity, 1);
-                    logger.info(this.inventories.toString());
-
-                    //entity.dispose();
                 }
             }
         }
-        logger.info("Sorry, you are not close enough to a gold piece!");
-
     }
 
     /**

@@ -53,7 +53,6 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
         { WorldBuilder.class, WorldDirector.class, DatabaseManager.class, DataBaseConnector.class, GameManager.class })
 public class MainCharacterTest {
 
-    private GoldPiece goldpiece;
     private MainCharacter testCharacter;
     private Tree testTree;
     private Rock testRock;
