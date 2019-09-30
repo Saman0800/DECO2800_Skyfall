@@ -19,7 +19,7 @@ public class GoldPiece extends StaticEntity {
     private static final String ENTITY_ID_STRING = "gold_piece";
 
     // the value of the piece of gold (either 5G,10G,50G or 100G)
-    public int value;
+    private int value;
 
     // all possible gold piece values in a list
     public static final List<Integer> goldValues = Arrays.asList(5,10,50,100);
