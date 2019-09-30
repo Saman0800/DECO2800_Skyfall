@@ -1190,28 +1190,22 @@ public class MainCharacter extends Peon
         for (Integer goldValue : goldPouch.keySet()) {
             totalValue += goldValue * goldPouch.get(goldValue);
         }
-        logger.info("The total value of your Gold Pouch is: " + totalValue + "G");
         return totalValue;
     }
 
-/*    *//**
-     * If the player is within 1m of a gold piece and presses G, it will
-     * be added to their Gold Pouch.
-     *//*
+    /**
+     * If the player is within 1m of a gold piece, it will
+     *  be added to their Gold Pouch.
+     */
     public void addClosestGoldPiece() {
         for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
             if (entity instanceof GoldPiece) {
                 if (this.getPosition().distance(entity.getPosition()) <= 1) {
                     this.addGold((GoldPiece) entity, 1);
-                    logger.info(this.inventories.toString());
-
-                    //entity.dispose();
                 }
             }
         }
-        logger.info("Sorry, you are not close enough to a gold piece!");
-
-    }*/
+    }
 
     /**
      * Moves the player based on current key inputs
