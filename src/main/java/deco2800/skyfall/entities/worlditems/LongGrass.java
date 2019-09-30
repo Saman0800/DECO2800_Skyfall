@@ -21,7 +21,7 @@ public class LongGrass extends StaticEntity {
         this.entityType = "LongGrass";
     }
 
-    public LongGrass (StaticEntityMemento memento){
+    public LongGrass(SaveableEntityMemento memento) {
         super(memento);
     }
 

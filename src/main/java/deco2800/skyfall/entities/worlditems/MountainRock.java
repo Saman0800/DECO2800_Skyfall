@@ -26,7 +26,7 @@ public class MountainRock extends StaticRock {
         this.entityType = "MountainRock";
     }
 
-    public MountainRock (StaticEntityMemento memento){
+    public MountainRock(SaveableEntityMemento memento) {
         super(memento);
         this.metalAmount = 15;
     }

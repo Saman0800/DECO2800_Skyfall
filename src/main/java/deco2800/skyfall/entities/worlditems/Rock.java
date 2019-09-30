@@ -29,7 +29,7 @@ public class Rock extends StaticRock {
         this.entityType = "Rock";
     }
 
-    public Rock (StaticEntityMemento memento){
+    public Rock(SaveableEntityMemento memento) {
         super(memento);
         this.metalAmount = 15;
     }

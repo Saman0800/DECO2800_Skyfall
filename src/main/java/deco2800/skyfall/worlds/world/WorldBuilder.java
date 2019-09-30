@@ -27,7 +27,7 @@ public class WorldBuilder implements WorldBuilderInterface {
     // Determines whether static entities are on
     private boolean staticEntities;
 
-    //Contains parameters for the world
+    // Contains parameters for the world
     private WorldParameters worldParameters;
 
     /**
@@ -155,9 +155,9 @@ public class WorldBuilder implements WorldBuilderInterface {
     private void spawnChests(World world, Random random, List<EntitySpawnRule> biomeSpawnRules) {
         // Spawn chests
         EntitySpawnRule chestRule = new EntitySpawnRule(tile -> new Chest(tile, true, ChestManager.generateRandomLoot(
-                (int) Math.floor(NoiseGenerator.fade(world.getStaticEntityNoise()
-                                                             .getOctavedPerlinValue(tile.getCol(), tile.getRow()), 2)) +
-                        5, LootRarity.LEGENDARY)), random.nextInt(), 0.005);
+                (int) Math.floor(NoiseGenerator
+                        .fade(world.getStaticEntityNoise().getOctavedPerlinValue(tile.getCol(), tile.getRow()), 2)) + 5,
+                LootRarity.LEGENDARY)), random.nextInt(), 0.005);
         biomeSpawnRules.add(chestRule);
     }
 
@@ -172,138 +172,136 @@ public class WorldBuilder implements WorldBuilderInterface {
      * @param world The world that will get static entities
      * @author Micheal CC
      */
-     Map<AbstractBiome, List<EntitySpawnRule>> generateStartEntities(World world) {
-         HashMap<AbstractBiome, List<EntitySpawnRule>> spawnRules = new HashMap<>();
+    Map<AbstractBiome, List<EntitySpawnRule>> generateStartEntities(World world) {
+        HashMap<AbstractBiome, List<EntitySpawnRule>> spawnRules = new HashMap<>();
 
-         long worldSeed = world.getSeed();
-         EntitySpawnRule.setNoiseSeed(worldSeed);
+        long worldSeed = world.getSeed();
+        EntitySpawnRule.setNoiseSeed(worldSeed);
 
-         Random random = new Random(worldSeed);
+        Random random = new Random(worldSeed);
 
-         // FIXME:Ontonator Make this work properly.
-         // You can't spawn things here.
-         //        Tile torchTile1 = world.getTile(0.0f, 5.0f);
-         //        world.addEntity(new TikiTorch(torchTile1, false));
-         //
-         //        Tile torchTile2 = world.getTile(0.0f, -3.0f);
-         //        world.addEntity(new TikiTorch(torchTile2, false));
+        // FIXME:Ontonator Make this work properly.
+        // You can't spawn things here.
+        // Tile torchTile1 = world.getTile(0.0f, 5.0f);
+        // world.addEntity(new TikiTorch(torchTile1, false));
+        //
+        // Tile torchTile2 = world.getTile(0.0f, -3.0f);
+        // world.addEntity(new TikiTorch(torchTile2, false));
 
-         for (AbstractBiome biome : world.getBiomes()) {
-             ArrayList<EntitySpawnRule> biomeSpawnRules = new ArrayList<>();
+        for (AbstractBiome biome : world.getBiomes()) {
+            ArrayList<EntitySpawnRule> biomeSpawnRules = new ArrayList<>();
 
-             switch (biome.getBiomeName()) {
-             case "forest":
+            switch (biome.getBiomeName()) {
+            case "forest":
 
-                 // Spawn some swords
-                 EntitySpawnRule swordRule =
-                         new EntitySpawnRule(tile -> new Sword(tile, true), random.nextInt(), 0.005);
-                 biomeSpawnRules.add(swordRule);
+                // Spawn some swords
+                EntitySpawnRule swordRule = new EntitySpawnRule(tile -> new Sword(tile, true), random.nextInt(),
+                        0.0005);
+                biomeSpawnRules.add(swordRule);
 
-                 // Spawn some axes
-                 EntitySpawnRule axeRule = new EntitySpawnRule(tile -> new Axe(tile, true), random.nextInt(), 0.05);
-                 biomeSpawnRules.add(axeRule);
+                // Spawn some axes
+                EntitySpawnRule axeRule = new EntitySpawnRule(tile -> new Axe(tile, true), random.nextInt(), 0.005);
+                biomeSpawnRules.add(axeRule);
 
-                 // Create a new perlin noise map
-                 SpawnControl treeControl = x -> x / 3d + 0.2;
-                 EntitySpawnRule treeRule =
-                         new EntitySpawnRule(tile -> new Tree(tile, true), random.nextInt(), true, treeControl);
-                 biomeSpawnRules.add(treeRule);
+                // Create a new perlin noise map
+                SpawnControl treeControl = x -> (x * x * x) / 3d + 0.2;
+                EntitySpawnRule treeRule = new EntitySpawnRule(tile -> new Tree(tile, true), random.nextInt(), true,
+                        treeControl);
+                biomeSpawnRules.add(treeRule);
 
-                 // Spawn some LongGrass uniformly
-                 EntitySpawnRule longGrassRule =
-                         new EntitySpawnRule(tile -> new LongGrass(tile, true), random.nextInt(), 0.07);
-                 biomeSpawnRules.add(longGrassRule);
+                // Spawn some LongGrass uniformly
+                EntitySpawnRule longGrassRule = new EntitySpawnRule(tile -> new LongGrass(tile, true), random.nextInt(),
+                        0.07);
+                biomeSpawnRules.add(longGrassRule);
 
-                 // Spawn some Rocks uniformly
-                 EntitySpawnRule rockRule = new EntitySpawnRule(tile -> new Rock(tile, true), random.nextInt(), 0.04);
-                 biomeSpawnRules.add(rockRule);
+                // Spawn some Rocks uniformly
+                EntitySpawnRule rockRule = new EntitySpawnRule(tile -> new Rock(tile, true), random.nextInt(), 0.04);
+                biomeSpawnRules.add(rockRule);
 
-                 spawnChests(world, random, biomeSpawnRules);
+                spawnChests(world, random, biomeSpawnRules);
 
-                 // This generator will cause the mushrooms to clump togteher more
-                 NoiseGenerator mushroomGen = new NoiseGenerator(new Random(worldSeed).nextLong(), 10, 20, 0.9);
-                 SpawnControl mushroomControl = x -> (x * x * x) / 3.0;
-                 EntitySpawnRule mushroomRule =
-                         new EntitySpawnRule(tile -> new ForestMushroom(tile, false), random.nextInt(), true,
-                                             mushroomControl);
-                 mushroomRule.setNoiseGenerator(mushroomGen);
-                 biomeSpawnRules.add(mushroomRule);
-                 break;
+                // This generator will cause the mushrooms to clump togteher more
+                NoiseGenerator mushroomGen = new NoiseGenerator(new Random(worldSeed).nextLong(), 10, 20, 0.9);
+                SpawnControl mushroomControl = x -> (x * x * x * x) / 3.0;
+                EntitySpawnRule mushroomRule = new EntitySpawnRule(tile -> new ForestMushroom(tile, false),
+                        random.nextInt(), true, mushroomControl);
+                mushroomRule.setNoiseGenerator(mushroomGen);
+                biomeSpawnRules.add(mushroomRule);
+                break;
 
-             case "mountain":
+            case "mountain":
 
-                 // Spawn some spears
-                 EntitySpawnRule spearRule =
-                         new EntitySpawnRule(tile -> new Spear(tile, true), random.nextInt(), 0.005);
-                 biomeSpawnRules.add(spearRule);
+                // Spawn some spears
+                EntitySpawnRule spearRule = new EntitySpawnRule(tile -> new Spear(tile, true), random.nextInt(), 0.005);
+                biomeSpawnRules.add(spearRule);
 
-                 // Create a new perlin noise map
-                 SpawnControl cubic = x -> x * x * x;
-                 EntitySpawnRule mTreeControl =
-                         new EntitySpawnRule(tile -> new MountainTree(tile, true), random.nextInt(), true, cubic);
-                 biomeSpawnRules.add(mTreeControl);
+                // Create a new perlin noise map
+                SpawnControl cubic = x -> x * x * x;
+                EntitySpawnRule mTreeControl = new EntitySpawnRule(tile -> new MountainTree(tile, true),
+                        random.nextInt(), true, cubic);
+                biomeSpawnRules.add(mTreeControl);
 
-                 spawnChests(world, random, biomeSpawnRules);
+                spawnChests(world, random, biomeSpawnRules);
 
-                 // Create a new perlin noise map
-                 SpawnControl rockControl = x -> (x * x * x * x) / 2.0;
-                 EntitySpawnRule mRockRule =
-                         new EntitySpawnRule(tile -> new MountainRock(tile, true), random.nextInt(), true, rockControl);
-                 biomeSpawnRules.add(mRockRule);
+                // Create a new perlin noise map
+                SpawnControl rockControl = x -> (x * x * x * x) / 2.0;
+                EntitySpawnRule mRockRule = new EntitySpawnRule(tile -> new MountainRock(tile, true), random.nextInt(),
+                        true, rockControl);
+                biomeSpawnRules.add(mRockRule);
 
-                 // Spawn some Snow uniformly
-                 EntitySpawnRule mSnowRule =
-                         new EntitySpawnRule(tile -> new SnowClump(tile, false), random.nextInt(), 0.07);
-                 biomeSpawnRules.add(mSnowRule);
+                // Spawn some Snow uniformly
+                EntitySpawnRule mSnowRule = new EntitySpawnRule(tile -> new SnowClump(tile, false), random.nextInt(),
+                        0.07);
+                biomeSpawnRules.add(mSnowRule);
 
-                 break;
+                break;
 
-             case "desert":
+            case "desert":
 
-                 // Spawn some axes
-                 EntitySpawnRule axeRule2 = new EntitySpawnRule(tile -> new Axe(tile, true), random.nextInt(), 0.005);
-                 biomeSpawnRules.add(axeRule2);
+                // Spawn some axes
+                EntitySpawnRule axeRule2 = new EntitySpawnRule(tile -> new Axe(tile, true), random.nextInt(), 0.005);
+                biomeSpawnRules.add(axeRule2);
 
-                 // Create a new perlin noise map
-                 SpawnControl cactiControl = x -> (x * x * x * x) / 4.0;
-                 EntitySpawnRule cactiRule =
-                         new EntitySpawnRule(tile -> new DesertCacti(tile, true), random.nextInt(), true, cactiControl);
-                 biomeSpawnRules.add(cactiRule);
-                 break;
+                // Create a new perlin noise map
+                SpawnControl cactiControl = x -> (x * x * x * x) / 4.0;
+                EntitySpawnRule cactiRule = new EntitySpawnRule(tile -> new DesertCacti(tile, true), random.nextInt(),
+                        true, cactiControl);
+                biomeSpawnRules.add(cactiRule);
+                break;
 
-             case "snowy_mountains":
+            case "snowy_mountains":
 
-                 // Spawn some bows
-                 EntitySpawnRule bowRule = new EntitySpawnRule(tile -> new Bow(tile, true), random.nextInt(), 0.005);
-                 biomeSpawnRules.add(bowRule);
+                // Spawn some bows
+                EntitySpawnRule bowRule = new EntitySpawnRule(tile -> new Bow(tile, true), random.nextInt(), 0.005);
+                biomeSpawnRules.add(bowRule);
 
-                 // Spawn some spears
-                 EntitySpawnRule spearRule2 =
-                         new EntitySpawnRule(tile -> new Spear(tile, true), random.nextInt(), 0.005);
-                 biomeSpawnRules.add(spearRule2);
+                // Spawn some spears
+                EntitySpawnRule spearRule2 = new EntitySpawnRule(tile -> new Spear(tile, true), random.nextInt(),
+                        0.005);
+                biomeSpawnRules.add(spearRule2);
 
-                 // Create a new perlin noise map
-                 SpawnControl sSnowControl = x -> x / 2d + 0.15;
-                 EntitySpawnRule sSnowRule =
-                         new EntitySpawnRule(tile -> new SnowClump(tile, false), random.nextInt(), true, sSnowControl);
-                 biomeSpawnRules.add(sSnowRule);
+                // Create a new perlin noise map
+                SpawnControl sSnowControl = x -> (x * x * x * x * x * x) / 2d + 0.05;
+                EntitySpawnRule sSnowRule = new EntitySpawnRule(tile -> new SnowClump(tile, false), random.nextInt(),
+                        true, sSnowControl);
+                biomeSpawnRules.add(sSnowRule);
 
-                 // Spawn some Snow Shrubs uniformly
-                 EntitySpawnRule snowShrubRule =
-                         new EntitySpawnRule(tile -> new SnowShrub(tile, true), random.nextInt(), 0.07);
-                 biomeSpawnRules.add(snowShrubRule);
+                // Spawn some Snow Shrubs uniformly
+                EntitySpawnRule snowShrubRule = new EntitySpawnRule(tile -> new SnowShrub(tile, true), random.nextInt(),
+                        0.03);
+                biomeSpawnRules.add(snowShrubRule);
 
-                 break;
+                break;
 
-             default:
-                 break;
-             }
+            default:
+                break;
+            }
 
-             spawnRules.put(biome, biomeSpawnRules);
-         }
+            spawnRules.put(biome, biomeSpawnRules);
+        }
 
-         return spawnRules;
-     }
+        return spawnRules;
+    }
 
     /**
      * Creates a world based on the values set in the builder
@@ -326,20 +324,20 @@ public class WorldBuilder implements WorldBuilderInterface {
         }
 
         switch (type) {
-            case "single_player":
-                world = new World(worldParameters);
-                break;
-            case "tutorial":
-                world = new TutorialWorld(worldParameters);
-                break;
-            case "test":
-                world = new TestWorld(worldParameters);
-                break;
-            case "server":
-                world = new ServerWorld(worldParameters);
-                break;
-            default:
-                throw new IllegalArgumentException("The world type is not valid");
+        case "single_player":
+            world = new World(worldParameters);
+            break;
+        case "tutorial":
+            world = new TutorialWorld(worldParameters);
+            break;
+        case "test":
+            world = new TestWorld(worldParameters);
+            break;
+        case "server":
+            world = new ServerWorld(worldParameters);
+            break;
+        default:
+            throw new IllegalArgumentException("The world type is not valid");
         }
 
         return world;

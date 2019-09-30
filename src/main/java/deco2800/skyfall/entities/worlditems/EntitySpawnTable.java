@@ -14,7 +14,8 @@ import java.util.function.Function;
  */
 public final class EntitySpawnTable {
     // Private constructor to prevent construction.
-    private EntitySpawnTable() {}
+    private EntitySpawnTable() {
+    }
 
     /**
      * Simple static method for placing static items. Takes the given entity and
@@ -41,21 +42,23 @@ public final class EntitySpawnTable {
      */
     private static double adjustChanceAdjacent(EntitySpawnRule rule, Tile nextTile, double currentChance) {
 
-        // Tiles always have 6 neighbours, so always just put it to the power of 6 instead of checking the number of
+        // Tiles always have 6 neighbours, so always just put it to the power of 6
+        // instead of checking the number of
         // neighbours each time.
         double adjustmentFactor = rule.getLimitAdjacentValue();
         // FIXME:Ontonator Check that this actualy works with chunks.
         adjustmentFactor = Math.pow(adjustmentFactor,
-                                    nextTile.getNeighbours().values().stream().filter(Tile::isObstructed).count());
+                nextTile.getNeighbours().values().stream().filter(Tile::isObstructed).count());
 
         return currentChance / adjustmentFactor;
 
     }
 
     /**
-     * <em>Approximately</em> normalises the static entity noise used for entity spawn chance to a uniform distribution.
-     * This was
-     * obtained through experimental methods and must be recalculated if the noise generator parameters ever change.
+     * <em>Approximately</em> normalises the static entity noise used for entity
+     * spawn chance to a uniform distribution. This was obtained through
+     * experimental methods and must be recalculated if the noise generator
+     * parameters ever change.
      *
      * @param x the value to normalise
      *
@@ -66,13 +69,12 @@ public final class EntitySpawnTable {
     }
 
     public static double getRandomValue(World world, EntitySpawnRule spawnRule, Tile tile) {
-        return normalizeStaticEntityNoise(world.getStaticEntityNoise()
-                                                  .getOctavedPerlinValue(tile.getCol() + spawnRule.getIndex()%100,
-                                                                         tile.getRow() + spawnRule.getIndex()%100));
+        return normalizeStaticEntityNoise(world.getStaticEntityNoise().getOctavedPerlinValue(
+                tile.getCol() + spawnRule.getIndex() % 50, tile.getRow() + spawnRule.getIndex() % 100));
     }
 
     private static void placeWithChance(Function<Tile, StaticEntity> newInstance, EntitySpawnRule rule, Tile nextTile,
-                                        World world, double chance) {
+            World world, double chance) {
         if (rule.getLimitAdjacent()) {
             chance = adjustChanceAdjacent(rule, nextTile, chance);
         }
@@ -89,12 +91,12 @@ public final class EntitySpawnTable {
      * Places down a entity uniformly into the world.
      *
      * @param newInstance A function which creates a new instance to place
-     * @param rule        The EntitySpawn that holds the characteristics of the placement of the static entity
+     * @param rule        The EntitySpawn that holds the characteristics of the
+     *                    placement of the static entity
      * @param nextTile    The tile on which to place the static entity
      */
-    public static void placeUniform(Function<Tile, StaticEntity> newInstance,
-                                    EntitySpawnRule rule, Tile nextTile,
-                                    World world) {
+    public static void placeUniform(Function<Tile, StaticEntity> newInstance, EntitySpawnRule rule, Tile nextTile,
+            World world) {
         // Get the uniform chance from the rule
         double chance = rule.getChance();
 
@@ -105,12 +107,12 @@ public final class EntitySpawnTable {
      * Places down a entity using a the perlin noise value of the tile.
      *
      * @param newInstance A function which creates a new instance to place
-     * @param rule        The EntitySpawn that holds the characteristics of the placement of the static entity
+     * @param rule        The EntitySpawn that holds the characteristics of the
+     *                    placement of the static entity
      * @param nextTile    The tile on which to place the static entity
      */
-    public static void placePerlin(Function<Tile, StaticEntity> newInstance,
-                                   EntitySpawnRule rule, Tile nextTile,
-                                   World world) {
+    public static void placePerlin(Function<Tile, StaticEntity> newInstance, EntitySpawnRule rule, Tile nextTile,
+            World world) {
         // Get the perlin noise value of the tile and apply the perlin map
         double noise = rule.getNoiseGenerator().getOctavedPerlinValue(nextTile.getRow(), nextTile.getCol());
         SpawnControl perlinMap = rule.getAdjustMap();
@@ -122,8 +124,9 @@ public final class EntitySpawnTable {
     /**
      * Randomly distributes an entity with a given spawn rule
      *
-     * @param rule        A spawn rule, which specifies how the entity will be distributed example rules are chance,
-     *                    min/max, next to, a combination of these, e.g.
+     * @param rule A spawn rule, which specifies how the entity will be distributed
+     *             example rules are chance, min/max, next to, a combination of
+     *             these, e.g.
      */
     public static void spawnEntity(EntitySpawnRule rule, World world, Tile tile) {
         if (tile == null) {

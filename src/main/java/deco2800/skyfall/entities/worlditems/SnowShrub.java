@@ -21,8 +21,7 @@ public class SnowShrub extends StaticEntity {
         this.entityType = "SnowShrub";
     }
 
-
-    public SnowShrub (StaticEntityMemento memento){
+    public SnowShrub(SaveableEntityMemento memento) {
         super(memento);
     }
 
