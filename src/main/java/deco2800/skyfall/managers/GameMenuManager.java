@@ -46,6 +46,9 @@ public class GameMenuManager extends TickableManager {
 
     private float topLeftX = 0;
     private float topLeftY = 0;
+
+    private float bottomLeftX = 0;
+    private float bottomLeftY = 0;
     /**
      * Initialise a new GameMenuManager with stage and skin including the characters in the game.
      * And construct Manager instances for later use.
@@ -93,6 +96,9 @@ public class GameMenuManager extends TickableManager {
 
             topLeftX = stage.getCamera().position.x  - (stage.getCamera().viewportWidth / 2);
             topLeftY = topRightY;
+
+            bottomLeftX = topLeftX;
+            bottomLeftY =  stage.getCamera().position.y  - (stage.getCamera().viewportHeight / 2);
 
         }
         //Get the current state of the inventory on tick so that display can be updated
@@ -259,18 +265,18 @@ public class GameMenuManager extends TickableManager {
             System.out.println("Please add skin and stats manager before drawing");
             return;
         }
+
+
         Label.LabelStyle bluePill = new Label.LabelStyle();
         bluePill.font = skin.getFont("game-font");
         bluePill.fontColor = skin.getColor("white");
         bluePill.background = generateTextureRegionDrawableObject("blue_pill");
         skin.add("blue-pill", bluePill);
 
-
-        uiElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm, skin, this));
-        uiElements.put("goldPill", new GoldStatusBar(stage, null, textureManager,  skin, this));
-
-        uiElements.put("gameMenuBar", new GameMenuBar(stage, null, textureManager, this));
-        //uiElements.put("gameMenuBar2", new GameMenuBar2(stage, null, textureManager, skin, this));
+        TextButton.TextButtonStyle textBluePill = new TextButton.TextButtonStyle();
+        textBluePill.font = skin.getFont("game-font");
+        textBluePill.fontColor = skin.getColor("white");
+        skin.add("blue-pill2", textBluePill);
 
         popUps.put("inventoryTable",
                 new InventoryTable(stage, new ImageButton(generateTextureRegionDrawableObject("exitButton")),
@@ -317,9 +323,15 @@ public class GameMenuManager extends TickableManager {
                 null, textureManager, this, sm, skin));
 
 
-        uiElements.put("clock" , new Clock(stage, skin, this));
         //uiElements.put("weatherGUI", new WeatherGui(stage, EnvironmentManager.currentWeather()));
+        Map<String, AbstractUIElement> hudElements = new HashMap<>();
+        hudElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm, skin, this));
+        hudElements.put("goldPill", new GoldStatusBar(stage, null, textureManager,  skin, this));
+        hudElements.put("gameMenuBar", new GameMenuBar(stage, null, textureManager, this));
+        //hudElements.put("gameMenuBar2", new GameMenuBar2(stage, null, textureManager, skin, this));
+        hudElements.put("clock" , new Clock(stage, skin, this));
 
+        uiElements.put("HUD", new HeadsUpDisplay(stage, null, textureManager, skin, this, hudElements));
     }
 
     /**
@@ -373,6 +385,13 @@ public class GameMenuManager extends TickableManager {
         return topLeftY;
     }
 
+    public float getBottomLeftX() {
+        return bottomLeftX;
+    }
+
+    public float getBottomLeftY() {
+        return bottomLeftY;
+    }
     /**
      * If there is any opened popup, closes it.
      */

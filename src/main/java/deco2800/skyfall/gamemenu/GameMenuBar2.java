@@ -25,6 +25,7 @@ public class GameMenuBar2 extends AbstractUIElement {
     @Override
     public void updatePosition() {
         t.setPosition(gmm.getTopRightX() - 170, gmm.getTopRightY() - 800);
+        //t.setHeight(stage.getCamera().viewportHeight / 2);
         imageButton.setPosition(gmm.getTopRightX() - 200, gmm.getTopRightY() - 800);
     }
 

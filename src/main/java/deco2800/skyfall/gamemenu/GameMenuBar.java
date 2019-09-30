@@ -65,6 +65,7 @@ public class GameMenuBar extends AbstractUIElement {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 hideOpened();
+                hideOpened();
                 gameMenuManager.setPopUp("pauseTable");
             }
         });

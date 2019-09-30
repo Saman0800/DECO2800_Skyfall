@@ -45,12 +45,15 @@ public class Clock extends AbstractUIElement{
         clockDisplay.setPosition(positionX, positionY);
         // Set season position
         seasonDisplay.setPosition(positionX + 160, positionY + 10);
+        clockImage.setPosition(clockLabel.getWidth(), positionY - 20);
 
 
         if (clockLabel != null) {
             clockLabel.setPosition(positionX, positionY);
+            clockLabel.setWidth(stage.getCamera().viewportWidth / 8);
             clockLabel.toFront();
         }
+        clockImage.toFront();
 
     }
     /**
@@ -105,9 +108,17 @@ public class Clock extends AbstractUIElement{
         this.clockDisplay = new Image(GameMenuManager.generateTextureRegionDrawableObject(clockTexture));
         this.seasonDisplay = new Image(GameMenuManager.generateTextureRegionDrawableObject(seasonTexture));
         this.clockLabel = new Label("Error", skin,  "blue-pill");
+        this.clockImage = new Image(GameMenuManager.generateTextureRegionDrawableObject("new_clock"));
         clockLabel.setAlignment(Align.center);
+        clockLabel.setWidth(clockLabel.getWidth() + 50);
         clockLabel.setFontScale(0.7f);
+
+        clockImage.setScale(0.3f);
+
+        stage.addActor(clockImage);
         stage.addActor(clockLabel);
+
+
         // Update screen
         update();
         // Add displays onto stage
