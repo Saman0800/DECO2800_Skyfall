@@ -45,12 +45,11 @@ public class Clock extends AbstractUIElement{
         clockDisplay.setPosition(positionX, positionY);
         // Set season position
         seasonDisplay.setPosition(positionX + 160, positionY + 10);
-        clockImage.setPosition(clockLabel.getWidth(), positionY - 20);
+        clockImage.setPosition(positionX + 130, positionY - 10);
 
 
         if (clockLabel != null) {
             clockLabel.setPosition(positionX, positionY);
-            clockLabel.setWidth(stage.getCamera().viewportWidth / 8);
             clockLabel.toFront();
         }
         clockImage.toFront();
@@ -113,7 +112,7 @@ public class Clock extends AbstractUIElement{
         clockLabel.setWidth(clockLabel.getWidth() + 50);
         clockLabel.setFontScale(0.7f);
 
-        clockImage.setScale(0.3f);
+        clockImage.setScale(0.25f);
 
         stage.addActor(clockImage);
         stage.addActor(clockLabel);

@@ -23,7 +23,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
     private final Skin skin;
     private Map<String, AbstractUIElement> hudElements;
     private Map<Actor, UpdatePositionInterface> positionObjects;
-
+    private Table leftHUDTable;
 
     public HeadsUpDisplay(Stage stage, String[] textureNames, TextureManager tm,
                           Skin skin, GameMenuManager gmm,
@@ -39,6 +39,9 @@ public class HeadsUpDisplay extends AbstractUIElement {
 
     @Override
     public void updatePosition() {
+        leftHUDTable.setPosition(gmm.getTopLeftX() + 30, gmm.getTopLeftY() - 3 * stage.getCamera().viewportHeight / 4);
+        leftHUDTable.setHeight(stage.getCamera().viewportHeight / 2);
+
         positionObjects.forEach((actor, posObj) -> posObj.updatePosition(actor));
     }
 
@@ -55,29 +58,48 @@ public class HeadsUpDisplay extends AbstractUIElement {
 
         ImageButton pause = new ImageButton(generateTextureRegionDrawableObject("pause"));
         pause.setSize(65, 65 * 146 / 207f);
-        stage.addActor(pause);
-
 
         ImageButton settings = new ImageButton(generateTextureRegionDrawableObject("settings"));
         settings.setSize(65, 65 * 146 / 207f);
-        stage.addActor(settings);
-
 
         ImageButton create = new ImageButton(generateTextureRegionDrawableObject("create_button"));
-        create.scaleBy(0.5f, 0.5f);
-        stage.addActor(create);
+
+        ImageButton collect = new ImageButton(generateTextureRegionDrawableObject("collect_button"));
 
 
-        TextButton teleport = new TextButton(" TELEPORT ", skin, "blue-pill2");
+        TextButton teleport = new TextButton("TELEPORT", skin, "blue-pill2");
         teleport.getLabel().setStyle(skin.get("blue-pill", Label.LabelStyle.class));
         teleport.getLabel().setAlignment(Align.center);
-        stage.addActor(teleport);
+        teleport.getLabel().setFontScale(1f);
+
+        TextButton pauseT = new TextButton("PAUSE", skin, "blue-pill2");
+        pauseT.getLabel().setStyle(skin.get("blue-pill", Label.LabelStyle.class));
+        pauseT.getLabel().setAlignment(Align.center);
+        pauseT.getLabel().setFontScale(1f);
+
+        TextButton helpT = new TextButton("HELP", skin, "blue-pill2");
+        helpT.getLabel().setStyle(skin.get("blue-pill", Label.LabelStyle.class));
+        helpT.getLabel().setAlignment(Align.center);
+        helpT.getLabel().setFontScale(1f);
 
 
-        positionObjects.put(build, (Actor actor) -> actor.setPosition(gmm.getBottomLeftX(), gmm.getBottomLeftY()));
-        positionObjects.put(settings, (Actor actor) -> actor.setPosition(gmm.getTopLeftX() + 30, gmm.getTopLeftY() - 130));
-        positionObjects.put(pause, (Actor actor) -> actor.setPosition(gmm.getTopLeftX() + 100, gmm.getTopLeftY() - 130));
-        positionObjects.put(create, (Actor actor) -> actor.setPosition(gmm.getTopLeftX() + 30, gmm.getTopLeftY() - 250));
-        positionObjects.put(teleport, (Actor actor) -> actor.setPosition(gmm.getTopLeftX() + 30, gmm.getTopLeftY() - 310));
+        positionObjects.put(build, (Actor actor) -> actor.setPosition(gmm.getBottomRightX() - actor.getHeight() - 20, gmm.getBottomRightY() + 20));
+
+
+        leftHUDTable = new Table();
+        leftHUDTable.setDebug(true);
+        leftHUDTable.setWidth(200);
+        leftHUDTable.add(collect).width(200).height(100);
+        leftHUDTable.row();
+        leftHUDTable.add(create).width(200).height(100);
+        leftHUDTable.row();
+        leftHUDTable.add(teleport).expandY().fillX();
+        leftHUDTable.row();
+        leftHUDTable.add(pauseT).expandY().fillX();
+        leftHUDTable.row();
+        leftHUDTable.add(helpT).expandY().fillX();
+        leftHUDTable.row();
+        stage.addActor(leftHUDTable);
+
     }
 }

@@ -31,13 +31,13 @@ public class GoldStatusBar extends AbstractUIElement {
     public void updatePosition() {
         float positionX = stage.getCamera().position.x - goldLabel.getWidth();
 
-        goldLabel.setPosition(positionX + 100, gmm.getTopLeftY() - 70);
-        goldPouchButton.setPosition(positionX + goldLabel.getWidth() + 60, gmm.getTopLeftY() - 80);
+        goldLabel.setPosition(gmm.getTopLeftX() + 30, gmm.getTopLeftY() - 170);
+        goldPouchButton.setPosition(gmm.getTopLeftX() + goldLabel.getWidth(), gmm.getTopLeftY() - 175);
     }
 
     @Override
     public void draw() {
-        this.goldLabel = new Label(" " + MainCharacter.getInstance().getGoldPouchTotalValue() + " G   ", skin,  "blue-pill");
+        this.goldLabel = new Label("   " + MainCharacter.getInstance().getGoldPouchTotalValue() + " G   ", skin,  "blue-pill");
         goldLabel.setAlignment(Align.center);
         goldLabel.setFontScale(0.7f);
 
