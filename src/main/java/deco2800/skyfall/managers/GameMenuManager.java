@@ -49,6 +49,10 @@ public class GameMenuManager extends TickableManager {
 
     private float bottomLeftX = 0;
     private float bottomLeftY = 0;
+
+    private float bottomRightX = 0;
+    private float bottomRightY = 0;
+
     /**
      * Initialise a new GameMenuManager with stage and skin including the characters in the game.
      * And construct Manager instances for later use.
@@ -100,6 +104,8 @@ public class GameMenuManager extends TickableManager {
             bottomLeftX = topLeftX;
             bottomLeftY =  stage.getCamera().position.y  - (stage.getCamera().viewportHeight / 2);
 
+            bottomRightX = topRightX;
+            bottomRightY = bottomLeftY;
         }
         //Get the current state of the inventory on tick so that display can be updated
         if (currentPopUpElement != null) {
@@ -327,8 +333,8 @@ public class GameMenuManager extends TickableManager {
         Map<String, AbstractUIElement> hudElements = new HashMap<>();
         hudElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm, skin, this));
         hudElements.put("goldPill", new GoldStatusBar(stage, null, textureManager,  skin, this));
-        hudElements.put("gameMenuBar", new GameMenuBar(stage, null, textureManager, this));
-        //hudElements.put("gameMenuBar2", new GameMenuBar2(stage, null, textureManager, skin, this));
+//        hudElements.put("gameMenuBar", new GameMenuBar(stage, null, textureManager, this));
+        hudElements.put("gameMenuBar2", new GameMenuBar2(stage, null, textureManager, skin, this));
         hudElements.put("clock" , new Clock(stage, skin, this));
 
         uiElements.put("HUD", new HeadsUpDisplay(stage, null, textureManager, skin, this, hudElements));
@@ -392,6 +398,15 @@ public class GameMenuManager extends TickableManager {
     public float getBottomLeftY() {
         return bottomLeftY;
     }
+
+    public float getBottomRightX() {
+        return bottomRightX;
+    }
+
+    public float getBottomRightY() {
+        return bottomRightY;
+    }
+
     /**
      * If there is any opened popup, closes it.
      */

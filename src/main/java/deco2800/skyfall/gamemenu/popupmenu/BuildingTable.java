@@ -112,7 +112,9 @@ public class BuildingTable extends AbstractPopUpElement{
         List<Blueprint> blueprintsLearned = gameMenuManager.getMainCharacter().getBlueprintsLearned();
         // Generating items in getBlueprintsLearned
         float itemWidth = 400/4f-10;
+        // Row
         for (int i = 0; i < 3; i++) {
+            // Column
             for (int j = 0; j < 4; j++) {
                 try {
                     Blueprint item = blueprintsLearned.get(4 * i + j);
