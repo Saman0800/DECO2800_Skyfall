@@ -45,12 +45,11 @@ public class Clock extends AbstractUIElement{
         clockDisplay.setPosition(positionX, positionY);
         // Set season position
         seasonDisplay.setPosition(positionX + 160, positionY + 10);
-        clockImage.setPosition(clockLabel.getWidth(), positionY - 20);
+        clockImage.setPosition(positionX + 130, positionY - 20);
 
 
         if (clockLabel != null) {
             clockLabel.setPosition(positionX, positionY);
-            clockLabel.setWidth(stage.getCamera().viewportWidth / 8);
             clockLabel.toFront();
         }
         clockImage.toFront();
