@@ -5,6 +5,9 @@ import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.resources.Item;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Weapon to be used by the Main Character and stored as an inventory item
  */
@@ -14,12 +17,17 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon {
     private String name;
     private String weaponType;
     private String damageType;
+    private String texture;
     private int attackRate;
     private int damage;
     private int durability;
     private Boolean carryable;
-    private HexVector position;
     private Boolean exchangeable;
+    public boolean equippable;
+    private HexVector position;
+
+    // Logger to show messages
+    private final Logger logger = LoggerFactory.getLogger(Weapon.class);
 
     /**
      * Weapon constructor used in the game world
@@ -32,14 +40,16 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon {
         changeCollideability(false);
 
         this.name = name;
+        this.texture = texture;
         this.weaponType = weaponType;
         this.durability = durability;
         this.damageType = damageType;
         this.damage = damage;
         this.attackRate = attackRate;
         this.carryable = true;
-        this.position = tile.getCoordinates();
         this.exchangeable = false;
+        this.equippable = true;
+        this.position = tile.getCoordinates();
     }
 
     /**
@@ -54,6 +64,13 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon {
      */
     public String getName() {
         return this.name;
+    }
+
+    /**
+     * @return texture of weapon
+     */
+    public String getTexture() {
+        return this.texture;
     }
 
     /**
@@ -160,6 +177,14 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon {
         return this.exchangeable;
     }
 
+    /**
+     * Returns whether or not the weapon can be equipped from the inventory
+     * @return True if the weapon can be equipped, false otherwise
+     */
+    public Boolean isEquippable() {
+        return this.equippable;
+    }
+
     @Override
     public void onTick(long i) {
         // Auto-generated method stub
@@ -168,6 +193,7 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon {
     @Override
     public void use(HexVector position){
         // Use the specific function associated with the item
+        logger.warn("Durability: " + this.getDurability());
         this.decreaseDurability();
     }
 }

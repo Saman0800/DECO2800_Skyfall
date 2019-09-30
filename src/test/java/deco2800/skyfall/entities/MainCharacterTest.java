@@ -2,6 +2,7 @@ package deco2800.skyfall.entities;
 
 import deco2800.skyfall.entities.enemies.Treeman;
 import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.entities.weapons.EmptyItem;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
@@ -466,8 +467,9 @@ public class MainCharacterTest {
         Item toEquip = testCharacter.getInventoryManager().drop("Wood");
         testCharacter.setEquippedItem(toEquip);
 
-        Assert.assertEquals(testCharacter.getEquippedItem(), toEquip);;
-        Assert.assertEquals(testCharacter.displayEquippedItem(), "Natural Resource:Wood");
+        Assert.assertEquals(testCharacter.getEquippedItem().toString(),
+                new EmptyItem().toString());;
+        Assert.assertEquals(testCharacter.displayEquippedItem(), "No item equipped.");
     }
 
     //These methods no longer exist so tests are commented out

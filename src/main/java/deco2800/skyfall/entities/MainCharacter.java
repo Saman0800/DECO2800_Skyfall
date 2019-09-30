@@ -17,6 +17,7 @@ import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.entities.weapons.EmptyItem;
 import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
@@ -25,10 +26,7 @@ import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.observers.KeyUpObserver;
 import deco2800.skyfall.observers.TouchDownObserver;
-import deco2800.skyfall.resources.Blueprint;
-import deco2800.skyfall.resources.GoldPiece;
-import deco2800.skyfall.resources.HealthResources;
-import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.resources.*;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.saving.Save;
@@ -333,7 +331,7 @@ public class MainCharacter extends Peon
         blueprintsLearned = new ArrayList<>();
         tempFactory = new BuildingFactory();
 
-
+        this.equippedItem = new EmptyItem();
         isMoving = false;
 
         HexVector position = this.getPosition();
@@ -429,8 +427,21 @@ public class MainCharacter extends Peon
      *
      * @param item the item to equip
      */
-    public void setEquippedItem(Item item) {
-        this.equippedItem = item;
+    public Boolean setEquippedItem(Item item) {
+        if (item.isEquippable()) {
+            this.equippedItem = item;
+            return true;
+        } else {
+            logger.warn("You can't equip " + item.getName() + ".");
+            return false;
+        }
+    }
+
+    /**
+     * Sets the equipped item to be null when it runs out of durability
+     */
+    public void unEquip() {
+        this.equippedItem = new EmptyItem();
     }
 
     /**
@@ -468,17 +479,15 @@ public class MainCharacter extends Peon
      * Use the function of equipped item
      */
     public void useEquipped() {
-        // TODO Add durability into other inventory so it can be consistent
-
-        if (equippedItem instanceof Weapon
-                && !((Weapon) equippedItem).isUsable()) {
-                this.unequip();
+        if ((equippedItem instanceof Weapon && !((Weapon) equippedItem).isUsable())
+            || (equippedItem instanceof ManufacturedResources
+                && !((ManufacturedResources) equippedItem).isUsable())) {
+                this.unEquip();
                 return;
         }
 
-        if (equippedItem != null) {
-            equippedItem.use(this.getPosition());
-        }
+        equippedItem.use(this.getPosition());
+
 
         //this.attack();
         //else: collect nearby resources
@@ -528,7 +537,8 @@ public class MainCharacter extends Peon
         // Make projectile move toward the angle
         // Spawn projectile in front of character for now.
         Projectile projectile = new Projectile(mousePosition,
-                this.itemSlotSelected == 1 ? "arrow_north" : "sword_tex",
+//                this.itemSlotSelected == 1 ? "arrow_north" : "sword_tex",
+                ((Weapon)equippedItem).getTexture(),
                 "test hitbox",
                 position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
                 position.getRow() + 0.5f + 1.5f * unitDirection.getRow(),
@@ -570,18 +580,6 @@ public class MainCharacter extends Peon
         GameManager.get().getWorld().addEntity(spell);
 
         setAttacking(false);
-    }
-
-    public String getEquipped() {
-        return this.equipped;
-    }
-
-    public void setEquipped(String item) {
-        this.equipped = item;
-    }
-
-    public void unequip() {
-        this.equipped = "no_weapon";
     }
 
     /**
@@ -1090,19 +1088,20 @@ public class MainCharacter extends Peon
                 maxSpeed *= 2.f;
                 break;
             case Input.Keys.SPACE:
-                if (this.equippedItem != null) {
-                    useEquipped();
+                logger.info("Using " + equippedItem.toString());
+
+                useEquipped();
+
+                if (this.equippedItem instanceof Weapon) {
+                    float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
+                    float[] clickedPosition = WorldUtil.worldCoordinatesToSubColRow(mouse[0], mouse[1]);
+                    HexVector mousePosition = new HexVector(clickedPosition[0], clickedPosition[1]);
+
+                    this.attack(mousePosition);
                 }
                 break;
             case Input.Keys.ALT_LEFT:
-                if (this.equippedItem != null) {
-                    useEquipped();
-                }
-                float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
-                float[] clickedPosition = WorldUtil.worldCoordinatesToSubColRow(mouse[0], mouse[1]);
-                HexVector mousePosition = new HexVector(clickedPosition[0], clickedPosition[1]);
-
-                this.attack(mousePosition);
+                // Attack moved to SPACE
                 break;
             case Input.Keys.G:
                 addClosestGoldPiece();

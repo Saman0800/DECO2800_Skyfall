@@ -12,6 +12,7 @@ import deco2800.skyfall.gamemenu.GameMenuBar;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.resources.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -276,13 +277,17 @@ public class InventoryTable extends AbstractPopUpElement {
         this.equipButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(inventorySelected != null) {
-                    mainCharacter.setEquippedItem(inventory.drop(inventorySelected));
-                    inventorySelected = null;
-                    setButtonsActive(false);
-                    updatePanels();
-                    gameMenuBar.removeQuickAccessPanel();
-                    gameMenuBar.setQuickAccessPanel();
+                if (inventorySelected != null) {
+                    Item item = inventory.drop(inventorySelected);
+                    if (mainCharacter.setEquippedItem(item)) {
+                        inventorySelected = null;
+                        setButtonsActive(false);
+                        updatePanels();
+                        gameMenuBar.removeQuickAccessPanel();
+                        gameMenuBar.setQuickAccessPanel();
+                    } else {
+                        inventory.add(item);
+                    }
                 }
             }
         });
