@@ -166,4 +166,14 @@ public class QuestManager extends AbstractManager{
     public List<String> getBuildingsTotal() {
         return buildingsTotal;
     }
+
+    /*
+    Stuff to be done:
+    - track player inventory
+    - track buildings placed in the world
+    - confirm milestones have been met
+    - reset inventory/health upon starting new level?
+    - how to set quest level upon levelling up?
+    - figure out how portal activation fits in with all this
+     */
 }
