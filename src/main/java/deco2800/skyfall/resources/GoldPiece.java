@@ -1,7 +1,10 @@
 package deco2800.skyfall.resources;
 
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.worlds.Tile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +27,9 @@ public class GoldPiece extends StaticEntity {
     // have the value of the first gold piece be equal to 5
     private static int nextValue = 5;
 
+    // Logger to show messages
+    private final Logger logger = LoggerFactory.getLogger(MainCharacter.class);
+
 
     /**
      * Creates a gold piece with a particular value.
@@ -37,6 +43,7 @@ public class GoldPiece extends StaticEntity {
         if (value == 5 || value == 10 || value == 50 || value == 100){
             this.value = value;
         } else {
+            logger.info("You don't have enough Metal");
             System.out.println("Invalid piece of gold");
         }
     }
@@ -89,7 +96,6 @@ public class GoldPiece extends StaticEntity {
      */
     @Override
     public GoldPiece newInstance(Tile tile) {
-
         return new GoldPiece(tile, this.isObstructed());
     }
     /**
