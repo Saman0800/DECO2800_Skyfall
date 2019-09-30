@@ -6,7 +6,7 @@ import deco2800.skyfall.entities.HasHealth;
 
 import java.util.Random;
 
-public abstract class StaticRock extends StaticEntity implements HasHealth {
+public abstract class AbstractRock extends StaticEntity implements HasHealth {
 
     protected int health = 100;
     protected static Random randomGen = new Random();
@@ -15,15 +15,15 @@ public abstract class StaticRock extends StaticEntity implements HasHealth {
 
     protected static final String ENTITY_ID_STRING = "rock";
 
-    public StaticRock(SaveableEntityMemento memento) {
+    public AbstractRock(SaveableEntityMemento memento) {
         super(memento);
     }
 
-    public StaticRock() {
+    public AbstractRock() {
         this.setObjectName(ENTITY_ID_STRING);
     }
 
-    public StaticRock(Tile tile, boolean obstructed, String image) {
+    public AbstractRock(Tile tile, boolean obstructed, String image) {
         super(tile, 2, image, obstructed);
     }
 

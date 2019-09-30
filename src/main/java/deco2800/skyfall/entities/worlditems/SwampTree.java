@@ -2,49 +2,47 @@ package deco2800.skyfall.entities.worlditems;
 
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.entities.AbstractEntity;
 
-import java.util.List;
 import java.util.Map;
 
-public class Tree extends StaticTree {
+public class SwampTree extends AbstractTree {
 
-    protected static final String ENTITY_ID_STRING = "tree";
+    protected static final String ENTITY_ID_STRING = "swamp_tree";
 
-    public Tree(float col, float row, int renderOrder, Map<HexVector, String> texture) {
+    public SwampTree(float col, float row, int renderOrder, Map<HexVector, String> texture) {
         super(col, row, renderOrder, texture);
         this.woodAmount = 15;
     }
 
-    public Tree(Tile tile, boolean obstructed) {
-        super(tile, obstructed, "tree" + nextTreeTexture);
+    public SwampTree(Tile tile, boolean obstructed) {
+        super(tile, obstructed, "sTree" + nextTreeTexture);
         this.woodAmount = 15;
 
-        Tree.nextTreeTexture = randomGen.nextInt(3) + 1;
-        this.entityType = "Tree";
+        SwampTree.nextTreeTexture = randomGen.nextInt(3) + 1;
+        this.entityType = "SwampTree";
     }
 
-    public Tree(SaveableEntityMemento memento) {
+    public SwampTree(SaveableEntityMemento memento) {
         super(memento);
         this.woodAmount = 15;
     }
 
     /**
-     * The newInstance method implemented for the Tree class to allow for item
+     * The newInstance method implemented for the SwampTree class to allow for item
      * dispersal on game start up. This function is implemented with the
      * 
      * 
      * @return Duplicate rock tile with modified position.
      */
     @Override
-    public Tree newInstance(Tile tile) {
-        return new Tree(tile, this.isObstructed());
+    public SwampTree newInstance(Tile tile) {
+        return new SwampTree(tile, this.isObstructed());
     }
 
     @Override
     public boolean equals(Object other) {
 
-        if (!(other instanceof StaticTree)) {
+        if (!(other instanceof SwampTree)) {
             return false;
         }
 
@@ -58,6 +56,6 @@ public class Tree extends StaticTree {
      */
     @Override
     public int hashCode() {
-        return super.hashCode(31);
+        return super.hashCode(29);
     }
 }

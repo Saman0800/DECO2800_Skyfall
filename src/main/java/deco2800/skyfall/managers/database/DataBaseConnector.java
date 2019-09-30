@@ -657,14 +657,29 @@ public class DataBaseConnector {
                 StaticEntity.SaveableEntityMemento memento = gson.fromJson(entityResult.getString("data"),
                         StaticEntity.SaveableEntityMemento.class);
                 switch (memento.entityType) {
+                case "Bone":
+                    entity = new Bone(memento);
+                    break;
+                case "DesertShrub":
+                    entity = new DesertShrub(memento);
+                    break;
                 case "DesertCacti":
                     entity = new DesertCacti(memento);
                     break;
                 case "ForestMushroom":
                     entity = new ForestMushroom(memento);
                     break;
-                case "LongGrass":
-                    entity = new LongGrass(memento);
+                case "ForestShrub":
+                    entity = new ForestShrub(memento);
+                    break;
+                case "Leaves":
+                    entity = new Leaves(memento);
+                    break;
+                case "TreeStump":
+                    entity = new TreeStump(memento);
+                    break;
+                case "OrganicMound":
+                    entity = new OrganicMound(memento);
                     break;
                 case "MountainRock":
                     entity = new MountainRock(memento);
@@ -672,8 +687,8 @@ public class DataBaseConnector {
                 case "MountainTree":
                     entity = new MountainTree(memento);
                     break;
-                case "Rock":
-                    entity = new Rock(memento);
+                case "ForestRock":
+                    entity = new ForestRock(memento);
                     break;
                 case "SnowClump":
                     entity = new SnowClump(memento);
@@ -681,8 +696,26 @@ public class DataBaseConnector {
                 case "SnowShrub":
                     entity = new SnowShrub(memento);
                     break;
-                case "Tree":
-                    entity = new Tree(memento);
+                case "ForestTree":
+                    entity = new ForestTree(memento);
+                    break;
+                case "SwampShrub":
+                    entity = new SwampShrub(memento);
+                    break;
+                case "SwampRock":
+                    entity = new SwampRock(memento);
+                    break;
+                case "SwampTree":
+                    entity = new SwampTree(memento);
+                    break;
+                case "VolcanicShrub":
+                    entity = new VolcanicShrub(memento);
+                    break;
+                case "VolcanicRock":
+                    entity = new VolcanicRock(memento);
+                    break;
+                case "VolcanicTree":
+                    entity = new VolcanicTree(memento);
                     break;
                 default:
                     throw new RuntimeException(String.format("Could not create %s from memento", memento.entityType));

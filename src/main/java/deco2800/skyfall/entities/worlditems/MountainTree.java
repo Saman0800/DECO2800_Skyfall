@@ -7,7 +7,7 @@ import deco2800.skyfall.worlds.Tile;
 
 import java.util.Map;
 
-public class MountainTree extends StaticTree {
+public class MountainTree extends AbstractTree {
 
     protected static final String ENTITY_ID_STRING = "mountain tree";
 

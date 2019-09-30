@@ -16,30 +16,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import java.util.Map;
+public abstract class AbstractTree extends StaticEntity implements Tickable, Harvestable {
 
-public abstract class StaticTree extends StaticEntity implements Tickable, Harvestable {
-
-    protected static final Logger LOG = LoggerFactory.getLogger(Tree.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(AbstractTree.class);
     protected int woodAmount; // amount of wood that each tree has
 
     protected static Random randomGen = new Random();
     protected static int nextTreeTexture = 1;
     protected static final String ENTITY_ID_STRING = "abstract_tree";
 
-    public StaticTree(SaveableEntityMemento memento) {
+    public AbstractTree(SaveableEntityMemento memento) {
         super(memento);
     }
 
-    public StaticTree() {
+    public AbstractTree() {
         this.setObjectName(ENTITY_ID_STRING);
     }
 
-    public StaticTree(float col, float row, int renderOrder, Map<HexVector, String> texture) {
+    public AbstractTree(float col, float row, int renderOrder, Map<HexVector, String> texture) {
         super(col, row, renderOrder, texture);
     }
 
-    public StaticTree(Tile tile, boolean obstructed, String image) {
+    public AbstractTree(Tile tile, boolean obstructed, String image) {
         super(tile, 5, image, obstructed);
     }
 
@@ -75,7 +73,7 @@ public abstract class StaticTree extends StaticEntity implements Tickable, Harve
             return false;
         }
 
-        Tree otherTree = (Tree) other;
+        AbstractTree otherTree = (AbstractTree) other;
         if (this.getCol() != otherTree.getCol() || this.getRow() != otherTree.getRow()) {
             return false;
         }

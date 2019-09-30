@@ -2,10 +2,13 @@ package deco2800.skyfall.entities;
 
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Saveable;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.Tile;
 
 public abstract class SaveableEntity extends AbstractEntity implements Saveable<SaveableEntity.SaveableEntityMemento> {
 
-    // The type of entity this is (e.g. "Tree", "Axe" etc.)
+    // The type of entity this is (e.g. "ForestTree", "Axe" etc.)
     protected String entityType;
     // Boolean used to determine if the entity is obstructable in game
     protected boolean obstructed;

@@ -20,7 +20,7 @@ public class HatchetTest {
     private Hatchet hatchet;
     private MainCharacter owner;
     private HexVector position;
-    private Tree treeToFarm;
+    private ForestTree treeToFarm;
     private Tile testTile;
 
     @Before
@@ -30,7 +30,7 @@ public class HatchetTest {
         owner = MainCharacter.getInstance(1f, 1f, 0.05f, "player", 10);
         hatchet = new Hatchet(owner, position);
         testTile = new Tile(null, 1f, 1f);
-        treeToFarm = new Tree(testTile, true);
+        treeToFarm = new ForestTree(testTile, true);
     }
 
     @After

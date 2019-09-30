@@ -3,7 +3,7 @@ package deco2800.skyfall.entities.worlditems;
 import deco2800.skyfall.worlds.Tile;
 import java.util.Random;
 
-public class MountainRock extends StaticRock {
+public class MountainRock extends AbstractRock {
 
     private static final String ENTITY_ID_STRING = "mountain_rock";
 

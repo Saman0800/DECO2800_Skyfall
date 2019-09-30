@@ -205,17 +205,18 @@ public class WorldBuilder implements WorldBuilderInterface {
 
                 // Create a new perlin noise map
                 SpawnControl treeControl = x -> (x * x * x) / 3d + 0.2;
-                EntitySpawnRule treeRule = new EntitySpawnRule(tile -> new Tree(tile, true), random.nextInt(), true,
-                        treeControl);
+                EntitySpawnRule treeRule = new EntitySpawnRule(tile -> new ForestTree(tile, true), random.nextInt(),
+                        true, treeControl);
                 biomeSpawnRules.add(treeRule);
 
-                // Spawn some LongGrass uniformly
-                EntitySpawnRule longGrassRule = new EntitySpawnRule(tile -> new LongGrass(tile, true), random.nextInt(),
+                // Spawn some ForestShrub uniformly
+                EntitySpawnRule forestShrub = new EntitySpawnRule(tile -> new ForestShrub(tile, true), random.nextInt(),
                         0.07);
-                biomeSpawnRules.add(longGrassRule);
+                biomeSpawnRules.add(forestShrub);
 
                 // Spawn some Rocks uniformly
-                EntitySpawnRule rockRule = new EntitySpawnRule(tile -> new Rock(tile, true), random.nextInt(), 0.04);
+                EntitySpawnRule rockRule = new EntitySpawnRule(tile -> new ForestRock(tile, true), random.nextInt(),
+                        0.04);
                 biomeSpawnRules.add(rockRule);
 
                 spawnChests(world, random, biomeSpawnRules);

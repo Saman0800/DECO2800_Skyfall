@@ -87,7 +87,7 @@ public class EntitySpawnTableTest {
     public void testPlaceEntity() {
         Tile tile1 = new Tile(null, 0.0f, 0.0f);
         Tile tile2 = new Tile(null, 0.0f, 1.0f);
-        Rock rock = new Rock(tile2, true);
+        ForestRock rock = new ForestRock(tile2, true);
 
         // check tile has no rock
         assertFalse(tile1.hasParent());
@@ -126,7 +126,8 @@ public class EntitySpawnTableTest {
         // check basic spawnEntities
         final double chance = 0.95;
         for (Tile tile : testWorld.getTileMap()) {
-            // EntitySpawnTable.spawnEntity(tileToPlace -> new Rock(tileToPlace, true),
+            // EntitySpawnTable.spawnEntity(tileToPlace -> new ForestRock(tileToPlace,
+            // true),
             // chance, testWorld, tile);
         }
 
@@ -156,7 +157,7 @@ public class EntitySpawnTableTest {
     // EntitySpawnRule newRule = new EntitySpawnRule(2, 4, null, true);
     // newRule.setChance(1.0);
     //
-    // Rock rock = new Rock();
+    // ForestRock rock = new ForestRock();
     // EntitySpawnTable.spawnEntity(rock, newRule, newWorld);
     //
     // int count = 0;

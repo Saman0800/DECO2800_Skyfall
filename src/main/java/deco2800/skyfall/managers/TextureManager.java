@@ -83,9 +83,8 @@ public class TextureManager extends AbstractManager {
 
             }
 
-
             textureMap.put("gold", new Texture("resources/gold.png"));
-            //EnemyEntity
+            // EnemyEntity
             textureMap.put("flower", new Texture("resources/flower.png"));
             textureMap.put("enemyStone", new Texture("resources/enemyStone.png"));
             textureMap.put("spider", new Texture("resources/spider.png"));
@@ -169,6 +168,9 @@ public class TextureManager extends AbstractManager {
             textureMap.put("DCactus3", new Texture("resources/world_details/DCactus3.png"));
             textureMap.put("DCactus4", new Texture("resources/world_details/DCactus4.png"));
 
+            textureMap.put("DRibs", new Texture("resources/world_details/DRibs.png"));
+            textureMap.put("DSkull", new Texture("resources/world_details/DSkull.png"));
+
             textureMap.put("MSnow1", new Texture("resources/world_details/MSnow1.png"));
             textureMap.put("MSnow2", new Texture("resources/world_details/MSnow2.png"));
             textureMap.put("MSnow3", new Texture("resources/world_details/MSnow3.png"));
@@ -177,7 +179,37 @@ public class TextureManager extends AbstractManager {
             textureMap.put("MBush2", new Texture("resources/world_details/MBush2.png"));
             textureMap.put("MBush3", new Texture("resources/world_details/MBush3.png"));
 
+            textureMap.put("sBush1", new Texture("resources/world_details/sBush1.png"));
+            textureMap.put("sBush2", new Texture("resources/world_details/sBush2.png"));
+            textureMap.put("sBush3", new Texture("resources/world_details/sBush3.png"));
+
             textureMap.put("tikitorch", new Texture("resources/world_details/flame.gif"));
+
+            textureMap.put("leaves1", new Texture("resources/world_details/leaves1.png"));
+
+            textureMap.put("mound1", new Texture("resources/world_details/mound1.png"));
+
+            textureMap.put("trunk1", new Texture("resources/world_details/trunk1.png"));
+
+            textureMap.put("sRock1", new Texture("resources/world_details/sRock1.png"));
+            textureMap.put("sRock2", new Texture("resources/world_details/sRock2.png"));
+            textureMap.put("sRock3", new Texture("resources/world_details/sRock3.png"));
+
+            textureMap.put("sTree1", new Texture("resources/world_details/sTree1.png"));
+            textureMap.put("sTree2", new Texture("resources/world_details/sTree2.png"));
+            textureMap.put("sTree3", new Texture("resources/world_details/sTree3.png"));
+
+            textureMap.put("vBush1", new Texture("resources/world_details/vBush1.png"));
+            textureMap.put("vBush2", new Texture("resources/world_details/vBush2.png"));
+            textureMap.put("vBush3", new Texture("resources/world_details/vBush3.png"));
+
+            textureMap.put("vRock1", new Texture("resources/world_details/vRock1.png"));
+            textureMap.put("vRock2", new Texture("resources/world_details/vRock2.png"));
+            textureMap.put("vRock3", new Texture("resources/world_details/vRock3.png"));
+
+            textureMap.put("vTree1", new Texture("resources/world_details/vTree1.png"));
+            textureMap.put("vTree2", new Texture("resources/world_details/vTree2.png"));
+            textureMap.put("vTree3", new Texture("resources/world_details/vTree3.png"));
 
             textureMap.put("sword_tex", new Texture("resources/weapons/sword.png"));
             textureMap.put("sword", new Texture("resources/weapons/sword.png"));
@@ -191,7 +223,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("game_over_temp_bg", new Texture("resources/game_over_background.png"));
             textureMap.put("game over retry temp", new Texture("resources/game_over_retry.png"));
             textureMap.put("game over home temp", new Texture("resources/game_over_home_button.png"));
-
 
             textureMap.put("pause", new Texture("resources/pause_icon.png"));
             textureMap.put("settings", new Texture("resources/settings.png"));
@@ -263,7 +294,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("checked", new Texture("resources/checked.png"));
             textureMap.put("unchecked", new Texture("resources/unchecked.png"));
 
-            //Inventory Item Icons
+            // Inventory Item Icons
             textureMap.put("Stone_inv", new Texture("resources/items_icons/stone.png"));
             textureMap.put("Wood_inv", new Texture("resources/items_icons/wood.png"));
             textureMap.put("Vine_inv", new Texture("resources/items_icons/vine.png"));
@@ -279,7 +310,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("Pick Axe", new Texture("resources/items_icons/pickaxe.png"));
 
             textureMap.put("Sand_inv", new Texture("resources/temp_sand.png"));
-
 
             // Inventory items
             textureMap.put("Apple", new Texture("resources/inventory/apple-1.png"));
@@ -311,7 +341,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("spells_shield_Anim", new Texture("resources/spells/shield_spritesheet.png"));
             textureMap.put("spells_shield_Still", new Texture("resources/spells/shield_3.png"));
             textureMap.put("spells_tornado_Anim", new Texture("resources/spells/tornado_spritesheet.png"));
-
 
             System.out.println("ALL TEXTURES LOADED SUCCESSFULLY");
 
@@ -370,9 +399,10 @@ public class TextureManager extends AbstractManager {
 
         } else {
             // log.info("Texture map does not contain P{}, returning default texture.", id);
-            //TODO fix the issue where tiles are not getting added to lakes correctly,
-            //Temporary fix is just to assign tiles without a texture the lake texture so that the
-            //issue isn't as noticable
+            // TODO fix the issue where tiles are not getting added to lakes correctly,
+            // Temporary fix is just to assign tiles without a texture the lake texture so
+            // that the
+            // issue isn't as noticable
             return textureMap.get("lake1.1");
         }
 
