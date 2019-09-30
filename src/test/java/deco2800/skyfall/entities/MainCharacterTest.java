@@ -505,9 +505,9 @@ public class MainCharacterTest {
 //
 //    }
 
-/*    *//**
+    /**
      * Tests to ensure that the closest gold piece is added to the gold pouch
-     *//*
+     */
     @Test
     public void addClosestGoldPieceTest(){
         mockGM.setWorld(w);
@@ -521,7 +521,7 @@ public class MainCharacterTest {
         Assert.assertTrue(testCharacter.getGoldPouch().containsKey(5));
         Assert.assertEquals(105, (int) testCharacter.getGoldPouchTotalValue());
 
-    }*/
+    }
 
     @Test
     public void createItemTest() {

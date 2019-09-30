@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.*;
 
 import deco2800.skyfall.entities.worlditems.Rock;
+import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +14,8 @@ import java.util.Random;
 
 public class WorldParametersTest {
     WorldParameters worldParameters;
+
+
     @Before
     public void setup(){
          worldParameters = new WorldParameters();
@@ -77,5 +80,6 @@ public class WorldParametersTest {
     public void testEntities(){
         worldParameters.addEntity(new Rock());
         assertTrue(worldParameters.getEntities().get(0) instanceof Rock);
+        //assertTrue(worldParameters.getEntities().get(0) instanceof GoldPiece);
     }
 }

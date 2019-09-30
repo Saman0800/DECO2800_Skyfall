@@ -694,10 +694,14 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
 
             } else if (entity instanceof GoldPiece) {
                 MainCharacter mc = gmm.getMainCharacter();
+                mc.addClosestGoldPiece();
+                removeEntity(entity);
+/*
                 if (mc.getPosition().distance(entity.getPosition()) <= 1) {
                     mc.addGold((GoldPiece) entity, 1);
                     removeEntity(entity);
                 }
+*/
 
             }else if (entity instanceof BlueprintShop) {
                 GameMenuManager menuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
