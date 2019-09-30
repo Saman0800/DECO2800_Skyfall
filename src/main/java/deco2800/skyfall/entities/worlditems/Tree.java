@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class Tree extends StaticTree {
 
+    protected static final String ENTITY_ID_STRING = "tree";
+
     public Tree(float col, float row, int renderOrder, Map<HexVector, String> texture) {
         super(col, row, renderOrder, texture);
         this.woodAmount = 15;

@@ -67,7 +67,6 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
     public StaticEntity(Tile tile, int renderOrder, String texture, boolean obstructed) {
         super(tile.getCol(), tile.getRow(), renderOrder);
         this.setObjectName(ENTITY_ID_STRING);
-        this.entityType = ENTITY_ID_STRING;
         this.setTexture(texture);
         this.obstructed = obstructed;
         children = new HashMap<>();
@@ -84,7 +83,6 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
     public StaticEntity(float col, float row, int renderOrder, Map<HexVector, String> texture) {
         super(col, row, renderOrder);
         this.setObjectName(ENTITY_ID_STRING);
-        this.entityType = ENTITY_ID_STRING;
 
         Tile center = GameManager.get().getWorld().getTile(this.getPosition());
         this.obstructed = true;
@@ -120,7 +118,6 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
     public StaticEntity(Tile tile, int renderOrder, String texture, boolean obstructed, String fixtureDef) {
         super(tile.getCol(), tile.getRow(), renderOrder, fixtureDef);
         this.setObjectName(ENTITY_ID_STRING);
-        this.entityType = ENTITY_ID_STRING;
         this.setTexture(texture);
 
         this.renderOrder = renderOrder;
@@ -140,7 +137,6 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
     public StaticEntity(float col, float row, int renderOrder, Map<HexVector, String> texture, String fixtureDef) {
         super(col, row, renderOrder, fixtureDef);
         this.setObjectName(ENTITY_ID_STRING);
-        this.entityType = ENTITY_ID_STRING;
 
         Tile center = GameManager.get().getWorld().getTile(this.getPosition());
         this.renderOrder = renderOrder;
@@ -275,14 +271,5 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
      */
     public void addToChunk(Chunk chunk) {
         chunk.addEntity(this);
-    }
-
-    /**
-     * Gets the entity type of this entity
-     *
-     * @return the entity type of this entity
-     */
-    public String getEntityType() {
-        return this.entityType;
     }
 }

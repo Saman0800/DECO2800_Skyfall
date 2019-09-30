@@ -4,14 +4,8 @@ import deco2800.skyfall.worlds.Tile;
 import java.util.Random;
 
 public class Rock extends StaticRock {
-    private int health = 100;
 
-    // TODO Remove this and replace the Random instance with the seeded Random as a
-    // parameter.
-
-    private static Random randomGen = new Random();
-    private static int nextRock = 1;
-    private int metalAmount;
+    protected static final String ENTITY_ID_STRING = "rock";
 
     public Rock(Tile tile, boolean obstructed) {
         super(tile, obstructed, "rock" + nextRock);
@@ -32,21 +26,6 @@ public class Rock extends StaticRock {
     public Rock(SaveableEntityMemento memento) {
         super(memento);
         this.metalAmount = 15;
-    }
-
-    @Override
-    public void onTick(long i) {
-        // Do nothing on tick
-    }
-
-    @Override
-    public int getHealth() {
-        return health;
-    }
-
-    @Override
-    public void setHealth(int health) {
-        this.health = health;
     }
 
     /**

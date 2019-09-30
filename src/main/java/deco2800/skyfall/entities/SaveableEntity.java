@@ -27,6 +27,15 @@ public abstract class SaveableEntity extends AbstractEntity implements Saveable<
         return new SaveableEntityMemento(this);
     }
 
+    /**
+     * Gets the entity type of this entity
+     *
+     * @return the entity type of this entity
+     */
+    public String getEntityType() {
+        return this.entityType;
+    }
+
     @Override
     public void load(SaveableEntityMemento memento) {
         this.setEntityID(memento.entityID);

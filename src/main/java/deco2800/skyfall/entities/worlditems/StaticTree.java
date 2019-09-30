@@ -25,7 +25,7 @@ public abstract class StaticTree extends StaticEntity implements Tickable, Harve
 
     protected static Random randomGen = new Random();
     protected static int nextTreeTexture = 1;
-    protected static final String ENTITY_ID_STRING = "tree";
+    protected static final String ENTITY_ID_STRING = "abstract_tree";
 
     public StaticTree(SaveableEntityMemento memento) {
         super(memento);

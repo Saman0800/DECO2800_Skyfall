@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class MountainTree extends StaticTree {
 
+    protected static final String ENTITY_ID_STRING = "mountain tree";
+
     public MountainTree(float col, float row, int renderOrder, Map<HexVector, String> texture) {
         super(col, row, renderOrder, texture);
         this.woodAmount = 15;
