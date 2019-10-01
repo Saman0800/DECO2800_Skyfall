@@ -2,13 +2,13 @@ package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import deco2800.skyfall.buildings.BuildingFactory;
-import deco2800.skyfall.entities.enemies.Treeman;
-import deco2800.skyfall.entities.spells.SpellCaster;
-import deco2800.skyfall.entities.spells.SpellFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
+
+import deco2800.skyfall.buildings.BuildingFactory;
+import deco2800.skyfall.entities.spells.SpellCaster;
+import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.Animatable;
@@ -17,8 +17,7 @@ import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellType;
-import deco2800.skyfall.entities.weapons.EmptyItem;
-import deco2800.skyfall.entities.weapons.Weapon;
+import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
 import deco2800.skyfall.gui.ManaBar;
@@ -33,6 +32,7 @@ import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,28 +44,33 @@ import java.util.Map;
 /**
  * Main character in the game
  */
-public class MainCharacter extends Peon
-        implements KeyDownObserver, KeyUpObserver, TouchDownObserver, Tickable, Animatable {
+public class MainCharacter extends Peon implements KeyDownObserver,
+        KeyUpObserver, TouchDownObserver, Tickable, Animatable {
 
     private static MainCharacter mainCharacterInstance = null;
 
-    public static MainCharacter getInstance(float col, float row, float speed, String name, int health, String[] textures) {
+    public static MainCharacter getInstance(float col, float row, float speed
+            , String name, int health, String[] textures) {
         if (mainCharacterInstance == null) {
-            mainCharacterInstance = new MainCharacter(col, row, speed, name, health, textures);
+            mainCharacterInstance = new MainCharacter(col, row, speed, name,
+                    health, textures);
         }
         return mainCharacterInstance;
     }
 
-    public static MainCharacter getInstance(float col, float row, float speed, String name, int health) {
+    public static MainCharacter getInstance(float col, float row, float speed
+            , String name, int health) {
         if (mainCharacterInstance == null) {
-            mainCharacterInstance = new MainCharacter(col, row, speed, name, health);
+            mainCharacterInstance = new MainCharacter(col, row, speed, name,
+                    health);
         }
         return mainCharacterInstance;
     }
 
     public static MainCharacter getInstance() {
         if (mainCharacterInstance == null) {
-            mainCharacterInstance = new MainCharacter(0,0,0.05f, "Main Piece", 10);
+            mainCharacterInstance = new MainCharacter(0,0,0.05f, "Main " +
+                    "Piece", 10);
         }
         return mainCharacterInstance;
     }
@@ -129,8 +134,11 @@ public class MainCharacter extends Peon
     public static final String HURT = "player_hurt";
     public static final String DIED = "player_died";
 
-
     public static final String BOWATTACK = "bow_and_arrow_attack";
+    public static final String AXEATTACK = "axe_attack";
+    public static final String SWORDATTACK = "sword_attack";
+    public static final String SPEARATTACK = "first_attack";
+    public static final String ATTACK = "player_hurt";
 
     //The pick Axe that is going to be created
     private Hatchet hatchetToCreate;
@@ -441,7 +449,13 @@ public class MainCharacter extends Peon
      * Sets the equipped item to be null when it runs out of durability
      */
     public void unEquip() {
+        // Return item to a tile in the world
+        if (equippedItem instanceof Weapon) {
+            GameManager.get().getWorld().addEntity((StaticEntity)equippedItem);
+        }
+
         this.equippedItem = new EmptyItem();
+
     }
 
     /**
@@ -487,12 +501,6 @@ public class MainCharacter extends Peon
         }
 
         equippedItem.use(this.getPosition());
-
-
-        //this.attack();
-        //else: collect nearby resources
-        //Will be adjusted in following sprint when it is possible to spawn
-        //non-static entities
     }
 
     /**
@@ -532,21 +540,40 @@ public class MainCharacter extends Peon
         HexVector unitDirection = mousePosition.subtract(this.getPosition()).normalized();
 
         setCurrentState(AnimationRole.ATTACK);
-        SoundManager.playSound(BOWATTACK);
 
         // Make projectile move toward the angle
-        // Spawn projectile in front of character for now.
+        // Spawn projectile in front of character
         Projectile projectile = new Projectile(mousePosition,
-//                this.itemSlotSelected == 1 ? "arrow_north" : "sword_tex",
-                ((Weapon)equippedItem).getTexture(),
-                "test hitbox",
+                ((Weapon)equippedItem).getTexture("attack"),
+                "hitbox",
                 position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
                 position.getRow() + 0.5f + 1.5f * unitDirection.getRow(),
-                2,
-                0.1f,
+                ((Weapon)equippedItem).getDamage(),
+                ((Weapon)equippedItem).getAttackRate(),
                 this.itemSlotSelected == 1 ? 1 : 0);
+
         // Add the projectile entity to the game world.
         GameManager.get().getWorld().addEntity(projectile);
+
+        // Play weapon attack sound
+        switch(((Weapon)equippedItem).getName()) {
+            case "sword":
+                SoundManager.playSound(SWORDATTACK);
+                break;
+            case "spear":
+                SoundManager.playSound(SPEARATTACK);
+                break;
+            case "bow":
+                SoundManager.playSound(BOWATTACK);
+                break;
+            case "axe":
+                SoundManager.playSound(AXEATTACK);
+                break;
+            default:
+                SoundManager.playSound(ATTACK);
+                break;
+        }
+
     }
 
     /**
@@ -1088,8 +1115,6 @@ public class MainCharacter extends Peon
                 maxSpeed *= 2.f;
                 break;
             case Input.Keys.SPACE:
-                logger.info("Using " + equippedItem.toString());
-
                 useEquipped();
 
                 if (this.equippedItem instanceof Weapon) {

@@ -69,8 +69,15 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon {
     /**
      * @return texture of weapon
      */
-    public String getTexture() {
-        return this.texture;
+    public String getTexture(String mode) {
+        switch(mode) {
+            case "attack":
+                return this.getName() + "_attack";
+            case "display":
+                return this.getName() + "_display_inv";
+            default:
+                return this.texture;
+        }
     }
 
     /**
@@ -191,7 +198,7 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon {
     }
 
     @Override
-    public void use(HexVector position){
+    public void use(HexVector position) {
         // Use the specific function associated with the item
         logger.warn("Durability: " + this.getDurability());
         this.decreaseDurability();

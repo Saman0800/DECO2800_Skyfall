@@ -256,19 +256,19 @@ public class WorldBuilder implements WorldBuilderInterface {
                     // Spawn some axes
                     EntitySpawnRule axeRule =
                             new EntitySpawnRule(tile -> new Axe(tile, true),
-                                    0.1, 1, 10, biome);
+                                    0.3, 1, 10, biome);
                     biomeSpawnRules.add(axeRule);
 
                     // Spawn some bows
                     EntitySpawnRule bowRule =
                             new EntitySpawnRule(tile -> new Bow(tile, true),
-                                    0.2, 10, 30, biome);
+                                    0.4, 10, 20, biome);
                     biomeSpawnRules.add(bowRule);
 
                     // Spawn some spears
                     EntitySpawnRule spearRule =
                             new EntitySpawnRule(tile -> new Spear(tile, true),
-                                    0.3, 10, 50, biome);
+                                    0.5, 5, 15, biome);
                     biomeSpawnRules.add(spearRule);
 
                     // Spawn some swords
