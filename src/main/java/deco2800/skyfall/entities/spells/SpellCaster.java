@@ -64,6 +64,7 @@ public class SpellCaster {
                 }
             }
         }
+
         //If in no spell sequence. Reset.
         if (spellSequenceIn == null) {
             logger.trace("Note in a spell sequence.");

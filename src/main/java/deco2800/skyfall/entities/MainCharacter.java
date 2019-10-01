@@ -258,7 +258,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private int manaCD = 0;
 
     //Tick interval to restore mana.
-    private int MANACOOLDOWN = 10;
+    private int totalManaCooldown = 10;
 
     /**
      * The GUI mana bar that can be updated when mana is restored/lost.
@@ -342,8 +342,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.equippedItem = new EmptyItem();
         isMoving = false;
 
-        HexVector position = this.getPosition();
-
         // Sets the filters so that MainCharacter doesn't collide with projectile.
         for (Fixture fix : getBody().getFixtureList()) {
             Filter filter = fix.getFilterData();
@@ -411,7 +409,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private void setupGameOverScreen() {
         this.gameOverTable = (GameOverTable) GameManager.get().getManagerFromInstance(GameMenuManager.class).
                 getPopUp("gameOverTable");
-        System.out.println(gameOverTable);
     }
 
 
@@ -709,7 +706,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         getBody().setLinearVelocity(getBody().getLinearVelocity()
                         .lerp(new Vector2(0.f, 0.f), 0.5f));
 
-        System.out.println("CURRENT HEALTH:" + String.valueOf(getHealth()));
         if (this.getHealth() <= 0) {
             kill();
         } else {
@@ -1019,7 +1015,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.centreCameraAuto();
 
         this.manaCD++;
-        if (this.manaCD > MANACOOLDOWN) {
+        if (this.manaCD > totalManaCooldown) {
             this.restoreMana();
         }
 

@@ -83,7 +83,4 @@ public class Tornado extends Spell {
                         AnimationRole.ATTACK, Direction.DEFAULT, true, true));
     }
 
-    @Override
-    public void setDirectionTextures() {
-    }
 }
