@@ -3,16 +3,13 @@ package deco2800.skyfall.resources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 
-
-
-
-public abstract class HealthResources implements deco2800.skyfall.resources.Item {
+public abstract class HealthResources implements Item {
 
     // can the item be stored in the inventory
     private Boolean carryable;
     // the name of the item e.g. food, poison
     private String name;
-    //impact the player's health or not
+    // impact the player's health or not
     private Boolean hasHealingPower;
 
     // the name of the subtype the item belongs to
@@ -20,8 +17,11 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
     // the co-ordinates of the tile the item has been placed on
     private HexVector position;
 
-    //Items could change or not e.g. coins, items
+    // Items could change or not e.g. coins, items
     private Boolean exchangeable;
+
+    // Can be item be equipped
+    public boolean equippable;
 
     // the value of the piece of food
     public int foodValue;
@@ -39,6 +39,7 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
         this.subtype = "Health Resource";
         this.exchangeable = true;
         this.hasHealingPower = true;
+        this.equippable = false;
         //Do we need a new type like FoodResources? and hasFoodEffect may false
         // in here as medicine may not affect the food fullness
 
@@ -59,7 +60,7 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
         //Do we need a new type like FoodResources?
         // and hasFoodEffect may false in here as medicine may not affect the food fullness
         this.exchangeable = true;
-
+        this.equippable = false;
         this.position = position.getCoordinates();
     }
 
@@ -171,4 +172,11 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
         return "This item increases or decreases a player's health.";
     }
 
+    /**
+     * Returns whether or not the item can be equipped from the inventory
+     * @return True if the item can be equipped, false otherwise
+     */
+    public Boolean isEquippable() {
+        return this.equippable;
+    }
 }
