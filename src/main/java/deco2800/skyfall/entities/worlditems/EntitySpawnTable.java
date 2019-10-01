@@ -118,7 +118,7 @@ public final class EntitySpawnTable {
         }
 
         // First check if the top and bottom neighbors are obstructed
-        if ((!northNeighbour.isObstructed() && !southNeighbour.isObstructed()) || dirNeighbour.isObstructed()) {
+        if (dirNeighbour.isObstructed() || (!northNeighbour.isObstructed() && !southNeighbour.isObstructed())) {
             placeDown(newInstance, nextTile, world);
         } else if (!nextTile.getBiome().getBiomeName().equals(dirNeighbour.getBiome().getBiomeName())) {
             // We are at the edge of a biome

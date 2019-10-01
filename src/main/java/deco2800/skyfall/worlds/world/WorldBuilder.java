@@ -379,8 +379,8 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(mRockRule);
 
         // Spawn some Snow uniformly
-        EntitySpawnRule mSnowRule = new EntitySpawnRule(tile -> new VolcanicShrub(tile, false), random.nextInt(), 0.02);
-        biomeSpawnRules.add(mSnowRule);
+        EntitySpawnRule vShrubRule = new EntitySpawnRule(tile -> new VolcanicShrub(tile, true), random.nextInt(), 0.02);
+        biomeSpawnRules.add(vShrubRule);
 
         EntitySpawnRule leavesRule = new EntitySpawnRule(tile -> new Leaves(tile, false), random.nextInt(), 0.02);
         biomeSpawnRules.add(leavesRule);
@@ -393,27 +393,28 @@ public class WorldBuilder implements WorldBuilderInterface {
         long worldSeed = world.getSeed();
 
         // Create a new perlin noise map
-        SpawnControl sTreeControl = x -> (x * x * x) / 3d + 0.01;
+        SpawnControl sTreeControl = x -> (x * x * x * x) / 3d + 0.01;
         EntitySpawnRule treeRule = new EntitySpawnRule(tile -> new SwampTree(tile, true), random.nextInt(), true,
                 sTreeControl);
         biomeSpawnRules.add(treeRule);
 
         // Spawn some ForestShrub uniformly
         EntitySpawnRule swampShrubRule = new EntitySpawnRule(tile -> new SwampShrub(tile, true), random.nextInt(),
-                0.07);
+                0.04);
         biomeSpawnRules.add(swampShrubRule);
 
         // Spawn some Rocks uniformly
         EntitySpawnRule rockRule = new EntitySpawnRule(tile -> new SwampRock(tile, true), random.nextInt(), 0.015);
         biomeSpawnRules.add(rockRule);
 
-        EntitySpawnRule moundRule = new EntitySpawnRule(tile -> new OrganicMound(tile, true), random.nextInt(), 0.015);
+        EntitySpawnRule moundRule = new EntitySpawnRule(tile -> new OrganicMound(tile, true), random.nextInt(), 0.01);
+        moundRule.setLimitAdjacent(true);
         biomeSpawnRules.add(moundRule);
 
         // This generator will cause the mushrooms to clump together more
         NoiseGenerator mushroomGen = new NoiseGenerator(new Random(worldSeed).nextLong(), 10, 20, 0.9);
         SpawnControl mushroomControl = x -> (x * x * x * x) / 4d;
-        EntitySpawnRule mushroomRule = new EntitySpawnRule(tile -> new ForestMushroom(tile, false), random.nextInt(),
+        EntitySpawnRule mushroomRule = new EntitySpawnRule(tile -> new ForestMushroom(tile, true), random.nextInt(),
                 true, mushroomControl);
         mushroomRule.setNoiseGenerator(mushroomGen);
         biomeSpawnRules.add(mushroomRule);
