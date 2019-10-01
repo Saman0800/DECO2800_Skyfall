@@ -80,13 +80,13 @@ public class WeaponInventoryIntegrationTest {
      */
     @Test
     public void equipTest() {
-        Assert.assertEquals("no_weapon", mc.getEquipped());
+        Assert.assertEquals(new EmptyItem().toString(), mc.getEquippedItem().toString());
 
-        mc.setEquipped("axe");
-        Assert.assertEquals("axe", mc.getEquipped());
+        mc.setEquippedItem(axe);
+        Assert.assertEquals(axe, mc.getEquippedItem());
 
-        mc.setEquipped("sword");
-        Assert.assertEquals("sword", mc.getEquipped());
+        mc.setEquippedItem(sword);
+        Assert.assertEquals(sword, mc.getEquippedItem());
     }
 
     /**
@@ -94,9 +94,9 @@ public class WeaponInventoryIntegrationTest {
      */
     @Test
     public void unequipTest() {
-        mc.setEquipped("axe");
-        mc.unequip();
-        Assert.assertEquals("no_weapon", mc.getEquipped());
+        mc.setEquippedItem(axe);
+        mc.unEquip();
+        Assert.assertEquals(new EmptyItem().toString(), mc.getEquippedItem().toString());
     }
 
     /**

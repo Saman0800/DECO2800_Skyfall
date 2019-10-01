@@ -680,11 +680,6 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
                 }
                 removeEntity(entity);
                 gmm.getInventory().add((Item) entity);
-                if (!mc.getEquipped().equals(((Weapon) entity).getName())) {
-                    gmm.getInventory().quickAccessRemove(mc.getEquipped());
-                    gmm.getInventory().quickAccessAdd(((Weapon) entity).getName());
-                    mc.setEquipped(((Weapon) entity).getName());
-                }
             } else if (entity instanceof Chest) {
                 GameMenuManager menuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
                 ChestTable chest = (ChestTable) menuManager.getPopUp("chestTable");

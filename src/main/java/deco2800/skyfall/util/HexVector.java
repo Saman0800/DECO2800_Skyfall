@@ -176,7 +176,24 @@ public class HexVector {
         return new HexVector(newCol, newRow);
     }
 
+    public HexVector subtract(HexVector subtract) {
+        float newRow = getRow() - subtract.getRow();
+        float newCol = getCol() - subtract.getCol();
+        return new HexVector(newCol, newRow);
+    }
+
+    public float length() {
+        return (float)Math.sqrt(getRow() * getRow() + getCol() * getCol());
+    }
+
+    public HexVector normalized() {
+        float len = length();
+        HexVector temp = new HexVector(getCol() / len, getRow() / len);
+        return temp;
+    }
+
     public double getAngle() {
-        return angle;
+        HexVector temp = this.normalized();
+        return Math.atan2(temp.getRow(), temp.getCol());
     }
 }
