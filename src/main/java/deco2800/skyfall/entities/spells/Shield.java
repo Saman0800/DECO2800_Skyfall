@@ -52,7 +52,6 @@ public class Shield extends Spell implements Animatable {
         this.manaCost = 30;
         this.mc = GameManager.getManagerFromInstance(GameMenuManager.class).getMainCharacter();
         if (this.mc != null) {
-            // this.mc.setInvincible(true);
             this.mc.setRecovering(true);
         }
         setCurrentState(AnimationRole.STILL);
