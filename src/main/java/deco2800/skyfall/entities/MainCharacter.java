@@ -65,8 +65,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         return mainCharacterInstance;
     }
 
-    public static MainCharacter getInstance(float col, float row, float speed
-            , String name, int health) {
+    public static MainCharacter getInstance(float col, float row, float speed, String name, int health) {
         if (mainCharacterInstance == null) {
             mainCharacterInstance = new MainCharacter(col, row, speed, name,
                     health);
