@@ -188,6 +188,9 @@ public class Whitebear extends AbstractPet implements Animatable, Item {
 
     }
 
+    public Boolean isEquippable() {
+        return false;
+    }
 
 }
 

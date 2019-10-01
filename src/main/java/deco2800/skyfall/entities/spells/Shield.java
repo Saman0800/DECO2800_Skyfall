@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities.spells;
 
+import com.badlogic.gdx.Input;
 import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
@@ -16,6 +17,17 @@ public class Shield extends Spell implements Animatable {
     protected MainCharacter mc;
 
     private int shieldTime = 0;
+
+    /**
+     * Key sequence required to cast this spell.
+     */
+    public static int[] keySequence = new int[] {
+            Input.Keys.LEFT,
+            Input.Keys.LEFT,
+            Input.Keys.RIGHT,
+            Input.Keys.RIGHT,
+            Input.Keys.UP
+    };
 
     /**
      * Construct a new spell.
@@ -40,7 +52,6 @@ public class Shield extends Spell implements Animatable {
         this.manaCost = 30;
         this.mc = GameManager.getManagerFromInstance(GameMenuManager.class).getMainCharacter();
         if (this.mc != null) {
-            // this.mc.setInvincible(true);
             this.mc.setRecovering(true);
         }
         setCurrentState(AnimationRole.STILL);
