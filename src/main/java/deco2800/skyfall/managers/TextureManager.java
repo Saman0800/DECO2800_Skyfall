@@ -1,6 +1,8 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.graphics.Texture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,6 +21,7 @@ import java.util.Map;
  * @Author Tim Hadwen
  */
 public class TextureManager extends AbstractManager {
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameManager.class);
 
     /**
      * The width of the tile to use then positioning the tile.
@@ -387,8 +390,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("watchtower_180", new Texture("resources/world_structures/watchtower_180.png"));
             textureMap.put("watchtower_270", new Texture("resources/world_structures/watchtower_270.png"));
 
-            // FIXME:Ontonator Make this use a logger.
-            System.out.println("ALL TEXTURES LOADED SUCCESSFULLY");
+            LOGGER.debug("ALL TEXTURES LOADED SUCCESSFULLY");
 
         } catch (Exception e) {
             throw new RuntimeException(e);
