@@ -36,7 +36,6 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
      * If an enemy is in this hitbox, they will be damaged once.
      */
     public PlayerPeon(float row, float col, float speed) {
-//        super(row, col, speed, name, health);
         this.setObjectName("playerPeon");
         GameManager.getManagerFromInstance(InputManager.class)
                 .addKeyDownListener(this);
@@ -101,10 +100,6 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
 
     public void notifyTouchDown ( int screenX, int screenY, int pointer,
                                   int button) {
-        //TODO: Add game state conditions so player does not always attack.
-        // I.e. when menu is open this should be ignored.
-        //System.out.println(screenX);
-        //System.out.println(screenY);
 
         // cant move when click game menu
         if (screenX > 185 && screenX < 1095 && screenY > 615) {

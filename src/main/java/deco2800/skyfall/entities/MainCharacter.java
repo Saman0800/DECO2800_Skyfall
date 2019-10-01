@@ -2,12 +2,13 @@ package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import deco2800.skyfall.buildings.BuildingFactory;
-import deco2800.skyfall.entities.enemies.Treeman;
-import deco2800.skyfall.entities.spells.SpellFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
+
+import deco2800.skyfall.buildings.BuildingFactory;
+import deco2800.skyfall.entities.spells.SpellCaster;
+import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.Animatable;
@@ -16,6 +17,7 @@ import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
 import deco2800.skyfall.gui.ManaBar;
@@ -23,16 +25,14 @@ import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.observers.KeyUpObserver;
 import deco2800.skyfall.observers.TouchDownObserver;
-import deco2800.skyfall.resources.Blueprint;
-import deco2800.skyfall.resources.GoldPiece;
-import deco2800.skyfall.resources.HealthResources;
-import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.resources.*;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,28 +44,33 @@ import java.util.Map;
 /**
  * Main character in the game
  */
-public class MainCharacter extends Peon
-        implements KeyDownObserver, KeyUpObserver, TouchDownObserver, Tickable, Animatable {
+public class MainCharacter extends Peon implements KeyDownObserver,
+        KeyUpObserver, TouchDownObserver, Tickable, Animatable {
 
     private static MainCharacter mainCharacterInstance = null;
 
-    public static MainCharacter getInstance(float col, float row, float speed, String name, int health, String[] textures) {
+    public static MainCharacter getInstance(float col, float row, float speed
+            , String name, int health, String[] textures) {
         if (mainCharacterInstance == null) {
-            mainCharacterInstance = new MainCharacter(col, row, speed, name, health, textures);
+            mainCharacterInstance = new MainCharacter(col, row, speed, name,
+                    health, textures);
         }
         return mainCharacterInstance;
     }
 
-    public static MainCharacter getInstance(float col, float row, float speed, String name, int health) {
+    public static MainCharacter getInstance(float col, float row, float speed
+            , String name, int health) {
         if (mainCharacterInstance == null) {
-            mainCharacterInstance = new MainCharacter(col, row, speed, name, health);
+            mainCharacterInstance = new MainCharacter(col, row, speed, name,
+                    health);
         }
         return mainCharacterInstance;
     }
 
     public static MainCharacter getInstance() {
         if (mainCharacterInstance == null) {
-            mainCharacterInstance = new MainCharacter(0,0,0.05f, "Main Piece", 10);
+            mainCharacterInstance = new MainCharacter(0,0,0.05f, "Main " +
+                    "Piece", 10);
         }
         return mainCharacterInstance;
     }
@@ -129,8 +134,11 @@ public class MainCharacter extends Peon
     public static final String HURT = "player_hurt";
     public static final String DIED = "player_died";
 
-
     public static final String BOWATTACK = "bow_and_arrow_attack";
+    public static final String AXEATTACK = "axe_attack";
+    public static final String SWORDATTACK = "sword_attack";
+    public static final String SPEARATTACK = "first_attack";
+    public static final String ATTACK = "player_hurt";
 
     //The pick Axe that is going to be created
     private Hatchet hatchetToCreate;
@@ -237,9 +245,20 @@ public class MainCharacter extends Peon
     protected SpellType spellSelected = SpellType.NONE;
 
     /**
+     * Used to cast spells.
+     */
+    protected SpellCaster spellCaster = null;
+
+    /**
      * How much mana the character has available for spellcasting.
      */
     private int mana = 100;
+
+    //Current time in interval to restore mana.
+    private int manaCD = 0;
+
+    //Tick interval to restore mana.
+    private int totalManaCooldown = 10;
 
     /**
      * The GUI mana bar that can be updated when mana is restored/lost.
@@ -320,10 +339,8 @@ public class MainCharacter extends Peon
         blueprintsLearned = new ArrayList<>();
         tempFactory = new BuildingFactory();
 
-
+        this.equippedItem = new EmptyItem();
         isMoving = false;
-
-        HexVector position = this.getPosition();
 
         // Sets the filters so that MainCharacter doesn't collide with projectile.
         for (Fixture fix : getBody().getFixtureList()) {
@@ -340,6 +357,8 @@ public class MainCharacter extends Peon
         this.scale = 0.4f;
         setDirectionTextures();
         configureAnimations();
+
+        spellCaster = new SpellCaster(this);
     }
 
     /**
@@ -390,7 +409,6 @@ public class MainCharacter extends Peon
     private void setupGameOverScreen() {
         this.gameOverTable = (GameOverTable) GameManager.get().getManagerFromInstance(GameMenuManager.class).
                 getPopUp("gameOverTable");
-        System.out.println(gameOverTable);
     }
 
 
@@ -414,8 +432,27 @@ public class MainCharacter extends Peon
      *
      * @param item the item to equip
      */
-    public void setEquippedItem(Item item) {
-        this.equippedItem = item;
+    public Boolean setEquippedItem(Item item) {
+        if (item.isEquippable()) {
+            this.equippedItem = item;
+            return true;
+        } else {
+            logger.warn("You can't equip " + item.getName() + ".");
+            return false;
+        }
+    }
+
+    /**
+     * Sets the equipped item to be null when it runs out of durability
+     */
+    public void unEquip() {
+        // Return item to a tile in the world
+        if (equippedItem instanceof Weapon) {
+            GameManager.get().getWorld().addEntity((StaticEntity)equippedItem);
+        }
+
+        this.equippedItem = new EmptyItem();
+
     }
 
     /**
@@ -453,12 +490,14 @@ public class MainCharacter extends Peon
      * Use the function of equipped item
      */
     public void useEquipped() {
-        if (equippedItem != null) {
-            equippedItem.use(this.getPosition());
+        if ((equippedItem instanceof Weapon && !((Weapon) equippedItem).isUsable())
+            || (equippedItem instanceof ManufacturedResources
+                && !((ManufacturedResources) equippedItem).isUsable())) {
+                this.unEquip();
+                return;
         }
-        //else: collect nearby resources
-        //Will be adjusted in following sprint when it is possible to spawn
-        //non-static entities
+
+        equippedItem.use(this.getPosition());
     }
 
     /**
@@ -475,14 +514,10 @@ public class MainCharacter extends Peon
      */
     public void attack(HexVector mousePosition) {
         //Animation control
+        logger.debug("Attacking");
+
         setAttacking(true);
         setCurrentState(AnimationRole.ATTACK);
-
-        Projectile projectile = new Projectile(mousePosition,
-                this.itemSlotSelected == 1 ? "range_test" : "melee_test",
-                "test hitbox", position.getCol() + 1,
-                position.getRow(), 1,
-                0.1f, this.itemSlotSelected == 1 ? 1 : 0);
 
         //If there is a spell selected, spawn the spell.
         //else, just fire off a normal projectile.
@@ -499,22 +534,43 @@ public class MainCharacter extends Peon
      * @param mousePosition The position of the user's mouse.
      */
     protected void fireProjectile(HexVector mousePosition) {
-        HexVector position = this.getPosition();
+        HexVector unitDirection = mousePosition.subtract(this.getPosition()).normalized();
 
         setCurrentState(AnimationRole.ATTACK);
-        SoundManager.playSound(BOWATTACK);
+
         // Make projectile move toward the angle
-        // Spawn projectile in front of character for now.
+        // Spawn projectile in front of character
         Projectile projectile = new Projectile(mousePosition,
-                this.itemSlotSelected == 1 ? "range_test" : "melee_test",
-                "test hitbox",
-                position.getCol() + 1,
-                position.getRow(),
-                2,
-                0.1f,
+                ((Weapon)equippedItem).getTexture("attack"),
+                "hitbox",
+                position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
+                position.getRow() + 0.5f + 1.5f * unitDirection.getRow(),
+                ((Weapon)equippedItem).getDamage(),
+                ((Weapon)equippedItem).getAttackRate(),
                 this.itemSlotSelected == 1 ? 1 : 0);
+
         // Add the projectile entity to the game world.
         GameManager.get().getWorld().addEntity(projectile);
+
+        // Play weapon attack sound
+        switch(((Weapon)equippedItem).getName()) {
+            case "sword":
+                SoundManager.playSound(SWORDATTACK);
+                break;
+            case "spear":
+                SoundManager.playSound(SPEARATTACK);
+                break;
+            case "bow":
+                SoundManager.playSound(BOWATTACK);
+                break;
+            case "axe":
+                SoundManager.playSound(AXEATTACK);
+                break;
+            default:
+                SoundManager.playSound(ATTACK);
+                break;
+        }
+
     }
 
     /**
@@ -548,18 +604,6 @@ public class MainCharacter extends Peon
         GameManager.get().getWorld().addEntity(spell);
 
         setAttacking(false);
-    }
-
-    public String getEquipped() {
-        return this.equipped;
-    }
-
-    public void setEquipped(String item) {
-        this.equipped = item;
-    }
-
-    public void unequip() {
-        this.equipped = "no_weapon";
     }
 
     /**
@@ -662,7 +706,6 @@ public class MainCharacter extends Peon
         getBody().setLinearVelocity(getBody().getLinearVelocity()
                         .lerp(new Vector2(0.f, 0.f), 0.5f));
 
-        System.out.println("CURRENT HEALTH:" + String.valueOf(getHealth()));
         if (this.getHealth() <= 0) {
             kill();
         } else {
@@ -946,13 +989,19 @@ public class MainCharacter extends Peon
             }
         }
 
-        if (button == 1) {
+    }
 
-            float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
-            float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
+    /**
+     * Reset the mana cooldown period and restore 1 mana to the MainCharacter.
+     */
+    private void restoreMana() {
 
-            HexVector mousePos = new HexVector(clickedPosition[0], clickedPosition[1]);
-            this.attack(mousePos);
+        //Reset the cooldown period.
+        this.manaCD = 0;
+
+        //Time interval has passed so restore some mana.
+        if (this.mana < 100) {
+            this.mana++;
         }
     }
 
@@ -964,6 +1013,11 @@ public class MainCharacter extends Peon
         this.updatePosition();
         this.movementSound();
         this.centreCameraAuto();
+
+        this.manaCD++;
+        if (this.manaCD > totalManaCooldown) {
+            this.restoreMana();
+        }
 
         //this.setCurrentSpeed(this.direction.len());
         //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
@@ -1057,9 +1111,18 @@ public class MainCharacter extends Peon
                 maxSpeed *= 2.f;
                 break;
             case Input.Keys.SPACE:
-                if (this.equippedItem != null) {
-                    useEquipped();
+                useEquipped();
+
+                if (this.equippedItem instanceof Weapon) {
+                    float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
+                    float[] clickedPosition = WorldUtil.worldCoordinatesToSubColRow(mouse[0], mouse[1]);
+                    HexVector mousePosition = new HexVector(clickedPosition[0], clickedPosition[1]);
+
+                    this.attack(mousePosition);
                 }
+                break;
+            case Input.Keys.ALT_LEFT:
+                // Attack moved to SPACE
                 break;
             case Input.Keys.G:
                 addClosestGoldPiece();
@@ -1086,6 +1149,8 @@ public class MainCharacter extends Peon
                 switchItem(keycode);
                 break;
         }
+        //Let the SpellCaster know a key was pressed.
+        spellCaster.onKeyPressed(keycode);
     }
 
     /**
@@ -1094,7 +1159,7 @@ public class MainCharacter extends Peon
      *
      * @param type The SpellType to cast.
      */
-    private void selectSpell(SpellType type) {
+    public void selectSpell(SpellType type) {
         this.spellSelected = type;
     }
 

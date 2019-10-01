@@ -179,19 +179,39 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("tikitorch", new Texture("resources/world_details/flame.gif"));
 
-            textureMap.put("sword_tex", new Texture("resources/weapons/sword.png"));
-            textureMap.put("sword", new Texture("resources/weapons/sword.png"));
+            // Weapons pick-up
+            textureMap.put("sword_tex", new Texture("resources/weapons/sword" +
+                    ".png"));
             textureMap.put("axe_tex", new Texture("resources/weapons/axe.png"));
             textureMap.put("bow_tex", new Texture("resources/weapons/bow.png"));
             textureMap.put("spear_tex", new Texture("resources/weapons/spear.png"));
-            textureMap.put("no_weapon_tex", new Texture("resources/weapons/noweapon.png"));
+
+            // Weapons attack
+            textureMap.put("sword_attack", new Texture("resources/weapons" +
+                    "/DesertSword.png"));
+            textureMap.put("axe_attack", new Texture("resources/weapons" +
+                    "/axe.png"));
+            textureMap.put("bow_attack", new Texture("resources/weapons" +
+                    "/ArrowEast.png"));
+            textureMap.put("spear_attack", new Texture("resources/weapons" +
+                    "/spear.png"));
+
+            // Weapons display
+            textureMap.put("sword_display_inv", new Texture("resources" +
+                    "/weapons" +
+                    "/RustySword.png"));
+            textureMap.put("axe_display_inv", new Texture("resources/weapons" +
+                    "/axe.png"));
+            textureMap.put("bow_display_inv", new Texture("resources/weapons" +
+                    "/bow2.png"));
+            textureMap.put("spear_display_inv", new Texture("resources/weapons" +
+                    "/spear2.png"));
 
             textureMap.put("pop up screen", new Texture("resources/pop_up_screen_background.png"));
             textureMap.put("game menu bar", new Texture("resources/pop_up_screen_title_background.png"));
             textureMap.put("game_over_temp_bg", new Texture("resources/game_over_background.png"));
             textureMap.put("game over retry temp", new Texture("resources/game_over_retry.png"));
             textureMap.put("game over home temp", new Texture("resources/game_over_home_button.png"));
-
 
             textureMap.put("pause", new Texture("resources/pause_icon.png"));
             textureMap.put("settings", new Texture("resources/settings.png"));
@@ -270,7 +290,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("Metal_inv", new Texture("resources/items_icons/metal.png"));
             textureMap.put("Pick Axe_inv", new Texture("resources/items_icons/pickaxe.png"));
             textureMap.put("Hatchet_inv", new Texture("resources/items_icons/hatchet.png"));
-            textureMap.put("sword_tex_inv", new Texture("resources/items_icons/sword.png"));
             textureMap.put("Aloe_Vera_inv", new Texture("resources/items_icons/aloevera.png"));
             textureMap.put("Apple_inv", new Texture("resources/items_icons/apple.png"));
             textureMap.put("Berry_inv", new Texture("resources/items_icons/berry.png"));

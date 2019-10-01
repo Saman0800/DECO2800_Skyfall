@@ -194,14 +194,6 @@ public class WorldBuilder implements WorldBuilderInterface {
             switch (biome.getBiomeName()) {
                 case "forest":
 
-                    // Spawn some swords
-                    EntitySpawnRule swordRule = new EntitySpawnRule(tile -> new Sword(tile, true), 0.05, 10, 20, biome);
-                    biomeSpawnRules.add(swordRule);
-
-                    // Spawn some axes
-                    EntitySpawnRule axeRule = new EntitySpawnRule(tile -> new Axe(tile, true), 0.5, 1, 5, biome);
-                    biomeSpawnRules.add(axeRule);
-
                     // Create a new perlin noise map
                     SpawnControl treeControl = x -> x / 3d + 0.2;
                     EntitySpawnRule treeRule = new EntitySpawnRule(tile -> new Tree(tile, true), biome, true, treeControl);
@@ -229,12 +221,6 @@ public class WorldBuilder implements WorldBuilderInterface {
 
                 case "mountain":
 
-                    // Spawn some spears
-                    SpawnControl spearControl = x -> x * x * x * x * x * x * x;
-                    EntitySpawnRule spearRule =
-                            new EntitySpawnRule(tile -> new Spear(tile, true), biome, true, spearControl);
-                    biomeSpawnRules.add(spearRule);
-
                     // Create a new perlin noise map
                     SpawnControl cubic = x -> (x * x * x * x * x) / 4.0;
                     EntitySpawnRule mTreeControl =
@@ -258,10 +244,6 @@ public class WorldBuilder implements WorldBuilderInterface {
 
                 case "desert":
 
-                    // Spawn some axes
-                    EntitySpawnRule axeRule2 = new EntitySpawnRule(tile -> new Axe(tile, true), 0.1, 1, 30, biome);
-                    biomeSpawnRules.add(axeRule2);
-
                     // Create a new perlin noise map
                     SpawnControl cactiControl = x -> (x * x * x * x) / 4.0;
                     EntitySpawnRule cactiRule =
@@ -271,15 +253,29 @@ public class WorldBuilder implements WorldBuilderInterface {
 
                 case "snowy_mountains":
 
+                    // Spawn some axes
+                    EntitySpawnRule axeRule =
+                            new EntitySpawnRule(tile -> new Axe(tile, true),
+                                    0.3, 1, 10, biome);
+                    biomeSpawnRules.add(axeRule);
+
                     // Spawn some bows
-                    EntitySpawnRule bowRule = new EntitySpawnRule(tile -> new Bow(tile, true), 0.2, 30, 50, biome);
+                    EntitySpawnRule bowRule =
+                            new EntitySpawnRule(tile -> new Bow(tile, true),
+                                    0.4, 10, 20, biome);
                     biomeSpawnRules.add(bowRule);
 
                     // Spawn some spears
-                    SpawnControl spearControl2 = x -> x * x * x * x;
-                    EntitySpawnRule spearRule2 =
-                            new EntitySpawnRule(tile -> new Spear(tile, true), biome, true, spearControl2);
-                    biomeSpawnRules.add(spearRule2);
+                    EntitySpawnRule spearRule =
+                            new EntitySpawnRule(tile -> new Spear(tile, true),
+                                    0.5, 5, 15, biome);
+                    biomeSpawnRules.add(spearRule);
+
+                    // Spawn some swords
+                    EntitySpawnRule swordRule =
+                            new EntitySpawnRule(tile -> new Sword(tile, true)
+                                    , 0.6, 10, 20, biome);
+                    biomeSpawnRules.add(swordRule);
 
                     // Create a new perlin noise map
                     SpawnControl sSnowControl = x -> x / 2d + 0.15;
