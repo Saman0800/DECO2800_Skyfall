@@ -21,7 +21,7 @@ import java.util.Map;
  * @Author Tim Hadwen
  */
 public class TextureManager extends AbstractManager {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GameManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TextureManager.class);
 
     /**
      * The width of the tile to use then positioning the tile.
