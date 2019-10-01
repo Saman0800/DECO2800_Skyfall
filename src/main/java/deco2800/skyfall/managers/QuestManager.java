@@ -1,5 +1,7 @@
 package deco2800.skyfall.managers;
 
+import deco2800.skyfall.entities.MainCharacter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +31,9 @@ public class QuestManager extends AbstractManager{
     //Level 2 buildings
     private List<String> levelTwoBuildings = new ArrayList<>();
 
+    //Player character
+    private MainCharacter player;
+
     /**
      * Constructor, sets up beginning of game goals
      */
@@ -40,6 +45,7 @@ public class QuestManager extends AbstractManager{
         levelTwoBuildings.add("WatchTower");
         levelTwoBuildings.add("StorageUnit");
         levelTwoBuildings.add("TownCentre");
+        player = MainCharacter.getInstance();
         setMilestones();
     }
 
@@ -176,4 +182,34 @@ public class QuestManager extends AbstractManager{
     - how to set quest level upon levelling up?
     - figure out how portal activation fits in with all this
      */
+
+    /**
+     * Checks if amount of wood in player inventory meets wood milestone amount
+     * @return True if amount equals or exceeds milestone, False if not
+     */
+    public boolean checkWood() {
+        int currentWood = player.getInventoryManager()
+                .getAmount("Wood");
+        return (currentWood >= getWoodTotal());
+    }
+
+    /**
+     * Checks if amount of stone in player inventory meets stone milestone amount
+     * @return True if amount equals or exceeds milestone, False if not
+     */
+    public boolean checkStone() {
+        int currentStone = player.getInventoryManager()
+                .getAmount("Stone");
+        return (currentStone >= getStoneTotal());
+    }
+
+    /**
+     * Checks if amount of metal in player inventory meets metal milestone amount
+     * @return True if amount equals or exceeds milestone, False if not
+     */
+    public boolean checkMetal() {
+        int currentMetal = player.getInventoryManager()
+                .getAmount("Metal");
+        return (currentMetal >= getMetalTotal());
+    }
 }
