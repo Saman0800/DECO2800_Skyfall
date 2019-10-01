@@ -264,12 +264,12 @@ public class TextureManager extends AbstractManager {
             textureMap.put("Sand", new Texture("resources/temp_sand.png"));
             textureMap.put("Select", new Texture("resources/item_selected.png"));
             textureMap.put("quick_access_panel", new Texture("quick_access_panel.png"));
-            textureMap.put("drop", new Texture("resources/temp_drop_button.png"));
-            textureMap.put("drop inactive", new Texture("resources/temp_drop_button_inactive.png"));
-            textureMap.put("equip", new Texture("resources/temp_equip_button.png"));
-            textureMap.put("equip inactive", new Texture("resources/temp_equip_button_inactive.png"));
-            textureMap.put("addqa", new Texture("resources/temp_addqa_button.png"));
-            textureMap.put("addqa inactive", new Texture("resources/temp_addqa_button_inactive.png"));
+            textureMap.put("drop", new Texture("resources/inventory/drop_active.png"));
+            textureMap.put("drop inactive", new Texture("resources/inventory/drop_inactive.png"));
+            textureMap.put("equip", new Texture("resources/inventory/equip_active.png"));
+            textureMap.put("equip inactive", new Texture("resources/inventory/equip_inactive.png"));
+            textureMap.put("addqa", new Texture("resources/inventory/add_qa_active.png"));
+            textureMap.put("addqa inactive", new Texture("resources/inventory/add_qa_inactive.png"));
             textureMap.put("takeall", new Texture("resources/takeall.png"));
             textureMap.put("selected", new Texture("resources/items_icons/selected.png"));
             textureMap.put("item_background", new Texture("resources/items_icons/item_background.png"));
