@@ -52,10 +52,6 @@ public class HeadsUpDisplay extends AbstractUIElement {
 
     @Override
     public void draw() {
-        ImageButton build = new ImageButton(generateTextureRegionDrawableObject("build"));
-        build.setSize(219 * 0.55f, 207 * 0.55f);
-        stage.addActor(build);
-
         ImageButton pause = new ImageButton(generateTextureRegionDrawableObject("pause"));
         pause.setSize(65, 65 * 146 / 207f);
 
@@ -81,9 +77,6 @@ public class HeadsUpDisplay extends AbstractUIElement {
         helpT.getLabel().setStyle(skin.get("blue-pill", Label.LabelStyle.class));
         helpT.getLabel().setAlignment(Align.center);
         helpT.getLabel().setFontScale(1f);
-
-
-        positionObjects.put(build, (Actor actor) -> actor.setPosition(gmm.getBottomRightX() - actor.getHeight() - 20, gmm.getBottomRightY() + 20));
 
 
         leftHUDTable = new Table();
