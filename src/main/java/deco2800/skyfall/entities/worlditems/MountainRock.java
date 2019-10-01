@@ -1,7 +1,6 @@
 package deco2800.skyfall.entities.worlditems;
 
 import deco2800.skyfall.worlds.Tile;
-import java.util.Random;
 
 public class MountainRock extends AbstractRock {
 

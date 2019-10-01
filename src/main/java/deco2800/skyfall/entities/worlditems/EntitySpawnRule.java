@@ -2,7 +2,6 @@ package deco2800.skyfall.entities.worlditems;
 
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 
 import java.util.Random;
@@ -64,7 +63,8 @@ public class EntitySpawnRule {
     private Function<Tile, StaticEntity> newInstance;
 
     /**
-     * A unique index for this rule that is consistent across runs for any given seed.
+     * A unique index for this rule that is consistent across runs for any given
+     * seed.
      */
     private int index;
 
@@ -74,7 +74,8 @@ public class EntitySpawnRule {
      *
      * @param newInstance The method to use to generate a new instance
      * @param index       The unique index of the rule
-     * @param chance The likelihood of spawning an ent in a given tile of the world
+     * @param chance      The likelihood of spawning an ent in a given tile of the
+     *                    world
      */
     public EntitySpawnRule(Function<Tile, StaticEntity> newInstance, int index, double chance) {
         this.newInstance = newInstance;
@@ -87,9 +88,9 @@ public class EntitySpawnRule {
      *
      * @param newInstance The method to use to generate a new instance
      * @param index       The unique index of the rule
-     * @param usePerlin A boolean value to dictate if the perlin noise value of the
-     *                  tile is to used to determine the likeliness of a entity to
-     *                  be placed down on a tile.
+     * @param usePerlin   A boolean value to dictate if the perlin noise value of
+     *                    the tile is to used to determine the likeliness of a
+     *                    entity to be placed down on a tile.
      */
     public EntitySpawnRule(Function<Tile, StaticEntity> newInstance, int index, boolean usePerlin) {
         this.newInstance = newInstance;
@@ -106,10 +107,11 @@ public class EntitySpawnRule {
      *
      * @param newInstance The method to use to generate a new instance
      * @param index       The unique index of the rule
-     * @param usePerlin   A boolean value to dictate if the perlin noise value of the tile is to used to determine the
-     *                    likeliness of a entity to be placed down on a tile.
-     * @param map         A lambda experssion to adjust the perlin noise value when using it as the likeliness to spawn
-     *                    an entity
+     * @param usePerlin   A boolean value to dictate if the perlin noise value of
+     *                    the tile is to used to determine the likeliness of a
+     *                    entity to be placed down on a tile.
+     * @param map         A lambda experssion to adjust the perlin noise value when
+     *                    using it as the likeliness to spawn an entity
      */
     public EntitySpawnRule(Function<Tile, StaticEntity> newInstance, int index, boolean usePerlin, SpawnControl map) {
         this(newInstance, index, usePerlin);
@@ -206,6 +208,7 @@ public class EntitySpawnRule {
 
     /**
      * Gets the function that returns a new instance to place.
+     * 
      * @return gets the function that returns a new instance to place
      */
     public Function<Tile, StaticEntity> getNewInstance() {
@@ -214,10 +217,10 @@ public class EntitySpawnRule {
 
     /**
      * Sets the function that returns a new instance to place.
+     * 
      * @return sets the function that returns a new instance to place
      */
-    public void setNewInstance(
-            Function<Tile, StaticEntity> newInstance) {
+    public void setNewInstance(Function<Tile, StaticEntity> newInstance) {
         this.newInstance = newInstance;
     }
 

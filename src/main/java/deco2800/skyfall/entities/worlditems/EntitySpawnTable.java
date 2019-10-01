@@ -4,6 +4,7 @@ import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.World;
+import java.util.Random;
 
 import java.util.function.Function;
 
@@ -13,6 +14,9 @@ import java.util.function.Function;
  * handle this for you
  */
 public final class EntitySpawnTable {
+
+    static private Random randDirection = new Random();
+
     // Private constructor to prevent construction.
     private EntitySpawnTable() {
     }
@@ -70,7 +74,7 @@ public final class EntitySpawnTable {
 
     public static double getRandomValue(World world, EntitySpawnRule spawnRule, Tile tile) {
         return normalizeStaticEntityNoise(world.getStaticEntityNoise().getOctavedPerlinValue(
-                tile.getCol() + spawnRule.getIndex() % 50, tile.getRow() + spawnRule.getIndex() % 100));
+                tile.getCol() + spawnRule.getIndex() % 100, tile.getRow() + spawnRule.getIndex() % 100));
     }
 
     private static void placeWithChance(Function<Tile, StaticEntity> newInstance, EntitySpawnRule rule, Tile nextTile,
@@ -80,11 +84,61 @@ public final class EntitySpawnTable {
         }
 
         if (getRandomValue(world, rule, nextTile) < chance) {
-            StaticEntity newEntity = newInstance.apply(nextTile);
-            int renderOrder = (int) (nextTile.getRow() * -2.0);
-            newEntity.setRenderOrder(renderOrder);
-            world.addEntity(newEntity);
+            int direction = Tile.NORTH_EAST;
+            int newRandDir = randDirection.nextInt(5);
+
+            if (newRandDir == 0) {
+                direction = Tile.NORTH_EAST;
+            } else if (newRandDir == 1) {
+                direction = Tile.NORTH_WEST;
+            } else if (newRandDir == 2) {
+                direction = Tile.SOUTH_EAST;
+            } else if (newRandDir == 3) {
+                direction = Tile.SOUTH_WEST;
+            }
+
+            placeHorizontalJitter(newInstance, nextTile, world, direction);
         }
+    }
+
+    private static void placeHorizontalJitter(Function<Tile, StaticEntity> newInstance, Tile nextTile, World world,
+            int direction) {
+
+        Tile northNeighbour;
+        Tile southNeighbour;
+        Tile dirNeighbour;
+
+        northNeighbour = nextTile.getNeighbour(Tile.NORTH);
+        southNeighbour = nextTile.getNeighbour(Tile.SOUTH);
+        dirNeighbour = nextTile.getNeighbour(direction);
+
+        if (northNeighbour == null || southNeighbour == null || dirNeighbour == null) {
+            placeDown(newInstance, nextTile, world);
+            return;
+        }
+
+        // First check if the top and bottom neighbors are obstructed
+        if ((!northNeighbour.isObstructed() && !southNeighbour.isObstructed()) || dirNeighbour.isObstructed()) {
+            placeDown(newInstance, nextTile, world);
+        } else if (!nextTile.getBiome().getBiomeName().equals(dirNeighbour.getBiome().getBiomeName())) {
+            // We are at the edge of a biome
+            placeDown(newInstance, nextTile, world);
+        } else if (randDirection.nextFloat() < 0.9) {
+            placeHorizontalJitter(newInstance, dirNeighbour, world, direction);
+        } else {
+            placeDown(newInstance, nextTile, world);
+        }
+
+    }
+
+    private static void placeDown(Function<Tile, StaticEntity> newInstance, Tile nextTile, World world) {
+
+        StaticEntity newEntity = newInstance.apply(nextTile);
+        int renderOrder = (int) (nextTile.getRow() * -2.0);
+        newEntity.setRenderOrder(renderOrder);
+        world.addEntity(newEntity);
+
+        return;
     }
 
     /**

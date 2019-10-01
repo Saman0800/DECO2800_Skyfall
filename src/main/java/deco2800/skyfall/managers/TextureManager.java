@@ -168,8 +168,13 @@ public class TextureManager extends AbstractManager {
             textureMap.put("DCactus3", new Texture("resources/world_details/DCactus3.png"));
             textureMap.put("DCactus4", new Texture("resources/world_details/DCactus4.png"));
 
+            textureMap.put("DRock1", new Texture("resources/world_details/DRock1.png"));
+            textureMap.put("DRock2", new Texture("resources/world_details/DRock2.png"));
+            textureMap.put("DRock3", new Texture("resources/world_details/DRock3.png"));
+
             textureMap.put("DRibs", new Texture("resources/world_details/DRibs.png"));
             textureMap.put("DSkull", new Texture("resources/world_details/DSkull.png"));
+            textureMap.put("DBush1", new Texture("resources/world_details/DBush1.png"));
 
             textureMap.put("MSnow1", new Texture("resources/world_details/MSnow1.png"));
             textureMap.put("MSnow2", new Texture("resources/world_details/MSnow2.png"));

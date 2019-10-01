@@ -194,103 +194,37 @@ public class WorldBuilder implements WorldBuilderInterface {
             switch (biome.getBiomeName()) {
             case "forest":
 
-                // Spawn some swords
-                EntitySpawnRule swordRule = new EntitySpawnRule(tile -> new Sword(tile, true), random.nextInt(),
-                        0.0005);
-                biomeSpawnRules.add(swordRule);
+                generateForestEntities(biomeSpawnRules, random, world);
 
-                // Spawn some axes
-                EntitySpawnRule axeRule = new EntitySpawnRule(tile -> new Axe(tile, true), random.nextInt(), 0.005);
-                biomeSpawnRules.add(axeRule);
-
-                // Create a new perlin noise map
-                SpawnControl treeControl = x -> (x * x * x) / 3d + 0.2;
-                EntitySpawnRule treeRule = new EntitySpawnRule(tile -> new ForestTree(tile, true), random.nextInt(),
-                        true, treeControl);
-                biomeSpawnRules.add(treeRule);
-
-                // Spawn some ForestShrub uniformly
-                EntitySpawnRule forestShrub = new EntitySpawnRule(tile -> new ForestShrub(tile, true), random.nextInt(),
-                        0.07);
-                biomeSpawnRules.add(forestShrub);
-
-                // Spawn some Rocks uniformly
-                EntitySpawnRule rockRule = new EntitySpawnRule(tile -> new ForestRock(tile, true), random.nextInt(),
-                        0.04);
-                biomeSpawnRules.add(rockRule);
-
-                spawnChests(world, random, biomeSpawnRules);
-
-                // This generator will cause the mushrooms to clump togteher more
-                NoiseGenerator mushroomGen = new NoiseGenerator(new Random(worldSeed).nextLong(), 10, 20, 0.9);
-                SpawnControl mushroomControl = x -> (x * x * x * x) / 3.0;
-                EntitySpawnRule mushroomRule = new EntitySpawnRule(tile -> new ForestMushroom(tile, false),
-                        random.nextInt(), true, mushroomControl);
-                mushroomRule.setNoiseGenerator(mushroomGen);
-                biomeSpawnRules.add(mushroomRule);
                 break;
 
             case "mountain":
 
-                // Spawn some spears
-                EntitySpawnRule spearRule = new EntitySpawnRule(tile -> new Spear(tile, true), random.nextInt(), 0.005);
-                biomeSpawnRules.add(spearRule);
-
-                // Create a new perlin noise map
-                SpawnControl cubic = x -> x * x * x;
-                EntitySpawnRule mTreeControl = new EntitySpawnRule(tile -> new MountainTree(tile, true),
-                        random.nextInt(), true, cubic);
-                biomeSpawnRules.add(mTreeControl);
-
-                spawnChests(world, random, biomeSpawnRules);
-
-                // Create a new perlin noise map
-                SpawnControl rockControl = x -> (x * x * x * x) / 2.0;
-                EntitySpawnRule mRockRule = new EntitySpawnRule(tile -> new MountainRock(tile, true), random.nextInt(),
-                        true, rockControl);
-                biomeSpawnRules.add(mRockRule);
-
-                // Spawn some Snow uniformly
-                EntitySpawnRule mSnowRule = new EntitySpawnRule(tile -> new SnowClump(tile, false), random.nextInt(),
-                        0.07);
-                biomeSpawnRules.add(mSnowRule);
+                generateMountainEntities(biomeSpawnRules, random, world);
 
                 break;
 
             case "desert":
 
-                // Spawn some axes
-                EntitySpawnRule axeRule2 = new EntitySpawnRule(tile -> new Axe(tile, true), random.nextInt(), 0.005);
-                biomeSpawnRules.add(axeRule2);
+                generateDesertEntities(biomeSpawnRules, random, world);
 
-                // Create a new perlin noise map
-                SpawnControl cactiControl = x -> (x * x * x * x) / 4.0;
-                EntitySpawnRule cactiRule = new EntitySpawnRule(tile -> new DesertCacti(tile, true), random.nextInt(),
-                        true, cactiControl);
-                biomeSpawnRules.add(cactiRule);
                 break;
 
             case "snowy_mountains":
 
-                // Spawn some bows
-                EntitySpawnRule bowRule = new EntitySpawnRule(tile -> new Bow(tile, true), random.nextInt(), 0.005);
-                biomeSpawnRules.add(bowRule);
+                generateSnowyMountainsEntities(biomeSpawnRules, random, world);
 
-                // Spawn some spears
-                EntitySpawnRule spearRule2 = new EntitySpawnRule(tile -> new Spear(tile, true), random.nextInt(),
-                        0.005);
-                biomeSpawnRules.add(spearRule2);
+                break;
 
-                // Create a new perlin noise map
-                SpawnControl sSnowControl = x -> (x * x * x * x * x * x) / 2d + 0.05;
-                EntitySpawnRule sSnowRule = new EntitySpawnRule(tile -> new SnowClump(tile, false), random.nextInt(),
-                        true, sSnowControl);
-                biomeSpawnRules.add(sSnowRule);
+            case "volcanic_mountains":
 
-                // Spawn some Snow Shrubs uniformly
-                EntitySpawnRule snowShrubRule = new EntitySpawnRule(tile -> new SnowShrub(tile, true), random.nextInt(),
-                        0.03);
-                biomeSpawnRules.add(snowShrubRule);
+                generateVolcanicMountainsEntities(biomeSpawnRules, random, world);
+
+                break;
+
+            case "swamp":
+
+                generateSwampEntities(biomeSpawnRules, random, world);
 
                 break;
 
@@ -302,6 +236,189 @@ public class WorldBuilder implements WorldBuilderInterface {
         }
 
         return spawnRules;
+    }
+
+    private void generateForestEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
+
+        long worldSeed = world.getSeed();
+
+        // Spawn some swords
+        EntitySpawnRule swordRule = new EntitySpawnRule(tile -> new Sword(tile, true), random.nextInt(), 0.005);
+        biomeSpawnRules.add(swordRule);
+
+        // Spawn some axes
+        EntitySpawnRule axeRule = new EntitySpawnRule(tile -> new Axe(tile, true), random.nextInt(), 0.007);
+        biomeSpawnRules.add(axeRule);
+
+        // Create a new perlin noise map
+        SpawnControl treeControl = x -> (x * x) / 3d + 0.01;
+        EntitySpawnRule treeRule = new EntitySpawnRule(tile -> new ForestTree(tile, true), random.nextInt(), true,
+                treeControl);
+        treeRule.setLimitAdjacent(true);
+        biomeSpawnRules.add(treeRule);
+
+        // Spawn some ForestShrub uniformly
+        EntitySpawnRule forestShrub = new EntitySpawnRule(tile -> new ForestShrub(tile, true), random.nextInt(), 0.03);
+        biomeSpawnRules.add(forestShrub);
+
+        // Spawn some Rocks uniformly
+        EntitySpawnRule rockRule = new EntitySpawnRule(tile -> new ForestRock(tile, true), random.nextInt(), 0.02);
+        rockRule.setLimitAdjacent(true);
+        biomeSpawnRules.add(rockRule);
+
+        spawnChests(world, random, biomeSpawnRules);
+
+        // This generator will cause the mushrooms to clump togteher more
+        NoiseGenerator mushroomGen = new NoiseGenerator(new Random(worldSeed).nextLong(), 10, 20, 0.9);
+        SpawnControl mushroomControl = x -> (x * x * x * x) / 7d;
+        EntitySpawnRule mushroomRule = new EntitySpawnRule(tile -> new ForestMushroom(tile, false), random.nextInt(),
+                true, mushroomControl);
+        mushroomRule.setNoiseGenerator(mushroomGen);
+        mushroomRule.setLimitAdjacent(true);
+        biomeSpawnRules.add(mushroomRule);
+
+        return;
+    }
+
+    private void generateMountainEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
+
+        // Spawn some spears
+        EntitySpawnRule spearRule = new EntitySpawnRule(tile -> new Spear(tile, true), random.nextInt(), 0.005);
+        biomeSpawnRules.add(spearRule);
+
+        // Create a new perlin noise map
+        SpawnControl cubic = x -> (x * x * x) / 6 + 0.01;
+        EntitySpawnRule mTreeControl = new EntitySpawnRule(tile -> new MountainTree(tile, true), random.nextInt(), true,
+                cubic);
+        mTreeControl.setLimitAdjacent(true);
+        biomeSpawnRules.add(mTreeControl);
+
+        spawnChests(world, random, biomeSpawnRules);
+
+        // Create a new perlin noise map
+        SpawnControl rockControl = x -> (x * x * x * x) / 5.0;
+        EntitySpawnRule mRockRule = new EntitySpawnRule(tile -> new MountainRock(tile, true), random.nextInt(), true,
+                rockControl);
+        mRockRule.setLimitAdjacent(true);
+        biomeSpawnRules.add(mRockRule);
+
+        // Spawn some Snow uniformly
+        EntitySpawnRule mSnowRule = new EntitySpawnRule(tile -> new SnowClump(tile, false), random.nextInt(), 0.02);
+        biomeSpawnRules.add(mSnowRule);
+
+        return;
+    }
+
+    private void generateDesertEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
+
+        // Spawn some axes
+        EntitySpawnRule axeRule2 = new EntitySpawnRule(tile -> new Axe(tile, true), random.nextInt(), 0.005);
+        biomeSpawnRules.add(axeRule2);
+
+        // Create a new perlin noise map
+        SpawnControl cactiControl = x -> (x * x * x) / 8.0;
+        EntitySpawnRule cactiRule = new EntitySpawnRule(tile -> new DesertCacti(tile, true), random.nextInt(), true,
+                cactiControl);
+        biomeSpawnRules.add(cactiRule);
+
+        // Spawn some bones
+        EntitySpawnRule boneRule = new EntitySpawnRule(tile -> new Bone(tile, true), random.nextInt(), 0.004);
+        biomeSpawnRules.add(boneRule);
+
+        // Spawn desert shrubbery
+        EntitySpawnRule dShrubRule = new EntitySpawnRule(tile -> new DesertShrub(tile, true), random.nextInt(), 0.008);
+        biomeSpawnRules.add(dShrubRule);
+
+        // Spawn desert rocks
+        EntitySpawnRule dRockRule = new EntitySpawnRule(tile -> new DesertRock(tile, true), random.nextInt(), 0.01);
+        biomeSpawnRules.add(dRockRule);
+
+        return;
+    }
+
+    private void generateSnowyMountainsEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
+
+        // Spawn some bows
+        EntitySpawnRule bowRule = new EntitySpawnRule(tile -> new Bow(tile, true), random.nextInt(), 0.005);
+        biomeSpawnRules.add(bowRule);
+
+        // Spawn some spears
+        EntitySpawnRule spearRule2 = new EntitySpawnRule(tile -> new Spear(tile, true), random.nextInt(), 0.005);
+        biomeSpawnRules.add(spearRule2);
+
+        // Create a new perlin noise map
+        SpawnControl sSnowControl = x -> (x * x * x * x * x * x) / 2d + 0.05;
+        EntitySpawnRule sSnowRule = new EntitySpawnRule(tile -> new SnowClump(tile, false), random.nextInt(), true,
+                sSnowControl);
+        biomeSpawnRules.add(sSnowRule);
+
+        // Spawn some Snow Shrubs uniformly
+        EntitySpawnRule snowShrubRule = new EntitySpawnRule(tile -> new SnowShrub(tile, true), random.nextInt(), 0.03);
+        biomeSpawnRules.add(snowShrubRule);
+
+        return;
+
+    }
+
+    private void generateVolcanicMountainsEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
+
+        // Create a new perlin noise map
+        SpawnControl cubic = x -> (x * x * x) / 6 + 0.01;
+        EntitySpawnRule mTreeControl = new EntitySpawnRule(tile -> new VolcanicTree(tile, true), random.nextInt(), true,
+                cubic);
+        mTreeControl.setLimitAdjacent(true);
+        biomeSpawnRules.add(mTreeControl);
+
+        spawnChests(world, random, biomeSpawnRules);
+
+        // Create a new perlin noise map
+        SpawnControl rockControl = x -> (x * x * x * x) / 3.0;
+        EntitySpawnRule mRockRule = new EntitySpawnRule(tile -> new VolcanicRock(tile, true), random.nextInt(), true,
+                rockControl);
+        mRockRule.setLimitAdjacent(true);
+        biomeSpawnRules.add(mRockRule);
+
+        // Spawn some Snow uniformly
+        EntitySpawnRule mSnowRule = new EntitySpawnRule(tile -> new VolcanicShrub(tile, false), random.nextInt(), 0.02);
+        biomeSpawnRules.add(mSnowRule);
+
+        EntitySpawnRule leavesRule = new EntitySpawnRule(tile -> new Leaves(tile, false), random.nextInt(), 0.02);
+        biomeSpawnRules.add(leavesRule);
+
+        return;
+    }
+
+    private void generateSwampEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
+
+        long worldSeed = world.getSeed();
+
+        // Create a new perlin noise map
+        SpawnControl sTreeControl = x -> (x * x * x) / 3d + 0.01;
+        EntitySpawnRule treeRule = new EntitySpawnRule(tile -> new SwampTree(tile, true), random.nextInt(), true,
+                sTreeControl);
+        biomeSpawnRules.add(treeRule);
+
+        // Spawn some ForestShrub uniformly
+        EntitySpawnRule swampShrubRule = new EntitySpawnRule(tile -> new SwampShrub(tile, true), random.nextInt(),
+                0.07);
+        biomeSpawnRules.add(swampShrubRule);
+
+        // Spawn some Rocks uniformly
+        EntitySpawnRule rockRule = new EntitySpawnRule(tile -> new SwampRock(tile, true), random.nextInt(), 0.015);
+        biomeSpawnRules.add(rockRule);
+
+        EntitySpawnRule moundRule = new EntitySpawnRule(tile -> new OrganicMound(tile, true), random.nextInt(), 0.015);
+        biomeSpawnRules.add(moundRule);
+
+        // This generator will cause the mushrooms to clump together more
+        NoiseGenerator mushroomGen = new NoiseGenerator(new Random(worldSeed).nextLong(), 10, 20, 0.9);
+        SpawnControl mushroomControl = x -> (x * x * x * x) / 4d;
+        EntitySpawnRule mushroomRule = new EntitySpawnRule(tile -> new ForestMushroom(tile, false), random.nextInt(),
+                true, mushroomControl);
+        mushroomRule.setNoiseGenerator(mushroomGen);
+        biomeSpawnRules.add(mushroomRule);
+
+        return;
     }
 
     /**

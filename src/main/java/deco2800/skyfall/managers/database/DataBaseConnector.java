@@ -666,6 +666,9 @@ public class DataBaseConnector {
                 case "DesertCacti":
                     entity = new DesertCacti(memento);
                     break;
+                case "DesertRock":
+                    entity = new DesertRock(memento);
+                    break;
                 case "ForestMushroom":
                     entity = new ForestMushroom(memento);
                     break;
