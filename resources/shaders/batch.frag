@@ -68,7 +68,7 @@ vec3 calculatePointLightColour(int i) {
 void main() {
     //query texture for colour of fragment
     vec4 texColor = texture2D(u_texture, v_texCoords).rgba;
-    
+
     //discard transparent fragments
     //transparency is not supported for rendering
     //outside of pure transparency (with transparency less that 0.1)

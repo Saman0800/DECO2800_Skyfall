@@ -188,6 +188,10 @@ public class Renderer3D implements Renderer {
                 continue;
             }
 
+            //set color of batch from abstract ent's mod color
+            Color modColor = entity.getModulatingColor();
+            batch.setColor(modColor.r, modColor.g, modColor.b, modColor.a);
+
             Texture tex = textureManager.getTexture(entity.getTexture());
             if (entity instanceof StaticEntity) {
                 StaticEntity staticEntity = ((StaticEntity) entity);
@@ -213,27 +217,20 @@ public class Renderer3D implements Renderer {
                 if (!(entity instanceof Animatable)) {
                     renderAbstractEntity(batch, entity, entityWorldCoord, tex);
                 } else {
-
-                    Color c = batch.getColor();
-
                     if (entity instanceof MainCharacter) {
                         if (((MainCharacter) entity).IsHurt() || ((MainCharacter) entity).isDead()) {
-                            System.out.println("Changed to red");
-                            batch.setColor(Color.RED);
+                            entity.setModulatingColor(Color.RED);
                         } else if (((MainCharacter) entity).isRecovering()) {
                             if (((MainCharacter) entity).isTexChanging()) {
-                                batch.setColor(c.r, c.g, c.b, 0f);
+                                entity.setModulatingColor(Color.WHITE);
                                 ((MainCharacter) entity).setTexChanging(!((MainCharacter) entity).isTexChanging());
                             } else {
-                                batch.setColor(c.r, c.g, c.b, 1f);
+                                entity.setModulatingColor(Color.WHITE);
                                 ((MainCharacter) entity).setTexChanging(!((MainCharacter) entity).isTexChanging());
                             }
                         }
-                    } else {
-                        batch.setColor(c.r, c.g, c.b, 1f);
                     }
                     runAnimation(batch, entity, entityWorldCoord);
-                    batch.setColor(c.r, c.g, c.b, 1f);
                 }
 
                 /* Draw Peon */

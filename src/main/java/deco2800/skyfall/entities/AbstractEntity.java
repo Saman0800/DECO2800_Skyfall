@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.physics.box2d.*;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.animation.AnimationLinker;
@@ -75,6 +76,11 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     @Expose
     private String texture = "error_box";
+
+    //A modulating colour value
+    //each colour channel (0-1) will be multiplied by the corresponding value
+    //Default of (1.0f, 1.0f, 1.0f, 1.0f) will render sprite as normal
+    private Color modulatingColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
     @Expose
     private int entityID = 0;
@@ -289,6 +295,39 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      */
     public void setTexture(String texture) {
         this.texture = texture;
+    }
+
+    /**
+     * Gets the modulating colour of this entity
+     * Each component will be multiplied against the current modulating colour
+     * Default is (1.0f, 1.0f, 1.0f, 1.0f), which will render with in standard colour
+     * @return The given modulating colour
+     */
+    public Color getModulatingColor() {
+        return modulatingColor;
+    }
+
+    /**
+     * Sets the new modulating colour for this entity
+     * This will be in the form (0-1, 0-1, 0-1, 0-1, 0-1) correspoding to (r, g, b, a)
+     * @param color the new modulation colour to use, which will be clamped into a valid range
+     */
+    public void setModulatingColor(Color color) {
+        this.modulatingColor = color.clamp();
+    }
+
+    /**
+     * An overload to setModulatingColor
+     * Sets the new modulating colour for this entity
+     * This will be in the form (0-1, 0-1, 0-1, 0-1, 0-1) correspoding to (r, g, b, a)
+     * the new modulation colour will be clamped into a valid range
+     * @param r component of new color
+     * @param g component of new color
+     * @param b component of new color
+     * @param a component of new color, remember the engine only supports 1 or 0
+     */
+    public void setModulatingColor(float r, float g, float b, float a) {
+        setModulatingColor(new Color(r, g, b, a));
     }
 
     @Override
