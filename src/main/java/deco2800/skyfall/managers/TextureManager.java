@@ -228,7 +228,9 @@ public class TextureManager extends AbstractManager {
             textureMap.put("create_button", new Texture("resources/new_ui/create.png"));
             textureMap.put("collect_button", new Texture("resources/new_ui/collect.png"));
             textureMap.put("location_button", new Texture("resources/new_ui/location.png"));
-
+            textureMap.put("blue_pill_table", new Texture("resources/new_ui/blue_pill_table.png"));
+            textureMap.put("complete_button", new Texture("resources/new_ui/complete.png"));
+            textureMap.put("light_blue_bg", new Texture("resources/new_ui/light_blue_background.png"));
             textureMap.put("new_clock", new Texture("resources/new_ui/clock.png"));
 
 

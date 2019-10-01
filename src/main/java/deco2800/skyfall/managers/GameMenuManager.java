@@ -279,6 +279,12 @@ public class GameMenuManager extends TickableManager {
         bluePill.background = generateTextureRegionDrawableObject("blue_pill");
         skin.add("blue-pill", bluePill);
 
+        Label.LabelStyle titlePill = new Label.LabelStyle();
+        titlePill.font = skin.getFont("game-font");
+        titlePill.fontColor = skin.getColor("black");
+        titlePill.background = generateTextureRegionDrawableObject("light_blue_bg");
+        skin.add("title-pill", titlePill);
+
         TextButton.TextButtonStyle textBluePill = new TextButton.TextButtonStyle();
         textBluePill.font = skin.getFont("game-font");
         textBluePill.fontColor = skin.getColor("white");
@@ -325,6 +331,10 @@ public class GameMenuManager extends TickableManager {
                 null, null, textureManager, this));
 
         popUps.put("blueprintShopTable", new BlueprintShopTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                null, textureManager, this, sm, skin));
+
+        popUps.put("collectTable", new CollectTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
                 null, textureManager, this, sm, skin));
 

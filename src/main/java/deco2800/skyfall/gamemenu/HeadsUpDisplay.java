@@ -1,8 +1,10 @@
 package deco2800.skyfall.gamemenu;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
@@ -59,27 +61,72 @@ public class HeadsUpDisplay extends AbstractUIElement {
         settings.setSize(65, 65 * 146 / 207f);
 
         ImageButton create = new ImageButton(generateTextureRegionDrawableObject("create_button"));
+        create.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                hideOpened(gmm);
+                gmm.setPopUp("createTable");
+            }
+        });
+
+
 
         ImageButton collect = new ImageButton(generateTextureRegionDrawableObject("collect_button"));
-
+        collect.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                hideOpened(gmm);
+                gmm.setPopUp("collectTable");
+            }
+        });
 
         TextButton teleport = new TextButton("TELEPORT", skin, "blue-pill2");
         teleport.getLabel().setStyle(skin.get("blue-pill", Label.LabelStyle.class));
         teleport.getLabel().setAlignment(Align.center);
         teleport.getLabel().setFontScale(0.8f);
+        teleport.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                hideOpened(gmm);
+                gmm.setPopUp("teleportTable");
+            }
+        });
+
 
         TextButton pauseT = new TextButton("PAUSE", skin, "blue-pill2");
         pauseT.getLabel().setStyle(skin.get("blue-pill", Label.LabelStyle.class));
         pauseT.getLabel().setAlignment(Align.center);
         pauseT.getLabel().setFontScale(0.8f);
+        pauseT.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                hideOpened(gmm);
+                gmm.setPopUp("pauseTable");
+            }
+        });
+
 
         TextButton helpT = new TextButton("HELP", skin, "blue-pill2");
         helpT.getLabel().setStyle(skin.get("blue-pill", Label.LabelStyle.class));
         helpT.getLabel().setAlignment(Align.center);
         helpT.getLabel().setFontScale(0.8f);
+        helpT.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                hideOpened(gmm);
+                gmm.setPopUp("helpTable");
+            }
+        });
 
         location = new ImageButton(generateTextureRegionDrawableObject("location_button"));
         location.setSize(200, 200);
+        location.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                hideOpened(gmm);
+                gmm.setPopUp("locationTable");
+            }
+        });
         stage.addActor(location);
 
 
