@@ -334,10 +334,13 @@ public class GameMenuManager extends TickableManager {
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
                 null, textureManager, this, sm, skin));
 
-        popUps.put("collectTable", new CollectTable(stage,
+        popUps.put("collectTable", new GenericCollectCreateTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                null, textureManager, this, sm, skin));
+                null, textureManager, this, sm, skin, "collect"));
 
+        popUps.put("createTable", new GenericCollectCreateTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                null, textureManager, this, sm, skin, "create"));
 
         //uiElements.put("weatherGUI", new WeatherGui(stage, EnvironmentManager.currentWeather()));
         Map<String, AbstractUIElement> hudElements = new HashMap<>();

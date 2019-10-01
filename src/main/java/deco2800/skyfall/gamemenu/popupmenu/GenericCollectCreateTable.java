@@ -13,21 +13,22 @@ import deco2800.skyfall.managers.TextureManager;
 
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
-public class CollectTable extends AbstractPopUpElement{
+public class GenericCollectCreateTable extends AbstractPopUpElement{
 
+    private final String type;
     private GameMenuManager gmm;
     private Skin skin;
     private Table collectTable;
 
 
-    public CollectTable(Stage stage, ImageButton exit, String[] textureNames,
-                        TextureManager tm, GameMenuManager gameMenuManager,
-                        StatisticsManager sm, Skin skin) {
+    public GenericCollectCreateTable(Stage stage, ImageButton exit, String[] textureNames,
+                                     TextureManager tm, GameMenuManager gameMenuManager,
+                                     StatisticsManager sm, Skin skin, String type) {
         super(stage,exit, textureNames, tm, gameMenuManager);
 
         this.skin = skin;
         this.gmm = gameMenuManager;
-
+        this.type = type;
         this.draw();
 
     }
@@ -61,7 +62,12 @@ public class CollectTable extends AbstractPopUpElement{
                 (Gdx.graphics.getHeight() + 160) / 2f - collectTable.getHeight()/2);
         collectTable.top();
 
-        Label label = new Label(" COLLECT ", skin,  "title-pill");
+        Label label;
+        if (type.equals("collect")) {
+            label = new Label(" COLLECT ", skin,  "title-pill");
+        } else {
+            label = new Label(" CREATE ", skin,  "title-pill");
+        }
 
         ImageButton complete = new ImageButton(generateTextureRegionDrawableObject("complete_button"));
 
