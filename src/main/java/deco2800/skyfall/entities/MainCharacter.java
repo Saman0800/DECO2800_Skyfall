@@ -3,6 +3,7 @@ package deco2800.skyfall.entities;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import deco2800.skyfall.buildings.BuildingFactory;
+import deco2800.skyfall.entities.enemies.Treeman;
 import deco2800.skyfall.entities.spells.SpellFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -242,6 +243,12 @@ public class MainCharacter extends Peon
      */
     private int mana = 100;
 
+    //Current time in interval to restore mana.
+    private int manaCD = 0;
+
+    //Tick interval to restore mana.
+    private int MANACOOLDOWN = 10;
+
     /**
      * The GUI mana bar that can be updated when mana is restored/lost.
      */
@@ -286,6 +293,7 @@ public class MainCharacter extends Peon
         this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
         this.setHeight(1);
         this.setObjectName("MainPiece");
+        this.setMaxHealth(health);
 
         GameManager.getManagerFromInstance(InputManager.class)
                 .addKeyDownListener(this);
@@ -343,6 +351,23 @@ public class MainCharacter extends Peon
     }
 
     /**
+     * Constructor with various textures
+     *
+     * @param textures A array of length 6 with string names corresponding to
+     *                 different orientation
+     *                 0 = North
+     *                 1 = North-East
+     *                 2 = South-East
+     *                 3 = South
+     *                 4 = South-West
+     *                 5 = North-West
+     */
+    private MainCharacter(float col, float row, float speed, String name, int health, String[] textures) {
+        this(row, col, speed, name, health);
+        this.setTexture(textures[2]);
+    }
+
+    /**
      * Setup the character specific gui elements.
      */
     public void setUpGUI() {
@@ -376,22 +401,7 @@ public class MainCharacter extends Peon
         System.out.println(gameOverTable);
     }
 
-    /**
-     * Constructor with various textures
-     *
-     * @param textures A array of length 6 with string names corresponding to
-     *                 different orientation
-     *                 0 = North
-     *                 1 = North-East
-     *                 2 = South-East
-     *                 3 = South
-     *                 4 = South-West
-     *                 5 = North-West
-     */
-    private MainCharacter(float col, float row, float speed, String name, int health, String[] textures) {
-        this(row, col, speed, name, health);
-        this.setTexture(textures[2]);
-    }
+
 
     /**
      * Switch the item the MainCharacter has equip.
@@ -454,6 +464,8 @@ public class MainCharacter extends Peon
         if (equippedItem != null) {
             equippedItem.use(this.getPosition());
         }
+
+        //this.attack();
         //else: collect nearby resources
         //Will be adjusted in following sprint when it is possible to spawn
         //non-static entities
@@ -473,14 +485,10 @@ public class MainCharacter extends Peon
      */
     public void attack(HexVector mousePosition) {
         //Animation control
+        logger.debug("Attacking");
+
         setAttacking(true);
         setCurrentState(AnimationRole.ATTACK);
-
-        Projectile projectile = new Projectile(mousePosition,
-                this.itemSlotSelected == 1 ? "range_test" : "melee_test",
-                "test hitbox", position.getCol() + 1,
-                position.getRow(), 1,
-                0.1f, this.itemSlotSelected == 1 ? 1 : 0);
 
         //If there is a spell selected, spawn the spell.
         //else, just fire off a normal projectile.
@@ -504,7 +512,7 @@ public class MainCharacter extends Peon
         // Make projectile move toward the angle
         // Spawn projectile in front of character for now.
         Projectile projectile = new Projectile(mousePosition,
-                this.itemSlotSelected == 1 ? "range_test" : "melee_test",
+                this.itemSlotSelected == 1 ? "arrow_north" : "sword_tex",
                 "test hitbox",
                 position.getCol() + 1,
                 position.getRow(),
@@ -654,11 +662,11 @@ public class MainCharacter extends Peon
 
         setHurt(true);
         logger.info("Hurted: " + isHurt);
-        this.changeHealth(-damage);
+        changeHealth(-damage);
+        updateHealth();
 
-        if (this.healthBar != null) {
-            this.healthBar.update();
-        }
+        getBody().setLinearVelocity(getBody().getLinearVelocity()
+                        .lerp(new Vector2(0.f, 0.f), 0.5f));
 
         System.out.println("CURRENT HEALTH:" + String.valueOf(getHealth()));
         if (this.getHealth() <= 0) {
@@ -666,6 +674,8 @@ public class MainCharacter extends Peon
         } else {
             hurtTime = 0;
             recoverTime = 0;
+
+            /*
             HexVector bounceBack = new HexVector(position.getCol(), position.getRow() - 2);
 
             switch (getPlayerDirectionCardinal()) {
@@ -697,10 +707,14 @@ public class MainCharacter extends Peon
                     break;
             }
             position.moveToward(bounceBack, 1f);
+            */
 
             SoundManager.playSound(HURT);
-        }
 
+            if (hurtTime == 400) {
+                setRecovering(true);
+            }
+        }
     }
 
     private void checkIfHurtEnded() {
@@ -745,14 +759,14 @@ public class MainCharacter extends Peon
 
     private void checkIfRecovered() {
         recoverTime += 20;
-        recoverTime += 20;
 
         this.changeCollideability(false);
 
-        if (recoverTime > 2000) {
+        if (recoverTime > 1000) {
             logger.info("Recovered");
             setRecovering(false);
             changeCollideability(true);
+            recoverTime = 0;
         }
     }
 
@@ -938,13 +952,19 @@ public class MainCharacter extends Peon
             }
         }
 
-        if (button == 1) {
+    }
 
-            float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
-            float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
+    /**
+     * Reset the mana cooldown period and restore 1 mana to the MainCharacter.
+     */
+    private void restoreMana() {
 
-            HexVector mousePos = new HexVector(clickedPosition[0], clickedPosition[1]);
-            this.attack(mousePos);
+        //Reset the cooldown period.
+        this.manaCD = 0;
+
+        //Time interval has passed so restore some mana.
+        if (this.mana < 100) {
+            this.mana++;
         }
     }
 
@@ -956,6 +976,11 @@ public class MainCharacter extends Peon
         this.updatePosition();
         this.movementSound();
         this.centreCameraAuto();
+
+        this.manaCD++;
+        if (this.manaCD > MANACOOLDOWN) {
+            this.restoreMana();
+        }
 
         //this.setCurrentSpeed(this.direction.len());
         //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
@@ -1052,6 +1077,13 @@ public class MainCharacter extends Peon
                 if (this.equippedItem != null) {
                     useEquipped();
                 }
+                break;
+            case Input.Keys.ALT_LEFT:
+                float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
+                float[] clickedPosition = WorldUtil.worldCoordinatesToSubColRow(mouse[0], mouse[1]);
+                HexVector mousePosition = new HexVector(clickedPosition[0], clickedPosition[1]);
+
+                this.attack(mousePosition);
                 break;
             case Input.Keys.G:
                 addClosestGoldPiece();
@@ -1358,7 +1390,6 @@ public class MainCharacter extends Peon
     private void updateVel() {
         vel = getBody().getLinearVelocity().len();
     }
-
 
     /**
      * Gets the direction the player is currently facing
@@ -1713,7 +1744,7 @@ public class MainCharacter extends Peon
             } else if (getToBeRun().getType() == AnimationRole.ATTACK) {
                 return;
             }
-        } else {
+        }
 
             if (isDead()) {
                 setCurrentState(AnimationRole.STILL);
@@ -1726,7 +1757,6 @@ public class MainCharacter extends Peon
                     setCurrentState(AnimationRole.MOVE);
                 }
             }
-        }
     }
 
 

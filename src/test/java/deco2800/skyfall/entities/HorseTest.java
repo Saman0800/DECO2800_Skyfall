@@ -7,7 +7,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-
+// A test for Horse class
 public class HorseTest {
     private Horse horse;
 

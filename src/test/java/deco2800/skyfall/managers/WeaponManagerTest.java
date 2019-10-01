@@ -95,6 +95,8 @@ public class WeaponManagerTest {
         testCharacter.dropInventory("sword");
 
         Assert.assertEquals(testCharacter.getInventoryManager().getTotalAmount(), 10);
+
+
     }
 
     @Ignore

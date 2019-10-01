@@ -3,6 +3,7 @@ package deco2800.skyfall.entities.weapons;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.worlds.Tile;
+
 import org.junit.*;
 
 public class WeaponInventoryIntegrationTest {
@@ -10,8 +11,6 @@ public class WeaponInventoryIntegrationTest {
     private MainCharacter mc;
     private InventoryManager inventory;
     private Weapon sword;
-    private Weapon spear;
-    private Weapon bow;
     private Weapon axe;
 
     /**
@@ -22,8 +21,6 @@ public class WeaponInventoryIntegrationTest {
         mc = MainCharacter.getInstance(0f, 0f, 0.05f, "Main Piece", 10);
         inventory = new InventoryManager();
         sword = new Sword(new Tile(null, 0, 0), false);
-        spear = new Spear(new Tile(null, 0, 0), false);
-        bow = new Bow(new Tile(null, 0, 0), false);
         axe = new Axe(new Tile(null, 0, 0), false);
     }
 
@@ -35,8 +32,6 @@ public class WeaponInventoryIntegrationTest {
         mc = null;
         inventory = null;
         sword = null;
-        spear = null;
-        bow = null;
         axe = null;
     }
 
@@ -79,7 +74,6 @@ public class WeaponInventoryIntegrationTest {
         Assert.assertEquals(0, inventory.getAmount("axe"));
         Assert.assertEquals(9, inventory.getTotalAmount());
     }
-
 
     /**
      * Tests that main character can equip a weapon

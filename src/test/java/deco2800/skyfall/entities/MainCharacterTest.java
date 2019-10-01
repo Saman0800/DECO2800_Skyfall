@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.entities.enemies.Treeman;
 import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.entities.worlditems.*;
@@ -22,8 +23,6 @@ import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
 
-import java.util.concurrent.CopyOnWriteArrayList;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
 
@@ -562,13 +561,13 @@ public class MainCharacterTest {
         GameManager gm = GameManager.get();
         World world = mock(World.class);
         gm.setWorld(world);
-        testCharacter.attack(pos);
+        testCharacter.attack(new HexVector(0,0));
         //Assert that projectile was added to game world.
         assertTrue(gm.getWorld().getEntities().stream().anyMatch(e -> e instanceof Projectile));
 
         //Assert that a spell was cast and is in the world.
         testCharacter.spellSelected = SpellType.FLAME_WALL;
-        testCharacter.attack(pos);
+        testCharacter.attack(new HexVector(0,0));
         assertTrue(gm.getWorld().getEntities().stream().anyMatch(e -> e instanceof Spell));
         Assert.assertEquals(this.testCharacter.spellSelected,SpellType.NONE);
 
@@ -605,7 +604,7 @@ public class MainCharacterTest {
 
         HexVector old_pos = new HexVector(testCharacter.getPosition().getRow(), testCharacter.getPosition().getCol());
 
-        world.addEntity(new Treeman(old_pos.getRow() + 0.1f, old_pos.getCol() + 0.1f));
+        world.addEntity(new Treeman(old_pos.getRow() + 0.1f, old_pos.getCol() + 0.1f, testCharacter));
 
         for (int i = 0; i < 100; ++i) {
             world.onTick(100);

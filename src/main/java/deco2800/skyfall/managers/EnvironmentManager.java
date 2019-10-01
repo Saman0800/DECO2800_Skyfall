@@ -1,7 +1,5 @@
 package deco2800.skyfall.managers;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.observers.DayNightObserver;
@@ -596,15 +594,6 @@ public class EnvironmentManager extends TickableManager {
         setBiome();
         setTODMusic();
         getcurrentWeather();
-
-        // Key mapping to mute volume
-        // M for mute and U to un-mute
-        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-            BGMManager.mute();
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
-            BGMManager.unmute();
-        }
 
         weatherEvent++;
 
