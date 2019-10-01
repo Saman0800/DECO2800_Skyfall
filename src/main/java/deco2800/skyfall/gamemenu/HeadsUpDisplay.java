@@ -24,7 +24,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
     private Map<String, AbstractUIElement> hudElements;
     private Map<Actor, UpdatePositionInterface> positionObjects;
     private Table leftHUDTable;
-
+    private ImageButton location;
     public HeadsUpDisplay(Stage stage, String[] textureNames, TextureManager tm,
                           Skin skin, GameMenuManager gmm,
                           Map<String, AbstractUIElement> hudElements) {
@@ -41,7 +41,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
     public void updatePosition() {
         leftHUDTable.setPosition(gmm.getTopLeftX() + 30, gmm.getTopLeftY() - 3 * stage.getCamera().viewportHeight / 4);
         leftHUDTable.setHeight(stage.getCamera().viewportHeight / 2);
-
+        location.setSize(stage.getCamera().viewportWidth / 6, stage.getCamera().viewportHeight / 6);
         positionObjects.forEach((actor, posObj) -> posObj.updatePosition(actor));
     }
 
@@ -66,18 +66,24 @@ public class HeadsUpDisplay extends AbstractUIElement {
         TextButton teleport = new TextButton("TELEPORT", skin, "blue-pill2");
         teleport.getLabel().setStyle(skin.get("blue-pill", Label.LabelStyle.class));
         teleport.getLabel().setAlignment(Align.center);
-        teleport.getLabel().setFontScale(1f);
+        teleport.getLabel().setFontScale(0.8f);
 
         TextButton pauseT = new TextButton("PAUSE", skin, "blue-pill2");
         pauseT.getLabel().setStyle(skin.get("blue-pill", Label.LabelStyle.class));
         pauseT.getLabel().setAlignment(Align.center);
-        pauseT.getLabel().setFontScale(1f);
+        pauseT.getLabel().setFontScale(0.8f);
 
         TextButton helpT = new TextButton("HELP", skin, "blue-pill2");
         helpT.getLabel().setStyle(skin.get("blue-pill", Label.LabelStyle.class));
         helpT.getLabel().setAlignment(Align.center);
-        helpT.getLabel().setFontScale(1f);
+        helpT.getLabel().setFontScale(0.8f);
 
+        location = new ImageButton(generateTextureRegionDrawableObject("location_button"));
+        location.setSize(200, 200);
+        stage.addActor(location);
+
+
+        positionObjects.put(location, (Actor actor) -> actor.setPosition(gmm.getBottomLeftX() + stage.getCamera().viewportWidth / 1024, gmm.getBottomLeftY() + stage.getCamera().viewportHeight / 1024));
 
         leftHUDTable = new Table();
         leftHUDTable.setDebug(true);
