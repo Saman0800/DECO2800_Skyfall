@@ -184,6 +184,15 @@ public class QuestManager extends AbstractManager{
      */
 
     /**
+     * Checks if amount of gold in player inventory meets gold milestone amount
+     * @return True if amount equals or exceeds milestone, False if not
+     */
+    public boolean checkGold() {
+        int currentGold = player.getGoldPouchTotalValue();
+        return (currentGold >= getGoldTotal());
+    }
+
+    /**
      * Checks if amount of wood in player inventory meets wood milestone amount
      * @return True if amount equals or exceeds milestone, False if not
      */
