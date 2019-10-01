@@ -7,7 +7,6 @@ import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.entities.ICombatEntity;
@@ -17,9 +16,9 @@ import deco2800.skyfall.animation.AnimationRole;
 /**
  * An instance to abstract the basic variables and  methods of an enemy.
  */
-public abstract class AbstractEnemy extends Peon implements Animatable, ICombatEntity {
+public abstract class AbstractEnemy extends Peon implements ICombatEntity {
 
-    private final transient Logger log = LoggerFactory.getLogger(AbstractEnemy.class);
+    private final Logger log = LoggerFactory.getLogger(AbstractEnemy.class);
 
     // The basic variables of the enemy.
     private int strength;
@@ -34,12 +33,10 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
 
     // Booleans to check whether Enemy is in a state.
     private boolean isMoving;
-    // private boolean isChasing;
     private boolean isAttacking;
     private boolean isHurt = false;
 
     // How long does Enemy take to initiate animation.
-    private long attackTime = 0;
     private long hurtTime = 0;
     private long deadTime = 0;
 
@@ -75,6 +72,7 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
         this.level = level;
         this.setHealth(health);
         this.setMaxHealth(health);
+        this.strength = strength;
     }
 
     public AbstractEnemy (float col, float row) {
@@ -114,8 +112,9 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
      * @param player Main character
      */
     private void attackPlayer(MainCharacter player) {
+        System.out.println(mc.isRecovering());
         if(isAttacking && !(this.mc.isRecovering() ||
-                this.mc.isDead() || this.mc.IsHurt())) {
+                this.mc.isDead() || this.mc.isHurt())) {
             this.setSpeed(this.chaseSpeed);
             this.destination = new HexVector(player.getCol(), player.getRow());
 
@@ -228,6 +227,14 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
 
     /**
      * Get the biome the enemy appears
+     * @param biome name oof the biome.
+     */
+    public void setBiomeLocated(String biome){
+        biomeLocated = biome;
+    }
+
+    /**
+     * Get the biome the enemy appears
      * @return the name oof the biome.
      */
     @SuppressWarnings("WeakerAccess")
@@ -248,9 +255,9 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
     }
 
     @Override
-    public void dealDamage(ICombatEntity entity) {
-        if (entity.canDealDamage()) {
-            entity.dealDamage(entity);
+    public void dealDamage(MainCharacter mc) {
+        if (mc.isRecovering()) {
+            mc.hurt(getDamage());
         }
     }
 
@@ -283,17 +290,17 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
         if (angle < 0) {
             angle += 360;
         }
-        if (angle >= 0 && angle <= 60) {
+        if (between(angle, 0, 59.9)) {
             return Direction.SOUTH_WEST;
-        } else if (angle > 60 && angle <= 120) {
+        } else if (between(angle, 60, 119.5)) {
             return Direction.SOUTH;
-        } else if (angle > 120 && angle <= 180) {
+        } else if (between(angle, 120, 179.9)) {
             return Direction.SOUTH_EAST;
-        } else if (angle > 180 && angle <= 240) {
+        } else if (between(angle, 180, 239.9)) {
             return Direction.NORTH_EAST;
-        } else if (angle > 240 && angle <= 300) {
+        } else if (between(angle, 240, 299.9)) {
             return Direction.NORTH;
-        } else if (angle > 300 && angle < 360) {
+        } else if (between(angle, 300, 360)) {
             return Direction.NORTH_WEST;
         }
         return null;
@@ -303,27 +310,26 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
      * under normal situation the enemy will random wandering in 100 radius circle
      */
     public void randomMoving() {
-        if (!isAttacking || mc.isRecovering() || mc.isDead()) {
-            if (!isMoving && canMove) {
-                //target position
-                float[] targetPosition = new float[2];
-                if (getObjectName().equals("stone")) {
-                    //random movement range
-                    targetPosition[0] = (float) (Math.random() * 100 + originalPosition[0]);
-                    targetPosition[1] = (float) (Math.random() * 100 + originalPosition[1]);
-                } else if (getObjectName().equals("treeman")) {
-                    targetPosition[0] = (float) (Math.random() * 800 + originalPosition[0]);
-                    targetPosition[1] = (float) (Math.random() * 800 + originalPosition[1]);
-                }
-                float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow(targetPosition[0], targetPosition[1]);
-                destination = new HexVector(randomPositionWorld[0], randomPositionWorld[1]);
-                isMoving = true;
-                this.position.moveToward(destination, this.normalSpeed);
+        if ((!isAttacking || mc.isRecovering() || mc.isDead()) &&
+                !isMoving && canMove) {
+            //target position
+            float[] targetPosition = new float[2];
+            if (getObjectName().equals("stone")) {
+                //random movement range
+                targetPosition[0] = (float) (Math.random() * 100 + originalPosition[0]);
+                targetPosition[1] = (float) (Math.random() * 100 + originalPosition[1]);
+            } else if (getObjectName().equals("treeman")) {
+                targetPosition[0] = (float) (Math.random() * 800 + originalPosition[0]);
+                targetPosition[1] = (float) (Math.random() * 800 + originalPosition[1]);
+            }
+            float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow(targetPosition[0], targetPosition[1]);
+            destination = new HexVector(randomPositionWorld[0], randomPositionWorld[1]);
+            isMoving = true;
+            this.position.moveToward(destination, this.normalSpeed);
 
-                SoundManager.stopSound(chasingSound);
-                if (destination.getCol() == this.getCol() && destination.getRow() == this.getRow()) {
-                    isMoving = false;
-                }
+            SoundManager.stopSound(chasingSound);
+            if (destination.getCol() == this.getCol() && destination.getRow() == this.getRow()) {
+                isMoving = false;
             }
         }
     }
@@ -357,10 +363,9 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
 
             //if the player in angry distance or the enemy is attacked by player then turning to angry model
             if (distance(mc) < 2 || isAttacking && !(mc.isDead() ||
-                    mc.isRecovering() || mc.IsHurt())) {
+                    mc.isRecovering() || mc.isHurt())) {
                 setAttacking(true);
                 attackPlayer(mc);
-                attackTime = 0;
                 SoundManager.loopSound(chasingSound);
 
             } else {
@@ -376,14 +381,6 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
             }
             this.updateAnimation();
         }
-    }
-
-    /**
-     * Sets default direction textures uses the get index for Animation feature
-     * as described in the animation documentation section 4.
-     */
-    @Override
-    public void setDirectionTextures() {
     }
 
     /**
@@ -423,6 +420,17 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
     @Override
     public String toString() {
         return String.format("%s at (%d, %d) %s biome", getObjectName(), (int)getCol(), (int)getRow(), getBiomeLocated());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof AbstractEnemy &&
+                this.hashCode() == obj.hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
     }
 
 }

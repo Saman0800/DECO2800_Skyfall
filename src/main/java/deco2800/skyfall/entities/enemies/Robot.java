@@ -20,7 +20,6 @@ public class Robot extends AbstractEnemy implements Animatable {
         super(col,row);
 
         this.setLevel(2);
-        this.setSpeed(1);
         this.setRange(1);
         this.setHeight(1);
         this.setHealth(10);
@@ -71,5 +70,10 @@ public class Robot extends AbstractEnemy implements Animatable {
             AnimationRole.ATTACK, Direction.DEFAULT, new AnimationLinker(
                     "robot_defence", AnimationRole.MOVE,
                         Direction.DEFAULT, true, true));
+    }
+
+    @Override
+    public void setDirectionTextures() {
+
     }
 }

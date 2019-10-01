@@ -1,7 +1,6 @@
 package deco2800.skyfall.entities.enemies;
 
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.AnimationLinker;
@@ -9,7 +8,7 @@ import deco2800.skyfall.animation.AnimationLinker;
 /**
  * Instance of a treeman enemy.
  */
-public class Treeman extends AbstractEnemy implements Animatable {
+public class Treeman extends AbstractEnemy {
 
     /**
      * Initialization value of enemy treeman, and set the initial image in
@@ -23,7 +22,6 @@ public class Treeman extends AbstractEnemy implements Animatable {
         this.setDamage(1);
         this.setHeight(5);
         this.setHealth(10);
-        this.setSpeed(0.01f);
         this.setCanMove(true);
         this.setCharacter(mc);
         this.setObjectName("treeman");
@@ -31,7 +29,6 @@ public class Treeman extends AbstractEnemy implements Animatable {
         this.setAllSpeed(0.02f, 0.05f, 0.02f);
 
         this.configureAnimations();
-        this.setDirectionTextures();
         this.configureSounds();
     }
 
@@ -54,7 +51,6 @@ public class Treeman extends AbstractEnemy implements Animatable {
         this.setAllSpeed(0.02f, 0.05f, 0.02f);
 
         this.configureAnimations();
-        this.setDirectionTextures();
         this.configureSounds();
     }
 
@@ -69,7 +65,6 @@ public class Treeman extends AbstractEnemy implements Animatable {
     /**
      * Set up treeman animation.
      */
-    @Override
     public void configureAnimations() {
         this.addAnimations(
                 AnimationRole.MOVE, Direction.NORTH, new AnimationLinker("treemanMN", AnimationRole.MOVE, Direction.NORTH,

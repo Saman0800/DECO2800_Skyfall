@@ -1,34 +1,27 @@
 package deco2800.skyfall.entities;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import org.slf4j.Logger;
+import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Collections;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.world.Chunk;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import org.slf4j.Logger;
+
 import org.slf4j.LoggerFactory;
-
-import java.util.Set;
-
-import com.badlogic.gdx.graphics.Texture;
-
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.Tile;
-
-import com.google.gson.annotations.Expose;
+import com.badlogic.gdx.graphics.Texture;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.TextureManager;
 
 public class StaticEntity extends AbstractEntity implements NewInstance<StaticEntity>, Saveable<StaticEntity.StaticEntityMemento> {
-    private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
+    private final Logger log = LoggerFactory.getLogger(StaticEntity.class);
 
     private static final String ENTITY_ID_STRING = "staticEntityID";
     //private int renderOrder;
@@ -105,31 +98,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         this.obstructed = true;
         this.textures = texture;
 
-        if (center == null) {
-            log.debug("Center is null");
-            return;
-        }
-        center.setObstructed(true);
-
-        if (!WorldUtil.validColRow(center.getCoordinates())) {
-            log.debug(center.getCoordinates() + " Is Invalid:");
-            return;
-        }
-
-        children = new HashMap<>();
-
-        for (Entry<HexVector, String> tex : texture.entrySet()) {
-            Tile tile = textureToTile(tex.getKey(), this.getPosition());
-            if (tile != null) {
-                children.put(tile.getCoordinates(), tex.getValue());
-            }
-        }
-
-        for (HexVector childPos : children.keySet()) {
-            Tile child = GameManager.get().getWorld().getTile(childPos);
-
-            child.setObstructed(true);
-        }
+        staticEntitySetUp(center, texture);
     }
 
     /**
@@ -152,7 +121,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         children = new HashMap<>();
         children.put(tile.getCoordinates(), texture);
         if (!WorldUtil.validColRow(tile.getCoordinates())) {
-            log.debug(tile.getCoordinates() + "%s Is Invalid:");
+            log.debug("{}s Is Invalid:", tile.getCoordinates());
             return;
         }
 
@@ -178,13 +147,18 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         this.obstructed = true;
         this.textures = texture;
 
+        staticEntitySetUp(center, texture);
+    }
+
+    private void staticEntitySetUp(Tile center, Map<HexVector, String> texture) {
         if (center == null) {
             log.debug("Center is null");
             return;
         }
+        center.setObstructed(true);
 
         if (!WorldUtil.validColRow(center.getCoordinates())) {
-            log.debug(center.getCoordinates() + " Is Invalid:");
+            log.debug("{} is Invalid:", center.getCoordinates());
             return;
         }
 

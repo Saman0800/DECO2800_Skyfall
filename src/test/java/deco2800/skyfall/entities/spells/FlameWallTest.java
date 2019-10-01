@@ -2,6 +2,7 @@ package deco2800.skyfall.entities.spells;
 
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.enemies.AbstractEnemy;
+import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.enemies.Treeman;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;

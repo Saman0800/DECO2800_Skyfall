@@ -154,6 +154,40 @@ public class AnimationManager extends AbstractManager {
                 "spells_tornado_Anim",
                 303, 337, 0.12f);
 
+        /*
+        this.generateAnimationObject("Enemy_Abductor_Move_N_Anim",
+                "enemyScout_Move_N",
+                303, 337, 0.12f);
+
+        this.generateAnimationObject("Enemy_Abductor_Move_NW_Anim",
+                "enemyScout_Move_NW",
+                303, 337, 0.12f);
+
+        this.generateAnimationObject("Enemy_Abductor_Move_NE_Anim",
+                "enemyScout_Move_NE",
+                303, 337, 0.12f);
+
+        this.generateAnimationObject("Enemy_Abductor_Move_S_Anim",
+                "enemyScout_Move_S",
+                303, 337, 0.12f);
+
+        this.generateAnimationObject("Enemy_Abductor_Move_SW_Anim",
+                "enemyScout_Move_SW",
+                303, 337, 0.12f);
+
+        this.generateAnimationObject("Enemy_Abductor_Move_SE_Anim",
+                "enemyScout_Move_SE",
+                303, 337, 0.12f);
+
+        this.generateAnimationObject("Enemy_Abductor_Move_W_Anim",
+                "enemyScout_Move_W",
+                303, 337, 0.12f);
+
+        this.generateAnimationObject("Enemy_Abductor_Move_E_Anim",
+                "enemyScout_Move_E",
+                303, 337, 0.12f);
+        */
+
         System.out.println("All animations in game");
     }
 

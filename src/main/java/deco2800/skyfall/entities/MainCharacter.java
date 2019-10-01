@@ -37,7 +37,6 @@ import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.entities.spells.SpellFactory;
-import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
 
 /**
  * Main character in the game
@@ -63,7 +62,7 @@ public class MainCharacter extends Peon
 
     public static MainCharacter getInstance() {
         if (mainCharacterInstance == null) {
-            mainCharacterInstance = new MainCharacter(0,0,0.05f, "Main Piece", 10);
+            mainCharacterInstance = new MainCharacter(0, 0, 0.05f, "Main Piece", 10);
         }
         return mainCharacterInstance;
     }
@@ -124,7 +123,7 @@ public class MainCharacter extends Peon
 
     // Variables to sound effects
     private static final String WALK_NORMAL = "people_walk_normal";
-    private static final String HURT = "player_hurt";
+    private static final String PLAYER_HURT = "player_hurt";
     private static final String DIED = "player_died";
 
 
@@ -243,9 +242,9 @@ public class MainCharacter extends Peon
     private HealthCircle healthBar;
 
     /**
-     * Can this character take damage.
+     * The GUI health bar for the character.
      */
-    private boolean isInvincible;
+    // private GameOverTable gameOverTable;
 
     private String equipped;
 
@@ -338,7 +337,7 @@ public class MainCharacter extends Peon
      *                 5 = North-West
      */
     private MainCharacter(float col, float row, float speed, String name, int health, String[] textures) {
-        this(row, col, speed, name, health);
+        this(col, row, speed, name, health);
         this.setTexture(textures[2]);
     }
 
@@ -372,11 +371,9 @@ public class MainCharacter extends Peon
      */
     private void setupGameOverScreen() {
         // Game Over screen.
-        GameOverTable gameOverTable = (GameOverTable) GameManager.get().getManagerFromInstance(GameMenuManager.class).
-                getPopUp("gameOverTable");
-        System.out.println(gameOverTable);
+        // gameOverTable = (GameOverTable) GameManager.getManagerFromInstance(GameMenuManager.class).
+        //         getPopUp("gameOverTable");
     }
-
 
 
     /**
@@ -573,12 +570,44 @@ public class MainCharacter extends Peon
     }
 
     /**
-     * Set if the character is invincible.
+<<<<<<< HEAD
+     * Lets the player enter a vehicle, by changing there speed and there sprite
      *
-     * @param isInvincible Is the character invincible.
+     * @param vehicle The vehicle they are entering
      */
-    public void setInvincible(boolean isInvincible) {
-        this.isInvincible = isInvincible;
+    public void enterVehicle(String vehicle) {
+        // Determine the vehicle they are entering and set their new speed and
+        // texture
+        if (vehicle.equals("Camel")) {
+            //this.setTexture();
+            setAcceleration(0.1f);
+            setMaxSpeed(0.8f);
+        } else if (vehicle.equals("Dragon")) {
+            //this.setTexture();
+            setAcceleration(0.125f);
+            setMaxSpeed(1f);
+        } else if (vehicle.equals("Boat")) {
+            //this.setTexture();
+            setAcceleration(0.01f);
+            setMaxSpeed(0.5f);
+            changeSwimming(true);
+        } else {
+            //this.setTexture();
+            setAcceleration(0.03f);
+            setMaxSpeed(0.6f);
+        }
+    }
+
+    /**
+     * Lets the player exit the vehicle by setting their speed back to
+     * default and changing the texture. Also changing swimming to false in
+     * case they were in a boat
+     */
+    public void exitVehicle() {
+        //this.setTexture();
+        setAcceleration(0.01f);
+        setMaxSpeed(0.4f);
+        changeSwimming(false);
     }
 
     public void pickUpInventory(Item item) {
@@ -596,61 +625,27 @@ public class MainCharacter extends Peon
 
     /**
      * Player takes damage from other entities/ by starving.
+     *
+     * @param damage the damage deal to the player.
      */
     public void hurt(int damage) {
 
-        // if (this.isInvincible) return;
         if (this.isRecovering) return;
 
         setHurt(true);
-        logger.info("Hurted: " + isHurt);
         changeHealth(-damage);
         updateHealth();
 
         getBody().setLinearVelocity(getBody().getLinearVelocity()
-                        .lerp(new Vector2(0.f, 0.f), 0.5f));
-        logger.info("CURRENT HEALTH:" + this.getHealth());
+                .lerp(new Vector2(0.f, 0.f), 0.5f));
+
         if (this.getHealth() <= 0) {
             kill();
         } else {
             hurtTime = 0;
             recoverTime = 0;
 
-            /*
-            HexVector bounceBack = new HexVector(position.getCol(), position.getRow() - 2);
-
-            switch (getPlayerDirectionCardinal()) {
-                case "North":
-                    bounceBack = new HexVector(position.getCol(), position.getRow() - 2);
-                    break;
-                case "North-East":
-                    bounceBack = new HexVector(position.getCol() - 2, position.getRow() - 2);
-                    break;
-                case "East":
-                    bounceBack = new HexVector(position.getCol() - 2, position.getRow());
-                    break;
-                case "South-East":
-                    bounceBack = new HexVector(position.getCol() - 2, position.getRow() + 2);
-                    break;
-                case "South":
-                    bounceBack = new HexVector(position.getCol(), position.getRow() + 2);
-                    break;
-                case "South-West":
-                    bounceBack = new HexVector(position.getCol() + 2, position.getRow() + 2);
-                    break;
-                case "West":
-                    bounceBack = new HexVector(position.getCol() - 2, position.getRow());
-                    break;
-                case "North-West":
-                    bounceBack = new HexVector(position.getCol() + 2, position.getRow() - 2);
-                    break;
-                default:
-                    break;
-            }
-            position.moveToward(bounceBack, 1f);
-            */
-
-            SoundManager.playSound(HURT);
+            SoundManager.playSound(PLAYER_HURT);
 
             if (hurtTime > 400) {
                 setRecovering(true);
@@ -690,10 +685,6 @@ public class MainCharacter extends Peon
         this.isRecovering = isRecovering;
     }
 
-    public boolean isInvincible() {
-        return isInvincible;
-    }
-
     public boolean isTexChanging() {
         return isTexChanging;
     }
@@ -704,7 +695,6 @@ public class MainCharacter extends Peon
 
     private void checkIfRecovered() {
         recoverTime += 20;
-
         this.changeCollideability(false);
 
         if (recoverTime > 1000) {
@@ -725,13 +715,12 @@ public class MainCharacter extends Peon
         SoundManager.playSound(DIED);
         setCurrentState(AnimationRole.DEAD);
         deadTime = 0;
-        // gameOverTable.show();
     }
 
     /**
      * @return if player is in the state of "hurt".
      */
-    public boolean IsHurt() {
+    public boolean isHurt() {
         return isHurt;
     }
 
@@ -881,17 +870,17 @@ public class MainCharacter extends Peon
 
             //Check we have permission to build
 
-            if(GameManager.getManagerFromInstance(ConstructionManager.class).getStatus() == 1) {
-            //    System.out.println(clickedPosition[0]);
-            //    System.out.println(clickedPosition[1]);
+            if (GameManager.getManagerFromInstance(ConstructionManager.class).getStatus() == 1) {
+                //    System.out.println(clickedPosition[0]);
+                //    System.out.println(clickedPosition[1]);
                 //cheking inventories
-            //    if (GameManager.getManagerFromInstance(ConstructionManager.class).invCheck(inventories)){
-            //        GameManager.getManagerFromInstance(ConstructionManager.class).build(GameManager.get().getWorld(),clickedPosition[0], clickedPosition[1]);
-            //    }
+                //    if (GameManager.getManagerFromInstance(ConstructionManager.class).invCheck(inventories)){
+                //        GameManager.getManagerFromInstance(ConstructionManager.class).build(GameManager.get().getWorld(),clickedPosition[0], clickedPosition[1]);
+                //    }
 
                 // REMOVE THE INVENTORIES
-                    //    buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
-                    //    invRemove(buildingToBePlaced,GameManager.getManagerFromInstance(InventoryManager.class));
+                //    buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
+                //    invRemove(buildingToBePlaced,GameManager.getManagerFromInstance(InventoryManager.class));
 
                 GameManager.getManagerFromInstance(ConstructionManager.class).build(GameManager.get().getWorld(),
                         (int) clickedPosition[0], (int) clickedPosition[1]);
@@ -1091,7 +1080,7 @@ public class MainCharacter extends Peon
     /**
      * Adds a piece of gold to the Gold Pouch
      *
-     * @param gold The piece of gold to be added to the pouch
+     * @param gold  The piece of gold to be added to the pouch
      * @param count How many of that piece of gold should be added
      */
     public void addGold(GoldPiece gold, Integer count) {
@@ -1418,33 +1407,34 @@ public class MainCharacter extends Peon
      */
     private String getPlayerDirectionCardinal() {
         double playerDirectionAngle = getPlayerDirectionAngle();
-        playerDirectionAngle = 90 - Math.toDegrees(playerDirectionAngle);
+        playerDirectionAngle = Math.toDegrees(playerDirectionAngle);
 
         if (playerDirectionAngle < 0) {
             playerDirectionAngle += 360;
         }
-        if (checkIfDirectionNorth(playerDirectionAngle)) {
+        if (between(playerDirectionAngle, 67.5, 112.5)) {
             setCurrentDirection(Direction.NORTH);
             return "North";
-        } else if (checkIfDirectionNorthEast(playerDirectionAngle)) {
+        } else if (between(playerDirectionAngle, 22.5, 67.5)) {
             setCurrentDirection(Direction.NORTH_EAST);
             return "North-East";
-        } else if (checkIfDirectionEast(playerDirectionAngle)) {
+        } else if (between(playerDirectionAngle, 0, 22.5) ||
+                between(playerDirectionAngle, 337.5, 360) ) {
             setCurrentDirection(Direction.EAST);
             return "East";
-        } else if (checkIfDirectionSouthEast(playerDirectionAngle)) {
+        } else if (between(playerDirectionAngle, 292.5, 337.5)) {
             setCurrentDirection(Direction.SOUTH_EAST);
             return "South-East";
-        } else if (checkIfDirectionSouth(playerDirectionAngle)) {
+        } else if (between(playerDirectionAngle, 247.5, 292.5)) {
             setCurrentDirection(Direction.SOUTH);
             return "South";
-        } else if (checkIfDirectionSouthWest(playerDirectionAngle)) {
+        } else if (between(playerDirectionAngle, 202.5, 247.5)) {
             setCurrentDirection(Direction.SOUTH_WEST);
             return "South-West";
-        } else if (checkIfDirectionWest(playerDirectionAngle)) {
+        } else if (between(playerDirectionAngle, 157.5, 202.5)) {
             setCurrentDirection(Direction.WEST);
             return "West";
-        } else if (checkIfDirectionNorthWest(playerDirectionAngle)) {
+        } else if (between(playerDirectionAngle, 112.5, 157.5)) {
             setCurrentDirection(Direction.NORTH_WEST);
             return "North-West";
         }
@@ -1722,7 +1712,7 @@ public class MainCharacter extends Peon
      */
     private void updateAnimation() {
         getPlayerDirectionCardinal();
-        List<Float> vel = getVelocity();
+        List<Float> velocity = getVelocity();
 
         /* Short Animations */
         if (getToBeRun() != null) {
@@ -1737,31 +1727,30 @@ public class MainCharacter extends Peon
         } else if (isHurt) {
             setCurrentState(AnimationRole.HURT);
         } else {
-            if (vel.get(2) == 0f) {
-                setCurrentState(AnimationRole.NULL);
-            } else {
-                setCurrentState(AnimationRole.MOVE);
+            if (velocity.get(2) == 0f) {
+                    setCurrentState(AnimationRole.NULL);
+                } else {
+                    setCurrentState(AnimationRole.MOVE);
+                }
             }
         }
-    }
 
-
-    /**
-     * Toggles if the camera should follow the player
-     */
-    private void toggleCameraLock() {
-        if (!cameraLock) {
-            cameraLock = true;
-            centreCameraManual();
-        } else {
-            cameraLock = false;
+        /**
+         * Toggles if the camera should follow the player
+         */
+        private void toggleCameraLock () {
+            if (!cameraLock) {
+                cameraLock = true;
+                centreCameraManual();
+            } else {
+                cameraLock = false;
+            }
         }
-    }
 
-    /**
-     * Centres the camera onto the player
-     * Designed to called on a loop
-     */
+        /**
+         * Centres the camera onto the player
+         * Designed to called on a loop
+         */
     private void centreCameraAuto() {
         if (cameraLock) {
             float[] coords = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
@@ -1771,33 +1760,33 @@ public class MainCharacter extends Peon
     }
 
     /**
-     * Centres the camera onto the player
-     * Not supposed to be called on a loop
-     */
-    private void centreCameraManual() {
-        float[] coords = WorldUtil
-                .colRowToWorldCords(this.getCol(), this.getRow());
-        GameManager.get().getCamera().position.set(coords[0], coords[1], 0);
-    }
+         * Centres the camera onto the player
+         * Not supposed to be called on a loop
+         */
+        private void centreCameraManual () {
+            float[] coords = WorldUtil
+                    .colRowToWorldCords(this.getCol(), this.getRow());
+            GameManager.get().getCamera().position.set(coords[0], coords[1], 0);
+        }
 
-     /** Returns the id of this character
-     *
-     * @return the id of this character
-     */
-    public long getID() {
-        return this.id;
-    }
+        /** Returns the id of this character
+         *
+         * @return the id of this character
+         */
+        public long getID () {
+            return this.id;
+        }
 
-    /**
-     * Returns the save this character is for
-     *
-     * @return the save this character is for
-     */
-    public Save getSave() {
-        return save;
-    }
+        /**
+         * Returns the save this character is for
+         *
+         * @return the save this character is for
+         */
+        public Save getSave () {
+            return save;
+        }
 
-    // FIXME:dannothan Fix or remove this.
+        // FIXME:dannothan Fix or remove this.
 //    @Override
 //    public MainCharacterMemento save() {
 //        return new MainCharacterMemento(this);
