@@ -2,6 +2,7 @@ package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.weapons.EmptyItem;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
@@ -9,6 +10,9 @@ import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.resources.Item;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +22,9 @@ import java.util.Map;
 public class Hatchet extends ManufacturedResources implements Item, Blueprint {
 
     private boolean blueprintLearned = false;
+
+    // Logger to show messages
+    private final Logger logger = LoggerFactory.getLogger(Hatchet.class);
 
     /***
      * Create a Hatecht with the name Hatchet
@@ -202,6 +209,9 @@ public class Hatchet extends ManufacturedResources implements Item, Blueprint {
                 }
             }
         }
-
+        this.decreaseDurability();
+        logger.warn("Durability: " + this.getDurability());
     }
+
+
 }

@@ -6,40 +6,50 @@ import org.junit.*;
 
 public class AxeTest {
 
-  private Axe axe;
+    private Axe axe;
 
-  @Before
-  public void setUp() {
-    axe = new Axe(new Tile(null, 0, 0), false);
-  }
+    @Before
+    public void setUp() {
+        axe = new Axe(new Tile(null, 0, 0), false);
+    }
 
-  @After
-  public void tearDown() {
-    axe = null;
-  }
+    @After
+    public void tearDown() {
+        axe = null;
+    }
 
-  @Test
-  public void getDurabilityTest() {
-    assert(axe.getDurability() == 10);
-  }
+    @Test
+    public void getDurabilityTest() {
+        Assert.assertEquals(10, axe.getDurability());
+    }
 
-  @Test
-  public void getAttackRateTest() {
-    assert (axe.getAttackRate() == 4);
-  }
+    @Test
+    public void changeDurabilityTest() {
+        Assert.assertTrue(axe.isUsable());
+        for (int i = 0; i < 10; i++) {
+            axe.decreaseDurability();
+        }
+        System.out.println(axe.getDurability());
+        Assert.assertFalse(axe.isUsable());
+    }
 
-  @Test
-  public void getDamageTest() {
-    assert(axe.getDamage() == 4);
-  }
+    @Test
+    public void getAttackRateTest() {
+        Assert.assertEquals(4, axe.getAttackRate());
+    }
 
-  @Test
-  public void getNameTest() {
-    assert (axe.getName().equals("axe"));
-  }
+    @Test
+    public void getDamageTest() {
+        Assert.assertEquals(4, axe.getDamage());
+    }
 
-  @Test
-  public void toStringTest() {
-    Assert.assertEquals(axe.toString(), "" + "melee" + ":" + "axe");
-  }
+    @Test
+    public void getNameTest() {
+        Assert.assertEquals("axe", axe.getName());
+    }
+
+    @Test
+    public void toStringTest() {
+        Assert.assertEquals("melee:axe", axe.toString());
+    }
 }

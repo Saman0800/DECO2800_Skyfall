@@ -31,16 +31,29 @@ public class SoundManager extends AbstractManager {
             String PATH = "resources/sounds/";
             soundMap.put("people_walk_normal", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "pick up.wav")));
-            soundMap.put("spider", Gdx.audio.newSound
+            soundMap.put("spiderWalk", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "spider.wav")));
-            soundMap.put("robot", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "robot.wav")));
-            soundMap.put("sword", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "sword.wav")));
+            soundMap.put("spiderDie", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "spider_death.wav")));
+            soundMap.put("robotWalk", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "robot_walk.wav")));
+            soundMap.put("robotDie", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "robot_death.wav")));
+            soundMap.put("flowerOpen", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "flower_open.wav")));
+            soundMap.put("flowerDie", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "flower_death.wav")));
             soundMap.put("stoneWalk", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "stone_walk.wav")));
             soundMap.put("stoneDie", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "stone_die.wav")));
+            soundMap.put("treemanWalk", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "tree_monster_move.wav")));
+            soundMap.put("treemanDie", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "tree_monster_death.wav")));
+            soundMap.put("sword", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "sword.wav")));
+
             soundMap.put("collectStone", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "collect-stone.wav")));
             soundMap.put("menu", Gdx.audio.newSound
@@ -61,6 +74,8 @@ public class SoundManager extends AbstractManager {
                     (Gdx.files.internal(PATH + "died.wav")));
             soundMap.put("beach_day", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "beach_day.wav")));
+            soundMap.put("sword_attack", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "sword.wav")));
 
         } catch(Exception e) {
             LOGGER.error("no song be found");

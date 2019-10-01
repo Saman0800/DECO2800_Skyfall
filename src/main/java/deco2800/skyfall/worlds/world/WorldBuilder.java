@@ -346,6 +346,10 @@ public class WorldBuilder implements WorldBuilderInterface {
         EntitySpawnRule spearRule2 = new EntitySpawnRule(tile -> new Spear(tile, true), random.nextInt(), 0.005);
         biomeSpawnRules.add(spearRule2);
 
+        // Spawn some swords
+        EntitySpawnRule swordRule2 = new EntitySpawnRule(tile -> new Swort(tile, true), random.nextInt(), 0.006);
+        biomeSpawnRules.add(swordRule2);
+
         // Create a new perlin noise map
         SpawnControl sSnowControl = x -> (x * x * x * x * x * x) / 2d + 0.05;
         EntitySpawnRule sSnowRule = new EntitySpawnRule(tile -> new SnowClump(tile, false), random.nextInt(), true,

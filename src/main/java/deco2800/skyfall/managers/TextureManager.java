@@ -84,11 +84,7 @@ public class TextureManager extends AbstractManager {
             }
 
             textureMap.put("gold", new Texture("resources/gold.png"));
-            // EnemyEntity
-            textureMap.put("flower", new Texture("resources/flower.png"));
-            textureMap.put("enemyStone", new Texture("resources/enemyStone.png"));
-            textureMap.put("spider", new Texture("resources/spider.png"));
-            textureMap.put("robot", new Texture("resources/robot.png"));
+
             textureMap.put("whitebear", new Texture("resources/whitebear.png"));
             textureMap.put("icewhitebear", new Texture("resources/icewhitebear.png"));
             textureMap.put("lizardHome", new Texture("resources/lizard/home.png"));
@@ -96,23 +92,28 @@ public class TextureManager extends AbstractManager {
             textureMap.put("lizardE", new Texture("resources/lizard/lizardE.png"));
             textureMap.put("lizardN", new Texture("resources/lizard/lizardN.png"));
             textureMap.put("lizardS", new Texture("resources/lizard/lizardS.png"));
-            textureMap.put("stoneRS", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/stoneRS.png"));
-            textureMap.put("stoneRSE", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/stoneRSE.png"));
-            textureMap.put("stoneRSW", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/stoneRSW.png"));
-            textureMap.put("stoneRNE", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/stoneRNE.png"));
-            textureMap.put("stoneRNW", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/stoneRNW.png"));
-            textureMap.put("stoneRN", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/stoneRN.png"));
-            textureMap.put("stoneDead", new Texture("resources/EnemyAnimationPacked/stoneUnderAttacking/Dead.png"));
+
+            //AbstractEnemy
+            textureMap.put("robot", new Texture("resources/enemyOld/robot.png"));
+            textureMap.put("spider", new Texture("resources/enemyOld/spider.png"));
+            textureMap.put("flower", new Texture("resources/enemyOld/flower.png"));
+            textureMap.put("enemyStone", new Texture("resources/enemyOld/enemyStone.png"));
+            textureMap.put("flowerDead", new Texture("resources/enemyOld/flowerDead.png"));
+            textureMap.put("treemanDead", new Texture("resources/enemyOld/TreemanDead.png"));
+            textureMap.put("enemyTreeman", new Texture("resources/enemyOld/Treeman.png"));
+
+            textureMap.put("stoneRS", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRS.png"));
+            textureMap.put("stoneRSE", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRSE.png"));
+            textureMap.put("stoneRSW", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRSW.png"));
+            textureMap.put("stoneRNE", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRNE.png"));
+            textureMap.put("stoneRNW", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRNW.png"));
+            textureMap.put("stoneRN", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRN.png"));
+            textureMap.put("stoneDead", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/Dead.png"));
 
             textureMap.put("chestClosed", new Texture("resources/chest_icon.png"));
             textureMap.put("blueprintShop", new Texture("resources/shopkeeper.png"));
 
-            textureMap.put("enemyTreeman", new Texture("resources/Treeman.png"));
-            textureMap.put("treemanDead", new Texture("resources/TreemanDead.png"));
-
             textureMap.put("petTiger", new Texture("resources/tiger_front1.png"));
-
-            textureMap.put("flowerDead", new Texture("resources/flowerDead.png"));
 
             textureMap.put("grass_tuff", new Texture("resources/world_details/grass1.png"));
 
@@ -218,10 +219,33 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("sword_tex", new Texture("resources/weapons/sword.png"));
             textureMap.put("sword", new Texture("resources/weapons/sword.png"));
+            // Weapons pick-up
+            textureMap.put("sword_tex", new Texture("resources/weapons/sword" +
+                    ".png"));
             textureMap.put("axe_tex", new Texture("resources/weapons/axe.png"));
             textureMap.put("bow_tex", new Texture("resources/weapons/bow.png"));
             textureMap.put("spear_tex", new Texture("resources/weapons/spear.png"));
-            textureMap.put("no_weapon_tex", new Texture("resources/weapons/noweapon.png"));
+
+            // Weapons attack
+            textureMap.put("sword_attack", new Texture("resources/weapons" +
+                    "/DesertSword.png"));
+            textureMap.put("axe_attack", new Texture("resources/weapons" +
+                    "/axe.png"));
+            textureMap.put("bow_attack", new Texture("resources/weapons" +
+                    "/ArrowEast.png"));
+            textureMap.put("spear_attack", new Texture("resources/weapons" +
+                    "/spear.png"));
+
+            // Weapons display
+            textureMap.put("sword_display_inv", new Texture("resources" +
+                    "/weapons" +
+                    "/RustySword.png"));
+            textureMap.put("axe_display_inv", new Texture("resources/weapons" +
+                    "/axe.png"));
+            textureMap.put("bow_display_inv", new Texture("resources/weapons" +
+                    "/bow2.png"));
+            textureMap.put("spear_display_inv", new Texture("resources/weapons" +
+                    "/spear2.png"));
 
             textureMap.put("pop up screen", new Texture("resources/pop_up_screen_background.png"));
             textureMap.put("game menu bar", new Texture("resources/pop_up_screen_title_background.png"));
@@ -306,7 +330,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("Metal_inv", new Texture("resources/items_icons/metal.png"));
             textureMap.put("Pick Axe_inv", new Texture("resources/items_icons/pickaxe.png"));
             textureMap.put("Hatchet_inv", new Texture("resources/items_icons/hatchet.png"));
-            textureMap.put("sword_tex_inv", new Texture("resources/items_icons/sword.png"));
             textureMap.put("Aloe_Vera_inv", new Texture("resources/items_icons/aloevera.png"));
             textureMap.put("Apple_inv", new Texture("resources/items_icons/apple.png"));
             textureMap.put("Berry_inv", new Texture("resources/items_icons/berry.png"));
@@ -347,8 +370,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("spells_shield_Still", new Texture("resources/spells/shield_3.png"));
             textureMap.put("spells_tornado_Anim", new Texture("resources/spells/tornado_spritesheet.png"));
 
-            System.out.println("ALL TEXTURES LOADED SUCCESSFULLY");
-
             textureMap.put("cabin_0", new Texture("resources/world_structures/cabin_0.png"));
             textureMap.put("cabin_90", new Texture("resources/world_structures/cabin_90.png"));
             textureMap.put("cabin_180", new Texture("resources/world_structures/cabin_180.png"));
@@ -366,6 +387,9 @@ public class TextureManager extends AbstractManager {
             textureMap.put("watchtower_180", new Texture("resources/world_structures/watchtower_180.png"));
             textureMap.put("watchtower_270", new Texture("resources/world_structures/watchtower_270.png"));
 
+            // FIXME:Ontonator Make this use a logger.
+            System.out.println("ALL TEXTURES LOADED SUCCESSFULLY");
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -374,7 +398,7 @@ public class TextureManager extends AbstractManager {
     /**
      * Used for testing only.
      *
-     * @param test
+     * @param test is the function being tested.
      */
     public TextureManager(boolean test) {
 
@@ -457,5 +481,4 @@ public class TextureManager extends AbstractManager {
         textureMap.put(id, texture);
         return texture;
     }
-
 }

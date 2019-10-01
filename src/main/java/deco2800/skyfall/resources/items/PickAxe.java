@@ -9,6 +9,8 @@ import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.resources.Item;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +21,9 @@ import java.util.Map;
 public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
     private boolean blueprintLearned = false;
+
+    // Logger to show messages
+    private final Logger logger = LoggerFactory.getLogger(PickAxe.class);
 
     /***
      * Create a Pick Axe with the name Pick Axe.
@@ -212,5 +217,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
                 }
             }
         }
+        this.decreaseDurability();
+        logger.warn("Durability: " + this.getDurability());
     }
 }
