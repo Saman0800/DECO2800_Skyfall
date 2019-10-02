@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities.spells;
 
+import com.badlogic.gdx.Input;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
@@ -16,6 +17,17 @@ public class Tornado extends Spell {
 
     //MainCharacter instance.
     private MainCharacter mc;
+
+    /**
+     * Key sequence required to cast this spell.
+     */
+    public static int[] keySequence = new int[] {
+            Input.Keys.UP,
+            Input.Keys.UP,
+            Input.Keys.UP,
+            Input.Keys.DOWN,
+            Input.Keys.DOWN
+    };
 
     /**
      * Construct a new spell.
@@ -71,7 +83,4 @@ public class Tornado extends Spell {
                         AnimationRole.ATTACK, Direction.DEFAULT, true, true));
     }
 
-    @Override
-    public void setDirectionTextures() {
-    }
 }

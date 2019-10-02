@@ -20,7 +20,7 @@ public class Projectile extends AgentEntity implements Animatable {
     /**
      * How many game ticks all projectiles survive for before being removed.
      */
-    public static final int LIFE_TIME_TICKS = 100;
+    public static final int LIFE_TIME_TICKS = 15;
 
     /**
      * The amount of damage this projectile deals.
@@ -72,6 +72,7 @@ public class Projectile extends AgentEntity implements Animatable {
         this.range = range;
 
         this.textureName = textureName;
+
         this.setTexture(textureName);
         this.setObjectName(objectName);
 

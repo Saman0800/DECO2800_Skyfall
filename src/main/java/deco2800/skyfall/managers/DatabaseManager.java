@@ -34,26 +34,28 @@ public final class DatabaseManager extends AbstractManager {
     private static String saveName = "";
     private static List<String> saveNameList = new ArrayList<>();
 
-    //The current instance of the DataBaseManager
+    // The current instance of the DataBaseManager
     private static DatabaseManager instance = null;
 
-    //An instance of DataBaseConnector that is used to connect and manage data in the database
+    // An instance of DataBaseConnector that is used to connect and manage data in
+    // the database
     private static DataBaseConnector dataBaseConnector;
 
     private DatabaseManager() {
         /*
-         This constructor is not called, but added to deal with the:
-             Add a private constructor to hide the implicit public one.
-         code smell
-        */
+         * This constructor is not called, but added to deal with the: Add a private
+         * constructor to hide the implicit public one. code smell
+         */
     }
 
     /**
-     * This function will generate the JSON for a tile, and return the StringBuilder with the JSON appended.
+     * This function will generate the JSON for a tile, and return the StringBuilder
+     * with the JSON appended.
      *
-     * @param t the tile we are generating the JSON for
+     * @param t                  the tile we are generating the JSON for
      * @param entireJsonAsString the entire JSON as it currently exists
-     * @param appendComma a boolean letting us know whether we're at the end of the JSON array.
+     * @param appendComma        a boolean letting us know whether we're at the end
+     *                           of the JSON array.
      * @return A StringBuilder object with the tile JSON appended.
      */
     private static StringBuilder generateJsonForTile(Tile t, StringBuilder entireJsonAsString, boolean appendComma) {
@@ -80,11 +82,13 @@ public final class DatabaseManager extends AbstractManager {
     }
 
     /**
-     * This function will generate the JSON for an entity, and return the StringBuilder with the JSON appended.
+     * This function will generate the JSON for an entity, and return the
+     * StringBuilder with the JSON appended.
      *
-     * @param e the entity we are generating the JSON for
+     * @param e                  the entity we are generating the JSON for
      * @param entireJsonAsString the entire JSON as it currently exists
-     * @param appendComma a boolean letting us know whether we're at the end of the JSON array.
+     * @param appendComma        a boolean letting us know whether we're at the end
+     *                           of the JSON array.
      * @return A StringBuilder object with the entity JSON appended.
      */
     private static StringBuilder generateJsonForEntity(AbstractEntity e, StringBuilder entireJsonAsString,
@@ -113,7 +117,8 @@ public final class DatabaseManager extends AbstractManager {
         return entireJsonAsString;
     }
 
-    /** This function will return the string represented by a GSON token.
+    /**
+     * This function will return the string represented by a GSON token.
      *
      * @param reader the JsonReader that tracks where we ar ein the file.
      * @return The string of that token.
@@ -128,8 +133,9 @@ public final class DatabaseManager extends AbstractManager {
     }
 
     /**
-     * This function will read the outer JSON file, reading the main array names [entities or tiles]
-     * If we are past these two tokens, the BreakSignal will be returned.
+     * This function will read the outer JSON file, reading the main array names
+     * [entities or tiles] If we are past these two tokens, the BreakSignal will be
+     * returned.
      *
      * @param reader the JsonReader that tracks where we are in the file
      * @return A string representing the main array name
@@ -138,7 +144,8 @@ public final class DatabaseManager extends AbstractManager {
         try {
             return readGsonToken(reader);
         } catch (IllegalStateException e) {
-            // This catch is used to figure out if we're finished loading entities and tiles.
+            // This catch is used to figure out if we're finished loading entities and
+            // tiles.
             try {
                 if (reader.peek() == JsonToken.END_DOCUMENT) {
                     return "BreakSignal";
@@ -155,7 +162,7 @@ public final class DatabaseManager extends AbstractManager {
     /**
      * Processes the tile portions of the JSON file when loading.
      *
-     * @param reader the JsonReader object for loading JsonTokens
+     * @param reader   the JsonReader object for loading JsonTokens
      * @param newTiles the list of new tiles.
      */
     private static void processTileJson(JsonReader reader, List<Tile> newTiles) {
@@ -217,7 +224,7 @@ public final class DatabaseManager extends AbstractManager {
         try {
             for (String s : Arrays.asList("rock")) {
                 if (entityObjectName.startsWith(s)) {
-                    Rock create = new Rock();
+                    ForestRock create = new ForestRock();
                     create.setObjectName(entityObjectName);
                     return (AbstractEntity) create;
                 }
@@ -244,7 +251,7 @@ public final class DatabaseManager extends AbstractManager {
             HashMap<String, String> entityMap = new HashMap<>();
             entityMap.put("player", "entities.MainCharacter");
             entityMap.put("rock", "entities.rock");
-            entityMap.put("tree", "entities.Tree");
+            entityMap.put("tree", "entities.ForestTree");
             entityMap.put("staticEntityID", "entities.StaticEntity");
 
             fullEntityName.append(entityMap.get(entityObjectName));
@@ -257,6 +264,7 @@ public final class DatabaseManager extends AbstractManager {
 
     /**
      * Gets the current DatabaseManger, and if it does exist create it and return it
+     * 
      * @return A DataBaseManager
      */
     public static DatabaseManager get() {
@@ -316,7 +324,7 @@ public final class DatabaseManager extends AbstractManager {
     /**
      * Processes the entity portions of the JSON file when loading.
      *
-     * @param reader the JsonReader object for loading JsonTokens
+     * @param reader      the JsonReader object for loading JsonTokens
      * @param newEntities the map of new entities.
      */
     private static void processEntityJson(JsonReader reader, Map<Integer, AbstractEntity> newEntities) {
@@ -350,8 +358,7 @@ public final class DatabaseManager extends AbstractManager {
 
     }
 
-    private static boolean startArrayReading(JsonReader reader,
-                                             CopyOnWriteArrayList<Tile> newTiles) {
+    private static boolean startArrayReading(JsonReader reader, CopyOnWriteArrayList<Tile> newTiles) {
         try {
             reader.beginArray();
             return true;
@@ -409,14 +416,17 @@ public final class DatabaseManager extends AbstractManager {
     /**
      * This function loads the current state of the world from the save_file.json
      *
-     * This function is essentially a whole lot of parsing a JSON, which is particularly cumbersome in Java.
+     * This function is essentially a whole lot of parsing a JSON, which is
+     * particularly cumbersome in Java.
      *
-     * If you have any questions please direct them to me, I'll be writing a wiki page about this regardless.
+     * If you have any questions please direct them to me, I'll be writing a wiki
+     * page about this regardless.
      *
      * @author @shivy
      *
-     * @param world We have a world as a parameter for testing purposes.  In the main game, this will never need to be
-     *              passed, but when testing a TestWorld is needed to be passed.
+     * @param world We have a world as a parameter for testing purposes. In the main
+     *              game, this will never need to be passed, but when testing a
+     *              TestWorld is needed to be passed.
      */
     public static void loadWorld(World world) {
         // This check allows for the world parameter to act as an optional
@@ -447,7 +457,8 @@ public final class DatabaseManager extends AbstractManager {
         }
 
         world.setTileMap(newTiles);
-        // FIXME This is broken, but I haven't fixed given this is going to be overhauled later.
+        // FIXME This is broken, but I haven't fixed given this is going to be
+        // overhauled later.
         // world.generateNeighbours();
         world.setEntities(new CopyOnWriteArrayList<>(newEntities.values()));
         logger.info("Load succeeded");
@@ -483,12 +494,15 @@ public final class DatabaseManager extends AbstractManager {
     }
 
     /**
-     * This function saves the current state of the world to the Event, Tile, Entity and MultiEntity tables
+     * This function saves the current state of the world to the Event, Tile, Entity
+     * and MultiEntity tables
      *
-     * Before saving, the function will delete everything in the Event, Tile, Entity and MultiEntity tables
+     * Before saving, the function will delete everything in the Event, Tile, Entity
+     * and MultiEntity tables
      *
-     * @param world We have a world as a parameter for testing purposes.  In the main game, this will never need to be
-     *              passed, but when testing a TestWorld is needed to be passed.
+     * @param world We have a world as a parameter for testing purposes. In the main
+     *              game, this will never need to be passed, but when testing a
+     *              TestWorld is needed to be passed.
      */
     public static void saveWorld(World world) {
         logger.info("Saving the world to database.");
@@ -539,7 +553,7 @@ public final class DatabaseManager extends AbstractManager {
     /**
      * Creates and starts and new DataBaseConnector
      */
-    public void startDataBaseConnector(){
+    public void startDataBaseConnector() {
         dataBaseConnector = new DataBaseConnector();
         dataBaseConnector.start();
     }
@@ -547,18 +561,17 @@ public final class DatabaseManager extends AbstractManager {
     /**
      * Closes the connection of the DataBaseConnector to the database
      */
-    public void closeDataBaseConnector(){
+    public void closeDataBaseConnector() {
         dataBaseConnector.close();
     }
 
     /**
      * Gets the Database connector
+     * 
      * @return The database connector
      */
     public DataBaseConnector getDataBaseConnector() {
         return dataBaseConnector;
     }
-
-
 
 }

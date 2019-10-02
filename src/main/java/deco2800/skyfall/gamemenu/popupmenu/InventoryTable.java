@@ -12,6 +12,7 @@ import deco2800.skyfall.gamemenu.GameMenuBar;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.resources.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -276,13 +277,17 @@ public class InventoryTable extends AbstractPopUpElement {
         this.equipButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(inventorySelected != null) {
-                    mainCharacter.setEquippedItem(inventory.drop(inventorySelected));
-                    inventorySelected = null;
-                    setButtonsActive(false);
-                    updatePanels();
-                    gameMenuBar.removeQuickAccessPanel();
-                    gameMenuBar.setQuickAccessPanel();
+                if (inventorySelected != null) {
+                    Item item = inventory.drop(inventorySelected);
+                    if (mainCharacter.setEquippedItem(item)) {
+                        inventorySelected = null;
+                        setButtonsActive(false);
+                        updatePanels();
+                        gameMenuBar.removeQuickAccessPanel();
+                        gameMenuBar.setQuickAccessPanel();
+                    } else {
+                        inventory.add(item);
+                    }
                 }
             }
         });
@@ -350,7 +355,7 @@ public class InventoryTable extends AbstractPopUpElement {
     private void setCounts(Map<String, Integer> inventoryAmounts, int xpos, int ypos, int size, int xspace){
         int count = 0;
 
-        String[] weapons = {"axe", "box", "spear", "sword"};
+        String[] weapons = {"axe", "bow", "spear", "sword"};
 
         for (Map.Entry<String, Integer> entry : inventoryAmounts.entrySet()) {
             Image selected = new Image(generateTextureRegionDrawableObject("selected"));
@@ -361,10 +366,11 @@ public class InventoryTable extends AbstractPopUpElement {
             String weaponName = entry.getKey();
             for (String weapon : weapons) {
                 if (weapon.equals(entry.getKey())) {
-                    weaponName = entry.getKey() + "_tex";
+                    weaponName = entry.getKey() + "_display";
                 }
             }
-            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(weaponName + "_inv"));
+            ImageButton icon =
+                    new ImageButton(generateTextureRegionDrawableObject(weaponName + "_inv"));
             icon.setName(entry.getKey());
             icon.setSize((float)size, (float)size);
             icon.setPosition((float)(xpos + (size+xspace)*(count-1)), ypos);

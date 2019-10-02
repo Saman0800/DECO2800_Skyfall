@@ -13,12 +13,11 @@ import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.ArrayList;
+import java.lang.reflect.Field;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -50,10 +49,10 @@ public class ChunkTest {
         mockStatic(DatabaseManager.class);
         when(DatabaseManager.get()).thenReturn(manager);
 
+        MainCharacter.resetInstance();
         WorldBuilder builder = new WorldBuilder();
         WorldDirector.constructTestWorld(builder);
         MainCharacter mainCharacter = MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
-        mainCharacter.setPosition(0, 0);
         builder.addEntity(mainCharacter);
         world = builder.getWorld();
 
