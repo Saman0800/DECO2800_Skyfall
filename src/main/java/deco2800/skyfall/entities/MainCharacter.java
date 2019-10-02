@@ -48,6 +48,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         KeyUpObserver, TouchDownObserver, Tickable, Animatable {
 
     private static MainCharacter mainCharacterInstance = null;
+    private boolean residualFromPopUp = false;
 
     /**
      * Removes the stored main character instance so that the next call to any of the {@code getInstance} methods will
@@ -1024,7 +1025,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         logger.info(String.valueOf(yInput));
 
         if(!GameScreen.isPaused) {
+            if (residualFromPopUp) {
+                residualInputsFromPopUp();
+            }
             this.updatePosition();
+        } else {
+            residualFromPopUp = true;
         }
         this.movementSound();
         this.centreCameraAuto();
@@ -1184,6 +1190,29 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.spellSelected = type;
     }
 
+    public void residualInputsFromPopUp() {
+        logger.info("Inputs being re added");
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            yInput += 1;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            xInput += -1;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            yInput += -1;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            xInput += 1;
+        }
+
+        residualFromPopUp = false;
+
+    }
+
+
     /**
      * Sets the appropriate movement flags to false on keyUp
      *
@@ -1197,6 +1226,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             yInput = 0;
             return;
         }
+
         switch (keycode) {
             case Input.Keys.W:
                 yInput -= 1;
