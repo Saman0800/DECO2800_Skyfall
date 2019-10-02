@@ -1,9 +1,10 @@
 package deco2800.skyfall.managers;
 
-import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.gui.Tuple;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.*;
+
+import java.io.Serializable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,14 +45,19 @@ public class InventoryManager extends TickableManager {
         initInventory(new HashMap<>());
 
         // Add default items to inventory
-        this.inventoryAdd(new Stone());
-        this.inventoryAdd(new Stone());
-        this.inventoryAdd(new Wood());
-        this.inventoryAdd(new Wood());
-        this.inventoryAdd(new Hatchet());
-        this.inventoryAdd(new PickAxe());
+        this.add(new Stone());
+        this.add(new Stone());
+        this.add(new Wood());
+        this.add(new Wood());
+        this.add(new Wood());
+        this.add(new Wood());
+        this.add(new Wood());
+        this.add(new Hatchet());
+        this.add(new PickAxe());
         this.quickAccessAdd("Hatchet");
         this.quickAccessAdd("Pick Axe");
+        this.quickAccessAdd("Wood");
+        this.quickAccessAdd("Stone");
     }
 
     public void initInventory(Map<String, List<Item>> inventory) {
@@ -102,7 +108,7 @@ public class InventoryManager extends TickableManager {
      * Get a copy of the inventory contents.
      * @return a copy of the inventory
      */
-    public Map<String, List<Item>> getInventoryContents() {
+    public Map<String, List<Item>> getContents() {
         return Collections.unmodifiableMap(this.inventory);
     }
 
@@ -111,7 +117,7 @@ public class InventoryManager extends TickableManager {
      * @return a map of item name to the integer amount in the inventory for
      * all inventory items.
      */
-    public Map<String, Integer> getInventoryAmounts() {
+    public Map<String, Integer> getAmounts() {
         Map<String, Integer> inventoryAmounts = new HashMap<>();
 
         for (Map.Entry<String, List<Item>> entry : this.inventory.entrySet()) {
@@ -130,7 +136,7 @@ public class InventoryManager extends TickableManager {
         int total = 0;
 
         List<Integer> inventoryAmount =
-                new ArrayList<>(this.getInventoryAmounts().values());
+                new ArrayList<>(this.getAmounts().values());
 
         for (Integer count: inventoryAmount) {
             total += count;
@@ -185,7 +191,7 @@ public class InventoryManager extends TickableManager {
      * @return the integer number of that item type in the inventory
      */
     public int getAmount(String item) {
-        Map<String, Integer> inventoryAmounts = this.getInventoryAmounts();
+        Map<String, Integer> inventoryAmounts = this.getAmounts();
 
         if (inventoryAmounts.get(item) != null) {
             return inventoryAmounts.get(item);
@@ -200,7 +206,7 @@ public class InventoryManager extends TickableManager {
      */
     @Override
     public String toString() {
-        Map<String, Integer> inventoryAmounts = this.getInventoryAmounts();
+        Map<String, Integer> inventoryAmounts = this.getAmounts();
         return "Inventory Contents " + inventoryAmounts.toString();
     }
 
@@ -216,13 +222,8 @@ public class InventoryManager extends TickableManager {
      * Add an item to the full inventory.
      * @param item the item to add to the inventory, implements Item interface.
      */
-    public boolean inventoryAdd(Item item) {
-        String name;
-        if (item instanceof Weapon) {
-            name = item.getName() + "_tex";
-        } else {
-            name = item.getName();
-        }
+    public boolean add(Item item) {
+        String name = item.getName();
 
         if (this.inventory.get(name) != null) {
             List<Item> itemsList = this.inventory.get(name);
@@ -274,13 +275,13 @@ public class InventoryManager extends TickableManager {
      * @param itemName the String name of the item to drop from the inventory.
      * @return the Item dropped from the inventory
      */
-    public Item inventoryDrop(String itemName) {
-        if (this.inventory.get(itemName) != null) {
+    public Item drop(String itemName) {
+        if(this.inventory.get(itemName) != null){
             int num = this.inventory.get(itemName).size();
 
             if (num == 1) {
                 Item item = this.inventory.get(itemName).get(0);
-                removeFromInventory(itemName);
+                remove(itemName);
                 return item;
             } else if(num > 1) {
                 List<Item> itemsList = this.inventory.get(itemName);
@@ -289,6 +290,25 @@ public class InventoryManager extends TickableManager {
                 this.inventory.put(itemName, itemsList);
                 return item;
             }
+        }
+
+        logger.warn("You can't remove what you don't have!");
+
+        return null;
+    }
+
+
+    /**
+     * Removes all of a specific item type from the inventory, and quick access inventory.
+     * Returns as a list of items.
+     * @param itemName the String name of the item type to drop from the inventory.
+     * @return List of instances of item type dropped from inventory
+     */
+    public List<Item> dropAll(String itemName) {
+        if(this.inventory.get(itemName) != null){
+            List<Item> items = this.inventory.get(itemName);
+            remove(itemName);
+            return items;
         }
 
         logger.warn("You can't remove what you don't have!");
@@ -306,7 +326,7 @@ public class InventoryManager extends TickableManager {
      * @param amount the number of the item type to drop from the inventory
      * @return a list of the items dropped from the inventory
      */
-    public List<Item> inventoryDropMultiple(String itemName, int amount){
+    public List<Item> dropMultiple(String itemName, int amount){
         List<Item> itemsDropped = new ArrayList<>();
         List<Item> itemsList = this.inventory.get(itemName);
 
@@ -322,7 +342,7 @@ public class InventoryManager extends TickableManager {
                 this.inventory.put(itemName, itemsList);
             } else if (amount == num) {
                 itemsDropped.addAll(itemsList);
-                removeFromInventory(itemName);
+                remove(itemName);
             } else {
                 logger.warn("You don't have that many " + itemName +
                         "s!");
@@ -337,9 +357,33 @@ public class InventoryManager extends TickableManager {
     /**
      * Removes an item from the inventory
      */
-    private void removeFromInventory(String itemName) {
+    private void remove(String itemName) {
         this.inventory.remove(itemName);
         this.quickAccessRemove((itemName));
         this.positions.remove(itemName);
+    }
+
+    /**
+     * Returns the description of item
+     * @param itemName String name of item
+     * @return Description of item
+     */
+    public String getItemDescription(String itemName){
+        if(this.inventory.get(itemName) != null){
+            int num = this.inventory.get(itemName).size();
+
+            if (num == 1) {
+                Item item = this.inventory.get(itemName).get(0);
+                return item.getDescription();
+            } else if(num > 1) {
+                List<Item> itemsList = this.inventory.get(itemName);
+                Item item = itemsList.get(num - 1);
+                return item.getDescription();
+            }
+        }
+
+        logger.warn("You don't have that!");
+
+        return null;
     }
 }

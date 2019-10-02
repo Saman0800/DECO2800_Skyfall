@@ -10,7 +10,7 @@ public class AxeTest {
 
   @Before
   public void setUp() {
-    axe = new Axe(new Tile(0, 0), false);
+    axe = new Axe(new Tile(null, 0, 0), false);
   }
 
   @After
@@ -40,11 +40,6 @@ public class AxeTest {
 
   @Test
   public void toStringTest() {
-    Assert.assertEquals(axe.toString(), "axe is a melee weapon " +
-            "which can be used to help the Main Character" +
-            " defeat enemies. It has deals 4 slash damages each time it is" +
-            " used. It also has an attack rate " +
-            "of: 4 and a durability of: 10 before it become useless. "
-            + "axe" + "is carryable, but exchangeable.");
+    Assert.assertEquals(axe.toString(), "" + "melee" + ":" + "axe");
   }
 }

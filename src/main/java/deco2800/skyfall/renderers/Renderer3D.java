@@ -14,6 +14,9 @@ import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.*;
+import deco2800.skyfall.worlds.world.Chunk;
+import org.javatuples.Pair;
+import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -65,7 +68,9 @@ public class Renderer3D implements Renderer {
         }
 
         // Render tiles onto the map
-        List<Tile> tileMap = GameManager.get().getWorld().getTileMap();
+        // List<Tile> tileMap = GameManager.get().getWorld().getTileMap();
+        HashMap<Pair<Integer, Integer>, Chunk> chunks = GameManager.get().getWorld().getLoadedChunks();
+        int tileCount = chunks.values().stream().mapToInt(chunk -> chunk.getTiles().size()).sum();
         List<Tile> tilesToBeSkipped = new ArrayList<>();
         elapsedTime += Gdx.graphics.getDeltaTime();
 
@@ -75,11 +80,13 @@ public class Renderer3D implements Renderer {
         // rendered
 
         tilesSkipped = 0;
-        for (Tile t : tileMap) {
-            // Render each tile
-            renderTile(batch, camera, tileMap, tilesToBeSkipped, t);
+        for (Chunk chunk : chunks.values()) {
+            for (Tile t : chunk.getTiles()) {
+                // Render each tile
+                renderTile(batch, camera, tileCount, tilesToBeSkipped, t);
 
-            // Render each undiscovered area
+                // Render each undiscovered area
+            }
         }
 
         renderAbstractEntities(batch, camera);
@@ -96,11 +103,11 @@ public class Renderer3D implements Renderer {
      *
      * @param batch            the sprite batch.
      * @param camera           the camera.
-     * @param tileMap          the tile map.
+     * @param tileCount        the total number of tiles.
      * @param tilesToBeSkipped a list of tiles to skip.
      * @param tile             the tile to render.
      */
-    private void renderTile(SpriteBatch batch, OrthographicCamera camera, List<Tile> tileMap,
+    private void renderTile(SpriteBatch batch, OrthographicCamera camera, int tileCount,
             List<Tile> tilesToBeSkipped, Tile tile) {
 
         if (tilesToBeSkipped.contains(tile)) {
@@ -110,8 +117,8 @@ public class Renderer3D implements Renderer {
 
         if (WorldUtil.areCoordinatesOffScreen(tileWorldCord[0], tileWorldCord[1], camera)) {
             tilesSkipped++;
-            GameManager.get().setTilesRendered(tileMap.size() - tilesSkipped);
-            GameManager.get().setTilesCount(tileMap.size());
+            GameManager.get().setTilesRendered(tileCount - tilesSkipped);
+            GameManager.get().setTilesCount(tileCount);
             return;
         }
 
@@ -122,8 +129,8 @@ public class Renderer3D implements Renderer {
             Color c = batch.getColor();
             batch.setColor(c.r, c.g, c.b, .5f);
         }
-        GameManager.get().setTilesRendered(tileMap.size() - tilesSkipped);
-        GameManager.get().setTilesCount(tileMap.size());
+        GameManager.get().setTilesRendered(tileCount - tilesSkipped);
+        GameManager.get().setTilesCount(tileCount);
 
     }
 
@@ -174,19 +181,6 @@ public class Renderer3D implements Renderer {
         int w = TextureManager.TILE_WIDTH;
         int h = TextureManager.TILE_HEIGHT;
 
-        boolean renderDebug = true; // For debugging hitboxes
-        if (renderDebug) {
-            World box2DWorld = GameManager.get().getManager(PhysicsManager.class).getBox2DWorld();
-            Array<Body> bodies = new Array<>();
-            box2DWorld.getBodies(bodies);
-
-            for (Body body : bodies) {
-                float[] bodyWorldCoord = WorldUtil.colRowToWorldCords(body.getPosition().x, body.getPosition().y);
-
-                batch.draw(textureManager.getTexture("Select"), bodyWorldCoord[0], bodyWorldCoord[1], 10.f, 10.f);
-            }
-        }
-
         for (AbstractEntity entity : entities) {
             float[] entityWorldCoord = WorldUtil.colRowToWorldCords(entity.getCol(), entity.getRow());
             // If it's offscreen
@@ -220,10 +214,12 @@ public class Renderer3D implements Renderer {
                 if (!(entity instanceof Animatable)) {
                     renderAbstractEntity(batch, entity, entityWorldCoord, tex);
                 } else {
+
                     Color c = batch.getColor();
 
                     if (entity instanceof MainCharacter) {
                         if (((MainCharacter) entity).IsHurt() || ((MainCharacter) entity).isDead()) {
+                            System.out.println("Changed to red");
                             batch.setColor(Color.RED);
                         } else if (((MainCharacter) entity).isRecovering()) {
                             if (((MainCharacter) entity).isTexChanging()) {
@@ -251,7 +247,6 @@ public class Renderer3D implements Renderer {
 
         GameManager.get().setEntitiesRendered(entities.size() - entitiesSkipped);
         GameManager.get().setEntitiesCount(entities.size());
-
     }
 
     /**
@@ -299,6 +294,19 @@ public class Renderer3D implements Renderer {
     }
 
     private void debugRender(SpriteBatch batch, OrthographicCamera camera) {
+
+        boolean hitboxRenderDebug = false; // For debugging hitboxes
+        if (hitboxRenderDebug) {
+            World box2DWorld = GameManager.get().getManager(PhysicsManager.class).getBox2DWorld();
+            Array<Body> bodies = new Array<>();
+            box2DWorld.getBodies(bodies);
+
+            for (Body body : bodies) {
+                float[] bodyWorldCoord = WorldUtil.colRowToWorldCords(body.getPosition().x, body.getPosition().y);
+
+                batch.draw(textureManager.getTexture("Select"), bodyWorldCoord[0], bodyWorldCoord[1], 10.f, 10.f);
+            }
+        }
 
         if (GameManager.get().showCoords) {
             List<Tile> tileMap = GameManager.get().getWorld().getTileMap();

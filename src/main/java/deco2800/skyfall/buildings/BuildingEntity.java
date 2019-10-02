@@ -1,7 +1,24 @@
 package deco2800.skyfall.buildings;
 
-import deco2800.skyfall.entities.structures.Structure;
+import com.badlogic.gdx.graphics.Texture;
+import com.google.gson.annotations.Expose;
+
+import deco2800.skyfall.entities.AbstractEntity;
+
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.GameMenuManager;
+
+import deco2800.skyfall.managers.InventoryManager;
+
+import deco2800.skyfall.resources.Blueprint;
+import deco2800.skyfall.resources.Item;
+
+import deco2800.skyfall.util.Collider;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.world.World;
+import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,53 +26,73 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.entities.AbstractEntity;
-
 /**
  *  A BuildingEntity is an base class for all building entity subclass,
  *  including basic information that a building object should contains.
  */
-public class BuildingEntity extends AbstractEntity implements Structure {
+public class BuildingEntity extends AbstractEntity {
 
-    // a debug logger
+    // a logger
     private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);
     // a building object name
     private static final String ENTITY_ID_STRING = "buildingEntityID";
+    private Collider collider;
+
+    //The type of building to be created
+    private BuildingType buildingType;
 
     // consistent information for a specific building
     private int buildTime;
     private Map<String, Integer> buildCost;
     private Map<String, String> buildingTextures;
+    @Expose
     private int maxHealth;
 
     // changeable information for a specific building
     private float col;
     private float row;
 
+    @Expose
     private int length;
+
     private int width;
     private int level;
     private boolean upgradable;
     private int currentHealth;
 
+    private int maxInventorySize;
+    private InventoryManager inventoryManager;
+
+    private boolean canAttack;
+    private boolean canDefend;
+    private AttackLevel attackLevel;
+    private DefendLevel defendLevel;
+
+    enum AttackLevel {
+        LOW,
+        MEDIUM,
+        HIGH
+    }
+
+    enum DefendLevel {
+        LOW,
+        MEDIUM,
+        HIGH
+    }
+
     /**
-     * Constructor for an building entity.
+     * Constructor for an building entity with normal rendering size.
      * @param col the col position on the world
      * @param row the row position on the world
      * @param renderOrder the height position on the world
+     * @param buildingType specific building information container
      */
-    public BuildingEntity(float col, float row, int renderOrder) {
-        super(col, row, renderOrder, 1, 1);
-        this.setObjectName(ENTITY_ID_STRING);
-        this.setRenderOrder(renderOrder);
-        this.animations = new HashMap<>();
+    public BuildingEntity(float col, float row, int renderOrder, BuildingType buildingType) {
+        this(col, row, renderOrder, buildingType, 1, 1);
 
         if (!WorldUtil.validColRow(new HexVector(col, row))) {
             log.debug("Invalid position");
         }
-        setDefault();
     }
 
     /**
@@ -63,39 +100,67 @@ public class BuildingEntity extends AbstractEntity implements Structure {
      * @param col the col position on the world
      * @param row the row position on the world
      * @param renderOrder the height position on the world
+     * @param buildingType specific building information container
      * @param colRenderLength factor to scale the texture length
      * @param rowRenderLength factor to scale the texture width
      */
-    public BuildingEntity(float col, float row, int renderOrder, float colRenderLength, float rowRenderLength) {
+    public BuildingEntity(float col, float row, int renderOrder, BuildingType buildingType,
+                          float colRenderLength, float rowRenderLength) {
         super(col, row, renderOrder, colRenderLength, rowRenderLength);
         this.setObjectName(ENTITY_ID_STRING);
         this.setRenderOrder(renderOrder);
         this.animations = new HashMap<>();
+        this.buildingType = buildingType;
+        this.buildCost = buildingType.getBuildCost();
+        this.setObjectName(buildingType.getName());
+        this.setTexture(buildingType.getMainTexture());
+        this.setBuildTime(buildingType.getBuildTime());
+        this.setInitialHealth(buildingType.getMaxHealth());
+        this.setWidth(buildingType.getSizeY());
+        this.setLength(buildingType.getSizeX());
+        this.setBuildingLevel(1);
+        this.setCollider();
 
         if (!WorldUtil.validColRow(new HexVector(col, row))) {
             log.debug("Invalid position");
         }
-        setDefault();
     }
 
     /**
-     * Set default information for a building entity, and it should be overridden inside
-     * a building entity subclass for setting different basic information.
-     */
-    private void setDefault() {
-        // default consistent information of the building type
-        setTexture("error_build");
-        setBuildTime(1);
-        addBuildCost("", 0);
-        addBuildCost("", 0);
-        setInitialHealth(1000);
+    * Creates a new Collider object at (x,y) coordinates with size xLength x yLength.
+    * Called by building factory before returning a building such that no building
+    * in the game has a Collider set to null.
+    */
+    public void setCollider() {
+        float[] cords = WorldUtil.colRowToWorldCords(position.getCol(), position.getRow());
 
-        // default changeable information of the building type
-        length = 1;
-        width = 1;
-        level = 1;
-        upgradable = false;
-        currentHealth = getInitialHealth();
+        // preferred way as setting a collider based on texture size
+        try {
+            Texture texture = new Texture(getTexture());
+            collider = new Collider(cords[0], cords[1],
+                    texture.getWidth(), texture.getHeight());
+            return;
+        } catch (Exception e) {
+            log.info("Building {} can't set a collider with its texture",
+                    getObjectName() + getEntityID());
+        }
+
+        // preferred way is blocked, setting a collider based on tile
+        try {
+            float tileSize = 100;
+            collider = new Collider(cords[0], cords[1],
+                    tileSize * getLength(), tileSize * getWidth());
+        } catch (Exception e2) {
+            log.info("Building {} has a null collider",
+                    getObjectName() + getEntityID());
+        }
+    }
+
+    /**
+     * @return The collider for the building entity
+     */
+    public Collider getCollider() {
+        return collider;
     }
 
     @Override
@@ -104,6 +169,7 @@ public class BuildingEntity extends AbstractEntity implements Structure {
         // run building animation here if provided (e.g. show build time left)
         // do nothing so far
     }
+
 
     /**
      * @param x - X coordinate
@@ -122,6 +188,12 @@ public class BuildingEntity extends AbstractEntity implements Structure {
     public void removeBuilding(World world) {
         world.removeEntity(this);
     }
+
+    /**
+     * Get the type of building
+     * @return building type
+     */
+    public BuildingType getBuildingType() { return this.buildingType; }
 
 
     /**
@@ -153,12 +225,12 @@ public class BuildingEntity extends AbstractEntity implements Structure {
             buildCost.put(resource, cost);
         }
     }
+
     /**
      * @return - cost of building the building
      */
-    public Map<String, Integer> getCost(){
-        return buildCost;
-    }
+    public Map<String, Integer> getCost(){ return buildCost; }
+
 
     /**
      * Adds a texture to the buildings list of textures.
@@ -199,7 +271,7 @@ public class BuildingEntity extends AbstractEntity implements Structure {
 
     /**
      * Set a building entity length related to number of tile in terms of column.
-     * @param length a building's length
+     * @param length a building's length (x length)
      */
     public void setLength(int length) {
         if (length != 0) {
@@ -209,7 +281,7 @@ public class BuildingEntity extends AbstractEntity implements Structure {
 
     /**
      * Get a building entity length related to number of tile in terms of column.
-     * @return a building's length
+     * @return a building's length (x length)
      */
     public int getLength() {
         return this.length;
@@ -217,7 +289,7 @@ public class BuildingEntity extends AbstractEntity implements Structure {
 
     /**
      * Set a building entity width related to number of tile in terms of row.
-     * @param width a building's width
+     * @param width a building's width (y length)
      */
     public void setWidth(int width) {
         if (width != 0) {
@@ -227,7 +299,7 @@ public class BuildingEntity extends AbstractEntity implements Structure {
 
     /**
      * Get a building entity width related to number of tile in terms of row.
-     * @return a building's width
+     * @return a building's width (y length)
      */
     public int getWidth() {
         return this.width;
@@ -289,10 +361,130 @@ public class BuildingEntity extends AbstractEntity implements Structure {
 
 
 
+    /**
+     * Returns the number of wood required for the item.
+     *
+     * @return The name of the item
+     */
+    //@Override
+    public int getRequiredWood() {
+        return 1;
+    }
 
+    /**
+     * Returns the number of stones required for the item.
+     *
+     * @return The name of the item
+     */
+    //@Override
+    public int getRequiredStone() {
+        return 30;
+    }
 
+    /**
+     * Returns the number of metal required for the item.
+     *
+     * @return The name of the item
+     */
+    //@Override
+    public int getRequiredMetal() {
+        return 10;
+    }
 
+    /**
+     * Returns a map of the name of the required resource and
+     * the required number of each resource to create the item.
+     *
+     * @return a hashamp of the required resources and their number.
+     */
+    //@Override
+    public Map<String, Integer> getAllRequirements() {
 
+        buildCost.put("Wood", 50);
+        buildCost.put("Stone", 30);
+        buildCost.put("Metal", 10);
+        return buildCost;
+    }
+
+    //@Override
+    public String getName() {
+        return null;
+    }
+
+    /**
+     * Returns the number of metal required for the item.
+     *
+     * @return The name of the item
+     */
+    //@Override
+    public boolean isBlueprintLearned() {
+        //do nothing
+        return true;
+    }
+
+    /**
+     * Returns the number of metal required for the item.
+     *
+     * @return The name of the item
+     */
+    //@Override
+    public void toggleBlueprintLearned() {
+        //do nothing
+    }
+
+    //TODO: Empty interact methods need to not be empty wooo!
+
+    public void cabinInteract() {
+        //Resting at the cabin restores a players health.
+        MainCharacter player = GameManager.getManagerFromInstance(GameMenuManager.class).getMainCharacter();
+        player.changeHealth(+player.getMaxHealth());
+        //TODO: Update player health GUI.
+        //player.updateHealth();
+        //TODO: Needs to change game time.
+    }
+
+    public void fenceInteract() {}
+
+    public void castleInteract() {}
+
+    public void safehouseInteract() {}
+
+    public void towncentreInteract() {}
+
+    public void watchtowerInteract() {}
+
+    /**
+     * getter method
+     * @return InventoryManager of the Building
+     */
+    public InventoryManager getInventoryManager() {
+        return this.inventoryManager;
+    }
+
+    /**
+     * setter method
+     * @param inventoryManager InventoryManager of the Building
+     */
+    public void setInventoryManager(InventoryManager inventoryManager) {
+        this.inventoryManager = inventoryManager;
+    }
+
+    /**
+     * Add item into inventory of the building
+     * @param item the item added into inventory of the building
+     * @return true if added successfully, otherwise false
+     */
+    public boolean AddInventory(Item item){
+        return this.inventoryManager.add(item);
+    }
+
+    /**
+     *
+     * @param item
+     */
+    public void quickAccessRemove(Item item){
+        this.inventoryManager.quickAccessRemove(item.getName());
+    }
 
 
 }

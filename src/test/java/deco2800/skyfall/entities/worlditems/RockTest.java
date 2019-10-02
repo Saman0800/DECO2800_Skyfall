@@ -6,8 +6,10 @@ import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.OnScreenMessageManager;
+import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
@@ -15,21 +17,23 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ GameManager.class, DatabaseManager.class, PlayerPeon.class })
+@PrepareForTest({ GameManager.class, PlayerPeon.class, WorldBuilder.class, WorldDirector.class, DatabaseManager.class,
+                  DataBaseConnector.class })
 public class RockTest {
     private World w = null;
 
@@ -39,7 +43,25 @@ public class RockTest {
     private GameManager mockGM;
 
     @Before
-    public void Setup() {
+    public void Setup() throws Exception {
+        Random random = new Random(0);
+        whenNew(Random.class).withAnyArguments().thenReturn(random);
+
+        DataBaseConnector connector = mock(DataBaseConnector.class);
+        when(connector.loadChunk(any(World.class), anyInt(), anyInt())).then(
+                (Answer<Chunk>) invocation -> {
+                    Chunk chunk = new Chunk(invocation.getArgumentAt(0, World.class),
+                                            invocation.getArgumentAt(1, Integer.class),
+                                            invocation.getArgumentAt(2, Integer.class));
+                    chunk.generateEntities();
+                    return chunk;
+                });
+
+        DatabaseManager manager = mock(DatabaseManager.class);
+        when(manager.getDataBaseConnector()).thenReturn(connector);
+
+        mockStatic(DatabaseManager.class);
+        when(DatabaseManager.get()).thenReturn(manager);
 
         WorldBuilder worldBuilder = new WorldBuilder();
         WorldDirector.constructTestWorld(worldBuilder);
@@ -65,11 +87,7 @@ public class RockTest {
 
     @Test
     public void TestConstruction() {
-        // Populate the world with tiles
-        CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        Tile tile1 = new Tile(0.0f, 0.0f);
-        tileMap.add(tile1);
-        w.setTileMap(tileMap);
+        Tile tile1 = w.getTile(0.0f, 0.0f);
 
         Rock rock1 = new Rock(tile1, true);
 
@@ -79,8 +97,8 @@ public class RockTest {
 
         // Check that the various properties of this static entity have been
         // set correctly
-        assertTrue(rock1.equals(rock1));
-        assertTrue(rock1.getPosition().equals(new HexVector(0.0f, 0.0f)));
+        assertEquals(rock1, rock1);
+        assertEquals(rock1.getPosition(), new HexVector(0.0f, 0.0f));
         assertEquals(rock1.getRenderOrder(), 2);
         assertEquals(rock1.getCol(), 0.0f, 0.0f);
         assertEquals(rock1.getRow(), 0.0f, 0.0f);
@@ -90,17 +108,10 @@ public class RockTest {
 
     @Test
     public void TestAddedFunctions() {
-        CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        // Populate world with tiles
-        Tile tile1 = new Tile(0.0f, 0.0f);
-        Tile tile2 = new Tile(0.0f, 1.0f);
-        Tile tile3 = new Tile(1.0f, -0.5f);
-        Tile tile4 = new Tile(1.0f, 0.5f);
-        tileMap.add(tile1);
-        tileMap.add(tile2);
-        tileMap.add(tile4);
-        tileMap.add(tile3);
-        w.setTileMap(tileMap);
+        Tile tile1 = w.getTile(0.0f, 0.0f);
+        Tile tile2 = w.getTile(0.0f, 1.0f);
+        Tile tile3 = w.getTile(1.0f, -0.5f);
+        Tile tile4 = w.getTile(1.0f, 0.5f);
 
         Rock rock1 = new Rock(tile1, true);
 
@@ -110,10 +121,10 @@ public class RockTest {
 
         Rock rock2 = rock1.newInstance(tile2);
 
-        assertFalse(rock1.equals(rock2));
+        assertNotEquals(rock1, rock2);
 
         // check various properties of this new rock
-        assertTrue(rock2.getPosition().equals(new HexVector(0.0f, 1.0f)));
+        assertEquals(rock2.getPosition(), new HexVector(0.0f, 1.0f));
         assertEquals(rock2.getRenderOrder(), 2);
         assertEquals(rock2.getCol(), 0.0f, 0.001f);
         assertEquals(rock2.getRow(), 1.0f, 0.001f);
@@ -137,13 +148,7 @@ public class RockTest {
 
     @Test
     public void TestGetandSet() {
-        CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
-        // Populate world with tiles
-        Tile tile1 = new Tile(0.0f, 0.0f);
-        Tile tile2 = new Tile(0.0f, 1.0f);
-        tileMap.add(tile1);
-        tileMap.add(tile2);
-        w.setTileMap(tileMap);
+        Tile tile1 = w.getTile(0.0f, 0.0f);
 
         Rock rock1 = new Rock(tile1, true);
 

@@ -10,7 +10,7 @@ public class BowTest {
 
   @Before
   public void setUp() {
-    bow = new Bow(new Tile(0, 0), false);
+    bow = new Bow(new Tile(null, 0, 0), false);
   }
 
   @After
@@ -20,7 +20,7 @@ public class BowTest {
 
   @Test
   public void getDurabilityTest() {
-    assert(bow.getDurability() == 10);
+    assert(bow.getDurability() == 100);
   }
 
   @Test
@@ -39,11 +39,6 @@ public class BowTest {
 
   @Test
   public void toStringTest() {
-    Assert.assertEquals(bow.toString(), "bow is a range weapon " +
-            "which can be used to help the Main Character" +
-            " defeat enemies. It has deals 4 splash damages each time it is" +
-            " used. It also has an attack rate " +
-            "of: 3 and a durability of: 10 before it become useless. "
-            + "bow" + "is carryable, but exchangeable.");
+    Assert.assertEquals(bow.toString(), "" + "range" + ":" + "bow");
   }
 }

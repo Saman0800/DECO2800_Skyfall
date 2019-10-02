@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class HealthResourcesTest extends HealthResources{
+public class HealthResourcesTest {
     private HealthResources apple;
     private HealthResources aloe_vera;
     private HealthResources berry;

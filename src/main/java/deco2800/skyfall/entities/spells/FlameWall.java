@@ -1,7 +1,10 @@
 package deco2800.skyfall.entities.spells;
 
+import deco2800.skyfall.animation.AnimationLinker;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.entities.enemies.AbstractEnemy;
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.EnemyEntity;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 
@@ -40,19 +43,33 @@ public class FlameWall extends Spell {
         //Each game tick add to counter.
         this.ticksSinceAttacked++;
 
+        setCurrentState(AnimationRole.ATTACK);
+
         if (this.ticksSinceAttacked > attackCD) {
             //Loop through enemies.
             List<AbstractEntity> entities =  GameManager.get().getWorld().getEntities();
 
             for (AbstractEntity entity : entities) {
                 //If close enough, deal damage to the enemy over time.
-                if (entity instanceof EnemyEntity &&
+                if (entity instanceof AbstractEnemy &&
                         this.position.isCloseEnoughToBeTheSameByDistance(entity.getPosition(),1)) {
-                        ((EnemyEntity) entity).takeDamage(this.getDamage());
+                        ((AbstractEnemy) entity).takeDamage(this.getDamage());
                     }
                 }
             this.ticksSinceAttacked = 0;
         }
 
+    }
+
+    @Override
+    public void configureAnimations() {
+        // Fire spell animation
+        addAnimations(AnimationRole.ATTACK, Direction.DEFAULT,
+                new AnimationLinker("Spells_Fire_Anim",
+                        AnimationRole.ATTACK, Direction.DEFAULT, true, true));
+    }
+
+    @Override
+    public void setDirectionTextures() {
     }
 }

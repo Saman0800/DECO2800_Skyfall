@@ -8,6 +8,11 @@ public abstract class StaticRock extends StaticEntity implements HasHealth {
 
     protected static final String ENTITY_ID_STRING = "rock";
 
+    public StaticRock(StaticEntityMemento memento){
+        super(memento);
+    }
+
+
     public StaticRock() {
         this.setObjectName(ENTITY_ID_STRING);
     }

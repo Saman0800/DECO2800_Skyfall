@@ -7,6 +7,7 @@ import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.ManufacturedResources;
+import deco2800.skyfall.util.HexVector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -117,6 +118,11 @@ public class ResearchTable extends ManufacturedResources implements Blueprint,
         return "Research Table";
     }
 
+    @Override
+    public int getCost() {
+        return 0;
+    }
+
     /**
      * Returns the item description
      *
@@ -126,6 +132,11 @@ public class ResearchTable extends ManufacturedResources implements Blueprint,
     public String getDescription() {
         return "A research table is used to retrieve blueprints in exchange " +
                 "of resources or gold";
+    }
+
+    @Override
+    public void use(HexVector position) {
+
     }
 
     /**
@@ -158,3 +169,4 @@ public class ResearchTable extends ManufacturedResources implements Blueprint,
         return 30;
     }
 }
+

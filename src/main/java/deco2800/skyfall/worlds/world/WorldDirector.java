@@ -1,9 +1,21 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.enemies.*;
+import deco2800.skyfall.entities.pets.LizardHome;
+import deco2800.skyfall.entities.pets.IceWhitebear;
+import deco2800.skyfall.entities.pets.Tiger;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.worlds.biomes.*;
+import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.DesertBiome;
+import deco2800.skyfall.worlds.biomes.ForestBiome;
+import deco2800.skyfall.worlds.biomes.MountainBiome;
+import deco2800.skyfall.worlds.biomes.SnowyMountainsBiome;
+import deco2800.skyfall.worlds.biomes.SwampBiome;
+import deco2800.skyfall.worlds.biomes.VolcanicMountainsBiome;
+import deco2800.skyfall.managers.StatisticsManager;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -23,26 +35,31 @@ public class WorldDirector {
      * @return The builder that was passed in
      * @author Ontonator
      */
-    public static WorldBuilder constructNBiomeSinglePlayerWorld(WorldBuilder builder, int n){
+    public static WorldBuilder constructNBiomeSinglePlayerWorld(WorldBuilder builder, int n, boolean renderUI){
         builder.setType("single_player");
         if (n < 1 || n > 5) {
             throw new IllegalArgumentException("n must be between 1 and 5");
         }
 
+        assert new Random(0) != null;
+
         ArrayList<AbstractBiome> choices = new ArrayList<>();
-        choices.add(new ForestBiome());
-        choices.add(new DesertBiome());
-        choices.add(new MountainBiome());
-        choices.add(new VolcanicMountainsBiome());
-        choices.add(new SwampBiome());
-        choices.add(new SnowyMountainsBiome());
+        choices.add(new ForestBiome(random));
+        choices.add(new DesertBiome(random));
+        choices.add(new MountainBiome(random));
+        choices.add(new VolcanicMountainsBiome(random));
+        choices.add(new SwampBiome(random));
+        choices.add(new SnowyMountainsBiome(random));
 
         for (int i = 0; i < n; i++) {
-            builder.addBiome(choices.remove(random.nextInt(choices.size())), 40);
+            // builder.addBiome(choices.remove(random.nextInt(choices.size())), 40);
+            builder.addBiome(choices.remove(random.nextInt(choices.size())), 25);
         }
 
-        builder.setWorldSize(160);
-        builder.setNodeSpacing(15);
+        // builder.setWorldSize(160);
+        builder.setWorldSize(300);
+        // builder.setNodeSpacing(15);
+        builder.setNodeSpacing(25);
         builder.setSeed(random.nextInt());
 
         builder.addLake(5);
@@ -54,19 +71,34 @@ public class WorldDirector {
 
         builder.setStaticEntities(true);
 
-        MainCharacter mainCharacter = new MainCharacter(0,0,0.05f, "Main Piece", 10);
+        MainCharacter mainCharacter = MainCharacter.getInstance(0,0,0.05f, "Main Piece", 10);
+        mainCharacter.setCol(0);
+        mainCharacter.setRow(0);
+
+        if (renderUI) {
+            StatisticsManager sm = new StatisticsManager(mainCharacter);
+            GameManager.addManagerToInstance(sm);
+            GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
+            gmm.addStatsManager(sm);
+            gmm.drawAllElements();
+        }
 
         builder.addEntity(mainCharacter);
-        GameManager.getManagerFromInstance(GameMenuManager.class).setMainCharacter(mainCharacter);
-
-        builder.addEntity(new Spider(-8f, -1f, mainCharacter));
-        builder.addEntity(new Robot(-15, -15, mainCharacter));
         builder.addEntity(new Stone(-4, -3, mainCharacter));
-        builder.addEntity(new Flower(5f,5f,mainCharacter));
-        builder.addEntity(new Treeman(3f,3f,mainCharacter));
+        builder.addEntity(new LizardHome(0, 2, mainCharacter));
+        builder.addEntity(new IceWhitebear(-2, 0, mainCharacter));
+        builder.addEntity(new Flower(2f,2f,mainCharacter));
+        builder.addEntity(new Flower(8f,2f,mainCharacter));
+        builder.addEntity(new Treeman(-2f,-3f,mainCharacter));
+        builder.addEntity(new Tiger(-4f,-2f,mainCharacter));
 
-        builder.addEntity(new Camel(34,-7, mainCharacter));
+//        builder.addEntity(new Sword(new Tile(-1f, 3f), "sword_tex", true));
+//        builder.addEntity(new Spear(new Tile(-1f, 5f), "spear_tex", true));
+//        builder.addEntity(new Bow(new Tile(-1f, 7f), "bow_tex", true));
+//        builder.addEntity(new Axe(new Tile(-1f, 9f), "axe_tex", true));
 
+        builder.addEntity(new Camel(34, -7, mainCharacter));
+        builder.addEntity(new Horse(-8,-6, mainCharacter));
         return builder;
     }
 
@@ -76,10 +108,11 @@ public class WorldDirector {
      */
     public static void constructTutorialWorld(WorldBuilder builder){
 
-        MainCharacter mainCharacter = new MainCharacter(0,0,0.05f, "Main Piece", 10);
+        MainCharacter mainCharacter = MainCharacter.getInstance(0,0,0.05f, "Main Piece", 10);
+        mainCharacter.setCol(0);
+        mainCharacter.setRow(0);
 
         builder.addEntity(mainCharacter);
-        GameManager.getManagerFromInstance(GameMenuManager.class).setMainCharacter(mainCharacter);
 
         builder.addEntity(new Spider(-4f, -1f, mainCharacter));
         builder.addEntity(new Robot(-4, -2, mainCharacter));
@@ -95,10 +128,9 @@ public class WorldDirector {
         builder.setSeed(2);
         builder.setStaticEntities(true);
         builder.addEntity(new Spider(-4f, -1f));
-        builder.addEntity(new MainCharacter(0f,0f,0.05f, "Main Piece", 10));
-        builder.addBiome(new ForestBiome(), 20);
-        builder.addBiome(new DesertBiome(), 20);
-        builder.addBiome(new MountainBiome(), 20);
+        builder.addBiome(new ForestBiome(random), 20);
+        builder.addBiome(new DesertBiome(random), 20);
+        builder.addBiome(new MountainBiome(random), 20);
     }
 
     /**
@@ -109,9 +141,9 @@ public class WorldDirector {
         builder.setNodeSpacing(15);
         builder.setWorldSize(80);
         builder.setType("server");
-        builder.addBiome(new ForestBiome(), 20);
-        builder.addBiome(new DesertBiome(), 20);
-        builder.addBiome(new MountainBiome(), 20);
+        builder.addBiome(new ForestBiome(random), 20);
+        builder.addBiome(new DesertBiome(random), 20);
+        builder.addBiome(new MountainBiome(random), 20);
     }
 
     /**
@@ -122,15 +154,14 @@ public class WorldDirector {
         builder.setNodeSpacing(5);
         builder.setWorldSize(30);
 
-        builder.setType("test");
-        builder.setStaticEntities(true);
+        builder.setType("single_player");
+//        builder.setStaticEntities(true);
 
-        builder.addBiome(new ForestBiome(), 10);
-        builder.addBiome(new DesertBiome(), 10);
-        builder.addBiome(new MountainBiome(), 10);
-        builder.addBiome(new VolcanicMountainsBiome(), 10);
-        builder.addBiome(new SwampBiome(), 10);
-        builder.addBiome(new SnowyMountainsBiome(), 10);
-        builder.addLake(3);
+        builder.addBiome(new ForestBiome(random), 10);
+//        builder.addBiome(new DesertBiome(random), 10);
+//        builder.addBiome(new MountainBiome(random), 10);
+//        builder.addBiome(new VolcanicMountainsBiome(random), 10);
+//        builder.addBiome(new SwampBiome(random), 10);
+//        builder.addBiome(new SnowyMountainsBiome(random), 10);
     }
 }

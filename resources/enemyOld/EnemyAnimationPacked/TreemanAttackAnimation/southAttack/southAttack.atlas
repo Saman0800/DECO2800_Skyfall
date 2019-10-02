@@ -1,0 +1,57 @@
+
+southAttack.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+TreemanSouthAttack1
+  rotate: false
+  xy: 1, 403
+  size: 550, 400
+  orig: 550, 400
+  offset: 0, 0
+  index: -1
+TreemanSouthAttack2
+  rotate: false
+  xy: 1, 1
+  size: 550, 400
+  orig: 550, 400
+  offset: 0, 0
+  index: -1
+TreemanSouthAttack3
+  rotate: false
+  xy: 1, 1
+  size: 550, 400
+  orig: 550, 400
+  offset: 0, 0
+  index: -1
+
+southAttack2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+TreemanSouthAttack4
+  rotate: false
+  xy: 1, 403
+  size: 550, 400
+  orig: 550, 400
+  offset: 0, 0
+  index: -1
+TreemanSouthAttack5
+  rotate: false
+  xy: 1, 1
+  size: 550, 400
+  orig: 550, 400
+  offset: 0, 0
+  index: -1
+
+southAttack3.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+TreemanSouthAttack6
+  rotate: false
+  xy: 1, 1
+  size: 550, 400
+  orig: 550, 400
+  offset: 0, 0
+  index: -1

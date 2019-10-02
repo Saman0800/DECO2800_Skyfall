@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities.weapons;
 
 import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 
 public class Bow extends Weapon implements Item, IWeapon {
@@ -18,7 +19,7 @@ public class Bow extends Weapon implements Item, IWeapon {
 
         this.name = "bow";
         this.weaponType = "range";
-        this.durability = 10;
+        this.durability = 100;
         this.damageType = "splash";
         this.damage = 4;
         this.attackRate = 3;
@@ -97,14 +98,6 @@ public class Bow extends Weapon implements Item, IWeapon {
      * @return a description about the weapon
      */
     public String getDescription() {
-        return this.toString();
-    }
-
-    @Override
-    /**
-     * A paragraph describing the weapon
-     */
-    public String toString() {
         return this.getName() + " is a " + this.getSubtype() + " weapon which" +
                 " can be used to help the Main Character defeat enemies." +
                 " It has deals " + this.getDamage() + " " + this.getDamageType()
@@ -112,6 +105,14 @@ public class Bow extends Weapon implements Item, IWeapon {
                 "of: " + this.getAttackRate() + " and a durability of: " +
                 this.getDurability() + " before it become useless. "
                 + this.getName() + "is carryable, but exchangeable.";
+    }
+
+    @Override
+    /**
+     * A paragraph describing the weapon
+     */
+    public String toString() {
+        return "" + this.getSubtype() + ":" + this.getName();
     }
 
     /**
@@ -124,5 +125,10 @@ public class Bow extends Weapon implements Item, IWeapon {
     @Override
     public void onTick(long i) {
         // Auto-generated method stub
+    }
+
+    @Override
+    public void use(HexVector position){
+
     }
 }

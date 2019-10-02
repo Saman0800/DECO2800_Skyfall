@@ -1,7 +1,5 @@
 package deco2800.skyfall.managers;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.observers.DayNightObserver;
@@ -37,7 +35,7 @@ public class EnvironmentManager extends TickableManager {
     private boolean isDay;
 
     // Biome player is currently in
-    public String biome;
+   public String biome = "forest";
 
     // Music filename
     private String file;
@@ -279,7 +277,6 @@ public class EnvironmentManager extends TickableManager {
      * @param hour The hour of day to be set. Must be between 0-23 inclusive.
      * @param mins The minutes of the hour of day to be set. Must be between 0-59 inclusive.
      */
-
     public void setTime(int hour, int mins) {
         hours = hour;
         minutes = mins;
@@ -297,7 +294,7 @@ public class EnvironmentManager extends TickableManager {
         //Update isDay boolean
         isDay();
     }
-    
+
     /**
      * Returns whether it is day or not
      *
@@ -420,6 +417,7 @@ public class EnvironmentManager extends TickableManager {
      * Format for filenames: "biome_day/night" e.g. "forest_day"
      */
     public void setFilename() {
+        // FIXME What is this meant to do? This is just a getter.
         // Check environment
         isDay();
         currentBiome();
@@ -596,15 +594,6 @@ public class EnvironmentManager extends TickableManager {
         setBiome();
         setTODMusic();
         getcurrentWeather();
-
-        // Key mapping to mute volume
-        // M for mute and U to un-mute
-        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-            BGMManager.mute();
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
-            BGMManager.unmute();
-        }
 
         weatherEvent++;
 

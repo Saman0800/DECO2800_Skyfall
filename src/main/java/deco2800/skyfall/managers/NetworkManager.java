@@ -155,7 +155,8 @@ public class NetworkManager extends TickableManager {
                 messagesReceived++;
                 if (object instanceof TileUpdateMessage) {
                     GameManager.get().getWorld().updateTile(((TileUpdateMessage) object).tile);
-                    GameManager.get().getWorld().generateNeighbours();
+                    // FIXME:Ontonator This needs to be fixed, if multiplayer ever becomes a thing.
+                    // GameManager.get().getWorld().generateNeighbours();
                 } else if (object instanceof ChatMessage) {
                     GameManager.get().getManager(OnScreenMessageManager.class).addMessage(object.toString());
                 } else if (object instanceof SingleEntityUpdateMessage) {

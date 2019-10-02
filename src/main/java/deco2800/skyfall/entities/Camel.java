@@ -1,12 +1,12 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.DesertBiome;
 
 public class Camel extends VehicleEntity {
-    private AbstractBiome biomeType = new DesertBiome();
     private static final transient String BIOME = "desert";
     private MainCharacter mc;
     private boolean available = true;
@@ -17,19 +17,22 @@ public class Camel extends VehicleEntity {
     public Camel(float col, float row, MainCharacter mc) {
         super(col,row);
         this.mc = mc;
-        this.setTexture("camel_character");
-        this.setObjectName("camel_character");
+        this.setTexture("camel");
+        this.setObjectName("camel");
         this.setHeight(1);
         this.setAvailable(available);
         this.setHealth(HEALTH);
     }
 
-    public Camel(float row, float col, String textureName, int damage) {
-        super(row, col, textureName, damage);
+    public Camel(float col, float row) {
+        super(col,row);
+        this.setTexture("camel_character");
+        this.setObjectName("camel_character");
+        this.setHeight(1);
     }
 
-    public void setBiome(AbstractBiome biomeType){
-        this.biomeType = biomeType;
+    public Camel(float row, float col, String textureName, int damage) {
+        super(row, col, textureName, damage);
     }
 
     public String getBiome() {
@@ -38,18 +41,23 @@ public class Camel extends VehicleEntity {
 
     @Override
     public void onTick(long i) {
-        //super.onTick(i);
+        super.onTick(i);
         if (mc != null) {
             float columnDis = mc.getCol() - this.getCol();
             float rowDis = mc.getRow() - this.getRow();
 
-            if ((columnDis * rowDis + rowDis * rowDis) < 4) {
-                if (available){
-                    //TODO: Let main character get onto vehicle
+            float colDistance = mc.getCol() - this.getCol();
+            float rowDistance = mc.getRow() - this.getRow();
 
-                }
+            if ((colDistance * colDistance + rowDistance * rowDistance) < 4){
+
+                // Let main character get onto vehicle
+               setTexture("camel_character");
+               setObjectName("camel_character");
+
+
             } else {
-
+                this.setCurrentState(AnimationRole.NULL);
             }
         } else {
             System.out.println("Main Character is null");
@@ -65,4 +73,12 @@ public class Camel extends VehicleEntity {
         return this.moving;
     }
 
+    public boolean checkAvailable(String bomie) {
+        if (!bomie.equals(BIOME)) {
+            available = false;
+        } else {
+            available = true;
+        }
+        return available;
+    }
 }

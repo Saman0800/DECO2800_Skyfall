@@ -1,8 +1,11 @@
 package deco2800.skyfall.resources.items;
 
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.InventoryManager;
+import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.resources.Item;
@@ -12,7 +15,7 @@ import java.util.Map;
 /***
  * A Hatchet item. Hatchet is a manufacturd resource. It can harvest a tree.
  */
-public class Hatchet extends ManufacturedResources implements Item {
+public class Hatchet extends ManufacturedResources implements Item, Blueprint {
 
     private boolean blueprintLearned = false;
 
@@ -105,14 +108,12 @@ public class Hatchet extends ManufacturedResources implements Item {
      * @param treeToFarm the tree to be farmed
      */
     public void farmTree(Tree treeToFarm) {
-
-
             if (treeToFarm.getWoodAmount() == 0) {
                 System.out.println("This tree has no more wood");
                 GameManager.get().getWorld().removeEntity(treeToFarm);
 
             } else {
-                owner.getInventoryManager().inventoryAdd(new Wood());
+                GameManager.getManagerFromInstance(InventoryManager.class).add(new Wood());
                 treeToFarm.decreaseWoodAmount();
             }
         }
@@ -123,7 +124,7 @@ public class Hatchet extends ManufacturedResources implements Item {
      */
     @Override
     public String getDescription() {
-        return "This item is similar to an axe. It can be used to " + "cut down trees and retrieve wood.";
+        return "This item is similar to an axe." + "\n" + " It can be used to " + "cut down trees and retrieve wood.";
     }
 
     @Override
@@ -179,4 +180,20 @@ public class Hatchet extends ManufacturedResources implements Item {
         return blueprintLearned;
     }
 
+    @Override
+    public int getCost() {
+        return 20;
+    }
+
+    @Override
+    public void use(HexVector position){
+        for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+            if (entity instanceof StaticTree) {
+                if (position.distance(entity.getPosition()) <= 1.5) {
+                    this.farmTree((Tree) entity);
+                }
+            }
+        }
+
+    }
 }

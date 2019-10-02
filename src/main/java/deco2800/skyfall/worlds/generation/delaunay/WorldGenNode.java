@@ -1,9 +1,13 @@
 package deco2800.skyfall.worlds.generation.delaunay;
 
+import deco2800.skyfall.saving.AbstractMemento;
+import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
+import deco2800.skyfall.worlds.world.World;
 
 import java.util.*;
 
@@ -13,7 +17,8 @@ import java.util.*;
  * <a href="http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/?fbclid=IwAR30I7ILTznH6YzYYqZfjIE3vcqPsed85ta9bohPZWi74SfWMwWpD8AVddQ#source">
  * This</a>
  */
-public class WorldGenNode implements Comparable<WorldGenNode> {
+public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGenNode.WorldGenNodeMemento> {
+    private long id;
 
     // position
     private double x;
@@ -25,11 +30,10 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     // List of vertices for this polygon in the form [x, y]
     private List<double[]> vertices;
 
-    // List of tiles that are within the polygon defined by this node
-    private List<Tile> tiles;
-
     // Whether or not this node's polygon is on the edge of the map
     private boolean borderNode;
+
+    private AbstractBiome biome;
 
     /**
      * Constructor for a WorldGenNode
@@ -38,12 +42,16 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * @param y the y coordinate of the node
      */
     public WorldGenNode(double x, double y) {
+        this.id = System.nanoTime();
         this.x = x;
         this.y = y;
         this.neighbours = new ArrayList<>();
         this.vertices = new ArrayList<>();
-        this.tiles = new ArrayList<>();
         this.borderNode = false;
+    }
+
+    public WorldGenNode(WorldGenNodeMemento memento) {
+        this.load(memento);
     }
 
     @Override
@@ -108,15 +116,6 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     }
 
     /**
-     * Associates a tile with this node
-     *
-     * @param tile the tile in question
-     */
-    public void addTile(Tile tile) {
-        this.tiles.add(tile);
-    }
-
-    /**
      * Uses a variation of Lloyd's Algorithm to make a list of nodes more evenly spread apart.
      * <p>
      * For info on what Lloyd's Algorithm is, see
@@ -147,7 +146,6 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
                 // Remove info that may change when moving nodes
                 node.vertices.clear();
                 node.neighbours.clear();
-                node.tiles.clear();
                 node.borderNode = false;
             }
             // Reapply the Delaunay Triangulation
@@ -161,10 +159,11 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      *
      * @param nodes the list of nodes to assign neighbours
      * @param edges the list of edges between nodes
+     * @param world the world this node is in
      *
      * @throws InvalidCoordinatesException if any nodes have a vertex whose coordinates are not 2 dimensional
      */
-    public static void assignNeighbours(List<WorldGenNode> nodes, List<VoronoiEdge> edges)
+    public static void assignNeighbours(List<WorldGenNode> nodes, List<VoronoiEdge> edges, World world)
             throws InvalidCoordinatesException {
         // Compare each node with each other node
         for (int i = 0; i < nodes.size(); i++) {
@@ -177,7 +176,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
                 nodes.get(j).assignNeighbour(nodes.get(i));
                 double[] vertexB = sharedVertex(nodes.get(i), nodes.get(j), vertexA);
                 if (vertexB != null) {
-                    VoronoiEdge edge = new VoronoiEdge(vertexA, vertexB);
+                    VoronoiEdge edge = new VoronoiEdge(vertexA, vertexB, world);
                     edges.add(edge);
                     edge.addEdgeNode(nodes.get(i));
                     edge.addEdgeNode(nodes.get(j));
@@ -234,86 +233,101 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         return null;
     }
 
+    // TODO redo this javadoc
     /**
      * Assigns each tile in the world to the nearest node.
      *
      * @param nodes The list of nodes that can be assigned to
-     * @param tiles The list of tiles to assign
      */
-    public static void assignTiles(List<WorldGenNode> nodes, List<Tile> tiles, Random random, int nodeSpacing) {
-        int startPeriod = nodeSpacing * 2;
-        // TODO Fix possible divide-by-zero.
-        int octaves = Math.max((int) Math.ceil(Math.log(startPeriod) / Math.log(2)) - 1, 1);
-        double attenuation = Math.pow(0.9, 1d / octaves);
+    public static void removeZeroTileNodes(World world, List<WorldGenNode> nodes, int nodeSpacing, int worldSize) throws WorldGenException {
+        // TODO Make this more efficient by looping through only the tiles within the rectangle containing this node
+        //  and stop on the first tile inside the border. Start iterating from the middle, which is more likely to
+        //  be within the node.
 
-        NoiseGenerator xGen = new NoiseGenerator(random, octaves, startPeriod, attenuation);
-        NoiseGenerator yGen = new NoiseGenerator(random,  octaves, startPeriod, attenuation);
-        // Ensure nodes are stored in order of Y value
-        nodes.sort(Comparable::compareTo);
-        for (Tile tile : tiles) {
-            // Offset the position of tiles used to calculate the nodes using
-            // Perlin noise to add noise to the edges.
-            double tileX =
-                    tile.getCol() + xGen.getOctavedPerlinValue(tile.getCol() , tile.getRow()) *
-                            (double) nodeSpacing - (double) nodeSpacing / 2;
-            double tileY =
-                    tile.getRow() + yGen.getOctavedPerlinValue(tile.getCol() , tile.getRow()) *
-                            (double) nodeSpacing - (double) nodeSpacing / 2;
-            // Find the index of the node with the node with one of the nearest
-            // Y values (note, if there is no node with the exact Y value, it)
-            // Can choose the node on either side, not the strictly closest one
-            int nearestIndex = binarySearch(tileY, nodes, 0, nodes.size() - 1);
-            boolean lowerLimitFound = false;
-            boolean upperLimitFound = false;
+        NoiseGenerator xGen = world.getTileOffsetNoiseGeneratorX();
+        NoiseGenerator yGen = world.getTileOffsetNoiseGeneratorY();
+        List<WorldGenNode> tempNodes = new ArrayList<>(nodes);
 
-            // Store the minimum distance to a node, and the index of that node
-            double minDistance = nodes.get(nearestIndex).distanceTo(tileX, tileY);
-            int minDistanceIndex = nearestIndex;
-            int iterations = 1;
-            // Starting from the initial index, this loop checks the 1st node on
-            // either side, then the 2nd node on either side, continuing
-            // outwards (kept track of by iterations).
-            while (!(upperLimitFound && lowerLimitFound)) {
-                int lower = nearestIndex - iterations;
-                int upper = nearestIndex + iterations;
-                // Stop the algorithm from checking off the end of the list
-                if (lower < 0) {
+        for (int i = -1 * worldSize; i <= worldSize; i++) {
+            for (int j = -1 * worldSize; j <= worldSize; j++) {
+                double rowY = j + (i % 2 != 0 ? 0.5f : 0);
+                double tileX =
+                        i + xGen.getOctavedPerlinValue(i , rowY) *
+                                (double) nodeSpacing - (double) nodeSpacing / 2;
+                double tileY =
+                        rowY + yGen.getOctavedPerlinValue(i , rowY) *
+                                (double) nodeSpacing - (double) nodeSpacing / 2;
+
+                // Remove the node from the list of nodes to search
+                tempNodes.remove(nodes.get(findNearestNodeIndex(nodes, tileX, tileY)));
+            }
+        }
+        nodes.removeAll(tempNodes);
+        for (WorldGenNode node : nodes) {
+            // Clear all properties that may change with removing 0 tile nodes
+            node.vertices.clear();
+            node.neighbours.clear();
+            node.borderNode = false;
+        }
+        // Recalculate neighbours, borderNodes etc
+        calculateVertices(nodes, worldSize);
+    }
+
+    public static int findNearestNodeIndex(List<WorldGenNode> nodes, double tileX, double tileY) {
+        // Find the index of the node with the node with one of the nearest
+        // Y values (note, if there is no node with the exact Y value, it)
+        // Can choose the node on either side, not the strictly closest one
+        int nearestIndex = binarySearch(tileY, nodes, 0, nodes.size() - 1);
+
+        boolean lowerLimitFound = false;
+        boolean upperLimitFound = false;
+
+        // Store the minimum distance to a node, and the index of that node
+        double minDistance = nodes.get(nearestIndex).distanceTo(tileX, tileY);
+        int minDistanceIndex = nearestIndex;
+        int iterations = 1;
+        // Starting from the initial index, this loop checks the 1st node on
+        // either side, then the 2nd node on either side, continuing
+        // outwards (kept track of by iterations).
+        while (!(upperLimitFound && lowerLimitFound)) {
+            int lower = nearestIndex - iterations;
+            int upper = nearestIndex + iterations;
+            // Stop the algorithm from checking off the end of the list
+            if (lower < 0) {
+                lowerLimitFound = true;
+            }
+            if (upper > nodes.size() - 1) {
+                upperLimitFound = true;
+            }
+
+            if (!lowerLimitFound) {
+                double distance = nodes.get(lower).distanceTo(tileX, tileY);
+                // Update the closest node if necessary
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    minDistanceIndex = lower;
+                }
+                // As distance to a node is necessarily >= the difference in
+                // y value, if the difference in y value is greater than the
+                // smallest distance to a node, all future nodes in that
+                // direction will be further away
+                if (nodes.get(lower).yDistanceTo(tileY) > minDistance) {
                     lowerLimitFound = true;
                 }
-                if (upper > nodes.size() - 1) {
+            }
+            if (!upperLimitFound) {
+                double distance = nodes.get(upper).distanceTo(tileX, tileY);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    minDistanceIndex = upper;
+                }
+                if (nodes.get(upper).yDistanceTo(tileY) > minDistance) {
                     upperLimitFound = true;
                 }
-
-                if (!lowerLimitFound) {
-                    double distance = nodes.get(lower).distanceTo(tileX, tileY);
-                    // Update the closest node if necessary
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        minDistanceIndex = lower;
-                    }
-                    // As distance to a node is necessarily >= the difference in
-                    // y value, if the difference in y value is greater than the
-                    // smallest distance to a node, all future nodes in that
-                    // direction will be further away
-                    if (nodes.get(lower).yDistanceTo(tileY) > minDistance) {
-                        lowerLimitFound = true;
-                    }
-                }
-                if (!upperLimitFound) {
-                    double distance = nodes.get(upper).distanceTo(tileX, tileY);
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        minDistanceIndex = upper;
-                    }
-                    if (nodes.get(upper).yDistanceTo(tileY) > minDistance) {
-                        upperLimitFound = true;
-                    }
-                }
-                iterations++;
             }
-            // Assign tile to the node
-            nodes.get(minDistanceIndex).addTile(tile);
+            iterations++;
         }
+        return minDistanceIndex;
     }
 
     /**
@@ -368,7 +382,7 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
      * @param end The ending value of the array to search from
      * @return The node with closest y value to toFind
      */
-    private static int binarySearch(double toFind, List<WorldGenNode> nodes,
+    public static int binarySearch(double toFind, List<WorldGenNode> nodes,
                                     int start, int end) {
         int middle = (end + start) / 2;
         double middleValue = nodes.get(middle).getY();
@@ -488,7 +502,6 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         for (int i = 0; i < nodes.size(); i++) {
             WorldGenTriangle triangle =
                     triangleSoup.findContainingTriangle(nodes.get(i));
-
             if (triangle == null) {
                 // If no containing triangle exists, then the vertex is not
                 // inside a triangle (this can also happen due to numerical
@@ -665,28 +678,6 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         }
     }
 
-    /**
-     * Remove all nodes with no associated tile from a list
-     *
-     * @param nodes The list of nodes to check
-     * @param worldSize Half the side length of the world
-     * @throws WorldGenException If calculateVertices throws a WorldGenException
-     */
-    public static void removeZeroTileNodes(List<WorldGenNode> nodes, int worldSize) throws WorldGenException {
-        // Set up iterator to allow nodes to be removed while looping through them
-
-        // Remove all nodes with no associated tiles
-        nodes.removeIf(node -> node.getTiles().isEmpty());
-        for (WorldGenNode node : nodes) {
-            // Clear all properties that may change with removing 0 tile nodes
-            node.vertices.clear();
-            node.neighbours.clear();
-            node.borderNode = false;
-        }
-        // Recalculate neighbours, borderNodes etc.
-        calculateVertices(nodes, worldSize);
-    }
-
     /* ------------------------------------------------------------------------
      * 				GETTERS AND SETTERS BELOW THIS COMMENT.
      * ------------------------------------------------------------------------ */
@@ -738,15 +729,6 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
     }
 
     /**
-     * Get the tiles within this node
-     *
-     * @return the tiles within this node
-     */
-    public List<Tile> getTiles() {
-        return this.tiles;
-    }
-
-    /**
      * Returns whether or not this is a border node
      *
      * @return whether or not this is a border node
@@ -764,4 +746,56 @@ public class WorldGenNode implements Comparable<WorldGenNode> {
         this.borderNode = borderNode;
     }
 
+    public AbstractBiome getBiome() {
+        return biome;
+    }
+
+    public void setBiome(AbstractBiome biome) {
+        this.biome = biome;
+    }
+
+    /**
+     * Returns the ID of this world
+     *
+     * @return the ID of this world
+     */
+    public long getID() {
+        return this.id;
+    }
+
+    @Override
+    public WorldGenNodeMemento save() {
+        return new WorldGenNodeMemento(this);
+    }
+
+    @Override
+    public void load(WorldGenNodeMemento memento) {
+        this.id = memento.nodeID;
+        this.x = memento.x;
+        this.y = memento.y;
+    }
+
+    public class WorldGenNodeMemento extends AbstractMemento {
+
+        // The ID of this node
+        private long nodeID;
+
+        // The coordinates of the node
+        private double x;
+        private double y;
+
+        private boolean borderNode;
+
+        /**
+         * Constructor for a new NodeSaveInfo
+         *
+         * @param node the node this is for
+         */
+        public WorldGenNodeMemento(WorldGenNode node) {
+            this.nodeID = node.id;
+            this.x = node.x;
+            this.y = node.y;
+        }
+
+    }
 }

@@ -31,9 +31,11 @@ public class HealthCircle extends StatBar {
         offset += (diff * 10) / 2;
         smallerCircle.setPosition(positionX + offset, positionY + offset);
         currentValue = newValue;
-        if (newValue >= 0) {
+        if (newValue >= 1) {
             label.setText("Health: " + newValue);
-        } else {
+        }
+
+        if (newValue < 0) {
             label.setText("DEAD");
         }
     }

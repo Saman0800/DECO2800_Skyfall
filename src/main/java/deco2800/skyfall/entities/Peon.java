@@ -8,15 +8,17 @@ import deco2800.skyfall.tasks.*;
  * Base class of character in game where main characters and enemies will
  * inherit from
  */
-public class Peon extends AgentEntity implements Tickable {
+public abstract class Peon extends AgentEntity implements Tickable {
 	// Task being completed by character
-	protected transient AbstractTask task;
+	private transient AbstractTask task;
 
 	// Name of the character
 	private String name;
 
 	// Health of the character
 	private int health;
+	// Max Health of the character
+	private int maxHealth;
 
 	// Boolean of whether character is dead
 	private int deaths;
@@ -47,10 +49,12 @@ public class Peon extends AgentEntity implements Tickable {
 
 		if (health <= 0){
 			this.health = 10;
+			this.maxHealth = 10;
 		} else {
 			this.health = health;
+			this.maxHealth = health;
 		}
-
+		System.out.println(name + " has " + maxHealth);
 		this.deaths = 0;
 	}
 
@@ -101,8 +105,18 @@ public class Peon extends AgentEntity implements Tickable {
 
 		this.health = currentHealth;
 
-		if (this.isDead()) {
+
+		if(currentHealth > maxHealth) {
+			this.health = maxHealth;
+		} else {
+			this.health += amount;
+		}
+
+		if (this instanceof MainCharacter && this.isDead()) {
 			this.health = currentHealth;
+			this.deaths += 1;
+		} else if (this.isDead()){
+			this.health = 0;
 			this.deaths += 1;
 		}
 	}
@@ -114,6 +128,20 @@ public class Peon extends AgentEntity implements Tickable {
 	public int getHealth() {
 		return this.health;
 	}
+
+	/**
+	 * Returns max health of character
+	 * @return - max health of character.
+	 */
+	public int getMaxHealth() {
+		return maxHealth;
+	}
+
+	/**
+	 *
+	 * @param newMaxHealth - New max health for the player.
+	 */
+	protected void setMaxHealth(int newMaxHealth) { this.maxHealth = newMaxHealth; }
 
 	/**
 	 * Checks if character is dead
@@ -149,10 +177,10 @@ public class Peon extends AgentEntity implements Tickable {
 		return task;
 	}
 
-    @Override
     /**
      * Handles tick based stuff, e.g. movement
      */
+    @Override
     public void onTick(long i) {
         if(task != null && task.isAlive()) {
             if(task.isComplete()) {

@@ -2,6 +2,7 @@ package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.NaturalResources;
+import deco2800.skyfall.util.HexVector;
 
 
 /**
@@ -10,7 +11,7 @@ import deco2800.skyfall.resources.NaturalResources;
 public class Metal extends NaturalResources implements Item {
 
     // the name of the item
-    private String name;
+    //private String name;
 
     // the biome the metal is in
     private String biome;
@@ -66,7 +67,12 @@ public class Metal extends NaturalResources implements Item {
      */
     @Override
     public String getDescription() {
-        return "This item can be collected by destroying an enemy.";
+        return "This item can be collected" + "\n" + " by destroying an enemy.";
+    }
+
+    @Override
+    public void use(HexVector position){
+
     }
 
 }

@@ -3,7 +3,10 @@ package deco2800.skyfall.mainmenu;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -32,7 +35,6 @@ public class MainMenuScreen implements Screen {
     public MainMenuScreen(final SkyfallGame game) {
         this.game = game;
         stage = new Stage(new ExtendViewport(MIN_WIDTH, MIN_HEIGHT), game.batch);
-        System.out.println(GameManager.get());
         skin = GameManager.get().getSkin();
 
         Image background = new Image(GameManager.get().getManager(TextureManager.class).getTexture("background"));
@@ -44,17 +46,18 @@ public class MainMenuScreen implements Screen {
         // logo.setPosition(1280/2 - 225, 720/2 + 100);
         // stage.addActor(logo);
 
-        System.out.println(skin==null);
-        Button newGameBtn = new TextButton("SINGLE PLAYER", skin, "main_menu");
-        newGameBtn.setPosition(10, MIN_HEIGHT - 100);
+        TextButton newGameBtn = new TextButton("SINGLE PLAYER", skin, "main_menu");
+        newGameBtn.getStyle().fontColor = Color.BLACK;
+
+        newGameBtn.setPosition(50, MIN_HEIGHT - 220);
         stage.addActor(newGameBtn);
 
         Button connectToServerButton = new TextButton("CONNECT TO SERVER", skin, "main_menu");
-        connectToServerButton.setPosition(10, MIN_HEIGHT - 50);
+        connectToServerButton.setPosition(50, MIN_HEIGHT - 170);
         stage.addActor(connectToServerButton);
 
         Button tutorialButton = new TextButton("TUTORIAL", skin, "main_menu");
-        tutorialButton.setPosition(10, MIN_HEIGHT - 150);
+        tutorialButton.setPosition(50, MIN_HEIGHT - 270);
         stage.addActor(tutorialButton);
 
         //Button startServerButton = new TextButton("START SERVER", skin, "main_menu");

@@ -21,12 +21,12 @@ public class WeaponManagerTest {
      * Sets up all variables to be used for testing
      */
     public void setup() {
-        testCharacter = new MainCharacter(0f, 0f,
+        testCharacter = MainCharacter.getInstance(0f, 0f,
                 0.05f, "Main Piece", 10);
-        sword = new Sword(new Tile(0, 0), false);
-        spear = new Spear(new Tile(0, 0), false);
-        bow = new Bow(new Tile(0, 0), false);
-        axe = new Axe(new Tile(0, 0), false);
+        sword = new Sword(new Tile(null, 0, 0), true);
+        spear = new Spear(new Tile(null, 0, 0), true);
+        bow = new Bow(new Tile(null, 0, 0), true);
+        axe = new Axe(new Tile(null, 0, 0), true);
     }
 
     @After
@@ -59,7 +59,7 @@ public class WeaponManagerTest {
      * Private helper method for the test character to drop weapons
      */
     private void dropWeapons() {
-        testCharacter.getInventoryManager().inventoryDropMultiple("sword", 2);
+        testCharacter.getInventoryManager().dropMultiple("sword", 2);
         testCharacter.dropInventory("spear");
         testCharacter.dropInventory("bow");
         testCharacter.dropInventory("axe");
@@ -106,6 +106,6 @@ public class WeaponManagerTest {
     public void returnTest() {
         this.pickUpWeapons();
 
-        Assert.assertEquals(testCharacter.getInventoryManager().getInventoryAmounts().size(), 8);
+        Assert.assertEquals(testCharacter.getInventoryManager().getAmounts().size(), 8);
     }
 }

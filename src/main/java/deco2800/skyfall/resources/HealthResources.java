@@ -1,6 +1,6 @@
 package deco2800.skyfall.resources;
 
-import deco2800.skyfall.entities.EnemyEntity;
+//import deco2800.skyfall.entities.EnemyEntity;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 import org.slf4j.Logger;

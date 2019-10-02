@@ -1,21 +1,26 @@
 package deco2800.skyfall.managers;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.observers.DayNightObserver;
 import deco2800.skyfall.observers.SeasonObserver;
 import deco2800.skyfall.observers.TimeObserver;
+import java.util.ArrayList;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.world.World;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class EnvironmentManagerTest {
@@ -35,7 +40,7 @@ public class EnvironmentManagerTest {
     public void initialize() {
         try {
             manager = new EnvironmentManager();
-        } catch (NoSuchAlgorithmException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         gm.setWorld(mockWorld);
@@ -186,14 +191,8 @@ public class EnvironmentManagerTest {
 
     @Test
     public void onTickTest() {
-        try {
-            manager.onTick(1000000);
-
-            long time = (System.currentTimeMillis() / 60000) % 24;
-
-            assertEquals(time, manager.getTime());
-
-        } catch (Exception e) { /* Exception caught, if any */ }
+        manager.onTick(0);
+        verify(mockWorld).getEntities();
     }
 
     @Test

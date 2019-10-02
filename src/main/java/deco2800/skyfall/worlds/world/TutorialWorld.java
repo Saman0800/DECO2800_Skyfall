@@ -14,9 +14,9 @@ import java.util.List;
  */
 public class TutorialWorld extends World implements TouchDownObserver {
     // Variables used for the event triggers used in the tutorial
-    boolean firstTime = true;
-    boolean testKilledTree = false;
-    Tree testTutorialTree;
+    private boolean firstTime = true;
+    private boolean testKilledTree = false;
+    private Tree testTutorialTree;
 
     /**
      * Constructs a tutorial world using the Rocket World constructor

@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.entities.AgentEntity;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.TaskPool;
 import deco2800.skyfall.tasks.AbstractTask;
@@ -9,6 +10,7 @@ import deco2800.skyfall.tasks.AbstractTask;
  */
 public class BowMan extends AgentEntity {
     protected transient AbstractTask task;
+
 
     public BowMan(float col, float row) {
         super(col, row, 2, 0.05f);

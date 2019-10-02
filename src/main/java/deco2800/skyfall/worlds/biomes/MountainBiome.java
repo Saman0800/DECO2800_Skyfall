@@ -2,6 +2,7 @@ package deco2800.skyfall.worlds.biomes;
 
 import deco2800.skyfall.worlds.Tile;
 
+import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import deco2800.skyfall.worlds.generation.perlinnoise.TileNoiseGenerator;
 import java.util.ArrayList;
 import java.util.Random;
@@ -14,36 +15,36 @@ public class MountainBiome extends AbstractBiome {
     /**
      * Constructor for a Biome
      */
-    public MountainBiome() {
+    public MountainBiome(Random random) {
         super("mountain", null);
+
+        textureGenerator = new NoiseGenerator(random.nextLong(), 3, 60, 0.5);
     }
 
-
     /**
-     * Method that will determine the textures of the mountain biome textures
-     *
-     * @param random the RNG to use to generate the textures
+     * Loads a biome from a memento
+     * @param memento The memento that holds the save data
      */
+    public MountainBiome(AbstractBiomeMemento memento){
+        super(memento);
+        textureGenerator = new NoiseGenerator(memento.noiseGeneratorSeed, 3, 60, 0.5);
+    }
 
     @Override
-    public void setTileTextures(Random random) {
+    public void setTileTexture(Tile tile) {
         ArrayList<String> textures = new ArrayList<>();
-//        textures.add("mountain_9");
-//        textures.add("mountain_10");
-//        textures.add("mountain_11");
         textures.add("mountain_1");
         textures.add("mountain_2");
         textures.add("mountain_3");
-//        textures.add("snow");
 
-        //Perlin noise generation
-        new TileNoiseGenerator(getTiles(), random,3  , 60,0.5, Tile::setPerlinValue);
-
-
-        for (Tile tile : getTiles()) {
-            int perlinValue = (int) Math.floor(tile.getPerlinValue() * textures.size());
-            tile.setTexture(textures.get(perlinValue < textures.size() ? perlinValue : textures.size() - 1));
+        double perlinValue =
+                NoiseGenerator.fade(textureGenerator.getOctavedPerlinValue(tile.getCol(), tile.getRow()), 2);
+        int adjustedPerlinValue = (int) Math.floor(perlinValue * textures.size());
+        if (adjustedPerlinValue >= textures.size()) {
+            adjustedPerlinValue = textures.size() - 1;
         }
+        // TODO Is `setPerlinValue` still required?
+        tile.setPerlinValue(adjustedPerlinValue);
+        tile.setTexture(textures.get(adjustedPerlinValue));
     }
-
 }
