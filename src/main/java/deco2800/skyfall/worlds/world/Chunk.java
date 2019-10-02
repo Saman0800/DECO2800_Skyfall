@@ -7,11 +7,12 @@ import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
 import deco2800.skyfall.entities.worlditems.EntitySpawnTable;
 import deco2800.skyfall.worlds.Tile;
+import java.io.Serializable;
 import org.javatuples.Pair;
 
 import java.util.*;
 
-public class Chunk implements Saveable<Chunk.ChunkMemento> {
+public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
     /** The length of a side of the chunk (i.e. the chunk will contain this squared tiles). */
     public static final int CHUNK_SIDE_LENGTH = 10;
 
@@ -333,7 +334,7 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
     /**
      * The memento storing the information required to reproduce a chunk.
      */
-    public static class ChunkMemento extends AbstractMemento {
+    public static class ChunkMemento extends AbstractMemento implements Serializable {
         private int x;
         private int y;
 

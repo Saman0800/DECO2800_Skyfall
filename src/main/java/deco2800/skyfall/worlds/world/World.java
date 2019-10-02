@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
  * It provides storage for the WorldEntities and other universal world level
  * items.
  */
-public class World implements TouchDownObserver , Serializable, Saveable<World.WorldMemento> {
+public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
     public static final int LOADED_RADIUS = 50;
     protected long id;
 
@@ -836,7 +836,7 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
         this.tileOffsetNoiseGeneratorY = worldMemento.tileOffsetNoiseGeneratorY;
     }
 
-    public class WorldMemento extends AbstractMemento {
+    public static class WorldMemento extends AbstractMemento implements Serializable {
         private long saveID;
         private long worldID;
         private int nodeSpacing;

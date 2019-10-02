@@ -28,11 +28,13 @@ import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.resources.*;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
+import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
 
+import java.io.Serializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1858,56 +1860,55 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     // FIXME:dannothan Fix or remove this.
-//    @Override
-//    public MainCharacterMemento save() {
-//        return new MainCharacterMemento(this);
-//    }
-//
-//    @Override
-//    public void load(MainCharacterMemento memento) {
-//        this.id = memento.mainCharacterID;
+    // FIXME:jeffvan figure out what needs saving
+    public MainCharacterMemento save() {
+        return new MainCharacterMemento(this);
+    }
+
+    public void load(MainCharacterMemento memento) {
+        this.id = memento.mainCharacterID;
 //        this.equippedItem = memento.equippedItem;
-//        this.level = memento.level;
-//        this.foodLevel = memento.foodLevel;
-//        this.foodAccum = memento.foodAccum;
-//        this.goldPouch = memento.goldPouch;
+        this.level = memento.level;
+        this.foodLevel = memento.foodLevel;
+        this.foodAccum = memento.foodAccum;
+        this.goldPouch = memento.goldPouch;
 //        this.blueprintsLearned = memento.blueprints;
-//        this.inventories = memento.inventory;
+        this.inventories = memento.inventory;
 //        this.weapons = memento.weapons;
 //        this.hotbar = memento.hotbar;
-//    }
-//
-//    public class MainCharacterMemento extends AbstractMemento {
-//
-//        //TODO:dannathan add stuff for entitiy
-//        private long saveID;
-//        private long mainCharacterID;
-//
-//        private int equippedItem;
-//        private int level;
-//
-//        private int foodLevel;
-//        private float foodAccum;
-//
-//        private InventoryManager inventory;
-//        private WeaponManager weapons;
-//        private HashMap<Integer, Integer> goldPouch;
-//        private List<Item> hotbar;
-//
-//        private List<String> blueprints;
-//
-//        public MainCharacterMemento(MainCharacter character) {
-//            this.saveID = character.save.getSaveID();
-//            this.mainCharacterID = character.id;
+    }
+
+    public static class MainCharacterMemento extends AbstractMemento implements Serializable {
+
+        //TODO:dannathan add stuff for entitiy
+        private long saveID;
+        private long mainCharacterID;
+
+        private int equippedItem;
+        private int level;
+
+        private int foodLevel;
+        private float foodAccum;
+
+        private InventoryManager inventory;
+        private WeaponManager weapons;
+        private HashMap<Integer, Integer> goldPouch;
+        private List<Item> hotbar;
+
+        private List<String> blueprints;
+
+        public MainCharacterMemento(MainCharacter character) {
+            this.saveID = character.save.getSaveID();
+            this.mainCharacterID = character.id;
 //            this.equippedItem = character.equippedItem;
-//            this.level = character.level;
-//            this.foodLevel = character.foodLevel;
-//            this.foodAccum = character.foodAccum;
-//            this.goldPouch = character.goldPouch;
+            this.level = character.level;
+            this.foodLevel = character.foodLevel;
+            this.foodAccum = character.foodAccum;
+            this.goldPouch = character.goldPouch;
 //            this.blueprints = character.blueprintsLearned;
-//            this.inventory = character.inventories;
+            this.inventory = character.inventories;
 //            this.weapons = character.weapons;
 //            this.hotbar = character.hotbar;
-//        }
-//    }
+        }
+    }
 }

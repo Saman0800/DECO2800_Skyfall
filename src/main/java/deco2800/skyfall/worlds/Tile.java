@@ -1,5 +1,6 @@
 package deco2800.skyfall.worlds;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.Map.Entry;
 
