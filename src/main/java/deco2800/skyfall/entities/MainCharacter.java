@@ -1021,9 +1021,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     @Override
     public void onTick(long i) {
-        logger.info(String.valueOf(xInput));
-        logger.info(String.valueOf(yInput));
-
         if(!GameScreen.isPaused) {
             if (residualFromPopUp) {
                 residualInputsFromPopUp();
@@ -1191,7 +1188,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     public void residualInputsFromPopUp() {
-        logger.info("Inputs being re added");
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             yInput += 1;
         }
