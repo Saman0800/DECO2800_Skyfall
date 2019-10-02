@@ -8,6 +8,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
+
 import static org.junit.Assert.*;
 
 public class WhitebearTest {
@@ -16,6 +18,7 @@ public class WhitebearTest {
     private Whitebear whitebear = null;
     @Before
     public void setUp() throws Exception {
+        MainCharacter.resetInstance();
         mc = MainCharacter.getInstance(5f, 5f, 2f, "Main Char", 10);
         whitebear = new Whitebear(5, 2, mc);
     }

@@ -26,7 +26,7 @@ public class SnowClump extends StaticEntity implements HasHealth {
         this.entityType = "SnowClump";
     }
 
-    public SnowClump (StaticEntityMemento memento){
+    public SnowClump(SaveableEntityMemento memento) {
         super(memento);
     }
 

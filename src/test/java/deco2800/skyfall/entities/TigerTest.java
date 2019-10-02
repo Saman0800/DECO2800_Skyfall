@@ -93,14 +93,4 @@ public class TigerTest {
                 tiger.toString());
     }
 
-    /**
-     * Test the level of tiger
-     */
-    @Test
-    public void testLevel(){
-        Assert.assertEquals(2,tiger.getLevel());
-    }
-
-
-
 }

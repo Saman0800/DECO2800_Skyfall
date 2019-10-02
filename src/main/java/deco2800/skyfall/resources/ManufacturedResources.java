@@ -28,7 +28,13 @@ public abstract class ManufacturedResources implements Item, Blueprint {
     // a list of all required resources needed to create a manufactured resource item.
     protected Map<String, Integer> allRequirements;
 
-    protected boolean blueprintLearned=false;
+    // Can be item be equipped
+    public boolean equippable;
+
+    // Durability of the item (how many times it can be used
+    private int durability;
+
+    protected boolean blueprintLearned = false;
 
 
 
@@ -42,16 +48,23 @@ public abstract class ManufacturedResources implements Item, Blueprint {
         this.position = position;
         this.carryable = true;
         this.subtype = "Manufactured Resource";
+        this.equippable = true;
+        this.durability = 15;
     }
 
     public ManufacturedResources(MainCharacter owner){
         this.owner = owner;
-        this.subtype= "Manufactured Resource";
+        this.subtype = "Manufactured Resource";
+        this.equippable = true;
+        this.durability = 15;
     }
 
     public ManufacturedResources(){
         this.subtype= "Manufactured Resource";
+        this.equippable = true;
+        this.durability = 15;
     }
+
     /**
      * Returns whether or not the item can be stored in the inventory
      * @return True if the item can be added to the inventory, false
@@ -157,6 +170,35 @@ public abstract class ManufacturedResources implements Item, Blueprint {
         blueprintLearned =true;
     }
 
+    /**
+     * Returns whether or not the item can be equipped from the inventory
+     * @return True if the item can be equipped, false otherwise
+     */
+    public Boolean isEquippable() {
+        return this.equippable;
+    }
+
+    /**
+     * @return the durability of the hatchet
+     */
+    public int getDurability() {
+        return this.durability;
+    }
+
+    /**
+     * Reduces durability of hatchet by 1
+     */
+    public void decreaseDurability() {
+        this.durability -= 1;
+    }
+
+    /**
+     * If the durability of the hatchet have durability bigger than 0
+     * @return whether to hatchet is still usable
+     */
+    public boolean isUsable() {
+        return this.getDurability() > 0;
+    }
 }
 
 

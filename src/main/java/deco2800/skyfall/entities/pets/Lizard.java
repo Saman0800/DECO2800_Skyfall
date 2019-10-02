@@ -224,4 +224,8 @@ public class Lizard extends AbstractPet implements Animatable, Item {
     public void use(HexVector position) {
 
     }
+
+    public Boolean isEquippable() {
+        return false;
+    }
 }
