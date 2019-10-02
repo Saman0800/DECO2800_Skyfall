@@ -284,7 +284,7 @@ public class GameMenuManager extends TickableManager {
 
         Label.LabelStyle titlePill = new Label.LabelStyle();
         titlePill.font = gameFont;
-        titlePill.fontColor = skin.getColor("black");
+        titlePill.fontColor = skin.getColor("navy");
         titlePill.background = generateTextureRegionDrawableObject("light_blue_bg");
         skin.add("title-pill", titlePill);
 
