@@ -222,8 +222,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("inner_circle", new Texture("resources/new_ui/RedCircle.png"));
             textureMap.put("blue_pill", new Texture("resources/new_ui/blue_pill_background.png"));
             textureMap.put("build_button", new Texture("resources/new_ui/build_section.png"));
-            textureMap.put("inventory_bg", new Texture("resources/new_ui/inventory_background.png"));
-            textureMap.put("inventory_expand_button", new Texture("resources/new_ui/inventory_expand_bar.png"));
+            textureMap.put("quickaccess_bg", new Texture("resources/new_ui/quickaccess_bg.png"));
+            textureMap.put("quickaccess_side_bar", new Texture("resources/new_ui/quickaccess_side_bar.png"));
             textureMap.put("teleport_button", new Texture("resources/new_ui/teleport.png"));
             textureMap.put("create_button", new Texture("resources/new_ui/create.png"));
             textureMap.put("collect_button", new Texture("resources/new_ui/collect.png"));
@@ -231,6 +231,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("blue_pill_table", new Texture("resources/new_ui/blue_pill_table.png"));
             textureMap.put("complete_button", new Texture("resources/new_ui/complete.png"));
             textureMap.put("light_blue_bg", new Texture("resources/new_ui/light_blue_background.png"));
+            textureMap.put("popup_bg", new Texture("resources/new_ui/popup_bg.png"));
+            textureMap.put("popup_banner", new Texture("resources/new_ui/popup_banner.png"));
             textureMap.put("new_clock", new Texture("resources/new_ui/clock.png"));
 
 
@@ -258,7 +260,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("goldPouch", new Texture("resources/goldPieces/goldPouch.png"));
             textureMap.put("goldBanner", new Texture("resources/goldPieces/goldBanner.png"));
             textureMap.put("menu_panel", new Texture("resources/menu_panel.png"));
-            textureMap.put("exit", new Texture("resources/exit.png"));
             textureMap.put("exitButton", new Texture("resources/exit_button.png"));
             textureMap.put("inv_button", new Texture("resources/inv_button.png"));
             textureMap.put("Sand", new Texture("resources/temp_sand.png"));
@@ -276,9 +277,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("checked", new Texture("resources/checked.png"));
             textureMap.put("unchecked", new Texture("resources/unchecked.png"));
 
-            //Inventory popup
-            textureMap.put("inv_banner", new Texture("resources/inventory/banner.png"));
-            textureMap.put("inv_background", new Texture("resources/inventory/background.png"));
 
             //Inventory Item Icons
             textureMap.put("Stone_inv", new Texture("resources/items_icons/stone.png"));

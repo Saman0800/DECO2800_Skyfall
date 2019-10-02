@@ -195,7 +195,7 @@ public class InventoryTable extends AbstractPopUpElement {
                 (Gdx.graphics.getHeight() + 160) / 2f - inventoryTable.getHeight()/2);
         inventoryTable.setDebug(false);
         inventoryTable.top();
-        inventoryTable.setBackground(generateTextureRegionDrawableObject("inv_background"));
+        inventoryTable.setBackground(generateTextureRegionDrawableObject("popup_bg"));
         inventoryTable.setName("inventoryTable");
 
         return inventoryTable;
@@ -207,7 +207,7 @@ public class InventoryTable extends AbstractPopUpElement {
      */
     private Table setHeading(){
         Table infoBar = new Table();
-        infoBar.setBackground(generateTextureRegionDrawableObject("inv_banner"));
+        infoBar.setBackground(generateTextureRegionDrawableObject("popup_banner"));
         infoBar.setSize(650, 55);
         infoBar.setPosition(130, 430);
 

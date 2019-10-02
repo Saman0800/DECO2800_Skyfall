@@ -69,51 +69,25 @@ public class HelpTable extends AbstractPopUpElement{
         helpTable.setSize(600, 600 * 1346 / 1862f);
         helpTable.setPosition(Gdx.graphics.getWidth()/2f - helpTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - helpTable.getHeight()/2);
-//        helpTable.setDebug(true);
+        helpTable.setDebug(true);
         helpTable.top();
-        helpTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
+        helpTable.setBackground(generateTextureRegionDrawableObject("popup_bg"));
 
-        Table infoBar = new Table();
-        infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
+        Table banner = new Table();
+        banner.setBackground(generateTextureRegionDrawableObject("popup_banner"));
 
-        Label text = new Label("HELP", skin, "black-text");
-        infoBar.add(text);
+        Label text = new Label("HELP", skin, "navy-text");
+        banner.add(text);
 
-        helpTable.add(infoBar).width(550).height(550 * 188f / 1756).padTop(20).colspan(3);
+        helpTable.add(banner).width(550).height(550 * 188f / 1756).padTop(20).colspan(3);
         helpTable.row().padTop(20);
 
-        setControl("W", "Move Up", helpTable);
-        setControl("A", "Move Left", helpTable);
-        setControl("S", "Move Down", helpTable);
-        setControl("D", "Move Right", helpTable);
 
-//        Label space = new Label("SPACE", skin, "WASD");
-//        space.setAlignment(Align.center);
-//        helpTable.add(space).height(50).padLeft(25).colspan(2).expandY();
-//        Label spaceDescription = new Label("Description", skin, "WASD");
-//        helpTable.add(spaceDescription).height(50).left().expandX().padLeft(20);
-//        helpTable.row().padTop(15);
         helpTable.setVisible(false);
         stage.addActor(helpTable);
         //System.out.println("Finished Drawing HELPTABLE");
     }
 
-    /**
-     * Places description of the control key and the key itself.
-     *
-     * @param key Control key
-     * @param description Description of the key
-     * @param table Table to place on.
-     */
-    private void setControl(String key, String description, Table table) {
-        Label label = new Label(key, skin, "white-label");
-        table.add(label).padLeft(25).width(50).height(50);
-        label.setAlignment(Align.center);
-        Label desc = new Label(description, skin, "white-label");
-        table.add(desc).left().padLeft(20).height(50).expandX();
-//        table.add().expandX().fillX();
-        table.row().padTop(15);
-    }
 
 
 }

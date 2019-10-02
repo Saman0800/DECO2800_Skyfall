@@ -40,9 +40,9 @@ public class GameMenuBar2 extends AbstractUIElement {
     @Override
     public void draw() {
         quickAccessPanel = new Table().top().left();
-        sideBar = new ImageButton(generateTextureRegionDrawableObject("inventory_expand_button"));
+        sideBar = new ImageButton(generateTextureRegionDrawableObject("quickaccess_side_bar"));
         quickAccessPanel.setDebug(true);
-        quickAccessPanel.setBackground(GameMenuManager.generateTextureRegionDrawableObject("inventory_bg"));
+        quickAccessPanel.setBackground(GameMenuManager.generateTextureRegionDrawableObject("quickaccess_bg"));
         quickAccessPanel.setSize(150, 550);
         updateQuickAccess();
         TextButton.TextButtonStyle test = new TextButton.TextButtonStyle();
