@@ -58,6 +58,7 @@
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
   default: { font: default-font, fontColor: black }
   black-text: { font: game-font, fontColor: black}
+  navy-text: {font: game-font, fontColor: { hex: 112A40 }}
   white-text: { font: game-font, fontColor: white}
   white-label: { font: game-font, fontColor: white , background: default-round}
   black-label: { font: game-font, fontColor: black , background: default-round}

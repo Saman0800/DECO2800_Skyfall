@@ -3,6 +3,7 @@ package deco2800.skyfall.entities;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import deco2800.skyfall.buildings.BuildingFactory;
+import deco2800.skyfall.entities.enemies.Treeman;
 import deco2800.skyfall.entities.spells.SpellFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -194,7 +195,7 @@ public class MainCharacter extends Peon
     private int itemSlotSelected = 1;
 
     /**
-     * How long does MainCharacter hurt status lasts,
+     * How long does MainCharacter playerHurt status lasts,
      */
     private long hurtTime = 0;
 
@@ -210,7 +211,7 @@ public class MainCharacter extends Peon
     private long deadTime = 500;
 
     /**
-     * Check whether MainCharacter is hurt.
+     * Check whether MainCharacter is playerHurt.
      */
     private boolean isHurt = false;
 
@@ -284,6 +285,7 @@ public class MainCharacter extends Peon
         this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
         this.setHeight(1);
         this.setObjectName("MainPiece");
+        this.setMaxHealth(health);
 
         GameManager.getManagerFromInstance(InputManager.class)
                 .addKeyDownListener(this);
@@ -341,6 +343,23 @@ public class MainCharacter extends Peon
     }
 
     /**
+     * Constructor with various textures
+     *
+     * @param textures A array of length 6 with string names corresponding to
+     *                 different orientation
+     *                 0 = North
+     *                 1 = North-East
+     *                 2 = South-East
+     *                 3 = South
+     *                 4 = South-West
+     *                 5 = North-West
+     */
+    private MainCharacter(float col, float row, float speed, String name, int health, String[] textures) {
+        this(row, col, speed, name, health);
+        this.setTexture(textures[2]);
+    }
+
+    /**
      * Setup the character specific gui elements.
      */
     public void setUpGUI() {
@@ -371,25 +390,10 @@ public class MainCharacter extends Peon
     private void setupGameOverScreen() {
         this.gameOverTable = (GameOverTable) GameManager.get().getManagerFromInstance(GameMenuManager.class).
                 getPopUp("gameOverTable");
-        System.out.println(gameOverTable);
+        logger.info("Game Over");
     }
 
-    /**
-     * Constructor with various textures
-     *
-     * @param textures A array of length 6 with string names corresponding to
-     *                 different orientation
-     *                 0 = North
-     *                 1 = North-East
-     *                 2 = South-East
-     *                 3 = South
-     *                 4 = South-West
-     *                 5 = North-West
-     */
-    private MainCharacter(float col, float row, float speed, String name, int health, String[] textures) {
-        this(row, col, speed, name, health);
-        this.setTexture(textures[2]);
-    }
+
 
     /**
      * Switch the item the MainCharacter has equip.
@@ -645,25 +649,30 @@ public class MainCharacter extends Peon
     /**
      * Player takes damage from other entities/ by starving.
      */
-    public void hurt(int damage) {
+    public void playerHurt(int damage) {
 
         // if (this.isInvincible) return;
         if (this.isRecovering) return;
 
         setHurt(true);
         logger.info("Hurted: " + isHurt);
-        this.changeHealth(-damage);
+        changeHealth(-damage);
+        updateHealth();
 
-        if (this.healthBar != null) {
-            this.healthBar.update();
-        }
+        if (!isRecovering) {
+            setHurt(true);
+            this.changeHealth(-damage);
+        getBody().setLinearVelocity(getBody().getLinearVelocity()
+                        .lerp(new Vector2(0.f, 0.f), 0.5f));
 
-        System.out.println("CURRENT HEALTH:" + String.valueOf(getHealth()));
+
         if (this.getHealth() <= 0) {
             kill();
         } else {
             hurtTime = 0;
             recoverTime = 0;
+
+            /*
             HexVector bounceBack = new HexVector(position.getCol(), position.getRow() - 2);
 
             switch (getPlayerDirectionCardinal()) {
@@ -695,14 +704,19 @@ public class MainCharacter extends Peon
                     break;
             }
             position.moveToward(bounceBack, 1f);
-
-            SoundManager.playSound(HURT);
+            */
         }
 
+            SoundManager.playSound(HURT);
+
+            if (hurtTime == 400) {
+                setRecovering(true);
+            }
+        }
     }
 
     private void checkIfHurtEnded() {
-        hurtTime += 20; // hurt for 1 second
+        hurtTime += 20; // playerHurt for 1 second
 
         if (hurtTime > 400) {
             logger.info("Hurt ended");
@@ -723,7 +737,7 @@ public class MainCharacter extends Peon
 
     /**
      * Player recovers from being attacked. It removes player 's
-     * hurt effect (e.g. sprite flashing in red), in hurt().
+     * playerHurt effect (e.g. sprite flashing in red), in playerHurt().
      */
     public boolean isRecovering() {
         return isRecovering;
@@ -743,14 +757,14 @@ public class MainCharacter extends Peon
 
     private void checkIfRecovered() {
         recoverTime += 20;
-        recoverTime += 20;
 
         this.changeCollideability(false);
 
-        if (recoverTime > 2000) {
+        if (recoverTime > 1000) {
             logger.info("Recovered");
             setRecovering(false);
             changeCollideability(true);
+            recoverTime = 0;
         }
     }
 
@@ -764,18 +778,18 @@ public class MainCharacter extends Peon
         SoundManager.playSound(DIED);
         setCurrentState(AnimationRole.DEAD);
         deadTime = 0;
-        // gameOverTable.show();
+        //gameOverTable.show();
     }
 
     /**
-     * @return if player is in the state of "hurt".
+     * @return if player is in the state of "playerHurt".
      */
     public boolean IsHurt() {
         return isHurt;
     }
 
     /**
-     * @param isHurt the player's "hurt" status
+     * @param isHurt the player's "playerHurt" status
      */
     public void setHurt(boolean isHurt) {
         this.isHurt = isHurt;
@@ -843,6 +857,7 @@ public class MainCharacter extends Peon
                 int hungerValue = ((HealthResources) item).getFoodValue();
                 change_food(hungerValue);
                 dropInventory(item.getName());
+                ((HealthResources) item).use(this.getPosition());
             } else {
                 logger.info("Given item (" + item.getName() + ") is " + "not edible!");
             }
@@ -856,7 +871,7 @@ public class MainCharacter extends Peon
      *
      * @return true if hunger points is <= 0, else false
      */
-    public boolean isStarving() {
+    public boolean isStarving( ){
         return foodLevel <= 0;
     }
 
@@ -1343,7 +1358,6 @@ public class MainCharacter extends Peon
         vel = getBody().getLinearVelocity().len();
     }
 
-
     /**
      * Gets the direction the player is currently facing
      * North: 0 deg
@@ -1695,7 +1709,7 @@ public class MainCharacter extends Peon
             } else if (getToBeRun().getType() == AnimationRole.ATTACK) {
                 return;
             }
-        } else {
+        }
 
             if (isDead()) {
                 setCurrentState(AnimationRole.STILL);
@@ -1708,7 +1722,6 @@ public class MainCharacter extends Peon
                     setCurrentState(AnimationRole.MOVE);
                 }
             }
-        }
     }
 
 

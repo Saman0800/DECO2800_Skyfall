@@ -351,7 +351,7 @@ public class GameMenuManager extends TickableManager {
         hudElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm, skin, this));
         hudElements.put("goldPill", new GoldStatusBar(stage, null, textureManager,  skin, this));
         hudElements.put("gameMenuBar", new GameMenuBar(stage, null, textureManager, this));
-        //hudElements.put("gameMenuBar2", new GameMenuBar2(stage, null, textureManager, skin, this));
+        hudElements.put("gameMenuBar2", new GameMenuBar2(stage, null, textureManager, skin, this));
         hudElements.put("clock" , new Clock(stage, skin, this));
 
         uiElements.put("HUD", new HeadsUpDisplay(stage, null, textureManager, skin, this, hudElements));

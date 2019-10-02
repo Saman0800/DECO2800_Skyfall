@@ -73,7 +73,7 @@ public class TutorialWorld extends World implements TouchDownObserver {
         	testKilledEnemy = true;
         	testTutorialBox.reset();
         	testTutorialBox.setString("Now that nothing, no matter how " +
-        			"harmless, can hurt your squishy body, please go collect " +
+        			"harmless, can playerHurt your squishy body, please go collect " +
         			"the remnants of the first creature you slaughtered. This" +
         			" can be done by walking on top of it where it used to " +
         			"stand. With these materials you can now create morally" +

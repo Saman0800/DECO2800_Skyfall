@@ -191,11 +191,11 @@ public class InventoryTable extends AbstractPopUpElement {
     private Table setBaseInventoryTable(){
         inventoryTable = new Table();
         inventoryTable.setSize(910, 510);
-        inventoryTable.setPosition(Gdx.graphics.getWidth()/2f - inventoryTable.getWidth()/2,
+        inventoryTable.setPosition((Gdx.graphics.getWidth()/2f - inventoryTable.getWidth()/2 + 60),
                 (Gdx.graphics.getHeight() + 160) / 2f - inventoryTable.getHeight()/2);
         inventoryTable.setDebug(false);
         inventoryTable.top();
-        inventoryTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
+        inventoryTable.setBackground(generateTextureRegionDrawableObject("inv_background"));
         inventoryTable.setName("inventoryTable");
 
         return inventoryTable;
@@ -207,11 +207,11 @@ public class InventoryTable extends AbstractPopUpElement {
      */
     private Table setHeading(){
         Table infoBar = new Table();
-        infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
+        infoBar.setBackground(generateTextureRegionDrawableObject("inv_banner"));
         infoBar.setSize(650, 55);
         infoBar.setPosition(130, 430);
 
-        Label text = new Label("INVENTORY", skin, "black-text");
+        Label text = new Label("INVENTORY", skin, "navy-text");
         infoBar.add(text);
 
         return infoBar;
@@ -235,12 +235,12 @@ public class InventoryTable extends AbstractPopUpElement {
      */
     private void setButtons(){
         this.inactiveDropButton = new ImageButton(generateTextureRegionDrawableObject("drop inactive"));
-        this.inactiveDropButton.setSize(100, 60);
-        this.inactiveDropButton.setPosition(285, 20);
+        this.inactiveDropButton.setSize(170, 60);
+        this.inactiveDropButton.setPosition(225, 20);
 
         this.dropButton = new ImageButton(generateTextureRegionDrawableObject("drop"));
-        this.dropButton.setSize(100, 60);
-        this.dropButton.setPosition(285, 20);
+        this.dropButton.setSize(170, 60);
+        this.dropButton.setPosition(225, 20);
         this.dropButton.setVisible(false);
         this.dropButton.addListener(new ClickListener() {
             @Override
@@ -257,12 +257,12 @@ public class InventoryTable extends AbstractPopUpElement {
         });
 
         this.inactiveEquipButton = new ImageButton(generateTextureRegionDrawableObject("equip inactive"));
-        this.inactiveEquipButton.setSize(100, 60);
-        this.inactiveEquipButton.setPosition(405, 20);
+        this.inactiveEquipButton.setSize(170, 60);
+        this.inactiveEquipButton.setPosition(390, 20);
 
         this.equipButton = new ImageButton(generateTextureRegionDrawableObject("equip"));
-        this.equipButton.setSize(100, 60);
-        this.equipButton.setPosition(405, 20);
+        this.equipButton.setSize(170, 60);
+        this.equipButton.setPosition(390, 20);
         this.equipButton.setVisible(false);
         this.equipButton.addListener(new ClickListener() {
             @Override
@@ -279,12 +279,12 @@ public class InventoryTable extends AbstractPopUpElement {
         });
 
         this.inactiveAddqaButton = new ImageButton(generateTextureRegionDrawableObject("addqa inactive"));
-        this.inactiveAddqaButton.setSize(100, 60);
-        this.inactiveAddqaButton.setPosition(530, 20);
+        this.inactiveAddqaButton.setSize(170, 60);
+        this.inactiveAddqaButton.setPosition(560, 20);
 
         this.addqaButton = new ImageButton(generateTextureRegionDrawableObject("addqa"));
-        this.addqaButton.setSize(100, 60);
-        this.addqaButton.setPosition(530, 20);
+        this.addqaButton.setSize(170, 60);
+        this.addqaButton.setPosition(560, 20);
         this.addqaButton.setVisible(false);
         this.addqaButton.addListener(new ClickListener() {
             @Override
