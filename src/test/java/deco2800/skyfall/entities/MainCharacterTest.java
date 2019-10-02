@@ -596,31 +596,29 @@ public class MainCharacterTest {
 
     @Test
     public void healthItemTest() {
-        testCharacter.changeHealth(-9);
-
         // Create items that give you health
         Aloe_Vera alo = new Aloe_Vera();
         Apple apple = new Apple();
         Berry berry = new Berry();
 
-        Assert.assertEquals(1, testCharacter.getHealth());
+        int currentHealth = testCharacter.getHealth();
 
         // Check that health increases by 2
         testCharacter.pickUpInventory(alo);
         testCharacter.eatFood(alo);
-        Assert.assertEquals(3, testCharacter.getHealth());
+        Assert.assertEquals(currentHealth + 2, testCharacter.getHealth());
 
         // Check that health increases by 4
         testCharacter.pickUpInventory(apple);
+        testCharacter.changeHealth(-2);
         testCharacter.eatFood(apple);
-        Assert.assertEquals(7, testCharacter.getHealth());
-
-        testCharacter.changeHealth(-6);
+        Assert.assertEquals(currentHealth + 4, testCharacter.getHealth());
 
         // Check that health increases by 6
         testCharacter.pickUpInventory(berry);
+        testCharacter.changeHealth(-4);
         testCharacter.eatFood(berry);
-        Assert.assertEquals(7, testCharacter.getHealth());
+        Assert.assertEquals(currentHealth + 6, testCharacter.getHealth());
     }
 
     @Test
