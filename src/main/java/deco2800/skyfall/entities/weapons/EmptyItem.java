@@ -11,8 +11,8 @@ public class EmptyItem implements Item {
     // Item attributes
     private String name;
     private String subType;
-    private Boolean carryable;
-    private Boolean exchangeable;
+    private boolean carryable;
+    private boolean exchangeable;
     private boolean equippable;
     private HexVector position;
     private int durability;
@@ -51,7 +51,7 @@ public class EmptyItem implements Item {
      * @return True if the item can be carried in the inventory, false
      * if it is consumed immediately.
      */
-    public Boolean isCarryable() {
+    public boolean isCarryable() {
         return this.carryable;
     }
 
@@ -67,7 +67,7 @@ public class EmptyItem implements Item {
      * Returns whether or not the item can be exchanged.
      * @return True if the item can be exchanged, false otherwise.
      */
-    public Boolean isExchangeable() {
+    public boolean isExchangeable() {
         return this.exchangeable;
     }
 
@@ -103,7 +103,7 @@ public class EmptyItem implements Item {
      * Returns whether or not the item can be equipped from the inventory.
      * @return True if the item can be equipped, false otherwise.
      */
-    public Boolean isEquippable() {
+    public boolean isEquippable() {
         return this.equippable;
     }
 }

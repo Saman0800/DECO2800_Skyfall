@@ -436,18 +436,17 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
     }
 
-    // FIXME:Ontonator Should this return primitive `boolean`?
     /**
      * Sets the player's equipped item
      *
      * @param item the item to equip
      */
-    public Boolean setEquippedItem(Item item) {
+    public boolean setEquippedItem(Item item) {
         if (item.isEquippable()) {
             this.equippedItem = item;
             return true;
         } else {
-            logger.warn("You can't equip " + item.getName() + ".");
+            logger.warn("You can't equip {}.", item.getName());
             return false;
         }
     }

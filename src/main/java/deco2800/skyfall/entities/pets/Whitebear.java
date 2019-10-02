@@ -164,7 +164,7 @@ public class Whitebear extends AbstractPet implements Animatable, Item {
     }
 
     @Override
-    public Boolean isCarryable() {
+    public boolean isCarryable() {
         return true;
     }
 
@@ -174,7 +174,7 @@ public class Whitebear extends AbstractPet implements Animatable, Item {
     }
 
     @Override
-    public Boolean isExchangeable() {
+    public boolean isExchangeable() {
         return true;
     }
 
@@ -188,7 +188,7 @@ public class Whitebear extends AbstractPet implements Animatable, Item {
 
     }
 
-    public Boolean isEquippable() {
+    public boolean isEquippable() {
         return false;
     }
 

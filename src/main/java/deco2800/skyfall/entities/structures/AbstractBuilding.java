@@ -27,7 +27,7 @@ public abstract class AbstractBuilding extends SaveableEntity {
 
     private InventoryManager inventoryManager;
 
-    // private Boolean hasPlayer;
+    // private boolean hasPlayer;
 
     /**
      *

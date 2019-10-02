@@ -10,8 +10,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import deco2800.skyfall.buildings.BuildingFactory;
-
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.graphics.HasPointLight;
@@ -90,7 +88,7 @@ public class GameScreen implements Screen,KeyDownObserver {
         MainCharacter.getInstance().setSave(this.save);
         this.save.setMainCharacter(MainCharacter.getInstance());
         GameManager gameManager = GameManager.get();
-        GameMenuManager gameMenuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+        GameMenuManager gameMenuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
         DatabaseManager databaseManager = DatabaseManager.get();
         gameMenuManager.setStage(stage);
         gameMenuManager.setSkin(gameManager.getSkin());
@@ -151,7 +149,7 @@ public class GameScreen implements Screen,KeyDownObserver {
         /* Add BGM to game manager */
         gameManager.addManager(new BGMManager());
 
-        /**
+        /*
          * NOTE: Now that the Environment Manager has been added start creating the
          * SpectralValue instances for the Ambient Light.
          */

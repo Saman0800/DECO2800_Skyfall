@@ -10,7 +10,7 @@ public abstract class SaveableEntity extends AbstractEntity implements Saveable<
 
     // The type of entity this is (e.g. "ForestTree", "Axe" etc.)
     protected String entityType;
-    // Boolean used to determine if the entity is obstructable in game
+    // boolean used to determine if the entity is obstructable in game
     protected boolean obstructed;
 
     public SaveableEntity() {
@@ -71,7 +71,7 @@ public abstract class SaveableEntity extends AbstractEntity implements Saveable<
          * private Body body; private Fixture fixture;
          */
 
-        protected Boolean isCollidable;
+        protected boolean isCollidable;
         protected String texture;
 
         public SaveableEntityMemento(SaveableEntity entity) {

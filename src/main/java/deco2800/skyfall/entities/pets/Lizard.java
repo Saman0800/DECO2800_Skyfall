@@ -186,7 +186,7 @@ public class Lizard extends AbstractPet implements Animatable, Item {
      * @return true
      */
     @Override
-    public Boolean isCarryable() {
+    public boolean isCarryable() {
         return true;
     }
 
@@ -206,7 +206,7 @@ public class Lizard extends AbstractPet implements Animatable, Item {
      * @return True if the pet can be exchanged, false otherwise
      */
     @Override
-    public Boolean isExchangeable() {
+    public boolean isExchangeable() {
         return true;
     }
 
@@ -225,7 +225,7 @@ public class Lizard extends AbstractPet implements Animatable, Item {
 
     }
 
-    public Boolean isEquippable() {
+    public boolean isEquippable() {
         return false;
     }
 }

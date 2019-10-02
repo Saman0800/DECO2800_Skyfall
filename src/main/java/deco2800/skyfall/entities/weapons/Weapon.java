@@ -21,8 +21,8 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon {
     private int attackRate;
     private int damage;
     private int durability;
-    private Boolean carryable;
-    private Boolean exchangeable;
+    private boolean carryable;
+    private boolean exchangeable;
     public boolean equippable;
     private HexVector position;
 
@@ -164,7 +164,7 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon {
      * @return True if the item can be carried in the inventory, false
      * if it is consumed immediately
      */
-    public Boolean isCarryable() {
+    public boolean isCarryable() {
         return this.carryable;
     }
 
@@ -180,7 +180,7 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon {
      * Returns whether or not the weapon can be exchanged
      * @return True if the weapon can be exchanged, false otherwise
      */
-    public Boolean isExchangeable() {
+    public boolean isExchangeable() {
         return this.exchangeable;
     }
 
@@ -188,7 +188,7 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon {
      * Returns whether or not the weapon can be equipped from the inventory
      * @return True if the weapon can be equipped, false otherwise
      */
-    public Boolean isEquippable() {
+    public boolean isEquippable() {
         return this.equippable;
     }
 
