@@ -1,7 +1,10 @@
 package deco2800.skyfall.resources;
 
+//import deco2800.skyfall.entities.EnemyEntity;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class HealthResources implements Item {
 
@@ -9,11 +12,12 @@ public abstract class HealthResources implements Item {
     private Boolean carryable;
     // the name of the item e.g. food, poison
     private String name;
+
     // impact the player's health or not
     private Boolean hasHealingPower;
 
     // the name of the subtype the item belongs to
-    public String subtype;
+    protected String subtype;
     // the co-ordinates of the tile the item has been placed on
     private HexVector position;
 
@@ -24,11 +28,12 @@ public abstract class HealthResources implements Item {
     public boolean equippable;
 
     // the value of the piece of food
-    public int foodValue;
+    protected int foodValue;
 
     // the healing ability of the health item
-    public int healthValue;
+    protected int healthValue;
 
+    private final transient Logger log = LoggerFactory.getLogger(HealthResources.class);
 
     /**
      * Creates a default health resource.
@@ -62,6 +67,8 @@ public abstract class HealthResources implements Item {
         this.exchangeable = true;
         this.equippable = false;
         this.position = position.getCoordinates();
+
+        this.healthValue = 10;
     }
 
 
@@ -141,6 +148,11 @@ public abstract class HealthResources implements Item {
     public int getFoodValue() {
         return foodValue;
     }
+
+    public void setHealthValue(int health){
+        this.healthValue = health;
+    }
+
     public int getHealthValue(){
         return healthValue;
     }

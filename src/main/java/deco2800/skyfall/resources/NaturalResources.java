@@ -9,13 +9,13 @@ import deco2800.skyfall.worlds.Tile;
 public abstract class NaturalResources implements Item {
 
     // the name of the item e.g. wood, stone
-    public String name;
+    protected String name;
 
     // can the item be carried in the inventory or not
     private Boolean carryable;
 
     // the name of the subtype the item belongs to
-    public String subtype;
+    protected String subtype;
 
     // the co-ordinates of the tile the item has been placed on
     private HexVector position;

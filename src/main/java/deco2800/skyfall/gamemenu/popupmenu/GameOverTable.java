@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
@@ -15,10 +17,10 @@ import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDra
  * A class for game over table pop up.
  */
 public class GameOverTable extends AbstractPopUpElement{
-    private Skin skin;
-    private Table gameOverTable;
-    private GameMenuManager gameMenuManager;
 
+
+    private Table mainTable;
+    private GameMenuManager gameMenuManager;
 
     /**
      * Constructs a game over table.
@@ -28,13 +30,11 @@ public class GameOverTable extends AbstractPopUpElement{
      * @param textureNames Names of the textures.
      * @param tm Current texture manager.
      * @param gameMenuManager Current game menu manager.
-     * @param skin Current skin.
      */
     public GameOverTable(Stage stage, ImageButton exit,
                          String[] textureNames, TextureManager tm,
-                         GameMenuManager gameMenuManager, Skin skin) {
+                         GameMenuManager gameMenuManager) {
         super(stage, exit, textureNames,tm , gameMenuManager);
-        this.skin = skin;
         this.gameMenuManager = gameMenuManager;
         this.draw();
     }
@@ -45,7 +45,7 @@ public class GameOverTable extends AbstractPopUpElement{
     @Override
     public void hide() {
         super.hide();
-        gameOverTable.setVisible(false);
+        mainTable.setVisible(false);
     }
 
     /**
@@ -54,7 +54,7 @@ public class GameOverTable extends AbstractPopUpElement{
     @Override
     public void show() {
         super.show();
-        gameOverTable.setVisible(true);
+        mainTable.setVisible(true);
     }
 
     /**
@@ -64,28 +64,28 @@ public class GameOverTable extends AbstractPopUpElement{
     @Override
     public void draw() {
         super.draw();
-        gameOverTable = new Table();
-        gameOverTable.bottom();
-        gameOverTable.setSize(500, 500 * 1346 / 1862f);
-        gameOverTable.setPosition(Gdx.graphics.getWidth()/2f - gameOverTable.getWidth()/2,
-                (Gdx.graphics.getHeight() + 160) / 2f - gameOverTable.getHeight()/2);
-        gameOverTable.setBackground(generateTextureRegionDrawableObject("game_over_temp_bg"));
+        mainTable = new Table();
+        mainTable.bottom();
+        mainTable.setSize(500, 500 * 1346 / 1862f);
+        mainTable.setPosition(Gdx.graphics.getWidth()/2f - mainTable.getWidth()/2,
+                (Gdx.graphics.getHeight() + 160) / 2f - mainTable.getHeight()/2);
+        mainTable.setBackground(generateTextureRegionDrawableObject("game_over_temp_bg"));
 
         ImageButton retry = new ImageButton(generateTextureRegionDrawableObject("game over retry temp"));
-        gameOverTable.add(retry).padBottom(15).width(450).height(450*302/2313f);
-        gameOverTable.row();
+        mainTable.add(retry).padBottom(15).width(450).height(450*302/2313f);
+        mainTable.row();
 
         retry.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 hide();
-                gameMenuManager.getMainCharacter().changeHealth(10);
+                gameMenuManager.getMainCharacter().changeHealth(50);
             }
         });
 
         ImageButton toHome = new ImageButton(generateTextureRegionDrawableObject("game over home temp"));
-        gameOverTable.add(toHome).padBottom(15).width(450).height(450*302/2313f);;
-        gameOverTable.row();
+        mainTable.add(toHome).padBottom(15).width(450).height(450*302/2313f);
+        mainTable.row();
         toHome.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -93,9 +93,8 @@ public class GameOverTable extends AbstractPopUpElement{
             }
         });
 
-        gameOverTable.setVisible(false);
-        stage.addActor(gameOverTable);
-        System.out.println(gameOverTable);
+        mainTable.setVisible(false);
+        stage.addActor(mainTable);
     }
 
 }

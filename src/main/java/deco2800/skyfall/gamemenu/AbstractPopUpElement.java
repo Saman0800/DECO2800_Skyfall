@@ -53,6 +53,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
     public void show(){
         if (exitButton != null) {
             exitButton.setVisible(true);
+            exitButton.top();
         }
         isVisible = true;
         pause();

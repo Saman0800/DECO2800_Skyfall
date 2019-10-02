@@ -11,16 +11,16 @@ import java.util.Map;
 public abstract class ManufacturedResources implements Item, Blueprint {
 
     // the name of the item e.g. Hatchet, Pick Axe
-    public String name;
+    protected String name;
 
     // can the item be stored in the inventory
     protected Boolean carryable;
 
     // the name of the subtype the item belongs to
-    public String subtype;
+    protected String subtype;
 
     // the co-ordinates of the tile the item has been placed on
-    public HexVector position;
+    protected HexVector position;
 
     // an AngnetEntity instance representing the owner of the resource.
     protected MainCharacter owner;

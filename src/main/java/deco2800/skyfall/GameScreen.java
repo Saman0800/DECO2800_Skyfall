@@ -59,10 +59,6 @@ public class GameScreen implements Screen,KeyDownObserver {
 
     long lastGameTick = 0;
 
-    /**
-     * Create an EnvironmentManager for ToD.
-     */
-    EnvironmentManager timeOfDay;
     public static boolean isPaused = false;
 
     //A wrapper for shader
@@ -86,7 +82,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 
 
         this.save = new Save();
-        MainCharacter.getInstance(0,0,0.05f, "Main Piece", 10);
+        MainCharacter.getInstance(0,0,0.05f, "Main Piece", 50);
         MainCharacter.getInstance().setSave(this.save);
         this.save.setMainCharacter(MainCharacter.getInstance());
         GameManager gameManager = GameManager.get();
@@ -122,7 +118,8 @@ public class GameScreen implements Screen,KeyDownObserver {
                 save.getWorlds().add(world);
                 save.setCurrentWorld(world);
                 world.setSave(save);
-                DatabaseManager.get().getDataBaseConnector().saveGame(save);
+                //TODO: Uncomment this before merging
+               // DatabaseManager.get().getDataBaseConnector().saveGame(save);
             }
             GameManager.get().getManager(NetworkManager.class).startHosting("host");
         }

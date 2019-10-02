@@ -1,4 +1,4 @@
-package deco2800.skyfall.gui;
+package deco2800.skyfall.gamemenu;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.resources.HealthResources;
 
 /**
  * We have a HealthCircle and a Manabar, need to join some common logic.
@@ -27,6 +28,7 @@ public abstract class StatBar {
     protected float positionX;
     protected float positionY;
     protected String attributeName;
+    protected  HealthResources healthResources;
 
     /**
      *

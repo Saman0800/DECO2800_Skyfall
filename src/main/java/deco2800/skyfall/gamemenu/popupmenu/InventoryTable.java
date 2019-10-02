@@ -66,9 +66,6 @@ public class InventoryTable extends AbstractPopUpElement {
     //Inventory user interface equip item button (inactive)
     private ImageButton inactiveEquipButton;
 
-    //Item information currently displayed in the info panel
-    private Label itemInfo;
-
     //Logger for Inventory Table
     private final transient Logger LOGGER =
             LoggerFactory.getLogger(InventoryTable.class);
@@ -195,11 +192,11 @@ public class InventoryTable extends AbstractPopUpElement {
     private Table setBaseInventoryTable(){
         inventoryTable = new Table();
         inventoryTable.setSize(910, 510);
-        inventoryTable.setPosition(Gdx.graphics.getWidth()/2f - inventoryTable.getWidth()/2,
+        inventoryTable.setPosition((Gdx.graphics.getWidth()/2f - inventoryTable.getWidth()/2 + 60),
                 (Gdx.graphics.getHeight() + 160) / 2f - inventoryTable.getHeight()/2);
         inventoryTable.setDebug(false);
         inventoryTable.top();
-        inventoryTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
+        inventoryTable.setBackground(generateTextureRegionDrawableObject("popup_bg"));
         inventoryTable.setName("inventoryTable");
 
         return inventoryTable;
@@ -211,11 +208,11 @@ public class InventoryTable extends AbstractPopUpElement {
      */
     private Table setHeading(){
         Table infoBar = new Table();
-        infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
+        infoBar.setBackground(generateTextureRegionDrawableObject("popup_banner"));
         infoBar.setSize(650, 55);
         infoBar.setPosition(130, 430);
 
-        Label text = new Label("INVENTORY", skin, "black-text");
+        Label text = new Label("INVENTORY", skin, "navy-text");
         infoBar.add(text);
 
         return infoBar;
@@ -229,13 +226,7 @@ public class InventoryTable extends AbstractPopUpElement {
         Table infoPanel = new Table();
         infoPanel.setSize(410, 320);
         infoPanel.setPosition(25, 98);
-        infoPanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
-
-        itemInfo = new Label("Click on an item to use it, and " + "\n" + "find out more information.", skin, "default");
-        itemInfo.setSize(350, 200);
-        itemInfo.setPosition(90, 70);
-
-        infoPanel.addActor(itemInfo);
+        infoPanel.setBackground(generateTextureRegionDrawableObject("Description_Panel"));
 
         return infoPanel;
     }
@@ -245,12 +236,12 @@ public class InventoryTable extends AbstractPopUpElement {
      */
     private void setButtons(){
         this.inactiveDropButton = new ImageButton(generateTextureRegionDrawableObject("drop inactive"));
-        this.inactiveDropButton.setSize(100, 60);
-        this.inactiveDropButton.setPosition(285, 20);
+        this.inactiveDropButton.setSize(170, 60);
+        this.inactiveDropButton.setPosition(225, 20);
 
         this.dropButton = new ImageButton(generateTextureRegionDrawableObject("drop"));
-        this.dropButton.setSize(100, 60);
-        this.dropButton.setPosition(285, 20);
+        this.dropButton.setSize(170, 60);
+        this.dropButton.setPosition(225, 20);
         this.dropButton.setVisible(false);
         this.dropButton.addListener(new ClickListener() {
             @Override
@@ -267,12 +258,12 @@ public class InventoryTable extends AbstractPopUpElement {
         });
 
         this.inactiveEquipButton = new ImageButton(generateTextureRegionDrawableObject("equip inactive"));
-        this.inactiveEquipButton.setSize(100, 60);
-        this.inactiveEquipButton.setPosition(405, 20);
+        this.inactiveEquipButton.setSize(170, 60);
+        this.inactiveEquipButton.setPosition(390, 20);
 
         this.equipButton = new ImageButton(generateTextureRegionDrawableObject("equip"));
-        this.equipButton.setSize(100, 60);
-        this.equipButton.setPosition(405, 20);
+        this.equipButton.setSize(170, 60);
+        this.equipButton.setPosition(390, 20);
         this.equipButton.setVisible(false);
         this.equipButton.addListener(new ClickListener() {
             @Override
@@ -293,12 +284,12 @@ public class InventoryTable extends AbstractPopUpElement {
         });
 
         this.inactiveAddqaButton = new ImageButton(generateTextureRegionDrawableObject("addqa inactive"));
-        this.inactiveAddqaButton.setSize(100, 60);
-        this.inactiveAddqaButton.setPosition(530, 20);
+        this.inactiveAddqaButton.setSize(170, 60);
+        this.inactiveAddqaButton.setPosition(560, 20);
 
         this.addqaButton = new ImageButton(generateTextureRegionDrawableObject("addqa"));
-        this.addqaButton.setSize(100, 60);
-        this.addqaButton.setPosition(530, 20);
+        this.addqaButton.setSize(170, 60);
+        this.addqaButton.setPosition(560, 20);
         this.addqaButton.setVisible(false);
         this.addqaButton.addListener(new ClickListener() {
             @Override
@@ -335,13 +326,10 @@ public class InventoryTable extends AbstractPopUpElement {
     private void updateItemInfo(){
         //System.out.println(inventorySelected);
         if (inventorySelected != null){
-            String info = inventory.getItemDescription(inventorySelected);
-            itemInfo.setText(info);
+            infoPanel.setBackground(generateTextureRegionDrawableObject(inventorySelected + "_desc"));
         } else{
-            itemInfo.setText("Click on an item to use it, and " + "\n" + "find out more information.");
+            infoPanel.setBackground(generateTextureRegionDrawableObject("Description_Panel"));
         }
-        infoPanel.removeActor(itemInfo);
-        infoPanel.add(itemInfo);
     }
 
     /**

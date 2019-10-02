@@ -15,6 +15,7 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
+import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Save;
@@ -685,7 +686,18 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
                 ChestTable chest = (ChestTable) menuManager.getPopUp("chestTable");
                 chest.updateChestPanel((Chest) entity);
                 menuManager.setPopUp("chestTable");
-            } else if (entity instanceof BlueprintShop) {
+
+
+            } else if (entity instanceof GoldPiece) {
+                MainCharacter mc = gmm.getMainCharacter();
+                if (tile.getCoordinates().distance(mc.getPosition()) <= 1) {
+                    mc.addGold((GoldPiece) entity, 1);
+                    // remove the gold piece instance from the world
+                    removeEntity(entity);
+                }
+            }
+
+            else if (entity instanceof BlueprintShop) {
                 GameMenuManager menuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
                 BlueprintShopTable bs = (BlueprintShopTable) menuManager.getPopUp("blueprintShopTable");
                 bs.updateBlueprintShopPanel();

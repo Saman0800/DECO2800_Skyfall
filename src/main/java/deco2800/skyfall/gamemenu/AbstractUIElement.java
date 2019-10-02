@@ -1,9 +1,11 @@
 package deco2800.skyfall.gamemenu;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
 
 /**
@@ -66,5 +68,14 @@ public abstract class AbstractUIElement {
 
     public AbstractUIElement() {
 
+    }
+
+    /**
+     * If there is any opened popup, closes it.
+     */
+    protected void hideOpened(GameMenuManager gmm) {
+        if (gmm.getCurrentPopUp() != null) {
+            gmm.getCurrentPopUp().hide();
+        }
     }
 }

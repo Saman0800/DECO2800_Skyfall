@@ -1,12 +1,11 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
@@ -18,7 +17,7 @@ import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDra
 
 public class HelpTable extends AbstractPopUpElement{
     private Skin skin;
-    private Table helpTable;
+    private Table table;
 
     /**
      * Constructs a help table.
@@ -44,7 +43,7 @@ public class HelpTable extends AbstractPopUpElement{
     @Override
     public void hide() {
         super.hide();
-        helpTable.setVisible(false);
+        table.setVisible(false);
     }
 
     /**
@@ -53,7 +52,7 @@ public class HelpTable extends AbstractPopUpElement{
     @Override
     public void show() {
         super.show();
-        helpTable.setVisible(true);
+        table.setVisible(true);
     }
 
 
@@ -65,55 +64,75 @@ public class HelpTable extends AbstractPopUpElement{
     public void draw() {
         super.draw();
 //        System.out.println("Drawing HELPTABLE");
-        helpTable = new Table();
-        helpTable.setSize(600, 600 * 1346 / 1862f);
-        helpTable.setPosition(Gdx.graphics.getWidth()/2f - helpTable.getWidth()/2,
-                (Gdx.graphics.getHeight() + 160) / 2f - helpTable.getHeight()/2);
-//        helpTable.setDebug(true);
-        helpTable.top();
-        helpTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
+        table = new Table().top();
+        table.setSize(750, 600);
+        table.setPosition(Gdx.graphics.getWidth()/2f - table.getWidth()/2,
+                Gdx.graphics.getHeight() / 2f - table.getHeight()/2);
+//        table.setDebug(true);
+        table.setBackground(generateTextureRegionDrawableObject("popup_bg"));
 
-        Table infoBar = new Table();
-        infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
-
-        Label text = new Label("HELP", skin, "black-text");
-        infoBar.add(text);
-
-        helpTable.add(infoBar).width(550).height(550 * 188f / 1756).padTop(20).colspan(3);
-        helpTable.row().padTop(20);
-
-        setControl("W", "Move Up", helpTable);
-        setControl("A", "Move Left", helpTable);
-        setControl("S", "Move Down", helpTable);
-        setControl("D", "Move Right", helpTable);
-
-//        Label space = new Label("SPACE", skin, "WASD");
-//        space.setAlignment(Align.center);
-//        helpTable.add(space).height(50).padLeft(25).colspan(2).expandY();
-//        Label spaceDescription = new Label("Description", skin, "WASD");
-//        helpTable.add(spaceDescription).height(50).left().expandX().padLeft(20);
-//        helpTable.row().padTop(15);
-        helpTable.setVisible(false);
-        stage.addActor(helpTable);
+        drawBanner();
+        toPrev();
+        table.setVisible(false);
+        stage.addActor(table);
         //System.out.println("Finished Drawing HELPTABLE");
     }
 
-    /**
-     * Places description of the control key and the key itself.
-     *
-     * @param key Control key
-     * @param description Description of the key
-     * @param table Table to place on.
-     */
-    private void setControl(String key, String description, Table table) {
-        Label label = new Label(key, skin, "white-label");
-        table.add(label).padLeft(25).width(50).height(50);
-        label.setAlignment(Align.center);
-        Label desc = new Label(description, skin, "white-label");
-        table.add(desc).left().padLeft(20).height(50).expandX();
-//        table.add().expandX().fillX();
-        table.row().padTop(15);
+    private void drawBanner() {
+        Table banner = new Table();
+        banner.setBackground(generateTextureRegionDrawableObject("popup_banner"));
+
+        Label text = new Label("HELP", skin, "navy-text");
+        banner.add(text);
+
+        table.add(banner).width(700).height(70).padTop(20).colspan(2);
+        table.row().padTop(10);
     }
 
+    private void toNext() {
+        Image page2 = new Image(generateTextureRegionDrawableObject("help_page2"));
+        table.add(page2).width(650).height(1704f / 2556 * 650).colspan(2);
+        table.row();
 
+        TextureRegionDrawable arrow = generateTextureRegionDrawableObject("help_arrow");
+        ImageButton leftArrow = new ImageButton(arrow);
+        leftArrow.setTransform(true);
+        leftArrow.setOrigin(30, 25);
+        leftArrow.setRotation(180);
+        table.add(leftArrow).width(60).height(50).padLeft(10).spaceRight(10);
+        leftArrow.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                table.clearChildren();
+                drawBanner();
+                toPrev();
+            }
+        });
+
+        Label next = new Label("PREVIOUS", skin, "white-text");
+        next.setFontScale(0.7f);
+        table.add(next).left().expandX();
+    }
+
+    private void toPrev() {
+        Image page1 = new Image(generateTextureRegionDrawableObject("help_page1"));
+        table.add(page1).width(650).height(1704f / 2556 * 650).colspan(2);
+        table.row();
+
+        Label next = new Label("NEXT", skin, "white-text");
+        next.setFontScale(0.7f);
+        table.add(next).right().expandX();
+
+        TextureRegionDrawable arrow = generateTextureRegionDrawableObject("help_arrow");
+        ImageButton rightArrow = new ImageButton(arrow);
+        table.add(rightArrow).width(60).height(50).spaceLeft(10).padRight(10);
+        rightArrow.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                table.clearChildren();
+                drawBanner();
+                toNext();
+            }
+        });
+    }
 }

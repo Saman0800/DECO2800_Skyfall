@@ -51,7 +51,6 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
         { WorldBuilder.class, WorldDirector.class, DatabaseManager.class, DataBaseConnector.class, GameManager.class })
 public class MainCharacterTest {
 
-    private GoldPiece goldpiece;
     private MainCharacter testCharacter;
     private Tree testTree;
     private Rock testRock;
@@ -173,7 +172,7 @@ public class MainCharacterTest {
     }
 
     /**
-     * Private helper method used for inventory testting
+     * Private helper method used for inventory testing
      */
     private void pickUpInventoryMultiple(Item item, int amount) {
         for (int i = 0; i < amount; i++) {
@@ -281,12 +280,12 @@ public class MainCharacterTest {
     }
 
     /**
-     * Test hurt effect
+     * Test playerHurt effect
      */
     @Test
     public void hurtTest() {
         // Reduce health by input damage test
-        // testCharacter.hurt(3);
+        // testCharacter.playerHurt(3);
         // Assert.assertEquals(7, testCharacter.getHealth());
 
         // Character bounce back test
@@ -305,7 +304,7 @@ public class MainCharacterTest {
      */
     @Test
     public void recoverTest() {
-        // Set the health status of player from hurt back to normal
+        // Set the health status of player from playerHurt back to normal
         // so that the effect (e.g. sprite flashing in red) will disappear
         // after recovering.
 
@@ -317,9 +316,9 @@ public class MainCharacterTest {
      */
     @Test
     public void killTest() {
-        // Test if hurt() can trigger Peon.changeHealth() when
+        // Test if playerHurt() can trigger Peon.changeHealth() when
         // the damage taken can make player's health below 0.
-        testCharacter.hurt(10);
+        testCharacter.playerHurt(10);
 
         // Assert.assertEquals(1, testCharacter.getDeaths());
 
@@ -395,6 +394,10 @@ public class MainCharacterTest {
         GoldPiece g10 = new GoldPiece(10);
         GoldPiece g50 = new GoldPiece(50);
 
+        //remove a piece of gold from the pouch which is not there
+        // (should do nothing)
+        testCharacter.removeGold(5);
+
         // add the respective gold pieces to the pouch
         testCharacter.addGold(g5, 4);
         testCharacter.addGold(g10, 1);
@@ -408,6 +411,8 @@ public class MainCharacterTest {
 
         //remove a piece of gold from the pouch
         testCharacter.removeGold(5);
+
+
 
         // ensure that the necessary adjustments have been made
         Assert.assertTrue(testCharacter.getGoldPouchTotalValue() == 275);
@@ -588,6 +593,33 @@ public class MainCharacterTest {
         this.testCharacter.switchItem(10);
         Assert.assertEquals(this.testCharacter.getItemSlotSelected(),3);
 
+    }
+
+    @Test
+    public void healthItemTest() {
+        // Create items that give you health
+        Aloe_Vera alo = new Aloe_Vera();
+        Apple apple = new Apple();
+        Berry berry = new Berry();
+
+        int currentHealth = testCharacter.getHealth();
+
+        // Check that health increases by 2
+        testCharacter.pickUpInventory(alo);
+        testCharacter.eatFood(alo);
+        Assert.assertEquals(currentHealth + 2, testCharacter.getHealth());
+
+        // Check that health increases by 4
+        testCharacter.pickUpInventory(apple);
+        testCharacter.changeHealth(-2);
+        testCharacter.eatFood(apple);
+        Assert.assertEquals(currentHealth + 4, testCharacter.getHealth());
+
+        // Check that health increases by 6
+        testCharacter.pickUpInventory(berry);
+        testCharacter.changeHealth(-4);
+        testCharacter.eatFood(berry);
+        Assert.assertEquals(currentHealth + 6, testCharacter.getHealth());
     }
 
     @Test

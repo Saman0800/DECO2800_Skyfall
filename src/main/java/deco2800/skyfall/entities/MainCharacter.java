@@ -20,7 +20,7 @@ import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
-import deco2800.skyfall.gui.ManaBar;
+import deco2800.skyfall.gamemenu.ManaBar;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.observers.KeyUpObserver;
@@ -203,7 +203,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private int itemSlotSelected = 1;
 
     /**
-     * How long does MainCharacter hurt status lasts,
+     * How long does MainCharacter playerHurt status lasts,
      */
     private long hurtTime = 0;
 
@@ -219,7 +219,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private long deadTime = 500;
 
     /**
-     * Check whether MainCharacter is hurt.
+     * Check whether MainCharacter is playerHurt.
      */
     private boolean isHurt = false;
 
@@ -409,6 +409,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private void setupGameOverScreen() {
         this.gameOverTable = (GameOverTable) GameManager.get().getManagerFromInstance(GameMenuManager.class).
                 getPopUp("gameOverTable");
+        logger.info("Game Over");
     }
 
 
@@ -693,7 +694,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Player takes damage from other entities/ by starving.
      */
-    public void hurt(int damage) {
+    public void playerHurt(int damage) {
 
         // if (this.isInvincible) return;
         if (this.isRecovering) return;
@@ -703,6 +704,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         changeHealth(-damage);
         updateHealth();
 
+        if (!isRecovering) {
+            setHurt(true);
+            this.changeHealth(-damage);
         getBody().setLinearVelocity(getBody().getLinearVelocity()
                         .lerp(new Vector2(0.f, 0.f), 0.5f));
 
@@ -745,6 +749,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             }
             position.moveToward(bounceBack, 1f);
             */
+        }
 
             SoundManager.playSound(HURT);
 
@@ -755,7 +760,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     private void checkIfHurtEnded() {
-        hurtTime += 20; // hurt for 1 second
+        hurtTime += 20; // playerHurt for 1 second
 
         if (hurtTime > 400) {
             logger.info("Hurt ended");
@@ -776,7 +781,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Player recovers from being attacked. It removes player 's
-     * hurt effect (e.g. sprite flashing in red), in hurt().
+     * playerHurt effect (e.g. sprite flashing in red), in playerHurt().
      */
     public boolean isRecovering() {
         return isRecovering;
@@ -817,18 +822,18 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         SoundManager.playSound(DIED);
         setCurrentState(AnimationRole.DEAD);
         deadTime = 0;
-        // gameOverTable.show();
+        //gameOverTable.show();
     }
 
     /**
-     * @return if player is in the state of "hurt".
+     * @return if player is in the state of "playerHurt".
      */
     public boolean IsHurt() {
         return isHurt;
     }
 
     /**
-     * @param isHurt the player's "hurt" status
+     * @param isHurt the player's "playerHurt" status
      */
     public void setHurt(boolean isHurt) {
         this.isHurt = isHurt;
@@ -896,6 +901,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 int hungerValue = ((HealthResources) item).getFoodValue();
                 change_food(hungerValue);
                 dropInventory(item.getName());
+                ((HealthResources) item).use(this.getPosition());
             } else {
                 logger.info("Given item (" + item.getName() + ") is " + "not edible!");
             }
@@ -909,7 +915,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      *
      * @return true if hunger points is <= 0, else false
      */
-    public boolean isStarving() {
+    public boolean isStarving( ){
         return foodLevel <= 0;
     }
 
@@ -1193,10 +1199,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 break;
             case Input.Keys.SPACE:
                 break;
-            case Input.Keys.G:
-                break;
-            case Input.Keys.M:
-                break;
             default:
                 break;
         }
@@ -1275,25 +1277,21 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         for (Integer goldValue : goldPouch.keySet()) {
             totalValue += goldValue * goldPouch.get(goldValue);
         }
-        logger.info("The total value of your Gold Pouch is: " + totalValue + "G");
         return totalValue;
     }
 
     /**
-     * If the player is within 2m of a gold piece and presses G, it will
-     * be added to their Gold Pouch.
+     * If the player is within 1m of a gold piece, it will
+     *  be added to their Gold Pouch.
      */
     public void addClosestGoldPiece() {
         for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
             if (entity instanceof GoldPiece) {
-                if (this.getPosition().distance(entity.getPosition()) <= 2) {
+                if (this.getPosition().distance(entity.getPosition()) <= 1) {
                     this.addGold((GoldPiece) entity, 1);
-                    logger.info(this.inventories.toString());
                 }
             }
         }
-        logger.info("Sorry, you are not close enough to a gold piece!");
-
     }
 
     /**
