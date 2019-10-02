@@ -79,7 +79,7 @@ public class GameOverTable extends AbstractPopUpElement{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 hide();
-                gameMenuManager.getMainCharacter().changeHealth(10);
+                gameMenuManager.getMainCharacter().changeHealth(50);
             }
         });
 

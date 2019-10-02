@@ -82,7 +82,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 
 
         this.save = new Save();
-        MainCharacter.getInstance(0,0,0.05f, "Main Piece", 10);
+        MainCharacter.getInstance(0,0,0.05f, "Main Piece", 50);
         MainCharacter.getInstance().setSave(this.save);
         this.save.setMainCharacter(MainCharacter.getInstance());
         GameManager gameManager = GameManager.get();

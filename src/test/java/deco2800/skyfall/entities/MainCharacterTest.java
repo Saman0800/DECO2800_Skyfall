@@ -173,7 +173,7 @@ public class MainCharacterTest {
     }
 
     /**
-     * Private helper method used for inventory testting
+     * Private helper method used for inventory testing
      */
     private void pickUpInventoryMultiple(Item item, int amount) {
         for (int i = 0; i < amount; i++) {
@@ -281,12 +281,12 @@ public class MainCharacterTest {
     }
 
     /**
-     * Test hurt effect
+     * Test playerHurt effect
      */
     @Test
     public void hurtTest() {
         // Reduce health by input damage test
-        // testCharacter.hurt(3);
+        // testCharacter.playerHurt(3);
         // Assert.assertEquals(7, testCharacter.getHealth());
 
         // Character bounce back test
@@ -305,7 +305,7 @@ public class MainCharacterTest {
      */
     @Test
     public void recoverTest() {
-        // Set the health status of player from hurt back to normal
+        // Set the health status of player from playerHurt back to normal
         // so that the effect (e.g. sprite flashing in red) will disappear
         // after recovering.
 
@@ -317,9 +317,9 @@ public class MainCharacterTest {
      */
     @Test
     public void killTest() {
-        // Test if hurt() can trigger Peon.changeHealth() when
+        // Test if playerHurt() can trigger Peon.changeHealth() when
         // the damage taken can make player's health below 0.
-        testCharacter.hurt(10);
+        testCharacter.playerHurt(10);
 
         // Assert.assertEquals(1, testCharacter.getDeaths());
 
@@ -592,6 +592,35 @@ public class MainCharacterTest {
         this.testCharacter.switchItem(10);
         Assert.assertEquals(this.testCharacter.getItemSlotSelected(),3);
 
+    }
+
+    @Test
+    public void healthItemTest() {
+        testCharacter.changeHealth(-9);
+
+        // Create items that give you health
+        Aloe_Vera alo = new Aloe_Vera();
+        Apple apple = new Apple();
+        Berry berry = new Berry();
+
+        Assert.assertEquals(1, testCharacter.getHealth());
+
+        // Check that health increases by 2
+        testCharacter.pickUpInventory(alo);
+        testCharacter.eatFood(alo);
+        Assert.assertEquals(3, testCharacter.getHealth());
+
+        // Check that health increases by 4
+        testCharacter.pickUpInventory(apple);
+        testCharacter.eatFood(apple);
+        Assert.assertEquals(7, testCharacter.getHealth());
+
+        testCharacter.changeHealth(-6);
+
+        // Check that health increases by 6
+        testCharacter.pickUpInventory(berry);
+        testCharacter.eatFood(berry);
+        Assert.assertEquals(7, testCharacter.getHealth());
     }
 
     @Test

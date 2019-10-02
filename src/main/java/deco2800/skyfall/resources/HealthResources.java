@@ -13,6 +13,7 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
     private Boolean carryable;
     // the name of the item e.g. food, poison
     private String name;
+
     //impact the player's health or not
     private Boolean hasHealingPower;
 

@@ -195,7 +195,7 @@ public class MainCharacter extends Peon
     private int itemSlotSelected = 1;
 
     /**
-     * How long does MainCharacter hurt status lasts,
+     * How long does MainCharacter playerHurt status lasts,
      */
     private long hurtTime = 0;
 
@@ -211,7 +211,7 @@ public class MainCharacter extends Peon
     private long deadTime = 500;
 
     /**
-     * Check whether MainCharacter is hurt.
+     * Check whether MainCharacter is playerHurt.
      */
     private boolean isHurt = false;
 
@@ -390,7 +390,7 @@ public class MainCharacter extends Peon
     private void setupGameOverScreen() {
         this.gameOverTable = (GameOverTable) GameManager.get().getManagerFromInstance(GameMenuManager.class).
                 getPopUp("gameOverTable");
-        System.out.println(gameOverTable);
+        logger.info("Game Over");
     }
 
 
@@ -649,7 +649,7 @@ public class MainCharacter extends Peon
     /**
      * Player takes damage from other entities/ by starving.
      */
-    public void hurt(int damage) {
+    public void playerHurt(int damage) {
 
         // if (this.isInvincible) return;
         if (this.isRecovering) return;
@@ -716,7 +716,7 @@ public class MainCharacter extends Peon
     }
 
     private void checkIfHurtEnded() {
-        hurtTime += 20; // hurt for 1 second
+        hurtTime += 20; // playerHurt for 1 second
 
         if (hurtTime > 400) {
             logger.info("Hurt ended");
@@ -737,7 +737,7 @@ public class MainCharacter extends Peon
 
     /**
      * Player recovers from being attacked. It removes player 's
-     * hurt effect (e.g. sprite flashing in red), in hurt().
+     * playerHurt effect (e.g. sprite flashing in red), in playerHurt().
      */
     public boolean isRecovering() {
         return isRecovering;
@@ -778,18 +778,18 @@ public class MainCharacter extends Peon
         SoundManager.playSound(DIED);
         setCurrentState(AnimationRole.DEAD);
         deadTime = 0;
-        // gameOverTable.show();
+        //gameOverTable.show();
     }
 
     /**
-     * @return if player is in the state of "hurt".
+     * @return if player is in the state of "playerHurt".
      */
     public boolean IsHurt() {
         return isHurt;
     }
 
     /**
-     * @param isHurt the player's "hurt" status
+     * @param isHurt the player's "playerHurt" status
      */
     public void setHurt(boolean isHurt) {
         this.isHurt = isHurt;
@@ -857,6 +857,7 @@ public class MainCharacter extends Peon
                 int hungerValue = ((HealthResources) item).getFoodValue();
                 change_food(hungerValue);
                 dropInventory(item.getName());
+                ((HealthResources) item).use(this.getPosition());
             } else {
                 logger.info("Given item (" + item.getName() + ") is " + "not edible!");
             }

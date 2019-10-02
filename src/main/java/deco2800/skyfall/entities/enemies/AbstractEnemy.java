@@ -131,7 +131,7 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
             if (distance(mc) < range) {
                 setAttacking(false);
                 setCurrentState(AnimationRole.ATTACK);
-                player.hurt(this.getDamage());
+                player.playerHurt(this.getDamage());
                 player.setRecovering(true);
             }
         }
@@ -139,7 +139,7 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
 
     private void checkIfAttackEnded() {
         setAttacking(false);
-        attackTime += 20; // hurt for 1 second
+        attackTime += 20; // playerHurt for 1 second
         if (attackTime > 400) {
             log.info("Attack ended");
             setAttacking(false);
@@ -164,22 +164,22 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
     }
 
     /**
-     *  Get whether enemy is hurt.
+     *  Get whether enemy is playerHurt.
      */
     public boolean isHurt() {
         return isHurt;
     }
 
     /**
-     *  Set whether enemy is hurt.
-     * @param isHurt the player's "hurt" status
+     *  Set whether enemy is playerHurt.
+     * @param isHurt the player's "playerHurt" status
      */
     public void setHurt(boolean isHurt) {
         this.isHurt = isHurt;
     }
 
     private void checkIfHurtEnded() {
-        hurtTime += 20; // hurt for 1 second
+        hurtTime += 20; // playerHurt for 1 second
         if (hurtTime > 400) {
             log.info("Hurt ended");
             setHurt(false);
