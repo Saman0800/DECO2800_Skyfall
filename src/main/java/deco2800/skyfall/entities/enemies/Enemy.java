@@ -4,12 +4,9 @@ import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.SoundManager;
-import deco2800.skyfall.util.HexVector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import deco2800.skyfall.entities.Peon;
-
-
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.entities.ICombatEntity;
@@ -49,16 +46,36 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     private MainCharacter mainCharacter;
 
+    // enemy types
+    public enum EnemyType {
+        ABDUCTOR,
+        FLOWER,
+        HEAVY,
+        ROBOT,
+        SCOUT,
+        SPIDER,
+        STONE,
+        TREEMAN
+    }
+
+    // type this enemy is
+    private EnemyType enemy;
+
     public Enemy(float col, float row, String hitBoxPath, String name, String biome, String textureName) {
+        // Sets the spawning location and all the collision
         this.setPosition(col, row);
         this.initialiseBox2D(col, row, hitBoxPath);
         this.setCollidable(true);
 
+        // Sets the type of the enemy, its name and the biome it is from
+        this.setType(name);
         this.setName(name);
         this.setBiome(biome);
 
+        // Sets the main character for this enemy
         this.setMainCharacter(MainCharacter.getInstance());
 
+        // Sets the texture for this enemy and the animations
         this.setTexture(textureName);
         this.setDirectionTextures();
         this.configureAnimations();
@@ -70,11 +87,12 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
         this.setHealth(10);
     }
 
+    /**
+     * This method makes the enemy attack the main character if they are in
+     * range.
+     */
     private void attackPlayer() {
-        setAttacking(false);
-        setCurrentState(AnimationRole.ATTACK);
-        mainCharacter.hurt(this.getDamage());
-        mainCharacter.setRecovering(true);
+        dealDamage(mainCharacter);
     }
 
     private void moveToPlayer() {
@@ -92,8 +110,8 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
     }
 
     /**
-     * Damage taken
-     * @param damage hero damage
+     * Deals damage to this enemy by lowering its health
+     * @param damage The amount of damage being dealt
      */
     public void takeDamage(int damage) {
         hurtTime = 0;
@@ -128,21 +146,53 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
         }
     }
 
+    /**
+     * Deals damage to the main character by lowering their health
+     * @param mc The main character
+     */
     @Override
     public void dealDamage(MainCharacter mc) {
-        // TODO: write code for dealing damage
+        setAttacking(false);
+        setCurrentState(AnimationRole.ATTACK);
+        mc.hurt(this.getDamage());
+        mc.setRecovering(true);
     }
 
+    /**
+     * Determines whether the enemy can deal damage
+     * @return True if they can deal damage, false otherwise
+     */
     @Override
     public boolean canDealDamage() {
-        // TODO: write code for checking if damage can be dealt
-        return false;
+        return this.getName().matches("Abductor");
     }
 
+    /**
+     * Gets the damage value for the enemy type
+     * @return The damage value
+     */
     @Override
     public int getDamage() {
-        // TODO: write code for how much damage should be dealt
-        return 0;
+        switch (enemy) {
+            case ABDUCTOR:
+                return 0;
+            case FLOWER:
+                return 1;
+            case HEAVY:
+                return 2;
+            case ROBOT:
+                return 1;
+            case SCOUT:
+                return 1;
+            case STONE:
+                return 2;
+            case SPIDER:
+                return 1;
+            case TREEMAN:
+                return 2;
+            default:
+                return 0;
+        }
     }
 
     @Override
@@ -230,11 +280,34 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
         return null;
     }
 
+    /**
+     * Sets the type of the enemy from all available types
+     * @param name The name of the enemy
+     */
+    private void setType(String name) {
+        if (name.matches("Abductor")) {
+            enemy = EnemyType.ABDUCTOR;
+        } else if (name.matches("Flower")) {
+            enemy = EnemyType.FLOWER;
+        } else if (name.matches("Heavy")) {
+            enemy = EnemyType.HEAVY;
+        } else if (name.matches("Robot")) {
+            enemy = EnemyType.ROBOT;
+        } else if (name.matches("Scout")) {
+            enemy = EnemyType.SCOUT;
+        } else if (name.matches("Spider")) {
+            enemy = EnemyType.SPIDER;
+        } else if (name.matches("Stone")) {
+            enemy = EnemyType.STONE;
+        } else {
+            enemy = EnemyType.TREEMAN;
+        }
+    }
+
     @Override
     public void setHealth(int health) {
         this.changeHealth(this.getHealth() - health);
     }
-
 
     public void setValues(float scaling, int health, float strength, float attackRange, float walkingSpeed, float chasingSpeed) {
         this.setMaxHealth((int) (health * scaling));
