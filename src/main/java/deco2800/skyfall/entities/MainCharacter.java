@@ -1461,6 +1461,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         } else {
             val = 0;
         }
+
+        val = val * -180 / Math.PI + 90;
+        if (val < 0) {
+            val += 360;
+        }
+
         return val;
     }
 
