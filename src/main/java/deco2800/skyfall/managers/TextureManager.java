@@ -236,6 +236,10 @@ public class TextureManager extends AbstractManager {
             textureMap.put("popup_banner", new Texture("resources/new_ui/popup_banner.png"));
             textureMap.put("new_clock", new Texture("resources/new_ui/clock.png"));
 
+            // Help table
+            textureMap.put("help_page1", new Texture("resources/new_ui/helpTable/help_page1.png"));
+            textureMap.put("help_page2", new Texture("resources/new_ui/helpTable/help_page2.png"));
+            textureMap.put("help_arrow", new Texture("resources/new_ui/helpTable/arrow.png"));
 
             // Clock/Season graphics
             textureMap.put("dawn", new Texture("resources/clock/dawn_clock.png"));
