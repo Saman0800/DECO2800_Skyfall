@@ -1,8 +1,10 @@
 package deco2800.skyfall.managers;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.SkyfallGame;
@@ -272,23 +274,25 @@ public class GameMenuManager extends TickableManager {
             return;
         }
 
-
+        Drawable bgBluePill = generateTextureRegionDrawableObject("blue_pill");
+        BitmapFont gameFont = skin.getFont("game-font");
         Label.LabelStyle bluePill = new Label.LabelStyle();
-        bluePill.font = skin.getFont("game-font");
+        bluePill.font = gameFont;
         bluePill.fontColor = skin.getColor("white");
-        bluePill.background = generateTextureRegionDrawableObject("blue_pill");
+        bluePill.background = bgBluePill;
         skin.add("blue-pill", bluePill);
 
         Label.LabelStyle titlePill = new Label.LabelStyle();
-        titlePill.font = skin.getFont("game-font");
+        titlePill.font = gameFont;
         titlePill.fontColor = skin.getColor("black");
         titlePill.background = generateTextureRegionDrawableObject("light_blue_bg");
         skin.add("title-pill", titlePill);
 
         TextButton.TextButtonStyle textBluePill = new TextButton.TextButtonStyle();
-        textBluePill.font = skin.getFont("game-font");
+        textBluePill.font = gameFont;
         textBluePill.fontColor = skin.getColor("white");
-        skin.add("blue-pill2", textBluePill);
+        skin.add("blue-pill", textBluePill);
+
 
         popUps.put("inventoryTable",
                 new InventoryTable(stage, new ImageButton(generateTextureRegionDrawableObject("exitButton")),
@@ -346,7 +350,7 @@ public class GameMenuManager extends TickableManager {
         Map<String, AbstractUIElement> hudElements = new HashMap<>();
         hudElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm, skin, this));
         hudElements.put("goldPill", new GoldStatusBar(stage, null, textureManager,  skin, this));
-        hudElements.put("gameMenuBar", new GameMenuBar(stage, null, textureManager, this));
+        //hudElements.put("gameMenuBar", new GameMenuBar(stage, null, textureManager, this));
         hudElements.put("gameMenuBar2", new GameMenuBar2(stage, null, textureManager, skin, this));
         hudElements.put("clock" , new Clock(stage, skin, this));
 
