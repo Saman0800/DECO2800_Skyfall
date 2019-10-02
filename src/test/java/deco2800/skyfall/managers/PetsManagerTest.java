@@ -17,6 +17,8 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.lang.reflect.Field;
+
 import static org.mockito.Matchers.booleanThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -39,7 +41,8 @@ public class PetsManagerTest {
      * Setting up the world
      */
     @Before
-    public void Setup() {
+    public void Setup() throws NoSuchFieldException, IllegalAccessException {
+        MainCharacter.resetInstance();
         mc = MainCharacter.getInstance(0f, 0f, 0.05f, "Main Piece", 10);
         bear = new Whitebear(0, 0, mc);
         lizard = new Lizard(0, 0, mc);

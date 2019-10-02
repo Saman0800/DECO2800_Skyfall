@@ -117,12 +117,12 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
 
     }
 
-    private Map<AbstractBiome, List<EntitySpawnRule>> generateStartEntitiesInternal(World world) {
+    private Map<AbstractBiome, List<EntitySpawnRule>> generateStartEntitiesInternal() {
         return new WorldBuilder().generateStartEntities(this);
     }
 
     public void generateStartEntities() {
-        this.spawnRules = this.generateStartEntitiesInternal(this);
+        this.spawnRules = this.generateStartEntitiesInternal();
     }
 
     /**
@@ -598,11 +598,11 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
     }
 
     public String worldToString() {
-        // TODO:Ontonator Check that this works.
         StringBuilder string = new StringBuilder();
         loadedChunks.entrySet().stream()
                 .sorted(Comparator.comparing(Map.Entry::getKey))
-                .flatMap(entry -> entry.getValue().getTiles().stream())
+                .flatMap(entry -> entry.getValue().getTiles().stream()
+                        .sorted(Comparator.comparing(tile -> new Pair<>(tile.getCol(), tile.getRow()))))
                 .forEachOrdered(tile -> {
                     String out = String.format("%f, %f, %s, %s\n", tile.getCol(), tile.getRow(),
                                                tile.getBiome().getBiomeName(),

@@ -75,7 +75,7 @@ public class GoldPiece extends StaticEntity {
      *
      * @param memento
      */
-    public GoldPiece (StaticEntityMemento memento){
+    public GoldPiece (SaveableEntityMemento memento){
         super(memento);
     }
 
