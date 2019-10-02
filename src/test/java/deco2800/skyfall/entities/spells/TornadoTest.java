@@ -67,7 +67,7 @@ public class TornadoTest {
 
         GameManager gm = GameManager.get();
         World world = mock(World.class);
-        AbstractEnemy enemy = mock(Treeman.class);
+        Enemy enemy = mock(Enemy.class);
         gm.setWorld(world);
 
         //Add a new list with mock enemy.

@@ -2,6 +2,9 @@ package deco2800.skyfall.entities.enemies;
 
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.AnimationLinker;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.SoundManager;
+import deco2800.skyfall.util.HexVector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import deco2800.skyfall.entities.Peon;
@@ -21,13 +24,15 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
     // Logger for tracking enemy information
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    // health
+    private int health;
     // animation timings
     private long hurtTime;
     private long attackTime;
     private long deadTime;
     // Booleans to check whether Enemy is in a state.
-    private boolean isMoving;
-    private boolean isAttacking;
+    private boolean isMoving = false;
+    private boolean isAttacking = false;
     private boolean isHurt = false;
     // walking speeds
     private float walkingSpeed;
@@ -62,19 +67,65 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     public Enemy(float col, float row) {
         this.setPosition(col, row);
+        this.setHealth(10);
     }
 
     private void attackPlayer() {
-        // TODO: write code for attacking player
+        setAttacking(false);
+        setCurrentState(AnimationRole.ATTACK);
+        mainCharacter.hurt(this.getDamage());
+        mainCharacter.setRecovering(true);
     }
 
     private void moveToPlayer() {
-        // TODO: write code for moving to player
+        if(isAttacking && !(this.mainCharacter.isRecovering() ||
+                this.mainCharacter.isDead() || this.mainCharacter.isHurt())) {
+            this.setSpeed(getChasingSpeed());
+           // this.destination = new HexVector(player.getCol(), player.getRow());
+           // this.position.moveToward(destination, this.getChasingSpeed());
+
+            //if the player in attack range then attack player
+            if (distance(mainCharacter) < getAttackRange()) {
+                attackPlayer();
+            }
+        }
     }
 
+    /**
+     * Damage taken
+     * @param damage hero damage
+     */
     public void takeDamage(int damage) {
-        // TODO: write code for taking damage
-        // Destroys the enemy if it has taken too much damage
+        hurtTime = 0;
+        setHurt(true);
+        changeHealth(-damage);
+        health -= damage;
+
+        // In Peon.class, when the health = 0, isDead will be set true automatically.
+        if (health <= 0) {
+            destroy();
+        }
+    }
+
+    /**
+     * Remove this enemy from the game world.
+     */
+    private void destroy() {
+        if (isDead()) {
+            if(getChaseSound() != null) {
+                SoundManager.stopSound(getChaseSound());
+            }
+            if(getDeadSound() != null) {
+                SoundManager.playSound(getDeadSound());
+
+                isMoving = false;
+                //this.destination = new HexVector(this.getCol(), this.getRow());
+                this.setDead(true);
+                logger.info("Enemy destroyed.");}
+
+            GameManager.get().getWorld().removeEntity(this);
+            setCurrentState(AnimationRole.NULL);
+        }
     }
 
     @Override
@@ -101,14 +152,82 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
         return new int[0];
     }
 
-    public void updateAnimation() {
-        // TODO: write code for updating the enemy animation
-        // Uses current direction
-        // May need to move angle code from mainCharacter to peon
+    /**
+     * If the animation is moving sets the animation state to be Move
+     * else NULL. Also sets the direction
+     */
+    private void updateAnimation() {
+        /* Short Animations */
+        if (getToBeRun() != null) {
+            if (getToBeRun().getType() == AnimationRole.DEAD) {
+                setCurrentState(AnimationRole.STILL);
+            } else if (getToBeRun().getType() == AnimationRole.ATTACK) {
+                setAttacking(false);
+            }
+        } else {
+            if (isDead()) {
+                setCurrentState(AnimationRole.STILL);
+            } else if (isHurt) {
+                setCurrentState(AnimationRole.HURT);
+            }
+        }
     }
 
     public void onTick(int i) {
-        // TODO: write all code to be called on each tick
+        if (isDead()) {
+            if (deadTime < 500) {
+                deadTime += 20;
+            } else {
+                destroy();
+            }
+        } else {
+            // TODO: Write a method that makes enemy move randomly
+            updateAnimation();
+
+            //if the player in angry distance or the enemy is attacked by player then turning to angry model
+            if (distance(mainCharacter) < 2 || isAttacking && !(mainCharacter.isDead() ||
+                    mainCharacter.isRecovering() || mainCharacter.isHurt())) {
+                setAttacking(true);
+                moveToPlayer();
+                SoundManager.loopSound(getChaseSound());
+
+            } else {
+                isMoving = false;
+                setAttacking(false);
+                setSpeed(getWalkingSpeed());
+                setCurrentDirection(movementDirection(this.position.getAngle()));
+                setCurrentState(AnimationRole.MOVE);
+                SoundManager.stopSound(getChaseSound());
+            }
+            this.updateAnimation();
+        }
+    }
+
+    /**
+     * get movement direction
+     *
+     * @param angle the angle between to tile
+     * @return direction of the enemy.
+     */
+    private Direction movementDirection(double angle) {
+        angle = Math.toDegrees(angle - Math.PI);
+        if (angle < 0) {
+            angle += 360;
+        }
+        if (between(angle, 0, 59.9)) {
+            return Direction.SOUTH_WEST;
+        } else if (between(angle, 60, 119.5)) {
+            return Direction.SOUTH;
+        } else if (between(angle, 120, 179.9)) {
+            return Direction.SOUTH_EAST;
+        } else if (between(angle, 180, 239.9)) {
+            return Direction.NORTH_EAST;
+        } else if (between(angle, 240, 299.9)) {
+            return Direction.NORTH;
+        } else if (between(angle, 300, 360)) {
+            return Direction.NORTH_WEST;
+        }
+        return null;
     }
 
     @Override
@@ -260,6 +379,15 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     public String getChaseSound() {
         return this.chaseSound;
+    }
+
+    /**
+     * Setting the enemy to attack model
+     *
+     * @param isAttacking whether the enemy is attacking.
+     */
+    private void setAttacking(boolean isAttacking) {
+        this.isAttacking = isAttacking;
     }
 
     public void setAttackSound(String attackSound) {
