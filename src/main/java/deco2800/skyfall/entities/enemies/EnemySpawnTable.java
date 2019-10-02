@@ -3,12 +3,10 @@ package deco2800.skyfall.entities.enemies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.Peon;
-import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.EnvironmentManager;
 import deco2800.skyfall.worlds.Tile;
@@ -19,7 +17,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class EnemySpawnTable {
+public class EnemySpawnTable implements TimeObserver {
 
     /**
      * The radius in the which the enemies may spawn in
@@ -36,11 +34,6 @@ public class EnemySpawnTable {
      * enemies.
      */
     private long spawnFrequency;
-
-    /**
-     * The time (sec) in which the last spawn occured
-     */
-    private int lastSpawn = 0;
 
     /**
      * The world in which the enemies are being spawned into
@@ -74,9 +67,16 @@ public class EnemySpawnTable {
             Map<String, List<Class<? extends AbstractEnemy>>> biomeToConstructor,
             Function<EnvironmentManager, Double> probAdjFunc) {
 
+        this(spawnRadius, maxInRadius, frequency, biomeToConstructor, probAdjFunc, GameManager.get().getWorld());
+    }
+
+    public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
+            Map<String, List<Class<? extends AbstractEnemy>>> biomeToConstructor,
+            Function<EnvironmentManager, Double> probAdjFunc, World world) {
+
         this.spawnRadius = spawnRadius;
         this.maxInRadius = maxInRadius;
-        this.world = GameManager.get().getWorld();
+        this.world = world;
         this.environManager = GameManager.get().getManager(EnvironmentManager.class);
         this.biomeToConstructor = biomeToConstructor;
         this.probAdjFunc = probAdjFunc;
@@ -85,7 +85,7 @@ public class EnemySpawnTable {
     /**
      * @return Gets all the enemies from within the world.
      */
-    private List<AbstractEnemy> getAllAbstractEnemies() {
+    public List<AbstractEnemy> getAllAbstractEnemies() {
 
         return world.getSortedAgentEntities().stream().filter(AbstractEnemy.class::isInstance)
                 .map(AbstractEnemy.class::cast).collect(Collectors.toList());
@@ -102,7 +102,7 @@ public class EnemySpawnTable {
      * 
      * @return true if the entity is in range of the target. false otherwise.
      */
-    private boolean inRange(AbstractEntity entity, float x, float y, float radius) {
+    public boolean inRange(AbstractEntity entity, float x, float y, float radius) {
 
         return Math.pow(entity.getRow() - x, 2) + Math.pow(entity.getCol() - y, 2) < radius * radius;
 
@@ -118,7 +118,7 @@ public class EnemySpawnTable {
      * 
      * @return A list of all the enemies within range of the target.
      */
-    private List<AbstractEnemy> enemiesInTarget(float x, float y, float radius) {
+    public List<AbstractEnemy> enemiesInTarget(float x, float y, float radius) {
 
         return getAllAbstractEnemies().stream().filter(enemy -> inRange(enemy, x, y, radius))
                 .collect(Collectors.toList());
@@ -128,9 +128,9 @@ public class EnemySpawnTable {
     /**
      * Returns a list of all the enemies within range of the main character.
      */
-    private List<AbstractEnemy> enemiesNearCharacter() {
+    public List<AbstractEnemy> enemiesNearCharacter() {
 
-        return enemiesInTarget(mainCharacter.getRow(), mainCharacter.getCol(), maxInRadius);
+        return enemiesInTarget(mainCharacter.getRow(), mainCharacter.getCol(), spawnRadius);
 
     }
 
@@ -139,7 +139,7 @@ public class EnemySpawnTable {
      * 
      * @param targetEnemy The enemy that we are making the count for.
      */
-    private int enemiesNearTargetCount(float x, float y) {
+    public int enemiesNearTargetCount(float x, float y) {
 
         return enemiesInTarget(x, y, 50).size();
 
@@ -148,7 +148,7 @@ public class EnemySpawnTable {
     /**
      * Check to see if it is time to start spawn more enemies
      */
-    private void notifyTimeUpdate(long i) {
+    public void notifyTimeUpdate(long i) {
 
         if ((i % spawnFrequency) == 0) {
             spawnEnemies();
@@ -182,6 +182,7 @@ public class EnemySpawnTable {
 
         int enemiesPlaced = 0;
         Tile nextTile = null;
+        Random rand = new Random();
 
         while (tileIter.hasNext() && (enemiesPlaced <= numberToSpawn)) {
 
@@ -215,7 +216,6 @@ public class EnemySpawnTable {
             }
 
             // Pick a class, any class!
-            Random rand = new Random();
             Class<? extends AbstractEnemy> randEnemyType = possibleConstructors
                     .get(rand.nextInt(possibleConstructors.size()));
 
