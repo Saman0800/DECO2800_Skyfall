@@ -670,47 +670,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.isAttacking = isAttacking;
     }
 
-    /**
-<<<<<<< HEAD
-     * Lets the player enter a vehicle, by changing there speed and there sprite
-     *
-     * @param vehicle The vehicle they are entering
-     */
-    public void enterVehicle(String vehicle) {
-        // Determine the vehicle they are entering and set their new speed and
-        // texture
-        if (vehicle.equals("Camel")) {
-            //this.setTexture();
-            setAcceleration(0.1f);
-            setMaxSpeed(0.8f);
-        } else if (vehicle.equals("Dragon")) {
-            //this.setTexture();
-            setAcceleration(0.125f);
-            setMaxSpeed(1f);
-        } else if (vehicle.equals("Boat")) {
-            //this.setTexture();
-            setAcceleration(0.01f);
-            setMaxSpeed(0.5f);
-            changeSwimming(true);
-        } else {
-            //this.setTexture();
-            setAcceleration(0.03f);
-            setMaxSpeed(0.6f);
-        }
-    }
-
-    /**
-     * Lets the player exit the vehicle by setting their speed back to
-     * default and changing the texture. Also changing swimming to false in
-     * case they were in a boat
-     */
-    public void exitVehicle() {
-        //this.setTexture();
-        setAcceleration(0.01f);
-        setMaxSpeed(0.4f);
-        changeSwimming(false);
-    }
-
     public void pickUpInventory(Item item) {
         this.inventories.add(item);
     }
@@ -1447,79 +1406,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         } else {
             val = 0;
         }
-        return val;
-    }
-
-    /**
-     * Checks if the direction of the player is North
-     *
-     * @return true if player direction is North, false otherwise
-     */
-    private boolean checkIfDirectionNorth(double playerDirectionAngle){
-        return (playerDirectionAngle <= 22.5 || playerDirectionAngle >= 337.5);
-    }
-
-    /**
-     * Checks if the direction of the player is NorthEast
-     *
-     * @return true if player direction is NorthEast, false otherwise
-     */
-    private boolean checkIfDirectionNorthEast(double playerDirectionAngle){
-        return (22.5 <= playerDirectionAngle && playerDirectionAngle <= 67.5);
-    }
-
-    /**
-     * Checks if the direction of the player is East
-     *
-     * @return true if player direction is East, false otherwise
-     */
-    private boolean checkIfDirectionEast(double playerDirectionAngle){
-        return (67.5 <= playerDirectionAngle && playerDirectionAngle <= 112.5);
-    }
-
-    /**
-     * Checks if the direction of the player is SouthEast
-     *
-     * @return true if player direction is SouthEast, false otherwise
-     */
-    private boolean checkIfDirectionSouthEast(double playerDirectionAngle){
-        return (112.5 <= playerDirectionAngle && playerDirectionAngle <= 157.5);
-    }
-
-    /**
-     * Checks if the direction of the player is South
-     *
-     * @return true if player direction is South, false otherwise
-     */
-    private boolean checkIfDirectionSouth(double playerDirectionAngle){
-        return (157.5 <= playerDirectionAngle && playerDirectionAngle <= 202.5);
-    }
-
-    /**
-     * Checks if the direction of the player is SouthWest
-     *
-     * @return true if player direction is SouthWest, false otherwise
-     */
-    private boolean checkIfDirectionSouthWest(double playerDirectionAngle){
-        return (202.5 <= playerDirectionAngle && playerDirectionAngle <= 247.5);
-    }
-
-    /**
-     * Checks if the direction of the player is West
-     *
-     * @return true if player direction is West, false otherwise
-     */
-    private boolean checkIfDirectionWest(double playerDirectionAngle){
-        return  (247.5 <= playerDirectionAngle && playerDirectionAngle <= 292.5);
-    }
-
-    /**
-     * Checks if the direction of the player is NorthWest
-     *
-     * @return true if player direction is NorthWest, false otherwise
-     */
-    private boolean checkIfDirectionNorthWest(double playerDirectionAngle){
-        return  (292.5 <= playerDirectionAngle && playerDirectionAngle <= 337.5);
+        return -Math.toDegrees(val);
     }
 
     /**
@@ -1529,7 +1416,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @return new texture to use
      */
     private String getPlayerDirectionCardinal() {
-        double playerDirectionAngle =  getPlayerDirectionAngle() * -180/Math.PI;
+        double playerDirectionAngle =  getPlayerDirectionAngle();
         int playerDirectionIndex = Math.floorMod((int) Math.floor((playerDirectionAngle + 90.0) / 45), 8);
 
         switch (playerDirectionIndex) {
