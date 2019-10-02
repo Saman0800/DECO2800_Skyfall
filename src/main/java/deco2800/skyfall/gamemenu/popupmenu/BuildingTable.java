@@ -23,7 +23,7 @@ import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDra
  */
 public class BuildingTable extends AbstractPopUpElement{
     private Skin skin;
-    private Table mainTable;
+    private Table table;
     private Table itemInfo;
     private Blueprint selectedItem = null;
     private InventoryTable inventoryTable;
@@ -57,7 +57,7 @@ public class BuildingTable extends AbstractPopUpElement{
     public void hide() {
         super.hide();
         itemInfo.clearChildren();
-        mainTable.setVisible(false);
+        table.setVisible(false);
     }
 
     /**
@@ -66,7 +66,7 @@ public class BuildingTable extends AbstractPopUpElement{
     @Override
     public void show() {
         super.show();
-        mainTable.setVisible(true);
+        table.setVisible(true);
     }
 
     /**
@@ -77,21 +77,21 @@ public class BuildingTable extends AbstractPopUpElement{
     @Override
     public void draw() {
         super.draw();
-        mainTable = new Table();
-        mainTable.setSize(800, 800 * 1346 / 1862f);
-        mainTable.setPosition(Gdx.graphics.getWidth()/2f - mainTable.getWidth()/2,
-                (Gdx.graphics.getHeight() + 160) / 2f - mainTable.getHeight()/2);
-        mainTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
+        table = new Table();
+        table.setSize(800, 800 * 1346 / 1862f);
+        table.setPosition(Gdx.graphics.getWidth() / 2f - table.getWidth() / 2,
+                Gdx.graphics.getHeight() / 2f - table.getHeight() / 2);
+        table.setBackground(generateTextureRegionDrawableObject("popup_bg"));
 
-        Table infoBar = new Table();
-        infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
+        Table banner = new Table();
+        banner.setBackground(generateTextureRegionDrawableObject("popup_banner"));
 
-        Label text = new Label("BUILDING TABLE", skin, "black-text");
-        text.setFontScale(1.2f);
-        infoBar.add(text);
+        Label text = new Label("BUILDING TABLE", skin, "navy-text");
+        text.setFontScale(1.1f);
+        banner.add(text);
 
-        mainTable.add(infoBar).width(750).height(750 * 188f / 1756).padTop(20).colspan(2);
-        mainTable.row();
+        table.add(banner).width(750).height(750 * 188f / 1756).padTop(20).colspan(2);
+        table.row();
 
         Table blueprint = new Table();
         Label blueprintTitle = new Label("BLUEPRINT", skin, "black-label");
@@ -137,9 +137,9 @@ public class BuildingTable extends AbstractPopUpElement{
             items.row();
         }
 
-        mainTable.add(blueprint).width(400).top().expand();
-        mainTable.add(items).width(400).top().expand();
-        mainTable.row();
+        table.add(blueprint).width(400).top().expand();
+        table.add(items).width(400).top().expand();
+        table.row();
 
         TextButton buildIt = new TextButton("BUILD IT", skin, "game");
         buildIt.addListener(new ClickListener() {
@@ -153,10 +153,10 @@ public class BuildingTable extends AbstractPopUpElement{
             }
         });
 
-        mainTable.add(buildIt).colspan(2).expand();
+        table.add(buildIt).colspan(2).expand();
 
-        mainTable.setVisible(false);
-        stage.addActor(mainTable);
+        table.setVisible(false);
+        stage.addActor(table);
     }
 
     /**

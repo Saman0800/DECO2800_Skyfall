@@ -82,8 +82,8 @@ public class HelpTable extends AbstractPopUpElement{
         Table banner = new Table();
         banner.setBackground(generateTextureRegionDrawableObject("popup_banner"));
 
-        Label text = new Label("HELP", skin, "navy-text");
-        banner.add(text);
+        Label title = new Label("HELP", skin, "navy-text");
+        banner.add(title);
 
         table.add(banner).width(700).height(70).padTop(20).colspan(2);
         table.row().padTop(10);
