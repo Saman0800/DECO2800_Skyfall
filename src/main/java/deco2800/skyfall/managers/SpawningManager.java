@@ -65,7 +65,6 @@ public class SpawningManager extends TickableManager  {
      */
     @Override
     public void onTick(long i) {
-        System.out.println("hello");
     }
 
     /**

@@ -1529,9 +1529,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @return new texture to use
      */
     private String getPlayerDirectionCardinal() {
-        double playerDirectionAngle = getPlayerDirectionAngle();
-
-        int playerDirectionIndex = Math.floorMod((int) Math.floor(((playerDirectionAngle + 22.5) / 45)), 8);
+        double playerDirectionAngle =  getPlayerDirectionAngle() * -180/Math.PI;
+        int playerDirectionIndex = Math.floorMod((int) Math.floor((playerDirectionAngle + 90.0) / 45), 8);
 
         switch (playerDirectionIndex) {
         case 0:
