@@ -60,6 +60,19 @@ public class WorldUtil {
 		return new float[]{col, row};
 	}
 
+	public static float[] worldCoordinatesToSubColRow(float x, float y) {
+      float row;
+      float col;
+      x -= TILE_WIDTH / 2;
+      y -= TILE_HEIGHT / 2;
+			row = y / TILE_HEIGHT;
+			col = x /(TILE_WIDTH * 0.75f);
+
+			row += 0.5;
+			col += 0.5;
+      return new float[]{col, row};
+	}
+
 	/**
 	 * Same function as above, but returns a primitive type. Much faster for rendering.
 	 * @param col coordinate column

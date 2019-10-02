@@ -1,18 +1,10 @@
 package deco2800.skyfall.entities.worlditems;
 
 import deco2800.skyfall.worlds.Tile;
-import java.util.Random;
 
-public class MountainRock extends StaticRock {
-    private int health = 100;
+public class MountainRock extends AbstractRock {
+
     private static final String ENTITY_ID_STRING = "mountain_rock";
-
-    // TODO Remove this and replace the Random instance with the seeded Random as a
-    // parameter.
-
-    private static Random randomGen = new Random();
-    private static int nextRock = 1;
-    private int metalAmount;
 
     public MountainRock() {
         this.setObjectName(ENTITY_ID_STRING);
@@ -26,24 +18,9 @@ public class MountainRock extends StaticRock {
         this.entityType = "MountainRock";
     }
 
-    public MountainRock (StaticEntityMemento memento){
+    public MountainRock(SaveableEntityMemento memento) {
         super(memento);
         this.metalAmount = 15;
-    }
-
-    @Override
-    public void onTick(long i) {
-        // Do nothing on tick
-    }
-
-    @Override
-    public int getHealth() {
-        return health;
-    }
-
-    @Override
-    public void setHealth(int health) {
-        this.health = health;
     }
 
     /**

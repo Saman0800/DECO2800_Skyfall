@@ -1,5 +1,8 @@
 package deco2800.skyfall.worlds.generation.perlinnoise;
 
+import deco2800.skyfall.entities.worlditems.EntitySpawnTable;
+
+import java.util.ArrayList;
 import java.util.Random;
 
 /**

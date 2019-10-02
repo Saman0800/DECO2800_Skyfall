@@ -112,7 +112,6 @@ public abstract class AbstractEnemy extends Peon implements ICombatEntity {
      * @param player Main character
      */
     private void attackPlayer(MainCharacter player) {
-        System.out.println(mc.isRecovering());
         if(isAttacking && !(this.mc.isRecovering() ||
                 this.mc.isDead() || this.mc.isHurt())) {
             this.setSpeed(this.chaseSpeed);
@@ -159,6 +158,7 @@ public abstract class AbstractEnemy extends Peon implements ICombatEntity {
      *  Set whether enemy is hurt.
      * @param isHurt the player's "hurt" status
      */
+    @SuppressWarnings("WeakerAccess")
     public void setHurt(boolean isHurt) {
         this.isHurt = isHurt;
     }

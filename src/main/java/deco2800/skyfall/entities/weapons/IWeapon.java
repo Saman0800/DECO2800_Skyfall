@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities.weapons;
 
 public interface IWeapon {
+
     /**
      * Get weapon type
      * @return the type of a weapon
