@@ -5,8 +5,9 @@ import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
+import java.io.Serializable;
 
-public abstract class SaveableEntity extends AbstractEntity implements Saveable<SaveableEntity.SaveableEntityMemento> {
+public abstract class SaveableEntity extends AbstractEntity implements Saveable<SaveableEntity.SaveableEntityMemento> , Serializable{
 
     // The type of entity this is (e.g. "ForestTree", "Axe" etc.)
     protected String entityType;
@@ -54,7 +55,7 @@ public abstract class SaveableEntity extends AbstractEntity implements Saveable<
         this.setPosition(memento.col, memento.row);
     }
 
-    public class SaveableEntityMemento extends AbstractMemento {
+    public static class SaveableEntityMemento extends AbstractMemento implements Serializable{
         public String entityType;
         public int height;
         public float row;
