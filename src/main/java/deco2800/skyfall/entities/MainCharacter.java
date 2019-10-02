@@ -18,7 +18,7 @@ import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
-import deco2800.skyfall.gui.ManaBar;
+import deco2800.skyfall.gamemenu.ManaBar;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.observers.KeyUpObserver;
@@ -1065,12 +1065,6 @@ public class MainCharacter extends Peon
                     useEquipped();
                 }
                 break;
-            case Input.Keys.G:
-                addClosestGoldPiece();
-                break;
-            case Input.Keys.M:
-                getGoldPouchTotalValue();
-                break;
             case Input.Keys.Z:
                 selectSpell(SpellType.FLAME_WALL);
                 break;
@@ -1131,10 +1125,6 @@ public class MainCharacter extends Peon
                 maxSpeed /= 2.f;
                 break;
             case Input.Keys.SPACE:
-                break;
-            case Input.Keys.G:
-                break;
-            case Input.Keys.M:
                 break;
             default:
                 break;
@@ -1214,25 +1204,21 @@ public class MainCharacter extends Peon
         for (Integer goldValue : goldPouch.keySet()) {
             totalValue += goldValue * goldPouch.get(goldValue);
         }
-        logger.info("The total value of your Gold Pouch is: " + totalValue + "G");
         return totalValue;
     }
 
     /**
-     * If the player is within 2m of a gold piece and presses G, it will
-     * be added to their Gold Pouch.
+     * If the player is within 1m of a gold piece, it will
+     *  be added to their Gold Pouch.
      */
     public void addClosestGoldPiece() {
         for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
             if (entity instanceof GoldPiece) {
-                if (this.getPosition().distance(entity.getPosition()) <= 2) {
+                if (this.getPosition().distance(entity.getPosition()) <= 1) {
                     this.addGold((GoldPiece) entity, 1);
-                    logger.info(this.inventories.toString());
                 }
             }
         }
-        logger.info("Sorry, you are not close enough to a gold piece!");
-
     }
 
     /**

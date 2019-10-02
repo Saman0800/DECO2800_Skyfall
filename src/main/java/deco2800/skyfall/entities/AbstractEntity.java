@@ -1,8 +1,6 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.animation.AnimationLinker;
@@ -12,16 +10,10 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.renderers.Renderable;
-import deco2800.skyfall.renderers.Renderer;
-import deco2800.skyfall.util.*;
-import org.lwjgl.Sys;
 import deco2800.skyfall.util.BodyEditorLoader;
 import deco2800.skyfall.util.HexVector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.security.KeyStore;
-import java.sql.Array;
 import java.util.*;
 
 /**
@@ -30,7 +22,7 @@ import java.util.*;
  * need to be rendered should not be a WorldEntity
  */
 public abstract class AbstractEntity implements Comparable<AbstractEntity>, Renderable {
-    private final transient Logger log = LoggerFactory.getLogger(AbstractEntity.class);
+    private final Logger log = LoggerFactory.getLogger(AbstractEntity.class);
 
     private static final String ENTITY_ID_STRING = "entityID";
 
@@ -98,7 +90,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     /**
      * Default textures in each direction
      */
-    protected Map<Direction, String> defaultDirectionTextures = new HashMap<>();
+    protected Map<Direction, String> defaultDirectionTextures = new EnumMap<>(Direction.class);
     /**
      * The animation to be run
      */
@@ -125,7 +117,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         entityID = AbstractEntity.getNextID();
         this.setObjectName(ENTITY_ID_STRING);
         this.renderOrder = renderOrder;
-        animations = new HashMap<>();
+        animations = new EnumMap<>(AnimationRole.class);
     }
 
     public AbstractEntity(float col, float row, int renderOrder, String fixtureDef) {
@@ -133,7 +125,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         entityID = AbstractEntity.getNextID();
         this.setObjectName(ENTITY_ID_STRING);
         this.renderOrder = renderOrder;
-        animations = new HashMap<>();
+        animations = new EnumMap<>(AnimationRole.class);
     }
 
     public AbstractEntity() {
@@ -141,7 +133,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         this.colRenderLength = 1f;
         this.rowRenderLength = 1f;
         this.setObjectName(ENTITY_ID_STRING);
-        animations = new HashMap<>();
+        animations = new EnumMap<>(AnimationRole.class);
         changeCollideability(true);
         this.initialiseBox2D(position.getCol(), position.getRow());
     }
@@ -476,14 +468,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 					new BodyEditorLoader(Gdx.files.internal("resources/HitBoxes" +
 							"/" + fixtureDefName + "HitBox.json"));
 
-			// Creates a world for the hit box to inhabit
-			//PhysicsManager manager = new PhysicsManager();
-			//World world = manager.getBox2DWorld();
-
-			// Create the hit box body
-			//BodyDef bd = new BodyDef();
-			//bd.type = BodyDef.BodyType.DynamicBody;
-			//body = world.createBody(bd);
 
 			// Assigns all the aspects of the fixture
 			FixtureDef fixtureDef = new FixtureDef();
@@ -493,10 +477,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
 			// Gets the hit box from the loader
 			loader.attachFixture(body, "Character", fixtureDef, scale);
-
-			// Set the collision of the body
-			//fixture = body.createFixture(fixtureDef);
-			//fixture.setSensor(!isCollidable);
 		}catch (NullPointerException e){
 		    log.warn("Failed to load custom hit box");
 			defineFixture();
@@ -524,7 +504,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      */
     public void handleCollision(Object other) {
         //Does nothing as collision logic should be case specific
-        log.info("I was hit: " + this.getClass() + "\n by: " + other.getClass());
+        String s = String.format("I was hit: %s by: %s", this.getClass(), other.getClass());
+        log.info(s);
     }
 
     /**

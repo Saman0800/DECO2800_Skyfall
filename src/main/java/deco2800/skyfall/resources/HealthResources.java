@@ -17,7 +17,7 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
     private Boolean hasHealingPower;
 
     // the name of the subtype the item belongs to
-    public String subtype;
+    protected String subtype;
     // the co-ordinates of the tile the item has been placed on
     private HexVector position;
 
@@ -25,10 +25,10 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
     private Boolean exchangeable;
 
     // the value of the piece of food
-    public int foodValue;
+    protected int foodValue;
 
     // the healing ability of the health item
-    public int healthValue;
+    protected int healthValue;
 
     private final transient Logger log = LoggerFactory.getLogger(HealthResources.class);
 

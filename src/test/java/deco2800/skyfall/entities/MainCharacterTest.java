@@ -52,7 +52,6 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
         { WorldBuilder.class, WorldDirector.class, DatabaseManager.class, DataBaseConnector.class, GameManager.class })
 public class MainCharacterTest {
 
-    private GoldPiece goldpiece;
     private MainCharacter testCharacter;
     private Tree testTree;
     private Rock testRock;
@@ -396,6 +395,10 @@ public class MainCharacterTest {
         GoldPiece g10 = new GoldPiece(10);
         GoldPiece g50 = new GoldPiece(50);
 
+        //remove a piece of gold from the pouch which is not there
+        // (should do nothing)
+        testCharacter.removeGold(5);
+
         // add the respective gold pieces to the pouch
         testCharacter.addGold(g5, 4);
         testCharacter.addGold(g10, 1);
@@ -409,6 +412,8 @@ public class MainCharacterTest {
 
         //remove a piece of gold from the pouch
         testCharacter.removeGold(5);
+
+
 
         // ensure that the necessary adjustments have been made
         Assert.assertTrue(testCharacter.getGoldPouchTotalValue() == 275);

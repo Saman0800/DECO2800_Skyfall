@@ -192,6 +192,8 @@ public class WorldBuilder implements WorldBuilderInterface {
             ArrayList<EntitySpawnRule> biomeSpawnRules = new ArrayList<>();
 
             switch (biome.getBiomeName()) {
+
+
                 case "forest":
 
                     // Spawn some swords
@@ -254,6 +256,9 @@ public class WorldBuilder implements WorldBuilderInterface {
                     EntitySpawnRule mSnowRule = new EntitySpawnRule(tile -> new SnowClump(tile, false), 0.07, 30, 200, biome);
                     biomeSpawnRules.add(mSnowRule);
 
+
+
+
                     break;
 
                 case "desert":
@@ -275,6 +280,10 @@ public class WorldBuilder implements WorldBuilderInterface {
                     EntitySpawnRule bowRule = new EntitySpawnRule(tile -> new Bow(tile, true), 0.2, 30, 50, biome);
                     biomeSpawnRules.add(bowRule);
 
+                    // Spawn gold pieces uniformly
+                    EntitySpawnRule goldRule = new EntitySpawnRule(tile -> new GoldPiece(tile, true), 0.2, 30, 50, biome);
+                    biomeSpawnRules.add(goldRule);
+
                     // Spawn some spears
                     SpawnControl spearControl2 = x -> x * x * x * x;
                     EntitySpawnRule spearRule2 =
@@ -290,6 +299,8 @@ public class WorldBuilder implements WorldBuilderInterface {
                     // Spawn some Snow Shrubs uniformly
                     EntitySpawnRule snowShrubRule = new EntitySpawnRule(tile -> new SnowShrub(tile, true), 0.07, 20, 200, biome);
                     biomeSpawnRules.add(snowShrubRule);
+
+
 
                     break;
                 default:
