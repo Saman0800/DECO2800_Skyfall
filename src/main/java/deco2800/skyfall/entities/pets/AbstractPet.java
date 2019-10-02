@@ -146,10 +146,10 @@ public abstract class AbstractPet extends Peon implements ICombatEntity {
      *
      * @return The amount of armour this pet has.
      */
-    @Override
-    public int getArmour() {
-        return this.armour;
-    }
+    //@Override
+    //public int getArmour() {
+    //    return this.armour;
+    //}
 
     /**
      * Set armour of this pet
@@ -179,16 +179,5 @@ public abstract class AbstractPet extends Peon implements ICombatEntity {
     public int[] getResistanceAttributes() {
         return new int[0];
     }
-
-    /**
-     * Return a list of status indicators.
-     *
-     * @return A list of status indicators.
-     */
-    @Override
-    public String[] getStatusIndicators() {
-        return new String[0];
-    }
-
 
 }

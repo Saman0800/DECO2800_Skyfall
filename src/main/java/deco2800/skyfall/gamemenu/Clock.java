@@ -123,7 +123,6 @@ public class Clock extends AbstractUIElement{
         // Add displays onto stage
         //stage.addActor(clockDisplay);
         //stage.addActor(seasonDisplay);
-
     }
     /**
      * Updates the display and resizes if necessary

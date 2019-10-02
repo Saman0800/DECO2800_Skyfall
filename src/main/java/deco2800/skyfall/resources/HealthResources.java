@@ -1,9 +1,10 @@
 package deco2800.skyfall.resources;
 
+//import deco2800.skyfall.entities.EnemyEntity;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
-
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public abstract class HealthResources implements deco2800.skyfall.resources.Item {
@@ -12,6 +13,7 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
     private Boolean carryable;
     // the name of the item e.g. food, poison
     private String name;
+
     //impact the player's health or not
     private Boolean hasHealingPower;
 
@@ -29,6 +31,7 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
     // the healing ability of the health item
     protected int healthValue;
 
+    private final transient Logger log = LoggerFactory.getLogger(HealthResources.class);
 
     /**
      * Creates a default health resource.
@@ -61,6 +64,8 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
         this.exchangeable = true;
 
         this.position = position.getCoordinates();
+
+        this.healthValue = 10;
     }
 
 
@@ -140,6 +145,11 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
     public int getFoodValue() {
         return foodValue;
     }
+
+    public void setHealthValue(int health){
+        this.healthValue = health;
+    }
+
     public int getHealthValue(){
         return healthValue;
     }

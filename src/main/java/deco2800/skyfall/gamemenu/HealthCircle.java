@@ -33,12 +33,19 @@ public class HealthCircle extends AbstractUIElement {
             return;
         }
 
-        smallerCircle.setSize((float) 10 * newHealth,
-                (float) 10 * newHealth);
-        offset += (diff * 10) / 2;
+        smallerCircle.setSize((float) 2 * newHealth,
+                (float) 2 * newHealth);
+        offset += (diff * 2) / 2;
         smallerCircle.setPosition(positionX + offset, positionY + offset);
         currentHealth = newHealth;
-        label.setText("Health: " + sm.getHealth());
+
+        System.out.println("POSTION " + smallerCircle.getX() + smallerCircle.getY());
+
+        if(sm.getHealth() < 1) {
+            label.setText("DEAD");
+        } else {
+            label.setText("Health: " + sm.getHealth());
+        }
     }
 
     /**

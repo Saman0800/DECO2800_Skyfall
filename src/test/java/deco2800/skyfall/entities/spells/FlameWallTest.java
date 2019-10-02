@@ -1,16 +1,14 @@
 package deco2800.skyfall.entities.spells;
 
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.Enemy;
-import deco2800.skyfall.entities.EnemyEntity;
+import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.enemies.AbstractEnemy;
+import deco2800.skyfall.entities.enemies.Treeman;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.world.World;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -65,7 +63,7 @@ public class FlameWallTest {
 
         GameManager gm = GameManager.get();
         World world = mock(World.class);
-        EnemyEntity enemy = mock(EnemyEntity.class);
+        AbstractEnemy enemy = mock(Treeman.class);
         gm.setWorld(world);
 
         //Add a new list with mock enemy.
