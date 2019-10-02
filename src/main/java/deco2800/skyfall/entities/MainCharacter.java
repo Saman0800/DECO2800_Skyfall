@@ -1020,7 +1020,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     @Override
     public void onTick(long i) {
-        this.updatePosition();
+        logger.info(String.valueOf(xInput));
+        logger.info(String.valueOf(yInput));
+
+        if(!GameScreen.isPaused) {
+            this.updatePosition();
+        }
         this.movementSound();
         this.centreCameraAuto();
 
@@ -1076,7 +1081,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         //Put specific collision logic here
     }
 
+    public void resetVelocity() {
 
+        xInput = 0;
+        yInput = 0;
+    }
     /**
      * Sets the Player's current movement speed
      *
@@ -1097,6 +1106,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void notifyKeyDown(int keycode) {
         //player cant move when paused
         if (GameManager.getPaused()) {
+            xInput = 0;
+            yInput = 0;
             return;
         }
         switch (keycode) {
@@ -1182,6 +1193,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void notifyKeyUp(int keycode) {
         // Player cant move when paused
         if (GameManager.getPaused()) {
+            xInput = 0;
+            yInput = 0;
             return;
         }
         switch (keycode) {
