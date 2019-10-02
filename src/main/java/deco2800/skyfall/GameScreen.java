@@ -33,6 +33,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
+
+
 public class GameScreen implements Screen,KeyDownObserver {
 	private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
 	@SuppressWarnings("unused")
@@ -205,6 +207,9 @@ public class GameScreen implements Screen,KeyDownObserver {
         blueKeyFrame.add(new TFTuple(18.5f, 0.8f));
         blueKeyFrame.add(new TFTuple(19.0f, 0.19f));
         ambientBlue = new LinearSpectralValue(blueKeyFrame, gameEnvironManag);
+
+        //create a spawning manager
+        SpawningManager.createSpawningManager();
 
         PathFindingService pathFindingService = new PathFindingService();
 
