@@ -167,6 +167,12 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(chestRule);
     }
 
+    /**
+     * The method to be used to spawn gold into a particular woorld
+     * @param world The world that will get static entities
+     * @param random Generates random integers
+     * @param biomeSpawnRules The hashmap which stores all the biome spawn rules
+     */
     private void spawnGold(World world, Random random, List<EntitySpawnRule> biomeSpawnRules){
         // Spawn gold pieces
         EntitySpawnRule goldRule = new EntitySpawnRule(tile -> new GoldPiece(tile, true), random.nextInt(), 0.02);
