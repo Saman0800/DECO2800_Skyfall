@@ -356,6 +356,7 @@ public class TextureManager extends AbstractManager {
 
 
             textureMap.put("Stone_inv", new Texture("resources/items_icons/stone.png"));
+            textureMap.put("Sand_inv", new Texture("resources/items_icons/sand.png"));
             textureMap.put("Wood_inv", new Texture("resources/items_icons/wood.png"));
             textureMap.put("Vine_inv", new Texture("resources/items_icons/vine.png"));
             textureMap.put("Metal_inv", new Texture("resources/items_icons/metal.png"));
@@ -367,8 +368,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("PoisonousMushroom_inv", new Texture("resources/items_icons/poisonous_mushroom.png"));
             textureMap.put("Hatchet", new Texture("resources/items_icons/hatchet.png"));
             textureMap.put("Pick Axe", new Texture("resources/items_icons/pickaxe.png"));
-
-            textureMap.put("Sand_inv", new Texture("resources/temp_sand.png"));
 
             //Inventory Item Descriptions
             textureMap.put("Wood_desc", new Texture("resources/items_icons/wood_desc.png"));
