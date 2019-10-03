@@ -101,6 +101,11 @@ public abstract class NaturalResources implements Item {
         return position;
     }
 
+    /**
+     * Returns whether or not the natural resource is exchangeable
+     * @return True or false depending on whether or not the resource
+     * is exchangeable
+     */
     @Override
     public Boolean isExchangeable() {
         return exchangeable;
