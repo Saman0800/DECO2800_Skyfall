@@ -124,6 +124,8 @@ public abstract class NaturalResources implements Item {
         return "" + subtype + ":" + name;
     }
 
+
+
     /**
      * Returns the item description
      * @return the item description

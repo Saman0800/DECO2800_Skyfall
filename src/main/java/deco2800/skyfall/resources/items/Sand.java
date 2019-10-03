@@ -20,24 +20,6 @@ public class Sand extends NaturalResources implements Item {
 
 
     /**
-     * Creates a string representation of the natural resource in the format:
-     *
-     * <p>'{Natural Resource}:{Name}' </p>
-     *
-     * <p>without surrounding quotes and with {natural resource} replaced by
-     * the subtype of the item and {name} replaced with the item name
-     * For example: </p>
-     *
-     * <p>Natural Resource:Wood </p>
-     *
-     * @return A string representation of the natural resource.
-     */
-    @Override
-    public String toString() {
-        return "" + subtype + ":" + name;
-    }
-
-    /**
      * Returns the item description
      * @return the item description
      */

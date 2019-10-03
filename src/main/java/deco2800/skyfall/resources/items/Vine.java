@@ -32,23 +32,6 @@ public class Vine extends NaturalResources implements Item {
                 "be used to produce rope.";
     }
 
-    /**
-     * Creates a string representation of the natural resource in the format:
-     *
-     * <p>'{Natural Resource}:{Name}' </p>
-     *
-     * <p>without surrounding quotes and with {natural resource} replaced by
-     * the subtype of the item and {name} replaced with the item name
-     * For example: </p>
-     *
-     * <p>Natural Resource:Wood </p>
-     *
-     * @return A string representation of the natural resource.
-     */
-    @Override
-    public String toString() {
-        return "" + subtype + ":" + name;
-    }
 
     @Override
     public void use(HexVector position){
