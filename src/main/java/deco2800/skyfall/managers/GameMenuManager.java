@@ -275,12 +275,23 @@ public class GameMenuManager extends TickableManager {
         }
 
         Drawable bgBluePill = generateTextureRegionDrawableObject("blue_pill");
+        Drawable bgGreenPill = generateTextureRegionDrawableObject("green_pill");
         BitmapFont gameFont = skin.getFont("game-font");
+
+
         Label.LabelStyle bluePill = new Label.LabelStyle();
         bluePill.font = gameFont;
         bluePill.fontColor = skin.getColor("white");
         bluePill.background = bgBluePill;
         skin.add("blue-pill", bluePill);
+
+
+
+        Label.LabelStyle greenPill = new Label.LabelStyle();
+        greenPill.font = gameFont;
+        greenPill.fontColor = skin.getColor("white");
+        greenPill.background = bgGreenPill;
+        skin.add("green-pill", greenPill);
 
         Label.LabelStyle titlePill = new Label.LabelStyle();
         titlePill.font = gameFont;
@@ -293,10 +304,6 @@ public class GameMenuManager extends TickableManager {
         textBluePill.fontColor = skin.getColor("white");
         skin.add("blue-pill", textBluePill);
 
-
-        popUps.put("inventoryTable",
-                new InventoryTable(stage, new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                        null, textureManager, skin,this));
 
         popUps.put("settingsTable", new SettingsTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
@@ -342,7 +349,15 @@ public class GameMenuManager extends TickableManager {
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
                 null, textureManager, this, sm, skin, "collect"));
 
+        popUps.put("teleportTable", new TeleportTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                null, textureManager, this, sm, skin, "collect"));
+
         popUps.put("createTable", new GenericCollectCreateTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                null, textureManager, this, sm, skin, "create"));
+
+        popUps.put("progressTable", new ProgressTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
                 null, textureManager, this, sm, skin, "create"));
 
@@ -355,6 +370,10 @@ public class GameMenuManager extends TickableManager {
         hudElements.put("clock" , new Clock(stage, skin, this));
 
         uiElements.put("HUD", new HeadsUpDisplay(stage, null, textureManager, skin, this, hudElements));
+
+        popUps.put("inventoryTable",
+                new InventoryTable(stage, new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                        null, textureManager, skin,this));
     }
 
     /**

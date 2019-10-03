@@ -3,7 +3,10 @@ package deco2800.skyfall.gamemenu.popupmenu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
@@ -14,24 +17,20 @@ import java.util.Map;
 
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
-public class GenericCollectCreateTable extends AbstractPopUpElement{
-
+public class ProgressTable extends AbstractPopUpElement {
     private final String type;
     private GameMenuManager gmm;
     private Skin skin;
     private Table baseTable;
     private LinkedHashMap<String, Integer> quantityToResources = new LinkedHashMap<>();
-    private TextButton complete;
-    private Label titleLabel;
-    private Type tableType;
     private Table labelTable;
-    private static enum Type {
-        COLLECT,
-        CREATE
-    }
 
+    private Label biomeLabel;
+    private Label collectLabel;
+    private Label createLabel;
+    private Label blueprintLabel;
 
-    public GenericCollectCreateTable(Stage stage, ImageButton exit, String[] textureNames,
+    public ProgressTable(Stage stage, ImageButton exit, String[] textureNames,
                                      TextureManager tm, GameMenuManager gameMenuManager,
                                      StatisticsManager sm, Skin skin, String type) {
         super(stage,exit, textureNames, tm, gameMenuManager);
@@ -39,11 +38,6 @@ public class GenericCollectCreateTable extends AbstractPopUpElement{
         this.skin = skin;
         this.gmm = gameMenuManager;
         this.type = type;
-
-        complete = new TextButton("  COMPLETED!  ", skin);
-        complete.getLabel().setStyle(skin.get("green-pill",
-                Label.LabelStyle.class));
-        complete.getLabel().getStyle().fontColor = Color.BLACK;
 
         labelTable = new Table();
         labelTable.setDebug(true);
@@ -65,38 +59,41 @@ public class GenericCollectCreateTable extends AbstractPopUpElement{
      */
     @Override
     public void show() {
+        //this.draw();
         super.show();
         baseTable.setVisible(true);
     }
 
     @Override
     public void update() {
-        //TODO: (@Kausta) link with quests manager
-        if (checkComplete()) {
-            complete.setVisible(true);
-        } else {
-            complete.setVisible(false);
-        }
-        updateText();
+            updateBiomeText("Forest");
+            updateCollectText("4/4");
+            updateCreateText("4/4");
+            updateCreateText("4/4");
     }
 
 
-    private void updateText() {
-        labelTable.clear();
-        //TODO: Integrate with QuestManager
-        //TODO: (@Kausta) Add Current?
-        for (Map.Entry<String, Integer> entry :  quantityToResources.entrySet()) {
-            String currentText  = String.format("%d x %s", entry.getValue(), entry.getKey());
-            labelTable.add(new Label(currentText, skin, "white-text")).left();
-            labelTable.row();
-        }
+    private void updateBiomeText(String text) {
+        biomeLabel.setText(text + " Biome: ");
+    }
+
+    private void updateCollectText(String text) {
+        collectLabel.setText("COLLECT: " + text);
+    }
+
+    private void updateCreateText(String text) {
+        collectLabel.setText("CREATE: " + text);
+
+    }
+
+    private void updateBlueprintTest(String text) {
+        blueprintLabel.setText(text + "x  Blueprint: " + "To Purchase");
     }
 
 
-    private boolean checkComplete() {
+    public boolean checkComplete() {
         return false;
     }
-
     @Override
     public void draw() {
         super.draw();
@@ -108,21 +105,27 @@ public class GenericCollectCreateTable extends AbstractPopUpElement{
         baseTable.top();
 
 
-        if (type.equals("collect")) {
-            titleLabel = new Label(" COLLECT ", skin,  "title-pill");
-        } else {
-            titleLabel = new Label(" CREATE ", skin,  "title-pill");
-        }
+
+        Label titleLabel = new Label(" PROGRESS ", skin, "title-pill");
+        biomeLabel = new Label("ERR", skin, "game-font",Color.WHITE);
+        collectLabel = new Label("ERR", skin, "game-font",Color.WHITE);
+        createLabel = new Label("ERR", skin, "game-font",Color.WHITE);
+        blueprintLabel = new Label("ERR", skin, "game-font",Color.WHITE);
+
+        titleLabel.getStyle().fontColor = Color.BLACK;
 
         baseTable.setDebug(true);
         baseTable.add(titleLabel);
         baseTable.row();
-        baseTable.add(labelTable);
+        baseTable.add(biomeLabel).expand().left();
         baseTable.row();
-        baseTable.add(complete).bottom().width(200).expand();
+        baseTable.add(collectLabel).expand().left();
+        baseTable.row();
+        baseTable.add(createLabel).expand().left();
+        baseTable.row();
+        baseTable.add(blueprintLabel).expand().left();
+        baseTable.row();
         baseTable.setVisible(false);
-        quantityToResources.put("IRON", 2);
     }
-
 
 }

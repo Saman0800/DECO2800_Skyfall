@@ -8,7 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
-import deco2800.skyfall.gamemenu.GameMenuBar;
+import deco2800.skyfall.gamemenu.GameMenuBar2;
+import deco2800.skyfall.gamemenu.HeadsUpDisplay;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.managers.TextureManager;
@@ -46,7 +47,7 @@ public class InventoryTable extends AbstractPopUpElement {
     private MainCharacter mainCharacter;
 
     //Current GameMenuBar in game, from GameMenuManager
-    private GameMenuBar gameMenuBar;
+    private GameMenuBar2 gameMenuBar;
 
     //Inventory user interface drop item button (active)
     private ImageButton dropButton;
@@ -88,8 +89,11 @@ public class InventoryTable extends AbstractPopUpElement {
         this.inventory = gameMenuManager.getInventory();
         this.mainCharacter = gameMenuManager.getMainCharacter();
 
-        if(gameMenuManager.getUIElement("gameMenuBar") instanceof GameMenuBar){
-            this.gameMenuBar = (GameMenuBar) gameMenuManager.getUIElement("gameMenuBar");
+        if(gameMenuManager.getUIElement("HUD") instanceof HeadsUpDisplay){
+            HeadsUpDisplay hud = (HeadsUpDisplay) gameMenuManager.getUIElement("HUD");
+            if(hud.gethudElement("gameMenuBar2") instanceof GameMenuBar2){
+                this.gameMenuBar = (GameMenuBar2) hud.gethudElement("gameMenuBar2");
+            }
         }
         this.draw();
     }
@@ -297,7 +301,6 @@ public class InventoryTable extends AbstractPopUpElement {
                 if(inventorySelected != null) {
                     inventory.quickAccessAdd(inventorySelected);
                     inventorySelected = null;
-                    updatePanels();
                     gameMenuBar.removeQuickAccessPanel();
                     gameMenuBar.setQuickAccessPanel();
                 }

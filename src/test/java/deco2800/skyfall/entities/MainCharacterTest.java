@@ -498,6 +498,7 @@ public class MainCharacterTest {
 
     /**
      * Tests to ensure that the closest gold piece is added to the gold pouch
+     * Tested here instead of World to allow for ease of testing.
      */
     @Test
     public void addClosestGoldPieceTest() {

@@ -16,12 +16,6 @@ public class Apple extends HealthResources implements Item {
     // amount of health item provides
     private int health = 4;
 
-    // the colour of the Apple
-    private String colour;
-
-    // the biome the apple is in (will change to different type in future?)
-    private String biome;
-
     //whether or not the item impacts the player's food fullness
     private Boolean hasFoodEffect;
 
@@ -29,7 +23,6 @@ public class Apple extends HealthResources implements Item {
     private final Logger logger = LoggerFactory.getLogger(Apple.class);
 
     public Apple(){
-
         this.biome = "Forest";
         this.name ="Apple";
         this.colour ="red";
@@ -41,19 +34,16 @@ public class Apple extends HealthResources implements Item {
     }
 
 
+    /**
+     * Returns the name of the health resource
+     * @return the name of the health resource
+     */
     @Override
     public String getName() {
         return "Apple";
     }
 
 
-    /**
-     * Returns the biome the apple is situated in
-     * @return the biome the apple is situated in
-     */
-    public String getBiome(){
-        return biome;
-    }
 
     /**
      * Returns whether or not the item impacts the player's food fullness

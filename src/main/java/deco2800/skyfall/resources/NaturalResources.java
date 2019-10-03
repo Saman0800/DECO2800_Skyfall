@@ -23,6 +23,9 @@ public abstract class NaturalResources implements Item {
     // determines whether or not the resource can be traded
     private Boolean exchangeable;
 
+    // the name of the biome the resource is situated in
+    protected String biome;
+
     // Can be item be equipped
     public boolean equippable;
 
@@ -60,6 +63,14 @@ public abstract class NaturalResources implements Item {
         return name;
     }
 
+    /**
+     * Returns the biome the stone is situated in
+     * @return the biome the stone is situated in
+     */
+    public String getBiome(){
+        return biome;
+    }
+
 
     /**
      * Returns whether or not the item can be carried
@@ -90,6 +101,11 @@ public abstract class NaturalResources implements Item {
         return position;
     }
 
+    /**
+     * Returns whether or not the natural resource is exchangeable
+     * @return True or false depending on whether or not the resource
+     * is exchangeable
+     */
     @Override
     public Boolean isExchangeable() {
         return exchangeable;
@@ -112,6 +128,8 @@ public abstract class NaturalResources implements Item {
     public String toString() {
         return "" + subtype + ":" + name;
     }
+
+
 
     /**
      * Returns the item description

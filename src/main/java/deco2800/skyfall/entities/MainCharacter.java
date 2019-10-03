@@ -1144,12 +1144,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             case Input.Keys.ALT_LEFT:
                 // Attack moved to SPACE
                 break;
-            case Input.Keys.G:
-                addClosestGoldPiece();
-                break;
-            case Input.Keys.M:
-                getGoldPouchTotalValue();
-                break;
             case Input.Keys.Z:
                 selectSpell(SpellType.FLAME_WALL);
                 break;

@@ -19,6 +19,7 @@ public abstract class ManufacturedResources implements Item, Blueprint {
     // the name of the subtype the item belongs to
     protected String subtype;
 
+
     // the co-ordinates of the tile the item has been placed on
     protected HexVector position;
 
