@@ -48,6 +48,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         KeyUpObserver, TouchDownObserver, Tickable, Animatable {
 
     private static MainCharacter mainCharacterInstance = null;
+    private boolean residualFromPopUp = false;
 
     /**
      * Removes the stored main character instance so that the next call to any of the {@code getInstance} methods will
@@ -1020,7 +1021,16 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     @Override
     public void onTick(long i) {
-        this.updatePosition();
+        if(!GameScreen.isPaused) {
+            if (residualFromPopUp) {
+                residualInputsFromPopUp();
+            }
+            this.updatePosition();
+        } else {
+            SoundManager.stopSound("people_walk_normal");
+            getBody().setLinearVelocity(0f, 0f);
+            residualFromPopUp = true;
+        }
         this.movementSound();
         this.centreCameraAuto();
 
@@ -1076,7 +1086,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         //Put specific collision logic here
     }
 
+    public void resetVelocity() {
 
+        xInput = 0;
+        yInput = 0;
+    }
     /**
      * Sets the Player's current movement speed
      *
@@ -1097,6 +1111,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void notifyKeyDown(int keycode) {
         //player cant move when paused
         if (GameManager.getPaused()) {
+            xInput = 0;
+            yInput = 0;
             return;
         }
         switch (keycode) {
@@ -1173,6 +1189,28 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.spellSelected = type;
     }
 
+    public void residualInputsFromPopUp() {
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            yInput += 1;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            xInput += -1;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            yInput += -1;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            xInput += 1;
+        }
+
+        residualFromPopUp = false;
+
+    }
+
+
     /**
      * Sets the appropriate movement flags to false on keyUp
      *
@@ -1182,8 +1220,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void notifyKeyUp(int keycode) {
         // Player cant move when paused
         if (GameManager.getPaused()) {
+            xInput = 0;
+            yInput = 0;
             return;
         }
+
         switch (keycode) {
             case Input.Keys.W:
                 yInput -= 1;
@@ -1461,6 +1502,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         } else {
             val = 0;
         }
+
+        val = val * -180 / Math.PI + 90;
+        if (val < 0) {
+            val += 360;
+        }
+
         return val;
     }
 
