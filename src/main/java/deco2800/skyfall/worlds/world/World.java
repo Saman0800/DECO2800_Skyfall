@@ -14,9 +14,11 @@ import deco2800.skyfall.gamemenu.popupmenu.ChestTable;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InputManager;
+import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.resources.NaturalResources;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.saving.Saveable;
@@ -688,13 +690,29 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
                 menuManager.setPopUp("chestTable");
 
 
-            } else if (entity instanceof GoldPiece) {
+            } else if (entity instanceof Item) {
+                MainCharacter mc = gmm.getMainCharacter();
+                if (tile.getCoordinates().distance(mc.getPosition()) > 2) {
+                    continue;
+                }
+                removeEntity(entity);
+                gmm.getInventory().add((Item) entity);
+            }else if (entity instanceof GoldPiece) {
                 MainCharacter mc = gmm.getMainCharacter();
                 if (tile.getCoordinates().distance(mc.getPosition()) <= 1) {
                     mc.addGold((GoldPiece) entity, 1);
                     // remove the gold piece instance from the world
                     removeEntity(entity);
                 }
+            }
+
+            else if (entity instanceof Item) {
+                MainCharacter mc = gmm.getMainCharacter();
+                InventoryManager inventory = GameManager.getManagerFromInstance(InventoryManager.class);
+//                if (tile.getCoordinates().distance(mc.getPosition()) <= 1) {
+                    inventory.add((Item) entity);
+                    removeEntity(entity);
+//                }
             }
 
             else if (entity instanceof BlueprintShop) {
