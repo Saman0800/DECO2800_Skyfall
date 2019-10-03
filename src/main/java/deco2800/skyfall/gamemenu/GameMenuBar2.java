@@ -3,6 +3,7 @@ package deco2800.skyfall.gamemenu;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -40,12 +41,26 @@ public class GameMenuBar2 extends AbstractUIElement {
 
     @Override
     public void draw() {
+        setQuickAccessPanel();
+
+        build = new ImageButton(generateTextureRegionDrawableObject("build"));
+        build.setSize(150, 295f / 316 * 150);
+        build.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                hideOpened(gmm);
+                gmm.setPopUp("buildingTable");
+            }
+        });
+
+        stage.addActor(build);
+    }
+
+    public void setQuickAccessPanel(){
         quickAccessPanel = new Table().top().left();
-        sideBar = new ImageButton(generateTextureRegionDrawableObject("quickaccess_side_bar"));
-//        quickAccessPanel.setDebug(true);
         quickAccessPanel.setBackground(GameMenuManager.generateTextureRegionDrawableObject("quickaccess_bg"));
         quickAccessPanel.setSize(150, 500);
-        updateQuickAccess();
+        setQuickAccessItems();
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
         buttonStyle.up = generateTextureRegionDrawableObject("quickaccess_button_bg");
         buttonStyle.down = generateTextureRegionDrawableObject("quickaccess_button_bg");
@@ -62,6 +77,7 @@ public class GameMenuBar2 extends AbstractUIElement {
 //        remove.getLabel().setFontScale(0.8f);
         quickAccessPanel.add(remove).width(130).height(50).padTop(10).padLeft(10);
 
+        sideBar = new ImageButton(generateTextureRegionDrawableObject("quickaccess_side_bar"));
         sideBar.setSize(35, 360); //TODO: reduce chunkiness
         sideBar.addListener(new ClickListener() {
             @Override
@@ -71,29 +87,21 @@ public class GameMenuBar2 extends AbstractUIElement {
             }
         });
 
-        build = new ImageButton(generateTextureRegionDrawableObject("build"));
-        build.setSize(150, 295f / 316 * 150);
-        build.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                hideOpened(gmm);
-                gmm.setPopUp("buildingTable");
-            }
-        });
-
         stage.addActor(quickAccessPanel);
         stage.addActor(sideBar);
-        stage.addActor(build);
+    }
+
+    public void removeQuickAccessPanel(){
+        quickAccessPanel.remove();
+        sideBar.remove();
     }
 
     /**
-     * Updates the quick access inventory display to show the current contents
-     * of the quick access inventory.
+     * Sets the items in the quick access inventory
      */
-    public void updateQuickAccess(){
+    public void setQuickAccessItems(){
         Map<String, Integer> quickAccess = gmm.getInventory().getQuickAccess();
 
-        int count = 1;
         int size = 80;
 
         String[] weapons = {"axe", "box", "spear", "sword"};
@@ -108,13 +116,12 @@ public class GameMenuBar2 extends AbstractUIElement {
                 }
             }
             ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(weaponName + "_inv"));
+            icon.setName("qa_icon");
             quickAccessPanel.add(icon).width(size).height(size).padTop(10).padLeft(20 + sideBarWidth/2);
             Label num = new Label(entry.getValue().toString(), skin, "white-label");
             num.setFontScale(0.4f);
             quickAccessPanel.add(num).top().left().padLeft(-20).padTop(5);
             quickAccessPanel.row();
-
-            count++;
         }
     }
 
