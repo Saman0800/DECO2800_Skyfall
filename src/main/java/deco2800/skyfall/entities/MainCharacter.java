@@ -1027,6 +1027,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             }
             this.updatePosition();
         } else {
+            getBody().setLinearVelocity(0f, 0f);
             residualFromPopUp = true;
         }
         this.movementSound();
