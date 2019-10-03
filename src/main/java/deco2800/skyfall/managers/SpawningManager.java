@@ -3,7 +3,6 @@ package deco2800.skyfall.managers;
 import deco2800.skyfall.entities.enemies.AbstractEnemy;
 import deco2800.skyfall.entities.enemies.Spawnable;
 import deco2800.skyfall.graphics.types.vec2;
-import javafx.util.Pair;
 
 import java.util.Iterator;
 import java.util.Map;
