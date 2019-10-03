@@ -10,8 +10,6 @@ import deco2800.skyfall.util.HexVector;
  */
 public class Metal extends NaturalResources implements Item {
 
-    // the biome the metal is in
-    private String biome;
 
     /**
      * Creates a default metal item
@@ -23,13 +21,6 @@ public class Metal extends NaturalResources implements Item {
     }
 
 
-    /**
-     * Returns the biome the metal is situated in
-     * @return the biome the metal is situated in
-     */
-    public String getBiome(){
-        return biome;
-    }
 
     /**
      * Creates a string representation of the natural resource in the format:

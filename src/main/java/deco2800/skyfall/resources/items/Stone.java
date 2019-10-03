@@ -12,8 +12,7 @@ public class Stone extends NaturalResources implements Item {
     // the colour of the stone
     private String colour;
 
-    // the biome the stone is in
-    private String biome;
+
 
     /**
      * Creates a default stone item
@@ -33,13 +32,7 @@ public class Stone extends NaturalResources implements Item {
         return colour;
     }
 
-    /**
-     * Returns the biome the stone is situated in
-     * @return the biome the stone is situated in
-     */
-    public String getBiome(){
-        return biome;
-    }
+
 
     /**
      * Returns the item description

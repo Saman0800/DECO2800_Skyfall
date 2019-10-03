@@ -12,8 +12,7 @@ public class Wood extends NaturalResources implements Item {
     // the colour of the wood
     private String colour;
 
-    // the biome the wood is in
-    private String biome;
+
 
     /**
      * Creates a default wood item
@@ -44,13 +43,7 @@ public class Wood extends NaturalResources implements Item {
         return colour;
     }
 
-    /**
-     * Returns the biome the wood is situated in
-     * @return the biome the wood is situated in
-     */
-    public String getBiome(){
-        return biome;
-    }
+
 
     /**
      * Creates a string representation of the natural resource in the format:

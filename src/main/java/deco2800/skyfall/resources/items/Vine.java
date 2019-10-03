@@ -9,8 +9,7 @@ import deco2800.skyfall.util.HexVector;
  */
 public class Vine extends NaturalResources implements Item {
 
-    // the biome the vine is in
-    private String biome;
+
 
     /**
      * Creates a default vine item
@@ -21,13 +20,7 @@ public class Vine extends NaturalResources implements Item {
     }
 
 
-    /**
-     * Returns the biome the vine is situated in
-     * @return the biome the vine is situated in
-     */
-    public String getBiome(){
-        return biome;
-    }
+
 
     /**
      * Returns the item description

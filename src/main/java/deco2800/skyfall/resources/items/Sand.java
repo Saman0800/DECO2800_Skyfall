@@ -9,9 +9,6 @@ import deco2800.skyfall.util.HexVector;
  */
 public class Sand extends NaturalResources implements Item {
 
-    // the biome the sand is in
-    private String biome;
-
     /**
      * Creates a default sand item
      */
@@ -21,13 +18,6 @@ public class Sand extends NaturalResources implements Item {
     }
 
 
-    /**
-     * Returns the biome the sand is situated in
-     * @return the biome the sand is situated in
-     */
-    public String getBiome(){
-        return biome;
-    }
 
     /**
      * Creates a string representation of the natural resource in the format:
