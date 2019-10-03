@@ -10,10 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
-import deco2800.skyfall.managers.BGMManager;
-import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.managers.SoundManager;
-import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.managers.*;
 
 
 import java.util.Map;
@@ -118,12 +115,14 @@ public class SettingsTable extends AbstractPopUpElement{
         bgm.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                BGMManager bgmManager = GameManager.getManagerFromInstance(BGMManager.class);
+
                 if (!bgm.isChecked()) {
-                    BGMManager.paused = true;
-                    BGMManager.mute();
+                    bgmManager.paused = true;
+                    bgmManager.mute();
                 } else {
-                    BGMManager.paused = false;
-                    BGMManager.unmute();
+                    bgmManager.paused = false;
+                    bgmManager.unmute();
                 }
 
             }

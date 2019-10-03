@@ -21,16 +21,14 @@ public class DesertCacti extends StaticEntity implements Tickable, Harvestable {
 
     public DesertCacti(float col, float row, int renderOrder, Map<HexVector, String> texture) {
         super(col, row, renderOrder, texture);
-        this.setTexture("");
         this.woodAmount = 3;
         this.entityType = "DesertCacti";
     }
 
-    public DesertCacti(StaticEntityMemento memento){
+    public DesertCacti(SaveableEntityMemento memento) {
         super(memento);
         this.woodAmount = 3;
     }
-
 
     public DesertCacti(Tile tile, boolean obstructed) {
         super(tile, 5, "DCactus" + nextImage, obstructed);
@@ -39,8 +37,8 @@ public class DesertCacti extends StaticEntity implements Tickable, Harvestable {
     }
 
     /**
-     * The newInstance method implemented for the DesertCacti class to allow for item
-     * dispersal on game start up. This function is implemented with the
+     * The newInstance method implemented for the DesertCacti class to allow for
+     * item dispersal on game start up. This function is implemented with the
      * 
      * 
      * @return Duplicate rock tile with modified position.

@@ -33,7 +33,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ GameManager.class, PlayerPeon.class, WorldBuilder.class, WorldDirector.class, DatabaseManager.class,
-                  DataBaseConnector.class })
+        DataBaseConnector.class })
 public class RockTest {
     private World w = null;
 
@@ -48,14 +48,12 @@ public class RockTest {
         whenNew(Random.class).withAnyArguments().thenReturn(random);
 
         DataBaseConnector connector = mock(DataBaseConnector.class);
-        when(connector.loadChunk(any(World.class), anyInt(), anyInt())).then(
-                (Answer<Chunk>) invocation -> {
-                    Chunk chunk = new Chunk(invocation.getArgumentAt(0, World.class),
-                                            invocation.getArgumentAt(1, Integer.class),
-                                            invocation.getArgumentAt(2, Integer.class));
-                    chunk.generateEntities();
-                    return chunk;
-                });
+        when(connector.loadChunk(any(World.class), anyInt(), anyInt())).then((Answer<Chunk>) invocation -> {
+            Chunk chunk = new Chunk(invocation.getArgumentAt(0, World.class),
+                    invocation.getArgumentAt(1, Integer.class), invocation.getArgumentAt(2, Integer.class));
+            chunk.generateEntities();
+            return chunk;
+        });
 
         DatabaseManager manager = mock(DatabaseManager.class);
         when(manager.getDataBaseConnector()).thenReturn(connector);
@@ -89,7 +87,7 @@ public class RockTest {
     public void TestConstruction() {
         Tile tile1 = w.getTile(0.0f, 0.0f);
 
-        Rock rock1 = new Rock(tile1, true);
+        ForestRock rock1 = new ForestRock(tile1, true);
 
         // Make sure our tile is non-null
         Tile tileGet1 = w.getTile(0.0f, 0.0f);
@@ -113,13 +111,13 @@ public class RockTest {
         Tile tile3 = w.getTile(1.0f, -0.5f);
         Tile tile4 = w.getTile(1.0f, 0.5f);
 
-        Rock rock1 = new Rock(tile1, true);
+        ForestRock rock1 = new ForestRock(tile1, true);
 
         // Check that the health interface is working as expected
         rock1.setHealth(5);
-        assertEquals("Unexpected health value for Rock.", rock1.getHealth(), 5);
+        assertEquals("Unexpected health value for ForestRock.", rock1.getHealth(), 5);
 
-        Rock rock2 = rock1.newInstance(tile2);
+        ForestRock rock2 = rock1.newInstance(tile2);
 
         assertNotEquals(rock1, rock2);
 
@@ -130,7 +128,7 @@ public class RockTest {
         assertEquals(rock2.getRow(), 1.0f, 0.001f);
         assertTrue(rock2.isObstructed());
         String rockObjectName = "rock";
-        assertEquals("Rock id was " + rock2.getObjectName() + " but expected " + rockObjectName, rockObjectName,
+        assertEquals("ForestRock id was " + rock2.getObjectName() + " but expected " + rockObjectName, rockObjectName,
                 rock2.getObjectName());
 
         // Check that the Overwritten newInstance method is working as expected
@@ -150,7 +148,7 @@ public class RockTest {
     public void TestGetandSet() {
         Tile tile1 = w.getTile(0.0f, 0.0f);
 
-        Rock rock1 = new Rock(tile1, true);
+        ForestRock rock1 = new ForestRock(tile1, true);
 
         rock1.setHealth(3);
         assertEquals(3, rock1.getHealth());

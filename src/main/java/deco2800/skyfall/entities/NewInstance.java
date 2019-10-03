@@ -8,7 +8,7 @@ import deco2800.skyfall.worlds.Tile;
  * dispersed on game start up.
  * 
  * @param <E> The type/class of the entity that you would like to disperse, for
- *            example: Rock (class), Tree (class).
+ *            example: ForestRock (class), ForestTree (class).
  */
 public interface NewInstance<E extends StaticEntity> {
     /**

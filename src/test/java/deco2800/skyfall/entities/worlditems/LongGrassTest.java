@@ -29,7 +29,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ GameManager.class, PlayerPeon.class, WorldBuilder.class, WorldDirector.class, DatabaseManager.class,
-                  DataBaseConnector.class })
+        DataBaseConnector.class })
 public class LongGrassTest {
     private World w = null;
 
@@ -44,14 +44,12 @@ public class LongGrassTest {
         whenNew(Random.class).withAnyArguments().thenReturn(random);
 
         DataBaseConnector connector = mock(DataBaseConnector.class);
-        when(connector.loadChunk(any(World.class), anyInt(), anyInt())).then(
-                (Answer<Chunk>) invocation -> {
-                    Chunk chunk = new Chunk(invocation.getArgumentAt(0, World.class),
-                                            invocation.getArgumentAt(1, Integer.class),
-                                            invocation.getArgumentAt(2, Integer.class));
-                    chunk.generateEntities();
-                    return chunk;
-                });
+        when(connector.loadChunk(any(World.class), anyInt(), anyInt())).then((Answer<Chunk>) invocation -> {
+            Chunk chunk = new Chunk(invocation.getArgumentAt(0, World.class),
+                    invocation.getArgumentAt(1, Integer.class), invocation.getArgumentAt(2, Integer.class));
+            chunk.generateEntities();
+            return chunk;
+        });
 
         DatabaseManager manager = mock(DatabaseManager.class);
         when(manager.getDataBaseConnector()).thenReturn(connector);
@@ -84,7 +82,7 @@ public class LongGrassTest {
     public void TestConstruction() {
         Tile tile1 = w.getTile(0.0f, 0.0f);
 
-        LongGrass longGrass1 = new LongGrass(tile1, true);
+        ForestShrub longGrass1 = new ForestShrub(tile1, true);
 
         // Make sure our tile is non-null
         Tile tileGet1 = w.getTile(0.0f, 0.0f);
@@ -98,7 +96,7 @@ public class LongGrassTest {
         assertEquals(longGrass1.getCol(), 0.0f, 0.0f);
         assertEquals(longGrass1.getRow(), 0.0f, 0.0f);
         assertTrue(longGrass1.isObstructed());
-        assertEquals(longGrass1.getObjectName(), "long_grass");
+        assertEquals(longGrass1.getObjectName(), "forest_shrub");
     }
 
     @Test
@@ -106,7 +104,7 @@ public class LongGrassTest {
         Tile tile1 = w.getTile(0.0f, 0.0f);
         Tile tile2 = w.getTile(0.0f, 1.0f);
 
-        LongGrass longGrass1 = new LongGrass(tile1, true);
+        ForestShrub longGrass1 = new ForestShrub(tile1, true);
         longGrass1.newInstance(tile2);
 
         // Check that the Overwritten newInstance method is working as expected

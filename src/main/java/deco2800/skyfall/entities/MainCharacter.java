@@ -48,9 +48,17 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         KeyUpObserver, TouchDownObserver, Tickable, Animatable {
 
     private static MainCharacter mainCharacterInstance = null;
+    private boolean residualFromPopUp = false;
 
-    public static MainCharacter getInstance(float col, float row, float speed
-            , String name, int health, String[] textures) {
+    /**
+     * Removes the stored main character instance so that the next call to any of the {@code getInstance} methods will
+     * create a new {@code MainCharacter}.
+     */
+    public static void resetInstance() {
+        mainCharacterInstance = null;
+    }
+
+    public static MainCharacter getInstance(float col, float row, float speed, String name, int health, String[] textures) {
         if (mainCharacterInstance == null) {
             mainCharacterInstance = new MainCharacter(col, row, speed, name,
                     health, textures);
@@ -58,8 +66,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         return mainCharacterInstance;
     }
 
-    public static MainCharacter getInstance(float col, float row, float speed
-            , String name, int health) {
+    public static MainCharacter getInstance(float col, float row, float speed, String name, int health) {
         if (mainCharacterInstance == null) {
             mainCharacterInstance = new MainCharacter(col, row, speed, name,
                     health);
@@ -131,8 +138,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     // Variables to sound effects
     public static final String WALK_NORMAL = "people_walk_normal";
-    public static final String HURT = "player_hurt";
-    public static final String DIED = "player_died";
+
+    public static final String HURT_SOUND_NAME = "player_hurt";
+    public static final String DIED_SOUND_NAME = "player_died";
 
     public static final String BOWATTACK = "bow_and_arrow_attack";
     public static final String AXEATTACK = "axe_attack";
@@ -321,7 +329,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         xInput = 0;
         yInput = 0;
         setAcceleration(10.f);
-        setMaxSpeed(1.f);
+        // FIXME:Ontonator Change this back.
+        // setMaxSpeed(1.f);
+        setMaxSpeed(5.f);
         vel = 0;
         velHistoryX = new ArrayList<>();
         velHistoryY = new ArrayList<>();
@@ -417,6 +427,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
     }
 
+    // FIXME:Ontonator Should this return primitive `boolean`?
     /**
      * Sets the player's equipped item
      *
@@ -727,7 +738,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             position.moveToward(bounceBack, 1f);
             */
 
-            SoundManager.playSound(HURT);
+            SoundManager.playSound(HURT_SOUND_NAME);
 
             if (hurtTime == 400) {
                 setRecovering(true);
@@ -795,7 +806,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void kill() {
         // set health to 0.
         changeHealth(0);
-        SoundManager.playSound(DIED);
+        SoundManager.playSound(DIED_SOUND_NAME);
         setCurrentState(AnimationRole.DEAD);
         deadTime = 0;
         // gameOverTable.show();
@@ -991,7 +1002,16 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     @Override
     public void onTick(long i) {
-        this.updatePosition();
+        if(!GameScreen.isPaused) {
+            if (residualFromPopUp) {
+                residualInputsFromPopUp();
+            }
+            this.updatePosition();
+        } else {
+            SoundManager.stopSound("people_walk_normal");
+            getBody().setLinearVelocity(0f, 0f);
+            residualFromPopUp = true;
+        }
         this.movementSound();
         this.centreCameraAuto();
 
@@ -1047,7 +1067,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         //Put specific collision logic here
     }
 
+    public void resetVelocity() {
 
+        xInput = 0;
+        yInput = 0;
+    }
     /**
      * Sets the Player's current movement speed
      *
@@ -1068,6 +1092,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void notifyKeyDown(int keycode) {
         //player cant move when paused
         if (GameManager.getPaused()) {
+            xInput = 0;
+            yInput = 0;
             return;
         }
         switch (keycode) {
@@ -1144,6 +1170,28 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.spellSelected = type;
     }
 
+    public void residualInputsFromPopUp() {
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            yInput += 1;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            xInput += -1;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            yInput += -1;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            xInput += 1;
+        }
+
+        residualFromPopUp = false;
+
+    }
+
+
     /**
      * Sets the appropriate movement flags to false on keyUp
      *
@@ -1153,8 +1201,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void notifyKeyUp(int keycode) {
         // Player cant move when paused
         if (GameManager.getPaused()) {
+            xInput = 0;
+            yInput = 0;
             return;
         }
+
         switch (keycode) {
             case Input.Keys.W:
                 yInput -= 1;
@@ -1432,6 +1483,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         } else {
             val = 0;
         }
+
+        val = val * -180 / Math.PI + 90;
+        if (val < 0) {
+            val += 360;
+        }
+
         return val;
     }
 
@@ -1443,38 +1500,37 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     private String getPlayerDirectionCardinal() {
         double playerDirectionAngle = getPlayerDirectionAngle();
-        playerDirectionAngle = 90 - Math.toDegrees(playerDirectionAngle);
 
-        if (playerDirectionAngle < 0) {
-            playerDirectionAngle += 360;
-        }
-        if (playerDirectionAngle <= 22.5 || playerDirectionAngle >= 337.5) {
-            setCurrentDirection(Direction.NORTH);
-            return "North";
-        } else if (22.5 <= playerDirectionAngle && playerDirectionAngle <= 67.5) {
-            setCurrentDirection(Direction.NORTH_EAST);
-            return "North-East";
-        } else if (67.5 <= playerDirectionAngle && playerDirectionAngle <= 112.5) {
-            setCurrentDirection(Direction.EAST);
-            return "East";
-        } else if (112.5 <= playerDirectionAngle && playerDirectionAngle <= 157.5) {
-            setCurrentDirection(Direction.SOUTH_EAST);
-            return "South-East";
-        } else if (157.5 <= playerDirectionAngle && playerDirectionAngle <= 202.5) {
-            setCurrentDirection(Direction.SOUTH);
-            return "South";
-        } else if (202.5 <= playerDirectionAngle && playerDirectionAngle <= 247.5) {
-            setCurrentDirection(Direction.SOUTH_WEST);
-            return "South-West";
-        } else if (247.5 <= playerDirectionAngle && playerDirectionAngle <= 292.5) {
-            setCurrentDirection(Direction.WEST);
-            return "West";
-        } else if (292.5 <= playerDirectionAngle && playerDirectionAngle <= 337.5) {
-            setCurrentDirection(Direction.NORTH_WEST);
-            return "North-West";
-        }
+        int playerDirectionIndex = Math.floorMod((int) Math.floor(((playerDirectionAngle + 22.5) / 45)), 8);
 
-        return "Invalid";
+        switch (playerDirectionIndex) {
+        case 0:
+                setCurrentDirection(Direction.NORTH);
+                return "North";
+        case 1:
+                setCurrentDirection(Direction.NORTH_EAST);
+                return "North-East";
+        case 2:
+                setCurrentDirection(Direction.EAST);
+                return "East";
+        case 3:
+                setCurrentDirection(Direction.SOUTH_EAST);
+                return "South-East";
+        case 4:
+                setCurrentDirection(Direction.SOUTH);
+                return "South";
+        case 5:
+                setCurrentDirection(Direction.SOUTH_WEST);
+                return "South-West";
+        case 6:
+                setCurrentDirection(Direction.WEST);
+                return "West";
+        case 7:
+                setCurrentDirection(Direction.NORTH_WEST);
+                return "North-West";
+        default:
+            return "Invalid";
+        }
     }
 
     /**
@@ -1748,7 +1804,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     private void updateAnimation() {
         getPlayerDirectionCardinal();
-        List<Float> vel = getVelocity();
 
 
 
@@ -1766,7 +1821,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             } else if (isHurt) {
                 setCurrentState(AnimationRole.HURT);
             } else {
-                if (vel.get(2) == 0f) {
+            if (getVelocity().get(2) == 0f) {
                     setCurrentState(AnimationRole.NULL);
                 } else {
                     setCurrentState(AnimationRole.MOVE);

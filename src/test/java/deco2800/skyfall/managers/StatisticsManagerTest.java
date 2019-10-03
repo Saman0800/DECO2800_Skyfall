@@ -31,20 +31,13 @@ public class StatisticsManagerTest {
     private Weapon bow;
     private Weapon axe;
 
-    @Before
     /**
      * Set up all test variables
      */
-    public void setUp() throws NoSuchFieldException, IllegalAccessException {
-
-        testCharacter1 = MainCharacter.getInstance(4, 4, 0.5f, "Side Piece", 60);
-        // Reset the level, heath and deaths.
-        testCharacter1.changeLevel(1 - testCharacter1.getLevel());
-        testCharacter1.changeHealth(10 - testCharacter1.getHealth());
-        // There is no other way to modify this.
-        Field deathsField = Peon.class.getDeclaredField("deaths");
-        deathsField.setAccessible(true);
-        deathsField.setInt(testCharacter1, 0);
+    @Before
+    public void setUp() {
+        MainCharacter.resetInstance();
+        testCharacter1 = MainCharacter.getInstance(4, 4, 0.5f, "Side Piece", 10);
 
         testManager = new StatisticsManager(this.testCharacter1);
         testEnemy1 = new Treeman(1,1, testCharacter1);
@@ -56,10 +49,10 @@ public class StatisticsManagerTest {
         axe = new Axe(new Tile(null, 0, 0), false);
     }
 
-    @After
     /**
      * Sets all test variables to null after testing
      */
+    @After
     public void tearDown() {
         testCharacter1 = null;
         testManager = null;
@@ -127,8 +120,8 @@ public class StatisticsManagerTest {
     public void loseLevelTest() {
         this.testManager.getCharacter().changeLevel(5);
 
-        Assert.assertEquals(testManager.getLevel(), 6);
-        Assert.assertEquals(testManager.getHealth(), 60);
+        Assert.assertEquals(6, testManager.getLevel());
+        Assert.assertEquals(60, testManager.getHealth());
 
         this.testManager.getCharacter().changeHealth(-60);
         this.testManager.getCharacter().changeHealth(-60);
@@ -136,39 +129,39 @@ public class StatisticsManagerTest {
         this.testManager.getCharacter().changeHealth(-60);
         this.testManager.getCharacter().changeHealth(-60);
 
-        Assert.assertEquals(testManager.getDeaths(), 5);
+        Assert.assertEquals(5, testManager.getDeaths());
 
         testManager.loseExperience();
         testManager.loseLevel();
 
-        Assert.assertEquals(testManager.getLevel(), 5);
-        Assert.assertEquals(testManager.getHealth(), 50);
+        Assert.assertEquals(5, testManager.getLevel());
+        Assert.assertEquals(50, testManager.getHealth());
 
     }
 
-    @Test
     /**
      * Test that killed enemies are recorded correctly
      */
+    @Test
     public void killsTest() {
         this.recordKills();
 
-        Assert.assertEquals(testManager.getAmountKilled(testEnemy1), 3);
-        Assert.assertEquals(testManager.getAmountKilled(testEnemy2), 4);
-        Assert.assertEquals(testManager.getAmountKilled(testEnemy3), 3);
-        Assert.assertEquals(testManager.getKills(), 10);
+        Assert.assertEquals(3, testManager.getAmountKilled(testEnemy1));
+        Assert.assertEquals(4, testManager.getAmountKilled(testEnemy2));
+        Assert.assertEquals(3, testManager.getAmountKilled(testEnemy3));
+        Assert.assertEquals(10, testManager.getKills());
 
-        Assert.assertEquals(testManager.getMoney(), 100);
+        Assert.assertEquals(100, testManager.getMoney());
     }
 
-    @Test
     /**
      * Test that experience is changing correctly due to different events
      */
+    @Test
     public void experienceLevelTest() {
-        Assert.assertEquals(testManager.getExperienceCap(), 20);
-        Assert.assertEquals(testManager.getLevel(), 1);
-        Assert.assertEquals(testManager.getExperience(), 0);
+        Assert.assertEquals(20, testManager.getExperienceCap());
+        Assert.assertEquals(1, testManager.getLevel());
+        Assert.assertEquals(0, testManager.getExperience());
 
         this.pickUpWeapons();
         this.recordKills();

@@ -26,27 +26,28 @@ import deco2800.skyfall.worlds.Tile;
 
 import com.google.gson.annotations.Expose;
 
-public class StaticEntity extends AbstractEntity implements NewInstance<StaticEntity>, Saveable<StaticEntity.StaticEntityMemento> {
+public class StaticEntity extends SaveableEntity implements NewInstance<StaticEntity> {
     private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
 
     private static final String ENTITY_ID_STRING = "staticEntityID";
-    //private int renderOrder;
+    // private int renderOrder;
     private boolean obstructed;
     private static TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
-
-    // The type of entity this is (e.g. "Tree", "Axe" etc.)
-    protected String entityType;
 
     public Map<HexVector, String> children;
 
     private Map<HexVector, String> textures;
+
+    public StaticEntity() {
+        super();
+    }
 
     /**
      * Loads a static entity from a memento
      *
      * @param memento the static entitiy to add
      */
-    public StaticEntity(StaticEntityMemento memento) {
+    public StaticEntity(SaveableEntityMemento memento) {
         super(memento.col, memento.row, memento.renderOrder);
         this.load(memento);
         children = new HashMap<>();
@@ -57,10 +58,6 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
             return;
         }
 
-    }
-
-    public StaticEntity() {
-        super();
     }
 
     public StaticEntity(Tile tile, int renderOrder, String texture, boolean obstructed) {
@@ -114,8 +111,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         }
     }
 
-    public StaticEntity(Tile tile, int renderOrder, String texture,
-                        boolean obstructed, String fixtureDef) {
+    public StaticEntity(Tile tile, int renderOrder, String texture, boolean obstructed, String fixtureDef) {
         super(tile.getCol(), tile.getRow(), renderOrder, fixtureDef);
         this.setObjectName(ENTITY_ID_STRING);
         this.setTexture(texture);
@@ -134,8 +130,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         tile.setObstructed(obstructed);
     }
 
-    public StaticEntity(float col, float row, int renderOrder, Map<HexVector,
-            String> texture, String fixtureDef) {
+    public StaticEntity(float col, float row, int renderOrder, Map<HexVector, String> texture, String fixtureDef) {
         super(col, row, renderOrder, fixtureDef);
         this.setObjectName(ENTITY_ID_STRING);
 
@@ -272,77 +267,5 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
      */
     public void addToChunk(Chunk chunk) {
         chunk.addEntity(this);
-    }
-
-    /**
-     * Gets the entity type of this entity
-     *
-     * @return the entity type of this entity
-     */
-    public String getEntityType() {
-        return this.entityType;
-    }
-
-    @Override
-    public StaticEntityMemento save() {
-        return new StaticEntityMemento(this);
-    }
-
-    @Override
-    public void load(StaticEntityMemento memento) {
-        this.setEntityID(memento.entityID);
-        setRenderOrder(memento.renderOrder);
-        this.obstructed = memento.obstructed;
-        /*
-        this.setBody(memento.body);
-        this.setFixture(memento.fixture);
-         */
-        this.setCollidable(memento.isCollidable);
-        this.setTexture(memento.texture);
-        this.setColRenderLength(memento.colRenderLength);
-        this.setRowRenderLength(memento.rowRenderLength);
-        this.setPosition(memento.col, memento.row);
-    }
-
-    public class StaticEntityMemento extends AbstractMemento {
-        public String staticEntityType;
-        public int height;
-        public float row;
-        public float col;
-        public int entityID;
-        public float colRenderLength;
-        public float rowRenderLength;
-        public int renderOrder;
-        public boolean obstructed;
-
-        // TODO:dannathan find out if these need to be saved (they cause a stack overflow in gson)
-        /*
-        private Body body;
-        private Fixture fixture;
-         */
-
-        private Boolean isCollidable;
-        private String texture;
-
-        public StaticEntityMemento(StaticEntity entity) {
-            this.staticEntityType = entity.entityType;
-            this.height = entity.getHeight();
-            this.row = entity.getRow();
-            this.col = entity.getCol();
-            this.entityID = entity.getEntityID();
-            this.colRenderLength = entity.getColRenderLength();
-            this.rowRenderLength = entity.getRowRenderLength();
-            this.renderOrder = entity.getRenderOrder();
-            this.obstructed = entity.obstructed;
-
-
-            /*
-            this.body = entity.getBody();
-            this.fixture = entity.getFixture();
-            */
-
-            this.isCollidable = entity.getCollidable();
-            this.texture = entity.getTexture();
-        }
     }
 }

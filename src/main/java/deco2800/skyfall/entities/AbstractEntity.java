@@ -43,36 +43,36 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         return nextID++;
     }
 
-	protected final EntityHexVector position;
+    protected final EntityHexVector position;
     private int height;
     private float colRenderLength;
     private float rowRenderLength;
 
-	public void setBody(Body body) {
-		this.body = body;
-	}
+    public void setBody(Body body) {
+        this.body = body;
+    }
 
-	public void setFixture(Fixture fixture) {
-		this.fixture = fixture;
-	}
+    public void setFixture(Fixture fixture) {
+        this.fixture = fixture;
+    }
 
-	public void setColRenderLength(float colRenderLength) {
-		this.colRenderLength = colRenderLength;
-	}
+    public void setColRenderLength(float colRenderLength) {
+        this.colRenderLength = colRenderLength;
+    }
 
-	public void setRowRenderLength(float rowRenderLength) {
-		this.rowRenderLength = rowRenderLength;
-	}
+    public void setRowRenderLength(float rowRenderLength) {
+        this.rowRenderLength = rowRenderLength;
+    }
 
-	public void setCollidable(Boolean collidable) {
-		isCollidable = collidable;
-	}
+    public void setCollidable(Boolean collidable) {
+        isCollidable = collidable;
+    }
 
     public Boolean getCollidable() {
         return isCollidable;
     }
 
-    //Box2D properties
+    // Box2D properties
     private Body body;
     protected Fixture fixture;
     private Boolean isCollidable;
@@ -85,7 +85,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     protected int renderOrder = 0;
 
-    //For animations
+    // For animations
     /**
      * Maps animations roles to animation names
      */
@@ -111,8 +111,9 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Constructor for an abstract entity
-     * @param col the col position on the world
-     * @param row the row position on the world
+     *
+     * @param col         the col position on the world
+     * @param row         the row position on the world
      * @param renderOrder the height position on the world
      */
 
@@ -133,7 +134,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
     public AbstractEntity() {
-		this.position = new EntityHexVector(this);
+        this.position = new EntityHexVector(this);
         this.colRenderLength = 1f;
         this.rowRenderLength = 1f;
         this.setObjectName(ENTITY_ID_STRING);
@@ -144,15 +145,15 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Constructor for an abstract entity
-     * @param col the col position on the world
-     * @param row the row position on the world
-     * @param height the height position on the world
+     *
+     * @param col             the col position on the world
+     * @param row             the row position on the world
+     * @param height          the height position on the world
      * @param colRenderLength the rendered length in col direction
      * @param rowRenderLength the rendered length in the row direction
      */
-	public AbstractEntity(float col, float row, int height,
-						  float colRenderLength, float rowRenderLength) {
-		this.position = new EntityHexVector(this, col, row);
+    public AbstractEntity(float col, float row, int height, float colRenderLength, float rowRenderLength) {
+        this.position = new EntityHexVector(this, col, row);
         this.height = height;
         this.colRenderLength = colRenderLength;
         this.rowRenderLength = rowRenderLength;
@@ -186,43 +187,43 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         return position.getRow();
     }
 
-	/**
-	 * Get the Z position of this AbstractWorld Entity
-	 * 
-	 * @return The Z position
-	 */
-	public int getHeight() {
-		return height;
-	}
-
-	/**
-	 * Sets the col coordinate for the entity. If you are setting both the row and the column of the entity, use {@link
-	 * #setPosition(float, float)} instead.
-	 *
-	 * @param col the new column of this entity
-	 */
-	public void setCol(float col) {
-		setPosition(col, getRow());
+    /**
+     * Get the Z position of this AbstractWorld Entity
+     *
+     * @return The Z position
+     */
+    public int getHeight() {
+        return height;
     }
 
-	/**
-	 * Sets the row coordinate for the entity. If you are setting both the row and the column of the entity, use {@link
-	 * #setPosition(float, float)} instead.
-	 *
-	 * @param row the new row of this entity
+    /**
+     * Sets the col coordinate for the entity. If you are setting both the row and
+     * the column of the entity, use {@link #setPosition(float, float)} instead.
+     *
+     * @param col the new column of this entity
+     */
+    public void setCol(float col) {
+        setPosition(col, getRow());
+    }
+
+    /**
+     * Sets the row coordinate for the entity. If you are setting both the row and
+     * the column of the entity, use {@link #setPosition(float, float)} instead.
+     *
+     * @param row the new row of this entity
      */
     public void setRow(float row) {
-		setPosition(getCol(), row);
-	}
+        setPosition(getCol(), row);
+    }
 
-	/**
-	 * Sets the position of this entity.
-	 *
-	 * @param col the new column of this entity
-	 * @param row the new row of this entity
-	 */
-	public void setPosition(float col, float row) {
-		this.position.set(col, row);
+    /**
+     * Sets the position of this entity.
+     *
+     * @param col the new column of this entity
+     * @param row the new row of this entity
+     */
+    public void setPosition(float col, float row) {
+        this.position.set(col, row);
     }
 
     /**
@@ -234,12 +235,13 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * sets the position of the entity in the world
-     * @param col the x coordinate for the entity
-     * @param row the y coordinate for the entity
+     *
+     * @param col    the x coordinate for the entity
+     * @param row    the y coordinate for the entity
      * @param height the z coordinate for the entity
      */
     public void setPosition(float col, float row, int height) {
-		setPosition(col, row);
+        setPosition(col, row);
         setHeight(height);
     }
 
@@ -288,8 +290,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * Sets the texture string for this entity. Check the texture is registered with
      * the TextureRegister
      *
-     * @param texture
-     *            String texture id
+     * @param texture String texture id
      */
     public void setTexture(String texture) {
         this.texture = texture;
@@ -320,6 +321,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Gets the distance from an abstract entity
+     *
      * @param e the abstract entity
      * @return the distance as a float
      */
@@ -368,6 +370,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Gets the associate animation with an animation role
+     *
      * @param type Animation role to get animation for
      * @return animation name
      */
@@ -383,6 +386,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Gets the current animation to be run
+     *
      * @return The animation to be run
      */
     public AnimationLinker getToBeRun() {
@@ -390,8 +394,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
     /**
-     * Called on creation of the entity for setting up the entities collision
-     * Uses default fixture shape/size of a small circle
+     * Called on creation of the entity for setting up the entities collision Uses
+     * default fixture shape/size of a small circle
      *
      * @param x the entities x coordinate
      * @param y the entities y coordinate
@@ -405,8 +409,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * Called on creation of the entity for setting up the entities collision
      * Defines the fixture size/shape based on a .JSON file
      *
-     * @param x the entities x coordinate
-     * @param y the entities y coordinate
+     * @param x              the entities x coordinate
+     * @param y              the entities y coordinate
      * @param fixtureDefFile file path the .JSON file
      */
     public void initialiseBox2D(float x, float y, String fixtureDefFile) {
@@ -415,9 +419,9 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
     /**
-     * Defines the properties for the entity's body using default values
-     * Custom values can be set in the individual entities constructor after the
-     * body has been created
+     * Defines the properties for the entity's body using default values Custom
+     * values can be set in the individual entities constructor after the body has
+     * been created
      *
      * @param x the entities x coordinate
      * @param y the entities y coordinate
@@ -425,7 +429,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     private void defineBody(float x, float y) {
         World box2DWorld = GameManager.get().getManager(PhysicsManager.class).getBox2DWorld();
 
-        //Creates the body
+        // Creates the body
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(x, y);
@@ -437,10 +441,9 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
     /**
-     * Defines the fixture using default properties and default shape
-     * of a small circle.
-     * Custom values can be set in the individual entities constructor after the
-     * fixture has been created.
+     * Defines the fixture using default properties and default shape of a small
+     * circle. Custom values can be set in the individual entities constructor after
+     * the fixture has been created.
      */
     public void defineFixture() {
         CircleShape shape = new CircleShape();
@@ -451,45 +454,45 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         fixtureDef.density = 1f;
         fixture = body.createFixture(fixtureDef);
 
-        //Sets up if the entity can be collided with
-        //True by default
+        // Sets up if the entity can be collided with
+        // True by default
         fixture.setSensor(!isCollidable);
 
         shape.dispose();
     }
 
-	/**
-	 * Defines the body's fixture with default values which can be changes in
-	 * the entity's constructor after the fixture is created.
-	 * Sets the fixtures shape and size based on a .JSON file
-	 *
-	 * @param fixtureDefName file path to .JSON file defining the fixture
-	 */
-	public void defineFixture(String fixtureDefName){
-		try {
-			// Creates the loader to load the complex hitbox
-			BodyEditorLoader loader =
-					new BodyEditorLoader(Gdx.files.internal("resources/HitBoxes" +
-							"/" + fixtureDefName + "HitBox.json"));
+    /**
+     * Defines the body's fixture with default values which can be changes in the
+     * entity's constructor after the fixture is created. Sets the fixtures shape
+     * and size based on a .JSON file
+     *
+     * @param fixtureDefName file path to .JSON file defining the fixture
+     */
+    public void defineFixture(String fixtureDefName) {
+        try {
+            // Creates the loader to load the complex hitbox
+            BodyEditorLoader loader = new BodyEditorLoader(
+                    Gdx.files.internal("resources/HitBoxes" + "/" + fixtureDefName + "HitBox.json"));
 
 
 
-			// Assigns all the aspects of the fixture
-			FixtureDef fixtureDef = new FixtureDef();
-			fixtureDef.density = 1;
-			fixtureDef.friction = 0.5f;
-			fixtureDef.restitution = 0.3f;
+            // Assigns all the aspects of the fixture
+            FixtureDef fixtureDef = new FixtureDef();
+            fixtureDef.density = 1;
+            fixtureDef.friction = 0.5f;
+            fixtureDef.restitution = 0.3f;
 
-			// Gets the hit box from the loader
-			loader.attachFixture(body, "Character", fixtureDef, scale);
+            // Gets the hit box from the loader
+            loader.attachFixture(body, "Character", fixtureDef, scale);
 
+            // Set the collision of the body
 
-		}catch (NullPointerException e){
-		    log.warn("Failed to load custom hit box");
-			defineFixture();
-		}
-	}
-    
+        } catch (NullPointerException e) {
+            log.warn("Failed to load custom hit box");
+            defineFixture();
+        }
+    }
+
     /**
      * Controls if the entity can be collided with
      *
@@ -503,15 +506,15 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
     /**
-     * Called every time the entity is involved in a collision
-     * Should be overwritten for each entity where something should occur
-     * during a collision
+     * Called every time the entity is involved in a collision Should be overwritten
+     * for each entity where something should occur during a collision
      *
      * @param other the other object involved in the collision
      */
     public void handleCollision(Object other) {
-        //Does nothing as collision logic should be case specific
-        log.info("I was hit: " + this.getClass() + "\n by: " + other.getClass());
+        // Does nothing as collision logic should be case specific
+        // The print log is slowing down the program and cluttering output
+        // log.info("I was hit: " + this.getClass() + "\n by: " + other.getClass());
     }
 
     /**
@@ -523,6 +526,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * The current direction that the object is facing
+     *
      * @return Direction that the entity is facing
      */
     public Direction getCurrentDirection() {
@@ -531,6 +535,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * The current state of the object
+     *
      * @return The state of the object
      */
     public AnimationRole getCurrentState() {
@@ -538,8 +543,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
     /**
-     * Set the current direction and also updates the animation to be run
-     * variable
+     * Set the current direction and also updates the animation to be run variable
+     *
      * @param currentDirection new direction that the entity is facing
      */
     public void setCurrentDirection(Direction currentDirection) {
@@ -548,8 +553,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
     /**
-     * Set the current state and also updates the animation to be run
-     * variable
+     * Set the current state and also updates the animation to be run variable
+     *
      * @param currentState new direction that the entity is facing
      */
     public void setCurrentState(AnimationRole currentState) {
@@ -559,9 +564,10 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Adds an animation to the animation map
-     * @param role State
+     *
+     * @param role             State
      * @param currentDirection Direction
-     * @param animationLinker Animation object
+     * @param animationLinker  Animation object
      */
     protected void addAnimations(AnimationRole role, Direction currentDirection, AnimationLinker animationLinker) {
         if (role == AnimationRole.NULL) {
@@ -583,8 +589,9 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
     /**
-     * How much to scale the texture by.
-     * Used in MainCharacter to scale down the texture
+     * How much to scale the texture by. Used in MainCharacter to scale down the
+     * texture
+     *
      * @return Scale multiplicative factor.
      */
     public float getScale() {
