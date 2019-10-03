@@ -1,11 +1,9 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
@@ -23,7 +21,7 @@ public class GenericCollectCreateTable extends AbstractPopUpElement{
     private Skin skin;
     private Table baseTable;
     private LinkedHashMap<String, Integer> quantityToResources = new LinkedHashMap<>();
-    private ImageButton complete;
+    private TextButton complete;
     private Label titleLabel;
     private Type tableType;
     private Table labelTable;
@@ -42,9 +40,12 @@ public class GenericCollectCreateTable extends AbstractPopUpElement{
         this.gmm = gameMenuManager;
         this.type = type;
 
-        complete = new ImageButton(generateTextureRegionDrawableObject("complete_button"));
+        complete = new TextButton("  COMPLETED!  ", skin);
+        complete.getLabel().setStyle(skin.get("green-pill",
+                Label.LabelStyle.class));
+        complete.getLabel().getStyle().fontColor = Color.BLACK;
+
         labelTable = new Table();
-        //labelTable.setFillParent(true);
         labelTable.setDebug(true);
         this.draw();
         stage.addActor(baseTable);
@@ -64,7 +65,6 @@ public class GenericCollectCreateTable extends AbstractPopUpElement{
      */
     @Override
     public void show() {
-        //this.draw();
         super.show();
         baseTable.setVisible(true);
     }
@@ -81,10 +81,10 @@ public class GenericCollectCreateTable extends AbstractPopUpElement{
     }
 
 
-    public void updateText() {
+    private void updateText() {
         labelTable.clear();
         //TODO: Integrate with QuestManager
-        //TODO: (@Kausta) Add Currently?
+        //TODO: (@Kausta) Add Current?
         for (Map.Entry<String, Integer> entry :  quantityToResources.entrySet()) {
             String currentText  = String.format("%d x %s", entry.getValue(), entry.getKey());
             labelTable.add(new Label(currentText, skin, "white-text")).left();
@@ -93,9 +93,10 @@ public class GenericCollectCreateTable extends AbstractPopUpElement{
     }
 
 
-    public boolean checkComplete() {
+    private boolean checkComplete() {
         return false;
     }
+
     @Override
     public void draw() {
         super.draw();
@@ -120,6 +121,7 @@ public class GenericCollectCreateTable extends AbstractPopUpElement{
         baseTable.row();
         baseTable.add(complete).bottom().width(200).expand();
         baseTable.setVisible(false);
+        quantityToResources.put("IRON", 2);
     }
 
 

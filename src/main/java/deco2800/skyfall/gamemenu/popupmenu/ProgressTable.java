@@ -23,9 +23,12 @@ public class ProgressTable extends AbstractPopUpElement {
     private Skin skin;
     private Table baseTable;
     private LinkedHashMap<String, Integer> quantityToResources = new LinkedHashMap<>();
-    private ImageButton complete;
-    private Label titleLabel;
     private Table labelTable;
+
+    private Label biomeLabel;
+    private Label collectLabel;
+    private Label createLabel;
+    private Label blueprintLabel;
 
     public ProgressTable(Stage stage, ImageButton exit, String[] textureNames,
                                      TextureManager tm, GameMenuManager gameMenuManager,
@@ -36,7 +39,6 @@ public class ProgressTable extends AbstractPopUpElement {
         this.gmm = gameMenuManager;
         this.type = type;
 
-        complete = new ImageButton(generateTextureRegionDrawableObject("complete_button"));
         labelTable = new Table();
         labelTable.setDebug(true);
         this.draw();
@@ -64,25 +66,28 @@ public class ProgressTable extends AbstractPopUpElement {
 
     @Override
     public void update() {
-        //TODO: (@Kausta) link with quests manager
-        if (checkComplete()) {
-            complete.setVisible(true);
-        } else {
-            complete.setVisible(false);
-        }
-        updateText();
+            updateBiomeText("Forest");
+            updateCollectText("4/4");
+            updateCreateText("4/4");
+            updateCreateText("4/4");
     }
 
 
-    public void updateText() {
-        labelTable.clear();
-        //TODO: Integrate with QuestManager
-        //TODO: (@Kausta) Add Currently?
-        for (Map.Entry<String, Integer> entry :  quantityToResources.entrySet()) {
-            String currentText  = String.format("%d x %s", entry.getValue(), entry.getKey());
-            labelTable.add(new Label(currentText, skin, "white-text")).left();
-            labelTable.row();
-        }
+    private void updateBiomeText(String text) {
+        biomeLabel.setText(text + " Biome: ");
+    }
+
+    private void updateCollectText(String text) {
+        collectLabel.setText("COLLECT: " + text);
+    }
+
+    private void updateCreateText(String text) {
+        collectLabel.setText("CREATE: " + text);
+
+    }
+
+    private void updateBlueprintTest(String text) {
+        blueprintLabel.setText(text + "x  Blueprint: " + "To Purchase");
     }
 
 
@@ -100,13 +105,26 @@ public class ProgressTable extends AbstractPopUpElement {
         baseTable.top();
 
 
-        titleLabel = new Label("PROGRESS", skin,  "blue-pill");
+
+        Label titleLabel = new Label(" PROGRESS ", skin, "title-pill");
+        biomeLabel = new Label("ERR", skin, "game-font",Color.WHITE);
+        collectLabel = new Label("ERR", skin, "game-font",Color.WHITE);
+        createLabel = new Label("ERR", skin, "game-font",Color.WHITE);
+        blueprintLabel = new Label("ERR", skin, "game-font",Color.WHITE);
+
         titleLabel.getStyle().fontColor = Color.BLACK;
 
         baseTable.setDebug(true);
         baseTable.add(titleLabel);
-
-        baseTable.add(complete).bottom().width(200).expand();
+        baseTable.row();
+        baseTable.add(biomeLabel).expand().left();
+        baseTable.row();
+        baseTable.add(collectLabel).expand().left();
+        baseTable.row();
+        baseTable.add(createLabel).expand().left();
+        baseTable.row();
+        baseTable.add(blueprintLabel).expand().left();
+        baseTable.row();
         baseTable.setVisible(false);
     }
 
