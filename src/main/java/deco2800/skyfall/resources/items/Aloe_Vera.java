@@ -11,9 +11,6 @@ public class Aloe_Vera extends HealthResources implements Item {
     // the name of the item
     private String name;
 
-    // the colour of the Aloe_Vera
-    private String colour;
-
     // amount of health item provides
     private int health = 2;
 
@@ -40,6 +37,7 @@ public class Aloe_Vera extends HealthResources implements Item {
     public String getName() {
         return "Aloe_Vera";
     }
+
 
 
 
