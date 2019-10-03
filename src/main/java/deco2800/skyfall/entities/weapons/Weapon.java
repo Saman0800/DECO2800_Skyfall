@@ -21,9 +21,9 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon {
     private int attackRate;
     private int damage;
     private int durability;
-    private Boolean carryable;
-    private Boolean exchangeable;
-    public boolean equippable;
+    private boolean carryable;
+    private boolean exchangeable;
+    private boolean equippable;
     private HexVector position;
 
     // Logger to show messages
