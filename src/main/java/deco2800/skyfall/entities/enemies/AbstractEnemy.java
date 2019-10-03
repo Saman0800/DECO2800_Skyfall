@@ -1,25 +1,25 @@
 package deco2800.skyfall.entities.enemies;
 
+import deco2800.skyfall.graphics.types.vec2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import deco2800.skyfall.entities.Peon;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.tasks.AbstractTask;
+
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.entities.ICombatEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.animation.AnimationRole;
 
-public abstract class AbstractEnemy extends Peon implements Animatable, ICombatEntity {
+/**
+ * An instance to abstract the basic variables and  methods of an enemy.
+ */
+public abstract class AbstractEnemy extends Peon implements ICombatEntity {
 
-    private final transient Logger log = LoggerFactory.getLogger(AbstractEnemy.class);
-
-    // The task this Enemy is set to perform.
-    protected transient AbstractTask task;
+    private final Logger log = LoggerFactory.getLogger(AbstractEnemy.class);
 
     // The basic variables of the enemy.
     private int strength;
@@ -34,42 +34,37 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
 
     // Booleans to check whether Enemy is in a state.
     private boolean isMoving;
-    private boolean isChasing;
     private boolean isAttacking;
     private boolean isHurt = false;
 
     // How long does Enemy take to initiate animation.
-    private long attackTime = 0;
     private long hurtTime = 0;
     private long deadTime = 0;
 
     // Speed of the enemy
     private float normalSpeed = 0.02f;
     private float chaseSpeed = 0.03f;
-    private float slowSpeed = 0.09f;
+    @SuppressWarnings("WeakerAccess")
+    protected float slowSpeed = 0.09f;
 
     // Sound of the enemy
+    @SuppressWarnings("WeakerAccess")
     protected String chasingSound;
     protected String attackSound;
+    @SuppressWarnings("WeakerAccess")
     protected String diedSound;
 
     // Nature of the enemy
     private boolean canMove = true;
 
-    // Main character instance
-    private MainCharacter mc;
-    // Main character location
-    private float colDistance;
-    private float rowDistance;
-
     //a routine for destination
     private HexVector destination = null;
-    //target position
-    private float[] targetPosition = null;
+
     //world coordinate of this enemy
     private float[] originalPosition = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
-    // Direction
-    private Direction movingDirection;
+
+    // Main character instance
+    private MainCharacter mc;
 
     public AbstractEnemy(float col, float row, int health, String textureName,
                          float speed, int strength, String hitBoxPath, int level) {
@@ -78,6 +73,7 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
         this.level = level;
         this.setHealth(health);
         this.setMaxHealth(health);
+        this.strength = strength;
     }
 
     public AbstractEnemy (float col, float row) {
@@ -118,7 +114,7 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
      */
     private void attackPlayer(MainCharacter player) {
         if(isAttacking && !(this.mc.isRecovering() ||
-                this.mc.isDead() || this.mc.IsHurt())) {
+                this.mc.isDead() || this.mc.isHurt())) {
             this.setSpeed(this.chaseSpeed);
             this.destination = new HexVector(player.getCol(), player.getRow());
 
@@ -126,7 +122,6 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
                 this.position.moveToward(destination, this.chaseSpeed);
             }
 
-            movingDirection = movementDirection(this.position.getAngle());
             //if the player in attack range then attack player
             if (distance(mc) < range) {
                 setAttacking(false);
@@ -134,16 +129,6 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
                 player.hurt(this.getDamage());
                 player.setRecovering(true);
             }
-        }
-    }
-
-    private void checkIfAttackEnded() {
-        setAttacking(false);
-        attackTime += 20; // hurt for 1 second
-        if (attackTime > 400) {
-            log.info("Attack ended");
-            setAttacking(false);
-            attackTime = 0;
         }
     }
 
@@ -174,6 +159,7 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
      *  Set whether enemy is hurt.
      * @param isHurt the player's "hurt" status
      */
+    @SuppressWarnings("WeakerAccess")
     public void setHurt(boolean isHurt) {
         this.isHurt = isHurt;
     }
@@ -242,8 +228,17 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
 
     /**
      * Get the biome the enemy appears
+     * @param biome name oof the biome.
+     */
+    public void setBiomeLocated(String biome){
+        biomeLocated = biome;
+    }
+
+    /**
+     * Get the biome the enemy appears
      * @return the name oof the biome.
      */
+    @SuppressWarnings("WeakerAccess")
     public String getBiomeLocated(){
         return biomeLocated;
     }
@@ -261,9 +256,9 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
     }
 
     @Override
-    public void dealDamage(ICombatEntity entity) {
-        if (entity.canDealDamage()) {
-            entity.dealDamage(entity);
+    public void dealDamage(MainCharacter mc) {
+        if (mc.isRecovering()) {
+            mc.hurt(getDamage());
         }
     }
 
@@ -275,7 +270,13 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
         return isMoving;
     }
 
-    public void setCanMove(boolean canMove) {
+    /**
+     * Set whether the enemy can move in the game or not.
+     *
+     * @param canMove Whether the enemy can walk in the game.
+     */
+    @SuppressWarnings("WeakerAccess")
+    protected void setCanMove(boolean canMove) {
         this.canMove = canMove;
     }
 
@@ -283,24 +284,24 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
      * get movement direction
      *
      * @param angle the angle between to tile
-     * @return direction
+     * @return direction of the enemy.
      */
     private Direction movementDirection(double angle) {
         angle = Math.toDegrees(angle - Math.PI);
         if (angle < 0) {
             angle += 360;
         }
-        if (angle >= 0 && angle <= 60) {
+        if (between(angle, 0, 59.9)) {
             return Direction.SOUTH_WEST;
-        } else if (angle > 60 && angle <= 120) {
+        } else if (between(angle, 60, 119.5)) {
             return Direction.SOUTH;
-        } else if (angle > 120 && angle <= 180) {
+        } else if (between(angle, 120, 179.9)) {
             return Direction.SOUTH_EAST;
-        } else if (angle > 180 && angle <= 240) {
+        } else if (between(angle, 180, 239.9)) {
             return Direction.NORTH_EAST;
-        } else if (angle > 240 && angle <= 300) {
+        } else if (between(angle, 240, 299.9)) {
             return Direction.NORTH;
-        } else if (angle > 300 && angle < 360) {
+        } else if (between(angle, 300, 360)) {
             return Direction.NORTH_WEST;
         }
         return null;
@@ -310,57 +311,36 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
      * under normal situation the enemy will random wandering in 100 radius circle
      */
     public void randomMoving() {
-        if(getObjectName().equals("stone")) {
-            if (!isAttacking || mc.isRecovering() || mc.isDead()) {
-                movingDirection = movementDirection(this.position.getAngle());
-
-                if (!isMoving) {
-                    targetPosition = new float[2];
-                    //random movement range
-                    targetPosition[0] = (float) (Math.random() * 100 + originalPosition[0]);
-                    targetPosition[1] = (float) (Math.random() * 100 + originalPosition[1]);
-                    float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow(targetPosition[0], targetPosition[1]);
-                    destination = new HexVector(randomPositionWorld[0], randomPositionWorld[1]);
-                    isMoving = true;
-                }
-
-                if (destination.getCol() == this.getCol() && destination.getRow() == this.getRow()) {
-                    isMoving = false;
-                    SoundManager.stopSound("stoneWalk");
-                }
-                this.position.moveToward(destination, this.getSpeed());
+        if ((!isAttacking || mc.isRecovering() || mc.isDead()) &&
+                !isMoving && canMove) {
+            //target position
+            float[] targetPosition = new float[2];
+            if (getObjectName().equals("stone")) {
+                //random movement range
+                targetPosition[0] = (float) (Math.random() * 100 + originalPosition[0]);
+                targetPosition[1] = (float) (Math.random() * 100 + originalPosition[1]);
+            } else if (getObjectName().equals("treeman")) {
+                targetPosition[0] = (float) (Math.random() * 800 + originalPosition[0]);
+                targetPosition[1] = (float) (Math.random() * 800 + originalPosition[1]);
             }
-        } else if(getObjectName().equals("treeman")) {
-            if (!isAttacking || mc.isRecovering() || mc.isDead()) {
-                if (!isMoving) {
-                    targetPosition = new float[2];
-                    targetPosition[0] = (float)
-                            (Math.random() * 800 + originalPosition[0]);
-                    targetPosition[1] = (float)
-                            (Math.random() * 800 + originalPosition[1]);
-                    float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow
-                            (targetPosition[0], targetPosition[1]);
-                    destination = new HexVector(randomPositionWorld[0],
-                            randomPositionWorld[1]);
-                    isMoving = true;
-                }
-                if (destination.getCol() == this.getCol() &&
-                        destination.getRow() == this.getRow()) {
-                    isMoving = false;
-                }
-                if (isHurt) {
-                    this.position.moveToward(destination, this.slowSpeed);
-                }
-                this.position.moveToward(destination, this.normalSpeed);
+            float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow(targetPosition[0], targetPosition[1]);
+            destination = new HexVector(randomPositionWorld[0], randomPositionWorld[1]);
+            isMoving = true;
+            this.position.moveToward(destination, this.normalSpeed);
+
+            SoundManager.stopSound(chasingSound);
+            if (destination.getCol() == this.getCol() && destination.getRow() == this.getRow()) {
+                isMoving = false;
             }
         }
     }
 
-    public void setCharacter(MainCharacter player) {
+    protected void setCharacter(MainCharacter player) {
         this.mc = player;
     }
 
-    public void setAllSpeed(float normalSpeed,
+    @SuppressWarnings("WeakerAccess")
+    protected void setAllSpeed(float normalSpeed,
                             float chasingSpeed, float slowSpeed) {
         this.normalSpeed = normalSpeed;
         this.chaseSpeed = chasingSpeed;
@@ -383,15 +363,14 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
             updateAnimation();
 
             //if the player in angry distance or the enemy is attacked by player then turning to angry model
-            if (distance(mc) < 2 ||
-                    isAttacking && !(mc.isDead() || mc.isRecovering() || mc.IsHurt())) {
+            if (distance(mc) < 2 || isAttacking && !(mc.isDead() ||
+                    mc.isRecovering() || mc.isHurt())) {
                 setAttacking(true);
                 attackPlayer(mc);
-                attackTime = 0;
                 SoundManager.loopSound(chasingSound);
-                checkIfAttackEnded();
 
             } else {
+                isMoving = false;
                 setAttacking(false);
                 setSpeed(normalSpeed);
                 setCurrentDirection(movementDirection(this.position.getAngle()));
@@ -403,14 +382,6 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
             }
             this.updateAnimation();
         }
-    }
-
-    /**
-     * Sets default direction textures uses the get index for Animation feature
-     * as described in the animation documentation section 4.
-     */
-    @Override
-    public void setDirectionTextures() {
     }
 
     /**
@@ -435,6 +406,15 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
     }
 
     /**
+     *  A cheat method to get player position, used by spawning
+     *  to work out where to place an enemy
+     * @return returns a vec2 -> (row, col) of player location
+     */
+    public vec2 getPlayerLocation() {
+        return new vec2(mc.getRow(), mc.getCol());
+    }
+
+    /**
      * Return a list of resistance attributes.
      *
      * @return A list of resistance attributes.
@@ -450,6 +430,17 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
     @Override
     public String toString() {
         return String.format("%s at (%d, %d) %s biome", getObjectName(), (int)getCol(), (int)getRow(), getBiomeLocated());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof AbstractEnemy &&
+                this.hashCode() == obj.hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
     }
 
 }

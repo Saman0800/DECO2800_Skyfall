@@ -16,7 +16,7 @@ public class TigerTest {
     @Before
     public void setup(){
         mc = new MainCharacter(2, 4, 0.3f, "fh", 20);
-        tiger = new Tiger(3f,3f, mc);
+        tiger = new Tiger(3f,3f);
 
     }
 
@@ -47,17 +47,6 @@ public class TigerTest {
     }
 
     /**
-     * To test tiger armour
-     */
-    /*
-    @Test
-    public void testArmour(){
-        Assert.assertEquals(5,tiger.getArmour());
-    }
-    */
-
-
-    /**
      * To test tiger enemy type
      */
     @Test
@@ -72,7 +61,7 @@ public class TigerTest {
      */
     @Test
     public void getMovingTest() {
-        Assert.assertEquals(false,tiger.getMoving());
+        Assert.assertFalse(tiger.getMoving());
     }
 
     /**
@@ -92,15 +81,5 @@ public class TigerTest {
         Assert.assertEquals("tiger at (3, 3) forest biome",
                 tiger.toString());
     }
-
-    /**
-     * Test the level of tiger
-     */
-    @Test
-    public void testLevel(){
-        Assert.assertEquals(2,tiger.getLevel());
-    }
-
-
 
 }
