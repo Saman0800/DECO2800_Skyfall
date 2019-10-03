@@ -43,9 +43,9 @@ public class DataBaseConnector {
             Driver derbyData = new EmbeddedDriver();
             DriverManager.registerDriver(derbyData);
             connection = DriverManager.getConnection("jdbc:derby:Database;create=true");
-            migrateDatabase();
 
             createTables();
+            migrateDatabase();
 
         } catch (Exception e) {
             System.out.println(e);
