@@ -9,9 +9,6 @@ import deco2800.skyfall.util.HexVector;
  */
 public class Vine extends NaturalResources implements Item {
 
-    // the name of the item
-    //private String name;
-
     // the biome the vine is in
     private String biome;
 
@@ -23,14 +20,6 @@ public class Vine extends NaturalResources implements Item {
         this.biome = "Forest";
     }
 
-    /**
-     * Returns the name of the natural resource
-     * @return The name of the natural resource
-     */
-    @Override
-    public String getName() {
-        return this.name;
-    }
 
     /**
      * Returns the biome the vine is situated in

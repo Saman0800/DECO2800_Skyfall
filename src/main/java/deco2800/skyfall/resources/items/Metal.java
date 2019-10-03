@@ -10,9 +10,6 @@ import deco2800.skyfall.util.HexVector;
  */
 public class Metal extends NaturalResources implements Item {
 
-    // the name of the item
-    //private String name;
-
     // the biome the metal is in
     private String biome;
 
@@ -23,15 +20,6 @@ public class Metal extends NaturalResources implements Item {
         this.name = "Metal";
         this.biome = "Ruined City";
 
-    }
-
-    /**
-     * Returns the name of the natural resource
-     * @return The name of the natural resource
-     */
-    @Override
-    public String getName() {
-        return this.name;
     }
 
 

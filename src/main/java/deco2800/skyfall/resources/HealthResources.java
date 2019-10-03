@@ -25,7 +25,7 @@ public abstract class HealthResources implements Item {
     private Boolean exchangeable;
 
     // Can be item be equipped
-    public boolean equippable;
+    private boolean equippable;
 
     // the value of the piece of food
     protected int foodValue;

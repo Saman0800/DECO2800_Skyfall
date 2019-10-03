@@ -8,10 +8,8 @@ import deco2800.skyfall.util.HexVector;
  * A class representing a Stone Natural Resource item
  */
 public class Stone extends NaturalResources implements Item {
-    // the name of the item
-    //private String name;
 
-      // the colour of the stone
+    // the colour of the stone
     private String colour;
 
     // the biome the stone is in
@@ -26,14 +24,6 @@ public class Stone extends NaturalResources implements Item {
         this.biome = "Forest";
     }
 
-    /**
-     * Returns the name of the natural resource
-     * @return The name of the natural resource
-     */
-    @Override
-    public String getName() {
-        return this.name;
-    }
 
     /**
      * Returns the colour of the stone

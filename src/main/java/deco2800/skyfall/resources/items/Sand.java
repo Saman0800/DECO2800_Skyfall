@@ -9,9 +9,6 @@ import deco2800.skyfall.util.HexVector;
  */
 public class Sand extends NaturalResources implements Item {
 
-    // the name of the item
-    //private String name;
-
     // the biome the sand is in
     private String biome;
 
@@ -21,15 +18,6 @@ public class Sand extends NaturalResources implements Item {
     public Sand(){
         this.name = "Sand";
         this.biome = "Beach";
-    }
-
-    /**
-     * Returns the name of the natural resource
-     * @return The name of the natural resource
-     */
-    @Override
-    public String getName() {
-        return this.name;
     }
 
 
