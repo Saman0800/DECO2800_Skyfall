@@ -10,6 +10,7 @@ public abstract class HealthResources implements Item {
 
     // can the item be stored in the inventory
     private Boolean carryable;
+
     // the name of the item e.g. food, poison
     private String name;
 
@@ -35,6 +36,9 @@ public abstract class HealthResources implements Item {
 
     // the healing ability of the health item
     protected int healthValue;
+
+    // the colour of the health resource
+    protected String colour;
 
     private final transient Logger log = LoggerFactory.getLogger(HealthResources.class);
 
@@ -75,13 +79,20 @@ public abstract class HealthResources implements Item {
     }
 
     /**
-     * Returns the biome the apple is situated in
-     * @return the biome the apple is situated in
+     * Returns the biome the Health Resource is situated in
+     * @return the biome the Health Resource is situated in
      */
     public String getBiome(){
         return biome;
     }
 
+    /**
+     * Returns the colour of the Health resource
+     * @return the colour of the Health resource
+     */
+    public String getColour(){
+        return colour;
+    }
 
     /**
      * Returns the name of the health resource

@@ -9,8 +9,6 @@ public class PoisonousMushroom extends HealthResources implements Item {
     private String name;
 
 
-    // the colour of the PoisonousMushroom
-    private String colour;
 
     // determines whether or not the resource can be traded
     //private Boolean exchangeable;
@@ -38,6 +36,8 @@ public class PoisonousMushroom extends HealthResources implements Item {
     public String getName() {
         return "PoisonousMushroom";
     }
+
+
 
     /**
      * Returns whether or not the item impacts the player's food fullness

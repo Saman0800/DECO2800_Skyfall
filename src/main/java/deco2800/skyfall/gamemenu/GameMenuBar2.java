@@ -23,6 +23,8 @@ public class GameMenuBar2 extends AbstractUIElement {
     private Table quickAccessPanel;
     private ImageButton sideBar;
     private ImageButton build;
+    //Current item selected in inventory user interface
+    private String quickAccessSelected;
 
     public GameMenuBar2(Stage stage, String[] textureNames, TextureManager tm, Skin skin, GameMenuManager gmm) {
         super(stage, textureNames, tm);
@@ -109,15 +111,65 @@ public class GameMenuBar2 extends AbstractUIElement {
         float sideBarWidth = 35;
 
         for (Map.Entry<String, Integer> entry : quickAccess.entrySet()) {
+            Image selected = new Image(generateTextureRegionDrawableObject("selected"));
+            selected.setName(entry.getKey() + "-qaSelected");
+            selected.setSize((float) size + 15, (float) size + 15);
+            selected.setPosition((float)-7.5, (float)-7.5);
+            selected.setVisible(false);
+
             String weaponName = entry.getKey();
             for (String weapon : weapons) {
                 if (weapon.equals(entry.getKey())) {
                     weaponName = entry.getKey() + "_tex";
                 }
             }
+            Table iconCell = new Table();
+            iconCell.setName("iconCell");
             ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(weaponName + "_inv"));
-            icon.setName("qa_icon");
-            quickAccessPanel.add(icon).width(size).height(size).padTop(10).padLeft(20 + sideBarWidth/2);
+            icon.setName(entry.getKey());
+
+            icon.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+
+                    if(quickAccessSelected != icon.getName()){
+                        quickAccessSelected = icon.getName();
+                    }else{
+                        quickAccessSelected = null;
+                    }
+
+                    Actor selected = stage.getRoot().findActor(icon.getName() + "-qaSelected");
+
+                    if(selected.isVisible()){
+                        selected.setVisible(false);
+                        //setButtonsActive(false);
+
+                    }else{
+                        for(Actor actor: quickAccessPanel.getChildren()){
+                            if(actor.getName() != null && actor.getName().equals("iconCell") && actor instanceof Table){
+                                Table iconCell = (Table) actor;
+
+                                for(Actor iconActor: iconCell.getChildren()){
+                                    String name = iconActor.getName();
+                                    if(name != null && name.contains("-qaSelected")){
+                                        iconActor.setVisible(false);
+                                    }
+                                }
+                            }
+                        }
+
+                        selected.setVisible(true);
+
+                        //setButtonsActive(true);
+
+                    }
+                }
+            });
+
+            icon.setSize(size, size);
+            iconCell.addActor(selected);
+            iconCell.addActor(icon);
+            quickAccessPanel.add(iconCell).width(size).height(size).padTop(10).padLeft(20 + sideBarWidth/2);
             Label num = new Label(entry.getValue().toString(), skin, "white-label");
             num.setFontScale(0.4f);
             quickAccessPanel.add(num).top().left().padLeft(-20).padTop(5);

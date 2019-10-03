@@ -32,6 +32,14 @@ public class BerryTest{
         assertEquals("Berry", berry.getName());
     }
 
+    /**
+     * Tests the correct colour is returned for the health resource
+     */
+    @Test
+    public void getColourTest(){
+        assertEquals("wine red", berry.getColour());
+
+    }
 
     /**
      * Ensure that berry is classified as carryable

@@ -16,8 +16,7 @@ public class Berry extends HealthResources implements Item {
     // amount of health item provides
     private int health = 6;
 
-    //The color of the berry
-    private String colour;
+
 
     //whether or not the item impacts the player's food fullness
     private Boolean hasFoodEffect;
@@ -44,6 +43,8 @@ public class Berry extends HealthResources implements Item {
     public String getName() {
         return "Berry";
     }
+
+
 
 
     /**
