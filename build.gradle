@@ -103,7 +103,7 @@ dependencies {
 
 flyway {
 	url = 'jdbc:derby:' + project.projectDir + '/Database;create=true;'
-	locations = ['filesystem:src/db/migration']
+	locations = ['filesystem:resources/db/migration']
 }
 
 

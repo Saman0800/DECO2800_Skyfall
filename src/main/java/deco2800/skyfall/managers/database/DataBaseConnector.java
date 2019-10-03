@@ -22,6 +22,7 @@ import deco2800.skyfall.worlds.world.World.WorldMemento;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.Collections;
 import org.apache.derby.jdbc.EmbeddedDriver;
 
 import java.sql.*;
@@ -40,12 +41,10 @@ public class DataBaseConnector {
     public void start() {
         try {
             // Connects to the data base
+            migrateDatabase();
             Driver derbyData = new EmbeddedDriver();
             DriverManager.registerDriver(derbyData);
             connection = DriverManager.getConnection("jdbc:derby:Database;create=true");
-
-            createTables();
-            migrateDatabase();
 
         } catch (Exception e) {
             System.out.println(e);
@@ -91,14 +90,17 @@ public class DataBaseConnector {
 
             ArrayList<String> foundTables = new ArrayList<>();
             while (tables.next()) {
-                if (!tables.getString(3).startsWith("SYS")) {
+                if (!tables.getString(3).startsWith("SYS") || !tables.getString(3).equals("flyway_schema_history")) {
                     foundTables.add(tables.getString(3));
                 }
             }
 
+            Collections.reverse(tablesCheck);
             if (foundTables.size() != tablesCheck.size()) {
-                for (String toDelete : foundTables) {
-                    statement.execute(String.format("DROP TABLE %s", toDelete));
+                for (String toDelete : tablesCheck) {
+                    if (foundTables.contains(toDelete)) {
+                        statement.execute(String.format("DROP TABLE %s", toDelete));
+                    }
                 }
                 for (String query : queries.getQueries()) {
                     statement.execute(query);
@@ -775,7 +777,9 @@ public class DataBaseConnector {
     private void migrateDatabase(){
         Flyway flyway = new Flyway();
         flyway.setDataSource("jdbc:derby:Database;create=true", "", "");
-        flyway.baseline();
+
+        flyway.setCleanOnValidationError(true);
+        flyway.setValidateOnMigrate(true);
         flyway.migrate();
     }
 

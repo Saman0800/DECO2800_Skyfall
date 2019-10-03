@@ -1,82 +1,87 @@
-create table SAVES
+CREATE TABLE SAVES
 (
-    SAVE_ID BIGINT not null
-        primary key,
-    DATA    BLOB
+    save_id bigint not null,
+    data blob,
+    PRIMARY KEY (save_id)
 );
 
-create table MAIN_CHARACTER
+
+CREATE TABLE WORLDS
 (
-    CHARACTER_ID BIGINT not null
-        primary key,
-    SAVE_ID      BIGINT not null
-        references SAVES,
-    DATA         BLOB
+    save_id bigint not null ,
+    world_id bigint not null ,
+    is_current_world boolean,
+    data blob,
+    primary key (world_id) ,
+    foreign key (save_id) references SAVES(save_id)
 );
 
-create table WORLDS
+
+CREATE TABLE MAIN_CHARACTER
 (
-    SAVE_ID          BIGINT not null
-        references SAVES,
-    WORLD_ID         BIGINT not null
-        primary key,
-    IS_CURRENT_WORLD BOOLEAN,
-    DATA             BLOB
+    character_id        bigint NOT NULL,
+    save_id             bigint not null ,
+    data blob,
+    PRIMARY KEY (character_id),
+    FOREIGN KEY (save_id) references SAVES (save_id)
 );
 
-create table BIOMES
+
+CREATE table BIOMES
 (
-    BIOME_ID   BIGINT not null,
-    WORLD_ID   BIGINT not null
-        references WORLDS,
-    BIOME_TYPE CLOB,
-    DATA       BLOB,
-    primary key (BIOME_ID, WORLD_ID)
+    biome_id       bigint not null ,
+    world_id       bigint not null ,
+    biome_type     CLOB ,
+    data blob,
+    primary key (biome_id, world_id),
+    foreign key (world_id) references WORLDS(world_id)
 );
 
-create table CHUNKS
+
+CREATE TABLE NODES
 (
-    WORLD_ID BIGINT  not null
-        references WORLDS,
-    X        INTEGER not null,
-    Y        INTEGER not null,
-    DATA     BLOB,
-    primary key (WORLD_ID, X, Y)
+    node_id bigint not null,
+    world_id bigint not null ,
+    x_pos double not null ,
+    y_pos double not null ,
+    data blob,
+    biome_id bigint not null,
+    primary key (node_id),
+    foreign key (biome_id, world_id) references BIOMES (biome_id,world_id)
 );
 
-create table EDGES
+CREATE TABLE EDGES
 (
-    WORLD_ID BIGINT not null,
-    EDGE_ID  BIGINT not null
-        primary key,
-    BIOME_ID BIGINT not null,
-    DATA     BLOB,
-    foreign key (BIOME_ID, WORLD_ID) references BIOMES
+    world_id bigint,
+    edge_id bigint,
+    biome_id bigint,
+    data blob,
+    primary key (edge_id),
+    foreign key (biome_id, world_id) references BIOMES(biome_id, world_id)
 );
 
-create table ENTITIES
+
+CREATE TABLE CHUNKS
 (
-    ENTITY_ID BIGINT  not null,
-    TYPE      CLOB,
-    X         DOUBLE  not null,
-    Y         DOUBLE  not null,
-    CHUNK_X   INTEGER not null,
-    CHUNK_Y   INTEGER not null,
-    WORLD_ID  BIGINT  not null,
-    DATA      BLOB,
-    primary key (ENTITY_ID, WORLD_ID),
-    foreign key (WORLD_ID, CHUNK_X, CHUNK_Y) references CHUNKS
+    world_id bigint not null ,
+    x int not null ,
+    y int not null ,
+    data blob,
+    PRIMARY KEY (world_id, x, y),
+    FOREIGN KEY (world_id) references WORLDS(world_id)
 );
 
-create table NODES
+CREATE TABLE ENTITIES
 (
-    NODE_ID  BIGINT not null
-        primary key,
-    WORLD_ID BIGINT not null
-        references WORLDS,
-    X_POS    DOUBLE not null,
-    Y_POS    DOUBLE not null,
-    DATA     BLOB,
-    BIOME_ID BIGINT not null,
-    foreign key (BIOME_ID, WORLD_ID) references WORLDS (BIOME_ID, WORLD_ID)
-);
+    entity_id bigint,
+    type clob,
+    x double not null ,
+    y double not null ,
+    chunk_x int not null,
+    chunk_y int not null,
+    world_id bigint not null,
+    data blob,
+    PRIMARY KEY (entity_id, world_id),
+    foreign key (world_id, chunk_x, chunk_y) references CHUNKS(world_id, x, y)
+)
+
