@@ -289,6 +289,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("quickaccess_bg", new Texture("resources/new_ui/quickaccess_bg.png"));
             textureMap.put("quickaccess_side_bar", new Texture("resources/new_ui/quickaccess_side_bar.png"));
             textureMap.put("teleport_button", new Texture("resources/new_ui/teleport.png"));
+            textureMap.put("green_teleport_button", new Texture("resources/new_ui/teleport_green.png"));
             textureMap.put("create_button", new Texture("resources/new_ui/create.png"));
             textureMap.put("collect_button", new Texture("resources/new_ui/collect.png"));
             textureMap.put("location_button", new Texture("resources/new_ui/location.png"));
@@ -301,6 +302,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("quickaccess_button_bg", new Texture("resources/new_ui/quickaccess_button_bg.png"));
             textureMap.put("remove_qa", new Texture("resources/new_ui/remove_quick_access.png"));
             textureMap.put("equip_qa", new Texture("resources/new_ui/qa_equip.png"));
+            textureMap.put("teleporting_man", new Texture("resources/new_ui/teleporting_man.png"));
 
             // Help table
             textureMap.put("help_page1", new Texture("resources/new_ui/helpTable/help_page1.png"));

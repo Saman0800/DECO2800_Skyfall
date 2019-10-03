@@ -275,12 +275,21 @@ public class GameMenuManager extends TickableManager {
         }
 
         Drawable bgBluePill = generateTextureRegionDrawableObject("blue_pill");
+        Drawable bgGreenPill = generateTextureRegionDrawableObject("green_pill");
         BitmapFont gameFont = skin.getFont("game-font");
+
+
         Label.LabelStyle bluePill = new Label.LabelStyle();
         bluePill.font = gameFont;
         bluePill.fontColor = skin.getColor("white");
         bluePill.background = bgBluePill;
         skin.add("blue-pill", bluePill);
+
+        Label.LabelStyle greenPill = new Label.LabelStyle();
+        greenPill.font = gameFont;
+        greenPill.fontColor = skin.getColor("white");
+        greenPill.background = bgGreenPill;
+        skin.add("green-pill", greenPill);
 
         Label.LabelStyle titlePill = new Label.LabelStyle();
         titlePill.font = gameFont;
@@ -339,6 +348,10 @@ public class GameMenuManager extends TickableManager {
                 null, textureManager, this, sm, skin));
 
         popUps.put("collectTable", new GenericCollectCreateTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                null, textureManager, this, sm, skin, "collect"));
+
+        popUps.put("teleportTable", new TeleportTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
                 null, textureManager, this, sm, skin, "collect"));
 
