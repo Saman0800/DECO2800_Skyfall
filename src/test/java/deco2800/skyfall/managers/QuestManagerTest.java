@@ -1,5 +1,7 @@
 package deco2800.skyfall.managers;
 
+import deco2800.skyfall.resources.GoldPiece;
+import deco2800.skyfall.worlds.world.World;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -7,15 +9,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 public class QuestManagerTest {
 
     //Test manager
     private QuestManager manager;
+    private GameManager gameManager = GameManager.get();
+    private InputManager mockIM = mock(InputManager.class);
+    private PetsManager mockPM = mock(PetsManager.class);
+    private InventoryManager mockInvM = mock(InventoryManager.class);
+    private AnimationManager mockAM = mock(AnimationManager.class);
 
     @Before
     public void setUp() {
         manager = new QuestManager();
+        gameManager.addManager(mockIM);
+        gameManager.addManager(mockPM);
+        gameManager.addManager(mockInvM);
+        gameManager.addManager(mockAM);
     }
 
     @Test
@@ -61,6 +73,14 @@ public class QuestManagerTest {
 
         manager.setBuildingsTotal(testBuildings);
         assertEquals(testBuildings, manager.getBuildingsTotal());
+    }
+
+    @Test
+    public void checkGoldTest() {
+        assertFalse(manager.checkGold());
+        GoldPiece extraGold = new GoldPiece(100);
+        manager.getPlayer().addGold(extraGold, 2);
+        assertTrue(manager.checkGold());
     }
 
 }

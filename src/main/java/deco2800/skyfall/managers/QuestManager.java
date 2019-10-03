@@ -272,4 +272,11 @@ public class QuestManager extends TickableManager{
         }
     }
 
+    /**
+     * Access player for testing
+     * @return main character entity
+     */
+    protected MainCharacter getPlayer() {
+        return player;
+    }
 }
