@@ -352,7 +352,7 @@ public class GameMenuManager extends TickableManager {
 
         popUps.put("teleportTable", new TeleportTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                null, textureManager, this, sm, skin, "collect"));
+                null, textureManager, this, questManager, skin, "collect"));
 
         popUps.put("createTable", new GenericCollectCreateTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
