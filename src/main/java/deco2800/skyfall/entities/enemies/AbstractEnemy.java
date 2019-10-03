@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities.enemies;
 
+import deco2800.skyfall.graphics.types.vec2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import deco2800.skyfall.entities.Peon;
@@ -402,6 +403,15 @@ public abstract class AbstractEnemy extends Peon implements ICombatEntity {
                 setCurrentState(AnimationRole.HURT);
             }
         }
+    }
+
+    /**
+     *  A cheat method to get player position, used by spawning
+     *  to work out where to place an enemy
+     * @return returns a vec2 -> (row, col) of player location
+     */
+    public vec2 getPlayerLocation() {
+        return new vec2(mc.getRow(), mc.getCol());
     }
 
     /**
