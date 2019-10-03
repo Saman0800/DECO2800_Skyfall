@@ -293,7 +293,7 @@ public class MainCharacterTest {
         // so that the effect (e.g. sprite flashing in red) will disappear
         // after recovering.
 
-        Assert.assertFalse(testCharacter.IsHurt());
+        Assert.assertFalse(testCharacter.isHurt());
     }
 
     /**

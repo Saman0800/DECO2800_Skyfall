@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities.pets;
 
 import deco2800.skyfall.entities.ICombatEntity;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.Peon;
 
 public abstract class AbstractPet extends Peon implements ICombatEntity {
@@ -123,10 +124,10 @@ public abstract class AbstractPet extends Peon implements ICombatEntity {
     /**
      * Deal damage to another ICombatEntity.
      *
-     * @param entity The combat entity that has been selected to deal damage to.
+     * @param mc The combat entity that has been selected to deal damage to.
      */
     @Override
-    public void dealDamage(ICombatEntity entity) {
+    public void dealDamage(MainCharacter mc) {
 
     }
 
