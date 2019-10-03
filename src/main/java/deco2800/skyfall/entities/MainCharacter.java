@@ -568,7 +568,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 SoundManager.playSound(AXEATTACK);
                 break;
             default:
-                SoundManager.playSound(HURT);
+                SoundManager.playSound(HURT_SOUND_NAME);
                 break;
         }
 
