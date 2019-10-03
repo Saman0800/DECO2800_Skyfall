@@ -23,7 +23,7 @@ public class InventoryManager extends TickableManager {
     private List<String> quickAccess;
 
     // Maximum size of quick access inventory
-    private static final int QA_MAX_SIZE = 6;
+    private static final int QA_MAX_SIZE = 4;
 
     public boolean HAS_QUICK_ACCESS = true;
 

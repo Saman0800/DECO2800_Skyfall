@@ -294,10 +294,6 @@ public class GameMenuManager extends TickableManager {
         skin.add("blue-pill", textBluePill);
 
 
-        popUps.put("inventoryTable",
-                new InventoryTable(stage, new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                        null, textureManager, skin,this));
-
         popUps.put("settingsTable", new SettingsTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
                 null, textureManager, this,
@@ -355,6 +351,10 @@ public class GameMenuManager extends TickableManager {
         hudElements.put("clock" , new Clock(stage, skin, this));
 
         uiElements.put("HUD", new HeadsUpDisplay(stage, null, textureManager, skin, this, hudElements));
+
+        popUps.put("inventoryTable",
+                new InventoryTable(stage, new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                        null, textureManager, skin,this));
     }
 
     /**
