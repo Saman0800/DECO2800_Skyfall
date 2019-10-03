@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.QuestManager;
 import deco2800.skyfall.managers.TextureManager;
 
 import java.util.ArrayList;
@@ -17,10 +18,12 @@ import java.util.Map;
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
 public class HeadsUpDisplay extends AbstractUIElement {
+
     interface UpdatePositionInterface {
         void updatePosition(Actor actor);
     }
 
+    private final QuestManager qm;
     private final GameMenuManager gmm;
     private final Skin skin;
     private Map<String, AbstractUIElement> hudElements;
@@ -31,12 +34,14 @@ public class HeadsUpDisplay extends AbstractUIElement {
     private boolean canTeleport = true;
     public HeadsUpDisplay(Stage stage, String[] textureNames, TextureManager tm,
                           Skin skin, GameMenuManager gmm,
-                          Map<String, AbstractUIElement> hudElements) {
+                          Map<String, AbstractUIElement> hudElements,
+                          QuestManager qm) {
         super(stage, textureNames, tm);
         this.gmm = gmm;
         this.skin = skin;
         this.hudElements = hudElements;
         this.positionObjects = new HashMap<>();
+        this.qm = qm;
         this.draw();
     }
 
@@ -54,12 +59,12 @@ public class HeadsUpDisplay extends AbstractUIElement {
         hudElements.forEach((key, value) -> value.update());
         //TODO: (@Kausta) If can teleport enable the teleport button
         if ((teleport != null))
-            if (canTeleport) {
+            if (qm.questFinished()) {
                 teleport.getLabel().setColor(0f, 1f, 0f, 1);
-                teleport.setDisabled(true);
+                teleport.setDisabled(false);
             } else {
                 teleport.getLabel().setColor(0.25f, 0.25f, 0.25f, 1);
-                teleport.setDisabled(false);
+                teleport.setDisabled(true);
             }
     }
 
@@ -100,8 +105,10 @@ public class HeadsUpDisplay extends AbstractUIElement {
         teleport.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                hideOpened(gmm);
-                gmm.setPopUp("teleportTable");
+                if (!teleport.isDisabled()) {
+                    hideOpened(gmm);
+                    gmm.setPopUp("teleportTable");
+                }
             }
         });
 
