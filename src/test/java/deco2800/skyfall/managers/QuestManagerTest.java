@@ -1,7 +1,9 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.resources.GoldPiece;
-import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.resources.items.Metal;
+import deco2800.skyfall.resources.items.Stone;
+import deco2800.skyfall.resources.items.Wood;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,7 +15,7 @@ import static org.mockito.Mockito.mock;
 
 public class QuestManagerTest {
 
-    //Test manager
+    //Test managers
     private QuestManager manager;
     private GameManager gameManager = GameManager.get();
     private InputManager mockIM = mock(InputManager.class);
@@ -81,6 +83,36 @@ public class QuestManagerTest {
         GoldPiece extraGold = new GoldPiece(100);
         manager.getPlayer().addGold(extraGold, 2);
         assertTrue(manager.checkGold());
+    }
+
+    @Test
+    public void checkWoodTest() {
+        assertFalse(manager.checkWood());
+        Wood wood = new Wood();
+        while(manager.getPlayer().getInventoryManager().getAmount("Wood") < 50) {
+            manager.getPlayer().getInventoryManager().add(wood);
+        }
+        assertTrue(manager.checkWood());
+    }
+
+    @Test
+    public void checkStoneTest() {
+        assertFalse(manager.checkStone());
+        Stone stone = new Stone();
+        while(manager.getPlayer().getInventoryManager().getAmount("Stone") < 50) {
+            manager.getPlayer().getInventoryManager().add(stone);
+        }
+        assertTrue(manager.checkStone());
+    }
+
+    @Test
+    public void checkMetalTest() {
+        assertFalse(manager.checkMetal());
+        Metal metal = new Metal();
+        while(manager.getPlayer().getInventoryManager().getAmount("Metal") < 30) {
+            manager.getPlayer().getInventoryManager().add(metal);
+        }
+        assertTrue(manager.checkMetal());
     }
 
 }
