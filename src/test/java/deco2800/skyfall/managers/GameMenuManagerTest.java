@@ -1,5 +1,6 @@
 package deco2800.skyfall.managers;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
@@ -23,7 +24,7 @@ public class GameMenuManagerTest {
     private Skin skin;
     private Map<String, AbstractPopUpElement> popUps;
     private Map<String, AbstractUIElement> uiElements;
-
+    private Camera camera;
 
     @Before
     public void setUp() {
@@ -34,6 +35,12 @@ public class GameMenuManagerTest {
         skin = mock(Skin.class);
         popUps = mock(Map.class);
         uiElements = mock(Map.class);
+        camera = spy(Camera.class);
+        camera.position.x = 100;
+        camera.position.y = 100;
+        camera.viewportWidth = 100;
+        camera.viewportHeight = 100;
+        when(stage.getCamera()).thenReturn(camera);
 
         gmm = new GameMenuManager(tm, sm, im, stage, skin, popUps, uiElements);
     }
@@ -112,5 +119,6 @@ public class GameMenuManagerTest {
         popUps = null;
         uiElements = null;
         gmm = null;
+        camera = null;
     }
 }

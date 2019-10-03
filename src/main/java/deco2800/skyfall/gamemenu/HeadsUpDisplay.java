@@ -137,13 +137,14 @@ public class HeadsUpDisplay extends AbstractUIElement {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 hideOpened(gmm);
-                gmm.setPopUp("locationTable");
+                gmm.setPopUp("progressTable");
             }
         });
         stage.addActor(location);
 
 
-        positionObjects.put(location, (Actor actor) -> actor.setPosition(gmm.getBottomLeftX() + stage.getCamera().viewportWidth / 1024, gmm.getBottomLeftY() + stage.getCamera().viewportHeight / 1024));
+        positionObjects.put(location, (Actor actor) -> actor.setPosition(gmm.getBottomLeftX() + stage.getCamera().viewportWidth / 1024,
+                gmm.getBottomLeftY() + stage.getCamera().viewportHeight / 1024));
 
         leftHUDTable = new Table();
         leftHUDTable.setDebug(true);

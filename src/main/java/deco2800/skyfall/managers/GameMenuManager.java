@@ -285,6 +285,8 @@ public class GameMenuManager extends TickableManager {
         bluePill.background = bgBluePill;
         skin.add("blue-pill", bluePill);
 
+
+
         Label.LabelStyle greenPill = new Label.LabelStyle();
         greenPill.font = gameFont;
         greenPill.fontColor = skin.getColor("white");
@@ -352,6 +354,10 @@ public class GameMenuManager extends TickableManager {
                 null, textureManager, this, sm, skin, "collect"));
 
         popUps.put("createTable", new GenericCollectCreateTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                null, textureManager, this, sm, skin, "create"));
+
+        popUps.put("progressTable", new ProgressTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
                 null, textureManager, this, sm, skin, "create"));
 
