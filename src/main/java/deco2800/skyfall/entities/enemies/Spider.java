@@ -8,7 +8,7 @@ import deco2800.skyfall.animation.AnimationLinker;
 /**
  * Instance of a spider enemy.
   */
-public class Spider extends AbstractEnemy {
+public class Spider extends Enemy {
 
     // Health of the spider.
     private static final transient int HEALTH = 10;
@@ -21,18 +21,13 @@ public class Spider extends AbstractEnemy {
     public Spider(float col, float row, MainCharacter mc) {
         super(col, row);
 
-        this.setLevel(1);
         this.setSpeed(1);
-        this.setRange(4);
         this.setHeight(1);
-        this.setCanMove(true);
-        this.setCharacter(mc);
         this.setHealth(HEALTH);
         this.setTexture(enemyName);
         this.setObjectName(enemyName);
 
         this.configureAnimations();
-        this.setAllSpeed(0.04f, 0.05f, 0.02f);
     }
 
     /**
@@ -41,17 +36,13 @@ public class Spider extends AbstractEnemy {
     public Spider(float col, float row) {
         super(col, row);
 
-        this.setLevel(1);
-        this.setRange(4);
         this.setHeight(1);
-        this.setCanMove(true);
         this.setHealth(HEALTH);
         this.setTexture(enemyName);
         this.setObjectName(enemyName);
 
         this.configureSounds();
         this.configureAnimations();
-        this.setAllSpeed(0.04f, 0.05f, 0.02f);
     }
 
     /**

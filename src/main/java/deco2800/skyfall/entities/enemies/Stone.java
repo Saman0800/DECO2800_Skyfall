@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.entities.AbstractEntity;
@@ -14,7 +13,7 @@ import deco2800.skyfall.animation.AnimationLinker;
  * Instance of a stone enemy.
   */
 
-public class Stone extends AbstractEnemy {
+public class Stone extends Enemy {
 
     /**
      * Basic constructor for creating a stone enemy.
@@ -22,16 +21,11 @@ public class Stone extends AbstractEnemy {
     public Stone(float col, float row, MainCharacter mc) {
         super(col, row);
 
-        this.setLevel(2);
-        this.setRange(1);
         this.setHeight(1);
         this.setDamage(3);
         this.setHealth(10);
-        this.setCanMove(true);
-        this.setCharacter(mc);
         this.setTexture("enemyStone");
         this.setObjectName("stone");
-        this.setAllSpeed(0.008f, 0.009f, 0.007f);
 
         this.configureSounds();
         this.configureAnimations();
@@ -43,14 +37,11 @@ public class Stone extends AbstractEnemy {
     public Stone(float col, float row) {
         super(col,row);
 
-        this.setLevel(2);
         this.setSpeed(1);
-        this.setRange(1);
         this.setHeight(1);
         this.setHealth(13);
         this.setObjectName("stone");
         this.setTexture("enemyStone");
-        this.setAllSpeed(0.01f, 0.02f, 0.02f);
 
         this.configureAnimations();
         this.configureSounds();

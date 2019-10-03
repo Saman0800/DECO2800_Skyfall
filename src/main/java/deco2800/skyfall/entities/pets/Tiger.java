@@ -4,14 +4,13 @@ import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.entities.enemies.AbstractEnemy;
 import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 
-public class Tiger extends AbstractEnemy implements Animatable {
+public class Tiger extends Enemy implements Animatable {
     //The health of tiger
     private static final transient int HEALTH = 10;
     //The attack speed of tiger
@@ -26,8 +25,6 @@ public class Tiger extends AbstractEnemy implements Animatable {
     private Direction movingDirection;
     //Set boolean moving
     private boolean moving = false;
-    //Set the period equal to zero , to account attack time
-    private int period = 0;
     //Set the type
     private static final transient String PET_TYPE = "tiger";
     //savage animation
@@ -44,13 +41,6 @@ public class Tiger extends AbstractEnemy implements Animatable {
     private float[] orginalPosition = WorldUtil.colRowToWorldCords
             (this.getCol(), this.getRow());
 
-    /*
-    public Tiger(float row, float col, String texturename,
-                   int health, int armour, int strngth) {
-        super(row, col, texturename, health, strngth);
-    }
-    */
-
     /**
      * Initialization value of pet tiger, and set the initial image in
      * the game
@@ -61,14 +51,12 @@ public class Tiger extends AbstractEnemy implements Animatable {
         this.setObjectName("petTiger");
         this.setHeight(5);
         this.setHealth(HEALTH);
-        this.setLevel(2);
         this.setSpeed(2);
         this.setDamage(1);
         this.mc = mc;
         this.setDirectionTextures();
         this.configureAnimations();
     }
-
 
     /**
      * Initialization value of pet tiger
@@ -79,10 +67,8 @@ public class Tiger extends AbstractEnemy implements Animatable {
         this.setObjectName("petTiger");
         this.setHeight(5);
         this.setHealth(HEALTH);
-        this.setLevel(2);
         this.setSpeed(2);
     }
-
 
     /**
      * get pet type
@@ -184,7 +170,7 @@ public class Tiger extends AbstractEnemy implements Animatable {
     /**
      * Give a location to the pet tiger, if it wants to run away
      */
-    public void runAway(){
+    private void runAway(){
         targetPosition = new float[2];
         targetPosition[0] = (float)
                 (Math.random() * 800 + orginalPosition[0]);
@@ -196,9 +182,6 @@ public class Tiger extends AbstractEnemy implements Animatable {
                 randomPositionWorld[1]);
         this.position.moveToward(destination,this.RUNAWAYSPEED);
     }
-
-
-
 
     /**
      * get the moving direction
@@ -212,8 +195,8 @@ public class Tiger extends AbstractEnemy implements Animatable {
      * Make the pet tiger do the random movement
      *
      */
-    public void randomMoving() {
-        if(moving == false){
+    private void randomMoving() {
+        if(!moving){
             targetPosition = new float[2];
             targetPosition[0] = (float)
                     (Math.random() * 200 + orginalPosition[0]);
@@ -233,24 +216,22 @@ public class Tiger extends AbstractEnemy implements Animatable {
             this.position.moveToward(destination,this.INJURESPEED);
         }
         this.position.moveToward(destination,this.NORMALSPEED);
-
     }
 
     /**
      * The tiger will follow the player
      *
      */
-    public void followPlayer(MainCharacter player){
+    private void followPlayer(MainCharacter player){
         destination = new HexVector(player.getCol(), player.getRow());
         this.position.moveToward(destination, this.getSpeed());
 
     }
 
-
     /**
      * if this pet is dead then will show dead texture for a while
      */
-    int time=0;
+    private int time=0;
     private void tigerDead(){
         if(time <= 100){
             time++;
@@ -275,6 +256,11 @@ public class Tiger extends AbstractEnemy implements Animatable {
     }
 
 
+    @Override
+    public void setDirectionTextures() {
+
+    }
+
     /**
      * add pet tiger animations
      */
@@ -287,17 +273,4 @@ public class Tiger extends AbstractEnemy implements Animatable {
 
     }
 
-    /**
-     * Set the direction textures of the pet tiger
-     */
-    @Override
-    public void setDirectionTextures() {
-
-    }
-
-
-    @Override
-    public void dealDamage(MainCharacter mc) {
-
-    }
 }

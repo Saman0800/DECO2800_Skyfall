@@ -9,7 +9,7 @@ import deco2800.skyfall.animation.AnimationLinker;
 /**
  * Instance of a robot enemy.
   */
-public class Robot extends AbstractEnemy implements Animatable {
+public class Robot extends Enemy implements Animatable {
 
     private String enemyName = "robot";
 
@@ -19,12 +19,8 @@ public class Robot extends AbstractEnemy implements Animatable {
     public Robot(float col, float row, MainCharacter mc) {
         super(col,row);
 
-        this.setLevel(2);
-        this.setRange(1);
         this.setHeight(1);
         this.setHealth(10);
-        this.setCanMove(true);
-        this.setCharacter(mc);
         this.setTexture(enemyName);
         this.setObjectName(enemyName);
 
@@ -39,12 +35,9 @@ public class Robot extends AbstractEnemy implements Animatable {
     public Robot(float col, float row) {
         super(col,row);
 
-        this.setLevel(2);
         this.setSpeed(1);
-        this.setRange(1);
         this.setHeight(1);
         this.setHealth(10);
-        this.setCanMove(true);
         this.setTexture(enemyName);
         this.setObjectName(enemyName);
 

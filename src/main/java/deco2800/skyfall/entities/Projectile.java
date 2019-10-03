@@ -6,8 +6,8 @@ import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.managers.GameManager;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.entities.enemies.Enemy;
+import deco2800.skyfall.animation.AnimationRole;
 
 /**
  * An entity that is shot from a weapon.

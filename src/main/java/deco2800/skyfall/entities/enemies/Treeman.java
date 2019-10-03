@@ -8,7 +8,7 @@ import deco2800.skyfall.animation.AnimationLinker;
 /**
  * Instance of a treeman enemy.
  */
-public class Treeman extends AbstractEnemy {
+public class Treeman extends Enemy {
 
     /**
      * Initialization value of enemy treeman, and set the initial image in
@@ -17,16 +17,11 @@ public class Treeman extends AbstractEnemy {
     public Treeman(float col, float row, MainCharacter mc) {
         super(col, row);
 
-        this.setLevel(2);
-        this.setRange(1);
-        this.setDamage(1);
         this.setHeight(5);
         this.setHealth(10);
-        this.setCanMove(true);
-        this.setCharacter(mc);
+
         this.setObjectName("treeman");
         this.setTexture("enemyTreeman");
-        this.setAllSpeed(0.02f, 0.05f, 0.02f);
 
         this.configureAnimations();
         this.configureSounds();
@@ -41,14 +36,10 @@ public class Treeman extends AbstractEnemy {
     public Treeman(float col, float row) {
         super(col,row);
 
-        this.setLevel(2);
-        this.setRange(1);
         this.setHeight(1);
         this.setHealth(10);
-        this.setCanMove(true);
         this.setObjectName("treeman");
         this.setTexture("enemyTreeman");
-        this.setAllSpeed(0.02f, 0.05f, 0.02f);
 
         this.configureAnimations();
         this.configureSounds();

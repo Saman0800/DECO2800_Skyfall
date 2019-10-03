@@ -8,7 +8,7 @@ import deco2800.skyfall.animation.AnimationLinker;
 /**
  * Instance of a flower enemy.
  */
-public class Flower extends AbstractEnemy {
+public class Flower extends Enemy {
 
     /**
      * Basic Constructor for creating a flower enemy.
@@ -16,20 +16,13 @@ public class Flower extends AbstractEnemy {
     public Flower(float col, float row, MainCharacter mc) {
         super(col, row);
 
-        this.setRange(2);
-        this.setLevel(2);
         this.setHeight(1);
-        this.setDamage(4);
         this.setHealth(13);
-        this.setCharacter(mc);
-        this.setCanMove(false);
         this.setTexture("flower");
         this.setObjectName("flower");
 
         this.configureAnimations();
-       // this.setDirectionTextures();
         this.configureSounds();
-        this.setAllSpeed(0.04f, 0.05f, 0.02f);
     }
 
     /*

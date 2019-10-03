@@ -96,18 +96,16 @@ public class TextureManager extends AbstractManager {
             textureMap.put("lizardN", new Texture("resources/lizard/lizardN.png"));
             textureMap.put("lizardS", new Texture("resources/lizard/lizardS.png"));
 
-
-            /*
             // New Enemies (Scout, Heavy, Abductor)
-            textureMap.put("enemyScout_Move_N", new Texture("resources/Enemies/Abductor/enemy3_B.png"));
+            textureMap.put("enemyScout", new Texture("resources/Enemies/Abductor/enemy3_F.png"));
+            textureMap.put("enemyScout_Move_N", new Texture("resources/Enemies/Abductor/enemy3_B_walk.png"));
             textureMap.put("enemyScout_Move_NW", new Texture("resources/Enemies/Abductor/enemy3_BL.png"));
-            textureMap.put("enemyScout_Move_NE", new Texture("resources/Enemies/Abductor/enemy3_NE.png"));
-            textureMap.put("enemyScout_Move_S", new Texture("resources/Enemies/Abductor/enemy3_F.png"));
+            textureMap.put("enemyScout_Move_NE", new Texture("resources/Enemies/Abductor/enemy3_FR.png"));
+            textureMap.put("enemyScout_Move_S", new Texture("resources/Enemies/Abductor/enemy3_F_walk.png"));
             textureMap.put("enemyScout_Move_SW", new Texture("resources/Enemies/Abductor/enemy3_FL.png"));
             textureMap.put("enemyScout_Move_SE", new Texture("resources/Enemies/Abductor/enemy3_FR.png"));
             textureMap.put("enemyScout_Move_W", new Texture("resources/Enemies/Abductor/enemy3_L.png"));
             textureMap.put("enemyScout_Move_E", new Texture("resources/Enemies/Abductor/enemy3_R.png"));
-            */
 
             textureMap.put("chestClosed", new Texture("resources/chest_icon.png"));
             textureMap.put("blueprintShop", new Texture("resources/shopkeeper.png"));
@@ -216,11 +214,9 @@ public class TextureManager extends AbstractManager {
             textureMap.put("vTree2", new Texture("resources/world_details/vTree2.png"));
             textureMap.put("vTree3", new Texture("resources/world_details/vTree3.png"));
 
-            textureMap.put("sword_tex", new Texture("resources/weapons/sword.png"));
             textureMap.put("sword", new Texture("resources/weapons/sword.png"));
             // Weapons pick-up
-            textureMap.put("sword_tex", new Texture("resources/weapons/sword" +
-                    ".png"));
+            textureMap.put("sword_tex", new Texture("resources/weapons/sword.png"));
             textureMap.put("axe_tex", new Texture("resources/weapons/axe.png"));
             textureMap.put("bow_tex", new Texture("resources/weapons/bow.png"));
             textureMap.put("spear_tex", new Texture("resources/weapons/spear.png"));
