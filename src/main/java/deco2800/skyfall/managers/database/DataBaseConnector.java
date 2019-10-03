@@ -28,6 +28,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import org.flywaydb.core.Flyway;
 
 public class DataBaseConnector {
     /* The connection to the database */
@@ -42,6 +43,7 @@ public class DataBaseConnector {
             Driver derbyData = new EmbeddedDriver();
             DriverManager.registerDriver(derbyData);
             connection = DriverManager.getConnection("jdbc:derby:Database;create=true");
+            migrateDatabase();
 
             createTables();
 
@@ -655,7 +657,6 @@ public class DataBaseConnector {
      */
     public Chunk loadChunk(World world, int x, int y) {
         try {
-            Gson gson = new Gson();
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection
                     .prepareStatement("SELECT * FROM CHUNKS WHERE X = ? and Y = ? and WORLD_ID = ?");
@@ -768,6 +769,14 @@ public class DataBaseConnector {
         } catch (SQLException | IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+    private void migrateDatabase(){
+        Flyway flyway = new Flyway();
+        flyway.setDataSource("jdbc:derby:Database;create=true", "", "");
+        flyway.baseline();
+        flyway.migrate();
     }
 
 }

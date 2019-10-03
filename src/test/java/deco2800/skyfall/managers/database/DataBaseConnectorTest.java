@@ -30,8 +30,5 @@ public class DataBaseConnectorTest {
     public void setup(){
         assertNotNull(dataBaseConnector);
         when(dataBaseConnector.getConnection()).thenReturn(connection);
-
-
-
     }
 }
