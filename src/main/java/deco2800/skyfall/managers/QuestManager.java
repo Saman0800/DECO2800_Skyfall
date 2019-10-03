@@ -7,7 +7,7 @@ import deco2800.skyfall.entities.MainCharacter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestManager extends AbstractManager{
+public class QuestManager extends TickableManager{
 
     //Current level of quest
     private int questLevel;
@@ -36,11 +36,15 @@ public class QuestManager extends AbstractManager{
     //Player character
     private MainCharacter player;
 
+    //Quest milestones achieved or not
+    private boolean questSuccess;
+
     /**
      * Constructor, sets up beginning of game goals
      */
     public QuestManager() {
         this.questLevel = 1;
+        questSuccess = false;
         buildingsTotal = new ArrayList<>();
         levelOneBuildings.add("Cabin");
         levelOneBuildings.add("WatchTower");
@@ -236,7 +240,8 @@ public class QuestManager extends AbstractManager{
         for (int i = 0; i < entities.size(); i++) {
             if (entities.get(i) instanceof BuildingEntity) {
                 for (int j = 0; j < buildingsTotal.size(); j++) {
-                    if (((BuildingEntity) entities.get(i)).getName().equals(buildingsTotal.get(j))) {
+                    if (((BuildingEntity) entities.get(i)).getName()
+                            .equals(buildingsTotal.get(j))) {
                         currentBuildings.add(buildingsTotal.get(j));
                     }
                 }
@@ -247,4 +252,23 @@ public class QuestManager extends AbstractManager{
         }
         return allBuildings;
     }
+
+    /**
+     * Checks if milestones are met each game tick
+     * @param i Game tick
+     */
+    @Override
+    public void onTick(long i) {
+        checkGold();
+        checkStone();
+        checkWood();
+        checkMetal();
+        checkBuildings();
+
+        if (checkGold() && checkStone() && checkWood() &&
+        checkMetal() && checkBuildings()) {
+            questSuccess = true;
+        }
+    }
+
 }
