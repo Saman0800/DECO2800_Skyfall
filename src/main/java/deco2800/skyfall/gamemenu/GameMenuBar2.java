@@ -175,6 +175,14 @@ public class GameMenuBar2 extends AbstractUIElement {
             quickAccessPanel.add(num).top().left().padLeft(-20).padTop(5);
             quickAccessPanel.row();
         }
+
+        int sizeDifference = 4 - quickAccess.entrySet().size();
+        while(sizeDifference > 0){
+            sizeDifference -= 1;
+            Table blankCell = new Table();
+            quickAccessPanel.add(blankCell).width(size).height(size).padTop(10).padLeft(20 + sideBarWidth/2);
+            quickAccessPanel.row();
+        }
     }
 
 }
