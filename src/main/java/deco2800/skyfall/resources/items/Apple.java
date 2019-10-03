@@ -16,8 +16,6 @@ public class Apple extends HealthResources implements Item {
     // amount of health item provides
     private int health = 4;
 
-
-
     //whether or not the item impacts the player's food fullness
     private Boolean hasFoodEffect;
 
@@ -36,6 +34,10 @@ public class Apple extends HealthResources implements Item {
     }
 
 
+    /**
+     * Returns the name of the health resource
+     * @return the name of the health resource
+     */
     @Override
     public String getName() {
         return "Apple";

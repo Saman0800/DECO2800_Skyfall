@@ -10,6 +10,7 @@ public abstract class HealthResources implements Item {
 
     // can the item be stored in the inventory
     private Boolean carryable;
+
     // the name of the item e.g. food, poison
     private String name;
 
