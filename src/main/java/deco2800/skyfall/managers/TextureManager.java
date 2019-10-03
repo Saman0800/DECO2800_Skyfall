@@ -369,6 +369,11 @@ public class TextureManager extends AbstractManager {
             textureMap.put("Hatchet", new Texture("resources/items_icons/hatchet.png"));
             textureMap.put("Pick Axe", new Texture("resources/items_icons/pickaxe.png"));
 
+
+            //Items in World
+            textureMap.put("Stone_world", new Texture("resources/inventory/stone_world.png"));
+            textureMap.put("Wood_world", new Texture("resources/inventory/wood_world.png"));
+
             //Inventory Item Descriptions
             textureMap.put("Wood_desc", new Texture("resources/items_icons/wood_desc.png"));
             textureMap.put("Stone_desc", new Texture("resources/items_icons/stone_desc.png"));

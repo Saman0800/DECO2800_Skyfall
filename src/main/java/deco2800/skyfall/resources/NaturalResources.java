@@ -1,12 +1,14 @@
 package deco2800.skyfall.resources;
 
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 
 /**
  * An abstract class representing a Natural Resource item
  */
-public abstract class NaturalResources implements Item {
+public abstract class NaturalResources extends AbstractEntity implements Item {
 
     // the name of the item e.g. wood, stone
     protected String name;
@@ -147,5 +149,11 @@ public abstract class NaturalResources implements Item {
     public Boolean isEquippable() {
         return this.equippable;
     }
+
+    @Override
+    public void onTick(long i) {
+        // Auto-generated method stub
+    }
+
 
 }

@@ -2,10 +2,13 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.gui.Tuple;
 import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.resources.NaturalResources;
 import deco2800.skyfall.resources.items.*;
 
 import java.io.Serializable;
 
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.*;
@@ -306,7 +309,31 @@ public class InventoryManager extends TickableManager {
         if(this.inventory.get(itemName) != null){
             List<Item> items = this.inventory.get(itemName);
             remove(itemName);
+
+            float charCol = GameManager.getManagerFromInstance(StatisticsManager.class).getCharacter().getCol();
+            float charRow = GameManager.getManagerFromInstance(StatisticsManager.class).getCharacter().getRow();
+
+            for(Item item: items){
+                boolean validPos = false;
+                float col = 0;
+                float row = 0;
+
+                while(!validPos){
+                    col = (float) Math.floor(Math.random() * 20 + charCol);
+                    row = (float) Math.floor(Math.random() * 20 + charRow);
+                    HexVector pos = new HexVector(col, row);
+                    validPos = WorldUtil.validColRow(pos);
+                }
+
+                if(item instanceof NaturalResources){
+                    ((NaturalResources) item).setPosition(col, row);
+                    ((NaturalResources) item).setTexture(item.getName() + "_world");
+                    GameManager.get().getWorld().addEntity((NaturalResources) item);
+                }
+            }
+
             return items;
+
         }
 
         logger.warn("You can't remove what you don't have!");
