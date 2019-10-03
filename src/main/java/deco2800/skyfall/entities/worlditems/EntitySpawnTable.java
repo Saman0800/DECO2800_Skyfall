@@ -22,19 +22,6 @@ public final class EntitySpawnTable {
     }
 
     /**
-     * Simple static method for placing static items. Takes the given entity and
-     * places a deep copy within the world at a given tile
-     *
-     * @param tile   The tile the new entity will occupy
-     * @param entity The entity to be deep copied
-     * @param <T>    T must extend StaticEntity and have .newInstance inherited
-     */
-    public static <T extends StaticEntity> void placeEntity(T entity, Tile tile) {
-        World world = GameManager.get().getWorld();
-        world.addEntity(entity.newInstance(tile));
-    }
-
-    /**
      * Adjusts the chance of an entity spawning based on the number of neighbors the
      * tile already has.
      * 
@@ -85,7 +72,7 @@ public final class EntitySpawnTable {
 
         if (getRandomValue(world, rule, nextTile) < chance) {
             int direction = Tile.NORTH_EAST;
-            int newRandDir = randDirection.nextInt(5);
+            int newRandDir = randDirection.nextInt(4);
 
             if (newRandDir == 0) {
                 direction = Tile.NORTH_EAST;

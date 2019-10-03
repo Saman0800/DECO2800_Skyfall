@@ -34,8 +34,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
     private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
 
     private static final String ENTITY_ID_STRING = "staticEntityID";
-    // private int renderOrder;
-    private boolean obstructed;
+
     private static TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
 
     public Map<HexVector, String> children;
@@ -44,6 +43,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
 
     public StaticEntity() {
         super();
+        this.obstructed = true;
     }
 
     /**
