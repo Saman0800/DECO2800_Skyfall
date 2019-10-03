@@ -90,10 +90,8 @@ public class InventoryTable extends AbstractPopUpElement {
         this.mainCharacter = gameMenuManager.getMainCharacter();
 
         if(gameMenuManager.getUIElement("HUD") instanceof HeadsUpDisplay){
-            System.out.println("hud");
             HeadsUpDisplay hud = (HeadsUpDisplay) gameMenuManager.getUIElement("HUD");
             if(hud.gethudElement("gameMenuBar2") instanceof GameMenuBar2){
-                System.out.println("gm2");
                 this.gameMenuBar = (GameMenuBar2) hud.gethudElement("gameMenuBar2");
             }
         }
