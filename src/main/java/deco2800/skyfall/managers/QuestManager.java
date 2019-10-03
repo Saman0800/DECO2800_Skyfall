@@ -1,5 +1,7 @@
 package deco2800.skyfall.managers;
 
+import deco2800.skyfall.buildings.BuildingEntity;
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 
 import java.util.ArrayList;
@@ -220,5 +222,29 @@ public class QuestManager extends AbstractManager{
         int currentMetal = player.getInventoryManager()
                 .getAmount("Metal");
         return (currentMetal >= getMetalTotal());
+    }
+
+    /**
+     * Checks if all required buildings have been placed in the world
+     * @return True if all buildings are placed, False if not
+     */
+    public boolean checkBuildings() {
+        boolean allBuildings = false;
+        ArrayList<String> currentBuildings = new ArrayList<>();
+        List<AbstractEntity> entities;
+        entities = GameManager.get().getWorld().getEntities();
+        for (int i = 0; i < entities.size(); i++) {
+            if (entities.get(i) instanceof BuildingEntity) {
+                for (int j = 0; j < buildingsTotal.size(); j++) {
+                    if (((BuildingEntity) entities.get(i)).getName().equals(buildingsTotal.get(j))) {
+                        currentBuildings.add(buildingsTotal.get(j));
+                    }
+                }
+            }
+        }
+        if (buildingsTotal.containsAll(currentBuildings)) {
+            allBuildings = true;
+        }
+        return allBuildings;
     }
 }
