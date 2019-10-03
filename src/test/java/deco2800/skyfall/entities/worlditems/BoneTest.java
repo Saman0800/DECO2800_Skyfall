@@ -1,9 +1,7 @@
 package deco2800.skyfall.entities.worlditems;
 
-import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.entities.HasHealth;
 import deco2800.skyfall.entities.SaveableEntity;
 
 import org.junit.Before;
@@ -12,11 +10,6 @@ import static org.junit.Assert.*;
 
 import java.util.Random;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 public class BoneTest {

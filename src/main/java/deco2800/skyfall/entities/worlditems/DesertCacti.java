@@ -18,21 +18,22 @@ public class DesertCacti extends StaticEntity implements Tickable, Harvestable {
 
     private static Random randomGen = new Random();
     private static int nextImage = 1;
-
-    public DesertCacti(float col, float row, int renderOrder, Map<HexVector, String> texture) {
-        super(col, row, renderOrder, texture);
-        this.woodAmount = 3;
-        this.entityType = "DesertCacti";
-    }
+    protected static final String ENTITY_ID_STRING = "desert_cacti";
 
     public DesertCacti(SaveableEntityMemento memento) {
         super(memento);
-        this.woodAmount = 3;
+        setCactiParams();
     }
 
     public DesertCacti(Tile tile, boolean obstructed) {
         super(tile, 5, "DCactus" + nextImage, obstructed);
+        setCactiParams();
         nextImage = randomGen.nextInt(4) + 1;
+    }
+
+    private void setCactiParams() {
+        this.setObjectName(ENTITY_ID_STRING);
+        this.entityType = "DesertCacti";
         this.woodAmount = 3;
     }
 
@@ -92,7 +93,7 @@ public class DesertCacti extends StaticEntity implements Tickable, Harvestable {
     public List<AbstractEntity> harvest(Tile tile) {
         Random random = new Random();
 
-        int dropCount = random.nextInt(15);
+        int dropCount = random.nextInt(this.woodAmount) + 2;
         List<AbstractEntity> drops = new ArrayList<>();
         for (int i = 0; i < dropCount; i++) {
             drops.add(new WoodCube(getCol(), getRow()));

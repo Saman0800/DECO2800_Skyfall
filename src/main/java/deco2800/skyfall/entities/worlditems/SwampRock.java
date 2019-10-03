@@ -9,13 +9,18 @@ public class SwampRock extends AbstractRock {
     public SwampRock(Tile tile, boolean obstructed) {
         super(tile, obstructed, "sRock" + nextRock);
         nextRock = randomGen.nextInt(3) + 1;
-        this.setObjectName(ENTITY_ID_STRING);
-        this.metalAmount = 15;
+        setupParams();
     }
 
     public SwampRock(SaveableEntityMemento memento) {
         super(memento);
+        setupParams();
+    }
+
+    private void setupParams() {
+        this.setObjectName(ENTITY_ID_STRING);
         this.metalAmount = 15;
+        this.entityType = "SwampRock";
     }
 
     /**
