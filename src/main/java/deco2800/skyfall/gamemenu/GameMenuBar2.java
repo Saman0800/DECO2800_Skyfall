@@ -33,10 +33,10 @@ public class GameMenuBar2 extends AbstractUIElement {
 
     @Override
     public void updatePosition() {
-        quickAccessPanel.setPosition(gmm.getTopRightX() - 170, gmm.getTopRightY() - 650);
+        quickAccessPanel.setPosition(gmm.getTopRightX() - 170, gmm.getTopRightY() - 570);
         //t.setHeight(stage.getCamera().viewportHeight / 2);
-        sideBar.setPosition(gmm.getTopRightX() - 180, gmm.getTopRightY() - 510);
-        build.setPosition(gmm.getBottomRightX() - 170, gmm.getBottomRightY() + 10);
+        sideBar.setPosition(gmm.getTopRightX() - 180, gmm.getTopRightY() - 440);
+        build.setPosition(gmm.getBottomRightX() - 170, gmm.getBottomRightY());
     }
 
     @Override
@@ -59,7 +59,7 @@ public class GameMenuBar2 extends AbstractUIElement {
     public void setQuickAccessPanel(){
         quickAccessPanel = new Table().top().left();
         quickAccessPanel.setBackground(GameMenuManager.generateTextureRegionDrawableObject("quickaccess_bg"));
-        quickAccessPanel.setSize(150, 500);
+        quickAccessPanel.setSize(150, 490);
         setQuickAccessItems();
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
         buttonStyle.up = generateTextureRegionDrawableObject("quickaccess_button_bg");
@@ -70,12 +70,12 @@ public class GameMenuBar2 extends AbstractUIElement {
 //        TextButton equip = new TextButton("EQUIP", buttonStyle);
 //        equip.getLabel().setFontScale(0.8f);
         ImageButton equip = new ImageButton(generateTextureRegionDrawableObject("equip_qa"));
-        quickAccessPanel.add(equip).width(130).height(50).padTop(10).padLeft(10);
+        quickAccessPanel.add(equip).width(130).height(50).padTop(5).padLeft(10);
         quickAccessPanel.row();
         ImageButton remove = new ImageButton(generateTextureRegionDrawableObject("remove_qa"));
 //        TextButton remove = new TextButton("REMOVE", buttonStyle);
 //        remove.getLabel().setFontScale(0.8f);
-        quickAccessPanel.add(remove).width(130).height(50).padTop(10).padLeft(10);
+        quickAccessPanel.add(remove).width(130).height(50).padTop(5).padLeft(10);
 
         sideBar = new ImageButton(generateTextureRegionDrawableObject("quickaccess_side_bar"));
         sideBar.setSize(35, 360); //TODO: reduce chunkiness
