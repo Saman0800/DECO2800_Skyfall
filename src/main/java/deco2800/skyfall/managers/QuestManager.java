@@ -268,6 +268,7 @@ public class QuestManager extends TickableManager{
         if (checkGold() && checkStone() && checkWood() &&
         checkMetal() && checkBuildings()) {
             questSuccess = true;
+            //Other quest success stuff here, or quest success method
         }
     }
 
