@@ -138,10 +138,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public static final String AXEATTACK = "axe_attack";
     public static final String SWORDATTACK = "sword_attack";
     public static final String SPEARATTACK = "first_attack";
-    public static final String ATTACK = "player_hurt";
 
-    //The pick Axe that is going to be created
-    private Hatchet hatchetToCreate;
+
 
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
@@ -161,7 +159,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     // Textures for all 6 directions to correspond to movement of character
 
-    // TODO: change this to an integer to support removing currency which is not just 100g or 50g or 20g
+
     // A goldPouch to store the character's gold pieces.
     private HashMap<Integer, Integer> goldPouch;
 
@@ -229,10 +227,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private boolean isRecovering = false;
     private boolean isTexChanging = false;
 
-    /**
-     * Check id player is attacking
-     */
-    private boolean isAttacking = false;
+
 
     /**
      * Item player is currently equipped with/holding.
@@ -271,12 +266,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     private HealthCircle healthBar;
 
-    /**
-     * Can this character take damage.
-     */
-    private boolean isInvincible;
 
-    private String equipped;
 
     /**
      *  Game Over screen.
@@ -352,7 +342,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
 
         isSprinting = false;
-        equipped = "no_weapon";
+
         canSwim = false;
         this.scale = 0.4f;
         setDirectionTextures();
@@ -516,7 +506,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         //Animation control
         logger.debug("Attacking");
 
-        setAttacking(true);
+
         setCurrentState(AnimationRole.ATTACK);
 
         //If there is a spell selected, spawn the spell.
@@ -567,7 +557,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 SoundManager.playSound(AXEATTACK);
                 break;
             default:
-                SoundManager.playSound(ATTACK);
+                SoundManager.playSound(HURT);
                 break;
         }
 
@@ -603,7 +593,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         GameManager.get().getWorld().addEntity(spell);
 
-        setAttacking(false);
+
     }
 
     /**
@@ -624,9 +614,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         return this.mana;
     }
 
-    public void setAttacking(boolean isAttacking) {
-        this.isAttacking = isAttacking;
-    }
+
 
     /**
      * Lets the player enter a vehicle, by changing there speed and there sprite
@@ -668,14 +656,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         changeSwimming(false);
     }
 
-    /**
-     * Set if the character is invincible.
-     *
-     * @param isInvincible Is the character invincible.
-     */
-    public void setInvincible(boolean isInvincible) {
-        this.isInvincible = isInvincible;
-    }
+
 
     public void pickUpInventory(Item item) {
         this.inventories.add(item);
@@ -695,7 +676,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     public void hurt(int damage) {
 
-        // if (this.isInvincible) return;
+
         if (this.isRecovering) return;
 
         setHurt(true);
@@ -1769,12 +1750,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         getPlayerDirectionCardinal();
         List<Float> vel = getVelocity();
 
-        /*
-        if(isAttacking) {
-            setCurrentState(AnimationRole.ATTACK);
-           // System.out.println(isAttacking);
-            setAttacking(false);
-        }
+
 
         /* Short Animations */
         if (getToBeRun() != null) {

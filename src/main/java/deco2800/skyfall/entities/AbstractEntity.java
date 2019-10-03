@@ -1,8 +1,7 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector2;
+
 import com.badlogic.gdx.physics.box2d.*;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.animation.AnimationLinker;
@@ -12,16 +11,13 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.renderers.Renderable;
-import deco2800.skyfall.renderers.Renderer;
-import deco2800.skyfall.util.*;
-import org.lwjgl.Sys;
+
 import deco2800.skyfall.util.BodyEditorLoader;
 import deco2800.skyfall.util.HexVector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.security.KeyStore;
-import java.sql.Array;
+
 import java.util.*;
 
 /**
@@ -476,14 +472,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 					new BodyEditorLoader(Gdx.files.internal("resources/HitBoxes" +
 							"/" + fixtureDefName + "HitBox.json"));
 
-			// Creates a world for the hit box to inhabit
-			//PhysicsManager manager = new PhysicsManager();
-			//World world = manager.getBox2DWorld();
 
-			// Create the hit box body
-			//BodyDef bd = new BodyDef();
-			//bd.type = BodyDef.BodyType.DynamicBody;
-			//body = world.createBody(bd);
 
 			// Assigns all the aspects of the fixture
 			FixtureDef fixtureDef = new FixtureDef();
@@ -494,9 +483,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 			// Gets the hit box from the loader
 			loader.attachFixture(body, "Character", fixtureDef, scale);
 
-			// Set the collision of the body
-			//fixture = body.createFixture(fixtureDef);
-			//fixture.setSensor(!isCollidable);
+
 		}catch (NullPointerException e){
 		    log.warn("Failed to load custom hit box");
 			defineFixture();

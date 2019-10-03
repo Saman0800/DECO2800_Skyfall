@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import deco2800.skyfall.buildings.BuildingFactory;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
@@ -36,7 +35,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 
 public class GameScreen implements Screen,KeyDownObserver {
-	private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
+	private final Logger logger = LoggerFactory.getLogger(Renderer3D.class);
 	@SuppressWarnings("unused")
 	private final SkyfallGame game;
 	/**
@@ -374,17 +373,17 @@ public class GameScreen implements Screen,KeyDownObserver {
 
         if (keycode == Input.Keys.F11) { // F11
             GameManager.get().showCoords = !GameManager.get().showCoords;
-            LOG.info("Show coords is now {}", GameManager.get().showCoords);
+            logger.info("Show coords is now {}", GameManager.get().showCoords);
         }
 
         if (keycode == Input.Keys.C) { // F11
             GameManager.get().showCoords = !GameManager.get().showCoords;
-            LOG.info("Show coords is now {}", GameManager.get().showCoords);
+            logger.info("Show coords is now {}", GameManager.get().showCoords);
         }
 
         if (keycode == Input.Keys.F10) { // F10
             GameManager.get().showPath = !GameManager.get().showPath;
-            LOG.info("Show Path is now {}", GameManager.get().showPath);
+            logger.info("Show Path is now {}", GameManager.get().showPath);
         }
 
         if (keycode == Input.Keys.F3) { // F3

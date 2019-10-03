@@ -72,7 +72,7 @@ public class Shield extends Spell implements Animatable {
 
     @Override
     public void destroy() {
-        this.mc.setInvincible(false);
+
         this.mc.setRecovering(false);
         super.destroy();
     }

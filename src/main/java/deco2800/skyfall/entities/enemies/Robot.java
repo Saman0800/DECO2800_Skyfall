@@ -11,6 +11,8 @@ import deco2800.skyfall.animation.AnimationLinker;
   */
 public class Robot extends AbstractEnemy implements Animatable {
 
+    private static final String CHARACTER = "robot";
+
     /**
      * Basic constructor to create a robot enemy.
       */
@@ -24,8 +26,8 @@ public class Robot extends AbstractEnemy implements Animatable {
         this.setHealth(10);
         this.setCanMove(true);
         this.setCharacter(mc);
-        this.setTexture("robot");
-        this.setObjectName("robot");
+        this.setTexture(CHARACTER);
+        this.setObjectName(CHARACTER);
 
         this.configureAnimations();
         this.setDirectionTextures();
@@ -44,8 +46,8 @@ public class Robot extends AbstractEnemy implements Animatable {
         this.setHeight(1);
         this.setHealth(10);
         this.setCanMove(true);
-        this.setTexture("robot");
-        this.setObjectName("robot");
+        this.setTexture(CHARACTER);
+        this.setObjectName(CHARACTER);
 
         this.configureAnimations();
         this.setDirectionTextures();

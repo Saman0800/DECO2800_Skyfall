@@ -13,10 +13,7 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
     protected Vector2 direction;
     protected float currentSpeed;
 
-    private boolean MOVE_UP = false;
-    private boolean MOVE_LEFT = false;
-    private boolean MOVE_RIGHT = false;
-    private boolean MOVE_DOWN = false;
+
 
     /**
      * PlayerPeon Constructor
@@ -43,23 +40,7 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
                 .addKeyUpListener(this);
     }
 
-    /**
-     * Calculates the new movement point depending on what movement keys are held down.
-     */
-    private void updateMoveVector() {
-        if (MOVE_UP) {
-            this.direction.add(0.0f, speed);
-        }
-        if (MOVE_LEFT) {
-            this.direction.sub(speed, 0.0f);
-        }
-        if (MOVE_DOWN) {
-            this.direction.sub(0.0f, speed);
-        }
-        if (MOVE_RIGHT) {
-            this.direction.add(speed, 0.0f);
-        }
-    }
+
 
     /**
      * @param i
@@ -75,7 +56,6 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
      * Attack with the weapon the character has equip.
      */
     public void attack() {
-        //TODO: Need to calculate an angle that the character is facing.
 
         //Spawn projectile in front of character for now.
 
@@ -83,7 +63,7 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
         //Get AbstractWorld from static class GameManager.
 
         //Add the projectile entity to the game world.
-        //manager.getWorld().addEntity(hitBox);
+
     }
 
     /**
@@ -109,20 +89,12 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
         if (button == 1) {
             this.attack();
         }
-//        else if (button == 1) {
-//            this.specialAttack();
-//        }
+        else if (button == 1) {
+            this.specialAttack();
+        }
     }
 
-    /**
-     * Sets the Player's current movement speed.
-     * @param cSpeed the speed for the player to currently move at.
-     */
-    private void setCurrentSpeed ( float cSpeed){
-        this.currentSpeed = cSpeed;
-//        this.task = new MovementTask(this, new HexVector(clickedPosition[0],
-//                clickedPosition[1]));
-    }
+
 
     /**
      * Sets the appropriate movement flags to true on keyDown
@@ -135,20 +107,7 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
             return;
         }
 
-        switch (keycode) {
-            case Input.Keys.W:
-                MOVE_UP = true;
-                break;
-            case Input.Keys.A:
-                MOVE_LEFT = true;
-                break;
-            case Input.Keys.S:
-                MOVE_DOWN = true;
-                break;
-            case Input.Keys.D:
-                MOVE_RIGHT = true;
-                break;
-        }
+
     }
 
     /**
@@ -157,19 +116,6 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
      */
     @Override
     public void notifyKeyUp ( int keycode){
-        switch (keycode) {
-            case Input.Keys.W:
-                MOVE_UP = false;
-                break;
-            case Input.Keys.A:
-                MOVE_LEFT = false;
-                break;
-            case Input.Keys.S:
-                MOVE_DOWN = false;
-                break;
-            case Input.Keys.D:
-                MOVE_RIGHT = false;
-                break;
-        }
+
     }
 }

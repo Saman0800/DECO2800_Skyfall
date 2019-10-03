@@ -11,8 +11,7 @@ import deco2800.skyfall.animation.AnimationLinker;
  */
 public class Flower extends AbstractEnemy implements Animatable {
 
-    // Main Character in the game
-    public MainCharacter mc;
+
 
     /**
      * Basic Constructor for creating a flower enemy.
@@ -37,30 +36,7 @@ public class Flower extends AbstractEnemy implements Animatable {
         this.setAllSpeed(0.04f, 0.05f, 0.02f);
     }
 
-    /*
-    /**
-     * Constructor foe testing flower enemy.
-      */
-    /*
-    public Flower(float col, float row) {
-        super(col,row);
 
-        this.setLevel(2);
-        this.setRange(4);
-        this.setSpeed(1);
-        this.setDamage(4);
-        this.setHeight(1);
-        this.setHealth(13);
-        this.setCanMove(false);
-        this.setTexture("flower");
-        this.setObjectName("flower");
-        this.setAllSpeed(0.04f, 0.05f, 0.02f);
-
-        this.configureAnimations();
-        this.setDirectionTextures();
-        this.configureSounds();
-    }
-    */
 
     /**
      * Set up flower sounds.

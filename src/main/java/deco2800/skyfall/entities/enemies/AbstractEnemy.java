@@ -34,7 +34,7 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
 
     // Booleans to check whether Enemy is in a state.
     private boolean isMoving;
-    private boolean isChasing;
+
     private boolean isAttacking;
     private boolean isHurt = false;
 
@@ -50,7 +50,7 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
 
     // Sound of the enemy
     protected String chasingSound;
-    protected String attackSound;
+
     protected String diedSound;
 
     // Nature of the enemy
@@ -58,9 +58,7 @@ public abstract class AbstractEnemy extends Peon implements Animatable, ICombatE
 
     // Main character instance
     private MainCharacter mc;
-    // Main character location
-    private float colDistance;
-    private float rowDistance;
+
 
     //a routine for destination
     private HexVector destination = null;

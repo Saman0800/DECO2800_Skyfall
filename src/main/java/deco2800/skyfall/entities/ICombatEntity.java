@@ -21,12 +21,7 @@ public interface ICombatEntity extends HasHealth {
      */
     boolean canDealDamage();
 
-    /**
-     * Get the amount of armour this entity has, calculated from the worn gear plus base stats.
-     *
-     * @return The amount of armour the entity has.
-     */
-   // int getArmour();
+
 
     /**
      * Get the amount of damage this entity deals.

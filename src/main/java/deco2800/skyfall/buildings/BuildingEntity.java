@@ -11,14 +11,14 @@ import deco2800.skyfall.managers.GameMenuManager;
 
 import deco2800.skyfall.managers.InventoryManager;
 
-import deco2800.skyfall.resources.Blueprint;
+
 import deco2800.skyfall.resources.Item;
 
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.world.World;
-import org.lwjgl.Sys;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,9 +48,7 @@ public class BuildingEntity extends AbstractEntity {
     @Expose
     private int maxHealth;
 
-    // changeable information for a specific building
-    private float col;
-    private float row;
+
 
     @Expose
     private int length;
@@ -60,13 +58,10 @@ public class BuildingEntity extends AbstractEntity {
     private boolean upgradable;
     private int currentHealth;
 
-    private int maxInventorySize;
+
     private InventoryManager inventoryManager;
 
-    private boolean canAttack;
-    private boolean canDefend;
-    private AttackLevel attackLevel;
-    private DefendLevel defendLevel;
+
 
     enum AttackLevel {
         LOW,
@@ -432,15 +427,13 @@ public class BuildingEntity extends AbstractEntity {
         //do nothing
     }
 
-    //TODO: Empty interact methods need to not be empty wooo!
+
 
     public void cabinInteract() {
         //Resting at the cabin restores a players health.
         MainCharacter player = GameManager.getManagerFromInstance(GameMenuManager.class).getMainCharacter();
         player.changeHealth(+player.getMaxHealth());
-        //TODO: Update player health GUI.
-        //player.updateHealth();
-        //TODO: Needs to change game time.
+
     }
 
     public void fenceInteract() {}
