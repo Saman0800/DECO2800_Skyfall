@@ -12,8 +12,6 @@ public class Berry extends HealthResources implements Item {
     // the name of the item
     private String name;
 
-    // the biome the berry is in (will change to different type in future?)
-    private String biome;
 
     // amount of health item provides
     private int health = 6;
@@ -31,7 +29,6 @@ public class Berry extends HealthResources implements Item {
      * Creates a default berry item.
      */
     public Berry(){
-
         this.biome = "Forest";
         this.colour ="wine red";
         this.name ="Berry";
@@ -48,14 +45,6 @@ public class Berry extends HealthResources implements Item {
         return "Berry";
     }
 
-
-    /**
-     * Returns the biome the sand is situated in
-     * @return the biome the sand is situated in
-     */
-    public String getBiome(){
-        return biome;
-    }
 
     /**
      * Returns whether or not the item impacts the player's food fullness

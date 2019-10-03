@@ -161,4 +161,13 @@ public class HeadsUpDisplay extends AbstractUIElement {
         stage.addActor(leftHUDTable);
 
     }
+
+    /**
+     * Element associated with key
+     * @param key
+     * @return
+     */
+    public AbstractUIElement gethudElement(String key) {
+        return hudElements.get(key);
+    }
 }
