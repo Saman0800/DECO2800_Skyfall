@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities.weapons;
 
 import deco2800.skyfall.worlds.Tile;
+
 import org.junit.*;
 
 public class RangeWeaponTest {
@@ -9,7 +10,7 @@ public class RangeWeaponTest {
     private Spear spear;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         bow = new Bow(new Tile(null, 0, 0), false);
         spear = new Spear(new Tile(null, 0, 0), false);
     }
@@ -21,17 +22,28 @@ public class RangeWeaponTest {
     }
 
     @Test
-    public void getWeaponType() {
+    public void getWeaponTypeTest() {
         Assert.assertEquals(bow.getWeaponType(), bow.getSubtype());
         Assert.assertEquals(spear.getWeaponType(), spear.getSubtype());
 
-        Assert.assertEquals(bow.getWeaponType(), "range");
-        Assert.assertEquals(spear.getWeaponType(), "range");
+        Assert.assertEquals("range", bow.getWeaponType());
+        Assert.assertEquals("range", spear.getWeaponType());
     }
 
     @Test
-    public void getDamageType() {
+    public void getDamageTypeTest() {
         Assert.assertEquals(spear.getDamageType(), bow.getDamageType());
-        Assert.assertEquals(spear.getDamageType(), "splash");
+        Assert.assertEquals("splash", spear.getDamageType());
+    }
+
+    @Test
+    public void itemMethodTest() {
+        Assert.assertEquals(spear.isCarryable(), bow.isCarryable());
+        Assert.assertTrue(spear.isCarryable());
+        Assert.assertTrue(bow.isCarryable());
+
+        Assert.assertEquals(spear.isExchangeable(), bow.isExchangeable());
+        Assert.assertFalse(spear.isExchangeable());
+        Assert.assertFalse(bow.isExchangeable());
     }
 }

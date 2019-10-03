@@ -5,6 +5,9 @@ import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationRole;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import deco2800.skyfall.entities.enemies.AbstractEnemy;
+import deco2800.skyfall.entities.enemies.Stone;
+import deco2800.skyfall.entities.enemies.Treeman;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 
@@ -19,7 +22,7 @@ public class Projectile extends AgentEntity implements Animatable {
     /**
      * How many game ticks all projectiles survive for before being removed.
      */
-    public static final int LIFE_TIME_TICKS = 100;
+    public static final int LIFE_TIME_TICKS = 15;
 
     /**
      * The amount of damage this projectile deals.
@@ -71,6 +74,7 @@ public class Projectile extends AgentEntity implements Animatable {
         this.range = range;
 
         this.textureName = textureName;
+
         this.setTexture(textureName);
         this.setObjectName(objectName);
 
@@ -140,12 +144,12 @@ public class Projectile extends AgentEntity implements Animatable {
     private boolean toBeDestroyed = false;
     @Override
     public void handleCollision(Object other) {
-        if (other instanceof EnemyEntity) {
-            ((EnemyEntity) other).takeDamage(this.getDamage());
-            ((EnemyEntity) other).setAttacked(true);
+        if (other instanceof AbstractEnemy) {
+            ((AbstractEnemy) other).takeDamage(this.getDamage());
+            ((AbstractEnemy) other).setHurt(true);
             toBeDestroyed = true;
-            ((EnemyEntity)other).getBody().setLinearVelocity(
-                    (((EnemyEntity)other).getBody().getLinearVelocity()
+            ((AbstractEnemy) other).getBody().setLinearVelocity(
+                    (((AbstractEnemy)other).getBody().getLinearVelocity()
                     .lerp(new Vector2(0.f, 0.f), 0.5f)));
         }
     }
@@ -165,6 +169,7 @@ public class Projectile extends AgentEntity implements Animatable {
 
     @Override
     public void configureAnimations() {
+
     }
 
     @Override

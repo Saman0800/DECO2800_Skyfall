@@ -1,10 +1,11 @@
 package deco2800.skyfall.entities.spells;
 
+import com.badlogic.gdx.Input;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.entities.enemies.AbstractEnemy;
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.EnemyEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
@@ -16,6 +17,17 @@ public class Tornado extends Spell {
 
     //MainCharacter instance.
     private MainCharacter mc;
+
+    /**
+     * Key sequence required to cast this spell.
+     */
+    public static int[] keySequence = new int[] {
+            Input.Keys.UP,
+            Input.Keys.UP,
+            Input.Keys.UP,
+            Input.Keys.DOWN,
+            Input.Keys.DOWN
+    };
 
     /**
      * Construct a new spell.
@@ -53,10 +65,10 @@ public class Tornado extends Spell {
         List<AbstractEntity> entities =  GameManager.get().getWorld().getEntities();
 
         for (AbstractEntity entity : entities) {
-            if (entity instanceof EnemyEntity
+            if (entity instanceof AbstractEnemy
                     && this.position.isCloseEnoughToBeTheSameByDistance(entity.getPosition(),1)) {
                 //If close enough, deal damage to the enemy over time.
-                ((EnemyEntity) entity).takeDamage(this.getDamage());
+                ((AbstractEnemy) entity).takeDamage(this.getDamage());
                 this.destroy();
             }
         }
@@ -71,7 +83,4 @@ public class Tornado extends Spell {
                         AnimationRole.ATTACK, Direction.DEFAULT, true, true));
     }
 
-    @Override
-    public void setDirectionTextures() {
-    }
 }

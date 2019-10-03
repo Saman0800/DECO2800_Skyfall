@@ -1,22 +1,15 @@
 package deco2800.skyfall.entities.pets;
 
 import deco2800.skyfall.animation.Animatable;
-import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.Harvestable;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.Spider;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.world.World;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Lizard extends AbstractPet implements Animatable, Item {
@@ -230,5 +223,9 @@ public class Lizard extends AbstractPet implements Animatable, Item {
     @Override
     public void use(HexVector position) {
 
+    }
+
+    public Boolean isEquippable() {
+        return false;
     }
 }
