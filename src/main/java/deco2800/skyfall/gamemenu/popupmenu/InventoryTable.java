@@ -175,10 +175,13 @@ public class InventoryTable extends AbstractPopUpElement {
         if(active){
             inactiveAddqaButton.setVisible(false);
             inactiveDropButton.setVisible(false);
-            inactiveEquipButton.setVisible(false);
             addqaButton.setVisible(true);
-            equipButton.setVisible(true);
             dropButton.setVisible(true);
+
+            if(inventory.getItemInstance(inventorySelected).isEquippable()){
+                equipButton.setVisible(true);
+                inactiveEquipButton.setVisible(false);
+            }
         }else{
             inactiveAddqaButton.setVisible(true);
             inactiveDropButton.setVisible(true);

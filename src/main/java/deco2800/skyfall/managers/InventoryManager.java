@@ -386,4 +386,10 @@ public class InventoryManager extends TickableManager {
 
         return null;
     }
+
+    public Item getItemInstance(String itemName){
+        List<Item> itemsList = this.inventory.get(itemName);
+        Item item = itemsList.get(0);
+        return item;
+    }
 }

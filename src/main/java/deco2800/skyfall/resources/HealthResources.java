@@ -51,7 +51,7 @@ public abstract class HealthResources implements Item {
         this.subtype = "Health Resource";
         this.exchangeable = true;
         this.hasHealingPower = true;
-        this.equippable = false;
+        this.equippable = true;
         //Do we need a new type like FoodResources? and hasFoodEffect may false
         // in here as medicine may not affect the food fullness
 
