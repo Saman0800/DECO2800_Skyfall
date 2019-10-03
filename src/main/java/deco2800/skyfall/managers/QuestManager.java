@@ -240,7 +240,7 @@ public class QuestManager extends TickableManager{
         for (int i = 0; i < entities.size(); i++) {
             if (entities.get(i) instanceof BuildingEntity) {
                 for (int j = 0; j < buildingsTotal.size(); j++) {
-                    if (((BuildingEntity) entities.get(i)).getName()
+                    if (((BuildingEntity) entities.get(i)).getBuildingType().getName()
                             .equals(buildingsTotal.get(j))) {
                         currentBuildings.add(buildingsTotal.get(j));
                     }
