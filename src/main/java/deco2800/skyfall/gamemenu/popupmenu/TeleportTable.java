@@ -105,6 +105,7 @@ public class TeleportTable extends AbstractPopUpElement {
         locationLabel.setFontScale(0.8f);
         teleportLabel = new Label("TELEPORT TO: ERR", skin, "white-text");
         teleportLabel.setFontScale(0.8f);
+        //TODO: Teleport Button
 
         labelTable.add();
         labelTable.row();

@@ -41,7 +41,7 @@ public class GameMenuManager extends TickableManager {
     private String currentPopUpElement = null;
 
     private Logger logger = LoggerFactory.getLogger(GameMenuManager.class);
-
+    private QuestManager questManager;
 
     private float topRightX = 0;
     private float topRightY = 0;
@@ -63,6 +63,7 @@ public class GameMenuManager extends TickableManager {
         textureManager = GameManager.get().getManager(TextureManager.class);
         inventory = GameManager.get().getManager(InventoryManager.class);
         soundManager = GameManager.get().getManager(SoundManager.class);
+        questManager = GameManager.get().getManager(QuestManager.class);
         stage = null;
         skin = null;
         characters = new String[NUMBEROFCHARACTERS];
@@ -347,7 +348,7 @@ public class GameMenuManager extends TickableManager {
 
         popUps.put("collectTable", new GenericCollectCreateTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                null, textureManager, this, sm, skin, "collect"));
+                null, textureManager, this, questManager, skin, "collect"));
 
         popUps.put("teleportTable", new TeleportTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
@@ -355,11 +356,11 @@ public class GameMenuManager extends TickableManager {
 
         popUps.put("createTable", new GenericCollectCreateTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                null, textureManager, this, sm, skin, "create"));
+                null, textureManager, this, questManager, skin, "create"));
 
         popUps.put("progressTable", new ProgressTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                null, textureManager, this, sm, skin, "create"));
+                null, textureManager, this, questManager, skin, "create"));
 
         //uiElements.put("weatherGUI", new WeatherGui(stage, EnvironmentManager.currentWeather()));
         Map<String, AbstractUIElement> hudElements = new HashMap<>();
@@ -369,7 +370,7 @@ public class GameMenuManager extends TickableManager {
         hudElements.put("gameMenuBar2", new GameMenuBar2(stage, null, textureManager, skin, this));
         hudElements.put("clock" , new Clock(stage, skin, this));
 
-        uiElements.put("HUD", new HeadsUpDisplay(stage, null, textureManager, skin, this, hudElements));
+        uiElements.put("HUD", new HeadsUpDisplay(stage, null, textureManager, skin, this, hudElements, questManager));
 
         popUps.put("inventoryTable",
                 new InventoryTable(stage, new ImageButton(generateTextureRegionDrawableObject("exitButton")),
