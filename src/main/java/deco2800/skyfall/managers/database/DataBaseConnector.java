@@ -28,6 +28,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import org.flywaydb.core.Flyway;
 
 public class DataBaseConnector {
     /* The connection to the database */
@@ -39,11 +40,10 @@ public class DataBaseConnector {
     public void start() {
         try {
             // Connects to the data base
+            migrateDatabase();
             Driver derbyData = new EmbeddedDriver();
             DriverManager.registerDriver(derbyData);
             connection = DriverManager.getConnection("jdbc:derby:Database;create=true");
-
-            createTables();
 
         } catch (Exception e) {
             System.out.println(e);
@@ -69,40 +69,6 @@ public class DataBaseConnector {
      */
     public Connection getConnection() {
         return connection;
-    }
-
-    /**
-     * Creates the table if they do not already exist
-     *
-     * @throws SQLException If an sqlexception occurs when creating the tables
-     */
-    public void createTables() throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-            // If there are any missing tables, then drop all the tables and add them all
-            // back
-            // other wise don't do that
-
-            CreateTablesQueries queries = new CreateTablesQueries();
-            DatabaseMetaData dbm = connection.getMetaData();
-            ResultSet tables = dbm.getTables(null, null, "%", null);
-            ArrayList<String> tablesCheck = queries.getTableNames();
-
-            ArrayList<String> foundTables = new ArrayList<>();
-            while (tables.next()) {
-                if (!tables.getString(3).startsWith("SYS")) {
-                    foundTables.add(tables.getString(3));
-                }
-            }
-
-            if (foundTables.size() != tablesCheck.size()) {
-                for (String toDelete : foundTables) {
-                    statement.execute(String.format("DROP TABLE %s", toDelete));
-                }
-                for (String query : queries.getQueries()) {
-                    statement.execute(query);
-                }
-            }
-        }
     }
 
     /**
@@ -655,7 +621,6 @@ public class DataBaseConnector {
      */
     public Chunk loadChunk(World world, int x, int y) {
         try {
-            Gson gson = new Gson();
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection
                     .prepareStatement("SELECT * FROM CHUNKS WHERE X = ? and Y = ? and WORLD_ID = ?");
@@ -768,6 +733,19 @@ public class DataBaseConnector {
         } catch (SQLException | IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+    /**
+     * Uses flyway to create the tables
+     */
+    private void migrateDatabase(){
+        Flyway flyway = new Flyway();
+        flyway.setDataSource("jdbc:derby:Database;create=true", "", "");
+
+        flyway.setCleanOnValidationError(true);
+        flyway.setValidateOnMigrate(true);
+        flyway.migrate();
     }
 
 }
