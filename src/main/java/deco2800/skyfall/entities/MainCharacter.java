@@ -706,21 +706,20 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     public void playerHurt(int damage) {
 
-        // if (this.isInvincible) return;
-        if (this.isRecovering) return;
-
         setHurt(true);
         logger.info("Hurted: " + isHurt);
         changeHealth(-damage);
         updateHealth();
+        logger.info("Current Health: " + this.getHealth());
 
         if (!isRecovering) {
             setHurt(true);
             this.changeHealth(-damage);
-        getBody().setLinearVelocity(getBody().getLinearVelocity()
+            getBody().setLinearVelocity(getBody().getLinearVelocity()
                         .lerp(new Vector2(0.f, 0.f), 0.5f));
 
-        if (this.getHealth() <= 0) {
+        if (this.getHealth() < 1) {
+            logger.info("Player died.");
             kill();
         } else {
             hurtTime = 0;
@@ -760,6 +759,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             position.moveToward(bounceBack, 1f);
             */
         }
+
+
+            // if (this.isInvincible) return;
+            if (this.isRecovering) return;
 
             SoundManager.playSound(HURT_SOUND_NAME);
 
@@ -828,10 +831,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     public void kill() {
         // set health to 0.
-        changeHealth(0);
+        //changeHealth(0);
         SoundManager.playSound(DIED_SOUND_NAME);
         setCurrentState(AnimationRole.DEAD);
         deadTime = 0;
+        //setupGameOverScreen();
         //gameOverTable.show();
     }
 
