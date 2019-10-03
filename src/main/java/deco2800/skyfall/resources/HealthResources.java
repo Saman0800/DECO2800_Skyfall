@@ -30,6 +30,9 @@ public abstract class HealthResources implements Item {
     // the value of the piece of food
     protected int foodValue;
 
+    // the biome the health resource is from
+    protected String biome;
+
     // the healing ability of the health item
     protected int healthValue;
 
@@ -69,6 +72,14 @@ public abstract class HealthResources implements Item {
         this.position = position.getCoordinates();
 
         this.healthValue = 10;
+    }
+
+    /**
+     * Returns the biome the apple is situated in
+     * @return the biome the apple is situated in
+     */
+    public String getBiome(){
+        return biome;
     }
 
 

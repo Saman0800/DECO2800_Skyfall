@@ -46,6 +46,18 @@ public class HealthResourcesTest {
     }
 
     /**
+     * Tests the correct biomes are returned for each health resource
+     */
+    @Test
+    public void getBiomeTest(){
+        assertEquals("Forest", apple.getBiome());
+        assertEquals("Forest", berry.getBiome());
+        assertEquals("Forest", poisonousmushroom.getBiome());
+        assertEquals("Desert", aloe_vera.getBiome());
+
+    }
+
+    /**
      * Ensure that all the items are classified as carryable
      */
     @Test
