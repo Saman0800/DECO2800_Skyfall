@@ -2,9 +2,12 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.enemies.AbstractEnemy;
 import deco2800.skyfall.entities.enemies.Spawnable;
+import deco2800.skyfall.graphics.types.vec2;
 import javafx.util.Pair;
 
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 import java.util.Vector;
 
 /*Handles spawning enemies into the game on tick*/
@@ -14,10 +17,13 @@ public class SpawningManager extends TickableManager  {
     //As a singleton, able to keep a single reference
     private static SpawningManager reference = null;
 
+    //the random used for enemy generation
+    Random random;
+
     //A map of enemy strength to enemy
     //enemy must implement Spawnable
-    //float is the (k, a) value used for spawning
-    Map<Spawnable, Pair<Float, Float>> spawnTable;
+    //float is the k value used for spawning
+    Map<Spawnable, Float> spawnTable;
 
     //All enemies that have spawned will be kept with a referece
     //kept by spawn order
@@ -37,6 +43,7 @@ public class SpawningManager extends TickableManager  {
      * Use createdSpawningManager instead of constructor
      */
     private SpawningManager() {
+        random = new Random();
     }
 
     /** Allows SpawningManager to be created and attached to GameManager with
@@ -59,12 +66,44 @@ public class SpawningManager extends TickableManager  {
     }
 
     /**
+     * Spawns the enemy a given distance from the player
+     * @param enemy A reference to Spawnable
+     */
+    private void spawnEnemy(Spawnable enemy) {
+        vec2 location = ((AbstractEnemy)enemy).getPlayerLocation();
+
+        //calculate the location of the player
+        double angle = random.nextDouble() * 2.0f * Math.PI;
+        location = new vec2(
+                location.x + SPAWN_DISTANCE*(float)Math.cos(angle),
+                location.y + SPAWN_DISTANCE*(float)Math.sin(angle)
+        );
+
+        enemyReferences.add( (AbstractEnemy)enemy.newInstance(location.x, location.y) );
+    }
+
+    /**
      * Will look at the internal spawn table to determine
      * if its time to spawn
      * @param i standard tick time
      */
     @Override
     public void onTick(long i) {
+        //return if day
+        if (GameManager.getManagerFromInstance(EnvironmentManager.class).isDay()) {
+            return;
+        }
+
+        Iterator it = spawnTable.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+
+            if (random.nextFloat() < (Float)pair.getValue()) {
+                spawnEnemy((Spawnable)pair.getKey());
+            }
+
+            it.remove();
+        }
     }
 
     /**
@@ -76,7 +115,7 @@ public class SpawningManager extends TickableManager  {
      * @param <T> The Enemy must be an AbstractEnemy, and implement Spawnable
      */
      public <T extends AbstractEnemy & Spawnable>
-     void addEnemyForSpawning(T template, float k, float a) {
-         spawnTable.put(template, new Pair<>(k ,a));
+     void addEnemyForSpawning(T template, float k) {
+         spawnTable.put(template, k);
      }
 }

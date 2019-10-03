@@ -409,7 +409,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * @param type Animation role to get animation for
      * @return animation name
      */
-
     private AnimationLinker getAnimationLinker(AnimationRole type, Direction direction) {
         if (animations.containsKey(type)) {
             Map<Direction, AnimationLinker> roleMap = animations.get(type);
