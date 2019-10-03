@@ -172,10 +172,10 @@ public class InventoryManagerTest {
         test.quickAccessAdd("Apple");
         test.quickAccessAdd("Berry");
 
-        assertEquals(6, test.getQuickAccess().size());
+        assertEquals(4, test.getQuickAccess().size());
 
         test.quickAccessAdd("Metal");
-        assertEquals(6, test.getQuickAccess().size());
+        assertEquals(4, test.getQuickAccess().size());
         assertFalse(test.getQuickAccess().containsKey("Metal"));
 
     }
