@@ -69,15 +69,29 @@ public class GameMenuBar2 extends AbstractUIElement {
         buttonStyle.font = skin.getFont("game-font");
         buttonStyle.fontColor = skin.getColor("navy");
 
-//        TextButton equip = new TextButton("EQUIP", buttonStyle);
-//        equip.getLabel().setFontScale(0.8f);
-        ImageButton equip = new ImageButton(generateTextureRegionDrawableObject("equip_qa"));
-        quickAccessPanel.add(equip).width(130).height(50).padTop(5).padLeft(10);
+        ImageButton equipInactive = new ImageButton(generateTextureRegionDrawableObject("equip inactive"));
+        equipInactive.setSize(130, 50);
+        ImageButton equipActive = new ImageButton(generateTextureRegionDrawableObject("equip"));
+        equipActive.setSize(130, 50);
+        equipActive.setVisible(false);
+
+        Table equipCell = new Table();
+        equipCell.addActor(equipActive);
+        equipCell.addActor(equipInactive);
+        quickAccessPanel.add(equipCell).width(130).height(50).padTop(5).padLeft(10);
         quickAccessPanel.row();
-        ImageButton remove = new ImageButton(generateTextureRegionDrawableObject("remove_qa"));
-//        TextButton remove = new TextButton("REMOVE", buttonStyle);
-//        remove.getLabel().setFontScale(0.8f);
-        quickAccessPanel.add(remove).width(130).height(50).padTop(5).padLeft(10);
+
+
+        ImageButton removeInactive = new ImageButton(generateTextureRegionDrawableObject("removeqa inactive"));
+        removeInactive.setSize(130, 50);
+        ImageButton removeActive = new ImageButton(generateTextureRegionDrawableObject("removeqa"));
+        removeActive.setSize(130, 50);
+        removeActive.setVisible(false);
+
+        Table removeCell = new Table();
+        removeCell.addActor(removeActive);
+        removeCell.addActor(removeInactive);
+        quickAccessPanel.add(removeCell).width(130).height(50).padTop(5).padLeft(10);
 
         sideBar = new ImageButton(generateTextureRegionDrawableObject("quickaccess_side_bar"));
         sideBar.setSize(35, 360); //TODO: reduce chunkiness

@@ -264,11 +264,11 @@ public class InventoryTable extends AbstractPopUpElement {
             }
         });
 
-        this.inactiveEquipButton = new ImageButton(generateTextureRegionDrawableObject("equip inactive"));
+        this.inactiveEquipButton = new ImageButton(generateTextureRegionDrawableObject("equip inactive inv"));
         this.inactiveEquipButton.setSize(170, 60);
         this.inactiveEquipButton.setPosition(390, 20);
 
-        this.equipButton = new ImageButton(generateTextureRegionDrawableObject("equip"));
+        this.equipButton = new ImageButton(generateTextureRegionDrawableObject("equip inv"));
         this.equipButton.setSize(170, 60);
         this.equipButton.setPosition(390, 20);
         this.equipButton.setVisible(false);

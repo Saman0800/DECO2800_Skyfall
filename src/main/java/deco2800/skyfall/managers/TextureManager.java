@@ -342,8 +342,12 @@ public class TextureManager extends AbstractManager {
             textureMap.put("drop inactive", new Texture("resources/inventory/drop_inactive.png"));
             textureMap.put("equip", new Texture("resources/inventory/equip_active.png"));
             textureMap.put("equip inactive", new Texture("resources/inventory/equip_inactive.png"));
+            textureMap.put("equip inv", new Texture("resources/inventory/equip_active_inv.png"));
+            textureMap.put("equip inactive inv", new Texture("resources/inventory/equip_inactive_inv.png"));
             textureMap.put("addqa", new Texture("resources/inventory/add_qa_active.png"));
             textureMap.put("addqa inactive", new Texture("resources/inventory/add_qa_inactive.png"));
+            textureMap.put("removeqa", new Texture("resources/inventory/removeqa_active.png"));
+            textureMap.put("removeqa inactive", new Texture("resources/inventory/removeqa_inactive.png"));
             textureMap.put("takeall", new Texture("resources/takeall.png"));
             textureMap.put("selected", new Texture("resources/items_icons/selected.png"));
             textureMap.put("item_background", new Texture("resources/items_icons/item_background.png"));
