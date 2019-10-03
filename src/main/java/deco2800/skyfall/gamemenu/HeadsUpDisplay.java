@@ -28,7 +28,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
     private Table leftHUDTable;
     private ImageButton location;
     private TextButton teleport;
-    private boolean canTeleport = false;
+    private boolean canTeleport = true;
     public HeadsUpDisplay(Stage stage, String[] textureNames, TextureManager tm,
                           Skin skin, GameMenuManager gmm,
                           Map<String, AbstractUIElement> hudElements) {
@@ -53,14 +53,14 @@ public class HeadsUpDisplay extends AbstractUIElement {
         super.update();
         hudElements.forEach((key, value) -> value.update());
         //TODO: (@Kausta) If can teleport enable the teleport button
-        if (teleport != null && canTeleport) {
-            teleport.getLabel().setColor(0f, 1f, 0f,1);
-            teleport.setDisabled(true);
-        } else {
-            teleport.getLabel().setColor(0.25f, 0.25f, 0.25f,1);
-            teleport.setDisabled(false);
-        }
-
+        if ((teleport != null))
+            if (canTeleport) {
+                teleport.getLabel().setColor(0f, 1f, 0f, 1);
+                teleport.setDisabled(true);
+            } else {
+                teleport.getLabel().setColor(0.25f, 0.25f, 0.25f, 1);
+                teleport.setDisabled(false);
+            }
     }
 
     @Override
@@ -96,6 +96,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
         teleport.getLabel().setAlignment(Align.center);
         teleport.getLabel().setFontScale(0.8f);
         teleport.getLabel().setColor(0.25f, 0.25f, 0.25f,1);
+        teleport.setDisabled(true);
         teleport.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

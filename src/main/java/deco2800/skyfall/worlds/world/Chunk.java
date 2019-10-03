@@ -229,7 +229,7 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
         for (Tile tile : tiles) {
             tile.removeReferanceFromNeighbours();
         }
-        //TODO: Uncomment this before merge
+        //TODO:(@Kausta) Uncomment this before merge
         //DatabaseManager.get().getDataBaseConnector().saveChunk(this);
 
         world.getLoadedChunks().remove(new Pair<>(x, y));
