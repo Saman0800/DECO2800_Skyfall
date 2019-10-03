@@ -12,8 +12,6 @@ public class Wood extends NaturalResources implements Item {
     // the colour of the wood
     private String colour;
 
-
-
     /**
      * Creates a default wood item
      */

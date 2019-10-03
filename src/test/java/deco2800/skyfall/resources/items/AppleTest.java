@@ -32,6 +32,15 @@ public class AppleTest{
         assertEquals("Apple", apple.getName());
     }
 
+    /**
+     * Tests the correct colour is returned for the health resource
+     */
+    @Test
+    public void getColourTest(){
+        assertEquals("red", apple.getColour());
+
+    }
+
 
     /**
      * Ensure that apple is classified as carryable

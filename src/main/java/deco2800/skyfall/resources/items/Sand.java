@@ -18,7 +18,6 @@ public class Sand extends NaturalResources implements Item {
     }
 
 
-
     /**
      * Returns the item description
      * @return the item description
