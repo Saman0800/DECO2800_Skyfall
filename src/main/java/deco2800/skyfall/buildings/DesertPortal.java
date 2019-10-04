@@ -1,13 +1,18 @@
 package deco2800.skyfall.buildings;
 
+import com.badlogic.gdx.graphics.Texture;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.resources.Blueprint;
 
 import java.util.Map;
 
 public class DesertPortal extends AbstractPortal implements Blueprint {
 
-    public String nextBiome = "Mountain";
+    public String currentBiome = "desert";
+    public String nextBiome = "mountain";
+    public String name = "desertPortal";
     public boolean blueprintLearned = false;
+    Texture texture;
 
 
     /**
@@ -22,6 +27,7 @@ public class DesertPortal extends AbstractPortal implements Blueprint {
         // TODO: @CGulley set the functionality to move to the next biome
 
     }
+
 
     @Override
     public void setTexture(String texture) {
@@ -67,13 +73,12 @@ public class DesertPortal extends AbstractPortal implements Blueprint {
     }
 
     /**
-     * a getter method to check if a player has learned the blueprint
+     * Get the name of the Portal
      *
-     * @return true if the player has learned the blueprint.
+     * @return String - The name of the portal
      */
-
     public String getName() {
-        return null;
+        return this.name;
     }
 
     /**
@@ -96,6 +101,11 @@ public class DesertPortal extends AbstractPortal implements Blueprint {
         }
 
     }
+
+    public void unlocknext(MainCharacter character) {
+        super.unlocknext(character, nextBiome);
+    }
+
 
     /**
      * @return - cost of building the building

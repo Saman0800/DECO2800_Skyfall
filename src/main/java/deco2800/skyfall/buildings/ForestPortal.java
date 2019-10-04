@@ -1,18 +1,23 @@
 package deco2800.skyfall.buildings;
 
+import com.badlogic.gdx.graphics.Texture;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.DesertBiome;
+import deco2800.skyfall.worlds.world.World;
 
 import java.util.Map;
 
 public class ForestPortal extends AbstractPortal implements Blueprint {
 
-
-    public String nextBiome = "Desert";
+    public String currentBiome = "forest";
+    public String nextBiome = "desert";
     public boolean blueprintLearned = false;
+    public String name = "forestPortal";
+    Texture texture;
 
 
 
@@ -74,13 +79,12 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
     }
 
     /**
-     * a getter method to check if a player has learned the blueprint
+     * Get the name of the Portal
      *
-     * @return true if the player has learned the blueprint.
+     * @return String - The name of the portal
      */
-
     public String getName() {
-        return null;
+        return this.name;
     }
 
     /**
@@ -112,4 +116,25 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
     }
 
 
+    public void unlocknext(MainCharacter character) {
+        super.unlocknext(character, nextBiome);
+    }
+
+    /**
+     * Move characters location to the next biome
+     * To be implemented when a player clicks on the portal
+     * @param character - The Character to teleport
+     */
+    public void teleport(MainCharacter character, World world) {
+        character.unlockBiome(nextBiome);
+        //move to a random place on the map
+
+        // maybe on click?????? set up an observer?
+
+    }
+
+
+
+
 }
+
