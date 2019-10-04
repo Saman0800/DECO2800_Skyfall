@@ -60,7 +60,7 @@ public class GameMenuManager extends TickableManager {
      * And construct Manager instances for later use.
      */
     public GameMenuManager() {
-        textureManager = GameManager.get().getManager(TextureManager.class);
+        updateTextureManager(GameManager.get().getManager(TextureManager.class));
         inventory = GameManager.get().getManager(InventoryManager.class);
         soundManager = GameManager.get().getManager(SoundManager.class);
         questManager = GameManager.get().getManager(QuestManager.class);
@@ -82,13 +82,18 @@ public class GameMenuManager extends TickableManager {
                            InventoryManager im, Stage stage, Skin skin,
                            Map<String, AbstractPopUpElement> popUps,
                            Map<String, AbstractUIElement> uiElements) {
-        GameMenuManager.textureManager = tm;
+        GameMenuManager.updateTextureManager(tm);
         soundManager = sm;
         inventory = im;
         this.stage = stage;
         this.skin = skin;
         this.popUps = popUps;
         this.uiElements = uiElements;
+    }
+
+    public static void updateTextureManager(TextureManager tm) {
+
+        textureManager = tm;
     }
 
     /**
@@ -201,14 +206,6 @@ public class GameMenuManager extends TickableManager {
     }
 
     /**
-     * Pause the game.
-     */
-    private void pause() {
-        GameManager.setPaused(true);
-        GameScreen.isPaused = true;
-    }
-
-    /**
      * Generates an instance of TextureRegionDrawable with the given texture name.
      *
      * @param sName Texture Name.
@@ -226,7 +223,7 @@ public class GameMenuManager extends TickableManager {
      */
     public void setMainCharacter(MainCharacter mainCharacter) {
         if (stage == null) {
-            System.out.println("Please set stage before adding character");
+            logger.info("Please set stage before adding character");
             return;
         }
         this.mainCharacter = mainCharacter;
@@ -271,9 +268,11 @@ public class GameMenuManager extends TickableManager {
      */
     public void drawAllElements(){
         if (sm == null || skin == null) {
-            System.out.println("Please add skin and stats manager before drawing");
+            logger.info("Please add skin and stats manager before drawing");
             return;
         }
+        String whiteText = "white";
+        String exitText = "exitButton";
 
         Drawable bgBluePill = generateTextureRegionDrawableObject("blue_pill");
         Drawable bgGreenPill = generateTextureRegionDrawableObject("green_pill");
@@ -282,7 +281,7 @@ public class GameMenuManager extends TickableManager {
 
         Label.LabelStyle bluePill = new Label.LabelStyle();
         bluePill.font = gameFont;
-        bluePill.fontColor = skin.getColor("white");
+        bluePill.fontColor = skin.getColor(whiteText);
         bluePill.background = bgBluePill;
         skin.add("blue-pill", bluePill);
 
@@ -290,7 +289,7 @@ public class GameMenuManager extends TickableManager {
 
         Label.LabelStyle greenPill = new Label.LabelStyle();
         greenPill.font = gameFont;
-        greenPill.fontColor = skin.getColor("white");
+        greenPill.fontColor = skin.getColor(whiteText);
         greenPill.background = bgGreenPill;
         skin.add("green-pill", greenPill);
 
@@ -302,37 +301,37 @@ public class GameMenuManager extends TickableManager {
 
         TextButton.TextButtonStyle textBluePill = new TextButton.TextButtonStyle();
         textBluePill.font = gameFont;
-        textBluePill.fontColor = skin.getColor("white");
+        textBluePill.fontColor = skin.getColor(whiteText);
         skin.add("blue-pill", textBluePill);
 
 
         popUps.put("settingsTable", new SettingsTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this,
                 skin, soundManager));
 
         popUps.put("helpTable", new HelpTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this,
                 skin));
 
         popUps.put("pauseTable", new PauseTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this,
                 skin));
 
         popUps.put("playerSelectTable", new PlayerSelectTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this,
                 skin));
 
         popUps.put("buildingTable", new BuildingTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this,
                 skin));
 
         popUps.put("goldTable", new GoldTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this, sm, skin));
 
 
@@ -340,41 +339,39 @@ public class GameMenuManager extends TickableManager {
                 null, null, textureManager, this));
 
         popUps.put("blueprintShopTable", new BlueprintShopTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this, sm, skin));
 
-        popUps.put("collectTable", new GenericCollectCreateTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+        popUps.put("collectTable", new CollectCreateTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this, questManager, skin, "collect"));
 
         popUps.put("teleportTable", new TeleportTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this, questManager, skin, "collect"));
 
-        popUps.put("createTable", new GenericCollectCreateTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+        popUps.put("createTable", new CollectCreateTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this, questManager, skin, "create"));
 
         popUps.put("progressTable", new ProgressTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                null, textureManager, this, questManager, skin, "create"));
+                new ImageButton(generateTextureRegionDrawableObject(exitText)),
+                null, textureManager, this, questManager, skin));
 
-        //uiElements.put("weatherGUI", new WeatherGui(stage, EnvironmentManager.currentWeather()));
         Map<String, AbstractUIElement> hudElements = new HashMap<>();
         hudElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm, skin, this));
         hudElements.put("goldPill", new GoldStatusBar(stage, null, textureManager,  skin, this));
-        //hudElements.put("gameMenuBar", new GameMenuBar(stage, null, textureManager, this));
         hudElements.put("gameMenuBar2", new GameMenuBar2(stage, null, textureManager, skin, this));
         hudElements.put("clock" , new Clock(stage, skin, this));
 
         uiElements.put("HUD", new HeadsUpDisplay(stage, null, textureManager, skin, this, hudElements, questManager));
 
         popUps.put("inventoryTable",
-                new InventoryTable(stage, new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                new InventoryTable(stage, new ImageButton(generateTextureRegionDrawableObject(exitText)),
                         null, textureManager, skin,this));
 
         popUps.put("chestTable",new ChestTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this, sm, skin));
     }
 
