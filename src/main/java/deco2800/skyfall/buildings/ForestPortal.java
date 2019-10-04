@@ -7,6 +7,7 @@ import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.DesertBiome;
+import deco2800.skyfall.worlds.world.World;
 
 import java.util.Map;
 
@@ -124,7 +125,7 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
      * To be implemented when a player clicks on the portal
      * @param character - The Character to teleport
      */
-    public void teleport(MainCharacter character) {
+    public void teleport(MainCharacter character, World world) {
         character.unlockBiome(nextBiome);
         //move to a random place on the map
 
