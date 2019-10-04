@@ -1,7 +1,9 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.managers.TextureManager;
 
 public class Horse extends VehicleEntity {
@@ -22,6 +24,8 @@ public class Horse extends VehicleEntity {
         this.setHeight(1);
         this.setAvailable(available);
         this.setHealth(HEALTH);
+        this.setDirectionTextures();
+        this.configureAnimations();
     }
 
     public String getBiome() {
@@ -35,18 +39,18 @@ public class Horse extends VehicleEntity {
             float colDistance = mc.getCol() - this.getCol();
             float rowDistance = mc.getRow() - this.getRow();
 
-            if ((colDistance * colDistance + rowDistance * rowDistance) < 4){
-
-                //TODO: Let main character get onto vehicle
-                setTexture("horse_character");
-                setObjectName("horse_character");
-
-
-            } else {
-                this.setCurrentState(AnimationRole.NULL);
-            }
-        } else {
-            System.out.println("Main Character is null");
+//            if ((colDistance * colDistance + rowDistance * rowDistance) < 4){
+//
+//                //TODO: Let main character get onto vehicle
+//                setTexture("horse_character");
+//                setObjectName("horse_character");
+//
+//
+//            } else {
+//                this.setCurrentState(AnimationRole.NULL);
+//            }
+//        } else {
+//            System.out.println("Main Character is null");
         }
 
     }
@@ -59,5 +63,20 @@ public class Horse extends VehicleEntity {
         return this.moving;
     }
 
+    /**
+     * Sets the animations.
+     */
 
+    public void configureAnimations() {
+
+        // Walk animation
+        addAnimations(AnimationRole.MOVE, Direction.DEFAULT,
+                new AnimationLinker("tigerFront",
+                        AnimationRole.MOVE, Direction.DEFAULT, true, true));
+    }
+
+    public void setDirectionTextures() {
+
+
+    }
 }
