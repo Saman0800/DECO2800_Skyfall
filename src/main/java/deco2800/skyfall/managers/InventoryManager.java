@@ -229,11 +229,13 @@ public class InventoryManager extends TickableManager {
         if (this.inventory.get(name) != null) {
             List<Item> itemsList = this.inventory.get(name);
             itemsList.add(item);
+            System.out.println("Take 1");
             this.inventory.put(name, itemsList);
             return true;
         } else {
             List<Item> itemsList = new ArrayList<>();
             itemsList.add(item);
+            System.out.println("Take 2");
             List<Tuple> pos = new ArrayList<>();
             for (Map.Entry<String, Tuple> entry : this.positions.entrySet()) {
                 pos.add(entry.getValue());
@@ -257,6 +259,8 @@ public class InventoryManager extends TickableManager {
             logger.warn("Not enough space in inventory");
             return false;
         }
+
+
     }
 
     public void inventoryAddMultiple(Map<String, List<Item>> items) {
@@ -319,8 +323,17 @@ public class InventoryManager extends TickableManager {
                 float row = 0;
 
                 while(!validPos){
-                    col = (float) Math.floor(Math.random() * 20 + charCol);
-                    row = (float) Math.floor(Math.random() * 20 + charRow);
+                    int randomCol = 50;
+                    int randomRow = 50;
+                    if(Math.random() > 0.5){
+                        randomCol *= -1;
+                    }
+                    if(Math.random() > 0.5){
+                        randomRow *= -1;
+                    }
+
+                    col = (float) Math.floor(Math.random() * randomCol + charCol);
+                    row = (float) Math.floor(Math.random() * randomRow + charRow);
                     HexVector pos = new HexVector(col, row);
                     validPos = WorldUtil.validColRow(pos);
                 }

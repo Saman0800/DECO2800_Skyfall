@@ -320,7 +320,7 @@ public class InventoryTable extends AbstractPopUpElement {
         resourcePanel.setName("resourcePanel");
         resourcePanel.setSize(410, 320);
         resourcePanel.setPosition(475, 98);
-        resourcePanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
+        resourcePanel.setBackground(generateTextureRegionDrawableObject("inventory_panel"));
 
         return resourcePanel;
     }
