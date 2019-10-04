@@ -251,11 +251,6 @@ public enum BuildingType implements Blueprint {
     }
 
     @Override
-    public void toggleBlueprintLearned() {
-
-    }
-
-    @Override
     public int getCost() {
         switch(name){
             case "Cabin":
