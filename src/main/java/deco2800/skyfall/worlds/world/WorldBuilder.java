@@ -157,12 +157,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         EntitySpawnRule chestRule = new EntitySpawnRule(tile -> new Chest(tile, true, ChestManager.generateRandomLoot(
                 (int) Math.floor(NoiseGenerator
                         .fade(world.getStaticEntityNoise().getOctavedPerlinValue(tile.getCol(), tile.getRow()), 2)) + 5,
-                LootRarity.LEGENDARY)), random.nextInt(), 0.005);
-        biomeSpawnRules.add(chestRule);
-    }
-
-    private void spawnBlueprintShop(Random random, List<EntitySpawnRule> biomeSpawnRules) {
-        EntitySpawnRule chestRule = new EntitySpawnRule(tile -> new BlueprintShop(tile, true), random.nextInt(), 0.04);
+                LootRarity.LEGENDARY)), random.nextInt(), 0.05);
         biomeSpawnRules.add(chestRule);
     }
 
@@ -245,6 +240,14 @@ public class WorldBuilder implements WorldBuilderInterface {
         // Spawn some swords
         EntitySpawnRule swordRule = new EntitySpawnRule(tile -> new Sword(tile, true), random.nextInt(), 0.005);
         biomeSpawnRules.add(swordRule);
+
+        // Spawn some chest
+        EntitySpawnRule chestRule = new EntitySpawnRule(tile -> new Chest(tile, true, ChestManager.generateRandomLoot(10, LootRarity.LEGENDARY)), random.nextInt(), 0.05);
+        biomeSpawnRules.add(chestRule);
+
+        // Spawn a blueprint shop
+        EntitySpawnRule bsRule = new EntitySpawnRule(tile -> new BlueprintShop(tile, true), random.nextInt(), 0.05);
+        biomeSpawnRules.add(bsRule);
 
         // Spawn some axes
         EntitySpawnRule axeRule = new EntitySpawnRule(tile -> new Axe(tile, true), random.nextInt(), 0.007);
