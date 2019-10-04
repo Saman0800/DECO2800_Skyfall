@@ -228,7 +228,7 @@ public class QuestManager extends TickableManager{
         return (currentMetal >= getMetalTotal());
     }
 
-    /**
+/*
      * Checks if all required buildings have been placed in the world
      * @return True if all buildings are placed, False if not
      */
@@ -248,7 +248,7 @@ public class QuestManager extends TickableManager{
                 }
             }
         }
-        if (buildingsTotal.containsAll(currentBuildings)) {
+        if (currentBuildings.containsAll(buildingsTotal)) {
             allBuildings = true;
         }
         return allBuildings;
@@ -271,6 +271,15 @@ public class QuestManager extends TickableManager{
             questSuccess = true;
             //Other quest success stuff here, or quest success method
         }
+    }
+
+
+    /**
+     * Access player for testing
+     * @return main character entity
+     */
+    protected MainCharacter getPlayer() {
+        return player;
     }
 
     public boolean questFinished() {
@@ -306,4 +315,12 @@ public class QuestManager extends TickableManager{
 
     }
 
+    /**
+     * Resets the current quest of the player
+     */
+    public void resetQuest() {
+        int currentLevel = this.getQuestLevel();
+        this.setQuestLevel(currentLevel);
+        MainCharacter.getInstance().changeHealth(50);
+    }
 }

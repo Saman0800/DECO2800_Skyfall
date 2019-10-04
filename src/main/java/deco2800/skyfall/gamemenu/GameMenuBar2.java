@@ -64,7 +64,6 @@ public class GameMenuBar2 extends AbstractUIElement {
      */
     @Override
     public void draw() {
-        showEquipped();
         setQuickAccessPanel();
 
         build = new ImageButton(generateTextureRegionDrawableObject("build"));
@@ -237,6 +236,7 @@ public class GameMenuBar2 extends AbstractUIElement {
                     }
                 }
             });
+
             icon.setSize(size, size);
             iconCell.addActor(selected);
             iconCell.addActor(icon);

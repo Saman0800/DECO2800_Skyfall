@@ -3,6 +3,7 @@ package deco2800.skyfall.entities;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.tasks.*;
+import org.lwjgl.Sys;
 
 /**
  * Base class of character in game where main characters and enemies will
@@ -48,9 +49,9 @@ public abstract class Peon extends AgentEntity implements Tickable {
 			setName(name);
 		}
 
-		if (health <= 0){
-			this.health = 10;
-			this.maxHealth = 10;
+		if (health < 1){
+			this.health = 50;
+			this.maxHealth = 50;
 		} else {
 			this.health = health;
 			this.maxHealth = health;
@@ -71,7 +72,7 @@ public abstract class Peon extends AgentEntity implements Tickable {
 		}
 
 		if (health <= 0){
-			this.health = 10;
+			this.health = 50;
 		} else {
 			this.health = health;
 		}
@@ -102,12 +103,13 @@ public abstract class Peon extends AgentEntity implements Tickable {
 	public void changeHealth(int amount) {
 		int currentHealth = this.getHealth();
 
-		currentHealth += amount;
 		if(currentHealth > maxHealth) {
 			currentHealth = maxHealth;
 		}
 
-        this.health = currentHealth;
+		currentHealth += amount;
+
+		this.health = currentHealth;
 
 		if (this instanceof MainCharacter && this.isDead()) {
 			health = 0;
@@ -116,13 +118,6 @@ public abstract class Peon extends AgentEntity implements Tickable {
 			health= 0;
 			this.deaths += 1;
 		}
-
-//		if(currentHealth > maxHealth) {
-//			currentHealth = maxHealth;
-//		} else {
-//			currentHealth += amount;
-//		}
-
 	}
 
 	/**
