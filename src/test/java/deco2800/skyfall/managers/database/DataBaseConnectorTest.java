@@ -16,18 +16,21 @@ import java.io.ObjectInputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.text.html.parser.Entity;
 import org.flywaydb.core.Flyway;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({GameManager.class})
+@PrepareForTest({DatabaseManager.class})
 public class DataBaseConnectorTest {
 
 //    private static DataBaseConnector dataBaseConnectorActual = new DataBaseConnector();
@@ -39,10 +42,6 @@ public class DataBaseConnectorTest {
     public static void setupOnce() {
         flyway = new Flyway();
         dataBaseConnectorExpected.start("src/test/java/deco2800/skyfall/managers/database/ExpectedDatabase");
-//        dataBaseConnectorActual.start("src/test/java/deco2800/skyfall/managers/database/TestDataBase");
-//        flyway.setDataSource("jdbc:derby:src/test/java/deco2800/skyfall/managers/database/TestDataBase;create=true", "",
-//            "");
-//        insertDataQueries = new InsertDataQueries(dataBaseConnectorActual.getConnection());
     }
 
     @Before
@@ -53,8 +52,7 @@ public class DataBaseConnectorTest {
 
     @AfterClass
     public static void cleanUp() {
-//        dataBaseConnectorActual.close();
-//        dataBaseConnectorExpected.close();
+        dataBaseConnectorExpected.close();
     }
 
 
@@ -75,15 +73,11 @@ public class DataBaseConnectorTest {
 
     @Test
     public void loadGameTest() {
-        MainCharacter.getInstance().setCol(0);
-        MainCharacter.getInstance().setRow(0);
-
-
-        DatabaseManager dbm = mock(DatabaseManager.class);
-        when(dbm.getDataBaseConnector()).thenReturn(dataBaseConnectorExpected);
+//        MainCharacter.getInstance().setCol(0);
+//        MainCharacter.getInstance().setRow(0);
 
         mockStatic(DatabaseManager.class);
-        when(DatabaseManager.get()).thenReturn(dbm);
+        when(DatabaseManager.get().getDataBaseConnector()).thenReturn(dataBaseConnectorExpected);
 
 
         try {
@@ -142,42 +136,4 @@ public class DataBaseConnectorTest {
     public void loadSaveInformationTest() {
     }
 
-
-    public void populateDatabase() throws SQLException, IOException, ClassNotFoundException {
-
-
-
-
-
-//        //Adding saves to database
-//        SaveMemento saveMock = Mockito.mock(SaveMemento.class);
-//        insertDataQueries.insertSave(0, saveMock);
-//
-//        //Adding worlds to database
-//        WorldMemento worldMock = Mockito.mock(WorldMemento.class);
-//        insertDataQueries.insertWorld(0, 0, true, worldMock);
-//
-//        //Adding chunks to the worlds
-//        ChunkMemento chunkMock = Mockito.mock(ChunkMemento.class);
-//        insertDataQueries.insertChunk(0, 0, 0, chunkMock);
-//
-//        //Adding edges to the world
-//        VoronoiEdgeMemento edgeMock = Mockito.mock(VoronoiEdgeMemento.class);
-//        insertDataQueries.insertEdges(0, 0, 0, edgeMock);
-//
-//        //Adding
-//        SaveableEntityMemento entityMock = Mockito.mock(SaveableEntityMemento.class);
-//        insertDataQueries.insertEntity("test", 0, 0, 0, 0, 0, entityMock, 0);
-//
-//        //FIXME:jeffvan12 implement main character testing, loading and saving the main character methods
-//        // in DatabaseConnector should be finished first
-//
-    }
-
-
-
-    public AbstractMemento loadMementoFromBytes(byte[] buffer) throws IOException, ClassNotFoundException {
-        ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(buffer));
-        return (AbstractMemento) objectIn.readObject();
-    }
 }
