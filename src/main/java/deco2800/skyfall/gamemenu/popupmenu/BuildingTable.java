@@ -110,11 +110,11 @@ public class BuildingTable extends AbstractPopUpElement{
         items.row();
 
         //testing
-        gameMenuManager.getMainCharacter().addBlueprint(new Hatchet());
-        gameMenuManager.getMainCharacter().addBlueprint(new PickAxe());
-        gameMenuManager.getMainCharacter().addBlueprint(new Sword());
-        gameMenuManager.getMainCharacter().addBlueprint(new Spear());
-        gameMenuManager.getMainCharacter().addBlueprint(new Bow());
+//        gameMenuManager.getMainCharacter().addBlueprint(new Hatchet());
+//        gameMenuManager.getMainCharacter().addBlueprint(new PickAxe());
+//        gameMenuManager.getMainCharacter().addBlueprint(new Sword());
+//        gameMenuManager.getMainCharacter().addBlueprint(new Spear());
+//        gameMenuManager.getMainCharacter().addBlueprint(new Bow());
 
         List<Blueprint> blueprintsLearned = gameMenuManager.getMainCharacter().getBlueprintsLearned();
         // Generating items in getBlueprintsLearned
