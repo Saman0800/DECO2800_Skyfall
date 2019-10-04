@@ -1,56 +1,48 @@
 package deco2800.skyfall.entities;
 
-import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import org.slf4j.Logger;
+import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Collections;
 
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.world.Chunk;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import org.slf4j.Logger;
+
 import org.slf4j.LoggerFactory;
-
-import java.util.Set;
-
-import com.badlogic.gdx.graphics.Texture;
-
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.Tile;
+import com.badlogic.gdx.graphics.Texture;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.TextureManager;
 
-import com.google.gson.annotations.Expose;
 
-public class StaticEntity extends AbstractEntity implements NewInstance<StaticEntity>, Saveable<StaticEntity.StaticEntityMemento> {
+public class StaticEntity extends SaveableEntity implements NewInstance<StaticEntity> {
     private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
 
     private static final String ENTITY_ID_STRING = "staticEntityID";
-    //private int renderOrder;
+    // private int renderOrder;
     private boolean obstructed;
     private static TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
-
-    // The type of entity this is (e.g. "Tree", "Axe" etc.)
-    protected String entityType;
 
     public Map<HexVector, String> children;
 
     private Map<HexVector, String> textures;
+
+    public StaticEntity() {
+        super();
+    }
 
     /**
      * Loads a static entity from a memento
      *
      * @param memento the static entitiy to add
      */
-    public StaticEntity(StaticEntityMemento memento) {
+    public StaticEntity(SaveableEntityMemento memento) {
         super(memento.col, memento.row, memento.renderOrder);
         this.load(memento);
         children = new HashMap<>();
@@ -63,10 +55,13 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
 
     }
 
-    public StaticEntity() {
-        super();
-    }
-
+    /**
+     * Initialises a static entity
+     * @param tile The tile it spawns on
+     * @param renderOrder The position is has in the render order
+     * @param texture The texture it is given
+     * @param obstructed Whether the entity is obstructed by something
+     */
     public StaticEntity(Tile tile, int renderOrder, String texture, boolean obstructed) {
         super(tile.getCol(), tile.getRow(), renderOrder);
         this.setObjectName(ENTITY_ID_STRING);
@@ -83,6 +78,13 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         tile.setObstructed(obstructed);
     }
 
+    /**
+     * Initialises a static entity
+     * @param col The tile col it spawns on
+     * @param row The tile row it spawns on
+     * @param renderOrder The position it has in the render order
+     * @param texture The texture the entity is given
+     */
     public StaticEntity(float col, float row, int renderOrder, Map<HexVector, String> texture) {
         super(col, row, renderOrder);
         this.setObjectName(ENTITY_ID_STRING);
@@ -91,35 +93,18 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         this.obstructed = true;
         this.textures = texture;
 
-        if (center == null) {
-            log.debug("Center is null");
-            return;
-        }
-        center.setObstructed(true);
-
-        if (!WorldUtil.validColRow(center.getCoordinates())) {
-            log.debug(center.getCoordinates() + " Is Invalid:");
-            return;
-        }
-
-        children = new HashMap<>();
-
-        for (Entry<HexVector, String> tex : texture.entrySet()) {
-            Tile tile = textureToTile(tex.getKey(), this.getPosition());
-            if (tile != null) {
-                children.put(tile.getCoordinates(), tex.getValue());
-            }
-        }
-
-        for (HexVector childPos : children.keySet()) {
-            Tile child = GameManager.get().getWorld().getTile(childPos);
-
-            child.setObstructed(true);
-        }
+        staticEntitySetUp(center, texture);
     }
 
-    public StaticEntity(Tile tile, int renderOrder, String texture,
-                        boolean obstructed, String fixtureDef) {
+    /**
+     * Initialises a static entity with a custom hit box
+     * @param tile The tile it spawns on
+     * @param renderOrder The position it has in the render order
+     * @param texture The texture the entity is given
+     * @param obstructed Whether the entity is obstructed by something
+     * @param fixtureDef The name of the hit box given to the entity
+     */
+    public StaticEntity(Tile tile, int renderOrder, String texture, boolean obstructed, String fixtureDef) {
         super(tile.getCol(), tile.getRow(), renderOrder, fixtureDef);
         this.setObjectName(ENTITY_ID_STRING);
         this.setTexture(texture);
@@ -130,7 +115,7 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         children = new HashMap<>();
         children.put(tile.getCoordinates(), texture);
         if (!WorldUtil.validColRow(tile.getCoordinates())) {
-            log.debug(tile.getCoordinates() + "%s Is Invalid:");
+            log.debug("{}s Is Invalid:", tile.getCoordinates());
             return;
         }
 
@@ -138,8 +123,15 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         tile.setObstructed(obstructed);
     }
 
-    public StaticEntity(float col, float row, int renderOrder, Map<HexVector,
-            String> texture, String fixtureDef) {
+    /**
+     * Initialises a static entity with a custom hit box
+     * @param col The tile col it spawns on
+     * @param row The tile row it spawns on
+     * @param renderOrder The position it has in the render order
+     * @param texture The texture the entity is given
+     * @param fixtureDef The name of the hit box given to the entity
+     */
+    public StaticEntity(float col, float row, int renderOrder, Map<HexVector, String> texture, String fixtureDef) {
         super(col, row, renderOrder, fixtureDef);
         this.setObjectName(ENTITY_ID_STRING);
 
@@ -148,13 +140,18 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         this.obstructed = true;
         this.textures = texture;
 
+        staticEntitySetUp(center, texture);
+    }
+
+    private void staticEntitySetUp(Tile center, Map<HexVector, String> texture) {
         if (center == null) {
             log.debug("Center is null");
             return;
         }
+        center.setObstructed(true);
 
         if (!WorldUtil.validColRow(center.getCoordinates())) {
-            log.debug(center.getCoordinates() + " Is Invalid:");
+            log.debug("{} is Invalid:", center.getCoordinates());
             return;
         }
 
@@ -192,6 +189,10 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         return Collections.unmodifiableMap(this.textures);
     }
 
+    /**
+     * Gives all the static entities in a world a parent and sets there hit
+     * box to be that of the parent
+     */
     public void setup() {
         if (children == null) {
             return;
@@ -233,6 +234,12 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         // Do the AI for the building in here
     }
 
+    /**
+     * Gets the tile for a position on the map
+     * @param offset The offset from the center of the map
+     * @param center The center of the map
+     * @return The Tile at the given location
+     */
     private Tile textureToTile(HexVector offset, HexVector center) {
         if (!WorldUtil.validColRow(offset)) {
             log.debug(offset + " Is Invaid:");
@@ -242,6 +249,10 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         return GameManager.get().getWorld().getTile(targetTile);
     }
 
+    /**
+     * Gets the position to render
+     * @return The x and y value for the position to render
+     */
     public int[] getRenderCentre() {
         float[] rowColValues = WorldUtil.colRowToWorldCords(getCol(), getRow());
 
@@ -255,16 +266,29 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
         return renderPos;
     }
 
+    /**
+     * Get the position of the child static entities
+     * @return Key set of all the child positions
+     */
     public Set<HexVector> getChildrenPositions() {
         return children.keySet();
     }
 
+    /**
+     * Gets the texture for a child position
+     * @param childPos The position of the child
+     * @return The Texture for that child
+     */
     public Texture getTexture(HexVector childPos) {
         String texture = children.get(childPos);
 
         return textureManager.getTexture(texture);
     }
 
+    /**
+     * Sets a map of child entities
+     * @param children Map with there position and name
+     */
     public void setChildren(Map<HexVector, String> children) {
         this.children = children;
     }
@@ -276,77 +300,5 @@ public class StaticEntity extends AbstractEntity implements NewInstance<StaticEn
      */
     public void addToChunk(Chunk chunk) {
         chunk.addEntity(this);
-    }
-
-    /**
-     * Gets the entity type of this entity
-     *
-     * @return the entity type of this entity
-     */
-    public String getEntityType() {
-        return this.entityType;
-    }
-
-    @Override
-    public StaticEntityMemento save() {
-        return new StaticEntityMemento(this);
-    }
-
-    @Override
-    public void load(StaticEntityMemento memento) {
-        this.setEntityID(memento.entityID);
-        setRenderOrder(memento.renderOrder);
-        this.obstructed = memento.obstructed;
-        /*
-        this.setBody(memento.body);
-        this.setFixture(memento.fixture);
-         */
-        this.setCollidable(memento.isCollidable);
-        this.setTexture(memento.texture);
-        this.setColRenderLength(memento.colRenderLength);
-        this.setRowRenderLength(memento.rowRenderLength);
-        this.setPosition(memento.col, memento.row);
-    }
-
-    public class StaticEntityMemento extends AbstractMemento {
-        public String staticEntityType;
-        public int height;
-        public float row;
-        public float col;
-        public int entityID;
-        public float colRenderLength;
-        public float rowRenderLength;
-        public int renderOrder;
-        public boolean obstructed;
-
-        // TODO:dannathan find out if these need to be saved (they cause a stack overflow in gson)
-        /*
-        private Body body;
-        private Fixture fixture;
-         */
-
-        private Boolean isCollidable;
-        private String texture;
-
-        public StaticEntityMemento(StaticEntity entity) {
-            this.staticEntityType = entity.entityType;
-            this.height = entity.getHeight();
-            this.row = entity.getRow();
-            this.col = entity.getCol();
-            this.entityID = entity.getEntityID();
-            this.colRenderLength = entity.getColRenderLength();
-            this.rowRenderLength = entity.getRowRenderLength();
-            this.renderOrder = entity.getRenderOrder();
-            this.obstructed = entity.obstructed;
-
-
-            /*
-            this.body = entity.getBody();
-            this.fixture = entity.getFixture();
-            */
-
-            this.isCollidable = entity.getCollidable();
-            this.texture = entity.getTexture();
-        }
     }
 }

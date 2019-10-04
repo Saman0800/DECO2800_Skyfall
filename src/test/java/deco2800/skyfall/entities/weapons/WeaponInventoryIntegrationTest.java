@@ -6,6 +6,8 @@ import deco2800.skyfall.worlds.Tile;
 
 import org.junit.*;
 
+import java.lang.reflect.Field;
+
 public class WeaponInventoryIntegrationTest {
 
     private MainCharacter mc;
@@ -17,7 +19,8 @@ public class WeaponInventoryIntegrationTest {
      * Setup function to initialise variables before each test
      */
     @Before
-    public void setup() {
+    public void setup() throws NoSuchFieldException, IllegalAccessException {
+        MainCharacter.resetInstance();
         mc = MainCharacter.getInstance(0f, 0f, 0.05f, "Main Piece", 10);
         inventory = new InventoryManager();
         sword = new Sword(new Tile(null, 0, 0), false);

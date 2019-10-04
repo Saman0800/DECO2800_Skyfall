@@ -67,6 +67,7 @@ public class BuildingTable extends AbstractPopUpElement{
      */
     @Override
     public void show() {
+        draw();
         super.show();
         buildingTable.setVisible(true);
     }
@@ -114,7 +115,6 @@ public class BuildingTable extends AbstractPopUpElement{
         gameMenuManager.getMainCharacter().addBlueprint(new Sword());
         gameMenuManager.getMainCharacter().addBlueprint(new Spear());
         gameMenuManager.getMainCharacter().addBlueprint(new Bow());
-
 
         List<Blueprint> blueprintsLearned = gameMenuManager.getMainCharacter().getBlueprintsLearned();
         // Generating items in getBlueprintsLearned

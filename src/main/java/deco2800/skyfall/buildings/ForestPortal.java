@@ -37,8 +37,7 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
      */
     public ForestPortal(float col, float row, int renderOrder) {
         super(col, row, renderOrder);
-        // TODO: @CGulley set texture to the texture of the forest portal
-        // TODO: @CGulley set the functionality to move to the next biome
+        this.setTexture("portal");
 
     }
 
@@ -112,7 +111,6 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
         } else {
             blueprintLearned = true;
         }
-
     }
 
     /**

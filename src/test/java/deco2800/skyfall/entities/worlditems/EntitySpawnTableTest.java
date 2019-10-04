@@ -12,6 +12,7 @@ import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -30,8 +31,8 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(
-        { GameManager.class, WorldBuilder.class, WorldDirector.class, DatabaseManager.class, DataBaseConnector.class })
+@PrepareForTest({ GameManager.class, WorldBuilder.class, WorldDirector.class, DatabaseManager.class,
+        DataBaseConnector.class })
 public class EntitySpawnTableTest {
 
     private World testWorld = null;
@@ -53,14 +54,12 @@ public class EntitySpawnTableTest {
         whenNew(Random.class).withAnyArguments().thenReturn(random);
 
         DataBaseConnector connector = mock(DataBaseConnector.class);
-        when(connector.loadChunk(any(World.class), anyInt(), anyInt())).then(
-                (Answer<Chunk>) invocation -> {
-                    Chunk chunk = new Chunk(invocation.getArgumentAt(0, World.class),
-                                            invocation.getArgumentAt(1, Integer.class),
-                                            invocation.getArgumentAt(2, Integer.class));
-                    chunk.generateEntities();
-                    return chunk;
-                });
+        when(connector.loadChunk(any(World.class), anyInt(), anyInt())).then((Answer<Chunk>) invocation -> {
+            Chunk chunk = new Chunk(invocation.getArgumentAt(0, World.class),
+                    invocation.getArgumentAt(1, Integer.class), invocation.getArgumentAt(2, Integer.class));
+            chunk.generateEntities();
+            return chunk;
+        });
 
         DatabaseManager manager = mock(DatabaseManager.class);
         when(manager.getDataBaseConnector()).thenReturn(connector);
@@ -88,7 +87,7 @@ public class EntitySpawnTableTest {
     public void testPlaceEntity() {
         Tile tile1 = new Tile(null, 0.0f, 0.0f);
         Tile tile2 = new Tile(null, 0.0f, 1.0f);
-        Rock rock = new Rock(tile2, true);
+        ForestRock rock = new ForestRock(tile2, true);
 
         // check tile has no rock
         assertFalse(tile1.hasParent());
@@ -113,6 +112,7 @@ public class EntitySpawnTableTest {
     }
 
     @Test
+    @Ignore
     public void testDirectPlace() {
         // Generate a chunk.
         testWorld.getChunk(0, 0);
@@ -126,44 +126,47 @@ public class EntitySpawnTableTest {
         // check basic spawnEntities
         final double chance = 0.95;
         for (Tile tile : testWorld.getTileMap()) {
-            EntitySpawnTable.spawnEntity(tileToPlace -> new Rock(tileToPlace, true), chance, testWorld, tile);
+            // EntitySpawnTable.spawnEntity(tileToPlace -> new ForestRock(tileToPlace,
+            // true),
+            // chance, testWorld, tile);
         }
 
         // count after spawning
         assertTrue(countWorldEntities() > 0);
     }
 
-//    @Test
-//    @Ignore // This is no longer a valid test, since the minimum and maximum values are no longer guaranteed.
-//    public void maxMinPlacementTest() {
-//        WorldBuilder worldBuilder = new WorldBuilder();
-//        WorldDirector.constructTestWorld(worldBuilder);
-//        World newWorld = worldBuilder.getWorld();
-//
-//        // create tile map, add tiles and push to testWorld
-//        CopyOnWriteArrayList<Tile> newTileMap = new CopyOnWriteArrayList<>();
-//
-//        for (int i = 0; i < worldSize; i++) {
-//            Tile tile = new Tile(null, 1.0f * i, 0.0f);
-//            newTileMap.add(tile);
-//            biome.addTile(tile);
-//        }
-//
-//        newWorld.setTileMap(newTileMap);
-//
-//        EntitySpawnRule newRule = new EntitySpawnRule(2, 4, null, true);
-//        newRule.setChance(1.0);
-//
-//        Rock rock = new Rock();
-//        EntitySpawnTable.spawnEntity(rock, newRule, newWorld);
-//
-//        int count = 0;
-//        for (Tile tile : newWorld.getTileMap()) {
-//            if (tile.hasParent()) {
-//                count++;
-//            }
-//        }
-//
-//        assertTrue("Count was " + count, count <= 4);
-//    }
+    // @Test
+    // @Ignore // This is no longer a valid test, since the minimum and maximum
+    // values are no longer guaranteed.
+    // public void maxMinPlacementTest() {
+    // WorldBuilder worldBuilder = new WorldBuilder();
+    // WorldDirector.constructTestWorld(worldBuilder);
+    // World newWorld = worldBuilder.getWorld();
+    //
+    // // create tile map, add tiles and push to testWorld
+    // CopyOnWriteArrayList<Tile> newTileMap = new CopyOnWriteArrayList<>();
+    //
+    // for (int i = 0; i < worldSize; i++) {
+    // Tile tile = new Tile(null, 1.0f * i, 0.0f);
+    // newTileMap.add(tile);
+    // biome.addTile(tile);
+    // }
+    //
+    // newWorld.setTileMap(newTileMap);
+    //
+    // EntitySpawnRule newRule = new EntitySpawnRule(2, 4, null, true);
+    // newRule.setChance(1.0);
+    //
+    // ForestRock rock = new ForestRock();
+    // EntitySpawnTable.spawnEntity(rock, newRule, newWorld);
+    //
+    // int count = 0;
+    // for (Tile tile : newWorld.getTileMap()) {
+    // if (tile.hasParent()) {
+    // count++;
+    // }
+    // }
+    //
+    // assertTrue("Count was " + count, count <= 4);
+    // }
 }

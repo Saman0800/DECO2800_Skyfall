@@ -23,8 +23,7 @@ public class MountainPortal extends AbstractPortal implements Blueprint {
      */
     public MountainPortal(float col, float row, int renderOrder) {
         super(col, row, renderOrder);
-        // TODO: @CGulley set texture to the texture of the mountain portal
-        // TODO: @Cgulley set the functionality to move to the next biome
+        this.setTexture("portal");
 
     }
 

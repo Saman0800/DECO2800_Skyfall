@@ -2,8 +2,8 @@ package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.StaticEntity;
-import deco2800.skyfall.entities.worlditems.Rock;
-import deco2800.skyfall.entities.worlditems.Tree;
+import deco2800.skyfall.entities.worlditems.ForestRock;
+import deco2800.skyfall.entities.worlditems.ForestTree;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.Cube;
 import deco2800.skyfall.util.HexVector;
@@ -22,7 +22,9 @@ public class TestWorld extends World {
 
     private static int RADIUS = 25;
 
-    private static final UnaryOperator<WorldParameters> THROWER = wp -> {throw new UnsupportedOperationException();};
+    private static final UnaryOperator<WorldParameters> THROWER = wp -> {
+        throw new UnsupportedOperationException();
+    };
 
     public TestWorld(WorldParameters worldParameters) {
         super(THROWER.apply(worldParameters));
@@ -73,7 +75,7 @@ public class TestWorld extends World {
     private void addTree(float col, float row) {
         Map<HexVector, String> textures = new HashMap<>();
         Tile t = GameManager.get().getWorld().getTile(col, row);
-        Tree tree = new Tree(t, true);
+        ForestTree tree = new ForestTree(t, true);
         addEntity(tree);
     }
 
@@ -85,7 +87,7 @@ public class TestWorld extends World {
         for (int i = 0; i < 200; i++) {
             Tile t = GameManager.get().getWorld().getTile(random.nextInt(tileCount));
             if (t != null) {
-                addEntity(new Rock(t, true));
+                addEntity(new ForestRock(t, true));
             }
         }
         addEntity(createBuilding2(-5, 0.5f));
