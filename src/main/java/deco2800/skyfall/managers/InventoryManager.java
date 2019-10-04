@@ -1,11 +1,16 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.gui.Tuple;
+import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.resources.ManufacturedResources;
+import deco2800.skyfall.resources.NaturalResources;
 import deco2800.skyfall.resources.items.*;
 
 import java.io.Serializable;
 
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.*;
@@ -23,7 +28,7 @@ public class InventoryManager extends TickableManager {
     private List<String> quickAccess;
 
     // Maximum size of quick access inventory
-    private static final int QA_MAX_SIZE = 6;
+    private static final int QA_MAX_SIZE = 4;
 
     public boolean HAS_QUICK_ACCESS = true;
 
@@ -56,8 +61,6 @@ public class InventoryManager extends TickableManager {
         this.add(new PickAxe());
         this.quickAccessAdd("Hatchet");
         this.quickAccessAdd("Pick Axe");
-        this.quickAccessAdd("Wood");
-        this.quickAccessAdd("Stone");
     }
 
     public void initInventory(Map<String, List<Item>> inventory) {
@@ -256,6 +259,8 @@ public class InventoryManager extends TickableManager {
             logger.warn("Not enough space in inventory");
             return false;
         }
+
+
     }
 
     public void inventoryAddMultiple(Map<String, List<Item>> items) {
@@ -308,7 +313,48 @@ public class InventoryManager extends TickableManager {
         if(this.inventory.get(itemName) != null){
             List<Item> items = this.inventory.get(itemName);
             remove(itemName);
+
+            float charCol = GameManager.getManagerFromInstance(StatisticsManager.class).getCharacter().getCol();
+            float charRow = GameManager.getManagerFromInstance(StatisticsManager.class).getCharacter().getRow();
+
+            for(Item item: items){
+                boolean validPos = false;
+                float col = 0;
+                float row = 0;
+
+                while(!validPos){
+                    int randomCol = 50;
+                    int randomRow = 50;
+                    if(Math.random() > 0.5){
+                        randomCol *= -1;
+                    }
+                    if(Math.random() > 0.5){
+                        randomRow *= -1;
+                    }
+
+                    col = (float) Math.floor(Math.random() * randomCol + charCol);
+                    row = (float) Math.floor(Math.random() * randomRow + charRow);
+                    HexVector pos = new HexVector(col, row);
+                    validPos = WorldUtil.validColRow(pos);
+                }
+
+                if(item instanceof NaturalResources){
+                    ((NaturalResources) item).setPosition(col, row);
+                    ((NaturalResources) item).setTexture(item.getName() + "_world");
+                    GameManager.get().getWorld().addEntity((NaturalResources) item);
+                } else if(item instanceof HealthResources){
+                    ((HealthResources) item).setPosition(col, row);
+                    ((HealthResources) item).setTexture(item.getName() + "_world");
+                    GameManager.get().getWorld().addEntity((HealthResources) item);
+                } else if(item instanceof ManufacturedResources){
+                    ((ManufacturedResources) item).setPosition(col, row);
+                    ((ManufacturedResources) item).setTexture(item.getName() + "_world");
+                    GameManager.get().getWorld().addEntity((ManufacturedResources) item);
+                }
+            }
+
             return items;
+
         }
 
         logger.warn("You can't remove what you don't have!");
@@ -385,5 +431,11 @@ public class InventoryManager extends TickableManager {
         logger.warn("You don't have that!");
 
         return null;
+    }
+
+    public Item getItemInstance(String itemName){
+        List<Item> itemsList = this.inventory.get(itemName);
+        Item item = itemsList.get(0);
+        return item;
     }
 }

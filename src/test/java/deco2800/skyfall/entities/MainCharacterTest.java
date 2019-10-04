@@ -291,7 +291,7 @@ public class MainCharacterTest {
         // so that the effect (e.g. sprite flashing in red) will disappear
         // after recovering.
 
-        Assert.assertFalse(testCharacter.IsHurt());
+        Assert.assertFalse(testCharacter.isHurt());
     }
 
     /**
@@ -496,6 +496,7 @@ public class MainCharacterTest {
 
     /**
      * Tests to ensure that the closest gold piece is added to the gold pouch
+     * Tested here instead of World to allow for ease of testing.
      */
     @Test
     public void addClosestGoldPieceTest() {
@@ -564,21 +565,28 @@ public class MainCharacterTest {
         testCharacter.changeHealth(-9);
 
         int currentHealth = testCharacter.getHealth();
-
+        // Loses health so player is not at full health (for eatFood())
+        testCharacter.changeHealth(-2);
+        currentHealth -= 2;
         // Check that health increases by 2
         testCharacter.pickUpInventory(alo);
         testCharacter.eatFood(alo);
         Assert.assertEquals(currentHealth + 2, testCharacter.getHealth());
+        // Add back health
+        currentHealth += 2;
 
+        testCharacter.changeHealth(-4);
+        currentHealth -= 4;
         // Check that health increases by 4
         testCharacter.pickUpInventory(apple);
-        testCharacter.changeHealth(-2);
         testCharacter.eatFood(apple);
         Assert.assertEquals(currentHealth + 4, testCharacter.getHealth());
+        currentHealth += 4;
 
+        testCharacter.changeHealth(-6);
+        currentHealth -= 6;
         // Check that health increases by 6
         testCharacter.pickUpInventory(berry);
-        testCharacter.changeHealth(-4);
         testCharacter.eatFood(berry);
         Assert.assertEquals(currentHealth + 6, testCharacter.getHealth());
     }

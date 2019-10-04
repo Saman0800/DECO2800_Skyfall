@@ -11,14 +11,9 @@ public class Aloe_Vera extends HealthResources implements Item {
     // the name of the item
     private String name;
 
-    // the colour of the Aloe_Vera
-    private String colour;
-
     // amount of health item provides
     private int health = 2;
 
-    // the biome the Aloe_vera is in (will change to different type in future?)
-    private String biome;
 
     // Logger to show messages
     private final Logger logger = LoggerFactory.getLogger(Aloe_Vera.class);
@@ -44,13 +39,6 @@ public class Aloe_Vera extends HealthResources implements Item {
     }
 
 
-    /**
-     * Returns the biome the Aloe_Vera is situated in
-     * @return the biome the Aloe_Vera is situated in
-     */
-    public String getBiome(){
-        return biome;
-    }
 
 
     @Override

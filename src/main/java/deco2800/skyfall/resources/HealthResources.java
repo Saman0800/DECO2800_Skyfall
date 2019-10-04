@@ -1,15 +1,17 @@
 package deco2800.skyfall.resources;
 
 //import deco2800.skyfall.entities.EnemyEntity;
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class HealthResources implements Item {
+public abstract class HealthResources extends AbstractEntity implements Item {
 
     // can the item be stored in the inventory
     private Boolean carryable;
+
     // the name of the item e.g. food, poison
     private String name;
 
@@ -25,13 +27,19 @@ public abstract class HealthResources implements Item {
     private Boolean exchangeable;
 
     // Can be item be equipped
-    public boolean equippable;
+    private boolean equippable;
 
     // the value of the piece of food
     protected int foodValue;
 
+    // the biome the health resource is from
+    protected String biome;
+
     // the healing ability of the health item
     protected int healthValue;
+
+    // the colour of the health resource
+    protected String colour;
 
     private final transient Logger log = LoggerFactory.getLogger(HealthResources.class);
 
@@ -44,7 +52,7 @@ public abstract class HealthResources implements Item {
         this.subtype = "Health Resource";
         this.exchangeable = true;
         this.hasHealingPower = true;
-        this.equippable = false;
+        this.equippable = true;
         //Do we need a new type like FoodResources? and hasFoodEffect may false
         // in here as medicine may not affect the food fullness
 
@@ -71,6 +79,21 @@ public abstract class HealthResources implements Item {
         this.healthValue = 10;
     }
 
+    /**
+     * Returns the biome the Health Resource is situated in
+     * @return the biome the Health Resource is situated in
+     */
+    public String getBiome(){
+        return biome;
+    }
+
+    /**
+     * Returns the colour of the Health resource
+     * @return the colour of the Health resource
+     */
+    public String getColour(){
+        return colour;
+    }
 
     /**
      * Returns the name of the health resource
@@ -190,5 +213,10 @@ public abstract class HealthResources implements Item {
      */
     public Boolean isEquippable() {
         return this.equippable;
+    }
+
+    @Override
+    public void onTick(long i) {
+        // Auto-generated method stub
     }
 }

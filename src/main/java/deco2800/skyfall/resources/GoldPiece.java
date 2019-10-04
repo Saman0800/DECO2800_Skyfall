@@ -43,8 +43,7 @@ public class GoldPiece extends StaticEntity {
         if (value == 5 || value == 10 || value == 50 || value == 100){
             this.value = value;
         } else {
-            logger.info("You don't have enough Metal");
-            System.out.println("Invalid piece of gold");
+            logger.info("Invalid piece of gold");
         }
     }
 

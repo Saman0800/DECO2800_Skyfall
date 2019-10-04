@@ -8,10 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
-import deco2800.skyfall.gamemenu.GameMenuBar;
-import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.managers.InventoryManager;
-import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.gamemenu.GameMenuBar2;
+import deco2800.skyfall.gamemenu.HeadsUpDisplay;
+import deco2800.skyfall.managers.*;
 import deco2800.skyfall.resources.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +45,7 @@ public class InventoryTable extends AbstractPopUpElement {
     private MainCharacter mainCharacter;
 
     //Current GameMenuBar in game, from GameMenuManager
-    private GameMenuBar gameMenuBar;
+    private GameMenuBar2 gameMenuBar;
 
     //Inventory user interface drop item button (active)
     private ImageButton dropButton;
@@ -65,6 +64,8 @@ public class InventoryTable extends AbstractPopUpElement {
 
     //Inventory user interface equip item button (inactive)
     private ImageButton inactiveEquipButton;
+
+    private StatisticsManager sm;
 
     //Logger for Inventory Table
     private final transient Logger LOGGER =
@@ -87,9 +88,13 @@ public class InventoryTable extends AbstractPopUpElement {
         this.gameMenuManager = gameMenuManager;
         this.inventory = gameMenuManager.getInventory();
         this.mainCharacter = gameMenuManager.getMainCharacter();
+        this.sm = GameManager.getManagerFromInstance(StatisticsManager.class);
 
-        if(gameMenuManager.getUIElement("gameMenuBar") instanceof GameMenuBar){
-            this.gameMenuBar = (GameMenuBar) gameMenuManager.getUIElement("gameMenuBar");
+        if(gameMenuManager.getUIElement("HUD") instanceof HeadsUpDisplay){
+            HeadsUpDisplay hud = (HeadsUpDisplay) gameMenuManager.getUIElement("HUD");
+            if(hud.gethudElement("gameMenuBar2") instanceof GameMenuBar2){
+                this.gameMenuBar = (GameMenuBar2) hud.gethudElement("gameMenuBar2");
+            }
         }
         this.draw();
     }
@@ -171,10 +176,13 @@ public class InventoryTable extends AbstractPopUpElement {
         if(active){
             inactiveAddqaButton.setVisible(false);
             inactiveDropButton.setVisible(false);
-            inactiveEquipButton.setVisible(false);
             addqaButton.setVisible(true);
-            equipButton.setVisible(true);
             dropButton.setVisible(true);
+
+            if(inventory.getItemInstance(inventorySelected).isEquippable()){
+                equipButton.setVisible(true);
+                inactiveEquipButton.setVisible(false);
+            }
         }else{
             inactiveAddqaButton.setVisible(true);
             inactiveDropButton.setVisible(true);
@@ -257,11 +265,11 @@ public class InventoryTable extends AbstractPopUpElement {
             }
         });
 
-        this.inactiveEquipButton = new ImageButton(generateTextureRegionDrawableObject("equip inactive"));
+        this.inactiveEquipButton = new ImageButton(generateTextureRegionDrawableObject("equip inactive inv"));
         this.inactiveEquipButton.setSize(170, 60);
         this.inactiveEquipButton.setPosition(390, 20);
 
-        this.equipButton = new ImageButton(generateTextureRegionDrawableObject("equip"));
+        this.equipButton = new ImageButton(generateTextureRegionDrawableObject("equip inv"));
         this.equipButton.setSize(170, 60);
         this.equipButton.setPosition(390, 20);
         this.equipButton.setVisible(false);
@@ -297,7 +305,6 @@ public class InventoryTable extends AbstractPopUpElement {
                 if(inventorySelected != null) {
                     inventory.quickAccessAdd(inventorySelected);
                     inventorySelected = null;
-                    updatePanels();
                     gameMenuBar.removeQuickAccessPanel();
                     gameMenuBar.setQuickAccessPanel();
                 }
@@ -314,7 +321,7 @@ public class InventoryTable extends AbstractPopUpElement {
         resourcePanel.setName("resourcePanel");
         resourcePanel.setSize(410, 320);
         resourcePanel.setPosition(475, 98);
-        resourcePanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
+        resourcePanel.setBackground(generateTextureRegionDrawableObject("inventory_panel"));
 
         return resourcePanel;
     }

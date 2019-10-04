@@ -1,12 +1,14 @@
 package deco2800.skyfall.managers;
 
+import deco2800.skyfall.buildings.BuildingEntity;
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestManager extends AbstractManager{
+public class QuestManager extends TickableManager{
 
     //Current level of quest
     private int questLevel;
@@ -35,11 +37,15 @@ public class QuestManager extends AbstractManager{
     //Player character
     private MainCharacter player;
 
+    //Quest milestones achieved or not
+    private boolean questSuccess;
+
     /**
      * Constructor, sets up beginning of game goals
      */
     public QuestManager() {
         this.questLevel = 1;
+        questSuccess = false;
         buildingsTotal = new ArrayList<>();
         levelOneBuildings.add("Cabin");
         levelOneBuildings.add("WatchTower");
@@ -223,6 +229,85 @@ public class QuestManager extends AbstractManager{
         return (currentMetal >= getMetalTotal());
     }
 
+/*
+     * Checks if all required buildings have been placed in the world
+     * @return True if all buildings are placed, False if not
+     */
+    public boolean checkBuildings() {
+        boolean allBuildings = false;
+        ArrayList<String> currentBuildings = new ArrayList<>();
+        List<AbstractEntity> entities;
+        entities = GameManager.get().getWorld().getEntities();
+
+        for (int i = 0; i < entities.size(); i++) {
+            if (entities.get(i) instanceof BuildingEntity) {
+                for (int j = 0; j < buildingsTotal.size(); j++) {
+                    if (((BuildingEntity) entities.get(i)).getBuildingType().getName()
+                            .equals(buildingsTotal.get(j))) {
+                        currentBuildings.add(buildingsTotal.get(j));
+                    }
+                }
+            }
+        }
+        if (buildingsTotal.containsAll(currentBuildings)) {
+            allBuildings = true;
+        }
+        return allBuildings;
+    }
+
+    /**
+     * Checks if milestones are met each game tick
+     * @param i Game tick
+     */
+    @Override
+    public void onTick(long i) {
+        checkGold();
+        checkStone();
+        checkWood();
+        checkMetal();
+        checkBuildings();
+
+        if (checkGold() && checkStone() && checkWood() &&
+        checkMetal() && checkBuildings()) {
+            questSuccess = true;
+            //Other quest success stuff here, or quest success method
+        }
+    }
+
+    public boolean questFinished() {
+        return questSuccess;
+    }
+
+    public String getBiome() {
+        return GameManager.get().getWorld().getBiomes().get(0).getBiomeName().replaceAll("_", " ").toUpperCase();
+    }
+
+    public int collectNum() {
+        int amt = 0;
+        if (checkWood()) {
+            System.out.println("NUM");
+            amt += 1;
+        }
+
+        if (checkStone()) {
+            System.out.println("NUM");
+            amt += 1;
+        }
+
+        if (checkMetal()) {
+            System.out.println("NUM");
+            amt += 1;
+        }
+
+        if (checkGold()) {
+            System.out.println("NUM");
+            amt += 1;
+        }
+        return amt;
+
+    }
+
+
     /**
      * Resets the current quest of the player
      */
@@ -231,4 +316,5 @@ public class QuestManager extends AbstractManager{
         this.setQuestLevel(currentLevel);
         MainCharacter.getInstance().changeHealth(50);
     }
+
 }

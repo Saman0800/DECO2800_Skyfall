@@ -1,12 +1,14 @@
 package deco2800.skyfall.resources;
 
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 
 /**
  * An abstract class representing a Natural Resource item
  */
-public abstract class NaturalResources implements Item {
+public abstract class NaturalResources extends AbstractEntity implements Item {
 
     // the name of the item e.g. wood, stone
     protected String name;
@@ -22,6 +24,9 @@ public abstract class NaturalResources implements Item {
 
     // determines whether or not the resource can be traded
     private Boolean exchangeable;
+
+    // the name of the biome the resource is situated in
+    protected String biome;
 
     // Can be item be equipped
     public boolean equippable;
@@ -60,6 +65,14 @@ public abstract class NaturalResources implements Item {
         return name;
     }
 
+    /**
+     * Returns the biome the stone is situated in
+     * @return the biome the stone is situated in
+     */
+    public String getBiome(){
+        return biome;
+    }
+
 
     /**
      * Returns whether or not the item can be carried
@@ -90,6 +103,11 @@ public abstract class NaturalResources implements Item {
         return position;
     }
 
+    /**
+     * Returns whether or not the natural resource is exchangeable
+     * @return True or false depending on whether or not the resource
+     * is exchangeable
+     */
     @Override
     public Boolean isExchangeable() {
         return exchangeable;
@@ -113,6 +131,8 @@ public abstract class NaturalResources implements Item {
         return "" + subtype + ":" + name;
     }
 
+
+
     /**
      * Returns the item description
      * @return the item description
@@ -129,5 +149,11 @@ public abstract class NaturalResources implements Item {
     public Boolean isEquippable() {
         return this.equippable;
     }
+
+    @Override
+    public void onTick(long i) {
+        // Auto-generated method stub
+    }
+
 
 }

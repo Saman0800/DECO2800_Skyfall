@@ -1,10 +1,11 @@
 package deco2800.skyfall.util;
 
 public class Cube {
-    public float x = 0;
-    public float y = 0;
-    public float z = 0;
+    private float x;
+    private float y;
+    private float z;
 
+    @SuppressWarnings("WeakerAccess")
     public Cube(float x, float y, float z) {
         this.x = x;
         this.y = y;
