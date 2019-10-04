@@ -89,6 +89,6 @@ public class Bow extends Weapon implements Item, IWeapon {
      */
     @Override
     public int getCost() {
-        return 0;
+        return 30;
     }
 }
