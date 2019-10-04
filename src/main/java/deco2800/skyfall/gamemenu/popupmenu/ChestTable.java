@@ -121,6 +121,20 @@ public class ChestTable extends AbstractPopUpElement{
         Map<String, Integer> inventoryAmounts = chest.getManager().getAmounts();
 
         setCounts(inventoryAmounts, 115, 215, 80, 20);
+
+        ImageButton button = new ImageButton(generateTextureRegionDrawableObject("take all"));
+        button.setName("Take all");
+        button.setSize(170, 60);
+        button.setPosition(165, 20);
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                sm.getInventory().inventoryAddMultiple(chest.getManager().getContents());
+                hide();
+            }
+        });
+
+        chestTable.addActor(button);
     }
 
     /**
