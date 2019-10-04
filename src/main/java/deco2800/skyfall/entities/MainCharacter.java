@@ -421,7 +421,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Set up the first biome as the forest biome
+     * Initialises all of the biomes as "unlocked" except the first biome (forest)
      */
     private void initialiselockedBiomes() {
         lockedBiomes = new ArrayList<>();
@@ -433,12 +433,20 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Set up the game over screen.
+     * Gets all of the "locked" biomes
+     * @return lockedBiomes - a list of all of the locked biomes
      */
     public List<String> getlockedBiomes() {
         return lockedBiomes;
     }
 
+    /**
+     * Removes a biome from the locked list ("unlocking a biome")
+     * @param biome - The biome to "unlock"
+     */
+    public void unlockBiome(String biome) {
+        lockedBiomes.remove(biome);
+    }
 
 
     /**

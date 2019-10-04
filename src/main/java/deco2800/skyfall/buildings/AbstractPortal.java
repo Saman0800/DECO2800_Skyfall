@@ -1,6 +1,7 @@
 package deco2800.skyfall.buildings;
 
 import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
@@ -51,10 +52,27 @@ public abstract class AbstractPortal extends AbstractEntity {
     }
 
 
-    public void moveBiomes(AbstractBiome currentBiome, AbstractBiome nextBiome) {
 
-        // add the functionality to move the biomes here
+    /**
+     * Unlocks the next biome
+     */
+    public void unlocknext(MainCharacter character, String nextBiome) {
+        character.unlockBiome(nextBiome);
     }
+
+
+    /**
+     * Move characters location to the next biome
+     * To be implemented when a player clicks on the portal
+     * @param character - The Character to teleport
+     * @param nextBiome - the Biome to teleport to
+     */
+    public void teleport(MainCharacter character, AbstractBiome nextBiome) {
+        // TODO: @CGulley - Create a general teleport method for all portals.
+        //  For now, individual functionality in child classes
+
+    }
+
 
 
 
