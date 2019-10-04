@@ -57,7 +57,6 @@ public class HeadsUpDisplay extends AbstractUIElement {
     public void update() {
         super.update();
         hudElements.forEach((key, value) -> value.update());
-        //TODO: (@Kausta) If can teleport enable the teleport button
         if ((teleport != null))
             if (qm.questFinished()) {
                 teleport.getLabel().setColor(0f, 1f, 0f, 1);
