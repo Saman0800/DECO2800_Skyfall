@@ -1654,7 +1654,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /***
      * Creates an item if the player has the blueprint. Checks if required resources
      * are in the inventory. if yes, creates the item, adds it to the player's
-     * inventoryand deducts the required resource from inventory
+     * inventory and deducts the required resource from inventory
      */
     public void createItem(Blueprint newItem) {
 
