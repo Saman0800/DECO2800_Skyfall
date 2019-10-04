@@ -67,9 +67,6 @@ public abstract class AbstractEnemy extends Peon implements ICombatEntity {
     //world coordinate of this enemy
     private float[] originalPosition = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
 
-    // Main character instance
-    private MainCharacter mc;
-
     public AbstractEnemy(float col, float row, int health, String textureName,
                          float speed, int strength, String hitBoxPath, int level) {
         super(row, col, speed, textureName,health);

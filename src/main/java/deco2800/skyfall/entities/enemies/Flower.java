@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities.enemies;
 
+import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.animation.AnimationRole;
@@ -59,6 +60,11 @@ public class Flower extends AbstractEnemy implements Animatable {
                 AnimationRole.MOVE, Direction.DEFAULT,
                 new AnimationLinker("flower_close",
                         AnimationRole.MOVE, Direction.DEFAULT, true, true));
+    }
+
+    @Override
+    public void setDirectionTextures() {
+
     }
 }
 
