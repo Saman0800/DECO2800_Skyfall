@@ -1686,9 +1686,18 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                         case "Hatchet":
                             this.getInventoryManager().add(new Hatchet());
                             break;
-
                         case "Pick Axe":
                             this.getInventoryManager().add(new PickAxe());
+                            break;
+
+                        case "Sword":
+                            this.getInventoryManager().add(new Sword());
+                            break;
+                        case "Spear":
+                            this.getInventoryManager().add(new Spear());
+                            break;
+                        case "Bow":
+                            this.getInventoryManager().add(new Bow());
                             break;
 
                         //These are only placeholders and will change once coordinated
