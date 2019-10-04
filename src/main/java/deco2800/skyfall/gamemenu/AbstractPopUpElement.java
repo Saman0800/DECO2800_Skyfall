@@ -27,6 +27,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
             exitButton.setVisible(false);
         }
         isVisible = false;
+        gameMenuManager.getMainCharacter().resetVelocity();
         resume();
         gameMenuManager.setPopUp(null);
     }
@@ -55,6 +56,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
             exitButton.setVisible(true);
             exitButton.top();
         }
+        gameMenuManager.getMainCharacter().resetVelocity();
         isVisible = true;
         pause();
     }

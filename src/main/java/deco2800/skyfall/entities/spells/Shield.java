@@ -51,8 +51,10 @@ public class Shield extends Spell implements Animatable {
         this.speed = 0;
         this.manaCost = 30;
         this.mc = GameManager.getManagerFromInstance(GameMenuManager.class).getMainCharacter();
+
         if (this.mc != null) {
             this.mc.setRecovering(true);
+
         }
         setCurrentState(AnimationRole.STILL);
     }
@@ -66,13 +68,14 @@ public class Shield extends Spell implements Animatable {
             shieldTime += 20;
             setCurrentState(AnimationRole.ATTACK);
         } else {
+            System.out.println(mc.isRecovering());
+            this.mc.setRecovering(true);
             setCurrentState(AnimationRole.STILL);
         }
     }
 
     @Override
     public void destroy() {
-        this.mc.setInvincible(false);
         this.mc.setRecovering(false);
         super.destroy();
     }

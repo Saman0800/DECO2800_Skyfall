@@ -2,6 +2,7 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.enemies.AbstractEnemy;
+import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.enemies.Treeman;
 import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.resources.items.*;
@@ -135,7 +136,7 @@ public class StatisticsManagerTest {
         testManager.loseLevel();
 
         Assert.assertEquals(5, testManager.getLevel());
-        Assert.assertEquals(50, testManager.getHealth());
+        Assert.assertEquals(0, testManager.getHealth());
 
     }
 

@@ -316,6 +316,7 @@ public class DataBaseConnector {
     public World loadWorlds(Save save, Save.SaveMemento saveMemento) throws SQLException, LoadException {
         PreparedStatement preparedStatement = null;
         ResultSet result = null;
+
         try {
             Gson gson = new Gson();
             connection.setAutoCommit(false);

@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.QuestManager;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
 
@@ -19,6 +20,7 @@ import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDra
 
 public class ProgressTable extends AbstractPopUpElement {
     private final String type;
+    private final QuestManager qm;
     private GameMenuManager gmm;
     private Skin skin;
     private Table baseTable;
@@ -31,14 +33,14 @@ public class ProgressTable extends AbstractPopUpElement {
     private Label blueprintLabel;
 
     public ProgressTable(Stage stage, ImageButton exit, String[] textureNames,
-                                     TextureManager tm, GameMenuManager gameMenuManager,
-                                     StatisticsManager sm, Skin skin, String type) {
+                         TextureManager tm, GameMenuManager gameMenuManager,
+                         QuestManager qm, Skin skin, String type) {
         super(stage,exit, textureNames, tm, gameMenuManager);
 
         this.skin = skin;
         this.gmm = gameMenuManager;
         this.type = type;
-
+        this.qm = qm;
         labelTable = new Table();
         labelTable.setDebug(true);
         this.draw();
@@ -66,15 +68,15 @@ public class ProgressTable extends AbstractPopUpElement {
 
     @Override
     public void update() {
-            updateBiomeText("Forest");
-            updateCollectText("4/4");
+            updateBiomeText(qm.getBiome());
+            updateCollectText(qm.collectNum() + "/4");
             updateCreateText("4/4");
-            updateCreateText("4/4");
+            updateBlueprintTest("1");
     }
 
 
     private void updateBiomeText(String text) {
-        biomeLabel.setText(text + " Biome: ");
+        biomeLabel.setText(text + " BIOME: ");
     }
 
     private void updateCollectText(String text) {
@@ -82,7 +84,7 @@ public class ProgressTable extends AbstractPopUpElement {
     }
 
     private void updateCreateText(String text) {
-        collectLabel.setText("CREATE: " + text);
+        createLabel.setText("CREATE: " + text);
 
     }
 

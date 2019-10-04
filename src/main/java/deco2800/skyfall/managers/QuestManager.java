@@ -237,6 +237,7 @@ public class QuestManager extends TickableManager{
         ArrayList<String> currentBuildings = new ArrayList<>();
         List<AbstractEntity> entities;
         entities = GameManager.get().getWorld().getEntities();
+
         for (int i = 0; i < entities.size(); i++) {
             if (entities.get(i) instanceof BuildingEntity) {
                 for (int j = 0; j < buildingsTotal.size(); j++) {
@@ -272,11 +273,45 @@ public class QuestManager extends TickableManager{
         }
     }
 
+
     /**
      * Access player for testing
      * @return main character entity
      */
     protected MainCharacter getPlayer() {
         return player;
+    }
+
+    public boolean questFinished() {
+        return questSuccess;
+    }
+
+    public String getBiome() {
+        return GameManager.get().getWorld().getBiomes().get(0).getBiomeName().replaceAll("_", " ").toUpperCase();
+    }
+
+    public int collectNum() {
+        int amt = 0;
+        if (checkWood()) {
+            System.out.println("NUM");
+            amt += 1;
+        }
+
+        if (checkStone()) {
+            System.out.println("NUM");
+            amt += 1;
+        }
+
+        if (checkMetal()) {
+            System.out.println("NUM");
+            amt += 1;
+        }
+
+        if (checkGold()) {
+            System.out.println("NUM");
+            amt += 1;
+        }
+        return amt;
+
     }
 }

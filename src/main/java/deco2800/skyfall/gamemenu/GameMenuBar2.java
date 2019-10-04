@@ -9,8 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.resources.Item;
 
 import java.util.Map;
 
@@ -26,11 +29,22 @@ public class GameMenuBar2 extends AbstractUIElement {
     //Current item selected in inventory user interface
     private String quickAccessSelected;
 
+    private ImageButton equipInactive;
+    private ImageButton equipActive;
+    private ImageButton removeInactive;
+    private ImageButton removeActive;
+
+    private InventoryManager inventory;
+
+    private MainCharacter mainCharacter;
+
     public GameMenuBar2(Stage stage, String[] textureNames, TextureManager tm, Skin skin, GameMenuManager gmm) {
         super(stage, textureNames, tm);
         this.gmm = gmm;
         this.skin = skin;
         this.draw();
+        this.inventory = gmm.getInventory();
+        this.mainCharacter = gmm.getMainCharacter();
     }
 
     @Override
@@ -69,15 +83,56 @@ public class GameMenuBar2 extends AbstractUIElement {
         buttonStyle.font = skin.getFont("game-font");
         buttonStyle.fontColor = skin.getColor("navy");
 
-//        TextButton equip = new TextButton("EQUIP", buttonStyle);
-//        equip.getLabel().setFontScale(0.8f);
-        ImageButton equip = new ImageButton(generateTextureRegionDrawableObject("equip_qa"));
-        quickAccessPanel.add(equip).width(130).height(50).padTop(5).padLeft(10);
+        equipInactive = new ImageButton(generateTextureRegionDrawableObject("equip inactive"));
+        equipInactive.setSize(130, 50);
+        equipActive = new ImageButton(generateTextureRegionDrawableObject("equip"));
+        equipActive.setSize(130, 50);
+        equipActive.setVisible(false);
+        this.equipActive.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (quickAccessSelected != null) {
+                    Item item = inventory.drop(quickAccessSelected);
+                    if (mainCharacter.setEquippedItem(item)) {
+                        quickAccessSelected = null;
+                        setButtonsActive(false);
+                        removeQuickAccessPanel();
+                        setQuickAccessPanel();
+                    } else {
+                        inventory.add(item);
+                    }
+                }
+            }
+        });
+
+        Table equipCell = new Table();
+        equipCell.addActor(equipActive);
+        equipCell.addActor(equipInactive);
+        quickAccessPanel.add(equipCell).width(130).height(50).padTop(5).padLeft(10);
         quickAccessPanel.row();
-        ImageButton remove = new ImageButton(generateTextureRegionDrawableObject("remove_qa"));
-//        TextButton remove = new TextButton("REMOVE", buttonStyle);
-//        remove.getLabel().setFontScale(0.8f);
-        quickAccessPanel.add(remove).width(130).height(50).padTop(5).padLeft(10);
+
+
+        removeInactive = new ImageButton(generateTextureRegionDrawableObject("removeqa inactive"));
+        removeInactive.setSize(130, 50);
+        removeActive = new ImageButton(generateTextureRegionDrawableObject("removeqa"));
+        removeActive.setSize(130, 50);
+        removeActive.setVisible(false);
+        this.removeActive.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(quickAccessSelected != null) {
+                    inventory.quickAccessRemove(quickAccessSelected);
+                    quickAccessSelected = null;
+                    removeQuickAccessPanel();
+                    setQuickAccessPanel();
+                }
+            }
+        });
+
+        Table removeCell = new Table();
+        removeCell.addActor(removeActive);
+        removeCell.addActor(removeInactive);
+        quickAccessPanel.add(removeCell).width(130).height(50).padTop(5).padLeft(10);
 
         sideBar = new ImageButton(generateTextureRegionDrawableObject("quickaccess_side_bar"));
         sideBar.setSize(35, 360); //TODO: reduce chunkiness
@@ -142,7 +197,7 @@ public class GameMenuBar2 extends AbstractUIElement {
 
                     if(selected.isVisible()){
                         selected.setVisible(false);
-                        //setButtonsActive(false);
+                        setButtonsActive(false);
 
                     }else{
                         for(Actor actor: quickAccessPanel.getChildren()){
@@ -159,9 +214,7 @@ public class GameMenuBar2 extends AbstractUIElement {
                         }
 
                         selected.setVisible(true);
-
-                        //setButtonsActive(true);
-
+                        setButtonsActive(true);
                     }
                 }
             });
@@ -174,6 +227,35 @@ public class GameMenuBar2 extends AbstractUIElement {
             num.setFontScale(0.4f);
             quickAccessPanel.add(num).top().left().padLeft(-20).padTop(5);
             quickAccessPanel.row();
+        }
+
+        int sizeDifference = 4 - quickAccess.entrySet().size();
+        while(sizeDifference > 0){
+            sizeDifference -= 1;
+            Table blankCell = new Table();
+            quickAccessPanel.add(blankCell).width(size).height(size).padTop(10).padLeft(20 + sideBarWidth/2);
+            quickAccessPanel.row();
+        }
+    }
+
+    /**
+     * Sets the buttons in the inventory pop up to active or inactive forms
+     * @param active boolean whether buttons are active
+     */
+    private void setButtonsActive(boolean active){
+        if(active){
+            removeInactive.setVisible(false);
+            removeActive.setVisible(true);
+
+            if(inventory.getItemInstance(quickAccessSelected).isEquippable()){
+                equipActive.setVisible(true);
+                equipInactive.setVisible(false);
+            }
+        }else{
+            equipInactive.setVisible(true);
+            removeInactive.setVisible(true);
+            equipActive.setVisible(false);
+            removeActive.setVisible(false);
         }
     }
 

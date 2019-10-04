@@ -2,7 +2,7 @@ package deco2800.skyfall.worlds.world;
 
 import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.*;
-import deco2800.skyfall.entities.enemies.AbstractEnemy;
+import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.AgentEntity;
@@ -14,9 +14,11 @@ import deco2800.skyfall.gamemenu.popupmenu.ChestTable;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InputManager;
+import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.resources.NaturalResources;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.saving.Saveable;
@@ -570,22 +572,22 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
         // entities.
 
         // TODO: this needs to be internalized into classes for cleaner code.
-        if (e1 instanceof Projectile && e2 instanceof AbstractEnemy) {
-            if (((AbstractEnemy) e2).getHealth() > 0) {
-                ((AbstractEnemy) e2).takeDamage(((Projectile) e1).getDamage());
-                ((AbstractEnemy) e2).setHurt(true);
+        if (e1 instanceof Projectile && e2 instanceof Enemy) {
+            if (((Enemy) e2).getHealth() > 0) {
+                ((Enemy) e2).takeDamage(((Projectile) e1).getDamage());
+                ((Enemy) e2).setHurt(true);
                 ((Projectile) e1).destroy();
             } else {
-                ((AbstractEnemy) e2).setDead(true);
+                ((Enemy) e2).setDead(true);
             }
 
-        } else if (e2 instanceof Projectile && e1 instanceof AbstractEnemy) {
-            if (((AbstractEnemy) e1).getHealth() > 0) {
-                ((AbstractEnemy) e1).takeDamage(((AbstractEnemy) e1).getDamage());
-                ((AbstractEnemy) e1).setHurt(true);
+        } else if (e2 instanceof Projectile && e1 instanceof Enemy) {
+            if (((Enemy) e1).getHealth() > 0) {
+                ((Enemy) e1).takeDamage(((Enemy) e1).getDamage());
+                ((Enemy) e1).setHurt(true);
                 ((Projectile) e2).destroy();
             } else {
-                ((AbstractEnemy) e1).setDead(true);
+                ((Enemy) e1).setDead(true);
             }
 
         }
@@ -686,8 +688,13 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
                 ChestTable chest = (ChestTable) menuManager.getPopUp("chestTable");
                 chest.updateChestPanel((Chest) entity);
                 menuManager.setPopUp("chestTable");
-
-
+            } else if (entity instanceof Item) {
+                    MainCharacter mc = gmm.getMainCharacter();
+                    if (tile.getCoordinates().distance(mc.getPosition()) > 2) {
+                        continue;
+                    }
+                    removeEntity(entity);
+                    gmm.getInventory().add((Item) entity);
             } else if (entity instanceof GoldPiece) {
                 MainCharacter mc = gmm.getMainCharacter();
                 if (tile.getCoordinates().distance(mc.getPosition()) <= 1) {
@@ -696,7 +703,6 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
                     removeEntity(entity);
                 }
             }
-
             else if (entity instanceof BlueprintShop) {
                 GameMenuManager menuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
                 BlueprintShopTable bs = (BlueprintShopTable) menuManager.getPopUp("blueprintShopTable");

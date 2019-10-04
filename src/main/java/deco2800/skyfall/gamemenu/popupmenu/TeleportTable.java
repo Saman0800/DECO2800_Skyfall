@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.QuestManager;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
 
@@ -16,6 +17,7 @@ import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDra
 
 public class TeleportTable extends AbstractPopUpElement {
     private final String type;
+    private final QuestManager qm;
     private GameMenuManager gmm;
     private Skin skin;
     private Table baseTable;
@@ -23,13 +25,13 @@ public class TeleportTable extends AbstractPopUpElement {
     private Label teleportLabel;
     public TeleportTable(Stage stage, ImageButton exit, String[] textureNames,
                          TextureManager tm, GameMenuManager gameMenuManager,
-                         StatisticsManager sm, Skin skin, String type) {
+                         QuestManager qm, Skin skin, String type) {
         super(stage,exit, textureNames, tm, gameMenuManager);
 
         this.skin = skin;
         this.gmm = gameMenuManager;
         this.type = type;
-
+        this.qm = qm;
         this.draw();
 
     }
@@ -55,7 +57,7 @@ public class TeleportTable extends AbstractPopUpElement {
 
     @Override
     public void update() {
-        updateLocation("FOREST");
+        updateLocation(qm.getBiome());
         updateTeleportTo("SNOW");
     }
 
@@ -105,6 +107,7 @@ public class TeleportTable extends AbstractPopUpElement {
         locationLabel.setFontScale(0.8f);
         teleportLabel = new Label("TELEPORT TO: ERR", skin, "white-text");
         teleportLabel.setFontScale(0.8f);
+        //TODO: Teleport Button
 
         labelTable.add();
         labelTable.row();
