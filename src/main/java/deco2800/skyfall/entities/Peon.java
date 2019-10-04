@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class Peon extends AgentEntity implements Tickable {
 	// Task being completed by character
-	private transient AbstractTask task;
+	protected transient AbstractTask task;
 
 	// Name of the character
 	private String name;
@@ -33,6 +33,7 @@ public abstract class Peon extends AgentEntity implements Tickable {
 	/**
 	 * Constructor with no parameters
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public Peon() {
 		super();
 		this.setTexture(CHARACTER);
@@ -65,6 +66,7 @@ public abstract class Peon extends AgentEntity implements Tickable {
 		this.deaths = 0;
 	}
 
+	@SuppressWarnings("WeakerAccess")
 	public Peon(float row, float col, float speed, String name, int health,
 				String fixtureDef) {
 		super(row, col, 3, speed, fixtureDef);

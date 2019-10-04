@@ -1,30 +1,27 @@
 package deco2800.skyfall.entities;
 
-
 import java.util.HashMap;
+
 import java.util.Map;
+import java.util.Set;
+import org.slf4j.Logger;
+import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Collections;
-
 
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.world.Chunk;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import org.slf4j.Logger;
+
 import org.slf4j.LoggerFactory;
-
-import java.util.Set;
-
-import com.badlogic.gdx.graphics.Texture;
-
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.Tile;
+import com.badlogic.gdx.graphics.Texture;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.TextureManager;
 
-import com.google.gson.annotations.Expose;
 
 public class StaticEntity extends SaveableEntity implements NewInstance<StaticEntity> {
     private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
@@ -60,6 +57,13 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
 
     }
 
+    /**
+     * Initialises a static entity
+     * @param tile The tile it spawns on
+     * @param renderOrder The position is has in the render order
+     * @param texture The texture it is given
+     * @param obstructed Whether the entity is obstructed by something
+     */
     public StaticEntity(Tile tile, int renderOrder, String texture, boolean obstructed) {
         super(tile.getCol(), tile.getRow(), renderOrder);
         this.setObjectName(ENTITY_ID_STRING);
@@ -76,6 +80,13 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
         tile.setObstructed(obstructed);
     }
 
+    /**
+     * Initialises a static entity
+     * @param col The tile col it spawns on
+     * @param row The tile row it spawns on
+     * @param renderOrder The position it has in the render order
+     * @param texture The texture the entity is given
+     */
     public StaticEntity(float col, float row, int renderOrder, Map<HexVector, String> texture) {
         super(col, row, renderOrder);
         this.setObjectName(ENTITY_ID_STRING);
@@ -84,33 +95,17 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
         this.obstructed = true;
         this.textures = texture;
 
-        if (center == null) {
-            log.debug("Center is null");
-            return;
-        }
-        center.setObstructed(true);
-
-        if (!WorldUtil.validColRow(center.getCoordinates())) {
-            log.debug(center.getCoordinates() + " Is Invalid:");
-            return;
-        }
-
-        children = new HashMap<>();
-
-        for (Entry<HexVector, String> tex : texture.entrySet()) {
-            Tile tile = textureToTile(tex.getKey(), this.getPosition());
-            if (tile != null) {
-                children.put(tile.getCoordinates(), tex.getValue());
-            }
-        }
-
-        for (HexVector childPos : children.keySet()) {
-            Tile child = GameManager.get().getWorld().getTile(childPos);
-
-            child.setObstructed(true);
-        }
+        staticEntitySetUp(center, texture);
     }
 
+    /**
+     * Initialises a static entity with a custom hit box
+     * @param tile The tile it spawns on
+     * @param renderOrder The position it has in the render order
+     * @param texture The texture the entity is given
+     * @param obstructed Whether the entity is obstructed by something
+     * @param fixtureDef The name of the hit box given to the entity
+     */
     public StaticEntity(Tile tile, int renderOrder, String texture, boolean obstructed, String fixtureDef) {
         super(tile.getCol(), tile.getRow(), renderOrder, fixtureDef);
         this.setObjectName(ENTITY_ID_STRING);
@@ -122,7 +117,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
         children = new HashMap<>();
         children.put(tile.getCoordinates(), texture);
         if (!WorldUtil.validColRow(tile.getCoordinates())) {
-            log.debug(tile.getCoordinates() + "%s Is Invalid:");
+            log.debug("{}s Is Invalid:", tile.getCoordinates());
             return;
         }
 
@@ -130,6 +125,14 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
         tile.setObstructed(obstructed);
     }
 
+    /**
+     * Initialises a static entity with a custom hit box
+     * @param col The tile col it spawns on
+     * @param row The tile row it spawns on
+     * @param renderOrder The position it has in the render order
+     * @param texture The texture the entity is given
+     * @param fixtureDef The name of the hit box given to the entity
+     */
     public StaticEntity(float col, float row, int renderOrder, Map<HexVector, String> texture, String fixtureDef) {
         super(col, row, renderOrder, fixtureDef);
         this.setObjectName(ENTITY_ID_STRING);
@@ -139,13 +142,18 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
         this.obstructed = true;
         this.textures = texture;
 
+        staticEntitySetUp(center, texture);
+    }
+
+    private void staticEntitySetUp(Tile center, Map<HexVector, String> texture) {
         if (center == null) {
             log.debug("Center is null");
             return;
         }
+        center.setObstructed(true);
 
         if (!WorldUtil.validColRow(center.getCoordinates())) {
-            log.debug(center.getCoordinates() + " Is Invalid:");
+            log.debug("{} is Invalid:", center.getCoordinates());
             return;
         }
 
@@ -183,6 +191,10 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
         return Collections.unmodifiableMap(this.textures);
     }
 
+    /**
+     * Gives all the static entities in a world a parent and sets there hit
+     * box to be that of the parent
+     */
     public void setup() {
         if (children == null) {
             return;
@@ -224,6 +236,12 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
         // Do the AI for the building in here
     }
 
+    /**
+     * Gets the tile for a position on the map
+     * @param offset The offset from the center of the map
+     * @param center The center of the map
+     * @return The Tile at the given location
+     */
     private Tile textureToTile(HexVector offset, HexVector center) {
         if (!WorldUtil.validColRow(offset)) {
             log.debug(offset + " Is Invaid:");
@@ -233,6 +251,10 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
         return GameManager.get().getWorld().getTile(targetTile);
     }
 
+    /**
+     * Gets the position to render
+     * @return The x and y value for the position to render
+     */
     public int[] getRenderCentre() {
         float[] rowColValues = WorldUtil.colRowToWorldCords(getCol(), getRow());
 
@@ -246,16 +268,29 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
         return renderPos;
     }
 
+    /**
+     * Get the position of the child static entities
+     * @return Key set of all the child positions
+     */
     public Set<HexVector> getChildrenPositions() {
         return children.keySet();
     }
 
+    /**
+     * Gets the texture for a child position
+     * @param childPos The position of the child
+     * @return The Texture for that child
+     */
     public Texture getTexture(HexVector childPos) {
         String texture = children.get(childPos);
 
         return textureManager.getTexture(texture);
     }
 
+    /**
+     * Sets a map of child entities
+     * @param children Map with there position and name
+     */
     public void setChildren(Map<HexVector, String> children) {
         this.children = children;
     }

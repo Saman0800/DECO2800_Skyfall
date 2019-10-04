@@ -1,7 +1,7 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.Gdx;
-
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.physics.box2d.*;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.animation.AnimationLinker;
@@ -11,12 +11,10 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.renderers.Renderable;
-
 import deco2800.skyfall.util.BodyEditorLoader;
 import deco2800.skyfall.util.HexVector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 import java.util.*;
 
@@ -79,6 +77,11 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     @Expose
     private String texture = "error_box";
+
+    //A modulating colour value
+    //each colour channel (0-1) will be multiplied by the corresponding value
+    //Default of (1.0f, 1.0f, 1.0f, 1.0f) will render sprite as normal
+    private Color modulatingColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
     @Expose
     private int entityID = 0;
@@ -296,6 +299,39 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         this.texture = texture;
     }
 
+    /**
+     * Gets the modulating colour of this entity
+     * Each component will be multiplied against the current modulating colour
+     * Default is (1.0f, 1.0f, 1.0f, 1.0f), which will render with in standard colour
+     * @return The given modulating colour
+     */
+    public Color getModulatingColor() {
+        return modulatingColor;
+    }
+
+    /**
+     * Sets the new modulating colour for this entity
+     * This will be in the form (0-1, 0-1, 0-1, 0-1, 0-1) correspoding to (r, g, b, a)
+     * @param color the new modulation colour to use, which will be clamped into a valid range
+     */
+    public void setModulatingColor(Color color) {
+        this.modulatingColor = color.clamp();
+    }
+
+    /**
+     * An overload to setModulatingColor
+     * Sets the new modulating colour for this entity
+     * This will be in the form (0-1, 0-1, 0-1, 0-1, 0-1) correspoding to (r, g, b, a)
+     * the new modulation colour will be clamped into a valid range
+     * @param r component of new color
+     * @param g component of new color
+     * @param b component of new color
+     * @param a component of new color, remember the engine only supports 1 or 0
+     */
+    public void setModulatingColor(float r, float g, float b, float a) {
+        setModulatingColor(new Color(r, g, b, a));
+    }
+
     @Override
     public boolean equals(Object other) {
         if (this == other) {
@@ -374,7 +410,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * @param type Animation role to get animation for
      * @return animation name
      */
-
     private AnimationLinker getAnimationLinker(AnimationRole type, Direction direction) {
         if (animations.containsKey(type)) {
             Map<Direction, AnimationLinker> roleMap = animations.get(type);
@@ -401,8 +436,10 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * @param y the entities y coordinate
      */
     private void initialiseBox2D(float x, float y) {
-        defineBody(x, y);
-        defineFixture();
+        if (!(this instanceof StaticEntity)) {
+            defineBody(x, y);
+            defineFixture();
+        }
     }
 
     /**
@@ -414,8 +451,10 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * @param fixtureDefFile file path the .JSON file
      */
     public void initialiseBox2D(float x, float y, String fixtureDefFile) {
-        defineBody(x, y);
-        defineFixture(fixtureDefFile);
+        if (!(this instanceof StaticEntity)) {
+            defineBody(x, y);
+            defineFixture(fixtureDefFile);
+        }
     }
 
     /**
@@ -605,5 +644,20 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      */
     public Body getBody() {
         return body;
+    }
+
+    /**
+     * Check if given value is in range.
+     *
+     * @param i the value to be checked.
+     * @param minValue the minimum value i should not be less then.
+     * @param maxValue the minimum value i should not exceed.
+     * @return If the value is between minValue and maxValue, return true, else false.
+     */
+    public static boolean between(double i, double minValue, double maxValue) {
+        if (i >= minValue && i <= maxValue)
+            return true;
+        else
+            return false;
     }
 }

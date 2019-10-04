@@ -30,7 +30,7 @@ import java.util.TreeMap;
  *  A BuildingEntity is an base class for all building entity subclass,
  *  including basic information that a building object should contains.
  */
-public class BuildingEntity extends AbstractEntity {
+public class BuildingEntity extends AbstractEntity  {
 
     // a logger
     private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);

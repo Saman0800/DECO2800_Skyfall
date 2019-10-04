@@ -13,7 +13,10 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
     protected Vector2 direction;
     protected float currentSpeed;
 
-
+    private boolean MOVEUP = false;
+    private boolean MOVELEFT = false;
+    private boolean MOVERIGHT = false;
+    private boolean MOVEDOWN = false;
 
     /**
      * PlayerPeon Constructor
@@ -40,13 +43,37 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
                 .addKeyUpListener(this);
     }
 
-
+    /**
+     * Calculates the new movement point depending on what movement keys are held down.
+     */
+    private void updateMoveVector() {
+        if (MOVEUP) {
+            this.direction.add(0.0f, speed);
+        }
+        if (MOVELEFT) {
+            this.direction.sub(speed, 0.0f);
+        }
+        if (MOVEDOWN) {
+            this.direction.sub(0.0f, speed);
+        }
+        if (MOVERIGHT) {
+            this.direction.add(speed, 0.0f);
+        }
+    }
 
     /**
      * @param i
      */
     @Override
     public void onTick(long i) {
+        if (task != null && task.isAlive()) {
+            task.onTick(i);
+
+            if (task.isComplete()) {
+                this.task = null;
+            }
+        }
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
         }
@@ -107,7 +134,22 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
             return;
         }
 
-
+        switch (keycode) {
+            case Input.Keys.W:
+                MOVEUP = true;
+                break;
+            case Input.Keys.A:
+                MOVELEFT = true;
+                break;
+            case Input.Keys.S:
+                MOVEDOWN = true;
+                break;
+            case Input.Keys.D:
+                MOVERIGHT = true;
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -116,6 +158,21 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
      */
     @Override
     public void notifyKeyUp ( int keycode){
-
+        switch (keycode) {
+            case Input.Keys.W:
+                MOVEUP = false;
+                break;
+            case Input.Keys.A:
+                MOVELEFT = false;
+                break;
+            case Input.Keys.S:
+                MOVEDOWN = false;
+                break;
+            case Input.Keys.D:
+                MOVERIGHT = false;
+                break;
+            default:
+                break;
+        }
     }
 }
