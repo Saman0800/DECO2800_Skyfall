@@ -23,7 +23,6 @@ public class CollectCreateTable extends AbstractPopUpElement{
     private GameMenuManager gmm;
     private Skin skin;
     private Table baseTable;
-    private LinkedHashMap<String, Integer> quantityToResources = new LinkedHashMap<>();
     private TextButton complete;
     private Label titleLabel;
     private Type tableType;
@@ -85,22 +84,23 @@ public class CollectCreateTable extends AbstractPopUpElement{
 
     private void updateText() {
         labelTable.clear();
-
+        String whiteText = "white-text";
+        String format = "%d x %s";
         if (type.equals("collect")) {
-            String currentText  = String.format("%d x %s", qm.getGoldTotal(), "Gold");
-            labelTable.add(new Label(currentText, skin, "white-text")).left();
+            String currentText  = String.format(format, qm.getGoldTotal(), "Gold");
+            labelTable.add(new Label(currentText, skin, whiteText)).left();
             labelTable.row();
 
-            currentText  = String.format("%d x %s", qm.getMetalTotal(), "Metal");
-            labelTable.add(new Label(currentText, skin, "white-text")).left();
+            currentText  = String.format(format, qm.getMetalTotal(), "Metal");
+            labelTable.add(new Label(currentText, skin, whiteText)).left();
             labelTable.row();
 
-            currentText  = String.format("%d x %s", qm.getStoneTotal(), "Stone");
-            labelTable.add(new Label(currentText, skin, "white-text")).left();
+            currentText  = String.format(format, qm.getStoneTotal(), "Stone");
+            labelTable.add(new Label(currentText, skin, whiteText)).left();
             labelTable.row();
 
-            currentText  = String.format("%d x %s", qm.getWoodTotal(), "Wood");
-            labelTable.add(new Label(currentText, skin, "white-text")).left();
+            currentText  = String.format(format, qm.getWoodTotal(), "Wood");
+            labelTable.add(new Label(currentText, skin, whiteText)).left();
             labelTable.row();
         } else {
             List<String> buildingsTotal = qm.getBuildingsTotal();
@@ -142,7 +142,6 @@ public class CollectCreateTable extends AbstractPopUpElement{
         baseTable.row();
         baseTable.add(complete).bottom().width(200).expand();
         baseTable.setVisible(false);
-        quantityToResources.put("IRON", 2);
     }
 
 

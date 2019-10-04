@@ -19,14 +19,9 @@ import java.util.Map;
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
 public class ProgressTable extends AbstractPopUpElement {
-    private final String type;
     private final QuestManager qm;
-    private GameMenuManager gmm;
     private Skin skin;
     private Table baseTable;
-    private LinkedHashMap<String, Integer> quantityToResources = new LinkedHashMap<>();
-    private Table labelTable;
-
     private Label biomeLabel;
     private Label collectLabel;
     private Label createLabel;
@@ -38,10 +33,8 @@ public class ProgressTable extends AbstractPopUpElement {
         super(stage,exit, textureNames, tm, gameMenuManager);
 
         this.skin = skin;
-        this.gmm = gameMenuManager;
-        this.type = type;
         this.qm = qm;
-        labelTable = new Table();
+        Table labelTable = new Table();
         labelTable.setDebug(true);
         this.draw();
         stage.addActor(baseTable);
@@ -61,7 +54,6 @@ public class ProgressTable extends AbstractPopUpElement {
      */
     @Override
     public void show() {
-        //this.draw();
         super.show();
         baseTable.setVisible(true);
     }

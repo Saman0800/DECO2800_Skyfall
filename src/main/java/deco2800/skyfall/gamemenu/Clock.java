@@ -1,17 +1,13 @@
 package deco2800.skyfall.gamemenu;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
-import deco2800.skyfall.gamemenu.AbstractUIElement;
 import deco2800.skyfall.managers.*;
 public class Clock extends AbstractUIElement{
     private final GameMenuManager gmm;
     private Image clockImage;
-    private float positionX;
-    private float positionY;
     private String clockTexture;
     private Image clockDisplay;
     // Season image
@@ -37,10 +33,8 @@ public class Clock extends AbstractUIElement{
      * Maintains position of clockDisplay and seasonDisplay with resizes
      */
     public void updatePosition() {
-        float positionX;
-        float positionY;
-        positionX = (gmm.getTopLeftX() + 30) ;
-        positionY = (gmm.getTopLeftY() - 70);
+        float positionX = (gmm.getTopLeftX() + 30);
+        float positionY = (gmm.getTopLeftY() - 70);
         // Set clock position
         clockDisplay.setPosition(positionX, positionY);
         // Set season position
@@ -120,9 +114,6 @@ public class Clock extends AbstractUIElement{
 
         // Update screen
         update();
-        // Add displays onto stage
-        //stage.addActor(clockDisplay);
-        //stage.addActor(seasonDisplay);
     }
     /**
      * Updates the display and resizes if necessary
