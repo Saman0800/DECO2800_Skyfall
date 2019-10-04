@@ -199,14 +199,7 @@ public class EnemySpawnTable implements TimeObserver {
                 continue;
             }
 
-            // Get the chance to spawn the enemy using the provided lambda function
-            double spawnChance = probAdjFunc.apply(environManager);
-
-            // Find all the enemies within close proximity to this tile and adjust the
-            // spawning chance
-            spawnChance = Math.pow(spawnChance, Math.log(enemiesNearTargetCount(nextTile.getRow(), nextTile.getCol())));
-
-            // Create an enemy using on of the appropriate constructors
+            // Create an enemy using one of the appropriate constructors
             List<Class<? extends AbstractEnemy>> possibleConstructors = biomeToConstructor
                     .get(nextTile.getBiome().getBiomeName());
 
@@ -214,6 +207,13 @@ public class EnemySpawnTable implements TimeObserver {
                 // There are no suitable enemies to spawn on this tile
                 continue;
             }
+
+            // Get the chance to spawn the enemy using the provided lambda function
+            double spawnChance = probAdjFunc.apply(environManager);
+
+            // Find all the enemies within close proximity to this tile and adjust the
+            // spawning chance accordingly
+            spawnChance = Math.pow(spawnChance, Math.log(enemiesNearTargetCount(nextTile.getRow(), nextTile.getCol())));
 
             // Pick a class, any class!
             Class<? extends AbstractEnemy> randEnemyType = possibleConstructors

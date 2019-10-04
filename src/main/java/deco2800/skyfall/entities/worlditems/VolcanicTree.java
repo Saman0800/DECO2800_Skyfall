@@ -9,22 +9,22 @@ public class VolcanicTree extends AbstractTree {
 
     protected static final String ENTITY_ID_STRING = "volcanic_tree";
 
-    public VolcanicTree(float col, float row, int renderOrder, Map<HexVector, String> texture) {
-        super(col, row, renderOrder, texture);
-        this.woodAmount = 15;
-    }
-
     public VolcanicTree(Tile tile, boolean obstructed) {
         super(tile, obstructed, "vTree" + nextTreeTexture);
-        this.woodAmount = 15;
+        setupParams();
 
         VolcanicTree.nextTreeTexture = randomGen.nextInt(3) + 1;
-        this.entityType = "VolcanicTree";
     }
 
     public VolcanicTree(SaveableEntityMemento memento) {
         super(memento);
+        setupParams();
+    }
+
+    private void setupParams() {
+        this.setObjectName(ENTITY_ID_STRING);
         this.woodAmount = 15;
+        this.entityType = "VolcanicTree";
     }
 
     /**
