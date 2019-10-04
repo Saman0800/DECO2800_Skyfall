@@ -3,7 +3,6 @@ package deco2800.skyfall.managers;
 import deco2800.skyfall.buildings.BuildingEntity;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
 
 import java.util.ArrayList;
 import java.util.List;

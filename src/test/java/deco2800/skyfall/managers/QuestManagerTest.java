@@ -29,11 +29,8 @@ public class QuestManagerTest {
     //Test managers
     private QuestManager manager;
     private GameManager gameManager = GameManager.get();
-    private InputManager mockIM = mock(InputManager.class);
-    private PetsManager mockPM = mock(PetsManager.class);
-    private InventoryManager mockInvM = mock(InventoryManager.class);
-    private AnimationManager mockAM = mock(AnimationManager.class);
 
+    //Mock objects
     private World mockWorld = mock(World.class);
     private List<AbstractEntity> mockEntities = mock(List.class);
     private BuildingEntity mockCabin = mock(BuildingEntity.class);
@@ -44,10 +41,6 @@ public class QuestManagerTest {
     public void setUp() {
         manager = new QuestManager();
         gameManager.setWorld(mockWorld);
-        gameManager.addManager(mockIM);
-        gameManager.addManager(mockPM);
-        gameManager.addManager(mockInvM);
-        gameManager.addManager(mockAM);
     }
 
     @Test
