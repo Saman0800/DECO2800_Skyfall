@@ -1021,13 +1021,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             this.restoreMana();
         }
 
-        //this.setCurrentSpeed(this.direction.len());
-        //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
-        //        System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction,
-        //         this.getPosition(), this.direction.x - this.getCol(),
-        //         this.direction.y - this.getRow());
-        //        System.out.printf("%s%n", this.currentSpeed);
-
         if (isHurt) {
             checkIfHurtEnded();
         } else if (isRecovering) {
@@ -1072,14 +1065,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         xInput = 0;
         yInput = 0;
-    }
-    /**
-     * Sets the Player's current movement speed
-     *
-     * @param cSpeed the speed for the player to currently move at
-     */
-    private void setCurrentSpeed(float cSpeed) {
-        this.currentSpeed = cSpeed;
     }
 
     boolean petout = false;

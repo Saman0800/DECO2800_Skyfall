@@ -162,10 +162,11 @@ public class Projectile extends AgentEntity implements Animatable {
 
     @Override
     public void configureAnimations() {
-
+        // Do nothing currently.
     }
 
     @Override
     public void setDirectionTextures() {
+        //Do nothing currently.
     }
 }

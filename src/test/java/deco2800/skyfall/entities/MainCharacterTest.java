@@ -596,7 +596,6 @@ public class MainCharacterTest {
         testCharacter.restoreMana();
         Assert.assertEquals(this.testCharacter.mana, 1);
         Assert.assertEquals(this.testCharacter.manaCD, 0);
-
     }
 
     @After

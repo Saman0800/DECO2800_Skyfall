@@ -21,8 +21,6 @@ public interface ICombatEntity extends HasHealth {
      */
     boolean canDealDamage();
 
-
-
     /**
      * Get the amount of damage this entity deals.
      *
