@@ -11,6 +11,7 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.XmlDataSet;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -23,6 +24,7 @@ import java.sql.ResultSet;
 import org.xml.sax.InputSource;
 
 
+@Ignore
 public class DataBaseConnectorTest extends DBTestCase {
     @Mock
     private DataBaseConnector dataBaseConnector;
