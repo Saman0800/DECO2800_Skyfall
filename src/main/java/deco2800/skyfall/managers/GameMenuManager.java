@@ -346,7 +346,7 @@ public class GameMenuManager extends TickableManager {
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
                 null, textureManager, this, sm, skin));
 
-        popUps.put("collectTable", new GenericCollectCreateTable(stage,
+        popUps.put("collectTable", new CollectCreateTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
                 null, textureManager, this, questManager, skin, "collect"));
 
@@ -354,7 +354,7 @@ public class GameMenuManager extends TickableManager {
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
                 null, textureManager, this, questManager, skin, "collect"));
 
-        popUps.put("createTable", new GenericCollectCreateTable(stage,
+        popUps.put("createTable", new CollectCreateTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
                 null, textureManager, this, questManager, skin, "create"));
 

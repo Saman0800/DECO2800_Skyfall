@@ -16,7 +16,7 @@ import java.util.Map;
 
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
-public class GenericCollectCreateTable extends AbstractPopUpElement{
+public class CollectCreateTable extends AbstractPopUpElement{
 
     private final String type;
     private final QuestManager qm;
@@ -34,9 +34,9 @@ public class GenericCollectCreateTable extends AbstractPopUpElement{
     }
 
 
-    public GenericCollectCreateTable(Stage stage, ImageButton exit, String[] textureNames,
-                                     TextureManager tm, GameMenuManager gameMenuManager,
-                                     QuestManager qm, Skin skin, String type) {
+    public CollectCreateTable(Stage stage, ImageButton exit, String[] textureNames,
+                              TextureManager tm, GameMenuManager gameMenuManager,
+                              QuestManager qm, Skin skin, String type) {
         super(stage,exit, textureNames, tm, gameMenuManager);
 
         this.skin = skin;

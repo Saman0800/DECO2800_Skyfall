@@ -70,7 +70,7 @@ public class ProgressTable extends AbstractPopUpElement {
     public void update() {
             updateBiomeText(qm.getBiome());
             updateCollectText(qm.collectNum() + "/4");
-            updateCreateText("4/4");
+            updateCreateText("0/4");
             updateBlueprintTest("1");
     }
 
@@ -93,9 +93,6 @@ public class ProgressTable extends AbstractPopUpElement {
     }
 
 
-    public boolean checkComplete() {
-        return false;
-    }
     @Override
     public void draw() {
         super.draw();
