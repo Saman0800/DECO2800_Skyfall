@@ -23,8 +23,7 @@ public class DesertPortal extends AbstractPortal implements Blueprint {
      */
     public DesertPortal(float col, float row, int renderOrder) {
         super(col, row, renderOrder);
-        // TODO: @CGulley set texture to the texture of the desert portal
-        // TODO: @CGulley set the functionality to move to the next biome
+        this.setTexture("portal");
 
     }
 

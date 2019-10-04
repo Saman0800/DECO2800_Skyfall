@@ -276,6 +276,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("fence_right_right", new Texture("resources/world_structures/fence_right_right.png"));
             textureMap.put("fence_top_left", new Texture("resources/world_structures/fence_top_left.png"));
             textureMap.put("fence_top_right", new Texture("resources/world_structures/fence_top_right.png"));
+            textureMap.put("portal", new Texture("resources/world_structures/portal.png"));
 
             textureMap.put("big_circle", new Texture("resources/OrangeCircle.png"));
             textureMap.put("inner_circle", new Texture("resources/RedCircle.png"));

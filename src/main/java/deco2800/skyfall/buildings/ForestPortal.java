@@ -5,10 +5,15 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.DesertBiome;
 import deco2800.skyfall.worlds.world.World;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class ForestPortal extends AbstractPortal implements Blueprint {
@@ -18,6 +23,8 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
     public boolean blueprintLearned = false;
     public String name = "forestPortal";
     Texture texture;
+    // a logger
+    private final transient Logger logger = LoggerFactory.getLogger(ForestPortal.class);
 
 
 
@@ -30,8 +37,7 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
      */
     public ForestPortal(float col, float row, int renderOrder) {
         super(col, row, renderOrder);
-        // TODO: @CGulley set texture to the texture of the forest portal
-        // TODO: @CGulley set the functionality to move to the next biome
+        this.setTexture("portal");
 
     }
 
@@ -105,7 +111,6 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
         } else {
             blueprintLearned = true;
         }
-
     }
 
     /**
@@ -124,16 +129,29 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
      * Move characters location to the next biome
      * To be implemented when a player clicks on the portal
      * @param character - The Character to teleport
+     * @param  world - The world to teleport through
      */
     public void teleport(MainCharacter character, World world) {
         character.unlockBiome(nextBiome);
         //move to a random place on the map
+        AbstractBiome next = null;
+        for (AbstractBiome biome: world.getBiomes()) {
+            if (biome.getBiomeName() == nextBiome) {
+                next = biome;
+            }
+        }
 
-        // maybe on click?????? set up an observer?
+        if (next == null) {
+            // TODO: @CGulley add a logger and send message to the logger about invalid biome
+            logger.warn("No next biome");
 
+        } else {
+            ArrayList<Tile> biomeTiles = next.getTiles();
+            Tile firstTile = biomeTiles.get(0);
+            // Setting the characters tile to the next biome
+            character.setPosition(firstTile.getCol(),firstTile.getRow());
+        }
     }
-
-
 
 
 }
