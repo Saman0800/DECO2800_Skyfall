@@ -4,6 +4,7 @@ import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.items.Metal;
 import deco2800.skyfall.resources.items.Stone;
 import deco2800.skyfall.resources.items.Wood;
+import deco2800.skyfall.worlds.world.World;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,9 +24,12 @@ public class QuestManagerTest {
     private InventoryManager mockInvM = mock(InventoryManager.class);
     private AnimationManager mockAM = mock(AnimationManager.class);
 
+    private World mockWorld = mock(World.class);
+
     @Before
     public void setUp() {
         manager = new QuestManager();
+        gameManager.setWorld(mockWorld);
         gameManager.addManager(mockIM);
         gameManager.addManager(mockPM);
         gameManager.addManager(mockInvM);
@@ -113,6 +117,12 @@ public class QuestManagerTest {
             manager.getPlayer().getInventoryManager().add(metal);
         }
         assertTrue(manager.checkMetal());
+    }
+
+    @Test
+    public void checkBuildingsTest() {
+
+        assertFalse(manager.checkBuildings());
     }
 
 }
