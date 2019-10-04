@@ -335,9 +335,6 @@ public class GameMenuManager extends TickableManager {
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
                 null, textureManager, this, sm, skin));
 
-        popUps.put("chestTable",new ChestTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                null, textureManager, this, sm, skin));
 
         popUps.put("gameOverTable", new GameOverTable(stage,
                 null, null, textureManager, this));
@@ -375,6 +372,10 @@ public class GameMenuManager extends TickableManager {
         popUps.put("inventoryTable",
                 new InventoryTable(stage, new ImageButton(generateTextureRegionDrawableObject("exitButton")),
                         null, textureManager, skin,this));
+
+        popUps.put("chestTable",new ChestTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                null, textureManager, this, sm, skin));
     }
 
     /**

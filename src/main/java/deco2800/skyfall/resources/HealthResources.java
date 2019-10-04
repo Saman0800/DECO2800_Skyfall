@@ -1,12 +1,13 @@
 package deco2800.skyfall.resources;
 
 //import deco2800.skyfall.entities.EnemyEntity;
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class HealthResources implements Item {
+public abstract class HealthResources extends AbstractEntity implements Item {
 
     // can the item be stored in the inventory
     private Boolean carryable;
@@ -212,5 +213,10 @@ public abstract class HealthResources implements Item {
      */
     public Boolean isEquippable() {
         return this.equippable;
+    }
+
+    @Override
+    public void onTick(long i) {
+        // Auto-generated method stub
     }
 }

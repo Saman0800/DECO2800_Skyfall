@@ -1,7 +1,9 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.gui.Tuple;
+import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.NaturalResources;
 import deco2800.skyfall.resources.items.*;
 
@@ -257,6 +259,8 @@ public class InventoryManager extends TickableManager {
             logger.warn("Not enough space in inventory");
             return false;
         }
+
+
     }
 
     public void inventoryAddMultiple(Map<String, List<Item>> items) {
@@ -319,8 +323,17 @@ public class InventoryManager extends TickableManager {
                 float row = 0;
 
                 while(!validPos){
-                    col = (float) Math.floor(Math.random() * 20 + charCol);
-                    row = (float) Math.floor(Math.random() * 20 + charRow);
+                    int randomCol = 50;
+                    int randomRow = 50;
+                    if(Math.random() > 0.5){
+                        randomCol *= -1;
+                    }
+                    if(Math.random() > 0.5){
+                        randomRow *= -1;
+                    }
+
+                    col = (float) Math.floor(Math.random() * randomCol + charCol);
+                    row = (float) Math.floor(Math.random() * randomRow + charRow);
                     HexVector pos = new HexVector(col, row);
                     validPos = WorldUtil.validColRow(pos);
                 }
@@ -329,6 +342,14 @@ public class InventoryManager extends TickableManager {
                     ((NaturalResources) item).setPosition(col, row);
                     ((NaturalResources) item).setTexture(item.getName() + "_world");
                     GameManager.get().getWorld().addEntity((NaturalResources) item);
+                } else if(item instanceof HealthResources){
+                    ((HealthResources) item).setPosition(col, row);
+                    ((HealthResources) item).setTexture(item.getName() + "_world");
+                    GameManager.get().getWorld().addEntity((HealthResources) item);
+                } else if(item instanceof ManufacturedResources){
+                    ((ManufacturedResources) item).setPosition(col, row);
+                    ((ManufacturedResources) item).setTexture(item.getName() + "_world");
+                    GameManager.get().getWorld().addEntity((ManufacturedResources) item);
                 }
             }
 

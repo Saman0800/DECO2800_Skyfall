@@ -34,6 +34,7 @@ import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
 
+import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -408,8 +409,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Set up the game over screen.
      */
     private void setupGameOverScreen() {
-        this.gameOverTable = (GameOverTable) GameManager.get().getManagerFromInstance(GameMenuManager.class).
-                getPopUp("gameOverTable");
+        GameManager.get().getManagerFromInstance(GameMenuManager.class).hideOpened();
+        GameManager.get().getManagerFromInstance(GameMenuManager.class).setPopUp("gameOverTable");
+        GameManager.get().getManagerFromInstance(GameMenuManager.class).getPopUp("gameOverTable");
         logger.info("Game Over");
     }
 
@@ -735,15 +737,16 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Kills the player. and notifying the game that the player
+     * Kills the playerr and notifys the game that the player
      * has died and cannot do any actions in game anymore.
+     * Once game is retried, quests are reset.
      */
-    private void kill() {
-        // set health to 0.
-        //changeHealth(0);
+    public void kill() {
         SoundManager.playSound(DIED_SOUND_NAME);
         setCurrentState(AnimationRole.DEAD);
         deadTime = 0;
+        setupGameOverScreen();
+        setDead(true);
     }
 
     /**
@@ -853,8 +856,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void changeLevel(int change) {
         if (level + change >= 1) {
             this.level += change;
-            this.setMaxHealth(getHealth() * 10);
-            this.changeHealth(change * 10);
+            /* Don't think we'll need to upgrade health each level */
+//            this.setMaxHealth(getHealth() * 10);
+//            this.changeHealth(change * 10);
         }
     }
 
@@ -995,6 +999,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         while (foodAccum >= 1.f) {
             change_food(-1);
             foodAccum -= 1.f;
+        }
+
+        if (this.getHealth() < 1) {
+            updateHealth();
         }
     }
 

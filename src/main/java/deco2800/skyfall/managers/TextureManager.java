@@ -349,6 +349,9 @@ public class TextureManager extends AbstractManager {
             textureMap.put("item_background", new Texture("resources/items_icons/item_background.png"));
             textureMap.put("checked", new Texture("resources/checked.png"));
             textureMap.put("unchecked", new Texture("resources/unchecked.png"));
+            textureMap.put("take all", new Texture("resources/inventory/take_all.png"));
+            textureMap.put("inventory_panel", new Texture("resources/inventory/inventory_panel.png"));
+
 
 
             textureMap.put("Stone_inv", new Texture("resources/items_icons/stone.png"));
@@ -369,15 +372,32 @@ public class TextureManager extends AbstractManager {
             //Items in World
             textureMap.put("Stone_world", new Texture("resources/inventory/stone_world.png"));
             textureMap.put("Wood_world", new Texture("resources/inventory/wood_world.png"));
+            textureMap.put("Sand_world", new Texture("resources/inventory/sand_world.png"));
+            textureMap.put("Vine_world", new Texture("resources/inventory/vine_world.png"));
+            textureMap.put("Pick Axe_world", new Texture("resources/inventory/pickaxe_world.png"));
+            textureMap.put("Metal_world", new Texture("resources/inventory/metal_world.png"));
+            textureMap.put("Hatchet_world", new Texture("resources/inventory/hatchet_world.png"));
+            textureMap.put("Berry_world", new Texture("resources/inventory/berry_world.png"));
+            textureMap.put("Apple_world", new Texture("resources/inventory/apple_world.png"));
+            textureMap.put("Aloe_Vera_world", new Texture("resources/inventory/aloevera_world.png"));
+
 
             //Inventory Item Descriptions
-            textureMap.put("Wood_desc", new Texture("resources/items_icons/wood_desc.png"));
+            textureMap.put("Wood_desc", new Texture("resources/items_icons/wood_desc2.png"));
             textureMap.put("Stone_desc", new Texture("resources/items_icons/stone_desc.png"));
             textureMap.put("Metal_desc", new Texture("resources/items_icons/metal_desc.png"));
             textureMap.put("Vine_desc", new Texture("resources/items_icons/vine_desc.png"));
+            textureMap.put("Sand_desc", new Texture("resources/items_icons/sand_desc.png"));
+            textureMap.put("Pick Axe_desc", new Texture("resources/items_icons/pickaxe_desc.png"));
+            textureMap.put("Hatchet_desc", new Texture("resources/items_icons/hatchet_desc.png"));
+            textureMap.put("axe_desc", new Texture("resources/items_icons/axe_desc.png"));
+            textureMap.put("bow_desc", new Texture("resources/items_icons/bow_desc.png"));
+            textureMap.put("spear_desc", new Texture("resources/items_icons/spear_desc.png"));
+            textureMap.put("sword_desc", new Texture("resources/items_icons/sword_desc.png"));
 
             //Inventory Description Panel
-            textureMap.put("Description_Panel", new Texture("resources/desc_panel.png"));
+            textureMap.put("Description_Panel", new Texture("resources/items_icons/no_desc.png"));
+
             // Inventory items
             textureMap.put("Apple", new Texture("resources/inventory/apple-1.png"));
             textureMap.put("Aloe_Vera", new Texture("resources/inventory/apple-1.png"));

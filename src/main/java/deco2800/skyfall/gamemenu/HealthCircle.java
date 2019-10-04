@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
+import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
@@ -33,13 +34,16 @@ public class HealthCircle extends AbstractUIElement {
             return;
         }
 
-        smallerCircle.setSize((float) 2 * newHealth,
-                (float) 2 * newHealth);
+        if (newHealth > 50) {
+            smallerCircle.setSize(100, 100);
+            smallerCircle.setPosition(positionX , positionY);
+        } else {
+            smallerCircle.setSize((float) 2 * newHealth,
+                    (float) 2 * newHealth);
+        }
         offset += (diff * 2) / 2;
         smallerCircle.setPosition(positionX + offset, positionY + offset);
         currentHealth = newHealth;
-
-        System.out.println("POSTION " + smallerCircle.getX() + smallerCircle.getY());
 
         if(sm.getHealth() < 1) {
             label.setText("DEAD");
@@ -55,9 +59,7 @@ public class HealthCircle extends AbstractUIElement {
     public void update() {
         super.update();
         newHealth = sm.getHealth();
-        if ((currentHealth - newHealth) >= 0) {
-            updateInnerCircle();
-        }
+        updateInnerCircle();
     }
     /**
      * Keeps the object on the top left of the screen

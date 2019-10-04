@@ -1,5 +1,6 @@
 package deco2800.skyfall.resources;
 
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.util.HexVector;
 
@@ -8,7 +9,7 @@ import java.util.Map;
 /**
  * An abstract class representing a Manufactured Resource item.
  */
-public abstract class ManufacturedResources implements Item, Blueprint {
+public abstract class ManufacturedResources extends AbstractEntity implements Item, Blueprint {
 
     // the name of the item e.g. Hatchet, Pick Axe
     protected String name;
@@ -200,6 +201,12 @@ public abstract class ManufacturedResources implements Item, Blueprint {
     public boolean isUsable() {
         return this.getDurability() > 0;
     }
+
+    @Override
+    public void onTick(long i) {
+        // Auto-generated method stub
+    }
+
 }
 
 

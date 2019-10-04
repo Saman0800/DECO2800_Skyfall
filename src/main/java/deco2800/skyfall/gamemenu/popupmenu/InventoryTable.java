@@ -10,9 +10,7 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.gamemenu.GameMenuBar2;
 import deco2800.skyfall.gamemenu.HeadsUpDisplay;
-import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.managers.InventoryManager;
-import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.managers.*;
 import deco2800.skyfall.resources.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +65,8 @@ public class InventoryTable extends AbstractPopUpElement {
     //Inventory user interface equip item button (inactive)
     private ImageButton inactiveEquipButton;
 
+    private StatisticsManager sm;
+
     //Logger for Inventory Table
     private final transient Logger LOGGER =
             LoggerFactory.getLogger(InventoryTable.class);
@@ -88,6 +88,7 @@ public class InventoryTable extends AbstractPopUpElement {
         this.gameMenuManager = gameMenuManager;
         this.inventory = gameMenuManager.getInventory();
         this.mainCharacter = gameMenuManager.getMainCharacter();
+        this.sm = GameManager.getManagerFromInstance(StatisticsManager.class);
 
         if(gameMenuManager.getUIElement("HUD") instanceof HeadsUpDisplay){
             HeadsUpDisplay hud = (HeadsUpDisplay) gameMenuManager.getUIElement("HUD");
@@ -320,7 +321,7 @@ public class InventoryTable extends AbstractPopUpElement {
         resourcePanel.setName("resourcePanel");
         resourcePanel.setSize(410, 320);
         resourcePanel.setPosition(475, 98);
-        resourcePanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
+        resourcePanel.setBackground(generateTextureRegionDrawableObject("inventory_panel"));
 
         return resourcePanel;
     }

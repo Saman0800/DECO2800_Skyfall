@@ -688,16 +688,14 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
                 ChestTable chest = (ChestTable) menuManager.getPopUp("chestTable");
                 chest.updateChestPanel((Chest) entity);
                 menuManager.setPopUp("chestTable");
-
-
             } else if (entity instanceof Item) {
-                MainCharacter mc = gmm.getMainCharacter();
-                if (tile.getCoordinates().distance(mc.getPosition()) > 2) {
-                    continue;
-                }
-                removeEntity(entity);
-                gmm.getInventory().add((Item) entity);
-            }else if (entity instanceof GoldPiece) {
+                    MainCharacter mc = gmm.getMainCharacter();
+                    if (tile.getCoordinates().distance(mc.getPosition()) > 2) {
+                        continue;
+                    }
+                    removeEntity(entity);
+                    gmm.getInventory().add((Item) entity);
+            } else if (entity instanceof GoldPiece) {
                 MainCharacter mc = gmm.getMainCharacter();
                 if (tile.getCoordinates().distance(mc.getPosition()) <= 1) {
                     mc.addGold((GoldPiece) entity, 1);
@@ -705,16 +703,6 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
                     removeEntity(entity);
                 }
             }
-
-            else if (entity instanceof Item) {
-                MainCharacter mc = gmm.getMainCharacter();
-                InventoryManager inventory = GameManager.getManagerFromInstance(InventoryManager.class);
-//                if (tile.getCoordinates().distance(mc.getPosition()) <= 1) {
-                    inventory.add((Item) entity);
-                    removeEntity(entity);
-//                }
-            }
-
             else if (entity instanceof BlueprintShop) {
                 GameMenuManager menuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
                 BlueprintShopTable bs = (BlueprintShopTable) menuManager.getPopUp("blueprintShopTable");
