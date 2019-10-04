@@ -255,13 +255,13 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * How much mana the character has available for spellcasting.
      */
-    private int mana = 100;
+    protected int mana = 100;
 
     //Current time in interval to restore mana.
-    private int manaCD = 0;
+    protected int manaCD = 0;
 
     //Tick interval to restore mana.
-    private int totalManaCooldown = 10;
+    protected int totalManaCooldown = 10;
 
     /**
      * The GUI mana bar that can be updated when mana is restored/lost.
@@ -986,7 +986,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Reset the mana cooldown period and restore 1 mana to the MainCharacter.
      */
-    private void restoreMana() {
+    protected void restoreMana() {
 
         //Reset the cooldown period.
         this.manaCD = 0;
@@ -1015,6 +1015,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.movementSound();
         this.centreCameraAuto();
 
+        //Mana restoration.
         this.manaCD++;
         if (this.manaCD > totalManaCooldown) {
             this.restoreMana();

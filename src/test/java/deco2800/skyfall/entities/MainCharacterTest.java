@@ -576,6 +576,29 @@ public class MainCharacterTest {
                 && testCharacter.getPosition().getCol() == old_pos.getCol());
     }
 
+
+    /**
+     * Test the mana restoration system works.
+     */
+    @Test
+    public void testRestoreMana() {
+
+        Assert.assertEquals(this.testCharacter.mana, 100);
+        Assert.assertEquals(this.testCharacter.manaCD, 0);
+
+        testCharacter.mana = 0;
+        testCharacter.manaCD = testCharacter.totalManaCooldown;
+
+        Assert.assertEquals(this.testCharacter.mana, 0);
+        Assert.assertEquals(this.testCharacter.manaCD, testCharacter.totalManaCooldown);
+
+        //Ensure 1 mana was added and manaCD was reset.
+        testCharacter.restoreMana();
+        Assert.assertEquals(this.testCharacter.mana, 1);
+        Assert.assertEquals(this.testCharacter.manaCD, 0);
+
+    }
+
     @After
     public void cleanup() {
         testCharacter = null;
