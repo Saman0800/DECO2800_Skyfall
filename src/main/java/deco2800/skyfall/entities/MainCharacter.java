@@ -1617,6 +1617,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             case FOREST:
                 unlocked.add(new Hatchet());
                 unlocked.add(new PickAxe());
+                unlocked.add(new Sword());
+                unlocked.add(new Bow());
+                unlocked.add(new Spear());
                 unlocked.add(CASTLE);
         }
         return unlocked;
@@ -1678,13 +1681,13 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                             this.getInventoryManager().add(new PickAxe());
                             break;
 
-                        case "Sword":
+                        case "sword":
                             this.getInventoryManager().add(new Sword());
                             break;
-                        case "Spear":
+                        case "spear":
                             this.getInventoryManager().add(new Spear());
                             break;
-                        case "Bow":
+                        case "bow":
                             this.getInventoryManager().add(new Bow());
                             break;
 
