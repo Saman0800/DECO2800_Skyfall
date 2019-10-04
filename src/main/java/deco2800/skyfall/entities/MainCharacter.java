@@ -3,6 +3,8 @@ package deco2800.skyfall.entities;
 //<<<<<<< HEAD
 import java.util.Map;
 import java.util.List;
+
+import deco2800.skyfall.buildings.ForestPortal;
 import org.slf4j.Logger;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -1621,6 +1623,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 unlocked.add(new Bow());
                 unlocked.add(new Spear());
                 unlocked.add(CASTLE);
+
+                unlocked.add(new ForestPortal(0, 0, 0));
         }
         return unlocked;
 
