@@ -97,6 +97,17 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
     private Save save;
 
     /**
+     * The constructor used to create a simple dummey world, used for displaying world information on the
+     * home screen
+     * @param worldId The id of the world
+     * @param save The save the world is in
+     */
+    public World(long worldId, Save save){
+        this.save = save;
+        this.id = worldId;
+    }
+
+    /**
      * The constructor for a world being loaded from a memento
      *
      * @param memento the memento to load from
@@ -835,6 +846,9 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
         this.tileOffsetNoiseGeneratorX = worldMemento.tileOffsetNoiseGeneratorX;
         this.tileOffsetNoiseGeneratorY = worldMemento.tileOffsetNoiseGeneratorY;
     }
+
+
+
 
     public static class WorldMemento extends AbstractMemento implements Serializable {
         private long saveID;

@@ -4,6 +4,12 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
+import org.dbunit.DBTestCase;
+import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.xml.FlatXmlDataSet;
+import org.dbunit.dataset.xml.XmlDataSet;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,9 +20,10 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import org.xml.sax.InputSource;
 
 
-public class DataBaseConnectorTest {
+public class DataBaseConnectorTest extends DBTestCase {
     @Mock
     private DataBaseConnector dataBaseConnector;
     @Mock
@@ -30,5 +37,10 @@ public class DataBaseConnectorTest {
     public void setup(){
         assertNotNull(dataBaseConnector);
         when(dataBaseConnector.getConnection()).thenReturn(connection);
+    }
+
+    @Override
+    protected IDataSet getDataSet() throws Exception {
+        return new FlatXmlDataSet(new FileInputStream("thing.xml"));
     }
 }

@@ -93,7 +93,7 @@ dependencies {
 	compile group: 'com.esotericsoftware', name: 'kryo', version: '4.0.2'
 	compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
 
-
+	testCompile group: 'org.dbunit', name: 'dbunit', version: '2.4.3'
 
 
 

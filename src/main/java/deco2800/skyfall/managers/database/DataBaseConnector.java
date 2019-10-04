@@ -442,52 +442,50 @@ public class DataBaseConnector {
     }
 
     public List<WorldGenNode> loadNodes(World world, List<AbstractBiome> biomes) throws SQLException, LoadException {
-        PreparedStatement preparedStatement = null;
-        ResultSet result = null;
         try {
-            Gson gson = new Gson();
             connection.setAutoCommit(false);
-            preparedStatement = connection.prepareStatement("SELECT * FROM nodes WHERE world_id = ?");
-            preparedStatement.setLong(1, world.getID());
-            result = preparedStatement.executeQuery();
+            List<WorldGenNode> nodes;
+            try (PreparedStatement preparedStatement = connection
+                .prepareStatement("SELECT * FROM nodes WHERE world_id = ?")) {
+                preparedStatement.setLong(1, world.getID());
+                try (ResultSet result = preparedStatement.executeQuery()) {
 
-            if (!result.next()) {
-                connection.setAutoCommit(true);
-                throw new LoadException();
-            }
-
-            List<WorldGenNode> nodes = new ArrayList<>();
-            do {
-                Long biomeID = result.getLong("biome_id");
-
-                byte[] buffer = result.getBytes("data");
-                ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(buffer));
-                WorldGenNodeMemento memento = (WorldGenNodeMemento) objectIn.readObject();
-
-                WorldGenNode node = new WorldGenNode(memento);
-
-                boolean foundBiome = false;
-                for (AbstractBiome biome : biomes) {
-                    if (biome.getBiomeID() == biomeID) {
-                        node.setBiome(biome);
-                        foundBiome = true;
-                        break;
+                    if (!result.next()) {
+                        connection.setAutoCommit(true);
+                        throw new LoadException();
                     }
-                }
-                if (!foundBiome) {
-                    connection.setAutoCommit(true);
-                    throw new LoadException();
-                }
 
-                nodes.add(node);
-            } while (result.next());
+                    nodes = new ArrayList<>();
+                    do {
+                        Long biomeID = result.getLong("biome_id");
+
+                        byte[] buffer = result.getBytes("data");
+                        ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(buffer));
+                        WorldGenNodeMemento memento = (WorldGenNodeMemento) objectIn.readObject();
+
+                        WorldGenNode node = new WorldGenNode(memento);
+
+                        boolean foundBiome = false;
+                        for (AbstractBiome biome : biomes) {
+                            if (biome.getBiomeID() == biomeID) {
+                                node.setBiome(biome);
+                                foundBiome = true;
+                                break;
+                            }
+                        }
+                        if (!foundBiome) {
+                            connection.setAutoCommit(true);
+                            throw new LoadException();
+                        }
+
+                        nodes.add(node);
+                    } while (result.next());
+                }
+            }
 
             return nodes;
         } catch (ClassNotFoundException | IOException e) {
             throw new RuntimeException(e);
-        } finally {
-            preparedStatement.close();
-            result.close();
         }
     }
 
@@ -502,55 +500,53 @@ public class DataBaseConnector {
      */
     public LinkedHashMap<VoronoiEdge, BeachBiome> loadBeachEdges(World world, List<AbstractBiome> biomes)
             throws SQLException, LoadException {
-        PreparedStatement preparedStatement = null;
-        ResultSet result = null;
         try {
             connection.setAutoCommit(false);
-            preparedStatement = connection.prepareStatement("SELECT * FROM EDGES WHERE world_id = ?");
-            preparedStatement.setLong(1, world.getID());
-            result = preparedStatement.executeQuery();
+            LinkedHashMap<VoronoiEdge, BeachBiome> edges;
+            try (PreparedStatement preparedStatement = connection
+                .prepareStatement("SELECT * FROM EDGES WHERE world_id = ?")) {
+                preparedStatement.setLong(1, world.getID());
+                try (ResultSet result = preparedStatement.executeQuery()) {
 
-            if (!result.next()) {
-                connection.setAutoCommit(true);
-                throw new LoadException();
-            }
+                    if (!result.next()) {
+                        connection.setAutoCommit(true);
+                        throw new LoadException();
+                    }
 
-            LinkedHashMap<VoronoiEdge, BeachBiome> edges = new LinkedHashMap<>();
-            do {
-                byte[] buffer = result.getBytes("data");
-                ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(buffer));
-                VoronoiEdgeMemento memento = (VoronoiEdgeMemento) objectIn.readObject();
-                Long biomeID = result.getLong("biome_id");
+                    edges = new LinkedHashMap<>();
+                    do {
+                        byte[] buffer = result.getBytes("data");
+                        ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(buffer));
+                        VoronoiEdgeMemento memento = (VoronoiEdgeMemento) objectIn.readObject();
+                        Long biomeID = result.getLong("biome_id");
 
-
-                VoronoiEdge edge = new VoronoiEdge(memento);
-                edge.setWorld(world);
-                boolean foundBiome = false;
-                for (AbstractBiome biome : biomes) {
-                    if (biome.getBiomeID() == biomeID) {
-                        foundBiome = true;
-                        if (biome.getBiomeName().equals("beach")) {
-                            edges.put(edge, (BeachBiome) biome);
-                            break;
-                        } else if (!biome.getBiomeName().equals("river")) {
+                        VoronoiEdge edge = new VoronoiEdge(memento);
+                        edge.setWorld(world);
+                        boolean foundBiome = false;
+                        for (AbstractBiome biome : biomes) {
+                            if (biome.getBiomeID() == biomeID) {
+                                foundBiome = true;
+                                if (biome.getBiomeName().equals("beach")) {
+                                    edges.put(edge, (BeachBiome) biome);
+                                    break;
+                                } else if (!biome.getBiomeName().equals("river")) {
+                                    connection.setAutoCommit(true);
+                                    throw new LoadException();
+                                }
+                            }
+                        }
+                        if (!foundBiome) {
                             connection.setAutoCommit(true);
                             throw new LoadException();
                         }
-                    }
-                }
-                if (!foundBiome) {
-                    connection.setAutoCommit(true);
-                    throw new LoadException();
-                }
 
-            } while (result.next());
+                    } while (result.next());
+                }
+            }
 
             return edges;
         } catch (ClassNotFoundException | IOException e) {
             throw new RuntimeException(e);
-        } finally {
-            preparedStatement.close();
-            result.close();
         }
     }
 
@@ -643,12 +639,14 @@ public class DataBaseConnector {
 
             // Gets the entities within the chunk from the database and add them to the
             // chunk
-            PreparedStatement entityquery = connection
-                    .prepareStatement("SELECT * FROM ENTITIES WHERE CHUNK_X = ? and CHUNK_Y = ? and WORLD_ID = ?");
-            entityquery.setInt(1, x);
-            entityquery.setInt(2, y);
-            entityquery.setLong(3, world.getID());
-            ResultSet entityResult = entityquery.executeQuery();
+            ResultSet entityResult;
+            try (PreparedStatement entityquery = connection
+                .prepareStatement("SELECT * FROM ENTITIES WHERE CHUNK_X = ? and CHUNK_Y = ? and WORLD_ID = ?")) {
+                entityquery.setInt(1, x);
+                entityquery.setInt(2, y);
+                entityquery.setLong(3, world.getID());
+                entityResult = entityquery.executeQuery();
+            }
 
             while (entityResult.next()) {
                 StaticEntity entity;
@@ -746,6 +744,50 @@ public class DataBaseConnector {
         flyway.setCleanOnValidationError(true);
         flyway.setValidateOnMigrate(true);
         flyway.migrate();
+    }
+
+
+    /**
+     * Gets all the saves and there corresponding worlds
+     * @return A list of all the saves
+     */
+    private List<Save> loadSaveInformation(){
+        try {
+            ArrayList<Save> saves = new ArrayList<>();
+
+            try (PreparedStatement saveStatement = connection.prepareStatement("SELECT * FROM SAVES")) {
+                //Go through and load all the worlds for each save
+                try (ResultSet saveSet = saveStatement.executeQuery()) {
+                    while (saveSet.next()) {
+
+                        byte[] buffer = saveSet.getBytes("data");
+                        ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(buffer));
+                        SaveMemento memento = (SaveMemento) objectIn.readObject();
+
+                        Save save = new Save(memento);
+
+                        try (PreparedStatement worldsStatement = connection
+                            .prepareStatement("SELECT * FROM WORLDS WHERE SAVE_ID = ?")) {
+                            worldsStatement.setLong(1, save.getSaveID());
+
+                            try (ResultSet worldSet = worldsStatement.executeQuery()) {
+                                //Loop through those worlds andd add them to the save
+                                while (worldSet.next()){
+                                    World world = new World(worldSet.getLong("world_id"), save);
+                                    save.addWorld(world);
+                                }
+                            }
+                        }
+
+                        saves.add(save);
+                    }
+                }
+            }
+            return saves;
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
