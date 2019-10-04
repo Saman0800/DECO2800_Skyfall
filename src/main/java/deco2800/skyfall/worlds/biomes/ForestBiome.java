@@ -47,4 +47,6 @@ public class ForestBiome extends AbstractBiome {
         tile.setPerlinValue(adjustedPerlinValue);
         tile.setTexture(textures.get(adjustedPerlinValue));
     }
+
+
 }

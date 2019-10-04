@@ -3,6 +3,8 @@ package deco2800.skyfall.entities;
 //<<<<<<< HEAD
 import java.util.Map;
 import java.util.List;
+
+import deco2800.skyfall.buildings.*;
 import org.slf4j.Logger;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -33,7 +35,6 @@ import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.observers.KeyUpObserver;
 import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.animation.AnimationLinker;
-import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.observers.TouchDownObserver;
@@ -72,6 +73,8 @@ import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
 
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.ForestBiome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,6 +83,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 //>>>>>>> master
+
+import static deco2800.skyfall.buildings.BuildingType.CABIN;
+import static deco2800.skyfall.buildings.BuildingType.CASTLE;
+import static deco2800.skyfall.buildings.BuildingType.WATCHTOWER;
 
 /**
  * Main character in the game
@@ -158,18 +165,19 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private PetsManager petsManager;
     private BuildingFactory tempFactory;
 
+    // List of the Biomes Unlocked
+    private List<String> lockedBiomes;
+
     /**
      * Please feel free to change, this is not accurate as to the stages of
      * the game
      */
     public enum GameStage {
         FOREST,
+        DESERT,
         MOUNTAIN,
-        ICE,
-        LAVA,
-        RIVER,
-        VALLEY,
-        GRAVEYARD
+        SNOW,
+        LAVA
     }
 
     //The name of the item to be created.
@@ -341,6 +349,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.setHeight(1);
         this.setObjectName("MainPiece");
         this.setMaxHealth(health);
+        initialiselockedBiomes();
 
         GameManager.getManagerFromInstance(InputManager.class)
                 .addKeyDownListener(this);
@@ -414,6 +423,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private MainCharacter(float col, float row, float speed, String name, int health, String[] textures) {
         this(col, row, speed, name, health);
         this.setTexture(textures[2]);
+        initialiselockedBiomes();
     }
 
     /**
@@ -450,6 +460,33 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         //         getPopUp("gameOverTable");
     }
 
+    /**
+     * Initialises all of the biomes as "unlocked" except the first biome (forest)
+     */
+    private void initialiselockedBiomes() {
+        lockedBiomes = new ArrayList<>();
+
+        lockedBiomes.add("desert");
+        lockedBiomes.add("mountain");
+        lockedBiomes.add("volcanic_mountain");
+
+    }
+
+    /**
+     * Gets all of the "locked" biomes
+     * @return lockedBiomes - a list of all of the locked biomes
+     */
+    public List<String> getlockedBiomes() {
+        return lockedBiomes;
+    }
+
+    /**
+     * Removes a biome from the locked list ("unlocking a biome")
+     * @param biome - The biome to "unlock"
+     */
+    public void unlockBiome(String biome) {
+        lockedBiomes.remove(biome);
+    }
 
     /**
      * Switch the item the MainCharacter has equip.
@@ -1337,14 +1374,27 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         // Gets the next tile
         Tile tile = getTile(position.getCol() + xInput, position.getRow() + yInput);
 
+        boolean valid = true;
+
         if (tile == null) {
-            return false;
-        } else {
-            return (!tile.getTextureName().contains("water")
-                    && !tile.getTextureName().contains("lake")
-                    && !tile.getTextureName().contains("ocean"))
-                    || canSwim;
+            valid = false;
         }
+
+        if ((tile.getTextureName().contains("water")
+                || tile.getTextureName().contains("lake")
+                || tile.getTextureName().contains("ocean"))
+                    && !canSwim) {
+            valid = false;
+        }
+
+        for (String s: lockedBiomes) {
+            if (tile.getTextureName().contains(s)){
+                valid = false;
+            }
+        }
+
+        return valid;
+
     }
 
     /**
@@ -1557,23 +1607,25 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public List<Blueprint> getUnlockedBlueprints() {
         List<Blueprint> unlocked = new ArrayList<>();
         switch (gameStage) {
-            case GRAVEYARD:
-                // e.g. unlocked.add(new Spaceship())
-                // fall through
-            case VALLEY:
-                // e.g. unlocked.add(new Factory())
-                // fall through
-            case RIVER:
-                // fall through
             case LAVA:
-                // fall through
-            case ICE:
-                // fall through
+
+            case SNOW:
+                unlocked.add(CABIN);
             case MOUNTAIN:
-                // fall through
+                unlocked.add(WATCHTOWER);
+                unlocked.add(new MountainPortal(0, 0, 0));
+            case DESERT:
+                unlocked.add(CABIN);
+                unlocked.add(new DesertPortal(0, 0, 0));
             case FOREST:
                 unlocked.add(new Hatchet());
                 unlocked.add(new PickAxe());
+                unlocked.add(new Sword());
+                unlocked.add(new Bow());
+                unlocked.add(new Spear());
+                unlocked.add(CASTLE);
+
+                unlocked.add(new ForestPortal(0, 0, 0));
         }
         return unlocked;
 
@@ -1606,7 +1658,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /***
      * Creates an item if the player has the blueprint. Checks if required resources
      * are in the inventory. if yes, creates the item, adds it to the player's
-     * inventoryand deducts the required resource from inventory
+     * inventory and deducts the required resource from inventory
      */
     public void createItem(Blueprint newItem) {
 
@@ -1630,9 +1682,18 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                         case "Hatchet":
                             this.getInventoryManager().add(new Hatchet());
                             break;
-
                         case "Pick Axe":
                             this.getInventoryManager().add(new PickAxe());
+                            break;
+
+                        case "sword":
+                            this.getInventoryManager().add(new Sword());
+                            break;
+                        case "spear":
+                            this.getInventoryManager().add(new Spear());
+                            break;
+                        case "bow":
+                            this.getInventoryManager().add(new Bow());
                             break;
 
                         //These are only placeholders and will change once coordinated
