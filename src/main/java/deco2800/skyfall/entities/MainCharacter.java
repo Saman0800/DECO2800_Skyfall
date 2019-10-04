@@ -1,6 +1,5 @@
 package deco2800.skyfall.entities;
 
-//<<<<<<< HEAD
 import java.util.Map;
 import java.util.List;
 
@@ -39,7 +38,6 @@ import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.entities.spells.SpellFactory;
-//=======
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.Gdx;
@@ -82,7 +80,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-//>>>>>>> master
 
 import static deco2800.skyfall.buildings.BuildingType.CABIN;
 import static deco2800.skyfall.buildings.BuildingType.CASTLE;
@@ -195,10 +192,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public static final String AXEATTACK = "axe_attack";
     public static final String SWORDATTACK = "sword_attack";
     public static final String SPEARATTACK = "first_attack";
-    public static final String ATTACK = "player_hurt";
 
-    //The pick Axe that is going to be created
-    private Hatchet hatchetToCreate;
+
 
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
@@ -218,7 +213,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     // Textures for all 6 directions to correspond to movement of character
 
-    // TODO: change this to an integer to support removing currency which is not just 100g or 50g or 20g
+
     // A goldPouch to store the character's gold pieces.
     private HashMap<Integer, Integer> goldPouch;
 
@@ -281,7 +276,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private boolean isHurt = false;
     private boolean isRecovering = false;
     private boolean isTexChanging = false;
+
     private boolean isAttacking = false;
+
 
     /**
      * Item player is currently equipped with/holding.
@@ -301,13 +298,13 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * How much mana the character has available for spellcasting.
      */
-    private int mana = 100;
+    protected int mana = 100;
 
     //Current time in interval to restore mana.
-    private int manaCD = 0;
+    protected int manaCD = 0;
 
     //Tick interval to restore mana.
-    private int totalManaCooldown = 10;
+    protected int totalManaCooldown = 10;
 
     /**
      * The GUI mana bar that can be updated when mana is restored/lost.
@@ -320,12 +317,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     private HealthCircle healthBar;
 
-    /**
-     * The GUI health bar for the character.
-     */
-    // private GameOverTable gameOverTable;
 
-    private String equipped;
 
     // TODO:dannathan Fix or remove this.
     // /**
@@ -399,7 +391,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
 
         isSprinting = false;
-        equipped = "no_weapon";
+
         canSwim = false;
         this.scale = 0.4f;
         setDirectionTextures();
@@ -592,7 +584,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         //Animation control
         logger.debug("Attacking");
 
-        setAttacking(true);
+
         setCurrentState(AnimationRole.ATTACK);
 
         //If there is a spell selected, spawn the spell.
@@ -643,7 +635,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 SoundManager.playSound(AXEATTACK);
                 break;
             default:
-                SoundManager.playSound(ATTACK);
+                SoundManager.playSound(HURT_SOUND_NAME);
                 break;
         }
 
@@ -679,7 +671,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         GameManager.get().getWorld().addEntity(spell);
 
-        setAttacking(false);
+
     }
 
     /**
@@ -699,6 +691,48 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public int getMana() {
         return this.mana;
     }
+
+
+    /**
+     * Lets the player enter a vehicle, by changing there speed and there sprite
+     *
+     * @param vehicle The vehicle they are entering
+     */
+    public void enterVehicle(String vehicle) {
+        // Determine the vehicle they are entering and set their new speed and
+        // texture
+        if (vehicle.equals("Camel")) {
+            //this.setTexture();
+            setAcceleration(0.1f);
+            setMaxSpeed(0.8f);
+        } else if (vehicle.equals("Dragon")) {
+            //this.setTexture();
+            setAcceleration(0.125f);
+            setMaxSpeed(1f);
+        } else if (vehicle.equals("Boat")) {
+            //this.setTexture();
+            setAcceleration(0.01f);
+            setMaxSpeed(0.5f);
+            changeSwimming(true);
+        } else {
+            //this.setTexture();
+            setAcceleration(0.03f);
+            setMaxSpeed(0.6f);
+        }
+    }
+
+    /**
+     * Lets the player exit the vehicle by setting their speed back to
+     * default and changing the texture. Also changing swimming to false in
+     * case they were in a boat
+     */
+    public void exitVehicle() {
+        //this.setTexture();
+        setAcceleration(0.01f);
+        setMaxSpeed(0.4f);
+        changeSwimming(false);
+    }
+
 
     public boolean isAttacking() {
         return isAttacking;
@@ -727,6 +761,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @param damage the damage deal to the player.
      */
     public void hurt(int damage) {
+
 
         if (this.isRecovering) return;
 
@@ -990,7 +1025,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Reset the mana cooldown period and restore 1 mana to the MainCharacter.
      */
-    private void restoreMana() {
+    protected void restoreMana() {
 
         //Reset the cooldown period.
         this.manaCD = 0;
@@ -1019,17 +1054,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.movementSound();
         this.centreCameraAuto();
 
+        //Mana restoration.
         this.manaCD++;
         if (this.manaCD > totalManaCooldown) {
             this.restoreMana();
         }
-
-        //this.setCurrentSpeed(this.direction.len());
-        //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
-        //        System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction,
-        //         this.getPosition(), this.direction.x - this.getCol(),
-        //         this.direction.y - this.getRow());
-        //        System.out.printf("%s%n", this.currentSpeed);
 
         if (isHurt) {
             checkIfHurtEnded();
@@ -1075,14 +1104,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         xInput = 0;
         yInput = 0;
-    }
-    /**
-     * Sets the Player's current movement speed
-     *
-     * @param cSpeed the speed for the player to currently move at
-     */
-    private void setCurrentSpeed(float cSpeed) {
-        this.currentSpeed = cSpeed;
     }
 
     boolean petout = false;
@@ -1824,6 +1845,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private void updateAnimation() {
         getPlayerDirectionCardinal();
         List<Float> velocity = getVelocity();
+
+        /* Short Animations */
 
         if (getToBeRun() != null) {
             if (getToBeRun().getType() == AnimationRole.DEAD) {

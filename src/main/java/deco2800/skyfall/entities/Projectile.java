@@ -6,6 +6,10 @@ import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.managers.GameManager;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import deco2800.skyfall.entities.enemies.AbstractEnemy;
+
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.entities.enemies.Enemy;
 
@@ -37,10 +41,9 @@ public class Projectile extends AgentEntity implements Animatable {
      */
     protected long ticksAliveFor = 0;
 
-    /**
-     *
-     */
+
     private HexVector movementPosition;
+
 
     /**
      * The texture of the projectile.
@@ -71,7 +74,6 @@ public class Projectile extends AgentEntity implements Animatable {
         this.movementPosition = movementPosition;
         this.range = range;
 
-        this.textureName = textureName;
 
         this.setTexture(textureName);
         this.setObjectName(objectName);
@@ -89,11 +91,11 @@ public class Projectile extends AgentEntity implements Animatable {
         //Position the projectile correctly.
         position.moveToward(movementPosition,speed);
 
-        //fixture.setFilterData()
+
 
         configureAnimations();
 
-        //TODO: rotate sprite in angle facing.
+
     }
 
     /**
@@ -171,10 +173,11 @@ public class Projectile extends AgentEntity implements Animatable {
 
     @Override
     public void configureAnimations() {
-
+        // Do nothing currently.
     }
 
     @Override
     public void setDirectionTextures() {
+        //Do nothing currently.
     }
 }

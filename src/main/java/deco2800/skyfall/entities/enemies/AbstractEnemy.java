@@ -50,6 +50,7 @@ public abstract class AbstractEnemy extends Peon implements ICombatEntity {
     // Sound of the enemy
     @SuppressWarnings("WeakerAccess")
     protected String chasingSound;
+
     protected String attackSound;
     @SuppressWarnings("WeakerAccess")
     protected String diedSound;
@@ -57,14 +58,14 @@ public abstract class AbstractEnemy extends Peon implements ICombatEntity {
     // Nature of the enemy
     private boolean canMove = true;
 
+    // Main character instance
+    private MainCharacter mc;
+
     //a routine for destination
     private HexVector destination = null;
 
     //world coordinate of this enemy
     private float[] originalPosition = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
-
-    // Main character instance
-    private MainCharacter mc;
 
     public AbstractEnemy(float col, float row, int health, String textureName,
                          float speed, int strength, String hitBoxPath, int level) {

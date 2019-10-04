@@ -20,7 +20,6 @@ public class AnimationLinker {
     private float startingTime;
     private final Logger logger = LoggerFactory.getLogger(AnimationLinker.class);
     private boolean isCompleted = false;
-    private Direction direction;
     private boolean looping;
     /**
      * Construct
@@ -36,7 +35,6 @@ public class AnimationLinker {
             getAnimation(animationName);
         }
         this.type = type;
-        this.direction = direction;
         this.animationName = animationName;
         this.startingTime = 0f;
         this.offset = new int[2];
