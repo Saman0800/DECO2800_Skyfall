@@ -100,7 +100,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("enemyScout", new Texture("resources/Enemies/Abductor/enemy3_F.png"));
             textureMap.put("enemyScout_Move_N", new Texture("resources/Enemies/Abductor/enemy3_B_walk.png"));
             textureMap.put("enemyScout_Move_NW", new Texture("resources/Enemies/Abductor/enemy3_BL.png"));
-            textureMap.put("enemyScout_Move_NE", new Texture("resources/Enemies/Abductor/enemy3_FR.png"));
+            textureMap.put("enemyScout_Move_NE", new Texture("resources/Enemies/Abductor/enemy3_BR.png"));
             textureMap.put("enemyScout_Move_S", new Texture("resources/Enemies/Abductor/enemy3_F_walk.png"));
             textureMap.put("enemyScout_Move_SW", new Texture("resources/Enemies/Abductor/enemy3_FL.png"));
             textureMap.put("enemyScout_Move_SE", new Texture("resources/Enemies/Abductor/enemy3_FR.png"));

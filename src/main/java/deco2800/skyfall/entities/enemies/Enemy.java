@@ -55,7 +55,7 @@ public class Enemy extends Peon
     private long hurtTime = 0;
     private long deadTime = 0;
     // Booleans to check whether Enemy is in a state.
-    private boolean isChasing = false;
+    private boolean isMoving = false;
     private boolean isAttacking = false;
     private boolean isHurt = false;
 
@@ -91,6 +91,7 @@ public class Enemy extends Peon
         this.setType(name);
         this.setName(name);
         this.setBiome(biome);
+        this.setHealth(health);
         this.setMaxHealth(health);
 
         // Sets the texture for this enemy and the animations
@@ -184,7 +185,7 @@ public class Enemy extends Peon
             if(getDeadSound() != null) {
                 SoundManager.playSound(getDeadSound());
 
-                isChasing = false;
+                isMoving = false;
                 this.destination = new HexVector(this.getCol(), this.getRow());
                 this.setDead(true);
                 logger.info("Enemy destroyed.");}
@@ -199,25 +200,26 @@ public class Enemy extends Peon
      */
     private void randomMoving() {
         if ((!isAttacking || mainCharacter.isRecovering() || mainCharacter.isDead()) &&
-                !isChasing) {
-            //target position
+                !isMoving) {
+
             float[] targetPosition = new float[2];
-            if (getObjectName().equals("Scout")) {
+            if (getObjectName().equals("Treeman")) {
                 //random movement range
                 targetPosition[0] = (float) (Math.random() * 100 + originalPosition[0]);
                 targetPosition[1] = (float) (Math.random() * 100 + originalPosition[1]);
-            } else if (getObjectName().equals("treeman")) {
-                targetPosition[0] = (float) (Math.random() * 800 + originalPosition[0]);
-                targetPosition[1] = (float) (Math.random() * 800 + originalPosition[1]);
+            } else if (getName().matches("Scout")) {
+                System.out.println(getName() + " is moving");
+                targetPosition[0] = (float) (Math.random() * 1200 + originalPosition[0]);
+                targetPosition[1] = (float) (Math.random() * 1200 + originalPosition[1]);
             }
             float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow(targetPosition[0], targetPosition[1]);
             destination = new HexVector(randomPositionWorld[0], randomPositionWorld[1]);
-            isChasing = true;
-            this.position.moveToward(destination, 0.3f);
+            isMoving = true;
+            this.position.moveToward(destination, getWalkingSpeed());
 
             SoundManager.stopSound(chasingSound);
             if (destination.getCol() == this.getCol() && destination.getRow() == this.getRow()) {
-                isChasing = false;
+                isMoving = false;
             }
         }
     }
@@ -263,9 +265,10 @@ public class Enemy extends Peon
 
     /**
      *  Handles the action of the enemy per time tick in game.
-     * @param i number of second tin the game.
+     * @param tick number of second tin the game.
      */
-    public void onTick(int i) {
+    @Override
+    public void onTick(long tick) {
         if (isDead()) {
             if (deadTime < 500) {
                 deadTime += 20;
@@ -276,14 +279,14 @@ public class Enemy extends Peon
             updateAnimation();
 
             //if the player in angry distance or the enemy is attacked by player then turning to angry model
-            if (distance(mainCharacter) < 4 || isAttacking && !(mainCharacter.isDead() ||
+            if (distance(mainCharacter) < 2 && !(mainCharacter.isDead() ||
                     mainCharacter.isRecovering() || mainCharacter.isHurt())) {
                 setAttacking(true);
                 chasePlayer();
                 SoundManager.loopSound(getChaseSound());
 
             } else {
-                isChasing = false;
+                isMoving = false;
                 randomMoving();
                 setAttacking(false);
                 setSpeed(getWalkingSpeed());
@@ -295,6 +298,27 @@ public class Enemy extends Peon
                 checkIfHurtEnded();
             }
             this.updateAnimation();
+        }
+    }
+
+    /**
+     * If the animation is moving sets the animation state to be Move
+     * else NULL. Also sets the direction
+     */
+    private void updateAnimation() {
+        /* Short Animations */
+        if (getToBeRun() != null) {
+            if (getToBeRun().getType() == AnimationRole.DEAD) {
+                setCurrentState(AnimationRole.STILL);
+            } else if (getToBeRun().getType() == AnimationRole.ATTACK) {
+                setAttacking(false);
+            }
+        } else {
+            if (isDead()) {
+                setCurrentState(AnimationRole.STILL);
+            } else if (isHurt) {
+                setCurrentState(AnimationRole.HURT);
+            }
         }
     }
 
@@ -351,26 +375,11 @@ public class Enemy extends Peon
 
     void setValues(float scaling, int health, int damage, float attackRange, float walkingSpeed, float chasingSpeed) {
         this.setMaxHealth((int) (health * scaling));
+        this.setHealth((int) (health * scaling));
         this.setDamage((int) ((float) damage * scaling));
         this.setAttackRange(attackRange * scaling);
         this.setWalkingSpeed(walkingSpeed * scaling);
         this.setChasingSpeed(chasingSpeed * scaling);
-    }
-
-    /**
-     * Set default texture of the enemy in 8 different directions.
-     */
-    @Override
-    public void setDirectionTextures() {
-        String animationNameStart = "__ANIMATION_" + this.getName();
-        defaultDirectionTextures.put(Direction.EAST, animationNameStart + "MoveE_Anim:0");
-        defaultDirectionTextures.put(Direction.NORTH, animationNameStart + "MoveN_Anim:0");
-        defaultDirectionTextures.put(Direction.WEST, animationNameStart + "MoveW_Anim:0");
-        defaultDirectionTextures.put(Direction.SOUTH, animationNameStart + "MoveS_Anim:0");
-        defaultDirectionTextures.put(Direction.NORTH_EAST, animationNameStart + "MoveNE_Anim:0");
-        defaultDirectionTextures.put(Direction.NORTH_WEST, animationNameStart + "MoveNW_Anim:0");
-        defaultDirectionTextures.put(Direction.SOUTH_EAST, animationNameStart + "MoveSE_Anim:0");
-        defaultDirectionTextures.put(Direction.SOUTH_WEST, animationNameStart + "MoveSW_Anim:0");
     }
 
     /**
@@ -381,27 +390,6 @@ public class Enemy extends Peon
         this.chasingSound = name + "Walk";
         this.attackingSound = name + "Attack";
         this.diedSound = name + "Dead";
-    }
-
-    /**
-     * If the animation is moving sets the animation state to be Move
-     * else NULL. Also sets the direction
-     */
-    private void updateAnimation() {
-        /* Short Animations */
-        if (getToBeRun() != null) {
-            if (getToBeRun().getType() == AnimationRole.DEAD) {
-                setCurrentState(AnimationRole.STILL);
-            } else if (getToBeRun().getType() == AnimationRole.ATTACK) {
-                setAttacking(false);
-            }
-        } else {
-            if (isDead()) {
-                setCurrentState(AnimationRole.STILL);
-            } else if (isHurt) {
-                setCurrentState(AnimationRole.HURT);
-            }
-        }
     }
 
     /**
@@ -418,11 +406,11 @@ public class Enemy extends Peon
                         true, true));
         this.addAnimations(
                 AnimationRole.MOVE, Direction.NORTH_EAST, new AnimationLinker(
-                        enemyName + "MoveE", AnimationRole.MOVE, Direction.NORTH_EAST,
+                        enemyName + "MoveNE", AnimationRole.MOVE, Direction.NORTH_EAST,
                         true, true));
         this.addAnimations(
                 AnimationRole.MOVE, Direction.NORTH_WEST, new AnimationLinker(
-                        enemyName + "MoveW", AnimationRole.MOVE, Direction.NORTH_WEST,
+                        enemyName + "MoveNW", AnimationRole.MOVE, Direction.NORTH_WEST,
                         true, true));
         this.addAnimations(
                 AnimationRole.MOVE, Direction.EAST, new AnimationLinker(
@@ -475,6 +463,22 @@ public class Enemy extends Peon
                 enemyName + "Dead", AnimationRole.DEAD, Direction.DEFAULT,
                         true, true));
         */
+    }
+
+    /**
+     * Set default texture of the enemy in 8 different directions.
+     */
+    @Override
+    public void setDirectionTextures() {
+        String animationNameStart = "__ANIMATION_" + this.getName();
+        defaultDirectionTextures.put(Direction.EAST, animationNameStart + "MoveE_Anim:0");
+        defaultDirectionTextures.put(Direction.WEST, animationNameStart + "MoveW_Anim:0");
+        defaultDirectionTextures.put(Direction.SOUTH, animationNameStart + "MoveS_Anim:0");
+        defaultDirectionTextures.put(Direction.NORTH, animationNameStart + "MoveN_Anim:0");
+        // defaultDirectionTextures.put(Direction.NORTH_EAST, animationNameStart + "MoveNE_Anim:0");
+        defaultDirectionTextures.put(Direction.NORTH_WEST, animationNameStart + "MoveNW_Anim:0");
+        defaultDirectionTextures.put(Direction.SOUTH_EAST, animationNameStart + "MoveSE_Anim:0");
+        defaultDirectionTextures.put(Direction.SOUTH_WEST, animationNameStart + "MoveSW_Anim:0");
     }
 
     /**
@@ -664,5 +668,4 @@ public class Enemy extends Peon
     public int hashCode() {
         return toString().hashCode();
     }
-
 }
