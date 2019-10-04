@@ -257,10 +257,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("info", new Texture("resources/information.png"));
             textureMap.put("select-character", new Texture("resources/character_selection.png"));
 
-            textureMap.put("resume", new Texture("resources/resume.png"));
-            textureMap.put("goHome", new Texture("resources/home.png"));
-            textureMap.put("reset", new Texture("resources/reset_game.png"));
-
             textureMap.put("build", new Texture("resources/build_icon.png"));
 
             textureMap.put("left_arrow", new Texture("resources/left_arrow.png"));
@@ -299,6 +295,9 @@ public class TextureManager extends AbstractManager {
             textureMap.put("remove_qa", new Texture("resources/new_ui/remove_quick_access.png"));
             textureMap.put("equip_qa", new Texture("resources/new_ui/qa_equip.png"));
             textureMap.put("teleporting_man", new Texture("resources/new_ui/teleporting_man.png"));
+            textureMap.put("toHome", new Texture("resources/new_ui/pauseTable/home.png"));
+            textureMap.put("resume", new Texture("resources/new_ui/pauseTable/resume.png"));
+            textureMap.put("reset", new Texture("resources/new_ui/pauseTable/reset.png"));
 
             // Help table
             textureMap.put("help_page1", new Texture("resources/new_ui/helpTable/help_page1.png"));

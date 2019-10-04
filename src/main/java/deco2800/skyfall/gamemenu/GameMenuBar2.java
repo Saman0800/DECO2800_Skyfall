@@ -24,6 +24,8 @@ public class GameMenuBar2 extends AbstractUIElement {
     private final GameMenuManager gmm;
     private final Skin skin;
     private Table quickAccessPanel;
+    private Table equippedTable;
+    private Label equipped;
     private ImageButton sideBar;
     private ImageButton build;
     //Current item selected in inventory user interface
@@ -49,14 +51,20 @@ public class GameMenuBar2 extends AbstractUIElement {
 
     @Override
     public void updatePosition() {
-        quickAccessPanel.setPosition(gmm.getTopRightX() - 170, gmm.getTopRightY() - 570);
+        equippedTable.setPosition(gmm.getTopRightX() - 170, gmm.getTopLeftY() - 100);
+        quickAccessPanel.setPosition(gmm.getTopRightX() - 170, gmm.getTopRightY() - 650);
         //t.setHeight(stage.getCamera().viewportHeight / 2);
-        sideBar.setPosition(gmm.getTopRightX() - 180, gmm.getTopRightY() - 440);
+        sideBar.setPosition(gmm.getTopRightX() - 180, gmm.getTopRightY() - 520);
         build.setPosition(gmm.getBottomRightX() - 170, gmm.getBottomRightY());
     }
 
+    /**
+     * Draws out the right hand side of the menu, including quick access and
+     * build icon (at the button right).
+     */
     @Override
     public void draw() {
+        showEquipped();
         setQuickAccessPanel();
 
         build = new ImageButton(generateTextureRegionDrawableObject("build"));
@@ -72,9 +80,19 @@ public class GameMenuBar2 extends AbstractUIElement {
         stage.addActor(build);
     }
 
+    public void showEquipped() {
+        equippedTable = new Table();
+        equippedTable.setBackground(generateTextureRegionDrawableObject("popup_bg"));
+        equippedTable.setSize(150, 70);
+        equipped = new Label("", skin, "white-text");
+        equipped.setFontScale(0.7f);
+        equippedTable.add(equipped);
+        stage.addActor(equippedTable);
+    }
+
     public void setQuickAccessPanel(){
         quickAccessPanel = new Table().top().left();
-        quickAccessPanel.setBackground(GameMenuManager.generateTextureRegionDrawableObject("quickaccess_bg"));
+        quickAccessPanel.setBackground(generateTextureRegionDrawableObject("quickaccess_bg"));
         quickAccessPanel.setSize(150, 490);
         setQuickAccessItems();
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
@@ -135,7 +153,7 @@ public class GameMenuBar2 extends AbstractUIElement {
         quickAccessPanel.add(removeCell).width(130).height(50).padTop(5).padLeft(10);
 
         sideBar = new ImageButton(generateTextureRegionDrawableObject("quickaccess_side_bar"));
-        sideBar.setSize(35, 360); //TODO: reduce chunkiness
+        sideBar.setSize(35, 360);
         sideBar.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -186,21 +204,22 @@ public class GameMenuBar2 extends AbstractUIElement {
             icon.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-
-                    if(quickAccessSelected != icon.getName()){
+                    if (quickAccessSelected != icon.getName()) {
                         quickAccessSelected = icon.getName();
-                    }else{
+                        equipped.setText(icon.getName().toUpperCase());
+                    } else {
+                        equipped.setText("");
                         quickAccessSelected = null;
                     }
 
                     Actor selected = stage.getRoot().findActor(icon.getName() + "-qaSelected");
 
-                    if(selected.isVisible()){
+                    if (selected.isVisible()) {
                         selected.setVisible(false);
                         setButtonsActive(false);
 
-                    }else{
-                        for(Actor actor: quickAccessPanel.getChildren()){
+                    } else {
+                        for (Actor actor : quickAccessPanel.getChildren()) {
                             if(actor.getName() != null && actor.getName().equals("iconCell") && actor instanceof Table){
                                 Table iconCell = (Table) actor;
 
@@ -218,7 +237,6 @@ public class GameMenuBar2 extends AbstractUIElement {
                     }
                 }
             });
-
             icon.setSize(size, size);
             iconCell.addActor(selected);
             iconCell.addActor(icon);
@@ -230,7 +248,7 @@ public class GameMenuBar2 extends AbstractUIElement {
         }
 
         int sizeDifference = 4 - quickAccess.entrySet().size();
-        while(sizeDifference > 0){
+        while (sizeDifference > 0) {
             sizeDifference -= 1;
             Table blankCell = new Table();
             quickAccessPanel.add(blankCell).width(size).height(size).padTop(10).padLeft(20 + sideBarWidth/2);
@@ -259,4 +277,12 @@ public class GameMenuBar2 extends AbstractUIElement {
         }
     }
 
+    /**
+     * Sets the text in equipped table to {itemName}.
+     *
+     * @param itemName Item that is equipped.
+     */
+    public void setEquipped(String itemName) {
+        equipped.setText(itemName);
+    }
 }

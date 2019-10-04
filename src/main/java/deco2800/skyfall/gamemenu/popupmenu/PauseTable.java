@@ -1,13 +1,13 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
@@ -67,21 +67,47 @@ public class PauseTable extends AbstractPopUpElement{
     public void draw() {
         super.draw();
         pauseTable = new Table();
-        pauseTable.setSize(500, 500 * 1346 / 1862f);
-        pauseTable.setPosition(Gdx.graphics.getWidth()/2f - pauseTable.getWidth()/2,
-                (Gdx.graphics.getHeight() + 160) / 2f - pauseTable.getHeight()/2);
-        pauseTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
+        pauseTable.setSize(600, 430);
+        pauseTable.setPosition(Gdx.graphics.getWidth() / 2f - pauseTable.getWidth() / 2,
+                Gdx.graphics.getHeight() / 2f - pauseTable.getHeight() / 2);
+        pauseTable.setBackground(generateTextureRegionDrawableObject("popup_bg"));
+        pauseTable.setDebug(true);
 
         Table infoBar = new Table();
-        infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
+        infoBar.setBackground(generateTextureRegionDrawableObject("popup_banner"));
 
-        Label text = new Label("GAME PAUSED", skin, "black-text");
+        Label text = new Label("GAME PAUSED", skin, "navy-text");
         infoBar.add(text);
 
         pauseTable.add(infoBar).width(475).height(475 * 188f / 1756).padTop(20).colspan(3);
         pauseTable.row();
 
-        ImageButton toHome = new ImageButton(generateTextureRegionDrawableObject("goHome"));
+//        Label soundEffect = new Label("SOUND EFFECTS", skin, "white-text");
+//        soundEffect.setFontScale(0.7f);
+//        soundEffect.setWrap(true);
+//        soundEffect.setAlignment(Align.center);
+//        soundEffect.getStyle().font.getData().setLineHeight(40);
+//        pauseTable.add(soundEffect).width(110);
+//        pauseTable.row();
+
+        Slider.SliderStyle s = new Slider.SliderStyle();
+        s.background = generateTextureRegionDrawableObject("green_pill");
+        s.knob = generateTextureRegionDrawableObject("new_clock");
+        s.knob.setMinHeight(10);
+        s.knob.setMinWidth(10);
+        s.knobBefore = generateTextureRegionDrawableObject("light_blue_bg");
+        s.knobAfter = generateTextureRegionDrawableObject("green_pill");
+
+        Slider test = new Slider(0, 100, 1, false, s);
+        test.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.out.println(String.valueOf(test.getValue()));
+            }
+        });
+
+        pauseTable.add(test).colspan(3).row();
+        ImageButton toHome = new ImageButton(generateTextureRegionDrawableObject("toHome"));
         toHome.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
