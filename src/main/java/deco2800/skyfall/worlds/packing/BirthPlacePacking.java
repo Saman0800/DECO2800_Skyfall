@@ -4,7 +4,7 @@ import deco2800.skyfall.worlds.world.World;
 
 public class BirthPlacePacking extends ComponentPacking {
 
-    public BirthPlacePacking(EnvironmentPacker packer) {
+    BirthPlacePacking(EnvironmentPacker packer) {
         super(packer);
     }
 

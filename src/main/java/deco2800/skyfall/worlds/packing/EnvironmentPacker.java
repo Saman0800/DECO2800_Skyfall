@@ -26,8 +26,9 @@ public class EnvironmentPacker {
         }
         this.world = world;
 
-        packings = new ArrayList<>();
+        this.packings = new ArrayList<>();
         // add packing components here into the packing queue
+        addPackingComponent(new BirthPlacePacking(this));
     }
 
     /**
@@ -49,5 +50,12 @@ public class EnvironmentPacker {
             component.packing(world);
         }
         packings.clear();
+    }
+
+    /**
+     * @return a world will be packed up its environment.
+     */
+    public World getPackedWorld() {
+        return world;
     }
 }
