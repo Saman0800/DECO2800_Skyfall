@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -81,7 +82,12 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
      * @return a hashamp of the required resources and their number.
      */
     public Map<String,Integer> getAllRequirements() {
-        return super.getBuildCost();
+        Map<String, Integer> allRequirements = new HashMap<>();
+        allRequirements.put("Wood", 25);
+        allRequirements.put("Stone", 10);
+        allRequirements.put("Metal", 0);
+
+        return allRequirements;
     }
 
     /**
