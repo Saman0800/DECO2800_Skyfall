@@ -29,7 +29,7 @@ public class ProgressTable extends AbstractPopUpElement {
 
     public ProgressTable(Stage stage, ImageButton exit, String[] textureNames,
                          TextureManager tm, GameMenuManager gameMenuManager,
-                         QuestManager qm, Skin skin, String type) {
+                         QuestManager qm, Skin skin) {
         super(stage,exit, textureNames, tm, gameMenuManager);
 
         this.skin = skin;

@@ -356,12 +356,11 @@ public class GameMenuManager extends TickableManager {
 
         popUps.put("progressTable", new ProgressTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject(exitText)),
-                null, textureManager, this, questManager, skin, "create"));
+                null, textureManager, this, questManager, skin));
 
         Map<String, AbstractUIElement> hudElements = new HashMap<>();
         hudElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm, skin, this));
         hudElements.put("goldPill", new GoldStatusBar(stage, null, textureManager,  skin, this));
-        //hudElements.put("gameMenuBar", new GameMenuBar(stage, null, textureManager, this));
         hudElements.put("gameMenuBar2", new GameMenuBar2(stage, null, textureManager, skin, this));
         hudElements.put("clock" , new Clock(stage, skin, this));
 
