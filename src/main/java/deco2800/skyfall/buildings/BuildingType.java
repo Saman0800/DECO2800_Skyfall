@@ -58,6 +58,9 @@ public enum BuildingType implements Blueprint {
             case "SafeHouse":
                 initialiseSafeHouse();
                 break;
+            case "Fence":
+                initialiseFence();
+                break;
             default:
                 break;
         }
@@ -195,6 +198,7 @@ public enum BuildingType implements Blueprint {
      *
      */
     public void initialiseFence() {
+        initialiseFenceTextures();
         buildingCost = new HashMap<>();
         buildingCost.put("Wood", 2);
     }
