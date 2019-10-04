@@ -62,6 +62,7 @@ public class ProgressTable extends AbstractPopUpElement {
     public void update() {
             updateBiomeText(qm.getBiome());
             updateCollectText(qm.collectNum() + "/4");
+            //TODO : (@Kausta) Update Blueprint number
             updateCreateText("0/4");
             updateBlueprintTest("1");
     }

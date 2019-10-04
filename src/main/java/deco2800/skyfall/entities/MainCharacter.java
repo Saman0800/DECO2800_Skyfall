@@ -1010,6 +1010,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         //Put specific collision logic here
     }
 
+    /**
+     * Resets the velocity of the player
+     */
     public void resetVelocity() {
 
         xInput = 0;

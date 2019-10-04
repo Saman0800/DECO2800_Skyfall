@@ -16,6 +16,9 @@ import java.util.Map;
 
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
+/**
+ * Doubles for the both the Collect Button and Create Button
+ */
 public class CollectCreateTable extends AbstractPopUpElement{
 
     private final String type;
@@ -71,6 +74,9 @@ public class CollectCreateTable extends AbstractPopUpElement{
         baseTable.setVisible(true);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void update() {
         if (checkComplete()) {
@@ -81,7 +87,9 @@ public class CollectCreateTable extends AbstractPopUpElement{
         updateText();
     }
 
-
+    /**
+     * Updates the text of the widget
+     */
     private void updateText() {
         labelTable.clear();
         String whiteText = "white-text";
@@ -113,11 +121,17 @@ public class CollectCreateTable extends AbstractPopUpElement{
         }
     }
 
-
+    /**
+     * Checks if all the resources have been collected
+     * @return True if all resources have been collected
+     */
     private boolean checkComplete() {
         return qm.checkGold() && qm.checkMetal() && qm.checkStone() && qm.checkWood();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void draw() {
         super.draw();

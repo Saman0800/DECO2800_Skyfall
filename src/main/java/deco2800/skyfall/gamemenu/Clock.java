@@ -8,13 +8,6 @@ import deco2800.skyfall.managers.*;
 public class Clock extends AbstractUIElement{
     private final GameMenuManager gmm;
     private Image clockImage;
-    private String clockTexture;
-    private Image clockDisplay;
-    // Season image
-    private Image seasonDisplay;
-    // Season filename
-    private String seasonTexture;
-
     //new HUD sprint 4
     private Skin skin;
     private Label clockLabel;
@@ -36,9 +29,6 @@ public class Clock extends AbstractUIElement{
         float positionX = (gmm.getTopLeftX() + 30);
         float positionY = (gmm.getTopLeftY() - 70);
         // Set clock position
-        clockDisplay.setPosition(positionX, positionY);
-        // Set season position
-        seasonDisplay.setPosition(positionX + 160, positionY + 10);
         clockImage.setPosition(positionX + 130, positionY - 10);
 
 
@@ -66,40 +56,9 @@ public class Clock extends AbstractUIElement{
         } else {
             clockLabel.setText(convTime + " : " + convDecimal);
         }
-        String season = GameManager.get().getManager(EnvironmentManager.class).getSeason();
-        // Monitor hours
-        if (GameManager.get().getManager(EnvironmentManager.class).getTOD() != null) {
-            if (time >= 5 && time <= 9) {
-                clockTexture = "dawn";
-            } else if (time >= 10 && time <= 16) {
-                clockTexture = "day";
-            } else if (time >= 17 && time <= 19) {
-                clockTexture = "dusk";
-            } else {
-                clockTexture = "night";
-            }
-            clockDisplay.setDrawable(GameMenuManager.generateTextureRegionDrawableObject(clockTexture));
-        }
-        // Monitor seasons
-        if (season != null) {
-            if (season.equals("Summer")) {
-                seasonTexture = "summer";
-            } else if (season.equals("Winter")) {
-                seasonTexture = "winter";
-            } else if (season.equals("Autumn")) {
-                seasonTexture = "autumn";
-            } else {
-                seasonTexture = "spring";
-            }
-            seasonDisplay.setDrawable(GameMenuManager.generateTextureRegionDrawableObject(seasonTexture));
-        }
     }
     @Override
     public void draw() {
-        clockTexture = "dawn";
-        seasonTexture = "summer";
-        this.clockDisplay = new Image(GameMenuManager.generateTextureRegionDrawableObject(clockTexture));
-        this.seasonDisplay = new Image(GameMenuManager.generateTextureRegionDrawableObject(seasonTexture));
         this.clockLabel = new Label("Error", skin,  "blue-pill");
         this.clockImage = new Image(GameMenuManager.generateTextureRegionDrawableObject("new_clock"));
         clockLabel.setAlignment(Align.center);
