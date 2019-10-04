@@ -845,6 +845,7 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
         this.worldParameters.setSeed(worldMemento.seed);
         this.tileOffsetNoiseGeneratorX = worldMemento.tileOffsetNoiseGeneratorX;
         this.tileOffsetNoiseGeneratorY = worldMemento.tileOffsetNoiseGeneratorY;
+        this.worldParameters.setWorldSize(worldMemento.worldSize);
     }
 
 
@@ -859,6 +860,7 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
         private NoiseGenerator tileOffsetNoiseGeneratorX;
         private NoiseGenerator tileOffsetNoiseGeneratorY;
         private long seed;
+        private int worldSize;
 
         public WorldMemento(World world) {
             // TODO (probably in the main save method)
@@ -870,6 +872,7 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
             this.tileOffsetNoiseGeneratorX = world.tileOffsetNoiseGeneratorX;
             this.tileOffsetNoiseGeneratorY = world.tileOffsetNoiseGeneratorY;
             this.seed = world.getWorldParameters().getSeed();
+            this.worldSize = world.getWorldParameters().getWorldSize();
         }
     }
 }

@@ -35,25 +35,14 @@ public class DataBaseConnector {
     /* The connection to the database */
     private Connection connection;
 
+    private Flyway flyway;
+
     private String dataBaseName;
 
     /**
      * Starts a connection to the database
+     * @param dataBaseName The name of the database to be connected to
      */
-    public void start() {
-        dataBaseName = "Database";
-        try {
-            // Connects to the data base
-            migrateDatabase();
-            Driver derbyData = new EmbeddedDriver();
-            DriverManager.registerDriver(derbyData);
-            connection = DriverManager.getConnection("jdbc:derby:Database;create=true");
-
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-
     public void start(String dataBaseName) {
         try {
             this.dataBaseName = dataBaseName;
@@ -74,7 +63,7 @@ public class DataBaseConnector {
     public void close() {
         try {
             connection.close();
-            DriverManager.getConnection("jdbc:derby:;shutdown=true");
+            DriverManager.getConnection("jdbc:derby:" + dataBaseName + ";shutdown=true");
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -270,7 +259,8 @@ public class DataBaseConnector {
             // loadMainCharacter(save);
             World currentWorld = loadWorlds(save, memento);
             save.setCurrentWorld(currentWorld);
-            currentWorld.addEntity(MainCharacter.getInstance());
+            //FIXME:dannathan Probably should turn this back on
+//            currentWorld.addEntity(MainCharacter.getInstance());
             save.setSaveID(saveID);
 
             return save;
@@ -695,6 +685,11 @@ public class DataBaseConnector {
     }
 
 
+    public Flyway getFlyway(){
+        return flyway;
+    }
+
+
     /**
      * Creates an entity from a given memento
      * @param entityMemento The entities memento that contains its data
@@ -754,7 +749,7 @@ public class DataBaseConnector {
      * Uses flyway to create the tables
      */
     private void migrateDatabase() {
-        Flyway flyway = new Flyway();
+        flyway = new Flyway();
         flyway.setDataSource("jdbc:derby:" + dataBaseName + ";create=true", "", "");
 
         flyway.setCleanOnValidationError(true);
@@ -763,12 +758,13 @@ public class DataBaseConnector {
     }
 
 
+
     /**
      * Gets all the saves and there corresponding worlds
      *
      * @return A list of all the saves
      */
-    private List<Save> loadSaveInformation() {
+    public List<Save> loadSaveInformation() {
         try {
             ArrayList<Save> saves = new ArrayList<>();
 

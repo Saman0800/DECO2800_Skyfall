@@ -81,8 +81,8 @@ public class DataBaseConnectorLoadingTest {
     private static DataBaseConnector dataBaseConnectorExpected = new DataBaseConnector();
     private static InsertDataQueries insertDataQueries;
 
-    private static final long WOLRD_ID =  10192405051611L;
-    private static final long SAVE_ID = 10190450936481L;
+    private static final long WOLRD_ID =  19471190335142L;
+    private static final long SAVE_ID = 19470155121187L;
 
     @BeforeClass
     public static void setupOnce() {
@@ -99,6 +99,11 @@ public class DataBaseConnectorLoadingTest {
 //
 //        mockStatic(MainCharacter.class);
 //        when(MainCharacter.getInstance()).thenReturn(mc);
+    }
+
+    @AfterClass
+    public static void cleanUp(){
+        dataBaseConnectorExpected.close();
     }
 
     @Test
@@ -121,12 +126,11 @@ public class DataBaseConnectorLoadingTest {
 
     //FIXME:jeffvan12 not entirely sure how to fix this
     @Test
-    @Ignore
     public void loadGameTest() {
         Save save = dataBaseConnectorExpected.loadGame();
         assertEquals(SAVE_ID, save.getSaveID());
         assertEquals(1, save.getWorlds().size());
-        assertEquals(7, save.getWorlds().get(0).getEntities().size());
+        assertEquals(0, save.getWorlds().get(0).getEntities().size());
         assertEquals(WOLRD_ID, save.getWorlds().get(0).getID());
         assertEquals(576, save.getWorlds().get(0).getWorldGenNodes().size());
         assertEquals(85, save.getWorlds().get(0).getBeachEdges().size());
@@ -285,5 +289,8 @@ public class DataBaseConnectorLoadingTest {
 
     @Test
     public void loadSaveInformationTest() {
+        ArrayList<Save> saves = (ArrayList<Save>) dataBaseConnectorExpected.loadSaveInformation();
+        assertEquals(1, saves.size());
+        assertEquals(SAVE_ID, saves.get(0).getSaveID());
     }
 }

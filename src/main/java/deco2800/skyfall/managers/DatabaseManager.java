@@ -556,8 +556,11 @@ public final class DatabaseManager extends AbstractManager {
     public void startDataBaseConnector() {
         dataBaseConnector = new DataBaseConnector();
         //FIXME:jeffvan12 should probably come up with a better way
-//        dataBaseConnector.start("src/test/java/deco2800/skyfall/managers/database/ExpectedDatabase");
-        dataBaseConnector.start();
+        dataBaseConnector.start("src/test/java/deco2800/skyfall/managers/database/ExpectedDatabase");
+        dataBaseConnector.getFlyway().clean();
+        dataBaseConnector.getFlyway().migrate();
+
+//        dataBaseConnector.start("Database");
     }
 
     /**
