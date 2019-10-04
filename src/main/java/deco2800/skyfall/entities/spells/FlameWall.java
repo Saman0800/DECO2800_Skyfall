@@ -4,7 +4,7 @@ import com.badlogic.gdx.Input;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.entities.enemies.AbstractEnemy;
+import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
@@ -15,7 +15,7 @@ public class FlameWall extends Spell {
 
     //How long since the spell last dealt damage.
     protected int ticksSinceAttacked = 0;
-    //How long it takes to cooldown.
+    //How long it takes to cool down.
     private int attackCD = 10;
 
     /**
@@ -63,9 +63,9 @@ public class FlameWall extends Spell {
 
             for (AbstractEntity entity : entities) {
                 //If close enough, deal damage to the enemy over time.
-                if (entity instanceof AbstractEnemy &&
+                if (entity instanceof Enemy &&
                         this.position.isCloseEnoughToBeTheSameByDistance(entity.getPosition(),1)) {
-                        ((AbstractEnemy) entity).takeDamage(this.getDamage());
+                        ((Enemy) entity).takeDamage(this.getDamage());
                     }
                 }
             this.ticksSinceAttacked = 0;
