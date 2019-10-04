@@ -34,16 +34,33 @@ public class DataBaseConnector {
     /* The connection to the database */
     private Connection connection;
 
+    private String dataBaseName;
+
     /**
      * Starts a connection to the database
      */
     public void start() {
+        dataBaseName = "Database";
         try {
             // Connects to the data base
             migrateDatabase();
             Driver derbyData = new EmbeddedDriver();
             DriverManager.registerDriver(derbyData);
             connection = DriverManager.getConnection("jdbc:derby:Database;create=true");
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void start(String dataBaseName) {
+        try {
+            this.dataBaseName = dataBaseName;
+            // Connects to the data base
+            migrateDatabase();
+            Driver derbyData = new EmbeddedDriver();
+            DriverManager.registerDriver(derbyData);
+            connection = DriverManager.getConnection("jdbc:derby:" + dataBaseName + ";create=true");
 
         } catch (Exception e) {
             System.out.println(e);
@@ -231,7 +248,6 @@ public class DataBaseConnector {
     public Save loadGame() {
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM SAVES");
                 ResultSet result = preparedStatement.executeQuery()) {
-            Gson gson = new Gson();
             connection.setAutoCommit(false);
             // TODO:dannathan make this work for any savefile, not just the most recent
             // preparedStatement = connection.prepareStatement("SELECT * FROM SAVES");
@@ -739,7 +755,7 @@ public class DataBaseConnector {
      */
     private void migrateDatabase(){
         Flyway flyway = new Flyway();
-        flyway.setDataSource("jdbc:derby:Database;create=true", "", "");
+        flyway.setDataSource("jdbc:derby:" + dataBaseName  + ";create=true", "", "");
 
         flyway.setCleanOnValidationError(true);
         flyway.setValidateOnMigrate(true);
