@@ -84,7 +84,7 @@ public class SoundManager extends AbstractManager {
 
     /**
      * Check whether this sound is sored in the map
-     * @param soundName
+     * @param soundName Name/Key of the sound in the soundMap.
      * @return true if it does, otherwise, false.
      */
     public boolean soundInMap(String soundName){
@@ -189,7 +189,7 @@ public class SoundManager extends AbstractManager {
 
     /**
      * Check whether the sound is in the loop
-     * @param soundName
+     * @param soundName name of the sound in soundMap.
      * @return true if it does, otherwise return false.
      */
     public  boolean checkLoop(String soundName){

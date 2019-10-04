@@ -28,8 +28,7 @@ public class ForestMushroom extends StaticEntity implements HasPointLight {
         this.entityType = "ForestMushroom";
     }
 
-
-    public ForestMushroom (StaticEntityMemento memento){
+    public ForestMushroom(SaveableEntityMemento memento) {
         super(memento);
     }
 

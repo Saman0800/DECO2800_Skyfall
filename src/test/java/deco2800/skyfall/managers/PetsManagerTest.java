@@ -1,11 +1,9 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.entities.pets.AbstractPet;
 import deco2800.skyfall.entities.pets.Lizard;
 import deco2800.skyfall.entities.pets.Whitebear;
-import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
@@ -17,13 +15,15 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.lang.reflect.Field;
+
 import static org.mockito.Matchers.booleanThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({GameManager.class, DatabaseManager.class, PlayerPeon.class, InventoryManager.class})
+@PrepareForTest({GameManager.class, DatabaseManager.class, MainCharacter.class, InventoryManager.class})
 public class PetsManagerTest {
     private World w = null;
     private PetsManager petsManager = null;
@@ -39,7 +39,8 @@ public class PetsManagerTest {
      * Setting up the world
      */
     @Before
-    public void Setup() {
+    public void Setup() throws NoSuchFieldException, IllegalAccessException {
+        MainCharacter.resetInstance();
         mc = MainCharacter.getInstance(0f, 0f, 0.05f, "Main Piece", 10);
         bear = new Whitebear(0, 0, mc);
         lizard = new Lizard(0, 0, mc);

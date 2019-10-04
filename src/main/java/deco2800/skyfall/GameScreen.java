@@ -10,8 +10,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import deco2800.skyfall.buildings.BuildingFactory;
-
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.graphics.HasPointLight;
@@ -34,6 +32,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+
+
 
 public class GameScreen implements Screen,KeyDownObserver {
 	private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
@@ -207,6 +207,9 @@ public class GameScreen implements Screen,KeyDownObserver {
         blueKeyFrame.add(new TFTuple(18.5f, 0.8f));
         blueKeyFrame.add(new TFTuple(19.0f, 0.19f));
         ambientBlue = new LinearSpectralValue(blueKeyFrame, gameEnvironManag);
+
+        //create a spawning manager
+        SpawningManager.createSpawningManager();
 
         PathFindingService pathFindingService = new PathFindingService();
 

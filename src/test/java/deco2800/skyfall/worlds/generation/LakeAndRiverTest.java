@@ -38,14 +38,12 @@ public class LakeAndRiverTest {
         whenNew(Random.class).withAnyArguments().thenReturn(random);
 
         DataBaseConnector connector = mock(DataBaseConnector.class);
-        when(connector.loadChunk(any(World.class), anyInt(), anyInt())).then(
-                (Answer<Chunk>) invocation -> {
-                    Chunk chunk = new Chunk(invocation.getArgumentAt(0, World.class),
-                                            invocation.getArgumentAt(1, Integer.class),
-                                            invocation.getArgumentAt(2, Integer.class));
-                    chunk.generateEntities();
-                    return chunk;
-                });
+        when(connector.loadChunk(any(World.class), anyInt(), anyInt())).then((Answer<Chunk>) invocation -> {
+            Chunk chunk = new Chunk(invocation.getArgumentAt(0, World.class),
+                    invocation.getArgumentAt(1, Integer.class), invocation.getArgumentAt(2, Integer.class));
+            chunk.generateEntities();
+            return chunk;
+        });
 
         DatabaseManager manager = mock(DatabaseManager.class);
         when(manager.getDataBaseConnector()).thenReturn(connector);
@@ -69,22 +67,21 @@ public class LakeAndRiverTest {
         worlds = null;
     }
 
-
-    // TODO: @CGulley FIX THIS FAILING TEST
-    //@Test
-    //public void lakeNotInOceanOrOtherLakeTest() {
-    //    for (World world : worlds) {
-    //        for (WorldGenNode node : world.getWorldGenNodes()) {
-    //            if (node.getBiome().getBiomeName().equals("lake")) {
-    //                for (WorldGenNode neighbour : node.getNeighbours()) {
-    //                    assertNotEquals("ocean", neighbour.getBiome().getBiomeName());
-    //                    assertFalse(neighbour.getBiome().getBiomeName().equals("lake")
-    //                            && neighbour.getBiome() != node.getBiome());
-    //                }
-    //            }
-    //         }
-    //    }
-    //}
+    @Test
+    @Ignore // Sojourn ignore. Just ignoring this for now to run game.
+    public void lakeNotInOceanOrOtherLakeTest() {
+        for (World world : worlds) {
+            for (WorldGenNode node : world.getWorldGenNodes()) {
+                if (node.getBiome().getBiomeName().equals("lake")) {
+                    for (WorldGenNode neighbour : node.getNeighbours()) {
+                        assertNotEquals("ocean", neighbour.getBiome().getBiomeName());
+                        assertFalse(neighbour.getBiome().getBiomeName().equals("lake")
+                                && neighbour.getBiome() != node.getBiome());
+                    }
+                }
+            }
+        }
+    }
 
     @Test
     public void parentBiomeTest() {
@@ -101,14 +98,15 @@ public class LakeAndRiverTest {
     public void noWaterOnOriginTile() {
         for (World world : worlds) {
             Tile tile = world.getTile(0, 0);
-            assertFalse(tile.getBiome().getBiomeName().equals("lake")
-                    || tile.getBiome().getBiomeName().equals("river"));
+            assertFalse(
+                    tile.getBiome().getBiomeName().equals("lake") || tile.getBiome().getBiomeName().equals("river"));
         }
     }
 
     @Test
     public void correctNumberTest() {
-        // This is not calculated for rivers anymore as the number of biomes that constitute a single river is now
+        // This is not calculated for rivers anymore as the number of biomes that
+        // constitute a single river is now
         // random, and multiple rivers may be conjoined into one randomly as well.
         for (World world : worlds) {
             int noLakes = 0;
@@ -134,7 +132,8 @@ public class LakeAndRiverTest {
                     for (Tile neighbour : tile.getNeighbours().values()) {
                         boolean correctBiome = neighbour.getBiome().getBiomeName().equals("lake")
                                 || neighbour.getBiome().getBiomeName().equals("ocean")
-                                || (neighbour.getBiome().getBiomeName().equals("river") && neighbour.getBiome() != biome);
+                                || (neighbour.getBiome().getBiomeName().equals("river")
+                                        && neighbour.getBiome() != biome);
                         if (correctBiome && !adjacentWaterBodies.contains(biome)) {
                             adjacentWaterBodies.add(neighbour.getBiome());
                         }
@@ -147,7 +146,7 @@ public class LakeAndRiverTest {
 
     // Adapted from AbstractWorld.generateNeighbours().
     private static void generateTileNeighbours(List<Tile> tiles) {
-        //multiply coords by 2 to remove floats
+        // multiply coords by 2 to remove floats
         Map<Integer, Map<Integer, Tile>> tileMap = new HashMap<>();
         Map<Integer, Tile> columnMap;
         for (Tile tile : tiles) {
@@ -160,40 +159,40 @@ public class LakeAndRiverTest {
             int col = (int) (tile.getCol() * 2);
             int row = (int) (tile.getRow() * 2);
 
-            //West
+            // West
             if (tileMap.containsKey(col - 2)) {
-                //North West
+                // North West
                 if (tileMap.get(col - 2).containsKey(row + 1)) {
                     tile.addNeighbour(Tile.NORTH_WEST, tileMap.get(col - 2).get(row + 1));
                 }
 
-                //South West
+                // South West
                 if (tileMap.get(col - 2).containsKey(row - 1)) {
                     tile.addNeighbour(Tile.SOUTH_WEST, tileMap.get(col - 2).get(row - 1));
                 }
             }
 
-            //Central
+            // Central
             if (tileMap.containsKey(col)) {
-                //North
+                // North
                 if (tileMap.get(col).containsKey(row + 2)) {
                     tile.addNeighbour(Tile.NORTH, tileMap.get(col).get(row + 2));
                 }
 
-                //South
+                // South
                 if (tileMap.get(col).containsKey(row - 2)) {
                     tile.addNeighbour(Tile.SOUTH, tileMap.get(col).get(row - 2));
                 }
             }
 
-            //East
+            // East
             if (tileMap.containsKey(col + 2)) {
-                //North East
+                // North East
                 if (tileMap.get(col + 2).containsKey(row + 1)) {
                     tile.addNeighbour(Tile.NORTH_EAST, tileMap.get(col + 2).get(row + 1));
                 }
 
-                //South East
+                // South East
                 if (tileMap.get(col + 2).containsKey(row - 1)) {
                     tile.addNeighbour(Tile.SOUTH_EAST, tileMap.get(col + 2).get(row - 1));
                 }

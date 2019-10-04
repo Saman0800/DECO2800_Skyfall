@@ -2,8 +2,8 @@ package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
-import deco2800.skyfall.graphics.HasPointLight;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -185,7 +185,8 @@ public class WorldParameters {
      * Sets the function to generate the spawn rules.
      * @param generateSpawnRules the spawn rules
      */
-    public void setGenerateSpawnRules(Function<World, Map<AbstractBiome, List<EntitySpawnRule>>> generateSpawnRules) {
+    public void setGenerateSpawnRules(
+            Function<World, Map<AbstractBiome, List<EntitySpawnRule>>> generateSpawnRules) {
         this.generateSpawnRules = generateSpawnRules;
     }
 
