@@ -1,6 +1,7 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -220,5 +221,14 @@ public class QuestManager extends AbstractManager{
         int currentMetal = player.getInventoryManager()
                 .getAmount("Metal");
         return (currentMetal >= getMetalTotal());
+    }
+
+    /**
+     * Resets the current quest of the player
+     */
+    public void resetQuest() {
+        int currentLevel = this.getQuestLevel();
+        this.setQuestLevel(currentLevel);
+        MainCharacter.getInstance().changeHealth(50);
     }
 }

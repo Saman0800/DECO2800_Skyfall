@@ -1,6 +1,10 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -8,7 +12,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import deco2800.skyfall.GameScreen;
+import deco2800.skyfall.SkyfallGame;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
+import deco2800.skyfall.mainmenu.MainMenuScreen;
+import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
 
@@ -88,7 +96,6 @@ public class PauseTable extends AbstractPopUpElement{
 //                gameMenuManager.getGame().batch = new SpriteBatch();
 //                gameMenuManager.getGame().setScreen(new MainMenuScreen(gameMenuManager.getGame()));
 //            System.out.println(gameMenuManager.getGame().batch == null);
-//            gameMenuManager.getGame().create();
             }
         });
 
