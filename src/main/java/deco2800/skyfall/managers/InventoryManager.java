@@ -1,7 +1,9 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.gui.Tuple;
+import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.NaturalResources;
 import deco2800.skyfall.resources.items.*;
 
@@ -229,13 +231,11 @@ public class InventoryManager extends TickableManager {
         if (this.inventory.get(name) != null) {
             List<Item> itemsList = this.inventory.get(name);
             itemsList.add(item);
-            System.out.println("Take 1");
             this.inventory.put(name, itemsList);
             return true;
         } else {
             List<Item> itemsList = new ArrayList<>();
             itemsList.add(item);
-            System.out.println("Take 2");
             List<Tuple> pos = new ArrayList<>();
             for (Map.Entry<String, Tuple> entry : this.positions.entrySet()) {
                 pos.add(entry.getValue());
@@ -342,6 +342,14 @@ public class InventoryManager extends TickableManager {
                     ((NaturalResources) item).setPosition(col, row);
                     ((NaturalResources) item).setTexture(item.getName() + "_world");
                     GameManager.get().getWorld().addEntity((NaturalResources) item);
+                } else if(item instanceof HealthResources){
+                    ((HealthResources) item).setPosition(col, row);
+                    ((HealthResources) item).setTexture(item.getName() + "_world");
+                    GameManager.get().getWorld().addEntity((HealthResources) item);
+                } else if(item instanceof ManufacturedResources){
+                    ((ManufacturedResources) item).setPosition(col, row);
+                    ((ManufacturedResources) item).setTexture(item.getName() + "_world");
+                    GameManager.get().getWorld().addEntity((ManufacturedResources) item);
                 }
             }
 
