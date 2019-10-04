@@ -671,7 +671,6 @@ public class DataBaseConnector {
             connection.setAutoCommit(false);
             while (entityResult.next()) {
                 connection.setAutoCommit(false);
-                StaticEntity entity;
                 buffer = entityResult.getBytes("data");
                 objectIn = new ObjectInputStream(new ByteArrayInputStream(buffer));
                 SaveableEntityMemento entityMemento = (SaveableEntityMemento) objectIn.readObject();
@@ -702,8 +701,8 @@ public class DataBaseConnector {
      * @return The created entity
      * @throws LoadException If the entity type does not exist
      */
-    private AbstractEntity createEntityFromMemento(SaveableEntityMemento entityMemento) throws LoadException{
-        switch (entityMemento.entityType) {
+    public AbstractEntity createEntityFromMemento(SaveableEntityMemento entityMemento) throws LoadException{
+        switch (entityMemento.getEntityType()) {
             case "Bone":
                 return new Bone(entityMemento);
             case "DesertShrub":

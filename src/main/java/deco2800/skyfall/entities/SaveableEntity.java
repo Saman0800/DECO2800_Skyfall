@@ -93,6 +93,11 @@ public abstract class SaveableEntity extends AbstractEntity implements Saveable<
             this.isCollidable = entity.getCollidable();
             this.texture = entity.getTexture();
         }
+
+
+        public String getEntityType(){
+            return this.entityType;
+        }
     }
 
 }
