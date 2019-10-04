@@ -60,7 +60,7 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
      *
      * @return An ArrayList of all the tiles within a biome
      */
-    public List<Tile> getTiles() {
+    public ArrayList<Tile> getTiles() {
         return tiles;
     }
 
