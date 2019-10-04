@@ -122,9 +122,9 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
 
                 Tile tile = new Tile(world, col, row + oddCol);
                 tiles.add(tile);
-                tile.assignNode(world.worldGenNodes, world.worldParameters.getNodeSpacing());
-                tile.assignEdge(world.riverEdges, world.beachEdges, world.worldParameters.getNodeSpacing(),
-                                world.worldParameters.getRiverWidth(), world.worldParameters.getBeachWidth());
+                tile.assignNode(world.getWorldGenNodes(), world.getWorldParameters().getNodeSpacing());
+                tile.assignEdge(world.getRiverEdges(), world.getBeachEdges(), world.getWorldParameters().getNodeSpacing(),
+                                world.getWorldParameters().getRiverWidth(), world.getWorldParameters().getBeachWidth());
             }
         }
 

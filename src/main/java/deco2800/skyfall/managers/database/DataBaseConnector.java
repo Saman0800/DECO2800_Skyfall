@@ -672,84 +672,14 @@ public class DataBaseConnector {
             while (entityResult.next()) {
                 connection.setAutoCommit(false);
                 StaticEntity entity;
-
                 buffer = entityResult.getBytes("data");
                 objectIn = new ObjectInputStream(new ByteArrayInputStream(buffer));
                 SaveableEntityMemento entityMemento = (SaveableEntityMemento) objectIn.readObject();
-
-                switch (entityMemento.entityType) {
-                    case "Bone":
-                        entity = new Bone(entityMemento);
-                        break;
-                    case "DesertShrub":
-                        entity = new DesertShrub(entityMemento);
-                        break;
-                    case "DesertCacti":
-                        entity = new DesertCacti(entityMemento);
-                        break;
-                    case "DesertRock":
-                        entity = new DesertRock(entityMemento);
-                        break;
-                    case "ForestMushroom":
-                        entity = new ForestMushroom(entityMemento);
-                        break;
-                    case "ForestShrub":
-                        entity = new ForestShrub(entityMemento);
-                        break;
-                    case "Leaves":
-                        entity = new Leaves(entityMemento);
-                        break;
-                    case "TreeStump":
-                        entity = new TreeStump(entityMemento);
-                        break;
-                    case "OrganicMound":
-                        entity = new OrganicMound(entityMemento);
-                        break;
-                    case "MountainRock":
-                        entity = new MountainRock(entityMemento);
-                        break;
-                    case "MountainTree":
-                        entity = new MountainTree(entityMemento);
-                        break;
-                    case "ForestRock":
-                        entity = new ForestRock(entityMemento);
-                        break;
-                    case "SnowClump":
-                        entity = new SnowClump(entityMemento);
-                        break;
-                    case "SnowShrub":
-                        entity = new SnowShrub(entityMemento);
-                        break;
-                    case "ForestTree":
-                        entity = new ForestTree(entityMemento);
-                        break;
-                    case "SwampShrub":
-                        entity = new SwampShrub(entityMemento);
-                        break;
-                    case "SwampRock":
-                        entity = new SwampRock(entityMemento);
-                        break;
-                    case "SwampTree":
-                        entity = new SwampTree(entityMemento);
-                        break;
-                    case "VolcanicShrub":
-                        entity = new VolcanicShrub(entityMemento);
-                        break;
-                    case "VolcanicRock":
-                        entity = new VolcanicRock(entityMemento);
-                        break;
-                    case "VolcanicTree":
-                        entity = new VolcanicTree(entityMemento);
-                        break;
-                    default:
-                        throw new RuntimeException(
-                            String.format("Could not create %s from memento", entityMemento.entityType));
-                }
-                chunk.addEntity(entity);
+                chunk.addEntity(createEntityFromMemento(entityMemento));
             }
             connection.setAutoCommit(true);
             return chunk;
-        } catch (IOException | ClassNotFoundException | SQLException e) {
+        } catch (IOException | ClassNotFoundException | SQLException | LoadException e) {
             throw new RuntimeException(e);
         } finally {
             try {
@@ -765,6 +695,61 @@ public class DataBaseConnector {
         }
     }
 
+
+    /**
+     * Creates an entity from a given memento
+     * @param entityMemento The entities memento that contains its data
+     * @return The created entity
+     * @throws LoadException If the entity type does not exist
+     */
+    private AbstractEntity createEntityFromMemento(SaveableEntityMemento entityMemento) throws LoadException{
+        switch (entityMemento.entityType) {
+            case "Bone":
+                return new Bone(entityMemento);
+            case "DesertShrub":
+                return new DesertShrub(entityMemento);
+            case "DesertCacti":
+                return new DesertCacti(entityMemento);
+            case "DesertRock":
+                return new DesertRock(entityMemento);
+            case "ForestMushroom":
+                return new ForestMushroom(entityMemento);
+            case "ForestShrub":
+                return new ForestShrub(entityMemento);
+            case "Leaves":
+                return new Leaves(entityMemento);
+            case "TreeStump":
+                return new TreeStump(entityMemento);
+            case "OrganicMound":
+                return new OrganicMound(entityMemento);
+            case "MountainRock":
+                return new MountainRock(entityMemento);
+            case "MountainTree":
+                return new MountainTree(entityMemento);
+            case "ForestRock":
+                return new ForestRock(entityMemento);
+            case "SnowClump":
+                return new SnowClump(entityMemento);
+            case "SnowShrub":
+                return new SnowShrub(entityMemento);
+            case "ForestTree":
+                return new ForestTree(entityMemento);
+            case "SwampShrub":
+                return new SwampShrub(entityMemento);
+            case "SwampRock":
+                return new SwampRock(entityMemento);
+            case "SwampTree":
+                return new SwampTree(entityMemento);
+            case "VolcanicShrub":
+                return new VolcanicShrub(entityMemento);
+            case "VolcanicRock":
+                return new VolcanicRock(entityMemento);
+            case "VolcanicTree":
+                return new VolcanicTree(entityMemento);
+            default:
+                throw new LoadException( String.format("Could not create %s from memento", entityMemento.entityType));
+        }
+    }
 
     /**
      * Uses flyway to create the tables
