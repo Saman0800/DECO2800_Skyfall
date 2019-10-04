@@ -194,6 +194,11 @@ public class WorldBuilder implements WorldBuilderInterface {
             switch (biome.getBiomeName()) {
                 case "forest":
 
+                    EntitySpawnRule blueprintShopRule = new EntitySpawnRule(tile -> new BlueprintShop(tile, true), 0.05, 5, 10, biome);
+                    biomeSpawnRules.add(blueprintShopRule);
+
+                    spawnChests(biome, world, biomeSpawnRules);
+
                     // Create a new perlin noise map
                     SpawnControl treeControl = x -> x / 3d + 0.2;
                     EntitySpawnRule treeRule = new EntitySpawnRule(tile -> new Tree(tile, true), biome, true, treeControl);
@@ -289,11 +294,13 @@ public class WorldBuilder implements WorldBuilderInterface {
 
                     break;
                 default:
+
                     break;
             }
 
             spawnRules.put(biome, biomeSpawnRules);
         }
+
 
         return spawnRules;
     }
