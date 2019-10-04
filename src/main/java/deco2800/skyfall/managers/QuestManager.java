@@ -248,7 +248,7 @@ public class QuestManager extends TickableManager{
                 }
             }
         }
-        if (buildingsTotal.containsAll(currentBuildings)) {
+        if (currentBuildings.containsAll(buildingsTotal)) {
             allBuildings = true;
         }
         return allBuildings;
