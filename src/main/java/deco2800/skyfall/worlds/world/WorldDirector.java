@@ -47,9 +47,9 @@ public class WorldDirector {
         choices.add(new DesertBiome(random));
         choices.add(new MountainBiome(random));
         choices.add(new VolcanicMountainsBiome(random));
-        choices.add(new SwampBiome(random));
-        choices.add(new SnowyMountainsBiome(random));
-
+//        choices.add(new SwampBiome(random));
+//        choices.add(new SnowyMountainsBiome(random));
+//
         for (int i = 0; i < n; i++) {
             // builder.addBiome(choices.remove(random.nextInt(choices.size())), 40);
             builder.addBiome(choices.remove(random.nextInt(choices.size())), 25);
