@@ -562,30 +562,21 @@ public class MainCharacterTest {
         Apple apple = new Apple();
         Berry berry = new Berry();
 
-        testCharacter.changeHealth(-9);
+        testCharacter.changeHealth(-8);
 
         int currentHealth = testCharacter.getHealth();
-        // Loses health so player is not at full health (for eatFood())
-        testCharacter.changeHealth(-2);
-        currentHealth -= 2;
+
         // Check that health increases by 2
         testCharacter.pickUpInventory(alo);
         testCharacter.eatFood(alo);
         Assert.assertEquals(currentHealth + 2, testCharacter.getHealth());
-        // Add back health
-        currentHealth += 2;
 
-        testCharacter.changeHealth(-4);
-        currentHealth -= 4;
-        // Check that health increases by 4
+        testCharacter.changeHealth(-2);
         testCharacter.pickUpInventory(apple);
         testCharacter.eatFood(apple);
         Assert.assertEquals(currentHealth + 4, testCharacter.getHealth());
-        currentHealth += 4;
 
-        testCharacter.changeHealth(-6);
-        currentHealth -= 6;
-        // Check that health increases by 6
+        testCharacter.changeHealth(-4);
         testCharacter.pickUpInventory(berry);
         testCharacter.eatFood(berry);
         Assert.assertEquals(currentHealth + 6, testCharacter.getHealth());
