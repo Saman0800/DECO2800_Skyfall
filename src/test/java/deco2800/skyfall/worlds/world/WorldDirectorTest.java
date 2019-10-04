@@ -40,13 +40,13 @@ public class WorldDirectorTest {
         WorldBuilder builder = Mockito.mock(WorldBuilder.class);
         WorldDirector.constructNBiomeSinglePlayerWorld(builder, 3, false);
         verify(builder).setType("single_player");
-        verify(builder).setWorldSize(300);
-        verify(builder).setNodeSpacing(25);
+        verify(builder).setWorldSize(100);
+        verify(builder).setNodeSpacing(20);
         verify(builder).setSeed(any(Integer.class));
-        verify(builder, times(2)).addLake(5);
+        verify(builder, times(2)).addLake(1);
         verify(builder).addRiver();
-        verify(builder).setRiverSize(5);
-        verify(builder).setBeachSize(12);
+        verify(builder).setRiverSize(1);
+        verify(builder).setBeachSize(2);
         verify(builder).setStaticEntities(true);
         verify(builder, times(3)).addBiome(any(AbstractBiome.class), any(Integer.class));
     }

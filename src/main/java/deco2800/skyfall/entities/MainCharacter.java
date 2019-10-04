@@ -33,6 +33,8 @@ import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
 
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.ForestBiome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -115,6 +117,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private List<Blueprint> blueprintsLearned;
     private PetsManager petsManager;
     private BuildingFactory tempFactory;
+
+    // List of the Biomes Unlocked
+    private List<String> lockedBiomes;
 
     /**
      * Please feel free to change, this is not accurate as to the stages of
@@ -307,6 +312,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.setHeight(1);
         this.setObjectName("MainPiece");
         this.setMaxHealth(health);
+        initialiselockedBiomes();
 
         GameManager.getManagerFromInstance(InputManager.class)
                 .addKeyDownListener(this);
@@ -378,6 +384,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private MainCharacter(float col, float row, float speed, String name, int health, String[] textures) {
         this(row, col, speed, name, health);
         this.setTexture(textures[2]);
+        initialiselockedBiomes();
     }
 
     /**
@@ -411,6 +418,25 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private void setupGameOverScreen() {
         this.gameOverTable = (GameOverTable) GameManager.get().getManagerFromInstance(GameMenuManager.class).
                 getPopUp("gameOverTable");
+    }
+
+    /**
+     * Set up the first biome as the forest biome
+     */
+    private void initialiselockedBiomes() {
+        lockedBiomes = new ArrayList<>();
+
+        lockedBiomes.add("desert");
+        lockedBiomes.add("mountain");
+        lockedBiomes.add("volcanic_mountain");
+
+    }
+
+    /**
+     * Set up the game over screen.
+     */
+    public List<String> getlockedBiomes() {
+        return lockedBiomes;
     }
 
 
@@ -1342,14 +1368,27 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         // Gets the next tile
         Tile tile = getTile(position.getCol() + xInput, position.getRow() + yInput);
 
+        boolean valid = true;
+
         if (tile == null) {
-            return false;
-        } else {
-            return (!tile.getTextureName().contains("water")
-                    && !tile.getTextureName().contains("lake")
-                    && !tile.getTextureName().contains("ocean"))
-                    || canSwim;
+            valid = false;
         }
+
+        if ((tile.getTextureName().contains("water")
+                || tile.getTextureName().contains("lake")
+                || tile.getTextureName().contains("ocean"))
+                    && !canSwim) {
+            valid = false;
+        }
+
+        for (String s: lockedBiomes) {
+            if (tile.getTextureName().contains(s)){
+                valid = false;
+            }
+        }
+
+        return valid;
+
     }
 
     /**
