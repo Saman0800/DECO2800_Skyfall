@@ -23,6 +23,7 @@ import deco2800.skyfall.managers.StatisticsManager;
 public class Enemy extends Peon
         implements Animatable, ICombatEntity, Tickable {
 
+
     // Logger for tracking enemy information
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -85,7 +86,7 @@ public class Enemy extends Peon
         this.setCollidable(true);
 
         // Sets the main character in the game.
-        this.setMainCharacter(GameManager.getManagerFromInstance(StatisticsManager.class).getCharacter());
+        this.setMainCharacter(MainCharacter.getInstance());
 
         // Sets the type of the enemy, its name and the biome it is from
         this.setType(name);
