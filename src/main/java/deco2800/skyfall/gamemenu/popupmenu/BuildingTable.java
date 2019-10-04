@@ -5,9 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import deco2800.skyfall.entities.weapons.Bow;
-import deco2800.skyfall.entities.weapons.Spear;
-import deco2800.skyfall.entities.weapons.Sword;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
@@ -112,9 +109,6 @@ public class BuildingTable extends AbstractPopUpElement{
         //testing
         gameMenuManager.getMainCharacter().addBlueprint(new Hatchet());
         gameMenuManager.getMainCharacter().addBlueprint(new PickAxe());
-        gameMenuManager.getMainCharacter().addBlueprint(new Sword());
-        gameMenuManager.getMainCharacter().addBlueprint(new Spear());
-        gameMenuManager.getMainCharacter().addBlueprint(new Bow());
 
         List<Blueprint> blueprintsLearned = gameMenuManager.getMainCharacter().getBlueprintsLearned();
         // Generating items in getBlueprintsLearned
