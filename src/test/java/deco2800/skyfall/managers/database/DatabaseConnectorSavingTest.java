@@ -65,6 +65,8 @@ public class DatabaseConnectorSavingTest {
 
     @Test
     public void saveGameTest() {
+        PreparedStatement getSaves = null;
+        ResultSet saveResults = null;
         try {
             Save save = new Save();
 
@@ -78,8 +80,8 @@ public class DatabaseConnectorSavingTest {
             ArrayList<Save> saves = (ArrayList<Save>) dbConnector.loadSaveInformation();
 
             int count = 0;
-            PreparedStatement getSaves = dbConnector.getConnection().prepareStatement("SELECT * FROM SAVES");
-            ResultSet saveResults = getSaves.executeQuery();
+            getSaves = dbConnector.getConnection().prepareStatement("SELECT * FROM SAVES");
+            saveResults = getSaves.executeQuery();
             while (saveResults.next()) {
                 count++;
             }
@@ -87,11 +89,20 @@ public class DatabaseConnectorSavingTest {
 
         } catch (SQLException e) {
             fail("Failed to save world due to an exception occurring : " + e);
+        } finally {
+            try {
+                getSaves.close();
+                saveResults.close();
+            } catch (SQLException e) {
+            }
         }
+
     }
 
     @Test
     public void updateSaveTest(){
+        ResultSet saveResults = null;
+        PreparedStatement getSaves = null;
         try {
             Save save = new Save();
 
@@ -106,8 +117,8 @@ public class DatabaseConnectorSavingTest {
             ArrayList<Save> saves = (ArrayList<Save>) dbConnector.loadSaveInformation();
 
             int count = 0;
-            PreparedStatement getSaves = dbConnector.getConnection().prepareStatement("SELECT * FROM SAVES");
-            ResultSet saveResults = getSaves.executeQuery();
+            getSaves = dbConnector.getConnection().prepareStatement("SELECT * FROM SAVES");
+            saveResults = getSaves.executeQuery();
             while (saveResults.next()) {
                 count++;
             }
@@ -115,6 +126,12 @@ public class DatabaseConnectorSavingTest {
 
         } catch (SQLException e) {
             fail("Failed to update the save due to an exception occurring : " + e);
+        } finally {
+            try {
+                saveResults.close();
+                getSaves.close();
+            } catch (SQLException e) {
+            }
         }
     }
 
