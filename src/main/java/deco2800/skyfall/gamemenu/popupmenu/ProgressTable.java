@@ -59,11 +59,11 @@ public class ProgressTable extends AbstractPopUpElement {
 
     @Override
     public void update() {
+            qm.checkBuildings();
             updateBiomeText(qm.getBiome());
             updateCollectText(qm.collectNum() + "/4");
-            //TODO : (@Kausta) Update Blueprint number
-            updateCreateText("0/4");
-            updateBlueprintTest("1");
+            updateCreateText(qm.getBuildingsNum() + "/" + qm.getBuildingsTotal().size());
+            updateBlueprintText("1");
     }
 
 
@@ -80,7 +80,7 @@ public class ProgressTable extends AbstractPopUpElement {
 
     }
 
-    private void updateBlueprintTest(String text) {
+    private void updateBlueprintText(String text) {
         blueprintLabel.setText(text + "x  Blueprint: " + "To Purchase");
     }
 
@@ -119,4 +119,19 @@ public class ProgressTable extends AbstractPopUpElement {
         baseTable.setVisible(false);
     }
 
+    public Label getBiomeLabel() {
+        return biomeLabel;
+    }
+
+    public Label getCollectLabel() {
+        return collectLabel;
+    }
+
+    public Label getCreateLabel() {
+        return createLabel;
+    }
+
+    public Label getBlueprintLabel() {
+        return blueprintLabel;
+    }
 }

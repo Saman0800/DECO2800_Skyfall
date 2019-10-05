@@ -81,18 +81,22 @@ public class CollectCreateTable extends AbstractPopUpElement{
      */
     @Override
     public void update() {
+        setComplete();
+        updateText();
+    }
+
+    public void setComplete() {
         if (checkComplete()) {
             complete.setVisible(true);
         } else {
             complete.setVisible(false);
         }
-        updateText();
     }
 
     /**
      * Updates the text of the widget
      */
-    private void updateText() {
+    public void updateText() {
         labelTable.clear();
         String whiteText = "white-text";
         String format = "%d x %s";
@@ -206,5 +210,9 @@ public class CollectCreateTable extends AbstractPopUpElement{
 
     public Label getLabelWood() {
         return labelWood;
+    }
+
+    public TextButton getComplete() {
+        return complete;
     }
 }
