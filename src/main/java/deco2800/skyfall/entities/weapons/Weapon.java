@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities.weapons;
 
 import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.resources.Item;
@@ -11,7 +12,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Weapon to be used by the Main Character and stored as an inventory item
  */
-public abstract class Weapon extends StaticEntity implements Item, IWeapon {
+public abstract class Weapon extends StaticEntity implements Item, IWeapon, Blueprint {
 
     // Weapon attributes
     private String name;
@@ -21,9 +22,9 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon {
     private int attackRate;
     private int damage;
     private int durability;
-    private Boolean carryable;
-    private Boolean exchangeable;
-    public boolean equippable;
+    private boolean carryable;
+    private boolean exchangeable;
+    private boolean equippable;
     private HexVector position;
 
     // Logger to show messages

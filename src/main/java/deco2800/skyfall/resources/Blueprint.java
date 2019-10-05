@@ -38,20 +38,18 @@ public interface Blueprint {
      *
      * @return true if the player has learned the blueprint.
      */
-
-    String getName();
-
     boolean isBlueprintLearned();
-
-    /**
-     * changes the boolean blueprintLearned to true.
-     */
-    void toggleBlueprintLearned();
 
     /**
      * @return - cost of building the building
      */
     int getCost();
+
+    /**
+     * @return - the name of the item
+     */
+    String getName();
+
 
 
 

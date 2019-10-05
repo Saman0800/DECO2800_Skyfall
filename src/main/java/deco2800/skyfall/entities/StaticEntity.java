@@ -1,5 +1,7 @@
 package deco2800.skyfall.entities;
 
+import java.util.HashMap;
+
 import java.util.Map;
 import java.util.Set;
 import org.slf4j.Logger;

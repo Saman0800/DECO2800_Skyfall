@@ -72,7 +72,7 @@ void main() {
     //discard transparent fragments
     //transparency is not supported for rendering
     //outside of pure transparency (with transparency less that 0.1)
-    if (texColor.a < 0.1f) {
+    if (texColor.a < 0.10f) {
         discard;
     }
 

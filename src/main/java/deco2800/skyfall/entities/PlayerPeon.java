@@ -83,7 +83,6 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
      * Attack with the weapon the character has equip.
      */
     public void attack() {
-        //TODO: Need to calculate an angle that the character is facing.
 
         //Spawn projectile in front of character for now.
 
@@ -91,7 +90,7 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
         //Get AbstractWorld from static class GameManager.
 
         //Add the projectile entity to the game world.
-        //manager.getWorld().addEntity(hitBox);
+
     }
 
     /**
@@ -117,20 +116,12 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
         if (button == 1) {
             this.attack();
         }
-//        else if (button == 1) {
-//            this.specialAttack();
-//        }
+        else if (button == 1) {
+            this.specialAttack();
+        }
     }
 
-    /**
-     * Sets the Player's current movement speed.
-     * @param cSpeed the speed for the player to currently move at.
-     */
-    private void setCurrentSpeed ( float cSpeed){
-        this.currentSpeed = cSpeed;
-//        this.task = new MovementTask(this, new HexVector(clickedPosition[0],
-//                clickedPosition[1]));
-    }
+
 
     /**
      * Sets the appropriate movement flags to true on keyDown

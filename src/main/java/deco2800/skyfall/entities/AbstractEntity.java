@@ -15,6 +15,7 @@ import deco2800.skyfall.util.BodyEditorLoader;
 import deco2800.skyfall.util.HexVector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.*;
 
 /**
@@ -113,7 +114,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Constructor for an abstract entity
-     * 
+     *
      * @param col         the col position on the world
      * @param row         the row position on the world
      * @param renderOrder the height position on the world
@@ -147,7 +148,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Constructor for an abstract entity
-     * 
+     *
      * @param col             the col position on the world
      * @param row             the row position on the world
      * @param height          the height position on the world
@@ -191,7 +192,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Get the Z position of this AbstractWorld Entity
-     * 
+     *
      * @return The Z position
      */
     public int getHeight() {
@@ -237,7 +238,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * sets the position of the entity in the world
-     * 
+     *
      * @param col    the x coordinate for the entity
      * @param row    the y coordinate for the entity
      * @param height the z coordinate for the entity
@@ -356,7 +357,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Gets the distance from an abstract entity
-     * 
+     *
      * @param e the abstract entity
      * @return the distance as a float
      */
@@ -405,7 +406,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Gets the associate animation with an animation role
-     * 
+     *
      * @param type Animation role to get animation for
      * @return animation name
      */
@@ -420,7 +421,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Gets the current animation to be run
-     * 
+     *
      * @return The animation to be run
      */
     public AnimationLinker getToBeRun() {
@@ -513,14 +514,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
             BodyEditorLoader loader = new BodyEditorLoader(
                     Gdx.files.internal("resources/HitBoxes" + "/" + fixtureDefName + "HitBox.json"));
 
-            // Creates a world for the hit box to inhabit
-            // PhysicsManager manager = new PhysicsManager();
-            // World world = manager.getBox2DWorld();
 
-            // Create the hit box body
-            // BodyDef bd = new BodyDef();
-            // bd.type = BodyDef.BodyType.DynamicBody;
-            // body = world.createBody(bd);
 
             // Assigns all the aspects of the fixture
             FixtureDef fixtureDef = new FixtureDef();
@@ -532,8 +526,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
             loader.attachFixture(body, "Character", fixtureDef, scale);
 
             // Set the collision of the body
-            // fixture = body.createFixture(fixtureDef);
-            // fixture.setSensor(!isCollidable);
+
         } catch (NullPointerException e) {
             log.warn("Failed to load custom hit box");
             defineFixture();
@@ -573,7 +566,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * The current direction that the object is facing
-     * 
+     *
      * @return Direction that the entity is facing
      */
     public Direction getCurrentDirection() {
@@ -582,7 +575,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * The current state of the object
-     * 
+     *
      * @return The state of the object
      */
     public AnimationRole getCurrentState() {
@@ -591,7 +584,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Set the current direction and also updates the animation to be run variable
-     * 
+     *
      * @param currentDirection new direction that the entity is facing
      */
     public void setCurrentDirection(Direction currentDirection) {
@@ -601,7 +594,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Set the current state and also updates the animation to be run variable
-     * 
+     *
      * @param currentState new direction that the entity is facing
      */
     public void setCurrentState(AnimationRole currentState) {
@@ -611,7 +604,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Adds an animation to the animation map
-     * 
+     *
      * @param role             State
      * @param currentDirection Direction
      * @param animationLinker  Animation object
@@ -638,7 +631,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     /**
      * How much to scale the texture by. Used in MainCharacter to scale down the
      * texture
-     * 
+     *
      * @return Scale multiplicative factor.
      */
     public float getScale() {

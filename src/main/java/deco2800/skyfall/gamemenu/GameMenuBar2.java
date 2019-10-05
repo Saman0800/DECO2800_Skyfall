@@ -51,7 +51,7 @@ public class GameMenuBar2 extends AbstractUIElement {
 
     @Override
     public void updatePosition() {
-        equippedTable.setPosition(gmm.getTopRightX() - 170, gmm.getTopLeftY() - 100);
+        //equippedTable.setPosition(gmm.getTopRightX() - 170, gmm.getTopLeftY() - 100);
         quickAccessPanel.setPosition(gmm.getTopRightX() - 170, gmm.getTopRightY() - 650);
         //t.setHeight(stage.getCamera().viewportHeight / 2);
         sideBar.setPosition(gmm.getTopRightX() - 180, gmm.getTopRightY() - 520);
@@ -86,6 +86,7 @@ public class GameMenuBar2 extends AbstractUIElement {
         equipped = new Label("", skin, "white-text");
         equipped.setFontScale(0.7f);
         equippedTable.add(equipped);
+        equippedTable.setVisible(false);
         stage.addActor(equippedTable);
     }
 
