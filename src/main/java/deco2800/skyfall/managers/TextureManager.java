@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Texture manager acts as a cache between the file system and the renderers.
@@ -32,8 +33,6 @@ public class TextureManager extends AbstractManager {
      * The height of the tile to use when positioning the tile.
      */
     public static final int TILE_HEIGHT = 278;
-
-    // private final Logger log = LoggerFactory.getLogger(TextureManager.class);
 
     /**
      * A HashMap of all textures with string keys
@@ -75,7 +74,7 @@ public class TextureManager extends AbstractManager {
             }
             for (File direc : files) {
                 if (direc.isDirectory()) {
-                    for (File file : direc.listFiles()) {
+                    for (File file : Objects.requireNonNull(direc.listFiles())) {
                         if (file.getName().toLowerCase().endsWith(".png")) {
                             String path = String.format("resources/tile_textures/%s/%s", direc.getName(),
                                     file.getName());
@@ -235,8 +234,6 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("sword", new Texture("resources/weapons/sword.png"));
             // Weapons pick-up
-            textureMap.put("sword_tex", new Texture("resources/weapons/sword" +
-                    ".png"));
             textureMap.put("axe_tex", new Texture("resources/weapons/axe.png"));
             textureMap.put("bow_tex", new Texture("resources/weapons/bow.png"));
             textureMap.put("spear_tex", new Texture("resources/weapons/spear.png"));
@@ -478,7 +475,7 @@ public class TextureManager extends AbstractManager {
             if (texture != null) {
                 return texture;
             } else {
-                // System.out.println("Texture animation could not be found");
+                LOGGER.warn("Texture animation could not be found");
                 return textureMap.get("spacman_ded");
             }
 
@@ -513,9 +510,7 @@ public class TextureManager extends AbstractManager {
      * @param filename Filename within the assets folder
      */
     public void saveTexture(String id, String filename) {
-        if (!textureMap.containsKey(id)) {
-            textureMap.put(id, new Texture(filename));
-        }
+        textureMap.computeIfAbsent(id, key -> new Texture(filename));
     }
 
     /**
@@ -527,11 +522,10 @@ public class TextureManager extends AbstractManager {
      * @return Texture of the given animation frame.
      */
     private Texture getTextureFromAnimation(String id, AnimationManager animationManager) {
-        String id1 = id.replaceAll("__ANIMATION_", "");
+        String id1 = id.replace("__ANIMATION_", "");
         String[] split = id1.split(":");
-        Texture texture = animationManager.getKeyFrameFromAnimation(split[0], Integer.valueOf(split[1]));
+        Texture texture = animationManager.getKeyFrameFromAnimation(split[0], Integer.parseInt(split[1]));
         if (texture == null) {
-            // System.out.println("getTextureFromAnimation did not find texture");
             return null;
         }
 

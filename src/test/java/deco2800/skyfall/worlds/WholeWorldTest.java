@@ -1,6 +1,5 @@
 package deco2800.skyfall.worlds;
 
-import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.worlds.world.Chunk;
@@ -18,7 +17,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;

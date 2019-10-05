@@ -32,6 +32,15 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
         this(new ArrayList<>(), null, null);
     }
 
+
+    /**
+     * Sets the id of a save
+     * @param id
+     */
+    public void setId(long id){
+        this.saveID = id;
+    }
+
     /**
      * Constructor for a save state
      *
@@ -124,7 +133,7 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
     /**
      * A savestate for the save
      */
-    public class SaveMemento extends AbstractMemento {
+    public static class SaveMemento extends AbstractMemento implements Serializable {
         private long saveID;
         private long currentWorld;
 

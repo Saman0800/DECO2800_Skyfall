@@ -1,8 +1,6 @@
 package deco2800.skyfall.worlds.generation.perlinnoise;
 
-import deco2800.skyfall.entities.worlditems.EntitySpawnTable;
-
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Random;
 
 /**
@@ -12,7 +10,7 @@ import java.util.Random;
  * permutation and hashing inspired by
  * <a>https://flafla2.github.io/2014/08/09/perlinnoise.html</a>
  */
-public class NoiseGenerator {
+public class NoiseGenerator implements Serializable {
 
     private static final double NORMALISATION_VALUE = 1;
 

@@ -3,12 +3,10 @@ package deco2800.skyfall.worlds.generation;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import deco2800.skyfall.worlds.biomes.BeachBiome;
-import deco2800.skyfall.worlds.biomes.RiverBiome;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.world.World;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -421,7 +419,7 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
         this.pointB = new double[] {memento.bx, memento.by};
     }
 
-    public class VoronoiEdgeMemento extends AbstractMemento {
+    public static class VoronoiEdgeMemento extends AbstractMemento implements Serializable {
 
         private long edgeID;
 
@@ -439,7 +437,7 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
          *
          * @param edge the edge this is for
          */
-        public VoronoiEdgeMemento(VoronoiEdge edge) {
+        public VoronoiEdgeMemento(VoronoiEdge edge)  {
 
             this.edgeID = edge.edgeID;
 
