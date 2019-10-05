@@ -4,7 +4,6 @@ import deco2800.skyfall.buildings.BuildingEntity;
 import deco2800.skyfall.buildings.BuildingFactory;
 
 import deco2800.skyfall.managers.database.DataBaseConnector;
-import deco2800.skyfall.entities.MainCharacter;
 
 import deco2800.skyfall.resources.items.Stone;
 import deco2800.skyfall.resources.items.Wood;

@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.io.*;
 
-import static java.lang.Float.parseFloat;
-
 /**
  * Abstracts saving settings to a file
  * Reads on constructor, saves all files on close()
