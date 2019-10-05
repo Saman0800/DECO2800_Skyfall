@@ -1,30 +1,23 @@
 package deco2800.skyfall.entities.pets;
 
 import deco2800.skyfall.animation.Animatable;
-import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.Harvestable;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.Spider;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.world.World;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Lizard extends AbstractPet implements Animatable, Item {
     MainCharacter mc;
-    //check whether this pet is summoned
+    // check whether this pet is summoned
     private boolean isOutSide = false;
 
-    //Checking whether this pet is on the way to collect money
+    // Checking whether this pet is on the way to collect money
     private boolean isOnTheWay = false;
 
     /**
@@ -48,7 +41,6 @@ public class Lizard extends AbstractPet implements Animatable, Item {
         this.setDirectionTextures();
         this.setCurrentState(AnimationRole.NULL);
     }
-
 
     /**
      * Get situation is this pet is summoned
@@ -85,26 +77,24 @@ public class Lizard extends AbstractPet implements Animatable, Item {
      * To collect nearby gold
      */
     public void findNearbyGold() {
-        List<AbstractEntity> abstractEntityList = GameManager.get().
-                getWorld().getSortedEntities();
+        List<AbstractEntity> abstractEntityList = GameManager.get().getWorld().getSortedEntities();
         for (AbstractEntity ae : abstractEntityList) {
-            if (ae instanceof GoldPiece) {
-                if (this.getDomesticated()) {
-                    if (ae.getPosition().distance(this.getPosition()) < 3) {
-                        isOnTheWay = true;
-                        HexVector aeposition = ae.getPosition();
-                        this.moveTowards(aeposition);
-                        if (ae.getPosition().distance(this.getPosition()) < 0.1) {
-                            mc.addGold((GoldPiece) ae, ((GoldPiece) ae).getValue());
-                            GameManager.get().getWorld().removeEntity(ae);
-                            isOnTheWay = false;
-                        }
-                    }
+
+            boolean isInstanceGoldPiece = ae instanceof GoldPiece;
+            boolean inRange = ae.getPosition().distance(this.getPosition()) < 3;
+
+            if (isInstanceGoldPiece && inRange && this.getDomesticated()) {
+                isOnTheWay = true;
+                HexVector aeposition = ae.getPosition();
+                this.moveTowards(aeposition);
+                if (ae.getPosition().distance(this.getPosition()) < 0.1) {
+                    mc.addGold((GoldPiece) ae, ((GoldPiece) ae).getValue());
+                    GameManager.get().getWorld().removeEntity(ae);
+                    isOnTheWay = false;
                 }
             }
         }
     }
-
 
     /**
      * get movement direction
@@ -140,8 +130,7 @@ public class Lizard extends AbstractPet implements Animatable, Item {
     public void followingCharacter() {
         if (this.getDomesticated()) {
             if (!isOnTheWay) {
-                HexVector destination = new HexVector(mc.getCol() - 1,
-                        mc.getRow() - 1);
+                HexVector destination = new HexVector(mc.getCol() - 1, mc.getRow() - 1);
                 moveTowards(destination);
             }
         }
@@ -149,6 +138,7 @@ public class Lizard extends AbstractPet implements Animatable, Item {
 
     @Override
     public void configureAnimations() {
+        // Do nothing for now
     }
 
     /**
@@ -193,7 +183,7 @@ public class Lizard extends AbstractPet implements Animatable, Item {
      * @return true
      */
     @Override
-    public Boolean isCarryable() {
+    public boolean isCarryable() {
         return true;
     }
 
@@ -213,7 +203,7 @@ public class Lizard extends AbstractPet implements Animatable, Item {
      * @return True if the pet can be exchanged, false otherwise
      */
     @Override
-    public Boolean isExchangeable() {
+    public boolean isExchangeable() {
         return true;
     }
 
@@ -229,6 +219,10 @@ public class Lizard extends AbstractPet implements Animatable, Item {
 
     @Override
     public void use(HexVector position) {
+        // Do nothing for now.
+    }
 
+    public boolean isEquippable() {
+        return false;
     }
 }

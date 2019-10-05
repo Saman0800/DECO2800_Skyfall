@@ -2,36 +2,38 @@ package deco2800.skyfall.managers;
 
 import java.io.File;
 import java.io.IOException;
+
+import deco2800.skyfall.observers.KeyTypedObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sound.sampled.*;
 
-public class BGMManager extends AbstractManager {
+public class BGMManager extends AbstractManager implements KeyTypedObserver {
 
     /* Audio input stream */
-    private static AudioInputStream audioInputStream;
+    private AudioInputStream audioInputStream;
 
     /* Clip that will be played */
-    private static Clip clip;
+    private Clip clip;
 
     /* File to be played */
-    private static String audio;
+    private String audio;
 
     /* Current position of clip */
-    private static Long currentPosition;
+    private Long currentPosition;
 
     /* Volume of the clip */
-    private static FloatControl volume;
+    private FloatControl volume;
 
-    /* Boolean mute control */
-    public static BooleanControl muteVol;
+    /* boolean mute control */
+    public BooleanControl muteVol;
 
     // Logger for class to display messages
     private static final Logger LOGGER =
             LoggerFactory.getLogger(BGMManager.class);
 
-    public static boolean paused = false;
+    public boolean paused = false;
 
     /**
      * Background music constructor
@@ -44,7 +46,7 @@ public class BGMManager extends AbstractManager {
      * Initialises the Audio Input Stream and allows clip to loop continuously.
      * @param file is the name of the audio intended to be played.
      */
-    public static void initClip(String file) throws UnsupportedAudioFileException,
+    public void initClip(String file) throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
 
         try {
@@ -72,7 +74,7 @@ public class BGMManager extends AbstractManager {
     /**
      * Plays the clip.
      */
-    public static void play()  {
+    public void play()  {
         //Play the clip
         clip.start();
     }
@@ -80,7 +82,7 @@ public class BGMManager extends AbstractManager {
     /**
      * Pauses the clip.
      */
-    public static void pause() {
+    public void pause() {
         //Get paused position
         currentPosition = clip.getMicrosecondPosition();
 
@@ -91,7 +93,7 @@ public class BGMManager extends AbstractManager {
     /**
      * Resumes the clip.
      */
-    public static void resume() throws UnsupportedAudioFileException,
+    public void resume() throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
         //Close current clip and reset
         clip.close();
@@ -103,7 +105,7 @@ public class BGMManager extends AbstractManager {
     /**
      * Stops the clip.
      */
-    public static void stop() {
+    public void stop() {
         //Reset clip
         currentPosition = 0L;
         clip.stop();
@@ -113,7 +115,7 @@ public class BGMManager extends AbstractManager {
     /**
      * Resets the clip to start time.
      */
-    public static void resetClip() throws UnsupportedAudioFileException, IOException,
+    public void resetClip() throws UnsupportedAudioFileException, IOException,
             LineUnavailableException {
         audioInputStream = AudioSystem.getAudioInputStream(new File(audio).getAbsoluteFile());
         clip.open(audioInputStream);
@@ -123,14 +125,14 @@ public class BGMManager extends AbstractManager {
     /**
      * Returns the current clip.
      */
-    public static Clip getClip()  {
+    public Clip getClip()  {
         return clip;
     }
 
     /**
      * Mutes the clip.
      */
-    public static void mute () {
+    public void mute () {
         //Set mute value to true
         muteVol = (BooleanControl) clip.getControl(BooleanControl.Type.MUTE);
         muteVol.setValue(true);
@@ -139,7 +141,7 @@ public class BGMManager extends AbstractManager {
     /**
      * Un-mutes the clip.
      */
-    public static void unmute() {
+    public void unmute() {
         //Set mute value to false
         muteVol = (BooleanControl) clip.getControl(BooleanControl.Type.MUTE);
         muteVol.setValue(false);
@@ -149,7 +151,7 @@ public class BGMManager extends AbstractManager {
      * Gets the current volume of the clip.
      * @return float of current volume.
      */
-    public static float getVolume() {
+    public float getVolume() {
         // Get the current volume of the clip.
         volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
         return volume.getValue();
@@ -159,7 +161,7 @@ public class BGMManager extends AbstractManager {
      * Sets the volume of the clip.
      * @param x is the intended float value to set the clip to.
      */
-    public static void setVolume(float x) {
+    public void setVolume(float x) {
         // Checks whether the given value is valid.
         try {
             volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
@@ -171,6 +173,20 @@ public class BGMManager extends AbstractManager {
             }
         } catch (NullPointerException | IllegalArgumentException ex) {
             LOGGER.warn(String.valueOf(ex));
+        }
+    }
+
+    /**
+     * Calls mute or unmute methods if appropriate keyboard input is given.
+     *
+     * @param character the character of the key
+     */
+    @Override
+    public void notifyKeyTyped(char character) {
+        if (character == 'm') {
+            mute();
+        } else if (character == 'u') {
+            unmute();
         }
     }
 }

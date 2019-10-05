@@ -1,12 +1,10 @@
 package deco2800.skyfall.entities.worlditems;
 
 import deco2800.skyfall.entities.StaticEntity;
-import deco2800.skyfall.worlds.world.World;
-import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.worlds.world.World;
+import java.util.Random;
 
-import java.lang.Math;
 import java.util.function.Function;
 
 /**
@@ -14,18 +12,12 @@ import java.util.function.Function;
  * EntitySpawnRule for precise spawning however, simpler methods exist that will
  * handle this for you
  */
-public class EntitySpawnTable {
-    /**
-     * Simple static method for placing static items. Takes the given entity and
-     * places a deep copy within the world at a given tile
-     *
-     * @param tile   The tile the new entity will occupy
-     * @param entity The entity to be deep copied
-     * @param <T>    T must extend StaticEntity and have .newInstance inherited
-     */
-    public static <T extends StaticEntity> void placeEntity(T entity, Tile tile) {
-        World world = GameManager.get().getWorld();
-        world.addEntity(entity.newInstance(tile));
+public final class EntitySpawnTable {
+
+    static private Random randDirection = new Random();
+
+    // Private constructor to prevent construction.
+    private EntitySpawnTable() {
     }
 
     /**
@@ -40,81 +32,143 @@ public class EntitySpawnTable {
      */
     private static double adjustChanceAdjacent(EntitySpawnRule rule, Tile nextTile, double currentChance) {
 
-        // Tiles always have 6 neighbours, so always just put it to the power of 6 instead of checking the number of
+        // Tiles always have 6 neighbours, so always just put it to the power of 6
+        // instead of checking the number of
         // neighbours each time.
         double adjustmentFactor = rule.getLimitAdjacentValue();
-        adjustmentFactor =
-                adjustmentFactor * adjustmentFactor * adjustmentFactor * adjustmentFactor * adjustmentFactor *
-                        adjustmentFactor;
+        // FIXME:Ontonator Check that this actualy works with chunks.
+        adjustmentFactor = Math.pow(adjustmentFactor,
+                nextTile.getNeighbours().values().stream().filter(Tile::isObstructed).count());
 
         return currentChance / adjustmentFactor;
 
     }
 
     /**
-     * Places down a entity uniformly into the world.
+     * <em>Approximately</em> normalises the static entity noise used for entity
+     * spawn chance to a uniform distribution. This was obtained through
+     * experimental methods and must be recalculated if the noise generator
+     * parameters ever change.
      *
-     * @param <T>         T must extend StaticEntity and have .newInstance inherited
-     * @param newInstance A function which creates a new instance to place
-     * @param rule        The EntitySpawn that holds the characteristics of the placement of the static entity
-     * @param nextTile    The tile on which to place the static entity
+     * @param x the value to normalise
+     *
+     * @return the normalised value
      */
-    public static <T extends StaticEntity> void placeUniform(Function<Tile, StaticEntity> newInstance,
-                                                             EntitySpawnRule rule, Tile nextTile,
-                                                             World world) {
+    public static double normalizeStaticEntityNoise(double x) {
+        return 1 - 1 / (1 + Math.exp(23 * (x - 0.5)));
+    }
 
-        // Get the uniform chance from the rule
-        double chance = rule.getChance();
+    public static double getRandomValue(World world, EntitySpawnRule spawnRule, Tile tile) {
+        return normalizeStaticEntityNoise(world.getStaticEntityNoise().getOctavedPerlinValue(
+                tile.getCol() + spawnRule.getIndex() % 100, tile.getRow() + spawnRule.getIndex() % 100));
+    }
 
+    private static void placeWithChance(Function<Tile, StaticEntity> newInstance, EntitySpawnRule rule, Tile nextTile,
+            World world, double chance) {
         if (rule.getLimitAdjacent()) {
             chance = adjustChanceAdjacent(rule, nextTile, chance);
         }
 
-        if (world.getStaticEntityNoise().getOctavedPerlinValue(nextTile.getCol(), nextTile.getRow()) < chance) {
-            StaticEntity newEntity = newInstance.apply(nextTile);
-            int renderOrder = (int) (nextTile.getRow() * -2.0);
-            newEntity.setRenderOrder(renderOrder);
-            world.addEntity(newEntity);
+        if (getRandomValue(world, rule, nextTile) < chance) {
+            int direction = Tile.NORTH_EAST;
+            int newRandDir = randDirection.nextInt(4);
+
+            if (newRandDir == 0) {
+                direction = Tile.NORTH_EAST;
+            } else if (newRandDir == 1) {
+                direction = Tile.NORTH_WEST;
+            } else if (newRandDir == 2) {
+                direction = Tile.SOUTH_EAST;
+            } else if (newRandDir == 3) {
+                direction = Tile.SOUTH_WEST;
+            }
+
+            placeHorizontalJitter(newInstance, nextTile, world, direction);
         }
+    }
+
+    private static void placeHorizontalJitter(Function<Tile, StaticEntity> newInstance, Tile nextTile, World world,
+            int direction) {
+
+        Tile northNeighbour;
+        Tile southNeighbour;
+        Tile dirNeighbour;
+
+        northNeighbour = nextTile.getNeighbour(Tile.NORTH);
+        southNeighbour = nextTile.getNeighbour(Tile.SOUTH);
+        dirNeighbour = nextTile.getNeighbour(direction);
+
+        if (northNeighbour == null || southNeighbour == null || dirNeighbour == null) {
+            placeDown(newInstance, nextTile, world);
+            return;
+        }
+
+        // First check if the top and bottom neighbors are obstructed
+        if (dirNeighbour.isObstructed() || (!northNeighbour.isObstructed() && !southNeighbour.isObstructed())) {
+            placeDown(newInstance, nextTile, world);
+        } else if (!nextTile.getBiome().getBiomeName().equals(dirNeighbour.getBiome().getBiomeName())) {
+            // We are at the edge of a biome
+            placeDown(newInstance, nextTile, world);
+        } else if (randDirection.nextFloat() < 0.9) {
+            placeHorizontalJitter(newInstance, dirNeighbour, world, direction);
+        } else {
+            placeDown(newInstance, nextTile, world);
+        }
+
+    }
+
+    private static void placeDown(Function<Tile, StaticEntity> newInstance, Tile nextTile, World world) {
+
+        StaticEntity newEntity = newInstance.apply(nextTile);
+        int renderOrder = (int) (nextTile.getRow() * -2.0);
+        newEntity.setRenderOrder(renderOrder);
+        world.addEntity(newEntity);
+
+        return;
+    }
+
+    /**
+     * Places down a entity uniformly into the world.
+     *
+     * @param newInstance A function which creates a new instance to place
+     * @param rule        The EntitySpawn that holds the characteristics of the
+     *                    placement of the static entity
+     * @param nextTile    The tile on which to place the static entity
+     */
+    public static void placeUniform(Function<Tile, StaticEntity> newInstance, EntitySpawnRule rule, Tile nextTile,
+            World world) {
+        // Get the uniform chance from the rule
+        double chance = rule.getChance();
+
+        placeWithChance(newInstance, rule, nextTile, world, chance);
     }
 
     /**
      * Places down a entity using a the perlin noise value of the tile.
      *
-     * @param <T>         T must extend StaticEntity and have .newInstance inherited
      * @param newInstance A function which creates a new instance to place
-     * @param rule        The EntitySpawn that holds the characteristics of the placement of the static entity
+     * @param rule        The EntitySpawn that holds the characteristics of the
+     *                    placement of the static entity
      * @param nextTile    The tile on which to place the static entity
      */
-    public static <T extends StaticEntity> void placePerlin(Function<Tile, StaticEntity> newInstance,
-                                                            EntitySpawnRule rule, Tile nextTile,
-                                                            World world) {
-
+    public static void placePerlin(Function<Tile, StaticEntity> newInstance, EntitySpawnRule rule, Tile nextTile,
+            World world) {
         // Get the perlin noise value of the tile and apply the perlin map
         double noise = rule.getNoiseGenerator().getOctavedPerlinValue(nextTile.getRow(), nextTile.getCol());
         SpawnControl perlinMap = rule.getAdjustMap();
         double adjustedProb = perlinMap.probabilityMap(noise);
 
-        if (rule.getLimitAdjacent()) {
-            adjustedProb = adjustChanceAdjacent(rule, nextTile, adjustedProb);
-        }
-
-        if (world.getStaticEntityNoise().getOctavedPerlinValue(nextTile.getCol(), nextTile.getRow()) < adjustedProb) {
-            StaticEntity newEntity = newInstance.apply(nextTile);
-            int renderOrder = (int) (nextTile.getRow() * -2.0);
-            newEntity.setRenderOrder(renderOrder);
-            world.addEntity(newEntity);
-        }
+        placeWithChance(newInstance, rule, nextTile, world, adjustedProb);
     }
 
     /**
      * Randomly distributes an entity with a given spawn rule
      *
-     * @param rule        A spawn rule, which specifies how the entity will be distributed example rules are chance,
-     *                    min/max, next to, a combination of these, e.g.
-     * @param <T>         T must extend StaticEntity and have .newInstance inherited
+     * @param rule A spawn rule, which specifies how the entity will be distributed
+     *             example rules are chance, min/max, next to, a combination of
+     *             these, e.g.
      */
-    public static <T extends StaticEntity> void spawnEntity(EntitySpawnRule rule, World world, Tile tile) {
+    public static void spawnEntity(EntitySpawnRule rule, World world, Tile tile) {
         if (tile == null) {
             return;
         }
@@ -129,21 +183,5 @@ public class EntitySpawnTable {
         } else {
             placeUniform(rule.getNewInstance(), rule, tile, world);
         }
-    }
-
-    // TODO:Ontonator Consider changing the signiature of this method and/or deprecating it.
-
-    /**
-     * Does entity placing with a simple probability, with no need for a EntitySpawnRule
-     *
-     * @param newInstance a function which creates a new instance to place
-     * @param chance      probability that the entity will be in a given tile
-     * @param <T>         T must extend StaticEntity and have .newInstance inherited
-     * @param world  specified biome to spawn in, null for no specification
-     */
-    public static <T extends StaticEntity, B extends AbstractBiome> void spawnEntity(
-            Function<Tile, StaticEntity> newInstance, double chance, World world, Tile tile) {
-        EntitySpawnRule spawnRule = new EntitySpawnRule(newInstance, chance);
-        EntitySpawnTable.spawnEntity(spawnRule, world, tile);
     }
 }

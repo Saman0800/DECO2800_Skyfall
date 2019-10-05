@@ -3,25 +3,25 @@ package deco2800.skyfall.resources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 
-
-
-
-public abstract class HealthResources implements deco2800.skyfall.resources.Item {
+public abstract class HealthResources implements Item {
 
     // can the item be stored in the inventory
-    private Boolean carryable;
+    private boolean carryable;
     // the name of the item e.g. food, poison
     private String name;
-    //impact the player's health or not
-    private Boolean hasHealingPower;
+    // impact the player's health or not
+    private boolean hasHealingPower;
 
     // the name of the subtype the item belongs to
     public String subtype;
     // the co-ordinates of the tile the item has been placed on
     private HexVector position;
 
-    //Items could change or not e.g. coins, items
-    private Boolean exchangeable;
+    // Items could change or not e.g. coins, items
+    private boolean exchangeable;
+
+    // Can be item be equipped
+    public boolean equippable;
 
     // the value of the piece of food
     public int foodValue;
@@ -39,6 +39,7 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
         this.subtype = "Health Resource";
         this.exchangeable = true;
         this.hasHealingPower = true;
+        this.equippable = false;
         //Do we need a new type like FoodResources? and hasFoodEffect may false
         // in here as medicine may not affect the food fullness
 
@@ -59,7 +60,7 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
         //Do we need a new type like FoodResources?
         // and hasFoodEffect may false in here as medicine may not affect the food fullness
         this.exchangeable = true;
-
+        this.equippable = false;
         this.position = position.getCoordinates();
     }
 
@@ -83,7 +84,7 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
      */
 
 
-    public Boolean isCarryable() {
+    public boolean isCarryable() {
         return carryable;
     }
 
@@ -103,7 +104,7 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
      * @return True if the item impacts on the player's health, false otherwise
      */
 
-    public Boolean hasHealingPower() {
+    public boolean hasHealingPower() {
         return hasHealingPower;
     }
 
@@ -123,7 +124,7 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
      * @return True if the item could be exhanged, false otherwise
      */
     @Override
-    public Boolean isExchangeable() {
+    public boolean isExchangeable() {
         return exchangeable;
     }
 
@@ -171,4 +172,11 @@ public abstract class HealthResources implements deco2800.skyfall.resources.Item
         return "This item increases or decreases a player's health.";
     }
 
+    /**
+     * Returns whether or not the item can be equipped from the inventory
+     * @return True if the item can be equipped, false otherwise
+     */
+    public boolean isEquippable() {
+        return this.equippable;
+    }
 }

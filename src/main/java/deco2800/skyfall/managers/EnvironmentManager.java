@@ -1,7 +1,5 @@
 package deco2800.skyfall.managers;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.observers.DayNightObserver;
@@ -451,11 +449,13 @@ public class EnvironmentManager extends TickableManager {
 
         // Check if there is a file
         if (!(file.contains(currentFile))) {
+            BGMManager bgmManager = GameManager.getManagerFromInstance(BGMManager.class);
+
             setFilename();
 
             // Stop current music
             try {
-                BGMManager.stop();
+                bgmManager.stop();
             } catch (Exception e) {
                 /* Exception caught, if any */
             }
@@ -464,8 +464,8 @@ public class EnvironmentManager extends TickableManager {
 
             // Play BGM
             try {
-                BGMManager.initClip(currentFile);
-                BGMManager.play();
+                bgmManager.initClip(currentFile);
+                bgmManager.play();
             } catch (Exception e) {
                 /* Exception caught, if any */
             }
@@ -596,15 +596,6 @@ public class EnvironmentManager extends TickableManager {
         setBiome();
         setTODMusic();
         getcurrentWeather();
-
-        // Key mapping to mute volume
-        // M for mute and U to un-mute
-        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-            BGMManager.mute();
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
-            BGMManager.unmute();
-        }
 
         weatherEvent++;
 

@@ -2,7 +2,6 @@ package deco2800.skyfall.entities.worlditems;
 
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.Tickable;
-import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.entities.Harvestable;
 import deco2800.skyfall.entities.AbstractEntity;
@@ -10,7 +9,6 @@ import deco2800.skyfall.entities.WoodCube;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class DesertCacti extends StaticEntity implements Tickable, Harvestable {
@@ -18,29 +16,28 @@ public class DesertCacti extends StaticEntity implements Tickable, Harvestable {
 
     private static Random randomGen = new Random();
     private static int nextImage = 1;
+    protected static final String ENTITY_ID_STRING = "desert_cacti";
 
-    public DesertCacti(float col, float row, int renderOrder, Map<HexVector, String> texture) {
-        super(col, row, renderOrder, texture);
-        this.setTexture("");
-        this.woodAmount = 3;
-        this.entityType = "DesertCacti";
-    }
-
-    public DesertCacti(StaticEntityMemento memento){
+    public DesertCacti(SaveableEntityMemento memento) {
         super(memento);
-        this.woodAmount = 3;
+        setCactiParams();
     }
-
 
     public DesertCacti(Tile tile, boolean obstructed) {
         super(tile, 5, "DCactus" + nextImage, obstructed);
+        setCactiParams();
         nextImage = randomGen.nextInt(4) + 1;
+    }
+
+    private void setCactiParams() {
+        this.setObjectName(ENTITY_ID_STRING);
+        this.entityType = "DesertCacti";
         this.woodAmount = 3;
     }
 
     /**
-     * The newInstance method implemented for the DesertCacti class to allow for item
-     * dispersal on game start up. This function is implemented with the
+     * The newInstance method implemented for the DesertCacti class to allow for
+     * item dispersal on game start up. This function is implemented with the
      * 
      * 
      * @return Duplicate rock tile with modified position.
@@ -94,7 +91,7 @@ public class DesertCacti extends StaticEntity implements Tickable, Harvestable {
     public List<AbstractEntity> harvest(Tile tile) {
         Random random = new Random();
 
-        int dropCount = random.nextInt(15);
+        int dropCount = random.nextInt(this.woodAmount) + 2;
         List<AbstractEntity> drops = new ArrayList<>();
         for (int i = 0; i < dropCount; i++) {
             drops.add(new WoodCube(getCol(), getRow()));

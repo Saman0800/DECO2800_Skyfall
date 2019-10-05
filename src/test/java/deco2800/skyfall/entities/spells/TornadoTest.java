@@ -1,16 +1,14 @@
 package deco2800.skyfall.entities.spells;
 
 import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.world.World;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -67,7 +65,7 @@ public class TornadoTest {
 
         GameManager gm = GameManager.get();
         World world = mock(World.class);
-        AbstractEnemy enemy = mock(Treeman.class);
+        Enemy enemy = mock(Enemy.class);
         gm.setWorld(world);
 
         //Add a new list with mock enemy.

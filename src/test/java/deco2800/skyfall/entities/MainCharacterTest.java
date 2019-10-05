@@ -1,7 +1,7 @@
 package deco2800.skyfall.entities;
 
-import deco2800.skyfall.entities.spells.Spell;
-import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.entities.enemies.Treeman;
+import deco2800.skyfall.entities.weapons.EmptyItem;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
@@ -22,10 +22,7 @@ import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
 
-import java.util.concurrent.CopyOnWriteArrayList;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-
 
 import org.junit.After;
 import org.junit.Assert;
@@ -36,11 +33,9 @@ import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Random;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mock;
@@ -49,14 +44,14 @@ import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(
-        { WorldBuilder.class, WorldDirector.class, DatabaseManager.class, DataBaseConnector.class, GameManager.class })
+@PrepareForTest({ WorldBuilder.class, WorldDirector.class, DatabaseManager.class, DataBaseConnector.class,
+        GameManager.class })
 public class MainCharacterTest {
 
     private GoldPiece goldpiece;
     private MainCharacter testCharacter;
-    private Tree testTree;
-    private Rock testRock;
+    private ForestTree testTree;
+    private ForestRock testRock;
     private Tile testTile;
     private GoldPiece testGoldPiece;
     private InventoryManager inventoryManager;
@@ -81,14 +76,12 @@ public class MainCharacterTest {
         whenNew(Random.class).withAnyArguments().thenReturn(random);
 
         DataBaseConnector connector = mock(DataBaseConnector.class);
-        when(connector.loadChunk(any(World.class), anyInt(), anyInt())).then(
-                (Answer<Chunk>) invocation -> {
-                    Chunk chunk = new Chunk(invocation.getArgumentAt(0, World.class),
-                            invocation.getArgumentAt(1, Integer.class),
-                            invocation.getArgumentAt(2, Integer.class));
-                    chunk.generateEntities();
-                    return chunk;
-                });
+        when(connector.loadChunk(any(World.class), anyInt(), anyInt())).then((Answer<Chunk>) invocation -> {
+            Chunk chunk = new Chunk(invocation.getArgumentAt(0, World.class),
+                    invocation.getArgumentAt(1, Integer.class), invocation.getArgumentAt(2, Integer.class));
+            chunk.generateEntities();
+            return chunk;
+        });
 
         DatabaseManager manager = mock(DatabaseManager.class);
         when(manager.getDataBaseConnector()).thenReturn(connector);
@@ -96,24 +89,15 @@ public class MainCharacterTest {
         mockStatic(DatabaseManager.class);
         when(DatabaseManager.get()).thenReturn(manager);
 
+        MainCharacter.resetInstance();
         testCharacter = MainCharacter.getInstance();
-        while (!testCharacter.getGoldPouch().isEmpty()) {
-            testCharacter.removeGold(testCharacter.getGoldPouch().keySet().iterator().next());
-        }
-        testCharacter.addGold(new GoldPiece(100), 1);
-        testCharacter.setMana(100);
-        Field deathsField = Peon.class.getDeclaredField("deaths");
-        deathsField.setAccessible(true);
-        deathsField.setInt(testCharacter, 0);
-        testCharacter.switchItem(8);
-        testCharacter.setHurt(false);
 
         testHatchet = new Hatchet();
         testHatchet2 = new Hatchet();
 
         testTile = new Tile(null, 0f, 0f);
-        testTree = new Tree(testTile,true);
-        testRock = new Rock(testTile,true);
+        testTree = new ForestTree(testTile, true);
+        testRock = new ForestRock(testTile, true);
 
         testGoldPiece = new GoldPiece(5);
 
@@ -138,26 +122,24 @@ public class MainCharacterTest {
      * Sets up all variables to be null after esting
      */
     public void tearDown() {
-        //testCharacter = null;
+        // testCharacter = null;
     }
 
-    /*@Test
-    /**
-     * Test getters and setters from Peon super Character class
-
-    public void setterGetterTest() {
-        Assert.assertEquals(testCharacter.getName(), "Main Piece");
-        testCharacter.setName("Side Piece");
-        Assert.assertEquals(testCharacter.getName(), "Side Piece");
-
-        Assert.assertFalse(testCharacter.isDead());
-        Assert.assertEquals(testCharacter.getHealth(), 10);
-        testCharacter.changeHealth(5);
-        // Assert.assertEquals(testCharacter.getHealth(), 15);
-        testCharacter.changeHealth(-20);
-       // Assert.assertEquals(testCharacter.getHealth(), 15);
-        Assert.assertEquals(testCharacter.getDeaths(), 1);
-    }*/
+    /*
+     * @Test /** Test getters and setters from Peon super Character class
+     *
+     * public void setterGetterTest() { Assert.assertEquals(testCharacter.getName(),
+     * "Main Piece"); testCharacter.setName("Side Piece");
+     * Assert.assertEquals(testCharacter.getName(), "Side Piece");
+     *
+     * Assert.assertFalse(testCharacter.isDead());
+     * Assert.assertEquals(testCharacter.getHealth(), 10);
+     * testCharacter.changeHealth(5); //
+     * Assert.assertEquals(testCharacter.getHealth(), 15);
+     * testCharacter.changeHealth(-20); //
+     * Assert.assertEquals(testCharacter.getHealth(), 15);
+     * Assert.assertEquals(testCharacter.getDeaths(), 1); }
+     */
 
     @Test
     /**
@@ -183,8 +165,9 @@ public class MainCharacterTest {
         }
     }
 
-    //LEAVE COMMENTED! As discussed on Gitlab ticket #197, after fixing an issue with the MainCharacter inventory this
-    //causes issues with gradle that need to be fixed.
+    // LEAVE COMMENTED! As discussed on Gitlab ticket #197, after fixing an issue
+    // with the MainCharacter inventory this
+    // causes issues with gradle that need to be fixed.
     @Test
     /**
      * Test main character is interacting correctly with basic inventory action
@@ -204,12 +187,10 @@ public class MainCharacterTest {
         pickUpInventoryMultiple(stone, 500);
         Assert.assertEquals((int) testCharacter.getInventoryManager().getAmount("Stone"),
                 inventoryManager.getAmount("Stone"));
-        /* Had to change inventory method inventoryDropMultiple
-            -   if(amount == num)
-            to:
-            -   if(amount.equals(num)
-            for this to work
-        */
+        /*
+         * Had to change inventory method inventoryDropMultiple - if(amount == num) to:
+         * - if(amount.equals(num) for this to work
+         */
         testCharacter.getInventoryManager().dropMultiple("Stone", inventoryManager.getAmount("Stone"));
         Assert.assertEquals((int) testCharacter.getInventoryManager().getAmount("Stone"),
                 inventoryManager.getAmount("Stone"));
@@ -279,7 +260,7 @@ public class MainCharacterTest {
     @Test
     public void setAndGetAnimationTest() {
         // testCharacter.addAnimations(AnimationRole.MOVE_EAST, "right");
-        //testCharacter.getAnimationName(AnimationRole.MOVE_EAST);
+        // testCharacter.getAnimationName(AnimationRole.MOVE_EAST);
     }
 
     /**
@@ -311,7 +292,7 @@ public class MainCharacterTest {
         // so that the effect (e.g. sprite flashing in red) will disappear
         // after recovering.
 
-        Assert.assertFalse(testCharacter.IsHurt());
+        Assert.assertFalse(testCharacter.isHurt());
     }
 
     /**
@@ -408,7 +389,7 @@ public class MainCharacterTest {
         Assert.assertTrue(testCharacter.getGoldPouch().get(10).equals(1));
         Assert.assertTrue(testCharacter.getGoldPouch().get(50).equals(3));
 
-        //remove a piece of gold from the pouch
+        // remove a piece of gold from the pouch
         testCharacter.removeGold(5);
 
         // ensure that the necessary adjustments have been made
@@ -417,7 +398,7 @@ public class MainCharacterTest {
         Assert.assertTrue(testCharacter.getGoldPouch().get(10).equals(1));
         Assert.assertTrue(testCharacter.getGoldPouch().get(50).equals(3));
 
-        //remove a piece of gold from the pouch which is the last piece
+        // remove a piece of gold from the pouch which is the last piece
         testCharacter.removeGold(10);
 
         // ensure that the necessary adjustments have been made
@@ -465,51 +446,54 @@ public class MainCharacterTest {
     }
 
     @Test
-    public void equippedItemTest(){
+    public void equippedItemTest() {
         Item toEquip = testCharacter.getInventoryManager().drop("Wood");
         testCharacter.setEquippedItem(toEquip);
 
-        Assert.assertEquals(testCharacter.getEquippedItem(), toEquip);;
-        Assert.assertEquals(testCharacter.displayEquippedItem(), "Natural Resource:Wood");
+        Assert.assertEquals(testCharacter.getEquippedItem().toString(),
+                new EmptyItem().toString());
+        Assert.assertEquals(testCharacter.displayEquippedItem(), "No item equipped.");
     }
 
-    //These methods no longer exist so tests are commented out
-//    @Test
-//    public void useHatchetTest() {
-//
-//        mockGM.setWorld(w);
-//        w.addEntity(testCharacter);
-//        w.addEntity(testTree);
-//        testCharacter.setCol(1f);
-//        testCharacter.setRow(1f);
-//        testTree.setCol(1f);
-//        testTree.setRow(1f);
-//        int currentWood = testCharacter.getInventoryManager().getAmount("Wood");
-//        testCharacter.useHatchet();
-//        Assert.assertEquals(currentWood + 1, testCharacter.getInventoryManager().getAmount("Wood"));
-//    }
-//
-//    @Test
-//    public void usePickAxeTest() {
-//
-//        mockGM.setWorld(w);
-//        w.addEntity(testCharacter);
-//        w.addEntity(testRock);
-//        testCharacter.setCol(1f);
-//        testCharacter.setRow(1f);
-//        testRock.setCol(1f);
-//        testRock.setRow(1f);
-//        int currentStone = testCharacter.getInventoryManager().getAmount("Stone");
-//        testCharacter.usePickAxe();
-//        Assert.assertEquals(currentStone + 1, testCharacter.getInventoryManager().getAmount("Stone"));
-//
-//    }
+    // These methods no longer exist so tests are commented out
+    // @Test
+    // public void useHatchetTest() {
+    //
+    // mockGM.setWorld(w);
+    // w.addEntity(testCharacter);
+    // w.addEntity(testTree);
+    // testCharacter.setCol(1f);
+    // testCharacter.setRow(1f);
+    // testTree.setCol(1f);
+    // testTree.setRow(1f);
+    // int currentWood = testCharacter.getInventoryManager().getAmount("Wood");
+    // testCharacter.useHatchet();
+    // Assert.assertEquals(currentWood + 1,
+    // testCharacter.getInventoryManager().getAmount("Wood"));
+    // }
+    //
+    // @Test
+    // public void usePickAxeTest() {
+    //
+    // mockGM.setWorld(w);
+    // w.addEntity(testCharacter);
+    // w.addEntity(testRock);
+    // testCharacter.setCol(1f);
+    // testCharacter.setRow(1f);
+    // testRock.setCol(1f);
+    // testRock.setRow(1f);
+    // int currentStone = testCharacter.getInventoryManager().getAmount("Stone");
+    // testCharacter.usePickAxe();
+    // Assert.assertEquals(currentStone + 1,
+    // testCharacter.getInventoryManager().getAmount("Stone"));
+    //
+    // }
 
     /**
      * Tests to ensure that the closest gold piece is added to the gold pouch
      */
     @Test
-    public void addClosestGoldPieceTest(){
+    public void addClosestGoldPieceTest() {
         mockGM.setWorld(w);
         w.addEntity(testCharacter);
         w.addEntity(testGoldPiece);
@@ -525,68 +509,43 @@ public class MainCharacterTest {
 
     @Test
     public void createItemTest() {
-//        int i;
-//        testCharacter.getBlueprintsLearned().add("Hatchet");
-//
-//        for (i = 0; i < 25; i++) {
-//            testCharacter.getInventoryManager().inventoryAdd(new Wood());
-//            testCharacter.getInventoryManager().inventoryAdd(new Stone());
-//            testCharacter.getInventoryManager().inventoryAdd(new Metal());
-//        }
-//
-//        int currentHatchetAmount = testCharacter.getInventoryManager().getAmount("Hatchet");
-//        testCharacter.createItem(new Hatchet());
-//        Assert.assertEquals(currentHatchetAmount+1, testCharacter.getInventoryManager().getAmount("Hatchet"));
+        // int i;
+        // testCharacter.getBlueprintsLearned().add("Hatchet");
+        //
+        // for (i = 0; i < 25; i++) {
+        // testCharacter.getInventoryManager().inventoryAdd(new Wood());
+        // testCharacter.getInventoryManager().inventoryAdd(new Stone());
+        // testCharacter.getInventoryManager().inventoryAdd(new Metal());
+        // }
+        //
+        // int currentHatchetAmount =
+        // testCharacter.getInventoryManager().getAmount("Hatchet");
+        // testCharacter.createItem(new Hatchet());
+        // Assert.assertEquals(currentHatchetAmount+1,
+        // testCharacter.getInventoryManager().getAmount("Hatchet"));
     }
 
     @Test
     public void manaTest() {
-        Assert.assertEquals(this.testCharacter.getMana(),100);
+        Assert.assertEquals(this.testCharacter.getMana(), 100);
         this.testCharacter.setMana(50);
-        Assert.assertEquals(this.testCharacter.getMana(),50);
+        Assert.assertEquals(this.testCharacter.getMana(), 50);
         this.testCharacter.setMana(-1);
-        Assert.assertEquals(this.testCharacter.getMana(),-1);
+        Assert.assertEquals(this.testCharacter.getMana(), -1);
         this.testCharacter.setMana(0);
-        Assert.assertEquals(this.testCharacter.getMana(),0);
+        Assert.assertEquals(this.testCharacter.getMana(), 0);
 
-    }
-
-    @Test
-    public void testAttack() {
-
-       HexVector pos = new HexVector();
-
-       // Save the players position before attacking
-       HexVector player_pos = new HexVector(testCharacter.getPosition().getRow(), testCharacter.getPosition().getCol());
-
-        GameManager gm = GameManager.get();
-        World world = mock(World.class);
-        gm.setWorld(world);
-        testCharacter.attack(pos);
-        //Assert that projectile was added to game world.
-        assertTrue(gm.getWorld().getEntities().stream().anyMatch(e -> e instanceof Projectile));
-
-        //Assert that a spell was cast and is in the world.
-        testCharacter.spellSelected = SpellType.FLAME_WALL;
-        testCharacter.attack(pos);
-        assertTrue(gm.getWorld().getEntities().stream().anyMatch(e -> e instanceof Spell));
-        Assert.assertEquals(this.testCharacter.spellSelected,SpellType.NONE);
-
-        w.onTick(100);
-
-        // Check if the player's position has remained the same and thus they aren't colliding
-        //Assert.assertTrue(player_pos.equals(testCharacter.getPosition()));
     }
 
     @Test
     public void testGetItemSlot() {
-        Assert.assertEquals(this.testCharacter.getItemSlotSelected(),1);
+        Assert.assertEquals(this.testCharacter.getItemSlotSelected(), 1);
         this.testCharacter.switchItem(9);
-        Assert.assertEquals(this.testCharacter.getItemSlotSelected(),2);
+        Assert.assertEquals(this.testCharacter.getItemSlotSelected(), 2);
         this.testCharacter.switchItem(1);
-        Assert.assertEquals(this.testCharacter.getItemSlotSelected(),2);
+        Assert.assertEquals(this.testCharacter.getItemSlotSelected(), 2);
         this.testCharacter.switchItem(10);
-        Assert.assertEquals(this.testCharacter.getItemSlotSelected(),3);
+        Assert.assertEquals(this.testCharacter.getItemSlotSelected(), 3);
 
     }
 
@@ -611,7 +570,30 @@ public class MainCharacterTest {
             world.onTick(100);
         }
 
-        assertFalse(testCharacter.getPosition().getRow() == old_pos.getRow() && testCharacter.getPosition().getCol() == old_pos.getCol());
+        assertFalse(testCharacter.getPosition().getRow() == old_pos.getRow()
+                && testCharacter.getPosition().getCol() == old_pos.getCol());
+    }
+
+
+    /**
+     * Test the mana restoration system works.
+     */
+    @Test
+    public void testRestoreMana() {
+
+        Assert.assertEquals(this.testCharacter.mana, 100);
+        Assert.assertEquals(this.testCharacter.manaCD, 0);
+
+        testCharacter.mana = 0;
+        testCharacter.manaCD = testCharacter.totalManaCooldown;
+
+        Assert.assertEquals(this.testCharacter.mana, 0);
+        Assert.assertEquals(this.testCharacter.manaCD, testCharacter.totalManaCooldown);
+
+        //Ensure 1 mana was added and manaCD was reset.
+        testCharacter.restoreMana();
+        Assert.assertEquals(this.testCharacter.mana, 1);
+        Assert.assertEquals(this.testCharacter.manaCD, 0);
     }
 
     @After

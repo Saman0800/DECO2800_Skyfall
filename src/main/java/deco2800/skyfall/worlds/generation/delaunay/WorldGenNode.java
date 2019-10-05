@@ -9,6 +9,7 @@ import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import deco2800.skyfall.worlds.world.World;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -17,7 +18,7 @@ import java.util.*;
  * <a href="http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/?fbclid=IwAR30I7ILTznH6YzYYqZfjIE3vcqPsed85ta9bohPZWi74SfWMwWpD8AVddQ#source">
  * This</a>
  */
-public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGenNode.WorldGenNodeMemento> {
+public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGenNode.WorldGenNodeMemento>, Serializable{
     private long id;
 
     // position
@@ -775,7 +776,7 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
         this.y = memento.y;
     }
 
-    public class WorldGenNodeMemento extends AbstractMemento {
+    public static class WorldGenNodeMemento extends AbstractMemento implements Serializable {
 
         // The ID of this node
         private long nodeID;

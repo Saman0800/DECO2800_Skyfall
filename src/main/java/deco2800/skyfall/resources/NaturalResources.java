@@ -1,19 +1,18 @@
 package deco2800.skyfall.resources;
 
-import deco2800.skyfall.resources.items.Wood;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 
 /**
  * An abstract class representing a Natural Resource item
  */
-public abstract class NaturalResources implements deco2800.skyfall.resources.Item {
+public abstract class NaturalResources implements Item {
 
     // the name of the item e.g. wood, stone
     public String name;
 
     // can the item be carried in the inventory or not
-    private Boolean carryable;
+    private boolean carryable;
 
     // the name of the subtype the item belongs to
     public String subtype;
@@ -22,7 +21,10 @@ public abstract class NaturalResources implements deco2800.skyfall.resources.Ite
     private HexVector position;
 
     // determines whether or not the resource can be traded
-    private Boolean exchangeable;
+    private boolean exchangeable;
+
+    // Can be item be equipped
+    public boolean equippable;
 
     /***
      * Creates a default natural resource where the position is unknown
@@ -32,6 +34,7 @@ public abstract class NaturalResources implements deco2800.skyfall.resources.Ite
         this.carryable = true;
         this.subtype = "Natural Resource";
         this.exchangeable = true;
+        this.equippable = false;
     }
 
 
@@ -45,7 +48,7 @@ public abstract class NaturalResources implements deco2800.skyfall.resources.Ite
         this.subtype = "Natural Resource";
         this.position = position.getCoordinates();
         this.exchangeable = true;
-
+        this.equippable = false;
     }
 
     /**
@@ -64,7 +67,7 @@ public abstract class NaturalResources implements deco2800.skyfall.resources.Ite
      * if it is consumed immediately
      */
     @Override
-    public Boolean isCarryable() {
+    public boolean isCarryable() {
         return carryable;
     }
 
@@ -88,7 +91,7 @@ public abstract class NaturalResources implements deco2800.skyfall.resources.Ite
     }
 
     @Override
-    public Boolean isExchangeable() {
+    public boolean isExchangeable() {
         return exchangeable;
     }
 
@@ -117,6 +120,14 @@ public abstract class NaturalResources implements deco2800.skyfall.resources.Ite
     @Override
     public String getDescription() {
         return "These items exist naturally in the world.";
+    }
+
+    /**
+     * Returns whether or not the item can be equipped from the inventory
+     * @return True if the item can be equipped, false otherwise
+     */
+    public boolean isEquippable() {
+        return this.equippable;
     }
 
 }

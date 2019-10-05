@@ -4,10 +4,9 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InventoryManager;
-import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.managers.TextureManager;
 import org.junit.After;
 import org.junit.Before;
@@ -32,7 +31,8 @@ public class AbstractPopUpElementTest {
         stage = mock(Stage.class);
         exitButton = mock(ImageButton.class);
         gmm = mock(GameMenuManager.class);
-
+        MainCharacter mc = mock(MainCharacter.class);
+        when(gmm.getMainCharacter()).thenReturn(mc);
         element = new AbstractPopUpElement(stage, exitButton, null, tm,  gmm);
     }
 

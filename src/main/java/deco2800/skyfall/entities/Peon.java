@@ -3,12 +3,14 @@ package deco2800.skyfall.entities;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.tasks.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Base class of character in game where main characters and enemies will
  * inherit from
  */
-public class Peon extends AgentEntity implements Tickable {
+public abstract class Peon extends AgentEntity implements Tickable {
 	// Task being completed by character
 	protected transient AbstractTask task;
 
@@ -20,15 +22,21 @@ public class Peon extends AgentEntity implements Tickable {
 	// Max Health of the character
 	private int maxHealth;
 
-	// Boolean of whether character is dead
+	// boolean of whether character is dead
 	private int deaths;
+
+	private static final String CHARACTER = "spacman_ded";
+
+	private final Logger logger =
+			LoggerFactory.getLogger(Peon.class);
 
 	/**
 	 * Constructor with no parameters
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public Peon() {
 		super();
-		this.setTexture("spacman_ded");
+		this.setTexture(CHARACTER);
 		this.setObjectName("Peon");
 		this.setHeight(1);
 		this.speed = 0.05f;
@@ -39,7 +47,7 @@ public class Peon extends AgentEntity implements Tickable {
      */
 	public Peon(float row, float col, float speed, String name, int health) {
 		super(row, col, 3, speed);
-		this.setTexture("spacman_ded");
+		this.setTexture(CHARACTER);
 
 		if (name == null || name.equals("")) {
 			setName("DEFAULT");
@@ -54,14 +62,15 @@ public class Peon extends AgentEntity implements Tickable {
 			this.health = health;
 			this.maxHealth = health;
 		}
-
+		logger.info(name + " has " + maxHealth);
 		this.deaths = 0;
 	}
 
+	@SuppressWarnings("WeakerAccess")
 	public Peon(float row, float col, float speed, String name, int health,
 				String fixtureDef) {
 		super(row, col, 3, speed, fixtureDef);
-		this.setTexture("spacman_ded");
+		this.setTexture(CHARACTER);
 
 		if (name == null || name.equals("")) {
 			setName("DEFAULT");
@@ -101,16 +110,16 @@ public class Peon extends AgentEntity implements Tickable {
 	public void changeHealth(int amount) {
 		int currentHealth = this.getHealth();
 
-		if(this.health + amount > maxHealth) {
+		if(currentHealth + amount > maxHealth) {
 			this.health = maxHealth;
 		} else {
 			this.health += amount;
 		}
-
-		if (this.isDead()) {
-			 this.health = currentHealth;
-			// gameOverTable.show();
-
+		if (this instanceof MainCharacter && this.isDead()) {
+			this.health = currentHealth;
+			this.deaths += 1;
+		} else if (this.isDead()){
+			this.health = 0;
 			this.deaths += 1;
 		}
 	}
@@ -135,7 +144,7 @@ public class Peon extends AgentEntity implements Tickable {
 	 *
 	 * @param newMaxHealth - New max health for the player.
 	 */
-	public void setMaxHealth(int newMaxHealth) { this.maxHealth = newMaxHealth; }
+	protected void setMaxHealth(int newMaxHealth) { this.maxHealth = newMaxHealth; }
 
 	/**
 	 * Checks if character is dead
@@ -148,11 +157,11 @@ public class Peon extends AgentEntity implements Tickable {
 	/**
 	 * Sets character to be dead
 	 */
-	public boolean setDead(boolean is_dead) {
-		if (is_dead) {
+	public boolean setDead(boolean isDead) {
+		if (isDead) {
 			health = 0;
 		}
-		return is_dead;
+		return isDead;
 	}
 
 	/**
@@ -171,10 +180,10 @@ public class Peon extends AgentEntity implements Tickable {
 		return task;
 	}
 
-    @Override
     /**
      * Handles tick based stuff, e.g. movement
      */
+    @Override
     public void onTick(long i) {
         if(task != null && task.isAlive()) {
             if(task.isComplete()) {

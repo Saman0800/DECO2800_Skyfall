@@ -1,11 +1,9 @@
 package deco2800.skyfall.entities;
 
-import deco2800.skyfall.managers.ChestManager;
-import deco2800.skyfall.resources.Item;
+
 import deco2800.skyfall.worlds.Tile;
 
-import java.util.List;
-import java.util.Map;
+
 
 /**
  * An blueprint shop entity that spawns in the game.
@@ -14,8 +12,7 @@ public class BlueprintShop extends StaticEntity implements HasHealth {
     private int health = 100;
     private static final String ENTITY_ID_STRING = "blueprintShop";
 
-    // TODO Remove this and replace the Random instance with the seeded Random as a
-    // parameter.
+
 
     /**
      * constructs a blueprint shop to be put into the game

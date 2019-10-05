@@ -84,9 +84,9 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             throw new IllegalArgumentException("All biomes must require at least one node");
         }
 
-        if (worldParameters.getBiomeSizesArray().length != worldParameters.getBiomes().size()) {
-            throw new IllegalArgumentException("The number of biomes must be equal to the number of biome sizes");
-        }
+        //if (worldParameters.getBiomeSizesArray().length != worldParameters.getBiomes().size()) {
+        //    throw new IllegalArgumentException("The number of biomes must be equal to the number of biome sizes");
+        //}
 
         if (nodes.stream().filter(node -> !node.isBorderNode()).count() < Arrays.stream(worldParameters.getBiomeSizesArray()).sum()) {
             throw new NotEnoughPointsException("Not enough nodes to build biomes");

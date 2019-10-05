@@ -9,6 +9,8 @@ import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.resources.Item;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,10 +22,13 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
     private boolean blueprintLearned = false;
 
+    // Logger to show messages
+    private final Logger logger = LoggerFactory.getLogger(PickAxe.class);
+
     /***
      * Create a Pick Axe with the name Pick Axe.
      *
-     * @param owner the owner of the inventory.
+     * @param owner    the owner of the inventory.
      * @param position the position of the Pick Axe.
      */
     public PickAxe(MainCharacter owner, HexVector position) {
@@ -50,6 +55,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
     /**
      * A getter method for the name of the item
+     * 
      * @return The name of the item
      */
     @Override
@@ -60,6 +66,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
     /**
      * A getter method for the subtype of the item.
+     * 
      * @return The name of the subtype.
      */
     @Override
@@ -70,6 +77,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
     /**
      * A getter method to the position of the item.
+     * 
      * @return the position of the hatchet.
      */
     @Override
@@ -79,6 +87,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
     /**
      * Creates a string representation Pick Axe.
+     * 
      * @return hatchet name and it's subtype.
      */
     @Override
@@ -89,19 +98,21 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
     /**
      * Checks if an item is exchangeable.
+     * 
      * @return true or false.
      */
     @Override
-    public Boolean isExchangeable() {
+    public boolean isExchangeable() {
         return true;
     }
 
     /**
-     * Harvests a rock. Currently making an inventory and adding the collected
-     * rock and metal to that inventory. Decreases the rock health.
+     * Harvests a rock. Currently making an inventory and adding the collected rock
+     * and metal to that inventory. Decreases the rock health.
+     * 
      * @param rockToFarm the rock to be farmed
      */
-    public void farmRock(Rock rockToFarm) {
+    public void farmRock(ForestRock rockToFarm) {
 
         if (rockToFarm.getHealth() == 0) {
             System.out.println("This rock has nothing left to offer");
@@ -112,7 +123,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
         else {
             GameManager.getManagerFromInstance(InventoryManager.class).add(new Stone());
 
-            //lowering the possibility of gaining metal
+            // lowering the possibility of gaining metal
             double x = (int) (Math.random() * ((1 - 0) + 1));
 
             if (x == 1) {
@@ -126,6 +137,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
     /**
      * Returns the item description
+     * 
      * @return the item description
      */
     @Override
@@ -164,8 +176,8 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
     }
 
     /**
-     * Returns a map of the name of the required resource and
-     * the required number of each resource to create the item.
+     * Returns a map of the name of the required resource and the required number of
+     * each resource to create the item.
      *
      * @return a hashamp of the required resources and their number.
      */
@@ -197,13 +209,15 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
     }
 
     @Override
-    public void use(HexVector position){
+    public void use(HexVector position) {
         for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
-            if (entity instanceof StaticRock) {
+            if (entity instanceof AbstractRock) {
                 if (position.distance(entity.getPosition()) <= 1.5) {
-                    this.farmRock((Rock) entity);
+                    this.farmRock((ForestRock) entity);
                 }
             }
         }
+        this.decreaseDurability();
+        logger.warn("Durability: " + this.getDurability());
     }
 }
