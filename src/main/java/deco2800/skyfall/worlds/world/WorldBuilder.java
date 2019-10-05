@@ -227,7 +227,11 @@ public class WorldBuilder implements WorldBuilderInterface {
                 generateSwampEntities(biomeSpawnRules, random, world);
 
                 break;
+                case "ocean":
 
+                    generateOceanEntities(biomeSpawnRules, random, world);
+
+                    break;
             default:
                 break;
             }
@@ -238,6 +242,10 @@ public class WorldBuilder implements WorldBuilderInterface {
         return spawnRules;
     }
 
+    private void generateOceanEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
+        EntitySpawnRule shipwrecks = new EntitySpawnRule(tile -> new Shipwrecks(tile, true), random.nextInt(), 0.012);
+        biomeSpawnRules.add(shipwrecks);
+    }
     private void generateForestEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
 
         long worldSeed = world.getSeed();
