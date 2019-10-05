@@ -2,20 +2,13 @@ package deco2800.skyfall.gamemenu.popupmenu;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import deco2800.skyfall.GameScreen;
-import deco2800.skyfall.SkyfallGame;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
-import deco2800.skyfall.mainmenu.MainMenuScreen;
 import deco2800.skyfall.managers.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
@@ -24,15 +17,8 @@ import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDra
  */
 public class GameOverTable extends AbstractPopUpElement{
 
-    // Main menu of game
-    private MainMenuScreen menuScreen;
-
     private Table mainTable;
-    private GameMenuManager gameMenuManager;
-
-    public static boolean retry = false;
-
-    private StatisticsManager sm;
+    private GameMenuManager gmManager;
 
     /**
      * Constructs a game over table.
@@ -47,7 +33,7 @@ public class GameOverTable extends AbstractPopUpElement{
                          String[] textureNames, TextureManager tm,
                          GameMenuManager gameMenuManager) {
         super(stage, exit, textureNames,tm , gameMenuManager);
-        this.gameMenuManager = gameMenuManager;
+        this.gmManager = gameMenuManager;
         this.draw();
     }
 
@@ -90,8 +76,8 @@ public class GameOverTable extends AbstractPopUpElement{
         retry.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                hide();
                 retryQuest();
+                hide();
             }
         });
 
@@ -101,8 +87,8 @@ public class GameOverTable extends AbstractPopUpElement{
         toHome.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                hide();
                 returnHome();
+                hide();
             }
         });
 
@@ -114,15 +100,15 @@ public class GameOverTable extends AbstractPopUpElement{
      * Resets the quest once play dies and chooses retry.
      */
     private void retryQuest() {
-        GameManager.getManagerFromInstance(QuestManager.class).resetQuest();
         MainCharacter.getInstance().changeHealth(50);
+        GameManager.getManagerFromInstance(QuestManager.class).resetQuest();
     }
 
     /**
      * Allows player to return home and start new game.
      */
     private void returnHome() {
-        gameMenuManager.getGame().create();
-        ((Game)Gdx.app.getApplicationListener()).setScreen(gameMenuManager.getGame().mainMenuScreen);
+        gmManager.getGame().create();
+        ((Game)Gdx.app.getApplicationListener()).setScreen(gmManager.getGame().mainMenuScreen);
     }
 }

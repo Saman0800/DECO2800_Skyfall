@@ -5,7 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
-import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
@@ -23,24 +22,23 @@ public class HealthCircle extends AbstractUIElement {
     StatisticsManager sm;
     Skin skin;
 
-    final int offsetNewGuiX = 175;
     /**
      * Updates the inner circle.
      */
     private void updateInnerCircle() {
-        float diff = currentHealth - newHealth;
-
         if (smallerCircle == null || biggerCircle == null) {
             return;
         }
 
         if (newHealth > 50) {
-            smallerCircle.setSize(100, 100);
-            smallerCircle.setPosition(positionX , positionY);
-        } else {
-            smallerCircle.setSize((float) 2 * newHealth,
-                    (float) 2 * newHealth);
+            newHealth = 50;
         }
+
+        float diff = currentHealth - newHealth;
+
+        smallerCircle.setSize((float) 2 * newHealth,
+                    (float) 2 * newHealth);
+
         offset += (diff * 2) / 2;
         smallerCircle.setPosition(positionX + offset, positionY + offset);
         currentHealth = newHealth;
@@ -48,7 +46,7 @@ public class HealthCircle extends AbstractUIElement {
         if(sm.getHealth() < 1) {
             label.setText("DEAD");
         } else {
-            label.setText("Health: " + sm.getHealth());
+            label.setText("Health: " + (int) currentHealth);
         }
     }
 

@@ -20,7 +20,6 @@ import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.gamemenu.HealthCircle;
-import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
 import deco2800.skyfall.gamemenu.ManaBar;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
@@ -34,7 +33,6 @@ import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
 
-import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +50,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     private static MainCharacter mainCharacterInstance = null;
     private boolean residualFromPopUp = false;
-    private GameOverTable gameOverTable;
 
     /**
      * Removes the stored main character instance so that the next call to any of the {@code getInstance} methods will
@@ -159,18 +156,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
 
-    /* Food is from 100 to 0 and goes down as the Player does actions such as:
-     - Walking
-     - Combat
-     - Resource Collecting
-     Once the food level reaches 0, the Player begins to starve, and starts to
-     lose health points. Still unsure if I should implement time based
-     starvation where as time goes on, the Player loses hunger.
-     */
-    private int foodLevel;
-
-    // The accumulated food tick to tick
-    private float foodAccum;
+    // Amount of time reviving to update health
+    private int revive;
 
     // Textures for all 6 directions to correspond to movement of character
 
@@ -277,9 +264,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private HealthCircle healthBar;
 
     /**
-     * The GUI health bar for the character.
+     * The GUI PopUp for the character
      */
-    // private GameOverTable gameOverTable;
+    private GameMenuManager gameMenuManager;
+
 
     private String equipped;
 
@@ -318,8 +306,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.inventories = GameManager.getManagerFromInstance(InventoryManager.class);
 
         this.level = 1;
-        this.foodLevel = 100;
-        foodAccum = 0.f;
 
         // create a new goldPouch object
         this.goldPouch = new HashMap<>();
@@ -409,10 +395,13 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Set up the game over screen.
      */
     private void setupGameOverScreen() {
-        GameManager.get().getManagerFromInstance(GameMenuManager.class).hideOpened();
-        GameManager.get().getManagerFromInstance(GameMenuManager.class).setPopUp("gameOverTable");
-        GameManager.get().getManagerFromInstance(GameMenuManager.class).getPopUp("gameOverTable");
-        logger.info("Game Over");
+        this.gameMenuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
+        if (this.gameMenuManager != null) {
+            gameMenuManager.hideOpened();
+            gameMenuManager.setPopUp("gameOverTable");
+            gameMenuManager.getPopUp("gameOverTable");
+            logger.info("Game Over");
+        }
     }
 
 
@@ -426,7 +415,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         if (keyCode >= 8 && keyCode <= 16) {
             int keyNumber = Integer.parseInt(Input.Keys.toString(keyCode));
             this.itemSlotSelected = keyNumber;
-            logger.info("Switched to item: " + keyNumber);
+            logger.info("Switched to item: {}", keyNumber);
         }
     }
 
@@ -441,7 +430,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             this.equippedItem = item;
             return true;
         } else {
-            logger.warn("You can't equip " + item.getName() + ".");
+            logger.warn("You can't equip {}.", item.getName());
             return false;
         }
     }
@@ -516,7 +505,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Attack with the weapon the character has equip.
      */
-    public void attack(HexVector mousePosition) {
+    public void attackEntity(HexVector mousePosition) {
         //Animation control
         logger.debug("Attacking");
 
@@ -545,7 +534,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         // Make projectile move toward the angle
         // Spawn projectile in front of character
         Projectile projectile = new Projectile(mousePosition,
-                ((Weapon)equippedItem).getTexture("attack"),
+                ((Weapon)equippedItem).getTexture("attackEntity"),
                 "hitbox",
                 position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
                 position.getRow() + 0.5f + 1.5f * unitDirection.getRow(),
@@ -556,7 +545,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         // Add the projectile entity to the game world.
         GameManager.get().getWorld().addEntity(projectile);
 
-        // Play weapon attack sound
+        // Play weapon attackEntity sound
         switch(((Weapon)equippedItem).getName()) {
             case "sword":
                 SoundManager.playSound(SWORDATTACK);
@@ -590,11 +579,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         //Create the spell using the factory.
         Spell spell = SpellFactory.createSpell(spellType, mousePosition);
 
-        logger.info("Spell Case: " + spellType.toString());
+        logger.info("Spell Case: {}", spellType.toString());
 
         int manaCost = spell.getManaCost();
 
-        //Check if there is enough mana to attack.
+        //Check if there is enough mana to attackEntity.
         if (mana < manaCost) {
             return;
         }
@@ -658,7 +647,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         setHurt(true);
         changeHealth(-damage);
         updateHealth();
-        logger.info("Current Health: " + this.getHealth());
+        logger.info("Current Health: {}", this.getHealth());
 
 
         if (!isRecovering) {
@@ -788,67 +777,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Change the hunger points value for the player
-     * (+ve amount increases hunger points)
-     * (-ve amount decreases hunger points)
-     *
-     * @param amount the amount to change it by
-     */
-    public void change_food(int amount) {
-        this.foodLevel += amount;
-        if (foodLevel > 100) {
-            foodLevel = 100;
-        }
-        if (foodLevel < 0) {
-            foodLevel = 0;
-        }
-    }
-
-    /**
-     * Get how many hunger points the player has
-     *
-     * @return The number of hunger points the player has
-     */
-    public int getFoodLevel() {
-        return foodLevel;
-    }
-
-    /**
-     * Method for the MainCharacter to eat food and restore/decrease hunger
-     * level
-     *
-     * @param item the item to eat
-     */
-    public void eatFood(Item item) {
-        int amount = inventories.getAmount(item.getName());
-        if (amount > 0) {
-            if (item instanceof HealthResources) {
-                int hungerValue = ((HealthResources) item).getFoodValue();
-                change_food(hungerValue);
-                dropInventory(item.getName());
-                ((HealthResources) item).use(this.getPosition());
-            } else {
-                logger.info("Given item (" + item.getName() + ") is " + "not edible!");
-            }
-        } else {
-            logger.info("You don't have enough of the given item");
-        }
-    }
-
-    /**
-     * See if the player is starving
-     *
-     * @return true if hunger points is <= 0, else false
-     */
-    public boolean isStarving( ){
-        return foodLevel <= 0;
-    }
-
-    public void changeSwimming(boolean swimmingAbility) {
-        this.canSwim = swimmingAbility;
-    }
-
-    /**
      * Change current level of character and increases health by 10
      *
      * @param change amount being added or subtracted
@@ -856,9 +784,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void changeLevel(int change) {
         if (level + change >= 1) {
             this.level += change;
-            /* Don't think we'll need to upgrade health each level */
-//            this.setMaxHealth(getHealth() * 10);
-//            this.changeHealth(change * 10);
         }
     }
 
@@ -985,25 +910,24 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
         }
-        // Do hunger stuff here
-        if (isMoving) {
-            if (isSprinting) {
-                foodAccum += 0.1f;
-            } else {
-                foodAccum += 0.01f;
-            }
-        } else {
-            foodAccum += 0.001f;
-        }
 
-        while (foodAccum >= 1.f) {
-            change_food(-1);
-            foodAccum -= 1.f;
-        }
-
-        if (this.getHealth() < 1) {
+        // After death, check if health is restored after restart
+        if (getHealth() < 1) {
             updateHealth();
         }
+
+        // Add to revive if character is not dead
+        if (!this.isDead()) {
+            revive += 1;
+        }
+
+        // Revive health if character has revived for 100 ticks
+        if (revive == 100) {
+            changeHealth(1);
+            updateHealth();
+            revive = 0;
+        }
+
     }
 
     @Override
@@ -1015,14 +939,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         xInput = 0;
         yInput = 0;
-    }
-    /**
-     * Sets the Player's current movement speed
-     *
-     * @param cSpeed the speed for the player to currently move at
-     */
-    private void setCurrentSpeed(float cSpeed) {
-        this.currentSpeed = cSpeed;
     }
 
     boolean petout = false;
@@ -1069,7 +985,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                     float[] clickedPosition = WorldUtil.worldCoordinatesToSubColRow(mouse[0], mouse[1]);
                     HexVector mousePosition = new HexVector(clickedPosition[0], clickedPosition[1]);
 
-                    this.attack(mousePosition);
+                    this.attackEntity(mousePosition);
                 }
                 break;
             case Input.Keys.ALT_LEFT:
@@ -1100,7 +1016,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Select the spell that the character is ready to cast.
-     * When they next click attack, this spell will cast.
+     * When they next click attackEntity, this spell will cast.
      *
      * @param type The SpellType to cast.
      */
@@ -1361,13 +1277,13 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @return true if the player is travelling in the right direction
      */
     private boolean checkDirection(int mainInput, float vel) {
-        boolean direction = true;
+        boolean characterDirection = true;
 
         if (mainInput != 0 && vel / Math.abs(vel) != mainInput && vel != 0) {
-            direction = false;
+            characterDirection = false;
         }
 
-        return direction;
+        return characterDirection;
     }
 
     /**
@@ -1727,7 +1643,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     private void updateAnimation() {
         getPlayerDirectionCardinal();
-        List<Float> velocity = getVelocity();
 
         if (getToBeRun() != null) {
             if (getToBeRun().getType() == AnimationRole.DEAD) {
