@@ -14,10 +14,10 @@ import java.util.List;
 
 public class Lizard extends AbstractPet implements Animatable, Item {
     MainCharacter mc;
-    //check whether this pet is summoned
+    // check whether this pet is summoned
     private boolean isOutSide = false;
 
-    //Checking whether this pet is on the way to collect money
+    // Checking whether this pet is on the way to collect money
     private boolean isOnTheWay = false;
 
     /**
@@ -41,7 +41,6 @@ public class Lizard extends AbstractPet implements Animatable, Item {
         this.setDirectionTextures();
         this.setCurrentState(AnimationRole.NULL);
     }
-
 
     /**
      * Get situation is this pet is summoned
@@ -78,26 +77,24 @@ public class Lizard extends AbstractPet implements Animatable, Item {
      * To collect nearby gold
      */
     public void findNearbyGold() {
-        List<AbstractEntity> abstractEntityList = GameManager.get().
-                getWorld().getSortedEntities();
+        List<AbstractEntity> abstractEntityList = GameManager.get().getWorld().getSortedEntities();
         for (AbstractEntity ae : abstractEntityList) {
-            if (ae instanceof GoldPiece) {
-                if (this.getDomesticated()) {
-                    if (ae.getPosition().distance(this.getPosition()) < 3) {
-                        isOnTheWay = true;
-                        HexVector aeposition = ae.getPosition();
-                        this.moveTowards(aeposition);
-                        if (ae.getPosition().distance(this.getPosition()) < 0.1) {
-                            mc.addGold((GoldPiece) ae, ((GoldPiece) ae).getValue());
-                            GameManager.get().getWorld().removeEntity(ae);
-                            isOnTheWay = false;
-                        }
-                    }
+
+            boolean isInstanceGoldPiece = ae instanceof GoldPiece;
+            boolean inRange = ae.getPosition().distance(this.getPosition()) < 3;
+
+            if (isInstanceGoldPiece && inRange && this.getDomesticated()) {
+                isOnTheWay = true;
+                HexVector aeposition = ae.getPosition();
+                this.moveTowards(aeposition);
+                if (ae.getPosition().distance(this.getPosition()) < 0.1) {
+                    mc.addGold((GoldPiece) ae, ((GoldPiece) ae).getValue());
+                    GameManager.get().getWorld().removeEntity(ae);
+                    isOnTheWay = false;
                 }
             }
         }
     }
-
 
     /**
      * get movement direction
@@ -133,8 +130,7 @@ public class Lizard extends AbstractPet implements Animatable, Item {
     public void followingCharacter() {
         if (this.getDomesticated()) {
             if (!isOnTheWay) {
-                HexVector destination = new HexVector(mc.getCol() - 1,
-                        mc.getRow() - 1);
+                HexVector destination = new HexVector(mc.getCol() - 1, mc.getRow() - 1);
                 moveTowards(destination);
             }
         }
@@ -142,6 +138,7 @@ public class Lizard extends AbstractPet implements Animatable, Item {
 
     @Override
     public void configureAnimations() {
+        // Do nothing for now
     }
 
     /**
@@ -222,7 +219,7 @@ public class Lizard extends AbstractPet implements Animatable, Item {
 
     @Override
     public void use(HexVector position) {
-
+        // Do nothing for now.
     }
 
     public Boolean isEquippable() {

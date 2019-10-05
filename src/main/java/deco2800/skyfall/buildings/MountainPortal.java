@@ -14,11 +14,11 @@ public class MountainPortal extends AbstractPortal implements Blueprint {
     public boolean blueprintLearned = false;
     Texture texture;
 
-
     /**
      * Constructor for an building entity with normal rendering size.
-     * @param col the col position on the world
-     * @param row the row position on the world
+     * 
+     * @param col         the col position on the world
+     * @param row         the row position on the world
      * @param renderOrder the height position on the world
      */
     public MountainPortal(float col, float row, int renderOrder) {
@@ -28,17 +28,13 @@ public class MountainPortal extends AbstractPortal implements Blueprint {
     }
 
     @Override
-    public void setTexture(String texture) {
-        super.setTexture(texture);
-    }
-
-    @Override
     public void onTick(long i) {
         // do nothing so far
     }
 
     /**
      * Returns the number of wood required for the item.
+     * 
      * @return The amount of wood needed
      */
     public int getRequiredWood() {
@@ -47,6 +43,7 @@ public class MountainPortal extends AbstractPortal implements Blueprint {
 
     /**
      * Returns the number of stones required for the item.
+     * 
      * @return The amount of stone needed
      */
     public int getRequiredStone() {
@@ -55,6 +52,7 @@ public class MountainPortal extends AbstractPortal implements Blueprint {
 
     /**
      * Returns the number of metal required for the item.
+     * 
      * @return The amount of metal needed
      */
     public int getRequiredMetal() {
@@ -62,11 +60,12 @@ public class MountainPortal extends AbstractPortal implements Blueprint {
     }
 
     /**
-     * Returns a map of the name of the required resource and
-     * the required number of each resource to create the item.
+     * Returns a map of the name of the required resource and the required number of
+     * each resource to create the item.
+     * 
      * @return a hashamp of the required resources and their number.
      */
-    public Map<String,Integer> getAllRequirements() {
+    public Map<String, Integer> getAllRequirements() {
         return super.getBuildCost();
     }
 
@@ -89,15 +88,10 @@ public class MountainPortal extends AbstractPortal implements Blueprint {
     }
 
     /**
-     * changes the boolean blueprintLearned to true.
+     * Toggles the boolean blueprintLearned between a true and false state.
      */
     public void toggleBlueprintLearned() {
-        if (blueprintLearned == true) {
-            blueprintLearned = false;
-        } else {
-            blueprintLearned = true;
-        }
-
+        blueprintLearned = !blueprintLearned;
     }
 
     /**
@@ -107,13 +101,8 @@ public class MountainPortal extends AbstractPortal implements Blueprint {
         return 0;
     }
 
-
     public void unlocknext(MainCharacter character) {
         super.unlocknext(character, nextBiome);
     }
 
-
-
 }
-
-
