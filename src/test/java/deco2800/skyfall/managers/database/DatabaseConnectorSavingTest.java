@@ -172,7 +172,7 @@ public class DatabaseConnectorSavingTest {
             assertEquals(-4962768465676381896L, world.getTileOffsetNoiseGeneratorX().getSeed());
             assertEquals(4437113781045784766L, world.getTileOffsetNoiseGeneratorY().getSeed());
 
-        } catch (SQLException | IOException | LoadException e) {
+        } catch (SQLException | IOException  e) {
             fail("Failed to save world : " + e);
         }
     }
@@ -216,7 +216,7 @@ public class DatabaseConnectorSavingTest {
             assertEquals(-4962768465676381896L, world.getTileOffsetNoiseGeneratorX().getSeed());
             assertEquals(4437113781045784766L, world.getTileOffsetNoiseGeneratorY().getSeed());
 
-        } catch (SQLException | IOException | LoadException e) {
+        } catch (SQLException | IOException  e) {
             fail("Failed to update the world : " + e);
         }
     }
