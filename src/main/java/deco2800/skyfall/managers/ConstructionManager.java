@@ -1,6 +1,7 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -323,6 +324,7 @@ public class ConstructionManager extends TickableManager {
      */
     public void setNull() {
         buildingToBePlaced = null;
+        Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
     }
 
     /**
@@ -582,6 +584,8 @@ public class ConstructionManager extends TickableManager {
             }
         }
 
+        // test
+        invvalid = true;
         return invvalid;
     }
 
@@ -682,6 +686,8 @@ public class ConstructionManager extends TickableManager {
                 return buildingFactory.createWatchTower(row, col);
             case 6:
                 return buildingFactory.createCastle(row, col);
+            case 7:
+                return buildingFactory.createForestPortal(row, col);
             default:
                 return null;
         }

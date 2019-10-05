@@ -16,7 +16,10 @@ public enum BuildingType implements Blueprint {
     FENCE("Fence", 5, 1, 1, 3, "fenceN-S"),
     SAFEHOUSE("SafeHouse", 5, 5, 5, 7, "safe_house_0"),
     WATCHTOWER("WatchTower", 8, 1, 1, 8, "watchtower_0"),
-    CASTLE("Castle", 10, 1, 1, 6, "castle_0");
+    CASTLE("Castle", 10, 1, 1, 6, "castle_0"),
+    FORESTPORTAL("ForestPortal", 10, 1, 1, 6, "portal_forest"),
+    MOUNTAINPORTAL("ForestPortal", 10, 1, 1, 6, "portal_mountain"),
+    DESERTPORTAL("ForestPortal", 10, 1, 1, 6, "portal_desert");
 
     private Map<String, Integer> buildingCost;
     private String name;
@@ -60,6 +63,9 @@ public enum BuildingType implements Blueprint {
                 break;
             case "Fence":
                 initialiseFence();
+                break;
+            case "ForestPortal":
+                initialiseForestPortal();
                 break;
             default:
                 break;
@@ -182,6 +188,18 @@ public enum BuildingType implements Blueprint {
         buildingCost.put("Wood", 10);
         buildingCost.put("Stone",7);
         buildingCost.put("Metal",3);
+    }
+
+    public void initialiseForestPortal() {
+        buildingCost = new HashMap<>();
+        buildingCost.put("Wood", 0);
+        buildingCost.put("Stone", 0);
+        buildingCost.put("Metal", 0);
+
+        buildingTextures = new ArrayList<>();
+        //Need to add initialise textures back.
+
+        buildingTextures.add("portal_forest");
     }
 
     public List<String> initialiseWatchTowerTextures() {

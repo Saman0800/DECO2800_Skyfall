@@ -1,6 +1,9 @@
 package deco2800.skyfall.worlds.world;
 
 import com.badlogic.gdx.Gdx;
+import deco2800.skyfall.buildings.BuildingEntity;
+import deco2800.skyfall.buildings.BuildingType;
+import deco2800.skyfall.buildings.ForestPortal;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.worlditems.*;
@@ -690,6 +693,23 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
                 BlueprintShopTable bs = (BlueprintShopTable) menuManager.getPopUp("blueprintShopTable");
                 bs.updateBlueprintShopPanel();
                 menuManager.setPopUp("blueprintShopTable");
+            } else if (entity instanceof BuildingEntity) {
+                BuildingEntity e = (BuildingEntity) entity;
+                switch (e.getBuildingType()) {
+                    case FORESTPORTAL:
+                        ForestPortal forestPortal = new ForestPortal(0, 0, 0);
+                        GameMenuManager manager = GameManager.getManagerFromInstance(GameMenuManager.class);
+                        //forestPortal.teleport(manager.getMainCharacter(), manager.);
+                        break;
+                    case MOUNTAINPORTAL:
+
+                        break;
+                    case DESERTPORTAL:
+
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

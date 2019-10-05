@@ -85,4 +85,8 @@ public class BuildingFactory {
     public BuildingEntity createCastle(float col, float row) {
         return new BuildingEntity(col, row, 2, BuildingType.CASTLE);
     }
+
+    public BuildingEntity createForestPortal(float col, float row) {
+        return new BuildingEntity(col, row, 2, BuildingType.FORESTPORTAL);
+    }
 }
