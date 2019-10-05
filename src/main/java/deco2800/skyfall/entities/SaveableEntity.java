@@ -7,7 +7,8 @@ import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
 import java.io.Serializable;
 
-public abstract class SaveableEntity extends AbstractEntity implements Saveable<SaveableEntity.SaveableEntityMemento> , Serializable{
+public abstract class SaveableEntity extends AbstractEntity
+        implements Saveable<SaveableEntity.SaveableEntityMemento>, Serializable {
 
     // The type of entity this is (e.g. "ForestTree", "Axe" etc.)
     protected String entityType;
@@ -29,6 +30,15 @@ public abstract class SaveableEntity extends AbstractEntity implements Saveable<
     @Override
     public SaveableEntityMemento save() {
         return new SaveableEntityMemento(this);
+    }
+
+    /**
+     * A simple getter function to retrieve the obstruction value of this object
+     *
+     * @return The obstruction value.
+     */
+    public boolean isObstructed() {
+        return this.obstructed;
     }
 
     /**
@@ -55,7 +65,7 @@ public abstract class SaveableEntity extends AbstractEntity implements Saveable<
         this.setPosition(memento.col, memento.row);
     }
 
-    public static class SaveableEntityMemento extends AbstractMemento implements Serializable{
+    public static class SaveableEntityMemento extends AbstractMemento implements Serializable {
         public String entityType;
         public int height;
         public float row;
@@ -94,8 +104,7 @@ public abstract class SaveableEntity extends AbstractEntity implements Saveable<
             this.texture = entity.getTexture();
         }
 
-
-        public String getEntityType(){
+        public String getEntityType() {
             return this.entityType;
         }
     }
