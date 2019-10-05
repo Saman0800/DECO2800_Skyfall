@@ -62,18 +62,18 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         this.rowRenderLength = rowRenderLength;
     }
 
-    public void setCollidable(boolean collidable) {
+    public void setCollidable(Boolean collidable) {
         isCollidable = collidable;
     }
 
-    public boolean getCollidable() {
+    public Boolean getCollidable() {
         return isCollidable;
     }
 
     // Box2D properties
     private Body body;
     protected Fixture fixture;
-    private boolean isCollidable;
+    private Boolean isCollidable;
 
     @Expose
     private String texture = "error_box";
@@ -538,7 +538,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      *
      * @param collidable boolean value if entities can collide with this entity
      */
-    public void changeCollideability(boolean collidable) {
+    public void changeCollideability(Boolean collidable) {
         isCollidable = collidable;
         if (fixture != null) {
             fixture.setSensor(!isCollidable);

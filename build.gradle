@@ -38,6 +38,9 @@ jacoco {
 
 clean.doFirst {
 	delete "Database/"
+	delete "src/test/java/deco2800/skyfall/managers/database/TestDataBase/"
+	delete "src/test/java/deco2800/skyfall/managers/database/SavingTestDataBase/"
+	delete "src/test/java/deco2800/skyfall/managers/database/LoadingTestDatabase/"
 }
 
 test {

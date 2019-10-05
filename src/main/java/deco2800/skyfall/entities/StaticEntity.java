@@ -174,7 +174,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
 
     /**
      * A simple getter function to retrieve the textures used for this object
-     * 
+     *
      * @return The obstruction value.
      */
     public Map<HexVector, String> getTextures() {
@@ -203,7 +203,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
     /**
      * This is the default implementation of the newInstance function for the static
      * entity given a tile position.
-     * 
+     *
      * @return A clone of the instance with only the tile position having changed.
      */
     public StaticEntity newInstance(Tile tile) {
@@ -213,7 +213,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
     /**
      * This is the default implementation of the newInstance function for the static
      * entity given a row and column position.
-     * 
+     *
      * @return A clone of the instance with only the centring of the entity having
      *         changed
      */
