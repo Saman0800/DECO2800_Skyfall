@@ -25,7 +25,6 @@ public class GameMenuManager extends TickableManager {
     private static TextureManager textureManager;
     private EnvironmentManager environmentManager;
     private Stage stage;
-    private MainCharacter mainCharacter;
     private InventoryManager inventory;
     private SoundManager soundManager;
     private Skin skin;
@@ -93,7 +92,7 @@ public class GameMenuManager extends TickableManager {
         this.uiElements = uiElements;
     }
 
-    public static void updateTextureManager(TextureManager tm) {
+    private static void updateTextureManager(TextureManager tm) {
 
         textureManager = tm;
     }
@@ -129,9 +128,8 @@ public class GameMenuManager extends TickableManager {
 
         }
 
-        for (String key: uiElements.keySet()) {
-            AbstractUIElement uiElement = uiElements.get(key);
-            uiElement.update();
+        for (Map.Entry<String, AbstractUIElement> key: uiElements.entrySet()) {
+            key.getValue().update();
         }
     }
 
@@ -218,19 +216,6 @@ public class GameMenuManager extends TickableManager {
         return new TextureRegionDrawable((new TextureRegion(textureManager.getTexture(sName))));
     }
 
-    /**
-     * Set main character of the game to be {mainCharacter}.
-     *
-     * @param mainCharacter Main character of the game.
-     */
-    public void setMainCharacter(MainCharacter mainCharacter) {
-        if (stage == null) {
-            logger.info("Please set stage before adding character");
-            return;
-        }
-        this.mainCharacter = mainCharacter;
-
-    }
 
     /**
      * Getter of main character of the game.
@@ -388,8 +373,8 @@ public class GameMenuManager extends TickableManager {
 
     /**
      * Element associated with key
-     * @param key
-     * @return
+     * @param key Key of the entry
+     * @return Gets the specific UI element=
      */
     public AbstractUIElement getUIElement(String key) {
         return uiElements.get(key);
