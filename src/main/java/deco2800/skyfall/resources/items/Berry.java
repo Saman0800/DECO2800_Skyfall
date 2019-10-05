@@ -45,8 +45,6 @@ public class Berry extends HealthResources implements Item {
     }
 
 
-
-
     /**
      * Returns whether or not the item impacts the player's food fullness
      *

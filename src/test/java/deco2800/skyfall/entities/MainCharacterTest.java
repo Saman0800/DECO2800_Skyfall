@@ -58,6 +58,7 @@ public class MainCharacterTest {
     private Hatchet testHatchet2;
     private PickAxe testPickaxe;
     private World w = null;
+
     @Mock
     private GameManager mockGM;
 
@@ -146,13 +147,13 @@ public class MainCharacterTest {
      */
     public void levelTest() {
         testCharacter.changeLevel(4);
-        Assert.assertEquals(testCharacter.getLevel(), 5);
+        Assert.assertEquals(5, testCharacter.getLevel());
 
         testCharacter.changeLevel(-5);
-        Assert.assertEquals(testCharacter.getLevel(), 5);
+        Assert.assertEquals(5, testCharacter.getLevel());
 
         testCharacter.changeLevel(-4);
-        Assert.assertEquals(testCharacter.getLevel(), 1);
+        Assert.assertEquals(1, testCharacter.getLevel());
     }
 
     /**
@@ -193,35 +194,6 @@ public class MainCharacterTest {
         testCharacter.getInventoryManager().dropMultiple("Stone", inventoryManager.getAmount("Stone"));
         Assert.assertEquals((int) testCharacter.getInventoryManager().getAmount("Stone"),
                 inventoryManager.getAmount("Stone"));
-    }
-
-    @Test
-    /**
-     * Test main character is interacting correctly with basic food action
-     */
-    public void foodTest() {
-        Assert.assertEquals(100, testCharacter.getFoodLevel());
-
-        Apple apple = new Apple();
-        testCharacter.pickUpInventory(apple);
-        testCharacter.eatFood(new Apple());
-        Assert.assertEquals(100, testCharacter.getFoodLevel());
-
-        testCharacter.pickUpInventory(new PoisonousMushroom());
-        testCharacter.eatFood(new PoisonousMushroom());
-        Assert.assertEquals(80, testCharacter.getFoodLevel());
-
-        testCharacter.pickUpInventory(new PoisonousMushroom());
-        testCharacter.eatFood(new PoisonousMushroom());
-        Assert.assertEquals(60, testCharacter.getFoodLevel());
-
-        for (int i = 0; i < 10; i++) {
-            testCharacter.pickUpInventory(new PoisonousMushroom());
-            testCharacter.eatFood(new PoisonousMushroom());
-        }
-
-        Assert.assertEquals(0, testCharacter.getFoodLevel());
-        Assert.assertTrue(testCharacter.isStarving());
     }
 
     @Test
@@ -299,18 +271,16 @@ public class MainCharacterTest {
      */
     @Test
     public void killTest() {
-        // Test if playerHurt() can trigger Peon.changeHealth() when
-        // the damage taken can make player's health below 0.
-       // testCharacter.playerHurt(50);
+        testCharacter.playerHurt(50);
 
-         //Assert.assertEquals(1, testCharacter.getDeaths());
+         Assert.assertEquals(2, testCharacter.getDeaths());
 
-        // "Kill" animation test
-//        AnimationLinker animationLinker = new AnimationLinker("MainCharacter_Dead_E_Anim", AnimationRole.DEAD,
-//                Direction.DEFAULT, false, true);
-//        testMap.put(Direction.DEFAULT, animationLinker);
-//        testCharacter.addAnimations(AnimationRole.DEAD, Direction.DEFAULT, animationLinker);
-//        Assert.assertEquals(testMap, testCharacter.animations.get(AnimationRole.DEAD));
+         //"Kill" animation test
+        AnimationLinker animationLinker = new AnimationLinker("MainCharacter_Dead_E_Anim", AnimationRole.DEAD,
+                Direction.DEFAULT, false, true);
+        testMap.put(Direction.DEFAULT, animationLinker);
+        testCharacter.addAnimations(AnimationRole.DEAD, Direction.DEFAULT, animationLinker);
+        Assert.assertEquals(testMap, testCharacter.animations.get(AnimationRole.DEAD));
     }
 
     public void movementAnimationsExist() {
@@ -568,17 +538,20 @@ public class MainCharacterTest {
 
         // Check that health increases by 2
         testCharacter.pickUpInventory(alo);
-        testCharacter.eatFood(alo);
+        testCharacter.setEquippedItem(alo);
+        testCharacter.useEquipped();
         Assert.assertEquals(currentHealth + 2, testCharacter.getHealth());
 
+        // Check that health increases by 4
         testCharacter.changeHealth(-2);
-        testCharacter.pickUpInventory(apple);
-        testCharacter.eatFood(apple);
+        testCharacter.setEquippedItem(apple);
+        testCharacter.useEquipped();
         Assert.assertEquals(currentHealth + 4, testCharacter.getHealth());
 
+        // Check that health increases by 6
         testCharacter.changeHealth(-4);
-        testCharacter.pickUpInventory(berry);
-        testCharacter.eatFood(berry);
+        testCharacter.setEquippedItem(berry);
+        testCharacter.useEquipped();
         Assert.assertEquals(currentHealth + 6, testCharacter.getHealth());
     }
 
