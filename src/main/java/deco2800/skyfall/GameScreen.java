@@ -28,6 +28,8 @@ import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -120,7 +122,16 @@ public class GameScreen implements Screen,KeyDownObserver {
                 save.getWorlds().add(world);
                 save.setCurrentWorld(world);
                 world.setSave(save);
+
                 DatabaseManager.get().getDataBaseConnector().saveGame(save);
+
+                //FIXME:jeffvan12 implement better way of creating new stuff things
+//                save.setId(0);
+//                world.setId(0);
+//                DatabaseManager.get().getDataBaseConnector().saveGame(save);
+//                DatabaseManager.get().getDataBaseConnector().saveAllTables();
+
+
             }
             GameManager.get().getManager(NetworkManager.class).startHosting("host");
         }

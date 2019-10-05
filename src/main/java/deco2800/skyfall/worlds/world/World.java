@@ -780,6 +780,15 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
         return worldParameters;
     }
 
+
+    /**
+     * Sets the id of a world
+     * @param id The id that the will be set to
+     */
+    public void setId(long id){
+        this.id = id;
+    }
+
     /**
      * Sets the area loaded by the world.
      *
