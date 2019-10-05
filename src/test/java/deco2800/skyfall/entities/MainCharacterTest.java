@@ -36,7 +36,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Random;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -600,6 +600,57 @@ public class MainCharacterTest {
         testCharacter.restoreMana();
         Assert.assertEquals(this.testCharacter.mana, 1);
         Assert.assertEquals(this.testCharacter.manaCD, 0);
+    }
+
+    /**
+     * Test the getHeath() method works.
+     */
+    @Test
+    public void getHealthTest() {
+        assertEquals(10, testCharacter.getHealth());
+
+        testCharacter.changeHealth(-2);
+
+        assertEquals(8, testCharacter.getHealth());
+    }
+
+    /**
+     * Test the setDead() method works.
+     */
+    @Test
+    public void setDeadTest() {
+        testCharacter.setDead(false);
+        assertFalse(testCharacter.isDead());
+
+        testCharacter.changeHealth(-10);
+
+        assertTrue(testCharacter.isDead());
+
+        assertEquals(0, testCharacter.getHealth());
+    }
+
+    /**
+     * Test the setDead() method works.
+     */
+    @Test
+    public void getDeathsTest() {
+        testCharacter.changeHealth(-10);
+        assertTrue(testCharacter.isDead());
+
+        assertEquals(1, testCharacter.getDeaths());
+
+    }
+
+    /**
+     * Test the removeAllGold() method works.
+     */
+    @Test
+    public void removeAllGoldTest() {
+        assertEquals(100, testCharacter.getGoldPouchTotalValue());
+
+        testCharacter.removeAllGold();
+
+        assertEquals(0, testCharacter.getGoldPouchTotalValue());
     }
 
     @After

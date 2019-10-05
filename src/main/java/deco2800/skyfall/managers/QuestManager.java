@@ -319,8 +319,24 @@ public class QuestManager extends TickableManager{
      * Resets the current quest of the player
      */
     public void resetQuest() {
+        // Get and reset the current level
         int currentLevel = this.getQuestLevel();
         this.setQuestLevel(currentLevel);
-        MainCharacter.getInstance().changeHealth(50);
+
+        // Get amount of building items in inventory
+        int currentMetal = player.getInventoryManager()
+                .getAmount("Metal");
+
+        int currentWood = player.getInventoryManager()
+                .getAmount("Wood");
+
+        int currentStone = player.getInventoryManager()
+                .getAmount("Stone");
+
+        // Reset the inventory
+        getPlayer().removeAllGold();
+        getPlayer().getInventoryManager().dropMultiple("Metal", currentMetal);
+        getPlayer().getInventoryManager().dropMultiple("Stone", currentStone);
+        getPlayer().getInventoryManager().dropMultiple("Wood", currentWood);
     }
 }
