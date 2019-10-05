@@ -9,10 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import deco2800.skyfall.BaseGDXTest;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.managers.EnvironmentManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
-import javafx.scene.shape.MoveToBuilder;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,7 +26,6 @@ public class GoldStatusBarTest extends BaseGDXTest{
     private Stage stage;
     private GameMenuManager gmm;
     private GoldStatusBar gsb;
-    private EnvironmentManager em;
     private TextureManager tm;
 
     @Before
@@ -35,7 +33,6 @@ public class GoldStatusBarTest extends BaseGDXTest{
         stage = mock(Stage.class);
         skin = spy(Skin.class);
         gmm = mock(GameMenuManager.class);
-        em = mock(EnvironmentManager.class);
         tm = mock(TextureManager.class);
 
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
@@ -59,5 +56,14 @@ public class GoldStatusBarTest extends BaseGDXTest{
 
         gsb.updateLabel();
         assertEquals(" 10 G   ", gsb.getGoldLabel().getText().toString());
+    }
+
+    @After
+    public void tearDown() {
+        skin = null;
+        stage = null;
+        gmm = null;
+        gsb = null;
+        tm = null;
     }
 }
