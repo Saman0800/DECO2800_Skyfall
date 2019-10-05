@@ -57,6 +57,10 @@ public class Clock extends AbstractUIElement{
             clockLabel.setText(convTime + " : " + convDecimal);
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void draw() {
         this.clockLabel = new Label("Error", skin,  "blue-pill");
