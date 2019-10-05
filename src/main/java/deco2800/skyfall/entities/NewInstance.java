@@ -2,7 +2,7 @@ package deco2800.skyfall.entities;
 
 import deco2800.skyfall.worlds.Tile;
 
-// TODO:Ontonator Consider removing this, since it isn't needed anymore.
+
 /**
  * This interface is required to be implement if a entity is to be randomly
  * dispersed on game start up.

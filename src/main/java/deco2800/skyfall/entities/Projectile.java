@@ -1,15 +1,17 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.math.Vector2;
+import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.animation.Animatable;
-import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.managers.GameManager;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import deco2800.skyfall.entities.enemies.AbstractEnemy;
-import deco2800.skyfall.entities.enemies.Stone;
-import deco2800.skyfall.entities.enemies.Treeman;
+
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.entities.enemies.Enemy;
 
 /**
  * An entity that is shot from a weapon.
@@ -39,13 +41,12 @@ public class Projectile extends AgentEntity implements Animatable {
      */
     protected long ticksAliveFor = 0;
 
-    /**
-     *
-     */
+
     private HexVector movementPosition;
 
+
     /**
-     *
+     * The texture of the projectile.
      */
     private String textureName;
 
@@ -73,7 +74,6 @@ public class Projectile extends AgentEntity implements Animatable {
         this.movementPosition = movementPosition;
         this.range = range;
 
-        this.textureName = textureName;
 
         this.setTexture(textureName);
         this.setObjectName(objectName);
@@ -91,11 +91,11 @@ public class Projectile extends AgentEntity implements Animatable {
         //Position the projectile correctly.
         position.moveToward(movementPosition,speed);
 
-        //fixture.setFilterData()
+
 
         configureAnimations();
 
-        //TODO: rotate sprite in angle facing.
+
     }
 
     /**
@@ -112,6 +112,10 @@ public class Projectile extends AgentEntity implements Animatable {
      */
     public int getRange() {
         return this.range;
+    }
+
+    public String getTextureName() {
+        return textureName;
     }
 
     /**
@@ -144,12 +148,12 @@ public class Projectile extends AgentEntity implements Animatable {
     private boolean toBeDestroyed = false;
     @Override
     public void handleCollision(Object other) {
-        if (other instanceof AbstractEnemy) {
-            ((AbstractEnemy) other).takeDamage(this.getDamage());
-            ((AbstractEnemy) other).setHurt(true);
+        if (other instanceof Enemy) {
+            ((Enemy) other).takeDamage(this.getDamage());
+            ((Enemy) other).setHurt(true);
             toBeDestroyed = true;
-            ((AbstractEnemy) other).getBody().setLinearVelocity(
-                    (((AbstractEnemy)other).getBody().getLinearVelocity()
+            ((Enemy) other).getBody().setLinearVelocity(
+                    (((Enemy)other).getBody().getLinearVelocity()
                     .lerp(new Vector2(0.f, 0.f), 0.5f)));
         }
     }
@@ -169,10 +173,11 @@ public class Projectile extends AgentEntity implements Animatable {
 
     @Override
     public void configureAnimations() {
-
+        // Do nothing currently.
     }
 
     @Override
     public void setDirectionTextures() {
+        //Do nothing currently.
     }
 }

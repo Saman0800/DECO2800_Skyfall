@@ -297,6 +297,7 @@ public class DataBaseConnector {
     public World loadWorlds(Save save, Save.SaveMemento saveMemento) throws SQLException, LoadException {
         PreparedStatement preparedStatement = null;
         ResultSet result = null;
+
         try {
             connection.setAutoCommit(false);
             preparedStatement = connection.prepareStatement("SELECT * FROM WORLDS WHERE save_id = ?");

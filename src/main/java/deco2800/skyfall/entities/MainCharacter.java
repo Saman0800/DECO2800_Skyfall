@@ -1,5 +1,43 @@
 package deco2800.skyfall.entities;
 
+import java.util.Map;
+import java.util.List;
+
+import deco2800.skyfall.buildings.*;
+import org.slf4j.Logger;
+import java.util.HashMap;
+import java.util.ArrayList;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import org.slf4j.LoggerFactory;
+import deco2800.skyfall.Tickable;
+import deco2800.skyfall.managers.*;
+import deco2800.skyfall.GameScreen;
+import deco2800.skyfall.saving.Save;
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.gui.ManaBar;
+import com.badlogic.gdx.math.Vector2;
+import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.resources.Blueprint;
+import deco2800.skyfall.resources.GoldPiece;
+import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.animation.Animatable;
+import com.badlogic.gdx.physics.box2d.Filter;
+import deco2800.skyfall.entities.spells.Spell;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import deco2800.skyfall.gamemenu.HealthCircle;
+import deco2800.skyfall.resources.items.Hatchet;
+import deco2800.skyfall.resources.items.PickAxe;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.observers.KeyUpObserver;
+import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.animation.AnimationLinker;
+import deco2800.skyfall.observers.KeyDownObserver;
+import deco2800.skyfall.resources.HealthResources;
+import deco2800.skyfall.observers.TouchDownObserver;
+import deco2800.skyfall.entities.spells.SpellFactory;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.Gdx;
@@ -35,6 +73,8 @@ import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
 
 import java.io.Serializable;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.ForestBiome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +83,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static deco2800.skyfall.buildings.BuildingType.CABIN;
+import static deco2800.skyfall.buildings.BuildingType.CASTLE;
+import static deco2800.skyfall.buildings.BuildingType.WATCHTOWER;
+
 /**
  * Main character in the game
  */
@@ -50,6 +94,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         KeyUpObserver, TouchDownObserver, Tickable, Animatable {
 
     private static MainCharacter mainCharacterInstance = null;
+    private boolean residualFromPopUp = false;
 
     /**
      * Removes the stored main character instance so that the next call to any of the {@code getInstance} methods will
@@ -77,8 +122,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     public static MainCharacter getInstance() {
         if (mainCharacterInstance == null) {
-            mainCharacterInstance = new MainCharacter(0,0,0.05f, "Main " +
-                    "Piece", 10);
+            mainCharacterInstance = new MainCharacter(0, 0, 0.05f, "Main Piece", 10);
         }
         return mainCharacterInstance;
     }
@@ -120,25 +164,28 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private PetsManager petsManager;
     private BuildingFactory tempFactory;
 
+    // List of the Biomes Unlocked
+    private List<String> lockedBiomes;
+
     /**
      * Please feel free to change, this is not accurate as to the stages of
      * the game
      */
     public enum GameStage {
         FOREST,
+        DESERT,
         MOUNTAIN,
-        ICE,
-        LAVA,
-        RIVER,
-        VALLEY,
-        GRAVEYARD
+        SNOW,
+        LAVA
     }
 
     //The name of the item to be created.
     private String itemToCreate;
 
     // Variables to sound effects
-    public static final String WALK_NORMAL = "people_walk_normal";
+    private static final String WALK_NORMAL = "people_walk_normal";
+    private static final String PLAYER_HURT = "player_hurt";
+    private static final String DIED = "player_died";
 
     public static final String HURT_SOUND_NAME = "player_hurt";
     public static final String DIED_SOUND_NAME = "player_died";
@@ -147,10 +194,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public static final String AXEATTACK = "axe_attack";
     public static final String SWORDATTACK = "sword_attack";
     public static final String SPEARATTACK = "first_attack";
-    public static final String ATTACK = "player_hurt";
 
-    //The pick Axe that is going to be created
-    private Hatchet hatchetToCreate;
+
 
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
@@ -170,7 +215,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     // Textures for all 6 directions to correspond to movement of character
 
-    // TODO: change this to an integer to support removing currency which is not just 100g or 50g or 20g
+
     // A goldPouch to store the character's gold pieces.
     private HashMap<Integer, Integer> goldPouch;
 
@@ -228,20 +273,14 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private long deadTime = 500;
 
     /**
-     * Check whether MainCharacter is hurt.
+     * Check whether MainCharacter is in a certain state.
      */
     private boolean isHurt = false;
-
-    /**
-     * Check id player is recovering
-     */
     private boolean isRecovering = false;
     private boolean isTexChanging = false;
 
-    /**
-     * Check id player is attacking
-     */
     private boolean isAttacking = false;
+
 
     /**
      * Item player is currently equipped with/holding.
@@ -261,13 +300,13 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * How much mana the character has available for spellcasting.
      */
-    private int mana = 100;
+    protected int mana = 100;
 
     //Current time in interval to restore mana.
-    private int manaCD = 0;
+    protected int manaCD = 0;
 
     //Tick interval to restore mana.
-    private int totalManaCooldown = 10;
+    protected int totalManaCooldown = 10;
 
     /**
      * The GUI mana bar that can be updated when mana is restored/lost.
@@ -280,17 +319,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     private HealthCircle healthBar;
 
-    /**
-     * Can this character take damage.
-     */
-    private boolean isInvincible;
 
-    private String equipped;
-
-    /**
-     *  Game Over screen.
-     */
-    private GameOverTable gameOverTable;
 
     // TODO:dannathan Fix or remove this.
     // /**
@@ -314,6 +343,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.setHeight(1);
         this.setObjectName("MainPiece");
         this.setMaxHealth(health);
+        initialiselockedBiomes();
 
         GameManager.getManagerFromInstance(InputManager.class)
                 .addKeyDownListener(this);
@@ -363,7 +393,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
 
         isSprinting = false;
-        equipped = "no_weapon";
+
         canSwim = false;
         this.scale = 0.4f;
         setDirectionTextures();
@@ -385,8 +415,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      *                 5 = North-West
      */
     private MainCharacter(float col, float row, float speed, String name, int health, String[] textures) {
-        this(row, col, speed, name, health);
+        this(col, row, speed, name, health);
         this.setTexture(textures[2]);
+        initialiselockedBiomes();
     }
 
     /**
@@ -418,11 +449,38 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Set up the game over screen.
      */
     private void setupGameOverScreen() {
-        this.gameOverTable = (GameOverTable) GameManager.get().getManagerFromInstance(GameMenuManager.class).
-                getPopUp("gameOverTable");
+        // Game Over screen.
+        // gameOverTable = (GameOverTable) GameManager.getManagerFromInstance(GameMenuManager.class).
+        //         getPopUp("gameOverTable");
     }
 
+    /**
+     * Initialises all of the biomes as "unlocked" except the first biome (forest)
+     */
+    private void initialiselockedBiomes() {
+        lockedBiomes = new ArrayList<>();
 
+        lockedBiomes.add("desert");
+        lockedBiomes.add("mountain");
+        lockedBiomes.add("volcanic_mountain");
+
+    }
+
+    /**
+     * Gets all of the "locked" biomes
+     * @return lockedBiomes - a list of all of the locked biomes
+     */
+    public List<String> getlockedBiomes() {
+        return lockedBiomes;
+    }
+
+    /**
+     * Removes a biome from the locked list ("unlocking a biome")
+     * @param biome - The biome to "unlock"
+     */
+    public void unlockBiome(String biome) {
+        lockedBiomes.remove(biome);
+    }
 
     /**
      * Switch the item the MainCharacter has equip.
@@ -527,7 +585,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         //Animation control
         logger.debug("Attacking");
 
-        setAttacking(true);
+
         setCurrentState(AnimationRole.ATTACK);
 
         //If there is a spell selected, spawn the spell.
@@ -578,7 +636,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 SoundManager.playSound(AXEATTACK);
                 break;
             default:
-                SoundManager.playSound(ATTACK);
+                SoundManager.playSound(HURT_SOUND_NAME);
                 break;
         }
 
@@ -614,7 +672,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
         GameManager.get().getWorld().addEntity(spell);
 
-        setAttacking(false);
+
     }
 
     /**
@@ -635,9 +693,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         return this.mana;
     }
 
-    public void setAttacking(boolean isAttacking) {
-        this.isAttacking = isAttacking;
-    }
 
     /**
      * Lets the player enter a vehicle, by changing there speed and there sprite
@@ -679,13 +734,13 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         changeSwimming(false);
     }
 
-    /**
-     * Set if the character is invincible.
-     *
-     * @param isInvincible Is the character invincible.
-     */
-    public void setInvincible(boolean isInvincible) {
-        this.isInvincible = isInvincible;
+
+    public boolean isAttacking() {
+        return isAttacking;
+    }
+
+    private void setAttacking(boolean isAttacking) {
+        this.isAttacking = isAttacking;
     }
 
     public void pickUpInventory(Item item) {
@@ -703,19 +758,20 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     /**
      * Player takes damage from other entities/ by starving.
+     *
+     * @param damage the damage deal to the player.
      */
     public void hurt(int damage) {
 
-        // if (this.isInvincible) return;
+
         if (this.isRecovering) return;
 
         setHurt(true);
-        logger.info("Hurted: " + isHurt);
         changeHealth(-damage);
         updateHealth();
 
         getBody().setLinearVelocity(getBody().getLinearVelocity()
-                        .lerp(new Vector2(0.f, 0.f), 0.5f));
+                .lerp(new Vector2(0.f, 0.f), 0.5f));
 
         if (this.getHealth() <= 0) {
             kill();
@@ -723,43 +779,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             hurtTime = 0;
             recoverTime = 0;
 
-            /*
-            HexVector bounceBack = new HexVector(position.getCol(), position.getRow() - 2);
+            SoundManager.playSound(PLAYER_HURT);
 
-            switch (getPlayerDirectionCardinal()) {
-                case "North":
-                    bounceBack = new HexVector(position.getCol(), position.getRow() - 2);
-                    break;
-                case "North-East":
-                    bounceBack = new HexVector(position.getCol() - 2, position.getRow() - 2);
-                    break;
-                case "East":
-                    bounceBack = new HexVector(position.getCol() - 2, position.getRow());
-                    break;
-                case "South-East":
-                    bounceBack = new HexVector(position.getCol() - 2, position.getRow() + 2);
-                    break;
-                case "South":
-                    bounceBack = new HexVector(position.getCol(), position.getRow() + 2);
-                    break;
-                case "South-West":
-                    bounceBack = new HexVector(position.getCol() + 2, position.getRow() + 2);
-                    break;
-                case "West":
-                    bounceBack = new HexVector(position.getCol() - 2, position.getRow());
-                    break;
-                case "North-West":
-                    bounceBack = new HexVector(position.getCol() + 2, position.getRow() - 2);
-                    break;
-                default:
-                    break;
-            }
-            position.moveToward(bounceBack, 1f);
-            */
-
-            SoundManager.playSound(HURT_SOUND_NAME);
-
-            if (hurtTime == 400) {
+            if (hurtTime > 400) {
                 setRecovering(true);
             }
         }
@@ -779,7 +801,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Helper function to update healthBar outside of class.
      */
-    public void updateHealth() {
+    private void updateHealth() {
         if (this.healthBar != null) {
             this.healthBar.update();
         }
@@ -807,7 +829,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     private void checkIfRecovered() {
         recoverTime += 20;
-
         this.changeCollideability(false);
 
         if (recoverTime > 1000) {
@@ -822,25 +843,25 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * Kills the player. and notifying the game that the player
      * has died and cannot do any actions in game anymore.
      */
-    public void kill() {
+    private void kill() {
         // set health to 0.
         changeHealth(0);
         SoundManager.playSound(DIED_SOUND_NAME);
         setCurrentState(AnimationRole.DEAD);
         deadTime = 0;
-        // gameOverTable.show();
     }
 
     /**
      * @return if player is in the state of "hurt".
      */
-    public boolean IsHurt() {
+    public boolean isHurt() {
         return isHurt;
     }
 
     /**
      * @param isHurt the player's "hurt" status
      */
+    @SuppressWarnings("WeakerAccess")
     public void setHurt(boolean isHurt) {
         this.isHurt = isHurt;
     }
@@ -983,17 +1004,17 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
             //Check we have permission to build
 
-            if(GameManager.getManagerFromInstance(ConstructionManager.class).getStatus() == 1) {
-            //    System.out.println(clickedPosition[0]);
-            //    System.out.println(clickedPosition[1]);
+            if (GameManager.getManagerFromInstance(ConstructionManager.class).getStatus() == 1) {
+                //    System.out.println(clickedPosition[0]);
+                //    System.out.println(clickedPosition[1]);
                 //cheking inventories
-            //    if (GameManager.getManagerFromInstance(ConstructionManager.class).invCheck(inventories)){
-            //        GameManager.getManagerFromInstance(ConstructionManager.class).build(GameManager.get().getWorld(),clickedPosition[0], clickedPosition[1]);
-            //    }
+                //    if (GameManager.getManagerFromInstance(ConstructionManager.class).invCheck(inventories)){
+                //        GameManager.getManagerFromInstance(ConstructionManager.class).build(GameManager.get().getWorld(),clickedPosition[0], clickedPosition[1]);
+                //    }
 
                 // REMOVE THE INVENTORIES
-                    //    buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
-                    //    invRemove(buildingToBePlaced,GameManager.getManagerFromInstance(InventoryManager.class));
+                //    buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
+                //    invRemove(buildingToBePlaced,GameManager.getManagerFromInstance(InventoryManager.class));
 
                 GameManager.getManagerFromInstance(ConstructionManager.class).build(GameManager.get().getWorld(),
                         (int) clickedPosition[0], (int) clickedPosition[1]);
@@ -1005,7 +1026,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Reset the mana cooldown period and restore 1 mana to the MainCharacter.
      */
-    private void restoreMana() {
+    protected void restoreMana() {
 
         //Reset the cooldown period.
         this.manaCD = 0;
@@ -1021,21 +1042,24 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     @Override
     public void onTick(long i) {
-        this.updatePosition();
+        if(!GameScreen.isPaused) {
+            if (residualFromPopUp) {
+                residualInputsFromPopUp();
+            }
+            this.updatePosition();
+        } else {
+            SoundManager.stopSound("people_walk_normal");
+            getBody().setLinearVelocity(0f, 0f);
+            residualFromPopUp = true;
+        }
         this.movementSound();
         this.centreCameraAuto();
 
+        //Mana restoration.
         this.manaCD++;
         if (this.manaCD > totalManaCooldown) {
             this.restoreMana();
         }
-
-        //this.setCurrentSpeed(this.direction.len());
-        //this.moveTowards(new HexVector(this.direction.x, this.direction.y));
-        //        System.out.printf("(%s : %s) diff: (%s, %s)%n", this.direction,
-        //         this.getPosition(), this.direction.x - this.getCol(),
-        //         this.direction.y - this.getRow());
-        //        System.out.printf("%s%n", this.currentSpeed);
 
         if (isHurt) {
             checkIfHurtEnded();
@@ -1077,14 +1101,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         //Put specific collision logic here
     }
 
+    public void resetVelocity() {
 
-    /**
-     * Sets the Player's current movement speed
-     *
-     * @param cSpeed the speed for the player to currently move at
-     */
-    private void setCurrentSpeed(float cSpeed) {
-        this.currentSpeed = cSpeed;
+        xInput = 0;
+        yInput = 0;
     }
 
     boolean petout = false;
@@ -1098,6 +1118,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void notifyKeyDown(int keycode) {
         //player cant move when paused
         if (GameManager.getPaused()) {
+            xInput = 0;
+            yInput = 0;
             return;
         }
         switch (keycode) {
@@ -1174,6 +1196,28 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.spellSelected = type;
     }
 
+    public void residualInputsFromPopUp() {
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            yInput += 1;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            xInput += -1;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            yInput += -1;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            xInput += 1;
+        }
+
+        residualFromPopUp = false;
+
+    }
+
+
     /**
      * Sets the appropriate movement flags to false on keyUp
      *
@@ -1183,8 +1227,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void notifyKeyUp(int keycode) {
         // Player cant move when paused
         if (GameManager.getPaused()) {
+            xInput = 0;
+            yInput = 0;
             return;
         }
+
         switch (keycode) {
             case Input.Keys.W:
                 yInput -= 1;
@@ -1216,8 +1263,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * Adds a piece of gold to the Gold Pouch
      *
-     * @Param gold The piece of gold to be added to the pouch
-     * @Param count How many of that piece of gold should be added
+     * @param gold  The piece of gold to be added to the pouch
+     * @param count How many of that piece of gold should be added
      */
     public void addGold(GoldPiece gold, Integer count) {
         // store the gold's value (5G, 10G etc) as a variable
@@ -1281,8 +1328,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      *
      * @return The total value of the Gold Pouch
      */
-    public Integer getGoldPouchTotalValue() {
-        Integer totalValue = 0;
+    public int getGoldPouchTotalValue() {
+        int totalValue = 0;
         for (Integer goldValue : goldPouch.keySet()) {
             totalValue += goldValue * goldPouch.get(goldValue);
         }
@@ -1296,11 +1343,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     public void addClosestGoldPiece() {
         for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
-            if (entity instanceof GoldPiece) {
-                if (this.getPosition().distance(entity.getPosition()) <= 2) {
-                    this.addGold((GoldPiece) entity, 1);
-                    logger.info(this.inventories.toString());
-                }
+            if (entity instanceof GoldPiece && this.getPosition().distance(entity.getPosition()) <= 2) {
+                this.addGold((GoldPiece) entity, 1);
+                logger.info(this.inventories.toString());
             }
         }
         logger.info("Sorry, you are not close enough to a gold piece!");
@@ -1351,14 +1396,27 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         // Gets the next tile
         Tile tile = getTile(position.getCol() + xInput, position.getRow() + yInput);
 
+        boolean valid = true;
+
         if (tile == null) {
-            return false;
-        } else {
-            return (!tile.getTextureName().contains("water")
-                    && !tile.getTextureName().contains("lake")
-                    && !tile.getTextureName().contains("ocean"))
-                    || canSwim;
+            valid = false;
         }
+
+        if ((tile.getTextureName().contains("water")
+                || tile.getTextureName().contains("lake")
+                || tile.getTextureName().contains("ocean"))
+                    && !canSwim) {
+            valid = false;
+        }
+
+        for (String s: lockedBiomes) {
+            if (tile.getTextureName().contains(s)){
+                valid = false;
+            }
+        }
+
+        return valid;
+
     }
 
     /**
@@ -1462,7 +1520,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         } else {
             val = 0;
         }
-        return val;
+        return -Math.toDegrees(val);
     }
 
     /**
@@ -1472,9 +1530,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * @return new texture to use
      */
     private String getPlayerDirectionCardinal() {
-        double playerDirectionAngle = getPlayerDirectionAngle();
-
-        int playerDirectionIndex = Math.floorMod((int) Math.floor(((playerDirectionAngle + 22.5) / 45)), 8);
+        double playerDirectionAngle =  getPlayerDirectionAngle();
+        int playerDirectionIndex = Math.floorMod((int) Math.floor((playerDirectionAngle + 90.0) / 45), 8);
 
         switch (playerDirectionIndex) {
         case 0:
@@ -1572,23 +1629,25 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public List<Blueprint> getUnlockedBlueprints() {
         List<Blueprint> unlocked = new ArrayList<>();
         switch (gameStage) {
-            case GRAVEYARD:
-                // e.g. unlocked.add(new Spaceship())
-                // fall through
-            case VALLEY:
-                // e.g. unlocked.add(new Factory())
-                // fall through
-            case RIVER:
-                // fall through
             case LAVA:
-                // fall through
-            case ICE:
-                // fall through
+
+            case SNOW:
+                unlocked.add(CABIN);
             case MOUNTAIN:
-                // fall through
+                unlocked.add(WATCHTOWER);
+                unlocked.add(new MountainPortal(0, 0, 0));
+            case DESERT:
+                unlocked.add(CABIN);
+                unlocked.add(new DesertPortal(0, 0, 0));
             case FOREST:
                 unlocked.add(new Hatchet());
                 unlocked.add(new PickAxe());
+                unlocked.add(new Sword());
+                unlocked.add(new Bow());
+                unlocked.add(new Spear());
+                unlocked.add(CASTLE);
+
+                unlocked.add(new ForestPortal(0, 0, 0));
         }
         return unlocked;
 
@@ -1621,7 +1680,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /***
      * Creates an item if the player has the blueprint. Checks if required resources
      * are in the inventory. if yes, creates the item, adds it to the player's
-     * inventoryand deducts the required resource from inventory
+     * inventory and deducts the required resource from inventory
      */
     public void createItem(Blueprint newItem) {
 
@@ -1645,9 +1704,18 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                         case "Hatchet":
                             this.getInventoryManager().add(new Hatchet());
                             break;
-
                         case "Pick Axe":
                             this.getInventoryManager().add(new PickAxe());
+                            break;
+
+                        case "sword":
+                            this.getInventoryManager().add(new Sword());
+                            break;
+                        case "spear":
+                            this.getInventoryManager().add(new Spear());
+                            break;
+                        case "bow":
+                            this.getInventoryManager().add(new Bow());
                             break;
 
                         //These are only placeholders and will change once coordinated
@@ -1777,15 +1845,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     private void updateAnimation() {
         getPlayerDirectionCardinal();
-
-        /*
-        if(isAttacking) {
-            setCurrentState(AnimationRole.ATTACK);
-           // System.out.println(isAttacking);
-            setAttacking(false);
-        }
+        List<Float> velocity = getVelocity();
 
         /* Short Animations */
+
         if (getToBeRun() != null) {
             if (getToBeRun().getType() == AnimationRole.DEAD) {
                 setCurrentState(AnimationRole.STILL);
@@ -1794,36 +1857,35 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             }
         }
 
-            if (isDead()) {
-                setCurrentState(AnimationRole.STILL);
-            } else if (isHurt) {
-                setCurrentState(AnimationRole.HURT);
-            } else {
-            if (getVelocity().get(2) == 0f) {
-                    setCurrentState(AnimationRole.NULL);
-                } else {
-                    setCurrentState(AnimationRole.MOVE);
-                }
-            }
-    }
-
-
-    /**
-     * Toggles if the camera should follow the player
-     */
-    private void toggleCameraLock() {
-        if (!cameraLock) {
-            cameraLock = true;
-            centreCameraManual();
+        if (isDead()) {
+            setCurrentState(AnimationRole.STILL);
+        } else if (isHurt) {
+            setCurrentState(AnimationRole.HURT);
         } else {
-            cameraLock = false;
+            if (getVelocity().get(2) == 0f) {
+                setCurrentState(AnimationRole.NULL);
+            } else {
+                setCurrentState(AnimationRole.MOVE);
+            }
         }
     }
 
-    /**
-     * Centres the camera onto the player
-     * Designed to called on a loop
-     */
+        /**
+         * Toggles if the camera should follow the player
+         */
+        private void toggleCameraLock () {
+            if (!cameraLock) {
+                cameraLock = true;
+                centreCameraManual();
+            } else {
+                cameraLock = false;
+            }
+        }
+
+        /**
+         * Centres the camera onto the player
+         * Designed to called on a loop
+         */
     private void centreCameraAuto() {
         if (cameraLock) {
             float[] coords = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
@@ -1833,33 +1895,33 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     }
 
     /**
-     * Centres the camera onto the player
-     * Not supposed to be called on a loop
-     */
-    private void centreCameraManual() {
-        float[] coords = WorldUtil
-                .colRowToWorldCords(this.getCol(), this.getRow());
-        GameManager.get().getCamera().position.set(coords[0], coords[1], 0);
-    }
+         * Centres the camera onto the player
+         * Not supposed to be called on a loop
+         */
+        private void centreCameraManual () {
+            float[] coords = WorldUtil
+                    .colRowToWorldCords(this.getCol(), this.getRow());
+            GameManager.get().getCamera().position.set(coords[0], coords[1], 0);
+        }
 
-     /** Returns the id of this character
-     *
-     * @return the id of this character
-     */
-    public long getID() {
-        return this.id;
-    }
+        /** Returns the id of this character
+         *
+         * @return the id of this character
+         */
+        public long getID () {
+            return this.id;
+        }
 
-    /**
-     * Returns the save this character is for
-     *
-     * @return the save this character is for
-     */
-    public Save getSave() {
-        return save;
-    }
+        /**
+         * Returns the save this character is for
+         *
+         * @return the save this character is for
+         */
+        public Save getSave () {
+            return save;
+        }
 
-    // FIXME:dannothan Fix or remove this.
+        // FIXME:dannothan Fix or remove this.
     // FIXME:jeffvan figure out what needs saving
     public MainCharacterMemento save() {
         return new MainCharacterMemento(this);
