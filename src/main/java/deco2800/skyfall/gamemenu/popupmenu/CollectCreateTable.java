@@ -96,19 +96,52 @@ public class CollectCreateTable extends AbstractPopUpElement{
         String format = "%d x %s";
         if (type.equals("collect")) {
             String currentText  = String.format(format, qm.getGoldTotal(), "Gold");
-            labelTable.add(new Label(currentText, skin, whiteText)).left();
+            Color color;
+
+            if (qm.checkGold()) {
+                color = Color.GREEN;
+            } else {
+                color = Color.WHITE;
+            }
+
+            Label labelGold = new Label(currentText, skin, whiteText);
+            labelGold.setColor(color);
+            labelTable.add(labelGold).left();
             labelTable.row();
+
+            if (qm.checkMetal()) {
+                color = Color.GREEN;
+            } else {
+                color = Color.WHITE;
+            }
 
             currentText  = String.format(format, qm.getMetalTotal(), "Metal");
-            labelTable.add(new Label(currentText, skin, whiteText)).left();
+            Label labelMetal = new Label(currentText, skin, whiteText);
+            labelMetal.setColor(color);
+            labelTable.add(labelMetal).left();
             labelTable.row();
+
+            if (qm.checkStone()) {
+                color = Color.GREEN;
+            } else {
+                color = Color.WHITE;
+            }
 
             currentText  = String.format(format, qm.getStoneTotal(), "Stone");
-            labelTable.add(new Label(currentText, skin, whiteText)).left();
+            Label labelStone = new Label(currentText, skin, whiteText);
+            labelStone.setColor(color);
+            labelTable.add(labelStone).left();
             labelTable.row();
 
+            if (qm.checkWood()) {
+                color = Color.GREEN;
+            } else {
+                color = Color.WHITE;
+            }
             currentText  = String.format(format, qm.getWoodTotal(), "Wood");
-            labelTable.add(new Label(currentText, skin, whiteText)).left();
+            Label labelWood = new Label(currentText, skin, whiteText);
+            labelWood.setColor(color);
+            labelTable.add(labelWood).left();
             labelTable.row();
         } else {
             List<String> buildingsTotal = qm.getBuildingsTotal();
