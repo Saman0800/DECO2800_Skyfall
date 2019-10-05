@@ -409,8 +409,6 @@ public class MainCharacter extends Peon
             this.healthBar = (HealthCircle) GameManager.getManagerFromInstance(GameMenuManager.class).
                     getUIElement("healthCircle");
         }
-        this.healthBar = (HealthCircle) GameManager.getManagerFromInstance(GameMenuManager.class)
-                .getUIElement("healthCircle");
     }
 
     /**

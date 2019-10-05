@@ -18,9 +18,6 @@ public class Berry extends HealthResources implements Item {
     // Logger to show messages
     private final Logger logger = LoggerFactory.getLogger(Berry.class);
 
-    //The color of the berry
-    private String colour;
-
     //whether or not the item impacts the player's food fullness
     private boolean hasFoodEffect;
 

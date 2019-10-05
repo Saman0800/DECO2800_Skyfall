@@ -16,9 +16,6 @@ public class Apple extends HealthResources implements Item {
     // amount of health item provides
     private int health = 4;
 
-    // the colour of the Apple
-     private String colour;
-
     // the biome the apple is in (will change to different type in future?)
     private String biome;
 
