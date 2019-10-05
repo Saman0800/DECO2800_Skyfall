@@ -23,7 +23,6 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
     private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
 
     private static final String ENTITY_ID_STRING = "staticEntityID";
-    private boolean obstructed;
     private static TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
 
     public Map<HexVector, String> children;
@@ -171,15 +170,6 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
 
             child.setObstructed(true);
         }
-    }
-
-    /**
-     * A simple getter function to retrieve the obstruction value of this object
-     *
-     * @return The obstruction value.
-     */
-    public boolean isObstructed() {
-        return this.obstructed;
     }
 
     /**
