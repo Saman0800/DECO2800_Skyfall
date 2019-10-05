@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
 /**
  * A class for building table pop up.
@@ -82,11 +81,11 @@ public class BuildingTable extends AbstractPopUpElement{
         table.setSize(800, 800 * 1346 / 1862f);
         table.setPosition(Gdx.graphics.getWidth() / 2f - table.getWidth() / 2,
                 Gdx.graphics.getHeight() / 2f - table.getHeight() / 2);
-        table.setBackground(generateTextureRegionDrawableObject("popup_bg"));
+        table.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
 
         // table banner
         Table banner = new Table();
-        banner.setBackground(generateTextureRegionDrawableObject("popup_banner"));
+        banner.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_banner"));
 
         Label text = new Label("BUILDING TABLE", skin, "navy-text");
         text.setFontScale(1.1f);
@@ -107,8 +106,8 @@ public class BuildingTable extends AbstractPopUpElement{
 
         // Right hand side of the table (list of blueprints)
         Table items = new Table();
-        Label number = new Label("", skin, "black-label");
-        items.add(number).padTop(10).colspan(4).width(100);
+        Label number = new Label("1/12", skin, "black-label");
+        items.add(number).padTop(10).colspan(4);
         items.row();
 
         //testing
@@ -124,7 +123,7 @@ public class BuildingTable extends AbstractPopUpElement{
             for (int j = 0; j < 4; j++) {
                 try {
                     Blueprint item = blueprintsLearned.get(4 * i + j);
-                    ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(item.getName() + "_inv"));
+                    ImageButton icon = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(item.getName() + "_inv"));
                     icon.addListener(new ClickListener() {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
@@ -135,7 +134,7 @@ public class BuildingTable extends AbstractPopUpElement{
                     });
                     items.add(icon).width(itemWidth).height(itemWidth).pad(5);
                 } catch (IndexOutOfBoundsException e) {
-                    Image bg = new Image(generateTextureRegionDrawableObject("item_background"));
+                    Image bg = new Image(gameMenuManager.generateTextureRegionDrawableObject("item_background"));
                     items.add(bg).width(itemWidth).height(itemWidth).pad(5);
                 }
             }
@@ -171,16 +170,16 @@ public class BuildingTable extends AbstractPopUpElement{
      */
     private void showInfo(Table table, Blueprint item) {
         table.clearChildren();
-        Image test = new Image(generateTextureRegionDrawableObject(item.getName() + "_inv"));
+        Image test = new Image(gameMenuManager.generateTextureRegionDrawableObject(item.getName() + "_inv"));
         table.add(test).width(110).height(110).padTop(10).padBottom(10);
         table.row();
 
         Table itemsRequired = new Table();
         itemsRequired.top();
-        itemsRequired.setBackground(generateTextureRegionDrawableObject("pop up screen"));
+        itemsRequired.setBackground(gameMenuManager.generateTextureRegionDrawableObject("pop up screen"));
 
         Table infoBar = new Table();
-        infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
+        infoBar.setBackground(gameMenuManager.generateTextureRegionDrawableObject("game menu bar"));
 
         Label text = new Label("ITEMS REQUIRED", skin, "black-text");
         text.setFontScale(0.5f);
@@ -202,12 +201,12 @@ public class BuildingTable extends AbstractPopUpElement{
             for (int j = 0; j < 4; ++j) {
                 try {
                     String itemName = itemsNeeded.get(4 * i + j);
-                    itemsRequired.add(new Image(generateTextureRegionDrawableObject(itemName + "_inv"))).width((250 - 20 - 20) / 4f - 5).height((250 - 20 - 20) / 4f - 5).pad(5).expandY();
+                    itemsRequired.add(new Image(gameMenuManager.generateTextureRegionDrawableObject(itemName + "_inv"))).width((250 - 20 - 20) / 4f - 5).height((250 - 20 - 20) / 4f - 5).pad(5).expandY();
                     Label number = new Label(String.valueOf(item.getAllRequirements().get(itemName)), skin, "white-label");
                     number.setFontScale(0.3f);
                     itemsRequired.add(number).top().padLeft(-15).padTop(5);
                 } catch (IndexOutOfBoundsException e) {
-                    itemsRequired.add(new Image(generateTextureRegionDrawableObject("item_background"))).width((250 - 20 - 20) / 4f - 5).height((250 - 20 - 20) / 4f - 5).pad(5).expandY();
+                    itemsRequired.add(new Image(gameMenuManager.generateTextureRegionDrawableObject("item_background"))).width((250 - 20 - 20) / 4f - 5).height((250 - 20 - 20) / 4f - 5).pad(5).expandY();
                     itemsRequired.add();
                 }
             }

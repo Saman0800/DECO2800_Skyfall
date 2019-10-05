@@ -14,32 +14,21 @@ public class Aloe_Vera extends HealthResources implements Item {
     // amount of health item provides
     private int health = 2;
 
-
     // Logger to show messages
     private final Logger logger = LoggerFactory.getLogger(Aloe_Vera.class);
-
 
     public Aloe_Vera(){
         //As Aloe_Vera usually in desert.
         this.biome = "Desert";
         this.name = "Aloe_Vera";
         this.colour = "green";
-        this.foodValue = 0;
-        //TODO: look into this.healthValue = 40;
-        this.foodValue = 0;
         this.healthValue = 40;
-        //this.hasFoodEffect = true;
-
     }
-
 
     @Override
     public String getName() {
         return "Aloe_Vera";
     }
-
-
-
 
     @Override
     public String toString() {

@@ -23,8 +23,8 @@ import java.util.*;
 public class GameMenuManager extends TickableManager {
 
     private static TextureManager textureManager;
+    private EnvironmentManager environmentManager;
     private Stage stage;
-    private MainCharacter mainCharacter;
     private InventoryManager inventory;
     private SoundManager soundManager;
     private Skin skin;
@@ -64,6 +64,7 @@ public class GameMenuManager extends TickableManager {
         inventory = GameManager.get().getManager(InventoryManager.class);
         soundManager = GameManager.get().getManager(SoundManager.class);
         questManager = GameManager.get().getManager(QuestManager.class);
+        environmentManager = GameManager.get().getManager(EnvironmentManager.class);
         stage = null;
         skin = null;
         characters = new String[NUMBEROFCHARACTERS];
@@ -91,7 +92,7 @@ public class GameMenuManager extends TickableManager {
         this.uiElements = uiElements;
     }
 
-    public static void updateTextureManager(TextureManager tm) {
+    private static void updateTextureManager(TextureManager tm) {
 
         textureManager = tm;
     }
@@ -127,9 +128,8 @@ public class GameMenuManager extends TickableManager {
 
         }
 
-        for (String key: uiElements.keySet()) {
-            AbstractUIElement uiElement = uiElements.get(key);
-            uiElement.update();
+        for (Map.Entry<String, AbstractUIElement> key: uiElements.entrySet()) {
+            key.getValue().update();
         }
     }
 
@@ -212,23 +212,10 @@ public class GameMenuManager extends TickableManager {
      *
      * @return An instance of TextureRegionDrawable with the given texture name.
      */
-    public static TextureRegionDrawable generateTextureRegionDrawableObject(String sName) {
+    public TextureRegionDrawable generateTextureRegionDrawableObject(String sName) {
         return new TextureRegionDrawable((new TextureRegion(textureManager.getTexture(sName))));
     }
 
-    /**
-     * Set main character of the game to be {mainCharacter}.
-     *
-     * @param mainCharacter Main character of the game.
-     */
-    public void setMainCharacter(MainCharacter mainCharacter) {
-        if (stage == null) {
-            logger.info("Please set stage before adding character");
-            return;
-        }
-        this.mainCharacter = mainCharacter;
-
-    }
 
     /**
      * Getter of main character of the game.
@@ -362,7 +349,7 @@ public class GameMenuManager extends TickableManager {
         hudElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm, skin, this));
         hudElements.put("goldPill", new GoldStatusBar(stage, null, textureManager,  skin, this));
         hudElements.put("gameMenuBar2", new GameMenuBar2(stage, null, textureManager, skin, this));
-        hudElements.put("clock" , new Clock(stage, skin, this));
+        hudElements.put("clock" , new Clock(stage, skin, this, environmentManager));
 
         uiElements.put("HUD", new HeadsUpDisplay(stage, null, textureManager, skin, this, hudElements, questManager));
 
@@ -386,8 +373,8 @@ public class GameMenuManager extends TickableManager {
 
     /**
      * Element associated with key
-     * @param key
-     * @return
+     * @param key Key of the entry
+     * @return Gets the specific UI element=
      */
     public AbstractUIElement getUIElement(String key) {
         return uiElements.get(key);

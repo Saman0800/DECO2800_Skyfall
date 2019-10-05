@@ -11,8 +11,6 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
 
-import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
-
 /**
  * The widget diplaying the gold, on the HUD
  */
@@ -35,8 +33,6 @@ public class GoldStatusBar extends AbstractUIElement {
      */
     @Override
     public void updatePosition() {
-        float positionX = stage.getCamera().position.x - goldLabel.getWidth();
-
         goldLabel.setPosition(gmm.getTopLeftX() + 30, gmm.getTopLeftY() - 170);
         goldPouchButton.setPosition(gmm.getTopLeftX() + goldLabel.getWidth(), gmm.getTopLeftY() - 175);
     }
@@ -51,7 +47,7 @@ public class GoldStatusBar extends AbstractUIElement {
         goldLabel.setAlignment(Align.center);
         goldLabel.setFontScale(0.7f);
 
-        goldPouchButton = new ImageButton(generateTextureRegionDrawableObject("goldPouch"));
+        goldPouchButton = new ImageButton(gmm.generateTextureRegionDrawableObject("goldPouch"));
         goldPouchButton.setSize(200 * 0.35f, 207 * 0.35f);
 
 
@@ -66,7 +62,6 @@ public class GoldStatusBar extends AbstractUIElement {
         stage.addActor(goldLabel);
         stage.addActor(goldPouchButton);
 
-        updatePosition();
     }
 
     /**
@@ -75,8 +70,18 @@ public class GoldStatusBar extends AbstractUIElement {
     @Override
     public void update() {
         super.update();
+        updateLabel();
+    }
 
+    public void updateLabel() {
         int total = gmm.getMainCharacter().getGoldPouchTotalValue();
         goldLabel.setText(" " + total + " G   ");
+    }
+
+    /**
+     * Used in unit testing
+     */
+    public Label getGoldLabel() {
+        return goldLabel;
     }
 }

@@ -50,14 +50,6 @@ public class AppleTest{
         assertTrue(apple.isCarryable());
     }
 
-    /**
-     * Ensure that apple is classified as food effect
-     */
-    @Test
-    public void hasFoodEffect() {
-        assertTrue(apple.hasFoodEffect());
-    }
-
 
     /**
      * Ensure that the correct subtype "Health Resource" is returned when

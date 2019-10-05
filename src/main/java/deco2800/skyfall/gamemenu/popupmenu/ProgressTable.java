@@ -16,7 +16,6 @@ import deco2800.skyfall.managers.TextureManager;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
 public class ProgressTable extends AbstractPopUpElement {
     private final QuestManager qm;
@@ -35,7 +34,6 @@ public class ProgressTable extends AbstractPopUpElement {
         this.skin = skin;
         this.qm = qm;
         Table labelTable = new Table();
-        labelTable.setDebug(true);
         this.draw();
         stage.addActor(baseTable);
     }
@@ -60,11 +58,11 @@ public class ProgressTable extends AbstractPopUpElement {
 
     @Override
     public void update() {
+            qm.checkBuildings();
             updateBiomeText(qm.getBiome());
             updateCollectText(qm.collectNum() + "/4");
-            //TODO : (@Kausta) Update Blueprint number
-            updateCreateText("0/4");
-            updateBlueprintTest("1");
+            updateCreateText(qm.getBuildingsNum() + "/" + qm.getBuildingsTotal().size());
+            updateBlueprintText("1");
     }
 
 
@@ -81,7 +79,7 @@ public class ProgressTable extends AbstractPopUpElement {
 
     }
 
-    private void updateBlueprintTest(String text) {
+    private void updateBlueprintText(String text) {
         blueprintLabel.setText(text + "x  Blueprint: " + "To Purchase");
     }
 
@@ -90,7 +88,7 @@ public class ProgressTable extends AbstractPopUpElement {
     public void draw() {
         super.draw();
         baseTable = new Table();
-        baseTable.setBackground(generateTextureRegionDrawableObject("blue_pill_table"));
+        baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("blue_pill_table"));
         baseTable.setSize(600, 600 * 1346 / 1862f);
         baseTable.setPosition(Gdx.graphics.getWidth()/2f - baseTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - baseTable.getHeight()/2);
@@ -106,7 +104,6 @@ public class ProgressTable extends AbstractPopUpElement {
 
         titleLabel.getStyle().fontColor = Color.BLACK;
 
-        baseTable.setDebug(true);
         baseTable.add(titleLabel);
         baseTable.row();
         baseTable.add(biomeLabel).expand().left();
@@ -120,4 +117,19 @@ public class ProgressTable extends AbstractPopUpElement {
         baseTable.setVisible(false);
     }
 
+    public Label getBiomeLabel() {
+        return biomeLabel;
+    }
+
+    public Label getCollectLabel() {
+        return collectLabel;
+    }
+
+    public Label getCreateLabel() {
+        return createLabel;
+    }
+
+    public Label getBlueprintLabel() {
+        return blueprintLabel;
+    }
 }

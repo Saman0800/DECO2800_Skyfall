@@ -14,7 +14,6 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
 
-import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
 /**
  * A class for pause table pop up.
@@ -74,11 +73,11 @@ public class PauseTable extends AbstractPopUpElement{
         table.setSize(600, 430);
         table.setPosition(Gdx.graphics.getWidth() / 2f - table.getWidth() / 2,
                 Gdx.graphics.getHeight() / 2f - table.getHeight() / 2);
-        table.setBackground(generateTextureRegionDrawableObject("popup_bg"));
+        table.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
 //        table.setDebug(true);
 
         Table infoBar = new Table();
-        infoBar.setBackground(generateTextureRegionDrawableObject("popup_banner"));
+        infoBar.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_banner"));
 
         Label text = new Label("GAME PAUSED", skin, "navy-text");
         infoBar.add(text);
@@ -96,14 +95,14 @@ public class PauseTable extends AbstractPopUpElement{
         table.add(soundEffect).width(110);
 
         Slider.SliderStyle s = new Slider.SliderStyle();
-        s.background = generateTextureRegionDrawableObject("knob_after");
+        s.background = gameMenuManager.generateTextureRegionDrawableObject("knob_after");
         s.background.setMinHeight(50);
-        s.knob = generateTextureRegionDrawableObject("knob");
+        s.knob = gameMenuManager.generateTextureRegionDrawableObject("knob");
         s.knob.setMinHeight(50);
         s.knob.setMinWidth(50);
-        s.knobBefore = generateTextureRegionDrawableObject("knob_before");
+        s.knobBefore = gameMenuManager.generateTextureRegionDrawableObject("knob_before");
         s.knobBefore.setMinHeight(50);
-        s.knobAfter = generateTextureRegionDrawableObject("knob_after");
+        s.knobAfter = gameMenuManager.generateTextureRegionDrawableObject("knob_after");
         s.knobAfter.setMinHeight(50);
 
         // Slider controlling volume of sound effects
@@ -132,7 +131,7 @@ public class PauseTable extends AbstractPopUpElement{
 
         table.add(musicBar).height(50).width(300).colspan(2).row();
 
-        ImageButton toHome = new ImageButton(generateTextureRegionDrawableObject("toHome"));
+        ImageButton toHome = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("toHome"));
         toHome.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -142,7 +141,7 @@ public class PauseTable extends AbstractPopUpElement{
         Label homeText = new Label("HOME", skin, textStyle);
         homeText.setFontScale(0.7f);
 
-        ImageButton resume = new ImageButton(generateTextureRegionDrawableObject("resume"));
+        ImageButton resume = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("resume"));
         resume.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -153,7 +152,7 @@ public class PauseTable extends AbstractPopUpElement{
         Label resumeText = new Label("RESUME", skin, textStyle);
         resumeText.setFontScale(0.7f);
 
-        ImageButton reset = new ImageButton(generateTextureRegionDrawableObject("reset"));
+        ImageButton reset = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("reset"));
         Label resetText = new Label("RESET", skin, textStyle);
         resetText.setFontScale(0.7f);
 
