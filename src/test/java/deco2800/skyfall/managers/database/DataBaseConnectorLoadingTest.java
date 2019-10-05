@@ -55,8 +55,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({DatabaseManager.class})
-@PowerMockIgnore({"java.sql.*", "org.apache.*"})
+@PrepareForTest({ DatabaseManager.class })
+@PowerMockIgnore({ "java.sql.*", "org.apache.*" })
 public class DataBaseConnectorLoadingTest {
 
     private static DataBaseConnector dataBaseConnectorExpected = new DataBaseConnector();
@@ -68,8 +68,9 @@ public class DataBaseConnectorLoadingTest {
     public static void setupOnce() {
         Flyway flyway = new Flyway();
         dataBaseConnectorExpected.start("src/test/java/deco2800/skyfall/managers/database/LoadingTestDatabase");
-        flyway.setDataSource("jdbc:derby:src/test/java/deco2800/skyfall/managers/database/LoadingTestDatabase;"
-            + "create=true", "", "");
+        flyway.setDataSource(
+                "jdbc:derby:src/test/java/deco2800/skyfall/managers/database/LoadingTestDatabase;" + "create=true", "",
+                "");
 
         flyway.clean();
         flyway.migrate();
@@ -81,12 +82,12 @@ public class DataBaseConnectorLoadingTest {
         mockStatic(DatabaseManager.class);
         when(DatabaseManager.get()).thenReturn(dm);
 
-//        MainCharacter mc = mock(MainCharacter.class);
-//        when(mc.getCol()).thenReturn((float) 0);
-//        when(mc.getRow()).thenReturn((float) 0);
-//
-//        mockStatic(MainCharacter.class);
-//        when(MainCharacter.getInstance()).thenReturn(mc);
+        // MainCharacter mc = mock(MainCharacter.class);
+        // when(mc.getCol()).thenReturn((float) 0);
+        // when(mc.getRow()).thenReturn((float) 0);
+        //
+        // mockStatic(MainCharacter.class);
+        // when(MainCharacter.getInstance()).thenReturn(mc);
     }
 
     @AfterClass
@@ -102,13 +103,12 @@ public class DataBaseConnectorLoadingTest {
         when(saveMemMock.getWorldID()).thenReturn(WOLRD_ID);
         World world = dataBaseConnectorExpected.loadWorlds(saveMock, saveMemMock);
         assertEquals(WOLRD_ID, world.getID());
-        assertEquals(576, world.getWorldGenNodes().size());
-        assertEquals(85, world.getBeachEdges().size());
-        assertEquals(6, world.getRiverEdges().size());
+        assertEquals(100, world.getWorldGenNodes().size());
+        assertEquals(39, world.getBeachEdges().size());
+        assertEquals(2, world.getRiverEdges().size());
     }
 
-
-    //FIXME:jeffvan12 not entirely sure how to fix this
+    // FIXME:jeffvan12 not entirely sure how to fix this
     @Test
     public void loadGameTest() {
         Save save = dataBaseConnectorExpected.loadGame();
@@ -116,19 +116,17 @@ public class DataBaseConnectorLoadingTest {
         assertEquals(1, save.getWorlds().size());
         assertEquals(0, save.getWorlds().get(0).getEntities().size());
         assertEquals(WOLRD_ID, save.getWorlds().get(0).getID());
-        assertEquals(576, save.getWorlds().get(0).getWorldGenNodes().size());
-        assertEquals(85, save.getWorlds().get(0).getBeachEdges().size());
-        assertEquals(6, save.getWorlds().get(0).getRiverEdges().size());
+        assertEquals(100, save.getWorlds().get(0).getWorldGenNodes().size());
+        assertEquals(39, save.getWorlds().get(0).getBeachEdges().size());
+        assertEquals(2, save.getWorlds().get(0).getRiverEdges().size());
     }
-
 
     @Test
     public void loadBiomesTest() {
         World worldMock = Mockito.mock(World.class);
         when(worldMock.getID()).thenReturn(WOLRD_ID);
-        ArrayList<AbstractBiome> biomes = (ArrayList<AbstractBiome>) dataBaseConnectorExpected
-            .loadBiomes(worldMock);
-        assertEquals(98, biomes.size());
+        ArrayList<AbstractBiome> biomes = (ArrayList<AbstractBiome>) dataBaseConnectorExpected.loadBiomes(worldMock);
+        assertEquals(48, biomes.size());
     }
 
     @Test
@@ -137,10 +135,10 @@ public class DataBaseConnectorLoadingTest {
             World worldMock = Mockito.mock(World.class);
             when(worldMock.getID()).thenReturn(WOLRD_ID);
             ArrayList<AbstractBiome> biomes = (ArrayList<AbstractBiome>) dataBaseConnectorExpected
-                .loadBiomes(worldMock);
+                    .loadBiomes(worldMock);
 
-            ArrayList<WorldGenNode> nodes = (ArrayList<WorldGenNode>) dataBaseConnectorExpected
-                .loadNodes(worldMock, biomes);
+            ArrayList<WorldGenNode> nodes = (ArrayList<WorldGenNode>) dataBaseConnectorExpected.loadNodes(worldMock,
+                    biomes);
 
             int countNodesInForst = 0;
 
@@ -150,7 +148,7 @@ public class DataBaseConnectorLoadingTest {
                 }
             }
 
-            assertEquals(22, countNodesInForst);
+            assertEquals(4, countNodesInForst);
 
         } catch (LoadException | SQLException e) {
             fail("Failed to load the nodes due to an exception occuring");
@@ -164,11 +162,12 @@ public class DataBaseConnectorLoadingTest {
             World worldMock = Mockito.mock(World.class);
             when(worldMock.getID()).thenReturn(WOLRD_ID);
             ArrayList<AbstractBiome> biomes = (ArrayList<AbstractBiome>) dataBaseConnectorExpected
-                .loadBiomes(worldMock);
+                    .loadBiomes(worldMock);
 
-            LinkedHashMap<VoronoiEdge, BeachBiome> edges = (LinkedHashMap<VoronoiEdge, BeachBiome>) dataBaseConnectorExpected.loadBeachEdges(worldMock, biomes);
+            LinkedHashMap<VoronoiEdge, BeachBiome> edges = (LinkedHashMap<VoronoiEdge, BeachBiome>) dataBaseConnectorExpected
+                    .loadBeachEdges(worldMock, biomes);
 
-            assertEquals(85, edges.size());
+            assertEquals(39, edges.size());
 
         } catch (SQLException | LoadException e) {
             fail("Failed to load the beach edges due to an exception occuring");
@@ -182,17 +181,17 @@ public class DataBaseConnectorLoadingTest {
             World worldMock = Mockito.mock(World.class);
             when(worldMock.getID()).thenReturn(WOLRD_ID);
             ArrayList<AbstractBiome> biomes = (ArrayList<AbstractBiome>) dataBaseConnectorExpected
-                .loadBiomes(worldMock);
+                    .loadBiomes(worldMock);
 
-            LinkedHashMap<VoronoiEdge, RiverBiome> edges = (LinkedHashMap<VoronoiEdge, RiverBiome>) dataBaseConnectorExpected.loadRiverEdges(worldMock, biomes);
+            LinkedHashMap<VoronoiEdge, RiverBiome> edges = (LinkedHashMap<VoronoiEdge, RiverBiome>) dataBaseConnectorExpected
+                    .loadRiverEdges(worldMock, biomes);
 
-            assertEquals(6, edges.size());
+            assertEquals(2, edges.size());
 
         } catch (SQLException | LoadException e) {
             fail("Failed to load the beach edges due to an exception occuring");
         }
     }
-
 
     @Test
     public void loadChunkTest() {
@@ -206,7 +205,7 @@ public class DataBaseConnectorLoadingTest {
 
         assertEquals(0, chunk.getX());
         assertEquals(0, chunk.getY());
-        assertEquals(7, chunk.getEntities().size());
+        assertEquals(6, chunk.getEntities().size());
         assertEquals(WOLRD_ID, chunk.getWorld().getID());
         assertEquals(100, chunk.getTiles().size());
     }

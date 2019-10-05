@@ -66,15 +66,15 @@ public abstract class SaveableEntity extends AbstractEntity
     }
 
     public static class SaveableEntityMemento extends AbstractMemento implements Serializable {
-        public String entityType;
-        public int height;
-        public float row;
-        public float col;
-        public int entityID;
-        public float colRenderLength;
-        public float rowRenderLength;
-        public int renderOrder;
-        public boolean obstructed;
+        private String entityType;
+        private int height;
+        private float row;
+        private float col;
+        private int entityID;
+        private float colRenderLength;
+        private float rowRenderLength;
+        private int renderOrder;
+        private boolean obstructed;
 
         // TODO:dannathan find out if these need to be saved (they cause a stack
         // overflow in gson)
@@ -104,8 +104,67 @@ public abstract class SaveableEntity extends AbstractEntity
             this.texture = entity.getTexture();
         }
 
+        /**
+         * @return Returns the entity type for this memento object.
+         */
         public String getEntityType() {
             return this.entityType;
+        }
+
+        /**
+         * @return Returns the height value for this memento object.
+         */
+        public int getHeight() {
+            return this.height;
+        }
+
+        /**
+         * @return Returns the row value for this memento object.
+         */
+        public float getRow() {
+            return this.row;
+        }
+
+        /**
+         * @return Returns the column value for this memento object.
+         */
+        public float getCol() {
+            return this.col;
+        }
+
+        /**
+         * @return Returns the render order for this memento object.
+         */
+        public int getRenderOrder() {
+            return this.renderOrder;
+        }
+
+        /**
+         * @return Returns the for this memento object.
+         */
+        public int getEntityID() {
+            return this.entityID;
+        }
+
+        /**
+         * @return Returns the column render value for this memento object.
+         */
+        public float getColRenderLength() {
+            return this.colRenderLength;
+        }
+
+        /**
+         * @return Returns the row render value for this memento object.
+         */
+        public float getRowRenderLength() {
+            return this.rowRenderLength;
+        }
+
+        /**
+         * @return Returns true if the memento object is obstructable.
+         */
+        public boolean getObstructed() {
+            return this.obstructed;
         }
     }
 
