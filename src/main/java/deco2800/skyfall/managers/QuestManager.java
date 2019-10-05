@@ -3,7 +3,6 @@ package deco2800.skyfall.managers;
 import deco2800.skyfall.buildings.BuildingEntity;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -249,7 +248,7 @@ public class QuestManager extends TickableManager{
                 }
             }
         }
-        if (buildingsTotal.containsAll(currentBuildings)) {
+        if (currentBuildings.containsAll(buildingsTotal)) {
             allBuildings = true;
         }
         return allBuildings;
@@ -272,6 +271,15 @@ public class QuestManager extends TickableManager{
             questSuccess = true;
             //Other quest success stuff here, or quest success method
         }
+    }
+
+
+    /**
+     * Access player for testing
+     * @return main character entity
+     */
+    protected MainCharacter getPlayer() {
+        return player;
     }
 
     public boolean questFinished() {
@@ -307,7 +315,6 @@ public class QuestManager extends TickableManager{
 
     }
 
-
     /**
      * Resets the current quest of the player
      */
@@ -316,5 +323,4 @@ public class QuestManager extends TickableManager{
         this.setQuestLevel(currentLevel);
         MainCharacter.getInstance().changeHealth(50);
     }
-
 }
