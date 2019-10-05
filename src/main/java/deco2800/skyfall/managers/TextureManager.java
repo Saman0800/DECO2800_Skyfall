@@ -223,6 +223,10 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("sword_tex", new Texture("resources/weapons/sword.png"));
             textureMap.put("sword", new Texture("resources/weapons/sword.png"));
+
+            //environment things
+            textureMap.put("shipwrecks", new Texture("resources/world_details/shipwrecks.png"));
+
             // Weapons pick-up
             textureMap.put("sword_tex", new Texture("resources/weapons/sword" +
                     ".png"));

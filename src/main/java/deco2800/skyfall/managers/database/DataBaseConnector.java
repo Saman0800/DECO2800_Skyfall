@@ -721,6 +721,9 @@ public class DataBaseConnector {
                 case "VolcanicTree":
                     entity = new VolcanicTree(memento);
                     break;
+                    case "Shipwrecks":
+                        entity = new Shipwrecks(memento);
+                        break;
                 default:
                     throw new RuntimeException(String.format("Could not create %s from memento", memento.entityType));
                 }
