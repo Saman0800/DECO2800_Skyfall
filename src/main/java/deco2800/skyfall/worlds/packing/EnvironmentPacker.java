@@ -8,9 +8,9 @@ import java.util.ArrayList;
  * entities and an initialized world based on the contents of the story so that to
  * improve the connection between the game and the story.
  *
- * Notes: This class is used after the WorldBuilder.getWorld() set by a WorldDirector and
- * before saving the world. Also, the current packing process is based on the world set
- * by WorldDirector.constructNBiomeSinglePlayerWorld().
+ * Notes: in order to avoid errors by rewriting messy world codes from previous sprints, the
+ * packing process is run based on the initial world that has been set by a WorldDirector and
+ * a WorldBuilder.
  *
  */
 public class EnvironmentPacker {
