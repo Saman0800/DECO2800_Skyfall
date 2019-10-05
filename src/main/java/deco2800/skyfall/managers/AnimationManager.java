@@ -43,6 +43,10 @@ public class AnimationManager extends AbstractManager {
         this.generateAnimationObject("mario_left",
                 "mario_left", 100, 138, DEFAULT_FRAME_RATE);
 
+        // Add bike animation
+        this.generateAnimationObject("bikeW","resources/Bike_Left_Animation/left.atlas",0.05f);
+        this.generateAnimationObject("bikeE","resources/Bike_Right_Animation/right.atlas",0.05f);
+
         this.generateAnimationObject("whitebearNE","resources/whitebearright/whitebearright.atlas",0.05f);
         this.generateAnimationObject("whitebearN","resources/whitebearback/whitebearback.atlas",0.05f);
         this.generateAnimationObject("whitebearNW","resources/whitebearleft/whitebearleft.atlas",0.05f);

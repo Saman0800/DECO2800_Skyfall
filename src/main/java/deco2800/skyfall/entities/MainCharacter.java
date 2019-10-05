@@ -1848,6 +1848,14 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         addAnimations(AnimationRole.STILL, Direction.DEFAULT,
                 new AnimationLinker("MainCharacter_Dead_E_Still",
                         AnimationRole.STILL, Direction.DEFAULT, false, true));
+
+        // Add bike animation
+        addAnimations(AnimationRole.VEHICLE_MOVE, Direction.WEST,
+                new AnimationLinker("bikeW",
+                        AnimationRole.VEHICLE_MOVE, Direction.WEST, true, true));
+        addAnimations(AnimationRole.VEHICLE_MOVE, Direction.EAST,
+                new AnimationLinker("bikeE",
+                        AnimationRole.VEHICLE_MOVE, Direction.EAST, true, true));
     }
 
     private Map<Direction,String> defaultMainCharacterTextureMap=new HashMap<>();
@@ -1913,7 +1921,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             }
 
         }else{
-
+            setCurrentState(AnimationRole.VEHICLE_MOVE);
         }
     }
 
