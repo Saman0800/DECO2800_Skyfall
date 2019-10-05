@@ -331,7 +331,6 @@ public class InventoryTable extends AbstractPopUpElement {
      * what item is selected.
      */
     private void updateItemInfo(){
-        //System.out.println(inventorySelected);
         if (inventorySelected != null){
             infoPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject(inventorySelected + "_desc"));
         } else{

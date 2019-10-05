@@ -185,7 +185,6 @@ public class CollectCreateTable extends AbstractPopUpElement{
             titleLabel = new Label(" CREATE ", skin,  "title-pill");
         }
 
-        baseTable.setDebug(true);
         baseTable.add(titleLabel);
         baseTable.row();
         baseTable.add(labelTable);
