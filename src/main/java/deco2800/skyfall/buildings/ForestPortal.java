@@ -19,7 +19,6 @@ import java.util.Map;
 public class ForestPortal extends AbstractPortal implements Blueprint {
 
     public String currentBiome = "forest";
-    public String nextBiome = "desert";
     public boolean blueprintLearned = false;
     public String name = "forestPortal";
     Texture texture;
@@ -37,7 +36,8 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
      */
     public ForestPortal(float col, float row, int renderOrder) {
         super(col, row, renderOrder);
-        this.setTexture("portal");
+        this.setTexture("portal_forest");
+        this.setNext("desert");
 
     }
 
@@ -121,37 +121,8 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
     }
 
 
-    public void unlocknext(MainCharacter character) {
-        super.unlocknext(character, nextBiome);
-    }
 
-    /**
-     * Move characters location to the next biome
-     * To be implemented when a player clicks on the portal
-     * @param character - The Character to teleport
-     * @param  world - The world to teleport through
-     */
-    public void teleport(MainCharacter character, World world) {
-        character.unlockBiome(nextBiome);
-        //move to a random place on the map
-        AbstractBiome next = null;
-        for (AbstractBiome biome: world.getBiomes()) {
-            if (biome.getBiomeName() == nextBiome) {
-                next = biome;
-            }
-        }
 
-        if (next == null) {
-            // TODO: @CGulley add a logger and send message to the logger about invalid biome
-            logger.warn("No next biome");
-
-        } else {
-            ArrayList<Tile> biomeTiles = next.getTiles();
-            Tile firstTile = biomeTiles.get(0);
-            // Setting the characters tile to the next biome
-            character.setPosition(firstTile.getCol(),firstTile.getRow());
-        }
-    }
 
 
 }

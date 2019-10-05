@@ -9,7 +9,6 @@ import java.util.Map;
 public class DesertPortal extends AbstractPortal implements Blueprint {
 
     public String currentBiome = "desert";
-    public String nextBiome = "mountain";
     public String name = "desertPortal";
     public boolean blueprintLearned = false;
     Texture texture;
@@ -23,7 +22,8 @@ public class DesertPortal extends AbstractPortal implements Blueprint {
      */
     public DesertPortal(float col, float row, int renderOrder) {
         super(col, row, renderOrder);
-        this.setTexture("portal");
+        this.setTexture("portal_desert");
+        this.setNext("mountain");
 
     }
 
@@ -99,10 +99,6 @@ public class DesertPortal extends AbstractPortal implements Blueprint {
             blueprintLearned = true;
         }
 
-    }
-
-    public void unlocknext(MainCharacter character) {
-        super.unlocknext(character, nextBiome);
     }
 
 

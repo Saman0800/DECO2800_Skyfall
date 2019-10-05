@@ -394,6 +394,12 @@ public class TextureManager extends AbstractManager {
             textureMap.put("watchtower_180", new Texture("resources/world_structures/watchtower_180.png"));
             textureMap.put("watchtower_270", new Texture("resources/world_structures/watchtower_270.png"));
 
+            //Portal Textures
+            textureMap.put("portal_desert", new Texture("resources/world_structures/portal_desert.png"));
+            textureMap.put("portal_forest", new Texture("resources/world_structures/portal_desert.png"));
+            textureMap.put("portal_mountain", new Texture("resources/world_structures/portal_desert.png"));
+
+
             // Old Enemy
             textureMap.put("robot", new Texture("resources/enemyOld/robot.png"));
             textureMap.put("spider", new Texture("resources/enemyOld/spider.png"));

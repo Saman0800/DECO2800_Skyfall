@@ -5,10 +5,13 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +25,8 @@ public abstract class AbstractPortal extends AbstractEntity {
     private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);
     // a building object name
     private static final String ENTITY_ID_STRING = "PortalID";
+    // The next biome to teleport to
+    public String nextBiome;
 
 
 
@@ -54,11 +59,12 @@ public abstract class AbstractPortal extends AbstractEntity {
 
 
     /**
-     * Unlocks the next biome
+     * Sets the next Biome to teleport to
      */
-    public void unlocknext(MainCharacter character, String nextBiome) {
-        character.unlockBiome(nextBiome);
+    public void setNext(String nextBiome) {
+        this.nextBiome = nextBiome;
     }
+
 
 
     /**
@@ -71,6 +77,34 @@ public abstract class AbstractPortal extends AbstractEntity {
         // TODO: @CGulley - Create a general teleport method for all portals.
         //  For now, individual functionality in child classes
 
+    }
+
+    /**
+     * Move characters location to the next biome
+     * To be implemented when a player clicks on the portal
+     * @param character - The Character to teleport
+     * @param  world - The world to teleport through
+     */
+    public void teleport(MainCharacter character, World world) {
+        character.unlockBiome(nextBiome);
+        //move to a random place on the map
+        AbstractBiome next = null;
+        for (AbstractBiome biome: world.getBiomes()) {
+            if (biome.getBiomeName() == nextBiome) {
+                next = biome;
+            }
+        }
+
+        if (next == null) {
+
+            log.warn("No next biome");
+
+        } else {
+            ArrayList<Tile> biomeTiles = next.getTiles();
+            Tile firstTile = biomeTiles.get(0);
+            // Setting the characters tile to the next biome
+            character.setPosition(firstTile.getCol(),firstTile.getRow());
+        }
     }
 
 
