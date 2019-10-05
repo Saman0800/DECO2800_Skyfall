@@ -9,9 +9,9 @@ public class Heavy extends Enemy {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public Heavy(float col, float row, float scaling, String biome, String textureName) {
-        super(col, row, "HeavyHitBox", "Heavy", 0.2f,  biome, textureName);
+        super(col, row, "HeavyHitBox", "Heavy", 0.06f,  biome, textureName);
 
         // Assign values, includes default values
-        this.setValues(scaling, 20, 5, 1, 5, 10);
+        this.setValues(scaling, 100, 1, 1,0.06f,0.03f);
     }
 }

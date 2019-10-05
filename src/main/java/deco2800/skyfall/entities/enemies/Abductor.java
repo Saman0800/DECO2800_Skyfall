@@ -9,9 +9,9 @@ public class Abductor extends Enemy {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public Abductor(float col, float row, float scaling, String biome, String textureName) {
-        super(col, row, "AbductorHitBox", "Abductor", 0.2f,  biome, textureName);
+        super(col, row, "AbductorHitBox", "Abductor",0.06f,  biome, textureName);
 
         // Assign values, includes default values
-        this.setValues(scaling, 10, 1, 1, 10, 20);
+        this.setValues(scaling, 100, 1, 1,0.06f,0.03f);
     }
 }

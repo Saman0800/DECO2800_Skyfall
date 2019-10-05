@@ -1,6 +1,5 @@
 package deco2800.skyfall.entities;
 
-//<<<<<<< HEAD
 import java.util.Map;
 import java.util.List;
 import org.slf4j.Logger;
@@ -12,15 +11,13 @@ import org.slf4j.LoggerFactory;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.GameScreen;
+import deco2800.skyfall.resources.*;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.gui.ManaBar;
 import com.badlogic.gdx.math.Vector2;
-import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.resources.Blueprint;
-import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.animation.Animatable;
 import com.badlogic.gdx.physics.box2d.Filter;
@@ -31,55 +28,15 @@ import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.observers.KeyUpObserver;
+import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.observers.KeyDownObserver;
-import deco2800.skyfall.resources.HealthResources;
+import deco2800.skyfall.entities.weapons.EmptyItem;
 import deco2800.skyfall.observers.TouchDownObserver;
-import deco2800.skyfall.entities.spells.SpellFactory;
-//=======
-import com.badlogic.gdx.physics.box2d.Filter;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.math.Vector2;
-
-import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.spells.SpellCaster;
 import deco2800.skyfall.entities.spells.SpellFactory;
-import deco2800.skyfall.GameScreen;
-import deco2800.skyfall.Tickable;
-import deco2800.skyfall.animation.Animatable;
-import deco2800.skyfall.animation.AnimationLinker;
-import deco2800.skyfall.animation.AnimationRole;
-import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.entities.spells.Spell;
-import deco2800.skyfall.entities.spells.SpellType;
-import deco2800.skyfall.entities.weapons.*;
-import deco2800.skyfall.gamemenu.HealthCircle;
-import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
-import deco2800.skyfall.gui.ManaBar;
-import deco2800.skyfall.managers.*;
-import deco2800.skyfall.observers.KeyDownObserver;
-import deco2800.skyfall.observers.KeyUpObserver;
-import deco2800.skyfall.observers.TouchDownObserver;
-import deco2800.skyfall.resources.*;
-import deco2800.skyfall.resources.items.Hatchet;
-import deco2800.skyfall.resources.items.PickAxe;
-import deco2800.skyfall.saving.Save;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.Tile;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-//>>>>>>> master
 
 /**
  * Main character in the game

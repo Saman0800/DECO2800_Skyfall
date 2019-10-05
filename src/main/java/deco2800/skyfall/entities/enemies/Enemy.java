@@ -15,14 +15,12 @@ import deco2800.skyfall.entities.ICombatEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.AnimationLinker;
-import deco2800.skyfall.managers.StatisticsManager;
 
 /**
  * An instance to abstract the basic variables and  methods of an enemy.
  */
 public class Enemy extends Peon
         implements Animatable, ICombatEntity, Tickable {
-
 
     // Logger for tracking enemy information
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -141,7 +139,6 @@ public class Enemy extends Peon
      *  Set whether enemy is hurt.
      * @param isHurt the player's "hurt" status
      */
-    @SuppressWarnings("WeakerAccess")
     public void setHurt(boolean isHurt) {
         this.isHurt = isHurt;
     }
@@ -200,23 +197,18 @@ public class Enemy extends Peon
      * under normal situation the enemy will random wandering in 100 radius circle
      */
     private void randomMoving() {
-        if ((!isAttacking || mainCharacter.isRecovering() || mainCharacter.isDead()) &&
-                !isMoving) {
+        if ((!isAttacking || mainCharacter.isRecovering() ||
+                mainCharacter.isDead()) && !isMoving) {
 
             float[] targetPosition = new float[2];
-            if (getObjectName().equals("Treeman")) {
-                //random movement range
-                targetPosition[0] = (float) (Math.random() * 100 + originalPosition[0]);
-                targetPosition[1] = (float) (Math.random() * 100 + originalPosition[1]);
-            } else if (getName().matches("Scout")) {
-                System.out.println(getName() + " is moving");
-                targetPosition[0] = (float) (Math.random() * 1200 + originalPosition[0]);
-                targetPosition[1] = (float) (Math.random() * 1200 + originalPosition[1]);
-            }
+            targetPosition[0] = (float) (Math.random() * 800 + originalPosition[0]);
+            targetPosition[1] = (float) (Math.random() * 800 + originalPosition[1]);
+
             float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow(targetPosition[0], targetPosition[1]);
             destination = new HexVector(randomPositionWorld[0], randomPositionWorld[1]);
             isMoving = true;
             this.position.moveToward(destination, getWalkingSpeed());
+            movementDirection(this.position.getAngle());
 
             SoundManager.stopSound(chasingSound);
             if (destination.getCol() == this.getCol() && destination.getRow() == this.getRow()) {
@@ -277,12 +269,13 @@ public class Enemy extends Peon
                 enemyDied();
             }
         } else {
-            updateAnimation();
+            movementDirection(this.position.getAngle());
 
             //if the player in angry distance or the enemy is attacked by player then turning to angry model
             if (distance(mainCharacter) < 2 && !(mainCharacter.isDead() ||
                     mainCharacter.isRecovering() || mainCharacter.isHurt())) {
                 setAttacking(true);
+                setCurrentState(AnimationRole.ATTACK);
                 chasePlayer();
                 SoundManager.loopSound(getChaseSound());
 
@@ -291,7 +284,6 @@ public class Enemy extends Peon
                 randomMoving();
                 setAttacking(false);
                 setSpeed(getWalkingSpeed());
-                setCurrentDirection(movementDirection(this.position.getAngle()));
                 setCurrentState(AnimationRole.MOVE);
                 SoundManager.stopSound(getChaseSound());
             }
@@ -307,6 +299,7 @@ public class Enemy extends Peon
      * else NULL. Also sets the direction
      */
     private void updateAnimation() {
+
         /* Short Animations */
         if (getToBeRun() != null) {
             if (getToBeRun().getType() == AnimationRole.DEAD) {
@@ -327,27 +320,39 @@ public class Enemy extends Peon
      * get movement direction
      *
      * @param angle the angle between to tile
-     * @return direction of the enemy.
      */
-    private Direction movementDirection(double angle) {
+    private void movementDirection(double angle) {
         angle = Math.toDegrees(angle - Math.PI);
-        if (angle < 0) {
-            angle += 360;
+
+        System.out.println(angle);
+        switch ((int) angle) {
+            case 0:
+                setCurrentDirection(Direction.NORTH);
+                break;
+            case 1:
+                setCurrentDirection(Direction.NORTH_EAST);
+                break;
+            case 2:
+                setCurrentDirection(Direction.EAST);
+                break;
+            case 3:
+                setCurrentDirection(Direction.SOUTH_EAST);
+                break;
+            case 4:
+                setCurrentDirection(Direction.SOUTH);
+                break;
+            case 5:
+                setCurrentDirection(Direction.SOUTH_WEST);
+                break;
+            case 6:
+                setCurrentDirection(Direction.WEST);
+                break;
+            case 7:
+                setCurrentDirection(Direction.NORTH_WEST);
+                break;
+            default:
+                break;
         }
-        if (between(angle, 0, 59.9)) {
-            return Direction.SOUTH_WEST;
-        } else if (between(angle, 60, 119.5)) {
-            return Direction.SOUTH;
-        } else if (between(angle, 120, 179.9)) {
-            return Direction.SOUTH_EAST;
-        } else if (between(angle, 180, 239.9)) {
-            return Direction.NORTH_EAST;
-        } else if (between(angle, 240, 299.9)) {
-            return Direction.NORTH;
-        } else if (between(angle, 300, 360)) {
-            return Direction.NORTH_WEST;
-        }
-        return null;
     }
 
     /**
@@ -472,11 +477,11 @@ public class Enemy extends Peon
     @Override
     public void setDirectionTextures() {
         String animationNameStart = "__ANIMATION_" + this.getName();
-        defaultDirectionTextures.put(Direction.EAST, animationNameStart + "MoveE_Anim:0");
+        //defaultDirectionTextures.put(Direction.EAST, animationNameStart + "MoveE_Anim:0")
         defaultDirectionTextures.put(Direction.WEST, animationNameStart + "MoveW_Anim:0");
         defaultDirectionTextures.put(Direction.SOUTH, animationNameStart + "MoveS_Anim:0");
         defaultDirectionTextures.put(Direction.NORTH, animationNameStart + "MoveN_Anim:0");
-        // defaultDirectionTextures.put(Direction.NORTH_EAST, animationNameStart + "MoveNE_Anim:0");
+        defaultDirectionTextures.put(Direction.NORTH_EAST, animationNameStart + "MoveNE_Anim:0");
         defaultDirectionTextures.put(Direction.NORTH_WEST, animationNameStart + "MoveNW_Anim:0");
         defaultDirectionTextures.put(Direction.SOUTH_EAST, animationNameStart + "MoveSE_Anim:0");
         defaultDirectionTextures.put(Direction.SOUTH_WEST, animationNameStart + "MoveSW_Anim:0");

@@ -87,8 +87,8 @@ public class WorldDirector {
         builder.addEntity(new LizardHome(0, 2, mainCharacter));
         builder.addEntity(new IceWhitebear(-2, 0, mainCharacter));
         builder.addEntity(new Tiger(-4f,-2f,mainCharacter));
-        builder.addEntity(new Scout(3,2f, 0.7f, "Forest",
-                "enemyScout"));
+        builder.addEntity(new Heavy(3,2f, 0.7f, "Forest",
+                "enemyHeavy"));
 
         builder.addEntity(new Camel(34, -7, mainCharacter));
         builder.addEntity(new Horse(-8,-6, mainCharacter));
