@@ -92,8 +92,6 @@ public class GoldTable extends AbstractPopUpElement{
         int ypos = 280;
 
         for (Map.Entry<Integer, Integer> entry : goldAmounts.entrySet()) {
-//            System.out.println(entry.getKey());
-//            System.out.println(entry.getValue());
             ImageButton icon = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("goldPiece" + entry.getKey()));
             icon.setName("icon");
             icon.setSize(100, 100);

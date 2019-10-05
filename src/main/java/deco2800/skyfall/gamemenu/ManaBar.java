@@ -22,9 +22,7 @@ public class ManaBar extends StatBar {
     protected void updateInnerCircle(int newValue) {
 
         if (smallerCircle == null) {
-            System.out.println("Smaller circle is null");
             if (biggerCircle == null) {
-                System.out.println("Bigger circle is null");
                 return;
             }
             return;
