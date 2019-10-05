@@ -34,9 +34,7 @@ public class MovementTask extends AbstractTask{
 			//we have a path
 			if(path.isEmpty()) {
 				complete = true;
-                updateAnimation();
 			} else {
-                updateAnimation();
 				entity.moveTowards(path.get(0).getCoordinates());
 				//This is a bit of a hack.
 				if(entity.getPosition().isCloseEnoughToBeTheSame(path.get(0).getCoordinates())) {
