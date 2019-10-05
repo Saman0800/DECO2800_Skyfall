@@ -55,7 +55,7 @@ public class SandCar extends AbstractVehicle implements Animatable, Item {
     }
 
     @Override
-    public Boolean isCarryable() {
+    public boolean isCarryable() {
         return true;
     }
 
@@ -65,7 +65,7 @@ public class SandCar extends AbstractVehicle implements Animatable, Item {
     }
 
     @Override
-    public Boolean isExchangeable() {
+    public boolean isExchangeable() {
         return true;
     }
 
@@ -80,8 +80,8 @@ public class SandCar extends AbstractVehicle implements Animatable, Item {
     }
 
     @Override
-    public Boolean isEquippable() {
-        return null;
+    public boolean isEquippable() {
+        return true;
     }
 
 

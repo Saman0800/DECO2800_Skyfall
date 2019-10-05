@@ -1,10 +1,7 @@
 package deco2800.skyfall.entities.vehicle;
 
 import deco2800.skyfall.animation.Animatable;
-import deco2800.skyfall.animation.AnimationLinker;
-import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.entities.ICombatEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.resources.Item;
@@ -79,7 +76,7 @@ public class Bike extends AbstractVehicle implements Animatable, Item {
     }
 
     @Override
-    public Boolean isCarryable() {
+    public boolean isCarryable() {
         return true;
     }
 
@@ -89,7 +86,7 @@ public class Bike extends AbstractVehicle implements Animatable, Item {
     }
 
     @Override
-    public Boolean isExchangeable() {
+    public boolean isExchangeable() {
         return true;
     }
 
@@ -104,8 +101,8 @@ public class Bike extends AbstractVehicle implements Animatable, Item {
     }
 
     @Override
-    public Boolean isEquippable() {
-        return null;
+    public boolean isEquippable() {
+        return true;
     }
 
 

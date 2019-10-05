@@ -1041,7 +1041,6 @@ public class MainCharacter extends Peon
             foodAccum -= 1.f;
         }
     }
-
     @Override
     public void handleCollision(Object other) {
         // Put specific collision logic here
@@ -1102,24 +1101,24 @@ public class MainCharacter extends Peon
                 break;
 
             case Input.Keys.F:
-//                if(!isOnVehicle){
-//                    Bike bike=null;
-//                    for(AbstractEntity bk:GameManager.get().getWorld().getEntities()){
-//                        if(bk instanceof Bike && bk.distance(this)<3){
-//                            bike= (Bike) bk;
-//                            bike.removeBike();
-//                            isOnVehicle=true;
-//                            setCurrentState(AnimationRole.NULL);
-//                            vehicleTexture("bike");
-//                            maxSpeed=10f;
-//                        }
-//                    }
-//
-//                }else{
-//                    defaultDirectionTextures=defaultMainCharacterTextureMap;
-//                    isOnVehicle=false;
-//                    GameManager.get().getWorld().addEntity(new Bike(this.getCol(),this.getRow(),this));
-//                }
+                if(!isOnVehicle){
+                    Bike bike=null;
+                    for(AbstractEntity bk:GameManager.get().getWorld().getEntities()){
+                        if(bk instanceof Bike && bk.distance(this)<3){
+                            bike= (Bike) bk;
+                            bike.removeBike();
+                            isOnVehicle=true;
+                            setCurrentState(AnimationRole.NULL);
+                            vehicleTexture("bike");
+                            maxSpeed=10f;
+                        }
+                    }
+
+                }else{
+                    defaultDirectionTextures=defaultMainCharacterTextureMap;
+                    isOnVehicle=false;
+                    GameManager.get().getWorld().addEntity(new Bike(this.getCol(),this.getRow(),this));
+                }
                 vehicleToUse();
                 break;
 
@@ -1165,69 +1164,9 @@ public class MainCharacter extends Peon
             default:
                 switchItem(keycode);
                 break;
-        }
-        //Let the SpellCaster know a key was pressed.
-        case Input.Keys.W:
-            yInput += 1;
-            break;
-        case Input.Keys.A:
-            xInput += -1;
-            break;
-        case Input.Keys.S:
-            yInput += -1;
-            break;
-        case Input.Keys.D:
-            xInput += 1;
-            break;
-        case Input.Keys.V:
-            petsManager.replacePet(this);
-            break;
-
-        case Input.Keys.SHIFT_LEFT:
-            isSprinting = true;
-            maxSpeed *= 2.f;
-            break;
-        case Input.Keys.SPACE:
-            useEquipped();
-
-            if (this.equippedItem instanceof Weapon) {
-                float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
-                float[] clickedPosition = WorldUtil.worldCoordinatesToSubColRow(mouse[0], mouse[1]);
-                HexVector mousePosition = new HexVector(clickedPosition[0], clickedPosition[1]);
-
-                this.attack(mousePosition);
             }
-            break;
-        case Input.Keys.ALT_LEFT:
-            // Attack moved to SPACE
-            break;
-        case Input.Keys.G:
-            addClosestGoldPiece();
-            break;
-        case Input.Keys.M:
-            getGoldPouchTotalValue();
-            break;
-        case Input.Keys.Z:
-            selectSpell(SpellType.FLAME_WALL);
-            break;
-        case Input.Keys.X:
-            selectSpell(SpellType.SHIELD);
-            break;
-        case Input.Keys.C:
-            selectSpell(SpellType.TORNADO);
-            break;
-        case Input.Keys.L:
-            toggleCameraLock();
-            break;
-        case Input.Keys.K:
-            centreCameraManual();
-            break;
-        default:
-            switchItem(keycode);
-            break;
-        }
+
         // Let the SpellCaster know a key was pressed.
->>>>>>> origin/master
         spellCaster.onKeyPressed(keycode);
     }
 
@@ -1962,17 +1901,6 @@ public class MainCharacter extends Peon
             setCurrentState(AnimationRole.VEHICLE_BIKE_MOVE);
         }
     }
-
-        /**
-         * Toggles if the camera should follow the player
-         */
-        private void toggleCameraLock () {
-            if (!cameraLock) {
-                cameraLock = true;
-                centreCameraManual();
-            } else {
-                cameraLock = false;
-            }
 
     /**
      * Toggles if the camera should follow the player
