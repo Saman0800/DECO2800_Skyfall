@@ -682,19 +682,16 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
                 removeEntity(entity);
                 gmm.getInventory().add((Item) entity);
             } else if (entity instanceof Chest) {
-                GameMenuManager menuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
-                ChestTable chest = (ChestTable) menuManager.getPopUp("chestTable");
+                ChestTable chest = (ChestTable) gmm.getPopUp("chestTable");
                 chest.updateChestPanel((Chest) entity);
-                menuManager.setPopUp("chestTable");
+                gmm.setPopUp("chestTable");
             } else if (entity instanceof BlueprintShop) {
-                GameMenuManager menuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
-                BlueprintShopTable bs = (BlueprintShopTable) menuManager.getPopUp("blueprintShopTable");
+                BlueprintShopTable bs = (BlueprintShopTable) gmm.getPopUp("blueprintShopTable");
                 bs.updateBlueprintShopPanel();
-                menuManager.setPopUp("blueprintShopTable");
+                gmm.setPopUp("blueprintShopTable");
             } else if (entity instanceof BuildingEntity) {
                 BuildingEntity e = (BuildingEntity) entity;
-                GameMenuManager manager = GameManager.getManagerFromInstance(GameMenuManager.class);
-                MainCharacter mc = manager.getMainCharacter();
+                MainCharacter mc = gmm.getMainCharacter();
                 switch (e.getBuildingType()) {
                     case FORESTPORTAL:
                         ForestPortal forestPortal = new ForestPortal(0, 0, 0);

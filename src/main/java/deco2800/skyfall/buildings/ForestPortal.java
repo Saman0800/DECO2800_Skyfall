@@ -21,7 +21,7 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
 
     public String currentBiome = "forest";
     public boolean blueprintLearned = false;
-    public String name = "portal";
+    public String name = "forestPortal";
     Texture texture;
     // a logger
     private final transient Logger logger = LoggerFactory.getLogger(ForestPortal.class);

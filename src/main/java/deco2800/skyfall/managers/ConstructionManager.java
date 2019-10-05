@@ -15,6 +15,7 @@ import deco2800.skyfall.buildings.BuildingEntity;
 import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.buildings.BuildingWidgets;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.structures.AbstractBuilding;
 import deco2800.skyfall.buildings.BuildingType;
 import deco2800.skyfall.worlds.world.World;
@@ -179,22 +180,49 @@ public class ConstructionManager extends TickableManager {
 
             Skin skin = new Skin(Gdx.files.internal("resources/uiskin.skin"));
 
-            //to be improved when building factory has been created
-            TextButton house = new TextButton("House", skin);
-            TextButton storageUnit= new TextButton("Stroage Unit", skin);
             TextButton setting = new TextButton("Setting", skin);
 
             setting.setBounds(50, 150, 140, 40);
 
-            house.setBounds(50, 450, 140, 40);
-            storageUnit.setBounds(50, 350, 140, 40);
-
-            buildMenu.addActor(house);
-            buildMenu.addActor(storageUnit);
             buildMenu.addActor(setting);
 
-            World world = GameManager.get().getWorld();
+            GameMenuManager manager = GameManager.getManagerFromInstance(GameMenuManager.class);
+            MainCharacter mc = manager.getMainCharacter();
 
+            int pos = 0;
+            for (BuildingType b : mc.craftedBuildings) {
+                String name = b.getName();
+                TextButton building = new TextButton(name, skin);
+                if (pos < 3){
+                    building.setBounds(50, 450 - pos * 100, 140, 40);
+                }else if(pos < 6){
+                    building.setBounds(300, 450 - (pos - 3) * 100, 140, 40);
+                }else{
+                    building.setBounds(600, 450 - (pos - 6) * 100, 140, 40);
+                }
+
+                final int FINALi = pos;
+                pos++;
+
+                buildMenu.addActor(building);
+                building.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y){
+
+                        hideBuildMenu();
+                        Pixmap pm = new Pixmap(Gdx.files.internal("resources/world_structures/house3.png"));
+                        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
+                        pm.dispose();
+
+                        //Sets building to be enabled
+                        buildTrue = 1;
+                        //ID of the building we want
+                        buildingID = FINALi;
+
+                    }
+                });
+            }
+
+            /*
             for(int i = 0; i < buildingFactory.getCount(); i++){
                 //String name = BuildingType.values()[i].getName();
                 String name = BuildingType.values()[i].name();
@@ -230,61 +258,13 @@ public class ConstructionManager extends TickableManager {
                 });
             }
 
-
-
-            house.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    //call build function for specific building
-
-                    /*
-                    displayWindow();
-                    //TODO implement permissions
-                    //permission test have not been updated since switched to factory for buildings
-
-
-                    AbstractEntity mc = world.getSortedAgentEntities().get(world.getSortedAgentEntities().size() - 1);
-                    HexVector position = mc.getPosition();
-
-                    float row = position.getRow();
-                    float col = position.getCol();
-
-                    BuildingEntity building1 = selectBuilding(i, );
-                    building1.placeBuilding(building1.getRow(), building1.getCol(), building1.getHeight(), world);
-
-
-                     */
-                }
-            });
-
-            storageUnit.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y){
-
-                    /*
-                    displayWindow();
-
-                    //TODO implement permissions
-                    //permission test have not been updated since switched to factory for buildings
-
-                    AbstractEntity mc = world.getSortedAgentEntities().get(world.getSortedAgentEntities().size()-1);
-                    HexVector position = mc.getPosition();
-
-                    float row = position.getRow();
-                    float col = position.getCol();
-
-                    setBuildingToBePlaced(buildingFactory.createStorageUnit(row, col));
-                    buildingToBePlaced.placeBuilding(buildingToBePlaced.getRow(), buildingToBePlaced.getCol(), buildingToBePlaced.getHeight(), world);
-
-                     */
-                }
-            });
+             */
 
             setting.addListener(new ClickListener() {
                 public void clicked(InputEvent event, float x, float y){
                     showSetting();
                 }
-                });
+            });
         }
     }
 
@@ -306,9 +286,6 @@ public class ConstructionManager extends TickableManager {
      */
     public void build(World world, float x, float y) {
         buildingToBePlaced = selectBuilding(buildingID, x, y);
-        //buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
-
-
         //Permissions
         if (invCheck(GameManager.getManagerFromInstance(InventoryManager.class))){
             buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
@@ -322,7 +299,7 @@ public class ConstructionManager extends TickableManager {
     /**
      * Resets current building by setting to null.
      */
-    public void setNull() {
+    private void setNull() {
         buildingToBePlaced = null;
         Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
     }
@@ -648,7 +625,7 @@ public class ConstructionManager extends TickableManager {
         String className = buildings[0].getClass().getName();
         for (int i = 0; i < buildings.length; i++) {
 
-            if (buildings[i].getClass().getName() != className) {
+            if (!buildings[i].getClass().getName().equals(className)) {
                 return false;
             }
 
@@ -670,7 +647,7 @@ public class ConstructionManager extends TickableManager {
      * @param col - y position that building will be placed
      * @return Building Entity that is selected
      */
-    public BuildingEntity selectBuilding(int index, float row, float col){
+    private BuildingEntity selectBuilding(int index, float row, float col){
         switch (index){
             case 0:
                 return buildingFactory.createCabin(row, col);

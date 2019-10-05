@@ -1,65 +1,24 @@
 package deco2800.skyfall.entities;
 
-//<<<<<<< HEAD
-import java.util.Map;
-import java.util.List;
-
-import deco2800.skyfall.buildings.*;
-import org.slf4j.Logger;
-import java.util.HashMap;
-import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import org.slf4j.LoggerFactory;
-import deco2800.skyfall.Tickable;
-import deco2800.skyfall.managers.*;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import deco2800.skyfall.GameScreen;
-import deco2800.skyfall.saving.Save;
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.gui.ManaBar;
-import com.badlogic.gdx.math.Vector2;
-import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.resources.Blueprint;
-import deco2800.skyfall.resources.GoldPiece;
-import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.Animatable;
-import com.badlogic.gdx.physics.box2d.Filter;
-import deco2800.skyfall.entities.spells.Spell;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import deco2800.skyfall.gamemenu.HealthCircle;
-import deco2800.skyfall.resources.items.Hatchet;
-import deco2800.skyfall.resources.items.PickAxe;
-import deco2800.skyfall.animation.AnimationRole;
-import deco2800.skyfall.observers.KeyUpObserver;
-import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.animation.AnimationLinker;
-import deco2800.skyfall.observers.KeyDownObserver;
-import deco2800.skyfall.resources.HealthResources;
-import deco2800.skyfall.observers.TouchDownObserver;
-import deco2800.skyfall.entities.spells.SpellFactory;
-//=======
-import com.badlogic.gdx.physics.box2d.Filter;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.math.Vector2;
-
-import deco2800.skyfall.buildings.BuildingFactory;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.buildings.*;
+import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellCaster;
 import deco2800.skyfall.entities.spells.SpellFactory;
-import deco2800.skyfall.GameScreen;
-import deco2800.skyfall.Tickable;
-import deco2800.skyfall.animation.Animatable;
-import deco2800.skyfall.animation.AnimationLinker;
-import deco2800.skyfall.animation.AnimationRole;
-import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.gamemenu.HealthCircle;
-import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
+import deco2800.skyfall.gamemenu.popupmenu.ConstructionTable;
 import deco2800.skyfall.gui.ManaBar;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
@@ -72,9 +31,6 @@ import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
-
-import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import deco2800.skyfall.worlds.biomes.ForestBiome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,11 +38,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-//>>>>>>> master
 
-import static deco2800.skyfall.buildings.BuildingType.CABIN;
-import static deco2800.skyfall.buildings.BuildingType.CASTLE;
-import static deco2800.skyfall.buildings.BuildingType.WATCHTOWER;
+import static deco2800.skyfall.buildings.BuildingType.*;
+
 
 /**
  * Main character in the game
@@ -159,6 +113,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     // Manager for all of MainCharacter's inventories
     private InventoryManager inventories;
 
+    public boolean toBuild;
     //List of blueprints that the player has learned.
 
     private List<Blueprint> blueprintsLearned;
@@ -180,6 +135,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     //The name of the item to be created.
     private String itemToCreate;
+
+    public List<BuildingType> craftedBuildings;
+    public List<BuildingType> constructedBuildings;
 
     // Variables to sound effects
     private static final String WALK_NORMAL = "people_walk_normal";
@@ -337,6 +295,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     public MainCharacter(float col, float row, float speed, String name, int health) {
         super(row, col, speed, name, health, "MainCharacter");
+        toBuild = false;
         this.id = System.nanoTime();
         gameStage = 0;
         this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
@@ -344,6 +303,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.setObjectName("MainPiece");
         this.setMaxHealth(health);
         initialiselockedBiomes();
+        constructedBuildings = new ArrayList<>();
+        craftedBuildings = new ArrayList<>();
 
         GameManager.getManagerFromInstance(InputManager.class)
                 .addKeyDownListener(this);
@@ -961,7 +922,13 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 
             //Check we have permission to build
-
+            if (toBuild) {
+                GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
+                ConstructionTable bs = (ConstructionTable) gmm.getPopUp("constructionTable");
+                bs.build(GameManager.get().getWorld(),
+                        (int) clickedPosition[0], (int) clickedPosition[1]);
+            }
+            /*
             if (GameManager.getManagerFromInstance(ConstructionManager.class).getStatus() == 1) {
                 //    System.out.println(clickedPosition[0]);
                 //    System.out.println(clickedPosition[1]);
@@ -977,6 +944,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 GameManager.getManagerFromInstance(ConstructionManager.class).build(GameManager.get().getWorld(),
                         (int) clickedPosition[0], (int) clickedPosition[1]);
             }
+             */
         }
 
     }
@@ -1041,7 +1009,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-            GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
+            GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
+            ConstructionTable bs = (ConstructionTable) gmm.getPopUp("constructionTable");
+            bs.updateBlueprintShopPanel();
+            gmm.setPopUp("constructionTable");
+            //GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
         }
         // Do hunger stuff here
         if (isMoving) {
@@ -1600,6 +1572,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     public List<Blueprint> getUnlockedBlueprints() {
         List<Blueprint> unlocked = new ArrayList<>();
+
+        // For items and general storage
         switch (gameStage) {
             case 3:
                 unlocked.add(CABIN);
@@ -1615,6 +1589,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 unlocked.add(new Spear());
                 unlocked.add(CASTLE);
         }
+
+        // for portals
         switch (gameStage) {
             case 3:
                 unlocked.add(new ForestPortal(0, 0, 0));
@@ -1667,18 +1643,18 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         for (Blueprint blueprint : getBlueprintsLearned()) {
             if (blueprint.getClass() == newItem.getClass()) {
 
-                if (newItem.getRequiredMetal() > this.getInventoryManager().
-                        getAmount("Metal")) {
-                    logger.info("You don't have enough Metal");
-
-                } else if (newItem.getRequiredWood() > this.getInventoryManager().
-                        getAmount("Wood")) {
-                    logger.info("You don't have enough Wood");
-
-                } else if (newItem.getRequiredStone() > this.getInventoryManager().
-                        getAmount("Stone")) {
-                    logger.info("You don't have enough Stone");
-
+//                if (newItem.getRequiredMetal() > this.getInventoryManager().
+//                        getAmount("Metal")) {
+//                    logger.info("You don't have enough Metal");
+//
+//                } else if (newItem.getRequiredWood() > this.getInventoryManager().
+//                        getAmount("Wood")) {
+//                    logger.info("You don't have enough Wood");
+//
+//                } else if (newItem.getRequiredStone() > this.getInventoryManager().
+//                        getAmount("Stone")) {
+//                    logger.info("You don't have enough Stone");
+                if (false) {
                 } else {
                     switch (newItem.getName()) {
                         case "Hatchet":
@@ -1701,32 +1677,43 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                         //These are only placeholders and will change once coordinated
                         //with Building team
                         case "Cabin":
-                            tempFactory.createCabin(this.getCol(), this.getRow());
+                            craftedBuildings.add(CABIN);
                             break;
 
                         case "StorageUnit":
-                            tempFactory.createStorageUnit(this.getCol(), this.getRow());
+                            craftedBuildings.add(STORAGE_UNIT);
                             break;
 
                         case "TownCentre":
-                            tempFactory.createTownCentreBuilding(this.getCol(), this.getRow());
+                            craftedBuildings.add(TOWNCENTRE);
                             break;
 
                         case "Fence":
-                            tempFactory.createFenceBuilding(this.getCol(), this.getRow());
+                            craftedBuildings.add(FENCE);
                             break;
 
                         case "SafeHouse":
-                            tempFactory.createSafeHouse(this.getCol(), this.getRow());
+                            craftedBuildings.add(SAFEHOUSE);
                             break;
 
                         case "WatchTower":
-                            tempFactory.createWatchTower(this.getCol(), this.getRow());
+                            craftedBuildings.add(WATCHTOWER);
                             break;
 
                         case "Castle":
-                            tempFactory.createCastle(this.getCol(), this.getRow());
+                            craftedBuildings.add(CASTLE);
                             break;
+
+                        case "forestPortal":
+                            craftedBuildings.add(FORESTPORTAL);
+                            break;
+                        case "desertPortal":
+                            craftedBuildings.add(DESERTPORTAL);
+                            break;
+                        case "mountainPortal":
+                            craftedBuildings.add(MOUNTAINPORTAL);
+                        case "volcanoPortal":
+                            craftedBuildings.add(VOLCANOPORTAL);
                         default:
                             logger.info("Invalid Item");
                             break;
