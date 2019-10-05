@@ -23,6 +23,7 @@ import java.util.*;
 public class GameMenuManager extends TickableManager {
 
     private static TextureManager textureManager;
+    private EnvironmentManager environmentManager;
     private Stage stage;
     private MainCharacter mainCharacter;
     private InventoryManager inventory;
@@ -64,6 +65,7 @@ public class GameMenuManager extends TickableManager {
         inventory = GameManager.get().getManager(InventoryManager.class);
         soundManager = GameManager.get().getManager(SoundManager.class);
         questManager = GameManager.get().getManager(QuestManager.class);
+        environmentManager = GameManager.get().getManager(EnvironmentManager.class);
         stage = null;
         skin = null;
         characters = new String[NUMBEROFCHARACTERS];
@@ -362,7 +364,7 @@ public class GameMenuManager extends TickableManager {
         hudElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm, skin, this));
         hudElements.put("goldPill", new GoldStatusBar(stage, null, textureManager,  skin, this));
         hudElements.put("gameMenuBar2", new GameMenuBar2(stage, null, textureManager, skin, this));
-        hudElements.put("clock" , new Clock(stage, skin, this));
+        hudElements.put("clock" , new Clock(stage, skin, this, environmentManager));
 
         uiElements.put("HUD", new HeadsUpDisplay(stage, null, textureManager, skin, this, hudElements, questManager));
 

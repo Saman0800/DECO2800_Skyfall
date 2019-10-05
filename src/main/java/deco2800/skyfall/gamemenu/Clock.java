@@ -8,6 +8,7 @@ import deco2800.skyfall.managers.*;
 
 public class Clock extends AbstractUIElement{
     private final GameMenuManager gmm;
+    private final EnvironmentManager em;
     private Image clockImage;
     private Skin skin;
     private Label clockLabel;
@@ -15,11 +16,12 @@ public class Clock extends AbstractUIElement{
      * Constructor to create a clock image in game that changes in accordance with time
      * @param s Stage to display things on
      */
-    public Clock(Stage s, Skin skin, GameMenuManager gmm) {
+    public Clock(Stage s, Skin skin, GameMenuManager gmm, EnvironmentManager em) {
         // Set stage
         stage = s;
         this.skin = skin;
         this.gmm = gmm;
+        this.em = em;
         this.draw();
     }
     /**
@@ -42,10 +44,10 @@ public class Clock extends AbstractUIElement{
     /**
      * Updates clockDisplay arrow in accordance with time
      */
-    private void updateDisplay() {
+    public void updateDisplay() {
         // Time of day in hours
-        long time = GameManager.get().getManager(EnvironmentManager.class).getTime();
-        int decimal = GameManager.get().getManager(EnvironmentManager.class).getMinutes();
+        long time = em.getTime();
+        int decimal = em.getMinutes();
 
         // Current season
         String convTime = String.valueOf(time);
@@ -70,7 +72,8 @@ public class Clock extends AbstractUIElement{
         clockLabel.setFontScale(0.7f);
 
         clockImage.setScale(0.25f);
-
+        clockLabel.setName("clockImage");
+        clockLabel.setName("clockLabel");
         stage.addActor(clockImage);
         stage.addActor(clockLabel);
 
@@ -86,4 +89,9 @@ public class Clock extends AbstractUIElement{
         super.update();
         updateDisplay();
     }
+
+    public Label getClockLabel() {
+        return clockLabel;
+    }
+
 }
