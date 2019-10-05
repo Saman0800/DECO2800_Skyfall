@@ -34,13 +34,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
-
-
-public class GameScreen implements Screen,KeyDownObserver {
-	private final Logger LOG = LoggerFactory.getLogger(Renderer3D.class);
-	@SuppressWarnings("unused")
-	private final SkyfallGame game;
-	/**
+public class GameScreen implements Screen, KeyDownObserver {
+    private final Logger logger = LoggerFactory.getLogger(Renderer3D.class);
+    @SuppressWarnings("unused")
+    private final SkyfallGame game;
+    /**
      * Set the renderer. 3D is for Isometric worlds Check the documentation for each
      * renderer to see how it handles WorldEntity coordinates
      */
@@ -66,7 +64,7 @@ public class GameScreen implements Screen,KeyDownObserver {
     EnvironmentManager timeOfDay;
     public static boolean isPaused = false;
 
-    //A wrapper for shader
+    // A wrapper for shader
     ShaderWrapper shader;
 
     /**
@@ -85,9 +83,8 @@ public class GameScreen implements Screen,KeyDownObserver {
         /* Create an example world for the engine */
         this.game = game;
 
-
         this.save = new Save();
-        MainCharacter.getInstance(0,0,0.05f, "Main Piece", 10);
+        MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
         MainCharacter.getInstance().setSave(this.save);
         this.save.setMainCharacter(MainCharacter.getInstance());
         GameManager gameManager = GameManager.get();
@@ -98,13 +95,11 @@ public class GameScreen implements Screen,KeyDownObserver {
         gameMenuManager.setGame(game);
         databaseManager.startDataBaseConnector();
 
-
-
-        //Used to create to the world
+        // Used to create to the world
 
         // Create main world
         if (!isHost) {
-            //Creating the world
+            // Creating the world
             WorldBuilder worldBuilder = new WorldBuilder();
             WorldDirector.constructServerWorld(worldBuilder);
             world = worldBuilder.getWorld();
@@ -118,7 +113,7 @@ public class GameScreen implements Screen,KeyDownObserver {
                 world = worldBuilder.getWorld();
             } else {
 
-                //Creating the world
+                // Creating the world
                 world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 4, true).getWorld();
                 EnvironmentPacker packer = new EnvironmentPacker(world);
                 packer.doPackings();
@@ -211,7 +206,7 @@ public class GameScreen implements Screen,KeyDownObserver {
         blueKeyFrame.add(new TFTuple(19.0f, 0.19f));
         ambientBlue = new LinearSpectralValue(blueKeyFrame, gameEnvironManag);
 
-        //create a spawning manager
+        // create a spawning manager
         SpawningManager.createSpawningManager();
 
         PathFindingService pathFindingService = new PathFindingService();
@@ -226,16 +221,15 @@ public class GameScreen implements Screen,KeyDownObserver {
 
         GameManager.get().getManager(KeyboardManager.class).registerForKeyDown(this);
 
-        //Create the shader program from resource files
-        //Shader program will be attached later
+        // Create the shader program from resource files
+        // Shader program will be attached later
         shader = new ShaderWrapper("batch");
-        //add shader to rendererDebug
+        // add shader to rendererDebug
         rendererDebug.setShader(shader);
     }
 
     /**
-     * Renderer thread
-     * Must update all displayed elements using a Renderer
+     * Renderer thread Must update all displayed elements using a Renderer
      */
     @Override
     public void render(float delta) {
@@ -285,7 +279,7 @@ public class GameScreen implements Screen,KeyDownObserver {
      * Use the selected renderer to render objects onto the map
      */
     private void rerenderMapObjects(SpriteBatch batch, OrthographicCamera camera) {
-        //set ambient light
+        // set ambient light
         shader.setAmbientComponent(
                 new vec3(ambientRed.getIntensity(), ambientGreen.getIntensity(), ambientBlue.getIntensity()),
                 ambientIntensity.getIntensity());
@@ -303,14 +297,15 @@ public class GameScreen implements Screen,KeyDownObserver {
             }
         }
 
-        //finalise shader parameters and attach to batch
+        // finalise shader parameters and attach to batch
         shader.finaliseAndAttachShader(batch);
-        //render batch
+        // render batch
         renderer.render(batch, camera);
     }
 
     @Override
     public void show() {
+        // Do nothing on show.
     }
 
     /**
@@ -363,7 +358,7 @@ public class GameScreen implements Screen,KeyDownObserver {
 
         if (keycode == Input.Keys.F5) {
 
-            //Create a random world
+            // Create a random world
             world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 4, true).getWorld();
 
             // Add this world to the save
@@ -380,17 +375,17 @@ public class GameScreen implements Screen,KeyDownObserver {
 
         if (keycode == Input.Keys.F11) { // F11
             GameManager.get().showCoords = !GameManager.get().showCoords;
-            LOG.info("Show coords is now {}", GameManager.get().showCoords);
+            logger.info("Show coords is now {}", GameManager.get().showCoords);
         }
 
         if (keycode == Input.Keys.C) { // F11
             GameManager.get().showCoords = !GameManager.get().showCoords;
-            LOG.info("Show coords is now {}", GameManager.get().showCoords);
+            logger.info("Show coords is now {}", GameManager.get().showCoords);
         }
 
         if (keycode == Input.Keys.F10) { // F10
             GameManager.get().showPath = !GameManager.get().showPath;
-            LOG.info("Show Path is now {}", GameManager.get().showPath);
+            logger.info("Show Path is now {}", GameManager.get().showPath);
         }
 
         if (keycode == Input.Keys.F3) { // F3
@@ -447,7 +442,7 @@ public class GameScreen implements Screen,KeyDownObserver {
             }
 
             if (Gdx.input.isKeyPressed(Input.Keys.P)) {
-                //FIXME:jeffvan12 Implement saving the game when this is pretty
+                // FIXME:jeffvan12 Implement saving the game when this is pretty
             }
 
             if (Gdx.input.isKeyPressed(Input.Keys.EQUALS)) {

@@ -15,6 +15,7 @@ import deco2800.skyfall.util.BodyEditorLoader;
 import deco2800.skyfall.util.HexVector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.*;
 
 /**
@@ -77,9 +78,9 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     @Expose
     private String texture = "error_box";
 
-    //A modulating colour value
-    //each colour channel (0-1) will be multiplied by the corresponding value
-    //Default of (1.0f, 1.0f, 1.0f, 1.0f) will render sprite as normal
+    // A modulating colour value
+    // each colour channel (0-1) will be multiplied by the corresponding value
+    // Default of (1.0f, 1.0f, 1.0f, 1.0f) will render sprite as normal
     private Color modulatingColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
     @Expose
@@ -113,7 +114,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Constructor for an abstract entity
-     * 
+     *
      * @param col         the col position on the world
      * @param row         the row position on the world
      * @param renderOrder the height position on the world
@@ -147,7 +148,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Constructor for an abstract entity
-     * 
+     *
      * @param col             the col position on the world
      * @param row             the row position on the world
      * @param height          the height position on the world
@@ -191,7 +192,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Get the Z position of this AbstractWorld Entity
-     * 
+     *
      * @return The Z position
      */
     public int getHeight() {
@@ -237,7 +238,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * sets the position of the entity in the world
-     * 
+     *
      * @param col    the x coordinate for the entity
      * @param row    the y coordinate for the entity
      * @param height the z coordinate for the entity
@@ -299,9 +300,10 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
     /**
-     * Gets the modulating colour of this entity
-     * Each component will be multiplied against the current modulating colour
-     * Default is (1.0f, 1.0f, 1.0f, 1.0f), which will render with in standard colour
+     * Gets the modulating colour of this entity Each component will be multiplied
+     * against the current modulating colour Default is (1.0f, 1.0f, 1.0f, 1.0f),
+     * which will render with in standard colour
+     * 
      * @return The given modulating colour
      */
     public Color getModulatingColor() {
@@ -309,19 +311,21 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
     /**
-     * Sets the new modulating colour for this entity
-     * This will be in the form (0-1, 0-1, 0-1, 0-1, 0-1) correspoding to (r, g, b, a)
-     * @param color the new modulation colour to use, which will be clamped into a valid range
+     * Sets the new modulating colour for this entity This will be in the form (0-1,
+     * 0-1, 0-1, 0-1, 0-1) correspoding to (r, g, b, a)
+     * 
+     * @param color the new modulation colour to use, which will be clamped into a
+     *              valid range
      */
     public void setModulatingColor(Color color) {
         this.modulatingColor = color.clamp();
     }
 
     /**
-     * An overload to setModulatingColor
-     * Sets the new modulating colour for this entity
-     * This will be in the form (0-1, 0-1, 0-1, 0-1, 0-1) correspoding to (r, g, b, a)
-     * the new modulation colour will be clamped into a valid range
+     * An overload to setModulatingColor Sets the new modulating colour for this
+     * entity This will be in the form (0-1, 0-1, 0-1, 0-1, 0-1) correspoding to (r,
+     * g, b, a) the new modulation colour will be clamped into a valid range
+     * 
      * @param r component of new color
      * @param g component of new color
      * @param b component of new color
@@ -356,7 +360,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Gets the distance from an abstract entity
-     * 
+     *
      * @param e the abstract entity
      * @return the distance as a float
      */
@@ -405,7 +409,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Gets the associate animation with an animation role
-     * 
+     *
      * @param type Animation role to get animation for
      * @return animation name
      */
@@ -420,7 +424,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Gets the current animation to be run
-     * 
+     *
      * @return The animation to be run
      */
     public AnimationLinker getToBeRun() {
@@ -512,15 +516,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
             BodyEditorLoader loader = new BodyEditorLoader(
                     Gdx.files.internal("resources/HitBoxes" + "/" + fixtureDefName + "HitBox.json"));
 
-            // Creates a world for the hit box to inhabit
-            // PhysicsManager manager = new PhysicsManager();
-            // World world = manager.getBox2DWorld();
-
-            // Create the hit box body
-            // BodyDef bd = new BodyDef();
-            // bd.type = BodyDef.BodyType.DynamicBody;
-            // body = world.createBody(bd);
-
             // Assigns all the aspects of the fixture
             FixtureDef fixtureDef = new FixtureDef();
             fixtureDef.density = 1;
@@ -531,8 +526,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
             loader.attachFixture(body, "Character", fixtureDef, scale);
 
             // Set the collision of the body
-            // fixture = body.createFixture(fixtureDef);
-            // fixture.setSensor(!isCollidable);
+
         } catch (NullPointerException e) {
             log.warn("Failed to load custom hit box");
             defineFixture();
@@ -559,8 +553,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      */
     public void handleCollision(Object other) {
         // Does nothing as collision logic should be case specific
-        // The print log is slowing down the program and cluttering output
-        // log.info("I was hit: " + this.getClass() + "\n by: " + other.getClass());
     }
 
     /**
@@ -572,7 +564,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * The current direction that the object is facing
-     * 
+     *
      * @return Direction that the entity is facing
      */
     public Direction getCurrentDirection() {
@@ -581,7 +573,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * The current state of the object
-     * 
+     *
      * @return The state of the object
      */
     public AnimationRole getCurrentState() {
@@ -590,7 +582,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Set the current direction and also updates the animation to be run variable
-     * 
+     *
      * @param currentDirection new direction that the entity is facing
      */
     public void setCurrentDirection(Direction currentDirection) {
@@ -600,7 +592,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Set the current state and also updates the animation to be run variable
-     * 
+     *
      * @param currentState new direction that the entity is facing
      */
     public void setCurrentState(AnimationRole currentState) {
@@ -610,7 +602,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     /**
      * Adds an animation to the animation map
-     * 
+     *
      * @param role             State
      * @param currentDirection Direction
      * @param animationLinker  Animation object
@@ -637,7 +629,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     /**
      * How much to scale the texture by. Used in MainCharacter to scale down the
      * texture
-     * 
+     *
      * @return Scale multiplicative factor.
      */
     public float getScale() {
@@ -656,15 +648,13 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     /**
      * Check if given value is in range.
      *
-     * @param i the value to be checked.
-     * @param minValue the minimum value i should not be less then.
-     * @param maxValue the minimum value i should not exceed.
-     * @return If the value is between minValue and maxValue, return true, else false.
+     * @param targetValue the value to be checked.
+     * @param minValue    the minimum value i should not be less then.
+     * @param maxValue    the minimum value i should not exceed.
+     * @return If the value is between minValue and maxValue, return true, else
+     *         false.
      */
-    public static boolean between(double i, double minValue, double maxValue) {
-        if (i >= minValue && i <= maxValue)
-            return true;
-        else
-            return false;
+    public static boolean between(double targetValue, double minValue, double maxValue) {
+        return (targetValue >= minValue && targetValue <= maxValue);
     }
 }

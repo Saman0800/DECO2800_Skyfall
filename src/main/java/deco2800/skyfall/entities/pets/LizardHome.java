@@ -39,6 +39,7 @@ public class LizardHome extends AbstractPet implements Animatable, Harvestable {
 
     @Override
     public void onTick(long i) {
+        // Do nothing for now.
     }
 
     /**
@@ -46,7 +47,7 @@ public class LizardHome extends AbstractPet implements Animatable, Harvestable {
      */
     @Override
     public void configureAnimations() {
-
+        // Do nothing for now.
     }
 
     /**
@@ -54,10 +55,8 @@ public class LizardHome extends AbstractPet implements Animatable, Harvestable {
      */
     @Override
     public void setDirectionTextures() {
-
-
+        // Do nothing for now.
     }
-
 
     /**
      * cut this tree and mines 1 health from tree health

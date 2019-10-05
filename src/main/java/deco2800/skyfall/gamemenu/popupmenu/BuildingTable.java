@@ -21,28 +21,27 @@ import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDra
 /**
  * A class for building table pop up.
  */
-public class BuildingTable extends AbstractPopUpElement{
+public class BuildingTable extends AbstractPopUpElement {
     private Skin skin;
-    private Table buildingTable, itemInfo;
+    private Table buildingTable;
+    private Table itemInfo;
     private Blueprint selectedItem = null;
     private InventoryTable inventoryTable;
     private GameMenuManager gameMenuManager;
 
-
     /**
      * Constructs a building table.
      *
-     * @param stage Current stage.
-     * @param exit Exit button if it has one.
-     * @param textureNames Names of the textures.
-     * @param tm Current texture manager.
+     * @param stage           Current stage.
+     * @param exit            Exit button if it has one.
+     * @param textureNames    Names of the textures.
+     * @param tm              Current texture manager.
      * @param gameMenuManager Current game menu manager.
-     * @param skin Current skin.
+     * @param skin            Current skin.
      */
-    public BuildingTable(Stage stage, ImageButton exit,
-                      String[] textureNames, TextureManager tm,
-                      GameMenuManager gameMenuManager, Skin skin) {
-        super(stage, exit, textureNames,tm , gameMenuManager);
+    public BuildingTable(Stage stage, ImageButton exit, String[] textureNames, TextureManager tm,
+            GameMenuManager gameMenuManager, Skin skin) {
+        super(stage, exit, textureNames, tm, gameMenuManager);
         this.skin = skin;
         this.gameMenuManager = gameMenuManager;
         inventoryTable = (InventoryTable) gameMenuManager.getPopUp("inventoryTable");
@@ -64,6 +63,7 @@ public class BuildingTable extends AbstractPopUpElement{
      */
     @Override
     public void show() {
+        draw();
         super.show();
         buildingTable.setVisible(true);
     }
@@ -78,8 +78,8 @@ public class BuildingTable extends AbstractPopUpElement{
         super.draw();
         buildingTable = new Table();
         buildingTable.setSize(800, 800 * 1346 / 1862f);
-        buildingTable.setPosition(Gdx.graphics.getWidth()/2f - buildingTable.getWidth()/2,
-                (Gdx.graphics.getHeight() + 160) / 2f - buildingTable.getHeight()/2);
+        buildingTable.setPosition(Gdx.graphics.getWidth() / 2f - buildingTable.getWidth() / 2,
+                (Gdx.graphics.getHeight() + 160) / 2f - buildingTable.getHeight() / 2);
         buildingTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
 
         Table infoBar = new Table();
@@ -105,12 +105,13 @@ public class BuildingTable extends AbstractPopUpElement{
         items.add(number).padTop(10).colspan(4);
         items.row();
 
-        //testing
+        // testing
         gameMenuManager.getMainCharacter().addBlueprint(new Hatchet());
         gameMenuManager.getMainCharacter().addBlueprint(new PickAxe());
+
         List<Blueprint> blueprintsLearned = gameMenuManager.getMainCharacter().getBlueprintsLearned();
         // Generating items in getBlueprintsLearned
-        float itemWidth = 400/4f-10;
+        float itemWidth = 400 / 4f - 10;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 4; j++) {
                 try {
@@ -181,7 +182,7 @@ public class BuildingTable extends AbstractPopUpElement{
         itemsRequired.add(infoBar).width(230).height(230 * 188f / 1756).colspan(10).padTop(5);
         itemsRequired.row();
 
-        List<String> itemsNeeded= new ArrayList<>();
+        List<String> itemsNeeded = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : item.getAllRequirements().entrySet()) {
             if (entry.getValue() != 0) {
                 itemsNeeded.add(entry.getKey());
@@ -194,12 +195,15 @@ public class BuildingTable extends AbstractPopUpElement{
             for (int j = 0; j < 4; ++j) {
                 try {
                     String itemName = itemsNeeded.get(4 * i + j);
-                    itemsRequired.add(new Image(generateTextureRegionDrawableObject(itemName + "_inv"))).width((250 - 20 - 20) / 4f - 5).height((250 - 20 - 20) / 4f - 5).pad(5).expandY();
-                    Label number = new Label(String.valueOf(item.getAllRequirements().get(itemName)), skin, "white-label");
+                    itemsRequired.add(new Image(generateTextureRegionDrawableObject(itemName + "_inv")))
+                            .width((250 - 20 - 20) / 4f - 5).height((250 - 20 - 20) / 4f - 5).pad(5).expandY();
+                    Label number = new Label(String.valueOf(item.getAllRequirements().get(itemName)), skin,
+                            "white-label");
                     number.setFontScale(0.3f);
                     itemsRequired.add(number).top().padLeft(-15).padTop(5);
                 } catch (IndexOutOfBoundsException e) {
-                    itemsRequired.add(new Image(generateTextureRegionDrawableObject("item_background"))).width((250 - 20 - 20) / 4f - 5).height((250 - 20 - 20) / 4f - 5).pad(5).expandY();
+                    itemsRequired.add(new Image(generateTextureRegionDrawableObject("item_background")))
+                            .width((250 - 20 - 20) / 4f - 5).height((250 - 20 - 20) / 4f - 5).pad(5).expandY();
                     itemsRequired.add();
                 }
             }
@@ -211,5 +215,3 @@ public class BuildingTable extends AbstractPopUpElement{
 
     }
 }
-
-

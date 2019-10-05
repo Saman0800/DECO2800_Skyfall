@@ -22,7 +22,7 @@ public class BuildingFactory {
      */
     public BuildingEntity createCabin(float col, float row) {
         BuildingEntity cabin = new BuildingEntity(col, row, 2, BuildingType.CABIN);
-        BuildingType cabinType = BuildingType.CABIN;
+
         return cabin;
     }
 
