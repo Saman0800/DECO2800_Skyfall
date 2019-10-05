@@ -36,7 +36,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Random;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -267,7 +267,7 @@ public class MainCharacterTest {
     }
 
     /**
-     * Test kill effect
+     * Test kill effect and method
      */
     @Test
     public void killTest() {
@@ -281,6 +281,9 @@ public class MainCharacterTest {
         testMap.put(Direction.DEFAULT, animationLinker);
         testCharacter.addAnimations(AnimationRole.DEAD, Direction.DEFAULT, animationLinker);
         Assert.assertEquals(testMap, testCharacter.animations.get(AnimationRole.DEAD));
+
+        // Is the character dead?
+        Assert.assertTrue(testCharacter.isDead());
     }
 
     public void movementAnimationsExist() {
@@ -600,6 +603,110 @@ public class MainCharacterTest {
         testCharacter.restoreMana();
         Assert.assertEquals(this.testCharacter.mana, 1);
         Assert.assertEquals(this.testCharacter.manaCD, 0);
+    }
+
+    /**
+     * Test the getHeath() method works.
+     */
+    @Test
+    public void getHealthTest() {
+        assertEquals(10, testCharacter.getHealth());
+
+        testCharacter.changeHealth(-2);
+
+        assertEquals(8, testCharacter.getHealth());
+    }
+
+    /**
+     * Test the setDead() method works.
+     */
+    @Test
+    public void setDeadTest() {
+        testCharacter.setDead(false);
+        assertFalse(testCharacter.isDead());
+
+        testCharacter.changeHealth(-10);
+
+        assertTrue(testCharacter.isDead());
+
+        assertEquals(0, testCharacter.getHealth());
+    }
+
+    /**
+     * Test the setDead() method works.
+     */
+    @Test
+    public void getDeathsTest() {
+        testCharacter.changeHealth(-10);
+        assertTrue(testCharacter.isDead());
+
+        assertEquals(1, testCharacter.getDeaths());
+
+    }
+
+    /**
+     * Test the removeAllGold() method works.
+     */
+    @Test
+    public void removeAllGoldTest() {
+        assertEquals(100, testCharacter.getGoldPouchTotalValue());
+
+        testCharacter.removeAllGold();
+
+        assertEquals(0, testCharacter.getGoldPouchTotalValue());
+    }
+
+    /**
+     * Test the removeAllGold() method works.
+     */
+    @Test
+    public void playerHurtTest() {
+        assertEquals(100, testCharacter.getGoldPouchTotalValue());
+
+        testCharacter.removeAllGold();
+
+        assertEquals(0, testCharacter.getGoldPouchTotalValue());
+    }
+
+    /**
+     * Test the isRecovering() method works.
+     */
+    @Test
+    public void isRecoveringTest() {
+        testCharacter.playerHurt(2);
+
+        assertFalse(testCharacter.isRecovering());
+    }
+
+    /**
+     * Test the setRecovering() method works.
+     */
+    @Test
+    public void setRecoveringTest() {
+        testCharacter.playerHurt(2);
+        assertFalse(testCharacter.isRecovering());
+
+        testCharacter.setRecovering(false);
+        assertFalse(testCharacter.isRecovering());
+
+        testCharacter.setRecovering(true);
+        assertTrue(testCharacter.isRecovering());
+    }
+
+    /**
+     * Test the pop up methods work.
+     */
+    @Test
+    public void popUpTest() {
+        GameMenuManager gameMenuManager = new GameMenuManager();
+        gameMenuManager.setMainCharacter(testCharacter);
+        testCharacter.setUpGUI();
+
+        gameMenuManager.hideOpened();
+        gameMenuManager.setPopUp("gameOverTable");
+
+        assertEquals(testCharacter, gameMenuManager.getMainCharacter());
+        assertEquals(gameMenuManager.getPopUp("gameOverTable"), gameMenuManager.getCurrentPopUp());
     }
 
     @After

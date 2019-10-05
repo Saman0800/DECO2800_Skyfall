@@ -12,14 +12,8 @@ public class Berry extends HealthResources implements Item {
     // the name of the item
     private String name;
 
-
     // amount of health item provides
     private int health = 6;
-
-
-
-    //whether or not the item impacts the player's food fullness
-    private Boolean hasFoodEffect;
 
     // Logger to show messages
     private final Logger logger = LoggerFactory.getLogger(Berry.class);
@@ -31,29 +25,13 @@ public class Berry extends HealthResources implements Item {
         this.biome = "Forest";
         this.colour ="wine red";
         this.name ="Berry";
-        this.hasFoodEffect = true;
-        this.foodValue = 20;
-        //TODO: look into this.healthValue = 5;
-        this.foodValue = 10;
         this.healthValue = 5;
     }
-
 
     @Override
     public String getName() {
         return "Berry";
     }
-
-
-    /**
-     * Returns whether or not the item impacts the player's food fullness
-     *
-     * @return True if the item impacts on the player's food fullness, false otherwise
-     */
-    public Boolean hasFoodEffect() {
-        return hasFoodEffect;
-    }
-
 
     @Override
     public String toString() {
