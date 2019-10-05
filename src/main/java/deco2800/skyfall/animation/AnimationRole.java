@@ -11,5 +11,6 @@ public enum AnimationRole {
     HURT,
     DEAD,
     STILL,
+    VEHICLE_MOVE,
     NULL
 }

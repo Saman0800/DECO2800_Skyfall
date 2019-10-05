@@ -5,16 +5,18 @@ import deco2800.skyfall.entities.Peon;
 
 public abstract class AbstractVehicle extends Peon implements ICombatEntity {
     private int health;
-    private boolean isTaken = false;
+    private boolean isTaken;
 
     public AbstractVehicle(float col, float row) {
         this.setRow(row);
         this.setCol(col);
+        this.isTaken = false;
     }
 
     public AbstractVehicle(float row, float col, String texturename, int health) {
         super(row, col, 0.2f, texturename, health);
         this.setTexture(texturename);
+        this.isTaken = false;
 
     }
 

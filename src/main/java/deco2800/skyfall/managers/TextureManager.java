@@ -110,6 +110,18 @@ public class TextureManager extends AbstractManager {
             textureMap.put("stoneRN", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRN.png"));
             textureMap.put("stoneDead", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/Dead.png"));
 
+
+            //vehicle section
+            textureMap.put("bike", new Texture("resources/Bike/bike-left.png"));
+            textureMap.put("bikeSOUTH", new Texture("resources/Bike/bike-face-player.png"));
+            textureMap.put("bikeNORTH", new Texture("resources/Bike/back-side-player.png"));
+            textureMap.put("bikeWEST", new Texture("resources/Bike/leftside-player.png"));
+            textureMap.put("bikeEAST", new Texture("resources/Bike/rightside-player.png"));
+//            textureMap.put("bikeNORTH_WEST", new Texture("resources/Bike/bike-face-player.png"));
+//            textureMap.put("bikeSOUTH_WEST", new Texture("resources/Bike/bike-face-player.png"));
+
+
+
             textureMap.put("chestClosed", new Texture("resources/chest_icon.png"));
             textureMap.put("blueprintShop", new Texture("resources/shopkeeper.png"));
 

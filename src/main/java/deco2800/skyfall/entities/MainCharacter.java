@@ -16,6 +16,7 @@ import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.entities.vehicle.Bike;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
 import deco2800.skyfall.gui.ManaBar;
@@ -1011,7 +1012,10 @@ public class MainCharacter extends Peon
     public void handleCollision(Object other) {
         //Put specific collision logic here
     }
-
+    private Map<Direction, String> vehicleDirection=new HashMap<>();
+    private void vehicleTexture(String vehicleName){
+        defaultDirectionTextures=vehicleDirection;
+    }
 
     /**
      * Sets the Player's current movement speed
@@ -1050,6 +1054,28 @@ public class MainCharacter extends Peon
                 break;
             case Input.Keys.V:
                 petsManager.replacePet(this);
+                break;
+
+            case Input.Keys.F:
+                if(!isOnVehicle){
+                    isOnVehicle=true;
+                    setCurrentState(AnimationRole.NULL);
+                    vehicleTexture("bike");
+//                    setTexture("bikeSOUTH");
+                    Bike bike=null;
+                    for(AbstractEntity bk:GameManager.get().getWorld().getEntities()){
+                        if(bk instanceof Bike){
+                            bike= (Bike) bk;
+                            bike.removeBike();
+                        }
+                    }
+                    maxSpeed=10f;
+                }else{
+                    defaultDirectionTextures=defaultMainCharacterTextureMap;
+                    isOnVehicle=false;
+                    GameManager.get().getWorld().addEntity(new Bike(this.getCol(),this.getRow(),this));
+                }
+
                 break;
 
             case Input.Keys.SHIFT_LEFT:
@@ -1680,22 +1706,38 @@ public class MainCharacter extends Peon
                         AnimationRole.STILL, Direction.DEFAULT, false, true));
     }
 
+    private Map<Direction,String> defaultMainCharacterTextureMap=new HashMap<>();
     /**
      * Sets default direction textures uses the get index for Animation feature
      * as described in the animation documentation section 4.
      */
     @Override
     public void setDirectionTextures() {
-        defaultDirectionTextures.put(Direction.EAST, "__ANIMATION_MainCharacterE_Anim:0");
-        defaultDirectionTextures.put(Direction.NORTH, "__ANIMATION_MainCharacterN_Anim:0");
-        defaultDirectionTextures.put(Direction.WEST, "__ANIMATION_MainCharacterW_Anim:0");
-        defaultDirectionTextures.put(Direction.SOUTH, "__ANIMATION_MainCharacterS_Anim:0");
-        defaultDirectionTextures.put(Direction.NORTH_EAST, "__ANIMATION_MainCharacterNE_Anim:0");
-        defaultDirectionTextures.put(Direction.NORTH_WEST, "__ANIMATION_MainCharacterNW_Anim:0");
-        defaultDirectionTextures.put(Direction.SOUTH_EAST, "__ANIMATION_MainCharacterSE_Anim:0");
-        defaultDirectionTextures.put(Direction.SOUTH_WEST, "__ANIMATION_MainCharacterSW_Anim:0");
+
+        defaultMainCharacterTextureMap.put(Direction.EAST, "__ANIMATION_MainCharacterE_Anim:0");
+        defaultMainCharacterTextureMap.put(Direction.NORTH, "__ANIMATION_MainCharacterN_Anim:0");
+        defaultMainCharacterTextureMap.put(Direction.WEST, "__ANIMATION_MainCharacterW_Anim:0");
+        defaultMainCharacterTextureMap.put(Direction.SOUTH, "__ANIMATION_MainCharacterS_Anim:0");
+        defaultMainCharacterTextureMap.put(Direction.NORTH_EAST, "__ANIMATION_MainCharacterNE_Anim:0");
+        defaultMainCharacterTextureMap.put(Direction.NORTH_WEST, "__ANIMATION_MainCharacterNW_Anim:0");
+        defaultMainCharacterTextureMap.put(Direction.SOUTH_EAST, "__ANIMATION_MainCharacterSE_Anim:0");
+        defaultMainCharacterTextureMap.put(Direction.SOUTH_WEST, "__ANIMATION_MainCharacterSW_Anim:0");
+        vehicleDirection.put(Direction.SOUTH, "bikeSOUTH");
+        vehicleDirection.put(Direction.EAST, "bikeEAST");
+        vehicleDirection.put(Direction.NORTH, "bikeNORTH");
+        vehicleDirection.put(Direction.WEST, "bikeWEST");
+        vehicleDirection.put(Direction.NORTH_EAST, "__ANIMATION_MainCharacterNE_Anim:0");
+        vehicleDirection.put(Direction.NORTH_WEST, "__ANIMATION_MainCharacterNW_Anim:0");
+        vehicleDirection.put(Direction.SOUTH_EAST, "__ANIMATION_MainCharacterSE_Anim:0");
+        vehicleDirection.put(Direction.SOUTH_WEST, "__ANIMATION_MainCharacterSW_Anim:0");
+        defaultDirectionTextures=defaultMainCharacterTextureMap;
+
+
+
+
     }
 
+    private boolean isOnVehicle=false;
     /**
      * If the animation is moving sets the animation state to be Move
      * else NULL. Also sets the direction
@@ -1712,13 +1754,14 @@ public class MainCharacter extends Peon
         }
 
         /* Short Animations */
-        if (getToBeRun() != null) {
-            if (getToBeRun().getType() == AnimationRole.DEAD) {
-                setCurrentState(AnimationRole.STILL);
-            } else if (getToBeRun().getType() == AnimationRole.ATTACK) {
-                return;
+        if(!isOnVehicle){
+            if (getToBeRun() != null) {
+                if (getToBeRun().getType() == AnimationRole.DEAD) {
+                    setCurrentState(AnimationRole.STILL);
+                } else if (getToBeRun().getType() == AnimationRole.ATTACK) {
+                    return;
+                }
             }
-        }
 
             if (isDead()) {
                 setCurrentState(AnimationRole.STILL);
@@ -1731,6 +1774,9 @@ public class MainCharacter extends Peon
                     setCurrentState(AnimationRole.MOVE);
                 }
             }
+
+        }
+
     }
 
 
