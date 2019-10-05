@@ -32,6 +32,15 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
         this(new ArrayList<>(), null, null);
     }
 
+
+    /**
+     * Sets the id of a save
+     * @param id
+     */
+    public void setId(long id){
+        this.saveID = id;
+    }
+
     /**
      * Constructor for a save state
      *

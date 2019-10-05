@@ -9,6 +9,7 @@ public class SnowShrub extends AbstractShrub {
     private static final String ENTITY_ID_STRING = "snow_shrub";
 
     public SnowShrub() {
+        this.entityType = "SnowShrub";
         this.setObjectName(ENTITY_ID_STRING);
     }
 

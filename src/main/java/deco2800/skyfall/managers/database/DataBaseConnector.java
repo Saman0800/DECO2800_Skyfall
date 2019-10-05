@@ -6,6 +6,7 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.SaveableEntity.SaveableEntityMemento;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.entities.worlditems.*;
+import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.saving.LoadException;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.saving.Save.SaveMemento;
@@ -41,6 +42,7 @@ public class DataBaseConnector {
 
     /**
      * Starts a connection to the database
+     *
      * @param dataBaseName The name of the database to be connected to
      */
     public void start(String dataBaseName) {
@@ -62,10 +64,9 @@ public class DataBaseConnector {
      */
     public void close() {
         try {
+            DriverManager.getConnection("jdbc:derby:;shutdown=true");
             connection.close();
-            DriverManager.getConnection("jdbc:derby:" + dataBaseName + ";shutdown=true");
         } catch (Exception e) {
-            System.out.println(e);
         }
     }
 
@@ -129,11 +130,9 @@ public class DataBaseConnector {
 
         for (AbstractBiome biome : world.getBiomes()) {
             if (containsQueries.containsBiome(biome.getBiomeID(), world.getID())) {
-                updateQueries.updateBiome(biome.getBiomeID(), world.getID(), biome.getBiomeName(),
-                    biome.save());
+                updateQueries.updateBiome(biome.getBiomeID(), world.getID(), biome.getBiomeName(), biome.save());
             } else {
-                insertQueries.insertBiome(biome.getBiomeID(), world.getID(), biome.getBiomeName(),
-                    biome.save());
+                insertQueries.insertBiome(biome.getBiomeID(), world.getID(), biome.getBiomeName(), biome.save());
             }
         }
 
@@ -672,10 +671,10 @@ public class DataBaseConnector {
             throw new RuntimeException(e);
         } finally {
             try {
-                if (entityQuery != null){
+                if (entityQuery != null) {
                     entityQuery.close();
                 }
-                if (preparedStatement != null){
+                if (preparedStatement != null) {
                     preparedStatement.close();
                 }
             } catch (SQLException e) {
@@ -685,18 +684,19 @@ public class DataBaseConnector {
     }
 
 
-    public Flyway getFlyway(){
+    public Flyway getFlyway() {
         return flyway;
     }
 
 
     /**
      * Creates an entity from a given memento
+     *
      * @param entityMemento The entities memento that contains its data
      * @return The created entity
      * @throws LoadException If the entity type does not exist
      */
-    public AbstractEntity createEntityFromMemento(SaveableEntityMemento entityMemento) throws LoadException{
+    public AbstractEntity createEntityFromMemento(SaveableEntityMemento entityMemento) throws LoadException {
         switch (entityMemento.getEntityType()) {
             case "Bone":
                 return new Bone(entityMemento);
@@ -741,7 +741,7 @@ public class DataBaseConnector {
             case "VolcanicTree":
                 return new VolcanicTree(entityMemento);
             default:
-                throw new LoadException( String.format("Could not create %s from memento", entityMemento.entityType));
+                throw new LoadException(String.format("Could not create %s from memento", entityMemento.entityType));
         }
     }
 
@@ -756,7 +756,6 @@ public class DataBaseConnector {
         flyway.setValidateOnMigrate(true);
         flyway.migrate();
     }
-
 
 
     /**
@@ -801,6 +800,83 @@ public class DataBaseConnector {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+    public void saveTable(String tableName){
+        PreparedStatement ps = null;
+        try {
+            ps = DatabaseManager.get().getDataBaseConnector().getConnection().prepareStatement(
+                "CALL SYSCS_UTIL.SYSCS_EXPORT_TABLE_LOBS_TO_EXTFILE(?,?,?,?,?,?, ?)");
+            ps.setString(1,null);
+            ps.setString(2,tableName);
+            ps.setString(3,"src/test/java/deco2800/skyfall/managers/database/PrebuiltData/" + tableName + ".dat");
+            ps.setString(4,",");
+            ps.setString(5, "\"");
+            ps.setString(6,"UTF-8");
+            ps.setString(7, "src/test/java/deco2800/skyfall/managers/database/PrebuiltData/" + tableName + "LOB" +
+                ".dat");
+            ps.execute();
+        } catch (SQLException e) {
+
+        }finally {
+            try {
+                assert ps != null;
+                ps.close();
+            } catch (SQLException e) {
+            }
+        }
+    }
+
+    public void saveAllTables(){
+        saveTable("SAVES");
+        saveTable("WORLDS");
+//        saveTable("MAIN_CHARACTER");
+        saveTable("BIOMES");
+        saveTable("NODES");
+        saveTable("EDGES");
+        saveTable("CHUNKS");
+        saveTable("ENTITIES");
+    }
+
+    public void loadAllTables(){
+        loadTable("SAVES", 1);
+        loadTable("WORLDS", 3);
+//        loadTable("MAIN_CHARACTER");
+        loadTable("BIOMES", 3);
+        loadTable("NODES", 4);
+        loadTable("EDGES" , 3 );
+        loadTable("CHUNKS", 3);
+        loadTable("ENTITIES", 7);
+    }
+
+    public void loadTable(String tableName,int dataIndex){
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement( "CALL SYSCS_UTIL.SYSCS_IMPORT_TABLE_LOBS_FROM_EXTFILE(?,?,?,?,?,?,?)");
+            ps.setString(1,null);
+            ps.setString(2,tableName);
+            ps.setString(3,"src/test/java/deco2800/skyfall/managers/database/PrebuiltData/" + tableName + ".dat");
+            ps.setString(4,",");
+            ps.setString(5, "\"");
+            ps.setString(6,"UTF-8");
+            ps.setInt(7, dataIndex);
+            ps.execute();
+        } catch (SQLException e) {
+
+        } finally {
+            try {
+                assert ps != null;
+                ps.close();
+            } catch (SQLException e) {
+            }
+        }
+    }
+
+
+    //FIXME:jeffvan12 implement delete save method
+    public void deleteSave(long saveId){
+
     }
 
 }

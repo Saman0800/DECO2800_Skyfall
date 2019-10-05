@@ -1,5 +1,6 @@
 package deco2800.skyfall.managers.database;
 
+import static deco2800.skyfall.managers.database.InsertQueriesTest.flyway;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.*;
 import static org.powermock.api.mockito.PowerMockito.mock;
@@ -79,13 +80,22 @@ public class DataBaseConnectorLoadingTest {
 
     private static DataBaseConnector dataBaseConnectorExpected = new DataBaseConnector();
     private static InsertDataQueries insertDataQueries;
+    private static Flyway flyway;
 
-    private static final long WOLRD_ID = 4805754247129L;
-    private static final long SAVE_ID = 4804723109140L;
+    private static final long WOLRD_ID = 0L;
+    private static final long SAVE_ID = 0L;
 
     @BeforeClass
     public static void setupOnce() {
-        dataBaseConnectorExpected.start("src/test/java/deco2800/skyfall/managers/database/ExpectedDatabase");
+        flyway = new Flyway();
+        dataBaseConnectorExpected.start("src/test/java/deco2800/skyfall/managers/database/LoadingTestDatabase");
+        flyway.setDataSource("jdbc:derby:src/test/java/deco2800/skyfall/managers/database/LoadingTestDatabase;"
+            + "create=true", "", "");
+
+        flyway.clean();
+        flyway.migrate();
+
+        dataBaseConnectorExpected.loadAllTables();
         DatabaseManager dm = mock(DatabaseManager.class);
         when(dm.getDataBaseConnector()).thenReturn(dataBaseConnectorExpected);
 
