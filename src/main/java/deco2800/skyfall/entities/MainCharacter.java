@@ -931,7 +931,7 @@ public class MainCharacter extends Peon
         // only allow left clicks to move player
 
         logger.info(String.valueOf(button));
-        if (GameScreen.isPaused) {
+        if (GameScreen.getIsPaused()) {
             return;
         }
 
@@ -984,7 +984,7 @@ public class MainCharacter extends Peon
      */
     @Override
     public void onTick(long i) {
-        if (!GameScreen.isPaused) {
+        if (!GameScreen.getIsPaused()) {
             if (residualFromPopUp) {
                 residualInputsFromPopUp();
             }
@@ -1340,14 +1340,15 @@ public class MainCharacter extends Peon
             valid = false;
         }
 
-        if ((tile.getTextureName().contains("water") || tile.getTextureName().contains("lake")
-                || tile.getTextureName().contains("ocean")) && !canSwim) {
+        if (tile != null && (tile.getTextureName().contains("water") || tile.getTextureName().contains("lake")
+            || tile.getTextureName().contains("ocean")) && !canSwim) {
             valid = false;
         }
 
         for (String s : lockedBiomes) {
-            if (tile.getTextureName().contains(s)) {
+            if (tile != null && tile.getTextureName().contains(s)) {
                 valid = false;
+                break;
             }
         }
 

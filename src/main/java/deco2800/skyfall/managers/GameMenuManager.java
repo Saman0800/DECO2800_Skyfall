@@ -178,7 +178,7 @@ public class GameMenuManager extends TickableManager {
      */
     private void pause() {
         GameManager.setPaused(true);
-        GameScreen.isPaused = true;
+        GameScreen.setIsPaused(true);
     }
 
     /**
