@@ -81,28 +81,28 @@ public class AnimationManager extends AbstractManager {
 
         this.generateAnimationObject("HeavyMoveN",
                 "enemyHeavy_Move_N",
-                224, 348, 0.07f);
+                224, 348, 0.2f);
         this.generateAnimationObject("HeavyMoveS",
                 "enemyHeavy_Move_S",
-                224, 349, 0.07f);
+                224, 349, 0.2f);
         this.generateAnimationObject("HeavyMoveE",
                 "enemyHeavy_Move_E",
-                222, 349, 0.07f);
+                222, 349, 0.2f);
         this.generateAnimationObject("HeavyMoveW",
                 "enemyHeavy_Move_W",
-                222, 350, 0.07f);
+                222, 350, 0.2f);
         this.generateAnimationObject("HeavyMoveNE",
                 "enemyHeavy_Move_NE",
-                221, 349, 0.07f);
+                221, 349, 0.2f);
         this.generateAnimationObject("HeavyMoveSE",
                 "enemyHeavy_Move_SE",
-                221, 349, 0.07f);
+                221, 349, 0.2f);
         this.generateAnimationObject("HeavyMoveSW",
                 "enemyHeavy_Move_SW",
-                221, 352, 0.07f);
+                221, 352, 0.2f);
         this.generateAnimationObject("HeavyMoveNW",
                 "enemyHeavy_Move_NW",
-                220, 353, 0.07f);
+                220, 353, 0.2f);
 
         this.generateAnimationObject("HeavyAttackN",
                 "enemyHeavy_Attack_N",
@@ -155,6 +155,7 @@ public class AnimationManager extends AbstractManager {
                 224, 341, 0.2f);
 
         // Main Character
+        // Walking animations
         this.generateAnimationObject("MainCharacterN_Anim",
                 "MainCharacterN_Anim",
                 729, 1134, 0.11f);
@@ -186,18 +187,36 @@ public class AnimationManager extends AbstractManager {
         this.generateAnimationObject("MainCharacterNW_Anim",
                 "MainCharacterNW_Anim",
                 743, 1147, 0.11f);
-
+        // Attack animations
         this.generateAnimationObject("MainCharacter_Attack_E_Anim",
                 "MainCharacter_Attack_E_Anim",
                 731, 1130, 0.09f);
-
+        this.generateAnimationObject("MainCharacter_Attack_N_Anim",
+                "MainCharacter_Attack_N_Anim",
+                771, 1135, 0.09f);
+        this.generateAnimationObject("MainCharacter_Attack_W_Anim",
+                "MainCharacter_Attack_W_Anim",
+                809, 1125, 0.09f);
+        // Hurt animations
         this.generateAnimationObject("MainCharacter_Hurt_E_Anim",
                 "MainCharacter_Hurt_E_Anim",
-                750, 1161, 0.2f);
-
+                750, 1161, 0.15f);
+        this.generateAnimationObject("MainCharacter_Hurt_W_Anim",
+                "MainCharacter_Hurt_W_Anim",
+                788, 1118, 0.15f);
+        // Dead animations
         this.generateAnimationObject("MainCharacter_Dead_E_Anim",
                 "MainCharacter_Dead_E_Anim",
                 1020, 1167, 0.2f);
+        this.generateAnimationObject("MainCharacter_Dead_L_Anim",
+                "MainCharacter_Dead_L_Anim",
+                1072, 1128, 0.2f);
+        this.generateAnimationObject("MainCharacter_Dead_R_Anim",
+                "MainCharacter_Dead_R_Anim",
+                1032, 1123, 0.2f);
+        this.generateAnimationObject("MainCharacter_Dead_W_Anim",
+                "MainCharacter_Dead_W_Anim",
+                1020, 1115, 0.2f);
         this.generateAnimationObject("MainCharacter_Dead_E_Still",
                 "MainCharacter_Dead_E_Still",
                 1216, 1293, 50f);

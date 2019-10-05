@@ -52,7 +52,7 @@ public class Tiger extends Enemy implements Animatable {
         this.setHeight(5);
         this.setHealth(HEALTH);
         this.setSpeed(2);
-        this.setDamage(1);
+        this.setStrength(1);
         this.mc = mc;
         this.setDirectionTextures();
         this.configureAnimations();

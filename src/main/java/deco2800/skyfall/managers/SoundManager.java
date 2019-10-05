@@ -39,18 +39,31 @@ public class SoundManager extends AbstractManager {
                     (Gdx.files.internal(PATH + "robot_walk.wav")));
             soundMap.put("robotDie", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "robot_death.wav")));
-            soundMap.put("flowerOpen", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "flower_open.wav")));
-            soundMap.put("flowerDie", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "flower_death.wav")));
-            soundMap.put("stoneWalk", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "stone_walk.wav")));
-            soundMap.put("stoneDie", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "stone_die.wav")));
-            soundMap.put("treemanWalk", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "tree_monster_move.wav")));
-            soundMap.put("treemanDie", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "tree_monster_death.wav")));
+            soundMap.put("HeavyDead", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "HeavyDead.wav")));
+            soundMap.put("HeavyHurt", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "HeavyHurt.wav")));
+            soundMap.put("HeavyAttack", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "HeavyAttack.wav")));
+            soundMap.put("HeavyWalk", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "HeavyWalk.wav")));
+            soundMap.put("ScoutDead", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "ScoutDead.wav")));
+            soundMap.put("ScoutHurt", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "ScoutHurt.wav")));
+            soundMap.put("ScoutAttack", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "ScoutAttack.wav")));
+            soundMap.put("ScoutWalk", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "ScoutWalk.wav")));
+            soundMap.put("AbductorDead", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "AbductorDead.wav")));
+            soundMap.put("AbductorHurt", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "AbductorHurt.wav")));
+            soundMap.put("AbductorAttack", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "AbductorAttack.wav")));
+            soundMap.put("AbductorWalk", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "AbductorWalk.wav")));
+
             soundMap.put("sword", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "sword.wav")));
 

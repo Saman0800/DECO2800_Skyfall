@@ -134,9 +134,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
     // Variables to sound effects
     private static final String WALK_NORMAL = "people_walk_normal";
-    private static final String PLAYER_HURT = "player_hurt";
-    private static final String DIED = "player_died";
-
     public static final String HURT_SOUND_NAME = "player_hurt";
     public static final String DIED_SOUND_NAME = "player_died";
 
@@ -230,7 +227,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private boolean isHurt = false;
     private boolean isRecovering = false;
     private boolean isTexChanging = false;
-    private boolean isAttacking = false;
 
     /**
      * Item player is currently equipped with/holding.
@@ -267,12 +263,12 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     /**
      * The GUI health bar for the character.
      */
-    private HealthCircle healthBar;
+    public HealthCircle healthBar;
 
     /**
      * The GUI health bar for the character.
      */
-    // private GameOverTable gameOverTable;
+    // private GameOverTable gameOverTable
 
     private String equipped;
 
@@ -512,7 +508,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         //Animation control
         logger.debug("Attacking");
 
-        setAttacking(true);
         setCurrentState(AnimationRole.ATTACK);
 
         //If there is a spell selected, spawn the spell.
@@ -598,8 +593,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
 
         GameManager.get().getWorld().addEntity(spell);
-
-        setAttacking(false);
     }
 
     /**
@@ -618,14 +611,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     public int getMana() {
         return this.mana;
-    }
-
-    public boolean isAttacking() {
-        return isAttacking;
-    }
-
-    private void setAttacking(boolean isAttacking) {
-        this.isAttacking = isAttacking;
     }
 
     public void pickUpInventory(Item item) {
@@ -653,17 +638,14 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         setHurt(true);
         changeHealth(-damage);
         updateHealth();
-
-        getBody().setLinearVelocity(getBody().getLinearVelocity()
-                .lerp(new Vector2(0.f, 0.f), 0.5f));
+        setCurrentState(AnimationRole.HURT);
 
         if (this.getHealth() <= 0) {
             kill();
         } else {
             hurtTime = 0;
             recoverTime = 0;
-
-            SoundManager.playSound(PLAYER_HURT);
+            SoundManager.playSound(HURT_SOUND_NAME);
 
             if (hurtTime > 400) {
                 setRecovering(true);
@@ -671,10 +653,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
     }
 
-    private void checkIfHurtEnded() {
+    public void checkIfHurtEnded() {
         hurtTime += 20; // hurt for 1 second
 
-        if (hurtTime > 400) {
+        if (hurtTime > 320) {
             logger.info("Hurt ended");
             setHurt(false);
             setRecovering(true);
@@ -711,7 +693,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         this.isTexChanging = isTexChanging;
     }
 
-    private void checkIfRecovered() {
+    public void checkIfRecovered() {
         recoverTime += 20;
         this.changeCollideability(false);
 
@@ -1642,7 +1624,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     @Override
     public void configureAnimations() {
-
         // Walk animation
         addAnimations(AnimationRole.MOVE, Direction.NORTH_WEST,
                 new AnimationLinker("MainCharacterNW_Anim",
@@ -1677,21 +1658,82 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                         AnimationRole.MOVE, Direction.SOUTH, true, true));
 
         // Attack animation
-        addAnimations(AnimationRole.ATTACK, Direction.DEFAULT,
+        addAnimations(AnimationRole.ATTACK, Direction.NORTH,
                 new AnimationLinker("MainCharacter_Attack_E_Anim",
-                        AnimationRole.ATTACK, Direction.DEFAULT, false, true));
+                        AnimationRole.ATTACK, Direction.NORTH, false, true));
+        addAnimations(AnimationRole.ATTACK, Direction.NORTH_EAST,
+                new AnimationLinker("MainCharacter_Attack_E_Anim",
+                        AnimationRole.ATTACK, Direction.NORTH_EAST, false, true));
+        addAnimations(AnimationRole.ATTACK, Direction.EAST,
+                new AnimationLinker("MainCharacter_Attack_E_Anim",
+                        AnimationRole.ATTACK, Direction.EAST, false, true));
+        addAnimations(AnimationRole.ATTACK, Direction.SOUTH_EAST,
+                new AnimationLinker("MainCharacter_Attack_E_Anim",
+                        AnimationRole.ATTACK, Direction.SOUTH_EAST, false, true));
+        addAnimations(AnimationRole.ATTACK, Direction.SOUTH,
+                new AnimationLinker("MainCharacter_Attack_N_Anim",
+                        AnimationRole.ATTACK, Direction.SOUTH, false, true));
+        addAnimations(AnimationRole.ATTACK, Direction.SOUTH_WEST,
+                new AnimationLinker("MainCharacter_Attack_W_Anim",
+                        AnimationRole.ATTACK, Direction.SOUTH_WEST, false, true));
+        addAnimations(AnimationRole.ATTACK, Direction.WEST,
+                new AnimationLinker("MainCharacter_Attack_W_Anim",
+                        AnimationRole.ATTACK, Direction.WEST, false, true));
+        addAnimations(AnimationRole.ATTACK, Direction.NORTH_WEST,
+                new AnimationLinker("MainCharacter_Attack_W_Anim",
+                        AnimationRole.ATTACK, Direction.NORTH_WEST, false, true));
 
         // Hurt animation
-        addAnimations(AnimationRole.HURT, Direction.DEFAULT,
+        addAnimations(AnimationRole.HURT, Direction.NORTH,
                 new AnimationLinker("MainCharacter_Hurt_E_Anim",
-                        AnimationRole.HURT, Direction.DEFAULT, true, true));
+                        AnimationRole.HURT, Direction.NORTH, false, true));
+        addAnimations(AnimationRole.HURT, Direction.NORTH_EAST,
+                new AnimationLinker("MainCharacter_Hurt_E_Anim",
+                        AnimationRole.HURT, Direction.NORTH_EAST, false, true));
+        addAnimations(AnimationRole.HURT, Direction.EAST,
+                new AnimationLinker("MainCharacter_Hurt_E_Anim",
+                        AnimationRole.HURT, Direction.EAST, false, true));
+        addAnimations(AnimationRole.HURT, Direction.SOUTH_EAST,
+                new AnimationLinker("MainCharacter_Hurt_E_Anim",
+                        AnimationRole.HURT, Direction.SOUTH_EAST, false, true));
+        addAnimations(AnimationRole.HURT, Direction.SOUTH,
+                new AnimationLinker("MainCharacter_Hurt_E_Anim",
+                        AnimationRole.HURT, Direction.SOUTH, false, true));
+        addAnimations(AnimationRole.HURT, Direction.SOUTH_WEST,
+                new AnimationLinker("MainCharacter_Hurt_W_Anim",
+                        AnimationRole.HURT, Direction.SOUTH_WEST, false, true));
+        addAnimations(AnimationRole.HURT, Direction.WEST,
+                new AnimationLinker("MainCharacter_Hurt_W_Anim",
+                        AnimationRole.HURT, Direction.WEST, false, true));
+        addAnimations(AnimationRole.HURT, Direction.NORTH_WEST,
+                new AnimationLinker("MainCharacter_Hurt_W_Anim",
+                        AnimationRole.HURT, Direction.NORTH_WEST, false, true));
 
         // Dead animation
-        addAnimations(AnimationRole.DEAD, Direction.DEFAULT,
+        addAnimations(AnimationRole.DEAD, Direction.EAST,
+                new AnimationLinker("MainCharacter_Dead_R_Anim",
+                        AnimationRole.DEAD, Direction.EAST, false, true));
+        addAnimations(AnimationRole.DEAD, Direction.NORTH_EAST,
                 new AnimationLinker("MainCharacter_Dead_E_Anim",
-                        AnimationRole.DEAD, Direction.DEFAULT, false, true));
-
-        // Dead animation
+                        AnimationRole.DEAD, Direction.NORTH_EAST, false, true));
+        addAnimations(AnimationRole.DEAD, Direction.SOUTH_EAST,
+                new AnimationLinker("MainCharacter_Dead_E_Anim",
+                        AnimationRole.DEAD, Direction.SOUTH_EAST, false, true));
+        addAnimations(AnimationRole.DEAD, Direction.NORTH,
+                new AnimationLinker("MainCharacter_Dead_E_Anim",
+                        AnimationRole.DEAD, Direction.NORTH, false, true));
+        addAnimations(AnimationRole.DEAD, Direction.SOUTH,
+                new AnimationLinker("MainCharacter_Dead_E_Anim",
+                        AnimationRole.DEAD, Direction.SOUTH, false, true));
+        addAnimations(AnimationRole.DEAD, Direction.WEST,
+                new AnimationLinker("MainCharacter_Dead_L_Anim",
+                        AnimationRole.DEAD, Direction.WEST, false, true));
+        addAnimations(AnimationRole.DEAD, Direction.SOUTH_WEST,
+                new AnimationLinker("MainCharacter_Dead_W_Anim",
+                        AnimationRole.DEAD, Direction.SOUTH_WEST, false, true));
+        addAnimations(AnimationRole.DEAD, Direction.NORTH_WEST,
+                new AnimationLinker("MainCharacter_Dead_W_Anim",
+                        AnimationRole.DEAD, Direction.NORTH_WEST, false, true));
         addAnimations(AnimationRole.STILL, Direction.DEFAULT,
                 new AnimationLinker("MainCharacter_Dead_E_Still",
                         AnimationRole.STILL, Direction.DEFAULT, false, true));
@@ -1717,7 +1759,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      * If the animation is moving sets the animation state to be Move
      * else NULL. Also sets the direction
      */
-    private void updateAnimation() {
+    public void updateAnimation() {
         getPlayerDirectionCardinal();
         List<Float> velocity = getVelocity();
 
@@ -1742,22 +1784,78 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
     }
 
-        /**
-         * Toggles if the camera should follow the player
-         */
-        private void toggleCameraLock () {
-            if (!cameraLock) {
-                cameraLock = true;
-                centreCameraManual();
-            } else {
-                cameraLock = false;
-            }
-        }
+    /**
+     * Get the duration main character hurts.
+     * @return the duration main character hurts.
+     */
+    public long getHurtTime() {
+        return hurtTime;
+    }
+    public void setHurtTime(long hurtTime) {
+        this.hurtTime = hurtTime;
+    }
 
-        /**
-         * Centres the camera onto the player
-         * Designed to called on a loop
-         */
+    /**
+     * Get the duration for main character to recover.
+     * @return the duration for main character to recover.
+     */
+    public long getRecoverTime() {
+        return recoverTime;
+    }
+    public void setRecoverTime(long recoverTime) {
+        this.recoverTime = recoverTime;
+    }
+
+    /**
+     * Get the duration for main character to die.
+     * @return the duration for main character to die.
+     */
+    public long getDeadTime() {
+        return deadTime;
+    }
+    public void setDeadTime(long deadTime) {
+        this.deadTime = deadTime;
+    }
+
+    /**
+     * Get the x-coordinate input of the player.
+     * @return the x-coordinate input of the player.
+     */
+    public int getXInput() {
+        return xInput;
+    }
+    /**
+     * Get the y-coordinate input of the player.
+     * @return the y-coordinate input of the player.
+     */
+    public int getYInput() {
+        return yInput;
+    }
+
+    /**
+     * Get whether main character is sprinting.
+     * @return whether main character is sprinting.
+     */
+    public boolean getIsSprinting() {
+        return isSprinting;
+    }
+
+    /**
+     * Toggles if the camera should follow the player
+     */
+    private void toggleCameraLock () {
+        if (!cameraLock) {
+            cameraLock = true;
+            centreCameraManual();
+        } else {
+            cameraLock = false;
+        }
+    }
+
+    /**
+     * Centres the camera onto the player
+     * Designed to called on a loop
+     */
     private void centreCameraAuto() {
         if (cameraLock) {
             float[] coords = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());

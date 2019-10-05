@@ -1,16 +1,16 @@
 package deco2800.skyfall.entities;
 
+import com.badlogic.gdx.Input;
 import deco2800.skyfall.entities.enemies.Treeman;
 import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.entities.weapons.Bow;
 import deco2800.skyfall.entities.weapons.EmptyItem;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.managers.DatabaseManager;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.InventoryManager;
-import deco2800.skyfall.managers.PhysicsManager;
+import deco2800.skyfall.gui.HealthCircle;
+import deco2800.skyfall.managers.*;
 import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
@@ -38,7 +38,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Random;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -119,34 +119,46 @@ public class MainCharacterTest {
         when(mockGM.getWorld()).thenReturn(w);
     }
 
-    @After
     /**
-     * Sets up all variables to be null after esting
+     * Sets up all variables to be null after testing
      */
+    @After
     public void tearDown() {
         // testCharacter = null;
     }
 
-    /*
-     * @Test /** Test getters and setters from Peon super Character class
-     *
-     * public void setterGetterTest() { Assert.assertEquals(testCharacter.getName(),
-     * "Main Piece"); testCharacter.setName("Side Piece");
-     * Assert.assertEquals(testCharacter.getName(), "Side Piece");
-     *
-     * Assert.assertFalse(testCharacter.isDead());
-     * Assert.assertEquals(testCharacter.getHealth(), 10);
-     * testCharacter.changeHealth(5); //
-     * Assert.assertEquals(testCharacter.getHealth(), 15);
-     * testCharacter.changeHealth(-20); //
-     * Assert.assertEquals(testCharacter.getHealth(), 15);
-     * Assert.assertEquals(testCharacter.getDeaths(), 1); }
+    /**
+     * Test getters and setters from Peon super Character class
      */
-
     @Test
+    public void setterGetterTest() {
+        Assert.assertEquals(testCharacter.getName(),
+    "Main Piece"); testCharacter.setName("Side Piece");
+        Assert.assertEquals(testCharacter.getName(), "Side Piece");
+
+        Assert.assertFalse(testCharacter.isDead());
+        Assert.assertEquals(testCharacter.getHealth(), 10);
+        // health reached maximum 10, so health remains at 10.
+        testCharacter.changeHealth(5);
+        Assert.assertEquals(testCharacter.getHealth(), 10);
+        // health reached 0, so health equals 0, death plus 1.
+        testCharacter.changeHealth(-20);
+        Assert.assertEquals(testCharacter.getHealth(), 0);
+        Assert.assertEquals(testCharacter.getDeaths(), 1);
+
+        testCharacter.setTexChanging(true);
+        assertTrue(testCharacter.isTexChanging());
+        testCharacter.setHurt(true);
+        assertTrue(testCharacter.isHurt());
+
+        testCharacter.changeTexture("mainCharacter");
+        assertEquals("mainCharacter", testCharacter.getTexture());
+    }
+
     /**
      * Test level changing of main character
      */
+    @Test
     public void levelTest() {
         testCharacter.changeLevel(4);
         Assert.assertEquals(testCharacter.getLevel(), 5);
@@ -270,19 +282,35 @@ public class MainCharacterTest {
      */
     @Test
     public void hurtTest() {
-        // Reduce health by input damage test
-        // testCharacter.hurt(3);
-        // Assert.assertEquals(7, testCharacter.getHealth());
+        // If character is recovering, return
+        testCharacter.setRecovering(true);
+        testCharacter.hurt(3);
+        assertFalse(testCharacter.isHurt());
+        testCharacter.setRecovering(false);
+        // Set isHurt to true.
+        testCharacter.hurt(3);
+        assertTrue(testCharacter.isHurt());
+        // Health decreases
+        assertEquals(7, testCharacter.getHealth());
+        // set current animation to hurt
+        assertEquals(AnimationRole.HURT, testCharacter.getCurrentState());
+        // set hurt time and recover time to 0.
+        assertEquals(0, testCharacter.getHurtTime());
+        assertEquals(0, testCharacter.getRecoverTime());
 
-        // Character bounce back test
-        // Assert.assertEquals(, testCharacter.getCol());
-
-        // "Hurt" animation test
-        AnimationLinker animationLinker = new AnimationLinker("MainCharacter_Hurt_E_Anim", AnimationRole.HURT,
-                Direction.DEFAULT, false, true);
-        testMap.put(Direction.DEFAULT, animationLinker);
-        testCharacter.addAnimations(AnimationRole.HURT, Direction.DEFAULT, animationLinker);
-        Assert.assertEquals(testMap, testCharacter.animations.get(AnimationRole.HURT));
+        // test checkIfHurtEnded()
+        testCharacter.checkIfHurtEnded();
+        // hurt time increases by 20.
+        assertEquals(20, testCharacter.getHurtTime());
+        // after hurt animation finished (around 2 seconds),
+        // finish hurting, start recovering.
+        testCharacter.setHurtTime(500);
+        testCharacter.checkIfHurtEnded();
+        // set animation status to "not hurt" and is recovering.
+        assertFalse(testCharacter.isHurt());
+        assertTrue(testCharacter.isRecovering());
+        // reset hurt time.
+        assertEquals(0, testCharacter.getHurtTime());
     }
 
     /**
@@ -291,10 +319,24 @@ public class MainCharacterTest {
     @Test
     public void recoverTest() {
         // Set the health status of player from hurt back to normal
-        // so that the effect (e.g. sprite flashing in red) will disappear
+        // so that the effect (e.g. sprite flashing) will disappear
         // after recovering.
+        testCharacter.checkIfRecovered();
+        testCharacter.checkIfRecovered();
+        // recover time increased by 20.
+        assertEquals(20, testCharacter.getRecoverTime());
+        // main character unable to be touched by other objects.
+        assertFalse(testCharacter.getCollidable());
 
-        Assert.assertFalse(testCharacter.isHurt());
+        // After recovered (around 3 seconds)...
+        testCharacter.setRecoverTime(3000);
+        testCharacter.checkIfRecovered();
+        // reset recover time.
+        assertEquals(0, testCharacter.getRecoverTime());
+        // main character able to be touched by other objects again.
+        assertTrue(testCharacter.getCollidable());
+        // set animation/sprite status to "not recovering".
+        assertFalse(testCharacter.isRecovering());
     }
 
     /**
@@ -302,18 +344,14 @@ public class MainCharacterTest {
      */
     @Test
     public void killTest() {
-        // Test if hurt() can trigger Peon.changeHealth() when
-        // the damage taken can make player's health below 0.
-        testCharacter.hurt(10);
-
-        // Assert.assertEquals(1, testCharacter.getDeaths());
-
-        // "Kill" animation test
-        AnimationLinker animationLinker = new AnimationLinker("MainCharacter_Dead_E_Anim", AnimationRole.DEAD,
-                Direction.DEFAULT, false, true);
-        testMap.put(Direction.DEFAULT, animationLinker);
-        testCharacter.addAnimations(AnimationRole.DEAD, Direction.DEFAULT, animationLinker);
-        Assert.assertEquals(testMap, testCharacter.animations.get(AnimationRole.DEAD));
+        // call kill() when character's health is 0.
+        testCharacter.hurt(100);
+        // set animation status to DEAD.
+        assertEquals(AnimationRole.DEAD, testCharacter.getCurrentState());
+        // reset dead time to 0.
+        assertEquals(0, testCharacter.getDeadTime());
+        // main character's number of death increases from 1 to 2.
+        Assert.assertEquals(2, testCharacter.getDeaths());
     }
 
     public void movementAnimationsExist() {
@@ -338,6 +376,45 @@ public class MainCharacterTest {
         testCharacter.setCurrentDirection(Direction.NORTH);
         s = testCharacter.getDefaultTexture();
         Assert.assertEquals(s, "__ANIMATION_MainCharacterN_Anim:0");
+    }
+
+    /**
+     * Test whether the animation role is updated when
+     * method is called.
+     */
+    @Test
+    public void updateAnimationTest() {
+
+        // test hurt animation state
+        testCharacter.setHurt(true);
+        testCharacter.updateAnimation();
+        assertEquals(AnimationRole.HURT, testCharacter.getCurrentState());
+        testCharacter.setHurt(false);
+
+        // test dead animation state
+        testCharacter.hurt(30);
+        testCharacter.updateAnimation();
+        assertEquals(AnimationRole.STILL, testCharacter.getCurrentState());
+    }
+
+    /**
+     * Test key code
+     */
+    @Test
+    public void notifyKeyDownTest() {
+        GameManager.setPaused(false);
+        testCharacter.notifyKeyDown(Input.Keys.W);
+        assertEquals(1, testCharacter.getYInput());
+        testCharacter.notifyKeyDown(Input.Keys.A);
+        assertEquals(-1, testCharacter.getXInput());
+        testCharacter.notifyKeyDown(Input.Keys.S);
+        testCharacter.notifyKeyDown(Input.Keys.S);
+        assertEquals(-1, testCharacter.getYInput());
+        testCharacter.notifyKeyDown(Input.Keys.D);
+        testCharacter.notifyKeyDown(Input.Keys.D);
+        assertEquals(1, testCharacter.getXInput());
+        testCharacter.notifyKeyDown(Input.Keys.SHIFT_LEFT);
+        assertTrue(testCharacter.getIsSprinting());
     }
 
     @Test

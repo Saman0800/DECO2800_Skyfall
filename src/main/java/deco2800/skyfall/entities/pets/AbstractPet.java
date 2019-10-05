@@ -167,7 +167,7 @@ public abstract class AbstractPet extends Peon implements ICombatEntity {
      * @return damage value
      */
     @Override
-    public int getDamage() {
+    public int getStrength() {
         return this.damage;
     }
 

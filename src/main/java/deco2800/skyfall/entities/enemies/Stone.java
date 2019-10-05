@@ -22,7 +22,7 @@ public class Stone extends Enemy {
         super(col, row);
 
         this.setHeight(1);
-        this.setDamage(3);
+        this.setStrength(3);
         this.setHealth(10);
         this.setTexture("enemyStone");
         this.setObjectName("stone");

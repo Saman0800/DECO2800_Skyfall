@@ -27,7 +27,7 @@ public class Enemy extends Peon
 
     // Basic enemy stats
     private int health;
-    private int damage;
+    private int strength;
     private float attackRange;
     private float walkingSpeed;
     private float chasingSpeed;
@@ -62,6 +62,8 @@ public class Enemy extends Peon
     @SuppressWarnings("WeakerAccess")
     protected String chasingSound;
     @SuppressWarnings("WeakerAccess")
+    protected String hurtSound;
+    @SuppressWarnings("WeakerAccess")
     protected String attackingSound;
     @SuppressWarnings("WeakerAccess")
     protected String diedSound;
@@ -71,6 +73,8 @@ public class Enemy extends Peon
 
     // A routine for destination
     private HexVector destination = null;
+    //target position
+    private float[] targetPosition = null;
     // World coordinates of this enemy
     private float[] originalPosition = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
 
@@ -112,6 +116,26 @@ public class Enemy extends Peon
     }
 
     /**
+     * Enemy chase the player, if player position is in range,
+     * enemy attacks player.
+     */
+    private void attackPlayer() {
+        if(!(this.mainCharacter.isRecovering() ||
+                this.mainCharacter.isDead() || this.mainCharacter.isHurt())) {
+            this.setSpeed(getChasingSpeed());
+            this.destination = new HexVector(mainCharacter.getCol(), mainCharacter.getRow());
+            this.position.moveToward(destination, this.getChasingSpeed());
+
+            //if the player in attack range then attack player
+            if (distance(mainCharacter) < getAttackRange()) {
+                dealDamage(mainCharacter);
+                setAttacking(true);
+                setCurrentState(AnimationRole.ATTACK);
+            }
+        }
+    }
+
+    /**
      * Damage taken
      * @param damage hero damage
      */
@@ -124,114 +148,7 @@ public class Enemy extends Peon
 
         // In Peon.class, when the health = 0, isDead will be set true automatically.
         if (health <= 0) {
-            enemyDied();
-        }
-    }
-
-    /**
-     *  Get whether enemy is hurt.
-     */
-    public boolean isHurt() {
-        return isHurt;
-    }
-
-    /**
-     *  Set whether enemy is hurt.
-     * @param isHurt the player's "hurt" status
-     */
-    public void setHurt(boolean isHurt) {
-        this.isHurt = isHurt;
-    }
-
-    /**
-     * Check whether the hurt time is within 2 seconds,
-     * therefore casting hurt effects on enemy.
-     */
-    private void checkIfHurtEnded() {
-        hurtTime += 20; // hurt for 1 second
-        if (hurtTime > 400) {
-            logger.info("Hurt ended");
-            setHurt(false);
-            hurtTime = 0;
-        }
-    }
-
-    /**
-     * Return the health this enemy has.
-     * @return The health this enemy has.
-     */
-    public int getHealth() {
-        return health;
-    }
-
-    /**
-     * To set enemy heal
-     * @param health set heal of enemy
-     */
-    public void setHealth(int health) {
-        this.health = health;
-    }
-
-    /**
-     * Remove this enemy from the game world.
-     */
-    private void enemyDied() {
-        if (isDead()) {
-            if(getChaseSound() != null) {
-                SoundManager.stopSound(getChaseSound());
-            }
-            if(getDeadSound() != null) {
-                SoundManager.playSound(getDeadSound());
-
-                isMoving = false;
-                this.destination = new HexVector(this.getCol(), this.getRow());
-                this.setDead(true);
-                logger.info("Enemy destroyed.");}
-
-            GameManager.get().getWorld().removeEntity(this);
-            setCurrentState(AnimationRole.NULL);
-        }
-    }
-
-    /**
-     * under normal situation the enemy will random wandering in 100 radius circle
-     */
-    private void randomMoving() {
-        if ((!isAttacking || mainCharacter.isRecovering() ||
-                mainCharacter.isDead()) && !isMoving) {
-
-            float[] targetPosition = new float[2];
-            targetPosition[0] = (float) (Math.random() * 800 + originalPosition[0]);
-            targetPosition[1] = (float) (Math.random() * 800 + originalPosition[1]);
-
-            float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow(targetPosition[0], targetPosition[1]);
-            destination = new HexVector(randomPositionWorld[0], randomPositionWorld[1]);
-            isMoving = true;
-            this.position.moveToward(destination, getWalkingSpeed());
-            movementDirection(this.position.getAngle());
-
-            SoundManager.stopSound(chasingSound);
-            if (destination.getCol() == this.getCol() && destination.getRow() == this.getRow()) {
-                isMoving = false;
-            }
-        }
-    }
-
-    /**
-     * Enemy chase the player, if player position is in range,
-     * enemy attacks player.
-     */
-    private void chasePlayer() {
-        if(isAttacking && !(this.mainCharacter.isRecovering() ||
-                this.mainCharacter.isDead() || this.mainCharacter.isHurt())) {
-            this.setSpeed(getChasingSpeed());
-            this.destination = new HexVector(mainCharacter.getCol(), mainCharacter.getRow());
-            this.position.moveToward(destination, this.getChasingSpeed());
-
-            //if the player in attack range then attack player
-            if (distance(mainCharacter) < getAttackRange()) {
-                dealDamage(mainCharacter);
-            }
+            die();
         }
     }
 
@@ -241,9 +158,8 @@ public class Enemy extends Peon
      */
     @Override
     public void dealDamage(MainCharacter mc) {
-        setAttacking(false);
         setCurrentState(AnimationRole.ATTACK);
-        mc.hurt(this.getDamage());
+        mc.hurt(this.getStrength());
         mc.setRecovering(true);
     }
 
@@ -257,41 +173,12 @@ public class Enemy extends Peon
     }
 
     /**
-     *  Handles the action of the enemy per time tick in game.
-     * @param tick number of second tin the game.
+     * Return a list of resistance attributes.
+     * @return A list of resistance attributes.
      */
     @Override
-    public void onTick(long tick) {
-        if (isDead()) {
-            if (deadTime < 500) {
-                deadTime += 20;
-            } else {
-                enemyDied();
-            }
-        } else {
-            movementDirection(this.position.getAngle());
-
-            //if the player in angry distance or the enemy is attacked by player then turning to angry model
-            if (distance(mainCharacter) < 2 && !(mainCharacter.isDead() ||
-                    mainCharacter.isRecovering() || mainCharacter.isHurt())) {
-                setAttacking(true);
-                setCurrentState(AnimationRole.ATTACK);
-                chasePlayer();
-                SoundManager.loopSound(getChaseSound());
-
-            } else {
-                isMoving = false;
-                randomMoving();
-                setAttacking(false);
-                setSpeed(getWalkingSpeed());
-                setCurrentState(AnimationRole.MOVE);
-                SoundManager.stopSound(getChaseSound());
-            }
-            if (isHurt) {
-                checkIfHurtEnded();
-            }
-            this.updateAnimation();
-        }
+    public int[] getResistanceAttributes() {
+        return new int[0];
     }
 
     /**
@@ -299,6 +186,7 @@ public class Enemy extends Peon
      * else NULL. Also sets the direction
      */
     private void updateAnimation() {
+        movementDirection(this.position.getAngle());
 
         /* Short Animations */
         if (getToBeRun() != null) {
@@ -317,75 +205,69 @@ public class Enemy extends Peon
     }
 
     /**
-     * get movement direction
-     *
-     * @param angle the angle between to tile
+     *  Handles the action of the enemy per time tick in game.
+     * @param tick number of second tin the game.
      */
-    private void movementDirection(double angle) {
-        angle = Math.toDegrees(angle - Math.PI);
+    @Override
+    public void onTick(long tick) {
+        if (isDead()) {
+            if (deadTime < 500) {
+                deadTime += 20;
+            } else {
+                die();
+            }
+        } else {
+            //if the player in angry distance or the enemy is attacked by player then turning to angry model
+            if (distance(mainCharacter) < 2 && !(mainCharacter.isDead() ||
+                    mainCharacter.isRecovering() || mainCharacter.isHurt())) {
+                attackPlayer();
+                SoundManager.loopSound(getChaseSound());
 
-        System.out.println(angle);
-        switch ((int) angle) {
-            case 0:
-                setCurrentDirection(Direction.NORTH);
-                break;
-            case 1:
-                setCurrentDirection(Direction.NORTH_EAST);
-                break;
-            case 2:
-                setCurrentDirection(Direction.EAST);
-                break;
-            case 3:
-                setCurrentDirection(Direction.SOUTH_EAST);
-                break;
-            case 4:
-                setCurrentDirection(Direction.SOUTH);
-                break;
-            case 5:
-                setCurrentDirection(Direction.SOUTH_WEST);
-                break;
-            case 6:
-                setCurrentDirection(Direction.WEST);
-                break;
-            case 7:
-                setCurrentDirection(Direction.NORTH_WEST);
-                break;
-            default:
-                break;
+            } else {
+                randomMoving();
+                setAttacking(false);
+                setSpeed(getWalkingSpeed());
+                setCurrentState(AnimationRole.MOVE);
+                SoundManager.stopSound(getChaseSound());
+            }
+            if (isHurt) {
+                checkIfHurtEnded();
+            }
+            this.updateAnimation();
         }
     }
 
     /**
-     * Sets the type of the enemy from all available types
-     * @param name The name of the enemy
+     * To set enemy heal
+     * @param health set heal of enemy
      */
-    private void setType(String name) {
-        if (name.matches("Abductor")) {
-            enemy = Enemy.EnemyType.ABDUCTOR;
-        } else if (name.matches("Flower")) {
-            enemy = Enemy.EnemyType.FLOWER;
-        } else if (name.matches("Heavy")) {
-            enemy = Enemy.EnemyType.HEAVY;
-        } else if (name.matches("Robot")) {
-            enemy = Enemy.EnemyType.ROBOT;
-        } else if (name.matches("Scout")) {
-            enemy = Enemy.EnemyType.SCOUT;
-        } else if (name.matches("Spider")) {
-            enemy = Enemy.EnemyType.SPIDER;
-        } else if (name.matches("Stone")) {
-            enemy = Enemy.EnemyType.STONE;
-        } else {
-            enemy = Enemy.EnemyType.TREEMAN;
-        }
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    /**
+     * Return the health this enemy has.
+     * @return The health this enemy has.
+     */
+    public int getHealth() {
+        return health;
     }
 
     void setValues(float scaling, int health, int damage, float attackRange, float walkingSpeed, float chasingSpeed) {
         this.setMaxHealth((int) (health * scaling));
         this.setHealth((int) (health * scaling));
-        this.setDamage((int) ((float) damage * scaling));
+        this.setStrength((int) ((float) damage * scaling));
         this.setAttackRange(attackRange * scaling);
         this.setWalkingSpeed(walkingSpeed * scaling);
         this.setChasingSpeed(chasingSpeed * scaling);
+    }
+
+    /**
+     * Set default texture of the enemy in 8 different directions.
+     */
+    @Override
+    public void setDirectionTextures() {
+        // not needed
     }
 
     /**
@@ -394,6 +276,7 @@ public class Enemy extends Peon
     private void configureSounds() {
         String name = this.getName();
         this.chasingSound = name + "Walk";
+        this.hurtSound = name + "Hurt";
         this.attackingSound = name + "Attack";
         this.diedSound = name + "Dead";
     }
@@ -439,7 +322,6 @@ public class Enemy extends Peon
                         enemyName + "MoveSW", AnimationRole.MOVE, Direction.SOUTH_WEST,
                         true, true));
 
-        /*
         this.addAnimations(
                 AnimationRole.ATTACK, Direction.EAST, new AnimationLinker(
                 enemyName + "AttackE", AnimationRole.ATTACK, Direction.EAST,
@@ -468,23 +350,6 @@ public class Enemy extends Peon
                 AnimationRole.DEAD, Direction.DEFAULT, new AnimationLinker(
                 enemyName + "Dead", AnimationRole.DEAD, Direction.DEFAULT,
                         true, true));
-        */
-    }
-
-    /**
-     * Set default texture of the enemy in 8 different directions.
-     */
-    @Override
-    public void setDirectionTextures() {
-        String animationNameStart = "__ANIMATION_" + this.getName();
-        //defaultDirectionTextures.put(Direction.EAST, animationNameStart + "MoveE_Anim:0")
-        defaultDirectionTextures.put(Direction.WEST, animationNameStart + "MoveW_Anim:0");
-        defaultDirectionTextures.put(Direction.SOUTH, animationNameStart + "MoveS_Anim:0");
-        defaultDirectionTextures.put(Direction.NORTH, animationNameStart + "MoveN_Anim:0");
-        defaultDirectionTextures.put(Direction.NORTH_EAST, animationNameStart + "MoveNE_Anim:0");
-        defaultDirectionTextures.put(Direction.NORTH_WEST, animationNameStart + "MoveNW_Anim:0");
-        defaultDirectionTextures.put(Direction.SOUTH_EAST, animationNameStart + "MoveSE_Anim:0");
-        defaultDirectionTextures.put(Direction.SOUTH_WEST, animationNameStart + "MoveSW_Anim:0");
     }
 
     /**
@@ -544,29 +409,20 @@ public class Enemy extends Peon
     }
 
     /**
-     * Setting the enemy to attack model
-     *
-     * @param isAttacking whether the enemy is attacking.
-     */
-    private void setAttacking(boolean isAttacking) {
-        this.isAttacking = isAttacking;
-    }
-
-    /**
      * Get enemy's current strength
      * @return enemy's current strength.
      */
     @Override
-    public int getDamage() {
-        return this.damage;
+    public int getStrength() {
+        return this.strength;
     }
 
     /**
      * Set the amount of damage for this enemy.
-     * @param damage the new amount of damage to be set.
+     * @param strength the new amount of damage to be set.
      */
-    public void setDamage(int damage) {
-        this.damage = damage;
+    public void setStrength(int strength) {
+        this.strength = strength;
     }
 
     /**
@@ -624,6 +480,144 @@ public class Enemy extends Peon
     }
 
     /**
+     *  Get whether enemy is hurt.
+     */
+    public boolean getHurt() {
+        return isHurt;
+    }
+
+    /**
+     *  Set whether enemy is hurt.
+     * @param isHurt the player's "hurt" status
+     */
+    public void setHurt(boolean isHurt) {
+        this.isHurt = isHurt;
+    }
+
+    /**
+     * Check whether the hurt time is within 2 seconds,
+     * therefore casting hurt effects on enemy.
+     */
+    private void checkIfHurtEnded() {
+        hurtTime += 20; // hurt for 1 second
+        if (hurtTime > 340) {
+            logger.info("Hurt ended");
+            setHurt(false);
+            hurtTime = 0;
+        }
+    }
+
+    /**
+     * Remove this enemy from the game world.
+     */
+    private void die() {
+        if (isDead()) {
+            if(getChaseSound() != null) {
+                SoundManager.stopSound(getChaseSound());
+            }
+            if(getDeadSound() != null) {
+                SoundManager.playSound(getDeadSound());
+
+                isMoving = false;
+                this.destination = new HexVector(this.getCol(), this.getRow());
+                this.setDead(true);
+                logger.info("Enemy destroyed.");}
+
+            GameManager.get().getWorld().removeEntity(this);
+            setCurrentState(AnimationRole.NULL);
+        }
+    }
+
+    /**
+     * under normal situation the enemy will random wandering in 100 radius circle
+     */
+    private void randomMoving() {
+        if ((!isAttacking)) {
+
+            targetPosition = new float[2];
+            targetPosition[0] = (float) (Math.random() * 200 + originalPosition[0]);
+            targetPosition[1] = (float) (Math.random() * 200 + originalPosition[1]);
+            float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow(targetPosition[0], targetPosition[1]);
+            destination = new HexVector(randomPositionWorld[0], randomPositionWorld[1]);
+            isMoving = true;
+
+            SoundManager.stopSound(chasingSound);
+            this.position.moveToward(destination,getWalkingSpeed());
+        }
+    }
+
+    /**
+     * get movement direction
+     *
+     * @param angle the angle between to tile
+     */
+    private void movementDirection(double angle) {
+        angle = Math.floorMod((int) Math.floor((angle + 90.0) / 45), 8);
+
+        switch ((int) angle) {
+            case 0:
+                setCurrentDirection(Direction.NORTH);
+                break;
+            case 1:
+                setCurrentDirection(Direction.NORTH_EAST);
+                break;
+            case 2:
+                setCurrentDirection(Direction.EAST);
+                break;
+            case 3:
+                setCurrentDirection(Direction.SOUTH_EAST);
+                break;
+            case 4:
+                setCurrentDirection(Direction.SOUTH);
+                break;
+            case 5:
+                setCurrentDirection(Direction.SOUTH_WEST);
+                break;
+            case 6:
+                setCurrentDirection(Direction.WEST);
+                break;
+            case 7:
+                setCurrentDirection(Direction.NORTH_WEST);
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Sets the type of the enemy from all available types
+     * @param name The name of the enemy
+     */
+    private void setType(String name) {
+        if (name.matches("Abductor")) {
+            enemy = Enemy.EnemyType.ABDUCTOR;
+        } else if (name.matches("Flower")) {
+            enemy = Enemy.EnemyType.FLOWER;
+        } else if (name.matches("Heavy")) {
+            enemy = Enemy.EnemyType.HEAVY;
+        } else if (name.matches("Robot")) {
+            enemy = Enemy.EnemyType.ROBOT;
+        } else if (name.matches("Scout")) {
+            enemy = Enemy.EnemyType.SCOUT;
+        } else if (name.matches("Spider")) {
+            enemy = Enemy.EnemyType.SPIDER;
+        } else if (name.matches("Stone")) {
+            enemy = Enemy.EnemyType.STONE;
+        } else {
+            enemy = Enemy.EnemyType.TREEMAN;
+        }
+    }
+
+    /**
+     * Setting the enemy to attack model
+     *
+     * @param isAttacking whether the enemy is attacking.
+     */
+    private void setAttacking(boolean isAttacking) {
+        this.isAttacking = isAttacking;
+    }
+
+    /**
      *  A cheat method to get player position, used by spawning
      *  to work out where to place an enemy
      * @return returns a vec2 -> (row, col) of player location
@@ -631,15 +625,6 @@ public class Enemy extends Peon
     public vec2 getPlayerLocation() {
         return new vec2(mainCharacter.getRow(),
                 mainCharacter.getCol());
-    }
-
-    /**
-     * Return a list of resistance attributes.
-     * @return A list of resistance attributes.
-     */
-    @Override
-    public int[] getResistanceAttributes() {
-        return new int[0];
     }
 
     /**

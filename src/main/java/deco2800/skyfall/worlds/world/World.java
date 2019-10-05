@@ -581,7 +581,7 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
 
         } else if (e2 instanceof Projectile && e1 instanceof Enemy) {
             if (((Enemy) e1).getHealth() > 0) {
-                ((Enemy) e1).takeDamage(((Enemy) e1).getDamage());
+                ((Enemy) e1).takeDamage(((Enemy) e1).getStrength());
                 ((Enemy) e1).setHurt(true);
                 ((Projectile) e2).destroy();
             } else {

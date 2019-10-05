@@ -379,10 +379,16 @@ public class TextureManager extends AbstractManager {
             textureMap.put("MainCharacterNW_Anim", new Texture("resources/Main_Character_B_Left_Anim.png"));
             // Main character Attack animation
             textureMap.put("MainCharacter_Attack_E_Anim", new Texture("resources/Main_Character_Attack_E.png"));
+            textureMap.put("MainCharacter_Attack_W_Anim", new Texture("resources/Main_Character_Attack_W.png"));
+            textureMap.put("MainCharacter_Attack_N_Anim", new Texture("resources/Main_Character_Attack_N.png"));
             // Main character Hurt animation
             textureMap.put("MainCharacter_Hurt_E_Anim", new Texture("resources/Main_Character_Hurt_E.png"));
+            textureMap.put("MainCharacter_Hurt_W_Anim", new Texture("resources/Main_Character_Hurt_W.png"));
             // Main character Dead animation
             textureMap.put("MainCharacter_Dead_E_Anim", new Texture("resources/Main_Character_Dead_E.png"));
+            textureMap.put("MainCharacter_Dead_L_Anim", new Texture("resources/Main_Character_Dead_L.png"));
+            textureMap.put("MainCharacter_Dead_R_Anim", new Texture("resources/Main_Character_Dead_R.png"));
+            textureMap.put("MainCharacter_Dead_SW_Anim", new Texture("resources/Main_Character_Dead_W.png"));
             textureMap.put("MainCharacter_Dead_E_Still", new Texture("resources/Main_Character_Dead_E_3.png"));
 
             // Spells
