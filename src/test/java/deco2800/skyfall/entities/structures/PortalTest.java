@@ -1,7 +1,6 @@
 package deco2800.skyfall.entities.structures;
 
-import deco2800.skyfall.buildings.AbstractPortal;
-import deco2800.skyfall.buildings.ForestPortal;
+import deco2800.skyfall.buildings.*;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.worlds.Tile;
@@ -84,6 +83,35 @@ public class PortalTest {
     }
 
     @Test
+    public void unlockMountainPortal() {
+        MainCharacter character2 = new MainCharacter(1,1,1, "character", 10);
+        ArrayList<String> lockedBiomes = new ArrayList<>();
+
+        lockedBiomes.add("volcanic_mountain");
+
+        assertNotEquals(lockedBiomes, character2.getlockedBiomes());
+
+        DesertPortal portal = new DesertPortal(2,2,1);
+        portal.teleport(character2, world);
+
+        assertEquals(lockedBiomes, character2.getlockedBiomes());
+
+    }
+    @Test
+    public void unlockVolcanoPortal() {
+        MainCharacter character3 = new MainCharacter(1,1,1, "character", 10);
+        ArrayList<String> lockedBiomes = new ArrayList<>();
+
+        assertNotEquals(lockedBiomes, character3.getlockedBiomes());
+
+        MountainPortal portal = new MountainPortal(2,2,1);
+        portal.teleport(character3, world);
+
+        assertEquals(lockedBiomes, character3.getlockedBiomes());
+
+    }
+
+    @Test
     public void testForestPortal() {
 
         AbstractPortal portal = new ForestPortal(1,1,1);
@@ -92,8 +120,42 @@ public class PortalTest {
     }
 
     @Test
+    public void testDesertPortal() {
+
+        AbstractPortal portal = new DesertPortal(1,1,1);
+        assertEquals("mountain", portal.nextBiome);
+
+    }
+
+    @Test
+    public void testMountainPortal() {
+
+        AbstractPortal portal = new MountainPortal(1,1,1);
+        assertEquals("volcanic_mountain", portal.nextBiome);
+
+    }
+
+    @Test
+    public void testVolcanoPortal() {
+
+        AbstractPortal portal = new VolcanoPortal(1,1,1);
+        assertEquals("volcanic_mountain", portal.nextBiome);
+
+    }
+
+
+
+    @Test
     public void testTeleportation() {
         MainCharacter character = new MainCharacter(1,1,1, "character", 10);
+
+        ForestPortal portal = new ForestPortal(2,2,1);
+        portal.teleport(character, world);
+
+        assertNotEquals(1,character.getCol());
+        assertNotEquals(1, character.getRow());
+
+        // Will implement this when portal placement is working
 
         //WorldBuilder builder = Mockito.mock(WorldBuilder.class);
         //WorldDirector.constructNBiomeSinglePlayerWorld(builder, 3, false);
@@ -104,11 +166,7 @@ public class PortalTest {
         //Tile characterTile1= character.getTile(character.getCol(),character.getRow());
         //assertEquals("desert", characterTile1.getBiome().getBiomeName());
 
-        ForestPortal portal = new ForestPortal(2,2,1);
-        portal.teleport(character, world);
 
-        assertNotEquals(1,character.getCol());
-        assertNotEquals(1, character.getRow());
 
         //Tile characterTile2= character.getTile(character.getCol(),character.getRow());
 
