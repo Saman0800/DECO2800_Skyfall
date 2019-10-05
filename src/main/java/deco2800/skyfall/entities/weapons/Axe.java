@@ -1,135 +1,94 @@
 package deco2800.skyfall.entities.weapons;
 
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Axe extends Weapon implements Item, IWeapon {
 
-    // Weapon attributes
-    private String name;
-    private String weaponType;
-    private String damageType;
-    private int attackRate;
-    private int damage;
-    private int durability;
-
     public Axe(Tile tile, boolean obstructed) {
-        super(tile, "axe_tex", obstructed);
-
-        this.name = "axe";
-        this.weaponType = "melee";
-        this.durability = 10;
-        this.damageType = "slash";
-        this.damage = 4;
-        this.attackRate = 4;
+        super(tile, "axe_tex", obstructed, "axe",
+                "melee", "slash",
+                4, 4, 10);
     }
 
     public Axe() {
-        this.name = "axe";
+        super("axe");
     }
 
     /**
-     * @return name of weapon
+     * @return a new instance of axe
      */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * @return type of weapon, melee or range
-     */
-    public String getSubtype() {
-        return this.weaponType;
-    }
-
-    /**
-     * @return Subtype of weapon
-     */
-    public String getWeaponType() {
-        return this.getSubtype();
-    }
-
-    /**
-     * @return type of damage, slash or splash
-     */
-    public String getDamageType() {
-        return this.damageType;
-    }
-
-    /**
-     * @return the durability of the weapon
-     */
-    public int getDurability() {
-        return this.durability;
-    }
-
-    /**
-     * Reduces durability of weapon by 1
-     */
-    public void decreaseDurability() {
-        this.durability -= 1;
-    }
-
-    /**
-     * If the durability of the weapon have durability bigger than 0
-     * @return whether to weapon is still usable
-     */
-    public boolean isUsable() {
-        return this.getDurability() > 0;
-    }
-
-    /**
-     * @return the attack rate of the weapon
-     */
-    public int getAttackRate() {
-        return this.attackRate;
-    }
-
-    /**
-     * @return the amount of damage dealt with the weapon
-     */
-    public int getDamage() {
-        return this.damage;
-    }
-
-    /**
-     * Returns a description about the weapon
-     * @return a description about the weapon
-     */
-    public String getDescription() {
-        return this.getName() + " is a " + this.getSubtype() + " weapon which" +
-                " can be used to help the Main Character defeat enemies." +
-                " It has deals " + this.getDamage() + " " + this.getDamageType()
-                + " damages each time it is used. It also has an attack rate " +
-                "of: " + this.getAttackRate() + " and a durability of: " +
-                this.getDurability() + " before it become useless. "
-                + this.getName() + "is carryable, but exchangeable.";
-    }
-
     @Override
-    /**
-     * A paragraph describing the weapon
-     */
-    public String toString() {
-        return "" + this.getSubtype() + ":" + this.getName();
-    }
-
-    /**
-     * @return a new instance of sword
-     */
     public Axe newInstance(Tile tile) {
         return new Axe(tile, this.isObstructed());
     }
 
+    /**
+     * Returns the number of wood required for the item.
+     *
+     * @return The name of the item
+     */
     @Override
-    public void onTick(long i) {
-        // Auto-generated method stub
+    public int getRequiredWood() {
+        return 20;
     }
 
+    /**
+     * Returns the number of stones required for the item.
+     *
+     * @return The name of the item
+     */
     @Override
-    public void use(HexVector position){
+    public int getRequiredStone() {
+        return 10;
+    }
 
+    /**
+     * Returns the number of metal required for the item.
+     *
+     * @return The name of the item
+     */
+    @Override
+    public int getRequiredMetal() {
+        return 10;
+    }
+
+    /**
+     * Returns a map of the name of the required resource and
+     * the required number of each resource to create the item.
+     *
+     * @return a hashamp of the required resources and their number.
+     */
+    @Override
+    public Map<String, Integer> getAllRequirements() {
+
+        Map<String, Integer> allRequirements = new HashMap<>();
+        allRequirements.put("Wood", 20);
+        allRequirements.put("Stone", 10);
+        allRequirements.put("Metal", 10);
+
+        return allRequirements;
+    }
+
+    /**
+     * a getter method to check if a player has learned the blueprint
+     *
+     * @return true if the player has learned the blueprint.
+     */
+    @Override
+    public boolean isBlueprintLearned() {
+        return false;
+    }
+
+    /**
+     * @return - cost of building the building
+     */
+    @Override
+    public int getCost() {
+        return 5;
     }
 }
 

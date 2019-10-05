@@ -2,7 +2,7 @@ package deco2800.skyfall.worlds.world;
 
 import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.*;
-import deco2800.skyfall.entities.enemies.AbstractEnemy;
+import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.AgentEntity;
@@ -116,12 +116,12 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
 
     }
 
-    private Map<AbstractBiome, List<EntitySpawnRule>> generateStartEntitiesInternal(World world) {
+    private Map<AbstractBiome, List<EntitySpawnRule>> generateStartEntitiesInternal() {
         return new WorldBuilder().generateStartEntities(this);
     }
 
     public void generateStartEntities() {
-        this.spawnRules = this.generateStartEntitiesInternal(this);
+        this.spawnRules = this.generateStartEntitiesInternal();
     }
 
     /**
@@ -569,22 +569,22 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
         // entities.
 
         // TODO: this needs to be internalized into classes for cleaner code.
-        if (e1 instanceof Projectile && e2 instanceof AbstractEnemy) {
-            if (((AbstractEnemy) e2).getHealth() > 0) {
-                ((AbstractEnemy) e2).takeDamage(((Projectile) e1).getDamage());
-                ((AbstractEnemy) e2).setHurt(true);
+        if (e1 instanceof Projectile && e2 instanceof Enemy) {
+            if (((Enemy) e2).getHealth() > 0) {
+                ((Enemy) e2).takeDamage(((Projectile) e1).getDamage());
+                ((Enemy) e2).setHurt(true);
                 ((Projectile) e1).destroy();
             } else {
-                ((AbstractEnemy) e2).setDead(true);
+                ((Enemy) e2).setDead(true);
             }
 
-        } else if (e2 instanceof Projectile && e1 instanceof AbstractEnemy) {
-            if (((AbstractEnemy) e1).getHealth() > 0) {
-                ((AbstractEnemy) e1).takeDamage(((AbstractEnemy) e1).getDamage());
-                ((AbstractEnemy) e1).setHurt(true);
+        } else if (e2 instanceof Projectile && e1 instanceof Enemy) {
+            if (((Enemy) e1).getHealth() > 0) {
+                ((Enemy) e1).takeDamage(((Enemy) e1).getDamage());
+                ((Enemy) e1).setHurt(true);
                 ((Projectile) e2).destroy();
             } else {
-                ((AbstractEnemy) e1).setDead(true);
+                ((Enemy) e1).setDead(true);
             }
 
         }
@@ -597,11 +597,11 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
     }
 
     public String worldToString() {
-        // TODO:Ontonator Check that this works.
         StringBuilder string = new StringBuilder();
         loadedChunks.entrySet().stream()
                 .sorted(Comparator.comparing(Map.Entry::getKey))
-                .flatMap(entry -> entry.getValue().getTiles().stream())
+                .flatMap(entry -> entry.getValue().getTiles().stream()
+                        .sorted(Comparator.comparing(tile -> new Pair<>(tile.getCol(), tile.getRow()))))
                 .forEachOrdered(tile -> {
                     String out = String.format("%f, %f, %s, %s\n", tile.getCol(), tile.getRow(),
                                                tile.getBiome().getBiomeName(),
@@ -680,11 +680,6 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
                 }
                 removeEntity(entity);
                 gmm.getInventory().add((Item) entity);
-                if (!mc.getEquipped().equals(((Weapon) entity).getName())) {
-                    gmm.getInventory().quickAccessRemove(mc.getEquipped());
-                    gmm.getInventory().quickAccessAdd(((Weapon) entity).getName());
-                    mc.setEquipped(((Weapon) entity).getName());
-                }
             } else if (entity instanceof Chest) {
                 GameMenuManager menuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
                 ChestTable chest = (ChestTable) menuManager.getPopUp("chestTable");

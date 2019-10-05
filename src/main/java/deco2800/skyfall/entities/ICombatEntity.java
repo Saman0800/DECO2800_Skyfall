@@ -14,19 +14,12 @@ public interface ICombatEntity extends HasHealth {
     /**
      * Deal damage to another ICombatEntity so damage calculation can be applied.
      */
-    void dealDamage(ICombatEntity entity);
+    void dealDamage(MainCharacter mc);
 
     /**
      * Some combat entities will only be able to be attacked.
      */
     boolean canDealDamage();
-
-    /**
-     * Get the amount of armour this entity has, calculated from the worn gear plus base stats.
-     *
-     * @return The amount of armour the entity has.
-     */
-   // int getArmour();
 
     /**
      * Get the amount of damage this entity deals.

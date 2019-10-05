@@ -6,40 +6,49 @@ import org.junit.*;
 
 public class SpearTest {
 
-  private Spear spear;
+    private Spear spear;
 
-  @Before
-  public void setUp() {
-    spear = new Spear(new Tile(null, 0, 0), false);
-  }
+    @Before
+    public void setUp() {
+        spear = new Spear(new Tile(null, 0, 0), false);
+    }
 
-  @After
-  public void tearDown() {
-    spear = null;
-  }
+    @After
+    public void tearDown() {
+        spear = null;
+    }
 
-  @Test
-  public void getDurabilityTest() {
-    assert(spear.getDurability() == 7);
-  }
+    @Test
+    public void getDurabilityTest() {
+        Assert.assertEquals(7, spear.getDurability());
+    }
 
-  @Test
-  public void getAttackRateTest() {
-    assert (spear.getAttackRate() == 4);
-  }
+    @Test
+    public void changeDurabilityTest() {
+        Assert.assertTrue(spear.isUsable());
+        for (int i = 0; i < 7; i++) {
+            spear.decreaseDurability();
+        }
+        Assert.assertFalse(spear.isUsable());
+    }
 
-  @Test
-  public void getDamageTest() {
-    assert(spear.getDamage() == 5);
-  }
+    @Test
+    public void getAttackRateTest() {
+        Assert.assertEquals(4, spear.getAttackRate());
+    }
 
-  @Test
-  public void getNameTest() {
-    assert (spear.getName().equals("spear"));
-  }
+    @Test
+    public void getDamageTest() {
+        Assert.assertEquals(5, spear.getDamage());
+    }
 
-  @Test
-  public void toStringTest() {
-    Assert.assertEquals(spear.toString(), "" + "range" + ":" + "spear");
-  }
+    @Test
+    public void getNameTest() {
+        Assert.assertEquals("spear", spear.getName());
+    }
+
+    @Test
+    public void toStringTest() {
+        Assert.assertEquals("range:spear", spear.toString());
+    }
 }

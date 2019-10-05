@@ -3,6 +3,8 @@ package deco2800.skyfall.entities;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.tasks.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Base class of character in game where main characters and enemies will
@@ -10,7 +12,7 @@ import deco2800.skyfall.tasks.*;
  */
 public abstract class Peon extends AgentEntity implements Tickable {
 	// Task being completed by character
-	private transient AbstractTask task;
+	protected transient AbstractTask task;
 
 	// Name of the character
 	private String name;
@@ -23,12 +25,18 @@ public abstract class Peon extends AgentEntity implements Tickable {
 	// Boolean of whether character is dead
 	private int deaths;
 
+	private static final String CHARACTER = "spacman_ded";
+
+	private final Logger logger =
+			LoggerFactory.getLogger(Peon.class);
+
 	/**
 	 * Constructor with no parameters
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public Peon() {
 		super();
-		this.setTexture("spacman_ded");
+		this.setTexture(CHARACTER);
 		this.setObjectName("Peon");
 		this.setHeight(1);
 		this.speed = 0.05f;
@@ -39,7 +47,7 @@ public abstract class Peon extends AgentEntity implements Tickable {
      */
 	public Peon(float row, float col, float speed, String name, int health) {
 		super(row, col, 3, speed);
-		this.setTexture("spacman_ded");
+		this.setTexture(CHARACTER);
 
 		if (name == null || name.equals("")) {
 			setName("DEFAULT");
@@ -54,14 +62,15 @@ public abstract class Peon extends AgentEntity implements Tickable {
 			this.health = health;
 			this.maxHealth = health;
 		}
-		System.out.println(name + " has " + maxHealth);
+		logger.info(name + " has " + maxHealth);
 		this.deaths = 0;
 	}
 
+	@SuppressWarnings("WeakerAccess")
 	public Peon(float row, float col, float speed, String name, int health,
 				String fixtureDef) {
 		super(row, col, 3, speed, fixtureDef);
-		this.setTexture("spacman_ded");
+		this.setTexture(CHARACTER);
 
 		if (name == null || name.equals("")) {
 			setName("DEFAULT");
@@ -148,11 +157,11 @@ public abstract class Peon extends AgentEntity implements Tickable {
 	/**
 	 * Sets character to be dead
 	 */
-	public boolean setDead(boolean is_dead) {
-		if (is_dead) {
+	public boolean setDead(boolean isDead) {
+		if (isDead) {
 			health = 0;
 		}
-		return is_dead;
+		return isDead;
 	}
 
 	/**

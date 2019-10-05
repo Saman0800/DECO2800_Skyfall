@@ -4,31 +4,23 @@ import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.worlds.Tile;
 import java.util.Random;
 
-public class SnowShrub extends StaticEntity {
+public class SnowShrub extends AbstractShrub {
 
     private static final String ENTITY_ID_STRING = "snow_shrub";
-    private static Random randomGen = new Random();
-    private static int nextRock = 1;
 
     public SnowShrub() {
         this.setObjectName(ENTITY_ID_STRING);
     }
 
     public SnowShrub(Tile tile, boolean obstructed) {
-        super(tile, 2, "MBush" + nextRock, obstructed);
+        super(tile, "MBush" + SnowShrub.nextTexture, obstructed);
         this.setObjectName(ENTITY_ID_STRING);
-        nextRock = randomGen.nextInt(3) + 1;
+        SnowShrub.nextTexture = randomGen.nextInt(3) + 1;
         this.entityType = "SnowShrub";
     }
 
-
-    public SnowShrub (StaticEntityMemento memento){
+    public SnowShrub(SaveableEntityMemento memento) {
         super(memento);
-    }
-
-    @Override
-    public void onTick(long i) {
-
     }
 
     /**

@@ -1,7 +1,7 @@
 package deco2800.skyfall.entities.worlditems;
 
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.PlayerPeon;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.WoodCube;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.managers.database.DataBaseConnector;
@@ -34,7 +34,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ GameManager.class, PlayerPeon.class, WorldBuilder.class, WorldDirector.class, DatabaseManager.class,
+@PrepareForTest({ GameManager.class, MainCharacter.class, WorldBuilder.class, WorldDirector.class, DatabaseManager.class,
                   DataBaseConnector.class })
 public class TreeTest {
     private World w = null;
@@ -50,11 +50,10 @@ public class TreeTest {
         whenNew(Random.class).withAnyArguments().thenReturn(random);
 
         DataBaseConnector connector = PowerMockito.mock(DataBaseConnector.class);
-        PowerMockito.when(connector.loadChunk(any(World.class), anyInt(), anyInt())).then(
-                (Answer<Chunk>) invocation -> {
+        PowerMockito.when(connector.loadChunk(any(World.class), anyInt(), anyInt()))
+                .then((Answer<Chunk>) invocation -> {
                     Chunk chunk = new Chunk(invocation.getArgumentAt(0, World.class),
-                                            invocation.getArgumentAt(1, Integer.class),
-                                            invocation.getArgumentAt(2, Integer.class));
+                            invocation.getArgumentAt(1, Integer.class), invocation.getArgumentAt(2, Integer.class));
                     chunk.generateEntities();
                     return chunk;
                 });
@@ -91,7 +90,7 @@ public class TreeTest {
     public void TestConstruction() {
         Tile tile1 = w.getTile(0.0f, 0.0f);
 
-        Tree tree1 = new Tree(tile1, true);
+        ForestTree tree1 = new ForestTree(tile1, true);
 
         // Make sure our tile is non-null
         Tile tileGet1 = w.getTile(0.0f, 0.0f);
@@ -117,8 +116,8 @@ public class TreeTest {
         Tile tile3 = w.getTile(1.0f, -0.5f);
         Tile tile4 = w.getTile(1.0f, 0.5f);
 
-        Tree tree1 = new Tree(tile1, true);
-        Tree tree2 = tree1.newInstance(tile2);
+        ForestTree tree1 = new ForestTree(tile1, true);
+        ForestTree tree2 = tree1.newInstance(tile2);
 
         assertNotEquals("Duplicated tree on the same position", tree1, tree2);
 
@@ -139,7 +138,7 @@ public class TreeTest {
     public void TestHarvest() {
         Tile tile1 = w.getTile(0.0f, 0.0f);
 
-        Tree tree1 = new Tree(tile1, true);
+        ForestTree tree1 = new ForestTree(tile1, true);
 
         List<AbstractEntity> drops = tree1.harvest(tile1);
 
@@ -157,7 +156,7 @@ public class TreeTest {
     public void TestHashCode() {
         Tile tile1 = w.getTile(0.0f, 0.0f);
 
-        Tree tree1 = new Tree(tile1, true);
+        ForestTree tree1 = new ForestTree(tile1, true);
 
         // Calculate the expected hash code
         float result = 1;
@@ -177,8 +176,8 @@ public class TreeTest {
         Map<HexVector, String> texture = new HashMap<>();
         texture.put(new HexVector(0.0f, 0.0f), "tree");
 
-        Tree tree1 = new Tree(tile1, true);
-        Tree tree2 = new Tree(0.0f, 0.5f, 2, texture);
+        ForestTree tree1 = new ForestTree(tile1, true);
+        ForestTree tree2 = new ForestTree(0.0f, 0.5f, 2, texture);
 
         assertEquals(15, tree1.getWoodAmount());
 

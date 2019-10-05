@@ -8,7 +8,7 @@ import deco2800.skyfall.entities.pets.Tiger;
 import deco2800.skyfall.entities.vehicle.Bike;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.DesertBiome;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
@@ -49,32 +49,50 @@ public class WorldDirector {
         choices.add(new DesertBiome(random));
         choices.add(new MountainBiome(random));
         choices.add(new VolcanicMountainsBiome(random));
-        choices.add(new SwampBiome(random));
-        choices.add(new SnowyMountainsBiome(random));
+        // For future development of the game
+        //choices.add(new SwampBiome(random));
+        //choices.add(new SnowyMountainsBiome(random));
 
         for (int i = 0; i < n; i++) {
             // builder.addBiome(choices.remove(random.nextInt(choices.size())), 40);
-            builder.addBiome(choices.remove(random.nextInt(choices.size())), 25);
+            // builder.addBiome(choices.remove(random.nextInt(choices.size())), 25);
+            builder.addBiome(choices.remove(random.nextInt(choices.size())), 5);
         }
 
-        // builder.setWorldSize(160);
-        builder.setWorldSize(300);
-        // builder.setNodeSpacing(15);
-        builder.setNodeSpacing(25);
+        builder.setWorldSize(100);
+        //builder.setWorldSize(300);
+        builder.setNodeSpacing(20);
+        // builder.setNodeSpacing(25);
         builder.setSeed(random.nextInt());
 
-        builder.addLake(5);
-        builder.addLake(5);
+        builder.addLake(1);
+        builder.addLake(1);
         builder.addRiver();
 
-        builder.setRiverSize(5);
-        builder.setBeachSize(12);
+        builder.setRiverSize(1);
+        builder.setBeachSize(2);
 
         builder.setStaticEntities(true);
 
-        MainCharacter mainCharacter = MainCharacter.getInstance(0,0,0.05f, "Main Piece", 10);
+        MainCharacter mainCharacter = MainCharacter.getInstance(0,0,10f, "Main Piece", 10);
         mainCharacter.setCol(0);
         mainCharacter.setRow(0);
+
+
+        //mainCharacter.getUnlockedBiomes();
+        //for (String s: mainCharacter.getUnlockedBiomes()) {
+        //    for (AbstractBiome b: builder.getWorld().getBiomes()) {
+        //        if (b.getBiomeName() == "desert") {
+        //            for (Tile t: b.getTiles()){
+        //                t.setObstructed(true);
+        //            }
+        //        }
+
+        //   }
+        //}
+
+
+
 
         if (renderUI) {
             StatisticsManager sm = new StatisticsManager(mainCharacter);
@@ -93,11 +111,6 @@ public class WorldDirector {
         builder.addEntity(new Treeman(-2f,-3f,mainCharacter));
         builder.addEntity(new Tiger(-4f,-2f,mainCharacter));
         builder.addEntity(new Bike(-10f,-2f,mainCharacter));
-
-//        builder.addEntity(new Sword(new Tile(-1f, 3f), "sword_tex", true));
-//        builder.addEntity(new Spear(new Tile(-1f, 5f), "spear_tex", true));
-//        builder.addEntity(new Bow(new Tile(-1f, 7f), "bow_tex", true));
-//        builder.addEntity(new Axe(new Tile(-1f, 9f), "axe_tex", true));
 
         builder.addEntity(new Camel(34, -7, mainCharacter));
         builder.addEntity(new Horse(-8,-6, mainCharacter));

@@ -105,6 +105,11 @@ public class Bike extends AbstractVehicle implements Animatable, Item {
 
     }
 
+    @Override
+    public Boolean isEquippable() {
+        return null;
+    }
+
 
     @Override
     public void takeDamage(int damage) {
@@ -112,9 +117,10 @@ public class Bike extends AbstractVehicle implements Animatable, Item {
     }
 
     @Override
-    public void dealDamage(ICombatEntity entity) {
+    public void dealDamage(MainCharacter mc) {
 
     }
+
 
     @Override
     public boolean canDealDamage() {
