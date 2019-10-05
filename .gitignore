@@ -44,6 +44,7 @@ sonar-project.properties
 .recommenders/
 EngineDB/*
 Database/*
+src/test/java/deco2800/skyfall/managers/database/SavingTestDataBase/*
 
 
 # vscode files

@@ -77,12 +77,11 @@ import org.powermock.reflect.Whitebox;
 @PowerMockIgnore({"java.sql.*", "org.apache.*"})
 public class DataBaseConnectorLoadingTest {
 
-    //    private static DataBaseConnector dataBaseConnectorActual = new DataBaseConnector();
     private static DataBaseConnector dataBaseConnectorExpected = new DataBaseConnector();
     private static InsertDataQueries insertDataQueries;
 
-    private static final long WOLRD_ID =  19471190335142L;
-    private static final long SAVE_ID = 19470155121187L;
+    private static final long WOLRD_ID = 4805754247129L;
+    private static final long SAVE_ID = 4804723109140L;
 
     @BeforeClass
     public static void setupOnce() {
@@ -102,7 +101,7 @@ public class DataBaseConnectorLoadingTest {
     }
 
     @AfterClass
-    public static void cleanUp(){
+    public static void cleanUp() {
         dataBaseConnectorExpected.close();
     }
 
@@ -163,7 +162,6 @@ public class DataBaseConnectorLoadingTest {
                 .loadNodes(worldMock, biomes);
 
             int countNodesInForst = 0;
-            int nodesInSpecificId = 0;
 
             for (WorldGenNode node : nodes) {
                 if (node.getBiome() instanceof ForestBiome) {
@@ -228,9 +226,9 @@ public class DataBaseConnectorLoadingTest {
 
             assertEquals(0, chunk.getX());
             assertEquals(0, chunk.getY());
-            assertEquals(6, chunk.getEntities().size());
+            assertEquals(7, chunk.getEntities().size());
             assertEquals(WOLRD_ID, chunk.getWorld().getID());
-            assertEquals(100,chunk.getTiles().size());
+            assertEquals(100, chunk.getTiles().size());
         } catch (SQLException | LoadException e) {
             e.printStackTrace();
         }
@@ -290,6 +288,7 @@ public class DataBaseConnectorLoadingTest {
     @Test
     public void loadSaveInformationTest() {
         ArrayList<Save> saves = (ArrayList<Save>) dataBaseConnectorExpected.loadSaveInformation();
+        assertEquals(WOLRD_ID, saves.get(0).getWorlds().get(0).getID());
         assertEquals(1, saves.size());
         assertEquals(SAVE_ID, saves.get(0).getSaveID());
     }
