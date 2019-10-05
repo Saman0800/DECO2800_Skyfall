@@ -1,9 +1,6 @@
 package deco2800.skyfall.entities.worlditems;
 
-import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
-
-import java.util.Map;
 
 public class VolcanicTree extends AbstractTree {
 
