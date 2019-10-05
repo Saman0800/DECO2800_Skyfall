@@ -6,6 +6,7 @@ import deco2800.skyfall.entities.pets.LizardHome;
 import deco2800.skyfall.entities.pets.IceWhitebear;
 import deco2800.skyfall.entities.pets.Tiger;
 import deco2800.skyfall.entities.vehicle.Bike;
+import deco2800.skyfall.entities.vehicle.SandCar;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.worlds.Tile;
@@ -111,6 +112,7 @@ public class WorldDirector {
         builder.addEntity(new Treeman(-2f,-3f,mainCharacter));
         builder.addEntity(new Tiger(-4f,-2f,mainCharacter));
         builder.addEntity(new Bike(-10f,-2f,mainCharacter));
+        builder.addEntity(new SandCar(-15f,-2f, mainCharacter));
 
         builder.addEntity(new Camel(34, -7, mainCharacter));
         builder.addEntity(new Horse(-8,-6, mainCharacter));

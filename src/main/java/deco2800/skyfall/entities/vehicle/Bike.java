@@ -6,12 +6,10 @@ import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.ICombatEntity;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.pets.AbstractPet;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.world.World;
+
 
 
 public class Bike extends AbstractVehicle implements Animatable, Item {
@@ -21,7 +19,7 @@ public class Bike extends AbstractVehicle implements Animatable, Item {
     private Direction movingDirection;
 
     public Bike(float col, float row, MainCharacter mc){
-        super(col, row);
+        super(col, row, "bike");
         this.setTexture(textureName);
         this.setObjectName(textureName);
         this.setHeight(1);
