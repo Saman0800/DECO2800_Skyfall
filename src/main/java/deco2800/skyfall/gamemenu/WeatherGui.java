@@ -39,9 +39,9 @@ public class WeatherGui extends AbstractUIElement{
     @Override
 
     public void draw() {
-        this.weatherEvent = new ImageButton(GameMenuManager.generateTextureRegionDrawableObject(weatherTexture));
-        weatherEvent.setSize(1500, 1500);
-        stage.addActor(weatherEvent);
+//        this.weatherEvent = new ImageButton(GameMenuManager.generateTextureRegionDrawableObject(weatherTexture));
+//        weatherEvent.setSize(1500, 1500);
+//        stage.addActor(weatherEvent);
     }
 
 

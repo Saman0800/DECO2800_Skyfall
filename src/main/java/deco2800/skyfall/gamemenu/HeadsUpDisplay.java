@@ -15,8 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
-
 public class HeadsUpDisplay extends AbstractUIElement {
 
     interface UpdatePositionInterface {
@@ -69,13 +67,13 @@ public class HeadsUpDisplay extends AbstractUIElement {
 
     @Override
     public void draw() {
-        ImageButton pause = new ImageButton(generateTextureRegionDrawableObject("pause"));
+        ImageButton pause = new ImageButton(gmm.generateTextureRegionDrawableObject("pause"));
         pause.setSize(65, 65 * 146 / 207f);
 
-        ImageButton settings = new ImageButton(generateTextureRegionDrawableObject("settings"));
+        ImageButton settings = new ImageButton(gmm.generateTextureRegionDrawableObject("settings"));
         settings.setSize(65, 65 * 146 / 207f);
 
-        ImageButton create = new ImageButton(generateTextureRegionDrawableObject("create_button"));
+        ImageButton create = new ImageButton(gmm.generateTextureRegionDrawableObject("create_button"));
         create.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -86,7 +84,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
 
 
 
-        ImageButton collect = new ImageButton(generateTextureRegionDrawableObject("collect_button"));
+        ImageButton collect = new ImageButton(gmm.generateTextureRegionDrawableObject("collect_button"));
         collect.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -137,7 +135,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
             }
         });
 
-        location = new ImageButton(generateTextureRegionDrawableObject("location_button"));
+        location = new ImageButton(gmm.generateTextureRegionDrawableObject("location_button"));
         location.setSize(200, 200);
         location.addListener(new ClickListener() {
             @Override

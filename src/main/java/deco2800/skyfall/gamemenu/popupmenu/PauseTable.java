@@ -20,7 +20,6 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
 
-import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
 /**
  * A class for pause table pop up.
@@ -78,11 +77,11 @@ public class PauseTable extends AbstractPopUpElement{
         pauseTable.setSize(600, 430);
         pauseTable.setPosition(Gdx.graphics.getWidth() / 2f - pauseTable.getWidth() / 2,
                 Gdx.graphics.getHeight() / 2f - pauseTable.getHeight() / 2);
-        pauseTable.setBackground(generateTextureRegionDrawableObject("popup_bg"));
+        pauseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
         pauseTable.setDebug(true);
 
         Table infoBar = new Table();
-        infoBar.setBackground(generateTextureRegionDrawableObject("popup_banner"));
+        infoBar.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_banner"));
 
         Label text = new Label("GAME PAUSED", skin, "navy-text");
         infoBar.add(text);
@@ -99,12 +98,12 @@ public class PauseTable extends AbstractPopUpElement{
 //        pauseTable.row();
 
         Slider.SliderStyle s = new Slider.SliderStyle();
-        s.background = generateTextureRegionDrawableObject("green_pill");
-        s.knob = generateTextureRegionDrawableObject("new_clock");
+        s.background = gameMenuManager.generateTextureRegionDrawableObject("green_pill");
+        s.knob = gameMenuManager.generateTextureRegionDrawableObject("new_clock");
         s.knob.setMinHeight(10);
         s.knob.setMinWidth(10);
-        s.knobBefore = generateTextureRegionDrawableObject("light_blue_bg");
-        s.knobAfter = generateTextureRegionDrawableObject("green_pill");
+        s.knobBefore = gameMenuManager.generateTextureRegionDrawableObject("light_blue_bg");
+        s.knobAfter = gameMenuManager.generateTextureRegionDrawableObject("green_pill");
 
         Slider test = new Slider(0, 100, 1, false, s);
         test.addListener(new ChangeListener() {
@@ -115,7 +114,7 @@ public class PauseTable extends AbstractPopUpElement{
         });
 
         pauseTable.add(test).colspan(3).row();
-        ImageButton toHome = new ImageButton(generateTextureRegionDrawableObject("toHome"));
+        ImageButton toHome = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("toHome"));
         toHome.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -129,7 +128,7 @@ public class PauseTable extends AbstractPopUpElement{
         Label homeText = new Label("HOME", skin, "white-text");
         homeText.setFontScale(0.7f);
 
-        ImageButton resume = new ImageButton(generateTextureRegionDrawableObject("resume"));
+        ImageButton resume = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("resume"));
         resume.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -140,7 +139,7 @@ public class PauseTable extends AbstractPopUpElement{
         Label resumeText = new Label("RESUME", skin, "white-text");
         resumeText.setFontScale(0.7f);
 
-        ImageButton reset = new ImageButton(generateTextureRegionDrawableObject("reset"));
+        ImageButton reset = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("reset"));
         Label resetText = new Label("RESET", skin, "white-text");
         resetText.setFontScale(0.7f);
 

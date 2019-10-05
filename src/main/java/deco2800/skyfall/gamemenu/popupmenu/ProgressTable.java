@@ -16,7 +16,6 @@ import deco2800.skyfall.managers.TextureManager;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
 public class ProgressTable extends AbstractPopUpElement {
     private final QuestManager qm;
@@ -90,7 +89,7 @@ public class ProgressTable extends AbstractPopUpElement {
     public void draw() {
         super.draw();
         baseTable = new Table();
-        baseTable.setBackground(generateTextureRegionDrawableObject("blue_pill_table"));
+        baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("blue_pill_table"));
         baseTable.setSize(600, 600 * 1346 / 1862f);
         baseTable.setPosition(Gdx.graphics.getWidth()/2f - baseTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - baseTable.getHeight()/2);

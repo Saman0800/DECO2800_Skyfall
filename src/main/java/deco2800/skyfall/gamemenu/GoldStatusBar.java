@@ -11,8 +11,6 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
 
-import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
-
 /**
  * The widget diplaying the gold, on the HUD
  */
@@ -51,7 +49,7 @@ public class GoldStatusBar extends AbstractUIElement {
         goldLabel.setAlignment(Align.center);
         goldLabel.setFontScale(0.7f);
 
-        goldPouchButton = new ImageButton(generateTextureRegionDrawableObject("goldPouch"));
+        goldPouchButton = new ImageButton(gmm.generateTextureRegionDrawableObject("goldPouch"));
         goldPouchButton.setSize(200 * 0.35f, 207 * 0.35f);
 
 

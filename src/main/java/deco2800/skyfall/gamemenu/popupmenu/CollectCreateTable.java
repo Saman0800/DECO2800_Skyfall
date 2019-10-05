@@ -14,7 +14,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
 /**
  * Doubles for the both the Collect Button and Create Button
@@ -169,7 +168,7 @@ public class CollectCreateTable extends AbstractPopUpElement{
     public void draw() {
         super.draw();
         baseTable = new Table();
-        baseTable.setBackground(generateTextureRegionDrawableObject("blue_pill_table"));
+        baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("blue_pill_table"));
         baseTable.setSize(600, 600 * 1346 / 1862f);
         baseTable.setPosition(Gdx.graphics.getWidth()/2f - baseTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - baseTable.getHeight()/2);

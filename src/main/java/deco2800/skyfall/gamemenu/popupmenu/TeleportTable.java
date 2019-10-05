@@ -13,12 +13,10 @@ import deco2800.skyfall.managers.TextureManager;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
 public class TeleportTable extends AbstractPopUpElement {
     private final String type;
     private final QuestManager qm;
-    private GameMenuManager gmm;
     private Skin skin;
     private Table baseTable;
     private Label locationLabel;
@@ -29,7 +27,6 @@ public class TeleportTable extends AbstractPopUpElement {
         super(stage,exit, textureNames, tm, gameMenuManager);
 
         this.skin = skin;
-        this.gmm = gameMenuManager;
         this.type = type;
         this.qm = qm;
         this.draw();
@@ -86,7 +83,7 @@ public class TeleportTable extends AbstractPopUpElement {
     public void draw() {
         super.draw();
         baseTable = new Table();
-        baseTable.setBackground(generateTextureRegionDrawableObject("blue_pill_table"));
+        baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("blue_pill_table"));
         baseTable.setSize(600, 600 * 1346 / 1862f);
         baseTable.setPosition(Gdx.graphics.getWidth()/2f - baseTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - baseTable.getHeight()/2);
@@ -95,10 +92,10 @@ public class TeleportTable extends AbstractPopUpElement {
         Label titleLabel = new Label(" BIOME COMPLETE ", skin, "green-pill");
 
 
-        ImageButton teleport = new ImageButton(generateTextureRegionDrawableObject("green_teleport_button"));
+        ImageButton teleport = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("green_teleport_button"));
 
 
-        Image teleportImg = new Image(generateTextureRegionDrawableObject("teleporting_man"));
+        Image teleportImg = new Image(gameMenuManager.generateTextureRegionDrawableObject("teleporting_man"));
         Table labelTable = new Table();
         labelTable.setSize(300, 600 * 1346 / 1862f);
         labelTable.setDebug(true);

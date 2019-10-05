@@ -10,7 +10,6 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.*;
 
-import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
 /**
  * A class for game over table pop up.
@@ -67,9 +66,9 @@ public class GameOverTable extends AbstractPopUpElement{
         mainTable.setSize(500, 500 * 1346 / 1862f);
         mainTable.setPosition(Gdx.graphics.getWidth()/2f - mainTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - mainTable.getHeight()/2);
-        mainTable.setBackground(generateTextureRegionDrawableObject("game_over_temp_bg"));
+        mainTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("game_over_temp_bg"));
 
-        ImageButton retry = new ImageButton(generateTextureRegionDrawableObject("game over retry temp"));
+        ImageButton retry = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("game over retry temp"));
         mainTable.add(retry).padBottom(15).width(450).height(450*302/2313f);
         mainTable.row();
 
@@ -81,7 +80,7 @@ public class GameOverTable extends AbstractPopUpElement{
             }
         });
 
-        ImageButton toHome = new ImageButton(generateTextureRegionDrawableObject("game over home temp"));
+        ImageButton toHome = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("game over home temp"));
         mainTable.add(toHome).padBottom(15).width(450).height(450*302/2313f);
         mainTable.row();
         toHome.addListener(new ClickListener() {

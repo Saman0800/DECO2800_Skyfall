@@ -5,10 +5,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.managers.*;
+
 public class Clock extends AbstractUIElement{
     private final GameMenuManager gmm;
     private Image clockImage;
-    //new HUD sprint 4
     private Skin skin;
     private Label clockLabel;
     /**
@@ -37,8 +37,8 @@ public class Clock extends AbstractUIElement{
             clockLabel.toFront();
         }
         clockImage.toFront();
-
     }
+
     /**
      * Updates clockDisplay arrow in accordance with time
      */
@@ -64,7 +64,7 @@ public class Clock extends AbstractUIElement{
     @Override
     public void draw() {
         this.clockLabel = new Label("Error", skin,  "blue-pill");
-        this.clockImage = new Image(GameMenuManager.generateTextureRegionDrawableObject("new_clock"));
+        this.clockImage = new Image(gmm.generateTextureRegionDrawableObject("new_clock"));
         clockLabel.setAlignment(Align.center);
         clockLabel.setWidth(clockLabel.getWidth() + 50);
         clockLabel.setFontScale(0.7f);
