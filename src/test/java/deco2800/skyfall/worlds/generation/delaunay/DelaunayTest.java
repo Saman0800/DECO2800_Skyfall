@@ -1,11 +1,9 @@
 package deco2800.skyfall.worlds.generation.delaunay;
 
-import deco2800.skyfall.worlds.biomes.ForestBiome;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import deco2800.skyfall.worlds.world.World;
-import deco2800.skyfall.worlds.world.WorldParameters;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
