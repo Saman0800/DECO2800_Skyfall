@@ -3,6 +3,8 @@ package deco2800.skyfall.entities;
 //<<<<<<< HEAD
 import java.util.Map;
 import java.util.List;
+
+import deco2800.skyfall.buildings.*;
 import org.slf4j.Logger;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -33,7 +35,6 @@ import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.observers.KeyUpObserver;
 import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.animation.AnimationLinker;
-import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.observers.TouchDownObserver;
@@ -1612,8 +1613,10 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 unlocked.add(CABIN);
             case MOUNTAIN:
                 unlocked.add(WATCHTOWER);
+                unlocked.add(new MountainPortal(0, 0, 0));
             case DESERT:
                 unlocked.add(CABIN);
+                unlocked.add(new DesertPortal(0, 0, 0));
             case FOREST:
                 unlocked.add(new Hatchet());
                 unlocked.add(new PickAxe());
@@ -1621,6 +1624,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 unlocked.add(new Bow());
                 unlocked.add(new Spear());
                 unlocked.add(CASTLE);
+
+                unlocked.add(new ForestPortal(0, 0, 0));
         }
         return unlocked;
 
