@@ -26,6 +26,7 @@ public class BuildingTable extends AbstractPopUpElement {
     private Table itemInfo;
     private Blueprint selectedItem = null;
     private InventoryTable inventoryTable;
+//    private GameMenuManager gameMenuManager;
 
     /**
      * Constructs a building table.
@@ -41,7 +42,7 @@ public class BuildingTable extends AbstractPopUpElement {
             GameMenuManager gameMenuManager, Skin skin) {
         super(stage, exit, textureNames, tm, gameMenuManager);
         this.skin = skin;
-        this.gameMenuManager = gameMenuManager;
+//        this.gameMenuManager = gameMenuManager;
         inventoryTable = (InventoryTable) gameMenuManager.getPopUp("inventoryTable");
         this.draw();
     }
@@ -81,6 +82,7 @@ public class BuildingTable extends AbstractPopUpElement {
                 Gdx.graphics.getHeight() / 2f - table.getHeight() / 2);
         table.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
 
+        // table banner
         Table banner = new Table();
         banner.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_banner"));
 
@@ -91,14 +93,17 @@ public class BuildingTable extends AbstractPopUpElement {
         table.add(banner).width(750).height(750 * 188f / 1756).padTop(20).colspan(2);
         table.row();
 
+        // Left hand side of the table
         Table blueprint = new Table();
         Label blueprintTitle = new Label("BLUEPRINT", skin, "black-label");
         blueprint.add(blueprintTitle).padTop(10);
         blueprint.row();
 
+        // Information about the item selected (left hand side)
         itemInfo = new Table();
         blueprint.add(itemInfo);
 
+        // Right hand side of the table (list of blueprints)
         Table items = new Table();
         Label number = new Label("1/12", skin, "black-label");
         items.add(number).padTop(10).colspan(4);
@@ -110,7 +115,6 @@ public class BuildingTable extends AbstractPopUpElement {
 
         List<Blueprint> blueprintsLearned = gameMenuManager.getMainCharacter().getBlueprintsLearned();
         // Generating items in getBlueprintsLearned
-
         // Row
         float itemWidth = 400 / 4f - 10;
         for (int i = 0; i < 3; i++) {
@@ -118,8 +122,8 @@ public class BuildingTable extends AbstractPopUpElement {
             for (int j = 0; j < 4; j++) {
                 try {
                     Blueprint item = blueprintsLearned.get(4 * i + j);
-                    ImageButton testt = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(item.getName() + "_inv"));
-                    testt.addListener(new ClickListener() {
+                    ImageButton icon = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(item.getName() + "_inv"));
+                    icon.addListener(new ClickListener() {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
                             number.setText(String.valueOf(blueprintsLearned.indexOf(item) + 1) + "/12");
@@ -127,8 +131,7 @@ public class BuildingTable extends AbstractPopUpElement {
                             selectedItem = item;
                         }
                     });
-
-                    items.add(testt).width(itemWidth).height(itemWidth).pad(5);
+                    items.add(icon).width(itemWidth).height(itemWidth).pad(5);
                 } catch (IndexOutOfBoundsException e) {
                     Image bg = new Image(gameMenuManager.generateTextureRegionDrawableObject("item_background"));
                     items.add(bg).width(itemWidth).height(itemWidth).pad(5);

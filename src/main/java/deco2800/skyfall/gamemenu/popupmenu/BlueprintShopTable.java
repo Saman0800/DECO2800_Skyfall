@@ -133,7 +133,6 @@ public class BlueprintShopTable extends AbstractPopUpElement {
                             sm.getCharacter().removeGold(b.getCost());
                             sm.getCharacter().addBlueprint(b);
                         } else {
-                            System.out.println("Not enough money");
                         }
                         updateBlueprintShopPanel();
                     }

@@ -98,9 +98,7 @@ public class TeleportTable extends AbstractPopUpElement {
         Image teleportImg = new Image(gameMenuManager.generateTextureRegionDrawableObject("teleporting_man"));
         Table labelTable = new Table();
         labelTable.setSize(300, 600 * 1346 / 1862f);
-        labelTable.setDebug(true);
 
-        baseTable.setDebug(true);
         baseTable.add(titleLabel).align(Align.center).colspan(2);
         baseTable.row();
         baseTable.add(teleportImg).width(300).left().expandY();

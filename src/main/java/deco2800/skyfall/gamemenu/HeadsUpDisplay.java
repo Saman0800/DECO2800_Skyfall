@@ -136,7 +136,6 @@ public class HeadsUpDisplay extends AbstractUIElement {
                 gmm.getBottomLeftY() + stage.getCamera().viewportHeight / 1024));
 
         leftHUDTable = new Table();
-        leftHUDTable.setDebug(true);
         leftHUDTable.setWidth(200);
         leftHUDTable.add(collect).width(200).height(100);
         leftHUDTable.row();

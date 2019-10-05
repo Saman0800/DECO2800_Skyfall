@@ -33,12 +33,15 @@ public class CollectCreateTable extends AbstractPopUpElement{
         COLLECT,
         CREATE
     }
-
+    private Label labelGold;
+    private Label labelMetal;
+    private Label labelStone;
+    private Label labelWood;
 
     public CollectCreateTable(Stage stage, ImageButton exit, String[] textureNames,
                               TextureManager tm, GameMenuManager gameMenuManager,
                               QuestManager qm, Skin skin, String type) {
-        super(stage,exit, textureNames, tm, gameMenuManager);
+        super(stage, exit, textureNames, tm, gameMenuManager);
 
         this.skin = skin;
         this.gmm = gameMenuManager;
@@ -50,7 +53,6 @@ public class CollectCreateTable extends AbstractPopUpElement{
         complete.getLabel().getStyle().fontColor = Color.BLACK;
 
         labelTable = new Table();
-        labelTable.setDebug(true);
         this.draw();
         stage.addActor(baseTable);
     }
@@ -78,18 +80,22 @@ public class CollectCreateTable extends AbstractPopUpElement{
      */
     @Override
     public void update() {
+        setComplete();
+        updateText();
+    }
+
+    public void setComplete() {
         if (checkComplete()) {
             complete.setVisible(true);
         } else {
             complete.setVisible(false);
         }
-        updateText();
     }
 
     /**
      * Updates the text of the widget
      */
-    private void updateText() {
+    public void updateText() {
         labelTable.clear();
         String whiteText = "white-text";
         String format = "%d x %s";
@@ -103,11 +109,10 @@ public class CollectCreateTable extends AbstractPopUpElement{
                 color = Color.WHITE;
             }
 
-            Label labelGold = new Label(currentText, skin, whiteText);
+            labelGold = new Label(currentText, skin, whiteText);
             labelGold.setColor(color);
             labelTable.add(labelGold).left();
             labelTable.row();
-
             if (qm.checkMetal()) {
                 color = Color.GREEN;
             } else {
@@ -115,7 +120,7 @@ public class CollectCreateTable extends AbstractPopUpElement{
             }
 
             currentText  = String.format(format, qm.getMetalTotal(), "Metal");
-            Label labelMetal = new Label(currentText, skin, whiteText);
+            labelMetal = new Label(currentText, skin, whiteText);
             labelMetal.setColor(color);
             labelTable.add(labelMetal).left();
             labelTable.row();
@@ -127,18 +132,17 @@ public class CollectCreateTable extends AbstractPopUpElement{
             }
 
             currentText  = String.format(format, qm.getStoneTotal(), "Stone");
-            Label labelStone = new Label(currentText, skin, whiteText);
+            labelStone = new Label(currentText, skin, whiteText);
             labelStone.setColor(color);
             labelTable.add(labelStone).left();
             labelTable.row();
-
             if (qm.checkWood()) {
                 color = Color.GREEN;
             } else {
                 color = Color.WHITE;
             }
             currentText  = String.format(format, qm.getWoodTotal(), "Wood");
-            Label labelWood = new Label(currentText, skin, whiteText);
+            labelWood = new Label(currentText, skin, whiteText);
             labelWood.setColor(color);
             labelTable.add(labelWood).left();
             labelTable.row();
@@ -181,7 +185,6 @@ public class CollectCreateTable extends AbstractPopUpElement{
             titleLabel = new Label(" CREATE ", skin,  "title-pill");
         }
 
-        baseTable.setDebug(true);
         baseTable.add(titleLabel);
         baseTable.row();
         baseTable.add(labelTable);
@@ -191,4 +194,23 @@ public class CollectCreateTable extends AbstractPopUpElement{
     }
 
 
+    public Label getLabelGold() {
+        return labelGold;
+    }
+
+    public Label getLabelMetal() {
+        return labelMetal;
+    }
+
+    public Label getLabelStone() {
+        return labelStone;
+    }
+
+    public Label getLabelWood() {
+        return labelWood;
+    }
+
+    public TextButton getComplete() {
+        return complete;
+    }
 }

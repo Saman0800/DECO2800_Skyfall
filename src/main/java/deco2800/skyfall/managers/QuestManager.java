@@ -39,6 +39,8 @@ public class QuestManager extends TickableManager{
     //Quest milestones achieved or not
     private boolean questSuccess;
 
+    //Updates this every checkBuildings
+    private int buildingsNum;
     /**
      * Constructor, sets up beginning of game goals
      */
@@ -254,6 +256,11 @@ public class QuestManager extends TickableManager{
         return allBuildings;
     }
 
+
+    public int getBuildingsNum() {
+        return buildingsNum;
+    }
+
     /**
      * Checks if milestones are met each game tick
      * @param i Game tick
@@ -293,22 +300,18 @@ public class QuestManager extends TickableManager{
     public int collectNum() {
         int amt = 0;
         if (checkWood()) {
-            System.out.println("NUM");
             amt += 1;
         }
 
         if (checkStone()) {
-            System.out.println("NUM");
             amt += 1;
         }
 
         if (checkMetal()) {
-            System.out.println("NUM");
             amt += 1;
         }
 
         if (checkGold()) {
-            System.out.println("NUM");
             amt += 1;
         }
         return amt;
