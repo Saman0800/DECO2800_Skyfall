@@ -48,6 +48,7 @@ src/test/java/deco2800/skyfall/managers/database/SavingTestDataBase/*
 src/test/java/deco2800/skyfall/managers/database/TestDataBase/*
 src/test/java/deco2800/skyfall/managers/database/LoadingTestDatabase/*
 
+settings\gfx.ini
 
 # vscode files
 .vscode/
