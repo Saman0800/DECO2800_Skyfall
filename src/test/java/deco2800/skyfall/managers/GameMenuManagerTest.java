@@ -4,7 +4,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.gamemenu.AbstractUIElement;
-import deco2800.skyfall.gamemenu.HealthCircle;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
