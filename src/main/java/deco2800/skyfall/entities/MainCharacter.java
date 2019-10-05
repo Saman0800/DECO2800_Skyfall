@@ -43,24 +43,9 @@ import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.spells.SpellCaster;
 import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.resources.*;
-import deco2800.skyfall.resources.items.Hatchet;
-import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.saving.AbstractMemento;
-import deco2800.skyfall.saving.Save;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.Tile;
 
 import java.io.Serializable;
-import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import deco2800.skyfall.worlds.biomes.ForestBiome;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static deco2800.skyfall.buildings.BuildingType.CABIN;
 import static deco2800.skyfall.buildings.BuildingType.CASTLE;
