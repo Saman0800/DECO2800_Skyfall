@@ -117,23 +117,26 @@ public class TextureManager extends AbstractManager {
             textureMap.put("enemyHeavy_Move_W", new Texture("resources/Enemies/Heavy/enemy2_L_walk.png"));
             textureMap.put("enemyHeavy_Move_E", new Texture("resources/Enemies/Heavy/enemy2_R_walk.png"));
 
-            textureMap.put("enemyHeavy_attack_N", new Texture("resources/Enemies/Heavy/enemy2_B_attack.png"));
-            textureMap.put("enemyHeavy_attack_NW", new Texture("resources/Enemies/Heavy/enemy2_BL_attack.png"));
-            textureMap.put("enemyHeavy_attack_NE", new Texture("resources/Enemies/Heavy/enemy2_BR_attack.png"));
-            textureMap.put("enemyHeavy_attack_S", new Texture("resources/Enemies/Heavy/enemy2_F_attack.png"));
-            textureMap.put("enemyHeavy_attack_SW", new Texture("resources/Enemies/Heavy/enemy2_FL_attack.png"));
-            textureMap.put("enemyHeavy_attack_SE", new Texture("resources/Enemies/Heavy/enemy2_FR_attack.png"));
-            textureMap.put("enemyHeavy_attack_W", new Texture("resources/Enemies/Heavy/enemy2_L_attack.png"));
-            textureMap.put("enemyHeavy_attack_E", new Texture("resources/Enemies/Heavy/enemy2_R_attack.png"));
+            textureMap.put("enemyHeavy_Attack_N", new Texture("resources/Enemies/Heavy/enemy2_B_attack.png"));
+            textureMap.put("enemyHeavy_Attack_NW", new Texture("resources/Enemies/Heavy/enemy2_BL_attack.png"));
+            textureMap.put("enemyHeavy_Attack_NE", new Texture("resources/Enemies/Heavy/enemy2_BR_attack.png"));
+            textureMap.put("enemyHeavy_Attack_S", new Texture("resources/Enemies/Heavy/enemy2_F_attack.png"));
+            textureMap.put("enemyHeavy_Attack_SW", new Texture("resources/Enemies/Heavy/enemy2_FL_attack.png"));
+            textureMap.put("enemyHeavy_Attack_SE", new Texture("resources/Enemies/Heavy/enemy2_FR_attack.png"));
+            textureMap.put("enemyHeavy_Attack_W", new Texture("resources/Enemies/Heavy/enemy2_L_attack.png"));
+            textureMap.put("enemyHeavy_Attack_E", new Texture("resources/Enemies/Heavy/enemy2_R_attack.png"));
 
-            textureMap.put("enemyHeavy_damage_N", new Texture("resources/Enemies/Heavy/enemy2_B_damage.png"));
-            textureMap.put("enemyHeavy_damage_NW", new Texture("resources/Enemies/Heavy/enemy2_BL_damage.png"));
-            textureMap.put("enemyHeavy_damage_NE", new Texture("resources/Enemies/Heavy/enemy2_BR_damage.png"));
-            textureMap.put("enemyHeavy_damage_S", new Texture("resources/Enemies/Heavy/enemy2_F_damage.png"));
-            textureMap.put("enemyHeavy_damage_SW", new Texture("resources/Enemies/Heavy/enemy2_FL_damage.png"));
-            textureMap.put("enemyHeavy_damage_SE", new Texture("resources/Enemies/Heavy/enemy2_FR_damage.png"));
-            textureMap.put("enemyHeavy_damage_W", new Texture("resources/Enemies/Heavy/enemy2_L_damage.png"));
-            textureMap.put("enemyHeavy_damage_E", new Texture("resources/Enemies/Heavy/enemy2_R_damage.png"));
+            textureMap.put("enemyHeavy_Damage_E", new Texture("resources/Enemies/Heavy/enemy2_F_die.png"));
+            textureMap.put("enemyHeavy_Damage_N", new Texture("resources/Enemies/Heavy/enemy2_B_damage.png"));
+            textureMap.put("enemyHeavy_Damage_NW", new Texture("resources/Enemies/Heavy/enemy2_BL_damage.png"));
+            textureMap.put("enemyHeavy_Damage_NE", new Texture("resources/Enemies/Heavy/enemy2_BR_damage.png"));
+            textureMap.put("enemyHeavy_Damage_S", new Texture("resources/Enemies/Heavy/enemy2_F_damage.png"));
+            textureMap.put("enemyHeavy_Damage_SW", new Texture("resources/Enemies/Heavy/enemy2_FL_damage.png"));
+            textureMap.put("enemyHeavy_Damage_SE", new Texture("resources/Enemies/Heavy/enemy2_FR_damage.png"));
+            textureMap.put("enemyHeavy_Damage_W", new Texture("resources/Enemies/Heavy/enemy2_L_damage.png"));
+            textureMap.put("enemyDie", new Texture("resources/Enemies/Heavy/enemy2_R_damage.png"));
+
+
 
             textureMap.put("chestClosed", new Texture("resources/chest_icon.png"));
             textureMap.put("blueprintShop", new Texture("resources/shopkeeper.png"));
@@ -388,7 +391,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("MainCharacter_Dead_E_Anim", new Texture("resources/Main_Character_Dead_E.png"));
             textureMap.put("MainCharacter_Dead_L_Anim", new Texture("resources/Main_Character_Dead_L.png"));
             textureMap.put("MainCharacter_Dead_R_Anim", new Texture("resources/Main_Character_Dead_R.png"));
-            textureMap.put("MainCharacter_Dead_SW_Anim", new Texture("resources/Main_Character_Dead_W.png"));
+            textureMap.put("MainCharacter_Dead_W_Anim", new Texture("resources/Main_Character_Dead_W.png"));
             textureMap.put("MainCharacter_Dead_E_Still", new Texture("resources/Main_Character_Dead_E_3.png"));
 
             // Spells

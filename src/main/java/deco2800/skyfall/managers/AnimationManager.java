@@ -93,7 +93,7 @@ public class AnimationManager extends AbstractManager {
                 222, 350, 0.2f);
         this.generateAnimationObject("HeavyMoveNE",
                 "enemyHeavy_Move_NE",
-                221, 349, 0.2f);
+                222, 349, 0.2f);
         this.generateAnimationObject("HeavyMoveSE",
                 "enemyHeavy_Move_SE",
                 221, 349, 0.2f);
@@ -152,6 +152,9 @@ public class AnimationManager extends AbstractManager {
                 227, 347, 0.2f);
         this.generateAnimationObject("HeavyDamageNW",
                 "enemyHeavy_Damage_NW",
+                224, 341, 0.2f);
+        this.generateAnimationObject("enemyDie",
+                "enemyDie",
                 224, 341, 0.2f);
 
         // Main Character

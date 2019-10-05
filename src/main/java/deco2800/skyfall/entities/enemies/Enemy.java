@@ -161,6 +161,7 @@ public class Enemy extends Peon
         setCurrentState(AnimationRole.ATTACK);
         mc.hurt(this.getStrength());
         mc.setRecovering(true);
+        SoundManager.playSound(attackingSound);
     }
 
     /**
@@ -186,7 +187,8 @@ public class Enemy extends Peon
      * else NULL. Also sets the direction
      */
     private void updateAnimation() {
-        movementDirection(this.position.getAngle());
+        setTexture(getDefaultTexture());
+        setCurrentDirection(movementDirection(this.position.getAngle()));
 
         /* Short Animations */
         if (getToBeRun() != null) {
@@ -217,11 +219,14 @@ public class Enemy extends Peon
                 die();
             }
         } else {
-            //if the player in angry distance or the enemy is attacked by player then turning to angry model
+            randomMoving();
+            setCurrentState(AnimationRole.MOVE);
+            this.updateAnimation();
+
             if (distance(mainCharacter) < 2 && !(mainCharacter.isDead() ||
                     mainCharacter.isRecovering() || mainCharacter.isHurt())) {
                 attackPlayer();
-                SoundManager.loopSound(getChaseSound());
+                SoundManager.playSound(getChaseSound());
 
             } else {
                 randomMoving();
@@ -233,7 +238,6 @@ public class Enemy extends Peon
             if (isHurt) {
                 checkIfHurtEnded();
             }
-            this.updateAnimation();
         }
     }
 
@@ -267,7 +271,15 @@ public class Enemy extends Peon
      */
     @Override
     public void setDirectionTextures() {
-        // not needed
+        String animationNameStart = "__ANIMATION_" + this.getName();
+        defaultDirectionTextures.put(Direction.EAST, animationNameStart + "MoveE:0");
+        defaultDirectionTextures.put(Direction.WEST, animationNameStart + "MoveW:0");
+        defaultDirectionTextures.put(Direction.SOUTH, animationNameStart + "MoveS:0");
+        defaultDirectionTextures.put(Direction.NORTH, animationNameStart + "MoveN:0");
+        defaultDirectionTextures.put(Direction.NORTH_EAST, animationNameStart + "MoveNE:0");
+        defaultDirectionTextures.put(Direction.NORTH_WEST, animationNameStart + "MoveNW:0");
+        defaultDirectionTextures.put(Direction.SOUTH_EAST, animationNameStart + "MoveSE:0");
+        defaultDirectionTextures.put(Direction.SOUTH_WEST, animationNameStart + "MoveSW:0");
     }
 
     /**
@@ -302,17 +314,15 @@ public class Enemy extends Peon
                         enemyName + "MoveNW", AnimationRole.MOVE, Direction.NORTH_WEST,
                         true, true));
         this.addAnimations(
-                AnimationRole.MOVE, Direction.EAST, new AnimationLinker(
-                        enemyName + "MoveE", AnimationRole.MOVE, Direction.EAST,
+                AnimationRole.MOVE, Direction.SOUTH, new AnimationLinker(
+                        enemyName + "MoveS", AnimationRole.MOVE, Direction.SOUTH,
                         true, true));
+
         this.addAnimations(
                 AnimationRole.MOVE, Direction.WEST, new AnimationLinker(
                         enemyName + "MoveW", AnimationRole.MOVE, Direction.WEST,
                         true, true));
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.SOUTH, new AnimationLinker(
-                        enemyName + "MoveS", AnimationRole.MOVE, Direction.SOUTH,
-                        true, true));
+
         this.addAnimations(
                 AnimationRole.MOVE, Direction.SOUTH_EAST, new AnimationLinker(
                         enemyName + "MoveSE", AnimationRole.MOVE, Direction.SOUTH_EAST,
@@ -321,6 +331,7 @@ public class Enemy extends Peon
                 AnimationRole.MOVE, Direction.SOUTH_WEST, new AnimationLinker(
                         enemyName + "MoveSW", AnimationRole.MOVE, Direction.SOUTH_WEST,
                         true, true));
+
 
         this.addAnimations(
                 AnimationRole.ATTACK, Direction.EAST, new AnimationLinker(
@@ -348,7 +359,7 @@ public class Enemy extends Peon
                         true, true));
         this.addAnimations(
                 AnimationRole.DEAD, Direction.DEFAULT, new AnimationLinker(
-                enemyName + "Dead", AnimationRole.DEAD, Direction.DEFAULT,
+                "enemyDie", AnimationRole.DEAD, Direction.DEFAULT,
                         true, true));
     }
 
@@ -533,16 +544,16 @@ public class Enemy extends Peon
      */
     private void randomMoving() {
         if ((!isAttacking)) {
-
             targetPosition = new float[2];
-            targetPosition[0] = (float) (Math.random() * 200 + originalPosition[0]);
-            targetPosition[1] = (float) (Math.random() * 200 + originalPosition[1]);
-            float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow(targetPosition[0], targetPosition[1]);
-            destination = new HexVector(randomPositionWorld[0], randomPositionWorld[1]);
+            targetPosition[0] = (float)
+                    (Math.random() * 800 + originalPosition[0]);
+            targetPosition[1]=(float)
+                    (Math.random() * 800 + originalPosition[1]);
+            float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow
+                    (targetPosition[0], targetPosition[1]);
+            destination = new HexVector(randomPositionWorld[0],
+                    randomPositionWorld[1]);
             isMoving = true;
-
-            SoundManager.stopSound(chasingSound);
-            this.position.moveToward(destination,getWalkingSpeed());
         }
     }
 
@@ -551,37 +562,25 @@ public class Enemy extends Peon
      *
      * @param angle the angle between to tile
      */
-    private void movementDirection(double angle) {
-        angle = Math.floorMod((int) Math.floor((angle + 90.0) / 45), 8);
-
-        switch ((int) angle) {
-            case 0:
-                setCurrentDirection(Direction.NORTH);
-                break;
-            case 1:
-                setCurrentDirection(Direction.NORTH_EAST);
-                break;
-            case 2:
-                setCurrentDirection(Direction.EAST);
-                break;
-            case 3:
-                setCurrentDirection(Direction.SOUTH_EAST);
-                break;
-            case 4:
-                setCurrentDirection(Direction.SOUTH);
-                break;
-            case 5:
-                setCurrentDirection(Direction.SOUTH_WEST);
-                break;
-            case 6:
-                setCurrentDirection(Direction.WEST);
-                break;
-            case 7:
-                setCurrentDirection(Direction.NORTH_WEST);
-                break;
-            default:
-                break;
+    private Direction movementDirection(double angle) {
+        angle = Math.toDegrees(angle - Math.PI);
+        if (angle < 0) {
+            angle += 360;
         }
+        if (between(angle, 0, 59.9)) {
+            return Direction.SOUTH_WEST;
+        } else if (between(angle, 60, 119.5)) {
+            return Direction.SOUTH;
+        } else if (between(angle, 120, 179.9)) {
+            return Direction.SOUTH_EAST;
+        } else if (between(angle, 180, 239.9)) {
+            return Direction.NORTH_EAST;
+        } else if (between(angle, 240, 299.9)) {
+            return Direction.NORTH;
+        } else if (between(angle, 300, 360)) {
+            return Direction.NORTH_WEST;
+        }
+        return null;
     }
 
     /**
