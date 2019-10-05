@@ -9,6 +9,7 @@ import java.sql.SQLException;
  * Queries used to determine whether a database contains an item
  */
 public class ContainsDataQueries {
+
     //Connection to the database
     private Connection connection;
 
@@ -17,7 +18,7 @@ public class ContainsDataQueries {
      *
      * @param connection The connection to the database
      */
-    public ContainsDataQueries(Connection connection) {
+    ContainsDataQueries(Connection connection) {
         this.connection = connection;
     }
 
@@ -28,22 +29,19 @@ public class ContainsDataQueries {
      * @return true if it does contain the save, false if it does not
      * @throws SQLException If an issue arises when performing the query
      */
-    public boolean containsSave(long id) throws SQLException {
-        PreparedStatement preparedStatement = null;
-        ResultSet result = null;
-        try {
-            connection.setAutoCommit(false);
-            preparedStatement = connection.prepareStatement("SELECT * FROM SAVES WHERE save_id = ?");
+    boolean containsSave(long id) throws SQLException {
+        connection.setAutoCommit(false);
+        boolean hasNext;
+        try (PreparedStatement preparedStatement = connection
+            .prepareStatement("SELECT * FROM SAVES WHERE save_id = ?")) {
             preparedStatement.setLong(1, id);
-            result = preparedStatement.executeQuery();
-            // Has to be done before closing to ensure autocommit stays off
-            boolean hasNext = result.next();
-            connection.setAutoCommit(true);
-            return hasNext;
-        } finally {
-            preparedStatement.close();
-            result.close();
+            try (ResultSet result = preparedStatement.executeQuery()) {
+                // Has to be done before closing to ensure autocommit stays off
+                hasNext = result.next();
+            }
         }
+        connection.setAutoCommit(true);
+        return hasNext;
     }
 
     /**
@@ -54,22 +52,22 @@ public class ContainsDataQueries {
      * @return true if it does contain the save, false if it does not
      * @throws SQLException If an issue arises when performing the query
      */
-    public boolean containsWorld(long saveId, long worldId) throws SQLException {
-        PreparedStatement preparedStatement = null;
-        ResultSet result = null;
-        try {
-            connection.setAutoCommit(false);
-            preparedStatement = connection.prepareStatement("SELECT * FROM WORLDS WHERE save_id = ? AND world_id = ?");
+    boolean containsWorld(long saveId, long worldId) throws SQLException {
+
+        connection.setAutoCommit(false);
+        boolean hasNext;
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM WORLDS WHERE save_id = ?"
+            + " AND world_id "
+            + "= ?")) {
             preparedStatement.setLong(1, saveId);
             preparedStatement.setLong(2, worldId);
-            result = preparedStatement.executeQuery();
-            boolean hasNext = result.next();
-            connection.setAutoCommit(true);
-            return hasNext;
-        } finally {
-            preparedStatement.close();
-            result.close();
+            try (ResultSet result = preparedStatement.executeQuery()) {
+                hasNext = result.next();
+            }
         }
+        connection.setAutoCommit(true);
+        return hasNext;
+
     }
 
     /**
@@ -81,21 +79,20 @@ public class ContainsDataQueries {
      * @throws SQLException If an issue arises when performing the query
      */
     public boolean containsMainCharacter(long id, long saveId) throws SQLException {
-        PreparedStatement preparedStatement = null;
-        ResultSet result = null;
-        try {
+
             connection.setAutoCommit(false);
-            preparedStatement = connection.prepareStatement("SELECT * FROM MAIN_CHARACTER WHERE character_id = ? AND save_id = ?");
+        boolean hasNext;
+        try (PreparedStatement preparedStatement = connection
+            .prepareStatement("SELECT * FROM MAIN_CHARACTER WHERE character_id = ? AND save_id = ?")) {
             preparedStatement.setLong(1, id);
             preparedStatement.setLong(2, saveId);
-            result = preparedStatement.executeQuery();
-            boolean hasNext = result.next();
-            connection.setAutoCommit(true);
-            return hasNext;
-        } finally {
-            preparedStatement.close();
-            result.close();
+            try (ResultSet result = preparedStatement.executeQuery()) {
+                hasNext = result.next();
+            }
         }
+        connection.setAutoCommit(true);
+            return hasNext;
+
     }
 
     /**
@@ -107,23 +104,22 @@ public class ContainsDataQueries {
      * @return true if it does contain the save, false if it does not
      * @throws SQLException If an issue arises when performing the query
      */
-    public boolean containsNode(long worldId, double xPos, double yPos) throws SQLException {
-        PreparedStatement preparedStatement = null;
-        ResultSet result = null;
-        try {
+    boolean containsNode(long worldId, double xPos, double yPos) throws SQLException {
+
             connection.setAutoCommit(false);
-            preparedStatement = connection.prepareStatement("SELECT * FROM NODES WHERE world_id = ? AND x_pos = ? AND y_pos = ?");
+        boolean hasNext;
+        try (PreparedStatement preparedStatement = connection
+            .prepareStatement("SELECT * FROM NODES WHERE world_id = ? AND x_pos = ? AND y_pos = ?")) {
             preparedStatement.setLong(1, worldId);
             preparedStatement.setDouble(2, xPos);
             preparedStatement.setDouble(3, yPos);
-            result = preparedStatement.executeQuery();
-            boolean hasNext = result.next();
-            connection.setAutoCommit(true);
-            return hasNext;
-        } finally {
-            preparedStatement.close();
-            result.close();
+            try (ResultSet result = preparedStatement.executeQuery()) {
+                hasNext = result.next();
+            }
         }
+        connection.setAutoCommit(true);
+            return hasNext;
+
     }
 
     /**
@@ -133,21 +129,20 @@ public class ContainsDataQueries {
      * @return true if it does contain the save, false if it does not
      * @throws SQLException If an issue arises when performing the query
      */
-    public boolean containsEdge(long edgeID) throws SQLException {
-        PreparedStatement preparedStatement = null;
-        ResultSet result = null;
-        try {
+    boolean containsEdge(long edgeID) throws SQLException {
+
             connection.setAutoCommit(false);
-            preparedStatement = connection.prepareStatement("SELECT * FROM EDGES WHERE edge_id = ?");
+        boolean hasNext;
+        try (PreparedStatement preparedStatement = connection
+            .prepareStatement("SELECT * FROM EDGES WHERE edge_id = ?")) {
             preparedStatement.setLong(1, edgeID);
-            result = preparedStatement.executeQuery();
-            boolean hasNext = result.next();
-            connection.setAutoCommit(true);
-            return hasNext;
-        } finally {
-            preparedStatement.close();
-            result.close();
+            try (ResultSet result = preparedStatement.executeQuery()) {
+                hasNext = result.next();
+            }
         }
+        connection.setAutoCommit(true);
+            return hasNext;
+
     }
 
     /**
@@ -158,22 +153,21 @@ public class ContainsDataQueries {
      * @return true if it does contain the save, false if it does not
      * @throws SQLException If an issue arises when performing the query
      */
-    public boolean containsBiome(long biomeId, long worldId) throws SQLException {
-        PreparedStatement preparedStatement = null;
-        ResultSet result = null;
-        try {
+    boolean containsBiome(long biomeId, long worldId) throws SQLException {
+
             connection.setAutoCommit(false);
-            preparedStatement = connection.prepareStatement("SELECT * FROM BIOMES WHERE biome_id = ? AND world_id = ?");
+        boolean hasNext;
+        try (PreparedStatement preparedStatement = connection
+            .prepareStatement("SELECT * FROM BIOMES WHERE biome_id = ? AND world_id = ?")) {
             preparedStatement.setLong(1, biomeId);
             preparedStatement.setLong(2, worldId);
-            result = preparedStatement.executeQuery();
-            boolean hasNext = result.next();
-            connection.setAutoCommit(true);
-            return hasNext;
-        } finally {
-            preparedStatement.close();
-            result.close();
+            try (ResultSet result = preparedStatement.executeQuery()) {
+                hasNext = result.next();
+            }
         }
+        connection.setAutoCommit(true);
+            return hasNext;
+
     }
 
     /**
@@ -185,23 +179,22 @@ public class ContainsDataQueries {
      * @return true if it does contain the save, false if it does not
      * @throws SQLException If an issue arises when performing the query
      */
-    public boolean containsChunk(long worldId, int x, int y) throws SQLException {
-        PreparedStatement preparedStatement = null;
-        ResultSet result = null;
-        try {
+    boolean containsChunk(long worldId, int x, int y) throws SQLException {
+
             connection.setAutoCommit(false);
-            preparedStatement = connection.prepareStatement("SELECT * FROM CHUNKS WHERE world_id = ? AND x = ? AND y = ?");
+        boolean hasNext;
+        try (PreparedStatement preparedStatement = connection
+            .prepareStatement("SELECT * FROM CHUNKS WHERE world_id = ? AND x = ? AND y = ?")) {
             preparedStatement.setLong(1, worldId);
             preparedStatement.setInt(2, x);
             preparedStatement.setInt(3, y);
-            result = preparedStatement.executeQuery();
-            boolean hasNext = result.next();
-            connection.setAutoCommit(true);
-            return hasNext;
-        } finally {
-            preparedStatement.close();
-            result.close();
+            try (ResultSet result = preparedStatement.executeQuery()) {
+                hasNext = result.next();
+            }
         }
+        connection.setAutoCommit(true);
+            return hasNext;
+
     }
 
     /**
@@ -212,21 +205,20 @@ public class ContainsDataQueries {
      * @return true if it does contain the save, false if it does not
      * @throws SQLException If an issue arises when performing the query
      */
-    public boolean containsEntity(long worldId, long entityId) throws SQLException {
-        PreparedStatement preparedStatement = null;
-        ResultSet result = null;
-        try {
+    boolean containsEntity(long worldId, long entityId) throws SQLException {
+
             connection.setAutoCommit(false);
-            preparedStatement = connection.prepareStatement("SELECT * FROM ENTITIES WHERE world_id = ? AND entity_id = ?");
+        boolean hasNext;
+        try (PreparedStatement preparedStatement = connection
+            .prepareStatement("SELECT * FROM ENTITIES WHERE world_id = ? AND entity_id = ?")) {
             preparedStatement.setLong(1, worldId);
             preparedStatement.setLong(2, entityId);
-            result = preparedStatement.executeQuery();
-            boolean hasNext = result.next();
-            connection.setAutoCommit(true);
-            return hasNext;
-        } finally {
-            preparedStatement.close();
-            result.close();
+            try (ResultSet result = preparedStatement.executeQuery()) {
+                hasNext = result.next();
+            }
         }
+        connection.setAutoCommit(true);
+            return hasNext;
+
     }
 }

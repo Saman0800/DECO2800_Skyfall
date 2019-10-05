@@ -1,14 +1,12 @@
 package deco2800.skyfall.managers.database;
 
-import static deco2800.skyfall.managers.database.InsertQueriesTest.flyway;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-import com.badlogic.gdx.graphics.g3d.model.data.ModelNodeKeyframe;
-import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.SaveableEntity.SaveableEntityMemento;
 import deco2800.skyfall.entities.worlditems.Bone;
 import deco2800.skyfall.entities.worlditems.DesertCacti;
@@ -32,9 +30,6 @@ import deco2800.skyfall.entities.worlditems.VolcanicRock;
 import deco2800.skyfall.entities.worlditems.VolcanicShrub;
 import deco2800.skyfall.entities.worlditems.VolcanicTree;
 import deco2800.skyfall.managers.DatabaseManager;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.PhysicsManager;
-import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.LoadException;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.saving.Save.SaveMemento;
@@ -46,32 +41,18 @@ import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import javax.swing.text.html.parser.Entity;
-import javax.xml.crypto.Data;
 import org.flywaydb.core.Flyway;
-import org.javatuples.Pair;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({DatabaseManager.class})
@@ -79,15 +60,13 @@ import org.powermock.reflect.Whitebox;
 public class DataBaseConnectorLoadingTest {
 
     private static DataBaseConnector dataBaseConnectorExpected = new DataBaseConnector();
-    private static InsertDataQueries insertDataQueries;
-    private static Flyway flyway;
 
     private static final long WOLRD_ID = 0L;
     private static final long SAVE_ID = 0L;
 
     @BeforeClass
     public static void setupOnce() {
-        flyway = new Flyway();
+        Flyway flyway = new Flyway();
         dataBaseConnectorExpected.start("src/test/java/deco2800/skyfall/managers/database/LoadingTestDatabase");
         flyway.setDataSource("jdbc:derby:src/test/java/deco2800/skyfall/managers/database/LoadingTestDatabase;"
             + "create=true", "", "");
@@ -117,19 +96,15 @@ public class DataBaseConnectorLoadingTest {
 
     @Test
     public void loadWorldsTest() {
-        try {
-            SaveMemento saveMemMock = Mockito.mock(SaveMemento.class);
-            Save saveMock = Mockito.mock(Save.class);
-            when(saveMock.getSaveID()).thenReturn(SAVE_ID);
-            when(saveMemMock.getWorldID()).thenReturn(WOLRD_ID);
-            World world = dataBaseConnectorExpected.loadWorlds(saveMock, saveMemMock);
-            assertEquals(WOLRD_ID, world.getID());
-            assertEquals(576, world.getWorldGenNodes().size());
-            assertEquals(85, world.getBeachEdges().size());
-            assertEquals(6, world.getRiverEdges().size());
-        } catch (SQLException | LoadException e) {
-            fail("Failed to load the worlds due to an exception occuring");
-        }
+        SaveMemento saveMemMock = Mockito.mock(SaveMemento.class);
+        Save saveMock = Mockito.mock(Save.class);
+        when(saveMock.getSaveID()).thenReturn(SAVE_ID);
+        when(saveMemMock.getWorldID()).thenReturn(WOLRD_ID);
+        World world = dataBaseConnectorExpected.loadWorlds(saveMock, saveMemMock);
+        assertEquals(WOLRD_ID, world.getID());
+        assertEquals(576, world.getWorldGenNodes().size());
+        assertEquals(85, world.getBeachEdges().size());
+        assertEquals(6, world.getRiverEdges().size());
     }
 
 
@@ -149,15 +124,11 @@ public class DataBaseConnectorLoadingTest {
 
     @Test
     public void loadBiomesTest() {
-        try {
-            World worldMock = Mockito.mock(World.class);
-            when(worldMock.getID()).thenReturn(WOLRD_ID);
-            ArrayList<AbstractBiome> biomes = (ArrayList<AbstractBiome>) dataBaseConnectorExpected
-                .loadBiomes(worldMock);
-            assertEquals(98, biomes.size());
-        } catch (SQLException | LoadException e) {
-            fail("Failed to load the biomes due to an exception occuring");
-        }
+        World worldMock = Mockito.mock(World.class);
+        when(worldMock.getID()).thenReturn(WOLRD_ID);
+        ArrayList<AbstractBiome> biomes = (ArrayList<AbstractBiome>) dataBaseConnectorExpected
+            .loadBiomes(worldMock);
+        assertEquals(98, biomes.size());
     }
 
     @Test
@@ -195,7 +166,7 @@ public class DataBaseConnectorLoadingTest {
             ArrayList<AbstractBiome> biomes = (ArrayList<AbstractBiome>) dataBaseConnectorExpected
                 .loadBiomes(worldMock);
 
-            LinkedHashMap<VoronoiEdge, BeachBiome> edges = dataBaseConnectorExpected.loadBeachEdges(worldMock, biomes);
+            LinkedHashMap<VoronoiEdge, BeachBiome> edges = (LinkedHashMap<VoronoiEdge, BeachBiome>) dataBaseConnectorExpected.loadBeachEdges(worldMock, biomes);
 
             assertEquals(85, edges.size());
 
@@ -213,7 +184,7 @@ public class DataBaseConnectorLoadingTest {
             ArrayList<AbstractBiome> biomes = (ArrayList<AbstractBiome>) dataBaseConnectorExpected
                 .loadBiomes(worldMock);
 
-            LinkedHashMap<VoronoiEdge, RiverBiome> edges = dataBaseConnectorExpected.loadRiverEdges(worldMock, biomes);
+            LinkedHashMap<VoronoiEdge, RiverBiome> edges = (LinkedHashMap<VoronoiEdge, RiverBiome>) dataBaseConnectorExpected.loadRiverEdges(worldMock, biomes);
 
             assertEquals(6, edges.size());
 
@@ -225,23 +196,19 @@ public class DataBaseConnectorLoadingTest {
 
     @Test
     public void loadChunkTest() {
-        try {
-            SaveMemento saveMemMock = Mockito.mock(SaveMemento.class);
-            Save saveMock = Mockito.mock(Save.class);
-            when(saveMock.getSaveID()).thenReturn(SAVE_ID);
-            when(saveMemMock.getWorldID()).thenReturn(WOLRD_ID);
-            World world = dataBaseConnectorExpected.loadWorlds(saveMock, saveMemMock);
+        SaveMemento saveMemMock = Mockito.mock(SaveMemento.class);
+        Save saveMock = Mockito.mock(Save.class);
+        when(saveMock.getSaveID()).thenReturn(SAVE_ID);
+        when(saveMemMock.getWorldID()).thenReturn(WOLRD_ID);
+        World world = dataBaseConnectorExpected.loadWorlds(saveMock, saveMemMock);
 
-            Chunk chunk = dataBaseConnectorExpected.loadChunk(world, 0, 0);
+        Chunk chunk = dataBaseConnectorExpected.loadChunk(world, 0, 0);
 
-            assertEquals(0, chunk.getX());
-            assertEquals(0, chunk.getY());
-            assertEquals(7, chunk.getEntities().size());
-            assertEquals(WOLRD_ID, chunk.getWorld().getID());
-            assertEquals(100, chunk.getTiles().size());
-        } catch (SQLException | LoadException e) {
-            e.printStackTrace();
-        }
+        assertEquals(0, chunk.getX());
+        assertEquals(0, chunk.getY());
+        assertEquals(7, chunk.getEntities().size());
+        assertEquals(WOLRD_ID, chunk.getWorld().getID());
+        assertEquals(100, chunk.getTiles().size());
     }
 
     @Test

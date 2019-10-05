@@ -13,7 +13,6 @@ import deco2800.skyfall.managers.TextureManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import sun.applet.Main;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyFloat;
