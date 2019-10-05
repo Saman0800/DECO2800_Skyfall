@@ -7,18 +7,26 @@ public class SwampShrub extends AbstractShrub {
     private static final String ENTITY_ID_STRING = "swamp_shrub";
 
     public SwampShrub() {
-        this.setObjectName(ENTITY_ID_STRING);
+        super();
+        setupParams();
+        this.setTexture("sBush" + SwampShrub.nextTexture);
+        ForestShrub.nextTexture = randomGen.nextInt(3) + 1;
     }
 
     public SwampShrub(Tile tile, boolean obstructed) {
         super(tile, "sBush" + SwampShrub.nextTexture, obstructed);
-        this.setObjectName(ENTITY_ID_STRING);
         SwampShrub.nextTexture = randomGen.nextInt(3) + 1;
-        this.entityType = "SwampShrub";
+        setupParams();
     }
 
     public SwampShrub(SaveableEntityMemento memento) {
         super(memento);
+        setupParams();
+    }
+
+    private void setupParams() {
+        this.setObjectName(ENTITY_ID_STRING);
+        this.entityType = "SwampShrub";
     }
 
     /**

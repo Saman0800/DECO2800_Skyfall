@@ -23,7 +23,6 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
     private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
 
     private static final String ENTITY_ID_STRING = "staticEntityID";
-    private boolean obstructed;
     private static TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
 
     public Map<HexVector, String> children;
@@ -174,17 +173,8 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
     }
 
     /**
-     * A simple getter function to retrieve the obstruction value of this object
-     *
-     * @return The obstruction value.
-     */
-    public boolean isObstructed() {
-        return this.obstructed;
-    }
-
-    /**
      * A simple getter function to retrieve the textures used for this object
-     * 
+     *
      * @return The obstruction value.
      */
     public Map<HexVector, String> getTextures() {
@@ -213,7 +203,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
     /**
      * This is the default implementation of the newInstance function for the static
      * entity given a tile position.
-     * 
+     *
      * @return A clone of the instance with only the tile position having changed.
      */
     public StaticEntity newInstance(Tile tile) {
@@ -223,7 +213,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
     /**
      * This is the default implementation of the newInstance function for the static
      * entity given a row and column position.
-     * 
+     *
      * @return A clone of the instance with only the centring of the entity having
      *         changed
      */
