@@ -11,11 +11,11 @@ public class PoisonousMushroom extends HealthResources implements Item {
 
 
     // determines whether or not the resource can be traded
-    //private Boolean exchangeable;
+    //private boolean exchangeable;
 
 
     //whether or not the item impacts the player's food fullness
-    private Boolean hasFoodEffect;
+    private boolean hasFoodEffect;
 
 
     /**
@@ -44,7 +44,7 @@ public class PoisonousMushroom extends HealthResources implements Item {
      *
      * @return True if the item impacts on the player's food fullness, false otherwise
      */
-    public Boolean hasFoodEffect() {
+    public boolean hasFoodEffect() {
         return hasFoodEffect;
     }
 

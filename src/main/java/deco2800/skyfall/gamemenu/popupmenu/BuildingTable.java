@@ -20,28 +20,26 @@ import java.util.Map;
 /**
  * A class for building table pop up.
  */
-public class BuildingTable extends AbstractPopUpElement{
+public class BuildingTable extends AbstractPopUpElement {
     private Skin skin;
     private Table table;
     private Table itemInfo;
     private Blueprint selectedItem = null;
     private InventoryTable inventoryTable;
 
-
     /**
      * Constructs a building table.
      *
-     * @param stage Current stage.
-     * @param exit Exit button if it has one.
-     * @param textureNames Names of the textures.
-     * @param tm Current texture manager.
+     * @param stage           Current stage.
+     * @param exit            Exit button if it has one.
+     * @param textureNames    Names of the textures.
+     * @param tm              Current texture manager.
      * @param gameMenuManager Current game menu manager.
-     * @param skin Current skin.
+     * @param skin            Current skin.
      */
-    public BuildingTable(Stage stage, ImageButton exit,
-                      String[] textureNames, TextureManager tm,
-                      GameMenuManager gameMenuManager, Skin skin) {
-        super(stage, exit, textureNames,tm , gameMenuManager);
+    public BuildingTable(Stage stage, ImageButton exit, String[] textureNames, TextureManager tm,
+            GameMenuManager gameMenuManager, Skin skin) {
+        super(stage, exit, textureNames, tm, gameMenuManager);
         this.skin = skin;
         this.gameMenuManager = gameMenuManager;
         inventoryTable = (InventoryTable) gameMenuManager.getPopUp("inventoryTable");
@@ -76,6 +74,7 @@ public class BuildingTable extends AbstractPopUpElement{
     @Override
     public void draw() {
         super.draw();
+
         table = new Table();
         table.setSize(800, 800 * 1346 / 1862f);
         table.setPosition(Gdx.graphics.getWidth() / 2f - table.getWidth() / 2,
@@ -105,15 +104,15 @@ public class BuildingTable extends AbstractPopUpElement{
         items.add(number).padTop(10).colspan(4);
         items.row();
 
-        //testing
+        // testing
         gameMenuManager.getMainCharacter().addBlueprint(new Hatchet());
         gameMenuManager.getMainCharacter().addBlueprint(new PickAxe());
 
-
         List<Blueprint> blueprintsLearned = gameMenuManager.getMainCharacter().getBlueprintsLearned();
         // Generating items in getBlueprintsLearned
-        float itemWidth = 400/4f-10;
+
         // Row
+        float itemWidth = 400 / 4f - 10;
         for (int i = 0; i < 3; i++) {
             // Column
             for (int j = 0; j < 4; j++) {
@@ -185,7 +184,7 @@ public class BuildingTable extends AbstractPopUpElement{
         itemsRequired.add(infoBar).width(230).height(230 * 188f / 1756).colspan(10).padTop(5);
         itemsRequired.row();
 
-        List<String> itemsNeeded= new ArrayList<>();
+        List<String> itemsNeeded = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : item.getAllRequirements().entrySet()) {
             if (entry.getValue() != 0) {
                 itemsNeeded.add(entry.getKey());
@@ -215,5 +214,3 @@ public class BuildingTable extends AbstractPopUpElement{
 
     }
 }
-
-

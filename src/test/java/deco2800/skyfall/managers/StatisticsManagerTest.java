@@ -2,7 +2,6 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.enemies.AbstractEnemy;
-import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.enemies.Treeman;
 import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.resources.items.*;
@@ -10,8 +9,6 @@ import deco2800.skyfall.resources.items.Stone;
 import deco2800.skyfall.worlds.Tile;
 
 import org.junit.*;
-
-import java.lang.reflect.Field;
 
 public class StatisticsManagerTest {
 

@@ -15,7 +15,7 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
     protected String name;
 
     // can the item be stored in the inventory
-    protected Boolean carryable;
+    protected boolean carryable;
 
     // the name of the subtype the item belongs to
     protected String subtype;
@@ -73,7 +73,7 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
      * if it is consumed immediately
      */
     @Override
-    public Boolean isCarryable() {
+    public boolean isCarryable() {
         return carryable;
     }
 
@@ -176,7 +176,7 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
      * Returns whether or not the item can be equipped from the inventory
      * @return True if the item can be equipped, false otherwise
      */
-    public Boolean isEquippable() {
+    public boolean isEquippable() {
         return this.equippable;
     }
 

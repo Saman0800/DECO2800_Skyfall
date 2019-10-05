@@ -205,7 +205,6 @@ public class WorldBuilder implements WorldBuilderInterface {
 
         for (AbstractBiome biome : world.getBiomes()) {
             ArrayList<EntitySpawnRule> biomeSpawnRules = new ArrayList<>();
-
             switch (biome.getBiomeName()) {
                 case "forest":
                     generateForestEntities(biomeSpawnRules, random, world);
@@ -230,11 +229,10 @@ public class WorldBuilder implements WorldBuilderInterface {
                 case "swamp":
                     generateSwampEntities(biomeSpawnRules, random, world);
                     break;
-            default:
-                break;
+                default:
+                    break;
 
             }
-
             spawnRules.put(biome, biomeSpawnRules);
         }
 

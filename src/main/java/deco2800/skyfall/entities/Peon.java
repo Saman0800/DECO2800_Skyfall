@@ -22,7 +22,7 @@ public abstract class Peon extends AgentEntity implements Tickable {
 	// Max Health of the character
 	private int maxHealth;
 
-	// Boolean of whether character is dead
+	// boolean of whether character is dead
 	private int deaths;
 
 	private static final String CHARACTER = "spacman_ded";
