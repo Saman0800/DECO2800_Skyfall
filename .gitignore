@@ -52,6 +52,7 @@ src/test/java/deco2800/skyfall/managers/database/ExpectedDatabase/*
 
 settings\gfx.ini
 settings/gfx.ini
+*gfx.ini*
 
 # vscode files
 .vscode/
