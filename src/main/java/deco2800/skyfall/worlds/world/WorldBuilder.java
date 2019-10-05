@@ -276,7 +276,6 @@ public class WorldBuilder implements WorldBuilderInterface {
         //Spawn gold pieces
         spawnGold(world, random, biomeSpawnRules);
 
-        spawnChests(world, random, biomeSpawnRules);
 
         // This generator will cause the mushrooms to clump togteher more
         NoiseGenerator mushroomGen = new NoiseGenerator(new Random(worldSeed).nextLong(), 10, 20, 0.9);
