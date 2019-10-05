@@ -40,7 +40,7 @@ public class ClockTest extends BaseGDXTest{
 
         clock = new Clock(stage, skin, gmm);
     }
-    
+
 
 
 
