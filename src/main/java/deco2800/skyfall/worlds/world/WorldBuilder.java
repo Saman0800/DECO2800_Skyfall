@@ -158,12 +158,13 @@ public class WorldBuilder implements WorldBuilderInterface {
         EntitySpawnRule chestRule = new EntitySpawnRule(tile -> new Chest(tile, true, ChestManager.generateRandomLoot(
                 (int) Math.floor(NoiseGenerator
                         .fade(world.getStaticEntityNoise().getOctavedPerlinValue(tile.getCol(), tile.getRow()), 2)) + 5,
-                LootRarity.LEGENDARY)), random.nextInt(), 0.005);
+                LootRarity.LEGENDARY)), random.nextInt(), 0.02);
         biomeSpawnRules.add(chestRule);
     }
 
-    private void spawnBlueprintShop(Random random, List<EntitySpawnRule> biomeSpawnRules) {
-        EntitySpawnRule chestRule = new EntitySpawnRule(tile -> new BlueprintShop(tile, true), random.nextInt(), 0.04);
+    private void spawnBlueprintShop(World world, Random random, List<EntitySpawnRule> biomeSpawnRules) {
+        // Spawn chests
+        EntitySpawnRule chestRule = new EntitySpawnRule(tile -> new BlueprintShop(tile, true), random.nextInt(), 0.02);
         biomeSpawnRules.add(chestRule);
     }
 
@@ -259,6 +260,9 @@ public class WorldBuilder implements WorldBuilderInterface {
         treeRule.setLimitAdjacent(true);
         biomeSpawnRules.add(treeRule);
 
+        spawnChests(world, random, biomeSpawnRules);
+        spawnBlueprintShop(world, random, biomeSpawnRules);
+
         // Spawn some ForestShrub uniformly
         EntitySpawnRule forestShrub = new EntitySpawnRule(tile -> new ForestShrub(tile, true), random.nextInt(), 0.03);
         biomeSpawnRules.add(forestShrub);
@@ -268,11 +272,11 @@ public class WorldBuilder implements WorldBuilderInterface {
         rockRule.setLimitAdjacent(true);
         biomeSpawnRules.add(rockRule);
 
+
         //Spawn gold pieces
         spawnGold(world, random, biomeSpawnRules);
 
         spawnChests(world, random, biomeSpawnRules);
-
 
         // This generator will cause the mushrooms to clump togteher more
         NoiseGenerator mushroomGen = new NoiseGenerator(new Random(worldSeed).nextLong(), 10, 20, 0.9);

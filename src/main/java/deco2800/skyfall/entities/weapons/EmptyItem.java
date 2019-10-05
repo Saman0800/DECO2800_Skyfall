@@ -11,8 +11,8 @@ public class EmptyItem implements Item {
     // Item attributes
     private String name;
     private String subType;
-    private Boolean carryable;
-    private Boolean exchangeable;
+    private boolean carryable;
+    private boolean exchangeable;
     private boolean equippable;
     private HexVector position;
     private int durability;

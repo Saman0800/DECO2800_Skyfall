@@ -216,7 +216,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("vTree2", new Texture("resources/world_details/vTree2.png"));
             textureMap.put("vTree3", new Texture("resources/world_details/vTree3.png"));
 
-            textureMap.put("sword_tex", new Texture("resources/weapons/sword.png"));
             textureMap.put("sword", new Texture("resources/weapons/sword.png"));
             // Weapons pick-up
             textureMap.put("sword_tex", new Texture("resources/weapons/sword" +
@@ -224,6 +223,12 @@ public class TextureManager extends AbstractManager {
             textureMap.put("axe_tex", new Texture("resources/weapons/axe.png"));
             textureMap.put("bow_tex", new Texture("resources/weapons/bow.png"));
             textureMap.put("spear_tex", new Texture("resources/weapons/spear.png"));
+
+            textureMap.put("bow", new Texture("resources/weapons/bow.png"));
+            textureMap.put("spear", new Texture("resources/weapons/spear.png"));
+
+            textureMap.put("bow_inv", new Texture("resources/weapons/bow.png"));
+            textureMap.put("spear_inv", new Texture("resources/weapons/spear.png"));
 
             // Weapons attack
             textureMap.put("sword_attack", new Texture("resources/weapons" +
@@ -257,10 +262,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("info", new Texture("resources/information.png"));
             textureMap.put("select-character", new Texture("resources/character_selection.png"));
 
-            textureMap.put("resume", new Texture("resources/resume.png"));
-            textureMap.put("goHome", new Texture("resources/home.png"));
-            textureMap.put("reset", new Texture("resources/reset_game.png"));
-
             textureMap.put("build", new Texture("resources/build_icon.png"));
 
             textureMap.put("left_arrow", new Texture("resources/left_arrow.png"));
@@ -276,6 +277,14 @@ public class TextureManager extends AbstractManager {
             textureMap.put("fence_right_right", new Texture("resources/world_structures/fence_right_right.png"));
             textureMap.put("fence_top_left", new Texture("resources/world_structures/fence_top_left.png"));
             textureMap.put("fence_top_right", new Texture("resources/world_structures/fence_top_right.png"));
+            textureMap.put("portal", new Texture("resources/world_structures/portal.png"));
+            textureMap.put("portal_inv", new Texture("resources/world_structures/portal.png"));
+            textureMap.put("mountainPortal", new Texture("resources/world_structures/portal.png"));
+            textureMap.put("mountainPortal_inv", new Texture("resources/world_structures/portal.png"));
+            textureMap.put("desertPortal", new Texture("resources/world_structures/portal.png"));
+            textureMap.put("desertPortal_inv", new Texture("resources/world_structures/portal.png"));
+
+
 
             textureMap.put("big_circle", new Texture("resources/new_ui/OrangeCircle.png"));
             textureMap.put("inner_circle", new Texture("resources/new_ui/RedCircle.png"));
@@ -299,6 +308,9 @@ public class TextureManager extends AbstractManager {
             textureMap.put("remove_qa", new Texture("resources/new_ui/remove_quick_access.png"));
             textureMap.put("equip_qa", new Texture("resources/new_ui/qa_equip.png"));
             textureMap.put("teleporting_man", new Texture("resources/new_ui/teleporting_man.png"));
+            textureMap.put("toHome", new Texture("resources/new_ui/pauseTable/home.png"));
+            textureMap.put("resume", new Texture("resources/new_ui/pauseTable/resume.png"));
+            textureMap.put("reset", new Texture("resources/new_ui/pauseTable/reset.png"));
 
             // Help table
             textureMap.put("help_page1", new Texture("resources/new_ui/helpTable/help_page1.png"));
@@ -428,6 +440,18 @@ public class TextureManager extends AbstractManager {
             textureMap.put("spells_shield_Anim", new Texture("resources/spells/shield_spritesheet.png"));
             textureMap.put("spells_shield_Still", new Texture("resources/spells/shield_3.png"));
             textureMap.put("spells_tornado_Anim", new Texture("resources/spells/tornado_spritesheet.png"));
+
+            // Textures for structure blueprints
+            textureMap.put("Cabin", new Texture("resources/world_structures/cabin_0.png"));
+            textureMap.put("Castle", new Texture("resources/world_structures/castle_0.png"));
+            textureMap.put("SafeHouse", new Texture("resources/world_structures/safe_house_0.png"));
+            textureMap.put("WatchTower", new Texture("resources/world_structures/watchtower_0.png"));
+
+            textureMap.put("Cabin_inv", new Texture("resources/world_structures/cabin_0.png"));
+            textureMap.put("Castle_inv", new Texture("resources/world_structures/castle_0.png"));
+            textureMap.put("SafeHouse_inv", new Texture("resources/world_structures/safe_house_0.png"));
+            textureMap.put("WatchTower_inv", new Texture("resources/world_structures/watchtower_0.png"));
+
 
             textureMap.put("cabin_0", new Texture("resources/world_structures/cabin_0.png"));
             textureMap.put("cabin_90", new Texture("resources/world_structures/cabin_90.png"));

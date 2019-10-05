@@ -13,6 +13,9 @@ import deco2800.skyfall.managers.TextureManager;
 
 import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
+/**
+ * The widget diplaying the gold, on the HUD
+ */
 public class GoldStatusBar extends AbstractUIElement {
     private final Skin skin;
     private final GameMenuManager gmm;
@@ -27,6 +30,9 @@ public class GoldStatusBar extends AbstractUIElement {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updatePosition() {
         float positionX = stage.getCamera().position.x - goldLabel.getWidth();
@@ -35,6 +41,10 @@ public class GoldStatusBar extends AbstractUIElement {
         goldPouchButton.setPosition(gmm.getTopLeftX() + goldLabel.getWidth(), gmm.getTopLeftY() - 175);
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void draw() {
         this.goldLabel = new Label("   " + MainCharacter.getInstance().getGoldPouchTotalValue() + " G   ", skin,  "blue-pill");
@@ -59,6 +69,9 @@ public class GoldStatusBar extends AbstractUIElement {
         updatePosition();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void update() {
         super.update();

@@ -50,28 +50,38 @@ public class TeleportTable extends AbstractPopUpElement {
      */
     @Override
     public void show() {
-        //this.draw();
         super.show();
         baseTable.setVisible(true);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void update() {
         updateLocation(qm.getBiome());
         updateTeleportTo("SNOW");
     }
 
-    public void updateLocation(String text) {
+    /**
+     * Updates the location label
+     * @param text The new text for it
+     */
+    private void updateLocation(String text) {
         locationLabel.setText("LOCATION : " + text);
     }
-
-    public void updateTeleportTo(String text) {
+    /**
+     * Updates the teleport to label
+     * @param text The new text for it
+     */
+    private void updateTeleportTo(String text) {
         teleportLabel.setText("TELEPORT TO : " + text);
     }
 
 
-
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void draw() {
         super.draw();
@@ -107,7 +117,7 @@ public class TeleportTable extends AbstractPopUpElement {
         locationLabel.setFontScale(0.8f);
         teleportLabel = new Label("TELEPORT TO: ERR", skin, "white-text");
         teleportLabel.setFontScale(0.8f);
-        //TODO: Teleport Button
+        //TODO: (@Kausta) Teleport Button
 
         labelTable.add();
         labelTable.row();
