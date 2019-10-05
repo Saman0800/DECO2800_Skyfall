@@ -28,10 +28,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-
 /**
- *  A BuildingWidgets is a UI widgets for existing building entities, and provides some handling
- *  methods shown on the screen to the existing building entities.
+ * A BuildingWidgets is a UI widgets for existing building entities, and
+ * provides some handling methods shown on the screen to the existing building
+ * entities.
  */
 public class BuildingWidgets {
 
@@ -62,6 +62,7 @@ public class BuildingWidgets {
 
     /**
      * Returns an instance of the building widgets.
+     * 
      * @return the building widgets
      */
     public static BuildingWidgets get(GameManager gm) {
@@ -93,7 +94,7 @@ public class BuildingWidgets {
             this.destroyBtn = new TextButton("Destroy", this.skin);
 
             this.menu.setVisible(false);
-            this.menu.align(Align.left|Align.top);
+            this.menu.align(Align.left | Align.top);
             this.menu.add(label).padBottom(3);
             this.menu.row();
             this.menu.add(healthBar).padBottom(3).width(100);
@@ -113,6 +114,7 @@ public class BuildingWidgets {
 
     /**
      * Returns a health bar for showing current health of a building.
+     * 
      * @return a health bar
      */
     private ProgressBar createHealthBar() {
@@ -140,15 +142,16 @@ public class BuildingWidgets {
         progressBarStyle.knobBefore = fillBar;
 
         // progress bar creation with above style
-        ProgressBar healthBar = new ProgressBar(0.0f, 1.0f, 0.01f, false, progressBarStyle);
-        healthBar.setValue(1.0f);
-        healthBar.setAnimateDuration(0.25f);
-        healthBar.setBounds(0, 0, 100, 15);
-        return healthBar;
+        ProgressBar newHealthBar = new ProgressBar(0.0f, 1.0f, 0.01f, false, progressBarStyle);
+        newHealthBar.setValue(1.0f);
+        newHealthBar.setAnimateDuration(0.25f);
+        newHealthBar.setBounds(0, 0, 100, 15);
+        return newHealthBar;
     }
 
     /**
      * Returns the widget container.
+     * 
      * @return the table object forms the widget
      */
     public Table getMenu() {
@@ -157,6 +160,7 @@ public class BuildingWidgets {
 
     /**
      * Checks building upgrade costs and inventory resources.
+     * 
      * @param building the building clicked on the world
      * @return true if enough resources provided for a upgrade, otherwise false
      */
@@ -181,7 +185,8 @@ public class BuildingWidgets {
 
     /**
      * Based on option to remove or add building resources into the inventory.
-     * @param costs a list of resources with their amount
+     * 
+     * @param costs  a list of resources with their amount
      * @param option remove resources if is 0, add resources if is 1
      */
     private void handleCost(Map<String, Integer> costs, int option) {
@@ -190,25 +195,26 @@ public class BuildingWidgets {
             String resource = cost.getKey();
             Integer amount = cost.getValue();
             switch (option) {
-                case 0:
-                    for (int i = 0; i < amount; i++) {
-                        inventoryManager.quickAccessRemove(resource);
-                    }
-                    break;
-                case 1:
-                    for (int i = 0; i < amount; i++) {
-                        inventoryManager.quickAccessAdd(resource);
-                    }
-                    break;
-                default:
-                    logger.warn("Out of options provided");
-                    break;
+            case 0:
+                for (int i = 0; i < amount; i++) {
+                    inventoryManager.quickAccessRemove(resource);
+                }
+                break;
+            case 1:
+                for (int i = 0; i < amount; i++) {
+                    inventoryManager.quickAccessAdd(resource);
+                }
+                break;
+            default:
+                logger.warn("Out of options provided");
+                break;
             }
         }
     }
 
     /**
      * Upgrades the building object when upgrade button is clicked.
+     * 
      * @param building a building is selected on the world
      */
     private void upgradeBuilding(BuildingEntity building) {
@@ -245,7 +251,7 @@ public class BuildingWidgets {
      * the percent's range is from 0 to 1.
      *
      * @param building a building is selected on the world
-     * @param percent the percent of resource costs back to inventory
+     * @param percent  the percent of resource costs back to inventory
      */
     private void destroyBuilding(BuildingEntity building, float percent) {
         Map<String, Integer> costs = building.getCost();
@@ -258,7 +264,7 @@ public class BuildingWidgets {
         }
 
         for (Map.Entry<String, Integer> cost : costs.entrySet()) {
-            int newValue = (int)Math.floor(percent * cost.getValue());
+            int newValue = (int) Math.floor(percent * cost.getValue());
             costs.replace(cost.getKey(), cost.getValue(), newValue);
         }
         handleCost(costs, 1);
@@ -267,49 +273,52 @@ public class BuildingWidgets {
 
     /**
      * Interact methods for buildings
+     * 
      * @param building building selected from world.
      */
     private void interactBuilding(BuildingEntity building) {
-        switch(building.getBuildingType()) {
-            default:
-                break;
-            case CABIN:
-                building.cabinInteract();
-                break;
-            case FENCE:
-                building.fenceInteract();
-                break;
-            case CASTLE:
-                building.castleInteract();
-                break;
-            case SAFEHOUSE:
-                building.safehouseInteract();
-                break;
-            case TOWNCENTRE:
-                building.towncentreInteract();
-                break;
-            case WATCHTOWER:
-                building.watchtowerInteract();
-                break;
-            case STORAGE_UNIT:
-                break;
+        switch (building.getBuildingType()) {
+        case CABIN:
+            building.cabinInteract();
+            break;
+        case FENCE:
+            building.fenceInteract();
+            break;
+        case CASTLE:
+            building.castleInteract();
+            break;
+        case SAFEHOUSE:
+            building.safehouseInteract();
+            break;
+        case TOWNCENTRE:
+            building.towncentreInteract();
+            break;
+        case WATCHTOWER:
+            building.watchtowerInteract();
+            break;
+        case STORAGE_UNIT:
+            break;
+        default:
+            break;
         }
     }
 
     /**
      * Sets up a container of the building widget with correct position settings.
+     * 
      * @param building a building is selected on the world
      */
     private void setMenu(BuildingEntity building) {
         float[] wCords = WorldUtil.colRowToWorldCords(building.getCol(), building.getRow());
         cameraPos.setCol(gm.getCamera().position.x);
         cameraPos.setRow(gm.getCamera().position.y);
-        menu.setPosition(stage.getWidth()/2 + wCords[0] - cameraPos.getCol() - menu.getMinWidth(),
-                stage.getHeight()/2 + wCords[1] - cameraPos.getRow() + menu.getMinHeight());
+        menu.setPosition(stage.getWidth() / 2 + wCords[0] - cameraPos.getCol() - menu.getMinWidth(),
+                stage.getHeight() / 2 + wCords[1] - cameraPos.getRow() + menu.getMinHeight());
     }
 
     /**
      * Sets up a health bar inside the building widget with its relevant functions.
+     * 
      * @param building a building is selected on the world
      */
     private void setHealthBar(BuildingEntity building) {
@@ -323,13 +332,16 @@ public class BuildingWidgets {
     }
 
     /**
-     * Sets up a upgrade button inside the building widget with its relevant functions.
+     * Sets up a upgrade button inside the building widget with its relevant
+     * functions.
+     * 
      * @param building a building is selected on the world
      */
     private void setUpgradeBtn(BuildingEntity building) {
         if (upgradeListener != null) {
             upgradeBtn.removeListener(upgradeListener);
         }
+
         upgradeBtn.addListener(upgradeListener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -339,7 +351,9 @@ public class BuildingWidgets {
     }
 
     /**
-     * Sets up a interact button inside the building widget with its relevant functions.
+     * Sets up a interact button inside the building widget with its relevant
+     * functions.
+     * 
      * @param building a building is selected on the world
      */
     private void setInteractBtn(BuildingEntity building) {
@@ -355,7 +369,9 @@ public class BuildingWidgets {
     }
 
     /**
-     * Sets up a destroy button inside the building widget with its relevant functions.
+     * Sets up a destroy button inside the building widget with its relevant
+     * functions.
+     * 
      * @param building a building is selected on the world
      */
     private void setDestroyBtn(BuildingEntity building) {
@@ -372,7 +388,9 @@ public class BuildingWidgets {
     }
 
     /**
-     * Sets up a widget with specific information of a selected building and its position, then showing it.
+     * Sets up a widget with specific information of a selected building and its
+     * position, then showing it.
+     * 
      * @param building a building is selected on the world
      */
     private void setWidgets(BuildingEntity building) {
@@ -386,8 +404,7 @@ public class BuildingWidgets {
 
     public void update() {
         // update widget position
-        if (cameraPos.getCol() != gm.getCamera().position.x
-                || cameraPos.getRow() != gm.getCamera().position.y) {
+        if (cameraPos.getCol() != gm.getCamera().position.x || cameraPos.getRow() != gm.getCamera().position.y) {
             menu.setPosition(menu.getX() - gm.getCamera().position.x + cameraPos.getCol(),
                     menu.getY() - gm.getCamera().position.y + cameraPos.getRow());
             cameraPos.setCol(gm.getCamera().position.x);
@@ -397,7 +414,7 @@ public class BuildingWidgets {
         // update health bar value
         if (menu.isVisible()) {
             int value = building.getCurrentHealth() / building.getInitialHealth();
-            if ((float)value != healthBar.getValue()) {
+            if ((float) value != healthBar.getValue()) {
                 setHealthBar(building);
             }
         }
@@ -419,18 +436,22 @@ public class BuildingWidgets {
 
             for (AbstractEntity entity : world.getEntities()) {
                 if (entity instanceof BuildingEntity) {
-                    Collider collider = ((BuildingEntity)entity).getCollider();
-                    if ((collider != null) && !(collider.getX() <= mousePos[0] && collider.getY() <= mousePos[1]
-                            && collider.getX() + collider.getXLength() >= mousePos[0]
-                            && collider.getY() + collider.getYLength() >= mousePos[1])) {
-                        continue;
-                    } else if ((collider == null) && !tile.getCoordinates().equals(entity.getPosition())) {
+                    Collider collider = ((BuildingEntity) entity).getCollider();
+
+                    boolean mouseNotInRange = (collider != null) && !(collider.getX() <= mousePos[0]
+                            && collider.getY() <= mousePos[1] && collider.getX() + collider.getXLength() >= mousePos[0]
+                            && collider.getY() + collider.getYLength() >= mousePos[1]);
+
+                    boolean entityAtTilePosition = (collider == null)
+                            && !tile.getCoordinates().equals(entity.getPosition());
+
+                    if (mouseNotInRange || entityAtTilePosition) {
                         continue;
                     }
 
                     // show the building widgets if a building is clicked
-                    building = (BuildingEntity)entity;
-                    setWidgets((BuildingEntity)entity);
+                    building = (BuildingEntity) entity;
+                    setWidgets((BuildingEntity) entity);
                     menu.setVisible(true);
                     break;
                 }
