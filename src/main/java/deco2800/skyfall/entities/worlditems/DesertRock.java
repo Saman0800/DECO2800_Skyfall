@@ -8,19 +8,26 @@ public class DesertRock extends AbstractRock {
 
     public DesertRock() {
         this.setObjectName(ENTITY_ID_STRING);
+        setupParams();
+        this.setTexture("DRock" + DesertRock.nextRock);
+        DesertRock.nextRock = randomGen.nextInt(3) + 1;
     }
 
     public DesertRock(Tile tile, boolean obstructed) {
         super(tile, obstructed, "DRock" + DesertRock.nextRock);
         DesertRock.nextRock = randomGen.nextInt(3) + 1;
-        this.setObjectName(ENTITY_ID_STRING);
-        this.metalAmount = 15;
-        this.entityType = "DesertRock";
+        setupParams();
     }
 
     public DesertRock(SaveableEntityMemento memento) {
         super(memento);
+        setupParams();
+    }
+
+    private void setupParams() {
+        this.setObjectName(ENTITY_ID_STRING);
         this.metalAmount = 15;
+        this.entityType = "DesertRock";
     }
 
     /**

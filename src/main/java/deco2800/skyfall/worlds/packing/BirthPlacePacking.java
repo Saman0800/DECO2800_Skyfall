@@ -1,6 +1,5 @@
 package deco2800.skyfall.worlds.packing;
 
-import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.world.World;
 

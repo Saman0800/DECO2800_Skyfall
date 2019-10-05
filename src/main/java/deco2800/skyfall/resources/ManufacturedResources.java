@@ -14,7 +14,7 @@ public abstract class ManufacturedResources implements Item, Blueprint {
     public String name;
 
     // can the item be stored in the inventory
-    protected Boolean carryable;
+    protected boolean carryable;
 
     // the name of the subtype the item belongs to
     public String subtype;
@@ -71,7 +71,7 @@ public abstract class ManufacturedResources implements Item, Blueprint {
      * if it is consumed immediately
      */
     @Override
-    public Boolean isCarryable() {
+    public boolean isCarryable() {
         return carryable;
     }
 
@@ -174,7 +174,7 @@ public abstract class ManufacturedResources implements Item, Blueprint {
      * Returns whether or not the item can be equipped from the inventory
      * @return True if the item can be equipped, false otherwise
      */
-    public Boolean isEquippable() {
+    public boolean isEquippable() {
         return this.equippable;
     }
 

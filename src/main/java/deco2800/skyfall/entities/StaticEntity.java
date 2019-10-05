@@ -23,7 +23,6 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
     private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
 
     private static final String ENTITY_ID_STRING = "staticEntityID";
-    private boolean obstructed;
     private static TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
 
     public Map<HexVector, String> children;
@@ -32,6 +31,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
 
     public StaticEntity() {
         super();
+        this.obstructed = true;
     }
 
     /**
@@ -54,7 +54,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
 
     /**
      * Initialises a static entity
-     * 
+     *
      * @param tile        The tile it spawns on
      * @param renderOrder The position is has in the render order
      * @param texture     The texture it is given
@@ -78,7 +78,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
 
     /**
      * Initialises a static entity
-     * 
+     *
      * @param col         The tile col it spawns on
      * @param row         The tile row it spawns on
      * @param renderOrder The position it has in the render order
@@ -97,7 +97,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
 
     /**
      * Initialises a static entity with a custom hit box
-     * 
+     *
      * @param tile        The tile it spawns on
      * @param renderOrder The position it has in the render order
      * @param texture     The texture the entity is given
@@ -125,7 +125,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
 
     /**
      * Initialises a static entity with a custom hit box
-     * 
+     *
      * @param col         The tile col it spawns on
      * @param row         The tile row it spawns on
      * @param renderOrder The position it has in the render order
@@ -173,17 +173,8 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
     }
 
     /**
-     * A simple getter function to retrieve the obstruction value of this object
-     *
-     * @return The obstruction value.
-     */
-    public boolean isObstructed() {
-        return this.obstructed;
-    }
-
-    /**
      * A simple getter function to retrieve the textures used for this object
-     * 
+     *
      * @return The obstruction value.
      */
     public Map<HexVector, String> getTextures() {
@@ -212,7 +203,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
     /**
      * This is the default implementation of the newInstance function for the static
      * entity given a tile position.
-     * 
+     *
      * @return A clone of the instance with only the tile position having changed.
      */
     public StaticEntity newInstance(Tile tile) {
@@ -222,7 +213,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
     /**
      * This is the default implementation of the newInstance function for the static
      * entity given a row and column position.
-     * 
+     *
      * @return A clone of the instance with only the centring of the entity having
      *         changed
      */
@@ -237,7 +228,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
 
     /**
      * Gets the tile for a position on the map
-     * 
+     *
      * @param offset The offset from the center of the map
      * @param center The center of the map
      * @return The Tile at the given location
@@ -253,7 +244,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
 
     /**
      * Gets the position to render
-     * 
+     *
      * @return The x and y value for the position to render
      */
     public int[] getRenderCentre() {
@@ -271,7 +262,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
 
     /**
      * Get the position of the child static entities
-     * 
+     *
      * @return Key set of all the child positions
      */
     public Set<HexVector> getChildrenPositions() {
@@ -280,7 +271,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
 
     /**
      * Gets the texture for a child position
-     * 
+     *
      * @param childPos The position of the child
      * @return The Texture for that child
      */
@@ -292,7 +283,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
 
     /**
      * Sets a map of child entities
-     * 
+     *
      * @param children Map with there position and name
      */
     public void setChildren(Map<HexVector, String> children) {

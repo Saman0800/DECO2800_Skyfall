@@ -8,25 +8,33 @@ import java.util.Random;
 
 public class Bone extends StaticEntity {
 
-    protected static Random randomGen = new Random();
+    protected static Random randomGen = new Random(2);
     private static String nextTextureString = "DSkull";
 
     protected static final String ENTITY_ID_STRING = "bone";
 
     public Bone(SaveableEntityMemento memento) {
         super(memento);
+        setBoneParams();
     }
 
     public Bone() {
+        super();
         this.setObjectName(ENTITY_ID_STRING);
+        setBoneParams();
+        this.setTexture(Bone.nextTextureString);
+
+        Bone.nextTextureString = randomGen.nextInt() == 0 ? "DSkull" : "DRibs";
     }
 
     public Bone(Tile tile, boolean obstructed) {
         super(tile, 2, Bone.nextTextureString, obstructed);
+        setBoneParams();
+        Bone.nextTextureString = randomGen.nextInt() == 0 ? "DSkull" : "DRibs";
+    }
+
+    private void setBoneParams() {
         this.setObjectName(ENTITY_ID_STRING);
-
-        Bone.nextTextureString = randomGen.nextInt(2) == 0 ? "DSkull" : "DRibs";
-
         this.entityType = "Bone";
     }
 

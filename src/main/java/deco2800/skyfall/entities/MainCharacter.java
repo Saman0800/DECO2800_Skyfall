@@ -43,6 +43,24 @@ import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.spells.SpellCaster;
 import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.resources.*;
+import deco2800.skyfall.resources.items.Hatchet;
+import deco2800.skyfall.resources.items.PickAxe;
+import deco2800.skyfall.saving.AbstractMemento;
+import deco2800.skyfall.saving.Save;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.Tile;
+
+import java.io.Serializable;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.ForestBiome;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static deco2800.skyfall.buildings.BuildingType.CABIN;
 import static deco2800.skyfall.buildings.BuildingType.CASTLE;
@@ -405,7 +423,7 @@ public class MainCharacter extends Peon
 
     /**
      * Gets all of the "locked" biomes
-     * 
+     *
      * @return lockedBiomes - a list of all of the locked biomes
      */
     public List<String> getlockedBiomes() {
@@ -414,7 +432,7 @@ public class MainCharacter extends Peon
 
     /**
      * Removes a biome from the locked list ("unlocking a biome")
-     * 
+     *
      * @param biome - The biome to "unlock"
      */
     public void unlockBiome(String biome) {
@@ -435,18 +453,17 @@ public class MainCharacter extends Peon
         }
     }
 
-    // FIXME:Ontonator Should this return primitive `boolean`?
     /**
      * Sets the player's equipped item
      *
      * @param item the item to equip
      */
-    public Boolean setEquippedItem(Item item) {
+    public boolean setEquippedItem(Item item) {
         if (item.isEquippable()) {
             this.equippedItem = item;
             return true;
         } else {
-            logger.warn("You can't equip " + item.getName() + ".");
+            logger.warn("You can't equip {}.", item.getName());
             return false;
         }
     }
@@ -1572,7 +1589,7 @@ public class MainCharacter extends Peon
 
     /***
      * A getter method for the blueprints that the player has learned.
-     * 
+     *
      * @return the learned blueprints list
      */
     public List<Blueprint> getBlueprintsLearned() {
@@ -1581,7 +1598,7 @@ public class MainCharacter extends Peon
 
     /***
      * A getter method to get the Item to be created.
-     * 
+     *
      * @return the item to create.
      */
     public String getItemToCreate() {
@@ -1590,7 +1607,7 @@ public class MainCharacter extends Peon
 
     /***
      * A Setter method to get the Item to be created.
-     * 
+     *
      * @param item the item to be created.
      */
     public void setItemToCreate(String item) {
@@ -1822,56 +1839,55 @@ public class MainCharacter extends Peon
     }
 
     // FIXME:dannothan Fix or remove this.
-    // @Override
-    // public MainCharacterMemento save() {
-    // return new MainCharacterMemento(this);
-    // }
-    //
-    // @Override
-    // public void load(MainCharacterMemento memento) {
-    // this.id = memento.mainCharacterID;
+    // FIXME:jeffvan figure out what needs saving
+    public MainCharacterMemento save() {
+        return new MainCharacterMemento(this);
+    }
+
+    public void load(MainCharacterMemento memento) {
+        this.id = memento.mainCharacterID;
     // this.equippedItem = memento.equippedItem;
-    // this.level = memento.level;
-    // this.foodLevel = memento.foodLevel;
-    // this.foodAccum = memento.foodAccum;
-    // this.goldPouch = memento.goldPouch;
+        this.level = memento.level;
+        this.foodLevel = memento.foodLevel;
+        this.foodAccum = memento.foodAccum;
+        this.goldPouch = memento.goldPouch;
     // this.blueprintsLearned = memento.blueprints;
-    // this.inventories = memento.inventory;
+        this.inventories = memento.inventory;
     // this.weapons = memento.weapons;
     // this.hotbar = memento.hotbar;
-    // }
-    //
-    // public class MainCharacterMemento extends AbstractMemento {
-    //
-    // //TODO:dannathan add stuff for entitiy
-    // private long saveID;
-    // private long mainCharacterID;
-    //
-    // private int equippedItem;
-    // private int level;
-    //
-    // private int foodLevel;
-    // private float foodAccum;
-    //
-    // private InventoryManager inventory;
-    // private WeaponManager weapons;
-    // private HashMap<Integer, Integer> goldPouch;
-    // private List<Item> hotbar;
-    //
-    // private List<String> blueprints;
-    //
-    // public MainCharacterMemento(MainCharacter character) {
-    // this.saveID = character.save.getSaveID();
-    // this.mainCharacterID = character.id;
+    }
+
+    public static class MainCharacterMemento extends AbstractMemento implements Serializable {
+
+        //TODO:dannathan add stuff for entitiy
+        private long saveID;
+        private long mainCharacterID;
+
+        private int equippedItem;
+        private int level;
+
+        private int foodLevel;
+        private float foodAccum;
+
+        private InventoryManager inventory;
+        private WeaponManager weapons;
+        private HashMap<Integer, Integer> goldPouch;
+        private List<Item> hotbar;
+
+        private List<String> blueprints;
+
+        public MainCharacterMemento(MainCharacter character) {
+            this.saveID = character.save.getSaveID();
+            this.mainCharacterID = character.id;
     // this.equippedItem = character.equippedItem;
-    // this.level = character.level;
-    // this.foodLevel = character.foodLevel;
-    // this.foodAccum = character.foodAccum;
-    // this.goldPouch = character.goldPouch;
+            this.level = character.level;
+            this.foodLevel = character.foodLevel;
+            this.foodAccum = character.foodAccum;
+            this.goldPouch = character.goldPouch;
     // this.blueprints = character.blueprintsLearned;
-    // this.inventory = character.inventories;
+            this.inventory = character.inventories;
     // this.weapons = character.weapons;
     // this.hotbar = character.hotbar;
-    // }
-    // }
+        }
+    }
 }

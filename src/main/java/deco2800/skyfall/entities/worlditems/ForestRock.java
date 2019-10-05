@@ -4,27 +4,30 @@ import deco2800.skyfall.worlds.Tile;
 
 public class ForestRock extends AbstractRock {
 
-    protected static final String ENTITY_ID_STRING = "rock";
+    protected static final String ENTITY_ID_STRING = "forest_rock";
 
     public ForestRock(Tile tile, boolean obstructed) {
         super(tile, obstructed, "rock" + nextRock);
         nextRock = randomGen.nextInt(3) + 1;
-        this.setObjectName(ENTITY_ID_STRING);
-        this.metalAmount = 15;
+        setupParams();
     }
 
     @Deprecated // This really doesn't make sense anymore.
     public ForestRock() {
         super(new Tile(null, 0.0f, 0.0f), true, "rock" + ForestRock.nextRock);
         ForestRock.nextRock = randomGen.nextInt(3) + 1;
-        this.setObjectName(ENTITY_ID_STRING);
-        this.metalAmount = 15;
-        this.entityType = "ForestRock";
+        setupParams();
     }
 
     public ForestRock(SaveableEntityMemento memento) {
         super(memento);
+        setupParams();
+    }
+
+    private void setupParams() {
+        this.setObjectName(ENTITY_ID_STRING);
         this.metalAmount = 15;
+        this.entityType = "ForestRock";
     }
 
     /**

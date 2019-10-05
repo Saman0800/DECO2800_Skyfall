@@ -5,6 +5,7 @@ import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.Random;
 /**
  * Class that represents the biomes
  */
-public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBiomeMemento> {
+public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBiomeMemento>, Serializable {
     private long id;
     private long worldID;
 
@@ -194,7 +195,7 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
         this.id = memento.biomeID;
     }
 
-    public class AbstractBiomeMemento extends AbstractMemento {
+    public static class AbstractBiomeMemento extends AbstractMemento implements Serializable {
         // The ID of the world this is in
         private long worldID;
 

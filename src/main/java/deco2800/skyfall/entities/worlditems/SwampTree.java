@@ -9,22 +9,22 @@ public class SwampTree extends AbstractTree {
 
     protected static final String ENTITY_ID_STRING = "swamp_tree";
 
-    public SwampTree(float col, float row, int renderOrder, Map<HexVector, String> texture) {
-        super(col, row, renderOrder, texture);
-        this.woodAmount = 15;
-    }
-
     public SwampTree(Tile tile, boolean obstructed) {
         super(tile, obstructed, "sTree" + nextTreeTexture);
-        this.woodAmount = 15;
+        setupParams();
 
         SwampTree.nextTreeTexture = randomGen.nextInt(3) + 1;
-        this.entityType = "SwampTree";
     }
 
     public SwampTree(SaveableEntityMemento memento) {
         super(memento);
+        setupParams();
+    }
+
+    private void setupParams() {
+        this.setObjectName(ENTITY_ID_STRING);
         this.woodAmount = 15;
+        this.entityType = "SwampTree";
     }
 
     /**
