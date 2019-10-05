@@ -165,7 +165,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     private PetsManager petsManager;
     private BuildingFactory tempFactory;
 
-    // List of the Biomes Unlocked
+    // List of the Biomes locked
     private List<String> lockedBiomes;
 
     /**

@@ -13,7 +13,7 @@ public class VolcanoPortal extends AbstractPortal implements Blueprint {
 
 
     public String currentBiome = "mountain";
-    public String name = "mountainPortal";
+    public String name = "portal_volcano";
     public boolean blueprintLearned = false;
     Texture texture;
     private final transient Logger logger = LoggerFactory.getLogger(BuildingEntity.class);
