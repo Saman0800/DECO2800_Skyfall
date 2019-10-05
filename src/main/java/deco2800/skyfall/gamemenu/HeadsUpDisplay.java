@@ -55,7 +55,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
     public void update() {
         super.update();
         hudElements.forEach((key, value) -> value.update());
-        if ((teleport != null))
+        if ((teleport != null)) {
             if (qm.questFinished()) {
                 teleport.getLabel().setColor(0f, 1f, 0f, 1);
                 teleport.setDisabled(false);
@@ -63,6 +63,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
                 teleport.getLabel().setColor(0.25f, 0.25f, 0.25f, 1);
                 teleport.setDisabled(true);
             }
+        }
     }
 
     @Override
@@ -92,22 +93,6 @@ public class HeadsUpDisplay extends AbstractUIElement {
                 gmm.setPopUp("collectTable");
             }
         });
-//TODO: (@Kausta) Remove if not necessary after portal merge
-//        teleport = new TextButton("TELEPORT", skin, "blue-pill");
-//        teleport.getLabel().setStyle(skin.get("blue-pill", Label.LabelStyle.class));
-//        teleport.getLabel().setAlignment(Align.center);
-//        teleport.getLabel().setFontScale(0.8f);
-//        teleport.getLabel().setColor(0.25f, 0.25f, 0.25f,1);
-//        teleport.setDisabled(true);
-//        teleport.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                if (!teleport.isDisabled()) {
-//                    hideOpened(gmm);
-//                    gmm.setPopUp("teleportTable");
-//                }
-//            }
-//        });
 
 
         TextButton pauseT = new TextButton("PAUSE", skin, "blue-pill");

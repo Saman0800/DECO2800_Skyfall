@@ -33,8 +33,6 @@ public class GoldStatusBar extends AbstractUIElement {
      */
     @Override
     public void updatePosition() {
-        float positionX = stage.getCamera().position.x - goldLabel.getWidth();
-
         goldLabel.setPosition(gmm.getTopLeftX() + 30, gmm.getTopLeftY() - 170);
         goldPouchButton.setPosition(gmm.getTopLeftX() + goldLabel.getWidth(), gmm.getTopLeftY() - 175);
     }
@@ -64,7 +62,6 @@ public class GoldStatusBar extends AbstractUIElement {
         stage.addActor(goldLabel);
         stage.addActor(goldPouchButton);
 
-        updatePosition();
     }
 
     /**
@@ -73,8 +70,18 @@ public class GoldStatusBar extends AbstractUIElement {
     @Override
     public void update() {
         super.update();
+        updateLabel();
+    }
 
+    public void updateLabel() {
         int total = gmm.getMainCharacter().getGoldPouchTotalValue();
         goldLabel.setText(" " + total + " G   ");
+    }
+
+    /**
+     * Used in unit testing
+     */
+    public Label getGoldLabel() {
+        return goldLabel;
     }
 }

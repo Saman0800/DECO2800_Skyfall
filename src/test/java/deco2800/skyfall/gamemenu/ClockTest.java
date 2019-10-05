@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import deco2800.skyfall.BaseGDXTest;
 import deco2800.skyfall.managers.EnvironmentManager;
 import deco2800.skyfall.managers.GameMenuManager;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,10 +21,10 @@ import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 public class ClockTest extends BaseGDXTest{
-    Skin skin;
-    Stage stage;
-    GameMenuManager gmm;
-    Clock clock;
+    private Skin skin;
+    private Stage stage;
+    private GameMenuManager gmm;
+    private Clock clock;
     private EnvironmentManager em;
 
     @Before
@@ -77,5 +78,13 @@ public class ClockTest extends BaseGDXTest{
 
     }
 
+    @After
+    public void tearDown() {
+        skin = null;
+        stage = null;
+        gmm = null;
+        clock = null;
+        em = null;
+    }
 
 }
