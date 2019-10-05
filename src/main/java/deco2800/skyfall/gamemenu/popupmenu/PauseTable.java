@@ -78,7 +78,6 @@ public class PauseTable extends AbstractPopUpElement{
         pauseTable.setPosition(Gdx.graphics.getWidth() / 2f - pauseTable.getWidth() / 2,
                 Gdx.graphics.getHeight() / 2f - pauseTable.getHeight() / 2);
         pauseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
-        pauseTable.setDebug(true);
 
         Table infoBar = new Table();
         infoBar.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_banner"));

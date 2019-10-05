@@ -83,7 +83,6 @@ public class BlueprintShopTable extends AbstractPopUpElement{
         blueprintTable.setSize(910, 510);
         blueprintTable.setPosition(Gdx.graphics.getWidth()/2f - blueprintTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - blueprintTable.getHeight()/2);
-        blueprintTable.setDebug(true);
         blueprintTable.top();
         blueprintTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("pop up screen"));
         blueprintTable.setName("chestTable");

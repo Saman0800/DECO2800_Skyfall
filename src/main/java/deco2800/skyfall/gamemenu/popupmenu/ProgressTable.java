@@ -34,7 +34,6 @@ public class ProgressTable extends AbstractPopUpElement {
         this.skin = skin;
         this.qm = qm;
         Table labelTable = new Table();
-        labelTable.setDebug(true);
         this.draw();
         stage.addActor(baseTable);
     }
@@ -105,7 +104,6 @@ public class ProgressTable extends AbstractPopUpElement {
 
         titleLabel.getStyle().fontColor = Color.BLACK;
 
-        baseTable.setDebug(true);
         baseTable.add(titleLabel);
         baseTable.row();
         baseTable.add(biomeLabel).expand().left();

@@ -84,7 +84,6 @@ public class ChestTable extends AbstractPopUpElement{
         chestTable.setSize(500, 510);
         chestTable.setPosition((Gdx.graphics.getWidth()/2f - chestTable.getWidth()/2 + 60),
                 (Gdx.graphics.getHeight() + 160) / 2f - chestTable.getHeight()/2);
-        chestTable.setDebug(false);
         chestTable.top();
         chestTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
         chestTable.setName("chestTable");

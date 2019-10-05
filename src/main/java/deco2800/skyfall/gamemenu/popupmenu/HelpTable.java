@@ -62,19 +62,16 @@ public class HelpTable extends AbstractPopUpElement{
     @Override
     public void draw() {
         super.draw();
-//        System.out.println("Drawing HELPTABLE");
         table = new Table().top();
         table.setSize(750, 600);
         table.setPosition(Gdx.graphics.getWidth()/2f - table.getWidth()/2,
                 Gdx.graphics.getHeight() / 2f - table.getHeight()/2);
-//        table.setDebug(true);
         table.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
 
         drawBanner();
         toPrev();
         table.setVisible(false);
         stage.addActor(table);
-        //System.out.println("Finished Drawing HELPTABLE");
     }
 
     private void drawBanner() {

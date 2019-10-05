@@ -53,7 +53,6 @@ public class CollectCreateTable extends AbstractPopUpElement{
         complete.getLabel().getStyle().fontColor = Color.BLACK;
 
         labelTable = new Table();
-        labelTable.setDebug(true);
         this.draw();
         stage.addActor(baseTable);
     }
