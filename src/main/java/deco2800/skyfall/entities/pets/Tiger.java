@@ -193,7 +193,7 @@ public class Tiger extends AbstractEnemy implements Animatable {
      *
      */
     public void randomMoving() {
-        if (moving) {
+        if (!moving) {
             targetPosition = new float[2];
             targetPosition[0] = (float) (Math.random() * 200 + orginalPosition[0]);
             targetPosition[1] = (float) (Math.random() * 200 + orginalPosition[1]);
