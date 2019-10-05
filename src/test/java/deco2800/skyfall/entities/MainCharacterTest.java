@@ -267,7 +267,7 @@ public class MainCharacterTest {
     }
 
     /**
-     * Test kill effect
+     * Test kill effect and method
      */
     @Test
     public void killTest() {
@@ -281,6 +281,9 @@ public class MainCharacterTest {
         testMap.put(Direction.DEFAULT, animationLinker);
         testCharacter.addAnimations(AnimationRole.DEAD, Direction.DEFAULT, animationLinker);
         Assert.assertEquals(testMap, testCharacter.animations.get(AnimationRole.DEAD));
+
+        // Is the character dead?
+        Assert.assertTrue(testCharacter.isDead());
     }
 
     public void movementAnimationsExist() {
@@ -651,6 +654,59 @@ public class MainCharacterTest {
         testCharacter.removeAllGold();
 
         assertEquals(0, testCharacter.getGoldPouchTotalValue());
+    }
+
+    /**
+     * Test the removeAllGold() method works.
+     */
+    @Test
+    public void playerHurtTest() {
+        assertEquals(100, testCharacter.getGoldPouchTotalValue());
+
+        testCharacter.removeAllGold();
+
+        assertEquals(0, testCharacter.getGoldPouchTotalValue());
+    }
+
+    /**
+     * Test the isRecovering() method works.
+     */
+    @Test
+    public void isRecoveringTest() {
+        testCharacter.playerHurt(2);
+
+        assertFalse(testCharacter.isRecovering());
+    }
+
+    /**
+     * Test the setRecovering() method works.
+     */
+    @Test
+    public void setRecoveringTest() {
+        testCharacter.playerHurt(2);
+        assertFalse(testCharacter.isRecovering());
+
+        testCharacter.setRecovering(false);
+        assertFalse(testCharacter.isRecovering());
+
+        testCharacter.setRecovering(true);
+        assertTrue(testCharacter.isRecovering());
+    }
+
+    /**
+     * Test the pop up methods work.
+     */
+    @Test
+    public void popUpTest() {
+        GameMenuManager gameMenuManager = new GameMenuManager();
+        gameMenuManager.setMainCharacter(testCharacter);
+        testCharacter.setUpGUI();
+
+        gameMenuManager.hideOpened();
+        gameMenuManager.setPopUp("gameOverTable");
+
+        assertEquals(testCharacter, gameMenuManager.getMainCharacter());
+        assertEquals(gameMenuManager.getPopUp("gameOverTable"), gameMenuManager.getCurrentPopUp());
     }
 
     @After

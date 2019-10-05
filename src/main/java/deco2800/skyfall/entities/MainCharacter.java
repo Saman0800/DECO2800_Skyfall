@@ -383,15 +383,19 @@ public class MainCharacter extends Peon implements KeyDownObserver,
      */
     private void setUpManaBar() {
         //Start with 100 mana.
-        this.manaBar = new ManaBar(100, "mana_bar_inner", "mana_bar");
+        if (this.manaBar != null) {
+            this.manaBar = new ManaBar(100, "mana_bar_inner", "mana_bar");
+        }
     }
 
     /**
      * Set up the health bar.
      */
     private void setupHealthBar() {
-        this.healthBar = (HealthCircle) GameManager.getManagerFromInstance(GameMenuManager.class).
-                getUIElement("healthCircle");
+        if (this.healthBar != null) {
+            this.healthBar = (HealthCircle) GameManager.getManagerFromInstance(GameMenuManager.class).
+                    getUIElement("healthCircle");
+        }
     }
 
     /**
@@ -720,7 +724,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         updateHealth();
         logger.info("Current Health: {}", this.getHealth());
 
-
         if (!isRecovering) {
             setHurt(true);
             this.changeHealth(-damage);
@@ -743,7 +746,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
     }
 
-
+    /*
+     * Checks if the players hurt is over
+     */
     private void checkIfHurtEnded() {
         hurtTime += 20; // playerHurt for 1 second
 
@@ -755,9 +760,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
     }
 
-    /**
-     * Helper function to update healthBar outside of class.
-     */
+        /**
+         * Helper function to update healthBar outside of class.
+         */
     private void updateHealth() {
         if (this.healthBar != null) {
             this.healthBar.update();
