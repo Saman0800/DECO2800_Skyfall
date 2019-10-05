@@ -516,7 +516,9 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public void unEquip() {
         // Return item to a tile in the world
         if (equippedItem instanceof Weapon) {
-            GameManager.get().getWorld().addEntity((StaticEntity)equippedItem);
+            Tile returnTile =
+                    GameManager.get().getWorld().getTile(((Weapon) equippedItem).getPosition());
+            GameManager.get().getWorld().addEntity(((Weapon) equippedItem).newInstance(returnTile));
         }
 
         this.equippedItem = new EmptyItem();
