@@ -36,7 +36,7 @@ import java.util.Map;
 public class BuildingWidgets {
 
     // a logger
-    private final transient Logger logger = LoggerFactory.getLogger(BuildingWidgets.class);
+    private final Logger logger = LoggerFactory.getLogger(BuildingWidgets.class);
 
     private static BuildingWidgets instance = null;
 

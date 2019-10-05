@@ -13,10 +13,10 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
     protected Vector2 direction;
     protected float currentSpeed;
 
-    private boolean MOVE_UP = false;
-    private boolean MOVE_LEFT = false;
-    private boolean MOVE_RIGHT = false;
-    private boolean MOVE_DOWN = false;
+    private boolean MOVEUP = false;
+    private boolean MOVELEFT = false;
+    private boolean MOVERIGHT = false;
+    private boolean MOVEDOWN = false;
 
     /**
      * PlayerPeon Constructor
@@ -47,16 +47,16 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
      * Calculates the new movement point depending on what movement keys are held down.
      */
     private void updateMoveVector() {
-        if (MOVE_UP) {
+        if (MOVEUP) {
             this.direction.add(0.0f, speed);
         }
-        if (MOVE_LEFT) {
+        if (MOVELEFT) {
             this.direction.sub(speed, 0.0f);
         }
-        if (MOVE_DOWN) {
+        if (MOVEDOWN) {
             this.direction.sub(0.0f, speed);
         }
-        if (MOVE_RIGHT) {
+        if (MOVERIGHT) {
             this.direction.add(speed, 0.0f);
         }
     }
@@ -66,6 +66,14 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
      */
     @Override
     public void onTick(long i) {
+        if (task != null && task.isAlive()) {
+            task.onTick(i);
+
+            if (task.isComplete()) {
+                this.task = null;
+            }
+        }
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
         }
@@ -75,7 +83,6 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
      * Attack with the weapon the character has equip.
      */
     public void attack() {
-        //TODO: Need to calculate an angle that the character is facing.
 
         //Spawn projectile in front of character for now.
 
@@ -83,7 +90,7 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
         //Get AbstractWorld from static class GameManager.
 
         //Add the projectile entity to the game world.
-        //manager.getWorld().addEntity(hitBox);
+
     }
 
     /**
@@ -109,20 +116,12 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
         if (button == 1) {
             this.attack();
         }
-//        else if (button == 1) {
-//            this.specialAttack();
-//        }
+        else if (button == 1) {
+            this.specialAttack();
+        }
     }
 
-    /**
-     * Sets the Player's current movement speed.
-     * @param cSpeed the speed for the player to currently move at.
-     */
-    private void setCurrentSpeed ( float cSpeed){
-        this.currentSpeed = cSpeed;
-//        this.task = new MovementTask(this, new HexVector(clickedPosition[0],
-//                clickedPosition[1]));
-    }
+
 
     /**
      * Sets the appropriate movement flags to true on keyDown
@@ -137,16 +136,18 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
 
         switch (keycode) {
             case Input.Keys.W:
-                MOVE_UP = true;
+                MOVEUP = true;
                 break;
             case Input.Keys.A:
-                MOVE_LEFT = true;
+                MOVELEFT = true;
                 break;
             case Input.Keys.S:
-                MOVE_DOWN = true;
+                MOVEDOWN = true;
                 break;
             case Input.Keys.D:
-                MOVE_RIGHT = true;
+                MOVERIGHT = true;
+                break;
+            default:
                 break;
         }
     }
@@ -159,16 +160,18 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
     public void notifyKeyUp ( int keycode){
         switch (keycode) {
             case Input.Keys.W:
-                MOVE_UP = false;
+                MOVEUP = false;
                 break;
             case Input.Keys.A:
-                MOVE_LEFT = false;
+                MOVELEFT = false;
                 break;
             case Input.Keys.S:
-                MOVE_DOWN = false;
+                MOVEDOWN = false;
                 break;
             case Input.Keys.D:
-                MOVE_RIGHT = false;
+                MOVERIGHT = false;
+                break;
+            default:
                 break;
         }
     }

@@ -3,44 +3,102 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="119.00000000000003" y="299.0">deco2800.skyfall.entities.spells.Spell</node>
-    <node x="354.0" y="466.0">deco2800.skyfall.entities.spells.FlameWall</node>
-    <node x="177.00000000000003" y="466.0">deco2800.skyfall.entities.spells.Shield</node>
-    <node x="-203.0" y="329.0">deco2800.skyfall.entities.spells.SpellFactory</node>
-    <node x="0.0" y="477.0">deco2800.skyfall.entities.spells.Tornado</node>
-    <node x="141.00000000000003" y="0.0">deco2800.skyfall.entities.Projectile</node>
-    <node x="582.0" y="0.0">deco2800.skyfall.entities.spells.SpellType</node>
+    <node x="22.756250000000023" y="460.5">deco2800.skyfall.entities.spells.Spell</node>
+    <node x="126.4491071428572" y="142.0">deco2800.skyfall.entities.spells.FlameWall</node>
+    <node x="330.75625" y="372.0">deco2800.skyfall.entities.spells.Shield</node>
+    <node x="142.60000000000002" y="-12.0">deco2800.skyfall.entities.spells.SpellFactory</node>
+    <node x="404.00625" y="153.5">deco2800.skyfall.entities.spells.Tornado</node>
+    <node x="-107.5508928571428" y="131.0">deco2800.skyfall.entities.spells.SpellCaster</node>
+    <node x="548.3991071428571" y="153.0">deco2800.skyfall.entities.spells.SpellType</node>
   </nodes>
   <notes />
   <edges>
     <edge source="deco2800.skyfall.entities.spells.Tornado" target="deco2800.skyfall.entities.spells.Spell">
-      <point x="0.0" y="-36.5" />
-      <point x="78.5" y="441.0" />
-      <point x="164.50000000000003" y="441.0" />
-      <point x="-91.0" y="58.5" />
-    </edge>
-    <edge source="deco2800.skyfall.entities.spells.Spell" target="deco2800.skyfall.entities.Projectile">
-      <point x="0.0" y="-58.5" />
-      <point x="0.0" y="124.5" />
+      <point x="53.5" y="-58.5" />
+      <point x="854.8991071428571" y="103.0" />
+      <point x="435.3142857142857" y="103.0" />
+      <point x="67.71428571428567" y="36.5" />
     </edge>
     <edge source="deco2800.skyfall.entities.spells.FlameWall" target="deco2800.skyfall.entities.spells.Spell">
-      <point x="0.0" y="-47.5" />
-      <point x="445.5" y="441.0" />
-      <point x="346.5" y="441.0" />
-      <point x="91.0" y="58.5" />
+      <point x="-53.5" y="-69.5" />
+      <point x="325.9491071428572" y="123.0" />
+      <point x="367.6" y="123.0" />
+      <point x="0.0" y="36.5" />
+    </edge>
+    <edge source="deco2800.skyfall.entities.spells.SpellFactory" target="deco2800.skyfall.entities.spells.Shield">
+      <point x="-57.60000000000002" y="-25.0" />
+      <point x="255.15625" y="354.0" />
+      <point x="91.9491071428572" y="354.0" />
+      <point x="-53.5" y="80.5" />
+    </edge>
+    <edge source="deco2800.skyfall.entities.spells.SpellFactory" target="deco2800.skyfall.entities.spells.FlameWall">
+      <point x="0.0" y="-25.0" />
+      <point x="312.75625" y="364.0" />
+      <point x="325.9491071428572" y="364.0" />
+      <point x="-53.5" y="69.5" />
     </edge>
     <edge source="deco2800.skyfall.entities.spells.Shield" target="deco2800.skyfall.entities.spells.Spell">
-      <point x="0.0" y="-47.5" />
-      <point x="0.0" y="58.5" />
+      <point x="53.5" y="-80.5" />
+      <point x="198.9491071428572" y="113.0" />
+      <point x="345.02857142857147" y="113.0" />
+      <point x="-22.571428571428555" y="36.5" />
+    </edge>
+    <edge source="deco2800.skyfall.entities.spells.SpellCaster" target="deco2800.skyfall.entities.spells.Tornado">
+      <point x="93.0" y="-113.5" />
+      <point x="693.75625" y="364.0" />
+      <point x="854.8991071428571" y="364.0" />
+      <point x="53.5" y="58.5" />
+    </edge>
+    <edge source="deco2800.skyfall.entities.spells.SpellCaster" target="deco2800.skyfall.entities.spells.SpellType">
+      <point x="31.0" y="-113.5" />
+      <point x="27.25" y="58.0" />
+    </edge>
+    <edge source="deco2800.skyfall.entities.spells.SpellFactory" target="deco2800.skyfall.entities.spells.Spell">
+      <point x="-115.19999999999999" y="-25.0" />
+      <point x="197.55625000000003" y="364.0" />
+      <point x="0.0" y="364.0" />
+      <point x="0.0" y="93.0" />
+      <point x="299.8857142857143" y="93.0" />
+      <point x="-67.71428571428572" y="36.5" />
+    </edge>
+    <edge source="deco2800.skyfall.entities.spells.SpellFactory" target="deco2800.skyfall.entities.spells.Tornado">
+      <point x="115.20000000000005" y="-25.0" />
+      <point x="427.95625000000007" y="354.0" />
+      <point x="747.8991071428571" y="354.0" />
+      <point x="-53.5" y="58.5" />
+    </edge>
+    <edge source="deco2800.skyfall.entities.spells.SpellFactory" target="deco2800.skyfall.entities.spells.SpellType">
+      <point x="57.60000000000002" y="-25.0" />
+      <point x="370.35625000000005" y="344.0" />
+      <point x="577.25625" y="344.0" />
+      <point x="-27.25" y="58.0" />
+    </edge>
+    <edge source="deco2800.skyfall.entities.spells.SpellCaster" target="deco2800.skyfall.entities.spells.Shield">
+      <point x="-93.0" y="-113.5" />
+      <point x="507.75625" y="334.0" />
+      <point x="198.9491071428572" y="334.0" />
+      <point x="53.5" y="80.5" />
+    </edge>
+    <edge source="deco2800.skyfall.entities.spells.SpellCaster" target="deco2800.skyfall.entities.spells.FlameWall">
+      <point x="-31.0" y="-113.5" />
+      <point x="569.75625" y="324.0" />
+      <point x="432.9491071428572" y="324.0" />
+      <point x="53.5" y="69.5" />
     </edge>
   </edges>
-  <settings layout="Hierarchic Group" zoom="1.0" x="245.0" y="471.5" />
+  <settings layout="Hierarchic Group" zoom="1.0" x="0.0" y="331.5" />
   <SelectedNodes>
+    <node>deco2800.skyfall.entities.spells.Spell</node>
+    <node>deco2800.skyfall.entities.spells.FlameWall</node>
+    <node>deco2800.skyfall.entities.spells.Shield</node>
     <node>deco2800.skyfall.entities.spells.SpellFactory</node>
+    <node>deco2800.skyfall.entities.spells.Tornado</node>
+    <node>deco2800.skyfall.entities.spells.SpellCaster</node>
+    <node>deco2800.skyfall.entities.spells.SpellType</node>
   </SelectedNodes>
   <Categories>
-    <Category>Fields</Category>
     <Category>Methods</Category>
+    <Category>Fields</Category>
   </Categories>
   <SCOPE>All</SCOPE>
   <VISIBILITY>private</VISIBILITY>

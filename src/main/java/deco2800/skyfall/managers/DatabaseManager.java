@@ -240,7 +240,7 @@ public final class DatabaseManager extends AbstractManager {
 
             for (String s : Arrays.asList("playerPeon")) {
                 if (entityObjectName.startsWith(s)) {
-                    PlayerPeon create = new PlayerPeon(1, 1, 1, "playerPeon", 10);
+                    MainCharacter create = new MainCharacter(1, 1, 1, "playerPeon", 10);
                     create.setObjectName(entityObjectName);
                     return (AbstractEntity) create;
                 }
@@ -249,7 +249,7 @@ public final class DatabaseManager extends AbstractManager {
             StringBuilder fullEntityName = new StringBuilder();
             fullEntityName.append("deco2800.skyfall");
             HashMap<String, String> entityMap = new HashMap<>();
-            entityMap.put("player", "entities.PlayerPeon");
+            entityMap.put("player", "entities.MainCharacter");
             entityMap.put("rock", "entities.rock");
             entityMap.put("tree", "entities.ForestTree");
             entityMap.put("staticEntityID", "entities.StaticEntity");
