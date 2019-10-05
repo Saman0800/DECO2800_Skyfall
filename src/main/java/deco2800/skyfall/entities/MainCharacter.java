@@ -168,17 +168,15 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     // List of the Biomes locked
     private List<String> lockedBiomes;
 
-    /**
-     * Please feel free to change, this is not accurate as to the stages of
-     * the game
+    /*
+        What stage of the game is the player on? Controls what blueprints
+        the player can buy and make.
+        0 = Forest
+        1 = Desert
+        2 = Mountain
+        3 = Volcano
      */
-    public enum GameStage {
-        FOREST,
-        DESERT,
-        MOUNTAIN,
-        SNOW,
-        LAVA
-    }
+    public int gameStage;
 
     //The name of the item to be created.
     private String itemToCreate;
@@ -245,11 +243,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     //Is the camera locked onto the main character
     private boolean cameraLock = true;
 
-    /*
-        What stage of the game is the player on? Controls what blueprints
-        the player can buy and make.
-     */
-    private GameStage gameStage;
+
 
     /*
      * Used for combat testing melee/range weapons.
@@ -344,7 +338,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public MainCharacter(float col, float row, float speed, String name, int health) {
         super(row, col, speed, name, health, "MainCharacter");
         this.id = System.nanoTime();
-        gameStage = GameStage.FOREST;
+        gameStage = 0;
         this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
         this.setHeight(1);
         this.setObjectName("MainPiece");
@@ -1607,25 +1601,33 @@ public class MainCharacter extends Peon implements KeyDownObserver,
     public List<Blueprint> getUnlockedBlueprints() {
         List<Blueprint> unlocked = new ArrayList<>();
         switch (gameStage) {
-            case LAVA:
-
-            case SNOW:
+            case 3:
                 unlocked.add(CABIN);
-            case MOUNTAIN:
+            case 2:
                 unlocked.add(WATCHTOWER);
-                unlocked.add(new MountainPortal(0, 0, 0));
-            case DESERT:
+            case 1:
                 unlocked.add(CABIN);
-                unlocked.add(new DesertPortal(0, 0, 0));
-            case FOREST:
+            case 0:
                 unlocked.add(new Hatchet());
                 unlocked.add(new PickAxe());
                 unlocked.add(new Sword());
                 unlocked.add(new Bow());
                 unlocked.add(new Spear());
                 unlocked.add(CASTLE);
-
+        }
+        switch (gameStage) {
+            case 3:
                 unlocked.add(new ForestPortal(0, 0, 0));
+                break;
+            case 2:
+                unlocked.add(new MountainPortal(0, 0, 0));
+                break;
+            case 1:
+                unlocked.add(new DesertPortal(0, 0, 0));
+                break;
+            case 0:
+                unlocked.add(new ForestPortal(0, 0, 0));
+                break;
         }
         return unlocked;
 

@@ -688,6 +688,12 @@ public class ConstructionManager extends TickableManager {
                 return buildingFactory.createCastle(row, col);
             case 7:
                 return buildingFactory.createForestPortal(row, col);
+            case 8:
+                return buildingFactory.createDesertPortal(row, col);
+            case 9:
+                return buildingFactory.createMountainPortal(row, col);
+            case 10:
+                return buildingFactory.createVolcanoPortal(row, col);
             default:
                 return null;
         }

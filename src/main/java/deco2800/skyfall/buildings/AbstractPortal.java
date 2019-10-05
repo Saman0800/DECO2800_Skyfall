@@ -90,7 +90,7 @@ public abstract class AbstractPortal extends AbstractEntity {
         //move to a random place on the map
         AbstractBiome next = null;
         for (AbstractBiome biome: world.getBiomes()) {
-            if (biome.getBiomeName() == nextBiome) {
+            if (biome.getBiomeName().equals(nextBiome)) {
                 next = biome;
             }
         }
@@ -104,6 +104,7 @@ public abstract class AbstractPortal extends AbstractEntity {
             Tile firstTile = biomeTiles.get(0);
             // Setting the characters tile to the next biome
             character.setPosition(firstTile.getCol(),firstTile.getRow());
+            character.gameStage++;
         }
     }
 

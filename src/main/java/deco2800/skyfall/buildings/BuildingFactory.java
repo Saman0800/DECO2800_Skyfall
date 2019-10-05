@@ -89,4 +89,16 @@ public class BuildingFactory {
     public BuildingEntity createForestPortal(float col, float row) {
         return new BuildingEntity(col, row, 2, BuildingType.FORESTPORTAL);
     }
+
+    public BuildingEntity createMountainPortal(float col, float row) {
+        return new BuildingEntity(col, row, 2, BuildingType.MOUNTAINPORTAL);
+    }
+
+    public BuildingEntity createDesertPortal(float col, float row) {
+        return new BuildingEntity(col, row, 2, BuildingType.DESERTPORTAL);
+    }
+
+    public BuildingEntity createVolcanoPortal(float col, float row) {
+        return new BuildingEntity(col, row, 2, BuildingType.VOLCANOPORTAL);
+    }
 }
