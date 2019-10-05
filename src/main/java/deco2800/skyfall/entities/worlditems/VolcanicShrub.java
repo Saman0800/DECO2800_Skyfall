@@ -7,18 +7,26 @@ public class VolcanicShrub extends AbstractShrub {
     private static final String ENTITY_ID_STRING = "volcanic_shrub";
 
     public VolcanicShrub() {
-        this.setObjectName(ENTITY_ID_STRING);
+        super();
+        this.setTexture("vBush" + VolcanicShrub.nextTexture);
+        VolcanicShrub.nextTexture = randomGen.nextInt(3) + 1;
+        setupParams();
     }
 
     public VolcanicShrub(Tile tile, boolean obstructed) {
         super(tile, "vBush" + VolcanicShrub.nextTexture, obstructed);
-        this.setObjectName(ENTITY_ID_STRING);
         VolcanicShrub.nextTexture = randomGen.nextInt(3) + 1;
-        this.entityType = "VolcanicShrub";
+        setupParams();
     }
 
     public VolcanicShrub(SaveableEntityMemento memento) {
         super(memento);
+        setupParams();
+    }
+
+    private void setupParams() {
+        this.setObjectName(ENTITY_ID_STRING);
+        this.entityType = "VolcanicShrub";
     }
 
     /**
