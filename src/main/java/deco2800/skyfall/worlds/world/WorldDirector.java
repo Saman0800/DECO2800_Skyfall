@@ -17,6 +17,8 @@ import deco2800.skyfall.worlds.biomes.SnowyMountainsBiome;
 import deco2800.skyfall.worlds.biomes.SwampBiome;
 import deco2800.skyfall.worlds.biomes.VolcanicMountainsBiome;
 import deco2800.skyfall.managers.StatisticsManager;
+import deco2800.skyfall.worlds.packing.hotSpringPacking;
+import deco2800.skyfall.worlds.packing.sunkShipPacking;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -95,6 +97,10 @@ public class WorldDirector {
 
         builder.addEntity(new Camel(34, -7, mainCharacter));
         builder.addEntity(new Horse(-8,-6, mainCharacter));
+
+        builder.addEntity(new hotSpringPacking(10,10, mainCharacter));
+        builder.addEntity(new sunkShipPacking(25,20));
+
         return builder;
     }
 
