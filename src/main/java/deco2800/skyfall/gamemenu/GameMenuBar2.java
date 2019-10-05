@@ -51,7 +51,7 @@ public class GameMenuBar2 extends AbstractUIElement {
 
     @Override
     public void updatePosition() {
-        //equippedTable.setPosition(gmm.getTopRightX() - 170, gmm.getTopLeftY() - 100);
+        equippedTable.setPosition(gmm.getTopRightX() - 170, gmm.getTopLeftY() - 100);
         quickAccessPanel.setPosition(gmm.getTopRightX() - 170, gmm.getTopRightY() - 650);
         //t.setHeight(stage.getCamera().viewportHeight / 2);
         sideBar.setPosition(gmm.getTopRightX() - 180, gmm.getTopRightY() - 520);
@@ -64,6 +64,7 @@ public class GameMenuBar2 extends AbstractUIElement {
      */
     @Override
     public void draw() {
+        showEquipped();
         setQuickAccessPanel();
 
         build = new ImageButton(generateTextureRegionDrawableObject("build"));
@@ -86,7 +87,6 @@ public class GameMenuBar2 extends AbstractUIElement {
         equipped = new Label("", skin, "white-text");
         equipped.setFontScale(0.7f);
         equippedTable.add(equipped);
-        equippedTable.setVisible(false);
         stage.addActor(equippedTable);
     }
 
@@ -112,6 +112,7 @@ public class GameMenuBar2 extends AbstractUIElement {
                 if (quickAccessSelected != null) {
                     Item item = inventory.drop(quickAccessSelected);
                     if (mainCharacter.setEquippedItem(item)) {
+                        equipped.setText(quickAccessSelected);
                         quickAccessSelected = null;
                         setButtonsActive(false);
                         removeQuickAccessPanel();
@@ -206,9 +207,7 @@ public class GameMenuBar2 extends AbstractUIElement {
                 public void clicked(InputEvent event, float x, float y) {
                     if (quickAccessSelected != icon.getName()) {
                         quickAccessSelected = icon.getName();
-                        equipped.setText(icon.getName().toUpperCase());
                     } else {
-                        equipped.setText("");
                         quickAccessSelected = null;
                     }
 
