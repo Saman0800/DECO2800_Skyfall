@@ -30,6 +30,7 @@ public abstract class AbstractTree extends StaticEntity implements Tickable, Har
     }
 
     public AbstractTree() {
+        super();
         this.setObjectName(ENTITY_ID_STRING);
     }
 
@@ -58,7 +59,7 @@ public abstract class AbstractTree extends StaticEntity implements Tickable, Har
 
     public List<AbstractEntity> harvest(Tile tile, int maxWoodCount) {
         Random random = new Random();
-        int dropCount = random.nextInt(maxWoodCount);
+        int dropCount = random.nextInt(maxWoodCount) + 1;
         List<AbstractEntity> drops = new ArrayList<>();
         for (int i = 0; i < dropCount; i++) {
             drops.add(new WoodCube(getCol(), getRow()));

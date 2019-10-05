@@ -1,7 +1,6 @@
 package deco2800.skyfall.entities.worlditems;
 
 import deco2800.skyfall.entities.StaticEntity;
-import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.World;
 import java.util.Random;
@@ -19,19 +18,6 @@ public final class EntitySpawnTable {
 
     // Private constructor to prevent construction.
     private EntitySpawnTable() {
-    }
-
-    /**
-     * Simple static method for placing static items. Takes the given entity and
-     * places a deep copy within the world at a given tile
-     *
-     * @param tile   The tile the new entity will occupy
-     * @param entity The entity to be deep copied
-     * @param <T>    T must extend StaticEntity and have .newInstance inherited
-     */
-    public static <T extends StaticEntity> void placeEntity(T entity, Tile tile) {
-        World world = GameManager.get().getWorld();
-        world.addEntity(entity.newInstance(tile));
     }
 
     /**
@@ -85,7 +71,7 @@ public final class EntitySpawnTable {
 
         if (getRandomValue(world, rule, nextTile) < chance) {
             int direction = Tile.NORTH_EAST;
-            int newRandDir = randDirection.nextInt(5);
+            int newRandDir = randDirection.nextInt(4);
 
             if (newRandDir == 0) {
                 direction = Tile.NORTH_EAST;

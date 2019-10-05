@@ -128,6 +128,15 @@ public class EntitySpawnRule {
     }
 
     /**
+     * Gets the noise seed for the Perlin noise values.
+     * 
+     * @return The currently used seed value.
+     */
+    public static long getNoiseSeed() {
+        return EntitySpawnRule.seed;
+    }
+
+    /**
      * @return get chance of the spawn rule, a value of -1 is returned when other
      *         spawn rules are
      */

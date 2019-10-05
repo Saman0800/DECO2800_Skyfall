@@ -7,20 +7,27 @@ public class MountainRock extends AbstractRock {
     private static final String ENTITY_ID_STRING = "mountain_rock";
 
     public MountainRock() {
-        this.setObjectName(ENTITY_ID_STRING);
+        super();
+        this.setTexture("MRock" + MountainRock.nextRock);
+        MountainRock.nextRock = randomGen.nextInt(3) + 1;
+        setupParams();
     }
 
     public MountainRock(Tile tile, boolean obstructed) {
         super(tile, obstructed, "MRock" + MountainRock.nextRock);
         MountainRock.nextRock = randomGen.nextInt(3) + 1;
-        this.setObjectName(ENTITY_ID_STRING);
-        this.metalAmount = 15;
-        this.entityType = "MountainRock";
+        setupParams();
     }
 
     public MountainRock(SaveableEntityMemento memento) {
         super(memento);
+        setupParams();
+    }
+
+    private void setupParams() {
+        this.setObjectName(ENTITY_ID_STRING);
         this.metalAmount = 15;
+        this.entityType = "MountainRock";
     }
 
     /**

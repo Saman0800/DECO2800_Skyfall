@@ -1,6 +1,5 @@
 package deco2800.skyfall.managers;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

@@ -14,13 +14,7 @@ import deco2800.skyfall.buildings.BuildingEntity;
 import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.buildings.BuildingWidgets;
-import deco2800.skyfall.entities.structures.AbstractBuilding;
 import deco2800.skyfall.buildings.BuildingType;
-import deco2800.skyfall.worlds.world.World;
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.entities.AbstractEntity;
-import org.lwjgl.Sys;
-import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.entities.AbstractEntity;
@@ -45,9 +39,9 @@ public class ConstructionManager extends TickableManager {
     /**
      * Stores the current status of the build menu
      */
-    private Boolean menuVisible;
-    private Boolean menuAdded;
-    private Boolean menuSetUp;
+    private boolean menuVisible;
+    private boolean menuAdded;
+    private boolean menuSetUp;
 
     /**
      * The menu through which the building process will be handled
@@ -417,8 +411,8 @@ public class ConstructionManager extends TickableManager {
      * @param value   - boolean value to allow/disallow building for the terrain
      * @return true if a terrain building permission is updated, otherwise false
      */
-    public boolean updateTerrainMap(String texture, Boolean value) {
-        if (texture == null || value == null) {
+    public boolean updateTerrainMap(String texture, boolean value) {
+        if (texture == null) {
             return false;
         }
         this.terrainMap.put(texture, value);
@@ -540,7 +534,7 @@ public class ConstructionManager extends TickableManager {
      * @param inventoryManager - player's inventory
      * @return True, if the player's inventory meets the inventory requirements, otherwise false
      */
-    public Boolean invCheck( InventoryManager inventoryManager) {
+    public boolean invCheck( InventoryManager inventoryManager) {
 
         Map<String, Integer> buildingCost = new HashMap<>();
         boolean invvalid = true;

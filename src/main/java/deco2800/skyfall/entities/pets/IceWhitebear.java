@@ -11,7 +11,8 @@ import java.util.List;
 
 public class IceWhitebear extends AbstractPet implements Animatable, Harvestable {
     MainCharacter mc;
-    public IceWhitebear(float col, float row, MainCharacter mc){
+
+    public IceWhitebear(float col, float row, MainCharacter mc) {
         super(col, row);
         this.setTexture("icewhitebear");
         this.setObjectName("icewhitebear");
@@ -26,27 +27,29 @@ public class IceWhitebear extends AbstractPet implements Animatable, Harvestable
 
     @Override
     public void onTick(long i) {
+        // Do nothing for the time being.
     }
+
     @Override
     public void configureAnimations() {
+        // Do nothing for the time being.
     }
 
     @Override
     public void setDirectionTextures() {
-
+        // Do nothing for the time being.
     }
 
-    public void destoryice(){
-        this.setHealth(this.getHealth()-1);
+    public void destoryice() {
+        this.setHealth(this.getHealth() - 1);
     }
 
     @Override
     public List<AbstractEntity> harvest(Tile tile) {
-        List<AbstractEntity> abstractEntityList=new ArrayList<>();
-        Whitebear whitebear=new Whitebear(-2, 0,mc);
+        List<AbstractEntity> abstractEntityList = new ArrayList<>();
+        Whitebear whitebear = new Whitebear(-2, 0, mc);
         whitebear.setDomesticated(false);
         abstractEntityList.add(whitebear);
         return abstractEntityList;
     }
 }
-

@@ -1,13 +1,7 @@
 package deco2800.skyfall.entities.spells;
 
 import deco2800.skyfall.util.HexVector;
-import org.junit.Before;
 import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 /**
  * Spell test suite.

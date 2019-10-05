@@ -13,7 +13,6 @@ import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.entities.*;
-import deco2800.skyfall.entities.spells.Shield;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.worlds.world.Chunk;
 import org.javatuples.Pair;

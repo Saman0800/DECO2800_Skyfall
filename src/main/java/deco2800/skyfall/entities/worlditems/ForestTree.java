@@ -1,30 +1,27 @@
 package deco2800.skyfall.entities.worlditems;
 
-import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
-
-import java.util.Map;
 
 public class ForestTree extends AbstractTree {
 
     protected static final String ENTITY_ID_STRING = "forest_tree";
 
-    public ForestTree(float col, float row, int renderOrder, Map<HexVector, String> texture) {
-        super(col, row, renderOrder, texture);
-        this.woodAmount = 15;
-    }
-
     public ForestTree(Tile tile, boolean obstructed) {
         super(tile, obstructed, "tree" + nextTreeTexture);
-        this.woodAmount = 15;
+        setupParams();
 
         ForestTree.nextTreeTexture = randomGen.nextInt(3) + 1;
-        this.entityType = "ForestTree";
     }
 
     public ForestTree(SaveableEntityMemento memento) {
         super(memento);
+        setupParams();
+    }
+
+    private void setupParams() {
+        this.setObjectName(ENTITY_ID_STRING);
         this.woodAmount = 15;
+        this.entityType = "ForestTree";
     }
 
     /**
