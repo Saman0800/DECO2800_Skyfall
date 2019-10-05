@@ -243,7 +243,7 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
 
     private void generateOceanEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
-        EntitySpawnRule shipwrecks = new EntitySpawnRule(tile -> new Shipwrecks(tile, true), random.nextInt(), 0.012);
+        EntitySpawnRule shipwrecks = new EntitySpawnRule(tile -> new Shipwrecks(tile, true), random.nextInt(), 0.003);
         biomeSpawnRules.add(shipwrecks);
     }
     private void generateForestEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
