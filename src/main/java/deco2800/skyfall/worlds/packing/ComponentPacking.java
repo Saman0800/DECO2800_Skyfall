@@ -87,12 +87,11 @@ public abstract class ComponentPacking {
 
         if (tile != null) {
             float[] tilePos = WorldUtil.colRowToWorldCords(x, y);
-            float tileSize = 100; // from somewhere in the game code
 
             for (AbstractEntity entity : getPacker ().getPackedWorld().getEntities()) {
                 float[] entityPos = WorldUtil.colRowToWorldCords(entity.getCol(), entity.getRow());
-                if ((entityPos[0] >= tilePos[0] && entityPos[0] <= tilePos[0] + tileSize)
-                        && (entityPos[1] >= tilePos[1] && entityPos[1] <= tilePos[1] + tileSize)) {
+                if ((entityPos[0] >= tilePos[0] && entityPos[0] <= tilePos[0] + WorldUtil.TILE_WIDTH)
+                        && (entityPos[1] >= tilePos[1] && entityPos[1] <= tilePos[1] + WorldUtil.TILE_HEIGHT)) {
                     getPacker().getPackedWorld().removeEntity(entity);
                 }
             }
@@ -117,12 +116,11 @@ public abstract class ComponentPacking {
 
         if (oldTile != null && tile != null) {
             float[] oldTilePos = WorldUtil.colRowToWorldCords(x, y);
-            float tileSize = 100; // from somewhere in the game code
 
             for (AbstractEntity entity : getPacker ().getPackedWorld().getEntities()) {
                 float[] entityPos = WorldUtil.colRowToWorldCords(entity.getCol(), entity.getRow());
-                if ((entityPos[0] >= oldTilePos[0] && entityPos[0] <= oldTilePos[0] + tileSize)
-                        && (entityPos[1] >= oldTilePos[1] && entityPos[1] <= oldTilePos[1] + tileSize)) {
+                if ((entityPos[0] >= oldTilePos[0] && entityPos[0] <= oldTilePos[0] + WorldUtil.TILE_WIDTH)
+                        && (entityPos[1] >= oldTilePos[1] && entityPos[1] <= oldTilePos[1] + WorldUtil.TILE_HEIGHT)) {
                     entity.setPosition(entity.getCol() + tile.getCol() - oldTile.getCol(),
                             entity.getRow() + tile.getRow() - oldTile.getRow());
                 }
