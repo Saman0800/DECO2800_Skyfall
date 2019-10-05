@@ -697,7 +697,6 @@ public class MainCharacterTest {
     @Test
     public void popUpTest() {
         GameMenuManager gameMenuManager = new GameMenuManager();
-        gameMenuManager.setMainCharacter(testCharacter);
         testCharacter.setUpGUI();
 
         gameMenuManager.hideOpened();
