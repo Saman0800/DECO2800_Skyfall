@@ -62,7 +62,8 @@ public abstract class Peon extends AgentEntity implements Tickable {
 			this.health = health;
 			this.maxHealth = health;
 		}
-		logger.info(name + " has " + maxHealth);
+		String info = String.format("%s has %d", name, maxHealth);
+		logger.info(info);
 		this.deaths = 0;
 	}
 
@@ -115,14 +116,10 @@ public abstract class Peon extends AgentEntity implements Tickable {
 		}
 
 		currentHealth += amount;
-
 		this.health = currentHealth;
 
-		if (this instanceof MainCharacter && this.isDead()) {
+		if (this.isDead()) {
 			health = 0;
-			this.deaths += 1;
-		} else if (this.isDead()){
-			health= 0;
 			this.deaths += 1;
 		}
 	}
@@ -161,9 +158,6 @@ public abstract class Peon extends AgentEntity implements Tickable {
 	 * Sets character to be dead
 	 */
 	public boolean setDead(boolean isDead) {
-		if (isDead) {
-			health = 0;
-		}
 		return isDead;
 	}
 

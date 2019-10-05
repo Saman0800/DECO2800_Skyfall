@@ -147,4 +147,34 @@ public class QuestManagerTest {
         assertTrue(manager.checkBuildings());
     }
 
+    @Test
+    public void resetQuestTest() {
+        manager.setQuestLevel(1);
+        manager.checkGold();
+        manager.setGoldTotal(100);
+        manager.resetQuest();
+
+        assertEquals(0, manager.getPlayer().getInventoryManager()
+                .getAmount("Stone"));
+        assertEquals(0, manager.getPlayer().getInventoryManager()
+                .getAmount("Wood"));
+        assertEquals(0, manager.getPlayer().getInventoryManager()
+                .getAmount("Metal"));
+        assertEquals(0, manager.getPlayer().getGoldPouchTotalValue());
+        assertEquals(300, manager.getGoldTotal());
+
+        GoldPiece extraGold = new GoldPiece(100);
+
+
+        manager.getPlayer().addGold(extraGold, 2);
+        manager.getPlayer().addGold(extraGold, 2);
+        manager.getPlayer().addGold(extraGold, 2);
+
+        assertTrue(manager.checkGold());
+
+        manager.resetQuest();
+
+        assertFalse(manager.checkGold());
+    }
+
 }
