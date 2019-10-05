@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.List;
 
 import deco2800.skyfall.buildings.*;
+import deco2800.skyfall.entities.vehicle.AbstractVehicle;
+import deco2800.skyfall.entities.vehicle.SandCar;
 import org.slf4j.Logger;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -1103,8 +1105,19 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 
 
     private Map<Direction, String> vehicleDirection=new HashMap<>();
+
+    private Map<Direction, String> vehicleDirection2 = new HashMap<>();
+
+    private String vehicleType = null;
+
     private void vehicleTexture(String vehicleName){
-        defaultDirectionTextures=vehicleDirection;
+        if (vehicleName.equals("bike")){
+            defaultDirectionTextures = vehicleDirection;
+        }
+        if (vehicleName.equals("sand_car")) {
+            defaultDirectionTextures = vehicleDirection2;
+        }
+
     }
 
     public void resetVelocity() {
@@ -1145,25 +1158,25 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 break;
 
             case Input.Keys.F:
-                if(!isOnVehicle){
-                    Bike bike=null;
-                    for(AbstractEntity bk:GameManager.get().getWorld().getEntities()){
-                        if(bk instanceof Bike && bk.distance(this)<3){
-                            bike= (Bike) bk;
-                            bike.removeBike();
-                            isOnVehicle=true;
-                            setCurrentState(AnimationRole.NULL);
-                            vehicleTexture("bike");
-                            maxSpeed=10f;
-                        }
-                    }
-
-                }else{
-                    defaultDirectionTextures=defaultMainCharacterTextureMap;
-                    isOnVehicle=false;
-                    GameManager.get().getWorld().addEntity(new Bike(this.getCol(),this.getRow(),this));
-                }
-
+//                if(!isOnVehicle){
+//                    Bike bike=null;
+//                    for(AbstractEntity bk:GameManager.get().getWorld().getEntities()){
+//                        if(bk instanceof Bike && bk.distance(this)<3){
+//                            bike= (Bike) bk;
+//                            bike.removeBike();
+//                            isOnVehicle=true;
+//                            setCurrentState(AnimationRole.NULL);
+//                            vehicleTexture("bike");
+//                            maxSpeed=10f;
+//                        }
+//                    }
+//
+//                }else{
+//                    defaultDirectionTextures=defaultMainCharacterTextureMap;
+//                    isOnVehicle=false;
+//                    GameManager.get().getWorld().addEntity(new Bike(this.getCol(),this.getRow(),this));
+//                }
+                vehicleToUse();
                 break;
 
             case Input.Keys.SHIFT_LEFT:
@@ -1211,6 +1224,44 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         }
         //Let the SpellCaster know a key was pressed.
         spellCaster.onKeyPressed(keycode);
+    }
+
+    public void vehicleToUse() {
+        if(!isOnVehicle){
+            AbstractVehicle vehicle = null;
+            for (AbstractEntity ve : GameManager.get().getWorld().getEntities()) {
+                if (ve instanceof Bike && ve.distance(this) < 3) {
+                    vehicle = (Bike) ve;
+                    ((Bike) vehicle).removeBike();
+                    isOnVehicle=true;
+                    setCurrentState(AnimationRole.NULL);
+                    vehicleTexture("bike");
+                    maxSpeed=10f;
+                    vehicleType = "bike";
+                }
+                if (ve instanceof SandCar && ve.distance(this) < 3) {
+                    vehicle = (SandCar) ve;
+                    ((SandCar) vehicle).removeSandCar();
+                    isOnVehicle=true;
+                    setCurrentState(AnimationRole.NULL);
+                    vehicleTexture("sand_car");
+                    maxSpeed=10f;
+                    vehicleType = "sand_car";
+                }
+            }
+
+        }else{
+            if (vehicleType.equals("bike")) {
+                defaultDirectionTextures=defaultMainCharacterTextureMap;
+                isOnVehicle=false;
+                GameManager.get().getWorld().addEntity(new Bike(this.getCol(),this.getRow(),this));
+            }
+            if (vehicleType.equals("sand_car")) {
+                defaultDirectionTextures = defaultMainCharacterTextureMap;
+                isOnVehicle=false;
+                GameManager.get().getWorld().addEntity(new SandCar(this.getCol(),this.getRow(),this));
+            }
+        }
     }
 
     /**
@@ -1850,15 +1901,18 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                         AnimationRole.STILL, Direction.DEFAULT, false, true));
 
         // Add bike animation
-        addAnimations(AnimationRole.VEHICLE_MOVE, Direction.WEST,
+        addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.WEST,
                 new AnimationLinker("bikeW",
-                        AnimationRole.VEHICLE_MOVE, Direction.WEST, true, true));
-        addAnimations(AnimationRole.VEHICLE_MOVE, Direction.EAST,
+                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.WEST, true, true));
+        addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.EAST,
                 new AnimationLinker("bikeE",
-                        AnimationRole.VEHICLE_MOVE, Direction.EAST, true, true));
-    }
+                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.EAST, true, true));
+
+
+         }
 
     private Map<Direction,String> defaultMainCharacterTextureMap=new HashMap<>();
+
     /**
      * Sets default direction textures uses the get index for Animation feature
      * as described in the animation documentation section 4.
@@ -1874,6 +1928,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         defaultMainCharacterTextureMap.put(Direction.NORTH_WEST, "__ANIMATION_MainCharacterNW_Anim:0");
         defaultMainCharacterTextureMap.put(Direction.SOUTH_EAST, "__ANIMATION_MainCharacterSE_Anim:0");
         defaultMainCharacterTextureMap.put(Direction.SOUTH_WEST, "__ANIMATION_MainCharacterSW_Anim:0");
+        // Bike
         vehicleDirection.put(Direction.SOUTH, "bikeSOUTH");
         vehicleDirection.put(Direction.EAST, "bikeEAST");
         vehicleDirection.put(Direction.NORTH, "bikeNORTH");
@@ -1882,11 +1937,16 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         vehicleDirection.put(Direction.NORTH_WEST, "__ANIMATION_MainCharacterNW_Anim:0");
         vehicleDirection.put(Direction.SOUTH_EAST, "__ANIMATION_MainCharacterSE_Anim:0");
         vehicleDirection.put(Direction.SOUTH_WEST, "__ANIMATION_MainCharacterSW_Anim:0");
+        // Sand Car
+        vehicleDirection2.put(Direction.NORTH, "sand_car_NORTH");
+        vehicleDirection2.put(Direction.SOUTH, "sand_car_SOUTH");
+        vehicleDirection2.put(Direction.EAST, "sand_car_EAST");
+        vehicleDirection2.put(Direction.WEST, "sand_car_WEST");
+        vehicleDirection2.put(Direction.NORTH_EAST, "__ANIMATION_MainCharacterNE_Anim:0");
+        vehicleDirection2.put(Direction.NORTH_WEST, "__ANIMATION_MainCharacterNW_Anim:0");
+        vehicleDirection2.put(Direction.SOUTH_EAST, "__ANIMATION_MainCharacterSE_Anim:0");
+        vehicleDirection2.put(Direction.SOUTH_WEST, "__ANIMATION_MainCharacterSW_Anim:0");
         defaultDirectionTextures=defaultMainCharacterTextureMap;
-
-
-
-
     }
 
     private boolean isOnVehicle=false;
@@ -1921,7 +1981,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
             }
 
         }else{
-            setCurrentState(AnimationRole.VEHICLE_MOVE);
+            setCurrentState(AnimationRole.VEHICLE_BIKE_MOVE);
         }
     }
 
