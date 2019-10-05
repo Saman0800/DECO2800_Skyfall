@@ -28,6 +28,8 @@ import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,7 +89,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         MainCharacter.getInstance().setSave(this.save);
         this.save.setMainCharacter(MainCharacter.getInstance());
         GameManager gameManager = GameManager.get();
-        GameMenuManager gameMenuManager = GameManager.get().getManagerFromInstance(GameMenuManager.class);
+        GameMenuManager gameMenuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
         DatabaseManager databaseManager = DatabaseManager.get();
         gameMenuManager.setStage(stage);
         gameMenuManager.setSkin(gameManager.getSkin());
@@ -117,7 +119,16 @@ public class GameScreen implements Screen, KeyDownObserver {
                 save.getWorlds().add(world);
                 save.setCurrentWorld(world);
                 world.setSave(save);
+
                 DatabaseManager.get().getDataBaseConnector().saveGame(save);
+
+                //FIXME:jeffvan12 implement better way of creating new stuff things
+//                save.setId(0);
+//                world.setId(0);
+//                DatabaseManager.get().getDataBaseConnector().saveGame(save);
+//                DatabaseManager.get().getDataBaseConnector().saveAllTables();
+
+
             }
             GameManager.get().getManager(NetworkManager.class).startHosting("host");
         }
@@ -146,7 +157,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         /* Add BGM to game manager */
         gameManager.addManager(new BGMManager());
 
-        /**
+        /*
          * NOTE: Now that the Environment Manager has been added start creating the
          * SpectralValue instances for the Ambient Light.
          */

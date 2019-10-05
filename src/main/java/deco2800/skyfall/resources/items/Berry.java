@@ -16,7 +16,7 @@ public class Berry extends HealthResources implements Item {
     private String colour;
 
     //whether or not the item impacts the player's food fullness
-    private Boolean hasFoodEffect;
+    private boolean hasFoodEffect;
 
     /**
      * Creates a default berry item.
@@ -53,7 +53,7 @@ public class Berry extends HealthResources implements Item {
      *
      * @return True if the item impacts on the player's food fullness, false otherwise
      */
-    public Boolean hasFoodEffect() {
+    public boolean hasFoodEffect() {
         return hasFoodEffect;
     }
 

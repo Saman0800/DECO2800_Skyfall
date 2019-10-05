@@ -25,6 +25,8 @@ public abstract class AbstractBuilding extends SaveableEntity {
 
     private InventoryManager inventoryManager;
 
+    // private boolean hasPlayer;
+
     /**
      *
      * @param x - X coordinate of building

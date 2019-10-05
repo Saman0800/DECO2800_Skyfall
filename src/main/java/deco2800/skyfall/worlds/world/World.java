@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
  * It provides storage for the WorldEntities and other universal world level
  * items.
  */
-public class World implements TouchDownObserver , Serializable, Saveable<World.WorldMemento> {
+public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
     public static final int LOADED_RADIUS = 50;
     protected long id;
 
@@ -95,6 +95,17 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
     //private MainCharacter mc = gmm.getMainCharacter();
 
     private Save save;
+
+    /**
+     * The constructor used to create a simple dummey world, used for displaying world information on the
+     * home screen
+     * @param worldId The id of the world
+     * @param save The save the world is in
+     */
+    public World(long worldId, Save save){
+        this.save = save;
+        this.id = worldId;
+    }
 
     /**
      * The constructor for a world being loaded from a memento
@@ -769,6 +780,15 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
         return worldParameters;
     }
 
+
+    /**
+     * Sets the id of a world
+     * @param id The id that the will be set to
+     */
+    public void setId(long id){
+        this.id = id;
+    }
+
     /**
      * Sets the area loaded by the world.
      *
@@ -834,9 +854,13 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
         this.worldParameters.setSeed(worldMemento.seed);
         this.tileOffsetNoiseGeneratorX = worldMemento.tileOffsetNoiseGeneratorX;
         this.tileOffsetNoiseGeneratorY = worldMemento.tileOffsetNoiseGeneratorY;
+        this.worldParameters.setWorldSize(worldMemento.worldSize);
     }
 
-    public class WorldMemento extends AbstractMemento {
+
+
+
+    public static class WorldMemento extends AbstractMemento implements Serializable {
         private long saveID;
         private long worldID;
         private int nodeSpacing;
@@ -845,6 +869,7 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
         private NoiseGenerator tileOffsetNoiseGeneratorX;
         private NoiseGenerator tileOffsetNoiseGeneratorY;
         private long seed;
+        private int worldSize;
 
         public WorldMemento(World world) {
             // TODO (probably in the main save method)
@@ -856,6 +881,7 @@ public class World implements TouchDownObserver , Serializable, Saveable<World.W
             this.tileOffsetNoiseGeneratorX = world.tileOffsetNoiseGeneratorX;
             this.tileOffsetNoiseGeneratorY = world.tileOffsetNoiseGeneratorY;
             this.seed = world.getWorldParameters().getSeed();
+            this.worldSize = world.getWorldParameters().getWorldSize();
         }
     }
 }

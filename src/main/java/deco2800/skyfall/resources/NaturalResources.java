@@ -12,7 +12,7 @@ public abstract class NaturalResources implements Item {
     public String name;
 
     // can the item be carried in the inventory or not
-    private Boolean carryable;
+    private boolean carryable;
 
     // the name of the subtype the item belongs to
     public String subtype;
@@ -21,7 +21,7 @@ public abstract class NaturalResources implements Item {
     private HexVector position;
 
     // determines whether or not the resource can be traded
-    private Boolean exchangeable;
+    private boolean exchangeable;
 
     // Can be item be equipped
     public boolean equippable;
@@ -67,7 +67,7 @@ public abstract class NaturalResources implements Item {
      * if it is consumed immediately
      */
     @Override
-    public Boolean isCarryable() {
+    public boolean isCarryable() {
         return carryable;
     }
 
@@ -91,7 +91,7 @@ public abstract class NaturalResources implements Item {
     }
 
     @Override
-    public Boolean isExchangeable() {
+    public boolean isExchangeable() {
         return exchangeable;
     }
 
@@ -126,7 +126,7 @@ public abstract class NaturalResources implements Item {
      * Returns whether or not the item can be equipped from the inventory
      * @return True if the item can be equipped, false otherwise
      */
-    public Boolean isEquippable() {
+    public boolean isEquippable() {
         return this.equippable;
     }
 

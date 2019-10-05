@@ -24,7 +24,7 @@ public interface Item {
      * @return True if the item can be carried in the inventory, false
      * if it is consumed immediately.
      */
-    Boolean isCarryable();
+    boolean isCarryable();
 
     /**
      * Returns the co-ordinates of the tile the item is on.
@@ -36,7 +36,7 @@ public interface Item {
      * Returns whether or not the item can be exchanged.
      * @return True if the item can be exchanged, false otherwise.
      */
-    Boolean isExchangeable();
+    boolean isExchangeable();
 
     /**
      * Returns a description about the item.
@@ -53,5 +53,5 @@ public interface Item {
      * Returns whether or not the item can be equipped from the inventory.
      * @return True if the item can be equipped, false otherwise.
      */
-    Boolean isEquippable();
+    boolean isEquippable();
 }
