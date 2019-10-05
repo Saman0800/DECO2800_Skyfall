@@ -107,7 +107,6 @@ public class ConstructionManager extends TickableManager {
         float ch = height * 0.5f;
 
         tableContainer.setSize(cw, ch);
-//        tableContainer.setPosition((sw - cw) / 2.0f, (sh - ch) / 2.0f);
         tableContainer.fillX();
 
         Table table = new Table(skin);
@@ -115,8 +114,6 @@ public class ConstructionManager extends TickableManager {
         Label topLabel = new Label("Construction Speed", skin);
         topLabel.setAlignment(Align.center);
         Slider slider = new Slider(0, 100, 1, false, skin);
-//        Label anotherLabel = new Label("ANOTHER LABEL", skin);
-//        anotherLabel.setAlignment(Align.center);
 
         Table buttonTable = new Table(skin);
 
@@ -127,7 +124,6 @@ public class ConstructionManager extends TickableManager {
         table.row().colspan(3).expandX().fillX();
         table.add(slider).fillX();
         table.row().colspan(3).expandX().fillX();
-//        table.add(anotherLabel).fillX();
         table.row().expandX().fillX();
 
         table.row().expandX().fillX();;
@@ -186,18 +182,16 @@ public class ConstructionManager extends TickableManager {
             buildMenu.addActor(storageUnit);
             buildMenu.addActor(setting);
 
-            World world = GameManager.get().getWorld();
 
             for(int i = 0; i < buildingFactory.getCount(); i++){
-                //String name = BuildingType.values()[i].getName();
                 String name = BuildingType.values()[i].name();
                 TextButton building = new TextButton(name, skin);
                 if (i < 3){
-                    building.setBounds(50, 450 - i * 100, 140, 40);
+                    building.setBounds(50, 450f - i * 100, 140, 40);
                 }else if(i < 6){
-                    building.setBounds(300, 450 - (i - 3) * 100, 140, 40);
+                    building.setBounds(300, 450f - (i - 3) * 100, 140, 40);
                 }else{
-                    building.setBounds(600, 450 - (i - 6) * 100, 140, 40);
+                    building.setBounds(600, 450f - (i - 6) * 100, 140, 40);
                 }
 
                 final int FINALi = i;
@@ -206,11 +200,8 @@ public class ConstructionManager extends TickableManager {
                 building.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y){
 
-//                        displayWindow();
                         hideBuildMenu();
-//                        System.out.println(building.getText());
                         Pixmap pm = new Pixmap(Gdx.files.internal("resources/world_structures/house3.png"));
-//                        System.out.println(pm.getFormat());
                         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
                         pm.dispose();
 
@@ -225,53 +216,6 @@ public class ConstructionManager extends TickableManager {
 
 
 
-            house.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    //call build function for specific building
-
-                    /*
-                    displayWindow();
-                    //TODO implement permissions
-                    //permission test have not been updated since switched to factory for buildings
-
-
-                    AbstractEntity mc = world.getSortedAgentEntities().get(world.getSortedAgentEntities().size() - 1);
-                    HexVector position = mc.getPosition();
-
-                    float row = position.getRow();
-                    float col = position.getCol();
-
-                    BuildingEntity building1 = selectBuilding(i, );
-                    building1.placeBuilding(building1.getRow(), building1.getCol(), building1.getHeight(), world);
-
-
-                     */
-                }
-            });
-
-            storageUnit.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y){
-
-                    /*
-                    displayWindow();
-
-                    //TODO implement permissions
-                    //permission test have not been updated since switched to factory for buildings
-
-                    AbstractEntity mc = world.getSortedAgentEntities().get(world.getSortedAgentEntities().size()-1);
-                    HexVector position = mc.getPosition();
-
-                    float row = position.getRow();
-                    float col = position.getCol();
-
-                    setBuildingToBePlaced(buildingFactory.createStorageUnit(row, col));
-                    buildingToBePlaced.placeBuilding(buildingToBePlaced.getRow(), buildingToBePlaced.getCol(), buildingToBePlaced.getHeight(), world);
-
-                     */
-                }
-            });
 
             setting.addListener(new ClickListener() {
                 public void clicked(InputEvent event, float x, float y){
@@ -299,7 +243,6 @@ public class ConstructionManager extends TickableManager {
      */
     public void build(World world, float x, float y) {
         buildingToBePlaced = selectBuilding(buildingID, x, y);
-        //buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
 
 
         //Permissions
@@ -397,7 +340,6 @@ public class ConstructionManager extends TickableManager {
                     throw new IOException("Incorrect file format");
                 }
             }
-            br.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -569,7 +511,6 @@ public class ConstructionManager extends TickableManager {
 
             String item = entry.getKey();
             Integer value = entry.getValue();
-            // System.out.println(item + " => " + value);
 
             if (value.intValue() > inventoryManager.getAmount(item)) {
                 invvalid = false;
@@ -638,7 +579,7 @@ public class ConstructionManager extends TickableManager {
         String className = buildings[0].getClass().getName();
         for (int i = 0; i < buildings.length; i++) {
 
-            if (buildings[i].getClass().getName() != className) {
+            if (!buildings[i].getClass().getName().equals(className)) {
                 return false;
             }
 

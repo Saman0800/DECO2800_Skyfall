@@ -145,7 +145,7 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
             logger.warn("No next biome");
 
         } else {
-            ArrayList<Tile> biomeTiles = next.getTiles();
+            ArrayList<Tile> biomeTiles = (ArrayList<Tile>) next.getTiles();
             Tile firstTile = biomeTiles.get(0);
             // Setting the characters tile to the next biome
             character.setPosition(firstTile.getCol(), firstTile.getRow());
