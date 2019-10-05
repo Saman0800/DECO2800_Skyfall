@@ -69,7 +69,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
         float x  = stage.getCamera().position.x  + (stage.getCamera().viewportWidth / 2);
         float y = stage.getCamera().position.y  +  (stage.getCamera().viewportHeight / 2);
         if (exitButton != null) {
-            exitButton.setPosition(x * 0.9f, y * 0.9f);
+            exitButton.setPosition(x * 0.8f, y * 0.9f);
         }
     }
 

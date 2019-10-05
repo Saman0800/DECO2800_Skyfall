@@ -279,6 +279,7 @@ public class InventoryTable extends AbstractPopUpElement {
                 if (inventorySelected != null) {
                     Item item = inventory.drop(inventorySelected);
                     if (mainCharacter.setEquippedItem(item)) {
+                        gameMenuBar.setEquipped(item.getName());
                         inventorySelected = null;
                         setButtonsActive(false);
                         updatePanels();
