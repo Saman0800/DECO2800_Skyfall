@@ -415,6 +415,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("portal_desert", new Texture("resources/world_structures/portal_desert.png"));
             textureMap.put("portal_forest", new Texture("resources/world_structures/portal_desert.png"));
             textureMap.put("portal_mountain", new Texture("resources/world_structures/portal_desert.png"));
+            textureMap.put("portal_volcano", new Texture("resources/world_structures/portal_volcano.png"));
 
 
             // Old Enemy
