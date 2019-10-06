@@ -35,7 +35,7 @@ public class BiomeGeneratorTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        Random random = new Random(0);
+        Random random = new Random(1);
         whenNew(Random.class).withAnyArguments().thenReturn(random);
 
         DataBaseConnector connector = mock(DataBaseConnector.class);
@@ -56,7 +56,7 @@ public class BiomeGeneratorTest {
 
         for (int i = 0; i < TEST_COUNT; i++) {
             WorldBuilder builder = new WorldBuilder();
-            WorldDirector.constructNBiomeSinglePlayerWorld(builder, 3, false);
+            WorldDirector.constructNBiomeSinglePlayerWorld(builder, 0, 3, false);
             builder.setNodeSpacing(5);
             builder.setWorldSize(60);
             World world = builder.getWorld();

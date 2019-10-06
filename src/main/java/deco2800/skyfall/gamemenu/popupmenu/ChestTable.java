@@ -1,6 +1,7 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -13,7 +14,6 @@ import deco2800.skyfall.managers.TextureManager;
 
 import java.util.Map;
 
-import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
 /**
  * A class for chest table pop up.
@@ -81,28 +81,25 @@ public class ChestTable extends AbstractPopUpElement{
     public void draw() {
         super.draw();
         chestTable = new Table();
-        chestTable.setSize(910, 510);
-        chestTable.setPosition(Gdx.graphics.getWidth()/2f - chestTable.getWidth()/2,
+        chestTable.setSize(500, 510);
+        chestTable.setPosition((Gdx.graphics.getWidth()/2f - chestTable.getWidth()/2 + 60),
                 (Gdx.graphics.getHeight() + 160) / 2f - chestTable.getHeight()/2);
-//        chestTable.setDebug(true);
         chestTable.top();
-        chestTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
+        chestTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
         chestTable.setName("chestTable");
 
-        Image infoBar = new Image(generateTextureRegionDrawableObject("inventory_banner"));
-        infoBar.setSize(650, 55);
-        infoBar.setPosition(130, 435);
+        Table infoBar = new Table();
+        infoBar.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_banner"));
+        infoBar.setSize(410, 55);
+        infoBar.setPosition(45, 430);
+        Label text = new Label("CHEST", skin, "navy-text");
+        infoBar.add(text);
 
-        Table infoPanel = new Table();
-        infoPanel.setSize(410, 400);
-        infoPanel.setPosition(25, 18);
-        infoPanel.setBackground(generateTextureRegionDrawableObject("info_panel"));
 
         this.resourcePanel = new Table();
         //updateChestPanel(chest);
 
         chestTable.addActor(infoBar);
-        chestTable.addActor(infoPanel);
         chestTable.addActor(this.resourcePanel);
         chestTable.setVisible(false);
         stage.addActor(chestTable);
@@ -115,41 +112,18 @@ public class ChestTable extends AbstractPopUpElement{
     public void updateChestPanel(Chest chest) {
         resourcePanel.clear();
         resourcePanel.setName("resourcePanel");
-        resourcePanel.setSize(410, 400);
-        resourcePanel.setPosition(475, 18);
-        resourcePanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
+        resourcePanel.setSize(410, 320);
+        resourcePanel.setPosition(45, 98);
+        resourcePanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("menu_panel"));
 
         Map<String, Integer> inventoryAmounts = chest.getManager().getAmounts();
 
-        int count = 0;
-        int xpos = 20;
-        int ypos = 280;
+        setCounts(inventoryAmounts, 115, 215, 80, 20);
 
-        for (Map.Entry<String, Integer> entry : inventoryAmounts.entrySet()) {
-
-            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(entry.getKey()));
-            icon.setName("icon");
-            icon.setSize(100, 100);
-            icon.setPosition(xpos + count * 130, ypos);
-
-            resourcePanel.addActor(icon);
-
-            Label num = new Label(entry.getValue().toString(), skin, "white-label");
-            num.setPosition(xpos + 85 + count * 130, ypos + 75);
-            resourcePanel.addActor(num);
-
-            count++;
-
-            if ((count) % 3 == 0) {
-                ypos -= 120;
-                count = 0;
-            }
-        }
-
-        ImageButton button = new ImageButton(generateTextureRegionDrawableObject("takeall"));
+        ImageButton button = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("take all"));
         button.setName("Take all");
-        button.setSize(100, 100);
-        button.setPosition(xpos + count * 130, ypos);
+        button.setSize(170, 60);
+        button.setPosition(165, 20);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -157,6 +131,56 @@ public class ChestTable extends AbstractPopUpElement{
                 hide();
             }
         });
-        resourcePanel.addActor(button);
+
+        chestTable.addActor(button);
+    }
+
+    /**
+     * Sets the item icons and counts in the resource panel.
+     * @param inventoryAmounts Map<String, Integer> of inventory contents
+     * @param xpos x position for item icon
+     * @param ypos y position for item icon
+     * @param size size of item icon
+     * @param xspace space between icons
+     */
+    private void setCounts(Map<String, Integer> inventoryAmounts, int xpos, int ypos, int size, int xspace){
+        int count = 0;
+
+        String[] weapons = {"axe", "bow", "spear", "sword"};
+
+        for (Map.Entry<String, Integer> entry : inventoryAmounts.entrySet()) {
+            String weaponName = entry.getKey();
+            for (String weapon : weapons) {
+                if (weapon.equals(entry.getKey())) {
+                    weaponName = entry.getKey() + "_display";
+                }
+            }
+            ImageButton icon =
+                    new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(weaponName + "_inv"));
+            icon.setName(entry.getKey());
+            icon.setSize((float)size, (float)size);
+            icon.setPosition((float)(xpos + (size+xspace)*(count-1)), ypos);
+            resourcePanel.addActor(icon);
+
+            Label num = new Label(entry.getValue().toString(), skin, "white-label");
+            num.setFontScale((float)0.4);
+            int numWidth = 18;
+            if(entry.getValue()>9){
+                numWidth += 8;
+            }
+            if(entry.getValue()>99){
+                numWidth += 8;
+            }
+            num.setSize(numWidth, 25);
+            num.setPosition(xspace*count + size*count + xpos - 35, ypos + 65);
+            resourcePanel.addActor(num);
+
+            count++;
+
+            if ((count) % 4 == 0) {
+                ypos -= 98;
+                count = 0;
+            }
+        }
     }
 }

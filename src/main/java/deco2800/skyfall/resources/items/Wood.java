@@ -9,14 +9,8 @@ import deco2800.skyfall.util.HexVector;
  */
 public class Wood extends NaturalResources implements Item {
 
-    // the name of the item
-    //private String name;
-
     // the colour of the wood
     private String colour;
-
-    // the biome the wood is in
-    private String biome;
 
     /**
      * Creates a default wood item
@@ -25,16 +19,6 @@ public class Wood extends NaturalResources implements Item {
         this.name = "Wood";
         this.colour = "brown";
         this.biome = "Forest";
-
-    }
-
-    /**
-     * Returns the name of the natural resource
-     * @return The name of the natural resource
-     */
-    @Override
-    public String getName() {
-        return this.name;
     }
 
     /**
@@ -56,31 +40,6 @@ public class Wood extends NaturalResources implements Item {
         return colour;
     }
 
-    /**
-     * Returns the biome the wood is situated in
-     * @return the biome the wood is situated in
-     */
-    public String getBiome(){
-        return biome;
-    }
-
-    /**
-     * Creates a string representation of the natural resource in the format:
-     *
-     * <p>'{Natural Resource}:{Name}' </p>
-     *
-     * <p>without surrounding quotes and with {natural resource} replaced by
-     * the subtype of the item and {name} replaced with the item name
-     * For example: </p>
-     *
-     * <p>Natural Resource:Wood </p>
-     *
-     * @return A string representation of the natural resource.
-     */
-    @Override
-    public String toString() {
-        return "" + subtype + ":" + name;
-    }
 
     @Override
     public void use(HexVector position){

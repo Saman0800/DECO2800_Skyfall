@@ -5,19 +5,24 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-
-import java.io.*;
-import java.util.*;
-
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import deco2800.skyfall.buildings.BuildingEntity;
 import com.badlogic.gdx.utils.Align;
+import deco2800.skyfall.buildings.BuildingEntity;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.buildings.BuildingWidgets;
 import deco2800.skyfall.buildings.BuildingType;
-import deco2800.skyfall.worlds.world.World;
-import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.buildings.BuildingWidgets;
 import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.world.World;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Managers the construction process
@@ -25,6 +30,7 @@ import deco2800.skyfall.entities.AbstractEntity;
  * Sets all build properties to false as nothing has been set up yet
  */
 public class ConstructionManager extends TickableManager {
+    public static final String UI_SKIN_PATH = "resources/uiskin.skin";
     //This manager while control all features related to construction
 
     //lmao
@@ -80,7 +86,7 @@ public class ConstructionManager extends TickableManager {
     private void createWindow() {
         Stage stage = GameManager.get().getStage();
         if (!menuAdded) {
-            Skin skin = new Skin(Gdx.files.internal("resources/uiskin.skin"));
+            Skin skin = new Skin(Gdx.files.internal(UI_SKIN_PATH));
             buildMenu = new Window("Construction", skin);
             hideBuildMenu();
             stage.addActor(buildMenu);
@@ -90,7 +96,7 @@ public class ConstructionManager extends TickableManager {
 
     private void showSetting(){
         Stage stage = GameManager.get().getStage();
-        Skin skin = new Skin(Gdx.files.internal("resources/uiskin.skin"));
+        Skin skin = new Skin(Gdx.files.internal(UI_SKIN_PATH));
         Window settingMenu = new Window("settingMenu", skin);
 
         float width = GameManager.get().getStage().getWidth();
@@ -107,7 +113,6 @@ public class ConstructionManager extends TickableManager {
         float ch = height * 0.5f;
 
         tableContainer.setSize(cw, ch);
-//        tableContainer.setPosition((sw - cw) / 2.0f, (sh - ch) / 2.0f);
         tableContainer.fillX();
 
         Table table = new Table(skin);
@@ -115,8 +120,6 @@ public class ConstructionManager extends TickableManager {
         Label topLabel = new Label("Construction Speed", skin);
         topLabel.setAlignment(Align.center);
         Slider slider = new Slider(0, 100, 1, false, skin);
-//        Label anotherLabel = new Label("ANOTHER LABEL", skin);
-//        anotherLabel.setAlignment(Align.center);
 
         Table buttonTable = new Table(skin);
 
@@ -127,10 +130,9 @@ public class ConstructionManager extends TickableManager {
         table.row().colspan(3).expandX().fillX();
         table.add(slider).fillX();
         table.row().colspan(3).expandX().fillX();
-//        table.add(anotherLabel).fillX();
         table.row().expandX().fillX();
 
-        table.row().expandX().fillX();;
+        table.row().expandX().fillX();
 
         table.add(buttonTable).colspan(3);
 
@@ -170,7 +172,7 @@ public class ConstructionManager extends TickableManager {
 
             menuSetUp = true;
 
-            Skin skin = new Skin(Gdx.files.internal("resources/uiskin.skin"));
+            Skin skin = new Skin(Gdx.files.internal(UI_SKIN_PATH));
 
             //to be improved when building factory has been created
             TextButton house = new TextButton("House", skin);
@@ -186,31 +188,25 @@ public class ConstructionManager extends TickableManager {
             buildMenu.addActor(storageUnit);
             buildMenu.addActor(setting);
 
-            World world = GameManager.get().getWorld();
-
             for(int i = 0; i < buildingFactory.getCount(); i++){
-                //String name = BuildingType.values()[i].getName();
                 String name = BuildingType.values()[i].name();
                 TextButton building = new TextButton(name, skin);
                 if (i < 3){
-                    building.setBounds(50, 450 - i * 100, 140, 40);
+                    building.setBounds(50, 450f - i * 100, 140, 40);
                 }else if(i < 6){
-                    building.setBounds(300, 450 - (i - 3) * 100, 140, 40);
+                    building.setBounds(300, 450f - (i - 3) * 100, 140, 40);
                 }else{
-                    building.setBounds(600, 450 - (i - 6) * 100, 140, 40);
+                    building.setBounds(600, 450f - (i - 6) * 100, 140, 40);
                 }
 
                 final int FINALi = i;
 
                 buildMenu.addActor(building);
                 building.addListener(new ClickListener() {
+                    @Override
                     public void clicked(InputEvent event, float x, float y){
-
-//                        displayWindow();
                         hideBuildMenu();
-//                        System.out.println(building.getText());
                         Pixmap pm = new Pixmap(Gdx.files.internal("resources/world_structures/house3.png"));
-//                        System.out.println(pm.getFormat());
                         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
                         pm.dispose();
 
@@ -218,66 +214,16 @@ public class ConstructionManager extends TickableManager {
                         buildTrue = 1;
                         //ID of the building we want
                         buildingID = FINALi;
-
                     }
                 });
             }
 
-
-
-            house.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    //call build function for specific building
-
-                    /*
-                    displayWindow();
-                    //TODO implement permissions
-                    //permission test have not been updated since switched to factory for buildings
-
-
-                    AbstractEntity mc = world.getSortedAgentEntities().get(world.getSortedAgentEntities().size() - 1);
-                    HexVector position = mc.getPosition();
-
-                    float row = position.getRow();
-                    float col = position.getCol();
-
-                    BuildingEntity building1 = selectBuilding(i, );
-                    building1.placeBuilding(building1.getRow(), building1.getCol(), building1.getHeight(), world);
-
-
-                     */
-                }
-            });
-
-            storageUnit.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y){
-
-                    /*
-                    displayWindow();
-
-                    //TODO implement permissions
-                    //permission test have not been updated since switched to factory for buildings
-
-                    AbstractEntity mc = world.getSortedAgentEntities().get(world.getSortedAgentEntities().size()-1);
-                    HexVector position = mc.getPosition();
-
-                    float row = position.getRow();
-                    float col = position.getCol();
-
-                    setBuildingToBePlaced(buildingFactory.createStorageUnit(row, col));
-                    buildingToBePlaced.placeBuilding(buildingToBePlaced.getRow(), buildingToBePlaced.getCol(), buildingToBePlaced.getHeight(), world);
-
-                     */
-                }
-            });
-
             setting.addListener(new ClickListener() {
+                @Override
                 public void clicked(InputEvent event, float x, float y){
                     showSetting();
                 }
-                });
+            });
         }
     }
 
@@ -299,8 +245,6 @@ public class ConstructionManager extends TickableManager {
      */
     public void build(World world, float x, float y) {
         buildingToBePlaced = selectBuilding(buildingID, x, y);
-        //buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
-
 
         //Permissions
         if (invCheck(GameManager.getManagerFromInstance(InventoryManager.class))){
@@ -377,7 +321,7 @@ public class ConstructionManager extends TickableManager {
 
         File file = new File(fileBase);
         try (FileReader fr = new FileReader(file);
-             BufferedReader br = new BufferedReader(fr);) {
+             BufferedReader br = new BufferedReader(fr)) {
 
             String line;
 
@@ -397,7 +341,6 @@ public class ConstructionManager extends TickableManager {
                     throw new IOException("Incorrect file format");
                 }
             }
-            br.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -569,9 +512,8 @@ public class ConstructionManager extends TickableManager {
 
             String item = entry.getKey();
             Integer value = entry.getValue();
-            // System.out.println(item + " => " + value);
 
-            if (value.intValue() > inventoryManager.getAmount(item)) {
+            if (value > inventoryManager.getAmount(item)) {
                 invvalid = false;
             }
         }
@@ -638,7 +580,7 @@ public class ConstructionManager extends TickableManager {
         String className = buildings[0].getClass().getName();
         for (int i = 0; i < buildings.length; i++) {
 
-            if (buildings[i].getClass().getName() != className) {
+            if (!className.equals(buildings[i].getClass().getName())) {
                 return false;
             }
 

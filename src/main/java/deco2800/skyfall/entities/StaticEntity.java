@@ -40,10 +40,10 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
      * @param memento the static entitiy to add
      */
     public StaticEntity(SaveableEntityMemento memento) {
-        super(memento.col, memento.row, memento.renderOrder);
+        super(memento.getCol(), memento.getRow(), memento.getRenderOrder());
         this.load(memento);
         children = new HashMap<>();
-        HexVector hexVector = new HexVector(memento.col, memento.row);
+        HexVector hexVector = new HexVector(memento.getCol(), memento.getRow());
         children.put(hexVector, memento.texture);
         if (!WorldUtil.validColRow(hexVector)) {
             log.debug("{} Is Invalid:", hexVector);

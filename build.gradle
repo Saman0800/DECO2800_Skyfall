@@ -41,6 +41,7 @@ clean.doFirst {
 	delete "src/test/java/deco2800/skyfall/managers/database/TestDataBase/"
 	delete "src/test/java/deco2800/skyfall/managers/database/SavingTestDataBase/"
 	delete "src/test/java/deco2800/skyfall/managers/database/LoadingTestDatabase/"
+	delete "src/test/java/deco2800/skyfall/managers/database/ExpectedDatabase/"
 }
 
 test {

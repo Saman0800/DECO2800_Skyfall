@@ -7,6 +7,7 @@ import com.google.gson.annotations.Expose;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.PhysicsManager;
@@ -24,7 +25,7 @@ import java.util.*;
  * need to be rendered should not be a WorldEntity
  */
 public abstract class AbstractEntity implements Comparable<AbstractEntity>, Renderable {
-    private final transient Logger log = LoggerFactory.getLogger(AbstractEntity.class);
+    private final Logger log = LoggerFactory.getLogger(AbstractEntity.class);
 
     private static final String ENTITY_ID_STRING = "entityID";
 
@@ -97,7 +98,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     /**
      * Default textures in each direction
      */
-    protected Map<Direction, String> defaultDirectionTextures = new HashMap<>();
+    protected Map<Direction, String> defaultDirectionTextures = new EnumMap<>(Direction.class);
     /**
      * The animation to be run
      */
@@ -125,7 +126,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         entityID = AbstractEntity.getNextID();
         this.setObjectName(ENTITY_ID_STRING);
         this.renderOrder = renderOrder;
-        animations = new HashMap<>();
+        animations = new EnumMap<>(AnimationRole.class);
     }
 
     public AbstractEntity(float col, float row, int renderOrder, String fixtureDef) {
@@ -133,7 +134,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         entityID = AbstractEntity.getNextID();
         this.setObjectName(ENTITY_ID_STRING);
         this.renderOrder = renderOrder;
-        animations = new HashMap<>();
+        animations = new EnumMap<>(AnimationRole.class);
     }
 
     public AbstractEntity() {
@@ -141,7 +142,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         this.colRenderLength = 1f;
         this.rowRenderLength = 1f;
         this.setObjectName(ENTITY_ID_STRING);
-        animations = new HashMap<>();
+        animations = new EnumMap<>(AnimationRole.class);
         changeCollideability(true);
         this.initialiseBox2D(position.getCol(), position.getRow());
     }
@@ -440,7 +441,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      */
     private void initialiseBox2D(float x, float y) {
         if (!(this instanceof StaticEntity)) {
-            defineBody(x, y);
+            defineBody(y, x);
             defineFixture();
         }
     }
@@ -502,6 +503,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
         shape.dispose();
     }
+
 
     /**
      * Defines the body's fixture with default values which can be changes in the
