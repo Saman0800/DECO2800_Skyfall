@@ -51,10 +51,7 @@ public class WoodTest  {
     }
 
 
-    //@Test
-    //public void hasHealingPower1() {
-        //assertFalse(wood.hasHealingPower());
-    //}
+
 
     @Test
     public void getCoords1() {

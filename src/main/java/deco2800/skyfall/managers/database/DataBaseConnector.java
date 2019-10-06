@@ -178,7 +178,7 @@ public class DataBaseConnector {
         for (WorldGenNode worldGenNode : world.getWorldGenNodes()) {
             if (containsQueries.containsNode(world.getID(), worldGenNode.getX(), worldGenNode.getY())) {
                 updateQueries.updateNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(), worldGenNode.save(),
-                    worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
+                        worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
             } else {
                 insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(), worldGenNode.save(),
                     worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
