@@ -25,10 +25,7 @@ public class EnvironmentPacker {
             throw new NullPointerException("Invalid world");
         }
         this.world = world;
-
         this.packings = new ArrayList<>();
-        // add packing components here into the packing queue
-        addPackingComponent(new BirthPlacePacking(this));
     }
 
     /**

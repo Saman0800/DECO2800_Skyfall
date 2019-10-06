@@ -139,4 +139,22 @@ public abstract class AbstractPacking {
         }
         return false;
     }
+
+    /**
+     * Add an entity into the world with customized render order. The method is created of
+     * too many different entity creation of entity class and some of them without
+     * setting on render order when created.
+     * @param world a game world
+     * @param entity an entity added into the world
+     * @param renderOrder the order when rendering the entity
+     * @return true if success, otherwise false
+     */
+    public boolean addEntityWithOrder(World world, AbstractEntity entity, int renderOrder) {
+        if (world != null && entity != null) {
+            entity.setRenderOrder(renderOrder);
+            world.addEntity(entity);
+            return true;
+        }
+        return false;
+    }
 }

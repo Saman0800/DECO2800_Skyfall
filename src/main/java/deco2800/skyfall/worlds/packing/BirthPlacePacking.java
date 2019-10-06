@@ -26,16 +26,30 @@ public class BirthPlacePacking extends AbstractPacking {
 
         // arrange entity on the region
         removeEntityOnTile(1f, 1.5f);
+        removeEntityOnTile(-1f, -1.5f);
+        removeEntityOnTile(-1f, 3.5f);
         removeEntityOnTile(-2f, 0f);
         removeEntityOnTile(-3f, 0.5f);
         removeEntityOnTile(-3f, -0.5f);
-        removeEntityOnTile(-1f, -1.5f);
+        removeEntityOnTile(4f, 1f);
+        removeEntityOnTile(-5f, -0.5f);
+        removeEntityOnTile(-5f, 0.5f);
+        removeEntityOnTile(-5f, 2.5f);
+        removeEntityOnTile(-4f, 2f);
         moveEntityFromTileToTile(0f, 2f, -2f, 0f);
         moveEntityFromTileToTile(-2f, -3f, 4f, 6f);
         moveEntityFromTileToTile(-4f, -3f, -12f, 3f);
         moveEntityFromTileToTile(-4f, -2f, -22f, 3f);
 
         // add some entity on the region
-        //world.addEntity(new ForestTree(world.getTile(-3f, 1f), true));
+        addEntityWithOrder(world, new ForestTree(world.getTile(-2f, 3f), true), 0);
+        addEntityWithOrder(world, new ForestTree(world.getTile(1f, 2.5f), true), 1);
+        addEntityWithOrder(world, new ForestTree(world.getTile(-3f, 2.5f), true), 1);
+        addEntityWithOrder(world, new ForestTree(world.getTile(2f, 2f), true), 1);
+        addEntityWithOrder(world, new ForestTree(world.getTile(-4f, 2f), true), 1);
+        addEntityWithOrder(world, new ForestTree(world.getTile(-4f, 1f), true), 1);
+        addEntityWithOrder(world, new ForestTree(world.getTile(-5f, 0.5f), true), 0);
+        addEntityWithOrder(world, new ForestTree(world.getTile(-5f, -0.5f), true), 1);
+        addEntityWithOrder(world, new ForestTree(world.getTile(-5f, -1.5f), true), 1);
     }
 }
