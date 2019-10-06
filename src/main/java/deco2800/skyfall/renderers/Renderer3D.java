@@ -208,8 +208,8 @@ public class Renderer3D implements Renderer {
                     // think of a massive tree with the tree trunk at the centre of the tile
                     // and it's branches and leaves over surrounding tiles
 
-                    int drawX = (int) (childWorldCoord[0] + (w - childTex.getWidth()) / 2 * WorldUtil.SCALE_X);
-                    int drawY = (int) (childWorldCoord[1] + (h - childTex.getHeight()) / 2 * WorldUtil.SCALE_Y);
+                    int drawX = (int) (childWorldCoord[0] + (w - childTex.getWidth()) / 2.0 * WorldUtil.SCALE_X);
+                    int drawY = (int) (childWorldCoord[1] + (h - childTex.getHeight()) / 2.0 * WorldUtil.SCALE_Y);
 
                     batch.draw(childTex, drawX, drawY, childTex.getWidth() * WorldUtil.SCALE_X,
                             childTex.getHeight() * WorldUtil.SCALE_Y);
@@ -222,14 +222,9 @@ public class Renderer3D implements Renderer {
                     if (entity instanceof MainCharacter) {
                         if (((MainCharacter) entity).isHurt() || ((MainCharacter) entity).isDead()) {
                             entity.setModulatingColor(Color.RED);
-                        } else if (((MainCharacter) entity).isRecovering()) {
-                            if (((MainCharacter) entity).isTexChanging()) {
-                                entity.setModulatingColor(Color.WHITE);
-                                ((MainCharacter) entity).setTexChanging(!((MainCharacter) entity).isTexChanging());
-                            } else {
-                                entity.setModulatingColor(Color.WHITE);
-                                ((MainCharacter) entity).setTexChanging(!((MainCharacter) entity).isTexChanging());
-                            }
+                        } else if (((MainCharacter) entity).isRecovering() && ((MainCharacter) entity).isTexChanging()) {
+                            entity.setModulatingColor(Color.WHITE);
+                            ((MainCharacter) entity).setTexChanging(!((MainCharacter) entity).isTexChanging());
                         }
                     }
                 }
@@ -292,18 +287,18 @@ public class Renderer3D implements Renderer {
 
     private void debugRender(SpriteBatch batch, OrthographicCamera camera) {
 
-        boolean hitboxRenderDebug = false; // For debugging hitboxes
-        if (hitboxRenderDebug) {
-            World box2DWorld = GameManager.get().getManager(PhysicsManager.class).getBox2DWorld();
-            Array<Body> bodies = new Array<>();
-            box2DWorld.getBodies(bodies);
-
-            for (Body body : bodies) {
-                float[] bodyWorldCoord = WorldUtil.colRowToWorldCords(body.getPosition().x, body.getPosition().y);
-
-                batch.draw(textureManager.getTexture("Select"), bodyWorldCoord[0], bodyWorldCoord[1], 10.f, 10.f);
-            }
-        }
+//        boolean hitboxRenderDebug = false; // For debugging hitboxes
+//        if (hitboxRenderDebug) {
+//            World box2DWorld = GameManager.get().getManager(PhysicsManager.class).getBox2DWorld();
+//            Array<Body> bodies = new Array<>();
+//            box2DWorld.getBodies(bodies);
+//
+//            for (Body body : bodies) {
+//                float[] bodyWorldCoord = WorldUtil.colRowToWorldCords(body.getPosition().x, body.getPosition().y);
+//
+//                batch.draw(textureManager.getTexture("Select"), bodyWorldCoord[0], bodyWorldCoord[1], 10.f, 10.f);
+//            }
+//        }
 
         if (GameManager.get().showCoords) {
             List<Tile> tileMap = GameManager.get().getWorld().getTileMap();
