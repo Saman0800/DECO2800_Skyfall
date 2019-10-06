@@ -8,7 +8,7 @@ import deco2800.skyfall.animation.AnimationLinker;
 /**
  * Instance of a flower enemy.
  */
-public class Flower extends Enemy {
+public class Flower extends Enemy implements Spawnable {
 
     /**
      * Basic Constructor for creating a flower enemy.
@@ -23,6 +23,11 @@ public class Flower extends Enemy {
 
         this.configureAnimations();
         this.configureSounds();
+    }
+
+    @Override
+    public Flower newInstance(float row, float col) {
+        return new Flower(row, col, this.getMainCharacter());
     }
 
     /*

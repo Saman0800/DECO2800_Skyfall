@@ -1,6 +1,10 @@
 package deco2800.skyfall.managers;
 
+import com.badlogic.gdx.utils.Logger;
 import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.enemies.Flower;
+import deco2800.skyfall.entities.enemies.Scout;
 import deco2800.skyfall.graphics.types.vec2;
 import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.enemies.Spawnable;
@@ -60,6 +64,14 @@ public class SpawningManager extends TickableManager  {
         reference = local;
         //add to game manager
         GameManager.addManagerToInstance(local);
+
+        //Add enemies to manager
+        System.out.println("here");
+        if (MainCharacter.getInstance() == null) {
+            System.out.println("error");
+        }
+        local.addEnemyForSpawning(new Flower(0, 0, MainCharacter.getInstance()), 1.0f);
+        System.out.println("here");
     }
 
     /**
@@ -97,9 +109,9 @@ public class SpawningManager extends TickableManager  {
     @Override
     public void onTick(long i) {
         //return if day
-        if (GameManager.getManagerFromInstance(EnvironmentManager.class).isDay()) {
-            return;
-        }
+        //if (GameManager.getManagerFromInstance(EnvironmentManager.class).isDay()) {
+        //    return;
+        //}
 
         Iterator it = spawnTable.entrySet().iterator();
         while (it.hasNext()) {
