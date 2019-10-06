@@ -79,7 +79,7 @@ public class HealthCircle extends AbstractUIElement {
     @Override
     public void draw() {
 
-        label = new Label("Health: 10", skin,  "blue-pill");
+        label = new Label("Health: 50", skin,  "blue-pill");
         label.setAlignment(Align.center);
         label.setFontScale(0.7f);
 

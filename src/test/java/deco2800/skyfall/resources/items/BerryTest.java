@@ -50,14 +50,6 @@ public class BerryTest{
     }
 
     /**
-     * Ensure that berry is classified as food effect
-     */
-    @Test
-    public void hasFoodEffect() {
-        assertTrue(berry.hasFoodEffect());
-    }
-
-    /**
      * Ensure that the correct subtype "Health Resource" is returned when
      * getSubtype(); is run
      */

@@ -284,8 +284,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("desertPortal", new Texture("resources/world_structures/portal.png"));
             textureMap.put("desertPortal_inv", new Texture("resources/world_structures/portal.png"));
 
-
-
             textureMap.put("big_circle", new Texture("resources/new_ui/OrangeCircle.png"));
             textureMap.put("inner_circle", new Texture("resources/new_ui/RedCircle.png"));
             textureMap.put("blue_pill", new Texture("resources/new_ui/blue_pill_background.png"));

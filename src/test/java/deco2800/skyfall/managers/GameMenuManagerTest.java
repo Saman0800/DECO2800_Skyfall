@@ -26,6 +26,8 @@ public class GameMenuManagerTest {
     private Map<String, AbstractUIElement> uiElements;
     private Camera camera;
 
+    private HealthCircle hc;
+
     @Before
     public void setUp() {
         tm = mock(TextureManager.class);
@@ -107,7 +109,6 @@ public class GameMenuManagerTest {
         verify(popUps, never()).put(anyString(), any());
         verify(uiElements, never()).put(anyString(), any());
     }
-
 
     @After()
     public void tearDown() {
