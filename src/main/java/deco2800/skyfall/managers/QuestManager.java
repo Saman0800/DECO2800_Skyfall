@@ -63,10 +63,10 @@ public class QuestManager extends TickableManager{
     private void setMilestones() {
         switch (questLevel) {
             case 1 :
-                setGoldTotal(1);
-                setWoodTotal(1);
-                setStoneTotal(1);
-                setMetalTotal(1);
+                setGoldTotal(300);
+                setWoodTotal(50);
+                setStoneTotal(50);
+                setMetalTotal(30);
                 setBuildingsTotal(levelOneBuildings);
                 break;
             case 2 :
