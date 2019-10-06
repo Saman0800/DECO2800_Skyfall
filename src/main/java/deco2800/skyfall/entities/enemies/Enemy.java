@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.entities.Peon;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.graphics.types.vec2;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.animation.Animatable;
@@ -54,7 +53,6 @@ public class Enemy extends Peon
     private long hurtTime = 0;
     private long deadTime = 0;
     // Booleans to check whether Enemy is in a state.
-    private boolean isMoving = false;
     private boolean isAttacking = false;
     private boolean isHurt = false;
 
@@ -73,10 +71,6 @@ public class Enemy extends Peon
 
     // A routine for destination
     private HexVector destination = null;
-    //target position
-    private float[] targetPosition = null;
-    // World coordinates of this enemy
-    private float[] originalPosition = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
 
     public Enemy(float col, float row, String hitBoxPath, String name,
                   float speed, String biome, String textureName) {
@@ -84,7 +78,7 @@ public class Enemy extends Peon
 
         // Sets the spawning location and all the collision
         this.setPosition(col, row);
-        //this.initialiseBox2D(col, row, hitBoxPath);
+        // this.initialiseBox2D(col, row, hitBoxPath);
         this.setCollidable(true);
 
         // Sets the main character in the game.
@@ -190,6 +184,8 @@ public class Enemy extends Peon
         setTexture(getDefaultTexture());
         setCurrentDirection(movementDirection(this.position.getAngle()));
 
+        System.out.println(getCurrentDirection());
+
         /* Short Animations */
         if (getToBeRun() != null) {
             if (getToBeRun().getType() == AnimationRole.DEAD) {
@@ -219,11 +215,11 @@ public class Enemy extends Peon
                 die();
             }
         } else {
-            randomMoving();
-            setCurrentState(AnimationRole.MOVE);
+            this.randomMoving();
+            this.setCurrentState(AnimationRole.MOVE);
             this.updateAnimation();
 
-            if (distance(mainCharacter) < 2 && !(mainCharacter.isDead() ||
+            if (distance(mainCharacter) < 4 && !(mainCharacter.isDead() ||
                     mainCharacter.isRecovering() || mainCharacter.isHurt())) {
                 attackPlayer();
                 SoundManager.playSound(getChaseSound());
@@ -287,7 +283,7 @@ public class Enemy extends Peon
      */
     private void configureSounds() {
         String name = this.getName();
-        this.chasingSound = name + "Walk";
+        this.chasingSound = "heavy_walk";
         this.hurtSound = name + "Hurt";
         this.attackingSound = name + "Attack";
         this.diedSound = name + "Dead";
@@ -301,6 +297,7 @@ public class Enemy extends Peon
     public void configureAnimations() {
         String enemyName = this.getName();
 
+        // Move animations
         this.addAnimations(
                 AnimationRole.MOVE, Direction.NORTH, new AnimationLinker(
                         enemyName + "MoveN", AnimationRole.MOVE, Direction.NORTH,
@@ -332,6 +329,7 @@ public class Enemy extends Peon
                         enemyName + "MoveSW", AnimationRole.MOVE, Direction.SOUTH_WEST,
                         true, true));
 
+        // Attack animations
         this.addAnimations(
                 AnimationRole.ATTACK, Direction.EAST, new AnimationLinker(
                 enemyName + "AttackE", AnimationRole.ATTACK, Direction.EAST,
@@ -555,11 +553,10 @@ public class Enemy extends Peon
             if(getDeadSound() != null) {
                 SoundManager.playSound(getDeadSound());
 
-                isMoving = false;
                 this.destination = new HexVector(this.getCol(), this.getRow());
                 this.setDead(true);
-                logger.info("Enemy destroyed.");}
-
+                logger.info("Enemy destroyed.");
+            }
             GameManager.get().getWorld().removeEntity(this);
             setCurrentState(AnimationRole.NULL);
         }
@@ -570,22 +567,23 @@ public class Enemy extends Peon
      */
     private void randomMoving() {
         if ((!isAttacking)) {
+            logger.info("{} is moving randomly.", getName());
+            /*
             targetPosition = new float[2];
             targetPosition[0] = (float)
-                    (Math.random() * 800 + originalPosition[0]);
+                    (Math.random() * 1200 + originalPosition[0]);
             targetPosition[1]=(float)
-                    (Math.random() * 800 + originalPosition[1]);
+                    (Math.random() * 1200 + originalPosition[1]);
             float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow
                     (targetPosition[0], targetPosition[1]);
             destination = new HexVector(randomPositionWorld[0],
                     randomPositionWorld[1]);
-            isMoving = true;
+            */
         }
     }
 
     /**
-     * get movement direction
-     *
+     * Get movement direction
      * @param angle the angle between to tile
      */
     private Direction movementDirection(double angle) {
@@ -593,6 +591,7 @@ public class Enemy extends Peon
         if (angle < 0) {
             angle += 360;
         }
+        System.out.println("angle is " + this.position.getAngle());
         if (between(angle, 0, 59.9)) {
             return Direction.SOUTH_WEST;
         } else if (between(angle, 60, 119.5)) {

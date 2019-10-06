@@ -1,10 +1,7 @@
 package deco2800.skyfall.managers;
 
-import com.badlogic.gdx.utils.Logger;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.enemies.Flower;
-import deco2800.skyfall.entities.enemies.Scout;
 import deco2800.skyfall.graphics.types.vec2;
 import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.enemies.Spawnable;
@@ -71,7 +68,9 @@ public class SpawningManager extends TickableManager  {
         GameManager.addManagerToInstance(local);
 
         //Add enemies to manager
-        local.addEnemyForSpawning(new Flower(0, 0, MainCharacter.getInstance()), 1.0f);
+        // local.addEnemyForSpawning(new Flower(0, 0, MainCharacter.getInstance()), 1.0f)
+        // local.addEnemyForSpawning(new Heavy(3,2f, 0.7f, "Forest",
+        //        "enemyHeavy"), 1.0f)
     }
 
     /**

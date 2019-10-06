@@ -43,9 +43,9 @@ public class SoundManager extends AbstractManager {
                     (Gdx.files.internal(PATH + "heavy_dead.wav")));
             soundMap.put("HeavyHurt", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "heavy_hurt.wav")));
-            soundMap.put("HeavyAttack", Gdx.audio.newSound
+            soundMap.put("heavyAttack", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "heavy_attack.wav")));
-            soundMap.put("HeavyWalk", Gdx.audio.newSound
+            soundMap.put("heavy_walk", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "heavy_walk.wav")));
             soundMap.put("ScoutDead", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "scout_dead.wav")));

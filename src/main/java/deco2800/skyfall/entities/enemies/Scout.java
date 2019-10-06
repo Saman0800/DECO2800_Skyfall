@@ -21,7 +21,7 @@ public class Scout extends Enemy implements Spawnable  {
      * @param textureName the name of the texture of the enemy.
      */
     public Scout(float col, float row, float scaling, String biome, String textureName) {
-        super(col, row, "ScoutHitBox", "Heavy",0.06f,  biome, textureName);
+        super(col, row, "Scout", "Heavy",0.06f,  biome, textureName);
 
         // Assign values, includes default values
         this.setValues(scaling, 100, 1, 1,0.06f,0.03f);

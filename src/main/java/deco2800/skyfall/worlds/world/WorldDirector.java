@@ -107,9 +107,6 @@ public class WorldDirector {
 
         builder.addEntity(mainCharacter);
 
-        builder.addEntity(new Spider(-4f, -1f, mainCharacter));
-        builder.addEntity(new Robot(-4, -2, mainCharacter));
-
         builder.addLake(5);
         builder.addRiver();
         builder.setRiverSize(5);
@@ -120,7 +117,6 @@ public class WorldDirector {
         builder.setType("tutorial");
         builder.setSeed(2);
         builder.setStaticEntities(true);
-        builder.addEntity(new Spider(-4f, -1f));
         builder.addBiome(new ForestBiome(random), 20);
         builder.addBiome(new DesertBiome(random), 20);
         builder.addBiome(new MountainBiome(random), 20);
