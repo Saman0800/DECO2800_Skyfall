@@ -2,7 +2,7 @@ package deco2800.skyfall.worlds.packing;
 
 import deco2800.skyfall.worlds.world.World;
 
-public class desertPacking extends ComponentPacking {
+public class desertPacking extends AbstractPacking {
 
 
     public desertPacking(EnvironmentPacker packer) {

@@ -18,7 +18,7 @@ public class EnvironmentPacker {
     // the builder should be loaded by WorldDirector, not new
     private World world;
     // a container of many small parts (components) of the environment packing
-    private ArrayList<ComponentPacking> packings;
+    private ArrayList<AbstractPacking> packings;
 
     public EnvironmentPacker(World world) {
         if (world == null) {
@@ -32,21 +32,12 @@ public class EnvironmentPacker {
     }
 
     /**
-     * Adds a packing component into the packing list.
-     * @param component a small part of environment packing
-     */
-    public void addPackingComponent(ComponentPacking component) {
-        if (component != null) {
-            packings.add(component);
-        }
-    }
-
-    /**
-     * Does all packings from the packing queue which includes many
-     * packing components for a full environment packing to the game.
+     * Does all packings from the packing queue which contains different
+     * parts of the environment packing on the world. And the packing
+     * queue will be cleared after executed.
      */
     public void doPackings() {
-        for (ComponentPacking component : packings) {
+        for (AbstractPacking component : packings) {
             component.packing(world);
         }
         packings.clear();
@@ -55,7 +46,47 @@ public class EnvironmentPacker {
     /**
      * @return a world will be packed up its environment.
      */
-    public World getPackedWorld() {
+    public World getWorld() {
         return world;
+    }
+
+    /**
+     * Adds a packing component into the packing list.
+     * @param component a small part of environment packing
+     * @return true if success, otherwise false
+     */
+    public boolean addPackingComponent(AbstractPacking component) {
+        if (component != null) {
+            return packings.add(component);
+        }
+        return false;
+    }
+
+    /**
+     * Removes a packing component inside the packing list.
+     * @param component a small part of environment packing
+     * @return true if success, otherwise false
+     */
+    public boolean removePackingComponent(AbstractPacking component) {
+        if (component != null) {
+            return packings.remove(component);
+        }
+        return false;
+    }
+
+    /**
+     * Removes a packing component based on type inside the packing list.
+     * @param type the type of a packing component
+     * @return true if success, otherwise false
+     */
+    public <T extends AbstractPacking> boolean removePackingComponent(Class<T> type) {
+        if (type != null) {
+            for (AbstractPacking packing : packings) {
+                if (packing.getClass() == type) {
+                    return packings.remove(packing);
+                }
+            }
+        }
+        return false;
     }
 }

@@ -13,19 +13,23 @@ import deco2800.skyfall.worlds.world.World;
  * it should be added into the packing queue from a Environment Packer.
  *
  */
-public abstract class ComponentPacking {
+public abstract class AbstractPacking {
 
     private EnvironmentPacker packer;
+    private World world;
 
-    ComponentPacking(EnvironmentPacker packer) {
+    public AbstractPacking(EnvironmentPacker packer) {
         if (packer == null) {
             throw new NullPointerException("Invalid environment packer.");
         }
         this.packer = packer;
+        this.world = packer.getWorld();
     }
 
     /**
-     * Packing a small specific part of the environment packing.
+     * Packing a small specific part of the environment packing. Notes that
+     * a tile's row coordinate is not same as shown in the game, and it
+     * should be multiple of 0.5f.
      * @param world a world will be packed up by this procedure
      */
     public abstract void packing(World world);
@@ -49,7 +53,7 @@ public abstract class ComponentPacking {
      */
     public AbstractBiome getBiomeFromTile(float x, float y) {
         HexVector tilePos = new HexVector(x, y);
-        Tile tile = packer.getPackedWorld().getTile(tilePos);
+        Tile tile = world.getTile(tilePos);
         if (tile != null) {
             return tile.getBiome();
         }
@@ -66,7 +70,7 @@ public abstract class ComponentPacking {
      */
     public boolean changeTileBiome(float x, float y, AbstractBiome newBiome) {
         HexVector tilePos = new HexVector(x, y);
-        Tile tile = getPacker().getPackedWorld().getTile(tilePos);
+        Tile tile = world.getTile(tilePos);
         if (newBiome != null && tile != null) {
             newBiome.addTile(tile);
             return true;
@@ -83,16 +87,19 @@ public abstract class ComponentPacking {
      * @return true if success, otherwise false
      */
     public boolean removeEntityOnTile(float x, float y) {
-        Tile tile = getPacker().getPackedWorld().getTile(x, y);
+        Tile tile = world.getTile(x, y);
 
         if (tile != null) {
             float[] tilePos = WorldUtil.colRowToWorldCords(x, y);
 
-            for (AbstractEntity entity : getPacker ().getPackedWorld().getEntities()) {
-                float[] entityPos = WorldUtil.colRowToWorldCords(entity.getCol(), entity.getRow());
+            for (AbstractEntity entity : world.getEntities()) {
+                float[] entityPos = {entity.getCol(), entity.getRow()};
+                if (WorldUtil.validColRow(entity.getPosition())) {
+                    entityPos = WorldUtil.colRowToWorldCords(entity.getCol(), entity.getRow());
+                }
                 if ((entityPos[0] >= tilePos[0] && entityPos[0] <= tilePos[0] + WorldUtil.TILE_WIDTH)
                         && (entityPos[1] >= tilePos[1] && entityPos[1] <= tilePos[1] + WorldUtil.TILE_HEIGHT)) {
-                    getPacker().getPackedWorld().removeEntity(entity);
+                    world.removeEntity(entity);
                 }
             }
             return true;
@@ -111,14 +118,17 @@ public abstract class ComponentPacking {
      * @return true if success, otherwise false
      */
     public boolean moveEntityFromTileToTile(float x, float y, float newX, float newY) {
-        Tile oldTile = getPacker().getPackedWorld().getTile(x, y);
-        Tile tile = getPacker().getPackedWorld().getTile(newX, newY);
+        Tile oldTile = world.getTile(x, y);
+        Tile tile = world.getTile(newX, newY);
 
         if (oldTile != null && tile != null) {
             float[] oldTilePos = WorldUtil.colRowToWorldCords(x, y);
 
-            for (AbstractEntity entity : getPacker ().getPackedWorld().getEntities()) {
-                float[] entityPos = WorldUtil.colRowToWorldCords(entity.getCol(), entity.getRow());
+            for (AbstractEntity entity : world.getEntities()) {
+                float[] entityPos = {entity.getCol(), entity.getRow()};
+                if (WorldUtil.validColRow(entity.getPosition())) {
+                    entityPos = WorldUtil.colRowToWorldCords(entity.getCol(), entity.getRow());
+                }
                 if ((entityPos[0] >= oldTilePos[0] && entityPos[0] <= oldTilePos[0] + WorldUtil.TILE_WIDTH)
                         && (entityPos[1] >= oldTilePos[1] && entityPos[1] <= oldTilePos[1] + WorldUtil.TILE_HEIGHT)) {
                     entity.setPosition(entity.getCol() + tile.getCol() - oldTile.getCol(),
