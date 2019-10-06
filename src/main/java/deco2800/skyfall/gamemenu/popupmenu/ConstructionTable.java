@@ -95,7 +95,7 @@ public class ConstructionTable extends AbstractPopUpElement{
         blueprintTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
         blueprintTable.setName("chestTable");
 
-        Image infoBar = new Image(generateTextureRegionDrawableObject("inventory_banner"));
+        Image infoBar = new Image(generateTextureRegionDrawableObject("building_banner"));
         infoBar.setSize(650, 55);
         infoBar.setPosition(130, 435);
 

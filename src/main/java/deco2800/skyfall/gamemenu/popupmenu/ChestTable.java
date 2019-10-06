@@ -89,7 +89,7 @@ public class ChestTable extends AbstractPopUpElement{
         chestTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
         chestTable.setName("chestTable");
 
-        Image infoBar = new Image(generateTextureRegionDrawableObject("inventory_banner"));
+        Image infoBar = new Image(generateTextureRegionDrawableObject("chest_banner"));
         infoBar.setSize(650, 55);
         infoBar.setPosition(130, 435);
 
