@@ -52,6 +52,7 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
      */
     public Save(List<World> worlds, MainCharacter mainCharacter, World currentWorld) {
         // FIXME: this may break if a save is stored for ~293+ years
+        this.worlds = new ArrayList<>();
         this.saveID = System.nanoTime();
 
         this.worlds = worlds;
@@ -62,7 +63,9 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
 
     public Save(SaveMemento saveMemento) {
         this.load(saveMemento);
-        this.worlds = new ArrayList<>();
+        if (this.worlds == null){
+            this.worlds = new ArrayList<>();
+        }
         this.mainCharacter = null;
     }
 
@@ -130,6 +133,9 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
 
     @Override
     public void load(SaveMemento saveMemento) {
+        if (this.worlds == null){
+            this.worlds = new ArrayList<>();
+        }
         this.saveID = saveMemento.saveID;
         this.currentWorld = DatabaseManager.get().getDataBaseConnector().loadWorlds(this, saveMemento);
 
