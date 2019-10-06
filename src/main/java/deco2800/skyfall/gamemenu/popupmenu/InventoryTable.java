@@ -8,17 +8,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
-import deco2800.skyfall.gamemenu.GameMenuBar;
-import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.managers.InventoryManager;
-import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.gamemenu.GameMenuBar2;
+import deco2800.skyfall.gamemenu.HeadsUpDisplay;
+import deco2800.skyfall.managers.*;
 import deco2800.skyfall.resources.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
 public class InventoryTable extends AbstractPopUpElement {
     //The inventory table
@@ -46,7 +44,7 @@ public class InventoryTable extends AbstractPopUpElement {
     private MainCharacter mainCharacter;
 
     //Current GameMenuBar in game, from GameMenuManager
-    private GameMenuBar gameMenuBar;
+    private GameMenuBar2 gameMenuBar;
 
     //Inventory user interface drop item button (active)
     private ImageButton dropButton;
@@ -66,8 +64,7 @@ public class InventoryTable extends AbstractPopUpElement {
     //Inventory user interface equip item button (inactive)
     private ImageButton inactiveEquipButton;
 
-    //Item information currently displayed in the info panel
-    private Label itemInfo;
+    private StatisticsManager sm;
 
     //Logger for Inventory Table
     private final transient Logger LOGGER =
@@ -90,9 +87,13 @@ public class InventoryTable extends AbstractPopUpElement {
         this.gameMenuManager = gameMenuManager;
         this.inventory = gameMenuManager.getInventory();
         this.mainCharacter = gameMenuManager.getMainCharacter();
+        this.sm = GameManager.getManagerFromInstance(StatisticsManager.class);
 
-        if(gameMenuManager.getUIElement("gameMenuBar") instanceof GameMenuBar){
-            this.gameMenuBar = (GameMenuBar) gameMenuManager.getUIElement("gameMenuBar");
+        if(gameMenuManager.getUIElement("HUD") instanceof HeadsUpDisplay){
+            HeadsUpDisplay hud = (HeadsUpDisplay) gameMenuManager.getUIElement("HUD");
+            if(hud.gethudElement("gameMenuBar2") instanceof GameMenuBar2){
+                this.gameMenuBar = (GameMenuBar2) hud.gethudElement("gameMenuBar2");
+            }
         }
         this.draw();
     }
@@ -174,10 +175,13 @@ public class InventoryTable extends AbstractPopUpElement {
         if(active){
             inactiveAddqaButton.setVisible(false);
             inactiveDropButton.setVisible(false);
-            inactiveEquipButton.setVisible(false);
             addqaButton.setVisible(true);
-            equipButton.setVisible(true);
             dropButton.setVisible(true);
+
+            if(inventory.getItemInstance(inventorySelected).isEquippable()){
+                equipButton.setVisible(true);
+                inactiveEquipButton.setVisible(false);
+            }
         }else{
             inactiveAddqaButton.setVisible(true);
             inactiveDropButton.setVisible(true);
@@ -195,11 +199,11 @@ public class InventoryTable extends AbstractPopUpElement {
     private Table setBaseInventoryTable(){
         inventoryTable = new Table();
         inventoryTable.setSize(910, 510);
-        inventoryTable.setPosition(Gdx.graphics.getWidth()/2f - inventoryTable.getWidth()/2,
+        inventoryTable.setPosition((Gdx.graphics.getWidth()/2f - inventoryTable.getWidth()/2 + 60),
                 (Gdx.graphics.getHeight() + 160) / 2f - inventoryTable.getHeight()/2);
         inventoryTable.setDebug(false);
         inventoryTable.top();
-        inventoryTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
+        inventoryTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
         inventoryTable.setName("inventoryTable");
 
         return inventoryTable;
@@ -211,11 +215,11 @@ public class InventoryTable extends AbstractPopUpElement {
      */
     private Table setHeading(){
         Table infoBar = new Table();
-        infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
+        infoBar.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_banner"));
         infoBar.setSize(650, 55);
         infoBar.setPosition(130, 430);
 
-        Label text = new Label("INVENTORY", skin, "black-text");
+        Label text = new Label("INVENTORY", skin, "navy-text");
         infoBar.add(text);
 
         return infoBar;
@@ -229,13 +233,7 @@ public class InventoryTable extends AbstractPopUpElement {
         Table infoPanel = new Table();
         infoPanel.setSize(410, 320);
         infoPanel.setPosition(25, 98);
-        infoPanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
-
-        itemInfo = new Label("Click on an item to use it, and " + "\n" + "find out more information.", skin, "default");
-        itemInfo.setSize(350, 200);
-        itemInfo.setPosition(90, 70);
-
-        infoPanel.addActor(itemInfo);
+        infoPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("Description_Panel"));
 
         return infoPanel;
     }
@@ -244,13 +242,13 @@ public class InventoryTable extends AbstractPopUpElement {
      * Sets the buttons in the inventory pop up, with corresponding click events.
      */
     private void setButtons(){
-        this.inactiveDropButton = new ImageButton(generateTextureRegionDrawableObject("drop inactive"));
-        this.inactiveDropButton.setSize(100, 60);
-        this.inactiveDropButton.setPosition(285, 20);
+        this.inactiveDropButton = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("drop inactive"));
+        this.inactiveDropButton.setSize(170, 60);
+        this.inactiveDropButton.setPosition(225, 20);
 
-        this.dropButton = new ImageButton(generateTextureRegionDrawableObject("drop"));
-        this.dropButton.setSize(100, 60);
-        this.dropButton.setPosition(285, 20);
+        this.dropButton = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("drop"));
+        this.dropButton.setSize(170, 60);
+        this.dropButton.setPosition(225, 20);
         this.dropButton.setVisible(false);
         this.dropButton.addListener(new ClickListener() {
             @Override
@@ -266,13 +264,13 @@ public class InventoryTable extends AbstractPopUpElement {
             }
         });
 
-        this.inactiveEquipButton = new ImageButton(generateTextureRegionDrawableObject("equip inactive"));
-        this.inactiveEquipButton.setSize(100, 60);
-        this.inactiveEquipButton.setPosition(405, 20);
+        this.inactiveEquipButton = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("equip inactive inv"));
+        this.inactiveEquipButton.setSize(170, 60);
+        this.inactiveEquipButton.setPosition(390, 20);
 
-        this.equipButton = new ImageButton(generateTextureRegionDrawableObject("equip"));
-        this.equipButton.setSize(100, 60);
-        this.equipButton.setPosition(405, 20);
+        this.equipButton = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("equip inv"));
+        this.equipButton.setSize(170, 60);
+        this.equipButton.setPosition(390, 20);
         this.equipButton.setVisible(false);
         this.equipButton.addListener(new ClickListener() {
             @Override
@@ -280,6 +278,7 @@ public class InventoryTable extends AbstractPopUpElement {
                 if (inventorySelected != null) {
                     Item item = inventory.drop(inventorySelected);
                     if (mainCharacter.setEquippedItem(item)) {
+                        gameMenuBar.setEquipped(item.getName());
                         inventorySelected = null;
                         setButtonsActive(false);
                         updatePanels();
@@ -292,13 +291,13 @@ public class InventoryTable extends AbstractPopUpElement {
             }
         });
 
-        this.inactiveAddqaButton = new ImageButton(generateTextureRegionDrawableObject("addqa inactive"));
-        this.inactiveAddqaButton.setSize(100, 60);
-        this.inactiveAddqaButton.setPosition(530, 20);
+        this.inactiveAddqaButton = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("addqa inactive"));
+        this.inactiveAddqaButton.setSize(170, 60);
+        this.inactiveAddqaButton.setPosition(560, 20);
 
-        this.addqaButton = new ImageButton(generateTextureRegionDrawableObject("addqa"));
-        this.addqaButton.setSize(100, 60);
-        this.addqaButton.setPosition(530, 20);
+        this.addqaButton = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("addqa"));
+        this.addqaButton.setSize(170, 60);
+        this.addqaButton.setPosition(560, 20);
         this.addqaButton.setVisible(false);
         this.addqaButton.addListener(new ClickListener() {
             @Override
@@ -306,7 +305,6 @@ public class InventoryTable extends AbstractPopUpElement {
                 if(inventorySelected != null) {
                     inventory.quickAccessAdd(inventorySelected);
                     inventorySelected = null;
-                    updatePanels();
                     gameMenuBar.removeQuickAccessPanel();
                     gameMenuBar.setQuickAccessPanel();
                 }
@@ -323,7 +321,7 @@ public class InventoryTable extends AbstractPopUpElement {
         resourcePanel.setName("resourcePanel");
         resourcePanel.setSize(410, 320);
         resourcePanel.setPosition(475, 98);
-        resourcePanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
+        resourcePanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("inventory_panel"));
 
         return resourcePanel;
     }
@@ -333,15 +331,11 @@ public class InventoryTable extends AbstractPopUpElement {
      * what item is selected.
      */
     private void updateItemInfo(){
-        //System.out.println(inventorySelected);
         if (inventorySelected != null){
-            String info = inventory.getItemDescription(inventorySelected);
-            itemInfo.setText(info);
+            infoPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject(inventorySelected + "_desc"));
         } else{
-            itemInfo.setText("Click on an item to use it, and " + "\n" + "find out more information.");
+            infoPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("Description_Panel"));
         }
-        infoPanel.removeActor(itemInfo);
-        infoPanel.add(itemInfo);
     }
 
     /**
@@ -355,22 +349,16 @@ public class InventoryTable extends AbstractPopUpElement {
     private void setCounts(Map<String, Integer> inventoryAmounts, int xpos, int ypos, int size, int xspace){
         int count = 0;
 
-        String[] weapons = {"axe", "bow", "spear", "sword"};
-
         for (Map.Entry<String, Integer> entry : inventoryAmounts.entrySet()) {
-            Image selected = new Image(generateTextureRegionDrawableObject("selected"));
+            Image selected = new Image(gameMenuManager.generateTextureRegionDrawableObject("selected"));
             selected.setName(entry.getKey() + "-selected");
             selected.setSize((float) size + 20, (float) size + 20);
             selected.setPosition((float)(xpos + -10 + (size+xspace)*(count-1)), ypos -10);
             selected.setVisible(false);
-            String weaponName = entry.getKey();
-            for (String weapon : weapons) {
-                if (weapon.equals(entry.getKey())) {
-                    weaponName = entry.getKey() + "_display";
-                }
-            }
+            String itemName = entry.getKey();
+
             ImageButton icon =
-                    new ImageButton(generateTextureRegionDrawableObject(weaponName + "_inv"));
+                    new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(itemName + "_inv"));
             icon.setName(entry.getKey());
             icon.setSize((float)size, (float)size);
             icon.setPosition((float)(xpos + (size+xspace)*(count-1)), ypos);

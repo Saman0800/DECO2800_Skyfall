@@ -397,6 +397,15 @@ public class Renderer3D implements Renderer {
                 * entity.getScale();
         int[] offset = aniLink.getOffset();
 
+        if (entity instanceof MainCharacter) {
+            if (((MainCharacter) entity).isHurt()) {
+                batch.setColor(Color.RED);
+            } else {
+                batch.setColor(Color.WHITE);
+
+            }
+        }
+
         batch.draw(currentFrame, entityWorldCoord[0] + offset[0], entityWorldCoord[1] + offset[0], width, height);
         aniLink.incrTime(Gdx.graphics.getDeltaTime());
     }

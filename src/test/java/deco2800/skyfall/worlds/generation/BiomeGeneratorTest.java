@@ -35,7 +35,7 @@ public class BiomeGeneratorTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        Random random = new Random(0);
+        Random random = new Random(1);
         whenNew(Random.class).withAnyArguments().thenReturn(random);
 
         DataBaseConnector connector = mock(DataBaseConnector.class);
