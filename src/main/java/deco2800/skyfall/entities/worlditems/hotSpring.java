@@ -1,11 +1,11 @@
-package deco2800.skyfall.worlds.packing;
+package deco2800.skyfall.entities.worlditems;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 
 
 
-public class hotSpringPacking extends AbstractEntity {
+public class hotSpring extends AbstractEntity {
 
     private static final String ENTITY_ID_STRING = "hot_spring";
     private static final int Recover_Healing_power = 3;
@@ -13,7 +13,7 @@ public class hotSpringPacking extends AbstractEntity {
     private MainCharacter player;
 
 
-    public hotSpringPacking(float col, float row, MainCharacter player) {
+    public hotSpring(float col, float row, MainCharacter player) {
         super(col, row, 2);
         this.setTexture("hot_spring");
         this.setHeight(0);
