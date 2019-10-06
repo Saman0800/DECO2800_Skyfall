@@ -27,7 +27,7 @@ public class Flower extends Enemy implements Spawnable {
 
     @Override
     public Flower newInstance(float row, float col) {
-        return new Flower(row, col, this.getMainCharacter());
+        return new Flower(col, row, MainCharacter.getInstance());
     }
 
     /*

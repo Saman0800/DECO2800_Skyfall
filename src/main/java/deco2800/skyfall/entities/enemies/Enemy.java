@@ -458,7 +458,7 @@ public class Enemy extends Peon
      * Getter and setter of the main character object in the game.
      * @param mainCharacter the main character in the game.
      */
-    private void setMainCharacter(MainCharacter mainCharacter) {
+    public void setMainCharacter(MainCharacter mainCharacter) {
         this.mainCharacter = mainCharacter;
     }
 

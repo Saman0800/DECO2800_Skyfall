@@ -90,10 +90,13 @@ public class SpawningManager extends TickableManager  {
                 location.y + SPAWN_DISTANCE*(float)Math.sin(angle)
         );
 
+        //create new instance
+        Enemy instance = (Enemy) enemy.newInstance(location.x, location.y);
+        instance.setMainCharacter(MainCharacter.getInstance());
         //add to references
-        enemyReferences.add((Enemy) enemy.newInstance(location.x, location.y));
+        enemyReferences.add((Enemy) instance);
         //add to game world
-        GameManager.get().getWorld().addEntity((AbstractEntity)enemy);
+        GameManager.get().getWorld().addEntity((AbstractEntity)instance);
     }
 
     /**
@@ -115,15 +118,12 @@ public class SpawningManager extends TickableManager  {
         //    return;
         //}
 
-        Iterator it = spawnTable.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
+        updateReferences();
 
-            if (random.nextFloat() < (Float)pair.getValue()) {
-        //        spawnEnemy((Spawnable)pair.getKey());
+        for (Map.Entry<Spawnable, Float> entry : spawnTable.entrySet()) {
+            if (random.nextFloat() < (Float)entry.getValue()) {
+                spawnEnemy((Spawnable)entry.getKey());
             }
-
-            it.remove();
         }
     }
 
