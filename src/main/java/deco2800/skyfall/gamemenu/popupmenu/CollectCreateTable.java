@@ -7,12 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.QuestManager;
-import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -103,7 +100,7 @@ public class CollectCreateTable extends AbstractPopUpElement{
             String currentText  = String.format(format, qm.getGoldTotal(), "Gold");
             Color color;
 
-            if (qm.checkGold()) {
+            if (qm.checkGold() || qm.questFinished()) {
                 color = Color.GREEN;
             } else {
                 color = Color.WHITE;
@@ -113,7 +110,7 @@ public class CollectCreateTable extends AbstractPopUpElement{
             labelGold.setColor(color);
             labelTable.add(labelGold).left();
             labelTable.row();
-            if (qm.checkMetal()) {
+            if (qm.checkMetal() || qm.questFinished()) {
                 color = Color.GREEN;
             } else {
                 color = Color.WHITE;
@@ -125,7 +122,7 @@ public class CollectCreateTable extends AbstractPopUpElement{
             labelTable.add(labelMetal).left();
             labelTable.row();
 
-            if (qm.checkStone()) {
+            if (qm.checkStone() || qm.questFinished()) {
                 color = Color.GREEN;
             } else {
                 color = Color.WHITE;
@@ -136,7 +133,7 @@ public class CollectCreateTable extends AbstractPopUpElement{
             labelStone.setColor(color);
             labelTable.add(labelStone).left();
             labelTable.row();
-            if (qm.checkWood()) {
+            if (qm.checkWood() || qm.questFinished()) {
                 color = Color.GREEN;
             } else {
                 color = Color.WHITE;
@@ -162,7 +159,11 @@ public class CollectCreateTable extends AbstractPopUpElement{
      * @return True if all resources have been collected
      */
     private boolean checkComplete() {
-        return qm.checkGold() && qm.checkMetal() && qm.checkStone() && qm.checkWood();
+        if (type.equals("collect")) {
+            return (qm.checkGold() && qm.checkMetal() && qm.checkStone() && qm.checkWood()) || qm.questFinished();
+        } else {
+            return qm.checkBuildings() || qm.questFinished();
+        }
     }
 
     /**
