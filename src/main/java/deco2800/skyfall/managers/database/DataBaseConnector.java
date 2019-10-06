@@ -141,8 +141,6 @@ public class DataBaseConnector {
             for (World world : save.getWorlds()) {
                 saveWorld(world);
             }
-
-            // fixme:jeffvan12 should probably work on this
         } catch (SQLException | IOException e) {
             throw new RunTimeSaveException("Failed to save the game ", e);
         }

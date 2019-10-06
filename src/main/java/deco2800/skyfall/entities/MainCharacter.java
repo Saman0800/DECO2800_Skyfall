@@ -295,8 +295,6 @@ public class MainCharacter extends Peon
         xInput = 0;
         yInput = 0;
         setAcceleration(10.f);
-        // FIXME:Ontonator Change this back.
-        // setMaxSpeed(1.f);
         setMaxSpeed(5.f);
         vel = 0;
         velHistoryX = new ArrayList<>();
@@ -1987,8 +1985,7 @@ public class MainCharacter extends Peon
         // this.blueprintsLearned = memento.blueprints;
         this.inventories = memento.inventory;
         this.setHealth(memento.health);
-        this.setCol(memento.col);
-        this.setRow(memento.row);
+        this.setPosition(memento.col, memento.row);
         this.gameStage = memento.stage;
         // s.this.weapons = memento.weapons;
         // this.hotbar = memento.hotbar;

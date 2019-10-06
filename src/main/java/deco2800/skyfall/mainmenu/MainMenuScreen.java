@@ -113,6 +113,9 @@ public class MainMenuScreen implements Screen {
         });
     }
 
+    /**
+     * Creates the window element for the start game window.
+     */
     private void createStartGameWindow() {
         Skin skin = GameManager.get().getSkin();
 
@@ -140,16 +143,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 String seedString = seedInput.getText();
-                long seed;
-                if (seedString.isEmpty()) {
-                    seed = new Random().nextLong();
-                } else {
-                    try {
-                        seed = Long.parseLong(seedString);
-                    } catch (NumberFormatException e) {
-                        seed = seedString.hashCode();
-                    }
-                }
+                long seed = calculateSeed(seedString);
                 game.setScreen(new GameScreen(game, seed, true));
             }
         });
@@ -160,15 +154,45 @@ public class MainMenuScreen implements Screen {
         stage.addActor(startGameWindow);
     }
 
+    /**
+     * Shows the window element for the start game window.
+     */
     private void showStartGameWindow() {
         startGameWindow.setVisible(true);
         startGameWindow.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.center);
     }
 
+    /**
+     * Calculates a seed based on the given string. If the string is empty, a random number is generated. If the seed is
+     * an integer, that integer is used. Otherwise, the hash of the string is used.
+     *
+     * @param seedString the string from which to calculate the seed
+     * @return the seed
+     */
+    private long calculateSeed(String seedString) {
+        long seed;
+        if (seedString.isEmpty()) {
+            seed = new Random().nextLong();
+        } else {
+            try {
+                seed = Long.parseLong(seedString);
+            } catch (NumberFormatException e) {
+                seed = seedString.hashCode();
+            }
+        }
+        return seed;
+    }
+
+    /**
+     * Hides the window element for the start game window.
+     */
     private void hideStartGameWindow() {
         startGameWindow.setVisible(false);
     }
 
+    /**
+     * Creates the window element for the load game window.
+     */
     private void createLoadGameWindow() {
         TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
 
@@ -237,6 +261,12 @@ public class MainMenuScreen implements Screen {
         stage.addActor(loadGameWindow);
     }
 
+    /**
+     * Generates a random name based on a save ID.
+     *
+     * @param saveID the save ID on which to base the name
+     * @return the name of the save
+     */
     private String generateReadableName(long saveID) {
         char[] saveCode = new char[5];
         for (int i = 0; i < saveCode.length; i++) {
@@ -247,11 +277,17 @@ public class MainMenuScreen implements Screen {
         return String.copyValueOf(saveCode);
     }
 
+    /**
+     * Shows the window element for the load game window.
+     */
     private void showLoadGameWindow() {
         loadGameWindow.setVisible(true);
         loadGameWindow.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.center);
     }
 
+    /**
+     * Creates the window element for the load game window.
+     */
     private void hideLoadGameWindow() {
         loadGameWindow.setVisible(false);
     }
