@@ -1863,7 +1863,9 @@ public class MainCharacter extends Peon
             }
 
         }else{
-            setCurrentState(AnimationRole.VEHICLE_BIKE_MOVE);
+            if (vehicleType.equals("bike")) {
+                setCurrentState(AnimationRole.VEHICLE_BIKE_MOVE);
+            }
         }
     }
 
