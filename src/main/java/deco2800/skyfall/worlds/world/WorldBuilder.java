@@ -294,7 +294,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(spearRule);
 
         // Create a new perlin noise map
-        SpawnControl cubic = x -> (x * x * x) / 6 + 0.01;
+        SpawnControl cubic = x -> (x * x * x) / 6.0 + 0.01;
         EntitySpawnRule mTreeControl = new EntitySpawnRule(tile -> new MountainTree(tile, true), random.nextInt(), true,
                 cubic);
         mTreeControl.setLimitAdjacent(true);
@@ -384,7 +384,7 @@ public class WorldBuilder implements WorldBuilderInterface {
     private void generateVolcanicMountainsEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
 
         // Create a new perlin noise map
-        SpawnControl cubic = x -> (x * x * x) / 6 + 0.01;
+        SpawnControl cubic = x -> (x * x * x) / 6.0 + 0.01;
         EntitySpawnRule mTreeControl = new EntitySpawnRule(tile -> new VolcanicTree(tile, true), random.nextInt(), true,
                 cubic);
         mTreeControl.setLimitAdjacent(true);

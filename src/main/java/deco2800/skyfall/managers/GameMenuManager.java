@@ -208,6 +208,14 @@ public class GameMenuManager extends TickableManager {
     }
 
     /**
+     * Pause the game.
+     */
+    private void pause() {
+        GameManager.setPaused(true);
+        GameScreen.setIsPaused(true);
+    }
+
+    /**
      * Generates an instance of TextureRegionDrawable with the given texture name.
      *
      * @param sName Texture Name.

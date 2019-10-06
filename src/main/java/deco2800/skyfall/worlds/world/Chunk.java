@@ -1,15 +1,15 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
+import deco2800.skyfall.entities.worlditems.EntitySpawnTable;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Saveable;
-import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
-import deco2800.skyfall.entities.worlditems.EntitySpawnTable;
 import deco2800.skyfall.worlds.Tile;
-import java.io.Serializable;
 import org.javatuples.Pair;
 
+import java.io.Serializable;
 import java.util.*;
 
 public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
@@ -231,7 +231,7 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
             tile.removeReferanceFromNeighbours();
         }
         //TODO:(@Kausta) Uncomment this before merge
-        //DatabaseManager.get().getDataBaseConnector().saveChunk(this);
+        DatabaseManager.get().getDataBaseConnector().saveChunk(this);
 
         world.getLoadedChunks().remove(new Pair<>(x, y));
     }

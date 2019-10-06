@@ -1,10 +1,13 @@
 package deco2800.skyfall.managers;
 
+import deco2800.skyfall.buildings.AbstractPortal;
 import deco2800.skyfall.buildings.BuildingEntity;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.resources.Blueprint;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class QuestManager extends TickableManager{
@@ -250,6 +253,8 @@ public class QuestManager extends TickableManager{
                 }
             }
         }
+
+        buildingsNum = currentBuildings.size();
         if (currentBuildings.containsAll(buildingsTotal)) {
             allBuildings = true;
         }
@@ -337,10 +342,22 @@ public class QuestManager extends TickableManager{
                 .getAmount("Stone");
 
         // Reset the inventory
+        buildingsNum = 0;
         questSuccess = false;
         getPlayer().removeAllGold();
         getPlayer().getInventoryManager().dropMultiple("Metal", currentMetal);
         getPlayer().getInventoryManager().dropMultiple("Stone", currentStone);
         getPlayer().getInventoryManager().dropMultiple("Wood", currentWood);
+    }
+
+
+    public boolean getBlueprintLearned() {
+        Iterator<Blueprint> iter = getPlayer().getBlueprintsLearned().iterator();
+        while (iter.hasNext()) {
+            if (iter.next() instanceof AbstractPortal) {
+                return true;
+            }
+        }
+        return  false;
     }
 }

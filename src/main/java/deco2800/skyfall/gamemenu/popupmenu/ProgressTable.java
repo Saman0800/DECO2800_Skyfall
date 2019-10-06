@@ -10,11 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.QuestManager;
-import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 
 public class ProgressTable extends AbstractPopUpElement {
@@ -62,7 +58,7 @@ public class ProgressTable extends AbstractPopUpElement {
             updateBiomeText(qm.getBiome());
             updateCollectText(qm.collectNum() + "/4");
             updateCreateText(qm.getBuildingsNum() + "/" + qm.getBuildingsTotal().size());
-            updateBlueprintText("1");
+            updateBlueprintText(qm.getBlueprintLearned() ? "Purchased!" : "To Purchase");
     }
 
 
@@ -80,7 +76,7 @@ public class ProgressTable extends AbstractPopUpElement {
     }
 
     private void updateBlueprintText(String text) {
-        blueprintLabel.setText(text + "x  Blueprint: " + "To Purchase");
+        blueprintLabel.setText( "Portal Blueprint: " + text);
     }
 
 
