@@ -196,4 +196,13 @@ public abstract class Peon extends AgentEntity implements Tickable {
 					.getTask(this);
         }
     }
+
+
+	/**
+	 * Sets the health
+	 * @param health The amount of health the Peon's health will be set to
+	 */
+	public void setHealth(int health){
+    	this.health = health;
+	}
 }
