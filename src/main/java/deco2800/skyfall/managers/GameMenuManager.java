@@ -25,6 +25,7 @@ public class GameMenuManager extends TickableManager {
     private static TextureManager textureManager;
     private Stage stage;
     private MainCharacter mainCharacter;
+    private EnvironmentManager em;
     private InventoryManager inventory;
     private SoundManager soundManager;
     private Skin skin;
@@ -64,6 +65,7 @@ public class GameMenuManager extends TickableManager {
         inventory = GameManager.get().getManager(InventoryManager.class);
         soundManager = GameManager.get().getManager(SoundManager.class);
         questManager = GameManager.get().getManager(QuestManager.class);
+        em = GameManager.get().getManager(EnvironmentManager.class);
         stage = null;
         skin = null;
         characters = new String[NUMBEROFCHARACTERS];
@@ -82,7 +84,7 @@ public class GameMenuManager extends TickableManager {
                            InventoryManager im, Stage stage, Skin skin,
                            Map<String, AbstractPopUpElement> popUps,
                            Map<String, AbstractUIElement> uiElements) {
-        GameMenuManager.updateTextureManager(tm);
+        this.updateTextureManager(tm);
         soundManager = sm;
         inventory = im;
         this.stage = stage;
@@ -91,7 +93,7 @@ public class GameMenuManager extends TickableManager {
         this.uiElements = uiElements;
     }
 
-    public static void updateTextureManager(TextureManager tm) {
+    public void updateTextureManager(TextureManager tm) {
 
         textureManager = tm;
     }
@@ -212,7 +214,7 @@ public class GameMenuManager extends TickableManager {
      *
      * @return An instance of TextureRegionDrawable with the given texture name.
      */
-    public static TextureRegionDrawable generateTextureRegionDrawableObject(String sName) {
+    public TextureRegionDrawable generateTextureRegionDrawableObject(String sName) {
         return new TextureRegionDrawable((new TextureRegion(textureManager.getTexture(sName))));
     }
 
@@ -363,7 +365,7 @@ public class GameMenuManager extends TickableManager {
                 textureManager, sm, skin, this));
         hudElements.put("goldPill", new GoldStatusBar(stage, null, textureManager,  skin, this));
         hudElements.put("gameMenuBar2", new GameMenuBar2(stage, null, textureManager, skin, this));
-        hudElements.put("clock" , new Clock(stage, skin, this));
+        hudElements.put("clock" , new Clock(stage, skin, this, em));
 
         uiElements.put("HUD", new HeadsUpDisplay(stage, null, textureManager, skin, this, hudElements, questManager));
 

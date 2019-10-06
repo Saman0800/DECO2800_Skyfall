@@ -16,6 +16,7 @@ import deco2800.skyfall.managers.QuestManager;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -27,11 +28,11 @@ import static org.mockito.Mockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 public class GameOverTableTest extends BaseGDXTest {
-    private Skin skin;
     private Stage stage;
     private GameMenuManager gmm;
     private GameOverTable gameOverTable;
     private TextureManager tm;
+    private QuestManager qm;
 
     @Before
     public void setUp () {
@@ -39,17 +40,10 @@ public class GameOverTableTest extends BaseGDXTest {
         gmm = mock(GameMenuManager.class);
         tm = spy(TextureManager.class);
         gmm = mock(GameMenuManager.class);
+        qm = mock(QuestManager.class);
 
         MainCharacter mc = mock(MainCharacter.class);
         Mockito.when(gmm.getMainCharacter()).thenReturn(mc);
-        tm = mock(TextureManager.class);
-        Camera c = new OrthographicCamera();
-        c.viewportHeight = 100;
-        c.viewportWidth = 100;
-        c.position.x = 100;
-        c.position.y = 100;
-
-        doReturn(c).when(stage).getCamera();
 
         gameOverTable = new GameOverTable(stage, null, null, tm,  gmm);
     }
@@ -74,9 +68,18 @@ public class GameOverTableTest extends BaseGDXTest {
         assertTrue(gameOverTable.isVisible());
     }
 
+    @Test
+    public void retryQuestTest() {
+        gameOverTable.retryQuest();
+
+        MainCharacter mc = mock(MainCharacter.class);
+
+        Mockito.when(mc.getHealth()).thenReturn(50);
+        assertEquals(50, mc.getHealth());
+    }
+
     @After
     public void tearDown() {
-        skin = null;
         stage = null;
         gmm = null;
         gameOverTable = null;

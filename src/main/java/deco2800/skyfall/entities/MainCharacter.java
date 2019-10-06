@@ -387,6 +387,7 @@ public class MainCharacter extends Peon
      * Set up the health bar.
      */
     private void setupHealthBar() {
+        // If the health bar does not equal null, create it
         if (this.healthBar != null) {
             this.healthBar = (HealthCircle) GameManager.getManagerFromInstance(GameMenuManager.class).
                     getUIElement("healthCircle");
@@ -397,6 +398,7 @@ public class MainCharacter extends Peon
      * Set up the game over screen.
      */
     private void setupGameOverScreen() {
+        // If the gameMenuManager does not equal null, create the game over screen
         this.gameMenuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
         if (this.gameMenuManager != null) {
             gameMenuManager.hideOpened();
@@ -710,19 +712,21 @@ public class MainCharacter extends Peon
      *
      * @param damage the damage deal to the player.
      */
-
     public void playerHurt(int damage) {
+        // Change health and related fields accordingly
         setHurt(true);
         changeHealth(-damage);
         updateHealth();
         logger.info("Current Health: {}", this.getHealth());
 
+        // If the player isn't recovering, set hurt and change health/animations
         if (!isRecovering) {
             setHurt(true);
             this.changeHealth(-damage);
             getBody().setLinearVelocity(getBody().getLinearVelocity()
                     .lerp(new Vector2(0.f, 0.f), 0.5f));
 
+            // Check if player died and run kill method
             if (this.getHealth() < 1) {
                 logger.info("Player died.");
                 kill();
@@ -753,9 +757,9 @@ public class MainCharacter extends Peon
         }
     }
 
-        /**
-         * Helper function to update healthBar outside of class.
-         */
+    /**
+     * Helper function to update healthBar outside of class.
+     */
     private void updateHealth() {
         if (this.healthBar != null) {
             this.healthBar.update();
@@ -770,6 +774,9 @@ public class MainCharacter extends Peon
         return isRecovering;
     }
 
+    /*
+     * Set players to recovering if hurt
+     */
     public void setRecovering(boolean isRecovering) {
         this.isRecovering = isRecovering;
     }
@@ -782,6 +789,9 @@ public class MainCharacter extends Peon
         this.isTexChanging = isTexChanging;
     }
 
+    /*
+     * Check if player has recovered
+     */
     private void checkIfRecovered() {
         recoverTime += 20;
         this.changeCollideability(false);
@@ -803,8 +813,10 @@ public class MainCharacter extends Peon
         SoundManager.playSound(DIED_SOUND_NAME);
         setCurrentState(AnimationRole.DEAD);
         deadTime = 0;
-        setupGameOverScreen();
         setDead(true);
+
+        // Show game over screen
+        setupGameOverScreen();
     }
 
     /**

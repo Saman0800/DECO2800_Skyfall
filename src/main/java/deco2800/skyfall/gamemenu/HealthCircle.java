@@ -1,7 +1,6 @@
 package deco2800.skyfall.gamemenu;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -11,26 +10,49 @@ import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
 
 public class HealthCircle extends AbstractUIElement {
+    // Game manager to be used
     private final GameMenuManager gmm;
+
+    // Current health of player
     private float currentHealth;
+
+    // New health after health change
     private int newHealth; // maybe for animating it down.
-    public  ImageButton biggerCircle;
-    public  ImageButton smallerCircle;
+
+    // Bigger circle
+    private  ImageButton biggerCircle;
+
+    // Inner/changing circle
+    private  ImageButton smallerCircle;
+
+    // Position X
     private float positionX;
+
+    // Position Y
     private float positionY;
+
+    // Offset for positions
     private float offset;
+
+    // Health label
     private Label label;
-    StatisticsManager sm;
-    Skin skin;
+
+    // Statistic manager to read player health from
+    private StatisticsManager sm;
+
+    // Skin
+    private Skin skin;
 
     /**
      * Updates the inner circle.
      */
     private void updateInnerCircle() {
+        // Check if null
         if (smallerCircle == null || biggerCircle == null) {
             return;
         }
 
+        // If health is greater than 50, set health to equal 50
         if (newHealth > 50) {
             newHealth = 50;
         }
@@ -42,8 +64,10 @@ public class HealthCircle extends AbstractUIElement {
 
         offset += (diff * 2) / 2;
         smallerCircle.setPosition(positionX + offset, positionY + offset);
+
         currentHealth = newHealth;
 
+        // Set label appropriately
         if(sm.getHealth() < 1) {
             label.setText("DEAD");
         } else {
