@@ -1,15 +1,9 @@
 package deco2800.skyfall.entities.enemies;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * An instance of a Scout (easy level) enemy.
  */
 public class Scout extends Enemy implements Spawnable  {
-
-    // Logger for tracking enemy information
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * Constructor to create new Scout enemy.
@@ -24,7 +18,7 @@ public class Scout extends Enemy implements Spawnable  {
         super(col, row, "Scout", "Scout",0.06f,  biome, textureName);
 
         // Assign values, includes default values
-        this.setValues(scaling, 3, 1, 1,0.06f,0.08f);
+        this.setValues(scaling, 3, 2, 1,0.06f,0.08f);
     }
 
     @Override

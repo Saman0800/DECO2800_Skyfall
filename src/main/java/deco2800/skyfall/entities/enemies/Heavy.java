@@ -1,22 +1,15 @@
 package deco2800.skyfall.entities.enemies;
 
-import deco2800.skyfall.entities.MainCharacter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * An instance of a Heavy (hard level) enemy.
  */
 public class Heavy extends Enemy implements Spawnable {
 
-    // Logger for tracking enemy information
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     public Heavy(float col, float row, float scaling, String biome, String textureName) {
         super(col, row, "Heavy", "Heavy", 0.06f,  biome, textureName);
 
         // Assign values, includes default values
-        this.setValues(scaling, 10, 3, 2,0.06f,0.03f);
+        this.setValues(scaling, 10, 5, 2,0.06f,0.03f);
     }
 
     /**
@@ -35,5 +28,29 @@ public class Heavy extends Enemy implements Spawnable {
     @Override
     public Enemy newInstance(float row, float col) {
         return new Heavy(col, row, getScale(), getBiome(), getTexture());
+    }
+
+    /**
+     * Check whether the object equals to this enemy instance.
+     *
+     * @param obj the object to be checked
+     * @return true if the objects equals, false otherwise.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Heavy &&
+                this.hashCode() == obj.hashCode();
+    }
+
+    /**
+     * The hashcode of the enemy based on {@link #toString()}.
+     * It will be used in {@link #equals(Object)} for comparing
+     * objects.
+     *
+     * @return the hashcode of the enemy instance.
+     */
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
     }
 }

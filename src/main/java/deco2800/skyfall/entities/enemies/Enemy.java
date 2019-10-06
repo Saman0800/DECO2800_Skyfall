@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.entities.Peon;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.graphics.types.vec2;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.animation.Animatable;
@@ -71,6 +72,10 @@ public class Enemy extends Peon
 
     // A routine for destination
     private HexVector destination = null;
+
+    //world coordinate of this enemy
+    private float[] originalPosition = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
+
 
     public Enemy(float col, float row, String hitBoxPath, String name,
                   float speed, String biome, String textureName) {
@@ -183,8 +188,6 @@ public class Enemy extends Peon
     private void updateAnimation() {
         setTexture(getDefaultTexture());
         setCurrentDirection(movementDirection(this.position.getAngle()));
-
-        System.out.println(getCurrentDirection());
 
         /* Short Animations */
         if (getToBeRun() != null) {
@@ -570,8 +573,7 @@ public class Enemy extends Peon
     private void randomMoving() {
         if ((!isAttacking)) {
             logger.info("{} is moving randomly.", getName());
-            /*
-            targetPosition = new float[2];
+            float[] targetPosition = new float[2];
             targetPosition[0] = (float)
                     (Math.random() * 1200 + originalPosition[0]);
             targetPosition[1]=(float)
@@ -580,7 +582,6 @@ public class Enemy extends Peon
                     (targetPosition[0], targetPosition[1]);
             destination = new HexVector(randomPositionWorld[0],
                     randomPositionWorld[1]);
-            */
         }
     }
 
@@ -684,7 +685,7 @@ public class Enemy extends Peon
      * It will be used in {@link #equals(Object)} for comparing
      * objects.
      *
-     * @return the hashcode of the enemy intstance.
+     * @return the hashcode of the enemy instance.
      */
     @Override
     public int hashCode() {
