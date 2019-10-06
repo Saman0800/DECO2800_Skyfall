@@ -3,18 +3,16 @@ package deco2800.skyfall.worlds.world;
 import com.badlogic.gdx.Gdx;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.enemies.Enemy;
-import deco2800.skyfall.entities.worlditems.*;
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.AgentEntity;
-import deco2800.skyfall.entities.Harvestable;
-import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.entities.weapons.Weapon;
+import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
 import deco2800.skyfall.gamemenu.popupmenu.BlueprintShopTable;
 import deco2800.skyfall.gamemenu.popupmenu.ChestTable;
+import deco2800.skyfall.graphics.HasPointLight;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.observers.TouchDownObserver;
+import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Save;
@@ -34,7 +32,6 @@ import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import org.javatuples.Pair;
 
-import deco2800.skyfall.graphics.HasPointLight;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -689,7 +686,22 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
                 ChestTable chest = (ChestTable) menuManager.getPopUp("chestTable");
                 chest.updateChestPanel((Chest) entity);
                 menuManager.setPopUp("chestTable");
-            } else if (entity instanceof BlueprintShop) {
+            } else if (entity instanceof Item) {
+                    MainCharacter mc = gmm.getMainCharacter();
+                    if (tile.getCoordinates().distance(mc.getPosition()) > 2) {
+                        continue;
+                    }
+                    removeEntity(entity);
+                    gmm.getInventory().add((Item) entity);
+            } else if (entity instanceof GoldPiece) {
+                MainCharacter mc = gmm.getMainCharacter();
+                if (tile.getCoordinates().distance(mc.getPosition()) <= 1) {
+                    mc.addGold((GoldPiece) entity, 1);
+                    // remove the gold piece instance from the world
+                    removeEntity(entity);
+                }
+            }
+            else if (entity instanceof BlueprintShop) {
                 GameMenuManager menuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
                 BlueprintShopTable bs = (BlueprintShopTable) menuManager.getPopUp("blueprintShopTable");
                 bs.updateBlueprintShopPanel();

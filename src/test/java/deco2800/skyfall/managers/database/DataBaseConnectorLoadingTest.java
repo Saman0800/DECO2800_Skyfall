@@ -220,8 +220,8 @@ public class DataBaseConnectorLoadingTest {
         when(saveMemMock.getWorldID()).thenReturn(WOLRD_ID);
         dataBaseConnectorExpected.loadMainCharacter(saveMock);
 
-        assertEquals(10, MainCharacter.getInstance().getHealth());
-        assertEquals(100, MainCharacter.getInstance().getFoodLevel());
+        assertEquals(50, MainCharacter.getInstance().getHealth());
+        assertEquals(0, MainCharacter.getInstance().getFoodLevel());
         assertEquals(4, MainCharacter.getInstance().getInventoryManager().getContents().size());
         assertEquals(0, MainCharacter.getInstance().getRow(), 0.000001);
         assertEquals(0, MainCharacter.getInstance().getCol(), 0.0000001);

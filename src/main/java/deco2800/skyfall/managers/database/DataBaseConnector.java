@@ -27,6 +27,7 @@ import deco2800.skyfall.entities.worlditems.VolcanicRock;
 import deco2800.skyfall.entities.worlditems.VolcanicShrub;
 import deco2800.skyfall.entities.worlditems.VolcanicTree;
 import deco2800.skyfall.managers.DatabaseManager;
+import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.saving.DatabaseException;
 import deco2800.skyfall.saving.LoadException;
 import deco2800.skyfall.saving.RunTimeLoadException;
@@ -178,7 +179,7 @@ public class DataBaseConnector {
         for (WorldGenNode worldGenNode : world.getWorldGenNodes()) {
             if (containsQueries.containsNode(world.getID(), worldGenNode.getX(), worldGenNode.getY())) {
                 updateQueries.updateNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(), worldGenNode.save(),
-                    worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
+                        worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
             } else {
                 insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(), worldGenNode.save(),
                     worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
@@ -773,6 +774,8 @@ public class DataBaseConnector {
                 return new VolcanicRock(entityMemento);
             case "VolcanicTree":
                 return new VolcanicTree(entityMemento);
+            case "GoldPiece":
+                return new GoldPiece(entityMemento);
             default:
                 throw new LoadException(
                     String.format("Could not create %s from memento", entityMemento.getEntityType()));

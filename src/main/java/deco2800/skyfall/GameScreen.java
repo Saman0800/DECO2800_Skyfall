@@ -85,7 +85,6 @@ public class GameScreen implements Screen, KeyDownObserver {
     private SpectralValue ambientBlue;
     private SpectralValue ambientGreen;
 
-    // FIXME:Ontonator Change the constructor to be able to load worlds.
     public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
         /* Create an example world for the engine */
         this.game = game;
@@ -174,7 +173,10 @@ public class GameScreen implements Screen, KeyDownObserver {
         /* Add BGM to game manager */
         gameManager.addManager(new BGMManager());
 
-        /*
+        /* Add Quest Manager to game manager*/
+        gameManager.addManager(new QuestManager());
+
+        /**
          * NOTE: Now that the Environment Manager has been added start creating the
          * SpectralValue instances for the Ambient Light.
          */

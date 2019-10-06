@@ -15,6 +15,9 @@
     white: { a: 1, b: 1, g: 1, r: 1 },
     red: { a: 1, b: 0, g: 0, r: 1 },
     black: { a: 1, b: 0, g: 0, r: 0 },
+    dark-blue: {a: 1, b: 64, g: 29, r: 7},
+    light-blue: {a: 1, b: 255, g: 252, r: 158},
+    navy: {hex: 112A40},
   },
   com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
     dialogDim: {
@@ -158,6 +161,10 @@
       fontColor: black
     }
     black-text: {
+      font: game-font,
+      fontColor: black
+    }
+    navy-text: {
       font: game-font,
       fontColor: black
     }
