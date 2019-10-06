@@ -309,6 +309,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("knob_after", new Texture("resources/new_ui/pauseTable/volume_navy.png"));
             textureMap.put("knob", new Texture("resources/new_ui/pauseTable/volume_knob.png"));
             textureMap.put("knob_before", new Texture("resources/new_ui/pauseTable/volume_green.png"));
+            textureMap.put("equipped_bar", new Texture("resources/new_ui/equipped_bar.png"));
 
 
             // Help table

@@ -46,7 +46,7 @@ public class GameMenuBar2 extends AbstractUIElement {
 
     @Override
     public void updatePosition() {
-        equippedTable.setPosition(gmm.getTopRightX() - 170, gmm.getTopLeftY() - 100);
+        equippedTable.setPosition(gmm.getTopRightX() - 170, gmm.getTopLeftY() - 130);
         quickAccessPanel.setPosition(gmm.getTopRightX() - 170, gmm.getTopRightY() - 650);
         //t.setHeight(stage.getCamera().viewportHeight / 2);
         sideBar.setPosition(gmm.getTopRightX() - 180, gmm.getTopRightY() - 520);
@@ -75,13 +75,17 @@ public class GameMenuBar2 extends AbstractUIElement {
         stage.addActor(build);
     }
 
+    /**
+     * Displays the equipped table at the top right corner showing what is equipped.
+     */
     public void showEquipped() {
-        equippedTable = new Table();
-        equippedTable.setBackground(gmm.generateTextureRegionDrawableObject("popup_bg"));
-        equippedTable.setSize(150, 70);
+        equippedTable = new Table().bottom();
+        equippedTable.setBackground(gmm.generateTextureRegionDrawableObject("equipped_bar"));
+        equippedTable.setSize(150, 100);
+        // Equipped item text
         equipped = new Label("", skin, "white-text");
         equipped.setFontScale(0.7f);
-        equippedTable.add(equipped);
+        equippedTable.add(equipped).padBottom(10);
         stage.addActor(equippedTable);
     }
 

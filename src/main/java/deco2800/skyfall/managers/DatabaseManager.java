@@ -559,7 +559,7 @@ public final class DatabaseManager extends AbstractManager {
         // Use this for generating the test, make sure you change the WORLD_ID and
         // SAVE_ID in
         // DatabaseConnectorLoadingTest
-        dataBaseConnector.start("src/test/java/deco2800/skyfall/managers/database/ExpectedDatabase");
+        dataBaseConnector.start("src/test/java/deco2800/skyfall/managers/database/ExpectedDatabase1");
         dataBaseConnector.getFlyway().clean();
         dataBaseConnector.getFlyway().migrate();
 
