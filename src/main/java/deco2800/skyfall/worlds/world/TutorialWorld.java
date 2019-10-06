@@ -71,6 +71,16 @@ public class TutorialWorld extends World implements TouchDownObserver {
             testTutorialBox.start();
         }
 
-
+        /*
+         * if (!entityList.contains(testTutorialEnemy) && !testKilledEnemy) {
+         * testKilledEnemy = true; testTutorialBox.reset();
+         * testTutorialBox.setString("Now that nothing, no matter how " +
+         * "harmless, can hurt your squishy body, please go collect " +
+         * "the remnants of the first creature you slaughtered. This" +
+         * " can be done by walking on top of it where it used to " +
+         * "stand. With these materials you can now create morally" +
+         * " questionable tools and building. Hooray. Please press " +
+         * "(inventory key here) to begin this process."); testTutorialBox.start(); }
+         */
     }
 }

@@ -4,9 +4,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.managers.TextureManager;
@@ -43,9 +41,6 @@ public class AbstractPopUpElementTest {
         element.show();
         assertTrue(element.isVisible());
         verify(exitButton).setVisible(true);
-        // Game paused
-        assertTrue(GameScreen.getIsPaused());
-        assertTrue(GameManager.getPaused());
     }
 
     @Test
@@ -53,9 +48,6 @@ public class AbstractPopUpElementTest {
         element.hide();
         assertFalse(element.isVisible());
         verify(exitButton).setVisible(false);
-        // Game resumed
-        assertFalse(GameScreen.getIsPaused());
-        assertFalse(GameManager.getPaused());
     }
 
     @Test

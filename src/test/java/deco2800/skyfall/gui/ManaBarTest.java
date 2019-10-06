@@ -1,7 +1,6 @@
 package deco2800.skyfall.gui;
 
 import deco2800.skyfall.BaseGDXTest;
-import deco2800.skyfall.gamemenu.ManaBar;
 import org.junit.BeforeClass;
 
 public class ManaBarTest extends BaseGDXTest {

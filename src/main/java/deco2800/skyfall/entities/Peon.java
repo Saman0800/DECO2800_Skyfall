@@ -55,15 +55,14 @@ public abstract class Peon extends AgentEntity implements Tickable {
 			setName(name);
 		}
 
-		if (health < 1){
-			this.health = 50;
-			this.maxHealth = 50;
+		if (health <= 0){
+			this.health = 10;
+			this.maxHealth = 10;
 		} else {
 			this.health = health;
 			this.maxHealth = health;
 		}
-		String info = String.format("%s has %d", name, maxHealth);
-		logger.info(info);
+		logger.info(name + " has " + maxHealth);
 		this.deaths = 0;
 	}
 
@@ -80,7 +79,7 @@ public abstract class Peon extends AgentEntity implements Tickable {
 		}
 
 		if (health <= 0){
-			this.health = 50;
+			this.health = 10;
 		} else {
 			this.health = health;
 		}
@@ -109,21 +108,18 @@ public abstract class Peon extends AgentEntity implements Tickable {
 	 * @param amount change being made to player's health
 	 */
 	public void changeHealth(int amount) {
-		// Current health equals player's current health
 		int currentHealth = this.getHealth();
 
-		// Change current health if it is greater than max health
-		if(currentHealth > maxHealth) {
-			currentHealth = maxHealth;
+		if(currentHealth + amount > maxHealth) {
+			this.health = maxHealth;
+		} else {
+			this.health += amount;
 		}
-
-		// Add health to current health
-		currentHealth += amount;
-		this.health = currentHealth;
-
-		// Check if player is dead
-		if (this.isDead()) {
-			health = 0;
+		if (this instanceof MainCharacter && this.isDead()) {
+			this.health = currentHealth;
+			this.deaths += 1;
+		} else if (this.isDead()){
+			this.health = 0;
 			this.deaths += 1;
 		}
 	}
@@ -133,7 +129,7 @@ public abstract class Peon extends AgentEntity implements Tickable {
 	 * @return health of character
 	 */
 	public int getHealth() {
-		return this.health;
+		return health;
 	}
 
 	/**
@@ -155,13 +151,16 @@ public abstract class Peon extends AgentEntity implements Tickable {
 	 * @return true if character's health is less than or equal to 0, else false
 	 */
 	public boolean isDead() {
-		return this.getHealth() < 1;
+		return this.getHealth() <= 0;
 	}
 
 	/**
 	 * Sets character to be dead
 	 */
 	public boolean setDead(boolean isDead) {
+		if (isDead) {
+			health = 0;
+		}
 		return isDead;
 	}
 

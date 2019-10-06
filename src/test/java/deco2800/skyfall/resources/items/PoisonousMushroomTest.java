@@ -31,14 +31,6 @@ public class PoisonousMushroomTest{
         assertEquals("PoisonousMushroom", poisonousMushroom.getName());
     }
 
-    /**
-     * Tests the correct colour is returned for the health resource
-     */
-    @Test
-    public void getColourTest(){
-        assertEquals("black white", poisonousMushroom.getColour());
-
-    }
 
     /**
      * Ensure that PoisonousMushroom is classified as carryable

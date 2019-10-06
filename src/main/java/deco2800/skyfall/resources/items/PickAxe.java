@@ -112,7 +112,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
      * 
      * @param rockToFarm the rock to be farmed
      */
-    public void farmRock(AbstractRock rockToFarm) {
+    public void farmRock(ForestRock rockToFarm) {
 
         if (rockToFarm.getHealth() == 0) {
             System.out.println("This rock has nothing left to offer");
@@ -128,13 +128,6 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
             if (x == 1) {
                 GameManager.getManagerFromInstance(InventoryManager.class).add(new Metal());
-            }
-
-            // lowering the possibility of gaining sand
-            double y = Math.random();
-
-            if (y >= 0.8) {
-                GameManager.getManagerFromInstance(InventoryManager.class).add(new Sand());
             }
 
             rockToFarm.setHealth(rockToFarm.getHealth() - 10);
@@ -220,7 +213,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
         for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
             if (entity instanceof AbstractRock) {
                 if (position.distance(entity.getPosition()) <= 1.5) {
-                    this.farmRock((AbstractRock) entity);
+                    this.farmRock((ForestRock) entity);
                 }
             }
         }

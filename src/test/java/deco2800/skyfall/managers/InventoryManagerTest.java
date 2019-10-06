@@ -1,8 +1,5 @@
 package deco2800.skyfall.managers;
 
-import com.badlogic.gdx.Game;
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.items.*;
 
@@ -25,6 +22,7 @@ public class InventoryManagerTest {
 
         List<String> qai = new ArrayList<>();
         qai.add("Stone");
+
         test = new InventoryManager(inv, qai);
     }
 
@@ -128,6 +126,10 @@ public class InventoryManagerTest {
 
         assertNull(test.dropMultiple("Sand", 2));
         assertNull(test.dropMultiple("Apple", 3));
+
+        test.dropAll("Metal");
+        assertEquals(0, test.getAmount("Metal"));
+        assertEquals(2, test.getAmounts().size());
     }
 
     @Test
@@ -170,10 +172,10 @@ public class InventoryManagerTest {
         test.quickAccessAdd("Apple");
         test.quickAccessAdd("Berry");
 
-        assertEquals(4, test.getQuickAccess().size());
+        assertEquals(6, test.getQuickAccess().size());
 
         test.quickAccessAdd("Metal");
-        assertEquals(4, test.getQuickAccess().size());
+        assertEquals(6, test.getQuickAccess().size());
         assertFalse(test.getQuickAccess().containsKey("Metal"));
 
     }

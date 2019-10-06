@@ -12,6 +12,7 @@ import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.resources.Blueprint;
 import java.util.List;
 
+import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
 /**
  * A class for blueprint shop table pop up.
@@ -71,17 +72,17 @@ public class BlueprintShopTable extends AbstractPopUpElement {
                 (Gdx.graphics.getHeight() + 160) / 2f - blueprintTable.getHeight() / 2);
         blueprintTable.setDebug(true);
         blueprintTable.top();
-        blueprintTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("pop up screen"));
+        blueprintTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
         blueprintTable.setName("chestTable");
 
-        Image infoBar = new Image(gameMenuManager.generateTextureRegionDrawableObject("inventory_banner"));
+        Image infoBar = new Image(generateTextureRegionDrawableObject("inventory_banner"));
         infoBar.setSize(650, 55);
         infoBar.setPosition(130, 435);
 
         Table infoPanel = new Table();
         infoPanel.setSize(410, 400);
         infoPanel.setPosition(25, 18);
-        infoPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("info_panel"));
+        infoPanel.setBackground(generateTextureRegionDrawableObject("info_panel"));
 
         this.blueprintPanel = new Table();
         // updateChestPanel(chest);
@@ -101,7 +102,7 @@ public class BlueprintShopTable extends AbstractPopUpElement {
         blueprintPanel.setName("resourcePanel");
         blueprintPanel.setSize(410, 400);
         blueprintPanel.setPosition(475, 18);
-        blueprintPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("menu_panel"));
+        blueprintPanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
 
         List<Blueprint> unlocked = sm.getCharacter().getUnlockedBlueprints();
 
@@ -111,7 +112,7 @@ public class BlueprintShopTable extends AbstractPopUpElement {
 
         for (Blueprint b : unlocked) {
 
-            ImageButton icon = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(b.getName()));
+            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(b.getName()));
             icon.setName("icon");
             icon.setSize(100, 100);
             icon.setPosition(xpos + count * 130, ypos);
@@ -133,6 +134,7 @@ public class BlueprintShopTable extends AbstractPopUpElement {
                             sm.getCharacter().removeGold(b.getCost());
                             sm.getCharacter().addBlueprint(b);
                         } else {
+                            System.out.println("Not enough money");
                         }
                         updateBlueprintShopPanel();
                     }

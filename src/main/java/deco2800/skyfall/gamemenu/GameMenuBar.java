@@ -11,11 +11,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
+import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
+
 public class GameMenuBar extends AbstractUIElement {
 
 
     private GameMenuManager gameMenuManager;
-    private Table quickAccessPanel;
+    Table quickAccessPanel;
     private Skin skin;
     private static final Logger LOGGER = LoggerFactory.getLogger(GameMenuBar.class);
 
@@ -54,7 +56,7 @@ public class GameMenuBar extends AbstractUIElement {
     private void showButtons() {
         int width;
         width = 65;
-        ImageButton pause = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("pause"));
+        ImageButton pause = new ImageButton(generateTextureRegionDrawableObject("pause"));
 
         pause.setSize(width, width * 146 / 207f);
         pause.setPosition(208, 105);
@@ -62,7 +64,6 @@ public class GameMenuBar extends AbstractUIElement {
         pause.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                hideOpened();
                 hideOpened();
                 gameMenuManager.setPopUp("pauseTable");
             }
@@ -72,7 +73,7 @@ public class GameMenuBar extends AbstractUIElement {
         setQuickAccessPanel();
 
 
-        ImageButton selectCharacter = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("select-character"));
+        ImageButton selectCharacter = new ImageButton(generateTextureRegionDrawableObject("select-character"));
         selectCharacter.setSize(width, width * 146 / 207f);
         selectCharacter.setPosition(208, 30 * 1000 / 800f);
         stage.addActor(selectCharacter);
@@ -85,7 +86,7 @@ public class GameMenuBar extends AbstractUIElement {
             }
         });
 
-        ImageButton info = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("info"));
+        ImageButton info = new ImageButton(generateTextureRegionDrawableObject("info"));
         info.setSize(width, width * 146 / 207f);
         info.setPosition(1015, 105);
         stage.addActor(info);
@@ -98,7 +99,7 @@ public class GameMenuBar extends AbstractUIElement {
             }
         });
 
-        ImageButton settings = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("settings"));
+        ImageButton settings = new ImageButton(generateTextureRegionDrawableObject("settings"));
         settings.setSize(width, width * 146 / 207f);
         settings.setPosition(1015, 30 * 1000 / 800f);
         stage.addActor(settings);
@@ -111,7 +112,7 @@ public class GameMenuBar extends AbstractUIElement {
             }
         });
 
-        ImageButton build = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("build"));
+        ImageButton build = new ImageButton(generateTextureRegionDrawableObject("build"));
         build.setSize(219 * 0.55f, 207 * 0.55f);
         build.setPosition(300, 30 * 1000 / 800f);
         stage.addActor(build);
@@ -125,6 +126,22 @@ public class GameMenuBar extends AbstractUIElement {
         });
 
 
+        ImageButton goldPouchButton = new ImageButton(generateTextureRegionDrawableObject("goldPouch"));
+        goldPouchButton.setSize(200 * 0.55f, 207 * 0.55f);
+        goldPouchButton.setPosition(440, 30 * 1000 / 800f);
+        stage.addActor(goldPouchButton);
+
+        goldPouchButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                hideOpened();
+                gameMenuManager.setPopUp("goldTable");
+            }
+        });
+
+
+
+
         LOGGER.info("Finished drawing menu bar");
     }
 
@@ -134,9 +151,9 @@ public class GameMenuBar extends AbstractUIElement {
     public void setQuickAccessPanel(){
         //Set Quick Access Panel
         quickAccessPanel = new Table();
+        quickAccessPanel.setBackground(generateTextureRegionDrawableObject("quick_access_panel"));
         quickAccessPanel.setSize(450, 207 * 0.55f);
         quickAccessPanel.setPosition(560, 30 * 1000 / 800f);
-        quickAccessPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("quick_access_panel"));
 
         //Populate quick access GUI with resources
         updateQuickAccess();
@@ -145,7 +162,7 @@ public class GameMenuBar extends AbstractUIElement {
 
 
         //Set open inventory button icon in quick access
-        ImageButton inventoryButton = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("inv_button"));
+        ImageButton inventoryButton = new ImageButton(generateTextureRegionDrawableObject("inv_button"));
         inventoryButton.setSize(50, 50 * 146 / 207f);
         inventoryButton.setPosition(950, 78);
 
@@ -181,7 +198,7 @@ public class GameMenuBar extends AbstractUIElement {
                     weaponName = entry.getKey() + "_display";
                 }
             }
-            ImageButton icon = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(weaponName + "_inv"));
+            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(weaponName + "_inv"));
             icon.setSize(size, size);
             icon.setPosition((xpos*count) + size*(count-1), ypos);
 

@@ -50,14 +50,6 @@ public class Aloe_VeraTest{
         assertEquals("Health Resource", aloe_vera.getSubtype());
     }
 
-    /**
-     * Tests the correct colour is returned for the health resource
-     */
-    @Test
-    public void getColourTest(){
-        assertEquals("green", aloe_vera.getColour());
-
-    }
 
     /**
      * Ensure that the item is considered exchangeable for later use in the game

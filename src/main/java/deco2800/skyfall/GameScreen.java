@@ -57,7 +57,6 @@ public class GameScreen implements Screen, KeyDownObserver {
 
     long lastGameTick = 0;
 
-
     /**
      * Create an EnvironmentManager for ToD.
      */
@@ -93,8 +92,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         this.game = game;
 
         this.save = new Save();
-
-        MainCharacter.getInstance(0,0,0.05f, "Main Piece", 50);
+        MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
         MainCharacter.getInstance().setSave(this.save);
         this.save.setMainCharacter(MainCharacter.getInstance());
         GameManager gameManager = GameManager.get();
@@ -169,10 +167,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         /* Add BGM to game manager */
         gameManager.addManager(new BGMManager());
 
-        /* Add Quest Manager to game manager*/
-        gameManager.addManager(new QuestManager());
-
-        /**
+        /*
          * NOTE: Now that the Environment Manager has been added start creating the
          * SpectralValue instances for the Ambient Light.
          */

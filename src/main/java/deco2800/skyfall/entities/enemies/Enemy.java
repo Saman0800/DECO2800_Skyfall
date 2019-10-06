@@ -154,7 +154,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
     public void dealDamage(MainCharacter mc) {
         setAttacking(false);
         setCurrentState(AnimationRole.ATTACK);
-        mc.playerHurt(this.getDamage());
+        mc.hurt(this.getDamage());
         mc.setRecovering(true);
     }
 

@@ -1,20 +1,15 @@
 package deco2800.skyfall.managers;
 
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.gamemenu.AbstractUIElement;
-import deco2800.skyfall.gamemenu.HealthCircle;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-
 import static org.mockito.Mockito.*;
 
 
@@ -27,7 +22,7 @@ public class GameMenuManagerTest {
     private Skin skin;
     private Map<String, AbstractPopUpElement> popUps;
     private Map<String, AbstractUIElement> uiElements;
-    private Camera camera;
+
 
     @Before
     public void setUp() {
@@ -38,12 +33,6 @@ public class GameMenuManagerTest {
         skin = mock(Skin.class);
         popUps = mock(Map.class);
         uiElements = mock(Map.class);
-        camera = spy(Camera.class);
-        camera.position.x = 100;
-        camera.position.y = 100;
-        camera.viewportWidth = 100;
-        camera.viewportHeight = 100;
-        when(stage.getCamera()).thenReturn(camera);
 
         gmm = new GameMenuManager(tm, sm, im, stage, skin, popUps, uiElements);
     }
@@ -65,7 +54,6 @@ public class GameMenuManagerTest {
     }
 
     @Test
-    @Ignore
     public void onTickUpdateTest() {
         gmm.setPopUp(null);
         //AbstractPopUpElement is still
@@ -74,18 +62,13 @@ public class GameMenuManagerTest {
         doNothing().when(mockPopUp).update();
 
 
-        HashMap<String, AbstractUIElement> actualMap = new HashMap<>();
+        HashMap<String, Object> actualMap = new HashMap<>();
 
-        actualMap.put("mock1", null);
-        actualMap.put("mock2", null);
-        actualMap.put("mock3", null);
+        actualMap.put("mock1", 2);
+        actualMap.put("mock2", 2);
+        actualMap.put("mock3", 2);
 
-        when(uiElements.entrySet()).thenReturn(actualMap.entrySet());
-
-        for (Map.Entry<String, AbstractUIElement> key: actualMap.entrySet()) {
-            doNothing().when(key).getValue().update();
-        }
-
+        when(uiElements.keySet()).thenReturn(actualMap.keySet());
         doReturn(mockPopUp).when(uiElements).get(anyString());
 
         gmm.onTick(0);
@@ -117,6 +100,7 @@ public class GameMenuManagerTest {
         verify(uiElements, never()).put(anyString(), any());
     }
 
+
     @After()
     public void tearDown() {
         tm = null;
@@ -127,6 +111,5 @@ public class GameMenuManagerTest {
         popUps = null;
         uiElements = null;
         gmm = null;
-        camera = null;
     }
 }

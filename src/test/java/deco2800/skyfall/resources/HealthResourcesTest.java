@@ -46,30 +46,6 @@ public class HealthResourcesTest {
     }
 
     /**
-     * Tests the correct biomes are returned for each health resource
-     */
-    @Test
-    public void getBiomeTest(){
-        assertEquals("Forest", apple.getBiome());
-        assertEquals("Forest", berry.getBiome());
-        assertEquals("Forest", poisonousmushroom.getBiome());
-        assertEquals("Desert", aloe_vera.getBiome());
-
-    }
-
-    /**
-     * Tests the correct colours are returned for each health resource
-     */
-    @Test
-    public void getColourTest(){
-        assertEquals("red", apple.getColour());
-        assertEquals("wine red", berry.getColour());
-        assertEquals("black white", poisonousmushroom.getColour());
-        assertEquals("green", aloe_vera.getColour());
-
-    }
-
-    /**
      * Ensure that all the items are classified as carryable
      */
     @Test

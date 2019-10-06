@@ -9,6 +9,7 @@ import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
 import java.util.Map;
 
+import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
 public class GoldTable extends AbstractPopUpElement{
     private final Skin skin;
@@ -50,17 +51,17 @@ public class GoldTable extends AbstractPopUpElement{
         goldTable.setPosition(Gdx.graphics.getWidth()/2f - goldTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - goldTable.getHeight()/2);
         goldTable.top();
-        goldTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("pop up screen"));
+        goldTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
         goldTable.setName("goldTable");
 
-        Image infoBar = new Image(gameMenuManager.generateTextureRegionDrawableObject("goldBanner"));
+        Image infoBar = new Image(generateTextureRegionDrawableObject("goldBanner"));
         infoBar.setSize(550, 55);
         infoBar.setPosition(90, 600);
 
         Table infoPanel = new Table();
         infoPanel.setSize(410, 400);
         infoPanel.setPosition(25, 18);
-        infoPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("info_panel"));
+        infoPanel.setBackground(generateTextureRegionDrawableObject("info_panel"));
 
         updateGoldPanel();
 
@@ -83,7 +84,7 @@ public class GoldTable extends AbstractPopUpElement{
         goldPanel.setName("goldPanel");
         goldPanel.setSize(500, 450);
         goldPanel.setPosition(110, 100);
-        goldPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("menu_panel"));
+        goldPanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
 
         Map<Integer, Integer> goldAmounts = sm.getCharacter().getGoldPouch();
 
@@ -92,7 +93,9 @@ public class GoldTable extends AbstractPopUpElement{
         int ypos = 280;
 
         for (Map.Entry<Integer, Integer> entry : goldAmounts.entrySet()) {
-            ImageButton icon = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("goldPiece" + entry.getKey()));
+//            System.out.println(entry.getKey());
+//            System.out.println(entry.getValue());
+            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject("goldPiece" + entry.getKey()));
             icon.setName("icon");
             icon.setSize(100, 100);
             icon.setPosition(xpos + count * 130, ypos);

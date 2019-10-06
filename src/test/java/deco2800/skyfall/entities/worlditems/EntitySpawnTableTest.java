@@ -133,13 +133,11 @@ public class EntitySpawnTableTest {
         when(mockGM.getManager(PhysicsManager.class)).thenReturn(physics);
     }
 
-    @Ignore
     @Test
     public void testNormalizeStaticEntityNoise() {
         assertEquals(1 - 1 / (1 + Math.exp(23 * (0.1 - 0.5))), EntitySpawnTable.normalizeStaticEntityNoise(0.1), 0.001);
     }
 
-    @Ignore
     @Test
     public void testPlaceUniform() {
         EntitySpawnTable.placeUniform(tile -> dummyRock, spawnRuleTest, centre, testWorld);
@@ -147,7 +145,6 @@ public class EntitySpawnTableTest {
         centre.setObstructed(false);
     }
 
-    @Ignore
     @Test
     public void testPlacePerlin() {
         EntitySpawnTable.placeUniform(tile -> dummyRock, spawnRulePerlinTest, centre, testWorld);

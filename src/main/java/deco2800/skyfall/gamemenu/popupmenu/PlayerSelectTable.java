@@ -12,6 +12,7 @@ import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
 
+import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
 /**
  * A class for player select table pop up.
@@ -73,10 +74,10 @@ public class PlayerSelectTable extends AbstractPopUpElement{
         playerSelectTable.setSize(600, 600 * 1346 / 1862f);
         playerSelectTable.setPosition(Gdx.graphics.getWidth()/2f - playerSelectTable.getWidth()/2,
                 (Gdx.graphics.getHeight() + 160) / 2f - playerSelectTable.getHeight()/2);
-        playerSelectTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("pop up screen"));
+        playerSelectTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
 
         Table infoBar = new Table();
-        infoBar.setBackground(gameMenuManager.generateTextureRegionDrawableObject("game menu bar"));
+        infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
 
         Label text = new Label("PLAYER SELECT", skin, "black-text");
         infoBar.add(text);
@@ -87,7 +88,7 @@ public class PlayerSelectTable extends AbstractPopUpElement{
         int arrowWidth = 60;
 
         //height = width
-        ImageButton leftArrow = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("left_arrow"));
+        ImageButton leftArrow = new ImageButton(generateTextureRegionDrawableObject("left_arrow"));
 
         playerSelectTable.add(leftArrow).width(arrowWidth).height(arrowWidth).expandY();
 
@@ -106,7 +107,7 @@ public class PlayerSelectTable extends AbstractPopUpElement{
             playerSelectTable.add(characterTables[i]).width(characterTableWidth).height(600f * 1346 / 1862 - 550f * 180 / 1756 - 40 - 30 - 200f*138/478).spaceLeft(5).spaceRight(5);
         }
 
-        ImageButton rightArrow = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("right_arrow"));
+        ImageButton rightArrow = new ImageButton(generateTextureRegionDrawableObject("right_arrow"));
         playerSelectTable.add(rightArrow).width(arrowWidth).height(arrowWidth).expandY();
 
         leftArrow.addListener(new ClickListener() {
@@ -127,7 +128,7 @@ public class PlayerSelectTable extends AbstractPopUpElement{
 
         playerSelectTable.row().padTop(20).padBottom(10);
 
-        ImageButton select = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("select"));
+        ImageButton select = new ImageButton(generateTextureRegionDrawableObject("select"));
         playerSelectTable.add(select).width(200).height(200 * select.getHeight() /select.getWidth()).expandX().colspan(5);
 
         select.addListener(new ClickListener() {
@@ -163,7 +164,7 @@ public class PlayerSelectTable extends AbstractPopUpElement{
             characterTable.row();
             String texture = gameMenuManager.getCharacters()[(i + gameMenuManager.NUMBEROFCHARACTERS - 1) % gameMenuManager.NUMBEROFCHARACTERS];
             try {
-                TextureRegionDrawable characterTexture = gameMenuManager.generateTextureRegionDrawableObject(texture);
+                TextureRegionDrawable characterTexture = generateTextureRegionDrawableObject(texture);
                 Image character = new Image(characterTexture);
                 characterTable.add(character).expandY().width(characterTableWidth * 0.8f).height(characterTableWidth * 0.8f * character.getHeight() / character.getWidth());
             } catch (NullPointerException e) {

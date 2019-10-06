@@ -127,7 +127,7 @@ public abstract class AbstractEnemy extends Peon implements ICombatEntity {
             if (distance(mc) < range) {
                 setAttacking(false);
                 setCurrentState(AnimationRole.ATTACK);
-                player.playerHurt(this.getDamage());
+                player.hurt(this.getDamage());
                 player.setRecovering(true);
             }
         }
@@ -150,15 +150,15 @@ public abstract class AbstractEnemy extends Peon implements ICombatEntity {
     }
 
     /**
-     *  Get whether enemy is playerHurt.
+     *  Get whether enemy is hurt.
      */
     public boolean isHurt() {
         return isHurt;
     }
 
     /**
-     *  Set whether enemy is playerHurt.
-     * @param isHurt the player's "playerHurt" status
+     *  Set whether enemy is hurt.
+     * @param isHurt the player's "hurt" status
      */
     @SuppressWarnings("WeakerAccess")
     public void setHurt(boolean isHurt) {
@@ -166,7 +166,7 @@ public abstract class AbstractEnemy extends Peon implements ICombatEntity {
     }
 
     private void checkIfHurtEnded() {
-        hurtTime += 20; // playerHurt for 1 second
+        hurtTime += 20; // hurt for 1 second
         if (hurtTime > 400) {
             log.info("Hurt ended");
             setHurt(false);
@@ -259,7 +259,7 @@ public abstract class AbstractEnemy extends Peon implements ICombatEntity {
     @Override
     public void dealDamage(MainCharacter mc) {
         if (mc.isRecovering()) {
-            mc.playerHurt(getDamage());
+            mc.hurt(getDamage());
         }
     }
 

@@ -9,10 +9,14 @@ public class PoisonousMushroom extends HealthResources implements Item {
     private String name;
 
 
+    // the colour of the PoisonousMushroom
+    private String colour;
 
     // determines whether or not the resource can be traded
     //private boolean exchangeable;
 
+    // the biome the poisonous mushroom is in (will change to different type in future?)
+    private String biome;
 
     //whether or not the item impacts the player's food fullness
     private boolean hasFoodEffect;
@@ -37,6 +41,14 @@ public class PoisonousMushroom extends HealthResources implements Item {
         return "PoisonousMushroom";
     }
 
+
+    /**
+     * Returns the biome the PoisonousMushroom is situated in
+     * @return the biome the PoisonousMushroom is situated in
+     */
+    public String getBiome(){
+        return biome;
+    }
 
 
     /**

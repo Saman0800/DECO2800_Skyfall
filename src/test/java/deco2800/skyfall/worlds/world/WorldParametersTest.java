@@ -3,7 +3,6 @@ package deco2800.skyfall.worlds.world;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.*;
 
-
 import deco2800.skyfall.entities.worlditems.ForestRock;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
 import org.junit.Before;
