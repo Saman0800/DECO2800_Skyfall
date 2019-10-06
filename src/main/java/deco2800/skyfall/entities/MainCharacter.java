@@ -1971,6 +1971,11 @@ public class MainCharacter extends Peon
     }
 
 
+    public int getFoodLevel(){
+        return this.foodLevel;
+    }
+
+
     // FIXME:dannothan Fix or remove this.
     // FIXME:jeffvan figure out what needs saving
     public MainCharacterMemento save() {
