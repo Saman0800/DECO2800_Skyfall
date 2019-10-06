@@ -321,9 +321,12 @@ public class DataBaseConnector {
                 byte[] buffer = result.getBytes("data");
                 ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(buffer));
                 MainCharacterMemento memento = (MainCharacterMemento) objectIn.readObject();
+                MainCharacter.resetInstance();
                 MainCharacter.loadMainCharacter(memento, save);
 
                 connection.setAutoCommit(true);
+
+
             }
 
         } catch (IOException | ClassNotFoundException | SQLException | LoadException e) {
