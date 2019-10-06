@@ -1,9 +1,5 @@
 package deco2800.skyfall.entities;
 
-import static deco2800.skyfall.buildings.BuildingType.CABIN;
-import static deco2800.skyfall.buildings.BuildingType.CASTLE;
-import static deco2800.skyfall.buildings.BuildingType.WATCHTOWER;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
@@ -23,48 +19,34 @@ import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellCaster;
 import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.spells.SpellType;
-import deco2800.skyfall.entities.weapons.Bow;
-import deco2800.skyfall.entities.weapons.EmptyItem;
-import deco2800.skyfall.entities.weapons.Spear;
-import deco2800.skyfall.entities.weapons.Sword;
-import deco2800.skyfall.entities.weapons.Weapon;
+import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gamemenu.ManaBar;
-import deco2800.skyfall.managers.ConstructionManager;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.managers.InputManager;
-import deco2800.skyfall.managers.InventoryManager;
-import deco2800.skyfall.managers.PetsManager;
-import deco2800.skyfall.managers.SoundManager;
-import deco2800.skyfall.managers.WeaponManager;
+import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.observers.KeyUpObserver;
 import deco2800.skyfall.observers.TouchDownObserver;
-import deco2800.skyfall.saving.AbstractMemento;
-
-import java.io.Serializable;
-
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.GoldPiece;
-import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
+import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static deco2800.skyfall.buildings.BuildingType.*;
 
 /**
  * Main character in the game
@@ -405,6 +387,7 @@ public class MainCharacter extends Peon
      * Set up the health bar.
      */
     private void setupHealthBar() {
+        // If the health bar does not equal null, create it
         if (this.healthBar != null) {
             this.healthBar = (HealthCircle) GameManager.getManagerFromInstance(GameMenuManager.class).
                     getUIElement("healthCircle");
@@ -415,6 +398,7 @@ public class MainCharacter extends Peon
      * Set up the game over screen.
      */
     private void setupGameOverScreen() {
+        // If the gameMenuManager does not equal null, create the game over screen
         this.gameMenuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
         if (this.gameMenuManager != null) {
             gameMenuManager.hideOpened();
@@ -728,19 +712,21 @@ public class MainCharacter extends Peon
      *
      * @param damage the damage deal to the player.
      */
-
     public void playerHurt(int damage) {
+        // Change health and related fields accordingly
         setHurt(true);
         changeHealth(-damage);
         updateHealth();
         logger.info("Current Health: {}", this.getHealth());
 
+        // If the player isn't recovering, set hurt and change health/animations
         if (!isRecovering) {
             setHurt(true);
             this.changeHealth(-damage);
             getBody().setLinearVelocity(getBody().getLinearVelocity()
                     .lerp(new Vector2(0.f, 0.f), 0.5f));
 
+            // Check if player died and run kill method
             if (this.getHealth() < 1) {
                 logger.info("Player died.");
                 kill();
@@ -771,9 +757,9 @@ public class MainCharacter extends Peon
         }
     }
 
-        /**
-         * Helper function to update healthBar outside of class.
-         */
+    /**
+     * Helper function to update healthBar outside of class.
+     */
     private void updateHealth() {
         if (this.healthBar != null) {
             this.healthBar.update();
@@ -788,6 +774,9 @@ public class MainCharacter extends Peon
         return isRecovering;
     }
 
+    /*
+     * Set players to recovering if hurt
+     */
     public void setRecovering(boolean isRecovering) {
         this.isRecovering = isRecovering;
     }
@@ -800,6 +789,9 @@ public class MainCharacter extends Peon
         this.isTexChanging = isTexChanging;
     }
 
+    /*
+     * Check if player has recovered
+     */
     private void checkIfRecovered() {
         recoverTime += 20;
         this.changeCollideability(false);
@@ -821,8 +813,10 @@ public class MainCharacter extends Peon
         SoundManager.playSound(DIED_SOUND_NAME);
         setCurrentState(AnimationRole.DEAD);
         deadTime = 0;
-        setupGameOverScreen();
         setDead(true);
+
+        // Show game over screen
+        setupGameOverScreen();
     }
 
     /**
@@ -1532,6 +1526,7 @@ public class MainCharacter extends Peon
 
     public List<Blueprint> getUnlockedBlueprints() {
         List<Blueprint> unlocked = new ArrayList<>();
+        QuestManager qm = GameManager.get().getManager(QuestManager.class);
         switch (gameStage) {
         case LAVA:
 
@@ -1550,8 +1545,9 @@ public class MainCharacter extends Peon
             unlocked.add(new Bow());
             unlocked.add(new Spear());
             unlocked.add(CASTLE);
-
-            unlocked.add(new ForestPortal(0, 0, 0));
+            if(qm.questFinished()) {
+                unlocked.add(new ForestPortal(0, 0, 0));
+            }
         }
         return unlocked;
 

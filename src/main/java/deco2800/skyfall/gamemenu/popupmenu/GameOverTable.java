@@ -16,6 +16,7 @@ import deco2800.skyfall.managers.*;
  */
 public class GameOverTable extends AbstractPopUpElement{
 
+    // Table to be displayed
     private Table mainTable;
 
     /**
@@ -73,6 +74,7 @@ public class GameOverTable extends AbstractPopUpElement{
         retry.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // If pressed, restart level and hide screen
                 retryQuest();
                 hide();
             }
@@ -84,6 +86,7 @@ public class GameOverTable extends AbstractPopUpElement{
         toHome.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // If pressed, return home and hide screen
                 returnHome();
                 hide();
             }
@@ -96,15 +99,19 @@ public class GameOverTable extends AbstractPopUpElement{
     /**
      * Resets the quest once play dies and chooses retry.
      */
-    private void retryQuest() {
+    public void retryQuest() {
+        // Restore health to full
         MainCharacter.getInstance().changeHealth(50);
+
+        // Reset quest
         GameManager.getManagerFromInstance(QuestManager.class).resetQuest();
     }
 
     /**
      * Allows player to return home and start new game.
      */
-    private void returnHome() {
+    public void returnHome() {
+        // Create a game and set screen to main menu
         gameMenuManager.getGame().create();
         ((Game)Gdx.app.getApplicationListener()).setScreen(gameMenuManager.getGame().mainMenuScreen);
     }
