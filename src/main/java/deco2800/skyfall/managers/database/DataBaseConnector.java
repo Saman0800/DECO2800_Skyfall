@@ -298,7 +298,7 @@ public class DataBaseConnector {
             SaveMemento memento = (SaveMemento) objectIn.readObject();
 
             Save save = new Save(memento);
-            World currentWorld = loadWorlds(save, memento);
+            World currentWorld = loadWorlds(save);
             save.setCurrentWorld(currentWorld);
             save.setSaveID(saveID);
 
@@ -339,10 +339,9 @@ public class DataBaseConnector {
      * Loads the world of a save
      *
      * @param save        the save to load from
-     * @param saveMemento the memento of the save
      * @return the save's current world
      */
-    public World loadWorlds(Save save, Save.SaveMemento saveMemento) {
+    public World loadWorlds(Save save) {
         try {
             connection.setAutoCommit(false);
             World currentWorld;
@@ -361,8 +360,8 @@ public class DataBaseConnector {
                     do {
                         boolean isCurrentWorld = result.getBoolean("is_current_world");
                         long worldID = result.getLong("world_id");
-                        if (!isCurrentWorld && saveMemento.getWorldID() == worldID
-                            || isCurrentWorld && saveMemento.getWorldID() != worldID) {
+                        if (!isCurrentWorld && save.getCurrentWorldId() == worldID
+                            || isCurrentWorld && save.getCurrentWorldId() != worldID) {
                             throw new LoadException();
                         }
 

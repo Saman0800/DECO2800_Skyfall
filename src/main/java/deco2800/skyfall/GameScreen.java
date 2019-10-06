@@ -119,10 +119,11 @@ public class GameScreen implements Screen, KeyDownObserver {
             DatabaseManager.get().getDataBaseConnector().saveGame(save);
 
             // Uncomment this when generating the data for the tests
-            // save.setId(0);
-            // world.setId(0);
-            // DatabaseManager.get().getDataBaseConnector().saveGame(save);
-            // DatabaseManager.get().getDataBaseConnector().saveAllTables();
+//             save.setId(0);
+//             world.setId(0);
+//            MainCharacter.getInstance().setID(0);
+//             DatabaseManager.get().getDataBaseConnector().saveGame(save);
+//             DatabaseManager.get().getDataBaseConnector().saveAllTables();
             gameManager.getManager(NetworkManager.class).startHosting("host");
         }
 
@@ -138,6 +139,11 @@ public class GameScreen implements Screen, KeyDownObserver {
         DataBaseConnector dbConnector = DatabaseManager.get().getDataBaseConnector();
 
         save = dbConnector.loadGame(saveID);
+        World currentWorld = dbConnector.loadWorlds(save);
+        save.setCurrentWorld(currentWorld);
+
+
+
         dbConnector.loadMainCharacter(save);
         world = save.getCurrentWorld();
         MainCharacter mainCharacter = MainCharacter.getInstance();

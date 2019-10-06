@@ -23,6 +23,8 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
     // The world the player is currently in
     private World currentWorld;
 
+    private long currentWorldId;
+
     // The ID of the main character in this save
     private MainCharacter mainCharacter;
 
@@ -71,6 +73,10 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
 
     public World getCurrentWorld() {
         return currentWorld;
+    }
+
+    public long getCurrentWorldId(){
+        return currentWorldId;
     }
 
     /**
@@ -131,13 +137,14 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
         return new SaveMemento(this);
     }
 
+
     @Override
     public void load(SaveMemento saveMemento) {
         if (this.worlds == null){
             this.worlds = new ArrayList<>();
         }
         this.saveID = saveMemento.saveID;
-        this.currentWorld = DatabaseManager.get().getDataBaseConnector().loadWorlds(this, saveMemento);
+        this.currentWorldId = saveMemento.currentWorld;
 
     }
 
