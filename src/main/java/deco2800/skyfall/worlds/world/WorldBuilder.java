@@ -322,6 +322,10 @@ public class WorldBuilder implements WorldBuilderInterface {
         EntitySpawnRule dRockRule = new EntitySpawnRule(tile -> new DesertRock(tile, true), random.nextInt(), 0.01);
         biomeSpawnRules.add(dRockRule);
 
+        // Spawn desert environment
+        EntitySpawnRule DesertEnvironment = new EntitySpawnRule(tile -> new DesertEnvironment(tile, true), random.nextInt(), 0.01);
+        biomeSpawnRules.add(DesertEnvironment);
+
         return;
     }
 
@@ -346,7 +350,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(sSnowRule);
 
         // Spawn some Snow Shrubs uniformly
-        EntitySpawnRule snowShrubRule = new EntitySpawnRule(tile -> new SnowShrub(tile, true), random.nextInt(), 0.03);
+        EntitySpawnRule snowShrubRule = new EntitySpawnRule(tile -> new SnowShrub(tile, true), random.nextInt(), 0.0);
         biomeSpawnRules.add(snowShrubRule);
 
         return;
