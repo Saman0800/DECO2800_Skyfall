@@ -1156,6 +1156,7 @@ public class MainCharacter extends Peon
                     vehicleTexture("sand_car");
                     maxSpeed=10f;
                     vehicleType = "sand_car";
+                    unlockBiome("desert");
                 }
             }
 
@@ -1168,6 +1169,7 @@ public class MainCharacter extends Peon
             if (vehicleType.equals("sand_car")) {
                 defaultDirectionTextures = defaultMainCharacterTextureMap;
                 isOnVehicle=false;
+                lockedBiomes.add("desert");
                 GameManager.get().getWorld().addEntity(new SandCar(this.getCol(),this.getRow(),this));
             }
         }
