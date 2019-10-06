@@ -37,7 +37,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
      */
     public static void resume() {
         GameManager.setPaused(false);
-        GameScreen.isPaused = false;
+        GameScreen.setIsPaused(false);
     }
 
     /**
@@ -45,7 +45,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
      */
     private static void pause() {
         GameManager.setPaused(true);
-        GameScreen.isPaused = true;
+        GameScreen.setIsPaused(true);
     }
 
     /**
