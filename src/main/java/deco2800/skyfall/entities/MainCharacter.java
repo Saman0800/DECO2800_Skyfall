@@ -323,6 +323,8 @@ public class MainCharacter extends Peon
         configureAnimations();
 
         spellCaster = new SpellCaster(this);
+
+//        updatePosition();
     }
 
     /**

@@ -158,15 +158,12 @@ public class DatabaseConnectorSavingTest {
             long saveId = save.getSaveID();
 
             dbConnector.saveWorld(world);
-            World loadedWorld = dbConnector.loadWorlds(save, save.save());
+            World loadedWorld = dbConnector.loadWorlds(save);
 
-
-
-            SaveMemento saveMemMock = Mockito.mock(SaveMemento.class);
             Save saveMock = Mockito.mock(Save.class);
             when(saveMock.getSaveID()).thenReturn(saveId);
-            when(saveMemMock.getWorldID()).thenReturn(worldId);
-            World worldLoaded = dbConnector.loadWorlds(saveMock, saveMemMock);
+            when(saveMock.getCurrentWorldId()).thenReturn(worldId);
+            World worldLoaded = dbConnector.loadWorlds(saveMock);
 
             assertEquals(0, loadedWorld.getID());
             assertEquals(0, loadedWorld.getRiverEdges().size());
@@ -208,11 +205,10 @@ public class DatabaseConnectorSavingTest {
             dbConnector.saveWorld(world);
 
 
-            SaveMemento saveMemMock = Mockito.mock(SaveMemento.class);
             Save saveMock = Mockito.mock(Save.class);
             when(saveMock.getSaveID()).thenReturn(saveId);
-            when(saveMemMock.getWorldID()).thenReturn(worldId);
-            World worldLoaded = dbConnector.loadWorlds(saveMock, saveMemMock);
+            when(saveMock.getCurrentWorldId()).thenReturn(worldId);
+            World worldLoaded = dbConnector.loadWorlds(saveMock);
 
             assertEquals(30, worldLoaded.getWorldParameters().getWorldSize());
             assertEquals(5, worldLoaded.getWorldParameters().getNodeSpacing());

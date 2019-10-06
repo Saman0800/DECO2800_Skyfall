@@ -440,10 +440,10 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * @param y the entities y coordinate
      */
     private void initialiseBox2D(float x, float y) {
-//        if (!(this instanceof StaticEntity)) {
-//            defineBody(y, x);
-//            defineFixture();
-//        }
+        if (!(this instanceof StaticEntity)) {
+            defineBody(y, x);
+            defineFixture();
+        }
     }
 
     /**
