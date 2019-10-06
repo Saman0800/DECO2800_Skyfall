@@ -3,27 +3,7 @@ package deco2800.skyfall.managers.database;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.SaveableEntity.SaveableEntityMemento;
 import deco2800.skyfall.entities.StaticEntity;
-import deco2800.skyfall.entities.worlditems.Bone;
-import deco2800.skyfall.entities.worlditems.DesertCacti;
-import deco2800.skyfall.entities.worlditems.DesertRock;
-import deco2800.skyfall.entities.worlditems.DesertShrub;
-import deco2800.skyfall.entities.worlditems.ForestMushroom;
-import deco2800.skyfall.entities.worlditems.ForestRock;
-import deco2800.skyfall.entities.worlditems.ForestShrub;
-import deco2800.skyfall.entities.worlditems.ForestTree;
-import deco2800.skyfall.entities.worlditems.Leaves;
-import deco2800.skyfall.entities.worlditems.MountainRock;
-import deco2800.skyfall.entities.worlditems.MountainTree;
-import deco2800.skyfall.entities.worlditems.OrganicMound;
-import deco2800.skyfall.entities.worlditems.SnowClump;
-import deco2800.skyfall.entities.worlditems.SnowShrub;
-import deco2800.skyfall.entities.worlditems.SwampRock;
-import deco2800.skyfall.entities.worlditems.SwampShrub;
-import deco2800.skyfall.entities.worlditems.SwampTree;
-import deco2800.skyfall.entities.worlditems.TreeStump;
-import deco2800.skyfall.entities.worlditems.VolcanicRock;
-import deco2800.skyfall.entities.worlditems.VolcanicShrub;
-import deco2800.skyfall.entities.worlditems.VolcanicTree;
+import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.saving.DatabaseException;
 import deco2800.skyfall.saving.LoadException;
@@ -761,6 +741,11 @@ public class DataBaseConnector {
                 return new VolcanicRock(entityMemento);
             case "VolcanicTree":
                 return new VolcanicTree(entityMemento);
+            case "Desert_Environment":
+                return new DesertEnvironment(entityMemento);
+            case "Shipwrecks":
+                return new Shipwrecks(entityMemento);
+
             default:
                 throw new LoadException(String.format("Could not create %s from memento", entityMemento.entityType));
         }
