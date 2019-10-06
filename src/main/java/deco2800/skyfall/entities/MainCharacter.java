@@ -1260,6 +1260,11 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         // If the player can move to the next tile process the movement
         if (checkTileMovement()) {
             this.processMovement();
+        } else {
+            recordVelHistory(0, 0);
+            preventSliding(0, 0);
+            getBody().setLinearVelocity(getBody().getLinearVelocity().limit(0));
+            updateVel();
         }
 
         // Updates the players position based on where their body is located
@@ -1279,9 +1284,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         if (tile == null) {
             return false;
         } else {
-            return (!tile.getTextureName().contains("water")
-                    && !tile.getTextureName().contains("lake")
-                    && !tile.getTextureName().contains("ocean"))
+            return (Tile.getTileType(tile.getTextureName()) != 3)
                     || canSwim;
         }
     }

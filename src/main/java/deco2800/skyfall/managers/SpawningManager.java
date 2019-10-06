@@ -1,13 +1,15 @@
 package deco2800.skyfall.managers;
 
+import com.badlogic.gdx.utils.Logger;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.enemies.Flower;
+import deco2800.skyfall.entities.enemies.Scout;
 import deco2800.skyfall.graphics.types.vec2;
 import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.enemies.Spawnable;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Random;
-import java.util.Vector;
+import java.util.*;
 
 /*Handles spawning enemies into the game on tick*/
 public class SpawningManager extends TickableManager  {
@@ -15,6 +17,9 @@ public class SpawningManager extends TickableManager  {
     private static boolean constructed = false;
     //As a singleton, able to keep a single reference
     private static SpawningManager reference = null;
+
+    //A maximum to the number of enemies allowed to be managed
+    private final int MAXENTITIES = 100;
 
     //the random used for enemy generation
     private Random random;
@@ -26,7 +31,7 @@ public class SpawningManager extends TickableManager  {
 
     //All enemies that have spawned will be kept with a referece
     //kept by spawn order
-    protected Vector<Enemy> enemyReferences;
+    protected List<Enemy> enemyReferences;
 
     public static SpawningManager getGlobalSpawningManager() {
         return reference;
@@ -43,6 +48,8 @@ public class SpawningManager extends TickableManager  {
      */
     private SpawningManager() {
         random = new Random();
+        spawnTable = new HashMap<Spawnable, Float>();
+        enemyReferences = new ArrayList<Enemy>();
     }
 
     /** Allows SpawningManager to be created and attached to GameManager with
@@ -62,6 +69,9 @@ public class SpawningManager extends TickableManager  {
         reference = local;
         //add to game manager
         GameManager.addManagerToInstance(local);
+
+        //Add enemies to manager
+        local.addEnemyForSpawning(new Flower(0, 0, MainCharacter.getInstance()), 1.0f);
     }
 
     /**
@@ -69,16 +79,34 @@ public class SpawningManager extends TickableManager  {
      * @param enemy A reference to Spawnable
      */
     private void spawnEnemy(Spawnable enemy) {
-        vec2 location = ((Enemy)enemy).getPlayerLocation();
+        if (MAXENTITIES <= enemyReferences.size()) {
+            return;
+        }
 
         //calculate the location of the player
+        MainCharacter mc = MainCharacter.getInstance();
+        vec2 location = new vec2(mc.getRow(), mc.getCol());
+
         double angle = random.nextDouble() * 2.0f * Math.PI;
         location = new vec2(
                 location.x + SPAWN_DISTANCE*(float)Math.cos(angle),
                 location.y + SPAWN_DISTANCE*(float)Math.sin(angle)
         );
 
-        enemyReferences.add((Enemy) enemy.newInstance(location.x, location.y));
+        //create new instance
+        Enemy instance = (Enemy) enemy.newInstance(location.x, location.y);
+        instance.setMainCharacter(MainCharacter.getInstance());
+        //add to references
+        enemyReferences.add((Enemy) instance);
+        //add to game world
+        GameManager.get().getWorld().addEntity((AbstractEntity)instance);
+    }
+
+    /**
+     * clears the list of old references to dead enemies
+     */
+    void updateReferences() {
+        enemyReferences.removeIf(s -> s.isDead());
     }
 
     /**
@@ -89,19 +117,16 @@ public class SpawningManager extends TickableManager  {
     @Override
     public void onTick(long i) {
         //return if day
-        if (GameManager.getManagerFromInstance(EnvironmentManager.class).isDay()) {
-            return;
-        }
+        //if (GameManager.getManagerFromInstance(EnvironmentManager.class).isDay()) {
+        //    return;
+        //}
 
-        Iterator it = spawnTable.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
+        updateReferences();
 
-            if (random.nextFloat() < (Float)pair.getValue()) {
-                spawnEnemy((Spawnable)pair.getKey());
+        for (Map.Entry<Spawnable, Float> entry : spawnTable.entrySet()) {
+            if (random.nextFloat() < (Float)entry.getValue()) {
+                spawnEnemy((Spawnable)entry.getKey());
             }
-
-            it.remove();
         }
     }
 

@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 /**
  * An instance of a Scout (easy level) enemy.
  */
-public class Scout extends Enemy {
+public class Scout extends Enemy implements Spawnable  {
 
     // Logger for tracking enemy information
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -25,5 +25,10 @@ public class Scout extends Enemy {
 
         // Assign values, includes default values
         this.setValues(scaling, 100, 1, 1,0.06f,0.03f);
+    }
+
+    @Override
+    public Scout newInstance(float row, float col) {
+        return new Scout(col, row, this.getScale(), this.getBiome(), this.getTexture());
     }
 }
