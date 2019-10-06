@@ -300,12 +300,8 @@ public class DataBaseConnector {
             SaveMemento memento = (SaveMemento) objectIn.readObject();
 
             Save save = new Save(memento);
-            // TODO impelement loading the main character
-            // loadMainCharacter(save);
             World currentWorld = loadWorlds(save, memento);
             save.setCurrentWorld(currentWorld);
-            // FIXME:dannathan Probably should turn this back on
-            // currentWorld.addEntity(MainCharacter.getInstance());
             save.setSaveID(saveID);
 
             return save;
@@ -314,7 +310,6 @@ public class DataBaseConnector {
         }
     }
 
-    // TODO:dannathan
     public void loadMainCharacter(Save save) {
         try (PreparedStatement preparedStatement = connection
             .prepareStatement("SELECT * FROM MAIN_CHARACTER WHERE save_id = ?")) {

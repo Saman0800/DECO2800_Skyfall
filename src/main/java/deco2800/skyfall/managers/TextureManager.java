@@ -1,6 +1,7 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.graphics.Texture;
+import org.omg.SendingContext.RunTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -185,8 +186,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bow", new Texture("resources/weapons/bow.png"));
             textureMap.put("spear", new Texture("resources/weapons/spear.png"));
 
-            textureMap.put("bow_inv", new Texture("resources/weapons/bow.png"));
-            textureMap.put("spear_inv", new Texture("resources/weapons/spear.png"));
 
             // Weapons attack
             textureMap.put("sword_attack", new Texture("resources/weapons" +
@@ -454,7 +453,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("stoneRN", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRN.png"));
             textureMap.put("stoneDead", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/Dead.png"));
 
-            System.out.println("ALL TEXTURES LOADED SUCCESSFULLY");
 
         } catch (Exception e) {
             throw new RuntimeException(e);

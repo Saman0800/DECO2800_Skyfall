@@ -278,6 +278,7 @@ public class MainCharacter extends Peon
      * @param save The save the character is in
      */
     private MainCharacter(MainCharacterMemento memento, Save save) {
+        super(memento.row, memento.row, 0, "Main Character", memento.health, "MainCharacter");
         this.load(memento);
         this.save = save;
         this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
