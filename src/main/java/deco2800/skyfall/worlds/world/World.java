@@ -32,7 +32,6 @@ import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
-import org.javatuples.Pair;
 
 import deco2800.skyfall.graphics.HasPointLight;
 import java.io.BufferedWriter;

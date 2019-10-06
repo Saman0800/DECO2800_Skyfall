@@ -97,6 +97,15 @@ public class TextureManager extends AbstractManager {
             textureMap.put("lizardS", new Texture("resources/lizard/lizardS.png"));
 
             // New Enemies (Scout, Heavy, Abductor)
+            textureMap.put("enemyScout_Move_N", new Texture("resources/Enemies/Scout/enemy1_B_walk.png"));
+            textureMap.put("enemyScout_Move_NW", new Texture("resources/Enemies/Scout/enemy1_BL_walk.png"));
+            textureMap.put("enemyScout_Move_NE", new Texture("resources/Enemies/Scout/enemy1_BR_walk.png"));
+            textureMap.put("enemyScout_Move_S", new Texture("resources/Enemies/Scout/enemy1_F_walk.png"));
+            textureMap.put("enemyScout_Move_SW", new Texture("resources/Enemies/Scout/enemy1_FL_walk.png"));
+            textureMap.put("enemyScout_Move_SE", new Texture("resources/Enemies/Scout/enemy1_FR_walk.png"));
+            textureMap.put("enemyScout_Move_W", new Texture("resources/Enemies/Scout/enemy1_L_walk.png"));
+            textureMap.put("enemyScout_Move_E", new Texture("resources/Enemies/Scout/enemy1_R_walk.png"));
+
             textureMap.put("enemyAbductor", new Texture("resources/Enemies/Abductor/enemy3_F.png"));
             textureMap.put("enemyAbductor_Move_N", new Texture("resources/Enemies/Abductor/enemy3_B_walk.png"));
             textureMap.put("enemyAbductor_Move_NW", new Texture("resources/Enemies/Abductor/enemy3_BL_walk.png"));

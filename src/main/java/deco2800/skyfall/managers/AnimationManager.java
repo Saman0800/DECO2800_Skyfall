@@ -54,6 +54,31 @@ public class AnimationManager extends AbstractManager {
         this.generateAnimationObject("tigerFront","resources/petTigerMovement/tigerMovementFront/tigerMovementFront.atlas",0.2f);
 
         // New Enemies
+        this.generateAnimationObject("ScoutMoveN",
+                "enemyScout_Move_N",
+                208, 279, 0.2f);
+        this.generateAnimationObject("ScoutMoveS",
+                "enemyScout_Move_S",
+                208, 278, 0.2f);
+        this.generateAnimationObject("ScoutMoveE",
+                "enemyScout_Move_E",
+                177, 265, 0.2f);
+        this.generateAnimationObject("ScoutMoveW",
+                "enemyScout_Move_W",
+                166, 265, 0.2f);
+        this.generateAnimationObject("ScoutMoveNE",
+                "enemyScout_Move_NE",
+                179, 265, 0.2f);
+        this.generateAnimationObject("ScoutMoveSE",
+                "enemyScout_Move_SE",
+                178, 255, 0.2f);
+        this.generateAnimationObject("ScoutMoveSW",
+                "enemyScout_Move_SW",
+                184, 254, 0.2f);
+        this.generateAnimationObject("ScoutMoveNW",
+                "enemyScout_Move_NW",
+                178, 265, 0.2f);
+
         this.generateAnimationObject("AbductorMoveN",
                 "enemyAbductor_Move_N",
                 151, 306, 0.2f);

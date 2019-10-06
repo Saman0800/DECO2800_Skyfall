@@ -16,7 +16,7 @@ public class Abductor extends Enemy implements Spawnable {
         super(col, row, "Abductor", "Abductor",0.06f,  biome, textureName);
 
         // Assign values, includes default values
-        this.setValues(scaling, 100, 1, 1,0.06f,0.03f);
+        this.setValues(scaling, 100, 1, 1,0.06f,0.06f);
     }
 
     @Override

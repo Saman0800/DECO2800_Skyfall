@@ -219,7 +219,7 @@ public class Enemy extends Peon
             this.setCurrentState(AnimationRole.MOVE);
             this.updateAnimation();
 
-            if (distance(mainCharacter) < 4 && !(mainCharacter.isDead() ||
+            if (distance(mainCharacter) < 3 && !(mainCharacter.isDead() ||
                     mainCharacter.isRecovering() || mainCharacter.isHurt())) {
                 attackPlayer();
                 SoundManager.playSound(getChaseSound());
@@ -587,21 +587,27 @@ public class Enemy extends Peon
      * @param angle the angle between to tile
      */
     private Direction movementDirection(double angle) {
-        angle = 1.5 * Math.PI - Math.atan2(getCol(), getRow());
+        angle = Math.toDegrees(angle - Math.PI);
 
-        System.out.println("angle is " + angle);
+        if(angle < 0) {
+            angle += 360;
+        }
 
-        if (between(angle, 0, 59.9)) {
+        if (between(angle, 0, 45)) {
+            return Direction.WEST;
+        } else if (between(angle, 46, 90)) {
             return Direction.SOUTH_WEST;
-        } else if (between(angle, 60, 119.5)) {
+        } else if (between(angle, 91, 135.5)) {
             return Direction.SOUTH;
-        } else if (between(angle, 120, 179.9)) {
+        } else if (between(angle, 136, 180.5)) {
             return Direction.SOUTH_EAST;
-        } else if (between(angle, 180, 239.9)) {
+        }else if (between(angle, 181, 225.5)) {
+            return Direction.EAST;
+        } else if (between(angle, 226, 270.9)) {
             return Direction.NORTH_EAST;
-        } else if (between(angle, 240, 299.9)) {
+        } else if (between(angle, 271, 315.9)) {
             return Direction.NORTH;
-        } else if (between(angle, 300, 360)) {
+        } else if (between(angle, 316, 360)) {
             return Direction.NORTH_WEST;
         }
         return null;

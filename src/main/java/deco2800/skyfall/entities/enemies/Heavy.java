@@ -16,7 +16,7 @@ public class Heavy extends Enemy implements Spawnable {
         super(col, row, "Heavy", "Heavy", 0.06f,  biome, textureName);
 
         // Assign values, includes default values
-        this.setValues(scaling, 100, 1, 1,0.06f,0.03f);
+        this.setValues(scaling, 10, 3, 2,0.06f,0.03f);
     }
 
     /**
@@ -29,7 +29,7 @@ public class Heavy extends Enemy implements Spawnable {
     public Heavy(float col, float row, float scaling) {
         super(col, row);
 
-        this.setValues(scaling, 100, 1, 1,0.06f,0.03f);
+        this.setValues(scaling, 100, 1, 1,0.06f,0.04f);
     }
 
     @Override
