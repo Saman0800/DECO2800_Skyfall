@@ -225,6 +225,9 @@ public class TextureManager extends AbstractManager {
             //environment things
             textureMap.put("shipwrecks", new Texture("resources/world_details/shipwrecks.png"));
 
+            textureMap.put("DEnvironment1", new Texture("resources/world_details/DEnvironment1.png"));
+            textureMap.put("DEnvironment2", new Texture("resources/world_details/DEnvironment2.png"));
+
             // Weapons pick-up
             textureMap.put("axe_tex", new Texture("resources/weapons/axe.png"));
             textureMap.put("bow_tex", new Texture("resources/weapons/bow.png"));
