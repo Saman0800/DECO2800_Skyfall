@@ -1,15 +1,12 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.Input;
-import deco2800.skyfall.entities.enemies.Treeman;
-import deco2800.skyfall.entities.spells.SpellType;
-import deco2800.skyfall.entities.weapons.Bow;
+import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.weapons.EmptyItem;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.gui.HealthCircle;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.resources.GoldPiece;
@@ -34,7 +31,6 @@ import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -643,7 +639,7 @@ public class MainCharacterTest {
 
         HexVector old_pos = new HexVector(testCharacter.getPosition().getRow(), testCharacter.getPosition().getCol());
 
-        world.addEntity(new Treeman(old_pos.getRow() + 0.1f, old_pos.getCol() + 0.1f, testCharacter));
+        world.addEntity(new Enemy(old_pos.getRow() + 0.1f, old_pos.getCol() + 0.1f));
 
         for (int i = 0; i < 100; ++i) {
             world.onTick(100);

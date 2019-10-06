@@ -587,11 +587,10 @@ public class Enemy extends Peon
      * @param angle the angle between to tile
      */
     private Direction movementDirection(double angle) {
-        angle = Math.toDegrees(angle - Math.PI);
-        if (angle < 0) {
-            angle += 360;
-        }
-        System.out.println("angle is " + this.position.getAngle());
+        angle = 1.5 * Math.PI - Math.atan2(getCol(), getRow());
+
+        System.out.println("angle is " + angle);
+
         if (between(angle, 0, 59.9)) {
             return Direction.SOUTH_WEST;
         } else if (between(angle, 60, 119.5)) {

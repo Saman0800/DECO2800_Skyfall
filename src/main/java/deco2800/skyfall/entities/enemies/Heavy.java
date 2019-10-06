@@ -19,6 +19,19 @@ public class Heavy extends Enemy implements Spawnable {
         this.setValues(scaling, 100, 1, 1,0.06f,0.03f);
     }
 
+    /**
+     * Constructor of Heavy enemy, used for testing
+     *
+     * @param col the x-coordinate of the enemy.
+     * @param row the y-coordinate of the enemy.
+     * @param scaling the scaling factor of the enemy's stats.
+     */
+    public Heavy(float col, float row, float scaling) {
+        super(col, row);
+
+        this.setValues(scaling, 100, 1, 1,0.06f,0.03f);
+    }
+
     @Override
     public Enemy newInstance(float row, float col) {
         return new Heavy(col, row, getScale(), getBiome(), getTexture());

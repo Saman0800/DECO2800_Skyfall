@@ -2,7 +2,6 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.enemies.Enemy;
-import deco2800.skyfall.entities.enemies.Treeman;
 import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.resources.items.*;
 import deco2800.skyfall.resources.items.Stone;
