@@ -1,6 +1,7 @@
 package deco2800.skyfall.saving;
 
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.worlds.world.World;
 
 import java.io.Serializable;
@@ -24,6 +25,8 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
 
     // The ID of the main character in this save
     private MainCharacter mainCharacter;
+
+
 
     /**
      * Constructor for a save without parameters
@@ -128,6 +131,8 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
     @Override
     public void load(SaveMemento saveMemento) {
         this.saveID = saveMemento.saveID;
+        this.currentWorld = DatabaseManager.get().getDataBaseConnector().loadWorlds(this, saveMemento);
+
     }
 
     /**
