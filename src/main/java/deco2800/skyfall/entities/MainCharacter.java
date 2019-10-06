@@ -1787,7 +1787,6 @@ public class MainCharacter extends Peon
 
         // Walk animation
         addAnimations(AnimationRole.MOVE, Direction.NORTH_WEST,
-<<<<<<< HEAD
                 new AnimationLinker("MainCharacterNW_Anim",
                         AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
 
@@ -1833,59 +1832,13 @@ public class MainCharacter extends Peon
         addAnimations(AnimationRole.DEAD, Direction.DEFAULT,
                 new AnimationLinker("MainCharacter_Dead_E_Anim",
                         AnimationRole.DEAD, Direction.DEFAULT, false, true));
-=======
-            new AnimationLinker("MainCharacterNW_Anim", AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
 
-        addAnimations(AnimationRole.MOVE, Direction.NORTH_EAST,
-            new AnimationLinker("MainCharacterNE_Anim", AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
-
-        addAnimations(AnimationRole.MOVE, Direction.SOUTH_WEST,
-            new AnimationLinker("MainCharacterSW_Anim", AnimationRole.MOVE, Direction.SOUTH_WEST, true, true));
-
-        addAnimations(AnimationRole.MOVE, Direction.SOUTH_EAST,
-            new AnimationLinker("MainCharacterSE_Anim", AnimationRole.MOVE, Direction.SOUTH_EAST, true, true));
-
-        addAnimations(AnimationRole.MOVE, Direction.EAST,
-            new AnimationLinker("MainCharacterE_Anim", AnimationRole.MOVE, Direction.EAST, true, true));
-
-        addAnimations(AnimationRole.MOVE, Direction.NORTH,
-            new AnimationLinker("MainCharacterN_Anim", AnimationRole.MOVE, Direction.NORTH, true, true));
-
-        addAnimations(AnimationRole.MOVE, Direction.WEST,
-            new AnimationLinker("MainCharacterW_Anim", AnimationRole.MOVE, Direction.WEST, true, true));
-
-        addAnimations(AnimationRole.MOVE, Direction.SOUTH,
-            new AnimationLinker("MainCharacterS_Anim", AnimationRole.MOVE, Direction.SOUTH, true, true));
-
-        // Attack animation
-        addAnimations(AnimationRole.ATTACK, Direction.DEFAULT, new AnimationLinker("MainCharacter_Attack_E_Anim",
-            AnimationRole.ATTACK, Direction.DEFAULT, false, true));
-
-        // Hurt animation
-        addAnimations(AnimationRole.HURT, Direction.DEFAULT,
-            new AnimationLinker("MainCharacter_Hurt_E_Anim", AnimationRole.HURT, Direction.DEFAULT, true, true));
-
-        // Dead animation
-        addAnimations(AnimationRole.DEAD, Direction.DEFAULT,
-            new AnimationLinker("MainCharacter_Dead_E_Anim", AnimationRole.DEAD, Direction.DEFAULT, false, true));
->>>>>>> master
-
+        
         // Dead animation
         addAnimations(AnimationRole.STILL, Direction.DEFAULT,
                 new AnimationLinker("MainCharacter_Dead_E_Still",
                         AnimationRole.STILL, Direction.DEFAULT, false, true));
     }
-
-        // Add bike animation
-        addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.WEST,
-                new AnimationLinker("bikeW",
-                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.WEST, true, true));
-        addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.EAST,
-                new AnimationLinker("bikeE",
-                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.EAST, true, true));
-
-
-         }
 
     private Map<Direction,String> defaultMainCharacterTextureMap=new HashMap<>();
 
