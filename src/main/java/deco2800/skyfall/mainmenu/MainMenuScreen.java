@@ -184,14 +184,12 @@ public class MainMenuScreen implements Screen {
 
         loadGameWindow.row();
 
-        // TODO:Ontonator Add a scroll pane if necessary.
         for (Save saveInfo : saveInfoList) {
             final long saveID = saveInfo.getSaveID();
             String saveName = "SAVE " + generateReadableName(saveID);
 
             loadGameWindow.add();
 
-            // TODO:Ontonator Add the progress percentage.
             Button loadSaveButton = new TextButton(saveName, skin, LOAD_GAME_STYLE);
             loadSaveButton.setColor(Color.LIGHT_GRAY);
             loadSaveButton.pad(-15);
@@ -212,7 +210,6 @@ public class MainMenuScreen implements Screen {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     DatabaseManager.get().getDataBaseConnector().deleteSave(saveID);
-                    // FIXME:Ontonator Make this not clear the enitire table.
                     loadGameWindow.removeActor(loadSaveButton);
                     loadGameWindow.removeActor(deleteSaveButton);
                 }

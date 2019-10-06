@@ -454,8 +454,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("stoneRN", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRN.png"));
             textureMap.put("stoneDead", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/Dead.png"));
 
-            System.out.println("ALL TEXTURES LOADED SUCCESSFULLY");
-
+            LOGGER.info("ALL TEXTURES LOADED SUCCESSFULLY");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -77,17 +77,16 @@ public class WorldDirector {
         mainCharacter.setCol(0);
         mainCharacter.setRow(0);
 
-        //mainCharacter.getUnlockedBiomes();
-        //for (String s: mainCharacter.getUnlockedBiomes()) {
-        //    for (AbstractBiome b: builder.getWorld().getBiomes()) {
-        //        if (b.getBiomeName() == "desert") {
-        //            for (Tile t: b.getTiles()){
-        //                t.setObstructed(true);
-        //            }
-        //        }
-
-        //   }
-        //}
+        // mainCharacter.getUnlockedBiomes();
+        // for (String s: mainCharacter.getUnlockedBiomes()) {
+        //     for (AbstractBiome b: builder.getWorld().getBiomes()) {
+        //         if (b.getBiomeName() == "desert") {
+        //             for (Tile t: b.getTiles()){
+        //                 t.setObstructed(true);
+        //             }
+        //         }
+        //    }
+        // }
 
         if (renderUI) {
             StatisticsManager sm = new StatisticsManager(mainCharacter);
