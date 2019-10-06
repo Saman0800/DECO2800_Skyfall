@@ -332,7 +332,6 @@ public class Enemy extends Peon
                         enemyName + "MoveSW", AnimationRole.MOVE, Direction.SOUTH_WEST,
                         true, true));
 
-
         this.addAnimations(
                 AnimationRole.ATTACK, Direction.EAST, new AnimationLinker(
                 enemyName + "AttackE", AnimationRole.ATTACK, Direction.EAST,
@@ -357,6 +356,33 @@ public class Enemy extends Peon
                 AnimationRole.ATTACK, Direction.WEST, new AnimationLinker(
                 enemyName + "AttackW", AnimationRole.ATTACK, Direction.WEST,
                         true, true));
+
+        // Hurt animations
+        this.addAnimations(
+                AnimationRole.HURT, Direction.EAST, new AnimationLinker(
+                        enemyName + "DamageE", AnimationRole.HURT, Direction.EAST,
+                        true, true));
+        this.addAnimations(
+                AnimationRole.HURT, Direction.NORTH, new AnimationLinker(
+                        enemyName + "DamageN", AnimationRole.HURT, Direction.NORTH,
+                        true, true));
+        this.addAnimations(
+                AnimationRole.HURT, Direction.SOUTH, new AnimationLinker(
+                        enemyName + "DamageS", AnimationRole.HURT, Direction.SOUTH,
+                        true, true));
+        this.addAnimations(
+                AnimationRole.HURT, Direction.SOUTH_EAST, new AnimationLinker(
+                        enemyName + "DamageSE", AnimationRole.HURT, Direction.SOUTH_EAST,
+                        true, true));
+        this.addAnimations(
+                AnimationRole.HURT, Direction.SOUTH_WEST, new AnimationLinker(
+                        enemyName + "DamageSW", AnimationRole.HURT, Direction.SOUTH_WEST,
+                        true, true));
+        this.addAnimations(
+                AnimationRole.HURT, Direction.WEST, new AnimationLinker(
+                        enemyName + "DamageW", AnimationRole.HURT, Direction.WEST,
+                        true, true));
+
         this.addAnimations(
                 AnimationRole.DEAD, Direction.DEFAULT, new AnimationLinker(
                 "enemyDie", AnimationRole.DEAD, Direction.DEFAULT,

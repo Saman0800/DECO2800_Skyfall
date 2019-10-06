@@ -18,10 +18,10 @@ public class Scout extends Enemy {
      * @param row the y-coordinate of the enemy.
      * @param scaling the factor the enemy's stat is scale in this enemy.
      * @param biome the biome this enemy is in.
-     * @param textureName the name of the texture of the enemt.
+     * @param textureName the name of the texture of the enemy.
      */
     public Scout(float col, float row, float scaling, String biome, String textureName) {
-        super(col, row, "ScoutHitBox", "Scout",0.06f,  biome, textureName);
+        super(col, row, "ScoutHitBox", "Heavy",0.06f,  biome, textureName);
 
         // Assign values, includes default values
         this.setValues(scaling, 100, 1, 1,0.06f,0.03f);
