@@ -2,15 +2,14 @@ package deco2800.skyfall.entities;
 
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Saveable;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.Tile;
+import java.io.Serializable;
 
-public abstract class SaveableEntity extends AbstractEntity implements Saveable<SaveableEntity.SaveableEntityMemento> {
+public abstract class SaveableEntity extends AbstractEntity
+        implements Saveable<SaveableEntity.SaveableEntityMemento>, Serializable {
 
     // The type of entity this is (e.g. "ForestTree", "Axe" etc.)
     protected String entityType;
-    // Boolean used to determine if the entity is obstructable in game
+    // boolean used to determine if the entity is obstructable in game
     protected boolean obstructed;
 
     public SaveableEntity() {
@@ -28,6 +27,15 @@ public abstract class SaveableEntity extends AbstractEntity implements Saveable<
     @Override
     public SaveableEntityMemento save() {
         return new SaveableEntityMemento(this);
+    }
+
+    /**
+     * A simple getter function to retrieve the obstruction value of this object
+     *
+     * @return The obstruction value.
+     */
+    public boolean isObstructed() {
+        return this.obstructed;
     }
 
     /**
@@ -54,7 +62,7 @@ public abstract class SaveableEntity extends AbstractEntity implements Saveable<
         this.setPosition(memento.col, memento.row);
     }
 
-    public class SaveableEntityMemento extends AbstractMemento {
+    public static class SaveableEntityMemento extends AbstractMemento implements Serializable {
         public String entityType;
         public int height;
         public float row;
@@ -71,7 +79,7 @@ public abstract class SaveableEntity extends AbstractEntity implements Saveable<
          * private Body body; private Fixture fixture;
          */
 
-        protected Boolean isCollidable;
+        protected boolean isCollidable;
         protected String texture;
 
         public SaveableEntityMemento(SaveableEntity entity) {
@@ -91,6 +99,10 @@ public abstract class SaveableEntity extends AbstractEntity implements Saveable<
 
             this.isCollidable = entity.getCollidable();
             this.texture = entity.getTexture();
+        }
+
+        public String getEntityType() {
+            return this.entityType;
         }
     }
 

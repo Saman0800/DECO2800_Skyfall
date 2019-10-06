@@ -11,7 +11,6 @@ import org.junit.After;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.util.Collider;
-import org.lwjgl.Sys;
 
 public class BuildingEntityTest {
 

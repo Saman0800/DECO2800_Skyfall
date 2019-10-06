@@ -107,7 +107,7 @@ public class ResearchTable extends ManufacturedResources implements Blueprint,
      * @return True if the item can be exchanged, false otherwise
      */
     @Override
-    public Boolean isExchangeable() {
+    public boolean isExchangeable() {
         return true;
     }
 

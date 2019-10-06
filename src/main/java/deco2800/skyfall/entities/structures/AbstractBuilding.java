@@ -1,13 +1,11 @@
 package deco2800.skyfall.entities.structures;
 
 import deco2800.skyfall.entities.SaveableEntity;
-import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.worlds.world.World;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * An abstract building is an item that can be placed in the world by the
@@ -27,7 +25,7 @@ public abstract class AbstractBuilding extends SaveableEntity {
 
     private InventoryManager inventoryManager;
 
-    // private Boolean hasPlayer;
+    // private boolean hasPlayer;
 
     /**
      *

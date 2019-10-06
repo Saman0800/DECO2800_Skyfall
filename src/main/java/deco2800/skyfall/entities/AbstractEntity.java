@@ -78,9 +78,9 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     @Expose
     private String texture = "error_box";
 
-    //A modulating colour value
-    //each colour channel (0-1) will be multiplied by the corresponding value
-    //Default of (1.0f, 1.0f, 1.0f, 1.0f) will render sprite as normal
+    // A modulating colour value
+    // each colour channel (0-1) will be multiplied by the corresponding value
+    // Default of (1.0f, 1.0f, 1.0f, 1.0f) will render sprite as normal
     private Color modulatingColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
     @Expose
@@ -300,9 +300,10 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
     /**
-     * Gets the modulating colour of this entity
-     * Each component will be multiplied against the current modulating colour
-     * Default is (1.0f, 1.0f, 1.0f, 1.0f), which will render with in standard colour
+     * Gets the modulating colour of this entity Each component will be multiplied
+     * against the current modulating colour Default is (1.0f, 1.0f, 1.0f, 1.0f),
+     * which will render with in standard colour
+     * 
      * @return The given modulating colour
      */
     public Color getModulatingColor() {
@@ -310,19 +311,21 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
     /**
-     * Sets the new modulating colour for this entity
-     * This will be in the form (0-1, 0-1, 0-1, 0-1, 0-1) correspoding to (r, g, b, a)
-     * @param color the new modulation colour to use, which will be clamped into a valid range
+     * Sets the new modulating colour for this entity This will be in the form (0-1,
+     * 0-1, 0-1, 0-1, 0-1) correspoding to (r, g, b, a)
+     * 
+     * @param color the new modulation colour to use, which will be clamped into a
+     *              valid range
      */
     public void setModulatingColor(Color color) {
         this.modulatingColor = color.clamp();
     }
 
     /**
-     * An overload to setModulatingColor
-     * Sets the new modulating colour for this entity
-     * This will be in the form (0-1, 0-1, 0-1, 0-1, 0-1) correspoding to (r, g, b, a)
-     * the new modulation colour will be clamped into a valid range
+     * An overload to setModulatingColor Sets the new modulating colour for this
+     * entity This will be in the form (0-1, 0-1, 0-1, 0-1, 0-1) correspoding to (r,
+     * g, b, a) the new modulation colour will be clamped into a valid range
+     * 
      * @param r component of new color
      * @param g component of new color
      * @param b component of new color
@@ -513,8 +516,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
             BodyEditorLoader loader = new BodyEditorLoader(
                     Gdx.files.internal("resources/HitBoxes" + "/" + fixtureDefName + "HitBox.json"));
 
-
-
             // Assigns all the aspects of the fixture
             FixtureDef fixtureDef = new FixtureDef();
             fixtureDef.density = 1;
@@ -552,8 +553,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      */
     public void handleCollision(Object other) {
         // Does nothing as collision logic should be case specific
-        // The print log is slowing down the program and cluttering output
-        // log.info("I was hit: " + this.getClass() + "\n by: " + other.getClass());
     }
 
     /**
@@ -649,15 +648,13 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     /**
      * Check if given value is in range.
      *
-     * @param i the value to be checked.
-     * @param minValue the minimum value i should not be less then.
-     * @param maxValue the minimum value i should not exceed.
-     * @return If the value is between minValue and maxValue, return true, else false.
+     * @param targetValue the value to be checked.
+     * @param minValue    the minimum value i should not be less then.
+     * @param maxValue    the minimum value i should not exceed.
+     * @return If the value is between minValue and maxValue, return true, else
+     *         false.
      */
-    public static boolean between(double i, double minValue, double maxValue) {
-        if (i >= minValue && i <= maxValue)
-            return true;
-        else
-            return false;
+    public static boolean between(double targetValue, double minValue, double maxValue) {
+        return (targetValue >= minValue && targetValue <= maxValue);
     }
 }

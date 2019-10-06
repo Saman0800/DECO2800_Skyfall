@@ -4,7 +4,6 @@ import deco2800.skyfall.buildings.BuildingEntity;
 import deco2800.skyfall.buildings.BuildingFactory;
 
 import deco2800.skyfall.managers.database.DataBaseConnector;
-import deco2800.skyfall.entities.MainCharacter;
 
 import deco2800.skyfall.resources.items.Stone;
 import deco2800.skyfall.resources.items.Wood;
@@ -98,7 +97,7 @@ public class ConstructionManagerTest {
         cmgr.setBuilding(0);
 
         BuildingEntity cabin = factory.createCabin(1,1);
-        Boolean result = cmgr.invCheck(inventoryManager);
+        boolean result = cmgr.invCheck(inventoryManager);
 
         Assert.assertTrue(result);
     }
@@ -115,7 +114,7 @@ public class ConstructionManagerTest {
         InventoryManager inventoryManager = new InventoryManager();
         cmgr.setBuilding(4);
 
-        //Boolean result = cmgr.invCheck(inventoryManager);
+        //boolean result = cmgr.invCheck(inventoryManager);
 
         //Assert.assertFalse(result);
     }
@@ -173,7 +172,7 @@ public class ConstructionManagerTest {
                 factory.createCabin(1,1);
         }
         InventoryManager inventoryManager = new InventoryManager();
-        Boolean result = cmgr.mergeBuilding(buildings, inventoryManager);
+        boolean result = cmgr.mergeBuilding(buildings, inventoryManager);
 
         Assert.assertEquals(true, result);
     }
@@ -186,7 +185,7 @@ public class ConstructionManagerTest {
             //    new TownCentreBuilding(3, 5)
         };
         InventoryManager inventoryManager = new InventoryManager();
-        Boolean result = cmgr.mergeBuilding(buildings, inventoryManager);
+        boolean result = cmgr.mergeBuilding(buildings, inventoryManager);
 
         Assert.assertEquals(false, result);
     }

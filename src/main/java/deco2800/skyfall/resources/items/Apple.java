@@ -16,7 +16,7 @@ public class Apple extends HealthResources implements Item {
     private String biome;
 
     //whether or not the item impacts the player's food fullness
-     private Boolean hasFoodEffect;
+     private boolean hasFoodEffect;
 
 
 
@@ -52,7 +52,7 @@ public class Apple extends HealthResources implements Item {
      *
      * @return True if the item impacts on the player's food fullness, false otherwise
      */
-    public Boolean hasFoodEffect() {
+    public boolean hasFoodEffect() {
         return hasFoodEffect;
     }
 

@@ -191,48 +191,28 @@ public class WorldBuilder implements WorldBuilderInterface {
 
         for (AbstractBiome biome : world.getBiomes()) {
             ArrayList<EntitySpawnRule> biomeSpawnRules = new ArrayList<>();
-
             switch (biome.getBiomeName()) {
             case "forest":
-
                 generateForestEntities(biomeSpawnRules, random, world);
-
                 break;
-
             case "mountain":
-
                 generateMountainEntities(biomeSpawnRules, random, world);
-
                 break;
-
             case "desert":
-
                 generateDesertEntities(biomeSpawnRules, random, world);
-
                 break;
-
             case "snowy_mountains":
-
                 generateSnowyMountainsEntities(biomeSpawnRules, random, world);
-
                 break;
-
             case "volcanic_mountains":
-
                 generateVolcanicMountainsEntities(biomeSpawnRules, random, world);
-
                 break;
-
             case "swamp":
-
                 generateSwampEntities(biomeSpawnRules, random, world);
-
                 break;
-
             default:
                 break;
             }
-
             spawnRules.put(biome, biomeSpawnRules);
         }
 

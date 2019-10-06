@@ -1,25 +1,30 @@
 package deco2800.skyfall.entities.worlditems;
 
-import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.worlds.Tile;
-import java.util.Random;
 
 public class DesertShrub extends AbstractShrub {
 
-    private static final String ENTITY_ID_STRING = "snow_shrub";
+    private static final String ENTITY_ID_STRING = "desert_shrub";
 
     public DesertShrub() {
-        this.setObjectName(ENTITY_ID_STRING);
+        super();
+        this.setTexture("DBush1");
+        setupParams();
     }
 
     public DesertShrub(Tile tile, boolean obstructed) {
         super(tile, "DBush1", obstructed);
-        this.setObjectName(ENTITY_ID_STRING);
-        this.entityType = "DesertShrub";
+        setupParams();
     }
 
     public DesertShrub(SaveableEntityMemento memento) {
         super(memento);
+        setupParams();
+    }
+
+    private void setupParams() {
+        this.setObjectName(ENTITY_ID_STRING);
+        this.entityType = "DesertShrub";
     }
 
     /**

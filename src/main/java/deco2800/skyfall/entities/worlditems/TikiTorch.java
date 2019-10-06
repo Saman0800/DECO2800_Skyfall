@@ -1,7 +1,6 @@
 package deco2800.skyfall.entities.worlditems;
 
 import deco2800.skyfall.entities.StaticEntity;
-import deco2800.skyfall.entities.SaveableEntity;
 import deco2800.skyfall.graphics.HasPointLight;
 import deco2800.skyfall.graphics.types.vec2;
 import deco2800.skyfall.managers.EnvironmentManager;

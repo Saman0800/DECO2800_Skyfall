@@ -3,7 +3,6 @@ package deco2800.skyfall.resources.items;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import deco2800.skyfall.resources.items.Apple;
 import static org.junit.Assert.*;
 
 public class AppleTest{
