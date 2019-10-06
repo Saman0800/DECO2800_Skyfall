@@ -1194,6 +1194,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 maxSpeed /= 2.f;
                 break;
             case Input.Keys.SPACE:
+                SoundManager.stopSound(WALK_NORMAL);
                 break;
             case Input.Keys.G:
                 break;
