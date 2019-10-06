@@ -66,12 +66,9 @@ public class SpawningManager extends TickableManager  {
         GameManager.addManagerToInstance(local);
 
         //Add enemies to manager
-        System.out.println("here");
-        if (MainCharacter.getInstance() == null) {
-            System.out.println("error");
-        }
-        local.addEnemyForSpawning(new Flower(0, 0, MainCharacter.getInstance()), 1.0f);
-        System.out.println("here");
+        //System.out.println("here");
+        //local.addEnemyForSpawning(new Flower(0, 0, MainCharacter.getInstance()), 1.0f);
+        //System.out.println("here");
     }
 
     /**
