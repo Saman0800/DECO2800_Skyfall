@@ -98,6 +98,8 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("hot_spring", new Texture("resources/Environment/HotSprings.png"));
             textureMap.put("in_hot_spring", new Texture("resources/Environment/HotSprings1.png"));
+            textureMap.put("ruinedCity", new Texture("resources/Environment/ruinedCity.png"));
+            textureMap.put("ruinedRobot", new Texture("resources/Environment/ruinedRobot.png"));
 
             /*
             // New Enemies (Scout, Heavy, Abductor)
