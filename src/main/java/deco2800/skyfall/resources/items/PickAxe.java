@@ -5,6 +5,7 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
+import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
@@ -24,6 +25,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
     // Logger to show messages
     private final Logger logger = LoggerFactory.getLogger(PickAxe.class);
+
 
     /***
      * Create a Pick Axe with the name Pick Axe.
@@ -122,7 +124,6 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
         else {
             GameManager.getManagerFromInstance(InventoryManager.class).add(new Stone());
-
             // lowering the possibility of gaining metal
             double x = (int) (Math.random() * ((1 - 0) + 1));
 
