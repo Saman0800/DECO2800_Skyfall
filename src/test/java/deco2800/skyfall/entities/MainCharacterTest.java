@@ -1,7 +1,6 @@
 package deco2800.skyfall.entities;
 
 import deco2800.skyfall.entities.enemies.Treeman;
-import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.entities.weapons.EmptyItem;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.animation.AnimationLinker;
@@ -32,7 +31,6 @@ import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -699,7 +697,6 @@ public class MainCharacterTest {
     @Test
     public void popUpTest() {
         GameMenuManager gameMenuManager = new GameMenuManager();
-        gameMenuManager.setMainCharacter(testCharacter);
         testCharacter.setUpGUI();
 
         gameMenuManager.hideOpened();

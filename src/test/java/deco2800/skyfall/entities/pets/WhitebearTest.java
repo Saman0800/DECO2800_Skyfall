@@ -1,16 +1,10 @@
 package deco2800.skyfall.entities.pets;
 
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.worlds.world.World;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.lang.reflect.Field;
-
-import static org.junit.Assert.*;
 
 public class WhitebearTest {
 

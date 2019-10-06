@@ -92,7 +92,7 @@ public class QuestManagerTest {
     public void checkGoldTest() {
         assertFalse(manager.checkGold());
         GoldPiece extraGold = new GoldPiece(100);
-        manager.getPlayer().addGold(extraGold, 2);
+        manager.getPlayer().addGold(extraGold, 5);
         assertTrue(manager.checkGold());
     }
 

@@ -1,6 +1,7 @@
 package deco2800.skyfall.gamemenu;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -13,8 +14,8 @@ public class HealthCircle extends AbstractUIElement {
     private final GameMenuManager gmm;
     private float currentHealth;
     private int newHealth; // maybe for animating it down.
-    private  ImageButton biggerCircle;
-    private  ImageButton smallerCircle;
+    public  ImageButton biggerCircle;
+    public  ImageButton smallerCircle;
     private float positionX;
     private float positionY;
     private float offset;
@@ -48,6 +49,15 @@ public class HealthCircle extends AbstractUIElement {
         } else {
             label.setText("Health: " + (int) currentHealth);
         }
+    }
+
+    /**
+     * Get smaller circle size
+     *
+     * @return Inner circle image
+     */
+    public ImageButton getInnerCircle() {
+        return this.smallerCircle;
     }
 
     /**

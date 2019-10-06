@@ -7,10 +7,9 @@ import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.NaturalResources;
 import deco2800.skyfall.resources.items.*;
 
-import java.io.Serializable;
-
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.*;

@@ -1,6 +1,5 @@
 package deco2800.skyfall.resources.items;
 
-import deco2800.skyfall.resources.NaturalResources;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

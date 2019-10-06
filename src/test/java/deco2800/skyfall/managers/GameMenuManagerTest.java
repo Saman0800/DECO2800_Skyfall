@@ -26,8 +26,6 @@ public class GameMenuManagerTest {
     private Map<String, AbstractUIElement> uiElements;
     private Camera camera;
 
-    private HealthCircle hc;
-
     @Before
     public void setUp() {
         tm = mock(TextureManager.class);

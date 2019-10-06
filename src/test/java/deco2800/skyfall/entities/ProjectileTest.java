@@ -1,7 +1,6 @@
 package deco2800.skyfall.entities;
 
 import deco2800.skyfall.util.HexVector;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;

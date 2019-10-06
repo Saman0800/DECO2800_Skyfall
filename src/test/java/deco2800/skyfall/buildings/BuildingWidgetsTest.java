@@ -1,11 +1,8 @@
 package deco2800.skyfall.buildings;
 
-import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import deco2800.skyfall.BaseGDXTest;
 import deco2800.skyfall.managers.GameManager;

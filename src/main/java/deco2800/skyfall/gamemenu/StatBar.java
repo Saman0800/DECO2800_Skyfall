@@ -38,31 +38,31 @@ public abstract class StatBar {
      * @param smallerTextureName
      */
     public StatBar(int currentValue, String attributeName, String biggerTextureName, String smallerTextureName) {
-
-        this.initialValue = currentValue;
-        this.currentValue = currentValue;
-        this.attributeName = attributeName;
-
-        stage = GameManager.get().getManager(GameMenuManager.class).getStage();
-
-        BitmapFont bitmapFont  = new BitmapFont();
-        bitmapFont.getData().setScale(1f);
-
-        label = new Label(this.attributeName + ": " + initialValue, new Label.LabelStyle(bitmapFont, Color.BLACK));
-
-        this.biggerCircle = new ImageButton(GameMenuManager.generateTextureRegionDrawableObject(biggerTextureName));
-        biggerCircle.setSize(100, 100);
-
-        this.smallerCircle = new ImageButton(GameMenuManager.generateTextureRegionDrawableObject(smallerTextureName));
-        smallerCircle.setSize(100, 100);
-
-        stage.addActor(biggerCircle);
-        stage.addActor(smallerCircle);
-
-        stage.addActor(label);
-        label.setAlignment(Align.center);
-
-        updateWithViewportChanges();
+//
+//        this.initialValue = currentValue;
+//        this.currentValue = currentValue;
+//        this.attributeName = attributeName;
+//
+//        stage = GameManager.get().getManager(GameMenuManager.class).getStage();
+//
+//        BitmapFont bitmapFont  = new BitmapFont();
+//        bitmapFont.getData().setScale(1f);
+//
+//        label = new Label(this.attributeName + ": " + initialValue, new Label.LabelStyle(bitmapFont, Color.BLACK));
+//
+//        this.biggerCircle = new ImageButton(GameMenuManager.generateTextureRegionDrawableObject(biggerTextureName));
+//        biggerCircle.setSize(100, 100);
+//
+//        this.smallerCircle = new ImageButton(GameMenuManager.generateTextureRegionDrawableObject(smallerTextureName));
+//        smallerCircle.setSize(100, 100);
+//
+//        stage.addActor(biggerCircle);
+//        stage.addActor(smallerCircle);
+//
+//        stage.addActor(label);
+//        label.setAlignment(Align.center);
+//
+//        updateWithViewportChanges();
     }
 
 

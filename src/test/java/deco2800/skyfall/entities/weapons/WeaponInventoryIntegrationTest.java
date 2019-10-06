@@ -6,8 +6,6 @@ import deco2800.skyfall.worlds.Tile;
 
 import org.junit.*;
 
-import java.lang.reflect.Field;
-
 public class WeaponInventoryIntegrationTest {
 
     private MainCharacter mc;

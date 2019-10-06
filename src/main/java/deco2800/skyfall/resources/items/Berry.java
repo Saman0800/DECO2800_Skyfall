@@ -33,6 +33,15 @@ public class Berry extends HealthResources implements Item {
         return "Berry";
     }
 
+
+    /**
+     * Returns the biome the sand is situated in
+     * @return the biome the sand is situated in
+     */
+    public String getBiome(){
+        return biome;
+    }
+
     @Override
     public String toString() {
         return "" + subtype + ":" + name;

@@ -15,8 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
-
 public class HeadsUpDisplay extends AbstractUIElement {
 
     interface UpdatePositionInterface {
@@ -57,7 +55,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
     public void update() {
         super.update();
         hudElements.forEach((key, value) -> value.update());
-        if ((teleport != null))
+        if ((teleport != null)) {
             if (qm.questFinished()) {
                 teleport.getLabel().setColor(0f, 1f, 0f, 1);
                 teleport.setDisabled(false);
@@ -65,17 +63,18 @@ public class HeadsUpDisplay extends AbstractUIElement {
                 teleport.getLabel().setColor(0.25f, 0.25f, 0.25f, 1);
                 teleport.setDisabled(true);
             }
+        }
     }
 
     @Override
     public void draw() {
-        ImageButton pause = new ImageButton(generateTextureRegionDrawableObject("pause"));
+        ImageButton pause = new ImageButton(gmm.generateTextureRegionDrawableObject("pause"));
         pause.setSize(65, 65 * 146 / 207f);
 
-        ImageButton settings = new ImageButton(generateTextureRegionDrawableObject("settings"));
+        ImageButton settings = new ImageButton(gmm.generateTextureRegionDrawableObject("settings"));
         settings.setSize(65, 65 * 146 / 207f);
 
-        ImageButton create = new ImageButton(generateTextureRegionDrawableObject("create_button"));
+        ImageButton create = new ImageButton(gmm.generateTextureRegionDrawableObject("create_button"));
         create.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -86,7 +85,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
 
 
 
-        ImageButton collect = new ImageButton(generateTextureRegionDrawableObject("collect_button"));
+        ImageButton collect = new ImageButton(gmm.generateTextureRegionDrawableObject("collect_button"));
         collect.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -94,22 +93,6 @@ public class HeadsUpDisplay extends AbstractUIElement {
                 gmm.setPopUp("collectTable");
             }
         });
-//TODO: (@Kausta) Remove if not necessary after portal merge
-//        teleport = new TextButton("TELEPORT", skin, "blue-pill");
-//        teleport.getLabel().setStyle(skin.get("blue-pill", Label.LabelStyle.class));
-//        teleport.getLabel().setAlignment(Align.center);
-//        teleport.getLabel().setFontScale(0.8f);
-//        teleport.getLabel().setColor(0.25f, 0.25f, 0.25f,1);
-//        teleport.setDisabled(true);
-//        teleport.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                if (!teleport.isDisabled()) {
-//                    hideOpened(gmm);
-//                    gmm.setPopUp("teleportTable");
-//                }
-//            }
-//        });
 
 
         TextButton pauseT = new TextButton("PAUSE", skin, "blue-pill");
@@ -137,7 +120,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
             }
         });
 
-        location = new ImageButton(generateTextureRegionDrawableObject("location_button"));
+        location = new ImageButton(gmm.generateTextureRegionDrawableObject("location_button"));
         location.setSize(200, 200);
         location.addListener(new ClickListener() {
             @Override
@@ -153,7 +136,6 @@ public class HeadsUpDisplay extends AbstractUIElement {
                 gmm.getBottomLeftY() + stage.getCamera().viewportHeight / 1024));
 
         leftHUDTable = new Table();
-        leftHUDTable.setDebug(true);
         leftHUDTable.setWidth(200);
         leftHUDTable.add(collect).width(200).height(100);
         leftHUDTable.row();

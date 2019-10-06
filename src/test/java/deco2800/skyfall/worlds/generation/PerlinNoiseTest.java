@@ -3,7 +3,6 @@ package deco2800.skyfall.worlds.generation;
 import static org.junit.Assert.assertEquals;
 
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
-import java.util.Random;
 import org.junit.Test;
 
 public class PerlinNoiseTest {
