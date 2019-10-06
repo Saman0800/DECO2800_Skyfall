@@ -34,7 +34,7 @@ public class StatisticsManagerTest {
     @Before
     public void setUp() {
         MainCharacter.resetInstance();
-        testCharacter1 = MainCharacter.getInstance(4, 4, 0.5f, "Side Piece", 10);
+        testCharacter1 = MainCharacter.getInstance(4, 4, 0.5f, "Side Piece", 50);
 
         testManager = new StatisticsManager(this.testCharacter1);
         testEnemy1 = new Enemy(1,1);
@@ -118,13 +118,16 @@ public class StatisticsManagerTest {
         this.testManager.getCharacter().changeLevel(5);
 
         Assert.assertEquals(6, testManager.getLevel());
-        Assert.assertEquals(60, testManager.getHealth());
+        Assert.assertEquals(50, testManager.getHealth());
 
-        this.testManager.getCharacter().changeHealth(-60);
-        this.testManager.getCharacter().changeHealth(-60);
-        this.testManager.getCharacter().changeHealth(-60);
-        this.testManager.getCharacter().changeHealth(-60);
-        this.testManager.getCharacter().changeHealth(-60);
+
+        this.testManager.getCharacter().changeHealth(-50);
+        Assert.assertTrue(testManager.getCharacter().isDead());
+
+        this.testManager.getCharacter().changeHealth(-50);
+        this.testManager.getCharacter().changeHealth(-50);
+        this.testManager.getCharacter().changeHealth(-50);
+        this.testManager.getCharacter().changeHealth(-50);
 
         Assert.assertEquals(5, testManager.getDeaths());
 

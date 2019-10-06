@@ -13,7 +13,6 @@ import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.entities.*;
-import deco2800.skyfall.entities.spells.Shield;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.worlds.world.Chunk;
 import org.javatuples.Pair;
@@ -293,8 +292,7 @@ public class Renderer3D implements Renderer {
 
     private void debugRender(SpriteBatch batch, OrthographicCamera camera) {
 
-        boolean hitboxRenderDebug = false; // For debugging hitboxes
-        if (hitboxRenderDebug) {
+        if (false) {
             World box2DWorld = GameManager.get().getManager(PhysicsManager.class).getBox2DWorld();
             Array<Body> bodies = new Array<>();
             box2DWorld.getBodies(bodies);
@@ -398,6 +396,15 @@ public class Renderer3D implements Renderer {
         float height = currentFrame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y
                 * entity.getScale();
         int[] offset = aniLink.getOffset();
+
+        if (entity instanceof MainCharacter) {
+            if (((MainCharacter) entity).isHurt()) {
+                batch.setColor(Color.RED);
+            } else {
+                batch.setColor(Color.WHITE);
+
+            }
+        }
 
         batch.draw(currentFrame, entityWorldCoord[0] + offset[0], entityWorldCoord[1] + offset[0], width, height);
         aniLink.incrTime(Gdx.graphics.getDeltaTime());

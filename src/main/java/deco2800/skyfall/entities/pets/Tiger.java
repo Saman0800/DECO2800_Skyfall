@@ -12,38 +12,40 @@ import deco2800.skyfall.util.WorldUtil;
 
 public class Tiger extends Enemy implements Animatable {
     //The health of tiger
+
     private static final transient int HEALTH = 10;
-    //The attack speed of tiger
+    // The attack speed of tiger
     private static final transient float RUNAWAYSPEED = 5f;
-    //The normal speed of tiger, if it is not in attack
+    // The normal speed of tiger, if it is not in attack
     private static final transient float NORMALSPEED = 0.01f;
-    //The speed of tiger, if it get injure
+    // The speed of tiger, if it get injure
     private static final transient float INJURESPEED = 0.00001f;
-    //The biome of tiger
+    // The biome of tiger
     private static final transient String BIOME = "forest";
-    //Moving direction
+    // Moving direction
     private Direction movingDirection;
-    //Set boolean moving
+    // Set boolean moving
     private boolean moving = false;
-    //Set the type
+
+    // Set the period equal to zero , to account attack time
+    private int period = 0;
+    // Set the type
     private static final transient String PET_TYPE = "tiger";
-    //savage animation
+    // savage animation
     private MainCharacter mc;
     private boolean attackStatus = false;
 
-    //a routine for destination
+    // a routine for destination
     private HexVector destination = null;
 
-    //target position
+    // target position
     private float[] targetPosition = null;
 
-    //world coordinate of this pet
-    private float[] orginalPosition = WorldUtil.colRowToWorldCords
-            (this.getCol(), this.getRow());
+    // world coordinate of this pet
+    private float[] orginalPosition = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
 
     /**
-     * Initialization value of pet tiger, and set the initial image in
-     * the game
+     * Initialization value of pet tiger, and set the initial image in the game
      */
     public Tiger(float col, float row, MainCharacter mc) {
         super(col, row);
@@ -72,6 +74,7 @@ public class Tiger extends Enemy implements Animatable {
 
     /**
      * get pet type
+     * 
      * @return pet type
      */
     public String getPetType() {
@@ -80,6 +83,7 @@ public class Tiger extends Enemy implements Animatable {
 
     /**
      * get pet moving
+     * 
      * @return boolean moving
      */
     public boolean getMoving() {
@@ -88,6 +92,7 @@ public class Tiger extends Enemy implements Animatable {
 
     /**
      * get biome
+     * 
      * @return string of biome
      */
     public String getBiome() {
@@ -96,7 +101,8 @@ public class Tiger extends Enemy implements Animatable {
 
     /**
      * get the attack status of pet tiger
-     * @param  status - boolean value
+     * 
+     * @param status - boolean value
      */
     public void SetAttackStatus(boolean status) {
         this.attackStatus = status;
@@ -105,62 +111,56 @@ public class Tiger extends Enemy implements Animatable {
 
     /**
      * Return true, if the pet tiger get injure. Otherwise return false
+     * 
      * @return True if get injure, false otherwise
      */
     public boolean getInjure() {
-        if (this.getHealth() < 5) {
-            return true;
-        }
-        return false;
+        return this.getHealth() < 5;
     }
-
 
     /**
      * Return the string
-     * @return string representation of this class including its pet type,
-     * biome and x,y coordinates
+     * 
+     * @return string representation of this class including its pet type, biome and
+     *         x,y coordinates
      */
     @Override
     public String toString() {
-        return String.format("%s at (%d, %d) %s biome", getPetType(),
-                (int) getCol(), (int) getRow(), getBiome());
+        return String.format("%s at (%d, %d) %s biome", getPetType(), (int) getCol(), (int) getRow(), getBiome());
     }
 
-
     /**
-     * If the character is not close to the pet tiger, this pet will does the
-     * random movement. If the the character is closing to the tiger, the tiger
-     * will run away, and if the character attack and capture the tiger, this
-     * tiger will be a pet of master
+     * If the character is not close to the pet tiger, this pet will does the random
+     * movement. If the the character is closing to the tiger, the tiger will run
+     * away, and if the character attack and capture the tiger, this tiger will be a
+     * pet of master
      *
      */
     @Override
     public void onTick(long i) {
         randomMoving();
         setCurrentState(AnimationRole.MOVE);
-        if (isDead() == true) {
+        if (isDead()) {
             this.tigerDead();
         } else {
             float colDistance = mc.getCol() - this.getCol();
             float rowDistance = mc.getRow() - this.getRow();
-            if(getHealth() == 10){
-                if ((colDistance * colDistance + rowDistance * rowDistance) < 4)
-                {
+            if (getHealth() == 10) {
+                if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
                     this.SetAttackStatus(true);
                     runAway();
-                }else {
+                } else {
                     randomMoving();
                 }
-            }
-            else{
+            } else {
                 followPlayer(mc);
                 this.SetAttackStatus(false);
                 setCurrentState(AnimationRole.MOVE);
-                if (getInjure() == true) {
-                    this.position.moveToward(destination,this.INJURESPEED);
+                if (getInjure()) {
+                    this.position.moveToward(destination, Tiger.INJURESPEED);
 
                 } else {
-                    this.position.moveToward(destination,this.NORMALSPEED);
+                    this.position.moveToward(destination, Tiger.NORMALSPEED);
                 }
             }
         }
@@ -170,24 +170,21 @@ public class Tiger extends Enemy implements Animatable {
     /**
      * Give a location to the pet tiger, if it wants to run away
      */
-    private void runAway(){
+    public void runAway() {
         targetPosition = new float[2];
-        targetPosition[0] = (float)
-                (Math.random() * 800 + orginalPosition[0]);
-        targetPosition[1]=(float)
-                (Math.random() * 800 + orginalPosition[1]);
-        float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow
-                (targetPosition[0], targetPosition[1]);
-        destination = new HexVector(randomPositionWorld[0],
-                randomPositionWorld[1]);
-        this.position.moveToward(destination,this.RUNAWAYSPEED);
+        targetPosition[0] = (float) (Math.random() * 800 + orginalPosition[0]);
+        targetPosition[1] = (float) (Math.random() * 800 + orginalPosition[1]);
+        float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow(targetPosition[0], targetPosition[1]);
+        destination = new HexVector(randomPositionWorld[0], randomPositionWorld[1]);
+        this.position.moveToward(destination, Tiger.RUNAWAYSPEED);
     }
 
     /**
      * get the moving direction
+     * 
      * @return moving direction
      */
-    public Direction getMovingDirection(){
+    public Direction getMovingDirection() {
         return movingDirection;
     }
 
@@ -195,34 +192,30 @@ public class Tiger extends Enemy implements Animatable {
      * Make the pet tiger do the random movement
      *
      */
-    private void randomMoving() {
-        if(!moving){
+    public void randomMoving() {
+        if (!moving) {
             targetPosition = new float[2];
-            targetPosition[0] = (float)
-                    (Math.random() * 200 + orginalPosition[0]);
-            targetPosition[1] = (float)
-                    (Math.random() * 200 + orginalPosition[1]);
-            float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow
-                    (targetPosition[0], targetPosition[1]);
-            destination = new HexVector(randomPositionWorld[0],
-                    randomPositionWorld[1]);
+            targetPosition[0] = (float) (Math.random() * 200 + orginalPosition[0]);
+            targetPosition[1] = (float) (Math.random() * 200 + orginalPosition[1]);
+            float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow(targetPosition[0], targetPosition[1]);
+            destination = new HexVector(randomPositionWorld[0], randomPositionWorld[1]);
             moving = true;
         }
-        if(destination.getCol() == this.getCol() &&
-                destination.getRow() == this.getRow()){
+        if (destination.getCol() == this.getCol() && destination.getRow() == this.getRow()) {
             moving = false;
         }
         if (getInjure() == true) {
-            this.position.moveToward(destination,this.INJURESPEED);
+            this.position.moveToward(destination, Tiger.INJURESPEED);
         }
-        this.position.moveToward(destination,this.NORMALSPEED);
+        this.position.moveToward(destination, Tiger.NORMALSPEED);
+
     }
 
     /**
      * The tiger will follow the player
      *
      */
-    private void followPlayer(MainCharacter player){
+    public void followPlayer(MainCharacter player) {
         destination = new HexVector(player.getCol(), player.getRow());
         this.position.moveToward(destination, this.getSpeed());
 
@@ -231,14 +224,14 @@ public class Tiger extends Enemy implements Animatable {
     /**
      * if this pet is dead then will show dead texture for a while
      */
-    private int time=0;
-    private void tigerDead(){
-        if(time <= 100){
+    int time = 0;
+    private void tigerDead() {
+        if (time <= 100) {
             time++;
             this.setTexture("tigerDead");
             this.setObjectName("tigerDead");
             setCurrentState(AnimationRole.NULL);
-        }else{
+        } else {
             GameManager.get().getWorld().removeEntity(this);
 
         }
@@ -255,22 +248,26 @@ public class Tiger extends Enemy implements Animatable {
         return new int[0];
     }
 
-
-    @Override
-    public void setDirectionTextures() {
-
-    }
-
     /**
      * add pet tiger animations
      */
     @Override
     public void configureAnimations() {
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.DEFAULT, new AnimationLinker
-                        ("tigerFront", AnimationRole.MOVE, Direction.DEFAULT,
-                                true, true));
+        this.addAnimations(AnimationRole.MOVE, Direction.DEFAULT,
+                new AnimationLinker("tigerFront", AnimationRole.MOVE, Direction.DEFAULT, true, true));
 
     }
 
+    /**
+     * Set the direction textures of the pet tiger
+     */
+    @Override
+    public void setDirectionTextures() {
+        // Do nothing for now.
+    }
+
+    @Override
+    public void dealDamage(MainCharacter mc) {
+        // Do nothing for now.
+    }
 }

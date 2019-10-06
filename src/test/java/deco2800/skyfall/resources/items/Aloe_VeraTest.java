@@ -3,7 +3,6 @@ package deco2800.skyfall.resources.items;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import deco2800.skyfall.resources.items.Aloe_Vera;
 import static org.junit.Assert.*;
 
 public class Aloe_VeraTest{
@@ -51,6 +50,14 @@ public class Aloe_VeraTest{
         assertEquals("Health Resource", aloe_vera.getSubtype());
     }
 
+    /**
+     * Tests the correct colour is returned for the health resource
+     */
+    @Test
+    public void getColourTest(){
+        assertEquals("green", aloe_vera.getColour());
+
+    }
 
     /**
      * Ensure that the item is considered exchangeable for later use in the game

@@ -2,6 +2,9 @@ package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.weapons.Bow;
+import deco2800.skyfall.entities.weapons.Spear;
+import deco2800.skyfall.entities.weapons.Sword;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.resources.Blueprint;
@@ -44,7 +47,7 @@ public class ResearchTable extends ManufacturedResources implements Blueprint,
     public ResearchTable(MainCharacter owner){
         super(owner);
         creatablesList = new ArrayList<>();
-        creatablesList.addAll(Arrays.asList(new Hatchet(),new PickAxe()));
+        creatablesList.addAll(Arrays.asList(new Hatchet(),new PickAxe(),new Sword(),new Spear(), new Bow()));
         playerInvenotry = GameManager.getManagerFromInstance(InventoryManager.class);
         goldCost = 25;
     }
@@ -104,7 +107,7 @@ public class ResearchTable extends ManufacturedResources implements Blueprint,
      * @return True if the item can be exchanged, false otherwise
      */
     @Override
-    public Boolean isExchangeable() {
+    public boolean isExchangeable() {
         return true;
     }
 

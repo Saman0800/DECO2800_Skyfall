@@ -8,14 +8,18 @@ public class VolcanicRock extends AbstractRock {
 
     public VolcanicRock(Tile tile, boolean obstructed) {
         super(tile, obstructed, "vRock" + nextRock);
-        nextRock = randomGen.nextInt(3) + 1;
-        this.setObjectName(ENTITY_ID_STRING);
-        this.metalAmount = 20;
+        setupParams();
     }
 
     public VolcanicRock(SaveableEntityMemento memento) {
         super(memento);
-        this.metalAmount = 20;
+        setupParams();
+    }
+
+    private void setupParams() {
+        this.setObjectName(ENTITY_ID_STRING);
+        this.metalAmount = 15;
+        this.entityType = "VolcanicRock";
     }
 
     /**

@@ -43,6 +43,10 @@ public class AnimationManager extends AbstractManager {
         this.generateAnimationObject("mario_left",
                 "mario_left", 100, 138, DEFAULT_FRAME_RATE);
 
+        // Add bike animation
+        this.generateAnimationObject("bikeW","resources/Bike_Left_Animation/left.atlas",0.05f);
+        this.generateAnimationObject("bikeE","resources/Bike_Right_Animation/right.atlas",0.05f);
+
         this.generateAnimationObject("whitebearNE","resources/whitebearright/whitebearright.atlas",0.05f);
         this.generateAnimationObject("whitebearN","resources/whitebearback/whitebearback.atlas",0.05f);
         this.generateAnimationObject("whitebearNW","resources/whitebearleft/whitebearleft.atlas",0.05f);
@@ -265,6 +269,7 @@ public class AnimationManager extends AbstractManager {
                 303, 337, 0.12f);
 
         LOGGER.info("All animations in game");
+
     }
 
     /**
@@ -288,8 +293,6 @@ public class AnimationManager extends AbstractManager {
         int height = tmpFrames.length ;
         int width =  tmpFrames[0].length;
         int size = height * width;
-
-        LOGGER.info("After split, Width: {} Height: {}", width, height);
 
         TextureRegion[] animationFrames = new TextureRegion[size];
 
@@ -318,9 +321,11 @@ public class AnimationManager extends AbstractManager {
             return;
         }
         Texture texture = textureManager.getTexture(textureName);
-        LOGGER.info("Texture has been fetched {}", textureName);
+
+        LOGGER.info("Texture has been fetched {} " , textureName);
 
         TextureRegion[][] tmpFrames = TextureRegion.split(texture, tileWidth, tileHeight);
+
         //Assuming tmpFrames is a matrix
         TextureRegion[] animationFrames = convert2DTo1D(tmpFrames);
         animationMap.put(animationName, new Animation<>(frameRate, animationFrames));
@@ -334,7 +339,7 @@ public class AnimationManager extends AbstractManager {
      * @param atlasPath The path to look at
      * @param frameRate The frame rate of the animation
      */
-    public void generateAnimationObject(String animationName,String atlasPath,float frameRate){
+    private void generateAnimationObject(String animationName,String atlasPath,float frameRate){
         TextureAtlas textureAtlas=new TextureAtlas(Gdx.files.internal(atlasPath));
         LOGGER.info("textureAtlas file has been fetched");
         animationMap.put(animationName, new Animation<TextureRegion>(frameRate,textureAtlas.getRegions()));

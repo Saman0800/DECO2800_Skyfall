@@ -2,7 +2,6 @@ package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.weapons.EmptyItem;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
@@ -110,7 +109,7 @@ public class Hatchet extends ManufacturedResources implements Item, Blueprint {
      * @return true or false.
      */
     @Override
-    public Boolean isExchangeable() {
+    public boolean isExchangeable() {
         return true;
     }
 
@@ -129,6 +128,13 @@ public class Hatchet extends ManufacturedResources implements Item, Blueprint {
         } else {
             GameManager.getManagerFromInstance(InventoryManager.class).add(new Wood());
             treeToFarm.decreaseWoodAmount();
+
+            // lowering the possibility of gaining sand
+            double y = Math.random();
+
+            if (y >= 0.8) {
+                GameManager.getManagerFromInstance(InventoryManager.class).add(new Vine());
+            }
         }
     }
 
@@ -212,6 +218,6 @@ public class Hatchet extends ManufacturedResources implements Item, Blueprint {
         this.decreaseDurability();
         logger.warn("Durability: " + this.getDurability());
     }
-
+//
 
 }

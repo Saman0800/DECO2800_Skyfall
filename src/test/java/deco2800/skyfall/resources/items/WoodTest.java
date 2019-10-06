@@ -1,6 +1,5 @@
 package deco2800.skyfall.resources.items;
 
-import deco2800.skyfall.resources.NaturalResources;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,10 +51,7 @@ public class WoodTest  {
     }
 
 
-    //@Test
-    //public void hasHealingPower1() {
-        //assertFalse(wood.hasHealingPower());
-    //}
+
 
     @Test
     public void getCoords1() {

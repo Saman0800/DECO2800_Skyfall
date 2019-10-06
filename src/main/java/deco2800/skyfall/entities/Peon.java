@@ -3,6 +3,8 @@ package deco2800.skyfall.entities;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.tasks.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Base class of character in game where main characters and enemies will
@@ -20,8 +22,13 @@ public abstract class Peon extends AgentEntity implements Tickable {
 	// Max Health of the character
 	private int maxHealth;
 
-	// Boolean of whether character is dead
+	// boolean of whether character is dead
 	private int deaths;
+
+	private static final String CHARACTER = "spacman_ded";
+
+	private final Logger logger =
+			LoggerFactory.getLogger(Peon.class);
 
 	/**
 	 * Constructor with no parameters
@@ -29,7 +36,7 @@ public abstract class Peon extends AgentEntity implements Tickable {
 	@SuppressWarnings("WeakerAccess")
 	public Peon() {
 		super();
-		this.setTexture("spacman_ded");
+		this.setTexture(CHARACTER);
 		this.setObjectName("Peon");
 		this.setHeight(1);
 		this.speed = 0.05f;
@@ -40,7 +47,7 @@ public abstract class Peon extends AgentEntity implements Tickable {
      */
 	public Peon(float row, float col, float speed, String name, int health) {
 		super(row, col, 3, speed);
-		this.setTexture("spacman_ded");
+		this.setTexture(CHARACTER);
 
 		if (name == null || name.equals("")) {
 			setName("DEFAULT");
@@ -48,13 +55,15 @@ public abstract class Peon extends AgentEntity implements Tickable {
 			setName(name);
 		}
 
-		if (health <= 0){
-			this.health = 10;
-			this.maxHealth = 10;
+		if (health < 1){
+			this.health = 50;
+			this.maxHealth = 50;
 		} else {
 			this.health = health;
 			this.maxHealth = health;
 		}
+		String info = String.format("%s has %d", name, maxHealth);
+		logger.info(info);
 		this.deaths = 0;
 	}
 
@@ -62,7 +71,7 @@ public abstract class Peon extends AgentEntity implements Tickable {
 	public Peon(float row, float col, float speed, String name, int health,
 				String fixtureDef) {
 		super(row, col, 3, speed, fixtureDef);
-		this.setTexture("spacman_ded");
+		this.setTexture(CHARACTER);
 
 		if (name == null || name.equals("")) {
 			setName("DEFAULT");
@@ -71,7 +80,7 @@ public abstract class Peon extends AgentEntity implements Tickable {
 		}
 
 		if (health <= 0){
-			this.health = 10;
+			this.health = 50;
 		} else {
 			this.health = health;
 		}
@@ -100,15 +109,20 @@ public abstract class Peon extends AgentEntity implements Tickable {
 	 * @param amount change being made to player's health
 	 */
 	public void changeHealth(int amount) {
+		// Current health equals player's current health
 		int currentHealth = this.getHealth();
 
-		if(currentHealth + amount > maxHealth) {
-			this.health = maxHealth;
-		} else {
-			this.health += amount;
+		// Change current health if it is greater than max health
+		if(currentHealth > maxHealth) {
+			currentHealth = maxHealth;
 		}
-		if (this.isDead()){
-			this.health = 0;
+		// Add health to current health
+		currentHealth += amount;
+		this.health = currentHealth;
+
+		// Check if player is dead
+		if (this.isDead()) {
+			health = 0;
 			this.deaths += 1;
 		}
 	}
@@ -118,7 +132,7 @@ public abstract class Peon extends AgentEntity implements Tickable {
 	 * @return health of character
 	 */
 	public int getHealth() {
-		return health;
+		return this.health;
 	}
 
 	/**
@@ -140,17 +154,14 @@ public abstract class Peon extends AgentEntity implements Tickable {
 	 * @return true if character's health is less than or equal to 0, else false
 	 */
 	public boolean isDead() {
-		return this.getHealth() <= 0;
+		return this.getHealth() < 1;
 	}
 
 	/**
 	 * Sets character to be dead
 	 */
-	public boolean setDead(boolean is_dead) {
-		if (is_dead) {
-			health = 0;
-		}
-		return is_dead;
+	public boolean setDead(boolean isDead) {
+		return isDead;
 	}
 
 	/**

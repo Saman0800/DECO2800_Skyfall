@@ -1,6 +1,7 @@
 package deco2800.skyfall.entities.weapons;
 
 import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.resources.Item;
@@ -11,7 +12,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Weapon to be used by the Main Character and stored as an inventory item
  */
-public abstract class Weapon extends StaticEntity implements Item, IWeapon {
+public abstract class Weapon extends StaticEntity implements Item, IWeapon, Blueprint {
 
     // Weapon attributes
     private String name;
@@ -21,8 +22,8 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon {
     private int attackRate;
     private int damage;
     private int durability;
-    private Boolean carryable;
-    private Boolean exchangeable;
+    private boolean carryable;
+    private boolean exchangeable;
     public boolean equippable;
     private HexVector position;
 
@@ -164,7 +165,7 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon {
      * @return True if the item can be carried in the inventory, false
      * if it is consumed immediately
      */
-    public Boolean isCarryable() {
+    public boolean isCarryable() {
         return this.carryable;
     }
 
@@ -180,7 +181,7 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon {
      * Returns whether or not the weapon can be exchanged
      * @return True if the weapon can be exchanged, false otherwise
      */
-    public Boolean isExchangeable() {
+    public boolean isExchangeable() {
         return this.exchangeable;
     }
 
@@ -188,7 +189,7 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon {
      * Returns whether or not the weapon can be equipped from the inventory
      * @return True if the weapon can be equipped, false otherwise
      */
-    public Boolean isEquippable() {
+    public boolean isEquippable() {
         return this.equippable;
     }
 

@@ -1,5 +1,7 @@
 package deco2800.skyfall.saving;
 
-public abstract class AbstractMemento {
+import java.io.Serializable;
+
+public abstract class AbstractMemento implements Serializable {
 
 }

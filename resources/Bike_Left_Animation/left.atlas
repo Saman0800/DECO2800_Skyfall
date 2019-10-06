@@ -1,0 +1,54 @@
+
+left.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+movemenL7
+  rotate: false
+  xy: 0, 2252
+  size: 1195, 1124
+  orig: 1195, 1124
+  offset: 0, 0
+  index: -1
+movementL1
+  rotate: false
+  xy: 0, 1126
+  size: 1195, 1124
+  orig: 1195, 1124
+  offset: 0, 0
+  index: -1
+movementL2
+  rotate: false
+  xy: 1197, 2252
+  size: 1195, 1124
+  orig: 1195, 1124
+  offset: 0, 0
+  index: -1
+movementL3
+  rotate: false
+  xy: 0, 0
+  size: 1195, 1124
+  orig: 1195, 1124
+  offset: 0, 0
+  index: -1
+movementL5
+  rotate: false
+  xy: 1197, 1126
+  size: 1195, 1124
+  orig: 1195, 1124
+  offset: 0, 0
+  index: -1
+movementL4
+  rotate: false
+  xy: 2394, 2252
+  size: 1194, 1124
+  orig: 1194, 1124
+  offset: 0, 0
+  index: -1
+movementL6
+  rotate: false
+  xy: 1197, 0
+  size: 1194, 1124
+  orig: 1194, 1124
+  offset: 0, 0
+  index: -1

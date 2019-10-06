@@ -6,7 +6,6 @@ import deco2800.skyfall.Tickable;
 import deco2800.skyfall.entities.Peon;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.graphics.types.vec2;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.managers.GameManager;
@@ -38,13 +37,8 @@ public class Enemy extends Peon
     // Enemy types
     public enum EnemyType {
         ABDUCTOR,
-        FLOWER,
         HEAVY,
-        ROBOT,
-        SCOUT,
-        SPIDER,
-        STONE,
-        TREEMAN
+        SCOUT
     }
 
     // type this enemy is
@@ -125,7 +119,7 @@ public class Enemy extends Peon
             this.destination = new HexVector(mainCharacter.getCol(), mainCharacter.getRow());
             this.position.moveToward(destination, this.getChasingSpeed());
 
-            //if the player in attack range then attack player
+            // if the player in attack range then attack player
             if (distance(mainCharacter) < getAttackRange()) {
                 setCurrentState(AnimationRole.ATTACK);
                 dealDamage(mainCharacter);
@@ -142,7 +136,6 @@ public class Enemy extends Peon
     public void takeDamage(int damage) {
         hurtTime = 0;
         setHurt(true);
-        changeHealth(-damage);
         health -= damage;
 
         // In Peon.class, when the health = 0, isDead will be set true automatically.
@@ -158,7 +151,7 @@ public class Enemy extends Peon
     @Override
     public void dealDamage(MainCharacter mc) {
         setCurrentState(AnimationRole.ATTACK);
-        mc.hurt(this.getStrength());
+        mc.playerHurt(this.getStrength());
         mc.setRecovering(true);
         SoundManager.playSound(attackingSound);
     }
@@ -169,7 +162,7 @@ public class Enemy extends Peon
      */
     @Override
     public boolean canDealDamage() {
-        return this.getName().matches("Abductor");
+        return true;
     }
 
     /**
@@ -185,7 +178,7 @@ public class Enemy extends Peon
      * If the animation is moving sets the animation state to be Move
      * else NULL. Also sets the direction
      */
-    private void updateAnimation() {
+    public void updateAnimation() {
         setTexture(getDefaultTexture());
         setCurrentDirection(movementDirection(this.position.getAngle()));
 
@@ -285,12 +278,11 @@ public class Enemy extends Peon
     /**
      * Deploy the sound of the enemy into the game.
      */
-    private void configureSounds() {
-        String name = this.getName();
-        this.chasingSound = "heavy_walk";
-        this.hurtSound = name + "Hurt";
-        this.attackingSound = name + "Attack";
-        this.diedSound = name + "Dead";
+    public void configureSounds() {
+        this.chasingSound = "enemy_walk";
+        this.hurtSound = "enemy_hurt";
+        this.attackingSound = "enemy_attack";
+        this.diedSound = "enemy_dead";
     }
 
     /**
@@ -318,12 +310,10 @@ public class Enemy extends Peon
                 AnimationRole.MOVE, Direction.SOUTH, new AnimationLinker(
                         enemyName + "MoveS", AnimationRole.MOVE, Direction.SOUTH,
                         true, true));
-
         this.addAnimations(
                 AnimationRole.MOVE, Direction.WEST, new AnimationLinker(
                         enemyName + "MoveW", AnimationRole.MOVE, Direction.WEST,
                         true, true));
-
         this.addAnimations(
                 AnimationRole.MOVE, Direction.SOUTH_EAST, new AnimationLinker(
                         enemyName + "MoveSE", AnimationRole.MOVE, Direction.SOUTH_EAST,
@@ -385,10 +375,11 @@ public class Enemy extends Peon
                         enemyName + "DamageW", AnimationRole.HURT, Direction.WEST,
                         true, true));
 
+        // Dead animation
         this.addAnimations(
                 AnimationRole.DEAD, Direction.DEFAULT, new AnimationLinker(
                 "enemyDie", AnimationRole.DEAD, Direction.DEFAULT,
-                        true, true));
+                        false, true));
     }
 
     /**
@@ -433,18 +424,28 @@ public class Enemy extends Peon
      * @return the name of the chasing sound
      *          (defined in {@link SoundManager}) of this enemy.
      */
-    private String getChaseSound() {
+    public String getChaseSound() {
         return this.chasingSound;
     }
 
     /**
-     * Getter of the enemy's sound when enemy's dead.
+     * Getter of the enemy's sound when enemy is dying.
      *
      * @return the name of the dead sound
      *               (defined in {@link SoundManager}) of this enemy.
      */
-    private String getDeadSound() {
+    public String getDeadSound() {
         return this.diedSound;
+    }
+
+    /**
+     * Getter of the enemy's sound when enemy is attacking.
+     *
+     * @return the name of the dead sound
+     *               (defined in {@link SoundManager}) of this enemy.
+     */
+    public String getAttackSound() {
+        return this.attackingSound;
     }
 
     /**
@@ -537,7 +538,7 @@ public class Enemy extends Peon
      * Check whether the hurt time is within 2 seconds,
      * therefore casting hurt effects on enemy.
      */
-    private void checkIfHurtEnded() {
+    public void checkIfHurtEnded() {
         hurtTime += 20; // hurt for 1 second
         if (hurtTime > 340) {
             logger.info("Hurt ended");
@@ -589,7 +590,7 @@ public class Enemy extends Peon
      * Get movement direction
      * @param angle the angle between to tile
      */
-    private Direction movementDirection(double angle) {
+    public Direction movementDirection(double angle) {
         angle = Math.toDegrees(angle - Math.PI);
 
         if(angle < 0) {
@@ -623,20 +624,10 @@ public class Enemy extends Peon
     private void setType(String name) {
         if (name.matches("Abductor")) {
             enemy = Enemy.EnemyType.ABDUCTOR;
-        } else if (name.matches("Flower")) {
-            enemy = Enemy.EnemyType.FLOWER;
-        } else if (name.matches("Heavy")) {
+        }  else if (name.matches("Heavy")) {
             enemy = Enemy.EnemyType.HEAVY;
-        } else if (name.matches("Robot")) {
-            enemy = Enemy.EnemyType.ROBOT;
         } else if (name.matches("Scout")) {
             enemy = Enemy.EnemyType.SCOUT;
-        } else if (name.matches("Spider")) {
-            enemy = Enemy.EnemyType.SPIDER;
-        } else if (name.matches("Stone")) {
-            enemy = Enemy.EnemyType.STONE;
-        } else {
-            enemy = Enemy.EnemyType.TREEMAN;
         }
     }
 
@@ -650,13 +641,14 @@ public class Enemy extends Peon
     }
 
     /**
-     *  A cheat method to get player position, used by spawning
-     *  to work out where to place an enemy
-     * @return returns a vec2 -> (row, col) of player location
+     * Get the duration main character hurts.
+     * @return the duration main character hurts.
      */
-    public vec2 getPlayerLocation() {
-        return new vec2(mainCharacter.getRow(),
-                mainCharacter.getCol());
+    public long getHurtTime() {
+        return hurtTime;
+    }
+    public void setHurtTime(long hurtTime) {
+        this.hurtTime = hurtTime;
     }
 
     /**
@@ -665,7 +657,8 @@ public class Enemy extends Peon
      */
     @Override
     public String toString() {
-        return String.format("%s at (%d, %d) %s biome", getObjectName(), (int)getCol(), (int)getRow(), getBiome());
+        return String.format("%s at (%d, %d) %s biome",
+                getName(), (int)getCol(), (int)getRow(), getBiome());
     }
 
     /**
