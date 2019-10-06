@@ -102,7 +102,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
      * @return true or false.
      */
     @Override
-    public Boolean isExchangeable() {
+    public boolean isExchangeable() {
         return true;
     }
 

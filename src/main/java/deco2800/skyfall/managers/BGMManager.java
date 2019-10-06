@@ -26,7 +26,7 @@ public class BGMManager extends AbstractManager implements KeyTypedObserver {
     /* Volume of the clip */
     private FloatControl volume;
 
-    /* Boolean mute control */
+    /* boolean mute control */
     public BooleanControl muteVol;
 
     // Logger for class to display messages

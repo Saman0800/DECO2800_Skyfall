@@ -2,7 +2,6 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.enemies.AbstractEnemy;
-import deco2800.skyfall.entities.enemies.Enemy;
 
 import java.util.*;
 

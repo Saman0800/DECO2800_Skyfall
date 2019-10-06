@@ -6,11 +6,11 @@ import deco2800.skyfall.worlds.Tile;
 public abstract class HealthResources implements Item {
 
     // can the item be stored in the inventory
-    private Boolean carryable;
+    private boolean carryable;
     // the name of the item e.g. food, poison
     private String name;
     // impact the player's health or not
-    private Boolean hasHealingPower;
+    private boolean hasHealingPower;
 
     // the name of the subtype the item belongs to
     public String subtype;
@@ -18,7 +18,7 @@ public abstract class HealthResources implements Item {
     private HexVector position;
 
     // Items could change or not e.g. coins, items
-    private Boolean exchangeable;
+    private boolean exchangeable;
 
     // Can be item be equipped
     public boolean equippable;
@@ -84,7 +84,7 @@ public abstract class HealthResources implements Item {
      */
 
 
-    public Boolean isCarryable() {
+    public boolean isCarryable() {
         return carryable;
     }
 
@@ -104,7 +104,7 @@ public abstract class HealthResources implements Item {
      * @return True if the item impacts on the player's health, false otherwise
      */
 
-    public Boolean hasHealingPower() {
+    public boolean hasHealingPower() {
         return hasHealingPower;
     }
 
@@ -124,7 +124,7 @@ public abstract class HealthResources implements Item {
      * @return True if the item could be exhanged, false otherwise
      */
     @Override
-    public Boolean isExchangeable() {
+    public boolean isExchangeable() {
         return exchangeable;
     }
 
@@ -176,7 +176,7 @@ public abstract class HealthResources implements Item {
      * Returns whether or not the item can be equipped from the inventory
      * @return True if the item can be equipped, false otherwise
      */
-    public Boolean isEquippable() {
+    public boolean isEquippable() {
         return this.equippable;
     }
 }
