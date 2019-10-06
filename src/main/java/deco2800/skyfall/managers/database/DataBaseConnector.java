@@ -63,7 +63,7 @@ public class DataBaseConnector {
             connection.close();
             DriverManager.getConnection("jdbc:derby:" + dataBaseName + ";shutdown=true");
         } catch (SQLException ignore) {
-            //Should ignore exception, as shutting down database always throws exceptions
+            // Should ignore exception, as shutting down database always throws exceptions
         }
     }
 
@@ -100,12 +100,12 @@ public class DataBaseConnector {
                 saveWorld(world);
             }
 
-            //fixme:jeffvan12 should probably work on this
+            // fixme:jeffvan12 should probably work on this
 
             // TODO implement saving the main character
             // saveMainCharacter(save.getMainCharacter());
         } catch (SQLException | IOException e) {
-            throw new RunTimeSaveException("Failed to save the game " , e);
+            throw new RunTimeSaveException("Failed to save the game ", e);
         }
     }
 
@@ -142,8 +142,8 @@ public class DataBaseConnector {
                 updateQueries.updateNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(),
                         worldGenNode.save(), worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
             } else {
-                insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(),
-                        worldGenNode.save(), worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
+                insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(), worldGenNode.save(),
+                        worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
             }
         }
 
@@ -224,7 +224,7 @@ public class DataBaseConnector {
             }
             connection.commit();
         } catch (SQLException | IOException e) {
-            throw new RunTimeSaveException("Failed to save the chunk" , e);
+            throw new RunTimeSaveException("Failed to save the chunk", e);
         }
     }
 
@@ -235,9 +235,11 @@ public class DataBaseConnector {
      */
     public Save loadGame() {
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM SAVES");
+
              ResultSet result = preparedStatement.executeQuery()) {
+
             connection.setAutoCommit(false);
-            //fixme:jeffvan12 sort this out
+            // fixme:jeffvan12 sort this out
 
             // TODO:dannathan make this work for any savefile, not just the most recent
             // preparedStatement = connection.prepareStatement("SELECT * FROM SAVES");
@@ -259,13 +261,13 @@ public class DataBaseConnector {
             // loadMainCharacter(save);
             World currentWorld = loadWorlds(save, memento);
             save.setCurrentWorld(currentWorld);
-            //FIXME:dannathan Probably should turn this back on
-//            currentWorld.addEntity(MainCharacter.getInstance());
+            // FIXME:dannathan Probably should turn this back on
+            // currentWorld.addEntity(MainCharacter.getInstance());
             save.setSaveID(saveID);
 
             return save;
         } catch (SQLException | IOException | ClassNotFoundException e) {
-            throw new RunTimeLoadException("Failed to load the game" , e);
+            throw new RunTimeLoadException("Failed to load the game", e);
         }
     }
 
@@ -292,7 +294,7 @@ public class DataBaseConnector {
      * @param saveMemento the memento of the save
      * @return the save's current world
      */
-    public World loadWorlds(Save save, Save.SaveMemento saveMemento)  {
+    public World loadWorlds(Save save, Save.SaveMemento saveMemento) {
         try {
             connection.setAutoCommit(false);
             World currentWorld;
@@ -340,7 +342,7 @@ public class DataBaseConnector {
             return currentWorld;
 
         } catch (ClassNotFoundException | IOException | LoadException | SQLException e) {
-            throw new RunTimeLoadException("Failed to load the world" , e);
+            throw new RunTimeLoadException("Failed to load the world", e);
         }
     }
 
@@ -356,8 +358,7 @@ public class DataBaseConnector {
             LinkedHashMap<AbstractBiome, Long> biomes;
             LinkedHashMap<Long, AbstractBiome> ids;
             try (PreparedStatement preparedStatement = connection
-                    .prepareStatement("SELECT * FROM biomes WHERE world_id = "
-                            + "?")) {
+                    .prepareStatement("SELECT * FROM biomes WHERE world_id = " + "?")) {
                 preparedStatement.setLong(1, world.getID());
 
                 try (ResultSet result = preparedStatement.executeQuery()) {
@@ -380,39 +381,39 @@ public class DataBaseConnector {
                         AbstractBiome biome;
 
                         switch (biomeType) {
-                            case "beach":
-                                biome = new BeachBiome(memento);
-                                break;
-                            case "desert":
-                                biome = new DesertBiome(memento);
-                                break;
-                            case "forest":
-                                biome = new ForestBiome(memento);
-                                break;
-                            case "lake":
-                                biome = new LakeBiome(memento);
-                                break;
-                            case "mountain":
-                                biome = new MountainBiome(memento);
-                                break;
-                            case "ocean":
-                                biome = new OceanBiome(memento);
-                                break;
-                            case "river":
-                                biome = new RiverBiome(memento);
-                                break;
-                            case "snowy_mountains":
-                                biome = new SnowyMountainsBiome(memento);
-                                break;
-                            case "swamp":
-                                biome = new SwampBiome(memento);
-                                break;
-                            case "volcanic_mountains":
-                                biome = new VolcanicMountainsBiome(memento);
-                                break;
-                            default:
-                                connection.setAutoCommit(false);
-                                throw new LoadException();
+                        case "beach":
+                            biome = new BeachBiome(memento);
+                            break;
+                        case "desert":
+                            biome = new DesertBiome(memento);
+                            break;
+                        case "forest":
+                            biome = new ForestBiome(memento);
+                            break;
+                        case "lake":
+                            biome = new LakeBiome(memento);
+                            break;
+                        case "mountain":
+                            biome = new MountainBiome(memento);
+                            break;
+                        case "ocean":
+                            biome = new OceanBiome(memento);
+                            break;
+                        case "river":
+                            biome = new RiverBiome(memento);
+                            break;
+                        case "snowy_mountains":
+                            biome = new SnowyMountainsBiome(memento);
+                            break;
+                        case "swamp":
+                            biome = new SwampBiome(memento);
+                            break;
+                        case "volcanic_mountains":
+                            biome = new VolcanicMountainsBiome(memento);
+                            break;
+                        default:
+                            connection.setAutoCommit(false);
+                            throw new LoadException();
                         }
                         biomes.put(biome, memento.getParentBiomeID());
                         ids.put(biome.getBiomeID(), biome);
@@ -439,7 +440,7 @@ public class DataBaseConnector {
             connection.setAutoCommit(true);
             return biomeList;
         } catch (ClassNotFoundException | IOException | SQLException | LoadException e) {
-            throw new RunTimeLoadException("Failed to load biomes for a world" ,e);
+            throw new RunTimeLoadException("Failed to load biomes for a world", e);
         }
     }
 
@@ -548,7 +549,7 @@ public class DataBaseConnector {
 
             return edges;
         } catch (ClassNotFoundException | IOException e) {
-            throw new RunTimeLoadException("Failed to load beach edges" ,e);
+            throw new RunTimeLoadException("Failed to load beach edges", e);
         }
     }
 
@@ -610,8 +611,8 @@ public class DataBaseConnector {
      * @param world The world where the chunk is
      * @param x     The x position of the chunk
      * @param y     The y positoin of the chunk
-     * @return The chunk from the database if it exists in the database. A new chunk if the chunk does not exist in the
-     * database.
+     * @return The chunk from the database if it exists in the database. A new chunk
+     *         if the chunk does not exist in the database.
      */
     public Chunk loadChunk(World world, int x, int y) {
         try {
@@ -666,11 +667,9 @@ public class DataBaseConnector {
         }
     }
 
-
     public Flyway getFlyway() {
         return flyway;
     }
-
 
     /**
      * Creates an entity from a given memento
@@ -681,50 +680,50 @@ public class DataBaseConnector {
      */
     public AbstractEntity createEntityFromMemento(SaveableEntityMemento entityMemento) throws LoadException {
         switch (entityMemento.getEntityType()) {
-            case "Bone":
-                return new Bone(entityMemento);
-            case "DesertShrub":
-                return new DesertShrub(entityMemento);
-            case "DesertCacti":
-                return new DesertCacti(entityMemento);
-            case "DesertRock":
-                return new DesertRock(entityMemento);
-            case "ForestMushroom":
-                return new ForestMushroom(entityMemento);
-            case "ForestShrub":
-                return new ForestShrub(entityMemento);
-            case "Leaves":
-                return new Leaves(entityMemento);
-            case "TreeStump":
-                return new TreeStump(entityMemento);
-            case "OrganicMound":
-                return new OrganicMound(entityMemento);
-            case "MountainRock":
-                return new MountainRock(entityMemento);
-            case "MountainTree":
-                return new MountainTree(entityMemento);
-            case "ForestRock":
-                return new ForestRock(entityMemento);
-            case "SnowClump":
-                return new SnowClump(entityMemento);
-            case "SnowShrub":
-                return new SnowShrub(entityMemento);
-            case "ForestTree":
-                return new ForestTree(entityMemento);
-            case "SwampShrub":
-                return new SwampShrub(entityMemento);
-            case "SwampRock":
-                return new SwampRock(entityMemento);
-            case "SwampTree":
-                return new SwampTree(entityMemento);
-            case "VolcanicShrub":
-                return new VolcanicShrub(entityMemento);
-            case "VolcanicRock":
-                return new VolcanicRock(entityMemento);
-            case "VolcanicTree":
-                return new VolcanicTree(entityMemento);
-            default:
-                throw new LoadException(String.format("Could not create %s from memento", entityMemento.entityType));
+        case "Bone":
+            return new Bone(entityMemento);
+        case "DesertShrub":
+            return new DesertShrub(entityMemento);
+        case "DesertCacti":
+            return new DesertCacti(entityMemento);
+        case "DesertRock":
+            return new DesertRock(entityMemento);
+        case "ForestMushroom":
+            return new ForestMushroom(entityMemento);
+        case "ForestShrub":
+            return new ForestShrub(entityMemento);
+        case "Leaves":
+            return new Leaves(entityMemento);
+        case "TreeStump":
+            return new TreeStump(entityMemento);
+        case "OrganicMound":
+            return new OrganicMound(entityMemento);
+        case "MountainRock":
+            return new MountainRock(entityMemento);
+        case "MountainTree":
+            return new MountainTree(entityMemento);
+        case "ForestRock":
+            return new ForestRock(entityMemento);
+        case "SnowClump":
+            return new SnowClump(entityMemento);
+        case "SnowShrub":
+            return new SnowShrub(entityMemento);
+        case "ForestTree":
+            return new ForestTree(entityMemento);
+        case "SwampShrub":
+            return new SwampShrub(entityMemento);
+        case "SwampRock":
+            return new SwampRock(entityMemento);
+        case "SwampTree":
+            return new SwampTree(entityMemento);
+        case "VolcanicShrub":
+            return new VolcanicShrub(entityMemento);
+        case "VolcanicRock":
+            return new VolcanicRock(entityMemento);
+        case "VolcanicTree":
+            return new VolcanicTree(entityMemento);
+        default:
+            throw new LoadException(String.format("Could not create %s from memento", entityMemento.getEntityType()));
         }
     }
 
@@ -740,7 +739,6 @@ public class DataBaseConnector {
         flyway.migrate();
     }
 
-
     /**
      * Gets all the saves and there corresponding worlds
      *
@@ -751,7 +749,7 @@ public class DataBaseConnector {
             ArrayList<Save> saves = new ArrayList<>();
 
             try (PreparedStatement saveStatement = connection.prepareStatement("SELECT * FROM SAVES")) {
-                //Go through and load all the worlds for each save
+                // Go through and load all the worlds for each save
                 try (ResultSet saveSet = saveStatement.executeQuery()) {
                     while (saveSet.next()) {
 
@@ -766,7 +764,7 @@ public class DataBaseConnector {
                             worldsStatement.setLong(1, save.getSaveID());
 
                             try (ResultSet worldSet = worldsStatement.executeQuery()) {
-                                //Loop through those worlds andd add them to the save
+                                // Loop through those worlds andd add them to the save
                                 while (worldSet.next()) {
                                     World world = new World(worldSet.getLong("world_id"), save);
                                     save.addWorld(world);
@@ -781,24 +779,23 @@ public class DataBaseConnector {
             return saves;
 
         } catch (Exception e) {
-            throw new RunTimeLoadException("Failed to load save information" , e);
+            throw new RunTimeLoadException("Failed to load save information", e);
         }
     }
 
-
-    private void saveTable(String tableName){
+    private void saveTable(String tableName) {
         try {
-            try (PreparedStatement ps = DatabaseManager.get().getDataBaseConnector().getConnection().prepareStatement(
-                    "CALL SYSCS_UTIL.SYSCS_EXPORT_TABLE_LOBS_TO_EXTFILE(?,?,?,?,?,?, ?)")) {
+            try (PreparedStatement ps = DatabaseManager.get().getDataBaseConnector().getConnection()
+                    .prepareStatement("CALL SYSCS_UTIL.SYSCS_EXPORT_TABLE_LOBS_TO_EXTFILE(?,?,?,?,?,?, ?)")) {
                 ps.setString(1, null);
                 ps.setString(2, tableName);
-                ps.setString(3,
-                        String.format("src/test/java/deco2800/skyfall/managers/database/PrebuiltData/%s.dat", tableName));
+                ps.setString(3, String.format("src/test/java/deco2800/skyfall/managers/database/PrebuiltData/%s.dat",
+                        tableName));
                 ps.setString(4, ",");
                 ps.setString(5, "\"");
                 ps.setString(6, "UTF-8");
-                ps.setString(7,
-                        String.format("src/test/java/deco2800/skyfall/managers/database/PrebuiltData/%sLOB.dat", tableName));
+                ps.setString(7, String.format("src/test/java/deco2800/skyfall/managers/database/PrebuiltData/%sLOB.dat",
+                        tableName));
                 ps.execute();
             }
         } catch (SQLException e) {
@@ -806,7 +803,7 @@ public class DataBaseConnector {
         }
     }
 
-    public void saveAllTables(){
+    public void saveAllTables() {
         saveTable("SAVES");
         saveTable("WORLDS");
         saveTable("BIOMES");
@@ -816,22 +813,20 @@ public class DataBaseConnector {
         saveTable("ENTITIES");
     }
 
-    public void loadAllTables(){
+    public void loadAllTables() {
         loadTable("SAVES", 1);
         loadTable("WORLDS", 3);
         loadTable("BIOMES", 3);
         loadTable("NODES", 4);
-        loadTable("EDGES" , 3 );
+        loadTable("EDGES", 3);
         loadTable("CHUNKS", 3);
         loadTable("ENTITIES", 7);
     }
 
-    private void loadTable(String tableName, int dataIndex){
+    private void loadTable(String tableName, int dataIndex) {
         try {
-            try (PreparedStatement ps = connection
-                    .prepareStatement("CALL SYSCS_UTIL.SYSCS_IMPORT_TABLE_LOBS_FROM_EXTFILE"
-                            + "(?,?,?,?,?,?,"
-                            + "?)")) {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "CALL SYSCS_UTIL.SYSCS_IMPORT_TABLE_LOBS_FROM_EXTFILE" + "(?,?,?,?,?,?," + "?)")) {
                 ps.setString(1, null);
                 ps.setString(2, tableName);
                 ps.setString(3, "src/test/java/deco2800/skyfall/managers/database/PrebuiltData/" + tableName + ".dat");
@@ -846,9 +841,8 @@ public class DataBaseConnector {
         }
     }
 
-
-    //FIXME:jeffvan12 implement delete save method
-    public void deleteSave(long saveId){
+    // FIXME:jeffvan12 implement delete save method
+    public void deleteSave(long saveId) {
 
     }
 
