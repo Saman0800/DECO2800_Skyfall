@@ -1576,7 +1576,7 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         // For items and general storage
         switch (gameStage) {
             case 3:
-                unlocked.add(CABIN);
+                unlocked.add(SAFEHOUSE);
             case 2:
                 unlocked.add(WATCHTOWER);
             case 1:
@@ -1593,17 +1593,21 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         // for portals
         switch (gameStage) {
             case 3:
-                unlocked.add(new ForestPortal(0, 0, 0));
-                break;
+                if (constructedBuildings.contains(SAFEHOUSE)) {
+                    unlocked.add(new ForestPortal(0, 0, 0));
+                }
             case 2:
-                unlocked.add(new MountainPortal(0, 0, 0));
-                break;
+                if (constructedBuildings.contains(WATCHTOWER)) {
+                    unlocked.add(new MountainPortal(0, 0, 0));
+                }
             case 1:
-                unlocked.add(new DesertPortal(0, 0, 0));
-                break;
+                if (constructedBuildings.contains(CABIN)) {
+                    unlocked.add(new DesertPortal(0, 0, 0));
+                }
             case 0:
-                unlocked.add(new ForestPortal(0, 0, 0));
-                break;
+                if (constructedBuildings.contains(CASTLE)) {
+                    unlocked.add(new ForestPortal(0, 0, 0));
+                }
         }
         return unlocked;
 
@@ -1654,6 +1658,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
 //                } else if (newItem.getRequiredStone() > this.getInventoryManager().
 //                        getAmount("Stone")) {
 //                    logger.info("You don't have enough Stone");
+
+                // testing
                 if (false) {
                 } else {
                     switch (newItem.getName()) {
