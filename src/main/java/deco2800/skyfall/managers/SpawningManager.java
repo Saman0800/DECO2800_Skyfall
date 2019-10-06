@@ -18,6 +18,9 @@ public class SpawningManager extends TickableManager  {
     //As a singleton, able to keep a single reference
     private static SpawningManager reference = null;
 
+    //A maximum to the number of enemies allowed to be managed
+    private final int MAXENTITIES = 100;
+
     //the random used for enemy generation
     private Random random;
 
@@ -76,7 +79,7 @@ public class SpawningManager extends TickableManager  {
      * @param enemy A reference to Spawnable
      */
     private void spawnEnemy(Spawnable enemy) {
-        if (((Enemy)enemy) == null ) {
+        if (MAXENTITIES <= enemyReferences.size()) {
             return;
         }
 
