@@ -7,6 +7,7 @@ import deco2800.skyfall.entities.AbstractEntity;
 
 import deco2800.skyfall.entities.ICombatEntity;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 
@@ -39,6 +40,8 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
     private static final String ENTITY_ID_STRING = "buildingEntityID";
     private Collider collider;
 
+    // health
+    private int health;
     //The type of building to be created
     private BuildingType buildingType;
 
@@ -49,8 +52,6 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
     @Expose
     private int maxHealth;
 
-
-
     @Expose
     private int length;
 
@@ -58,12 +59,22 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
     private int level;
     private boolean upgradable;
     private int currentHealth;
+    private Enemy.EnemyType enemy;
 
     private InventoryManager inventoryManager;
 
     @Override
     public void takeDamage(int damage) {
-        
+        this.health -= damage;
+
+        // In Peon.class, when the health = 0, isDead will be set true automatically.
+        if (this.health <= 0) {
+            destroy();
+        }
+    }
+
+    private void destroy() {
+        GameManager.get().getWorld().removeEntity(this);
     }
 
     @Override
@@ -78,7 +89,26 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     @Override
     public int getDamage() {
-        return 0;
+        switch (enemy) {
+            case ABDUCTOR:
+                return 0;
+            case FLOWER:
+                return 1;
+            case HEAVY:
+                return 2;
+            case ROBOT:
+                return 1;
+            case SCOUT:
+                return 1;
+            case STONE:
+                return 2;
+            case SPIDER:
+                return 1;
+            case TREEMAN:
+                return 2;
+            default:
+                return 0;
+        }
     }
 
     @Override
@@ -88,11 +118,12 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     @Override
     public int getHealth() {
-        return 0;
+        return this.health;
     }
 
     @Override
     public void setHealth(int health) {
+        this.health = health;
 
     }
 
