@@ -50,7 +50,7 @@ public class ChunkTest {
 
         MainCharacter.resetInstance();
         WorldBuilder builder = new WorldBuilder();
-        WorldDirector.constructTestWorld(builder);
+        WorldDirector.constructTestWorld(builder, 0);
         MainCharacter mainCharacter = MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
         builder.addEntity(mainCharacter);
         world = builder.getWorld();

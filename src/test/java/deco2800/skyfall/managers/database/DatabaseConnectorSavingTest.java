@@ -150,7 +150,7 @@ public class DatabaseConnectorSavingTest {
             InsertDataQueries insertDataQueries = new InsertDataQueries(dbConnector.getConnection());
 
             WorldBuilder worldBuilder = new WorldBuilder();
-            WorldDirector.constructTestWorld(worldBuilder);
+            WorldDirector.constructTestWorld(worldBuilder, 0);
             World world = worldBuilder.getWorld();
 
             Save save = new Save();
@@ -186,14 +186,13 @@ public class DatabaseConnectorSavingTest {
         }
     }
 
-
     @Test
     public void updateWorldTest(){
         try {
             InsertDataQueries insertDataQueries = new InsertDataQueries(dbConnector.getConnection());
 
             WorldBuilder worldBuilder = new WorldBuilder();
-            WorldDirector.constructTestWorld(worldBuilder);
+            WorldDirector.constructTestWorld(worldBuilder, 0);
             World world = worldBuilder.getWorld();
 
             Save save = new Save();

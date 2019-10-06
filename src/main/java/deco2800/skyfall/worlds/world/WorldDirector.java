@@ -1,18 +1,16 @@
 package deco2800.skyfall.worlds.world;
 
-import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.Camel;
+import deco2800.skyfall.entities.Horse;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.enemies.*;
-import deco2800.skyfall.entities.pets.LizardHome;
 import deco2800.skyfall.entities.pets.IceWhitebear;
+import deco2800.skyfall.entities.pets.LizardHome;
 import deco2800.skyfall.entities.pets.Tiger;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import deco2800.skyfall.worlds.biomes.DesertBiome;
-import deco2800.skyfall.worlds.biomes.ForestBiome;
-import deco2800.skyfall.worlds.biomes.MountainBiome;
-import deco2800.skyfall.worlds.biomes.VolcanicMountainsBiome;
 import deco2800.skyfall.managers.StatisticsManager;
+import deco2800.skyfall.worlds.biomes.*;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -21,29 +19,26 @@ import java.util.Random;
  * Class that helps with creating worlds using WorldBuilders
  */
 public class WorldDirector {
-
-    private static Random random = new Random(0);
-
-
-    private WorldDirector() {
-    }
-
+    private WorldDirector() {}
 
     /**
      * A simple world used in single player with n random biomes
      *
      * @param builder The builder used to construct the world
+     *
      * @return The builder that was passed in
+     *
      * @throws IllegalArgumentException if n is less than 1 or greater than 5
      * @author Ontonator
      */
-    public static WorldBuilder constructNBiomeSinglePlayerWorld(WorldBuilder builder, int n, boolean renderUI) {
+    public static WorldBuilder constructNBiomeSinglePlayerWorld(WorldBuilder builder, long seed, int n,
+                                                                boolean renderUI) {
+        Random random = new Random(seed);
+
         builder.setType("single_player");
         if (n < 1 || n > 5) {
             throw new IllegalArgumentException("n must be between 1 and 5");
         }
-
-        assert new Random(0) != null;
 
         ArrayList<AbstractBiome> choices = new ArrayList<>();
         choices.add(new ForestBiome(random));
@@ -110,6 +105,7 @@ public class WorldDirector {
 
         builder.addEntity(new Camel(34, -7, mainCharacter));
         builder.addEntity(new Horse(-8, -6, mainCharacter));
+
         return builder;
     }
 
@@ -118,7 +114,9 @@ public class WorldDirector {
      *
      * @param builder The builder used to construct the world
      */
-    public static void constructTutorialWorld(WorldBuilder builder) {
+    public static WorldBuilder constructTutorialWorld(WorldBuilder builder, long seed) {
+        Random random = new Random(seed);
+
 
         MainCharacter mainCharacter = MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
         mainCharacter.setCol(0);
@@ -143,6 +141,8 @@ public class WorldDirector {
         builder.addBiome(new ForestBiome(random), 20);
         builder.addBiome(new DesertBiome(random), 20);
         builder.addBiome(new MountainBiome(random), 20);
+
+        return builder;
     }
 
     /**
@@ -150,13 +150,17 @@ public class WorldDirector {
      *
      * @param builder The builder used to construct the world
      */
-    public static void constructServerWorld(WorldBuilder builder) {
+    public static WorldBuilder constructServerWorld(WorldBuilder builder, long seed) {
+        Random random = new Random(seed);
+
         builder.setNodeSpacing(15);
         builder.setWorldSize(80);
         builder.setType("server");
         builder.addBiome(new ForestBiome(random), 20);
         builder.addBiome(new DesertBiome(random), 20);
         builder.addBiome(new MountainBiome(random), 20);
+
+        return builder;
     }
 
     /**
@@ -164,18 +168,16 @@ public class WorldDirector {
      *
      * @param builder The builder used to construct the world
      */
-    public static void constructTestWorld(WorldBuilder builder) {
+    public static WorldBuilder constructTestWorld(WorldBuilder builder, long seed) {
+        Random random = new Random(seed);
+
         builder.setNodeSpacing(5);
         builder.setWorldSize(30);
 
         builder.setType("single_player");
-//        builder.setStaticEntities(true);
 
         builder.addBiome(new ForestBiome(random), 10);
-//        builder.addBiome(new DesertBiome(random), 10);
-//        builder.addBiome(new MountainBiome(random), 10);
-//        builder.addBiome(new VolcanicMountainsBiome(random), 10);
-//        builder.addBiome(new SwampBiome(random), 10);
-//        builder.addBiome(new SnowyMountainsBiome(random), 10);
+
+        return builder;
     }
 }

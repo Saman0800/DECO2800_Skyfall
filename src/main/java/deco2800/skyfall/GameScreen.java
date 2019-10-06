@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
@@ -45,7 +44,6 @@ public class GameScreen implements Screen, KeyDownObserver {
     OverlayRenderer rendererDebug = new OverlayRenderer();
     World world;
     Save save;
-    static Skin skin;
 
     /**
      * Create a camera for panning and zooming. Camera must be updated every render
@@ -87,66 +85,74 @@ public class GameScreen implements Screen, KeyDownObserver {
     private SpectralValue ambientBlue;
     private SpectralValue ambientGreen;
 
+    // FIXME:Ontonator Change the constructor to be able to load worlds.
     public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
         /* Create an example world for the engine */
         this.game = game;
-
         this.save = new Save();
-        MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
-        MainCharacter.getInstance().setSave(this.save);
-        this.save.setMainCharacter(MainCharacter.getInstance());
-        GameManager gameManager = GameManager.get();
-        GameMenuManager gameMenuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
-        DatabaseManager databaseManager = DatabaseManager.get();
-        gameMenuManager.setStage(stage);
-        gameMenuManager.setSkin(gameManager.getSkin());
-        gameMenuManager.setGame(game);
-        databaseManager.startDataBaseConnector();
 
-        // Used to create to the world
+        GameManager gameManager = initializeMenuManager();
 
         // Create main world
         if (!isHost) {
             // Creating the world
-            WorldBuilder worldBuilder = new WorldBuilder();
-            WorldDirector.constructServerWorld(worldBuilder);
-            world = worldBuilder.getWorld();
+            world = WorldDirector.constructServerWorld(new WorldBuilder(), seed).getWorld();
+            save.getWorlds().add(world);
+            save.setCurrentWorld(world);
+            world.setSave(save);
+            MainCharacter.getInstance().setSave(save);
 
             GameManager.get().getManager(NetworkManager.class).connectToHost("localhost", "duck1234");
         } else {
             if (GameManager.get().isTutorial) {
-
-                WorldBuilder worldBuilder = new WorldBuilder();
-                WorldDirector.constructTutorialWorld(worldBuilder);
-                world = worldBuilder.getWorld();
+                world = WorldDirector.constructTutorialWorld(new WorldBuilder(), seed).getWorld();
             } else {
-
                 // Creating the world
-                world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 4, true).getWorld();
-                save.getWorlds().add(world);
-                save.setCurrentWorld(world);
-                world.setSave(save);
-
-                //FIXME:jeffvan12 implement better way of creating new stuff things
-
-                //Comment this out when generating the data for the tests
-                DatabaseManager.get().getDataBaseConnector().saveGame(save);
-
-                //Uncomment this when generating the data for the tests
-//                save.setId(0);
-//                world.setId(0);
-//                MainCharacter.getInstance().setID(0);
-//                DatabaseManager.get().getDataBaseConnector().saveGame(save);
-//                DatabaseManager.get().getDataBaseConnector().saveAllTables();
-
-
+                world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), seed, 4, true).getWorld();
             }
+            save.getWorlds().add(world);
+            save.setCurrentWorld(world);
+            world.setSave(save);
+            MainCharacter.getInstance().setSave(save);
+
+            // FIXME:jeffvan12 implement better way of creating new stuff things
+
+            // Comment this out when generating the data for the tests
+            DatabaseManager.get().getDataBaseConnector().saveGame(save);
+
+            // Uncomment this when generating the data for the tests
+            // save.setId(0);
+            // world.setId(0);
+            // DatabaseManager.get().getDataBaseConnector().saveGame(save);
+            // DatabaseManager.get().getDataBaseConnector().saveAllTables();
             GameManager.get().getManager(NetworkManager.class).startHosting("host");
         }
 
         gameManager.setWorld(world);
 
-        // Add first peon to the world
+        initializeOtherManagers(gameManager);
+    }
+
+    public GameScreen(final SkyfallGame game, long saveID) {
+        this.game = game;
+
+        GameManager gameManager = initializeMenuManager();
+
+        this.save = DatabaseManager.get().getDataBaseConnector().loadGame(saveID);
+
+        initializeOtherManagers(gameManager);
+    }
+
+    private GameManager initializeMenuManager() {
+        GameManager gameManager = GameManager.get();
+        GameMenuManager gameMenuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
+        gameMenuManager.setStage(stage);
+        gameMenuManager.setSkin(gameManager.getSkin());
+        gameMenuManager.setGame(game);
+        return gameManager;
+    }
+
+    private void initializeOtherManagers(GameManager gameManager) {
         camera = new PotateCamera(1920, 1080);
         cameraDebug = new PotateCamera(1920, 1080);
 
@@ -162,7 +168,7 @@ public class GameScreen implements Screen, KeyDownObserver {
 
         /* Add environment to game manager */
         EnvironmentManager gameEnvironManag = gameManager.getManager(EnvironmentManager.class);
-        // For debuggin only!
+        // For debugging only!
         gameEnvironManag.setTime(12, 0);
 
         /* Add BGM to game manager */
@@ -378,7 +384,8 @@ public class GameScreen implements Screen, KeyDownObserver {
         if (keycode == Input.Keys.F5) {
 
             // Create a random world
-            world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 4, true).getWorld();
+            world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), world.getSeed() + 1, 4, true)
+                    .getWorld();
 
             // Add this world to the save
             save.getWorlds().add(world);

@@ -350,9 +350,10 @@ public class MainCharacter extends Peon
         this.setMaxHealth(health);
         initialiselockedBiomes();
 
-        GameManager.getManagerFromInstance(InputManager.class).addKeyDownListener(this);
-        GameManager.getManagerFromInstance(InputManager.class).addKeyUpListener(this);
-        GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
+        InputManager inputManager = GameManager.getManagerFromInstance(InputManager.class);
+        inputManager.addKeyDownListener(this);
+        inputManager.addKeyUpListener(this);
+        inputManager.addTouchDownListener(this);
 
         this.petsManager = GameManager.getManagerFromInstance(PetsManager.class);
 
@@ -665,7 +666,6 @@ public class MainCharacter extends Peon
         }
 
         GameManager.get().getWorld().addEntity(spell);
-
     }
 
     /**
@@ -752,7 +752,6 @@ public class MainCharacter extends Peon
      * @param damage the damage deal to the player.
      */
     public void hurt(int damage) {
-
         if (this.isRecovering) {
             return;
         }
@@ -1089,7 +1088,6 @@ public class MainCharacter extends Peon
     }
 
     public void resetVelocity() {
-
         xInput = 0;
         yInput = 0;
     }
@@ -1364,8 +1362,8 @@ public class MainCharacter extends Peon
         }
 
         // Updates the players position based on where their body is located
-        position.setCol(getBody().getPosition().x);
-        position.setRow(getBody().getPosition().y);
+        Vector2 bodyPos = getBody().getPosition();
+        this.position.set(bodyPos.x, bodyPos.y);
     }
 
     /**
@@ -1396,7 +1394,6 @@ public class MainCharacter extends Peon
         }
 
         return valid;
-
     }
 
     /**
@@ -1598,7 +1595,6 @@ public class MainCharacter extends Peon
         List<Blueprint> unlocked = new ArrayList<>();
         switch (gameStage) {
             case LAVA:
-
             case SNOW:
                 unlocked.add(CABIN);
             case MOUNTAIN:

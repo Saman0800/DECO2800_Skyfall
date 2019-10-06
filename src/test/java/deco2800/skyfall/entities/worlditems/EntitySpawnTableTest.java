@@ -109,7 +109,7 @@ public class EntitySpawnTableTest {
         when(DatabaseManager.get()).thenReturn(manager);
 
         WorldBuilder worldBuilder = new WorldBuilder();
-        WorldDirector.constructTestWorld(worldBuilder);
+        WorldDirector.constructTestWorld(worldBuilder, 0);
         testWorld = mock(World.class);
 
         dummyNoiseGen = mock(NoiseGenerator.class);
