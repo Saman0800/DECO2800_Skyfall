@@ -6,7 +6,6 @@ package deco2800.skyfall.gui;
  * Inspired from HealthCircle.java, but this is held in the MainCharacter class
  * and it only needs to be updated when the character takes/restores mana.
  *
- * TODO inherit a onWindowResize event
  */
 public class ManaBar extends StatBar {
 
@@ -20,9 +19,7 @@ public class ManaBar extends StatBar {
     protected void updateInnerCircle(int newValue) {
 
         if (smallerCircle == null) {
-            System.out.println("Smaller circle is null");
             if (biggerCircle == null) {
-                System.out.println("Bigger circle is null");
                 return;
             }
             return;
