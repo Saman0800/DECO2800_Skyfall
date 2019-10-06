@@ -29,7 +29,7 @@ public class BodyEditorLoader {
     private final Model model;
 
     // Reusable stuff
-    private final List<Vector2> vectorPool = new ArrayList<Vector2>();
+    private final List<Vector2> vectorPool = new ArrayList<>();
     private final PolygonShape polygonShape = new PolygonShape();
     private final CircleShape circleShape = new CircleShape();
     private final Vector2 vec = new Vector2();
@@ -78,7 +78,7 @@ public class BodyEditorLoader {
      */
     public void attachFixture(Body body, String name, FixtureDef fd, float scale) {
         RigidBodyModel rbModel = model.rigidBodies.get(name);
-        if (rbModel == null) throw new RuntimeException("Name '" + name + "' was not found.");
+        if (rbModel == null) throw new BodyEditorLoaderException(String.format("Name '%s' was not found.", name));
 
         Vector2 origin = vec.set(rbModel.origin).scl(scale);
 
@@ -120,7 +120,7 @@ public class BodyEditorLoader {
      */
     public String getImagePath(String name) {
         RigidBodyModel rbModel = model.rigidBodies.get(name);
-        if (rbModel == null) throw new RuntimeException("Name '" + name + "' was not found.");
+        if (rbModel == null) throw new BodyEditorLoaderException("Name '" + name + "' was not found.");
 
         return rbModel.imagePath;
     }
@@ -131,9 +131,9 @@ public class BodyEditorLoader {
      * size. Warning: this method returns the same Vector2 object each time, so
      * copy it if you need it for later use.
      */
-    public Vector2 getOrigin(String name, float scale) {
+    private Vector2 getOrigin(String name, float scale) {
         RigidBodyModel rbModel = model.rigidBodies.get(name);
-        if (rbModel == null) throw new RuntimeException("Name '" + name + "' was not found.");
+        if (rbModel == null) throw new BodyEditorLoaderException("Name '" + name + "' was not found.");
 
         return vec.set(rbModel.origin).scl(scale);
     }
@@ -152,25 +152,25 @@ public class BodyEditorLoader {
     // -------------------------------------------------------------------------
 
     public static class Model {
-        public final Map<String, RigidBodyModel> rigidBodies = new HashMap<String, RigidBodyModel>();
+        final Map<String, RigidBodyModel> rigidBodies = new HashMap<>();
     }
 
     public static class RigidBodyModel {
         public String name;
-        public String imagePath;
-        public final Vector2 origin = new Vector2();
-        public final List<PolygonModel> polygons = new ArrayList<PolygonModel>();
-        public final List<CircleModel> circles = new ArrayList<CircleModel>();
+        String imagePath;
+        final Vector2 origin = new Vector2();
+        final List<PolygonModel> polygons = new ArrayList<>();
+        final List<CircleModel> circles = new ArrayList<>();
     }
 
     public static class PolygonModel {
-        public final List<Vector2> vertices = new ArrayList<Vector2>();
+        public final List<Vector2> vertices = new ArrayList<>();
         private Vector2[] buffer; // used to avoid allocation in attachFixture()
     }
 
     public static class CircleModel {
-        public final Vector2 center = new Vector2();
-        public float radius;
+        final Vector2 center = new Vector2();
+        float radius;
     }
 
     // -------------------------------------------------------------------------

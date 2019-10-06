@@ -61,22 +61,31 @@ public class GameScreen implements Screen, KeyDownObserver {
      * Create an EnvironmentManager for ToD.
      */
     EnvironmentManager timeOfDay;
-    public static boolean isPaused = false;
+    private static boolean isPaused = false;
+
+    public static boolean getIsPaused(){
+        return isPaused;
+    }
+
+    public static void setIsPaused(boolean paused){
+        isPaused = paused;
+    }
+
 
     // A wrapper for shader
-    ShaderWrapper shader;
+    private ShaderWrapper shader;
 
     /**
      * This hold the intensity for the ambient light for the ambient light.
      */
-    SpectralValue ambientIntensity;
+    private SpectralValue ambientIntensity;
 
     /**
      * The will be the spectral values for the RBG values of the ambient light
      */
-    SpectralValue ambientRed;
-    SpectralValue ambientBlue;
-    SpectralValue ambientGreen;
+    private SpectralValue ambientRed;
+    private SpectralValue ambientBlue;
+    private SpectralValue ambientGreen;
 
     public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
         /* Create an example world for the engine */
@@ -118,9 +127,12 @@ public class GameScreen implements Screen, KeyDownObserver {
                 save.setCurrentWorld(world);
                 world.setSave(save);
 
+                //FIXME:jeffvan12 implement better way of creating new stuff things
+
+                //Comment this out when generating the data for the tests
                 DatabaseManager.get().getDataBaseConnector().saveGame(save);
 
-                //FIXME:jeffvan12 implement better way of creating new stuff things
+                //Uncomment this when generating the data for the tests
 //                save.setId(0);
 //                world.setId(0);
 //                DatabaseManager.get().getDataBaseConnector().saveGame(save);
@@ -317,8 +329,8 @@ public class GameScreen implements Screen, KeyDownObserver {
     /**
      * Resizes the viewport
      *
-     * @param width
-     * @param height
+     * @param width The new width of the viewport
+     * @param height The new height of the viewport
      */
     @Override
     public void resize(int width, int height) {
@@ -419,7 +431,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         }
     }
 
-    public void moveCamera() {
+    private void moveCamera() {
         // timmeh to fix hack. // fps is not updated cycle by cycle
         float normilisedGameSpeed = (60.0f / Gdx.graphics.getFramesPerSecond());
 
@@ -445,10 +457,6 @@ public class GameScreen implements Screen, KeyDownObserver {
 
             if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
                 camera.translate(0, goFastSpeed, 0);
-            }
-
-            if (Gdx.input.isKeyPressed(Input.Keys.P)) {
-                // FIXME:jeffvan12 Implement saving the game when this is pretty
             }
 
             if (Gdx.input.isKeyPressed(Input.Keys.EQUALS)) {

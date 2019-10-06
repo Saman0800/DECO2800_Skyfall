@@ -108,6 +108,27 @@ public class TextureManager extends AbstractManager {
             textureMap.put("enemyScout_Move_E", new Texture("resources/Enemies/Abductor/enemy3_R.png"));
             */
 
+
+            //vehicle section
+            //Bike
+            textureMap.put("bike", new Texture("resources/Bike/bike-left.png"));
+            textureMap.put("bikeSOUTH", new Texture("resources/Bike/bike-face-player.png"));
+            textureMap.put("bikeNORTH", new Texture("resources/Bike/back-side-player.png"));
+            textureMap.put("bikeWEST", new Texture("resources/Bike/leftside-player.png"));
+            textureMap.put("bikeEAST", new Texture("resources/Bike/rightside-player 1.png"));
+            textureMap.put("bikeEAST", new Texture("resources/Bike/rightside-player.png"));
+
+            // Sand Car
+            textureMap.put("sand_car", new Texture("resources/sand_car_image/sand_car_right.png"));
+            textureMap.put("sand_car_SOUTH", new Texture("resources/sand_car_image/sand_car_front_with_player.png"));
+            textureMap.put("sand_car_NORTH", new Texture("resources/sand_car_image/sand_car_back.png"));
+            textureMap.put("sand_car_WEST", new Texture("resources/sand_car_image/sand_car_left_with_player.png"));
+            textureMap.put("sand_car_EAST", new Texture("resources/sand_car_image/sand_car_right_with_player.png"));
+            textureMap.put("sand_car_SOUTHWEST", new Texture("resources/sand_car_image/sand_car_front_left_with_player.png"));
+            textureMap.put("sand_car_SOUTHEAST", new Texture("resources/sand_car_image/sand_car_front_right_with_player.png"));
+            textureMap.put("sand_car_NORTHEAST", new Texture("resources/sand_car_image/sand_car_back_right_with_player.png"));
+            textureMap.put("sand_car_NORTHWEST", new Texture("resources/sand_car_image/sand_car_back_left_with_player.png"));
+
             textureMap.put("chestClosed", new Texture("resources/chest_icon.png"));
             textureMap.put("blueprintShop", new Texture("resources/shopkeeper.png"));
 
@@ -139,81 +160,18 @@ public class TextureManager extends AbstractManager {
             textureMap.put("fenceNW-S", new Texture("resources/fence NW-S.png"));
 
             textureMap.put("rock", new Texture("resources/rocks.png"));
-            textureMap.put("rock1", new Texture("resources/world_details/rock1.png"));
-            textureMap.put("rock2", new Texture("resources/world_details/rock2.png"));
-            textureMap.put("rock3", new Texture("resources/world_details/rock3.png"));
 
-            textureMap.put("bush1", new Texture("resources/world_details/bush1.png"));
-            textureMap.put("bush2", new Texture("resources/world_details/bush2.png"));
-            textureMap.put("bush3", new Texture("resources/world_details/bush3.png"));
+            files = new File("resources/world_details").listFiles();
+            if (files == null) {
+                throw new FileNotFoundException();
+            }
 
-            textureMap.put("tree1", new Texture("resources/world_details/tree1.png"));
-            textureMap.put("tree2", new Texture("resources/world_details/tree2.png"));
-            textureMap.put("tree3", new Texture("resources/world_details/tree3.png"));
-
-            textureMap.put("mushrooms1", new Texture("resources/world_details/mushrooms1.png"));
-            textureMap.put("mushrooms2", new Texture("resources/world_details/mushrooms2.png"));
-
-            textureMap.put("MTree1", new Texture("resources/world_details/MTree1.png"));
-            textureMap.put("MTree2", new Texture("resources/world_details/MTree2.png"));
-            textureMap.put("MTree3", new Texture("resources/world_details/MTree3.png"));
-
-            textureMap.put("MRock1", new Texture("resources/world_details/MRock1.png"));
-            textureMap.put("MRock2", new Texture("resources/world_details/MRock2.png"));
-            textureMap.put("MRock3", new Texture("resources/world_details/MRock3.png"));
-
-            textureMap.put("DCactus1", new Texture("resources/world_details/DCactus1.png"));
-            textureMap.put("DCactus2", new Texture("resources/world_details/DCactus2.png"));
-            textureMap.put("DCactus3", new Texture("resources/world_details/DCactus3.png"));
-            textureMap.put("DCactus4", new Texture("resources/world_details/DCactus4.png"));
-
-            textureMap.put("DRock1", new Texture("resources/world_details/DRock1.png"));
-            textureMap.put("DRock2", new Texture("resources/world_details/DRock2.png"));
-            textureMap.put("DRock3", new Texture("resources/world_details/DRock3.png"));
-
-            textureMap.put("DRibs", new Texture("resources/world_details/DRibs.png"));
-            textureMap.put("DSkull", new Texture("resources/world_details/DSkull.png"));
-            textureMap.put("DBush1", new Texture("resources/world_details/DBush1.png"));
-
-            textureMap.put("MSnow1", new Texture("resources/world_details/MSnow1.png"));
-            textureMap.put("MSnow2", new Texture("resources/world_details/MSnow2.png"));
-            textureMap.put("MSnow3", new Texture("resources/world_details/MSnow3.png"));
-
-            textureMap.put("MBush1", new Texture("resources/world_details/MBush1.png"));
-            textureMap.put("MBush2", new Texture("resources/world_details/MBush2.png"));
-            textureMap.put("MBush3", new Texture("resources/world_details/MBush3.png"));
-
-            textureMap.put("sBush1", new Texture("resources/world_details/sBush1.png"));
-            textureMap.put("sBush2", new Texture("resources/world_details/sBush2.png"));
-            textureMap.put("sBush3", new Texture("resources/world_details/sBush3.png"));
-
-            textureMap.put("tikitorch", new Texture("resources/world_details/flame.gif"));
-
-            textureMap.put("leaves1", new Texture("resources/world_details/leaves1.png"));
-
-            textureMap.put("mound1", new Texture("resources/world_details/mound1.png"));
-
-            textureMap.put("trunk1", new Texture("resources/world_details/trunk1.png"));
-
-            textureMap.put("sRock1", new Texture("resources/world_details/sRock1.png"));
-            textureMap.put("sRock2", new Texture("resources/world_details/sRock2.png"));
-            textureMap.put("sRock3", new Texture("resources/world_details/sRock3.png"));
-
-            textureMap.put("sTree1", new Texture("resources/world_details/sTree1.png"));
-            textureMap.put("sTree2", new Texture("resources/world_details/sTree2.png"));
-            textureMap.put("sTree3", new Texture("resources/world_details/sTree3.png"));
-
-            textureMap.put("vBush1", new Texture("resources/world_details/vBush1.png"));
-            textureMap.put("vBush2", new Texture("resources/world_details/vBush2.png"));
-            textureMap.put("vBush3", new Texture("resources/world_details/vBush3.png"));
-
-            textureMap.put("vRock1", new Texture("resources/world_details/vRock1.png"));
-            textureMap.put("vRock2", new Texture("resources/world_details/vRock2.png"));
-            textureMap.put("vRock3", new Texture("resources/world_details/vRock3.png"));
-
-            textureMap.put("vTree1", new Texture("resources/world_details/vTree1.png"));
-            textureMap.put("vTree2", new Texture("resources/world_details/vTree2.png"));
-            textureMap.put("vTree3", new Texture("resources/world_details/vTree3.png"));
+            for (File file :files) {
+                if (file.getName().toLowerCase().endsWith(".png")) {
+                    String path = String.format("resources/world_details/%s", file.getName());
+                    textureMap.put(file.getName().substring(0, file.getName().length() - 4), new Texture(path));
+                }
+            }
 
             textureMap.put("sword", new Texture("resources/weapons/sword.png"));
             // Weapons pick-up
