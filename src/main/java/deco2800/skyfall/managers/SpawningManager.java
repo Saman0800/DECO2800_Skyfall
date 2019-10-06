@@ -1,13 +1,11 @@
 package deco2800.skyfall.managers;
 
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.graphics.types.vec2;
 import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.enemies.Spawnable;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Random;
-import java.util.Vector;
+import java.util.*;
 
 /*Handles spawning enemies into the game on tick*/
 public class SpawningManager extends TickableManager  {
@@ -26,7 +24,7 @@ public class SpawningManager extends TickableManager  {
 
     //All enemies that have spawned will be kept with a referece
     //kept by spawn order
-    protected Vector<Enemy> enemyReferences;
+    protected List<Enemy> enemyReferences;
 
     public static SpawningManager getGlobalSpawningManager() {
         return reference;
@@ -78,7 +76,17 @@ public class SpawningManager extends TickableManager  {
                 location.y + SPAWN_DISTANCE*(float)Math.sin(angle)
         );
 
+        //add to references
         enemyReferences.add((Enemy) enemy.newInstance(location.x, location.y));
+        //add to game world
+        GameManager.get().getWorld().addEntity((AbstractEntity)enemy);
+    }
+
+    /**
+     * clears the list of old references to dead enemies
+     */
+    void updateReferences() {
+        enemyReferences.removeIf(s -> s.isDead());
     }
 
     /**
