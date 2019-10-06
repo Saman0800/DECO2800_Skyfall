@@ -49,7 +49,7 @@ public class QuestManager extends TickableManager{
         questSuccess = false;
         buildingsTotal = new ArrayList<>();
         levelOneBuildings.add("Cabin");
-        levelOneBuildings.add("WatchTower");
+        //levelOneBuildings.add("WatchTower");
         levelTwoBuildings.add("WatchTower");
         levelTwoBuildings.add("StorageUnit");
         levelTwoBuildings.add("TownCentre");
@@ -273,8 +273,8 @@ public class QuestManager extends TickableManager{
         checkMetal();
         checkBuildings();
 
-        if (checkGold() && checkStone() && checkWood() &&
-        checkMetal() && checkBuildings()) {
+        if ((checkGold() && checkStone() && checkWood() &&
+        checkMetal() && checkBuildings()) || (questSuccess) ) {
             questSuccess = true;
             //Other quest success stuff here, or quest success method
         }
@@ -337,6 +337,7 @@ public class QuestManager extends TickableManager{
                 .getAmount("Stone");
 
         // Reset the inventory
+        questSuccess = false;
         getPlayer().removeAllGold();
         getPlayer().getInventoryManager().dropMultiple("Metal", currentMetal);
         getPlayer().getInventoryManager().dropMultiple("Stone", currentStone);
