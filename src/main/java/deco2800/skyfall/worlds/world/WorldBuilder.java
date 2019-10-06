@@ -326,6 +326,14 @@ public class WorldBuilder implements WorldBuilderInterface {
         EntitySpawnRule DesertEnvironment = new EntitySpawnRule(tile -> new DesertEnvironment(tile, true), random.nextInt(), 0.01);
         biomeSpawnRules.add(DesertEnvironment);
 
+        //Spawn ruined robot
+        EntitySpawnRule ruinedRobot = new EntitySpawnRule(tile -> new ruinedRobot(tile, true), random.nextInt(), 0.01);
+        biomeSpawnRules.add(ruinedRobot);
+
+        //Spawn ruined city
+        EntitySpawnRule ruinedCity = new EntitySpawnRule(tile -> new ruinedCity(tile, true), random.nextInt(), 0.01);
+        biomeSpawnRules.add(ruinedCity);
+
         return;
     }
 
