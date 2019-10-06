@@ -1824,10 +1824,10 @@ public class MainCharacter extends Peon
         vehicleDirection2.put(Direction.SOUTH, "sand_car_SOUTH");
         vehicleDirection2.put(Direction.EAST, "sand_car_EAST");
         vehicleDirection2.put(Direction.WEST, "sand_car_WEST");
-        vehicleDirection2.put(Direction.NORTH_EAST, "__ANIMATION_MainCharacterNE_Anim:0");
-        vehicleDirection2.put(Direction.NORTH_WEST, "__ANIMATION_MainCharacterNW_Anim:0");
-        vehicleDirection2.put(Direction.SOUTH_EAST, "__ANIMATION_MainCharacterSE_Anim:0");
-        vehicleDirection2.put(Direction.SOUTH_WEST, "__ANIMATION_MainCharacterSW_Anim:0");
+        vehicleDirection2.put(Direction.NORTH_EAST, "sand_car_NORTHEAST");
+        vehicleDirection2.put(Direction.NORTH_WEST, "sand_car_NORTHWEST");
+        vehicleDirection2.put(Direction.SOUTH_EAST, "sand_car_SOUTHEAST");
+        vehicleDirection2.put(Direction.SOUTH_WEST, "sand_car_SOUTHWEST");
         defaultDirectionTextures=defaultMainCharacterTextureMap;
     }
 
