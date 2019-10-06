@@ -18,8 +18,10 @@ import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.saving.Save;
 
 import java.util.List;
+import java.util.Random;
 
 public class MainMenuScreen implements Screen {
+    public static final String MAIN_MENU_STYLE = "main_menu";
     public static final String LOAD_GAME_STYLE = "load-game";
 
     private final SkyfallGame game;
@@ -33,7 +35,10 @@ public class MainMenuScreen implements Screen {
             { 'B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'V', 'W', 'X', 'Z' };
     private static char[] VOWELS = { 'A', 'E', 'I', 'O', 'U', 'Y' };
 
+    private final List<Save> saveInfoList;
     private Window loadGameWindow;
+
+    private Window startGameWindow;
 
     /**
      * The constructor of the MainMenuScreen
@@ -45,28 +50,40 @@ public class MainMenuScreen implements Screen {
         stage = new Stage(new ExtendViewport(MIN_WIDTH, MIN_HEIGHT), game.batch);
         Skin skin = GameManager.get().getSkin();
 
+        saveInfoList = DatabaseManager.get().getDataBaseConnector().loadSaveInformation();
+
         Image background = new Image(GameManager.get().getManager(TextureManager.class).getTexture("background"));
         background.setFillParent(true);
         stage.addActor(background);
 
-        TextButton newGameBtn = new TextButton("SINGLE PLAYER", skin, "main_menu");
+        TextButton newGameBtn = new TextButton("SINGLE PLAYER", skin, MAIN_MENU_STYLE);
         newGameBtn.getStyle().fontColor = Color.BLACK;
 
         newGameBtn.setPosition(50, MIN_HEIGHT - 220f);
         stage.addActor(newGameBtn);
 
-        Button connectToServerButton = new TextButton("CONNECT TO SERVER", skin, "main_menu");
+        Button connectToServerButton = new TextButton("CONNECT TO SERVER", skin, MAIN_MENU_STYLE);
         connectToServerButton.setPosition(50, MIN_HEIGHT - 170f);
         stage.addActor(connectToServerButton);
 
-        Button tutorialButton = new TextButton("TUTORIAL", skin, "main_menu");
+        Button tutorialButton = new TextButton("TUTORIAL", skin, MAIN_MENU_STYLE);
         tutorialButton.setPosition(50, MIN_HEIGHT - 270f);
         stage.addActor(tutorialButton);
 
-        Button loadGameButton = new TextButton("LOAD GAME", skin, "main_menu");
-        loadGameButton.setPosition(50, MIN_HEIGHT - 320f);
-        stage.addActor(loadGameButton);
+        if (!saveInfoList.isEmpty()) {
+            Button loadGameButton = new TextButton("LOAD GAME", skin, MAIN_MENU_STYLE);
+            loadGameButton.setPosition(50, MIN_HEIGHT - 320f);
+            stage.addActor(loadGameButton);
 
+            loadGameButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    showLoadGameWindow();
+                }
+            });
+        }
+
+        createStartGameWindow();
         createLoadGameWindow();
 
         tutorialButton.addListener(new ClickListener() {
@@ -82,8 +99,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 GameManager.get().isTutorial = false;
-                // TODO Accept user-provided seed or generate random seed.
-                game.setScreen(new GameScreen(game, 1, true));
+                showStartGameWindow();
             }
         });
 
@@ -95,21 +111,68 @@ public class MainMenuScreen implements Screen {
                 game.setScreen(new GameScreen(game, 3, false));
             }
         });
+    }
 
-        loadGameButton.addListener(new ClickListener() {
+    private void createStartGameWindow() {
+        Skin skin = GameManager.get().getSkin();
+
+        startGameWindow = new Window("", skin, LOAD_GAME_STYLE);
+        startGameWindow.setColor(Color.DARK_GRAY);
+        startGameWindow.pad(15, 10, 10, 10);
+
+        Label startGameWindowTitle = new Label("START GAME", skin, LOAD_GAME_STYLE);
+        startGameWindowTitle.setAlignment(Align.center);
+        startGameWindow.add(startGameWindowTitle).colspan(3).minWidth(200).minHeight(50).pad(0, 15, 15, 15).fill();
+
+        startGameWindow.row();
+
+        TextField seedInput = new TextField("", skin, LOAD_GAME_STYLE);
+        seedInput.setMessageText("SEED (OPTIONAL)");
+        seedInput.setColor(Color.LIGHT_GRAY);
+        seedInput.setHeight(35);
+        startGameWindow.add(seedInput).minWidth(320).minHeight(35).padBottom(12).fill();
+
+        startGameWindow.row();
+
+        Button startGameButton = new TextButton("START GAME", skin, LOAD_GAME_STYLE);
+        startGameButton.setColor(Color.LIGHT_GRAY);
+        startGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                showLoadGameWindow();
+                String seedString = seedInput.getText();
+                long seed;
+                if (seedString.isEmpty()) {
+                    seed = new Random().nextLong();
+                } else {
+                    try {
+                        seed = Long.parseLong(seedString);
+                    } catch (NumberFormatException e) {
+                        seed = seedString.hashCode();
+                    }
+                }
+                game.setScreen(new GameScreen(game, seed, true));
             }
         });
+        startGameWindow.add(startGameButton).minWidth(150).minHeight(35);
+
+        startGameWindow.pack();
+        startGameWindow.setVisible(false);
+        stage.addActor(startGameWindow);
+    }
+
+    private void showStartGameWindow() {
+        startGameWindow.setVisible(true);
+        startGameWindow.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.center);
+    }
+
+    private void hideStartGameWindow() {
+        startGameWindow.setVisible(false);
     }
 
     private void createLoadGameWindow() {
         TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
 
         Skin skin = GameManager.get().getSkin();
-
-        List<Save> saveInfoList = DatabaseManager.get().getDataBaseConnector().loadSaveInformation();
 
         loadGameWindow = new Window("", skin, LOAD_GAME_STYLE);
         loadGameWindow.setColor(Color.DARK_GRAY);
@@ -149,6 +212,7 @@ public class MainMenuScreen implements Screen {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     DatabaseManager.get().getDataBaseConnector().deleteSave(saveID);
+                    // FIXME:Ontonator Make this not clear the enitire table.
                     loadGameWindow.removeActor(loadSaveButton);
                     loadGameWindow.removeActor(deleteSaveButton);
                 }
