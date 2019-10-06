@@ -407,6 +407,9 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bow_desc", new Texture("resources/items_icons/bow_desc.png"));
             textureMap.put("spear_desc", new Texture("resources/items_icons/spear_desc.png"));
             textureMap.put("sword_desc", new Texture("resources/items_icons/sword_desc.png"));
+            textureMap.put("Apple_desc", new Texture("resources/items_icons/apple_desc.png"));
+            textureMap.put("Berry_desc", new Texture("resources/items_icons/berry_desc.png"));
+            textureMap.put("Aloe_Vera_desc", new Texture("resources/items_icons/aloevera_desc.png"));
 
             //Inventory Description Panel
             textureMap.put("Description_Panel", new Texture("resources/items_icons/no_desc.png"));
