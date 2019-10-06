@@ -1,6 +1,7 @@
 package deco2800.skyfall.saving;
 
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.worlds.world.World;
 
 import java.io.Serializable;
@@ -22,8 +23,12 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
     // The world the player is currently in
     private World currentWorld;
 
+    private long currentWorldId;
+
     // The ID of the main character in this save
     private MainCharacter mainCharacter;
+
+
 
     /**
      * Constructor for a save without parameters
@@ -49,6 +54,7 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
      */
     public Save(List<World> worlds, MainCharacter mainCharacter, World currentWorld) {
         // FIXME: this may break if a save is stored for ~293+ years
+        this.worlds = new ArrayList<>();
         this.saveID = System.nanoTime();
 
         this.worlds = worlds;
@@ -59,12 +65,18 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
 
     public Save(SaveMemento saveMemento) {
         this.load(saveMemento);
-        this.worlds = new ArrayList<>();
+        if (this.worlds == null){
+            this.worlds = new ArrayList<>();
+        }
         this.mainCharacter = null;
     }
 
     public World getCurrentWorld() {
         return currentWorld;
+    }
+
+    public long getCurrentWorldId(){
+        return currentWorldId;
     }
 
     /**
@@ -125,9 +137,15 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
         return new SaveMemento(this);
     }
 
+
     @Override
     public void load(SaveMemento saveMemento) {
+        if (this.worlds == null){
+            this.worlds = new ArrayList<>();
+        }
         this.saveID = saveMemento.saveID;
+        this.currentWorldId = saveMemento.currentWorld;
+
     }
 
     /**
