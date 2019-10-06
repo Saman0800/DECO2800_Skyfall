@@ -45,6 +45,8 @@ public class SpawningManager extends TickableManager  {
      */
     private SpawningManager() {
         random = new Random();
+        spawnTable = new HashMap<Spawnable, Float>();
+        enemyReferences = new ArrayList<Enemy>();
     }
 
     /** Allows SpawningManager to be created and attached to GameManager with
@@ -66,9 +68,7 @@ public class SpawningManager extends TickableManager  {
         GameManager.addManagerToInstance(local);
 
         //Add enemies to manager
-        //System.out.println("here");
-        //local.addEnemyForSpawning(new Flower(0, 0, MainCharacter.getInstance()), 1.0f);
-        //System.out.println("here");
+        local.addEnemyForSpawning(new Flower(0, 0, MainCharacter.getInstance()), 1.0f);
     }
 
     /**
@@ -76,9 +76,14 @@ public class SpawningManager extends TickableManager  {
      * @param enemy A reference to Spawnable
      */
     private void spawnEnemy(Spawnable enemy) {
-        vec2 location = ((Enemy)enemy).getPlayerLocation();
+        if (((Enemy)enemy) == null ) {
+            return;
+        }
 
         //calculate the location of the player
+        MainCharacter mc = MainCharacter.getInstance();
+        vec2 location = new vec2(mc.getRow(), mc.getCol());
+
         double angle = random.nextDouble() * 2.0f * Math.PI;
         location = new vec2(
                 location.x + SPAWN_DISTANCE*(float)Math.cos(angle),
@@ -115,7 +120,7 @@ public class SpawningManager extends TickableManager  {
             Map.Entry pair = (Map.Entry)it.next();
 
             if (random.nextFloat() < (Float)pair.getValue()) {
-                spawnEnemy((Spawnable)pair.getKey());
+        //        spawnEnemy((Spawnable)pair.getKey());
             }
 
             it.remove();
