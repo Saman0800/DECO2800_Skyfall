@@ -13,7 +13,6 @@ import deco2800.skyfall.managers.TextureManager;
 /**
  * A class for help table pop up.
  */
-
 public class HelpTable extends AbstractPopUpElement{
     private Skin skin;
     private Table table;
@@ -62,6 +61,7 @@ public class HelpTable extends AbstractPopUpElement{
     @Override
     public void draw() {
         super.draw();
+        // Set up main table
         table = new Table().top();
         table.setSize(750, 600);
         table.setPosition(Gdx.graphics.getWidth()/2f - table.getWidth()/2,
@@ -69,11 +69,15 @@ public class HelpTable extends AbstractPopUpElement{
         table.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
 
         drawBanner();
+        // Show first page
         toPrev();
         table.setVisible(false);
         stage.addActor(table);
     }
 
+    /**
+     * Draws out table banner, i.e. "HELP".
+     */
     private void drawBanner() {
         Table banner = new Table();
         banner.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_banner"));
@@ -85,6 +89,9 @@ public class HelpTable extends AbstractPopUpElement{
         table.row().padTop(10);
     }
 
+    /**
+     * Show the second page of the table (more commands)
+     */
     private void toNext() {
         Image page2 = new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page2"));
         table.add(page2).width(650).height(1704f / 2556 * 650).colspan(2);
@@ -92,6 +99,7 @@ public class HelpTable extends AbstractPopUpElement{
 
         TextureRegionDrawable arrow = gameMenuManager.generateTextureRegionDrawableObject("help_arrow");
         ImageButton leftArrow = new ImageButton(arrow);
+        // Rotates the arrow
         leftArrow.setTransform(true);
         leftArrow.setOrigin(30, 25);
         leftArrow.setRotation(180);
@@ -99,6 +107,7 @@ public class HelpTable extends AbstractPopUpElement{
         leftArrow.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // Redraw the table and switch to first page
                 table.clearChildren();
                 drawBanner();
                 toPrev();
@@ -110,6 +119,9 @@ public class HelpTable extends AbstractPopUpElement{
         table.add(next).left().expandX();
     }
 
+    /**
+     * Shows the previous page, i.e. the first page.
+     */
     private void toPrev() {
         Image page1 = new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page1"));
         table.add(page1).width(650).height(1704f / 2556 * 650).colspan(2);
@@ -125,6 +137,7 @@ public class HelpTable extends AbstractPopUpElement{
         rightArrow.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // Redraws the table and switch to the second page
                 table.clearChildren();
                 drawBanner();
                 toNext();

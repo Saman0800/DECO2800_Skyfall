@@ -14,14 +14,24 @@ import deco2800.skyfall.resources.Item;
 import java.util.Map;
 
 
+/**
+ * A class for the right hand side of the menu.
+ */
 public class GameMenuBar2 extends AbstractUIElement {
 
+    // Current game menu manager
     private final GameMenuManager gmm;
+    // Current skin
     private final Skin skin;
+    // Quick access panel on the right
     private Table quickAccessPanel;
+    // Shows what is equipped (Top right corner)
     private Table equippedTable;
+    // Text in eqiuppedTable
     private Label equipped;
+    // Blue side bar next to quickAccessPanel
     private ImageButton sideBar;
+    // Opens up building table (bottom right)
     private ImageButton build;
     //Current item selected in inventory user interface
     private String quickAccessSelected = "";
@@ -31,10 +41,22 @@ public class GameMenuBar2 extends AbstractUIElement {
     private ImageButton removeInactive;
     private ImageButton removeActive;
 
+    // Current inventory
     private InventoryManager inventory;
-
+    // Main character in the game
     private MainCharacter mainCharacter;
 
+    /**
+     * Constructs the right side of the menu including equipped table which shows
+     * what users are equipping, quick access panel, side bar which opens up inventory
+     * and build icon which opens up building table.
+     *
+     * @param stage Stage of the game.
+     * @param textureNames Texture names.
+     * @param tm TextureManager of the game.
+     * @param skin Skin used for the game.
+     * @param gmm Current game menu manager
+     */
     public GameMenuBar2(Stage stage, String[] textureNames, TextureManager tm, Skin skin, GameMenuManager gmm) {
         super(stage, textureNames, tm);
         this.gmm = gmm;
@@ -44,6 +66,9 @@ public class GameMenuBar2 extends AbstractUIElement {
         this.mainCharacter = gmm.getMainCharacter();
     }
 
+    /**
+     * Updates position of each actor, i.e let them stick to one side
+     */
     @Override
     public void updatePosition() {
         equippedTable.setPosition(gmm.getTopRightX() - 170, gmm.getTopLeftY() - 130);
@@ -146,6 +171,7 @@ public class GameMenuBar2 extends AbstractUIElement {
         removeCell.addActor(removeInactive);
         quickAccessPanel.add(removeCell).width(130).height(50).padTop(5).padLeft(10);
 
+        // Adding the side bar near quick access
         sideBar = new ImageButton(gmm.generateTextureRegionDrawableObject("quickaccess_side_bar"));
         sideBar.setSize(35, 360);
         sideBar.addListener(new ClickListener() {
@@ -177,6 +203,7 @@ public class GameMenuBar2 extends AbstractUIElement {
 
         float sideBarWidth = 35;
 
+        // Places each item to quick access
         for (Map.Entry<String, Integer> entry : quickAccess.entrySet()) {
             Image selected = new Image(gmm.generateTextureRegionDrawableObject("selected"));
             selected.setName(entry.getKey() + "-qaSelected");
