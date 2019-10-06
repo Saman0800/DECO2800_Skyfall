@@ -120,7 +120,7 @@ public class ConstructionManagerTest {
         //Assert.assertFalse(result);
     }
 
-
+ /*
     @Test
     public void testInvRemove() {
 
@@ -160,7 +160,7 @@ public class ConstructionManagerTest {
         Assert.assertEquals(2.0, inventoryManager.getAmount("Stone"), 0.0);
 
     }
-
+*/
 
     /**
     @Test
