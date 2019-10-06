@@ -17,7 +17,6 @@ import deco2800.skyfall.managers.*;
 public class GameOverTable extends AbstractPopUpElement{
 
     private Table mainTable;
-    private GameMenuManager gmManager;
 
     /**
      * Constructs a game over table.
@@ -32,7 +31,6 @@ public class GameOverTable extends AbstractPopUpElement{
                          String[] textureNames, TextureManager tm,
                          GameMenuManager gameMenuManager) {
         super(stage, exit, textureNames,tm , gameMenuManager);
-        this.gmManager = gameMenuManager;
         this.draw();
     }
 
@@ -107,7 +105,7 @@ public class GameOverTable extends AbstractPopUpElement{
      * Allows player to return home and start new game.
      */
     private void returnHome() {
-        gmManager.getGame().create();
-        ((Game)Gdx.app.getApplicationListener()).setScreen(gmManager.getGame().mainMenuScreen);
+        gameMenuManager.getGame().create();
+        ((Game)Gdx.app.getApplicationListener()).setScreen(gameMenuManager.getGame().mainMenuScreen);
     }
 }
