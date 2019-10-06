@@ -143,7 +143,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("enemyHeavy_Damage_SW", new Texture("resources/Enemies/Heavy/enemy2_FL_damage.png"));
             textureMap.put("enemyHeavy_Damage_SE", new Texture("resources/Enemies/Heavy/enemy2_FR_damage.png"));
             textureMap.put("enemyHeavy_Damage_W", new Texture("resources/Enemies/Heavy/enemy2_L_damage.png"));
-            textureMap.put("enemyDie", new Texture("resources/Enemies/Heavy/enemy2_R_damage.png"));
+            textureMap.put("enemyDie", new Texture("resources/Enemies/Heavy/enemy2_F_die.png"));
 
 
 

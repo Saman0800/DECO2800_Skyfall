@@ -106,28 +106,28 @@ public class AnimationManager extends AbstractManager {
 
         this.generateAnimationObject("HeavyMoveN",
                 "enemyHeavy_Move_N",
-                224, 348, 0.2f);
+                224, 348, 0.13f);
         this.generateAnimationObject("HeavyMoveS",
                 "enemyHeavy_Move_S",
-                224, 349, 0.2f);
+                224, 349, 0.13f);
         this.generateAnimationObject("HeavyMoveE",
                 "enemyHeavy_Move_E",
-                222, 349, 0.2f);
+                222, 349, 0.13f);
         this.generateAnimationObject("HeavyMoveW",
                 "enemyHeavy_Move_W",
-                222, 350, 0.2f);
+                222, 350, 0.13f);
         this.generateAnimationObject("HeavyMoveNE",
                 "enemyHeavy_Move_NE",
-                222, 349, 0.2f);
+                222, 349, 0.13f);
         this.generateAnimationObject("HeavyMoveSE",
                 "enemyHeavy_Move_SE",
-                221, 349, 0.2f);
+                221, 349, 0.13f);
         this.generateAnimationObject("HeavyMoveSW",
                 "enemyHeavy_Move_SW",
-                221, 352, 0.2f);
+                221, 352, 0.13f);
         this.generateAnimationObject("HeavyMoveNW",
                 "enemyHeavy_Move_NW",
-                220, 353, 0.2f);
+                220, 353, 0.13f);
 
         this.generateAnimationObject("HeavyAttackN",
                 "enemyHeavy_Attack_N",
@@ -180,7 +180,7 @@ public class AnimationManager extends AbstractManager {
                 224, 341, 0.2f);
         this.generateAnimationObject("enemyDie",
                 "enemyDie",
-                224, 341, 0.2f);
+                369, 357, 0.4f);
 
         // Main Character
         // Walking animations

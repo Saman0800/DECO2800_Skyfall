@@ -122,9 +122,9 @@ public class Enemy extends Peon
 
             //if the player in attack range then attack player
             if (distance(mainCharacter) < getAttackRange()) {
+                setCurrentState(AnimationRole.ATTACK);
                 dealDamage(mainCharacter);
                 setAttacking(true);
-                setCurrentState(AnimationRole.ATTACK);
             }
         }
     }
@@ -211,6 +211,7 @@ public class Enemy extends Peon
         if (isDead()) {
             if (deadTime < 500) {
                 deadTime += 20;
+                setCurrentState(AnimationRole.DEAD);
             } else {
                 die();
             }
@@ -556,9 +557,10 @@ public class Enemy extends Peon
                 this.destination = new HexVector(this.getCol(), this.getRow());
                 this.setDead(true);
                 logger.info("Enemy destroyed.");
+
+                setCurrentState(AnimationRole.NULL);
+                GameManager.get().getWorld().removeEntity(this);
             }
-            GameManager.get().getWorld().removeEntity(this);
-            setCurrentState(AnimationRole.NULL);
         }
     }
 
