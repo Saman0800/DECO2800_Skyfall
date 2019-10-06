@@ -3,12 +3,13 @@ package deco2800.skyfall.resources;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.util.HexVector;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * An abstract class representing a Manufactured Resource item.
  */
-public abstract class ManufacturedResources implements Item, Blueprint {
+public abstract class ManufacturedResources implements Item, Blueprint, Serializable {
 
     // the name of the item e.g. Hatchet, Pick Axe
     public String name;

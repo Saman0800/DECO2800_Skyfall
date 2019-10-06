@@ -66,7 +66,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.derby.impl.jdbc.LOBInputStream;
 import org.apache.derby.jdbc.EmbeddedDriver;
 import org.flywaydb.core.Flyway;
 
@@ -136,15 +135,13 @@ public class DataBaseConnector {
                 insertQueries.insertSave(saveId, save.save());
             }
 
+            saveMainCharacter();
             // Looping through the worlds in the save and saving them
             for (World world : save.getWorlds()) {
                 saveWorld(world);
             }
 
             // fixme:jeffvan12 should probably work on this
-
-            // TODO implement saving the main character
-            // saveMainCharacter(save.getMainCharacter());
         } catch (SQLException | IOException e) {
             throw new RunTimeSaveException("Failed to save the game ", e);
         }
@@ -216,19 +213,19 @@ public class DataBaseConnector {
     }
 
     // TODO:dannathan Fix or remove this.
-    public void saveMainCharacter(MainCharacter character) throws SQLException {
+    public void saveMainCharacter() throws SQLException {
         try {
             ContainsDataQueries containsQueries = new ContainsDataQueries(connection);
             InsertDataQueries insertQueries = new InsertDataQueries(connection);
             UpdateDataQueries updateQueries = new UpdateDataQueries(connection);
 
-            if (containsQueries.containsMainCharacter(character.getID(),
-                character.getSave().getSaveID())) {
-                updateQueries.updateMainCharacter(character.getID(),
-                    character.getSave().getSaveID(), character.save());
+            if (containsQueries.containsMainCharacter(MainCharacter.getInstance().getID(),
+                MainCharacter.getInstance().getSave().getSaveID())) {
+                updateQueries.updateMainCharacter(MainCharacter.getInstance().getID(),
+                    MainCharacter.getInstance().getSave().getSaveID(), MainCharacter.getInstance().save());
             } else {
-                insertQueries.insertMainCharacter(character.getID(),
-                    character.getSave().getSaveID(), character.save());
+                insertQueries.insertMainCharacter(MainCharacter.getInstance().getID(),
+                    MainCharacter.getInstance().getSave().getSaveID(), MainCharacter.getInstance().save());
             }
         } catch (IOException e) {
             throw new RunTimeSaveException("Unable to save the main character to the database", e);
@@ -277,24 +274,27 @@ public class DataBaseConnector {
      *
      * @return loads the most recent save
      */
-    public Save loadGame() {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM SAVES");
-            ResultSet result = preparedStatement.executeQuery()) {
-            connection.setAutoCommit(false);
-            // fixme:jeffvan12 sort this out
+    public Save loadGame(long saveId) {
 
-            // TODO:dannathan make this work for any savefile, not just the most recent
-            // preparedStatement = connection.prepareStatement("SELECT * FROM SAVES");
-            // result = preparedStatement.executeQuery();
-            if (!result.next()) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM SAVES WHERE save_id = "
+            + "?")) {
+            preparedStatement.setLong(1, saveId);
+            long saveID;
+            byte[] buffer;
+            try (ResultSet result = preparedStatement.executeQuery()) {
+                connection.setAutoCommit(false);
+                // fixme:jeffvan12 sort this out
+
+                if (!result.next()) {
+                    connection.setAutoCommit(true);
+                    throw new SQLException();
+                }
+
+                saveID = result.getLong("save_id");
                 connection.setAutoCommit(true);
-                throw new SQLException();
+
+                buffer = result.getBytes("data");
             }
-
-            long saveID = result.getLong("save_id");
-            connection.setAutoCommit(true);
-
-            byte[] buffer = result.getBytes("data");
             ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(buffer));
             SaveMemento memento = (SaveMemento) objectIn.readObject();
 
@@ -314,9 +314,9 @@ public class DataBaseConnector {
     }
 
     // TODO:dannathan
-    public void loadMainCharacter(Save save) throws SQLException, LoadException {
+    public void loadMainCharacter(Save save) {
         try (PreparedStatement preparedStatement = connection
-            .prepareStatement("SELECT * FROM MAIN_CHARACTER WHERE save_id = ?" )) {
+            .prepareStatement("SELECT * FROM MAIN_CHARACTER WHERE save_id = ?")) {
             preparedStatement.setLong(1, save.getSaveID());
             try (ResultSet result = preparedStatement.executeQuery()) {
                 if (!result.next()) {
@@ -328,11 +328,12 @@ public class DataBaseConnector {
                 ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(buffer));
                 MainCharacterMemento memento = (MainCharacterMemento) objectIn.readObject();
                 MainCharacter.loadMainCharacter(memento, save);
+
                 connection.setAutoCommit(true);
             }
 
-        } catch (IOException |  ClassNotFoundException e){
-            throw new LoadException("Unable to load main character", e);
+        } catch (IOException | ClassNotFoundException | SQLException | LoadException e) {
+            throw new RunTimeLoadException("Unable to load main character", e);
         }
 
     }
@@ -856,6 +857,7 @@ public class DataBaseConnector {
 
     public void saveAllTables() {
         saveTable("SAVES");
+        saveTable("MAIN_CHARACTER");
         saveTable("WORLDS");
         saveTable("BIOMES");
         saveTable("NODES");
@@ -866,6 +868,7 @@ public class DataBaseConnector {
 
     public void loadAllTables() {
         loadTable("SAVES", 1);
+        loadTable("MAIN_CHARACTER", 2);
         loadTable("WORLDS", 3);
         loadTable("BIOMES", 3);
         loadTable("NODES", 4);

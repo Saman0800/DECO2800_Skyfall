@@ -60,6 +60,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.omg.IOP.CodecPackage.InvalidTypeForEncodingHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -298,6 +299,7 @@ public class MainCharacter extends Peon
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
         this.petsManager = GameManager.getManagerFromInstance(PetsManager.class);
         this.inventories = GameManager.getManagerFromInstance(InventoryManager.class);
+        this.inventories.setContents(memento.inventoryContents);
         this.goldPouch = new HashMap<>();
 
         xInput = 0;
@@ -870,6 +872,8 @@ public class MainCharacter extends Peon
     public InventoryManager getInventoryManager() {
         return this.inventories;
     }
+
+
 
     /**
      * Change the hunger points value for the player (+ve amount increases hunger points) (-ve amount decreases hunger
@@ -1858,6 +1862,16 @@ public class MainCharacter extends Peon
         return this.id;
     }
 
+
+    /**
+     * Sets the id of the main character
+     * @param id The id that the main character will be set to
+     */
+    public void setID(long id){
+        this.id = id;
+
+    }
+
     /**
      * Returns the save this character is for
      *
@@ -1866,6 +1880,11 @@ public class MainCharacter extends Peon
     public Save getSave() {
         return save;
     }
+
+    public GameStage getGameStage(){
+        return this.gameStage;
+    }
+
 
     // FIXME:dannothan Fix or remove this.
     // FIXME:jeffvan figure out what needs saving
@@ -1904,6 +1923,7 @@ public class MainCharacter extends Peon
         private float row;
         private int health;
         private InventoryManager inventory;
+        private Map<String, List<Item>> inventoryContents;
         private WeaponManager weapons;
         private HashMap<Integer, Integer> goldPouch;
         private List<Item> hotbar;
@@ -1915,13 +1935,15 @@ public class MainCharacter extends Peon
             this.row = character.getRow();
             this.saveID = character.save.getSaveID();
             this.mainCharacterID = character.id;
-            // this.equippedItem = character.equippedItem;
+//             this.equippedItem = character.equippedItem;
             this.level = character.level;
             this.health = character.getHealth();
             this.foodLevel = character.foodLevel;
             this.foodAccum = character.foodAccum;
             this.goldPouch = character.goldPouch;
             // this.blueprints = character.blueprintsLearned;
+            inventoryContents =
+                GameManager.getManagerFromInstance(InventoryManager.class).getContents();
             this.inventory = character.inventories;
             // this.weapons = character.weapons;
             // this.hotbar = character.hotbar;

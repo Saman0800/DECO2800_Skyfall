@@ -7,6 +7,8 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.MainCharacter.GameStage;
 import deco2800.skyfall.entities.SaveableEntity.SaveableEntityMemento;
 import deco2800.skyfall.entities.worlditems.Bone;
 import deco2800.skyfall.entities.worlditems.DesertCacti;
@@ -111,7 +113,7 @@ public class DataBaseConnectorLoadingTest {
     // FIXME:jeffvan12 not entirely sure how to fix this
     @Test
     public void loadGameTest() {
-        Save save = dataBaseConnectorExpected.loadGame();
+        Save save = dataBaseConnectorExpected.loadGame(0);
         assertEquals(SAVE_ID, save.getSaveID());
         assertEquals(1, save.getWorlds().size());
         assertEquals(0, save.getWorlds().get(0).getEntities().size());
@@ -208,6 +210,24 @@ public class DataBaseConnectorLoadingTest {
         assertEquals(6, chunk.getEntities().size());
         assertEquals(WOLRD_ID, chunk.getWorld().getID());
         assertEquals(100, chunk.getTiles().size());
+    }
+
+    @Test
+    public void loadMainCharacterTest() {
+        SaveMemento saveMemMock = Mockito.mock(SaveMemento.class);
+        Save saveMock = Mockito.mock(Save.class);
+        when(saveMock.getSaveID()).thenReturn(SAVE_ID);
+        when(saveMemMock.getWorldID()).thenReturn(WOLRD_ID);
+        dataBaseConnectorExpected.loadMainCharacter(saveMock);
+
+        assertEquals(10, MainCharacter.getInstance().getHealth());
+        assertEquals(100, MainCharacter.getInstance().getFoodLevel());
+        assertEquals(4, MainCharacter.getInstance().getInventoryManager().getContents().size());
+        assertEquals(0, MainCharacter.getInstance().getRow(), 0.000001);
+        assertEquals(0, MainCharacter.getInstance().getCol(), 0.0000001);
+        assertEquals(0, MainCharacter.getInstance().getID());
+
+        assertEquals(GameStage.FOREST, MainCharacter.getInstance().getGameStage());
     }
 
     @Test

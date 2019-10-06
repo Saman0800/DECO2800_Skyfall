@@ -6,8 +6,10 @@ import static org.powermock.api.mockito.PowerMockito.when;
 import static org.junit.Assert.*;
 
 import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.worlditems.SnowShrub;
 import deco2800.skyfall.managers.DatabaseManager;
+import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.saving.LoadException;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.saving.Save.SaveMemento;
@@ -69,6 +71,9 @@ public class DatabaseConnectorSavingTest {
         ResultSet saveResults = null;
         try {
             Save save = new Save();
+            MainCharacter.resetInstance();
+            MainCharacter.getInstance();
+            MainCharacter.getInstance().setSave(save);
 
             World mockedWorld = Mockito.mock(World.class);
             when(mockedWorld.getSeed()).thenReturn(0L);
@@ -77,7 +82,7 @@ public class DatabaseConnectorSavingTest {
 
             dbConnector.saveGame(save);
 
-            ArrayList<Save> saves = (ArrayList<Save>) dbConnector.loadSaveInformation();
+//            ArrayList<Save> saves = (ArrayList<Save>) dbConnector.loadSaveInformation();
 
             int count = 0;
             getSaves = dbConnector.getConnection().prepareStatement("SELECT * FROM SAVES");
@@ -106,6 +111,10 @@ public class DatabaseConnectorSavingTest {
         try {
             Save save = new Save();
 
+            MainCharacter.resetInstance();
+            MainCharacter.getInstance();
+            MainCharacter.getInstance().setSave(save);
+
             World mockedWorld = Mockito.mock(World.class);
             when(mockedWorld.getSeed()).thenReturn(0L);
 
@@ -114,7 +123,7 @@ public class DatabaseConnectorSavingTest {
             dbConnector.saveGame(save);
             dbConnector.saveGame(save);
 
-            ArrayList<Save> saves = (ArrayList<Save>) dbConnector.loadSaveInformation();
+//            ArrayList<Save> saves = (ArrayList<Save>) dbConnector.loadSaveInformation();
 
             int count = 0;
             getSaves = dbConnector.getConnection().prepareStatement("SELECT * FROM SAVES");
@@ -361,6 +370,44 @@ public class DatabaseConnectorSavingTest {
             } catch (SQLException e) {
             }
         }
+    }
+
+    @Test
+    public void saveMainCharacterTest() {
+        PreparedStatement getSaves = null;
+        ResultSet saveResults = null;
+        try {
+            Save save = Mockito.mock(Save.class);
+            when(save.getSaveID()).thenReturn(0L);
+            MainCharacter.resetInstance();
+            MainCharacter.getInstance();
+            MainCharacter.getInstance().setSave(save);
+
+            SaveMemento saveMementoMock = Mockito.mock(SaveMemento.class);
+            InsertDataQueries insertDataQueries = new InsertDataQueries(dbConnector.getConnection());
+
+            insertDataQueries.insertSave(0, saveMementoMock);
+
+            dbConnector.saveMainCharacter();
+
+            int count = 0;
+            getSaves = dbConnector.getConnection().prepareStatement("SELECT * FROM MAIN_CHARACTER");
+            saveResults = getSaves.executeQuery();
+            while (saveResults.next()) {
+                count++;
+            }
+            assertEquals(1, count);
+
+        } catch (SQLException | IOException e) {
+            fail("Failed to the main character due to an exception occurring : " + e);
+        } finally {
+            try {
+                getSaves.close();
+                saveResults.close();
+            } catch (SQLException e) {
+            }
+        }
+
     }
 
 }

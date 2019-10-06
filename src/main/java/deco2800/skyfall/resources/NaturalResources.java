@@ -2,11 +2,12 @@ package deco2800.skyfall.resources;
 
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
+import java.io.Serializable;
 
 /**
  * An abstract class representing a Natural Resource item
  */
-public abstract class NaturalResources implements Item {
+public abstract class NaturalResources implements Item, Serializable {
 
     // the name of the item e.g. wood, stone
     public String name;
