@@ -41,24 +41,24 @@ public class BikeTest {
 
         }
 
-        /**
-         * To test whether moving
-         */
-        @Test
-        public void getMovingTest() {
-            Assert.assertEquals(false, horse.getMove());
-
-        }
-
-
-        /**
-         * Check whether the vehicle is available for this biome
-         */
-        @Test
-        public void isAvailableTest() {
-            Assert.assertTrue(horse.isAvailable());
-
-        }
+//        /**
+//         * To test whether moving
+//         */
+//        @Test
+//        public void getMovingTest() {
+//            Assert.assertEquals(false, bike.getMove());
+//
+//        }
+//
+//
+//        /**
+//         * Check whether the vehicle is available for this biome
+//         */
+//        @Test
+//        public void isAvailableTest() {
+//            Assert.assertTrue(horse.isAvailable());
+//
+//        }
     }
 
 

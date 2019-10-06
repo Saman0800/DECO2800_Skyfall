@@ -71,7 +71,7 @@ public class SandCar extends AbstractVehicle implements Animatable, Item {
 
     @Override
     public String getDescription() {
-        return "sand_car";
+        return "vehicle sand_car";
     }
 
     @Override
