@@ -745,7 +745,10 @@ public class DataBaseConnector {
                 return new DesertEnvironment(entityMemento);
             case "Shipwrecks":
                 return new Shipwrecks(entityMemento);
-
+                case "ruinedRobot":
+                return new ruinedRobot(entityMemento);
+            case "ruinedCity":
+                return new ruinedCity(entityMemento);
             default:
                 throw new LoadException(String.format("Could not create %s from memento", entityMemento.entityType));
         }
