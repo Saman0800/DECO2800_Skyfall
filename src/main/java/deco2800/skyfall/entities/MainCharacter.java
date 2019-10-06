@@ -1,13 +1,5 @@
 package deco2800.skyfall.entities;
 
-import static deco2800.skyfall.buildings.BuildingType.CABIN;
-import static deco2800.skyfall.buildings.BuildingType.CASTLE;
-import static deco2800.skyfall.buildings.BuildingType.WATCHTOWER;
-import deco2800.skyfall.entities.vehicle.AbstractVehicle;
-import deco2800.skyfall.entities.vehicle.SandCar;
-import org.slf4j.Logger;
-import java.util.HashMap;
-import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
@@ -27,43 +19,34 @@ import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellCaster;
 import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.entities.vehicle.AbstractVehicle;
 import deco2800.skyfall.entities.vehicle.Bike;
-import deco2800.skyfall.entities.weapons.Bow;
-import deco2800.skyfall.entities.weapons.EmptyItem;
-import deco2800.skyfall.entities.weapons.Spear;
-import deco2800.skyfall.entities.weapons.Sword;
-import deco2800.skyfall.entities.weapons.Weapon;
+import deco2800.skyfall.entities.vehicle.SandCar;
+import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gui.ManaBar;
-import deco2800.skyfall.managers.ConstructionManager;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.managers.InputManager;
-import deco2800.skyfall.managers.InventoryManager;
-import deco2800.skyfall.managers.PetsManager;
-import deco2800.skyfall.managers.SoundManager;
-import deco2800.skyfall.managers.WeaponManager;
+import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.observers.KeyUpObserver;
 import deco2800.skyfall.observers.TouchDownObserver;
-import deco2800.skyfall.saving.AbstractMemento;
-
-import java.io.Serializable;
-
-import deco2800.skyfall.resources.Blueprint;
-import deco2800.skyfall.resources.GoldPiece;
-import deco2800.skyfall.resources.HealthResources;
-import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.resources.ManufacturedResources;
+import deco2800.skyfall.resources.*;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
+import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.LoggerFactory;
+
+import static deco2800.skyfall.buildings.BuildingType.*;
 
 /**
  * Main character in the game
@@ -1101,24 +1084,6 @@ public class MainCharacter extends Peon
                 break;
 
             case Input.Keys.F:
-                if(!isOnVehicle){
-                    Bike bike=null;
-                    for(AbstractEntity bk:GameManager.get().getWorld().getEntities()){
-                        if(bk instanceof Bike && bk.distance(this)<3){
-                            bike= (Bike) bk;
-                            bike.removeBike();
-                            isOnVehicle=true;
-                            setCurrentState(AnimationRole.NULL);
-                            vehicleTexture("bike");
-                            maxSpeed=10f;
-                        }
-                    }
-
-                }else{
-                    defaultDirectionTextures=defaultMainCharacterTextureMap;
-                    isOnVehicle=false;
-                    GameManager.get().getWorld().addEntity(new Bike(this.getCol(),this.getRow(),this));
-                }
                 vehicleToUse();
                 break;
 

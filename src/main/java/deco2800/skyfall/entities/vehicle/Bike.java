@@ -27,37 +27,13 @@ public class Bike extends AbstractVehicle implements Animatable, Item {
         this.setDirectionTextures();
     }
 
-
     public boolean isOnUse(){
         this.removeBike();
         return this.isOnUse;
     }
 
-
-
-
-
     @Override
     public void configureAnimations() {
-//        this.addAnimations(
-//                AnimationRole.MOVE, Direction.NORTH, new AnimationLinker("whitebearN", AnimationRole.MOVE, Direction.NORTH,
-//                        true, true));
-//
-//        this.addAnimations(
-//                AnimationRole.MOVE, Direction.NORTH_EAST, new AnimationLinker("whitebearNE", AnimationRole.MOVE, Direction.NORTH_EAST,
-//                        true, true));
-//        this.addAnimations(
-//                AnimationRole.MOVE, Direction.NORTH_WEST, new AnimationLinker("whitebearNW", AnimationRole.MOVE, Direction.NORTH_WEST,
-//                        true, true));
-//        this.addAnimations(
-//                AnimationRole.MOVE, Direction.SOUTH, new AnimationLinker("whitebearS", AnimationRole.MOVE, Direction.SOUTH,
-//                        true, true));
-//        this.addAnimations(
-//                AnimationRole.MOVE, Direction.SOUTH_EAST, new AnimationLinker("whitebearSE", AnimationRole.MOVE, Direction.SOUTH_EAST,
-//                        true, true));
-//        this.addAnimations(
-//                AnimationRole.MOVE, Direction.SOUTH_WEST, new AnimationLinker("whitebearSW", AnimationRole.MOVE, Direction.SOUTH_WEST,
-//                        true, true));
     }
 
     @Override
