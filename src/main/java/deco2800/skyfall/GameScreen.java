@@ -27,7 +27,6 @@ import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.applet.Main;
 
 import java.util.ArrayList;
 
@@ -271,10 +270,10 @@ public class GameScreen implements Screen, KeyDownObserver {
 
         GameLauncher.application.addLifecycleListener(new LifecycleListener() {
             @Override
-            public void pause() { }
+            public void pause() {}
 
             @Override
-            public void resume() { }
+            public void resume() {}
 
             @Override
             public void dispose() {

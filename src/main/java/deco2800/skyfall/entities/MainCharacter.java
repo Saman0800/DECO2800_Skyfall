@@ -278,7 +278,7 @@ public class MainCharacter extends Peon
      * @param save The save the character is in
      */
     private MainCharacter(MainCharacterMemento memento, Save save) {
-        super(memento.row, memento.row, 0, "Main Character", memento.health, "MainCharacter");
+        super(memento.row, memento.col, 0, "Main Character", memento.health, "MainCharacter");
         this.load(memento);
         this.save = save;
         this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
@@ -375,8 +375,6 @@ public class MainCharacter extends Peon
         xInput = 0;
         yInput = 0;
         setAcceleration(10.f);
-        // FIXME:Ontonator Change this back.
-        // setMaxSpeed(1.f);
         setMaxSpeed(5.f);
         vel = 0;
         velHistoryX = new ArrayList<>();
