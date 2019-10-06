@@ -3,46 +3,12 @@ package deco2800.skyfall.managers.database;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.SaveableEntity.SaveableEntityMemento;
 import deco2800.skyfall.entities.StaticEntity;
-import deco2800.skyfall.entities.worlditems.Bone;
-import deco2800.skyfall.entities.worlditems.DesertCacti;
-import deco2800.skyfall.entities.worlditems.DesertRock;
-import deco2800.skyfall.entities.worlditems.DesertShrub;
-import deco2800.skyfall.entities.worlditems.ForestMushroom;
-import deco2800.skyfall.entities.worlditems.ForestRock;
-import deco2800.skyfall.entities.worlditems.ForestShrub;
-import deco2800.skyfall.entities.worlditems.ForestTree;
-import deco2800.skyfall.entities.worlditems.Leaves;
-import deco2800.skyfall.entities.worlditems.MountainRock;
-import deco2800.skyfall.entities.worlditems.MountainTree;
-import deco2800.skyfall.entities.worlditems.OrganicMound;
-import deco2800.skyfall.entities.worlditems.SnowClump;
-import deco2800.skyfall.entities.worlditems.SnowShrub;
-import deco2800.skyfall.entities.worlditems.SwampRock;
-import deco2800.skyfall.entities.worlditems.SwampShrub;
-import deco2800.skyfall.entities.worlditems.SwampTree;
-import deco2800.skyfall.entities.worlditems.TreeStump;
-import deco2800.skyfall.entities.worlditems.VolcanicRock;
-import deco2800.skyfall.entities.worlditems.VolcanicShrub;
-import deco2800.skyfall.entities.worlditems.VolcanicTree;
+import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.DatabaseManager;
-import deco2800.skyfall.saving.DatabaseException;
-import deco2800.skyfall.saving.LoadException;
-import deco2800.skyfall.saving.RunTimeLoadException;
-import deco2800.skyfall.saving.RunTimeSaveException;
-import deco2800.skyfall.saving.Save;
+import deco2800.skyfall.saving.*;
 import deco2800.skyfall.saving.Save.SaveMemento;
-import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.*;
 import deco2800.skyfall.worlds.biomes.AbstractBiome.AbstractBiomeMemento;
-import deco2800.skyfall.worlds.biomes.BeachBiome;
-import deco2800.skyfall.worlds.biomes.DesertBiome;
-import deco2800.skyfall.worlds.biomes.ForestBiome;
-import deco2800.skyfall.worlds.biomes.LakeBiome;
-import deco2800.skyfall.worlds.biomes.MountainBiome;
-import deco2800.skyfall.worlds.biomes.OceanBiome;
-import deco2800.skyfall.worlds.biomes.RiverBiome;
-import deco2800.skyfall.worlds.biomes.SnowyMountainsBiome;
-import deco2800.skyfall.worlds.biomes.SwampBiome;
-import deco2800.skyfall.worlds.biomes.VolcanicMountainsBiome;
 import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.VoronoiEdge.VoronoiEdgeMemento;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
@@ -51,21 +17,17 @@ import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.Chunk.ChunkMemento;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.World.WorldMemento;
+import org.apache.derby.jdbc.EmbeddedDriver;
+import org.flywaydb.core.Flyway;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.derby.jdbc.EmbeddedDriver;
-import org.flywaydb.core.Flyway;
 
 public class DataBaseConnector {
 
@@ -177,8 +139,8 @@ public class DataBaseConnector {
         // Save nodes
         for (WorldGenNode worldGenNode : world.getWorldGenNodes()) {
             if (containsQueries.containsNode(world.getID(), worldGenNode.getX(), worldGenNode.getY())) {
-                updateQueries.updateNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(), worldGenNode.save(),
-                        worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
+                updateQueries.updateNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(),
+                        worldGenNode.save(), worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
             } else {
                 insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(), worldGenNode.save(),
                         worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
@@ -273,7 +235,9 @@ public class DataBaseConnector {
      */
     public Save loadGame() {
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM SAVES");
-                ResultSet result = preparedStatement.executeQuery()) {
+
+             ResultSet result = preparedStatement.executeQuery()) {
+
             connection.setAutoCommit(false);
             // fixme:jeffvan12 sort this out
 

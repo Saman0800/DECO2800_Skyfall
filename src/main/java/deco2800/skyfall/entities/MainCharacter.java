@@ -1,9 +1,5 @@
 package deco2800.skyfall.entities;
 
-import static deco2800.skyfall.buildings.BuildingType.CABIN;
-import static deco2800.skyfall.buildings.BuildingType.CASTLE;
-import static deco2800.skyfall.buildings.BuildingType.WATCHTOWER;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
@@ -23,45 +19,34 @@ import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellCaster;
 import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.spells.SpellType;
-import deco2800.skyfall.entities.weapons.Bow;
-import deco2800.skyfall.entities.weapons.EmptyItem;
-import deco2800.skyfall.entities.weapons.Spear;
-import deco2800.skyfall.entities.weapons.Sword;
-import deco2800.skyfall.entities.weapons.Weapon;
+import deco2800.skyfall.entities.vehicle.AbstractVehicle;
+import deco2800.skyfall.entities.vehicle.Bike;
+import deco2800.skyfall.entities.vehicle.SandCar;
+import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gui.ManaBar;
-import deco2800.skyfall.managers.ConstructionManager;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.managers.InputManager;
-import deco2800.skyfall.managers.InventoryManager;
-import deco2800.skyfall.managers.PetsManager;
-import deco2800.skyfall.managers.SoundManager;
-import deco2800.skyfall.managers.WeaponManager;
+import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.observers.KeyUpObserver;
 import deco2800.skyfall.observers.TouchDownObserver;
-import deco2800.skyfall.saving.AbstractMemento;
-
-import java.io.Serializable;
-
-import deco2800.skyfall.resources.Blueprint;
-import deco2800.skyfall.resources.GoldPiece;
-import deco2800.skyfall.resources.HealthResources;
-import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.resources.ManufacturedResources;
+import deco2800.skyfall.resources.*;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
+import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import static deco2800.skyfall.buildings.BuildingType.*;
 
 /**
  * Main character in the game
@@ -1039,14 +1024,29 @@ public class MainCharacter extends Peon
             foodAccum -= 1.f;
         }
     }
-
     @Override
     public void handleCollision(Object other) {
         // Put specific collision logic here
     }
 
-    public void resetVelocity() {
 
+    private Map<Direction, String> vehicleDirection=new HashMap<>();
+
+    private Map<Direction, String> vehicleDirection2 = new HashMap<>();
+
+    private String vehicleType = null;
+
+    private void vehicleTexture(String vehicleName){
+        if (vehicleName.equals("bike")){
+            defaultDirectionTextures = vehicleDirection;
+        }
+        if (vehicleName.equals("sand_car")) {
+            defaultDirectionTextures = vehicleDirection2;
+        }
+
+    }
+
+    public void resetVelocity() {
         xInput = 0;
         yInput = 0;
     }
@@ -1067,67 +1067,112 @@ public class MainCharacter extends Peon
             return;
         }
         switch (keycode) {
-        case Input.Keys.W:
-            yInput += 1;
-            break;
-        case Input.Keys.A:
-            xInput += -1;
-            break;
-        case Input.Keys.S:
-            yInput += -1;
-            break;
-        case Input.Keys.D:
-            xInput += 1;
-            break;
-        case Input.Keys.V:
-            petsManager.replacePet(this);
-            break;
+            case Input.Keys.W:
+                yInput += 1;
+                break;
+            case Input.Keys.A:
+                xInput += -1;
+                break;
+            case Input.Keys.S:
+                yInput += -1;
+                break;
+            case Input.Keys.D:
+                xInput += 1;
+                break;
+            case Input.Keys.V:
+                petsManager.replacePet(this);
+                break;
 
-        case Input.Keys.SHIFT_LEFT:
-            isSprinting = true;
-            maxSpeed *= 2.f;
-            break;
-        case Input.Keys.SPACE:
-            useEquipped();
+            case Input.Keys.F:
+                vehicleToUse();
+                break;
 
-            if (this.equippedItem instanceof Weapon) {
-                float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
-                float[] clickedPosition = WorldUtil.worldCoordinatesToSubColRow(mouse[0], mouse[1]);
-                HexVector mousePosition = new HexVector(clickedPosition[0], clickedPosition[1]);
+            case Input.Keys.SHIFT_LEFT:
+                isSprinting = true;
+                maxSpeed *= 2.f;
+                break;
+            case Input.Keys.SPACE:
+                useEquipped();
 
-                this.attack(mousePosition);
+                if (this.equippedItem instanceof Weapon) {
+                    float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
+                    float[] clickedPosition = WorldUtil.worldCoordinatesToSubColRow(mouse[0], mouse[1]);
+                    HexVector mousePosition = new HexVector(clickedPosition[0], clickedPosition[1]);
+
+                    this.attack(mousePosition);
+                }
+                break;
+            case Input.Keys.ALT_LEFT:
+                // Attack moved to SPACE
+                break;
+            case Input.Keys.G:
+                addClosestGoldPiece();
+                break;
+            case Input.Keys.M:
+                getGoldPouchTotalValue();
+                break;
+            case Input.Keys.Z:
+                selectSpell(SpellType.FLAME_WALL);
+                break;
+            case Input.Keys.X:
+                selectSpell(SpellType.SHIELD);
+                break;
+            case Input.Keys.C:
+                selectSpell(SpellType.TORNADO);
+                break;
+            case Input.Keys.L:
+                toggleCameraLock();
+                break;
+            case Input.Keys.K:
+                centreCameraManual();
+                break;
+            default:
+                switchItem(keycode);
+                break;
             }
-            break;
-        case Input.Keys.ALT_LEFT:
-            // Attack moved to SPACE
-            break;
-        case Input.Keys.G:
-            addClosestGoldPiece();
-            break;
-        case Input.Keys.M:
-            getGoldPouchTotalValue();
-            break;
-        case Input.Keys.Z:
-            selectSpell(SpellType.FLAME_WALL);
-            break;
-        case Input.Keys.X:
-            selectSpell(SpellType.SHIELD);
-            break;
-        case Input.Keys.C:
-            selectSpell(SpellType.TORNADO);
-            break;
-        case Input.Keys.L:
-            toggleCameraLock();
-            break;
-        case Input.Keys.K:
-            centreCameraManual();
-            break;
-        default:
-            switchItem(keycode);
-            break;
-        }
+
         // Let the SpellCaster know a key was pressed.
         spellCaster.onKeyPressed(keycode);
+    }
+
+    public void vehicleToUse() {
+        if(!isOnVehicle){
+            AbstractVehicle vehicle = null;
+            for (AbstractEntity ve : GameManager.get().getWorld().getEntities()) {
+                if (ve instanceof Bike && ve.distance(this) < 3) {
+                    vehicle = (Bike) ve;
+                    ((Bike) vehicle).removeBike();
+                    isOnVehicle=true;
+                    setCurrentState(AnimationRole.NULL);
+                    vehicleTexture("bike");
+                    maxSpeed=10f;
+                    vehicleType = "bike";
+                }
+                if (ve instanceof SandCar && ve.distance(this) < 3) {
+                    vehicle = (SandCar) ve;
+                    ((SandCar) vehicle).removeSandCar();
+                    isOnVehicle=true;
+                    setCurrentState(AnimationRole.NULL);
+                    vehicleTexture("sand_car");
+                    maxSpeed=10f;
+                    vehicleType = "sand_car";
+                    unlockBiome("desert");
+                }
+            }
+
+        }else{
+            if (vehicleType.equals("bike")) {
+                defaultDirectionTextures=defaultMainCharacterTextureMap;
+                isOnVehicle=false;
+                GameManager.get().getWorld().addEntity(new Bike(this.getCol(),this.getRow(),this));
+            }
+            if (vehicleType.equals("sand_car")) {
+                defaultDirectionTextures = defaultMainCharacterTextureMap;
+                isOnVehicle=false;
+                lockedBiomes.add("desert");
+                GameManager.get().getWorld().addEntity(new SandCar(this.getCol(),this.getRow(),this));
+            }
+        }
     }
 
     /**
@@ -1737,8 +1782,21 @@ public class MainCharacter extends Peon
 
         // Dead animation
         addAnimations(AnimationRole.STILL, Direction.DEFAULT,
-                new AnimationLinker("MainCharacter_Dead_E_Still", AnimationRole.STILL, Direction.DEFAULT, false, true));
-    }
+                new AnimationLinker("MainCharacter_Dead_E_Still",
+                        AnimationRole.STILL, Direction.DEFAULT, false, true));
+
+        // Add bike animation
+        addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.WEST,
+                new AnimationLinker("bikeW",
+                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.WEST, true, true));
+        addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.EAST,
+                new AnimationLinker("bikeE",
+                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.EAST, true, true));
+
+
+         }
+
+    private Map<Direction,String> defaultMainCharacterTextureMap=new HashMap<>();
 
     /**
      * Sets default direction textures uses the get index for Animation feature as
@@ -1746,16 +1804,37 @@ public class MainCharacter extends Peon
      */
     @Override
     public void setDirectionTextures() {
-        defaultDirectionTextures.put(Direction.EAST, "__ANIMATION_MainCharacterE_Anim:0");
-        defaultDirectionTextures.put(Direction.NORTH, "__ANIMATION_MainCharacterN_Anim:0");
-        defaultDirectionTextures.put(Direction.WEST, "__ANIMATION_MainCharacterW_Anim:0");
-        defaultDirectionTextures.put(Direction.SOUTH, "__ANIMATION_MainCharacterS_Anim:0");
-        defaultDirectionTextures.put(Direction.NORTH_EAST, "__ANIMATION_MainCharacterNE_Anim:0");
-        defaultDirectionTextures.put(Direction.NORTH_WEST, "__ANIMATION_MainCharacterNW_Anim:0");
-        defaultDirectionTextures.put(Direction.SOUTH_EAST, "__ANIMATION_MainCharacterSE_Anim:0");
-        defaultDirectionTextures.put(Direction.SOUTH_WEST, "__ANIMATION_MainCharacterSW_Anim:0");
+
+        defaultMainCharacterTextureMap.put(Direction.EAST, "__ANIMATION_MainCharacterE_Anim:0");
+        defaultMainCharacterTextureMap.put(Direction.NORTH, "__ANIMATION_MainCharacterN_Anim:0");
+        defaultMainCharacterTextureMap.put(Direction.WEST, "__ANIMATION_MainCharacterW_Anim:0");
+        defaultMainCharacterTextureMap.put(Direction.SOUTH, "__ANIMATION_MainCharacterS_Anim:0");
+        defaultMainCharacterTextureMap.put(Direction.NORTH_EAST, "__ANIMATION_MainCharacterNE_Anim:0");
+        defaultMainCharacterTextureMap.put(Direction.NORTH_WEST, "__ANIMATION_MainCharacterNW_Anim:0");
+        defaultMainCharacterTextureMap.put(Direction.SOUTH_EAST, "__ANIMATION_MainCharacterSE_Anim:0");
+        defaultMainCharacterTextureMap.put(Direction.SOUTH_WEST, "__ANIMATION_MainCharacterSW_Anim:0");
+        // Bike
+        vehicleDirection.put(Direction.SOUTH, "bikeSOUTH");
+        vehicleDirection.put(Direction.EAST, "bikeEAST");
+        vehicleDirection.put(Direction.NORTH, "bikeNORTH");
+        vehicleDirection.put(Direction.WEST, "bikeWEST");
+        vehicleDirection.put(Direction.NORTH_EAST, "__ANIMATION_MainCharacterNE_Anim:0");
+        vehicleDirection.put(Direction.NORTH_WEST, "__ANIMATION_MainCharacterNW_Anim:0");
+        vehicleDirection.put(Direction.SOUTH_EAST, "__ANIMATION_MainCharacterSE_Anim:0");
+        vehicleDirection.put(Direction.SOUTH_WEST, "__ANIMATION_MainCharacterSW_Anim:0");
+        // Sand Car
+        vehicleDirection2.put(Direction.NORTH, "sand_car_NORTH");
+        vehicleDirection2.put(Direction.SOUTH, "sand_car_SOUTH");
+        vehicleDirection2.put(Direction.EAST, "sand_car_EAST");
+        vehicleDirection2.put(Direction.WEST, "sand_car_WEST");
+        vehicleDirection2.put(Direction.NORTH_EAST, "sand_car_NORTHEAST");
+        vehicleDirection2.put(Direction.NORTH_WEST, "sand_car_NORTHWEST");
+        vehicleDirection2.put(Direction.SOUTH_EAST, "sand_car_SOUTHEAST");
+        vehicleDirection2.put(Direction.SOUTH_WEST, "sand_car_SOUTHWEST");
+        defaultDirectionTextures=defaultMainCharacterTextureMap;
     }
 
+    private boolean isOnVehicle=false;
     /**
      * If the animation is moving sets the animation state to be Move else NULL.
      * Also sets the direction
@@ -1765,24 +1844,30 @@ public class MainCharacter extends Peon
         List<Float> velocity = getVelocity();
 
         /* Short Animations */
-
-        if (getToBeRun() != null) {
-            if (getToBeRun().getType() == AnimationRole.DEAD) {
-                setCurrentState(AnimationRole.STILL);
-            } else if (getToBeRun().getType() == AnimationRole.ATTACK) {
-                return;
+        if(!isOnVehicle) {
+            if (getToBeRun() != null) {
+                if (getToBeRun().getType() == AnimationRole.DEAD) {
+                    setCurrentState(AnimationRole.STILL);
+                } else if (getToBeRun().getType() == AnimationRole.ATTACK) {
+                    return;
+                }
             }
-        }
 
-        if (isDead()) {
-            setCurrentState(AnimationRole.STILL);
-        } else if (isHurt) {
-            setCurrentState(AnimationRole.HURT);
-        } else {
-            if (getVelocity().get(2) == 0f) {
-                setCurrentState(AnimationRole.NULL);
+            if (isDead()) {
+                setCurrentState(AnimationRole.STILL);
+            } else if (isHurt) {
+                setCurrentState(AnimationRole.HURT);
             } else {
-                setCurrentState(AnimationRole.MOVE);
+                if (getVelocity().get(2) == 0f) {
+                    setCurrentState(AnimationRole.NULL);
+                } else {
+                    setCurrentState(AnimationRole.MOVE);
+                }
+            }
+
+        }else{
+            if (vehicleType.equals("bike")) {
+                setCurrentState(AnimationRole.VEHICLE_BIKE_MOVE);
             }
         }
     }
