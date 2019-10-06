@@ -586,7 +586,6 @@ public class MainCharacter extends Peon implements KeyDownObserver,
         //Animation control
         logger.debug("Attacking");
 
-
         setCurrentState(AnimationRole.ATTACK);
 
         //If there is a spell selected, spawn the spell.
@@ -616,8 +615,8 @@ public class MainCharacter extends Peon implements KeyDownObserver,
                 position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
                 position.getRow() + 0.5f + 1.5f * unitDirection.getRow(),
                 ((Weapon)equippedItem).getDamage(),
-                ((Weapon)equippedItem).getAttackRate(),
-                this.itemSlotSelected == 1 ? 1 : 0);
+                1,
+                this.itemSlotSelected == 1 ? (((Weapon)equippedItem).getName().equals("bow") ? 10 : 0) : 0);
 
         // Add the projectile entity to the game world.
         GameManager.get().getWorld().addEntity(projectile);
