@@ -1,9 +1,6 @@
 package deco2800.skyfall;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -17,6 +14,7 @@ import deco2800.skyfall.graphics.ShaderWrapper;
 import deco2800.skyfall.graphics.types.vec3;
 import deco2800.skyfall.handlers.KeyboardManager;
 import deco2800.skyfall.managers.*;
+import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.renderers.OverlayRenderer;
 import deco2800.skyfall.renderers.PotateCamera;
@@ -29,6 +27,7 @@ import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.applet.Main;
 
 import java.util.ArrayList;
 
@@ -101,7 +100,7 @@ public class GameScreen implements Screen, KeyDownObserver {
             world.setSave(save);
             MainCharacter.getInstance().setSave(save);
 
-            GameManager.get().getManager(NetworkManager.class).connectToHost("localhost", "duck1234");
+            gameManager.getManager(NetworkManager.class).connectToHost("localhost", "duck1234");
         } else {
             if (GameManager.get().isTutorial) {
                 world = WorldDirector.constructTutorialWorld(new WorldBuilder(), seed).getWorld();
@@ -124,7 +123,7 @@ public class GameScreen implements Screen, KeyDownObserver {
             // world.setId(0);
             // DatabaseManager.get().getDataBaseConnector().saveGame(save);
             // DatabaseManager.get().getDataBaseConnector().saveAllTables();
-            GameManager.get().getManager(NetworkManager.class).startHosting("host");
+            gameManager.getManager(NetworkManager.class).startHosting("host");
         }
 
         gameManager.setWorld(world);
@@ -136,8 +135,24 @@ public class GameScreen implements Screen, KeyDownObserver {
         this.game = game;
 
         GameManager gameManager = initializeMenuManager();
+        DataBaseConnector dbConnector = DatabaseManager.get().getDataBaseConnector();
 
-        this.save = DatabaseManager.get().getDataBaseConnector().loadGame(saveID);
+        save = dbConnector.loadGame(saveID);
+        dbConnector.loadMainCharacter(save);
+        world = save.getCurrentWorld();
+        MainCharacter mainCharacter = MainCharacter.getInstance();
+        mainCharacter.setSave(save);
+        world.addEntity(mainCharacter);
+
+        gameManager.getManager(NetworkManager.class).startHosting("host");
+
+        StatisticsManager sm = new StatisticsManager(mainCharacter);
+        GameManager.addManagerToInstance(sm);
+        GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
+        gmm.addStatsManager(sm);
+        gmm.drawAllElements();
+
+        gameManager.setWorld(world);
 
         initializeOtherManagers(gameManager);
     }
@@ -253,6 +268,19 @@ public class GameScreen implements Screen, KeyDownObserver {
         shader = new ShaderWrapper("batch");
         // add shader to rendererDebug
         rendererDebug.setShader(shader);
+
+        GameLauncher.application.addLifecycleListener(new LifecycleListener() {
+            @Override
+            public void pause() { }
+
+            @Override
+            public void resume() { }
+
+            @Override
+            public void dispose() {
+                DatabaseManager.get().getDataBaseConnector().saveGame(save);
+            }
+        });
     }
 
     /**

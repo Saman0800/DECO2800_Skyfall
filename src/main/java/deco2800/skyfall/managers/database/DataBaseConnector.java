@@ -814,7 +814,7 @@ public class DataBaseConnector {
                             worldsStatement.setLong(1, save.getSaveID());
 
                             try (ResultSet worldSet = worldsStatement.executeQuery()) {
-                                // Loop through those worlds andd add them to the save
+                                // Loop through those worlds and add them to the save
                                 while (worldSet.next()) {
                                     World world = new World(worldSet.getLong("world_id"), save);
                                     save.addWorld(world);
@@ -836,7 +836,7 @@ public class DataBaseConnector {
     private void saveTable(String tableName) {
         try {
             try (PreparedStatement ps = DatabaseManager.get().getDataBaseConnector().getConnection()
-                .prepareStatement("CALL SYSCS_UTIL.SYSCS_EXPORT_TABLE_LOBS_TO_EXTFILE(?,?,?,?,?,?, ?)")) {
+                .prepareStatement("CALL SYSCS_UTIL.SYSCS_EXPORT_TABLE_LOBS_TO_EXTFILE(?, ?, ?, ?, ?, ?, ?)")) {
                 ps.setString(1, null);
                 ps.setString(2, tableName);
                 ps.setString(3, String.format("src/test/java/deco2800/skyfall/managers/database/PrebuiltData/%s.dat",
@@ -878,7 +878,7 @@ public class DataBaseConnector {
     private void loadTable(String tableName, int dataIndex) {
         try {
             try (PreparedStatement ps = connection.prepareStatement(
-                "CALL SYSCS_UTIL.SYSCS_IMPORT_TABLE_LOBS_FROM_EXTFILE" + "(?,?,?,?,?,?," + "?)")) {
+                "CALL SYSCS_UTIL.SYSCS_IMPORT_TABLE_LOBS_FROM_EXTFILE(?, ?, ?, ?, ?, ?, ?)")) {
                 ps.setString(1, null);
                 ps.setString(2, tableName);
                 ps.setString(3, "src/test/java/deco2800/skyfall/managers/database/PrebuiltData/" + tableName + ".dat");

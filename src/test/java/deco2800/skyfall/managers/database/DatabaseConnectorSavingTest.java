@@ -1,26 +1,24 @@
 package deco2800.skyfall.managers.database;
 
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.junit.Assert.*;
-
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.worlditems.SnowShrub;
-import deco2800.skyfall.managers.DatabaseManager;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.saving.LoadException;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.saving.Save.SaveMemento;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.biomes.ForestBiome;
 import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.Chunk.ChunkMemento;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.World.WorldMemento;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
+import org.flywaydb.core.Flyway;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.mockito.Mockito;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -30,17 +28,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import org.flywaydb.core.Flyway;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 public class DatabaseConnectorSavingTest {
 
