@@ -6,10 +6,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.SkyfallGame;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gamemenu.Clock;
-
 import deco2800.skyfall.gamemenu.*;
 import deco2800.skyfall.gamemenu.popupmenu.SettingsTable;
 import deco2800.skyfall.gamemenu.popupmenu.*;
@@ -23,8 +23,9 @@ import java.util.*;
 public class GameMenuManager extends TickableManager {
 
     private static TextureManager textureManager;
-    private EnvironmentManager environmentManager;
     private Stage stage;
+    private MainCharacter mainCharacter;
+    private EnvironmentManager em;
     private InventoryManager inventory;
     private SoundManager soundManager;
     private Skin skin;
@@ -64,7 +65,7 @@ public class GameMenuManager extends TickableManager {
         inventory = GameManager.get().getManager(InventoryManager.class);
         soundManager = GameManager.get().getManager(SoundManager.class);
         questManager = GameManager.get().getManager(QuestManager.class);
-        environmentManager = GameManager.get().getManager(EnvironmentManager.class);
+        em = GameManager.get().getManager(EnvironmentManager.class);
         stage = null;
         skin = null;
         characters = new String[NUMBEROFCHARACTERS];
@@ -83,7 +84,7 @@ public class GameMenuManager extends TickableManager {
                            InventoryManager im, Stage stage, Skin skin,
                            Map<String, AbstractPopUpElement> popUps,
                            Map<String, AbstractUIElement> uiElements) {
-        GameMenuManager.updateTextureManager(tm);
+        this.updateTextureManager(tm);
         soundManager = sm;
         inventory = im;
         this.stage = stage;
@@ -92,7 +93,7 @@ public class GameMenuManager extends TickableManager {
         this.uiElements = uiElements;
     }
 
-    private static void updateTextureManager(TextureManager tm) {
+    public void updateTextureManager(TextureManager tm) {
 
         textureManager = tm;
     }
@@ -128,8 +129,9 @@ public class GameMenuManager extends TickableManager {
 
         }
 
-        for (Map.Entry<String, AbstractUIElement> key: uiElements.entrySet()) {
-            key.getValue().update();
+        for (String key: uiElements.keySet()) {
+            AbstractUIElement uiElement = uiElements.get(key);
+            uiElement.update();
         }
     }
 
@@ -216,6 +218,19 @@ public class GameMenuManager extends TickableManager {
         return new TextureRegionDrawable((new TextureRegion(textureManager.getTexture(sName))));
     }
 
+    /**
+     * Set main character of the game to be {mainCharacter}.
+     *
+     * @param mainCharacter Main character of the game.
+     */
+    public void setMainCharacter(MainCharacter mainCharacter) {
+        if (stage == null) {
+            logger.info("Please set stage before adding character");
+            return;
+        }
+        this.mainCharacter = mainCharacter;
+
+    }
 
     /**
      * Getter of main character of the game.
@@ -346,10 +361,11 @@ public class GameMenuManager extends TickableManager {
                 null, textureManager, this, questManager, skin));
 
         Map<String, AbstractUIElement> hudElements = new HashMap<>();
-        hudElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"}, textureManager, sm, skin, this));
+        hudElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"},
+                textureManager, sm, skin, this));
         hudElements.put("goldPill", new GoldStatusBar(stage, null, textureManager,  skin, this));
         hudElements.put("gameMenuBar2", new GameMenuBar2(stage, null, textureManager, skin, this));
-        hudElements.put("clock" , new Clock(stage, skin, this, environmentManager));
+        hudElements.put("clock" , new Clock(stage, skin, this, em));
 
         uiElements.put("HUD", new HeadsUpDisplay(stage, null, textureManager, skin, this, hudElements, questManager));
 
@@ -373,8 +389,8 @@ public class GameMenuManager extends TickableManager {
 
     /**
      * Element associated with key
-     * @param key Key of the entry
-     * @return Gets the specific UI element=
+     * @param key
+     * @return
      */
     public AbstractUIElement getUIElement(String key) {
         return uiElements.get(key);

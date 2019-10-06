@@ -18,9 +18,6 @@ public class Berry extends HealthResources implements Item {
     // Logger to show messages
     private final Logger logger = LoggerFactory.getLogger(Berry.class);
 
-    //whether or not the item impacts the player's food fullness
-    private boolean hasFoodEffect;
-
     /**
      * Creates a default berry item.
      */
@@ -43,15 +40,6 @@ public class Berry extends HealthResources implements Item {
      */
     public String getBiome(){
         return biome;
-    }
-
-    /**
-     * Returns whether or not the item impacts the player's food fullness
-     *
-     * @return True if the item impacts on the player's food fullness, false otherwise
-     */
-    public boolean hasFoodEffect() {
-        return hasFoodEffect;
     }
 
     @Override

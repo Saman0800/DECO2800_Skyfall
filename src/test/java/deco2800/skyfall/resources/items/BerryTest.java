@@ -49,9 +49,6 @@ public class BerryTest{
     }
 
     /**
-
-
-    /**
      * Ensure that the correct subtype "Health Resource" is returned when
      * getSubtype(); is run
      */
