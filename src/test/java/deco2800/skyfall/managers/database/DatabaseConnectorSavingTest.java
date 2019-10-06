@@ -24,6 +24,7 @@ import deco2800.skyfall.worlds.world.WorldDirector;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -152,6 +153,7 @@ public class DatabaseConnectorSavingTest {
             WorldBuilder worldBuilder = new WorldBuilder();
             WorldDirector.constructTestWorld(worldBuilder, 0);
             World world = worldBuilder.getWorld();
+            world.setId(0);
 
             Save save = new Save();
 
@@ -165,6 +167,9 @@ public class DatabaseConnectorSavingTest {
             long saveId = save.getSaveID();
 
             dbConnector.saveWorld(world);
+            World loadedWorld = dbConnector.loadWorlds(save, save.save());
+
+
 
             SaveMemento saveMemMock = Mockito.mock(SaveMemento.class);
             Save saveMock = Mockito.mock(Save.class);
@@ -172,6 +177,8 @@ public class DatabaseConnectorSavingTest {
             when(saveMemMock.getWorldID()).thenReturn(worldId);
             World worldLoaded = dbConnector.loadWorlds(saveMock, saveMemMock);
 
+            assertEquals(0, loadedWorld.getID());
+            assertEquals(0, loadedWorld.getRiverEdges().size());
             assertEquals(30, worldLoaded.getWorldParameters().getWorldSize());
             assertEquals(5, worldLoaded.getWorldParameters().getNodeSpacing());
             assertEquals(23, world.getBiomes().size());
@@ -208,6 +215,7 @@ public class DatabaseConnectorSavingTest {
 
             dbConnector.saveWorld(world);
             dbConnector.saveWorld(world);
+
 
             SaveMemento saveMemMock = Mockito.mock(SaveMemento.class);
             Save saveMock = Mockito.mock(Save.class);

@@ -41,9 +41,9 @@ public class WorldDirector {
         if (n < 1 || n > 5) {
             throw new IllegalArgumentException("n must be between 1 and 5");
         }
+        builder.addBiome(new ForestBiome(random), 25);
 
         ArrayList<AbstractBiome> choices = new ArrayList<>();
-        choices.add(new ForestBiome(random));
         choices.add(new DesertBiome(random));
         choices.add(new MountainBiome(random));
         choices.add(new VolcanicMountainsBiome(random));
@@ -51,11 +51,12 @@ public class WorldDirector {
         //choices.add(new SwampBiome(random));
         //choices.add(new SnowyMountainsBiome(random));
 
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < choices.size(); i++) {
             // builder.addBiome(choices.remove(random.nextInt(choices.size())), 40);
             // builder.addBiome(choices.remove(random.nextInt(choices.size())), 25);
             builder.addBiome(choices.remove(random.nextInt(choices.size())), 5);
         }
+
 
         builder.setWorldSize(100);
         //builder.setWorldSize(300);
