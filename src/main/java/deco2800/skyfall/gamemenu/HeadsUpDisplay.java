@@ -102,7 +102,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
         pauseT.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                hideOpened(gmm);
+                gmm.hideOpened();
                 gmm.setPopUp("pauseTable");
             }
         });
@@ -115,7 +115,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
         helpT.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                hideOpened(gmm);
+                gmm.hideOpened();
                 gmm.setPopUp("helpTable");
             }
         });
@@ -125,7 +125,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
         location.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                hideOpened(gmm);
+                gmm.hideOpened();
                 gmm.setPopUp("progressTable");
             }
         });

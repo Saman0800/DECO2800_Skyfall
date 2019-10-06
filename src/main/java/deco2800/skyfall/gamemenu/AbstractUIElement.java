@@ -68,12 +68,4 @@ public abstract class AbstractUIElement {
 
     }
 
-    /**
-     * If there is any opened popup, closes it.
-     */
-    protected void hideOpened(GameMenuManager gmm) {
-        if (gmm.getCurrentPopUp() != null) {
-            gmm.getCurrentPopUp().hide();
-        }
-    }
 }

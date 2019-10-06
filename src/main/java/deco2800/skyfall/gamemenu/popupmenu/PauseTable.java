@@ -40,7 +40,7 @@ public class PauseTable extends AbstractPopUpElement{
         super(stage, exit, textureNames,tm , gameMenuManager);
         this.skin = skin;
         this.draw();
-        bgmManager = GameManager.getManagerFromInstance(BGMManager.class);
+//        bgmManager = GameManager.getManagerFromInstance(BGMManager.class);
     }
 
     /**
@@ -74,7 +74,7 @@ public class PauseTable extends AbstractPopUpElement{
         table.setPosition(Gdx.graphics.getWidth() / 2f - table.getWidth() / 2,
                 Gdx.graphics.getHeight() / 2f - table.getHeight() / 2);
         table.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
-//        table.setDebug(true);
+        table.setDebug(false);
 
         Table infoBar = new Table();
         infoBar.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_banner"));
@@ -94,19 +94,8 @@ public class PauseTable extends AbstractPopUpElement{
         soundEffect.getStyle().font.getData().setLineHeight(40);
         table.add(soundEffect).width(110);
 
-        Slider.SliderStyle s = new Slider.SliderStyle();
-        s.background = gameMenuManager.generateTextureRegionDrawableObject("knob_after");
-        s.background.setMinHeight(50);
-        s.knob = gameMenuManager.generateTextureRegionDrawableObject("knob");
-        s.knob.setMinHeight(50);
-        s.knob.setMinWidth(50);
-        s.knobBefore = gameMenuManager.generateTextureRegionDrawableObject("knob_before");
-        s.knobBefore.setMinHeight(50);
-        s.knobAfter = gameMenuManager.generateTextureRegionDrawableObject("knob_after");
-        s.knobAfter.setMinHeight(50);
-
         // Slider controlling volume of sound effects
-        Slider soundEffectsBar = new Slider(0, 100, 1, false, s);
+        Slider soundEffectsBar = new Slider(0, 100, 1, false, skin, "default-slider");
         soundEffectsBar.setValue(100);
         soundEffectsBar.addListener(new ChangeListener() {
             @Override
@@ -121,7 +110,7 @@ public class PauseTable extends AbstractPopUpElement{
         table.add(music);
 
         // Slider controlling volume of BGM (music)
-        Slider musicBar = new Slider(0, 100, 1, false, s);
+        Slider musicBar = new Slider(0, 100, 1, false, skin, "default-slider");
         musicBar.setValue(100);
         musicBar.addListener(new ChangeListener() {
             @Override

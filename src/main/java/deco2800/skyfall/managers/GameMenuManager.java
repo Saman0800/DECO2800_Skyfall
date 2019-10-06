@@ -314,6 +314,17 @@ public class GameMenuManager extends TickableManager {
         textBluePill.fontColor = skin.getColor(whiteText);
         skin.add("blue-pill", textBluePill);
 
+        Slider.SliderStyle s = new Slider.SliderStyle();
+        s.background = generateTextureRegionDrawableObject("knob_after");
+        s.background.setMinHeight(50);
+        s.knob = generateTextureRegionDrawableObject("knob");
+        s.knob.setMinHeight(50);
+        s.knob.setMinWidth(50);
+        s.knobBefore = generateTextureRegionDrawableObject("knob_before");
+        s.knobBefore.setMinHeight(50);
+        s.knobAfter = generateTextureRegionDrawableObject("knob_after");
+        s.knobAfter.setMinHeight(50);
+        skin.add("default-slider", s);
 
         popUps.put("settingsTable", new SettingsTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject(exitText)),

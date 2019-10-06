@@ -67,7 +67,7 @@ public class GameMenuBar2 extends AbstractUIElement {
         build.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                hideOpened(gmm);
+                gmm.hideOpened();
                 gmm.setPopUp("buildingTable");
             }
         });
@@ -94,11 +94,6 @@ public class GameMenuBar2 extends AbstractUIElement {
         quickAccessPanel.setBackground(gmm.generateTextureRegionDrawableObject("quickaccess_bg"));
         quickAccessPanel.setSize(150, 490);
         setQuickAccessItems();
-        TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
-        buttonStyle.up = gmm.generateTextureRegionDrawableObject("quickaccess_button_bg");
-        buttonStyle.down = gmm.generateTextureRegionDrawableObject("quickaccess_button_bg");
-        buttonStyle.font = skin.getFont("game-font");
-        buttonStyle.fontColor = skin.getColor("navy");
 
         equipInactive = new ImageButton(gmm.generateTextureRegionDrawableObject("equip inactive"));
         equipInactive.setSize(130, 50);
@@ -156,7 +151,7 @@ public class GameMenuBar2 extends AbstractUIElement {
         sideBar.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                hideOpened(gmm);
+                gmm.hideOpened();
                 gmm.setPopUp("inventoryTable");
             }
         });
@@ -275,6 +270,14 @@ public class GameMenuBar2 extends AbstractUIElement {
         }
     }
 
+    /**
+     * Gets what is equipped right now.
+     *
+     * @return The name of the equipped item.
+     */
+    public String getEquipped() {
+        return equipped.getText().toString();
+    }
     /**
      * Sets the text in equipped table to {itemName}.
      *
