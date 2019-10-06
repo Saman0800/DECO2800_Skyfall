@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 
 import deco2800.skyfall.entities.AbstractEntity;
 
+import deco2800.skyfall.entities.ICombatEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
@@ -30,7 +31,7 @@ import java.util.TreeMap;
  *  A BuildingEntity is an base class for all building entity subclass,
  *  including basic information that a building object should contains.
  */
-public class BuildingEntity extends AbstractEntity  {
+public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     // a logger
     private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);
@@ -58,10 +59,42 @@ public class BuildingEntity extends AbstractEntity  {
     private boolean upgradable;
     private int currentHealth;
 
-
     private InventoryManager inventoryManager;
 
+    @Override
+    public void takeDamage(int damage) {
+        
+    }
 
+    @Override
+    public void dealDamage(MainCharacter mc) {
+
+    }
+
+    @Override
+    public boolean canDealDamage() {
+        return false;
+    }
+
+    @Override
+    public int getDamage() {
+        return 0;
+    }
+
+    @Override
+    public int[] getResistanceAttributes() {
+        return new int[0];
+    }
+
+    @Override
+    public int getHealth() {
+        return 0;
+    }
+
+    @Override
+    public void setHealth(int health) {
+
+    }
 
     enum AttackLevel {
         LOW,
