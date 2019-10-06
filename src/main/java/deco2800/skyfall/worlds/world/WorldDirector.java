@@ -109,10 +109,8 @@ public class WorldDirector {
         builder.addEntity(new Treeman(-2f,-3f,mainCharacter));
         builder.addEntity(new Tiger(-4f,-2f,mainCharacter));
         builder.addEntity(new Bike(-10f,-2f,mainCharacter));
-        builder.addEntity(new SandCar(-15f,-2f, mainCharacter));
+        builder.addEntity(new SandCar(-20f,-2f, mainCharacter));
 
-        builder.addEntity(new Camel(34, -7, mainCharacter));
-        builder.addEntity(new Horse(-8,-6, mainCharacter));
         return builder;
     }
 

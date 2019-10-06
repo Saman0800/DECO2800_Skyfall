@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities.vehicle;
 
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.util.HexVector;
 import org.junit.Assert;
@@ -14,6 +15,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class SandCarTest {
     private SandCar sandCar;
     private MainCharacter mc;
+    private boolean isOnUse;
 
     @Before
     public void setup() throws Exception {
@@ -67,5 +69,17 @@ public class SandCarTest {
     @Test
     public void getSubtype() {
         Assert.assertEquals(sandCar.getSubtype(), "vehicle");
+    }
+
+    /**
+     * To test distance between bike and main character
+     */
+    @Test
+    public void vehicleOnUseTest(){
+        isOnUse = true;
+        AbstractEntity ve  = sandCar;
+        if(ve.distance(ve) == 4){
+            Assert.assertEquals(isOnUse, false);
+        }
     }
 }
