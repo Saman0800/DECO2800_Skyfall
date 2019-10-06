@@ -378,6 +378,10 @@ public class TextureManager extends AbstractManager {
             textureMap.put("PoisonousMushroom_inv", new Texture("resources/items_icons/poisonous_mushroom.png"));
             textureMap.put("Hatchet", new Texture("resources/items_icons/hatchet.png"));
             textureMap.put("Pick Axe", new Texture("resources/items_icons/pickaxe.png"));
+            textureMap.put("axe_inv", new Texture("resources/items_icons/axe.png"));
+            textureMap.put("bow_inv", new Texture("resources/items_icons/bow.png"));
+            textureMap.put("sword_inv", new Texture("resources/items_icons/sword.png"));
+            textureMap.put("spear_inv", new Texture("resources/items_icons/spear.png"));
 
 
             //Items in World
@@ -405,6 +409,9 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bow_desc", new Texture("resources/items_icons/bow_desc.png"));
             textureMap.put("spear_desc", new Texture("resources/items_icons/spear_desc.png"));
             textureMap.put("sword_desc", new Texture("resources/items_icons/sword_desc.png"));
+            textureMap.put("Apple_desc", new Texture("resources/items_icons/apple_desc.png"));
+            textureMap.put("Berry_desc", new Texture("resources/items_icons/berry_desc.png"));
+            textureMap.put("Aloe_Vera_desc", new Texture("resources/items_icons/aloevera_desc.png"));
 
             //Inventory Description Panel
             textureMap.put("Description_Panel", new Texture("resources/items_icons/no_desc.png"));
