@@ -111,7 +111,6 @@ public class MainMenuScreen implements Screen {
 
         List<Save> saveInfoList = DatabaseManager.get().getDataBaseConnector().loadSaveInformation();
 
-        // TODO:Ontonator Consider changing skin style to match the design.
         loadGameWindow = new Window("", skin, LOAD_GAME_STYLE);
         loadGameWindow.setColor(Color.DARK_GRAY);
         loadGameWindow.pad(15, 10, 10, 10);
