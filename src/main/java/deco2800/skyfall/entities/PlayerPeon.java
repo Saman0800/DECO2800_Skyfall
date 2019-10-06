@@ -116,9 +116,6 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
         if (button == 1) {
             this.attack();
         }
-        else if (button == 1) {
-            this.specialAttack();
-        }
     }
 
 
