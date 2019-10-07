@@ -1,13 +1,13 @@
 package deco2800.skyfall.entities.spells;
 
 import com.badlogic.gdx.Input;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.entities.enemies.Enemy;
-import deco2800.skyfall.animation.AnimationRole;
-import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.animation.AnimationLinker;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.entities.enemies.Enemy;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.util.HexVector;
 
 import java.util.List;
 

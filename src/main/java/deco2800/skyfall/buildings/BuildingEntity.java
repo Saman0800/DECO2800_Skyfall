@@ -9,6 +9,7 @@ import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.ICombatEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.Projectile;
+import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
@@ -40,7 +41,7 @@ import static deco2800.skyfall.entities.MainCharacter.*;
 public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     // a logger
-    private final Logger log = LoggerFactory.getLogger(BuildingEntity.class);
+    private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);
     // a building object name
     private static final String ENTITY_ID_STRING = "buildingEntityID";
     private Collider collider;
@@ -91,7 +92,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     @Override
     public void dealDamage(MainCharacter mc) {
-        // not needed
+
     }
 
     @Override
@@ -100,7 +101,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
     }
 
     @Override
-    public int getStrength() {
+    public int getDamage() {
         switch (buildingType) {
             case CABIN:
                 return 0;
@@ -591,7 +592,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
                 SoundManager.playSound(AXEATTACK);
                 break;
             default:
-                SoundManager.playSound("player_hurt");
+                SoundManager.playSound(HURT_SOUND_NAME);
                 break;
         }
 
