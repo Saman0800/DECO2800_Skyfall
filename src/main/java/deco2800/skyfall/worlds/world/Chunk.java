@@ -158,9 +158,12 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
         neighbouringChunks.removeIf(Objects::isNull);
         for (Chunk chunk : neighbouringChunks) {
             for (Tile tile : chunk.tiles) {
-                columnMap = tileMap.getOrDefault((int) tile.getCol() * 2, new HashMap<>());
-                columnMap.put((int) (tile.getRow() * 2), tile);
-                tileMap.put((int) (tile.getCol() * 2), columnMap);
+                if (tile.getCol() >= x * CHUNK_SIDE_LENGTH - 2 && tile.getCol() <= x * CHUNK_SIDE_LENGTH + 1 &&
+                        tile.getRow() >= y * CHUNK_SIDE_LENGTH - 2 && tile.getRow() <= y * CHUNK_SIDE_LENGTH + 1) {
+                    columnMap = tileMap.getOrDefault((int) tile.getCol() * 2, new HashMap<>());
+                    columnMap.put((int) (tile.getRow() * 2), tile);
+                    tileMap.put((int) (tile.getCol() * 2), columnMap);
+                }
             }
         }
 
@@ -173,13 +176,11 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
                 // North West
                 if (tileMap.get(col - 2).containsKey(row + 1)) {
                     tile.addNeighbour(Tile.NORTH_WEST, tileMap.get(col - 2).get(row + 1));
-                    tileMap.get(col - 2).get(row + 1).addNeighbour(Tile.SOUTH_EAST, tile);
                 }
 
                 // South West
                 if (tileMap.get(col - 2).containsKey(row - 1)) {
                     tile.addNeighbour(Tile.SOUTH_WEST, tileMap.get(col - 2).get(row - 1));
-                    tileMap.get(col - 2).get(row - 1).addNeighbour(Tile.NORTH_EAST, tile);
                 }
             }
 
@@ -188,13 +189,11 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
                 // North
                 if (tileMap.get(col).containsKey(row + 2)) {
                     tile.addNeighbour(Tile.NORTH, tileMap.get(col).get(row + 2));
-                    tileMap.get(col).get(row + 2).addNeighbour(Tile.SOUTH, tile);
                 }
 
                 // South
                 if (tileMap.get(col).containsKey(row - 2)) {
                     tile.addNeighbour(Tile.SOUTH, tileMap.get(col).get(row - 2));
-                    tileMap.get(col).get(row - 2).addNeighbour(Tile.NORTH, tile);
                 }
             }
 
@@ -203,13 +202,11 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
                 // North East
                 if (tileMap.get(col + 2).containsKey(row + 1)) {
                     tile.addNeighbour(Tile.NORTH_EAST, tileMap.get(col + 2).get(row + 1));
-                    tileMap.get(col + 2).get(row + 1).addNeighbour(Tile.SOUTH_WEST, tile);
                 }
 
                 // South East
                 if (tileMap.get(col + 2).containsKey(row - 1)) {
                     tile.addNeighbour(Tile.SOUTH_EAST, tileMap.get(col + 2).get(row - 1));
-                    tileMap.get(col + 2).get(row - 1).addNeighbour(Tile.NORTH_WEST, tile);
                 }
             }
         }

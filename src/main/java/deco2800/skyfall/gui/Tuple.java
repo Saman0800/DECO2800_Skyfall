@@ -1,13 +1,11 @@
 package deco2800.skyfall.gui;
 
-import java.io.Serializable;
-
 /**
  * Class to store positions for inventory items.
  * Uses builder prototype so can chain calls
  * i.e. Tuple.setX(1).setY(2)
  */
-public class Tuple implements Serializable {
+public class Tuple {
     private int x;
     private int y;
 

@@ -20,7 +20,7 @@ public class InputManager extends AbstractManager implements InputProcessor {
 
 	private ArrayList<TouchUpObserver> touchUpListeners = new ArrayList<>();
 
-	private ArrayList<TouchDraggedObserver> touchDraggedListeners = new ArrayList<>();
+	private ArrayList<TouchDraggedObserver> touchDragegdListeners = new ArrayList<>();
 
 	private ArrayList<MouseMovedObserver> mouseMovedListeners = new ArrayList<>();
 
@@ -97,7 +97,7 @@ public class InputManager extends AbstractManager implements InputProcessor {
 	 * @param observer the observer to add
 	 */
 	public void addTouchDraggedListener(TouchDraggedObserver observer) {
-		touchDraggedListeners.add(observer);
+		touchDragegdListeners.add(observer);
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class InputManager extends AbstractManager implements InputProcessor {
 	 * @param observer the observer to remove
 	 */
 	public void removeTouchDraggedListener(TouchDraggedObserver observer) {
-		touchDraggedListeners.remove(observer);
+		touchDragegdListeners.remove(observer);
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class InputManager extends AbstractManager implements InputProcessor {
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		for (TouchDraggedObserver observer : touchDraggedListeners) {
+		for (TouchDraggedObserver observer : touchDragegdListeners) {
 			observer.notifyTouchDragged(screenX, screenY, pointer);
 		}
 		return true;
