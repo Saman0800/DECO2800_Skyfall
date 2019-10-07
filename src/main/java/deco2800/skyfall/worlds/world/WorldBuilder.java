@@ -206,29 +206,32 @@ public class WorldBuilder implements WorldBuilderInterface {
         for (AbstractBiome biome : world.getBiomes()) {
             ArrayList<EntitySpawnRule> biomeSpawnRules = new ArrayList<>();
             switch (biome.getBiomeName()) {
-            case "forest":
-                generateForestEntities(biomeSpawnRules, random, world);
-                break;
-            case "mountain":
-                generateMountainEntities(biomeSpawnRules, random, world);
-                break;
-            case "desert":
-                generateDesertEntities(biomeSpawnRules, random, world);
-                break;
-            case "snowy_mountains":
-                generateSnowyMountainsEntities(biomeSpawnRules, random, world);
-                break;
-            case "volcanic_mountains":
-                generateVolcanicMountainsEntities(biomeSpawnRules, random, world);
-                break;
-            case "swamp":
-                generateSwampEntities(biomeSpawnRules, random, world);
-                break;
-            case "ocean":
-                generateOceanEntities(biomeSpawnRules, random, world);
-                break;
-            default:
-                break;
+                case "forest":
+                    generateForestEntities(biomeSpawnRules, random, world);
+                    break;
+
+                case "mountain":
+                    generateMountainEntities(biomeSpawnRules, random, world);
+                    break;
+
+                case "desert":
+                    generateDesertEntities(biomeSpawnRules, random, world);
+                    break;
+
+                case "snowy_mountains":
+                    generateSnowyMountainsEntities(biomeSpawnRules, random, world);
+                    break;
+
+                case "volcanic_mountains":
+                    generateVolcanicMountainsEntities(biomeSpawnRules, random, world);
+                    break;
+
+                case "swamp":
+                    generateSwampEntities(biomeSpawnRules, random, world);
+                    break;
+                default:
+                    break;
+
             }
             spawnRules.put(biome, biomeSpawnRules);
         }
@@ -236,10 +239,6 @@ public class WorldBuilder implements WorldBuilderInterface {
         return spawnRules;
     }
 
-    private void generateOceanEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
-        EntitySpawnRule shipwrecks = new EntitySpawnRule(tile -> new Shipwrecks(tile, true), random.nextInt(), 0.003);
-        biomeSpawnRules.add(shipwrecks);
-    }
     private void generateForestEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
 
         long worldSeed = world.getSeed();
@@ -365,18 +364,6 @@ public class WorldBuilder implements WorldBuilderInterface {
         EntitySpawnRule dRockRule = new EntitySpawnRule(tile -> new DesertRock(tile, true), random.nextInt(), 0.01);
         biomeSpawnRules.add(dRockRule);
 
-        // Spawn desert environment
-        EntitySpawnRule DesertEnvironment = new EntitySpawnRule(tile -> new DesertEnvironment(tile, true), random.nextInt(), 0.01);
-        biomeSpawnRules.add(DesertEnvironment);
-
-        //Spawn ruined robot
-        EntitySpawnRule ruinedRobot = new EntitySpawnRule(tile -> new ruinedRobot(tile, true), random.nextInt(), 0.01);
-        biomeSpawnRules.add(ruinedRobot);
-
-        //Spawn ruined city
-        EntitySpawnRule ruinedCity = new EntitySpawnRule(tile -> new ruinedCity(tile, true), random.nextInt(), 0.01);
-        biomeSpawnRules.add(ruinedCity);
-
         return;
     }
 
@@ -405,7 +392,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(sSnowRule);
 
         // Spawn some Snow Shrubs uniformly
-        EntitySpawnRule snowShrubRule = new EntitySpawnRule(tile -> new SnowShrub(tile, true), random.nextInt(), 0.0);
+        EntitySpawnRule snowShrubRule = new EntitySpawnRule(tile -> new SnowShrub(tile, true), random.nextInt(), 0.03);
         biomeSpawnRules.add(snowShrubRule);
 
         return;

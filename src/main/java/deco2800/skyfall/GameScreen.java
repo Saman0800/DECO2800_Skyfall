@@ -25,8 +25,6 @@ import deco2800.skyfall.renderers.Renderer3D;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.util.lightinghelpers.*;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.packing.BirthPlacePacking;
-import deco2800.skyfall.worlds.packing.EnvironmentPacker;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
@@ -127,9 +125,6 @@ public class GameScreen implements Screen, KeyDownObserver {
 
                 // Creating the world
                 world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 4, true).getWorld();
-                EnvironmentPacker packer = new EnvironmentPacker(world);
-                packer.addPackingComponent(new BirthPlacePacking(packer));
-                packer.doPackings();
                 save.getWorlds().add(world);
                 save.setCurrentWorld(world);
                 world.setSave(save);
