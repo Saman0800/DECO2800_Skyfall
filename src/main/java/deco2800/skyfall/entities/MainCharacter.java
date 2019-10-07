@@ -45,10 +45,9 @@ import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.entities.spells.SpellCaster;
 import deco2800.skyfall.entities.spells.SpellFactory;
+import static deco2800.skyfall.buildings.BuildingType.*;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.entities.vehicle.AbstractVehicle;
-
-import static deco2800.skyfall.buildings.BuildingType.*;
 
 /**
  * Main character in the game
@@ -58,7 +57,6 @@ public class MainCharacter extends Peon
 
     private static MainCharacter mainCharacterInstance = null;
     private boolean residualFromPopUp = false;
-
 
     /**
      * Removes the stored main character instance so that the next call to any of the {@code getInstance} methods will
