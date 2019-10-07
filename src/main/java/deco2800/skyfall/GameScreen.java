@@ -164,7 +164,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         gameManager.addManager(new InventoryManager());
 
         /* Add construction manager to game manager */
-        gameManager.addManager(new ConstructionManager());
+        //gameManager.addManager(new ConstructionManager());
 
         /* Add environment to game manager */
         EnvironmentManager gameEnvironManag = gameManager.getManager(EnvironmentManager.class);
