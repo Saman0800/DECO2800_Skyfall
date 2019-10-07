@@ -56,7 +56,7 @@ public class ConstructionManagerTest {
         this.gm = GameManager.get();
         this.cmgr = new ConstructionManager();
         wb = new WorldBuilder();
-        WorldDirector.constructTestWorld(wb);
+        WorldDirector.constructTestWorld(wb, 0);
         gm.setWorld(wb.getWorld());
     }
 

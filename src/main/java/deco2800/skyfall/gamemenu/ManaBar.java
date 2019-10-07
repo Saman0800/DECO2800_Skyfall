@@ -1,4 +1,6 @@
-package deco2800.skyfall.gui;
+package deco2800.skyfall.gamemenu;
+
+import deco2800.skyfall.gamemenu.StatBar;
 
 /**
  * This should be used by the MainCharacter class, and only called when damage is taken in order to update it.
@@ -20,9 +22,7 @@ public class ManaBar extends StatBar {
     protected void updateInnerCircle(int newValue) {
 
         if (smallerCircle == null) {
-            System.out.println("Smaller circle is null");
             if (biggerCircle == null) {
-                System.out.println("Bigger circle is null");
                 return;
             }
             return;

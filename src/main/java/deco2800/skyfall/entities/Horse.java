@@ -1,10 +1,10 @@
 package deco2800.skyfall.entities;
 
-
+import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 public class Horse extends VehicleEntity {
 
@@ -27,6 +27,8 @@ public class Horse extends VehicleEntity {
         this.setHeight(1);
         this.setAvailable(available);
         this.setHealth(HEALTH);
+        this.setDirectionTextures();
+        this.configureAnimations();
     }
 
     public String getBiome() {
@@ -64,5 +66,20 @@ public class Horse extends VehicleEntity {
         return this.moving;
     }
 
+    /**
+     * Sets the animations.
+     */
 
+    public void configureAnimations() {
+
+        // Walk animation
+        addAnimations(AnimationRole.MOVE, Direction.DEFAULT,
+                new AnimationLinker("tigerFront",
+                        AnimationRole.MOVE, Direction.DEFAULT, true, true));
+    }
+
+    public void setDirectionTextures() {
+
+
+    }
 }

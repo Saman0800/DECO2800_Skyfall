@@ -27,6 +27,7 @@ import deco2800.skyfall.entities.worlditems.VolcanicRock;
 import deco2800.skyfall.entities.worlditems.VolcanicShrub;
 import deco2800.skyfall.entities.worlditems.VolcanicTree;
 import deco2800.skyfall.managers.DatabaseManager;
+import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.saving.DatabaseException;
 import deco2800.skyfall.saving.LoadException;
 import deco2800.skyfall.saving.RunTimeLoadException;
@@ -66,7 +67,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.derby.impl.jdbc.LOBInputStream;
 import org.apache.derby.jdbc.EmbeddedDriver;
 import org.flywaydb.core.Flyway;
 
@@ -136,15 +136,11 @@ public class DataBaseConnector {
                 insertQueries.insertSave(saveId, save.save());
             }
 
+            saveMainCharacter();
             // Looping through the worlds in the save and saving them
             for (World world : save.getWorlds()) {
                 saveWorld(world);
             }
-
-            // fixme:jeffvan12 should probably work on this
-
-            // TODO implement saving the main character
-            // saveMainCharacter(save.getMainCharacter());
         } catch (SQLException | IOException e) {
             throw new RunTimeSaveException("Failed to save the game ", e);
         }
@@ -181,7 +177,7 @@ public class DataBaseConnector {
         for (WorldGenNode worldGenNode : world.getWorldGenNodes()) {
             if (containsQueries.containsNode(world.getID(), worldGenNode.getX(), worldGenNode.getY())) {
                 updateQueries.updateNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(), worldGenNode.save(),
-                    worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
+                        worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
             } else {
                 insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(), worldGenNode.save(),
                     worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
@@ -216,19 +212,19 @@ public class DataBaseConnector {
     }
 
     // TODO:dannathan Fix or remove this.
-    public void saveMainCharacter(MainCharacter character) throws SQLException {
+    public void saveMainCharacter() throws SQLException {
         try {
             ContainsDataQueries containsQueries = new ContainsDataQueries(connection);
             InsertDataQueries insertQueries = new InsertDataQueries(connection);
             UpdateDataQueries updateQueries = new UpdateDataQueries(connection);
 
-            if (containsQueries.containsMainCharacter(character.getID(),
-                character.getSave().getSaveID())) {
-                updateQueries.updateMainCharacter(character.getID(),
-                    character.getSave().getSaveID(), character.save());
+            if (containsQueries.containsMainCharacter(MainCharacter.getInstance().getID(),
+                MainCharacter.getInstance().getSave().getSaveID())) {
+                updateQueries.updateMainCharacter(MainCharacter.getInstance().getID(),
+                    MainCharacter.getInstance().getSave().getSaveID(), MainCharacter.getInstance().save());
             } else {
-                insertQueries.insertMainCharacter(character.getID(),
-                    character.getSave().getSaveID(), character.save());
+                insertQueries.insertMainCharacter(MainCharacter.getInstance().getID(),
+                    MainCharacter.getInstance().getSave().getSaveID(), MainCharacter.getInstance().save());
             }
         } catch (IOException e) {
             throw new RunTimeSaveException("Unable to save the main character to the database", e);
@@ -277,34 +273,33 @@ public class DataBaseConnector {
      *
      * @return loads the most recent save
      */
-    public Save loadGame() {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM SAVES");
-            ResultSet result = preparedStatement.executeQuery()) {
-            connection.setAutoCommit(false);
-            // fixme:jeffvan12 sort this out
+    public Save loadGame(long saveId) {
 
-            // TODO:dannathan make this work for any savefile, not just the most recent
-            // preparedStatement = connection.prepareStatement("SELECT * FROM SAVES");
-            // result = preparedStatement.executeQuery();
-            if (!result.next()) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM SAVES WHERE save_id = "
+            + "?")) {
+            preparedStatement.setLong(1, saveId);
+            long saveID;
+            byte[] buffer;
+            try (ResultSet result = preparedStatement.executeQuery()) {
+                connection.setAutoCommit(false);
+                // fixme:jeffvan12 sort this out
+
+                if (!result.next()) {
+                    connection.setAutoCommit(true);
+                    throw new SQLException();
+                }
+
+                saveID = result.getLong("save_id");
                 connection.setAutoCommit(true);
-                throw new SQLException();
+
+                buffer = result.getBytes("data");
             }
-
-            long saveID = result.getLong("save_id");
-            connection.setAutoCommit(true);
-
-            byte[] buffer = result.getBytes("data");
             ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(buffer));
             SaveMemento memento = (SaveMemento) objectIn.readObject();
 
             Save save = new Save(memento);
-            // TODO impelement loading the main character
-            // loadMainCharacter(save);
-            World currentWorld = loadWorlds(save, memento);
+            World currentWorld = loadWorlds(save);
             save.setCurrentWorld(currentWorld);
-            // FIXME:dannathan Probably should turn this back on
-            // currentWorld.addEntity(MainCharacter.getInstance());
             save.setSaveID(saveID);
 
             return save;
@@ -313,10 +308,9 @@ public class DataBaseConnector {
         }
     }
 
-    // TODO:dannathan
-    public void loadMainCharacter(Save save) throws SQLException, LoadException {
+    public void loadMainCharacter(Save save) {
         try (PreparedStatement preparedStatement = connection
-            .prepareStatement("SELECT * FROM MAIN_CHARACTER WHERE save_id = ?" )) {
+            .prepareStatement("SELECT * FROM MAIN_CHARACTER WHERE save_id = ?")) {
             preparedStatement.setLong(1, save.getSaveID());
             try (ResultSet result = preparedStatement.executeQuery()) {
                 if (!result.next()) {
@@ -327,12 +321,16 @@ public class DataBaseConnector {
                 byte[] buffer = result.getBytes("data");
                 ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(buffer));
                 MainCharacterMemento memento = (MainCharacterMemento) objectIn.readObject();
+                MainCharacter.resetInstance();
                 MainCharacter.loadMainCharacter(memento, save);
+
                 connection.setAutoCommit(true);
+
+
             }
 
-        } catch (IOException |  ClassNotFoundException e){
-            throw new LoadException("Unable to load main character", e);
+        } catch (IOException | ClassNotFoundException | SQLException | LoadException e) {
+            throw new RunTimeLoadException("Unable to load main character", e);
         }
 
     }
@@ -341,10 +339,9 @@ public class DataBaseConnector {
      * Loads the world of a save
      *
      * @param save        the save to load from
-     * @param saveMemento the memento of the save
      * @return the save's current world
      */
-    public World loadWorlds(Save save, Save.SaveMemento saveMemento) {
+    public World loadWorlds(Save save) {
         try {
             connection.setAutoCommit(false);
             World currentWorld;
@@ -363,8 +360,8 @@ public class DataBaseConnector {
                     do {
                         boolean isCurrentWorld = result.getBoolean("is_current_world");
                         long worldID = result.getLong("world_id");
-                        if (!isCurrentWorld && saveMemento.getWorldID() == worldID
-                            || isCurrentWorld && saveMemento.getWorldID() != worldID) {
+                        if (!isCurrentWorld && save.getCurrentWorldId() == worldID
+                            || isCurrentWorld && save.getCurrentWorldId() != worldID) {
                             throw new LoadException();
                         }
 
@@ -772,6 +769,8 @@ public class DataBaseConnector {
                 return new VolcanicRock(entityMemento);
             case "VolcanicTree":
                 return new VolcanicTree(entityMemento);
+            case "GoldPiece":
+                return new GoldPiece(entityMemento);
             default:
                 throw new LoadException(
                     String.format("Could not create %s from memento", entityMemento.getEntityType()));
@@ -815,7 +814,7 @@ public class DataBaseConnector {
                             worldsStatement.setLong(1, save.getSaveID());
 
                             try (ResultSet worldSet = worldsStatement.executeQuery()) {
-                                // Loop through those worlds andd add them to the save
+                                // Loop through those worlds and add them to the save
                                 while (worldSet.next()) {
                                     World world = new World(worldSet.getLong("world_id"), save);
                                     save.addWorld(world);
@@ -837,7 +836,7 @@ public class DataBaseConnector {
     private void saveTable(String tableName) {
         try {
             try (PreparedStatement ps = DatabaseManager.get().getDataBaseConnector().getConnection()
-                .prepareStatement("CALL SYSCS_UTIL.SYSCS_EXPORT_TABLE_LOBS_TO_EXTFILE(?,?,?,?,?,?, ?)")) {
+                .prepareStatement("CALL SYSCS_UTIL.SYSCS_EXPORT_TABLE_LOBS_TO_EXTFILE(?, ?, ?, ?, ?, ?, ?)")) {
                 ps.setString(1, null);
                 ps.setString(2, tableName);
                 ps.setString(3, String.format("src/test/java/deco2800/skyfall/managers/database/PrebuiltData/%s.dat",
@@ -856,6 +855,7 @@ public class DataBaseConnector {
 
     public void saveAllTables() {
         saveTable("SAVES");
+        saveTable("MAIN_CHARACTER");
         saveTable("WORLDS");
         saveTable("BIOMES");
         saveTable("NODES");
@@ -866,6 +866,7 @@ public class DataBaseConnector {
 
     public void loadAllTables() {
         loadTable("SAVES", 1);
+        loadTable("MAIN_CHARACTER", 2);
         loadTable("WORLDS", 3);
         loadTable("BIOMES", 3);
         loadTable("NODES", 4);
@@ -877,7 +878,7 @@ public class DataBaseConnector {
     private void loadTable(String tableName, int dataIndex) {
         try {
             try (PreparedStatement ps = connection.prepareStatement(
-                "CALL SYSCS_UTIL.SYSCS_IMPORT_TABLE_LOBS_FROM_EXTFILE" + "(?,?,?,?,?,?," + "?)")) {
+                "CALL SYSCS_UTIL.SYSCS_IMPORT_TABLE_LOBS_FROM_EXTFILE(?, ?, ?, ?, ?, ?, ?)")) {
                 ps.setString(1, null);
                 ps.setString(2, tableName);
                 ps.setString(3, "src/test/java/deco2800/skyfall/managers/database/PrebuiltData/" + tableName + ".dat");

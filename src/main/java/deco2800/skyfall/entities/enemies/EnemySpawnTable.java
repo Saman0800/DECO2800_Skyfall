@@ -17,6 +17,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.badlogic.gdx.utils.Array;
+
 public class EnemySpawnTable implements TimeObserver {
 
     /**
@@ -166,6 +168,39 @@ public class EnemySpawnTable implements TimeObserver {
         return;
     }
 
+    /**
+     * Separates tiles into different lists based on the biome the tile was from.
+     */
+    public static Map<String, List<Tile>> partitonTiles(World gameWorld) {
+
+        // Create the new hashmap that will contain all the tiles
+        Map<String, List<Tile>> partitionedTiles = new HashMap<>();
+
+        for (Chunk chunk : gameWorld.getLoadedChunks().values()) {
+            for (Tile tile : chunk.getTiles()) {
+                // Try to get the list that curresponds to the current tile's
+                // biome string
+                List<Tile> tileBiomeList = partitionedTiles.get(tile.getBiome().getBiomeName());
+
+                if (tileBiomeList == null) {
+                    // A list for this biome does not exist yet
+                    List<Tile> newBiomeList = new ArrayList<>();
+                    newBiomeList.add(tile);
+                    partitionedTiles.put(tile.getBiome().getBiomeName(), newBiomeList);
+                    continue;
+                }
+
+                tileBiomeList.add(tile);
+            }
+        }
+
+        return partitionedTiles;
+    }
+
+    /**
+     * Spawns the enemies into the world under the conditions specified by input
+     * parameters.
+     */
     private void spawnEnemies() {
 
         // Find how many enemies are within range of the maincharacter
@@ -175,67 +210,72 @@ public class EnemySpawnTable implements TimeObserver {
             return;
         }
 
-        // Get all the tiles within the current chunk
-        List<Tile> chunkTiles = new ArrayList<>();
+        Map<String, List<Tile>> partitionedTiles = partitonTiles(world);
 
-        for (Chunk chunk : world.getLoadedChunks().values()) {
-            for (Tile tile : chunk.getTiles()) {
-                chunkTiles.add(tile);
-            }
-        }
+        for (String biomeName : biomeToConstructor.keySet()) {
 
-        // Shuffle the tile list
-        Collections.shuffle(chunkTiles);
+            // Get all the tiles within the current chunk
+            List<Tile> chunkTiles = partitionedTiles.get(biomeName);
 
-        Iterator<Tile> tileIter = chunkTiles.iterator();
-
-        int enemiesPlaced = 0;
-        Tile nextTile = null;
-        Random rand = new Random();
-
-        while (tileIter.hasNext() && (enemiesPlaced <= numberToSpawn)) {
-
-            nextTile = tileIter.next();
-
-            if (nextTile.isObstructed()) {
+            if (chunkTiles == null || chunkTiles.size() == 0) {
                 continue;
             }
 
-            // Check if the tile is in sight of the player
-            float[] tileWorldCord = WorldUtil.colRowToWorldCords(nextTile.getCol(), nextTile.getRow());
+            // Shuffle the tile list
+            Collections.shuffle(chunkTiles);
 
-            if (!WorldUtil.areCoordinatesOffScreen(tileWorldCord[0], tileWorldCord[1], GameManager.get().getCamera())) {
-                continue;
-            }
+            Iterator<Tile> tileIter = chunkTiles.iterator();
 
-            // Create an enemy using one of the appropriate constructors
-            List<Class<?>> possibleConstructors = biomeToConstructor.get(nextTile.getBiome().getBiomeName());
+            int enemiesPlaced = 0;
+            Tile nextTile = null;
+            Random rand = new Random();
 
-            if ((possibleConstructors == null) || (possibleConstructors.size() == 0)) {
-                // There are no suitable enemies to spawn on this tile
-                continue;
-            }
+            while (tileIter.hasNext() && (enemiesPlaced <= numberToSpawn)) {
 
-            // Get the chance to spawn the enemy using the provided lambda function
-            double spawnChance = probAdjFunc.apply(environManager);
+                nextTile = tileIter.next();
 
-            // Find all the enemies within close proximity to this tile and adjust the
-            // spawning chance accordingly
-            spawnChance = Math.pow(spawnChance, Math.log(enemiesNearTargetCount(nextTile.getRow(), nextTile.getCol())));
-
-            // Pick a class, any class!
-            Class<?> randEnemyType = possibleConstructors.get(rand.nextInt(possibleConstructors.size()));
-
-            try {
-                Object newEnemy = randEnemyType.getDeclaredConstructor(Float.class, Float.class)
-                        .newInstance(nextTile.getRow(), nextTile.getCol());
-
-                if (newEnemy instanceof AbstractEnemy) {
-                    world.addEntity((AbstractEnemy) newEnemy);
-                    enemiesPlaced += 1;
+                if (nextTile.isObstructed()) {
+                    continue;
                 }
-            } catch (Exception E) {
-                System.err.println("Could not create new AbstractEnemy: " + E.toString());
+
+                // Check if the tile is in sight of the player
+                float[] tileWorldCord = WorldUtil.colRowToWorldCords(nextTile.getCol(), nextTile.getRow());
+
+                if (!WorldUtil.areCoordinatesOffScreen(tileWorldCord[0], tileWorldCord[1],
+                        GameManager.get().getCamera())) {
+                    continue;
+                }
+
+                // Create an enemy using one of the appropriate constructors
+                List<Class<?>> possibleConstructors = biomeToConstructor.get(nextTile.getBiome().getBiomeName());
+
+                if ((possibleConstructors == null) || (possibleConstructors.size() == 0)) {
+                    // There are no suitable enemies to spawn on this tile
+                    continue;
+                }
+
+                // Get the chance to spawn the enemy using the provided lambda function
+                double spawnChance = probAdjFunc.apply(environManager);
+
+                // Find all the enemies within close proximity to this tile and adjust the
+                // spawning chance accordingly
+                spawnChance = Math.pow(spawnChance,
+                        Math.log(enemiesNearTargetCount(nextTile.getRow(), nextTile.getCol())));
+
+                // Pick a class, any class!
+                Class<?> randEnemyType = possibleConstructors.get(rand.nextInt(possibleConstructors.size()));
+
+                try {
+                    Object newEnemy = randEnemyType.getDeclaredConstructor(Float.class, Float.class)
+                            .newInstance(nextTile.getRow(), nextTile.getCol());
+
+                    if (newEnemy instanceof AbstractEnemy) {
+                        world.addEntity((AbstractEnemy) newEnemy);
+                        enemiesPlaced += 1;
+                    }
+                } catch (Exception E) {
+                    System.err.println("Could not create new AbstractEnemy: " + E.toString());
+                }
             }
         }
     }

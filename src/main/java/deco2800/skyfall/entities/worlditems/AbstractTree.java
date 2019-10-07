@@ -97,6 +97,11 @@ public abstract class AbstractTree extends StaticEntity implements Tickable, Har
         result = (result + super.getCol()) * prime;
         result = (result + super.getRow()) * prime;
         result = (result + super.getHeight()) * prime;
+
+        if (!isObstructed()) {
+            result *= -1;
+        }
+
         return (int) result;
     }
 

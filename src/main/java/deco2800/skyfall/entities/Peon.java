@@ -55,21 +55,22 @@ public abstract class Peon extends AgentEntity implements Tickable {
 			setName(name);
 		}
 
-		if (health <= 0){
-			this.health = 10;
-			this.maxHealth = 10;
+		if (health < 1){
+			this.health = 50;
+			this.maxHealth = 50;
 		} else {
 			this.health = health;
 			this.maxHealth = health;
 		}
-		logger.info(name + " has " + maxHealth);
+		String info = String.format("%s has %d", name, maxHealth);
+		logger.info(info);
 		this.deaths = 0;
 	}
 
 	@SuppressWarnings("WeakerAccess")
 	public Peon(float row, float col, float speed, String name, int health,
 				String fixtureDef) {
-		super(row, col, 3, speed, fixtureDef);
+		super(col, row, 3, speed, fixtureDef);
 		this.setTexture(CHARACTER);
 
 		if (name == null || name.equals("")) {
@@ -79,7 +80,7 @@ public abstract class Peon extends AgentEntity implements Tickable {
 		}
 
 		if (health <= 0){
-			this.health = 10;
+			this.health = 50;
 		} else {
 			this.health = health;
 		}
@@ -108,18 +109,21 @@ public abstract class Peon extends AgentEntity implements Tickable {
 	 * @param amount change being made to player's health
 	 */
 	public void changeHealth(int amount) {
+		// Current health equals player's current health
 		int currentHealth = this.getHealth();
 
-		if(currentHealth + amount > maxHealth) {
-			this.health = maxHealth;
-		} else {
-			this.health += amount;
+		// Change current health if it is greater than max health
+		if(currentHealth > maxHealth) {
+			currentHealth = maxHealth;
 		}
-		if (this instanceof MainCharacter && this.isDead()) {
-			this.health = currentHealth;
-			this.deaths += 1;
-		} else if (this.isDead()){
-			this.health = 0;
+
+		// Add health to current health
+		currentHealth += amount;
+		this.health = currentHealth;
+
+		// Check if player is dead
+		if (this.isDead()) {
+			health = 0;
 			this.deaths += 1;
 		}
 	}
@@ -129,7 +133,7 @@ public abstract class Peon extends AgentEntity implements Tickable {
 	 * @return health of character
 	 */
 	public int getHealth() {
-		return health;
+		return this.health;
 	}
 
 	/**
@@ -151,16 +155,13 @@ public abstract class Peon extends AgentEntity implements Tickable {
 	 * @return true if character's health is less than or equal to 0, else false
 	 */
 	public boolean isDead() {
-		return this.getHealth() <= 0;
+		return this.getHealth() < 1;
 	}
 
 	/**
 	 * Sets character to be dead
 	 */
 	public boolean setDead(boolean isDead) {
-		if (isDead) {
-			health = 0;
-		}
 		return isDead;
 	}
 

@@ -1,26 +1,29 @@
 package deco2800.skyfall.resources;
 
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.util.HexVector;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * An abstract class representing a Manufactured Resource item.
  */
-public abstract class ManufacturedResources implements Item, Blueprint {
+public abstract class ManufacturedResources extends AbstractEntity implements Item, Blueprint, Serializable {
 
     // the name of the item e.g. Hatchet, Pick Axe
-    public String name;
+    protected String name;
 
     // can the item be stored in the inventory
     protected boolean carryable;
 
     // the name of the subtype the item belongs to
-    public String subtype;
+    protected String subtype;
+
 
     // the co-ordinates of the tile the item has been placed on
-    public HexVector position;
+    protected HexVector position;
 
     // an AngnetEntity instance representing the owner of the resource.
     protected MainCharacter owner;
@@ -199,6 +202,12 @@ public abstract class ManufacturedResources implements Item, Blueprint {
     public boolean isUsable() {
         return this.getDurability() > 0;
     }
+
+    @Override
+    public void onTick(long i) {
+        // Auto-generated method stub
+    }
+
 }
 
 
