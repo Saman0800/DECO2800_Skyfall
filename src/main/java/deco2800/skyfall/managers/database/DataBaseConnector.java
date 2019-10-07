@@ -732,7 +732,7 @@ public class DataBaseConnector {
             case "ruinedCity":
                 return new ruinedCity(entityMemento);
             default:
-                throw new LoadException(String.format("Could not create %s from memento", entityMemento.entityType));
+                throw new LoadException(String.format("Could not create %s from memento", entityMemento));
         }
     }
 
