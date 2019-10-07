@@ -65,7 +65,6 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
     private int level;
     private boolean upgradable;
     private int currentHealth;
-    private Enemy.EnemyType enemy;
 
     private InventoryManager inventoryManager;
 
@@ -103,23 +102,21 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     @Override
     public int getDamage() {
-        switch (enemy) {
-            case ABDUCTOR:
+        switch (buildingType) {
+            case CABIN:
                 return 0;
-            case FLOWER:
+            case CASTLE:
                 return 1;
-            case HEAVY:
+            case TOWNCENTRE:
                 return 2;
-            case ROBOT:
+            case FENCE:
+                return 0;
+            case SAFEHOUSE:
                 return 1;
-            case SCOUT:
-                return 1;
-            case STONE:
+            case WATCHTOWER:
                 return 2;
-            case SPIDER:
-                return 1;
-            case TREEMAN:
-                return 2;
+            case STORAGE_UNIT:
+                return 0;
             default:
                 return 0;
         }

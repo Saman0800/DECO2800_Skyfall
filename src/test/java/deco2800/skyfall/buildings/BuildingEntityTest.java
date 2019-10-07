@@ -293,6 +293,9 @@ public class BuildingEntityTest {
 
     @Test
     public void takeDamage() {
+        BuildingEntity building = new BuildingEntity(0, 0, 2, BuildingType.CABIN);
+        building.takeDamage(3);
+        assertEquals(building.getHealth(), -3);
     }
 
     @Test
@@ -305,6 +308,32 @@ public class BuildingEntityTest {
 
     @Test
     public void getDamage() {
+        BuildingEntity building = new BuildingEntity(0, 0, 2, BuildingType.CABIN);
+        int result = building.getDamage();
+        assertEquals(result, 0);
+
+        building = new BuildingEntity(0, 0, 2, BuildingType.CASTLE);
+        result = building.getDamage();
+        assertEquals(result, 1);
+
+        building = new BuildingEntity(0, 0, 2, BuildingType.TOWNCENTRE);
+        result = building.getDamage();
+        assertEquals(result, 2);
+
+        building = new BuildingEntity(0, 0, 2, BuildingType.FENCE);
+        result = building.getDamage();
+        assertEquals(result, 0);
+        building = new BuildingEntity(0, 0, 2, BuildingType.SAFEHOUSE);
+        result = building.getDamage();
+        assertEquals(result, 1);
+        building = new BuildingEntity(0, 0, 2, BuildingType.WATCHTOWER);
+        result = building.getDamage();
+        assertEquals(result, 2);
+        building = new BuildingEntity(0, 0, 2, BuildingType.STORAGE_UNIT);
+        result = building.getDamage();
+        assertEquals(result, 0);
+
+
     }
 
     @Test
