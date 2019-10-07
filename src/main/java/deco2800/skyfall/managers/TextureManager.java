@@ -1,7 +1,6 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.graphics.Texture;
-import org.omg.SendingContext.RunTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,9 +46,6 @@ public class TextureManager extends AbstractManager {
     public TextureManager() {
         try {
             textureMap.put("background", new Texture("resources/actualbackground.jpg"));
-            textureMap.put("load_game_back", new Texture("resources/load_game_menu/back.png"));
-            textureMap.put("load_game_delete", new Texture("resources/load_game_menu/delete.png"));
-
             textureMap.put("spacman_ded", new Texture("resources/spacman_ded.png"));
             textureMap.put("spacman_blue", new Texture("resources/spacman_blue.png"));
             textureMap.put("bowman", new Texture("resources/bowman.png"));

@@ -70,7 +70,7 @@ public abstract class Peon extends AgentEntity implements Tickable {
 	@SuppressWarnings("WeakerAccess")
 	public Peon(float row, float col, float speed, String name, int health,
 				String fixtureDef) {
-		super(col, row, 3, speed, fixtureDef);
+		super(row, col, 3, speed, fixtureDef);
 		this.setTexture(CHARACTER);
 
 		if (name == null || name.equals("")) {
@@ -196,13 +196,4 @@ public abstract class Peon extends AgentEntity implements Tickable {
 					.getTask(this);
         }
     }
-
-
-	/**
-	 * Sets the health
-	 * @param health The amount of health the Peon's health will be set to
-	 */
-	public void setHealth(int health){
-    	this.health = health;
-	}
 }

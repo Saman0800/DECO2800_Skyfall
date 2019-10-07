@@ -198,19 +198,3 @@ white
   orig: 3, 3
   offset: 0, 0
   index: -1
-load-game-window
-  rotate: false
-  xy: 215, 0
-  size: 41, 41
-  split: 20, 20, 20, 20
-  orig: 0, 0
-  offset: 0, 0
-  index: -1
-load-game-feature
-  rotate: false
-  xy: 194, 0
-  size: 21, 21
-  split: 10, 10, 10, 10
-  orig: 0, 0
-  offset: 0, 0
-  index: -1
