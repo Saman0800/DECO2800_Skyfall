@@ -18,7 +18,7 @@ public class BGMManager extends AbstractManager implements KeyTypedObserver {
     private Clip clip;
 
     /* File to be played */
-    private String audio;
+    public String audio;
 
     /* Current position of clip */
     private Long currentPosition;
