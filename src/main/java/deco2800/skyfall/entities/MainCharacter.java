@@ -334,7 +334,8 @@ public class MainCharacter extends Peon
         for (Fixture fix : getBody().getFixtureList()) {
             Filter filter = fix.getFilterData();
             filter.categoryBits = (short) 0x2; // Set filter category to 2
-            filter.maskBits = (short) (0xFFFF ^ 0x4); // remove mask category 4 (projectiles)
+            filter.maskBits = (short) (0xFFFF
+                    ^ 0x4); // remove mask category 4 (projectiles)
             fix.setFilterData(filter);
         }
 
@@ -472,7 +473,9 @@ public class MainCharacter extends Peon
     public void unEquip() {
         // Return item to a tile in the world
         if (equippedItem instanceof Weapon) {
-            GameManager.get().getWorld().addEntity((StaticEntity) equippedItem);
+            Tile returnTile =
+                    GameManager.get().getWorld().getTile(((Weapon) equippedItem).getPosition());
+            GameManager.get().getWorld().addEntity(((Weapon) equippedItem).newInstance(returnTile));
         }
 
         this.equippedItem = new EmptyItem();
@@ -564,12 +567,20 @@ public class MainCharacter extends Peon
 
         // Make projectile move toward the angle
         // Spawn projectile in front of character
+        Projectile projectile = new Projectile(mousePosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
+                position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
+                position.getRow() + 0.5f + 1.5f * unitDirection.getRow(),
+                ((Weapon)equippedItem).getDamage(),
+                1,
+                this.itemSlotSelected == 1 ? (((Weapon)equippedItem).getName().equals("bow") ? 10 : 0) : 0);
+        /*
         Projectile projectile = new Projectile(mousePosition,
                 ((Weapon)equippedItem).getTexture("attackEntity"),
                 "hitbox",
-                position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
-                position.getRow() + 0.5f + 1.5f * unitDirection.getRow(), ((Weapon) equippedItem).getDamage(),
-                ((Weapon) equippedItem).getAttackRate(), this.itemSlotSelected == 1 ? 1 : 0);
+            position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
+            position.getRow() + 0.5f + 1.5f * unitDirection.getRow(), ((Weapon) equippedItem).getDamage(),
+            ((Weapon) equippedItem).getAttackRate(), this.itemSlotSelected == 1 ? 1 : 0);
+            */
 
         // Add the projectile entity to the game world.
         GameManager.get().getWorld().addEntity(projectile);

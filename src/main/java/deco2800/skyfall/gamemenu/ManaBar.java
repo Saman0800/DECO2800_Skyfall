@@ -8,7 +8,6 @@ import deco2800.skyfall.gamemenu.StatBar;
  * Inspired from HealthCircle.java, but this is held in the MainCharacter class
  * and it only needs to be updated when the character takes/restores mana.
  *
- * TODO inherit a onWindowResize event
  */
 public class ManaBar extends StatBar {
 
