@@ -13,4 +13,5 @@ public interface Tickable {
      * @param tick Current game tick
      */
     void onTick(long tick);
+
 }

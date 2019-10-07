@@ -102,17 +102,17 @@ public class WorldDirector {
             gmm.addStatsManager(sm);
             gmm.drawAllElements();
         }
-
         builder.addEntity(mainCharacter);
-        builder.addEntity(new Stone(-4, -3, mainCharacter));
         builder.addEntity(new LizardHome(0, 2, mainCharacter));
         builder.addEntity(new IceWhitebear(-2, 0, mainCharacter));
-        builder.addEntity(new Flower(2f,2f,mainCharacter));
-        builder.addEntity(new Flower(8f,2f,mainCharacter));
-        builder.addEntity(new Treeman(-2f,-3f,mainCharacter));
         builder.addEntity(new Tiger(-4f,-2f,mainCharacter));
-        builder.addEntity(new Bike(-10f,-2f,mainCharacter));
-        builder.addEntity(new SandCar(-20f,-2f, mainCharacter));
+        builder.addEntity(new Scout(4,9, 0.7f, "Forest",
+                "enemyScout"));
+        builder.addEntity(new Abductor(9,7, 0.7f, "Forest",
+                "enemyAbductor"));
+        builder.addEntity(new Heavy(0,6, 0.7f, "Iceland",
+                "enemyHeavy"));
+
 
         builder.addEntity(new Camel(34, -7, mainCharacter));
         builder.addEntity(new Horse(-8,-6, mainCharacter));
@@ -135,9 +135,6 @@ public class WorldDirector {
 
         builder.addEntity(mainCharacter);
 
-        builder.addEntity(new Spider(-4f, -1f, mainCharacter));
-        builder.addEntity(new Robot(-4, -2, mainCharacter));
-
         builder.addLake(5);
         builder.addRiver();
         builder.setRiverSize(5);
@@ -148,7 +145,6 @@ public class WorldDirector {
         builder.setType("tutorial");
         builder.setSeed(2);
         builder.setStaticEntities(true);
-        builder.addEntity(new Spider(-4f, -1f));
         builder.addBiome(new ForestBiome(random), 20);
         builder.addBiome(new DesertBiome(random), 20);
         builder.addBiome(new MountainBiome(random), 20);
