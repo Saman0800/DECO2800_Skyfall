@@ -128,6 +128,13 @@ public class Hatchet extends ManufacturedResources implements Item, Blueprint {
         } else {
             GameManager.getManagerFromInstance(InventoryManager.class).add(new Wood());
             treeToFarm.decreaseWoodAmount();
+
+            // lowering the possibility of gaining sand
+            double y = Math.random();
+
+            if (y >= 0.8) {
+                GameManager.getManagerFromInstance(InventoryManager.class).add(new Vine());
+            }
         }
     }
 

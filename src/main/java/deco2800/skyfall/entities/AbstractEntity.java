@@ -24,7 +24,7 @@ import java.util.*;
  * need to be rendered should not be a WorldEntity
  */
 public abstract class AbstractEntity implements Comparable<AbstractEntity>, Renderable {
-    private final transient Logger log = LoggerFactory.getLogger(AbstractEntity.class);
+    private final Logger log = LoggerFactory.getLogger(AbstractEntity.class);
 
     private static final String ENTITY_ID_STRING = "entityID";
 
@@ -98,7 +98,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     /**
      * Default textures in each direction
      */
-    protected Map<Direction, String> defaultDirectionTextures = new HashMap<>();
+    protected Map<Direction, String> defaultDirectionTextures = new EnumMap<>(Direction.class);
     /**
      * The animation to be run
      */
@@ -126,7 +126,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         entityID = AbstractEntity.getNextID();
         this.setObjectName(ENTITY_ID_STRING);
         this.renderOrder = renderOrder;
-        animations = new HashMap<>();
+        animations = new EnumMap<>(AnimationRole.class);
     }
 
     public AbstractEntity(float col, float row, int renderOrder, String fixtureDef) {
@@ -134,7 +134,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         entityID = AbstractEntity.getNextID();
         this.setObjectName(ENTITY_ID_STRING);
         this.renderOrder = renderOrder;
-        animations = new HashMap<>();
+        animations = new EnumMap<>(AnimationRole.class);
     }
 
     public AbstractEntity() {
@@ -142,7 +142,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         this.colRenderLength = 1f;
         this.rowRenderLength = 1f;
         this.setObjectName(ENTITY_ID_STRING);
-        animations = new HashMap<>();
+        animations = new EnumMap<>(AnimationRole.class);
         changeCollideability(true);
         this.initialiseBox2D(position.getCol(), position.getRow());
     }
@@ -517,6 +517,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
         shape.dispose();
     }
+
 
     /**
      * Defines the body's fixture with default values which can be changes in the

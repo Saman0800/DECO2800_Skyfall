@@ -69,6 +69,7 @@ public class Projectile extends AgentEntity implements Animatable {
         this.speed = speed;
         this.movementPosition = movementPosition;
         this.range = range;
+        this.textureName = textureName;
 
         this.setTexture(textureName);
         this.setObjectName(objectName);
@@ -159,7 +160,7 @@ public class Projectile extends AgentEntity implements Animatable {
     /**
      * Remove the projectile from the game world.
      */
-    private boolean beenDestroyed = false;
+    protected boolean beenDestroyed = false;
 
     public void destroy() {
         if (!beenDestroyed) {

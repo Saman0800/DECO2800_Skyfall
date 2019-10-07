@@ -64,11 +64,6 @@ public class AnimationLinker {
         return animation;
     }
 
-
-    public void setAnimationName(String animationName) {
-        this.animationName = animationName;
-    }
-
     public float getStartingTime() {
         return startingTime;
     }
@@ -103,8 +98,8 @@ public class AnimationLinker {
             this.animation = null;
         }
 
-        if (this.animation == null) {
-            logger.error(animationName + " for entity" + "not found.");
+        if (this.animation == null && logger.isDebugEnabled()) {
+            logger.error(String.format("%s for entity not found.", animationName));
         }
     }
 }
