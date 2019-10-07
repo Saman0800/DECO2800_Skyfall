@@ -1713,22 +1713,22 @@ public class MainCharacter extends Peon
                 if (false) {
                 } else {
                     switch (newItem.getName()) {
-                    case "Hatchet":
-                        this.getInventoryManager().add(new Hatchet());
-                        break;
-                    case "Pick Axe":
-                        this.getInventoryManager().add(new PickAxe());
-                        break;
+                        case "Hatchet":
+                            this.getInventoryManager().add(new Hatchet());
+                            break;
+                        case "Pick Axe":
+                            this.getInventoryManager().add(new PickAxe());
+                            break;
 
-                    case "sword":
-                        this.getInventoryManager().add(new Sword());
-                        break;
-                    case "spear":
-                        this.getInventoryManager().add(new Spear());
-                        break;
-                    case "bow":
-                        this.getInventoryManager().add(new Bow());
-                        break;
+                        case "sword":
+                            this.getInventoryManager().add(new Sword());
+                            break;
+                        case "spear":
+                            this.getInventoryManager().add(new Spear());
+                            break;
+                        case "bow":
+                            this.getInventoryManager().add(new Bow());
+                            break;
 
                         //These are only placeholders and will change once coordinated
                         //with Building team
