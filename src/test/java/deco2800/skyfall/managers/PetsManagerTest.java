@@ -42,7 +42,7 @@ public class PetsManagerTest {
         bear = new Whitebear(0, 0, mc);
         lizard = new Lizard(0, 0, mc);
         WorldBuilder worldBuilder = new WorldBuilder();
-        WorldDirector.constructTestWorld(worldBuilder);
+        WorldDirector.constructTestWorld(worldBuilder, 0);
         w = worldBuilder.getWorld();
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);

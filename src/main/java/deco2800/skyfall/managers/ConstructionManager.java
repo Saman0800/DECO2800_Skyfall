@@ -5,19 +5,24 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-
-import java.io.*;
-import java.util.*;
-
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import deco2800.skyfall.buildings.BuildingEntity;
 import com.badlogic.gdx.utils.Align;
+import deco2800.skyfall.buildings.BuildingEntity;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.buildings.BuildingWidgets;
 import deco2800.skyfall.buildings.BuildingType;
-import deco2800.skyfall.worlds.world.World;
-import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.buildings.BuildingWidgets;
 import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.world.World;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Managers the construction process
@@ -25,6 +30,7 @@ import deco2800.skyfall.entities.AbstractEntity;
  * Sets all build properties to false as nothing has been set up yet
  */
 public class ConstructionManager extends TickableManager {
+    public static final String UI_SKIN_PATH = "resources/uiskin.skin";
     //This manager while control all features related to construction
 
     //lmao
@@ -80,7 +86,7 @@ public class ConstructionManager extends TickableManager {
     private void createWindow() {
         Stage stage = GameManager.get().getStage();
         if (!menuAdded) {
-            Skin skin = new Skin(Gdx.files.internal("resources/uiskin.skin"));
+            Skin skin = new Skin(Gdx.files.internal(UI_SKIN_PATH));
             buildMenu = new Window("Construction", skin);
             hideBuildMenu();
             stage.addActor(buildMenu);
@@ -90,7 +96,7 @@ public class ConstructionManager extends TickableManager {
 
     private void showSetting(){
         Stage stage = GameManager.get().getStage();
-        Skin skin = new Skin(Gdx.files.internal("resources/uiskin.skin"));
+        Skin skin = new Skin(Gdx.files.internal(UI_SKIN_PATH));
         Window settingMenu = new Window("settingMenu", skin);
 
         float width = GameManager.get().getStage().getWidth();
@@ -126,7 +132,7 @@ public class ConstructionManager extends TickableManager {
         table.row().colspan(3).expandX().fillX();
         table.row().expandX().fillX();
 
-        table.row().expandX().fillX();;
+        table.row().expandX().fillX();
 
         table.add(buttonTable).colspan(3);
 
@@ -166,7 +172,7 @@ public class ConstructionManager extends TickableManager {
 
             menuSetUp = true;
 
-            Skin skin = new Skin(Gdx.files.internal("resources/uiskin.skin"));
+            Skin skin = new Skin(Gdx.files.internal(UI_SKIN_PATH));
 
             //to be improved when building factory has been created
             TextButton house = new TextButton("House", skin);
@@ -181,7 +187,6 @@ public class ConstructionManager extends TickableManager {
             buildMenu.addActor(house);
             buildMenu.addActor(storageUnit);
             buildMenu.addActor(setting);
-
 
             for(int i = 0; i < buildingFactory.getCount(); i++){
                 String name = BuildingType.values()[i].name();
@@ -198,8 +203,8 @@ public class ConstructionManager extends TickableManager {
 
                 buildMenu.addActor(building);
                 building.addListener(new ClickListener() {
+                    @Override
                     public void clicked(InputEvent event, float x, float y){
-
                         hideBuildMenu();
                         Pixmap pm = new Pixmap(Gdx.files.internal("resources/world_structures/house3.png"));
                         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
@@ -209,19 +214,16 @@ public class ConstructionManager extends TickableManager {
                         buildTrue = 1;
                         //ID of the building we want
                         buildingID = FINALi;
-
                     }
                 });
             }
 
-
-
-
             setting.addListener(new ClickListener() {
+                @Override
                 public void clicked(InputEvent event, float x, float y){
                     showSetting();
                 }
-                });
+            });
         }
     }
 
@@ -243,7 +245,6 @@ public class ConstructionManager extends TickableManager {
      */
     public void build(World world, float x, float y) {
         buildingToBePlaced = selectBuilding(buildingID, x, y);
-
 
         //Permissions
         if (invCheck(GameManager.getManagerFromInstance(InventoryManager.class))){
@@ -320,7 +321,7 @@ public class ConstructionManager extends TickableManager {
 
         File file = new File(fileBase);
         try (FileReader fr = new FileReader(file);
-             BufferedReader br = new BufferedReader(fr);) {
+             BufferedReader br = new BufferedReader(fr)) {
 
             String line;
 
@@ -512,7 +513,7 @@ public class ConstructionManager extends TickableManager {
             String item = entry.getKey();
             Integer value = entry.getValue();
 
-            if (value.intValue() > inventoryManager.getAmount(item)) {
+            if (value > inventoryManager.getAmount(item)) {
                 invvalid = false;
             }
         }
@@ -579,7 +580,7 @@ public class ConstructionManager extends TickableManager {
         String className = buildings[0].getClass().getName();
         for (int i = 0; i < buildings.length; i++) {
 
-            if (!buildings[i].getClass().getName().equals(className)) {
+            if (!className.equals(buildings[i].getClass().getName())) {
                 return false;
             }
 

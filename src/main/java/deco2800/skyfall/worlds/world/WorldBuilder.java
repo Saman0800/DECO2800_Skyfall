@@ -9,6 +9,7 @@ import deco2800.skyfall.entities.weapons.Spear;
 import deco2800.skyfall.entities.weapons.Sword;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.ChestManager;
+import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.LootRarity;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
@@ -20,7 +21,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Allows for step by step creation of a world
  */
 public class WorldBuilder implements WorldBuilderInterface {
-
     // The world type, can either be single_player, server, tutorial or test
     private String type;
 
@@ -168,6 +168,19 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
 
     /**
+     * The method to be used to spawn gold into a particular woorld
+     * @param world The world that will get static entities
+     * @param random Generates random integers
+     * @param biomeSpawnRules The hashmap which stores all the biome spawn rules
+     */
+    private void spawnGold(World world, Random random, List<EntitySpawnRule> biomeSpawnRules){
+        // Spawn gold pieces
+        EntitySpawnRule goldRule = new EntitySpawnRule(tile -> new GoldPiece(tile, true), random.nextInt(), 0.02);
+        biomeSpawnRules.add(goldRule);
+
+    }
+
+    /**
      * Generates the static entities in a world
      *
      * @param world The world that will get static entities
@@ -192,26 +205,32 @@ public class WorldBuilder implements WorldBuilderInterface {
         for (AbstractBiome biome : world.getBiomes()) {
             ArrayList<EntitySpawnRule> biomeSpawnRules = new ArrayList<>();
             switch (biome.getBiomeName()) {
-            case "forest":
-                generateForestEntities(biomeSpawnRules, random, world);
-                break;
-            case "mountain":
-                generateMountainEntities(biomeSpawnRules, random, world);
-                break;
-            case "desert":
-                generateDesertEntities(biomeSpawnRules, random, world);
-                break;
-            case "snowy_mountains":
-                generateSnowyMountainsEntities(biomeSpawnRules, random, world);
-                break;
-            case "volcanic_mountains":
-                generateVolcanicMountainsEntities(biomeSpawnRules, random, world);
-                break;
-            case "swamp":
-                generateSwampEntities(biomeSpawnRules, random, world);
-                break;
-            default:
-                break;
+                case "forest":
+                    generateForestEntities(biomeSpawnRules, random, world);
+                    break;
+
+                case "mountain":
+                    generateMountainEntities(biomeSpawnRules, random, world);
+                    break;
+
+                case "desert":
+                    generateDesertEntities(biomeSpawnRules, random, world);
+                    break;
+
+                case "snowy_mountains":
+                    generateSnowyMountainsEntities(biomeSpawnRules, random, world);
+                    break;
+
+                case "volcanic_mountains":
+                    generateVolcanicMountainsEntities(biomeSpawnRules, random, world);
+                    break;
+
+                case "swamp":
+                    generateSwampEntities(biomeSpawnRules, random, world);
+                    break;
+                default:
+                    break;
+
             }
             spawnRules.put(biome, biomeSpawnRules);
         }
@@ -250,6 +269,11 @@ public class WorldBuilder implements WorldBuilderInterface {
         rockRule.setLimitAdjacent(true);
         biomeSpawnRules.add(rockRule);
 
+
+        //Spawn gold pieces
+        spawnGold(world, random, biomeSpawnRules);
+
+
         // This generator will cause the mushrooms to clump togteher more
         NoiseGenerator mushroomGen = new NoiseGenerator(new Random(worldSeed).nextLong(), 10, 20, 0.9);
         SpawnControl mushroomControl = x -> (x * x * x * x) / 7d;
@@ -258,12 +282,9 @@ public class WorldBuilder implements WorldBuilderInterface {
         mushroomRule.setNoiseGenerator(mushroomGen);
         mushroomRule.setLimitAdjacent(true);
         biomeSpawnRules.add(mushroomRule);
-
-        return;
     }
 
     private void generateMountainEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
-
         // Spawn some spears
         EntitySpawnRule spearRule = new EntitySpawnRule(tile -> new Spear(tile, true), random.nextInt(), 0.005);
         biomeSpawnRules.add(spearRule);
@@ -275,7 +296,11 @@ public class WorldBuilder implements WorldBuilderInterface {
         mTreeControl.setLimitAdjacent(true);
         biomeSpawnRules.add(mTreeControl);
 
+        //Spawn gold pieces
+        spawnGold(world, random, biomeSpawnRules);
+
         spawnChests(world, random, biomeSpawnRules);
+
 
         // Create a new perlin noise map
         SpawnControl rockControl = x -> (x * x * x * x) / 5.0;
@@ -287,12 +312,9 @@ public class WorldBuilder implements WorldBuilderInterface {
         // Spawn some Snow uniformly
         EntitySpawnRule mSnowRule = new EntitySpawnRule(tile -> new SnowClump(tile, false), random.nextInt(), 0.02);
         biomeSpawnRules.add(mSnowRule);
-
-        return;
     }
 
     private void generateDesertEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
-
         // Spawn some axes
         EntitySpawnRule axeRule2 = new EntitySpawnRule(tile -> new Axe(tile, true), random.nextInt(), 0.005);
         biomeSpawnRules.add(axeRule2);
@@ -302,6 +324,9 @@ public class WorldBuilder implements WorldBuilderInterface {
         EntitySpawnRule cactiRule = new EntitySpawnRule(tile -> new DesertCacti(tile, true), random.nextInt(), true,
                 cactiControl);
         biomeSpawnRules.add(cactiRule);
+
+        //Spawn gold pieces
+        spawnGold(world, random, biomeSpawnRules);
 
         // Spawn some bones
         EntitySpawnRule boneRule = new EntitySpawnRule(tile -> new Bone(tile, true), random.nextInt(), 0.004);
@@ -314,12 +339,9 @@ public class WorldBuilder implements WorldBuilderInterface {
         // Spawn desert rocks
         EntitySpawnRule dRockRule = new EntitySpawnRule(tile -> new DesertRock(tile, true), random.nextInt(), 0.01);
         biomeSpawnRules.add(dRockRule);
-
-        return;
     }
 
     private void generateSnowyMountainsEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
-
         // Spawn some bows
         EntitySpawnRule bowRule = new EntitySpawnRule(tile -> new Bow(tile, true), random.nextInt(), 0.005);
         biomeSpawnRules.add(bowRule);
@@ -332,6 +354,9 @@ public class WorldBuilder implements WorldBuilderInterface {
         EntitySpawnRule swordRule2 = new EntitySpawnRule(tile -> new Sword(tile, true), random.nextInt(), 0.006);
         biomeSpawnRules.add(swordRule2);
 
+        //Spawn gold pieces
+        spawnGold(world, random, biomeSpawnRules);
+
         // Create a new perlin noise map
         SpawnControl sSnowControl = x -> (x * x * x * x * x * x) / 2d + 0.05;
         EntitySpawnRule sSnowRule = new EntitySpawnRule(tile -> new SnowClump(tile, false), random.nextInt(), true,
@@ -341,13 +366,9 @@ public class WorldBuilder implements WorldBuilderInterface {
         // Spawn some Snow Shrubs uniformly
         EntitySpawnRule snowShrubRule = new EntitySpawnRule(tile -> new SnowShrub(tile, true), random.nextInt(), 0.03);
         biomeSpawnRules.add(snowShrubRule);
-
-        return;
-
     }
 
     private void generateVolcanicMountainsEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
-
         // Create a new perlin noise map
         SpawnControl cubic = x -> (x * x * x) / 6.0 + 0.01;
         EntitySpawnRule mTreeControl = new EntitySpawnRule(tile -> new VolcanicTree(tile, true), random.nextInt(), true,
@@ -355,7 +376,11 @@ public class WorldBuilder implements WorldBuilderInterface {
         mTreeControl.setLimitAdjacent(true);
         biomeSpawnRules.add(mTreeControl);
 
+        //Spawn gold pieces
+        spawnGold(world, random, biomeSpawnRules);
+
         spawnChests(world, random, biomeSpawnRules);
+
 
         // Create a new perlin noise map
         SpawnControl rockControl = x -> (x * x * x * x) / 3.0;
@@ -370,12 +395,9 @@ public class WorldBuilder implements WorldBuilderInterface {
 
         EntitySpawnRule leavesRule = new EntitySpawnRule(tile -> new Leaves(tile, false), random.nextInt(), 0.02);
         biomeSpawnRules.add(leavesRule);
-
-        return;
     }
 
     private void generateSwampEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
-
         long worldSeed = world.getSeed();
 
         // Create a new perlin noise map
@@ -388,6 +410,9 @@ public class WorldBuilder implements WorldBuilderInterface {
         EntitySpawnRule swampShrubRule = new EntitySpawnRule(tile -> new SwampShrub(tile, true), random.nextInt(),
                 0.04);
         biomeSpawnRules.add(swampShrubRule);
+
+        //Spawn gold pieces
+        spawnGold(world, random, biomeSpawnRules);
 
         // Spawn some Rocks uniformly
         EntitySpawnRule rockRule = new EntitySpawnRule(tile -> new SwampRock(tile, true), random.nextInt(), 0.015);
@@ -404,8 +429,6 @@ public class WorldBuilder implements WorldBuilderInterface {
                 true, mushroomControl);
         mushroomRule.setNoiseGenerator(mushroomGen);
         biomeSpawnRules.add(mushroomRule);
-
-        return;
     }
 
     /**

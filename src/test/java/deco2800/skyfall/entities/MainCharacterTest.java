@@ -6,10 +6,8 @@ import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.managers.DatabaseManager;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.InventoryManager;
-import deco2800.skyfall.managers.PhysicsManager;
+import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
+import deco2800.skyfall.managers.*;
 import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
@@ -36,7 +34,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.HashMap;
 import java.util.Random;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -48,7 +46,6 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
         GameManager.class })
 public class MainCharacterTest {
 
-    private GoldPiece goldpiece;
     private MainCharacter testCharacter;
     private ForestTree testTree;
     private ForestRock testRock;
@@ -59,6 +56,7 @@ public class MainCharacterTest {
     private Hatchet testHatchet2;
     private PickAxe testPickaxe;
     private World w = null;
+
     @Mock
     private GameManager mockGM;
 
@@ -104,7 +102,7 @@ public class MainCharacterTest {
         inventoryManager = GameManager.get().getManagerFromInstance(InventoryManager.class);
 
         WorldBuilder builder = new WorldBuilder();
-        WorldDirector.constructTestWorld(builder);
+        WorldDirector.constructTestWorld(builder, 0);
         w = builder.getWorld();
 
         mockGM = mock(GameManager.class);
@@ -147,17 +145,17 @@ public class MainCharacterTest {
      */
     public void levelTest() {
         testCharacter.changeLevel(4);
-        Assert.assertEquals(testCharacter.getLevel(), 5);
+        Assert.assertEquals(5, testCharacter.getLevel());
 
         testCharacter.changeLevel(-5);
-        Assert.assertEquals(testCharacter.getLevel(), 5);
+        Assert.assertEquals(5, testCharacter.getLevel());
 
         testCharacter.changeLevel(-4);
-        Assert.assertEquals(testCharacter.getLevel(), 1);
+        Assert.assertEquals(1, testCharacter.getLevel());
     }
 
     /**
-     * Private helper method used for inventory testting
+     * Private helper method used for inventory testing
      */
     private void pickUpInventoryMultiple(Item item, int amount) {
         for (int i = 0; i < amount; i++) {
@@ -194,35 +192,6 @@ public class MainCharacterTest {
         testCharacter.getInventoryManager().dropMultiple("Stone", inventoryManager.getAmount("Stone"));
         Assert.assertEquals((int) testCharacter.getInventoryManager().getAmount("Stone"),
                 inventoryManager.getAmount("Stone"));
-    }
-
-    @Test
-    /**
-     * Test main character is interacting correctly with basic food action
-     */
-    public void foodTest() {
-        Assert.assertEquals(100, testCharacter.getFoodLevel());
-
-        Apple apple = new Apple();
-        testCharacter.pickUpInventory(apple);
-        testCharacter.eatFood(new Apple());
-        Assert.assertEquals(100, testCharacter.getFoodLevel());
-
-        testCharacter.pickUpInventory(new PoisonousMushroom());
-        testCharacter.eatFood(new PoisonousMushroom());
-        Assert.assertEquals(80, testCharacter.getFoodLevel());
-
-        testCharacter.pickUpInventory(new PoisonousMushroom());
-        testCharacter.eatFood(new PoisonousMushroom());
-        Assert.assertEquals(60, testCharacter.getFoodLevel());
-
-        for (int i = 0; i < 10; i++) {
-            testCharacter.pickUpInventory(new PoisonousMushroom());
-            testCharacter.eatFood(new PoisonousMushroom());
-        }
-
-        Assert.assertEquals(0, testCharacter.getFoodLevel());
-        Assert.assertTrue(testCharacter.isStarving());
     }
 
     @Test
@@ -264,12 +233,12 @@ public class MainCharacterTest {
     }
 
     /**
-     * Test hurt effect
+     * Test playerHurt effect
      */
     @Test
     public void hurtTest() {
         // Reduce health by input damage test
-        // testCharacter.hurt(3);
+        // testCharacter.playerHurt(3);
         // Assert.assertEquals(7, testCharacter.getHealth());
 
         // Character bounce back test
@@ -288,7 +257,7 @@ public class MainCharacterTest {
      */
     @Test
     public void recoverTest() {
-        // Set the health status of player from hurt back to normal
+        // Set the health status of player from playerHurt back to normal
         // so that the effect (e.g. sprite flashing in red) will disappear
         // after recovering.
 
@@ -296,22 +265,23 @@ public class MainCharacterTest {
     }
 
     /**
-     * Test kill effect
+     * Test kill effect and method
      */
     @Test
     public void killTest() {
-        // Test if hurt() can trigger Peon.changeHealth() when
-        // the damage taken can make player's health below 0.
-        testCharacter.hurt(10);
+        testCharacter.playerHurt(50);
 
-        // Assert.assertEquals(1, testCharacter.getDeaths());
+         Assert.assertEquals(2, testCharacter.getDeaths());
 
-        // "Kill" animation test
+         //"Kill" animation test
         AnimationLinker animationLinker = new AnimationLinker("MainCharacter_Dead_E_Anim", AnimationRole.DEAD,
                 Direction.DEFAULT, false, true);
         testMap.put(Direction.DEFAULT, animationLinker);
         testCharacter.addAnimations(AnimationRole.DEAD, Direction.DEFAULT, animationLinker);
         Assert.assertEquals(testMap, testCharacter.animations.get(AnimationRole.DEAD));
+
+        // Is the character dead?
+        Assert.assertTrue(testCharacter.isDead());
     }
 
     public void movementAnimationsExist() {
@@ -378,6 +348,10 @@ public class MainCharacterTest {
         GoldPiece g10 = new GoldPiece(10);
         GoldPiece g50 = new GoldPiece(50);
 
+        //remove a piece of gold from the pouch which is not there
+        // (should do nothing)
+        testCharacter.removeGold(5);
+
         // add the respective gold pieces to the pouch
         testCharacter.addGold(g5, 4);
         testCharacter.addGold(g10, 1);
@@ -391,6 +365,8 @@ public class MainCharacterTest {
 
         // remove a piece of gold from the pouch
         testCharacter.removeGold(5);
+
+
 
         // ensure that the necessary adjustments have been made
         Assert.assertTrue(testCharacter.getGoldPouchTotalValue() == 275);
@@ -491,6 +467,7 @@ public class MainCharacterTest {
 
     /**
      * Tests to ensure that the closest gold piece is added to the gold pouch
+     * Tested here instead of World to allow for ease of testing.
      */
     @Test
     public void addClosestGoldPieceTest() {
@@ -550,6 +527,36 @@ public class MainCharacterTest {
     }
 
     @Test
+    public void healthItemTest() {
+        // Create items that give you health
+        Aloe_Vera alo = new Aloe_Vera();
+        Apple apple = new Apple();
+        Berry berry = new Berry();
+
+        testCharacter.changeHealth(-8);
+
+        int currentHealth = testCharacter.getHealth();
+
+        // Check that health increases by 2
+        testCharacter.pickUpInventory(alo);
+        testCharacter.setEquippedItem(alo);
+        testCharacter.useEquipped();
+        Assert.assertEquals(currentHealth + 2, testCharacter.getHealth());
+
+        // Check that health increases by 4
+        testCharacter.changeHealth(-2);
+        testCharacter.setEquippedItem(apple);
+        testCharacter.useEquipped();
+        Assert.assertEquals(currentHealth + 4, testCharacter.getHealth());
+
+        // Check that health increases by 6
+        testCharacter.changeHealth(-4);
+        testCharacter.setEquippedItem(berry);
+        testCharacter.useEquipped();
+        Assert.assertEquals(currentHealth + 6, testCharacter.getHealth());
+    }
+
+    @Test
     /**
      * Checks to see if the player is actually colliding with entities
      */
@@ -594,6 +601,109 @@ public class MainCharacterTest {
         testCharacter.restoreMana();
         Assert.assertEquals(this.testCharacter.mana, 1);
         Assert.assertEquals(this.testCharacter.manaCD, 0);
+    }
+
+    /**
+     * Test the getHeath() method works.
+     */
+    @Test
+    public void getHealthTest() {
+        assertEquals(10, testCharacter.getHealth());
+
+        testCharacter.changeHealth(-2);
+
+        assertEquals(8, testCharacter.getHealth());
+    }
+
+    /**
+     * Test the setDead() method works.
+     */
+    @Test
+    public void setDeadTest() {
+        testCharacter.setDead(false);
+        assertFalse(testCharacter.isDead());
+
+        testCharacter.changeHealth(-10);
+
+        assertTrue(testCharacter.isDead());
+
+        assertEquals(0, testCharacter.getHealth());
+    }
+
+    /**
+     * Test the setDead() method works.
+     */
+    @Test
+    public void getDeathsTest() {
+        testCharacter.changeHealth(-10);
+        assertTrue(testCharacter.isDead());
+
+        assertEquals(1, testCharacter.getDeaths());
+
+    }
+
+    /**
+     * Test the removeAllGold() method works.
+     */
+    @Test
+    public void removeAllGoldTest() {
+        assertEquals(100, testCharacter.getGoldPouchTotalValue());
+
+        testCharacter.removeAllGold();
+
+        assertEquals(0, testCharacter.getGoldPouchTotalValue());
+    }
+
+    /**
+     * Test the removeAllGold() method works.
+     */
+    @Test
+    public void playerHurtTest() {
+        assertEquals(100, testCharacter.getGoldPouchTotalValue());
+
+        testCharacter.removeAllGold();
+
+        assertEquals(0, testCharacter.getGoldPouchTotalValue());
+    }
+
+    /**
+     * Test the isRecovering() method works.
+     */
+    @Test
+    public void isRecoveringTest() {
+        testCharacter.playerHurt(2);
+
+        assertFalse(testCharacter.isRecovering());
+    }
+
+    /**
+     * Test the setRecovering() method works.
+     */
+    @Test
+    public void setRecoveringTest() {
+        testCharacter.playerHurt(2);
+        assertFalse(testCharacter.isRecovering());
+
+        testCharacter.setRecovering(false);
+        assertFalse(testCharacter.isRecovering());
+
+        testCharacter.setRecovering(true);
+        assertTrue(testCharacter.isRecovering());
+    }
+
+    /**
+     * Test the pop up methods work.
+     */
+    @Test
+    public void popUpTest() {
+        GameMenuManager gameMenuManager = new GameMenuManager();
+        testCharacter.setUpGUI();
+
+        gameMenuManager.hideOpened();
+        gameMenuManager.setPopUp("gameOverTable");
+
+        assertEquals(testCharacter, gameMenuManager.getMainCharacter());
+        assertEquals(gameMenuManager.getPopUp("gameOverTable"), gameMenuManager.getCurrentPopUp());
     }
 
     @After

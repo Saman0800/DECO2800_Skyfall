@@ -1,15 +1,15 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
+import deco2800.skyfall.entities.worlditems.EntitySpawnTable;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Saveable;
-import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
-import deco2800.skyfall.entities.worlditems.EntitySpawnTable;
 import deco2800.skyfall.worlds.Tile;
-import java.io.Serializable;
 import org.javatuples.Pair;
 
+import java.io.Serializable;
 import java.util.*;
 
 public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
@@ -158,12 +158,9 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
         neighbouringChunks.removeIf(Objects::isNull);
         for (Chunk chunk : neighbouringChunks) {
             for (Tile tile : chunk.tiles) {
-                if (tile.getCol() >= x * CHUNK_SIDE_LENGTH - 2 && tile.getCol() <= x * CHUNK_SIDE_LENGTH + 1 &&
-                        tile.getRow() >= y * CHUNK_SIDE_LENGTH - 2 && tile.getRow() <= y * CHUNK_SIDE_LENGTH + 1) {
-                    columnMap = tileMap.getOrDefault((int) tile.getCol() * 2, new HashMap<>());
-                    columnMap.put((int) (tile.getRow() * 2), tile);
-                    tileMap.put((int) (tile.getCol() * 2), columnMap);
-                }
+                columnMap = tileMap.getOrDefault((int) tile.getCol() * 2, new HashMap<>());
+                columnMap.put((int) (tile.getRow() * 2), tile);
+                tileMap.put((int) (tile.getCol() * 2), columnMap);
             }
         }
 
@@ -176,11 +173,13 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
                 // North West
                 if (tileMap.get(col - 2).containsKey(row + 1)) {
                     tile.addNeighbour(Tile.NORTH_WEST, tileMap.get(col - 2).get(row + 1));
+                    tileMap.get(col - 2).get(row + 1).addNeighbour(Tile.SOUTH_EAST, tile);
                 }
 
                 // South West
                 if (tileMap.get(col - 2).containsKey(row - 1)) {
                     tile.addNeighbour(Tile.SOUTH_WEST, tileMap.get(col - 2).get(row - 1));
+                    tileMap.get(col - 2).get(row - 1).addNeighbour(Tile.NORTH_EAST, tile);
                 }
             }
 
@@ -189,11 +188,13 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
                 // North
                 if (tileMap.get(col).containsKey(row + 2)) {
                     tile.addNeighbour(Tile.NORTH, tileMap.get(col).get(row + 2));
+                    tileMap.get(col).get(row + 2).addNeighbour(Tile.SOUTH, tile);
                 }
 
                 // South
                 if (tileMap.get(col).containsKey(row - 2)) {
                     tile.addNeighbour(Tile.SOUTH, tileMap.get(col).get(row - 2));
+                    tileMap.get(col).get(row - 2).addNeighbour(Tile.NORTH, tile);
                 }
             }
 
@@ -202,11 +203,13 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
                 // North East
                 if (tileMap.get(col + 2).containsKey(row + 1)) {
                     tile.addNeighbour(Tile.NORTH_EAST, tileMap.get(col + 2).get(row + 1));
+                    tileMap.get(col + 2).get(row + 1).addNeighbour(Tile.SOUTH_WEST, tile);
                 }
 
                 // South East
                 if (tileMap.get(col + 2).containsKey(row - 1)) {
                     tile.addNeighbour(Tile.SOUTH_EAST, tileMap.get(col + 2).get(row - 1));
+                    tileMap.get(col + 2).get(row - 1).addNeighbour(Tile.NORTH_WEST, tile);
                 }
             }
         }
@@ -230,7 +233,7 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
         for (Tile tile : tiles) {
             tile.removeReferanceFromNeighbours();
         }
-
+        //TODO:(@Kausta) Uncomment this before merge
         DatabaseManager.get().getDataBaseConnector().saveChunk(this);
 
         world.getLoadedChunks().remove(new Pair<>(x, y));
