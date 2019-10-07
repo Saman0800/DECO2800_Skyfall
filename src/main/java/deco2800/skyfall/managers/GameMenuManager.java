@@ -222,7 +222,7 @@ public class GameMenuManager extends TickableManager {
      *
      * @return An instance of TextureRegionDrawable with the given texture name.
      */
-    public TextureRegionDrawable generateTextureRegionDrawableObject(String sName) {
+    public static TextureRegionDrawable generateTextureRegionDrawableObject(String sName) {
         return new TextureRegionDrawable((new TextureRegion(textureManager.getTexture(sName))));
     }
 

@@ -66,13 +66,15 @@ public abstract class AbstractPortal extends AbstractEntity {
      * @param character - The Character to teleport
      * @param nextBiome - the Biome to teleport to
      */
-    public void teleport(MainCharacter character, AbstractBiome nextBiome) {
+    public void teleport(MainCharacter character, World nextBiome) {
         // TODO: @CGulley - Create a general teleport method for all portals.
         // For now, individual functionality in child classes
 
     }
 
+    public void unlocknext(MainCharacter character, String next) {
 
+    }
 
 
 

@@ -693,9 +693,6 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
                 ChestTable chest = (ChestTable) gmm.getPopUp("chestTable");
                 chest.updateChestPanel((Chest) entity);
                 gmm.setPopUp("chestTable");
-            } else if (entity instanceof BlueprintShop) {
-                BlueprintShopTable bs = (BlueprintShopTable) gmm.getPopUp("blueprintShopTable");
-                menuManager.setPopUp("chestTable");
             } else if (entity instanceof Item) {
                     MainCharacter mc = gmm.getMainCharacter();
                     if (tile.getCoordinates().distance(mc.getPosition()) > 2) {

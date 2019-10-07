@@ -19,7 +19,6 @@ import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gamemenu.popupmenu.ConstructionTable;
-import deco2800.skyfall.gui.ManaBar;
 import deco2800.skyfall.gamemenu.ManaBar;
 import deco2800.skyfall.entities.vehicle.AbstractVehicle;
 import deco2800.skyfall.entities.vehicle.Bike;
