@@ -14,7 +14,7 @@ public class GenerateExampleWorld {
     public static void main(String[] args){
 
         WorldBuilder worldBuilder = new WorldBuilder();
-        WorldDirector.constructTestWorld(worldBuilder, 0);
+        WorldDirector.constructTestWorld(worldBuilder);
         worldBuilder.setType("single_player");
         worldBuilder.setStaticEntities(false);
         World world = worldBuilder.getWorld();
