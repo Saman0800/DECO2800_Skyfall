@@ -17,7 +17,7 @@ import java.util.Map;
 public abstract class AbstractPortal extends AbstractEntity {
 
     // a logger
-    private final Logger log = LoggerFactory.getLogger(BuildingEntity.class);
+    private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);
     // a building object name
     private static final String ENTITY_ID_STRING = "PortalID";
 

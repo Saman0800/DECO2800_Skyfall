@@ -23,7 +23,7 @@ public class SpellFactory {
         if(spellType.equals(SpellType.FLAME_WALL)){
             spell = new FlameWall(mousePosition, "__ANIMATION_Spells_Fire_Anim:0",
                     "spell", mousePosition.getCol(), mousePosition.getRow(),
-                    3,
+                    1,
                     0.1f,
                     0);
         } else if(spellType.equals(SpellType.SHIELD)){

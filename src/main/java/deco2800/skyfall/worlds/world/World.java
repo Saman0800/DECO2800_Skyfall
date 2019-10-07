@@ -68,7 +68,6 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
     private int loadedAreaUpperY;
 
     //A list of all the tiles within a world
-
     protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
     protected CopyOnWriteArrayList<VoronoiEdge> voronoiEdges;
 
@@ -589,7 +588,7 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
 
         } else if (e2 instanceof Projectile && e1 instanceof Enemy) {
             if (((Enemy) e1).getHealth() > 0) {
-                ((Enemy) e1).takeDamage(((Enemy) e1).getStrength());
+                ((Enemy) e1).takeDamage(((Enemy) e1).getDamage());
                 ((Enemy) e1).setHurt(true);
                 ((Projectile) e2).destroy();
             } else {

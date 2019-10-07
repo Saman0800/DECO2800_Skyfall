@@ -307,31 +307,32 @@ public class BuildingEntityTest {
     }
 
     @Test
-    public void getStrength() {
+    public void getDamage() {
         BuildingEntity building = new BuildingEntity(0, 0, 2, BuildingType.CABIN);
-        int result = building.getStrength();
+        int result = building.getDamage();
         assertEquals(result, 0);
 
         building = new BuildingEntity(0, 0, 2, BuildingType.CASTLE);
-        result = building.getStrength();
+        result = building.getDamage();
         assertEquals(result, 1);
 
         building = new BuildingEntity(0, 0, 2, BuildingType.TOWNCENTRE);
-        result = building.getStrength();
+        result = building.getDamage();
         assertEquals(result, 2);
 
         building = new BuildingEntity(0, 0, 2, BuildingType.FENCE);
-        result = building.getStrength();
+        result = building.getDamage();
         assertEquals(result, 0);
         building = new BuildingEntity(0, 0, 2, BuildingType.SAFEHOUSE);
-        result = building.getStrength();
+        result = building.getDamage();
         assertEquals(result, 1);
         building = new BuildingEntity(0, 0, 2, BuildingType.WATCHTOWER);
-        result = building.getStrength();
+        result = building.getDamage();
         assertEquals(result, 2);
         building = new BuildingEntity(0, 0, 2, BuildingType.STORAGE_UNIT);
-        result = building.getStrength();
+        result = building.getDamage();
         assertEquals(result, 0);
+
 
     }
 
@@ -353,6 +354,10 @@ public class BuildingEntityTest {
 
     @Test
     public void getCollider() {
+    }
+
+    @Test
+    public void onTick() {
     }
 
     @Test

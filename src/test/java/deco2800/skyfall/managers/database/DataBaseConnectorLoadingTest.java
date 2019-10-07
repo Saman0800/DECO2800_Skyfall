@@ -201,15 +201,13 @@ public class DataBaseConnectorLoadingTest {
         when(saveMemMock.getWorldID()).thenReturn(WOLRD_ID);
         World world = dataBaseConnectorExpected.loadWorlds(saveMock, saveMemMock);
 
-       /* Chunk chunk = dataBaseConnectorExpected.loadChunk(world, 0, 0);
+        Chunk chunk = dataBaseConnectorExpected.loadChunk(world, 0, 0);
 
         assertEquals(0, chunk.getX());
         assertEquals(0, chunk.getY());
         assertEquals(6, chunk.getEntities().size());
         assertEquals(WOLRD_ID, chunk.getWorld().getID());
         assertEquals(100, chunk.getTiles().size());
-
-        */
     }
 
     @Test
