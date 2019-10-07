@@ -101,4 +101,17 @@ public class ProjectileTest  {
 
     }
 
+    /**
+     * Test the rangeof the projectile.
+     */
+    @Test
+    public void testRange() {
+        projectile.range = 10.f;
+        for (int i  = 0; i < 11; ++i) {
+            projectile.onTick(0);
+        }
+
+        assertThat("", projectile.position.length() < 12.f ,is(equalTo(true)));
+    }
+
 }
