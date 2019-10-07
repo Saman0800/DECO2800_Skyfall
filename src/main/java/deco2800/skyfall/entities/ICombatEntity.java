@@ -26,7 +26,7 @@ public interface ICombatEntity extends HasHealth {
      *
      * @return The damage this entity deals.
      */
-    int getStrength();
+    int getDamage();
 
     /**
      * Get an array of the resistance attributes.

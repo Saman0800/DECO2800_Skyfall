@@ -60,10 +60,10 @@ public class EnemySpawnTableTest {
 
         testWorld = mock(World.class);
         List<AgentEntity> agentEntities = new ArrayList<>();
-        agentEntities.add(new Heavy(0f, 0f, 0.2f));
-        agentEntities.add(new Heavy(20f, 20f, 0.1f));
-        agentEntities.add(new Heavy(100f, 150f, 0.1f));
-        agentEntities.add(new Heavy(150f, 50f, 0.1f));
+        agentEntities.add(new Robot(0f, 0f, MainCharacter.getInstance()));
+        agentEntities.add(new Robot(20f, 20f, MainCharacter.getInstance()));
+        agentEntities.add(new Robot(100f, 150f, MainCharacter.getInstance()));
+        agentEntities.add(new Robot(150f, 50f, MainCharacter.getInstance()));
         agentEntities.add(new PlayerPeon(10f, 10f, 2));
         when(testWorld.getSortedAgentEntities()).thenReturn(agentEntities);
 
@@ -71,14 +71,14 @@ public class EnemySpawnTableTest {
     }
 
     @Test
-    public void testGetAllEnemies() {
+    public void testGetAllAbstractEnemies() {
         List<AgentEntity> expectedList = new ArrayList<>();
-        expectedList.add(new Heavy(0f, 0f, 0.1f));
-        expectedList.add(new Heavy(20f, 20f, 0.1f));
-        expectedList.add(new Heavy(100f, 150f, 0.1f));
-        expectedList.add(new Heavy(150f, 50f, 0.1f));
+        expectedList.add(new Robot(0f, 0f, MainCharacter.getInstance()));
+        expectedList.add(new Robot(20f, 20f, MainCharacter.getInstance()));
+        expectedList.add(new Robot(100f, 150f, MainCharacter.getInstance()));
+        expectedList.add(new Robot(150f, 50f, MainCharacter.getInstance()));
 
-        assertEquals("Abstract enemies were not filtered correctly.", expectedList, testTable.getAllEnemies());
+        assertEquals("Abstract enemies were not filtered correctly.", expectedList, testTable.getAllAbstractEnemies());
     }
 
     @Test
@@ -90,8 +90,8 @@ public class EnemySpawnTableTest {
     @Test
     public void enemiesInTarget() {
         List<AgentEntity> expectedList = new ArrayList<>();
-        expectedList.add(new Heavy(0f, 0f, 0.1f));
-        expectedList.add(new Heavy(20f, 20f, 0.1f));
+        expectedList.add(new Robot(0f, 0f, MainCharacter.getInstance()));
+        expectedList.add(new Robot(20f, 20f, MainCharacter.getInstance()));
 
         assertEquals("Incorrect entities filtered.", expectedList, testTable.enemiesInTarget(0f, 0f, 50));
     }
@@ -104,8 +104,8 @@ public class EnemySpawnTableTest {
     @Test
     public void enemiesNearCharacter() {
         List<AgentEntity> expectedList = new ArrayList<>();
-        expectedList.add(new Heavy(0f, 0f, 0.1f));
-        expectedList.add(new Heavy(20f, 20f, 0.1f));
+        expectedList.add(new Robot(0f, 0f, MainCharacter.getInstance()));
+        expectedList.add(new Robot(20f, 20f, MainCharacter.getInstance()));
 
         assertEquals("Incorrect entities filtered.", expectedList, testTable.enemiesNearCharacter());
     }

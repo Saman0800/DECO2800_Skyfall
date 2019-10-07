@@ -7,6 +7,8 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.HexVector;
 
+
+
 public class Bike extends AbstractVehicle implements Animatable, Item {
     MainCharacter mc;
     private boolean isOnUse = false;
@@ -82,13 +84,14 @@ public class Bike extends AbstractVehicle implements Animatable, Item {
 
     @Override
     public void takeDamage(int damage) {
-        // override
+
     }
 
     @Override
     public void dealDamage(MainCharacter mc) {
-        // override
+
     }
+
 
     @Override
     public boolean canDealDamage() {
@@ -96,7 +99,7 @@ public class Bike extends AbstractVehicle implements Animatable, Item {
     }
 
     @Override
-    public int getStrength() {
+    public int getDamage() {
         return 0;
     }
 

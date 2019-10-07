@@ -44,6 +44,8 @@ public class AnimationManagerTest {
         assertEquals(doesNotExist, null);
     }
 
+
+
     @Test
     public void generateAnimationObjectTest() {
         Texture t  = mock(Texture.class);

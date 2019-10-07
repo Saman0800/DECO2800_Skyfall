@@ -193,6 +193,7 @@ public class HexVector {
     }
 
     public double getAngle() {
-        return angle;
+        HexVector temp = this.normalized();
+        return Math.atan2(temp.getRow(), temp.getCol());
     }
 }
