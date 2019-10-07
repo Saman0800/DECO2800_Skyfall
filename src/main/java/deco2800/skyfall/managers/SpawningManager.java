@@ -2,6 +2,7 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.enemies.Heavy;
 import deco2800.skyfall.graphics.types.vec2;
 import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.enemies.Spawnable;
@@ -16,7 +17,7 @@ public class SpawningManager extends TickableManager  {
     private static SpawningManager reference = null;
 
     //A maximum to the number of enemies allowed to be managed
-    private final int MAXENTITIES = 100;
+    private final int MAXENTITIES = 5;
 
     //the random used for enemy generation
     private Random random;
@@ -35,10 +36,13 @@ public class SpawningManager extends TickableManager  {
     }
 
     //Useful for controlling enemy counts
-    final int MAXIMUM_ENEMIES = 100;
+    final int MAXIMUM_ENEMIES = 10;
 
     //Enemies spawn in a circle around the player
     private final float SPAWN_DISTANCE = 100;
+
+    //Enemies will be culled if they get too far
+    private final float CULL_DISTANCE = 1000;
 
     /**
      * Use createdSpawningManager instead of constructor
@@ -68,9 +72,8 @@ public class SpawningManager extends TickableManager  {
         GameManager.addManagerToInstance(local);
 
         //Add enemies to manager
-        // local.addEnemyForSpawning(new Flower(0, 0, MainCharacter.getInstance()), 1.0f)
-        // local.addEnemyForSpawning(new Heavy(3,2f, 0.7f, "Forest",
-        //        "enemyHeavy"), 1.0f)
+        //local.addEnemyForSpawning(new Heavy(3,2f, 0.7f, "Forest",
+        //      "enemyHeavy"), 1.0f);
     }
 
     /**
@@ -106,6 +109,23 @@ public class SpawningManager extends TickableManager  {
      */
     void updateReferences() {
         enemyReferences.removeIf(s -> s.isDead());
+        enemyReferences.removeIf(s -> s.distance(MainCharacter.getInstance()) > CULL_DISTANCE );
+    }
+
+    /**
+     * Returns an enemy of the given type
+     * If no such enemy can be found, returns null
+     * @param type The class type to pull
+     * @param <T> The class must inherit Enemy
+     * @return returns the first enemy found, or null
+     */
+    public <T extends Enemy> T getFirstEnemy(Class<T> type) {
+        for (Enemy e : enemyReferences) {
+            if (type.isInstance(e)) {
+                return (T)e;
+            }
+        }
+        return null;
     }
 
     /**
@@ -116,9 +136,9 @@ public class SpawningManager extends TickableManager  {
     @Override
     public void onTick(long i) {
         //return if day
-        //if (GameManager.getManagerFromInstance(EnvironmentManager.class).isDay()) {
-        //    return;
-        //}
+        if (GameManager.getManagerFromInstance(EnvironmentManager.class).isDay()) {
+            return;
+        }
 
         updateReferences();
 
@@ -136,8 +156,39 @@ public class SpawningManager extends TickableManager  {
      * @param k Enemy spawning peaks at midnight, this is the horrizontal scaling value
      * @param <T> The Enemy must be an Enemy, and implement Spawnable
      */
-     public <T extends Enemy & Spawnable>
-     void addEnemyForSpawning(T template, float k) {
-         spawnTable.put(template, k);
-     }
+    public <T extends Enemy & Spawnable>
+    void addEnemyForSpawning(T template, float k) {
+        spawnTable.put(template, k);
+    }
+
+    /**
+     * Specifically, enemies spawned by this manager
+     * @return number of enemy instances managed
+     */
+    public int getNumberOfEntsManaged() {
+        return enemyReferences.size();
+    }
+
+    /**
+     * Counts templates only
+     * @return size of spawn table
+     */
+    public int getEntCountInSpawnTable() {
+        return spawnTable.size();
+    }
+
+    /**
+     * Deletes all templates
+     */
+    public void clearSpawnTable() {
+        spawnTable.clear();
+    }
+
+    /**
+     * @return gets the current culling distance
+     */
+    public float getCullingDistance() {
+        return CULL_DISTANCE;
+    }
+
 }
