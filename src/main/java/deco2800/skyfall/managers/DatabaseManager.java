@@ -555,7 +555,7 @@ public final class DatabaseManager extends AbstractManager {
      */
     public void startDataBaseConnector() {
         dataBaseConnector = new DataBaseConnector();
-        dataBaseConnector.start();
+         dataBaseConnector.start("Database");
     }
 
     /**

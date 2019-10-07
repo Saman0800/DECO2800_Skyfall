@@ -1,31 +1,26 @@
 package deco2800.skyfall.entities.worlditems;
 
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.WoodCube;
-import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
-
-import java.util.Map;
 
 public class MountainTree extends AbstractTree {
 
-    protected static final String ENTITY_ID_STRING = "mountain tree";
-
-    public MountainTree(float col, float row, int renderOrder, Map<HexVector, String> texture) {
-        super(col, row, renderOrder, texture);
-        this.woodAmount = 15;
-    }
+    protected static final String ENTITY_ID_STRING = "mountain_tree";
 
     public MountainTree(Tile tile, boolean obstructed) {
         super(tile, obstructed, "MTree" + MountainTree.nextTreeTexture);
         MountainTree.nextTreeTexture = randomGen.nextInt(3) + 1;
-        this.woodAmount = 15;
-        this.entityType = "MountainTree";
+        setupParams();
     }
 
     public MountainTree(SaveableEntityMemento memento) {
         super(memento);
+        setupParams();
+    }
+
+    private void setupParams() {
+        this.setObjectName(ENTITY_ID_STRING);
         this.woodAmount = 15;
+        this.entityType = "MountainTree";
     }
 
     /**

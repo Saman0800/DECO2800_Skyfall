@@ -4,9 +4,9 @@ import deco2800.skyfall.resources.Blueprint;
 
 import java.util.*;
 
-
 /**
- * A BuildingTime Enum outlines all of the building types available in the skyfall game as well as their set values/attributes
+ * A BuildingTime Enum outlines all of the building types available in the
+ * skyfall game as well as their set values/attributes
  */
 public enum BuildingType implements Blueprint {
 
@@ -89,7 +89,7 @@ public enum BuildingType implements Blueprint {
      */
     public void initialiseCabin() {
         buildingTextures = new ArrayList<>();
-        //Need to add initialise textures back.
+        // Need to add initialise textures back.
 
         buildingTextures.add("cabin_0");
         buildingTextures.add("cabin_90");
@@ -98,7 +98,7 @@ public enum BuildingType implements Blueprint {
 
         buildingCost = new HashMap<>();
         buildingCost.put("Wood", 5);
-        buildingCost.put("Stone",2);
+        buildingCost.put("Stone", 2);
     }
 
     public List<String> initialiseCabinTextures() {
@@ -120,7 +120,7 @@ public enum BuildingType implements Blueprint {
 
         buildingCost = new HashMap<>();
         buildingCost.put("Wood", 4);
-        buildingCost.put("Stone",2);
+        buildingCost.put("Stone", 2);
     }
 
     public List<String> initialiseStorageUnitTextures() {
@@ -139,8 +139,8 @@ public enum BuildingType implements Blueprint {
 
         buildingCost = new HashMap<>();
         buildingCost.put("Wood", 10);
-        buildingCost.put("Stone",5);
-        buildingCost.put("Metal",2);
+        buildingCost.put("Stone", 5);
+        buildingCost.put("Metal", 2);
     }
 
     public List<String> initialiseTownCentreTextures() {
@@ -156,8 +156,8 @@ public enum BuildingType implements Blueprint {
     public void initialiseCastle() {
         buildingCost = new HashMap<>();
         buildingCost.put("Wood", 20);
-        buildingCost.put("Stone",10);
-        buildingCost.put("Metal",5);
+        buildingCost.put("Stone", 10);
+        buildingCost.put("Metal", 5);
     }
 
     public List<String> initialiseCastleTextures() {
@@ -176,8 +176,8 @@ public enum BuildingType implements Blueprint {
     public void initialiseSafeHouse() {
         buildingCost = new HashMap<>();
         buildingCost.put("Wood", 10);
-        buildingCost.put("Stone",5);
-        buildingCost.put("Metal",2);
+        buildingCost.put("Stone", 5);
+        buildingCost.put("Metal", 2);
     }
 
     public List<String> initialiseSafeHouseTextures() {
@@ -189,7 +189,6 @@ public enum BuildingType implements Blueprint {
         return safeHouseTextures;
     }
 
-
     /**
      * Initialises the textures and building costs for the Watch tower Building Tpe
      *
@@ -197,8 +196,8 @@ public enum BuildingType implements Blueprint {
     public void initialiseWatchTower() {
         buildingCost = new HashMap<>();
         buildingCost.put("Wood", 10);
-        buildingCost.put("Stone",7);
-        buildingCost.put("Metal",3);
+        buildingCost.put("Stone", 7);
+        buildingCost.put("Metal", 3);
     }
 
     public void initialiseForestPortal() {
@@ -250,7 +249,7 @@ public enum BuildingType implements Blueprint {
     }
 
     public List<String> initialiseWatchTowerTextures() {
-        List<String> watchTowerTextures = new ArrayList<String>();
+        List<String> watchTowerTextures = new ArrayList<>();
         watchTowerTextures.add("watchtower_0");
         watchTowerTextures.add("watchtower_90");
         watchTowerTextures.add("watchtower_180");
@@ -269,7 +268,7 @@ public enum BuildingType implements Blueprint {
     }
 
     public List<String> initialiseFenceTextures() {
-        List<String> fenceTextures = new ArrayList<String>();
+        List<String> fenceTextures = new ArrayList<>();
 
         fenceTextures.add("fenceN-S");
         fenceTextures.add("fenceNE-SW");
@@ -321,17 +320,17 @@ public enum BuildingType implements Blueprint {
 
     @Override
     public int getCost() {
-        switch(name){
-            case "Cabin":
-                return 100;
-            case "StorageUnit":
-                return 150;
-            case "TownCentre":
-                return 200;
-            case "Wall":
-                return 250;
-            default:
-                return 0;
+        switch (name) {
+        case "Cabin":
+            return 100;
+        case "StorageUnit":
+            return 150;
+        case "TownCentre":
+            return 200;
+        case "Wall":
+            return 250;
+        default:
+            return 0;
         }
     }
 
@@ -389,6 +388,3 @@ public enum BuildingType implements Blueprint {
         return getAllRequirements();
     }
 }
-
-
-

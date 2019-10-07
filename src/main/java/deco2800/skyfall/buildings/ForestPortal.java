@@ -3,20 +3,19 @@ package deco2800.skyfall.buildings;
 import com.badlogic.gdx.graphics.Texture;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.resources.Blueprint;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import deco2800.skyfall.worlds.biomes.DesertBiome;
 import deco2800.skyfall.worlds.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+/**
+ * TODO: [Portal Team] Consider creating an abstract base class for the portal.
+ */
 public class ForestPortal extends AbstractPortal implements Blueprint {
 
     public String currentBiome = "forest";
@@ -26,13 +25,11 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
     // a logger
     private final transient Logger logger = LoggerFactory.getLogger(ForestPortal.class);
 
-
-
-
     /**
      * Constructor for an building entity with normal rendering size.
-     * @param col the col position on the world
-     * @param row the row position on the world
+     *
+     * @param col         the col position on the world
+     * @param row         the row position on the world
      * @param renderOrder the height position on the world
      */
     public ForestPortal(float col, float row, int renderOrder) {
@@ -43,17 +40,13 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
     }
 
     @Override
-    public void setTexture(String texture) {
-        super.setTexture(texture);
-    }
-
-    @Override
     public void onTick(long i) {
         // do nothing so far
     }
 
     /**
      * Returns the number of wood required for the item.
+     *
      * @return The amount of wood needed
      */
     public int getRequiredWood() {
@@ -62,6 +55,7 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
 
     /**
      * Returns the number of stones required for the item.
+     *
      * @return The amount of stone needed
      */
     public int getRequiredStone() {
@@ -70,6 +64,7 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
 
     /**
      * Returns the number of metal required for the item.
+     *
      * @return The amount of metal needed
      */
     public int getRequiredMetal() {
@@ -77,11 +72,12 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
     }
 
     /**
-     * Returns a map of the name of the required resource and
-     * the required number of each resource to create the item.
+     * Returns a map of the name of the required resource and the required number of
+     * each resource to create the item.
+     *
      * @return a hashamp of the required resources and their number.
      */
-    public Map<String,Integer> getAllRequirements() {
+    public Map<String, Integer> getAllRequirements() {
         Map<String, Integer> allRequirements = new HashMap<>();
         allRequirements.put("Wood", 25);
         allRequirements.put("Stone", 10);
@@ -109,14 +105,10 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
     }
 
     /**
-     * changes the boolean blueprintLearned to true.
+     * Toggles the boolean blueprintLearned between a true and false state.
      */
     public void toggleBlueprintLearned() {
-        if (blueprintLearned == true) {
-            blueprintLearned = false;
-        } else {
-            blueprintLearned = true;
-        }
+        blueprintLearned = !blueprintLearned;
     }
 
     /**
@@ -130,6 +122,4 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
 
 
 
-
 }
-

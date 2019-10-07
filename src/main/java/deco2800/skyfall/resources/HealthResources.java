@@ -1,34 +1,47 @@
 package deco2800.skyfall.resources;
 
+//import deco2800.skyfall.entities.EnemyEntity;
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public abstract class HealthResources implements Item {
+public abstract class HealthResources extends AbstractEntity implements Item {
 
     // can the item be stored in the inventory
-    private Boolean carryable;
+    private boolean carryable;
+
     // the name of the item e.g. food, poison
     private String name;
+
     // impact the player's health or not
-    private Boolean hasHealingPower;
+    private boolean hasHealingPower;
 
     // the name of the subtype the item belongs to
-    public String subtype;
+    protected String subtype;
     // the co-ordinates of the tile the item has been placed on
     private HexVector position;
 
     // Items could change or not e.g. coins, items
-    private Boolean exchangeable;
+    private boolean exchangeable;
 
     // Can be item be equipped
-    public boolean equippable;
+    private boolean equippable;
 
     // the value of the piece of food
-    public int foodValue;
+    protected int foodValue;
+
+    // the biome the health resource is from
+    protected String biome;
 
     // the healing ability of the health item
-    public int healthValue;
+    protected int healthValue;
 
+    // the colour of the health resource
+    protected String colour;
+
+    private final transient Logger log = LoggerFactory.getLogger(HealthResources.class);
 
     /**
      * Creates a default health resource.
@@ -39,7 +52,7 @@ public abstract class HealthResources implements Item {
         this.subtype = "Health Resource";
         this.exchangeable = true;
         this.hasHealingPower = true;
-        this.equippable = false;
+        this.equippable = true;
         //Do we need a new type like FoodResources? and hasFoodEffect may false
         // in here as medicine may not affect the food fullness
 
@@ -62,8 +75,25 @@ public abstract class HealthResources implements Item {
         this.exchangeable = true;
         this.equippable = false;
         this.position = position.getCoordinates();
+
+        this.healthValue = 10;
     }
 
+    /**
+     * Returns the biome the Health Resource is situated in
+     * @return the biome the Health Resource is situated in
+     */
+    public String getBiome(){
+        return biome;
+    }
+
+    /**
+     * Returns the colour of the Health resource
+     * @return the colour of the Health resource
+     */
+    public String getColour(){
+        return colour;
+    }
 
     /**
      * Returns the name of the health resource
@@ -84,7 +114,7 @@ public abstract class HealthResources implements Item {
      */
 
 
-    public Boolean isCarryable() {
+    public boolean isCarryable() {
         return carryable;
     }
 
@@ -104,7 +134,7 @@ public abstract class HealthResources implements Item {
      * @return True if the item impacts on the player's health, false otherwise
      */
 
-    public Boolean hasHealingPower() {
+    public boolean hasHealingPower() {
         return hasHealingPower;
     }
 
@@ -124,7 +154,7 @@ public abstract class HealthResources implements Item {
      * @return True if the item could be exhanged, false otherwise
      */
     @Override
-    public Boolean isExchangeable() {
+    public boolean isExchangeable() {
         return exchangeable;
     }
 
@@ -141,6 +171,11 @@ public abstract class HealthResources implements Item {
     public int getFoodValue() {
         return foodValue;
     }
+
+    public void setHealthValue(int health){
+        this.healthValue = health;
+    }
+
     public int getHealthValue(){
         return healthValue;
     }
@@ -176,7 +211,12 @@ public abstract class HealthResources implements Item {
      * Returns whether or not the item can be equipped from the inventory
      * @return True if the item can be equipped, false otherwise
      */
-    public Boolean isEquippable() {
+    public boolean isEquippable() {
         return this.equippable;
+    }
+
+    @Override
+    public void onTick(long i) {
+        // Auto-generated method stub
     }
 }

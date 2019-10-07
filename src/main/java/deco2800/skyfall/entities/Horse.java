@@ -1,27 +1,34 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
-import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.animation.Direction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Horse extends VehicleEntity {
-    private static TextureManager textureManager;
-    private Stage stage;
-    private static final transient String BIOME = "forest";
+
+    private static final String BIOME = "forest";
     private MainCharacter mc;
     private boolean available = true;
-    private boolean moving=false;
-    private static final transient String VEHICLE = "horse_images";
-    private static final transient int HEALTH = 10;
+    private boolean moving = false;
+    private static final String VEHICLE = "horse_images";
+    private static final String CHARACTER = "horse_character";
+    private static final int HEALTH = 10;
+
+    private final Logger logger =
+            LoggerFactory.getLogger(Horse.class);
 
     public Horse(float col, float row, MainCharacter mc) {
         super(col,row);
         this.mc = mc;
-        this.setTexture("horse_images");
-        this.setObjectName("horse_images");
+        this.setTexture(VEHICLE);
+        this.setObjectName(VEHICLE);
         this.setHeight(1);
         this.setAvailable(available);
         this.setHealth(HEALTH);
+        this.setDirectionTextures();
+        this.configureAnimations();
     }
 
     public String getBiome() {
@@ -37,16 +44,16 @@ public class Horse extends VehicleEntity {
 
             if ((colDistance * colDistance + rowDistance * rowDistance) < 4){
 
-                //TODO: Let main character get onto vehicle
-                setTexture("horse_character");
-                setObjectName("horse_character");
+
+                setTexture(CHARACTER);
+                setObjectName(CHARACTER);
 
 
             } else {
                 this.setCurrentState(AnimationRole.NULL);
             }
         } else {
-            System.out.println("Main Character is null");
+            logger.info("Main Character is null");
         }
 
     }
@@ -59,5 +66,20 @@ public class Horse extends VehicleEntity {
         return this.moving;
     }
 
+    /**
+     * Sets the animations.
+     */
 
+    public void configureAnimations() {
+
+        // Walk animation
+        addAnimations(AnimationRole.MOVE, Direction.DEFAULT,
+                new AnimationLinker("tigerFront",
+                        AnimationRole.MOVE, Direction.DEFAULT, true, true));
+    }
+
+    public void setDirectionTextures() {
+
+
+    }
 }

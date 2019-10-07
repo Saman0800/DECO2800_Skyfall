@@ -1,27 +1,32 @@
 package deco2800.skyfall.resources;
 
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 
 /**
  * An abstract class representing a Natural Resource item
  */
-public abstract class NaturalResources implements Item {
+public abstract class NaturalResources extends AbstractEntity implements Item {
 
     // the name of the item e.g. wood, stone
-    public String name;
+    protected String name;
 
     // can the item be carried in the inventory or not
-    private Boolean carryable;
+    private boolean carryable;
 
     // the name of the subtype the item belongs to
-    public String subtype;
+    protected String subtype;
 
     // the co-ordinates of the tile the item has been placed on
     private HexVector position;
 
     // determines whether or not the resource can be traded
-    private Boolean exchangeable;
+    private boolean exchangeable;
+
+    // the name of the biome the resource is situated in
+    protected String biome;
 
     // Can be item be equipped
     public boolean equippable;
@@ -60,6 +65,14 @@ public abstract class NaturalResources implements Item {
         return name;
     }
 
+    /**
+     * Returns the biome the stone is situated in
+     * @return the biome the stone is situated in
+     */
+    public String getBiome(){
+        return biome;
+    }
+
 
     /**
      * Returns whether or not the item can be carried
@@ -67,7 +80,7 @@ public abstract class NaturalResources implements Item {
      * if it is consumed immediately
      */
     @Override
-    public Boolean isCarryable() {
+    public boolean isCarryable() {
         return carryable;
     }
 
@@ -90,8 +103,13 @@ public abstract class NaturalResources implements Item {
         return position;
     }
 
+    /**
+     * Returns whether or not the natural resource is exchangeable
+     * @return True or false depending on whether or not the resource
+     * is exchangeable
+     */
     @Override
-    public Boolean isExchangeable() {
+    public boolean isExchangeable() {
         return exchangeable;
     }
 
@@ -113,6 +131,8 @@ public abstract class NaturalResources implements Item {
         return "" + subtype + ":" + name;
     }
 
+
+
     /**
      * Returns the item description
      * @return the item description
@@ -126,8 +146,14 @@ public abstract class NaturalResources implements Item {
      * Returns whether or not the item can be equipped from the inventory
      * @return True if the item can be equipped, false otherwise
      */
-    public Boolean isEquippable() {
+    public boolean isEquippable() {
         return this.equippable;
     }
+
+    @Override
+    public void onTick(long i) {
+        // Auto-generated method stub
+    }
+
 
 }

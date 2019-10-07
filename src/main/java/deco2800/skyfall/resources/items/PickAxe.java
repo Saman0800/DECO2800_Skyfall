@@ -108,7 +108,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
      * @return true or false.
      */
     @Override
-    public Boolean isExchangeable() {
+    public boolean isExchangeable() {
         return true;
     }
 
@@ -134,6 +134,13 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
             if (x == 1) {
                 GameManager.getManagerFromInstance(InventoryManager.class).add(new Metal());
+            }
+
+            // lowering the possibility of gaining sand
+            double y = Math.random();
+
+            if (y >= 0.8) {
+                GameManager.getManagerFromInstance(InventoryManager.class).add(new Sand());
             }
 
             rockToFarm.setHealth(rockToFarm.getHealth() - 10);
@@ -219,7 +226,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
         for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
             if (entity instanceof AbstractRock) {
                 if (position.distance(entity.getPosition()) <= 1.5) {
-                    this.farmRock((ForestRock) entity);
+                    this.farmRock((AbstractRock) entity);
                 }
             }
         }

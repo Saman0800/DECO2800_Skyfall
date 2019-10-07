@@ -6,7 +6,6 @@ import deco2800.skyfall.worlds.Tile;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * An chest entity that spawns in the game.
@@ -15,8 +14,6 @@ public class Chest extends StaticEntity implements HasHealth {
     private int health = 100;
     private static final String ENTITY_ID_STRING = "chestClosed";
 
-    // TODO Remove this and replace the Random instance with the seeded Random as a
-    // parameter.
 
     // The chest to be stored
     private ChestManager manager;

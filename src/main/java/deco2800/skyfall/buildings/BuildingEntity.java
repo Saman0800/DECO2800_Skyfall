@@ -3,22 +3,28 @@ package deco2800.skyfall.buildings;
 import com.badlogic.gdx.graphics.Texture;
 import com.google.gson.annotations.Expose;
 
+import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.entities.AbstractEntity;
 
+import deco2800.skyfall.entities.ICombatEntity;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.Projectile;
+import deco2800.skyfall.entities.enemies.Enemy;
+import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 
 import deco2800.skyfall.managers.InventoryManager;
 
-import deco2800.skyfall.resources.Blueprint;
+
+import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.resources.Item;
 
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.world.World;
-import org.lwjgl.Sys;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,11 +32,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static deco2800.skyfall.entities.MainCharacter.*;
+
 /**
  *  A BuildingEntity is an base class for all building entity subclass,
  *  including basic information that a building object should contains.
  */
-public class BuildingEntity extends AbstractEntity  {
+public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     // a logger
     private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);
@@ -38,6 +46,8 @@ public class BuildingEntity extends AbstractEntity  {
     private static final String ENTITY_ID_STRING = "buildingEntityID";
     private Collider collider;
 
+    // health
+    private int health;
     //The type of building to be created
     private BuildingType buildingType;
 
@@ -48,10 +58,6 @@ public class BuildingEntity extends AbstractEntity  {
     @Expose
     private int maxHealth;
 
-    // changeable information for a specific building
-    private float col;
-    private float row;
-
     @Expose
     private int length;
 
@@ -60,13 +66,77 @@ public class BuildingEntity extends AbstractEntity  {
     private boolean upgradable;
     private int currentHealth;
 
-    private int maxInventorySize;
     private InventoryManager inventoryManager;
 
-    private boolean canAttack;
-    private boolean canDefend;
-    private AttackLevel attackLevel;
-    private DefendLevel defendLevel;
+    /**
+     * Item the Building is currently equipped with/holding.
+     */
+    private Item equippedItem;
+
+    //default value
+    private int itemSlotSelected = 0;
+
+    @Override
+    public void takeDamage(int damage) {
+        this.health -= damage;
+
+        // In Peon.class, when the health = 0, isDead will be set true automatically.
+        if (this.health <= 0) {
+            destroy();
+        }
+    }
+
+    private void destroy() {
+        GameManager.get().getWorld().removeEntity(this);
+    }
+
+    @Override
+    public void dealDamage(MainCharacter mc) {
+
+    }
+
+    @Override
+    public boolean canDealDamage() {
+        return false;
+    }
+
+    @Override
+    public int getDamage() {
+        switch (buildingType) {
+            case CABIN:
+                return 0;
+            case CASTLE:
+                return 1;
+            case TOWNCENTRE:
+                return 2;
+            case FENCE:
+                return 0;
+            case SAFEHOUSE:
+                return 1;
+            case WATCHTOWER:
+                return 2;
+            case STORAGE_UNIT:
+                return 0;
+            default:
+                return 0;
+        }
+    }
+
+    @Override
+    public int[] getResistanceAttributes() {
+        return new int[0];
+    }
+
+    @Override
+    public int getHealth() {
+        return this.health;
+    }
+
+    @Override
+    public void setHealth(int health) {
+        this.health = health;
+
+    }
 
     enum AttackLevel {
         LOW,
@@ -432,15 +502,13 @@ public class BuildingEntity extends AbstractEntity  {
         //do nothing
     }
 
-    //TODO: Empty interact methods need to not be empty wooo!
+
 
     public void cabinInteract() {
         //Resting at the cabin restores a players health.
         MainCharacter player = GameManager.getManagerFromInstance(GameMenuManager.class).getMainCharacter();
         player.changeHealth(+player.getMaxHealth());
-        //TODO: Update player health GUI.
-        //player.updateHealth();
-        //TODO: Needs to change game time.
+
     }
 
     public void fenceInteract() {}
@@ -486,5 +554,48 @@ public class BuildingEntity extends AbstractEntity  {
         this.inventoryManager.quickAccessRemove(item.getName());
     }
 
+    /**
+     * Fire a projectile in the position that the mouse is in.
+     *
+     * @param enemyPosition The position of the enemy.
+     */
+    protected void fireProjectile(HexVector enemyPosition) {
+        HexVector unitDirection = enemyPosition.subtract(this.getPosition()).normalized();
+
+        setCurrentState(AnimationRole.ATTACK);
+
+        // Make projectile move toward the angle
+        // Spawn projectile in front of character
+        Projectile projectile = new Projectile(enemyPosition,
+                ((Weapon) equippedItem).getTexture("attack"), "hitbox",
+                position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
+                position.getRow() + 0.5f + 1.5f * unitDirection.getRow(),
+                ((Weapon)equippedItem).getDamage(),
+                1,
+                this.itemSlotSelected == 1 ? (equippedItem.getName().equals("bow") ? 10 : 0) : 0);
+
+        // Add the projectile entity to the game world.
+        GameManager.get().getWorld().addEntity(projectile);
+
+        // Play weapon attack sound
+        switch (equippedItem.getName()) {
+            case "sword":
+                SoundManager.playSound(SWORDATTACK);
+                break;
+            case "spear":
+                SoundManager.playSound(SPEARATTACK);
+                break;
+            case "bow":
+                SoundManager.playSound(BOWATTACK);
+                break;
+            case "axe":
+                SoundManager.playSound(AXEATTACK);
+                break;
+            default:
+                SoundManager.playSound(HURT_SOUND_NAME);
+                break;
+        }
+
+    }
 
 }

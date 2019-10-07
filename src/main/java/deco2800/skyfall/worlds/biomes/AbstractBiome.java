@@ -5,15 +5,14 @@ import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 
-import java.lang.reflect.Array;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Class that represents the biomes
  */
-public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBiomeMemento> {
+public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBiomeMemento>, Serializable {
     private long id;
     private long worldID;
 
@@ -47,7 +46,6 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
      * @param parentBiome The biome that the biome lives in, null if the biome has no parent
      */
     public AbstractBiome(String biomeName, AbstractBiome parentBiome) {
-        // this(biomeName, new ArrayList<>());
         this.biomeName = biomeName;
         setParentBiome(parentBiome);
         tiles = new ArrayList<>();
@@ -60,7 +58,7 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
      *
      * @return An ArrayList of all the tiles within a biome
      */
-    public ArrayList<Tile> getTiles() {
+    public List<Tile> getTiles() {
         return tiles;
     }
 
@@ -93,7 +91,6 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
         if (tile.getBiome() != null) {
             tile.getBiome().tiles.remove(tile);
         }
-        // FIXME:Ontonator Make this work with chunks.
         tiles.add(tile);
         tile.setBiome(this);
         setTileTexture(tile);
@@ -194,7 +191,7 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
         this.id = memento.biomeID;
     }
 
-    public class AbstractBiomeMemento extends AbstractMemento {
+    public static class AbstractBiomeMemento extends AbstractMemento implements Serializable {
         // The ID of the world this is in
         private long worldID;
 
@@ -214,9 +211,6 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
             this.worldID = biome.worldID;
             this.biomeID = biome.id;
             this.biomeType = biome.getBiomeName();
-            if (biome.textureGenerator == null) {
-                System.out.println(biome.getBiomeName());
-            }
             this.noiseGeneratorSeed = biome.textureGenerator.getSeed();
             if (biome.getParentBiome() == null) {
                 // TODO find a better value to represent null

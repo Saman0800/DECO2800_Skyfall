@@ -3,7 +3,6 @@ package deco2800.skyfall.resources.items;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import deco2800.skyfall.resources.items.PoisonousMushroom;
 import static org.junit.Assert.*;
 
 public class PoisonousMushroomTest{
@@ -32,6 +31,14 @@ public class PoisonousMushroomTest{
         assertEquals("PoisonousMushroom", poisonousMushroom.getName());
     }
 
+    /**
+     * Tests the correct colour is returned for the health resource
+     */
+    @Test
+    public void getColourTest(){
+        assertEquals("black white", poisonousMushroom.getColour());
+
+    }
 
     /**
      * Ensure that PoisonousMushroom is classified as carryable
