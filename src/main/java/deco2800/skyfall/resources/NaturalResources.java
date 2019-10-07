@@ -4,11 +4,12 @@ import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
+import java.io.Serializable;
 
 /**
  * An abstract class representing a Natural Resource item
  */
-public abstract class NaturalResources extends AbstractEntity implements Item {
+public abstract class NaturalResources extends AbstractEntity implements Item, Serializable {
 
     // the name of the item e.g. wood, stone
     protected String name;
