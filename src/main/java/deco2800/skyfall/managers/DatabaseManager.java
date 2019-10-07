@@ -264,7 +264,7 @@ public final class DatabaseManager extends AbstractManager {
 
     /**
      * Gets the current DatabaseManger, and if it does exist create it and return it
-     * 
+     *
      * @return A DataBaseManager
      */
     public static DatabaseManager get() {
@@ -567,7 +567,7 @@ public final class DatabaseManager extends AbstractManager {
 
     /**
      * Gets the Database connector
-     * 
+     *
      * @return The database connector
      */
     public DataBaseConnector getDataBaseConnector() {

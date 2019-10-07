@@ -63,7 +63,7 @@ public abstract class SaveableEntity extends AbstractEntity
     }
 
     public static class SaveableEntityMemento extends AbstractMemento implements Serializable {
-        private String entityType;
+        public String entityType;
         private int height;
         private float row;
         private float col;

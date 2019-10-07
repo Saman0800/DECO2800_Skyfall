@@ -39,18 +39,16 @@ public class SoundManager extends AbstractManager {
                     (Gdx.files.internal(PATH + "robot_walk.wav")));
             soundMap.put("robotDie", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "robot_death.wav")));
-            soundMap.put("flowerOpen", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "flower_open.wav")));
-            soundMap.put("flowerDie", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "flower_death.wav")));
-            soundMap.put("stoneWalk", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "stone_walk.wav")));
-            soundMap.put("stoneDie", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "stone_die.wav")));
-            soundMap.put("treemanWalk", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "tree_monster_move.wav")));
-            soundMap.put("treemanDie", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "tree_monster_death.wav")));
+            soundMap.put("enemy_dead", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "enemy_dead.wav")));
+            soundMap.put("enemy_hurt", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "enemy_hurt.wav")));
+            soundMap.put("enemy_attack", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "enemy_attack.wav")));
+            soundMap.put("enemy_walk", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "enemy_walk.wav")));
+
+
             soundMap.put("sword", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "sword.wav")));
 

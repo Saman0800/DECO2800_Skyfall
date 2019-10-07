@@ -1,5 +1,6 @@
-package deco2800.skyfall.entities;
+package deco2800.skyfall.entities.worlditems;
 
+import deco2800.skyfall.entities.MainCharacter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
