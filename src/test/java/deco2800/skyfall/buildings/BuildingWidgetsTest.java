@@ -16,7 +16,7 @@ public class BuildingWidgetsTest extends BaseGDXTest {
     @Before
     public void setup() {
         WorldBuilder worldBuilder = new WorldBuilder();
-        WorldDirector.constructTestWorld(worldBuilder, 0);
+        WorldDirector.constructTestWorld(worldBuilder);
         GameManager.get().setWorld(worldBuilder.getWorld());
         widget = BuildingWidgets.get(GameManager.get());
     }
