@@ -51,4 +51,20 @@ public class BowTest {
     public void toStringTest() {
         Assert.assertEquals("range:bow", bow.toString());
     }
+
+    @Test
+    public void getRequiredMetalTest() {
+        Assert.assertEquals(15, bow.getRequiredMetal());
+    }
+
+    @Test
+    public void getRequiredWoodTest() {
+        Assert.assertEquals(40, bow.getRequiredWood());
+    }
+
+    @Test
+    public void getRequiredStoneTest() {
+        Assert.assertEquals(20, bow.getRequiredStone());
+    }
+
 }

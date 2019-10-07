@@ -51,4 +51,19 @@ public class SpearTest {
     public void toStringTest() {
         Assert.assertEquals("range:spear", spear.toString());
     }
+
+    @Test
+    public void getRequiredMetalTest() {
+        Assert.assertEquals(20, spear.getRequiredMetal());
+    }
+
+    @Test
+    public void getRequiredWoodTest() {
+        Assert.assertEquals(20, spear.getRequiredWood());
+    }
+
+    @Test
+    public void getRequiredStoneTest() {
+        Assert.assertEquals(20, spear.getRequiredStone());
+    }
 }

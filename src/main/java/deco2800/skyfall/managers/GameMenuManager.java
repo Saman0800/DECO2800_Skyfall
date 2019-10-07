@@ -363,6 +363,9 @@ public class GameMenuManager extends TickableManager {
                 new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this, sm, skin));
 
+        popUps.put("constructionTable", new ConstructionTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
+                null, textureManager, this, sm, skin));
         popUps.put("collectTable", new CollectCreateTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this, questManager, skin, "collect"));

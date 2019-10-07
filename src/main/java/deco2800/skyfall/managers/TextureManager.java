@@ -246,10 +246,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("fence_top_right", new Texture("resources/world_structures/fence_top_right.png"));
             textureMap.put("portal", new Texture("resources/world_structures/portal.png"));
             textureMap.put("portal_inv", new Texture("resources/world_structures/portal.png"));
-            textureMap.put("mountainPortal", new Texture("resources/world_structures/portal.png"));
-            textureMap.put("mountainPortal_inv", new Texture("resources/world_structures/portal.png"));
-            textureMap.put("desertPortal", new Texture("resources/world_structures/portal.png"));
-            textureMap.put("desertPortal_inv", new Texture("resources/world_structures/portal.png"));
 
             textureMap.put("big_circle", new Texture("resources/new_ui/OrangeCircle.png"));
             textureMap.put("inner_circle", new Texture("resources/new_ui/RedCircle.png"));
@@ -301,6 +297,10 @@ public class TextureManager extends AbstractManager {
             textureMap.put("mana_bar_inner", new Texture("resources/mana_bar_inner.png"));
 
             textureMap.put("inventory_banner", new Texture("resources/inventory_banner.png"));
+            textureMap.put("chest_banner", new Texture("resources/chest_banner.png"));
+            textureMap.put("crafting_banner", new Texture("resources/crafting_banner.png"));
+            textureMap.put("blueprint_shop_banner", new Texture("resources/blueprint_shop_banner.png"));
+            textureMap.put("building_banner", new Texture("resources/building_banner.png"));
             textureMap.put("goldPiece5", new Texture("resources/goldPieces/goldPieceFive.png"));
             textureMap.put("goldPiece10", new Texture("resources/goldPieces/goldPieceTen.png"));
             textureMap.put("goldPiece50", new Texture("resources/goldPieces/goldPieceFifty.png"));
@@ -443,6 +443,24 @@ public class TextureManager extends AbstractManager {
             textureMap.put("watchtower_90", new Texture("resources/world_structures/watchtower_90.png"));
             textureMap.put("watchtower_180", new Texture("resources/world_structures/watchtower_180.png"));
             textureMap.put("watchtower_270", new Texture("resources/world_structures/watchtower_270.png"));
+
+            //Portal Textures
+            textureMap.put("portal_desert", new Texture("resources/world_structures/portal_desert.png"));
+            textureMap.put("portal_forest", new Texture("resources/world_structures/portal_desert.png"));
+            textureMap.put("portal_mountain", new Texture("resources/world_structures/portal_desert.png"));
+            textureMap.put("portal_volcano", new Texture("resources/world_structures/portal_volcano.png"));
+            textureMap.put("desertPortal", new Texture("resources/world_structures/portal_desert.png"));
+            textureMap.put("forestPortal", new Texture("resources/world_structures/portal_desert.png"));
+            textureMap.put("volcanoPortal", new Texture("resources/world_structures/portal_volcano.png"));
+            textureMap.put("mountainPortal", new Texture("resources/world_structures/portal.png"));
+            textureMap.put("DesertPortal", new Texture("resources/world_structures/portal_desert.png"));
+            textureMap.put("ForestPortal", new Texture("resources/world_structures/portal_desert.png"));
+            textureMap.put("VolcanoPortal", new Texture("resources/world_structures/portal_volcano.png"));
+            textureMap.put("MountainPortal", new Texture("resources/world_structures/portal.png"));
+            textureMap.put("desertPortal_inv", new Texture("resources/world_structures/portal_desert.png"));
+            textureMap.put("forestPortal_inv", new Texture("resources/world_structures/portal_desert.png"));
+            textureMap.put("volcanoPortal_inv", new Texture("resources/world_structures/portal_volcano.png"));
+            textureMap.put("mountainPortal_inv", new Texture("resources/world_structures/portal.png"));
 
             // Old Enemy
             textureMap.put("robot", new Texture("resources/enemyOld/robot.png"));
