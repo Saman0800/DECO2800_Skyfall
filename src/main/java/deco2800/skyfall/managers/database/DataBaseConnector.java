@@ -681,52 +681,58 @@ public class DataBaseConnector {
      */
     public AbstractEntity createEntityFromMemento(SaveableEntityMemento entityMemento) throws LoadException {
         switch (entityMemento.getEntityType()) {
-        case "Bone":
-            return new Bone(entityMemento);
-        case "DesertShrub":
-            return new DesertShrub(entityMemento);
-        case "DesertCacti":
-            return new DesertCacti(entityMemento);
-        case "DesertRock":
-            return new DesertRock(entityMemento);
-        case "ForestMushroom":
-            return new ForestMushroom(entityMemento);
-        case "ForestShrub":
-            return new ForestShrub(entityMemento);
-        case "Leaves":
-            return new Leaves(entityMemento);
-        case "TreeStump":
-            return new TreeStump(entityMemento);
-        case "OrganicMound":
-            return new OrganicMound(entityMemento);
-        case "MountainRock":
-            return new MountainRock(entityMemento);
-        case "MountainTree":
-            return new MountainTree(entityMemento);
-        case "ForestRock":
-            return new ForestRock(entityMemento);
-        case "SnowClump":
-            return new SnowClump(entityMemento);
-        case "SnowShrub":
-            return new SnowShrub(entityMemento);
-        case "ForestTree":
-            return new ForestTree(entityMemento);
-        case "SwampShrub":
-            return new SwampShrub(entityMemento);
-        case "SwampRock":
-            return new SwampRock(entityMemento);
-        case "SwampTree":
-            return new SwampTree(entityMemento);
-        case "VolcanicShrub":
-            return new VolcanicShrub(entityMemento);
-        case "VolcanicRock":
-            return new VolcanicRock(entityMemento);
-        case "VolcanicTree":
-            return new VolcanicTree(entityMemento);
-        case "GoldPiece":
-                return new GoldPiece(entityMemento);
-        default:
-            throw new LoadException(String.format("Could not create %s from memento", entityMemento.getEntityType()));
+            case "Bone":
+                return new Bone(entityMemento);
+            case "DesertShrub":
+                return new DesertShrub(entityMemento);
+            case "DesertCacti":
+                return new DesertCacti(entityMemento);
+            case "DesertRock":
+                return new DesertRock(entityMemento);
+            case "ForestMushroom":
+                return new ForestMushroom(entityMemento);
+            case "ForestShrub":
+                return new ForestShrub(entityMemento);
+            case "Leaves":
+                return new Leaves(entityMemento);
+            case "TreeStump":
+                return new TreeStump(entityMemento);
+            case "OrganicMound":
+                return new OrganicMound(entityMemento);
+            case "MountainRock":
+                return new MountainRock(entityMemento);
+            case "MountainTree":
+                return new MountainTree(entityMemento);
+            case "ForestRock":
+                return new ForestRock(entityMemento);
+            case "SnowClump":
+                return new SnowClump(entityMemento);
+            case "SnowShrub":
+                return new SnowShrub(entityMemento);
+            case "ForestTree":
+                return new ForestTree(entityMemento);
+            case "SwampShrub":
+                return new SwampShrub(entityMemento);
+            case "SwampRock":
+                return new SwampRock(entityMemento);
+            case "SwampTree":
+                return new SwampTree(entityMemento);
+            case "VolcanicShrub":
+                return new VolcanicShrub(entityMemento);
+            case "VolcanicRock":
+                return new VolcanicRock(entityMemento);
+            case "VolcanicTree":
+                return new VolcanicTree(entityMemento);
+            case "Desert_Environment":
+                return new DesertEnvironment(entityMemento);
+            case "Shipwrecks":
+                return new Shipwrecks(entityMemento);
+                case "ruinedRobot":
+                return new ruinedRobot(entityMemento);
+            case "ruinedCity":
+                return new ruinedCity(entityMemento);
+            default:
+                throw new LoadException(String.format("Could not create %s from memento", entityMemento));
         }
     }
 
