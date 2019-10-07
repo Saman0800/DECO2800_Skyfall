@@ -15,6 +15,8 @@ import deco2800.skyfall.worlds.biomes.ForestBiome;
 import deco2800.skyfall.worlds.biomes.MountainBiome;
 import deco2800.skyfall.worlds.biomes.VolcanicMountainsBiome;
 import deco2800.skyfall.managers.StatisticsManager;
+import deco2800.skyfall.entities.worlditems.*;
+
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -110,6 +112,11 @@ public class WorldDirector {
                 "enemyHeavy"));
         builder.addEntity(new Scout(2,7, 0.7f, "Forest",
                 "enemyScout"));
+
+        builder.addEntity(new Camel(34, -7, mainCharacter));
+        builder.addEntity(new Horse(-8,-6, mainCharacter));
+
+        builder.addEntity(new hotSpring(2,10, mainCharacter));
 
         return builder;
     }

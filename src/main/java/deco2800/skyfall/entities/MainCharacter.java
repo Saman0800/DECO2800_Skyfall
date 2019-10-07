@@ -40,17 +40,10 @@ import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.observers.KeyUpObserver;
 import deco2800.skyfall.buildings.MountainPortal;
-import deco2800.skyfall.entities.spells.Spell;
-import deco2800.skyfall.entities.spells.SpellCaster;
-import deco2800.skyfall.entities.spells.SpellFactory;
-import deco2800.skyfall.entities.spells.SpellType;
-import deco2800.skyfall.entities.weapons.*;
-import deco2800.skyfall.gamemenu.HealthCircle;
-import deco2800.skyfall.gamemenu.ManaBar;
-import deco2800.skyfall.entities.vehicle.AbstractVehicle;
-import deco2800.skyfall.entities.vehicle.Bike;
 import deco2800.skyfall.entities.vehicle.SandCar;
-import deco2800.skyfall.managers.*;
+import deco2800.skyfall.animation.AnimationLinker;
+import deco2800.skyfall.buildings.BuildingFactory;
+import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.entities.spells.SpellCaster;
@@ -150,9 +143,9 @@ public class MainCharacter extends Peon
     private String itemToCreate;
 
     // Variables to sound effects
-    private static final String WALK_NORMAL = "people_walk_normal";
-    private static final String HURT_SOUND_NAME = "player_hurt";
-    private static final String DIED_SOUND_NAME = "player_died";
+    public static final String WALK_NORMAL = "people_walk_normal";
+    public static final String HURT_SOUND_NAME = "player_hurt";
+    public static final String DIED_SOUND_NAME = "player_died";
 
     public static final String BOWATTACK = "bow_and_arrow_attack";
     public static final String AXEATTACK = "axe_attack";
@@ -341,7 +334,8 @@ public class MainCharacter extends Peon
         for (Fixture fix : getBody().getFixtureList()) {
             Filter filter = fix.getFilterData();
             filter.categoryBits = (short) 0x2; // Set filter category to 2
-            filter.maskBits = (short) (0xFFFF ^ 0x4); // remove mask category 4 (projectiles)
+            filter.maskBits = (short) (0xFFFF
+                    ^ 0x4); // remove mask category 4 (projectiles)
             fix.setFilterData(filter);
         }
 
@@ -479,7 +473,9 @@ public class MainCharacter extends Peon
     public void unEquip() {
         // Return item to a tile in the world
         if (equippedItem instanceof Weapon) {
-            GameManager.get().getWorld().addEntity((StaticEntity) equippedItem);
+            Tile returnTile =
+                    GameManager.get().getWorld().getTile(((Weapon) equippedItem).getPosition());
+            GameManager.get().getWorld().addEntity(((Weapon) equippedItem).newInstance(returnTile));
         }
 
         this.equippedItem = new EmptyItem();
@@ -571,12 +567,20 @@ public class MainCharacter extends Peon
 
         // Make projectile move toward the angle
         // Spawn projectile in front of character
+        Projectile projectile = new Projectile(mousePosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
+                position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
+                position.getRow() + 0.5f + 1.5f * unitDirection.getRow(),
+                ((Weapon)equippedItem).getDamage(),
+                1,
+                this.itemSlotSelected == 1 ? (((Weapon)equippedItem).getName().equals("bow") ? 10 : 0) : 0);
+        /*
         Projectile projectile = new Projectile(mousePosition,
                 ((Weapon)equippedItem).getTexture("attackEntity"),
                 "hitbox",
-                position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
-                position.getRow() + 0.5f + 1.5f * unitDirection.getRow(), ((Weapon) equippedItem).getDamage(),
-                ((Weapon) equippedItem).getAttackRate(), this.itemSlotSelected == 1 ? 1 : 0);
+            position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
+            position.getRow() + 0.5f + 1.5f * unitDirection.getRow(), ((Weapon) equippedItem).getDamage(),
+            ((Weapon) equippedItem).getAttackRate(), this.itemSlotSelected == 1 ? 1 : 0);
+            */
 
         // Add the projectile entity to the game world.
         GameManager.get().getWorld().addEntity(projectile);

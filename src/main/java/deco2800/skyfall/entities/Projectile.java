@@ -47,7 +47,7 @@ public class Projectile extends AgentEntity implements Animatable {
     /**
      * How far this projectile will travel.
      */
-    protected int range;
+    protected float range;
 
     /**
      * Construct a new projectile.
@@ -59,15 +59,16 @@ public class Projectile extends AgentEntity implements Animatable {
      * @param damage      The damage this projectile will deal on hit.
      * @param speed       How fast this projectile is travelling.
      */
-    public Projectile(HexVector movementPosition, String textureName, String objectName, float col, float row,
-            int damage, float speed, int range) {
 
+    public Projectile(HexVector movementPosition, String textureName, String objectName,
+                      float col, float row, int damage, float speed, float range) {
         super(col, row, 3, speed);
 
         this.damage = damage;
         this.speed = speed;
         this.movementPosition = movementPosition;
         this.range = range;
+        this.textureName = textureName;
 
         this.setTexture(textureName);
         this.setObjectName(objectName);
@@ -80,11 +81,7 @@ public class Projectile extends AgentEntity implements Animatable {
             fix.setFilterData(filter);
         }
 
-        // Position the projectile correctly.
-        position.moveToward(movementPosition, speed);
-
         configureAnimations();
-
     }
 
     /**
@@ -101,7 +98,7 @@ public class Projectile extends AgentEntity implements Animatable {
      * 
      * @return The range this projectile will travel.
      */
-    public int getRange() {
+    public float getRange() {
         return this.range;
     }
 
@@ -131,9 +128,17 @@ public class Projectile extends AgentEntity implements Animatable {
             this.destroy();
         }
 
-        if (this.range >= 1) {
-            position.moveToward(movementPosition, speed);
-            getBody().setTransform(position.getCol(), position.getRow(), getBody().getAngle());
+        if (range > 0.f) {
+            if (range < speed) {
+                position.moveToward(movementPosition, range);
+            } else {
+                position.moveToward(movementPosition, speed);
+            }
+
+            range = Math.max(range - speed, 0.f);
+
+            getBody().setTransform(position.getCol(), position.getRow(),
+            getBody().getAngle());
         }
 
     }
@@ -154,7 +159,7 @@ public class Projectile extends AgentEntity implements Animatable {
     /**
      * Remove the projectile from the game world.
      */
-    private boolean beenDestroyed = false;
+    protected boolean beenDestroyed = false;
 
     public void destroy() {
         if (!beenDestroyed) {

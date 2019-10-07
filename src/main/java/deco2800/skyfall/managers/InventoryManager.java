@@ -432,6 +432,12 @@ public class InventoryManager extends TickableManager {
         return null;
     }
 
+
+    /**
+     * Returns an instance of a particular item type
+     * @param itemName String name of item
+     * @return Item instance of type itemName
+     */
     public Item getItemInstance(String itemName){
         List<Item> itemsList = this.inventory.get(itemName);
         Item item = itemsList.get(0);
