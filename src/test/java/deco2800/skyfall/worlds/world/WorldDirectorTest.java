@@ -38,7 +38,7 @@ public class WorldDirectorTest {
     @Test
     public void constructNBiomeSinglePlayerWorldTest(){
         WorldBuilder builder = Mockito.mock(WorldBuilder.class);
-        WorldDirector.constructNBiomeSinglePlayerWorld(builder, 0, 3, false);
+        WorldDirector.constructNBiomeSinglePlayerWorld(builder, 3, false);
         verify(builder).setType("single_player");
         verify(builder).setWorldSize(100);
         verify(builder).setNodeSpacing(20);
@@ -54,7 +54,7 @@ public class WorldDirectorTest {
     @Test
     public void constructTutorialWorldTest(){
         WorldBuilder builder = Mockito.mock(WorldBuilder.class);
-        WorldDirector.constructTutorialWorld(builder, 0);
+        WorldDirector.constructTutorialWorld(builder);
         verify(builder).setType("tutorial");
         verify(builder).setWorldSize(80);
         verify(builder).setNodeSpacing(15);
@@ -70,7 +70,7 @@ public class WorldDirectorTest {
     @Test
     public void constructServerWorldTest(){
         WorldBuilder builder = Mockito.mock(WorldBuilder.class);
-        WorldDirector.constructServerWorld(builder, 0);
+        WorldDirector.constructServerWorld(builder);
         verify(builder).setType("server");
         verify(builder).setWorldSize(80);
         verify(builder).setNodeSpacing(15);
@@ -80,7 +80,7 @@ public class WorldDirectorTest {
     @Test
     public void constructTestWorldTest(){
         WorldBuilder builder = Mockito.mock(WorldBuilder.class);
-        WorldDirector.constructTestWorld(builder, 0);
+        WorldDirector.constructTestWorld(builder);
         verify(builder).setType("single_player");
         verify(builder).setWorldSize(30);
         verify(builder).setNodeSpacing(5);
