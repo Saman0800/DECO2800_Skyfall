@@ -4,8 +4,6 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.database.DataBaseConnector;
-
-import deco2800.skyfall.worlds.Tile;
 import org.javatuples.Pair;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

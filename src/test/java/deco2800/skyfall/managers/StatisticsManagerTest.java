@@ -1,7 +1,8 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.*;
-import deco2800.skyfall.entities.enemies.Enemy;
+import deco2800.skyfall.entities.enemies.AbstractEnemy;
+import deco2800.skyfall.entities.enemies.Treeman;
 import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.resources.items.*;
 import deco2800.skyfall.resources.items.Stone;
@@ -18,9 +19,9 @@ public class StatisticsManagerTest {
     private StatisticsManager testManager;
 
     // Enemies used for testing
-    private Enemy testEnemy1;
-    private Enemy testEnemy2;
-    private Enemy testEnemy3;
+    private AbstractEnemy testEnemy1;
+    private AbstractEnemy testEnemy2;
+    private AbstractEnemy testEnemy3;
 
     // Weapons being used for testing
     private Weapon sword;
@@ -37,9 +38,9 @@ public class StatisticsManagerTest {
         testCharacter1 = MainCharacter.getInstance(4, 4, 0.5f, "Side Piece", 50);
 
         testManager = new StatisticsManager(this.testCharacter1);
-        testEnemy1 = new Enemy(1,1);
-        testEnemy2 = new Enemy(2,2);
-        testEnemy3 = new Enemy(3,3);
+        testEnemy1 = new Treeman(1,1, testCharacter1);
+        testEnemy2 = new Treeman(2,2, testCharacter1);
+        testEnemy3 = new Treeman(3,3, testCharacter1);
         sword = new Sword(new Tile(null, 0, 0), false);
         spear = new Spear(new Tile(null, 0, 0), false);
         bow = new Bow(new Tile(null, 0, 0), false);
@@ -135,8 +136,6 @@ public class StatisticsManagerTest {
         testManager.loseLevel();
 
         Assert.assertEquals(5, testManager.getLevel());
-        Assert.assertEquals(0, testManager.getHealth());
-
     }
 
     /**

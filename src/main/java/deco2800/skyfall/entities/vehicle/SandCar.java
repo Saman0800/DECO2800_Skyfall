@@ -87,12 +87,12 @@ public class SandCar extends AbstractVehicle implements Animatable, Item {
 
     @Override
     public void takeDamage(int damage) {
-        // override
+
     }
 
     @Override
     public void dealDamage(MainCharacter mc) {
-        // override
+
     }
 
     @Override
@@ -101,7 +101,7 @@ public class SandCar extends AbstractVehicle implements Animatable, Item {
     }
 
     @Override
-    public int getStrength() {
+    public int getDamage() {
         return 0;
     }
 

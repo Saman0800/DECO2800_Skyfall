@@ -45,7 +45,7 @@ public class EnemySpawnTable implements TimeObserver {
      * string of the biome name and the values a list of all the classes to be
      * spawned within the corresponding biome.
      */
-    private Map<String, List<Class<? extends Enemy>>> biomeToConstructor;
+    private Map<String, List<Class<? extends AbstractEnemy>>> biomeToConstructor;
 
     /**
      * A reference to the environment manager to make queries to.
@@ -64,14 +64,14 @@ public class EnemySpawnTable implements TimeObserver {
     MainCharacter mainCharacter = MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
 
     public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
-            Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
+            Map<String, List<Class<? extends AbstractEnemy>>> biomeToConstructor,
             Function<EnvironmentManager, Double> probAdjFunc) {
 
         this(spawnRadius, maxInRadius, frequency, biomeToConstructor, probAdjFunc, GameManager.get().getWorld());
     }
 
     public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
-            Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
+            Map<String, List<Class<? extends AbstractEnemy>>> biomeToConstructor,
             Function<EnvironmentManager, Double> probAdjFunc, World world) {
 
         this.spawnRadius = spawnRadius;
@@ -85,10 +85,10 @@ public class EnemySpawnTable implements TimeObserver {
     /**
      * @return Gets all the enemies from within the world.
      */
-    public List<Enemy> getAllEnemies() {
+    public List<AbstractEnemy> getAllAbstractEnemies() {
 
-        return world.getSortedAgentEntities().stream().filter(Enemy.class::isInstance)
-                .map(Enemy.class::cast).collect(Collectors.toList());
+        return world.getSortedAgentEntities().stream().filter(AbstractEnemy.class::isInstance)
+                .map(AbstractEnemy.class::cast).collect(Collectors.toList());
 
     }
 
@@ -118,9 +118,9 @@ public class EnemySpawnTable implements TimeObserver {
      * 
      * @return A list of all the enemies within range of the target.
      */
-    public List<Enemy> enemiesInTarget(float x, float y, float radius) {
+    public List<AbstractEnemy> enemiesInTarget(float x, float y, float radius) {
 
-        return getAllEnemies().stream().filter(enemy -> inRange(enemy, x, y, radius))
+        return getAllAbstractEnemies().stream().filter(enemy -> inRange(enemy, x, y, radius))
                 .collect(Collectors.toList());
 
     }
@@ -128,7 +128,7 @@ public class EnemySpawnTable implements TimeObserver {
     /**
      * Returns a list of all the enemies within range of the main character.
      */
-    public List<Enemy> enemiesNearCharacter() {
+    public List<AbstractEnemy> enemiesNearCharacter() {
 
         return enemiesInTarget(mainCharacter.getRow(), mainCharacter.getCol(), spawnRadius);
 
@@ -137,7 +137,7 @@ public class EnemySpawnTable implements TimeObserver {
     /**
      * Returns how many enemies are with close proximity of another enemy.
      * 
-     * @param x The enemy that we are making the count for.
+     * @param targetEnemy The enemy that we are making the count for.
      */
     public int enemiesNearTargetCount(float x, float y) {
 
@@ -200,7 +200,7 @@ public class EnemySpawnTable implements TimeObserver {
             }
 
             // Create an enemy using one of the appropriate constructors
-            List<Class<? extends Enemy>> possibleConstructors = biomeToConstructor
+            List<Class<? extends AbstractEnemy>> possibleConstructors = biomeToConstructor
                     .get(nextTile.getBiome().getBiomeName());
 
             if (possibleConstructors.size() == 0) {
@@ -216,10 +216,10 @@ public class EnemySpawnTable implements TimeObserver {
             spawnChance = Math.pow(spawnChance, Math.log(enemiesNearTargetCount(nextTile.getRow(), nextTile.getCol())));
 
             // Pick a class, any class!
-            Class<? extends Enemy> randEnemyType = possibleConstructors
+            Class<? extends AbstractEnemy> randEnemyType = possibleConstructors
                     .get(rand.nextInt(possibleConstructors.size()));
 
-            Enemy newEnemy;
+            AbstractEnemy newEnemy;
 
             try {
                 newEnemy = randEnemyType.getDeclaredConstructor(Float.class, Float.class).newInstance(nextTile.getRow(),
@@ -227,7 +227,7 @@ public class EnemySpawnTable implements TimeObserver {
                 world.addEntity(newEnemy);
                 enemiesPlaced += 1;
             } catch (Exception E) {
-                System.err.println("Could not create new Enemy: " + E.getMessage());
+                System.err.println("Could not create new AbstractEnemy: " + E.getMessage());
             }
         }
     }

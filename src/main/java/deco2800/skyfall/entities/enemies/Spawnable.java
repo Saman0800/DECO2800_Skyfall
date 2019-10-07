@@ -3,7 +3,7 @@ package deco2800.skyfall.entities.enemies;
 /*An interface required for spawning abstract entities
 with SpawningManager
  */
-public interface Spawnable<E extends Enemy> {
+public interface Spawnable<E extends AbstractEnemy> {
     /**
      * Required for spawning
      * returns a new instance, that is a deep copy

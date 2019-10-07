@@ -1,53 +1,55 @@
 package deco2800.skyfall.entities;
 
-import java.util.Map;
-import java.util.List;
-import org.slf4j.Logger;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.io.Serializable;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import org.slf4j.LoggerFactory;
-import deco2800.skyfall.Tickable;
-import deco2800.skyfall.managers.*;
-import deco2800.skyfall.GameScreen;
-import deco2800.skyfall.saving.Save;
-import deco2800.skyfall.worlds.Tile;
 import com.badlogic.gdx.math.Vector2;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.gamemenu.ManaBar;
-import deco2800.skyfall.entities.weapons.*;
-import deco2800.skyfall.resources.Blueprint;
-import deco2800.skyfall.resources.GoldPiece;
-import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.animation.Animatable;
 import com.badlogic.gdx.physics.box2d.Filter;
-import deco2800.skyfall.entities.vehicle.Bike;
-import deco2800.skyfall.entities.spells.Spell;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import deco2800.skyfall.gamemenu.HealthCircle;
-import deco2800.skyfall.saving.AbstractMemento;
+import deco2800.skyfall.GameScreen;
+import deco2800.skyfall.Tickable;
+import deco2800.skyfall.animation.Animatable;
+import deco2800.skyfall.animation.AnimationLinker;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.buildings.DesertPortal;
 import deco2800.skyfall.buildings.ForestPortal;
-import deco2800.skyfall.resources.items.Hatchet;
-import deco2800.skyfall.resources.items.PickAxe;
-import deco2800.skyfall.animation.AnimationRole;
-import deco2800.skyfall.observers.KeyUpObserver;
 import deco2800.skyfall.buildings.MountainPortal;
-import deco2800.skyfall.entities.vehicle.SandCar;
-import deco2800.skyfall.animation.AnimationLinker;
-import deco2800.skyfall.buildings.BuildingFactory;
-import deco2800.skyfall.entities.spells.SpellType;
-import deco2800.skyfall.observers.KeyDownObserver;
-import deco2800.skyfall.observers.TouchDownObserver;
+import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellCaster;
 import deco2800.skyfall.entities.spells.SpellFactory;
-import static deco2800.skyfall.buildings.BuildingType.*;
-import deco2800.skyfall.resources.ManufacturedResources;
+import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.entities.weapons.*;
+import deco2800.skyfall.gamemenu.HealthCircle;
+import deco2800.skyfall.gamemenu.ManaBar;
 import deco2800.skyfall.entities.vehicle.AbstractVehicle;
+import deco2800.skyfall.entities.vehicle.Bike;
+import deco2800.skyfall.entities.vehicle.SandCar;
+import deco2800.skyfall.managers.*;
+import deco2800.skyfall.observers.KeyDownObserver;
+import deco2800.skyfall.observers.KeyUpObserver;
+import deco2800.skyfall.observers.TouchDownObserver;
+import deco2800.skyfall.resources.Blueprint;
+import deco2800.skyfall.resources.GoldPiece;
+import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.resources.ManufacturedResources;
+import deco2800.skyfall.resources.items.Hatchet;
+import deco2800.skyfall.resources.items.PickAxe;
+import deco2800.skyfall.saving.AbstractMemento;
+import deco2800.skyfall.saving.Save;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.Tile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static deco2800.skyfall.buildings.BuildingType.*;
 
 /**
  * Main character in the game
@@ -140,7 +142,10 @@ public class MainCharacter extends Peon
     private String itemToCreate;
 
     // Variables to sound effects
-    public static final String WALK_NORMAL = "people_walk_normal";
+    private static final String WALK_NORMAL = "people_walk_normal";
+    private static final String PLAYER_HURT = "player_hurt";
+    private static final String DIED = "player_died";
+
     public static final String HURT_SOUND_NAME = "player_hurt";
     public static final String DIED_SOUND_NAME = "player_died";
 
@@ -229,6 +234,8 @@ public class MainCharacter extends Peon
     private boolean isRecovering = false;
     private boolean isTexChanging = false;
 
+    private boolean isAttacking = false;
+
     /**
      * Item player is currently equipped with/holding.
      */
@@ -263,7 +270,7 @@ public class MainCharacter extends Peon
     /**
      * The GUI health bar for the character.
      */
-    public HealthCircle healthBar;
+    private HealthCircle healthBar;
 
     /**
      * The GUI PopUp for the character
@@ -693,6 +700,14 @@ public class MainCharacter extends Peon
         //changeSwimming(false);
     }
 
+    public boolean isAttacking() {
+        return isAttacking;
+    }
+
+    private void setAttacking(boolean isAttacking) {
+        this.isAttacking = isAttacking;
+    }
+
     public void pickUpInventory(Item item) {
         this.inventories.add(item);
     }
@@ -716,26 +731,39 @@ public class MainCharacter extends Peon
         setHurt(true);
         changeHealth(-damage);
         updateHealth();
-        setCurrentState(AnimationRole.HURT);
+        logger.info("Current Health: {}", this.getHealth());
 
-        if (this.getHealth() <= 0) {
-            kill();
-        } else {
-            hurtTime = 0;
-            recoverTime = 0;
-            SoundManager.playSound(HURT_SOUND_NAME);
-            if (hurtTime > 400) {
-                setRecovering(true);
+        // If the player isn't recovering, set hurt and change health/animations
+        if (!isRecovering) {
+            setHurt(true);
+            this.changeHealth(-damage);
+            getBody().setLinearVelocity(getBody().getLinearVelocity()
+                    .lerp(new Vector2(0.f, 0.f), 0.5f));
+
+            // Check if player died and run kill method
+            if (this.getHealth() < 1) {
+                logger.info("Player died.");
+                kill();
+            } else {
+                hurtTime = 0;
+                recoverTime = 0;
+
+                SoundManager.playSound(PLAYER_HURT);
+
+                if (hurtTime > 400) {
+                    setRecovering(true);
+                }
             }
         }
     }
 
-    /**
+    /*
      * Checks if the players hurt is over
      */
-    public void checkIfHurtEnded() {
+    private void checkIfHurtEnded() {
         hurtTime += 20; // playerHurt for 1 second
-        if (hurtTime > 320) {
+
+        if (hurtTime > 400) {
             logger.info("Hurt ended");
             setHurt(false);
             setRecovering(true);
@@ -775,10 +803,10 @@ public class MainCharacter extends Peon
         this.isTexChanging = isTexChanging;
     }
 
-    /**
+    /*
      * Check if player has recovered
      */
-    public void checkIfRecovered() {
+    private void checkIfRecovered() {
         recoverTime += 20;
         this.changeCollideability(false);
 
@@ -815,6 +843,7 @@ public class MainCharacter extends Peon
     /**
      * @param isHurt the player's "playerHurt" status
      */
+    @SuppressWarnings("WeakerAccess")
     public void setHurt(boolean isHurt) {
         this.isHurt = isHurt;
     }
@@ -939,7 +968,7 @@ public class MainCharacter extends Peon
             }
             this.updatePosition();
         } else {
-            SoundManager.stopSound(WALK_NORMAL);
+            SoundManager.stopSound("people_walk_normal");
             getBody().setLinearVelocity(0f, 0f);
             residualFromPopUp = true;
         }
@@ -1332,11 +1361,6 @@ public class MainCharacter extends Peon
         // If the player can move to the next tile process the movement
         if (checkTileMovement()) {
             this.processMovement();
-        } else {
-            recordVelHistory(0, 0);
-            preventSliding(0, 0);
-            getBody().setLinearVelocity(getBody().getLinearVelocity().limit(0));
-            updateVel();
         }
 
         // Updates the players position based on where their body is located
@@ -1711,143 +1735,65 @@ public class MainCharacter extends Peon
         }
     }
 
-
     /**
      * Sets the animations.
      */
     @Override
     public void configureAnimations() {
+
         // Walk animation
         addAnimations(AnimationRole.MOVE, Direction.NORTH_WEST,
-                new AnimationLinker("MainCharacterNW_Anim", AnimationRole.MOVE,
-                        Direction.NORTH_WEST, true, true));
+                new AnimationLinker("MainCharacterNW_Anim",
+                        AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
+
         addAnimations(AnimationRole.MOVE, Direction.NORTH_EAST,
-                new AnimationLinker("MainCharacterNE_Anim", AnimationRole.MOVE,
-                        Direction.NORTH_WEST, true, true));
+                new AnimationLinker("MainCharacterNE_Anim",
+                        AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
+
         addAnimations(AnimationRole.MOVE, Direction.SOUTH_WEST,
-                new AnimationLinker("MainCharacterSW_Anim", AnimationRole.MOVE,
-                        Direction.SOUTH_WEST, true, true));
+                new AnimationLinker("MainCharacterSW_Anim",
+                        AnimationRole.MOVE, Direction.SOUTH_WEST, true, true));
+
         addAnimations(AnimationRole.MOVE, Direction.SOUTH_EAST,
-                new AnimationLinker("MainCharacterSE_Anim", AnimationRole.MOVE,
-                        Direction.SOUTH_EAST, true, true));
+                new AnimationLinker("MainCharacterSE_Anim",
+                        AnimationRole.MOVE, Direction.SOUTH_EAST, true, true));
+
         addAnimations(AnimationRole.MOVE, Direction.EAST,
-                new AnimationLinker("MainCharacterE_Anim", AnimationRole.MOVE,
-                        Direction.EAST, true, true));
+                new AnimationLinker("MainCharacterE_Anim",
+                        AnimationRole.MOVE, Direction.EAST, true, true));
+
         addAnimations(AnimationRole.MOVE, Direction.NORTH,
-                new AnimationLinker("MainCharacterN_Anim", AnimationRole.MOVE,
-                        Direction.NORTH, true, true));
+                new AnimationLinker("MainCharacterN_Anim",
+                        AnimationRole.MOVE, Direction.NORTH, true, true));
+
         addAnimations(AnimationRole.MOVE, Direction.WEST,
-                new AnimationLinker("MainCharacterW_Anim", AnimationRole.MOVE,
-                        Direction.WEST, true, true));
+                new AnimationLinker("MainCharacterW_Anim",
+                        AnimationRole.MOVE, Direction.WEST, true, true));
+
         addAnimations(AnimationRole.MOVE, Direction.SOUTH,
-                new AnimationLinker("MainCharacterS_Anim", AnimationRole.MOVE,
-                        Direction.SOUTH, true, true));
+                new AnimationLinker("MainCharacterS_Anim",
+                        AnimationRole.MOVE, Direction.SOUTH, true, true));
 
         // Attack animation
-        String eastAttackAnim = "MainCharacter_Attack_E_Anim";
-        addAnimations(AnimationRole.ATTACK, Direction.NORTH,
-                new AnimationLinker(eastAttackAnim, AnimationRole.ATTACK,
-                        Direction.NORTH, false, true));
-        addAnimations(AnimationRole.ATTACK, Direction.NORTH_EAST,
-                new AnimationLinker(eastAttackAnim, AnimationRole.ATTACK,
-                        Direction.NORTH_EAST, false, true));
-        addAnimations(AnimationRole.ATTACK, Direction.EAST,
-                new AnimationLinker(eastAttackAnim, AnimationRole.ATTACK,
-                        Direction.EAST, false, true));
-        addAnimations(AnimationRole.ATTACK, Direction.SOUTH_EAST,
-                new AnimationLinker(eastAttackAnim, AnimationRole.ATTACK,
-                        Direction.SOUTH_EAST, false, true));
-        addAnimations(AnimationRole.ATTACK, Direction.SOUTH,
-                new AnimationLinker(eastAttackAnim, AnimationRole.ATTACK,
-                        Direction.SOUTH, false, true));
-        String westAttackAnim = "MainCharacter_Attack_W_Anim";
-        addAnimations(AnimationRole.ATTACK, Direction.SOUTH_WEST,
-                new AnimationLinker(westAttackAnim, AnimationRole.ATTACK,
-                        Direction.SOUTH_WEST, false, true));
-        addAnimations(AnimationRole.ATTACK, Direction.WEST,
-                new AnimationLinker(westAttackAnim, AnimationRole.ATTACK,
-                        Direction.WEST, false, true));
-        addAnimations(AnimationRole.ATTACK, Direction.NORTH_WEST,
-                new AnimationLinker(westAttackAnim,
-                        AnimationRole.ATTACK, Direction.NORTH_WEST, false, true));
+        addAnimations(AnimationRole.ATTACK, Direction.DEFAULT,
+                new AnimationLinker("MainCharacter_Attack_E_Anim",
+                        AnimationRole.ATTACK, Direction.DEFAULT, false, true));
 
         // Hurt animation
-        String eastHurtAnim = "MainCharacter_Hurt_E_Anim";
-        String westHurtAnim = "MainCharacter_Hurt_W_Anim";
-        addAnimations(AnimationRole.HURT, Direction.NORTH,
-                new AnimationLinker(eastHurtAnim,
-                        AnimationRole.HURT, Direction.NORTH, false, true));
-        addAnimations(AnimationRole.HURT, Direction.NORTH_EAST,
-                new AnimationLinker(eastHurtAnim,
-                        AnimationRole.HURT, Direction.NORTH_EAST, false, true));
-        addAnimations(AnimationRole.HURT, Direction.EAST,
-                new AnimationLinker(eastHurtAnim,
-                        AnimationRole.HURT, Direction.EAST, false, true));
-        addAnimations(AnimationRole.HURT, Direction.SOUTH_EAST,
-                new AnimationLinker(eastHurtAnim,
-                        AnimationRole.HURT, Direction.SOUTH_EAST, false, true));
-        addAnimations(AnimationRole.HURT, Direction.SOUTH,
-                new AnimationLinker(eastHurtAnim,
-                        AnimationRole.HURT, Direction.SOUTH, false, true));
-        addAnimations(AnimationRole.HURT, Direction.SOUTH_WEST,
-                new AnimationLinker(westHurtAnim,
-                        AnimationRole.HURT, Direction.SOUTH_WEST, false, true));
-        addAnimations(AnimationRole.HURT, Direction.WEST,
-                new AnimationLinker(westHurtAnim,
-                        AnimationRole.HURT, Direction.WEST, false, true));
-        addAnimations(AnimationRole.HURT, Direction.NORTH_WEST,
-                new AnimationLinker(westHurtAnim,
-                        AnimationRole.HURT, Direction.NORTH_WEST, false, true));
+        addAnimations(AnimationRole.HURT, Direction.DEFAULT,
+                new AnimationLinker("MainCharacter_Hurt_E_Anim",
+                        AnimationRole.HURT, Direction.DEFAULT, true, true));
 
         // Dead animation
-        String eastDeadAnim = "MainCharacter_Dead_R_Anim";
-        String northEastDeadAnim = "MainCharacter_Dead_E_Anim";
-        addAnimations(AnimationRole.DEAD, Direction.EAST,
-                new AnimationLinker(eastDeadAnim,
-                        AnimationRole.DEAD, Direction.EAST,
-                        false, true));
-        addAnimations(AnimationRole.DEAD, Direction.NORTH_EAST,
-                new AnimationLinker(northEastDeadAnim,
-                        AnimationRole.DEAD, Direction.NORTH_EAST,
-                        false, true));
-        addAnimations(AnimationRole.DEAD, Direction.SOUTH_EAST,
-                new AnimationLinker(northEastDeadAnim,
-                        AnimationRole.DEAD, Direction.SOUTH_EAST,
-                        false, true));
-        addAnimations(AnimationRole.DEAD, Direction.NORTH,
-                new AnimationLinker(northEastDeadAnim,
-                        AnimationRole.DEAD, Direction.NORTH,
-                        false, true));
-        addAnimations(AnimationRole.DEAD, Direction.SOUTH,
-                new AnimationLinker(northEastDeadAnim,
-                        AnimationRole.DEAD, Direction.SOUTH,
-                        false, true));
-        addAnimations(AnimationRole.DEAD, Direction.WEST,
-                new AnimationLinker("MainCharacter_Dead_L_Anim",
-                        AnimationRole.DEAD, Direction.WEST,
-                        false, true));
-        addAnimations(AnimationRole.DEAD, Direction.SOUTH_WEST,
-                new AnimationLinker("MainCharacter_Dead_W_Anim",
-                        AnimationRole.DEAD, Direction.SOUTH_WEST,
-                        false, true));
-        addAnimations(AnimationRole.DEAD, Direction.NORTH_WEST,
-                new AnimationLinker("MainCharacter_Dead_W_Anim",
-                        AnimationRole.DEAD, Direction.NORTH_WEST,
-                        false, true));
+        addAnimations(AnimationRole.DEAD, Direction.DEFAULT,
+                new AnimationLinker("MainCharacter_Dead_E_Anim",
+                        AnimationRole.DEAD, Direction.DEFAULT, false, true));
+
+        
+        // Dead animation
         addAnimations(AnimationRole.STILL, Direction.DEFAULT,
                 new AnimationLinker("MainCharacter_Dead_E_Still",
-                        AnimationRole.STILL, Direction.DEFAULT,
-                        false, true));
-
-        // Add bike animation
-        addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.WEST,
-                new AnimationLinker("bikeW",
-                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.WEST,
-                        true, true));
-        addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.EAST,
-                new AnimationLinker("bikeE",
-                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.EAST,
-                        true, true));
+                        AnimationRole.STILL, Direction.DEFAULT, false, true));
     }
 
     private Map<Direction,String> defaultMainCharacterTextureMap=new HashMap<>();
@@ -1893,85 +1839,36 @@ public class MainCharacter extends Peon
      * If the animation is moving sets the animation state to be Move else NULL.
      * Also sets the direction
      */
-    public void updateAnimation() {
+    private void updateAnimation() {
         getPlayerDirectionCardinal();
 
         /* Short Animations */
-        if(isOnVehicle) {
-            if(vehicleType.equals("bike")) {
+        if(!isOnVehicle) {
+            if (getToBeRun() != null) {
+                if (getToBeRun().getType() == AnimationRole.DEAD) {
+                    setCurrentState(AnimationRole.STILL);
+                } else if (getToBeRun().getType() == AnimationRole.ATTACK) {
+                    return;
+                }
+            }
+
+            if (isDead()) {
+                setCurrentState(AnimationRole.STILL);
+            } else if (isHurt) {
+                setCurrentState(AnimationRole.HURT);
+            } else {
+                if (getVelocity().get(2) == 0f) {
+                    setCurrentState(AnimationRole.NULL);
+                } else {
+                    setCurrentState(AnimationRole.MOVE);
+                }
+            }
+
+        }else{
+            if (vehicleType.equals("bike")) {
                 setCurrentState(AnimationRole.VEHICLE_BIKE_MOVE);
             }
         }
-        if (getToBeRun() != null) {
-            if (getToBeRun().getType() == AnimationRole.DEAD) {
-                setCurrentState(AnimationRole.STILL);
-            } else if (getToBeRun().getType() == AnimationRole.ATTACK) {
-                return;
-            }
-        }
-
-        if (isHurt) {
-            setCurrentState(AnimationRole.HURT);
-        } else {
-            if (getVelocity().get(2) == 0f) {
-                setCurrentState(AnimationRole.NULL);
-            } else {
-                setCurrentState(AnimationRole.MOVE);
-            }
-        }
-    }
-
-    /**
-     * Get the duration main character hurts.
-     * @return the duration main character hurts.
-     */
-    public long getHurtTime() {
-        return hurtTime;
-    }
-    public void setHurtTime(long hurtTime) {
-        this.hurtTime = hurtTime;
-    }
-
-    /**
-     * Get the duration for main character to recover.
-     * @return the duration for main character to recover.
-     */
-    public long getRecoverTime() {
-        return recoverTime;
-    }
-    public void setRecoverTime(long recoverTime) {
-        this.recoverTime = recoverTime;
-    }
-
-    /**
-     * Get the duration for main character to die.
-     * @return the duration for main character to die.
-     */
-    public long getDeadTime() {
-        return deadTime;
-    }
-
-    /**
-     * Get the x-coordinate input of the player.
-     * @return the x-coordinate input of the player.
-     */
-    public int getXInput() {
-        return xInput;
-    }
-    /**
-     * Get the y-coordinate input of the player.
-     * @return the y-coordinate input of the player.
-     */
-    public int getYInput() {
-        return yInput;
-    }
-
-    /**
-     * Get whether main character is sprinting.
-     * @return whether main character is sprinting.
-     */
-    public boolean getIsSprinting() {
-        return isSprinting;
     }
 
     /**

@@ -4,15 +4,14 @@ import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.entities.enemies.Enemy;
+import deco2800.skyfall.entities.enemies.AbstractEnemy;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 
-public class Tiger extends Enemy implements Animatable {
-    //The health of tiger
-
+public class Tiger extends AbstractEnemy implements Animatable {
+    // The health of tiger
     private static final transient int HEALTH = 10;
     // The attack speed of tiger
     private static final transient float RUNAWAYSPEED = 5f;
@@ -26,7 +25,6 @@ public class Tiger extends Enemy implements Animatable {
     private Direction movingDirection;
     // Set boolean moving
     private boolean moving = false;
-
     // Set the period equal to zero , to account attack time
     private int period = 0;
     // Set the type
@@ -53,8 +51,9 @@ public class Tiger extends Enemy implements Animatable {
         this.setObjectName("petTiger");
         this.setHeight(5);
         this.setHealth(HEALTH);
+        this.setLevel(2);
         this.setSpeed(2);
-        this.setStrength(1);
+        this.setDamage(1);
         this.mc = mc;
         this.setDirectionTextures();
         this.configureAnimations();
@@ -69,6 +68,7 @@ public class Tiger extends Enemy implements Animatable {
         this.setObjectName("petTiger");
         this.setHeight(5);
         this.setHealth(HEALTH);
+        this.setLevel(2);
         this.setSpeed(2);
     }
 
@@ -225,6 +225,7 @@ public class Tiger extends Enemy implements Animatable {
      * if this pet is dead then will show dead texture for a while
      */
     int time = 0;
+
     private void tigerDead() {
         if (time <= 100) {
             time++;
