@@ -102,7 +102,7 @@ public class MainCharacterTest {
         inventoryManager = GameManager.get().getManagerFromInstance(InventoryManager.class);
 
         WorldBuilder builder = new WorldBuilder();
-        WorldDirector.constructTestWorld(builder, 0);
+        WorldDirector.constructTestWorld(builder);
         w = builder.getWorld();
 
         mockGM = mock(GameManager.class);

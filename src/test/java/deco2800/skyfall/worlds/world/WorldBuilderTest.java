@@ -7,6 +7,7 @@ import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.stubbing.Answer;

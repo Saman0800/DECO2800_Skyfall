@@ -17,7 +17,7 @@ public class BuildingFactoryTest {
     public void setup() {
         this.gm = GameManager.get();
         WorldBuilder wb = new WorldBuilder();
-        WorldDirector.constructTestWorld(wb, 0);
+        WorldDirector.constructTestWorld(wb);
         this.gm.setWorld(wb.getWorld());
         this.factory = new BuildingFactory();
     }

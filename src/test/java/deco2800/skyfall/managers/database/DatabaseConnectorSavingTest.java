@@ -1,37 +1,43 @@
 package deco2800.skyfall.managers.database;
 
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
+import static org.junit.Assert.*;
+
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.worlditems.SnowShrub;
+import deco2800.skyfall.managers.DatabaseManager;
+import deco2800.skyfall.saving.LoadException;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.saving.Save.SaveMemento;
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.biomes.ForestBiome;
 import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.Chunk.ChunkMemento;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.World.WorldMemento;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
-import org.flywaydb.core.Flyway;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.mockito.Mockito;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.powermock.api.mockito.PowerMockito.when;
+import org.flywaydb.core.Flyway;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 public class DatabaseConnectorSavingTest {
 
@@ -63,9 +69,6 @@ public class DatabaseConnectorSavingTest {
         ResultSet saveResults = null;
         try {
             Save save = new Save();
-            MainCharacter.resetInstance();
-            MainCharacter.getInstance();
-            MainCharacter.getInstance().setSave(save);
 
             World mockedWorld = Mockito.mock(World.class);
             when(mockedWorld.getSeed()).thenReturn(0L);
@@ -74,7 +77,7 @@ public class DatabaseConnectorSavingTest {
 
             dbConnector.saveGame(save);
 
-//            ArrayList<Save> saves = (ArrayList<Save>) dbConnector.loadSaveInformation();
+            ArrayList<Save> saves = (ArrayList<Save>) dbConnector.loadSaveInformation();
 
             int count = 0;
             getSaves = dbConnector.getConnection().prepareStatement("SELECT * FROM SAVES");
@@ -103,10 +106,6 @@ public class DatabaseConnectorSavingTest {
         try {
             Save save = new Save();
 
-            MainCharacter.resetInstance();
-            MainCharacter.getInstance();
-            MainCharacter.getInstance().setSave(save);
-
             World mockedWorld = Mockito.mock(World.class);
             when(mockedWorld.getSeed()).thenReturn(0L);
 
@@ -115,7 +114,7 @@ public class DatabaseConnectorSavingTest {
             dbConnector.saveGame(save);
             dbConnector.saveGame(save);
 
-//            ArrayList<Save> saves = (ArrayList<Save>) dbConnector.loadSaveInformation();
+            ArrayList<Save> saves = (ArrayList<Save>) dbConnector.loadSaveInformation();
 
             int count = 0;
             getSaves = dbConnector.getConnection().prepareStatement("SELECT * FROM SAVES");
@@ -142,9 +141,8 @@ public class DatabaseConnectorSavingTest {
             InsertDataQueries insertDataQueries = new InsertDataQueries(dbConnector.getConnection());
 
             WorldBuilder worldBuilder = new WorldBuilder();
-            WorldDirector.constructTestWorld(worldBuilder, 0);
+            WorldDirector.constructTestWorld(worldBuilder);
             World world = worldBuilder.getWorld();
-            world.setId(0);
 
             Save save = new Save();
 
@@ -158,15 +156,13 @@ public class DatabaseConnectorSavingTest {
             long saveId = save.getSaveID();
 
             dbConnector.saveWorld(world);
-            World loadedWorld = dbConnector.loadWorlds(save);
 
+            SaveMemento saveMemMock = Mockito.mock(SaveMemento.class);
             Save saveMock = Mockito.mock(Save.class);
             when(saveMock.getSaveID()).thenReturn(saveId);
-            when(saveMock.getCurrentWorldId()).thenReturn(worldId);
-            World worldLoaded = dbConnector.loadWorlds(saveMock);
+            when(saveMemMock.getWorldID()).thenReturn(worldId);
+            World worldLoaded = dbConnector.loadWorlds(saveMock, saveMemMock);
 
-            assertEquals(0, loadedWorld.getID());
-            assertEquals(0, loadedWorld.getRiverEdges().size());
             assertEquals(30, worldLoaded.getWorldParameters().getWorldSize());
             assertEquals(5, worldLoaded.getWorldParameters().getNodeSpacing());
             assertEquals(23, world.getBiomes().size());
@@ -181,13 +177,14 @@ public class DatabaseConnectorSavingTest {
         }
     }
 
+
     @Test
     public void updateWorldTest(){
         try {
             InsertDataQueries insertDataQueries = new InsertDataQueries(dbConnector.getConnection());
 
             WorldBuilder worldBuilder = new WorldBuilder();
-            WorldDirector.constructTestWorld(worldBuilder, 0);
+            WorldDirector.constructTestWorld(worldBuilder);
             World world = worldBuilder.getWorld();
 
             Save save = new Save();
@@ -204,11 +201,11 @@ public class DatabaseConnectorSavingTest {
             dbConnector.saveWorld(world);
             dbConnector.saveWorld(world);
 
-
+            SaveMemento saveMemMock = Mockito.mock(SaveMemento.class);
             Save saveMock = Mockito.mock(Save.class);
             when(saveMock.getSaveID()).thenReturn(saveId);
-            when(saveMock.getCurrentWorldId()).thenReturn(worldId);
-            World worldLoaded = dbConnector.loadWorlds(saveMock);
+            when(saveMemMock.getWorldID()).thenReturn(worldId);
+            World worldLoaded = dbConnector.loadWorlds(saveMock, saveMemMock);
 
             assertEquals(30, worldLoaded.getWorldParameters().getWorldSize());
             assertEquals(5, worldLoaded.getWorldParameters().getNodeSpacing());
@@ -364,44 +361,6 @@ public class DatabaseConnectorSavingTest {
             } catch (SQLException e) {
             }
         }
-    }
-
-    @Test
-    public void saveMainCharacterTest() {
-        PreparedStatement getSaves = null;
-        ResultSet saveResults = null;
-        try {
-            Save save = Mockito.mock(Save.class);
-            when(save.getSaveID()).thenReturn(0L);
-            MainCharacter.resetInstance();
-            MainCharacter.getInstance();
-            MainCharacter.getInstance().setSave(save);
-
-            SaveMemento saveMementoMock = Mockito.mock(SaveMemento.class);
-            InsertDataQueries insertDataQueries = new InsertDataQueries(dbConnector.getConnection());
-
-            insertDataQueries.insertSave(0, saveMementoMock);
-
-            dbConnector.saveMainCharacter();
-
-            int count = 0;
-            getSaves = dbConnector.getConnection().prepareStatement("SELECT * FROM MAIN_CHARACTER");
-            saveResults = getSaves.executeQuery();
-            while (saveResults.next()) {
-                count++;
-            }
-            assertEquals(1, count);
-
-        } catch (SQLException | IOException e) {
-            fail("Failed to the main character due to an exception occurring : " + e);
-        } finally {
-            try {
-                getSaves.close();
-                saveResults.close();
-            } catch (SQLException e) {
-            }
-        }
-
     }
 
 }

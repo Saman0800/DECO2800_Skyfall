@@ -1,7 +1,6 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.graphics.Texture;
-import org.omg.SendingContext.RunTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,9 +46,6 @@ public class TextureManager extends AbstractManager {
     public TextureManager() {
         try {
             textureMap.put("background", new Texture("resources/actualbackground.jpg"));
-            textureMap.put("load_game_back", new Texture("resources/load_game_menu/back.png"));
-            textureMap.put("load_game_delete", new Texture("resources/load_game_menu/delete.png"));
-
             textureMap.put("spacman_ded", new Texture("resources/spacman_ded.png"));
             textureMap.put("spacman_blue", new Texture("resources/spacman_blue.png"));
             textureMap.put("bowman", new Texture("resources/bowman.png"));
@@ -99,6 +95,11 @@ public class TextureManager extends AbstractManager {
             textureMap.put("lizardN", new Texture("resources/lizard/lizardN.png"));
             textureMap.put("lizardS", new Texture("resources/lizard/lizardS.png"));
 
+
+            textureMap.put("hot_spring", new Texture("resources/Environment/HotSprings.png"));
+            textureMap.put("in_hot_spring", new Texture("resources/Environment/HotSprings1.png"));
+            textureMap.put("ruinedCity", new Texture("resources/Environment/ruinedCity.png"));
+            textureMap.put("ruinedRobot", new Texture("resources/Environment/ruinedRobot.png"));
 
             /*
             // New Enemies (Scout, Heavy, Abductor)
@@ -178,6 +179,13 @@ public class TextureManager extends AbstractManager {
             }
 
             textureMap.put("sword", new Texture("resources/weapons/sword.png"));
+
+            //environment things
+            textureMap.put("shipwrecks", new Texture("resources/world_details/shipwrecks.png"));
+
+            textureMap.put("DEnvironment1", new Texture("resources/world_details/DEnvironment1.png"));
+            textureMap.put("DEnvironment2", new Texture("resources/world_details/DEnvironment2.png"));
+
             // Weapons pick-up
             textureMap.put("axe_tex", new Texture("resources/weapons/axe.png"));
             textureMap.put("bow_tex", new Texture("resources/weapons/bow.png"));
@@ -186,6 +194,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bow", new Texture("resources/weapons/bow.png"));
             textureMap.put("spear", new Texture("resources/weapons/spear.png"));
 
+            textureMap.put("bow_inv", new Texture("resources/weapons/bow.png"));
+            textureMap.put("spear_inv", new Texture("resources/weapons/spear.png"));
 
             // Weapons attack
             textureMap.put("sword_attack", new Texture("resources/weapons" +
@@ -453,8 +463,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("stoneRN", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRN.png"));
             textureMap.put("stoneDead", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/Dead.png"));
 
+            System.out.println("ALL TEXTURES LOADED SUCCESSFULLY");
 
-            LOGGER.info("ALL TEXTURES LOADED SUCCESSFULLY");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

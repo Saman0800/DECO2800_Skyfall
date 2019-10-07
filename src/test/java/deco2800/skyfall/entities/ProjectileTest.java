@@ -1,13 +1,22 @@
 package deco2800.skyfall.entities;
 
+import com.badlogic.gdx.Game;
+import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.world.World;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.powermock.api.mockito.PowerMockito.*;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ GameManager.class })
 /**
  * Projectile test suite.
  */
@@ -41,7 +50,8 @@ public class ProjectileTest  {
      */
     @Test
     public void testProjectileRange() {
-        assertEquals(projectile.getRange(),1);
+        assertThat("", projectile.getRange(), is(equalTo(1f)));
+
     }
 
     /**
@@ -49,11 +59,31 @@ public class ProjectileTest  {
      */
     @Test
     public void testProjectilePosition() {
-        System.out.println(projectile.getCol());
-        System.out.println(projectile.getRow());
+        assertThat("", projectile.getCol(), is(equalTo(1f)));
+        assertThat("", projectile.getRow(), is(equalTo(1f)));
+    }
 
-        assertThat("", projectile.getCol(), is(equalTo(0.29289323f)));
-        assertThat("", projectile.getRow(), is(equalTo(0.29289323f)));
+    @Test
+    public void testGetTextureName() {
+        assertThat("",projectile.getTextureName(),is(equalTo("slash")));
+    }
+
+    /**
+     * Test destroying the Projectile.
+     */
+    @Test
+    public void testDestroy() {
+        GameManager gmReal = GameManager.get();
+        //mockStatic(GameManager.class);
+        GameManager gm = mock(GameManager.class);
+        mockStatic(GameManager.class);
+
+        when(GameManager.get()).thenReturn(gm);
+        World mockWorld = mock(World.class);
+        when(gm.getWorld()).thenReturn(mockWorld);
+
+        projectile.destroy();
+        assertThat("",projectile.beenDestroyed,is(equalTo(true)));
     }
 
     /**

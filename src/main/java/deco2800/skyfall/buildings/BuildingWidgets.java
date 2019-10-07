@@ -62,7 +62,7 @@ public class BuildingWidgets {
 
     /**
      * Returns an instance of the building widgets.
-     *
+     * 
      * @return the building widgets
      */
     public static BuildingWidgets get(GameManager gm) {
@@ -114,7 +114,7 @@ public class BuildingWidgets {
 
     /**
      * Returns a health bar for showing current health of a building.
-     *
+     * 
      * @return a health bar
      */
     private ProgressBar createHealthBar() {
@@ -151,7 +151,7 @@ public class BuildingWidgets {
 
     /**
      * Returns the widget container.
-     *
+     * 
      * @return the table object forms the widget
      */
     public Table getMenu() {
@@ -160,7 +160,7 @@ public class BuildingWidgets {
 
     /**
      * Checks building upgrade costs and inventory resources.
-     *
+     * 
      * @param building the building clicked on the world
      * @return true if enough resources provided for a upgrade, otherwise false
      */
@@ -185,7 +185,7 @@ public class BuildingWidgets {
 
     /**
      * Based on option to remove or add building resources into the inventory.
-     *
+     * 
      * @param costs  a list of resources with their amount
      * @param option remove resources if is 0, add resources if is 1
      */
@@ -214,7 +214,7 @@ public class BuildingWidgets {
 
     /**
      * Upgrades the building object when upgrade button is clicked.
-     *
+     * 
      * @param building a building is selected on the world
      */
     private void upgradeBuilding(BuildingEntity building) {
@@ -273,7 +273,7 @@ public class BuildingWidgets {
 
     /**
      * Interact methods for buildings
-     *
+     * 
      * @param building building selected from world.
      */
     private void interactBuilding(BuildingEntity building) {
@@ -297,14 +297,15 @@ public class BuildingWidgets {
             building.watchtowerInteract();
             break;
         case STORAGE_UNIT:
-            default:
-                break;
+            break;
+        default:
+            break;
         }
     }
 
     /**
      * Sets up a container of the building widget with correct position settings.
-     *
+     * 
      * @param building a building is selected on the world
      */
     private void setMenu(BuildingEntity building) {
@@ -317,11 +318,11 @@ public class BuildingWidgets {
 
     /**
      * Sets up a health bar inside the building widget with its relevant functions.
-     *
+     * 
      * @param building a building is selected on the world
      */
     private void setHealthBar(BuildingEntity building) {
-        float health = (float) building.getCurrentHealth() / building.getInitialHealth();
+        float health = building.getCurrentHealth() / building.getInitialHealth();
         healthBar.setValue(health);
         if (health < 0f) {
             healthBar.setValue(0f);
@@ -333,65 +334,63 @@ public class BuildingWidgets {
     /**
      * Sets up a upgrade button inside the building widget with its relevant
      * functions.
-     *
+     * 
      * @param building a building is selected on the world
      */
     private void setUpgradeBtn(BuildingEntity building) {
         if (upgradeListener != null) {
             upgradeBtn.removeListener(upgradeListener);
         }
-        upgradeListener = new ClickListener() {
+
+        upgradeBtn.addListener(upgradeListener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 upgradeBuilding(building);
             }
-        };
-        upgradeBtn.addListener(upgradeListener);
+        });
     }
 
     /**
      * Sets up a interact button inside the building widget with its relevant
      * functions.
-     *
+     * 
      * @param building a building is selected on the world
      */
     private void setInteractBtn(BuildingEntity building) {
         if (interactListener != null) {
             interactBtn.removeListener(interactListener);
         }
-        interactListener = new ClickListener() {
+        interactBtn.addListener(interactListener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 interactBuilding(building);
             }
-        };
-        interactBtn.addListener(interactListener);
+        });
     }
 
     /**
      * Sets up a destroy button inside the building widget with its relevant
      * functions.
-     *
+     * 
      * @param building a building is selected on the world
      */
     private void setDestroyBtn(BuildingEntity building) {
         if (destroyListener != null) {
             destroyBtn.removeListener(destroyListener);
         }
-        destroyListener = new ClickListener() {
+        destroyBtn.addListener(destroyListener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 destroyBuilding(building, 0.3f);
                 menu.setVisible(false);
             }
-        };
-        destroyBtn.addListener(destroyListener);
+        });
     }
 
     /**
      * Sets up a widget with specific information of a selected building and its
      * position, then showing it.
-     *
+     * 
      * @param building a building is selected on the world
      */
     private void setWidgets(BuildingEntity building) {
@@ -438,10 +437,15 @@ public class BuildingWidgets {
             for (AbstractEntity entity : world.getEntities()) {
                 if (entity instanceof BuildingEntity) {
                     Collider collider = ((BuildingEntity) entity).getCollider();
-                    if ((collider != null) && !(collider.getX() <= mousePos[0] && collider.getY() <= mousePos[1]
-                            && collider.getX() + collider.getXLength() >= mousePos[0]
-                            && collider.getY() + collider.getYLength() >= mousePos[1])
-                            || (collider == null) && !tile.getCoordinates().equals(entity.getPosition())) {
+
+                    boolean mouseNotInRange = (collider != null) && !(collider.getX() <= mousePos[0]
+                            && collider.getY() <= mousePos[1] && collider.getX() + collider.getXLength() >= mousePos[0]
+                            && collider.getY() + collider.getYLength() >= mousePos[1]);
+
+                    boolean entityAtTilePosition = (collider == null)
+                            && !tile.getCoordinates().equals(entity.getPosition());
+
+                    if (mouseNotInRange || entityAtTilePosition) {
                         continue;
                     }
 
