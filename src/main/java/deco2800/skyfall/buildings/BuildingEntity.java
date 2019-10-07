@@ -101,6 +101,10 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
     }
 
     @Override
+    public int getStrength() {
+        return 0;
+    }
+
     public int getDamage() {
         switch (buildingType) {
             case CABIN:
