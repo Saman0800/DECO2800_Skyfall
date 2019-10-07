@@ -1,22 +1,25 @@
 package deco2800.skyfall.managers;
 
-import deco2800.skyfall.entities.*;
-import deco2800.skyfall.entities.worlditems.*;
-import deco2800.skyfall.managers.database.DataBaseConnector;
-import deco2800.skyfall.worlds.world.World;
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.util.HexVector;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.AgentEntity;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.entities.worlditems.ForestRock;
+import deco2800.skyfall.managers.database.DataBaseConnector;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -24,7 +27,6 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.lang.reflect.InvocationTargetException;
 
 public final class DatabaseManager extends AbstractManager {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
