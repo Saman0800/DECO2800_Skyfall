@@ -11,16 +11,14 @@ import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.buildings.BuildingFactory;
-import deco2800.skyfall.buildings.DesertPortal;
-import deco2800.skyfall.buildings.ForestPortal;
-import deco2800.skyfall.buildings.MountainPortal;
+import deco2800.skyfall.buildings.*;
 import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellCaster;
 import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.gamemenu.HealthCircle;
+import deco2800.skyfall.gamemenu.popupmenu.ConstructionTable;
 import deco2800.skyfall.gamemenu.ManaBar;
 import deco2800.skyfall.entities.vehicle.AbstractVehicle;
 import deco2800.skyfall.entities.vehicle.Bike;
@@ -50,6 +48,7 @@ import java.util.List;
 import java.util.Map;
 
 import static deco2800.skyfall.buildings.BuildingType.*;
+
 
 /**
  * Main character in the game
@@ -122,24 +121,31 @@ public class MainCharacter extends Peon
     // Manager for all of MainCharacter's inventories
     private InventoryManager inventories;
 
-    // List of blueprints that the player has learned.
+    public boolean toBuild;
+    //List of blueprints that the player has learned.
 
     private List<Blueprint> blueprintsLearned;
     private PetsManager petsManager;
     private BuildingFactory tempFactory;
 
-    // List of the Biomes Unlocked
+    // List of the Biomes locked
     private List<String> lockedBiomes;
 
-    /**
-     * Please feel free to change, this is not accurate as to the stages of the game
+    /*
+        What stage of the game is the player on? Controls what blueprints
+        the player can buy and make.
+        0 = Forest
+        1 = Desert
+        2 = Mountain
+        3 = Volcano
      */
-    public enum GameStage {
-        FOREST, DESERT, MOUNTAIN, SNOW, LAVA
-    }
+    public int gameStage;
 
     // The name of the item to be created.
     private String itemToCreate;
+
+    public List<BuildingType> craftedBuildings;
+    public List<BuildingType> constructedBuildings;
 
     // Variables to sound effects
     private static final String WALK_NORMAL = "people_walk_normal";
@@ -200,11 +206,7 @@ public class MainCharacter extends Peon
     // Is the camera locked onto the main character
     private boolean cameraLock = true;
 
-    /*
-     * What stage of the game is the player on? Controls what blueprints the player
-     * can buy and make.
-     */
-    private GameStage gameStage;
+
 
     /*
      * Used for combat testing melee/range weapons. What number item slot the player
@@ -293,13 +295,16 @@ public class MainCharacter extends Peon
      */
     public MainCharacter(float col, float row, float speed, String name, int health) {
         super(row, col, speed, name, health, "MainCharacter");
+        toBuild = false;
         this.id = System.nanoTime();
-        gameStage = GameStage.FOREST;
+        gameStage = 0;
         this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
         this.setHeight(1);
         this.setObjectName("MainPiece");
         this.setMaxHealth(health);
         initialiselockedBiomes();
+        constructedBuildings = new ArrayList<>();
+        craftedBuildings = new ArrayList<>();
 
         GameManager.getManagerFromInstance(InputManager.class).addKeyDownListener(this);
         GameManager.getManagerFromInstance(InputManager.class).addKeyUpListener(this);
@@ -338,7 +343,8 @@ public class MainCharacter extends Peon
         for (Fixture fix : getBody().getFixtureList()) {
             Filter filter = fix.getFilterData();
             filter.categoryBits = (short) 0x2; // Set filter category to 2
-            filter.maskBits = (short) (0xFFFF ^ 0x4); // remove mask category 4 (projectiles)
+            filter.maskBits = (short) (0xFFFF
+                    ^ 0x4); // remove mask category 4 (projectiles)
             fix.setFilterData(filter);
         }
 
@@ -476,7 +482,9 @@ public class MainCharacter extends Peon
     public void unEquip() {
         // Return item to a tile in the world
         if (equippedItem instanceof Weapon) {
-            GameManager.get().getWorld().addEntity((StaticEntity) equippedItem);
+            Tile returnTile =
+                    GameManager.get().getWorld().getTile(((Weapon) equippedItem).getPosition());
+            GameManager.get().getWorld().addEntity(((Weapon) equippedItem).newInstance(returnTile));
         }
 
         this.equippedItem = new EmptyItem();
@@ -568,12 +576,20 @@ public class MainCharacter extends Peon
 
         // Make projectile move toward the angle
         // Spawn projectile in front of character
+        Projectile projectile = new Projectile(mousePosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
+                position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
+                position.getRow() + 0.5f + 1.5f * unitDirection.getRow(),
+                ((Weapon)equippedItem).getDamage(),
+                1,
+                this.itemSlotSelected == 1 ? (((Weapon)equippedItem).getName().equals("bow") ? 10 : 0) : 0);
+        /*
         Projectile projectile = new Projectile(mousePosition,
                 ((Weapon)equippedItem).getTexture("attackEntity"),
                 "hitbox",
-                position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
-                position.getRow() + 0.5f + 1.5f * unitDirection.getRow(), ((Weapon) equippedItem).getDamage(),
-                ((Weapon) equippedItem).getAttackRate(), this.itemSlotSelected == 1 ? 1 : 0);
+            position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
+            position.getRow() + 0.5f + 1.5f * unitDirection.getRow(), ((Weapon) equippedItem).getDamage(),
+            ((Weapon) equippedItem).getAttackRate(), this.itemSlotSelected == 1 ? 1 : 0);
+            */
 
         // Add the projectile entity to the game world.
         GameManager.get().getWorld().addEntity(projectile);
@@ -908,8 +924,14 @@ public class MainCharacter extends Peon
             float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
             float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 
-            // Check we have permission to build
-
+            //Check we have permission to build
+            if (toBuild) {
+                GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
+                ConstructionTable bs = (ConstructionTable) gmm.getPopUp("constructionTable");
+                bs.build(GameManager.get().getWorld(),
+                        (int) clickedPosition[0], (int) clickedPosition[1]);
+            }
+            /*
             if (GameManager.getManagerFromInstance(ConstructionManager.class).getStatus() == 1) {
                 // System.out.println(clickedPosition[0]);
                 // System.out.println(clickedPosition[1]);
@@ -928,6 +950,7 @@ public class MainCharacter extends Peon
                 GameManager.getManagerFromInstance(ConstructionManager.class).build(GameManager.get().getWorld(),
                         (int) clickedPosition[0], (int) clickedPosition[1]);
             }
+             */
         }
 
     }
@@ -986,7 +1009,11 @@ public class MainCharacter extends Peon
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-            GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
+            GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
+            ConstructionTable bs = (ConstructionTable) gmm.getPopUp("constructionTable");
+            bs.updateBlueprintShopPanel();
+            gmm.setPopUp("constructionTable");
+            //GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
         }
 
         // After death, check if health is restored after restart
@@ -1201,30 +1228,31 @@ public class MainCharacter extends Peon
         }
 
         switch (keycode) {
-        case Input.Keys.W:
-            yInput -= 1;
-            break;
-        case Input.Keys.A:
-            xInput -= -1;
-            break;
-        case Input.Keys.S:
-            yInput -= -1;
-            break;
-        case Input.Keys.D:
-            xInput -= 1;
-            break;
-        case Input.Keys.SHIFT_LEFT:
-            isSprinting = false;
-            maxSpeed /= 2.f;
-            break;
-        case Input.Keys.SPACE:
-            break;
-        case Input.Keys.G:
-            break;
-        case Input.Keys.M:
-            break;
-        default:
-            break;
+            case Input.Keys.W:
+                yInput -= 1;
+                break;
+            case Input.Keys.A:
+                xInput -= -1;
+                break;
+            case Input.Keys.S:
+                yInput -= -1;
+                break;
+            case Input.Keys.D:
+                xInput -= 1;
+                break;
+            case Input.Keys.SHIFT_LEFT:
+                isSprinting = false;
+                maxSpeed /= 2.f;
+                break;
+            case Input.Keys.SPACE:
+                SoundManager.stopSound(WALK_NORMAL);
+                break;
+            case Input.Keys.G:
+                break;
+            case Input.Keys.M:
+                break;
+            default:
+                break;
         }
     }
 
@@ -1590,28 +1618,43 @@ public class MainCharacter extends Peon
 
     public List<Blueprint> getUnlockedBlueprints() {
         List<Blueprint> unlocked = new ArrayList<>();
+
+        // For items and general storage
         QuestManager qm = GameManager.get().getManager(QuestManager.class);
         switch (gameStage) {
-        case LAVA:
+            case 3:
+                unlocked.add(SAFEHOUSE);
+            case 2:
+                unlocked.add(WATCHTOWER);
+            case 1:
+                unlocked.add(CABIN);
+            case 0:
+                unlocked.add(new Hatchet());
+                unlocked.add(new PickAxe());
+                unlocked.add(new Sword());
+                unlocked.add(new Bow());
+                unlocked.add(new Spear());
+                unlocked.add(CASTLE);
+        }
 
-        case SNOW:
-            unlocked.add(CABIN);
-        case MOUNTAIN:
-            unlocked.add(WATCHTOWER);
-            unlocked.add(new MountainPortal(0, 0, 0));
-        case DESERT:
-            unlocked.add(CABIN);
-            unlocked.add(new DesertPortal(0, 0, 0));
-        case FOREST:
-            unlocked.add(new Hatchet());
-            unlocked.add(new PickAxe());
-            unlocked.add(new Sword());
-            unlocked.add(new Bow());
-            unlocked.add(new Spear());
-            unlocked.add(CASTLE);
-            if(qm.questFinished()) {
-                unlocked.add(new ForestPortal(0, 0, 0));
-            }
+        // for portals
+        switch (gameStage) {
+            case 3:
+                if (constructedBuildings.contains(SAFEHOUSE)) {
+                    unlocked.add(new ForestPortal(0, 0, 0));
+                }
+            case 2:
+                if (constructedBuildings.contains(WATCHTOWER)) {
+                    unlocked.add(new MountainPortal(0, 0, 0));
+                }
+            case 1:
+                if (constructedBuildings.contains(CABIN)) {
+                    unlocked.add(new DesertPortal(0, 0, 0));
+                }
+            case 0:
+                if (constructedBuildings.contains(CASTLE)) {
+                    unlocked.add(new ForestPortal(0, 0, 0));
+                }
         }
         return unlocked;
 
@@ -1654,66 +1697,82 @@ public class MainCharacter extends Peon
         for (Blueprint blueprint : getBlueprintsLearned()) {
             if (blueprint.getClass() == newItem.getClass()) {
 
-                if (newItem.getRequiredMetal() > this.getInventoryManager().getAmount("Metal")) {
-                    logger.info("You don't have enough Metal");
+//                if (newItem.getRequiredMetal() > this.getInventoryManager().
+//                        getAmount("Metal")) {
+//                    logger.info("You don't have enough Metal");
+//
+//                } else if (newItem.getRequiredWood() > this.getInventoryManager().
+//                        getAmount("Wood")) {
+//                    logger.info("You don't have enough Wood");
+//
+//                } else if (newItem.getRequiredStone() > this.getInventoryManager().
+//                        getAmount("Stone")) {
+//                    logger.info("You don't have enough Stone");
 
-                } else if (newItem.getRequiredWood() > this.getInventoryManager().getAmount("Wood")) {
-                    logger.info("You don't have enough Wood");
-
-                } else if (newItem.getRequiredStone() > this.getInventoryManager().getAmount("Stone")) {
-                    logger.info("You don't have enough Stone");
-
+                // testing
+                if (false) {
                 } else {
                     switch (newItem.getName()) {
-                    case "Hatchet":
-                        this.getInventoryManager().add(new Hatchet());
-                        break;
-                    case "Pick Axe":
-                        this.getInventoryManager().add(new PickAxe());
-                        break;
+                        case "Hatchet":
+                            this.getInventoryManager().add(new Hatchet());
+                            break;
+                        case "Pick Axe":
+                            this.getInventoryManager().add(new PickAxe());
+                            break;
 
-                    case "sword":
-                        this.getInventoryManager().add(new Sword());
-                        break;
-                    case "spear":
-                        this.getInventoryManager().add(new Spear());
-                        break;
-                    case "bow":
-                        this.getInventoryManager().add(new Bow());
-                        break;
+                        case "sword":
+                            this.getInventoryManager().add(new Sword());
+                            break;
+                        case "spear":
+                            this.getInventoryManager().add(new Spear());
+                            break;
+                        case "bow":
+                            this.getInventoryManager().add(new Bow());
+                            break;
 
-                    // These are only placeholders and will change once coordinated
-                    // with Building team
-                    case "Cabin":
-                        tempFactory.createCabin(this.getCol(), this.getRow());
-                        break;
+                        //These are only placeholders and will change once coordinated
+                        //with Building team
+                        case "Cabin":
+                            craftedBuildings.add(CABIN);
+                            break;
 
-                    case "StorageUnit":
-                        tempFactory.createStorageUnit(this.getCol(), this.getRow());
-                        break;
+                        case "StorageUnit":
+                            craftedBuildings.add(STORAGE_UNIT);
+                            break;
 
-                    case "TownCentre":
-                        tempFactory.createTownCentreBuilding(this.getCol(), this.getRow());
-                        break;
+                        case "TownCentre":
+                            craftedBuildings.add(TOWNCENTRE);
+                            break;
 
-                    case "Fence":
-                        tempFactory.createFenceBuilding(this.getCol(), this.getRow());
-                        break;
+                        case "Fence":
+                            craftedBuildings.add(FENCE);
+                            break;
 
-                    case "SafeHouse":
-                        tempFactory.createSafeHouse(this.getCol(), this.getRow());
-                        break;
+                        case "SafeHouse":
+                            craftedBuildings.add(SAFEHOUSE);
+                            break;
 
-                    case "WatchTower":
-                        tempFactory.createWatchTower(this.getCol(), this.getRow());
-                        break;
+                        case "WatchTower":
+                            craftedBuildings.add(WATCHTOWER);
+                            break;
 
-                    case "Castle":
-                        tempFactory.createCastle(this.getCol(), this.getRow());
-                        break;
-                    default:
-                        logger.info("Invalid Item");
-                        break;
+                        case "Castle":
+                            craftedBuildings.add(CASTLE);
+                            break;
+
+                        case "forestPortal":
+                            craftedBuildings.add(FORESTPORTAL);
+                            break;
+                        case "desertPortal":
+                            craftedBuildings.add(DESERTPORTAL);
+                            break;
+                        case "mountainPortal":
+                            craftedBuildings.add(MOUNTAINPORTAL);
+                        case "volcanoPortal":
+                            craftedBuildings.add(VOLCANOPORTAL);
+                        default:
+                            logger.info("Invalid Item");
+                            break;
                     }
 
                     this.getInventoryManager().dropMultiple("Metal", newItem.getRequiredMetal());
@@ -1732,56 +1791,58 @@ public class MainCharacter extends Peon
 
         // Walk animation
         addAnimations(AnimationRole.MOVE, Direction.NORTH_WEST,
-                new AnimationLinker("MainCharacterNW_Anim", AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
+                new AnimationLinker("MainCharacterNW_Anim",
+                        AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
 
         addAnimations(AnimationRole.MOVE, Direction.NORTH_EAST,
-                new AnimationLinker("MainCharacterNE_Anim", AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
+                new AnimationLinker("MainCharacterNE_Anim",
+                        AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
 
         addAnimations(AnimationRole.MOVE, Direction.SOUTH_WEST,
-                new AnimationLinker("MainCharacterSW_Anim", AnimationRole.MOVE, Direction.SOUTH_WEST, true, true));
+                new AnimationLinker("MainCharacterSW_Anim",
+                        AnimationRole.MOVE, Direction.SOUTH_WEST, true, true));
 
         addAnimations(AnimationRole.MOVE, Direction.SOUTH_EAST,
-                new AnimationLinker("MainCharacterSE_Anim", AnimationRole.MOVE, Direction.SOUTH_EAST, true, true));
+                new AnimationLinker("MainCharacterSE_Anim",
+                        AnimationRole.MOVE, Direction.SOUTH_EAST, true, true));
 
         addAnimations(AnimationRole.MOVE, Direction.EAST,
-                new AnimationLinker("MainCharacterE_Anim", AnimationRole.MOVE, Direction.EAST, true, true));
+                new AnimationLinker("MainCharacterE_Anim",
+                        AnimationRole.MOVE, Direction.EAST, true, true));
 
         addAnimations(AnimationRole.MOVE, Direction.NORTH,
-                new AnimationLinker("MainCharacterN_Anim", AnimationRole.MOVE, Direction.NORTH, true, true));
+                new AnimationLinker("MainCharacterN_Anim",
+                        AnimationRole.MOVE, Direction.NORTH, true, true));
 
         addAnimations(AnimationRole.MOVE, Direction.WEST,
-                new AnimationLinker("MainCharacterW_Anim", AnimationRole.MOVE, Direction.WEST, true, true));
+                new AnimationLinker("MainCharacterW_Anim",
+                        AnimationRole.MOVE, Direction.WEST, true, true));
 
         addAnimations(AnimationRole.MOVE, Direction.SOUTH,
-                new AnimationLinker("MainCharacterS_Anim", AnimationRole.MOVE, Direction.SOUTH, true, true));
+                new AnimationLinker("MainCharacterS_Anim",
+                        AnimationRole.MOVE, Direction.SOUTH, true, true));
 
         // Attack animation
-        addAnimations(AnimationRole.ATTACK, Direction.DEFAULT, new AnimationLinker("MainCharacter_Attack_E_Anim",
-                AnimationRole.ATTACK, Direction.DEFAULT, false, true));
+        addAnimations(AnimationRole.ATTACK, Direction.DEFAULT,
+                new AnimationLinker("MainCharacter_Attack_E_Anim",
+                        AnimationRole.ATTACK, Direction.DEFAULT, false, true));
 
         // Hurt animation
         addAnimations(AnimationRole.HURT, Direction.DEFAULT,
-                new AnimationLinker("MainCharacter_Hurt_E_Anim", AnimationRole.HURT, Direction.DEFAULT, true, true));
+                new AnimationLinker("MainCharacter_Hurt_E_Anim",
+                        AnimationRole.HURT, Direction.DEFAULT, true, true));
 
         // Dead animation
         addAnimations(AnimationRole.DEAD, Direction.DEFAULT,
-                new AnimationLinker("MainCharacter_Dead_E_Anim", AnimationRole.DEAD, Direction.DEFAULT, false, true));
+                new AnimationLinker("MainCharacter_Dead_E_Anim",
+                        AnimationRole.DEAD, Direction.DEFAULT, false, true));
+
 
         // Dead animation
         addAnimations(AnimationRole.STILL, Direction.DEFAULT,
                 new AnimationLinker("MainCharacter_Dead_E_Still",
                         AnimationRole.STILL, Direction.DEFAULT, false, true));
-
-        // Add bike animation
-        addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.WEST,
-                new AnimationLinker("bikeW",
-                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.WEST, true, true));
-        addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.EAST,
-                new AnimationLinker("bikeE",
-                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.EAST, true, true));
-
-
-         }
+    }
 
     private Map<Direction,String> defaultMainCharacterTextureMap=new HashMap<>();
 

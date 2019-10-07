@@ -9,21 +9,21 @@ import java.util.Map;
 public class DesertPortal extends AbstractPortal implements Blueprint {
 
     public String currentBiome = "desert";
-    public String nextBiome = "mountain";
     public String name = "desertPortal";
     public boolean blueprintLearned = false;
     Texture texture;
 
     /**
      * Constructor for an building entity with normal rendering size.
-     * 
+     *
      * @param col         the col position on the world
      * @param row         the row position on the world
      * @param renderOrder the height position on the world
      */
     public DesertPortal(float col, float row, int renderOrder) {
         super(col, row, renderOrder);
-        this.setTexture("portal");
+        this.setTexture("portal_desert");
+        this.setNext("mountain");
 
     }
 
@@ -34,7 +34,7 @@ public class DesertPortal extends AbstractPortal implements Blueprint {
 
     /**
      * Returns the number of wood required for the item.
-     * 
+     *
      * @return The amount of wood needed
      */
     public int getRequiredWood() {
@@ -43,7 +43,7 @@ public class DesertPortal extends AbstractPortal implements Blueprint {
 
     /**
      * Returns the number of stones required for the item.
-     * 
+     *
      * @return The amount of stone needed
      */
     public int getRequiredStone() {
@@ -52,7 +52,7 @@ public class DesertPortal extends AbstractPortal implements Blueprint {
 
     /**
      * Returns the number of metal required for the item.
-     * 
+     *
      * @return The amount of metal needed
      */
     public int getRequiredMetal() {
@@ -62,7 +62,7 @@ public class DesertPortal extends AbstractPortal implements Blueprint {
     /**
      * Returns a map of the name of the required resource and the required number of
      * each resource to create the item.
-     * 
+     *
      * @return a hashamp of the required resources and their number.
      */
     public Map<String, Integer> getAllRequirements() {

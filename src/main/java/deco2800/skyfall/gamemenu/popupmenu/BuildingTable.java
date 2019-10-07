@@ -150,6 +150,7 @@ public class BuildingTable extends AbstractPopUpElement {
             public void clicked(InputEvent event, float x, float y) {
                 if (selectedItem != null) {
                     gameMenuManager.getMainCharacter().createItem(selectedItem);
+                    inventoryTable = (InventoryTable) gameMenuManager.getPopUp("inventoryTable");
                     inventoryTable.updatePanels();
                     hide();
                 }

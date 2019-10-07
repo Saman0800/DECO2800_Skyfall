@@ -51,4 +51,19 @@ public class SwordTest {
     public void toStringTest() {
         Assert.assertEquals("melee:sword", sword.toString());
     }
+
+    @Test
+    public void getRequiredMetalTest() {
+        Assert.assertEquals(10, sword.getRequiredMetal());
+    }
+
+    @Test
+    public void getRequiredWoodTest() {
+        Assert.assertEquals(30, sword.getRequiredWood());
+    }
+
+    @Test
+    public void getRequiredStoneTest() {
+        Assert.assertEquals(30, sword.getRequiredStone());
+    }
 }

@@ -15,6 +15,8 @@ import deco2800.skyfall.worlds.biomes.ForestBiome;
 import deco2800.skyfall.worlds.biomes.MountainBiome;
 import deco2800.skyfall.worlds.biomes.VolcanicMountainsBiome;
 import deco2800.skyfall.managers.StatisticsManager;
+import deco2800.skyfall.entities.worlditems.*;
+
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -111,6 +113,11 @@ public class WorldDirector {
         builder.addEntity(new Tiger(-4f,-2f,mainCharacter));
         builder.addEntity(new Bike(-10f,-2f,mainCharacter));
         builder.addEntity(new SandCar(-20f,-2f, mainCharacter));
+
+        builder.addEntity(new Camel(34, -7, mainCharacter));
+        builder.addEntity(new Horse(-8,-6, mainCharacter));
+
+        builder.addEntity(new hotSpring(2,10, mainCharacter));
 
         return builder;
     }

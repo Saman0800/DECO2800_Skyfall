@@ -4,7 +4,9 @@ import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +22,8 @@ public abstract class AbstractPortal extends AbstractEntity {
     private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);
     // a building object name
     private static final String ENTITY_ID_STRING = "PortalID";
+    // The next biome to teleport to
+    public String nextBiome;
 
     private Map<String, Integer> buildCost;
 
@@ -28,7 +32,7 @@ public abstract class AbstractPortal extends AbstractEntity {
 
     /**
      * Constructor for an building entity with normal rendering size.
-     * 
+     *
      * @param col         the col position on the world
      * @param row         the row position on the world
      * @param renderOrder the height position on the world
@@ -48,23 +52,30 @@ public abstract class AbstractPortal extends AbstractEntity {
     }
 
     /**
-     * Unlocks the next biome
+     * Sets the next Biome to teleport to
      */
-    public void unlocknext(MainCharacter character, String nextBiome) {
-        character.unlockBiome(nextBiome);
+    public void setNext(String nextBiome) {
+        this.nextBiome = nextBiome;
     }
+
 
     /**
      * Move characters location to the next biome To be implemented when a player
      * clicks on the portal
-     * 
+     *
      * @param character - The Character to teleport
      * @param nextBiome - the Biome to teleport to
      */
-    public void teleport(MainCharacter character, AbstractBiome nextBiome) {
+    public void teleport(MainCharacter character, World nextBiome) {
         // TODO: @CGulley - Create a general teleport method for all portals.
         // For now, individual functionality in child classes
 
     }
+
+    public void unlocknext(MainCharacter character, String next) {
+
+    }
+
+
 
 }
