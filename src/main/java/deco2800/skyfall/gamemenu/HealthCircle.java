@@ -76,7 +76,7 @@ public class HealthCircle extends AbstractUIElement {
     }
 
     /**
-     * Gets smaller circle image
+     * Get smaller circle size
      *
      * @return Inner circle image
      */
