@@ -575,6 +575,7 @@ public class MainCharacter extends Peon
                 ((Weapon)equippedItem).getDamage(),
                 1,
                 this.itemSlotSelected == 1 ? (((Weapon)equippedItem).getName().equals("bow") ? 10 : 0) : 0);
+        projectile.setAngle(-90.f + (float)Math.toDegrees(Math.atan2(unitDirection.getRow(), unitDirection.getCol())));
 
         // Add the projectile entity to the game world.
         GameManager.get().getWorld().addEntity(projectile);
