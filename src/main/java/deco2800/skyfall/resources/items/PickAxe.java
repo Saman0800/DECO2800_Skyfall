@@ -5,6 +5,7 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
+import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
@@ -24,6 +25,11 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
     // Logger to show messages
     private final Logger logger = LoggerFactory.getLogger(PickAxe.class);
+
+    //Used for farming sound
+    private static final String WALK_NORMAL = "people_walk_normal";
+
+
 
     /***
      * Create a Pick Axe with the name Pick Axe.
@@ -112,7 +118,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
      * 
      * @param rockToFarm the rock to be farmed
      */
-    public void farmRock(ForestRock rockToFarm) {
+    public void farmRock(AbstractRock rockToFarm) {
 
         if (rockToFarm.getHealth() == 0) {
             System.out.println("This rock has nothing left to offer");
@@ -121,8 +127,8 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
         }
 
         else {
+            SoundManager.playSound(WALK_NORMAL);
             GameManager.getManagerFromInstance(InventoryManager.class).add(new Stone());
-
             // lowering the possibility of gaining metal
             double x = (int) (Math.random() * ((1 - 0) + 1));
 
@@ -152,7 +158,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
      */
     @Override
     public int getRequiredWood() {
-        return 50;
+        return 20;
     }
 
     /**
@@ -162,7 +168,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
      */
     @Override
     public int getRequiredStone() {
-        return 30;
+        return 10;
     }
 
     /**
@@ -172,7 +178,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
      */
     @Override
     public int getRequiredMetal() {
-        return 10;
+        return 4;
     }
 
     /**
@@ -185,9 +191,9 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
     public Map<String, Integer> getAllRequirements() {
 
         Map<String, Integer> allRequirements = new HashMap<>();
-        allRequirements.put("Wood", 50);
-        allRequirements.put("Stone", 30);
-        allRequirements.put("Metal", 10);
+        allRequirements.put("Wood", 10);
+        allRequirements.put("Stone", 5);
+        allRequirements.put("Metal", 4);
 
         return allRequirements;
     }
@@ -205,7 +211,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
     @Override
     public int getCost() {
-        return 40;
+        return 20;
     }
 
     @Override

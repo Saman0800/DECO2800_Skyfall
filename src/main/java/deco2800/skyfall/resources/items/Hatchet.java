@@ -6,6 +6,7 @@ import deco2800.skyfall.entities.weapons.EmptyItem;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
+import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
@@ -25,6 +26,9 @@ public class Hatchet extends ManufacturedResources implements Item, Blueprint {
 
     // Logger to show messages
     private final Logger logger = LoggerFactory.getLogger(Hatchet.class);
+
+    //Used for farming sound
+    private static final String WALK_NORMAL = "people_walk_normal";
 
     /***
      * Create a Hatecht with the name Hatchet
@@ -127,6 +131,7 @@ public class Hatchet extends ManufacturedResources implements Item, Blueprint {
             GameManager.get().getWorld().removeEntity(treeToFarm);
 
         } else {
+            SoundManager.playSound(WALK_NORMAL);
             GameManager.getManagerFromInstance(InventoryManager.class).add(new Wood());
             treeToFarm.decreaseWoodAmount();
         }
