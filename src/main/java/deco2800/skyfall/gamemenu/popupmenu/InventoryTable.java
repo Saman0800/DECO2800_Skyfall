@@ -304,7 +304,6 @@ public class InventoryTable extends AbstractPopUpElement {
             public void clicked(InputEvent event, float x, float y) {
                 if(inventorySelected != null) {
                     inventory.quickAccessAdd(inventorySelected);
-                    inventorySelected = null;
                     gameMenuBar.removeQuickAccessPanel();
                     gameMenuBar.setQuickAccessPanel();
                 }
