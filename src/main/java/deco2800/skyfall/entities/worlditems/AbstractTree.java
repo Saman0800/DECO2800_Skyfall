@@ -74,6 +74,10 @@ public abstract class AbstractTree extends StaticEntity implements Tickable, Har
             return false;
         }
 
+        if (!(other instanceof AbstractTree)) {
+            return false;
+        }
+
         AbstractTree otherTree = (AbstractTree) other;
         if (this.getCol() != otherTree.getCol() || this.getRow() != otherTree.getRow()) {
             return false;
@@ -94,6 +98,10 @@ public abstract class AbstractTree extends StaticEntity implements Tickable, Har
         result = (result + super.getRow()) * prime;
         result = (result + super.getHeight()) * prime;
         return (int) result;
+    }
+
+    public int hashCode() {
+        return hashCode(4733);
     }
 
     /***
