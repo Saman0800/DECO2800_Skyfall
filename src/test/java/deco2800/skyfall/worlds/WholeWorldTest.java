@@ -84,7 +84,7 @@ public class WholeWorldTest {
         when(DatabaseManager.get()).thenReturn(manager);
 
         WorldBuilder worldBuilder = new WorldBuilder();
-        WorldDirector.constructTestWorld(worldBuilder, 0);
+        WorldDirector.constructTestWorld(worldBuilder);
         worldBuilder.setType("single_player");
         worldBuilder.setStaticEntities(false);
         World world = worldBuilder.getWorld();
@@ -102,7 +102,7 @@ public class WholeWorldTest {
     @Test
     public void testFrictionMap() {
         WorldBuilder worldBuilder = new WorldBuilder();
-        WorldDirector.constructTestWorld(worldBuilder, 0);
+        WorldDirector.constructTestWorld(worldBuilder);
         worldBuilder.setType("single_player");
         worldBuilder.setStaticEntities(false);
         World world = worldBuilder.getWorld();

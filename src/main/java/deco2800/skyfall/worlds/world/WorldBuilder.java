@@ -21,6 +21,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Allows for step by step creation of a world
  */
 public class WorldBuilder implements WorldBuilderInterface {
+
     // The world type, can either be single_player, server, tutorial or test
     private String type;
 
@@ -296,9 +297,12 @@ public class WorldBuilder implements WorldBuilderInterface {
         mushroomRule.setNoiseGenerator(mushroomGen);
         mushroomRule.setLimitAdjacent(true);
         biomeSpawnRules.add(mushroomRule);
+
+        return;
     }
 
     private void generateMountainEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
+
         // Spawn some spears
         EntitySpawnRule spearRule =
                 new EntitySpawnRule(tile -> new Spear(tile, true),
@@ -328,9 +332,12 @@ public class WorldBuilder implements WorldBuilderInterface {
         // Spawn some Snow uniformly
         EntitySpawnRule mSnowRule = new EntitySpawnRule(tile -> new SnowClump(tile, false), random.nextInt(), 0.02);
         biomeSpawnRules.add(mSnowRule);
+
+        return;
     }
 
     private void generateDesertEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
+
         // Spawn some axes
         EntitySpawnRule axeRule2 = new EntitySpawnRule(tile -> new Axe(tile,
                 true), random.nextInt(), 0.03);
@@ -356,9 +363,12 @@ public class WorldBuilder implements WorldBuilderInterface {
         // Spawn desert rocks
         EntitySpawnRule dRockRule = new EntitySpawnRule(tile -> new DesertRock(tile, true), random.nextInt(), 0.01);
         biomeSpawnRules.add(dRockRule);
+
+        return;
     }
 
     private void generateSnowyMountainsEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
+
         // Spawn some bows
         EntitySpawnRule bowRule = new EntitySpawnRule(tile -> new Bow(tile,
                 true), random.nextInt(), 0.03);
@@ -384,6 +394,9 @@ public class WorldBuilder implements WorldBuilderInterface {
         // Spawn some Snow Shrubs uniformly
         EntitySpawnRule snowShrubRule = new EntitySpawnRule(tile -> new SnowShrub(tile, true), random.nextInt(), 0.03);
         biomeSpawnRules.add(snowShrubRule);
+
+        return;
+
     }
 
     private void generateVolcanicMountainsEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
@@ -420,9 +433,12 @@ public class WorldBuilder implements WorldBuilderInterface {
 
         EntitySpawnRule leavesRule = new EntitySpawnRule(tile -> new Leaves(tile, false), random.nextInt(), 0.02);
         biomeSpawnRules.add(leavesRule);
+
+        return;
     }
 
     private void generateSwampEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
+
         long worldSeed = world.getSeed();
 
         // Spawn some spears
@@ -460,6 +476,8 @@ public class WorldBuilder implements WorldBuilderInterface {
                 true, mushroomControl);
         mushroomRule.setNoiseGenerator(mushroomGen);
         biomeSpawnRules.add(mushroomRule);
+
+        return;
     }
 
     /**
