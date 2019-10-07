@@ -1,29 +1,29 @@
 package deco2800.skyfall.entities.pets;
 
 import deco2800.skyfall.entities.ICombatEntity;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.Peon;
 
 public abstract class AbstractPet extends Peon implements ICombatEntity {
-    //pet health
+    // pet health
     private int health;
 
-    //pet level
+    // pet level
     private int level;
 
-    //pet damage
+    // pet damage
     private int damage;
 
-    //pet armour
+    // pet armour
     private int armour;
 
-    //is the pet domesticated
+    // is the pet domesticated
     private boolean domesticated = false;
 
-
-    //is the pet on the way of collecting coins
+    // is the pet on the way of collecting coins
     private boolean isOnTheWay = false;
 
-    //is the pet summoned
+    // is the pet summoned
     private boolean isSummoned = false;
 
     public AbstractPet(float col, float row) {
@@ -76,8 +76,7 @@ public abstract class AbstractPet extends Peon implements ICombatEntity {
     /**
      * Domesticate the pet
      *
-     * @param domesticated true if this pet is collect by mian character
-     *                     else false
+     * @param domesticated true if this pet is collect by mian character else false
      */
     public void setDomesticated(boolean domesticated) {
         this.domesticated = domesticated;
@@ -123,13 +122,12 @@ public abstract class AbstractPet extends Peon implements ICombatEntity {
     /**
      * Deal damage to another ICombatEntity.
      *
-     * @param entity The combat entity that has been selected to deal damage to.
+     * @param mc The combat entity that has been selected to deal damage to.
      */
     @Override
-    public void dealDamage(ICombatEntity entity) {
+    public void dealDamage(MainCharacter mc) {
 
     }
-
 
     /**
      * Return whether this pet can deal damage.
@@ -140,16 +138,6 @@ public abstract class AbstractPet extends Peon implements ICombatEntity {
     public boolean canDealDamage() {
         return false;
     }
-
-    /**
-     * Return the armour this pet has.
-     *
-     * @return The amount of armour this pet has.
-     */
-    //@Override
-    //public int getArmour() {
-    //    return this.armour;
-    //}
 
     /**
      * Set armour of this pet

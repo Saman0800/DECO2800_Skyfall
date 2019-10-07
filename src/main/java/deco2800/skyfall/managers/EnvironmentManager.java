@@ -449,11 +449,13 @@ public class EnvironmentManager extends TickableManager {
 
         // Check if there is a file
         if (!(file.contains(currentFile))) {
+            BGMManager bgmManager = GameManager.getManagerFromInstance(BGMManager.class);
+
             setFilename();
 
             // Stop current music
             try {
-                BGMManager.stop();
+                bgmManager.stop();
             } catch (Exception e) {
                 /* Exception caught, if any */
             }
@@ -462,8 +464,8 @@ public class EnvironmentManager extends TickableManager {
 
             // Play BGM
             try {
-                BGMManager.initClip(currentFile);
-                BGMManager.play();
+                bgmManager.initClip(currentFile);
+                bgmManager.play();
             } catch (Exception e) {
                 /* Exception caught, if any */
             }
@@ -601,5 +603,9 @@ public class EnvironmentManager extends TickableManager {
             randomWeatherEvent();
             weatherEvent = 0;
         }
+    }
+
+    public int getMinutes() {
+        return minutes;
     }
 }

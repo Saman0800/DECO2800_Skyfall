@@ -3,7 +3,6 @@ package deco2800.skyfall.resources.items;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import deco2800.skyfall.resources.items.Berry;
 import static org.junit.Assert.*;
 
 public class BerryTest{
@@ -32,6 +31,14 @@ public class BerryTest{
         assertEquals("Berry", berry.getName());
     }
 
+    /**
+     * Tests the correct colour is returned for the health resource
+     */
+    @Test
+    public void getColourTest(){
+        assertEquals("wine red", berry.getColour());
+
+    }
 
     /**
      * Ensure that berry is classified as carryable
@@ -39,14 +46,6 @@ public class BerryTest{
     @Test
     public void isCarryable2() {
         assertTrue(berry.isCarryable());
-    }
-
-    /**
-     * Ensure that berry is classified as food effect
-     */
-    @Test
-    public void hasFoodEffect() {
-        assertTrue(berry.hasFoodEffect());
     }
 
     /**

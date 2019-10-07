@@ -19,7 +19,7 @@ public class Whitebear extends AbstractPet implements Animatable, Item {
     private final String textureName = "whitebear";
     private Direction movingDirection;
 
-    public Whitebear(float col, float row, MainCharacter mc){
+    public Whitebear(float col, float row, MainCharacter mc) {
         super(col, row);
         this.setTexture(textureName);
         this.setObjectName(textureName);
@@ -33,52 +33,51 @@ public class Whitebear extends AbstractPet implements Animatable, Item {
         this.setDirectionTextures();
     }
 
-
-    public boolean getOutSide(){
+    public boolean getOutSide() {
         return this.isOutSide;
     }
-    public void setOutSide(boolean outSide){
-        this.isOutSide=outSide;
+
+    public void setOutSide(boolean outSide) {
+        this.isOutSide = outSide;
     }
+
     @Override
     public void onTick(long i) {
         findNearbyGold();
         followingCharacter();
     }
 
-    public void findNearbyGold(){
-        List<AbstractEntity> abstractEntityList=GameManager.get().getWorld().getSortedEntities();
-        for(AbstractEntity ae:abstractEntityList){
-            if(ae instanceof GoldPiece){
-                if(this.getDomesticated()){
-                    //if the pet is close to the coin, then pick up and come back to mc
-                    if(ae.getPosition().distance(this.getPosition())<3){
-                        isOnTheWay=true;
-                        HexVector aeposition =  ae.getPosition();
-                        this.moveTowards(aeposition);
-                        //when the pet is close enough to the coin, then pick up, otherwise move to the coin
-                        if(ae.getPosition().distance(this.getPosition())<0.1){
-                            mc.addGold((GoldPiece) ae,((GoldPiece) ae).getValue());
-                            GameManager.get().getWorld().removeEntity(ae);
-                            isOnTheWay=false;
-                        }
-                    }
+    public void findNearbyGold() {
+        List<AbstractEntity> abstractEntityList = GameManager.get().getWorld().getSortedEntities();
+        for (AbstractEntity ae : abstractEntityList) {
+
+            boolean isGoldPiece = ae instanceof GoldPiece;
+            boolean inRange = ae.getPosition().distance(this.getPosition()) < 3;
+
+            if (isGoldPiece && inRange && this.getDomesticated()) {
+                isOnTheWay = true;
+                HexVector aeposition = ae.getPosition();
+                this.moveTowards(aeposition);
+                // when the pet is close enough to the coin, then pick up, otherwise move to the
+                // coin
+                if (ae.getPosition().distance(this.getPosition()) < 0.1) {
+                    mc.addGold((GoldPiece) ae, ((GoldPiece) ae).getValue());
+                    GameManager.get().getWorld().removeEntity(ae);
+                    isOnTheWay = false;
                 }
             }
         }
     }
 
-
-
-    public void followingCharacter(){
+    public void followingCharacter() {
         setCurrentState(AnimationRole.MOVE);
-        if(this.getDomesticated()){
-            if(!isOnTheWay){
-                //keep at the right hand side of the mc
+        if (this.getDomesticated()) {
+            if (!isOnTheWay) {
+                // keep at the right hand side of the mc
                 HexVector destination = new HexVector(mc.getCol() - 1, mc.getRow() - 1);
                 setCurrentDirection(movementDirection(this.position.getAngle()));
                 this.position.moveToward(destination, this.getSpeed());
-                //when the pet arrive then make it face to the player
+                // when the pet arrive then make it face to the player
                 boolean complete = false;
                 if (destination.getCol() == this.getCol() && destination.getRow() == this.getRow()) {
                     complete = true;
@@ -88,10 +87,7 @@ public class Whitebear extends AbstractPet implements Animatable, Item {
                     } else if (movingDirection == Direction.NORTH) {
                         movingDirection = Direction.SOUTH;
                         setCurrentDirection(Direction.SOUTH);
-                    } else if (movingDirection == Direction.NORTH_WEST) {
-                        movingDirection = Direction.SOUTH_WEST;
-                        setCurrentDirection(Direction.SOUTH_WEST);
-                    } else if (movingDirection == Direction.SOUTH_EAST) {
+                    } else if (movingDirection == Direction.NORTH_WEST || movingDirection == Direction.SOUTH_EAST) {
                         movingDirection = Direction.SOUTH_WEST;
                         setCurrentDirection(Direction.SOUTH_WEST);
                     }
@@ -100,8 +96,8 @@ public class Whitebear extends AbstractPet implements Animatable, Item {
                     movingDirection = movementDirection(this.position.getAngle());
                 }
             }
-            }
         }
+    }
 
     public Direction movementDirection(double angle) {
         angle = Math.toDegrees(angle - Math.PI);
@@ -127,30 +123,24 @@ public class Whitebear extends AbstractPet implements Animatable, Item {
 
     @Override
     public void configureAnimations() {
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.NORTH, new AnimationLinker("whitebearN", AnimationRole.MOVE, Direction.NORTH,
-                        true, true));
+        this.addAnimations(AnimationRole.MOVE, Direction.NORTH,
+                new AnimationLinker("whitebearN", AnimationRole.MOVE, Direction.NORTH, true, true));
 
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.NORTH_EAST, new AnimationLinker("whitebearNE", AnimationRole.MOVE, Direction.NORTH_EAST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.NORTH_WEST, new AnimationLinker("whitebearNW", AnimationRole.MOVE, Direction.NORTH_WEST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.SOUTH, new AnimationLinker("whitebearS", AnimationRole.MOVE, Direction.SOUTH,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.SOUTH_EAST, new AnimationLinker("whitebearSE", AnimationRole.MOVE, Direction.SOUTH_EAST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.SOUTH_WEST, new AnimationLinker("whitebearSW", AnimationRole.MOVE, Direction.SOUTH_WEST,
-                        true, true));
+        this.addAnimations(AnimationRole.MOVE, Direction.NORTH_EAST,
+                new AnimationLinker("whitebearNE", AnimationRole.MOVE, Direction.NORTH_EAST, true, true));
+        this.addAnimations(AnimationRole.MOVE, Direction.NORTH_WEST,
+                new AnimationLinker("whitebearNW", AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
+        this.addAnimations(AnimationRole.MOVE, Direction.SOUTH,
+                new AnimationLinker("whitebearS", AnimationRole.MOVE, Direction.SOUTH, true, true));
+        this.addAnimations(AnimationRole.MOVE, Direction.SOUTH_EAST,
+                new AnimationLinker("whitebearSE", AnimationRole.MOVE, Direction.SOUTH_EAST, true, true));
+        this.addAnimations(AnimationRole.MOVE, Direction.SOUTH_WEST,
+                new AnimationLinker("whitebearSW", AnimationRole.MOVE, Direction.SOUTH_WEST, true, true));
     }
 
     @Override
     public void setDirectionTextures() {
-
+        // Do nothing for now.
     }
 
     @Override
@@ -164,17 +154,17 @@ public class Whitebear extends AbstractPet implements Animatable, Item {
     }
 
     @Override
-    public Boolean isCarryable() {
+    public boolean isCarryable() {
         return true;
     }
 
     @Override
     public HexVector getCoords() {
-        return new HexVector(this.getCol(),this.getRow());
+        return new HexVector(this.getCol(), this.getRow());
     }
 
     @Override
-    public Boolean isExchangeable() {
+    public boolean isExchangeable() {
         return true;
     }
 
@@ -185,12 +175,11 @@ public class Whitebear extends AbstractPet implements Animatable, Item {
 
     @Override
     public void use(HexVector position) {
-
+        // Do nothing for now.
     }
 
-    public Boolean isEquippable() {
+    public boolean isEquippable() {
         return false;
     }
 
 }
-

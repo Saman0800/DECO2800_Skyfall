@@ -1,10 +1,6 @@
 package deco2800.skyfall.entities;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public abstract class VehicleEntity extends Peon {
-    private final transient Logger log = LoggerFactory.getLogger(VehicleEntity.class);
 
     private int health;
 

@@ -1,17 +1,18 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
+import deco2800.skyfall.entities.worlditems.EntitySpawnTable;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Saveable;
-import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
-import deco2800.skyfall.entities.worlditems.EntitySpawnTable;
 import deco2800.skyfall.worlds.Tile;
 import org.javatuples.Pair;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Chunk implements Saveable<Chunk.ChunkMemento> {
+public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
     /** The length of a side of the chunk (i.e. the chunk will contain this squared tiles). */
     public static final int CHUNK_SIDE_LENGTH = 10;
 
@@ -36,7 +37,7 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
      *
      * @return the loaded chunk
      */
-    public static Chunk loadChunkAt(World world, int x, int y) {
+    static Chunk loadChunkAt(World world, int x, int y) {
         return DatabaseManager.get().getDataBaseConnector().loadChunk(world, x, y);
     }
 
@@ -121,9 +122,9 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
 
                 Tile tile = new Tile(world, col, row + oddCol);
                 tiles.add(tile);
-                tile.assignNode(world.worldGenNodes, world.worldParameters.getNodeSpacing());
-                tile.assignEdge(world.riverEdges, world.beachEdges, world.worldParameters.getNodeSpacing(),
-                                world.worldParameters.getRiverWidth(), world.worldParameters.getBeachWidth());
+                tile.assignNode(world.getWorldGenNodes(), world.getWorldParameters().getNodeSpacing());
+                tile.assignEdge(world.getRiverEdges(), world.getBeachEdges(), world.getWorldParameters().getNodeSpacing(),
+                                world.getWorldParameters().getRiverWidth(), world.getWorldParameters().getBeachWidth());
             }
         }
 
@@ -229,7 +230,7 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
         for (Tile tile : tiles) {
             tile.removeReferanceFromNeighbours();
         }
-
+        //TODO:(@Kausta) Uncomment this before merge
         DatabaseManager.get().getDataBaseConnector().saveChunk(this);
 
         world.getLoadedChunks().remove(new Pair<>(x, y));
@@ -333,7 +334,7 @@ public class Chunk implements Saveable<Chunk.ChunkMemento> {
     /**
      * The memento storing the information required to reproduce a chunk.
      */
-    public static class ChunkMemento extends AbstractMemento {
+    public static class ChunkMemento extends AbstractMemento implements Serializable {
         private int x;
         private int y;
 

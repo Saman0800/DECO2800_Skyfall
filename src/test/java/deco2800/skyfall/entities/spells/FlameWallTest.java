@@ -1,8 +1,7 @@
 package deco2800.skyfall.entities.spells;
 
 import deco2800.skyfall.entities.*;
-import deco2800.skyfall.entities.enemies.AbstractEnemy;
-import deco2800.skyfall.entities.enemies.Treeman;
+import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.world.World;
@@ -16,7 +15,6 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class FlameWallTest {
@@ -63,7 +61,7 @@ public class FlameWallTest {
 
         GameManager gm = GameManager.get();
         World world = mock(World.class);
-        AbstractEnemy enemy = mock(Treeman.class);
+        Enemy enemy = mock(Enemy.class);
         gm.setWorld(world);
 
         //Add a new list with mock enemy.

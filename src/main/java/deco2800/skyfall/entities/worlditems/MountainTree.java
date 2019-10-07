@@ -1,41 +1,26 @@
 package deco2800.skyfall.entities.worlditems;
 
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.WoodCube;
-import deco2800.skyfall.Tickable;
-import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+public class MountainTree extends AbstractTree {
 
-public class MountainTree extends StaticTree {
-    private static final Logger LOG = LoggerFactory.getLogger(MountainTree.class);
-    private int woodAmount; // amount of wood that each tree has
-
-    private static Random randomGen = new Random();
-    private static int nextTreeTexture = 1;
-
-    public MountainTree(float col, float row, int renderOrder, Map<HexVector, String> texture) {
-        super(col, row, renderOrder, texture);
-        this.setTexture("tree_cubeH1A0");
-        this.woodAmount = 15;
-    }
+    protected static final String ENTITY_ID_STRING = "mountain_tree";
 
     public MountainTree(Tile tile, boolean obstructed) {
         super(tile, obstructed, "MTree" + MountainTree.nextTreeTexture);
         MountainTree.nextTreeTexture = randomGen.nextInt(3) + 1;
-        this.woodAmount = 15;
-        this.entityType = "MountainTree";
+        setupParams();
     }
 
-    public MountainTree (StaticEntityMemento memento){
+    public MountainTree(SaveableEntityMemento memento) {
         super(memento);
+        setupParams();
+    }
+
+    private void setupParams() {
+        this.setObjectName(ENTITY_ID_STRING);
         this.woodAmount = 15;
+        this.entityType = "MountainTree";
     }
 
     /**
@@ -52,18 +37,12 @@ public class MountainTree extends StaticTree {
 
     @Override
     public boolean equals(Object other) {
-        if (other == null) {
-            return false;
-        }
+
         if (!(other instanceof MountainTree)) {
             return false;
         }
-        MountainTree otherTree = (MountainTree) other;
-        if (this.getCol() != otherTree.getCol() || this.getRow() != otherTree.getRow()) {
-            return false;
-        }
 
-        return this.getHeight() == otherTree.getHeight();
+        return super.equals(other);
     }
 
     /**
@@ -73,50 +52,6 @@ public class MountainTree extends StaticTree {
      */
     @Override
     public int hashCode() {
-        final float prime = 17;
-        float result = 1;
-        result = (result + super.getCol()) * prime;
-        result = (result + super.getRow()) * prime;
-        result = (result + super.getHeight()) * prime;
-        return (int) result;
+        return super.hashCode(17);
     }
-
-    /**
-     * Animates the trees on every game tick
-     *
-     * @param tick Current game tick
-     */
-    @Override
-    public void onTick(long tick) {
-    }
-
-    @Override
-    public List<AbstractEntity> harvest(Tile tile) {
-        Random random = new Random();
-
-        int dropCount = random.nextInt(15);
-        List<AbstractEntity> drops = new ArrayList<>();
-        for (int i = 0; i < dropCount; i++) {
-            drops.add(new WoodCube(getCol(), getRow()));
-        }
-
-        return drops;
-    }
-
-    /***
-     * A getter method to for woodAmount.
-     *
-     * @return woodAmount.
-     */
-    public int getWoodAmount() {
-        return woodAmount;
-    }
-
-    /***
-     * A method to decrease wood.
-     */
-    public void decreaseWoodAmount() {
-        woodAmount--;
-    }
-
 }

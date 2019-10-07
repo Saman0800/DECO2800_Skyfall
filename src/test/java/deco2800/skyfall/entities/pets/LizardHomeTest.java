@@ -2,7 +2,6 @@ package deco2800.skyfall.entities.pets;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.worlds.Tile;
@@ -21,9 +20,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
@@ -32,7 +29,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ GameManager.class, PlayerPeon.class, WorldBuilder.class, WorldDirector.class, DatabaseManager.class,
+@PrepareForTest({ GameManager.class, MainCharacter.class, WorldBuilder.class, WorldDirector.class, DatabaseManager.class,
                   DataBaseConnector.class })
 public class LizardHomeTest {
 
@@ -66,6 +63,8 @@ public class LizardHomeTest {
 
         mockStatic(DatabaseManager.class);
         when(DatabaseManager.get()).thenReturn(manager);
+
+        MainCharacter.resetInstance();
 
         lizardHome=new LizardHome(0,0,mc);
         mc = MainCharacter.getInstance(1f, 1f, 1f, "Main Piece", 2);

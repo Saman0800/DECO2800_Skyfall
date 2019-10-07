@@ -23,7 +23,7 @@ public class SpellCaster {
 
     public SpellCaster(MainCharacter mainCharacter) {
         this.mainCharacter = mainCharacter;
-    };
+    }
 
     /**
      * Receive a keyPressed event to log it.
@@ -117,5 +117,5 @@ public class SpellCaster {
           sequence = Tornado.keySequence;
 
       return sequence;
-    };
+    }
 }

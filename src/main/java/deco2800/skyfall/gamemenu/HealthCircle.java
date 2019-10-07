@@ -1,43 +1,87 @@
 package deco2800.skyfall.gamemenu;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Align;
+import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
 
 public class HealthCircle extends AbstractUIElement {
-    private float currentHealth;
-    private int newHealth; // maybe for animating it down.
-    private  ImageButton biggerCircle;
-    private  ImageButton smallerCircle;
-    private float positionX;
-    private float positionY;
-    private float offset;
-    private Label label;
-    StatisticsManager sm;
+    // Game manager to be used
+    private final GameMenuManager gmm;
 
+    // Current health of player
+    private float currentHealth;
+
+    // New health after health change
+    private int newHealth; // maybe for animating it down.
+
+    // Bigger circle
+    private  ImageButton biggerCircle;
+
+    // Inner/changing circle
+    private  ImageButton smallerCircle;
+
+    // Position X
+    private float positionX;
+
+    // Position Y
+    private float positionY;
+
+    // Offset for positions
+    private float offset;
+
+    // Health label
+    private Label label;
+
+    // Statistic manager to read player health from
+    private StatisticsManager sm;
+
+    // Skin
+    private Skin skin;
 
     /**
      * Updates the inner circle.
      */
     private void updateInnerCircle() {
-        float diff = currentHealth - newHealth;
-
-        if (smallerCircle == null) {
-            if (biggerCircle == null) {
-                return;
-            }
+        // Check if null
+        if (smallerCircle == null || biggerCircle == null) {
             return;
         }
 
-        smallerCircle.setSize(10 * newHealth, 10 * newHealth);
-        offset += (diff * 10) / 2;
+        // If health is greater than 50, set health to equal 50
+        if (newHealth > 50) {
+            newHealth = 50;
+        }
+
+        float diff = currentHealth - newHealth;
+
+        smallerCircle.setSize((float) 2 * newHealth,
+                    (float) 2 * newHealth);
+
+        offset += (diff * 2) / 2;
         smallerCircle.setPosition(positionX + offset, positionY + offset);
+
         currentHealth = newHealth;
-        label.setText("Health: " + sm.getHealth());
+
+        // Set label appropriately
+        if(sm.getHealth() < 1) {
+            label.setText("DEAD");
+        } else {
+            label.setText("Health: " + (int) currentHealth);
+        }
+    }
+
+    /**
+     * Get smaller circle size
+     *
+     * @return Inner circle image
+     */
+    public ImageButton getInnerCircle() {
+        return this.smallerCircle;
     }
 
     /**
@@ -47,20 +91,19 @@ public class HealthCircle extends AbstractUIElement {
     public void update() {
         super.update();
         newHealth = sm.getHealth();
-        if ((currentHealth - newHealth) >= 0) {
-            updateInnerCircle();
-        }
+        updateInnerCircle();
     }
     /**
      * Keeps the object on the top left of the screen
      */
     @Override
     public void updatePosition() {
-        positionX = (stage.getCamera().position.x  + (stage.getCamera().viewportWidth / 2) - 100);
-        positionY = (stage.getCamera().position.y  +  (stage.getCamera().viewportHeight / 2) - 100);
+        positionX = gmm.getTopRightX() - stage.getCamera().viewportWidth / 2;
+        positionY = gmm.getTopRightY() - 100;
         smallerCircle.setPosition(positionX + offset, positionY + offset);
         biggerCircle.setPosition(positionX, positionY);
-        label.setPosition(positionX + 15, positionY + 40);
+        label.setPosition(positionX + 80, positionY + 30);
+        label.toBack();
     }
 
 
@@ -69,9 +112,10 @@ public class HealthCircle extends AbstractUIElement {
      */
     @Override
     public void draw() {
-        BitmapFont bitmapFont  = new BitmapFont();
-        bitmapFont.getData().setScale(1f);
-        label = new Label("Health: 10", new Label.LabelStyle(bitmapFont, Color.WHITE));
+
+        label = new Label("Health: 50", skin,  "blue-pill");
+        label.setAlignment(Align.center);
+        label.setFontScale(0.7f);
 
         final int OUTER_CIRCLE = 1;
         final int INNER_CIRCLE = 0;
@@ -98,9 +142,11 @@ public class HealthCircle extends AbstractUIElement {
      * @param tm The texture manager
      * @param sm The statistics manager
      */
-    public HealthCircle(Stage stage, String[] textureNames, TextureManager tm, StatisticsManager sm) {
+    public HealthCircle(Stage stage, String[] textureNames, TextureManager tm, StatisticsManager sm, Skin skin, GameMenuManager gmm) {
         super(stage, textureNames, tm);
         this.sm = sm;
+        this.skin = skin;
+        this.gmm = gmm;
         this.draw();
         currentHealth = sm.getHealth();
     }

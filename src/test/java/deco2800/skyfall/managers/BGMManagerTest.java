@@ -1,6 +1,5 @@
 package deco2800.skyfall.managers;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -234,7 +233,7 @@ public class BGMManagerTest {
             TimeUnit.SECONDS.sleep(1);
             bgmManager.resume();
             TimeUnit.SECONDS.sleep(1);
-            assertEquals(true, bgmManager.getClip().isRunning());
+            assertTrue(bgmManager.getClip().isRunning());
         } catch (Exception e) {
             //exception caught
         }
@@ -266,11 +265,11 @@ public class BGMManagerTest {
             bgmManager.initClip(file);
             bgmManager.play();
             TimeUnit.SECONDS.sleep(1);
-            BGMManager.mute();
-            assertEquals(true, bgmManager.muteVol.getValue());
+            bgmManager.mute();
+            assertTrue(bgmManager.muteVol.getValue());
 
             // Test that sound is muted
-            assertEquals(true, bgmManager.muteVol.getValue());
+            assertTrue(bgmManager.muteVol.getValue());
         } catch (Exception e) {
             //exception caught
         }
@@ -286,10 +285,10 @@ public class BGMManagerTest {
             TimeUnit.SECONDS.sleep(1);
             bgmManager.unmute();
             TimeUnit.SECONDS.sleep(1);
-            assertEquals(false, bgmManager.muteVol.getValue());
+            assertFalse(bgmManager.muteVol.getValue());
 
             // Test that sound is unmuted
-            assertEquals(false, bgmManager.muteVol.getValue());
+            assertFalse(bgmManager.muteVol.getValue());
         } catch (Exception e) {
             //exception caught
         }
@@ -298,16 +297,16 @@ public class BGMManagerTest {
     @Test
     public void getVolumeTest() {
         try {
-            BGMManager.initClip(file);
-            BGMManager.play();
+            bgmManager.initClip(file);
+            bgmManager.play();
 
             // Test Minimum (0)
-            BGMManager.setVolume(0);
-            assertEquals(0, BGMManager.getVolume(), 0.01);
+            bgmManager.setVolume(0);
+            assertEquals(0, bgmManager.getVolume(), 0.01);
 
             // Test Maximum (100)
-            BGMManager.setVolume(100);
-            assertEquals(100, BGMManager.getVolume(), 0.01);
+            bgmManager.setVolume(100);
+            assertEquals(100, bgmManager.getVolume(), 0.01);
 
         } catch (Exception e) {
         }
@@ -316,26 +315,26 @@ public class BGMManagerTest {
     @Test
     public void setVolumeTest() {
         try {
-            BGMManager.initClip(file);
-            BGMManager.play();
+            bgmManager.initClip(file);
+            bgmManager.play();
 
             // Test Minimum (0)
-            BGMManager.setVolume(0);
-            assertEquals(0, BGMManager.getVolume(), 0.01);
+            bgmManager.setVolume(0);
+            assertEquals(0, bgmManager.getVolume(), 0.01);
 
             // Test Maximum (100)
-            BGMManager.setVolume(100);
-            assertEquals(100, BGMManager.getVolume(), 0.01);
+            bgmManager.setVolume(100);
+            assertEquals(100, bgmManager.getVolume(), 0.01);
 
             // Test whether exceptions are thrown (x > MAX).
             try {
-                BGMManager.setVolume(1000);
+                bgmManager.setVolume(1000);
                 fail();
             } catch (IndexOutOfBoundsException e) { }
 
             // Test whether exceptions are thrown (x > MAX).
             try {
-                BGMManager.setVolume(-1);
+                bgmManager.setVolume(-1);
                 fail();
             } catch (IndexOutOfBoundsException e) { }
 
@@ -343,13 +342,12 @@ public class BGMManagerTest {
     }
 
     @Test
-    public void stopBGMTest() throws UnsupportedAudioFileException,
-            IOException, LineUnavailableException {
+    public void stopBGMTest() throws IOException, LineUnavailableException {
         try {
-            BGMManager.initClip(file);
-            BGMManager.play();
-            BGMManager.stop();
-            //assertFalse(BGMManager.getClip().isRunning());
+            bgmManager.initClip(file);
+            bgmManager.play();
+            bgmManager.stop();
+            //assertFalse(bgmManager.getClip().isRunning());
         } catch (Exception e) {
             // Exception caught
         }

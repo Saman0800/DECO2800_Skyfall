@@ -10,15 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
-import deco2800.skyfall.managers.BGMManager;
-import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.managers.SoundManager;
-import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.managers.*;
 
 
 import java.util.Map;
 
-import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
 public class SettingsTable extends AbstractPopUpElement{
     private SoundManager soundManager;
@@ -69,10 +65,10 @@ public class SettingsTable extends AbstractPopUpElement{
                 (Gdx.graphics.getHeight() + 160) / 2f - settingsTable.getHeight()/2);
         settingsTable.setName("settingsTable");
         settingsTable.top();
-        settingsTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
+        settingsTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("pop up screen"));
 
         Table infoBar = new Table();
-        infoBar.setBackground(generateTextureRegionDrawableObject("game menu bar"));
+        infoBar.setBackground(gameMenuManager.generateTextureRegionDrawableObject("game menu bar"));
 
         Label text = new Label("SETTINGS", skin, "black-text");
         infoBar.add(text);
@@ -82,8 +78,8 @@ public class SettingsTable extends AbstractPopUpElement{
         font.getData().setScale(1f);
 
         CheckBox.CheckBoxStyle cbs = new CheckBox.CheckBoxStyle(
-                generateTextureRegionDrawableObject("unchecked"),
-                generateTextureRegionDrawableObject("checked"),
+                gameMenuManager.generateTextureRegionDrawableObject("unchecked"),
+                gameMenuManager.generateTextureRegionDrawableObject("checked"),
                 font, Color.BLACK);
 
         soundFX = new CheckBox("", cbs);
@@ -118,12 +114,14 @@ public class SettingsTable extends AbstractPopUpElement{
         bgm.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                BGMManager bgmManager = GameManager.getManagerFromInstance(BGMManager.class);
+
                 if (!bgm.isChecked()) {
-                    BGMManager.paused = true;
-                    BGMManager.mute();
+                    bgmManager.paused = true;
+                    bgmManager.mute();
                 } else {
-                    BGMManager.paused = false;
-                    BGMManager.unmute();
+                    bgmManager.paused = false;
+                    bgmManager.unmute();
                 }
 
             }

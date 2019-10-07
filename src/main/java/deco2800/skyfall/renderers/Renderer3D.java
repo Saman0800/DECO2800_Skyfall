@@ -16,7 +16,6 @@ import deco2800.skyfall.entities.*;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.worlds.world.Chunk;
 import org.javatuples.Pair;
-import org.lwjgl.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -42,7 +41,7 @@ public class Renderer3D implements Renderer {
 
     SoundManager sound = new SoundManager();
 
-    BitmapFont font;
+    private BitmapFont font;
 
     // mouse cursor
     private static final String TEXTURE_SELECTION = "selection";
@@ -189,10 +188,15 @@ public class Renderer3D implements Renderer {
                 continue;
             }
 
+            //set color of batch from abstract ent's mod color
+            Color modColor = entity.getModulatingColor();
+            batch.setColor(modColor.r, modColor.g, modColor.b, modColor.a);
+
             Texture tex = textureManager.getTexture(entity.getTexture());
             if (entity instanceof StaticEntity) {
                 StaticEntity staticEntity = ((StaticEntity) entity);
                 Set<HexVector> childrenPosns = staticEntity.getChildrenPositions();
+
                 for (HexVector childpos : childrenPosns) {
                     Texture childTex = staticEntity.getTexture(childpos);
                     float[] childWorldCoord = WorldUtil.colRowToWorldCords(childpos.getCol(), childpos.getRow());
@@ -211,40 +215,33 @@ public class Renderer3D implements Renderer {
                             childTex.getHeight() * WorldUtil.SCALE_Y);
                 }
             } else {
+                Color c = batch.getColor();
                 if (!(entity instanceof Animatable)) {
                     renderAbstractEntity(batch, entity, entityWorldCoord, tex);
                 } else {
-
-                    Color c = batch.getColor();
-
                     if (entity instanceof MainCharacter) {
-                        if (((MainCharacter) entity).IsHurt() || ((MainCharacter) entity).isDead()) {
-                            System.out.println("Changed to red");
-                            batch.setColor(Color.RED);
+                        if (((MainCharacter) entity).isHurt() || ((MainCharacter) entity).isDead()) {
+                            entity.setModulatingColor(Color.RED);
                         } else if (((MainCharacter) entity).isRecovering()) {
                             if (((MainCharacter) entity).isTexChanging()) {
-                                batch.setColor(c.r, c.g, c.b, 0f);
+                                entity.setModulatingColor(Color.WHITE);
                                 ((MainCharacter) entity).setTexChanging(!((MainCharacter) entity).isTexChanging());
                             } else {
-                                batch.setColor(c.r, c.g, c.b, 1f);
+                                entity.setModulatingColor(Color.WHITE);
                                 ((MainCharacter) entity).setTexChanging(!((MainCharacter) entity).isTexChanging());
                             }
                         }
-                    } else {
-                        batch.setColor(c.r, c.g, c.b, 1f);
                     }
+                }
                     runAnimation(batch, entity, entityWorldCoord);
-                    batch.setColor(c.r, c.g, c.b, 1f);
                 }
 
-                /* Draw Peon */
-                // Place movement tiles
-                if (entity instanceof Peon && GameManager.get().showPath) {
-                    renderPeonMovementTiles(batch, camera, entity, entityWorldCoord);
-                }
+            /* Draw Peon */
+            // Place movement tiles
+            if (entity instanceof Peon && GameManager.get().showPath) {
+                renderPeonMovementTiles(batch, camera, entity, entityWorldCoord);
             }
         }
-
         GameManager.get().setEntitiesRendered(entities.size() - entitiesSkipped);
         GameManager.get().setEntitiesCount(entities.size());
     }
@@ -295,8 +292,7 @@ public class Renderer3D implements Renderer {
 
     private void debugRender(SpriteBatch batch, OrthographicCamera camera) {
 
-        boolean hitboxRenderDebug = false; // For debugging hitboxes
-        if (hitboxRenderDebug) {
+        if (false) {
             World box2DWorld = GameManager.get().getManager(PhysicsManager.class).getBox2DWorld();
             Array<Body> bodies = new Array<>();
             box2DWorld.getBodies(bodies);
@@ -400,6 +396,15 @@ public class Renderer3D implements Renderer {
         float height = currentFrame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y
                 * entity.getScale();
         int[] offset = aniLink.getOffset();
+
+        if (entity instanceof MainCharacter) {
+            if (((MainCharacter) entity).isHurt()) {
+                batch.setColor(Color.RED);
+            } else {
+                batch.setColor(Color.WHITE);
+
+            }
+        }
 
         batch.draw(currentFrame, entityWorldCoord[0] + offset[0], entityWorldCoord[1] + offset[0], width, height);
         aniLink.incrTime(Gdx.graphics.getDeltaTime());

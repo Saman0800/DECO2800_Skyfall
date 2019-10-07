@@ -1,21 +1,19 @@
 package deco2800.skyfall.entities.worlditems;
 
-import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import deco2800.skyfall.worlds.biomes.ForestBiome;
+import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
+import deco2800.skyfall.worlds.Tile;
 import org.junit.Test;
 
 import java.util.Random;
+import java.util.function.Function;
 
 import static org.junit.Assert.*;
 
 public class EntitySpawnRuleTest {
-    AbstractBiome biome;
 
     @Test
     public void testAccessorsAndMutators() {
-        ForestBiome biome = new ForestBiome(new Random(0));
-
         SpawnControl pieceWise = x -> {
             if ((0 < x) && (x <= 0.5)) {
                 return 0;
@@ -26,20 +24,11 @@ public class EntitySpawnRuleTest {
             }
         };
 
-        EntitySpawnRule rule = new EntitySpawnRule(tile -> null, 10, 100, biome, true, pieceWise);
+        EntitySpawnRule rule = new EntitySpawnRule(tile -> null, 10, true, pieceWise);
         rule.setChance(0.1);
 
         assertEquals(0.1, rule.getChance(), 0.001);
-        assertEquals(10, rule.getMin());
-        assertEquals(100, rule.getMax());
 
-        rule.setMin(9);
-        rule.setMax(101);
-
-        assertEquals(9, rule.getMin());
-        assertEquals(101, rule.getMax());
-
-        assertEquals(rule.getBiome(), biome);
         assertEquals(rule.getAdjustMap(), pieceWise);
         assertTrue(rule.getUsePerlin());
         assertFalse(rule.getLimitAdjacent());
@@ -57,30 +46,22 @@ public class EntitySpawnRuleTest {
 
     @Test
     public void testConstructors() {
-        // FIXME:Ontonator Test for the `newInstance` value.
 
-        EntitySpawnRule rule = new EntitySpawnRule(tile -> null, 0);
-        assertEquals(0.0, rule.getChance(), 0.001);
+        Function<Tile, StaticEntity> newInstanceTest = tile -> null;
 
-        rule = new EntitySpawnRule(tile -> null, 5, 10);
-        assertEquals(5, rule.getMin());
-        assertEquals(10, rule.getMax());
+        EntitySpawnRule rule = new EntitySpawnRule(null, 20, false);
 
-        rule = new EntitySpawnRule(tile -> null, 0.5, 5, 10);
-        assertEquals(0.5, rule.getChance(), 0.001);
-        assertEquals(5, rule.getMin());
-        assertEquals(10, rule.getMax());
+        rule.setNewInstance(newInstanceTest);
+        rule.setIndex(25);
+        EntitySpawnRule.setNoiseSeed(9999);
 
-        biome = new ForestBiome(new Random(0));
-        rule = new EntitySpawnRule(tile -> null, 0.5, biome);
-        assertEquals(0.5, rule.getChance(), 0.001);
-        assertEquals(biome, rule.getBiome());
-
-        rule = new EntitySpawnRule(tile -> null, 0.5, 2, 100, biome);
-        assertEquals(0.5, rule.getChance(), 0.001);
-        assertEquals(2, rule.getMin());
-        assertEquals(100, rule.getMax());
-        assertEquals(biome, rule.getBiome());
+        // The default chance and perlin noise value boolean should be set
+        assertEquals(0.1, rule.getChance(), 0.001);
+        assertFalse(rule.getUsePerlin());
+        assertNull(rule.getNoiseGenerator());
+        assertEquals(newInstanceTest, rule.getNewInstance());
+        assertEquals(25, rule.getIndex());
+        assertEquals(9999, EntitySpawnRule.getNoiseSeed());
     }
 
 }

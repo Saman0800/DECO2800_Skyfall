@@ -1,7 +1,7 @@
 package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.worlditems.Tree;
+import deco2800.skyfall.entities.worlditems.ForestTree;
 import deco2800.skyfall.gui.GuiMaster;
 import deco2800.skyfall.gui.ScrollingTextBox;
 import deco2800.skyfall.managers.GameManager;
@@ -9,17 +9,18 @@ import deco2800.skyfall.observers.TouchDownObserver;
 import java.util.List;
 
 /**
- * This is a tutorial world created to help the player understand the world
- * and the mechanics of the game.
+ * This is a tutorial world created to help the player understand the world and
+ * the mechanics of the game.
  */
 public class TutorialWorld extends World implements TouchDownObserver {
     // Variables used for the event triggers used in the tutorial
     private boolean firstTime = true;
     private boolean testKilledTree = false;
-    private Tree testTutorialTree;
+    private ForestTree testTutorialTree;
 
     /**
      * Constructs a tutorial world using the Rocket World constructor
+     * 
      * @param worldParameters Class that contains all the world parameters
      */
     public TutorialWorld(WorldParameters worldParameters) {
@@ -50,8 +51,8 @@ public class TutorialWorld extends World implements TouchDownObserver {
         firstTime = false;
 
         for (AbstractEntity e : entityList) {
-            if (e instanceof Tree) {
-                testTutorialTree = (Tree) e;
+            if (e instanceof ForestTree) {
+                testTutorialTree = (ForestTree) e;
             }
         }
 
@@ -61,25 +62,15 @@ public class TutorialWorld extends World implements TouchDownObserver {
             testTutorialBox.setString("Congratulations. You have " + "successfully ended the life of a harmless, "
                     + "non-sentient life form. You monster. If we had more "
                     + "time I would enjoy testing your current emotional situation."
-            /*, however it seems that a still harmless, but " +
-            "far more sentient creature is currently immobile to " +
-            "your north. Please move your camera up by using " +
-            "the up arrow key and end this creature in the
-            same way you did the last."*/);
+            /*
+             * , however it seems that a still harmless, but " +
+             * "far more sentient creature is currently immobile to " +
+             * "your north. Please move your camera up by using " + "the up arrow key and
+             * end this creature in the same way you did the last."
+             */);
             testTutorialBox.start();
         }
 
-        /*if (!entityList.contains(testTutorialEnemy) && !testKilledEnemy) {
-        	testKilledEnemy = true;
-        	testTutorialBox.reset();
-        	testTutorialBox.setString("Now that nothing, no matter how " +
-        			"harmless, can hurt your squishy body, please go collect " +
-        			"the remnants of the first creature you slaughtered. This" +
-        			" can be done by walking on top of it where it used to " +
-        			"stand. With these materials you can now create morally" +
-        			" questionable tools and building. Hooray. Please press " +
-        			"(inventory key here) to begin this process.");
-        	testTutorialBox.start();
-        }*/
+
     }
 }
