@@ -5,6 +5,7 @@ import deco2800.skyfall.entities.SaveableEntity.SaveableEntityMemento;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.DatabaseManager;
+import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.saving.*;
 import deco2800.skyfall.saving.Save.SaveMemento;
 import deco2800.skyfall.worlds.biomes.*;
@@ -722,6 +723,8 @@ public class DataBaseConnector {
             return new VolcanicRock(entityMemento);
         case "VolcanicTree":
             return new VolcanicTree(entityMemento);
+        case "GoldPiece":
+                return new GoldPiece(entityMemento);
         default:
             throw new LoadException(String.format("Could not create %s from memento", entityMemento.getEntityType()));
         }
