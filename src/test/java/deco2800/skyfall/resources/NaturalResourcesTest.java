@@ -74,7 +74,14 @@ public class NaturalResourcesTest {
     }
 
 
-
+    @Test
+    public void getBiomeTest(){
+        assertEquals("Beach", sand.getBiome());
+        assertEquals("Forest", vine.getBiome());
+        assertEquals("Forest", wood.getBiome());
+        assertEquals("Forest", stone.getBiome());
+        assertEquals("Ruined City", metal.getBiome());
+    }
 
     @Test
     public void getCoords1() {

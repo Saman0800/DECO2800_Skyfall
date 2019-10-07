@@ -6,7 +6,10 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import deco2800.skyfall.graphics.types.vec2;
 import deco2800.skyfall.graphics.types.vec3;
+import deco2800.skyfall.renderers.Renderer3D;
 import deco2800.skyfall.util.SettingsFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static deco2800.skyfall.util.MathUtil.clamp;
 
@@ -16,18 +19,18 @@ import static deco2800.skyfall.util.MathUtil.clamp;
  */
 public class ShaderWrapper {
     //default shader used if not active
-    boolean active = false;
+    private boolean active = false;
     //links to shaderProgram, or ill-formed program on failure
-    ShaderProgram shaderProgram;
+    private ShaderProgram shaderProgram;
 
     //Ambient components
-    vec3 ambientColour = new vec3(0.0f);
-    float ambientIntensity = 0;
+    private vec3 ambientColour = new vec3(0.0f);
+    private float ambientIntensity = 0;
 
     //used for counting number of light points allocated
-    int pointLightCount = 0;
+    private int pointLightCount = 0;
     //used for final pointLight debugging
-    int finalPointLightCount = 0;
+    private int finalPointLightCount = 0;
 
     /**
      * Loads and compiles a shader program
@@ -36,34 +39,35 @@ public class ShaderWrapper {
      */
     public ShaderWrapper(String shaderName) {
         //load shaders
+        Logger logger = LoggerFactory.getLogger(ShaderWrapper.class);
         try {
             String vertexShader = Gdx.files.internal("resources/shaders/" + shaderName + ".vert").readString();
             String fragmentShader = Gdx.files.internal("resources/shaders/" + shaderName + ".frag").readString();
             shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
         }
         catch (GdxRuntimeException e) {
-            System.out.println("\nShader source not found, check:");
-            System.out.println("resources/shaders/"  + shaderName + ".vert");
-            System.out.println("resources/shaders/"  + shaderName + ".frag");
-            System.out.println("Extended shader disabled");
+            logger.warn("\nShader source not found, check:");
+            logger.warn(String.format("resources/shaders/%s.vert", shaderName));
+            logger.warn(String.format("resources/shaders/%s.frag", shaderName));
+            logger.warn("Extended shader disabled");
             return;
         }
 
         //Allows uniform variables to be in the fragment shader but not referenced in the vertex
-        shaderProgram.pedantic = false;
+        ShaderProgram.pedantic = false;
 
         //A small log explaining how the shader compilation went
-        System.out.println("\nShader program log:");
-        System.out.print(shaderProgram.getLog());
+        logger.warn("\nShader program log:");
+        logger.warn(shaderProgram.getLog());
         if (shaderProgram.isCompiled()) {
-            System.out.println("Shader program compiled\n");
+            logger.warn("Shader program compiled\n");
 
             SettingsFile gfxSettings = new SettingsFile("settings\\gfx.ini");
             active = (gfxSettings.get("s_use_e_shader", 1) != 0);
             gfxSettings.close();
         }
         else {
-            System.out.println("Shader program failed to compile, reverting to default\n");
+            logger.warn("Shader program failed to compile, reverting to default\n");
         }
     }
 
@@ -151,7 +155,7 @@ public class ShaderWrapper {
     public void addPointLight(PointLight pointLight) {
         if (active) {
             //creates the string for the target point light
-            String target = "pointLights[" + Integer.toString(pointLightCount)  + "]";
+            String target = "pointLights[" + pointLightCount + "]";
 
             vec3 colour = pointLight.getColour();
             vec2 position = pointLight.getPosition();

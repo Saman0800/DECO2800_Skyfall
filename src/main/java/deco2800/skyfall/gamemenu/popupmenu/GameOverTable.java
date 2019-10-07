@@ -1,24 +1,23 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
-import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.managers.*;
 
-import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
 
 /**
  * A class for game over table pop up.
  */
 public class GameOverTable extends AbstractPopUpElement{
-    private Skin skin;
-    private Table gameOverTable;
-    private GameMenuManager gameMenuManager;
 
+    // Table to be displayed
+    private Table mainTable;
 
     /**
      * Constructs a game over table.
@@ -28,14 +27,11 @@ public class GameOverTable extends AbstractPopUpElement{
      * @param textureNames Names of the textures.
      * @param tm Current texture manager.
      * @param gameMenuManager Current game menu manager.
-     * @param skin Current skin.
      */
     public GameOverTable(Stage stage, ImageButton exit,
                          String[] textureNames, TextureManager tm,
-                         GameMenuManager gameMenuManager, Skin skin) {
+                         GameMenuManager gameMenuManager) {
         super(stage, exit, textureNames,tm , gameMenuManager);
-        this.skin = skin;
-        this.gameMenuManager = gameMenuManager;
         this.draw();
     }
 
@@ -45,7 +41,7 @@ public class GameOverTable extends AbstractPopUpElement{
     @Override
     public void hide() {
         super.hide();
-        gameOverTable.setVisible(false);
+        mainTable.setVisible(false);
     }
 
     /**
@@ -54,7 +50,7 @@ public class GameOverTable extends AbstractPopUpElement{
     @Override
     public void show() {
         super.show();
-        gameOverTable.setVisible(true);
+        mainTable.setVisible(true);
     }
 
     /**
@@ -64,41 +60,59 @@ public class GameOverTable extends AbstractPopUpElement{
     @Override
     public void draw() {
         super.draw();
-        gameOverTable = new Table();
-        gameOverTable.bottom();
-        gameOverTable.setSize(500, 500 * 1346 / 1862f);
-        gameOverTable.setPosition(Gdx.graphics.getWidth()/2f - gameOverTable.getWidth()/2,
-                (Gdx.graphics.getHeight() + 160) / 2f - gameOverTable.getHeight()/2);
-        gameOverTable.setBackground(generateTextureRegionDrawableObject("game_over_temp_bg"));
+        mainTable = new Table();
+        mainTable.bottom();
+        mainTable.setSize(500, 500 * 1346 / 1862f);
+        mainTable.setPosition(Gdx.graphics.getWidth()/2f - mainTable.getWidth()/2,
+                (Gdx.graphics.getHeight() + 160) / 2f - mainTable.getHeight()/2);
+        mainTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("game_over_temp_bg"));
 
-        ImageButton retry = new ImageButton(generateTextureRegionDrawableObject("game over retry temp"));
-        gameOverTable.add(retry).padBottom(15).width(450).height(450*302/2313f);
-        gameOverTable.row();
+        ImageButton retry = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("game over retry temp"));
+        mainTable.add(retry).padBottom(15).width(450).height(450*302/2313f);
+        mainTable.row();
 
         retry.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // If pressed, restart level and hide screen
+                retryQuest();
                 hide();
-                gameMenuManager.getMainCharacter().changeHealth(10);
             }
         });
 
-        ImageButton toHome = new ImageButton(generateTextureRegionDrawableObject("game over home temp"));
-        gameOverTable.add(toHome).padBottom(15).width(450).height(450*302/2313f);;
-        gameOverTable.row();
+        ImageButton toHome = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("game over home temp"));
+        mainTable.add(toHome).padBottom(15).width(450).height(450*302/2313f);
+        mainTable.row();
         toHome.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // If pressed, return home and hide screen
+                returnHome();
                 hide();
             }
         });
 
-        gameOverTable.setVisible(false);
-        stage.addActor(gameOverTable);
-        System.out.println(gameOverTable);
+        mainTable.setVisible(false);
+        stage.addActor(mainTable);
     }
 
+    /**
+     * Resets the quest once play dies and chooses retry.
+     */
+    public void retryQuest() {
+        // Restore health to full
+        MainCharacter.getInstance().changeHealth(50);
+
+        // Reset quest
+        GameManager.getManagerFromInstance(QuestManager.class).resetQuest();
+    }
+
+    /**
+     * Allows player to return home and start new game.
+     */
+    public void returnHome() {
+        // Create a game and set screen to main menu
+        gameMenuManager.getGame().create();
+        ((Game)Gdx.app.getApplicationListener()).setScreen(gameMenuManager.getGame().mainMenuScreen);
+    }
 }
-
-
-

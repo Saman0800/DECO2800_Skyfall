@@ -5,6 +5,8 @@ import deco2800.skyfall.entities.enemies.*;
 import deco2800.skyfall.entities.pets.LizardHome;
 import deco2800.skyfall.entities.pets.IceWhitebear;
 import deco2800.skyfall.entities.pets.Tiger;
+import deco2800.skyfall.entities.vehicle.Bike;
+import deco2800.skyfall.entities.vehicle.SandCar;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
@@ -23,18 +25,23 @@ import java.util.Random;
  * Class that helps with creating worlds using WorldBuilders
  */
 public class WorldDirector {
+
     private static Random random = new Random(0);
 
+
+    private WorldDirector() {
+    }
 
 
     /**
      * A simple world used in single player with n random biomes
+     *
      * @param builder The builder used to construct the world
-     * @throws IllegalArgumentException if n is less than 1 or greater than 5
      * @return The builder that was passed in
+     * @throws IllegalArgumentException if n is less than 1 or greater than 5
      * @author Ontonator
      */
-    public static WorldBuilder constructNBiomeSinglePlayerWorld(WorldBuilder builder, int n, boolean renderUI){
+    public static WorldBuilder constructNBiomeSinglePlayerWorld(WorldBuilder builder, int n, boolean renderUI) {
         builder.setType("single_player");
         if (n < 1 || n > 5) {
             throw new IllegalArgumentException("n must be between 1 and 5");
@@ -72,10 +79,9 @@ public class WorldDirector {
 
         builder.setStaticEntities(true);
 
-        MainCharacter mainCharacter = MainCharacter.getInstance(0,0,10f, "Main Piece", 10);
+        MainCharacter mainCharacter = MainCharacter.getInstance(0, 0, 10f, "Main Piece", 10);
         mainCharacter.setCol(0);
         mainCharacter.setRow(0);
-
 
         //mainCharacter.getUnlockedBiomes();
         //for (String s: mainCharacter.getUnlockedBiomes()) {
@@ -88,9 +94,6 @@ public class WorldDirector {
 
         //   }
         //}
-
-
-
 
         if (renderUI) {
             StatisticsManager sm = new StatisticsManager(mainCharacter);
@@ -108,6 +111,8 @@ public class WorldDirector {
         builder.addEntity(new Flower(8f,2f,mainCharacter));
         builder.addEntity(new Treeman(-2f,-3f,mainCharacter));
         builder.addEntity(new Tiger(-4f,-2f,mainCharacter));
+        builder.addEntity(new Bike(-10f,-2f,mainCharacter));
+        builder.addEntity(new SandCar(-20f,-2f, mainCharacter));
 
         builder.addEntity(new Camel(34, -7, mainCharacter));
         builder.addEntity(new Horse(-8,-6, mainCharacter));
@@ -119,11 +124,12 @@ public class WorldDirector {
 
     /**
      * Constructs a tutorial world
+     *
      * @param builder The builder used to construct the world
      */
-    public static void constructTutorialWorld(WorldBuilder builder){
+    public static void constructTutorialWorld(WorldBuilder builder) {
 
-        MainCharacter mainCharacter = MainCharacter.getInstance(0,0,0.05f, "Main Piece", 10);
+        MainCharacter mainCharacter = MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
         mainCharacter.setCol(0);
         mainCharacter.setRow(0);
 
@@ -150,9 +156,10 @@ public class WorldDirector {
 
     /**
      * Constructs a server world
+     *
      * @param builder The builder used to construct the world
      */
-    public static void constructServerWorld(WorldBuilder builder){
+    public static void constructServerWorld(WorldBuilder builder) {
         builder.setNodeSpacing(15);
         builder.setWorldSize(80);
         builder.setType("server");
@@ -163,9 +170,10 @@ public class WorldDirector {
 
     /**
      * Constructs a world used for testing
+     *
      * @param builder The builder used to construct the world
      */
-    public static void constructTestWorld(WorldBuilder builder){
+    public static void constructTestWorld(WorldBuilder builder) {
         builder.setNodeSpacing(5);
         builder.setWorldSize(30);
 

@@ -35,17 +35,17 @@ public class AbstractPopUpElement extends AbstractUIElement {
     /**
      * Resumes the game.
      */
-    public void resume() {
+    public static void resume() {
         GameManager.setPaused(false);
-        GameScreen.isPaused = false;
+        GameScreen.setIsPaused(false);
     }
 
     /**
      * Pause the game.
      */
-    private void pause() {
+    private static void pause() {
         GameManager.setPaused(true);
-        GameScreen.isPaused = true;
+        GameScreen.setIsPaused(true);
     }
 
     /**
@@ -54,6 +54,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
     public void show(){
         if (exitButton != null) {
             exitButton.setVisible(true);
+            exitButton.top();
         }
         gameMenuManager.getMainCharacter().resetVelocity();
         isVisible = true;
@@ -68,7 +69,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
         float x  = stage.getCamera().position.x  + (stage.getCamera().viewportWidth / 2);
         float y = stage.getCamera().position.y  +  (stage.getCamera().viewportHeight / 2);
         if (exitButton != null) {
-            exitButton.setPosition(x * 0.9f, y * 0.9f);
+            exitButton.setPosition(x * 0.8f, y * 0.9f);
         }
     }
 
