@@ -121,17 +121,9 @@ public class OverlayRenderer implements Renderer {
 		// Display current biome in game
 		debugLine(batch, camera, line++,
 				String.format("Biome: %s",
-						GameManager.get().getManager(EnvironmentManager.class).biomeDisplayName()));
-
-		// Display current weather in game
-		debugLine(batch, camera, line++,
-				String.format("Weather: %s",
-						GameManager.get().getManager(EnvironmentManager.class).getcurrentWeather()));
-
-		line++;
+						GameManager.get().getManager(EnvironmentManager.class).currentBiome()));
 
 		// Display player's current equipped item
-
 		debugLine(batch, camera, line++,
 				String.format("Equipped Item: %s",
 						GameManager.get().getManager(StatisticsManager.class).getCharacter().displayEquippedItem()));

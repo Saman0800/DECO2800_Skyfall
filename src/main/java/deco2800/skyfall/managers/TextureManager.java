@@ -285,9 +285,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("spring", new Texture("resources/clock/spring.png"));
             textureMap.put("autumn", new Texture("resources/clock/autumn.png"));
 
-            textureMap.put("rain", new Texture("resources/weather/rain.png")); // weather
-            textureMap.put("snow", new Texture("resources/weather/snow.png")); // weather
-
             textureMap.put("mana_bar", new Texture("resources/mana_bar.png"));
             textureMap.put("mana_bar_inner", new Texture("resources/mana_bar_inner.png"));
 
