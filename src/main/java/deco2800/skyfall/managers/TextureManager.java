@@ -95,6 +95,12 @@ public class TextureManager extends AbstractManager {
             textureMap.put("lizardN", new Texture("resources/lizard/lizardN.png"));
             textureMap.put("lizardS", new Texture("resources/lizard/lizardS.png"));
 
+
+            textureMap.put("hot_spring", new Texture("resources/Environment/HotSprings.png"));
+            textureMap.put("in_hot_spring", new Texture("resources/Environment/HotSprings1.png"));
+            textureMap.put("ruinedCity", new Texture("resources/Environment/ruinedCity.png"));
+            textureMap.put("ruinedRobot", new Texture("resources/Environment/ruinedRobot.png"));
+
             // New Enemies (Scout, Heavy, Abductor)
             textureMap.put("enemyScout_Move_N", new Texture("resources/Enemies/Scout/enemy1_B_walk.png"));
             textureMap.put("enemyScout_Move_NW", new Texture("resources/Enemies/Scout/enemy1_BL_walk.png"));
@@ -143,9 +149,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("enemyHeavy_Damage_SE", new Texture("resources/Enemies/Heavy/enemy2_FR_damage.png"));
             textureMap.put("enemyHeavy_Damage_W", new Texture("resources/Enemies/Heavy/enemy2_L_damage.png"));
             textureMap.put("enemyDie", new Texture("resources/Enemies/Heavy/enemy2_F_die.png"));
-
-
-
 
             //vehicle section
             //Bike
@@ -212,6 +215,13 @@ public class TextureManager extends AbstractManager {
             }
 
             textureMap.put("sword", new Texture("resources/weapons/sword.png"));
+
+            //environment things
+            textureMap.put("shipwrecks", new Texture("resources/world_details/shipwrecks.png"));
+
+            textureMap.put("DEnvironment1", new Texture("resources/world_details/DEnvironment1.png"));
+            textureMap.put("DEnvironment2", new Texture("resources/world_details/DEnvironment2.png"));
+
             // Weapons pick-up
             textureMap.put("axe_tex", new Texture("resources/weapons/axe.png"));
             textureMap.put("bow_tex", new Texture("resources/weapons/bow.png"));
@@ -485,7 +495,7 @@ public class TextureManager extends AbstractManager {
      *
      * @param test is the function being tested.
      */
-    public TextureManager(boolean test) {
+    public void TextureManager(boolean test) {
 
     }
 

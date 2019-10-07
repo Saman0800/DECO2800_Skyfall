@@ -2,9 +2,6 @@ package deco2800.skyfall.entities;
 
 import java.util.Map;
 import java.util.List;
-
-import deco2800.skyfall.animation.AnimationLinker;
-import deco2800.skyfall.buildings.BuildingFactory;
 import org.slf4j.Logger;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -143,9 +140,9 @@ public class MainCharacter extends Peon
     private String itemToCreate;
 
     // Variables to sound effects
-    private static final String WALK_NORMAL = "people_walk_normal";
-    private static final String HURT_SOUND_NAME = "player_hurt";
-    private static final String DIED_SOUND_NAME = "player_died";
+    public static final String WALK_NORMAL = "people_walk_normal";
+    public static final String HURT_SOUND_NAME = "player_hurt";
+    public static final String DIED_SOUND_NAME = "player_died";
 
     public static final String BOWATTACK = "bow_and_arrow_attack";
     public static final String AXEATTACK = "axe_attack";
