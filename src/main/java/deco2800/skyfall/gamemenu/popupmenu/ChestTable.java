@@ -14,8 +14,6 @@ import deco2800.skyfall.managers.TextureManager;
 
 import java.util.Map;
 
-import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
-
 
 /**
  * A class for chest table pop up.
@@ -87,11 +85,11 @@ public class ChestTable extends AbstractPopUpElement{
         chestTable.setPosition((Gdx.graphics.getWidth()/2f - chestTable.getWidth()/2 + 60),
                 (Gdx.graphics.getHeight() + 160) / 2f - chestTable.getHeight()/2);
         chestTable.top();
-        chestTable.setBackground(generateTextureRegionDrawableObject("popup_bg"));
+        chestTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
         chestTable.setName("chestTable");
 
         Table infoBar = new Table();
-        infoBar.setBackground(generateTextureRegionDrawableObject("popup_banner"));
+        infoBar.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_banner"));
         infoBar.setSize(410, 55);
         infoBar.setPosition(45, 430);
         Label text = new Label("CHEST", skin, "navy-text");
@@ -115,13 +113,13 @@ public class ChestTable extends AbstractPopUpElement{
         resourcePanel.setName("resourcePanel");
         resourcePanel.setSize(410, 320);
         resourcePanel.setPosition(45, 98);
-        resourcePanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
+        resourcePanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("menu_panel"));
 
         Map<String, Integer> inventoryAmounts = chest.getManager().getAmounts();
 
         setCounts(inventoryAmounts, 115, 215, 80, 20);
 
-        ImageButton button = new ImageButton(generateTextureRegionDrawableObject("take all"));
+        ImageButton button = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("take all"));
         button.setName("Take all");
         button.setSize(170, 60);
         button.setPosition(165, 20);
@@ -157,7 +155,7 @@ public class ChestTable extends AbstractPopUpElement{
                 }
             }
             ImageButton icon =
-                    new ImageButton(generateTextureRegionDrawableObject(weaponName + "_inv"));
+                    new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(weaponName + "_inv"));
             icon.setName(entry.getKey());
             icon.setSize((float)size, (float)size);
             icon.setPosition((float)(xpos + (size+xspace)*(count-1)), ypos);

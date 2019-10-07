@@ -18,8 +18,6 @@ import deco2800.skyfall.worlds.world.World;
 
 import java.util.List;
 
-import static deco2800.skyfall.managers.GameMenuManager.generateTextureRegionDrawableObject;
-
 /**
  * A class for blueprint shop table pop up.
  */
@@ -92,17 +90,17 @@ public class ConstructionTable extends AbstractPopUpElement{
                 (Gdx.graphics.getHeight() + 160) / 2f - blueprintTable.getHeight()/2);
         blueprintTable.setDebug(true);
         blueprintTable.top();
-        blueprintTable.setBackground(generateTextureRegionDrawableObject("pop up screen"));
+        blueprintTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("pop up screen"));
         blueprintTable.setName("chestTable");
 
-        Image infoBar = new Image(generateTextureRegionDrawableObject("building_banner"));
+        Image infoBar = new Image(gameMenuManager.generateTextureRegionDrawableObject("building_banner"));
         infoBar.setSize(650, 55);
         infoBar.setPosition(130, 435);
 
         Table infoPanel = new Table();
         infoPanel.setSize(410, 400);
         infoPanel.setPosition(25, 18);
-        infoPanel.setBackground(generateTextureRegionDrawableObject("info_panel"));
+        infoPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("info_panel"));
 
         this.blueprintPanel = new Table();
         //updateChestPanel(chest);
@@ -122,7 +120,7 @@ public class ConstructionTable extends AbstractPopUpElement{
         blueprintPanel.setName("resourcePanel");
         blueprintPanel.setSize(410, 400);
         blueprintPanel.setPosition(475, 18);
-        blueprintPanel.setBackground(generateTextureRegionDrawableObject("menu_panel"));
+        blueprintPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("menu_panel"));
 
         List<BuildingType> unlocked = sm.getCharacter().craftedBuildings;
 
@@ -132,7 +130,7 @@ public class ConstructionTable extends AbstractPopUpElement{
 
         for (BuildingType b : unlocked) {
 
-            ImageButton icon = new ImageButton(generateTextureRegionDrawableObject(b.getName()));
+            ImageButton icon = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(b.getName()));
             icon.setName("icon");
             icon.setSize(100, 100);
             icon.setPosition(xpos + count * 130, ypos);
