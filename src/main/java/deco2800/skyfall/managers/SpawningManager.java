@@ -1,6 +1,6 @@
 package deco2800.skyfall.managers;
 
-import deco2800.skyfall.entities.enemies.AbstractEnemy;
+import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.enemies.Spawnable;
 import deco2800.skyfall.graphics.types.vec2;
 
@@ -26,7 +26,7 @@ public class SpawningManager extends TickableManager  {
 
     //All enemies that have spawned will be kept with a referece
     //kept by spawn order
-    Vector<AbstractEnemy> enemyReferences;
+    Vector<Enemy> enemyReferences;
 
     public static SpawningManager getGlobalSpawningManager() {
         return reference;
@@ -69,7 +69,7 @@ public class SpawningManager extends TickableManager  {
      * @param enemy A reference to Spawnable
      */
     private void spawnEnemy(Spawnable enemy) {
-        vec2 location = ((AbstractEnemy)enemy).getPlayerLocation();
+        vec2 location = ((Enemy)enemy).getPlayerLocation();
 
         //calculate the location of the player
         double angle = random.nextDouble() * 2.0f * Math.PI;
@@ -78,7 +78,7 @@ public class SpawningManager extends TickableManager  {
                 location.y + SPAWN_DISTANCE*(float)Math.sin(angle)
         );
 
-        enemyReferences.add( (AbstractEnemy)enemy.newInstance(location.x, location.y) );
+        enemyReferences.add( (Enemy)enemy.newInstance(location.x, location.y) );
     }
 
     /**
@@ -110,10 +110,9 @@ public class SpawningManager extends TickableManager  {
      * correct enemy types are added
      * @param template The enemy that wises to be spawned, has a complex class requirement <T>
      * @param k Enemy spawning peaks at midnight, this is the horrizontal scaling value
-     * @param a A scaling value which defines the maximum probability an enemy spawns this tick
      * @param <T> The Enemy must be an AbstractEnemy, and implement Spawnable
      */
-     public <T extends AbstractEnemy & Spawnable>
+     public <T extends Enemy & Spawnable>
      void addEnemyForSpawning(T template, float k) {
          spawnTable.put(template, k);
      }
