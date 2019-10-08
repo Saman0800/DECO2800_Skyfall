@@ -128,9 +128,11 @@ public class Lizard extends AbstractPet implements Animatable, Item {
      * The pet will follow main character
      */
     public void followingCharacter() {
-        if (this.getDomesticated() && !isOnTheWay) {
-            HexVector destination = new HexVector(mc.getCol() - 1, mc.getRow() - 1);
-            moveTowards(destination);
+        if (this.getDomesticated()) {
+            if (!isOnTheWay) {
+                HexVector destination = new HexVector(mc.getCol() - 1, mc.getRow() - 1);
+                moveTowards(destination);
+            }
         }
     }
 

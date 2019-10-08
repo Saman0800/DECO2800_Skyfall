@@ -33,10 +33,10 @@ public class SpawningManager extends TickableManager  {
     }
 
     //Useful for controlling enemy counts
-    static final int MAXIMUM_ENEMIES = 100;
+    final int MAXIMUM_ENEMIES = 100;
 
     //Enemies spawn in a circle around the player
-    static final float SPAWN_DISTANCE = 100;
+    final float SPAWN_DISTANCE = 100;
 
     /**
      * Use createdSpawningManager instead of constructor

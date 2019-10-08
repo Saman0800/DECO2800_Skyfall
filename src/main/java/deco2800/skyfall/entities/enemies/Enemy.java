@@ -340,52 +340,52 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     @Override
     public void configureAnimations() {
-        String nameBiome = this.getName() + this.getBiome();
+        String name_biome = this.getName() + this.getBiome();
         this.addAnimations(
-                AnimationRole.MOVE, Direction.NORTH, new AnimationLinker(nameBiome + "MN", AnimationRole.MOVE, Direction.NORTH,
+                AnimationRole.MOVE, Direction.NORTH, new AnimationLinker(name_biome + "MN", AnimationRole.MOVE, Direction.NORTH,
                         true, true));
         this.addAnimations(
-                AnimationRole.MOVE, Direction.NORTH_EAST, new AnimationLinker(nameBiome + "ME", AnimationRole.MOVE, Direction.NORTH_EAST,
+                AnimationRole.MOVE, Direction.NORTH_EAST, new AnimationLinker(name_biome + "ME", AnimationRole.MOVE, Direction.NORTH_EAST,
                         true, true));
         this.addAnimations(
-                AnimationRole.MOVE, Direction.NORTH_WEST, new AnimationLinker(nameBiome + "MW", AnimationRole.MOVE, Direction.NORTH_WEST,
+                AnimationRole.MOVE, Direction.NORTH_WEST, new AnimationLinker(name_biome + "MW", AnimationRole.MOVE, Direction.NORTH_WEST,
                         true, true));
         this.addAnimations(
-                AnimationRole.MOVE, Direction.EAST, new AnimationLinker(nameBiome + "ME", AnimationRole.MOVE, Direction.EAST,
+                AnimationRole.MOVE, Direction.EAST, new AnimationLinker(name_biome + "ME", AnimationRole.MOVE, Direction.EAST,
                         true, true));
         this.addAnimations(
-                AnimationRole.MOVE, Direction.WEST, new AnimationLinker(nameBiome + "MW", AnimationRole.MOVE, Direction.WEST,
+                AnimationRole.MOVE, Direction.WEST, new AnimationLinker(name_biome + "MW", AnimationRole.MOVE, Direction.WEST,
                         true, true));
         this.addAnimations(
-                AnimationRole.MOVE, Direction.SOUTH, new AnimationLinker(nameBiome + "MS", AnimationRole.MOVE, Direction.SOUTH,
+                AnimationRole.MOVE, Direction.SOUTH, new AnimationLinker(name_biome + "MS", AnimationRole.MOVE, Direction.SOUTH,
                         true, true));
         this.addAnimations(
-                AnimationRole.MOVE, Direction.SOUTH_EAST, new AnimationLinker(nameBiome + "MSE", AnimationRole.MOVE, Direction.SOUTH_EAST,
+                AnimationRole.MOVE, Direction.SOUTH_EAST, new AnimationLinker(name_biome + "MSE", AnimationRole.MOVE, Direction.SOUTH_EAST,
                         true, true));
         this.addAnimations(
-                AnimationRole.MOVE, Direction.SOUTH_WEST, new AnimationLinker(nameBiome + "MSW", AnimationRole.MOVE, Direction.SOUTH_WEST,
+                AnimationRole.MOVE, Direction.SOUTH_WEST, new AnimationLinker(name_biome + "MSW", AnimationRole.MOVE, Direction.SOUTH_WEST,
                         true, true));
 
         this.addAnimations(
-                AnimationRole.ATTACK, Direction.EAST, new AnimationLinker(nameBiome + "AE", AnimationRole.ATTACK, Direction.EAST,
+                AnimationRole.ATTACK, Direction.EAST, new AnimationLinker(name_biome + "AE", AnimationRole.ATTACK, Direction.EAST,
                         true, true));
         this.addAnimations(
-                AnimationRole.ATTACK, Direction.NORTH, new AnimationLinker(nameBiome + "AN", AnimationRole.ATTACK, Direction.NORTH,
+                AnimationRole.ATTACK, Direction.NORTH, new AnimationLinker(name_biome + "AN", AnimationRole.ATTACK, Direction.NORTH,
                         true, true));
         this.addAnimations(
-                AnimationRole.ATTACK, Direction.SOUTH, new AnimationLinker(nameBiome + "AS", AnimationRole.ATTACK, Direction.SOUTH,
+                AnimationRole.ATTACK, Direction.SOUTH, new AnimationLinker(name_biome + "AS", AnimationRole.ATTACK, Direction.SOUTH,
                         true, true));
         this.addAnimations(
-                AnimationRole.ATTACK, Direction.SOUTH_EAST, new AnimationLinker(nameBiome + "ASE", AnimationRole.ATTACK, Direction.SOUTH_EAST,
+                AnimationRole.ATTACK, Direction.SOUTH_EAST, new AnimationLinker(name_biome + "ASE", AnimationRole.ATTACK, Direction.SOUTH_EAST,
                         true, true));
         this.addAnimations(
-                AnimationRole.ATTACK, Direction.SOUTH_WEST, new AnimationLinker(nameBiome + "ASW", AnimationRole.ATTACK, Direction.SOUTH_WEST,
+                AnimationRole.ATTACK, Direction.SOUTH_WEST, new AnimationLinker(name_biome + "ASW", AnimationRole.ATTACK, Direction.SOUTH_WEST,
                         true, true));
         this.addAnimations(
-                AnimationRole.ATTACK, Direction.WEST, new AnimationLinker(nameBiome + "AW", AnimationRole.ATTACK, Direction.WEST,
+                AnimationRole.ATTACK, Direction.WEST, new AnimationLinker(name_biome + "AW", AnimationRole.ATTACK, Direction.WEST,
                         true, true));
         this.addAnimations(
-                AnimationRole.NULL, Direction.DEFAULT, new AnimationLinker(nameBiome + "Dead", AnimationRole.DEFENCE, Direction.DEFAULT,
+                AnimationRole.NULL, Direction.DEFAULT, new AnimationLinker(name_biome + "Dead", AnimationRole.DEFENCE, Direction.DEFAULT,
                         true, true));
 
     }

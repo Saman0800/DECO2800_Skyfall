@@ -1,25 +1,23 @@
 package deco2800.skyfall.entities.enemies;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.managers.EnvironmentManager;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.EnvironmentManager;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.world.Chunk;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class EnemySpawnTable implements TimeObserver {
-
-    /**
-     * A random number sequence to be used for getting random numbers
-     */
-    private Random rand = new Random();
 
     /**
      * The radius in the which the enemies may spawn in
@@ -156,6 +154,7 @@ public class EnemySpawnTable implements TimeObserver {
             spawnEnemies();
         }
 
+        return;
     }
 
     private void spawnEnemies() {
@@ -183,6 +182,7 @@ public class EnemySpawnTable implements TimeObserver {
 
         int enemiesPlaced = 0;
         Tile nextTile = null;
+        Random rand = new Random();
 
         while (tileIter.hasNext() && (enemiesPlaced <= numberToSpawn)) {
 
@@ -203,7 +203,7 @@ public class EnemySpawnTable implements TimeObserver {
             List<Class<? extends AbstractEnemy>> possibleConstructors = biomeToConstructor
                     .get(nextTile.getBiome().getBiomeName());
 
-            if (possibleConstructors.isEmpty()) {
+            if (possibleConstructors.size() == 0) {
                 // There are no suitable enemies to spawn on this tile
                 continue;
             }

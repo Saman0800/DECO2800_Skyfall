@@ -2,10 +2,6 @@ package deco2800.skyfall.entities;
 
 public abstract class VehicleEntity extends Peon {
 
-    // Message from Samuel Eagles (@Saman0800)
-    // The use of the health variable and their related methods are redundant as they
-    // do the same things as detailed in the Peon class
-
     private int health;
 
     private boolean beAttacked = false;
@@ -22,7 +18,6 @@ public abstract class VehicleEntity extends Peon {
         this.setTexture(textureName);
     }
 
-    @Override
     public void onTick(long i) {
 
     }
@@ -43,7 +38,6 @@ public abstract class VehicleEntity extends Peon {
         return this.beAttacked;
     }
 
-    @Override
     public int getHealth() {
         return this.health;
     }
