@@ -572,7 +572,7 @@ public class MainCharacterTest {
         HexVector old_pos = new HexVector(testCharacter.getPosition().getRow(), testCharacter.getPosition().getCol());
 
         world.addEntity(new Scout(old_pos.getRow() + 0.1f, old_pos.getCol() + 0.1f,
-                0.1f, "Forest", Enemy.EnemyType.SCOUT));
+                0.1f, "Forest", "Scout"));
 
         for (int i = 0; i < 100; ++i) {
             world.onTick(100);

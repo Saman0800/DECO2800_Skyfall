@@ -130,8 +130,8 @@ public class WorldDirector {
 
         builder.addEntity(mainCharacter);
 
-        builder.addEntity(new Scout(-4f, -1f, 0.2f, "Forest", Enemy.EnemyType.SCOUT));
-        builder.addEntity(new Heavy(-4f, -1f, 0.2f, "Forest", Enemy.EnemyType.HEAVY));
+        builder.addEntity(new Scout(-4f, -1f, 0.2f, "Forest", "Scout"));
+        builder.addEntity(new Heavy(-4f, -1f, 0.2f, "Forest", "Heavy"));
 
         builder.addLake(5);
         builder.addRiver();
@@ -143,7 +143,7 @@ public class WorldDirector {
         builder.setType("tutorial");
         builder.setSeed(2);
         builder.setStaticEntities(true);
-        builder.addEntity(new Scout(-4f, -1f, 0.1f, "Forest", Enemy.EnemyType.SCOUT));
+        builder.addEntity(new Scout(-4f, -1f, 0.1f, "Forest", "Scout"));
         builder.addBiome(new ForestBiome(random), 20);
         builder.addBiome(new DesertBiome(random), 20);
         builder.addBiome(new MountainBiome(random), 20);

@@ -1,18 +1,56 @@
 package deco2800.skyfall.entities.enemies;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+/**
+ * An instance of a Heavy (hard level) enemy.
+ */
+public class Heavy extends Enemy implements Spawnable {
 
-public class Heavy extends Enemy {
-
-    // Logger for tracking enemy information
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    public Heavy(float col, float row, float scaling, String biome, EnemyType enemyType) {
-        super(col, row, "HeavyHitBox", EnemyType.HEAVY,
-                0.2f, biome, "HeavyTexture");
+    public Heavy(float col, float row, float scaling, String biome, String textureName) {
+        super(col, row, "Heavy", EnemyType.HEAVY, 0.06f,  biome, textureName);
 
         // Assign values, includes default values
-        this.setValues(scaling, 10, 5, 1, 5, 10);
+        this.setValues(scaling, 10, 5, 2,0.06f,0.03f);
+    }
+
+    /**
+     * Constructor of Heavy enemy, used for testing
+     *
+     * @param col the x-coordinate of the enemy.
+     * @param row the y-coordinate of the enemy.
+     * @param scaling the scaling factor of the enemy's stats.
+     */
+    public Heavy(float col, float row, float scaling) {
+        super(col, row);
+
+        this.setValues(scaling, 100, 1, 1,0.06f,0.04f);
+    }
+
+    @Override
+    public Enemy newInstance(float row, float col) {
+        return new Heavy(col, row, getScale(), getBiome(), getTexture());
+    }
+
+    /**
+     * Check whether the object equals to this enemy instance.
+     *
+     * @param obj the object to be checked
+     * @return true if the objects equals, false otherwise.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Heavy &&
+                this.hashCode() == obj.hashCode();
+    }
+
+    /**
+     * The hashcode of the enemy based on {@link #toString()}.
+     * It will be used in {@link #equals(Object)} for comparing
+     * objects.
+     *
+     * @return the hashcode of the enemy instance.
+     */
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
     }
 }

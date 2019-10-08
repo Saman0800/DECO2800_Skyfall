@@ -7,6 +7,7 @@ import deco2800.skyfall.entities.MainCharacter;
 
 import deco2800.skyfall.worlds.world.World;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -59,10 +60,10 @@ public class EnemySpawnTableTest {
 
         testWorld = mock(World.class);
         List<AgentEntity> agentEntities = new ArrayList<>();
-        agentEntities.add(new Scout(-4f, -1f, 0.1f, "Forest", Enemy.EnemyType.SCOUT));
-        agentEntities.add(new Scout(-4f, -1f, 0.1f, "Forest", Enemy.EnemyType.SCOUT));
-        agentEntities.add(new Scout(-4f, -1f, 0.1f, "Forest", Enemy.EnemyType.SCOUT));
-        agentEntities.add(new Scout(-4f, -1f, 0.1f, "Forest", Enemy.EnemyType.SCOUT));
+        agentEntities.add(new Heavy(0f, 0f, 0.2f));
+        agentEntities.add(new Heavy(20f, 20f, 0.1f));
+        agentEntities.add(new Heavy(100f, 150f, 0.1f));
+        agentEntities.add(new Heavy(150f, 50f, 0.1f));
         agentEntities.add(new PlayerPeon(10f, 10f, 2));
         when(testWorld.getSortedAgentEntities()).thenReturn(agentEntities);
 
@@ -72,12 +73,12 @@ public class EnemySpawnTableTest {
     @Test
     public void testGetAllEnemies() {
         List<AgentEntity> expectedList = new ArrayList<>();
-        expectedList.add(new Heavy(-4f, -1f, 0.2f, "Forest", Enemy.EnemyType.HEAVY));
-        expectedList.add(new Heavy(-4f, -1f, 0.2f, "Forest", Enemy.EnemyType.HEAVY));
-        expectedList.add(new Heavy(-4f, -1f, 0.2f, "Forest", Enemy.EnemyType.HEAVY));
-        expectedList.add(new Heavy(-4f, -1f, 0.2f, "Forest", Enemy.EnemyType.HEAVY));
+        expectedList.add(new Heavy(0f, 0f, 0.1f));
+        expectedList.add(new Heavy(20f, 20f, 0.1f));
+        expectedList.add(new Heavy(100f, 150f, 0.1f));
+        expectedList.add(new Heavy(150f, 50f, 0.1f));
 
-        assertEquals("Enemies were not filtered correctly.", expectedList, testTable.getAllEnemies());
+        assertEquals("Abstract enemies were not filtered correctly.", expectedList, testTable.getAllEnemies());
     }
 
     @Test
@@ -89,8 +90,8 @@ public class EnemySpawnTableTest {
     @Test
     public void enemiesInTarget() {
         List<AgentEntity> expectedList = new ArrayList<>();
-        expectedList.add(new Scout(-4f, -1f, 0.2f, "Forest", Enemy.EnemyType.SCOUT));
-        expectedList.add(new Scout(-4f, -1f, 0.2f, "Forest", Enemy.EnemyType.SCOUT));
+        expectedList.add(new Heavy(0f, 0f, 0.1f));
+        expectedList.add(new Heavy(20f, 20f, 0.1f));
 
         assertEquals("Incorrect entities filtered.", expectedList, testTable.enemiesInTarget(0f, 0f, 50));
     }
@@ -103,8 +104,8 @@ public class EnemySpawnTableTest {
     @Test
     public void enemiesNearCharacter() {
         List<AgentEntity> expectedList = new ArrayList<>();
-        expectedList.add(new Scout(-4f, -1f, 0.1f, "Forest", Enemy.EnemyType.SCOUT));
-        expectedList.add(new Scout(-4f, -1f, 0.1f, "Forest", Enemy.EnemyType.SCOUT));
+        expectedList.add(new Heavy(0f, 0f, 0.1f));
+        expectedList.add(new Heavy(20f, 20f, 0.1f));
 
         assertEquals("Incorrect entities filtered.", expectedList, testTable.enemiesNearCharacter());
     }
