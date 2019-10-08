@@ -95,7 +95,6 @@ public class ChestTable extends AbstractPopUpElement{
         Label text = new Label("CHEST", skin, "navy-text");
         infoBar.add(text);
 
-
         this.resourcePanel = new Table();
         //updateChestPanel(chest);
 

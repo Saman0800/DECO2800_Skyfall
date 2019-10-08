@@ -1,5 +1,9 @@
 package deco2800.skyfall.buildings;
 
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.GameMenuManager;
+
 /**
  *  A BuildingFactory is a class to handle the creating process of all building entity classes,
  *  including both BuildingEntity based class and BuildingEntity subclasses.
@@ -15,15 +19,25 @@ public class BuildingFactory {
     }
 
     /**
+     * Add to made buildings and remove from crafted
+     * @param type
+     */
+    private void addToConstucted(BuildingType type) {
+        GameMenuManager manager = GameManager.getManagerFromInstance(GameMenuManager.class);
+        MainCharacter mc = manager.getMainCharacter();
+        mc.constructedBuildings.add(type);
+        mc.craftedBuildings.remove(type);
+    }
+
+    /**
      * Create cabin building based on BuildingEntity class with defined default renderOrder.
      * @param col column coordinate that a building located on
      * @param row row coordinate that a building located on
      * @return a cabin object
      */
     public BuildingEntity createCabin(float col, float row) {
-        BuildingEntity cabin = new BuildingEntity(col, row, 2, BuildingType.CABIN);
-
-        return cabin;
+        addToConstucted(BuildingType.CABIN);
+        return new BuildingEntity(col, row, 2, BuildingType.CABIN);
     }
 
     /**
@@ -33,6 +47,7 @@ public class BuildingFactory {
      * @return a storage unit building object
      */
     public BuildingEntity createStorageUnit(float col, float row) {
+        addToConstucted(BuildingType.STORAGE_UNIT);
         return new BuildingEntity(col, row, 2, BuildingType.STORAGE_UNIT);
     }
 
@@ -43,6 +58,7 @@ public class BuildingFactory {
      * @return a town centre object
      */
     public BuildingEntity createTownCentreBuilding(float col, float row) {
+        addToConstucted(BuildingType.TOWNCENTRE);
         return new BuildingEntity(col, row, 2, BuildingType.TOWNCENTRE);
     }
 
@@ -53,6 +69,7 @@ public class BuildingFactory {
      * @return a fence object
      */
     public BuildingEntity createFenceBuilding(float col, float row) {
+        addToConstucted(BuildingType.FENCE);
         return new BuildingEntity(col, row, 2, BuildingType.FENCE);
     }
 
@@ -63,6 +80,7 @@ public class BuildingFactory {
      * @return a safeHouse object
      */
     public BuildingEntity createSafeHouse(float col, float row) {
+        addToConstucted(BuildingType.SAFEHOUSE);
         return new BuildingEntity(col, row, 2, BuildingType.SAFEHOUSE);
     }
 
@@ -73,6 +91,7 @@ public class BuildingFactory {
      * @return a safeHouse object
      */
     public BuildingEntity createWatchTower(float col, float row) {
+        addToConstucted(BuildingType.WATCHTOWER);
         return new BuildingEntity(col, row, 2, BuildingType.WATCHTOWER);
     }
 
@@ -83,6 +102,27 @@ public class BuildingFactory {
      * @return a safeHouse object
      */
     public BuildingEntity createCastle(float col, float row) {
+        addToConstucted(BuildingType.CASTLE);
         return new BuildingEntity(col, row, 2, BuildingType.CASTLE);
+    }
+
+    public BuildingEntity createForestPortal(float col, float row) {
+        addToConstucted(BuildingType.FORESTPORTAL);
+        return new BuildingEntity(col, row, 2, BuildingType.FORESTPORTAL);
+    }
+
+    public BuildingEntity createMountainPortal(float col, float row) {
+        addToConstucted(BuildingType.MOUNTAINPORTAL);
+        return new BuildingEntity(col, row, 2, BuildingType.MOUNTAINPORTAL);
+    }
+
+    public BuildingEntity createDesertPortal(float col, float row) {
+        addToConstucted(BuildingType.DESERTPORTAL);
+        return new BuildingEntity(col, row, 2, BuildingType.DESERTPORTAL);
+    }
+
+    public BuildingEntity createVolcanoPortal(float col, float row) {
+        addToConstucted(BuildingType.VOLCANOPORTAL);
+        return new BuildingEntity(col, row, 2, BuildingType.VOLCANOPORTAL);
     }
 }

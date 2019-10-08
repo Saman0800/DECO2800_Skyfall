@@ -2,7 +2,6 @@ package deco2800.skyfall.entities.structures;
 
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.entities.StaticEntity;
-import deco2800.skyfall.managers.ConstructionManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
@@ -27,7 +26,6 @@ public class House extends AbstractBuilding {
     private int sizeY = 1;
     private HexVector coords;
     private String texture = "house1";
-    ConstructionManager permissions = new ConstructionManager();
 
     @Expose
     public Map<HexVector, String> children;

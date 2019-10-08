@@ -11,6 +11,9 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.renderers.Renderable;
+import deco2800.skyfall.resources.HealthResources;
+import deco2800.skyfall.resources.ManufacturedResources;
+import deco2800.skyfall.resources.NaturalResources;
 import deco2800.skyfall.util.BodyEditorLoader;
 import deco2800.skyfall.util.HexVector;
 import org.slf4j.Logger;
@@ -439,7 +442,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * @param y the entities y coordinate
      */
     private void initialiseBox2D(float x, float y) {
-        if (!(this instanceof StaticEntity)) {
+        if (!(this instanceof StaticEntity || this instanceof NaturalResources ||
+                this instanceof ManufacturedResources || this instanceof HealthResources)) {
             defineBody(x, y);
             defineFixture();
         }
@@ -454,7 +458,8 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * @param fixtureDefFile file path the .JSON file
      */
     public void initialiseBox2D(float x, float y, String fixtureDefFile) {
-        if (!(this instanceof StaticEntity)) {
+        if (!(this instanceof StaticEntity || this instanceof NaturalResources ||
+                this instanceof ManufacturedResources || this instanceof HealthResources)) {
             defineBody(x, y);
             defineFixture(fixtureDefFile);
         }

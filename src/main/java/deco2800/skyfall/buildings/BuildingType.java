@@ -10,10 +10,18 @@ import java.util.*;
  */
 public enum BuildingType implements Blueprint {
 
-    CABIN("Cabin", 10, 1, 1, 7, "cabin_0"), STORAGE_UNIT("StorageUnit", 5, 2, 2, 6, "storage_unit"),
-    TOWNCENTRE("TownCentre", 80, 3, 3, 0, "town_centre"), FENCE("Fence", 5, 1, 1, 3, "fenceN-S"),
-    SAFEHOUSE("SafeHouse", 5, 5, 5, 7, "safe_house_0"), WATCHTOWER("WatchTower", 8, 1, 1, 8, "watchtower_0"),
-    CASTLE("Castle", 10, 1, 1, 6, "castle_0");
+    CABIN("Cabin", 10, 1, 1, 7, "cabin_0"),
+    STORAGE_UNIT("StorageUnit", 5, 2, 2, 6, "storage_unit"),
+    TOWNCENTRE("TownCentre", 80, 3, 3, 0, "town_centre"),
+    FENCE("Fence", 5, 1, 1, 3, "fenceN-S"),
+    SAFEHOUSE("SafeHouse", 5, 5, 5, 7, "safe_house_0"),
+    WATCHTOWER("WatchTower", 8, 1, 1, 8, "watchtower_0"),
+    CASTLE("Castle", 10, 1, 1, 6, "castle_0"),
+    FORESTPORTAL("ForestPortal", 10, 1, 1, 6, "portal_forest"),
+    DESERTPORTAL("DesertPortal", 10, 1, 1, 6, "portal_desert"),
+    MOUNTAINPORTAL("MountainPortal", 10, 1, 1, 6, "portal_mountain"),
+    VOLCANOPORTAL("VolcanoPortal", 10, 1, 1, 6, "portal_volcano");
+
 
     private Map<String, Integer> buildingCost;
     private String name;
@@ -33,33 +41,45 @@ public enum BuildingType implements Blueprint {
         this.mainTexture = mainTexture;
 
         // adding all of the possible textures for each building type
-        switch (name) {
-        case "Cabin":
-            initialiseCabin();
-            break;
-        case "StorageUnit":
-            initialiseStorageUnit();
-            break;
-        case "TownCentre":
-            initialiseTownCentre();
-            break;
-        case "Wall":
-            initialiseFence();
-            break;
-        case "WatchTower":
-            initialiseWatchTower();
-            break;
-        case "Castle":
-            initialiseCastle();
-            break;
-        case "SafeHouse":
-            initialiseSafeHouse();
-            break;
-        case "Fence":
-            initialiseFence();
-            break;
-        default:
-            break;
+        switch(name){
+            case "Cabin":
+                initialiseCabin();
+                break;
+            case "StorageUnit":
+                initialiseStorageUnit();
+                break;
+            case "TownCentre":
+                initialiseTownCentre();
+                break;
+            case "Wall":
+                initialiseFence();
+                break;
+            case "WatchTower":
+                initialiseWatchTower();
+                break;
+            case "Castle":
+                initialiseCastle();
+                break;
+            case "SafeHouse":
+                initialiseSafeHouse();
+                break;
+            case "Fence":
+                initialiseFence();
+                break;
+            case "ForestPortal":
+                initialiseForestPortal();
+                break;
+            case "DesertPortal":
+                initialiseDesertPortal();
+                break;
+            case "MountainPortal":
+                initialiseMountainPortal();
+                break;
+            case "VolcanoPortal":
+                initialiseVolcanoPortal();
+                break;
+            default:
+                break;
         }
     }
 
@@ -178,6 +198,54 @@ public enum BuildingType implements Blueprint {
         buildingCost.put("Wood", 10);
         buildingCost.put("Stone", 7);
         buildingCost.put("Metal", 3);
+    }
+
+    public void initialiseForestPortal() {
+        buildingCost = new HashMap<>();
+        buildingCost.put("Wood", 0);
+        buildingCost.put("Stone", 0);
+        buildingCost.put("Metal", 0);
+
+        buildingTextures = new ArrayList<>();
+        //Need to add initialise textures back.
+
+        buildingTextures.add("portal_forest");
+    }
+
+    public void initialiseDesertPortal() {
+        buildingCost = new HashMap<>();
+        buildingCost.put("Wood", 0);
+        buildingCost.put("Stone", 0);
+        buildingCost.put("Metal", 0);
+
+        buildingTextures = new ArrayList<>();
+        //Need to add initialise textures back.
+
+        buildingTextures.add("portal_desert");
+    }
+
+    public void initialiseMountainPortal() {
+        buildingCost = new HashMap<>();
+        buildingCost.put("Wood", 0);
+        buildingCost.put("Stone", 0);
+        buildingCost.put("Metal", 0);
+
+        buildingTextures = new ArrayList<>();
+        //Need to add initialise textures back.
+
+        buildingTextures.add("portal_mountain");
+    }
+
+    public void initialiseVolcanoPortal() {
+        buildingCost = new HashMap<>();
+        buildingCost.put("Wood", 0);
+        buildingCost.put("Stone", 0);
+        buildingCost.put("Metal", 0);
+
+        buildingTextures = new ArrayList<>();
+        //Need to add initialise textures back.
+
+        buildingTextures.add("portal_volcano");
     }
 
     public List<String> initialiseWatchTowerTextures() {

@@ -49,9 +49,7 @@ public class PhysicsManager extends TickableManager {
                 boolean reactionOccurred = !contact.getFixtureA().isSensor()
                         && !contact.getFixtureB().isSensor();
 
-                if (reactionOccurred && (o1 instanceof MainCharacter || o2 instanceof MainCharacter)) {
-                    logger.info("Collision has occurred");
-                }
+                logger.info("Collision has occurred between {} and {}", o1.getClass(), o2.getClass());
 
                 //Runs collision handler defined in class
                 if (o1 instanceof AbstractEntity && reactionOccurred) {

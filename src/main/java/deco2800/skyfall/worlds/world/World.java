@@ -1,6 +1,7 @@
 package deco2800.skyfall.worlds.world;
 
 import com.badlogic.gdx.Gdx;
+import deco2800.skyfall.buildings.*;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.weapons.Weapon;
@@ -689,10 +690,9 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
                 removeEntity(entity);
                 gmm.getInventory().add((Item) entity);
             } else if (entity instanceof Chest) {
-                GameMenuManager menuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
-                ChestTable chest = (ChestTable) menuManager.getPopUp("chestTable");
+                ChestTable chest = (ChestTable) gmm.getPopUp("chestTable");
                 chest.updateChestPanel((Chest) entity);
-                menuManager.setPopUp("chestTable");
+                gmm.setPopUp("chestTable");
             } else if (entity instanceof Item) {
                     MainCharacter mc = gmm.getMainCharacter();
                     if (tile.getCoordinates().distance(mc.getPosition()) > 2) {
@@ -712,7 +712,30 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
                 GameMenuManager menuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
                 BlueprintShopTable bs = (BlueprintShopTable) menuManager.getPopUp("blueprintShopTable");
                 bs.updateBlueprintShopPanel();
-                menuManager.setPopUp("blueprintShopTable");
+                gmm.setPopUp("blueprintShopTable");
+            } else if (entity instanceof BuildingEntity) {
+                BuildingEntity e = (BuildingEntity) entity;
+                MainCharacter mc = gmm.getMainCharacter();
+                switch (e.getBuildingType()) {
+                    case FORESTPORTAL:
+                        ForestPortal forestPortal = new ForestPortal(0, 0, 0);
+                        forestPortal.teleport(mc, this);
+                        break;
+                    case MOUNTAINPORTAL:
+                        MountainPortal mountainPortal = new MountainPortal(0, 0, 0);
+                        mountainPortal.teleport(mc, this);
+                        break;
+                    case DESERTPORTAL:
+                        DesertPortal desertPortal = new DesertPortal(0, 0, 0);
+                        desertPortal.teleport(mc, this);
+                        break;
+                    case VOLCANOPORTAL:
+                        VolcanoPortal volcanoPortal = new VolcanoPortal(0, 0, 0);
+                        volcanoPortal.teleport(mc, this);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
