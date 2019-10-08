@@ -62,8 +62,6 @@ public class TikiTorch extends StaticEntity implements HasPointLight {
         float gametime = environmentManager.getHourDecimal();
         float kValue = (float) Math.sin(randomPointLightPeriod * gametime) * 0.15f + 1.2f;
         this.entityPointLight.setKValue(kValue);
-
-        return;
     }
 
     @Override

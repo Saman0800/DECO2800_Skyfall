@@ -10,6 +10,7 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.HexVector;
+
 import java.util.List;
 
 public class Whitebear extends AbstractPet implements Animatable, Item {
@@ -71,30 +72,28 @@ public class Whitebear extends AbstractPet implements Animatable, Item {
 
     public void followingCharacter() {
         setCurrentState(AnimationRole.MOVE);
-        if (this.getDomesticated()) {
-            if (!isOnTheWay) {
-                // keep at the right hand side of the mc
-                HexVector destination = new HexVector(mc.getCol() - 1, mc.getRow() - 1);
-                setCurrentDirection(movementDirection(this.position.getAngle()));
-                this.position.moveToward(destination, this.getSpeed());
-                // when the pet arrive then make it face to the player
-                boolean complete = false;
-                if (destination.getCol() == this.getCol() && destination.getRow() == this.getRow()) {
-                    complete = true;
-                    if (movingDirection == Direction.NORTH_EAST) {
-                        movingDirection = Direction.SOUTH_WEST;
-                        setCurrentDirection(Direction.SOUTH_WEST);
-                    } else if (movingDirection == Direction.NORTH) {
-                        movingDirection = Direction.SOUTH;
-                        setCurrentDirection(Direction.SOUTH);
-                    } else if (movingDirection == Direction.NORTH_WEST || movingDirection == Direction.SOUTH_EAST) {
-                        movingDirection = Direction.SOUTH_WEST;
-                        setCurrentDirection(Direction.SOUTH_WEST);
-                    }
-                } else {
-                    complete = false;
-                    movingDirection = movementDirection(this.position.getAngle());
+        if (this.getDomesticated() && !isOnTheWay) {
+            // keep at the right hand side of the mc
+            HexVector destination = new HexVector(mc.getCol() - 1, mc.getRow() - 1);
+            setCurrentDirection(movementDirection(this.position.getAngle()));
+            this.position.moveToward(destination, this.getSpeed());
+            // when the pet arrive then make it face to the player
+            boolean complete = false;
+            if (destination.getCol() == this.getCol() && destination.getRow() == this.getRow()) {
+                complete = true;
+                if (movingDirection == Direction.NORTH_EAST) {
+                    movingDirection = Direction.SOUTH_WEST;
+                    setCurrentDirection(Direction.SOUTH_WEST);
+                } else if (movingDirection == Direction.NORTH) {
+                    movingDirection = Direction.SOUTH;
+                    setCurrentDirection(Direction.SOUTH);
+                } else if (movingDirection == Direction.NORTH_WEST || movingDirection == Direction.SOUTH_EAST) {
+                    movingDirection = Direction.SOUTH_WEST;
+                    setCurrentDirection(Direction.SOUTH_WEST);
                 }
+            } else {
+                complete = false;
+                movingDirection = movementDirection(this.position.getAngle());
             }
         }
     }

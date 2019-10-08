@@ -13,10 +13,10 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
     protected Vector2 direction;
     protected float currentSpeed;
 
-    private boolean MOVEUP = false;
-    private boolean MOVELEFT = false;
-    private boolean MOVERIGHT = false;
-    private boolean MOVEDOWN = false;
+    private boolean moveUp = false;
+    private boolean moveLeft = false;
+    private boolean moveRight = false;
+    private boolean moveDown = false;
 
     /**
      * PlayerPeon Constructor
@@ -47,16 +47,16 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
      * Calculates the new movement point depending on what movement keys are held down.
      */
     private void updateMoveVector() {
-        if (MOVEUP) {
+        if (moveUp) {
             this.direction.add(0.0f, speed);
         }
-        if (MOVELEFT) {
+        if (moveLeft) {
             this.direction.sub(speed, 0.0f);
         }
-        if (MOVEDOWN) {
+        if (moveDown) {
             this.direction.sub(0.0f, speed);
         }
-        if (MOVERIGHT) {
+        if (moveRight) {
             this.direction.add(speed, 0.0f);
         }
     }
@@ -133,16 +133,16 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
 
         switch (keycode) {
             case Input.Keys.W:
-                MOVEUP = true;
+                moveUp = true;
                 break;
             case Input.Keys.A:
-                MOVELEFT = true;
+                moveLeft = true;
                 break;
             case Input.Keys.S:
-                MOVEDOWN = true;
+                moveDown = true;
                 break;
             case Input.Keys.D:
-                MOVERIGHT = true;
+                moveRight = true;
                 break;
             default:
                 break;
@@ -157,16 +157,16 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
     public void notifyKeyUp ( int keycode){
         switch (keycode) {
             case Input.Keys.W:
-                MOVEUP = false;
+                moveUp = false;
                 break;
             case Input.Keys.A:
-                MOVELEFT = false;
+                moveLeft = false;
                 break;
             case Input.Keys.S:
-                MOVEDOWN = false;
+                moveDown = false;
                 break;
             case Input.Keys.D:
-                MOVERIGHT = false;
+                moveRight = false;
                 break;
             default:
                 break;
