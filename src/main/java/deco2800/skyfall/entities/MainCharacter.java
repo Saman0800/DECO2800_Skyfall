@@ -736,6 +736,7 @@ public class MainCharacter extends Peon
         setHurt(true);
         changeHealth(-damage);
         updateHealth();
+        setCurrentState(AnimationRole.HURT);
         logger.info("Current Health: {}", this.getHealth());
 
         // If the player isn't recovering, set hurt and change health/animations
@@ -762,10 +763,10 @@ public class MainCharacter extends Peon
         }
     }
 
-    /*
+    /**
      * Checks if the players hurt is over
      */
-    private void checkIfHurtEnded() {
+    public void checkIfHurtEnded() {
         hurtTime += 20; // playerHurt for 1 second
 
         if (hurtTime > 400) {
@@ -808,10 +809,10 @@ public class MainCharacter extends Peon
         this.isTexChanging = isTexChanging;
     }
 
-    /*
+    /**
      * Check if player has recovered
      */
-    private void checkIfRecovered() {
+    public void checkIfRecovered() {
         recoverTime += 20;
         this.changeCollideability(false);
 
@@ -1881,13 +1882,13 @@ public class MainCharacter extends Peon
         vehicleDirection2.put(Direction.SOUTH_WEST, "sand_car_SOUTHWEST");
         defaultDirectionTextures=defaultMainCharacterTextureMap;
     }
-
     private boolean isOnVehicle=false;
+
     /**
      * If the animation is moving sets the animation state to be Move else NULL.
      * Also sets the direction
      */
-    private void updateAnimation() {
+    public void updateAnimation() {
         getPlayerDirectionCardinal();
 
         /* Short Animations */
@@ -1918,6 +1919,60 @@ public class MainCharacter extends Peon
             }
         }
     }
+
+    /**
+     * Get the duration main character hurts.
+     * @return the duration main character hurts.
+     */
+    public long getHurtTime() {
+        return hurtTime;
+    }
+    public void setHurtTime(long hurtTime) {
+        this.hurtTime = hurtTime;
+    }
+
+    /**
+     * Get the duration for main character to recover.
+     * @return the duration for main character to recover.
+     */
+    public long getRecoverTime() {
+        return recoverTime;
+    }
+    public void setRecoverTime(long recoverTime) {
+        this.recoverTime = recoverTime;
+    }
+
+    /**
+     * Get the duration for main character to die.
+     * @return the duration for main character to die.
+     */
+    public long getDeadTime() {
+        return deadTime;
+    }
+
+    /**
+     * Get the x-coordinate input of the player.
+     * @return the x-coordinate input of the player.
+     */
+    public int getXInput() {
+        return xInput;
+    }
+    /**
+     * Get the y-coordinate input of the player.
+     * @return the y-coordinate input of the player.
+     */
+    public int getYInput() {
+        return yInput;
+    }
+
+    /**
+     * Get whether main character is sprinting.
+     * @return whether main character is sprinting.
+     */
+    public boolean getIsSprinting() {
+        return isSprinting;
+    }
+
 
     /**
      * Toggles if the camera should follow the player

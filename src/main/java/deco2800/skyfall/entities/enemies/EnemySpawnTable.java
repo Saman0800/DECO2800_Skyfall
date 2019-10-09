@@ -1,8 +1,5 @@
 package deco2800.skyfall.entities.enemies;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
@@ -45,7 +42,7 @@ public class EnemySpawnTable implements TimeObserver {
      * string of the biome name and the values a list of all the classes to be
      * spawned within the corresponding biome.
      */
-    private Map<String, List<Class<? extends AbstractEnemy>>> biomeToConstructor;
+    private Map<String, List<Class<? extends Enemy>>> biomeToConstructor;
 
     /**
      * A reference to the environment manager to make queries to.
@@ -64,14 +61,14 @@ public class EnemySpawnTable implements TimeObserver {
     MainCharacter mainCharacter = MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
 
     public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
-            Map<String, List<Class<? extends AbstractEnemy>>> biomeToConstructor,
+            Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
             Function<EnvironmentManager, Double> probAdjFunc) {
 
         this(spawnRadius, maxInRadius, frequency, biomeToConstructor, probAdjFunc, GameManager.get().getWorld());
     }
 
     public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
-            Map<String, List<Class<? extends AbstractEnemy>>> biomeToConstructor,
+            Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
             Function<EnvironmentManager, Double> probAdjFunc, World world) {
 
         this.spawnRadius = spawnRadius;
@@ -85,10 +82,10 @@ public class EnemySpawnTable implements TimeObserver {
     /**
      * @return Gets all the enemies from within the world.
      */
-    public List<AbstractEnemy> getAllAbstractEnemies() {
+    public List<Enemy> getAllEnemies() {
 
-        return world.getSortedAgentEntities().stream().filter(AbstractEnemy.class::isInstance)
-                .map(AbstractEnemy.class::cast).collect(Collectors.toList());
+        return world.getSortedAgentEntities().stream().filter(Enemy.class::isInstance)
+                .map(Enemy.class::cast).collect(Collectors.toList());
 
     }
 
@@ -118,9 +115,9 @@ public class EnemySpawnTable implements TimeObserver {
      * 
      * @return A list of all the enemies within range of the target.
      */
-    public List<AbstractEnemy> enemiesInTarget(float x, float y, float radius) {
+    public List<Enemy> enemiesInTarget(float x, float y, float radius) {
 
-        return getAllAbstractEnemies().stream().filter(enemy -> inRange(enemy, x, y, radius))
+        return getAllEnemies().stream().filter(enemy -> inRange(enemy, x, y, radius))
                 .collect(Collectors.toList());
 
     }
@@ -128,7 +125,7 @@ public class EnemySpawnTable implements TimeObserver {
     /**
      * Returns a list of all the enemies within range of the main character.
      */
-    public List<AbstractEnemy> enemiesNearCharacter() {
+    public List<Enemy> enemiesNearCharacter() {
 
         return enemiesInTarget(mainCharacter.getRow(), mainCharacter.getCol(), spawnRadius);
 
@@ -137,7 +134,7 @@ public class EnemySpawnTable implements TimeObserver {
     /**
      * Returns how many enemies are with close proximity of another enemy.
      * 
-     * @param targetEnemy The enemy that we are making the count for.
+     * @param x The enemy that we are making the count for.
      */
     public int enemiesNearTargetCount(float x, float y) {
 
@@ -195,12 +192,12 @@ public class EnemySpawnTable implements TimeObserver {
             // Check if the tile is in sight of the player
             float[] tileWorldCord = WorldUtil.colRowToWorldCords(nextTile.getCol(), nextTile.getRow());
 
-            if (!WorldUtil.areCoordinatesOffScreen(tileWorldCord[0], tileWorldCord[1], GameManager.get().getCamera())) {
-                continue;
-            }
+           // if (!WorldUtil.areCoordinatesOffScreen(tileWorldCord[0], tileWorldCord[1], GameManager.get().getCamera())) {
+           //     continue;
+           // }
 
             // Create an enemy using one of the appropriate constructors
-            List<Class<? extends AbstractEnemy>> possibleConstructors = biomeToConstructor
+            List<Class<? extends Enemy>> possibleConstructors = biomeToConstructor
                     .get(nextTile.getBiome().getBiomeName());
 
             if (possibleConstructors.size() == 0) {
@@ -216,10 +213,10 @@ public class EnemySpawnTable implements TimeObserver {
             spawnChance = Math.pow(spawnChance, Math.log(enemiesNearTargetCount(nextTile.getRow(), nextTile.getCol())));
 
             // Pick a class, any class!
-            Class<? extends AbstractEnemy> randEnemyType = possibleConstructors
+            Class<? extends Enemy> randEnemyType = possibleConstructors
                     .get(rand.nextInt(possibleConstructors.size()));
 
-            AbstractEnemy newEnemy;
+            Enemy newEnemy;
 
             try {
                 newEnemy = randEnemyType.getDeclaredConstructor(Float.class, Float.class).newInstance(nextTile.getRow(),
@@ -227,7 +224,7 @@ public class EnemySpawnTable implements TimeObserver {
                 world.addEntity(newEnemy);
                 enemiesPlaced += 1;
             } catch (Exception E) {
-                System.err.println("Could not create new AbstractEnemy: " + E.getMessage());
+                System.err.println("Could not create new Enemy: " + E.getMessage());
             }
         }
     }
