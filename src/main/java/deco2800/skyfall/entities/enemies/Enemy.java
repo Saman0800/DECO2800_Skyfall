@@ -79,6 +79,9 @@ public class Enemy extends Peon
         // Sets the main character in the game.
         this.setMainCharacter(MainCharacter.getInstance());
 
+        // Set type of enemy
+        this.setType(enemyType);
+
         // Sets the type of the enemy, its name and the biome it is from
         this.setBiome(biome);
         this.setHealth(health);
@@ -89,8 +92,6 @@ public class Enemy extends Peon
         this.setDirectionTextures();
         this.configureAnimations();
         this.configureSounds();
-
-        this.enemy = enemyType;
     }
 
     /**
@@ -108,10 +109,10 @@ public class Enemy extends Peon
      * enemy attacks player.
      */
     private void attackPlayer() {
-        if(!(this.mainCharacter.isRecovering() ||
-                this.mainCharacter.isDead() || this.mainCharacter.isHurt())) {
+           if(!(mainCharacter.isDead() ||
+                    mainCharacter.isRecovering() || mainCharacter.isHurt())) {
             this.setSpeed(getChasingSpeed());
-            this.destination = new HexVector(mainCharacter.getCol(), mainCharacter.getRow());
+            this.destination = new HexVector(mainCharacter.getPosition());
             this.position.moveToward(destination, this.getChasingSpeed());
 
             // if the player in attack range then attack player
@@ -180,6 +181,14 @@ public class Enemy extends Peon
     }
 
     /**
+     * Set the type of enemy.
+     * @param enemyType the type of the enemy.
+     */
+    public void setType(EnemyType enemyType) {
+        this.enemy = enemyType;
+    }
+
+    /**
      * If the animation is moving sets the animation state to be Move
      * else NULL. Also sets the direction
      */
@@ -221,8 +230,7 @@ public class Enemy extends Peon
             this.setCurrentState(AnimationRole.MOVE);
             this.updateAnimation();
 
-            if (distance(mainCharacter) < 3 && !(mainCharacter.isDead() ||
-                    mainCharacter.isRecovering() || mainCharacter.isHurt())) {
+            if (distance(mainCharacter) < 4) {
                 attackPlayer();
                 SoundManager.playSound(getChaseSound());
 
@@ -269,7 +277,7 @@ public class Enemy extends Peon
      */
     @Override
     public void setDirectionTextures() {
-        String animationNameStart = "__ANIMATION_" + this.getName();
+        String animationNameStart = "__ANIMATION_" + this.enemy.name();
         defaultDirectionTextures.put(Direction.EAST, animationNameStart + "MoveE:0");
         defaultDirectionTextures.put(Direction.WEST, animationNameStart + "MoveW:0");
         defaultDirectionTextures.put(Direction.SOUTH, animationNameStart + "MoveS:0");
@@ -296,7 +304,7 @@ public class Enemy extends Peon
      */
     @Override
     public void configureAnimations() {
-        String enemyName = this.getName();
+        String enemyName = this.enemy.name();
 
         // Move animations
         this.addAnimations(

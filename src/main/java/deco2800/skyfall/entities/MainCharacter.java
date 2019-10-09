@@ -732,19 +732,12 @@ public class MainCharacter extends Peon
      * @param damage the damage deal to the player.
      */
     public void playerHurt(int damage) {
-        // Change health and related fields accordingly
-        setHurt(true);
-        changeHealth(-damage);
-        updateHealth();
-        setCurrentState(AnimationRole.HURT);
-        logger.info("Current Health: {}", this.getHealth());
-
         // If the player isn't recovering, set hurt and change health/animations
         if (!isRecovering) {
             setHurt(true);
-            this.changeHealth(-damage);
-            getBody().setLinearVelocity(getBody().getLinearVelocity()
-                    .lerp(new Vector2(0.f, 0.f), 0.5f));
+            changeHealth(-damage);
+            updateHealth();
+            setCurrentState(AnimationRole.HURT);
 
             // Check if player died and run kill method
             if (this.getHealth() < 1) {
@@ -753,7 +746,6 @@ public class MainCharacter extends Peon
             } else {
                 hurtTime = 0;
                 recoverTime = 0;
-
                 SoundManager.playSound(PLAYER_HURT);
 
                 if (hurtTime > 400) {
@@ -780,8 +772,9 @@ public class MainCharacter extends Peon
     /**
      * Helper function to update healthBar outside of class.
      */
-    private void updateHealth() {
+    public void updateHealth() {
         if (this.healthBar != null) {
+            System.out.println("mnmnm");
             this.healthBar.update();
         }
     }
@@ -987,6 +980,7 @@ public class MainCharacter extends Peon
         }
         this.movementSound();
         this.centreCameraAuto();
+        this.setRecovering(false);
 
         // Mana restoration.
         this.manaCD++;
