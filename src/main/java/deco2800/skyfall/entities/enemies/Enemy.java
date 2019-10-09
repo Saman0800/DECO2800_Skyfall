@@ -284,10 +284,10 @@ public class Enemy extends Peon
      * Deploy the sound of the enemy into the game.
      */
     public void configureSounds() {
-        this.chasingSound = "enemy_walk";
-        this.hurtSound = "enemy_hurt";
-        this.attackingSound = "enemy_attack";
-        this.diedSound = "enemy_dead";
+        this.chasingSound = "walk_D";
+        this.hurtSound = "be_hit";
+        this.attackingSound = "fist_attack";
+        this.diedSound = "died";
     }
 
     /**

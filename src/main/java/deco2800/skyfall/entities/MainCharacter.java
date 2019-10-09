@@ -148,17 +148,17 @@ public class MainCharacter extends Peon
     public List<BuildingType> constructedBuildings;
 
     // Variables to sound effects
-    private static final String WALK_NORMAL = "people_walk_normal";
-    private static final String PLAYER_HURT = "player_hurt";
-    private static final String DIED = "player_died";
+    private static final String WALK_NORMAL = "walk_D";
+    private static final String PLAYER_HURT = "be_hit";
+    private static final String DIED = "died";
 
-    public static final String HURT_SOUND_NAME = "player_hurt";
-    public static final String DIED_SOUND_NAME = "player_died";
+    public static final String HURT_SOUND_NAME = "be_hit";
+    public static final String DIED_SOUND_NAME = "died";
 
-    public static final String BOWATTACK = "bow_and_arrow_attack";
-    public static final String AXEATTACK = "axe_attack";
-    public static final String SWORDATTACK = "sword_attack";
-    public static final String SPEARATTACK = "first_attack";
+    public static final String BOWATTACK = "bow_standard";
+    public static final String AXEATTACK = "sword_standard";
+    public static final String SWORDATTACK = "sword_standard";
+    public static final String SPEARATTACK = "spear";
 
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
@@ -981,7 +981,7 @@ public class MainCharacter extends Peon
             }
             this.updatePosition();
         } else {
-            SoundManager.stopSound("people_walk_normal");
+            SoundManager.stopSound("walk_D");
             getBody().setLinearVelocity(0f, 0f);
             residualFromPopUp = true;
         }

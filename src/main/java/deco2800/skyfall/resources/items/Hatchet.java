@@ -27,7 +27,7 @@ public class Hatchet extends ManufacturedResources implements Item, Blueprint {
     private final Logger logger = LoggerFactory.getLogger(Hatchet.class);
 
     //Used for farming sound
-    private static final String WALK_NORMAL = "people_walk_normal";
+    private static final String WALK_NORMAL = "walk_D";
 
     /***
      * Create a Hatecht with the name Hatchet

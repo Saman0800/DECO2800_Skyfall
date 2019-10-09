@@ -403,7 +403,7 @@ public class EnvironmentManager extends TickableManager {
 
         // Until lake music created and ocean biome is restricted, play forest for now
         if (biome.equals("ocean") || biome.equals("lake") || biome.equals("river")) {
-            file = "resources/sounds/forest_" + filename;
+            file = "forest" + "_" + filename;
         } else {
             //file = "resources/sounds/" + biome + "_" + filename;
             file = biome + "_" + filename;
