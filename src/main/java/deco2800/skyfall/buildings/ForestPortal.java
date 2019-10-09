@@ -96,22 +96,6 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
     }
 
     /**
-     * a getter method to check if a player has learned the blueprint
-     *
-     * @return true if the player has learned the blueprint, false otherwise
-     */
-    public boolean isBlueprintLearned() {
-        return blueprintLearned;
-    }
-
-    /**
-     * Toggles the boolean blueprintLearned between a true and false state.
-     */
-    public void toggleBlueprintLearned() {
-        blueprintLearned = !blueprintLearned;
-    }
-
-    /**
      * @return - cost of building the building
      */
     public int getCost() {

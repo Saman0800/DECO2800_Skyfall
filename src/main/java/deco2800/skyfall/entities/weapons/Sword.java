@@ -75,16 +75,6 @@ public class Sword extends Weapon implements Item, IWeapon {
     }
 
     /**
-     * a getter method to check if a player has learned the blueprint
-     *
-     * @return true if the player has learned the blueprint.
-     */
-    @Override
-    public boolean isBlueprintLearned() {
-        return false;
-    }
-
-    /**
      * @return - cost of building the building
      */
     @Override

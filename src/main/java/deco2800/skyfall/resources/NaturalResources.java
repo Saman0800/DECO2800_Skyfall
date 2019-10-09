@@ -31,6 +31,9 @@ public abstract class NaturalResources extends AbstractEntity implements Item {
     // Can be item be equipped
     public boolean equippable;
 
+    // item description
+    protected String description;
+
     /***
      * Creates a default natural resource where the position is unknown
      */
@@ -40,6 +43,7 @@ public abstract class NaturalResources extends AbstractEntity implements Item {
         this.subtype = "Natural Resource";
         this.exchangeable = true;
         this.equippable = false;
+        description = "These items exist naturally in the world.";
     }
 
 
@@ -139,7 +143,7 @@ public abstract class NaturalResources extends AbstractEntity implements Item {
      */
     @Override
     public String getDescription() {
-        return "These items exist naturally in the world.";
+        return description;
     }
 
     /**
@@ -155,5 +159,8 @@ public abstract class NaturalResources extends AbstractEntity implements Item {
         // Auto-generated method stub
     }
 
+    @Override
+    public void use(HexVector position){
 
+    }
 }

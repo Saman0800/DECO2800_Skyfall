@@ -48,14 +48,9 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 public class MainCharacterTest {
 
     private MainCharacter testCharacter;
-    private ForestTree testTree;
-    private ForestRock testRock;
     private Tile testTile;
     private GoldPiece testGoldPiece;
     private InventoryManager inventoryManager;
-    private Hatchet testHatchet;
-    private Hatchet testHatchet2;
-    private PickAxe testPickaxe;
     private World w = null;
 
     @Mock
@@ -91,12 +86,7 @@ public class MainCharacterTest {
         MainCharacter.resetInstance();
         testCharacter = MainCharacter.getInstance();
 
-        testHatchet = new Hatchet();
-        testHatchet2 = new Hatchet();
-
         testTile = new Tile(null, 0f, 0f);
-        testTree = new ForestTree(testTile, true);
-        testRock = new ForestRock(testTile, true);
 
         testGoldPiece = new GoldPiece(5);
 

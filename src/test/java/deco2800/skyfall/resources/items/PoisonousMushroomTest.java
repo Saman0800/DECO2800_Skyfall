@@ -49,14 +49,6 @@ public class PoisonousMushroomTest{
     }
 
     /**
-     * Ensure that poisonous mushroom is classified as food effect
-     */
-    @Test
-    public void hasFoodEffect() {
-        assertTrue(poisonousMushroom.hasFoodEffect());
-    }
-
-    /**
      * Ensure that the correct subtype "Health Resource" is returned when
      * getSubtype(); is run
      */

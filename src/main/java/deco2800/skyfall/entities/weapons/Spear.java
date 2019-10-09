@@ -71,16 +71,7 @@ public class Spear extends Weapon implements Item, IWeapon {
         allRequirements.put("Stone", 20);
         allRequirements.put("Metal", 20);
 
-        return allRequirements;    }
-
-    /**
-     * a getter method to check if a player has learned the blueprint
-     *
-     * @return true if the player has learned the blueprint.
-     */
-    @Override
-    public boolean isBlueprintLearned() {
-        return false;
+        return allRequirements;
     }
 
     /**

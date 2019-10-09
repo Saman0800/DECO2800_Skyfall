@@ -8,7 +8,7 @@ import deco2800.skyfall.util.HexVector;
 /**
  * A class representing a Metal Natural Resource item
  */
-public class Metal extends NaturalResources implements Item {
+public class Metal extends NaturalResources {
 
 
     /**
@@ -17,22 +17,6 @@ public class Metal extends NaturalResources implements Item {
     public Metal(){
         this.name = "Metal";
         this.biome = "Ruined City";
-
+        description = "This item can be collected" + "\n" + " by destroying an enemy.";
     }
-
-
-    /**
-     * Returns the item description
-     * @return the item description
-     */
-    @Override
-    public String getDescription() {
-        return "This item can be collected" + "\n" + " by destroying an enemy.";
-    }
-
-    @Override
-    public void use(HexVector position){
-
-    }
-
 }

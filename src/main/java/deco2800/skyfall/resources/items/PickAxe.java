@@ -21,15 +21,11 @@ import java.util.Map;
  */
 public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
-    private boolean blueprintLearned = false;
-
     // Logger to show messages
     private final Logger logger = LoggerFactory.getLogger(PickAxe.class);
 
     //Used for farming sound
     private static final String WALK_NORMAL = "people_walk_normal";
-
-
 
     /***
      * Create a Pick Axe with the name Pick Axe.
@@ -39,67 +35,24 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
      */
     public PickAxe(MainCharacter owner, HexVector position) {
         super(owner, position);
-        this.name = "Pick Axe";
+        init();
     }
 
-    /***
-     * Create a Pick Axe with only one owner parameter.
-     *
-     * @param owner the owner of the inventory.
-     */
-    public PickAxe(MainCharacter owner) {
-        super(owner);
+    private void init() {
         this.name = "Pick Axe";
+        allRequirements = new HashMap<>();
+        allRequirements.put("Wood", 20);
+        allRequirements.put("Stone", 10);
+        allRequirements.put("Metal", 4);
+        description = "This item can be constructed using stone and wood. " + "\n" + "It can farm stone from biomes.";
+        carryable = true;
     }
 
     /***
      * Create a Pick Axe no parameter.
      */
     public PickAxe() {
-        this.name = "Pick Axe";
-    }
-
-    /**
-     * A getter method for the name of the item
-     * 
-     * @return The name of the item
-     */
-    @Override
-    public String getName() {
-
-        return this.name;
-    }
-
-    /**
-     * A getter method for the subtype of the item.
-     * 
-     * @return The name of the subtype.
-     */
-    @Override
-    public String getSubtype() {
-
-        return super.subtype;
-    }
-
-    /**
-     * A getter method to the position of the item.
-     * 
-     * @return the position of the hatchet.
-     */
-    @Override
-    public HexVector getCoords() {
-        return this.position;
-    }
-
-    /**
-     * Creates a string representation Pick Axe.
-     * 
-     * @return hatchet name and it's subtype.
-     */
-    @Override
-    public String toString() {
-
-        return "" + subtype + ":" + name;
+        init();
     }
 
     /**
@@ -130,7 +83,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
             SoundManager.playSound(WALK_NORMAL);
             GameManager.getManagerFromInstance(InventoryManager.class).add(new Stone());
             // lowering the possibility of gaining metal
-            double x = (int) (Math.random() * ((1 - 0) + 1));
+            double x = (int) (Math.random() * (2));
 
             if (x == 1) {
                 GameManager.getManagerFromInstance(InventoryManager.class).add(new Metal());
@@ -146,74 +99,6 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
             rockToFarm.setHealth(rockToFarm.getHealth() - 10);
         }
 
-    }
-
-    /**
-     * Returns the item description
-     * 
-     * @return the item description
-     */
-    @Override
-    public String getDescription() {
-        return "This item can be constructed using stone and wood. " + "\n" + "It can farm stone from biomes.";
-    }
-
-    /**
-     * Returns the number of wood required for the item.
-     *
-     * @return The name of the item
-     */
-    @Override
-    public int getRequiredWood() {
-        return 20;
-    }
-
-    /**
-     * Returns the number of stones required for the item.
-     *
-     * @return The name of the item
-     */
-    @Override
-    public int getRequiredStone() {
-        return 10;
-    }
-
-    /**
-     * Returns the number of metal required for the item.
-     *
-     * @return The name of the item
-     */
-    @Override
-    public int getRequiredMetal() {
-        return 4;
-    }
-
-    /**
-     * Returns a map of the name of the required resource and the required number of
-     * each resource to create the item.
-     *
-     * @return a hashamp of the required resources and their number.
-     */
-    @Override
-    public Map<String, Integer> getAllRequirements() {
-
-        Map<String, Integer> allRequirements = new HashMap<>();
-        allRequirements.put("Wood", 10);
-        allRequirements.put("Stone", 5);
-        allRequirements.put("Metal", 4);
-
-        return allRequirements;
-    }
-
-    /**
-     * a getter method to check if a player has learned the blueprint
-     *
-     * @return true if the player has learned the blueprint.
-     */
-    @Override
-    public boolean isBlueprintLearned() {
-
-        return blueprintLearned;
     }
 
     @Override
