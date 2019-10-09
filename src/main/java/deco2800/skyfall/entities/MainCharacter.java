@@ -11,14 +11,15 @@ import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.buildings.BuildingFactory;
-import deco2800.skyfall.buildings.DesertPortal;
-import deco2800.skyfall.buildings.ForestPortal;
-import deco2800.skyfall.buildings.MountainPortal;
+import deco2800.skyfall.buildings.*;
 import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellCaster;
 import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.entities.weapons.*;
+import deco2800.skyfall.gamemenu.HealthCircle;
+import deco2800.skyfall.gamemenu.popupmenu.ConstructionTable;
+import deco2800.skyfall.gamemenu.ManaBar;
 import deco2800.skyfall.entities.vehicle.AbstractVehicle;
 import deco2800.skyfall.entities.vehicle.Bike;
 import deco2800.skyfall.entities.vehicle.SandCar;
@@ -55,11 +56,10 @@ import static deco2800.skyfall.buildings.BuildingType.*;
  * Main character in the game
  */
 public class MainCharacter extends Peon
-    implements KeyDownObserver, KeyUpObserver, TouchDownObserver, Tickable, Animatable {
+        implements KeyDownObserver, KeyUpObserver, TouchDownObserver, Tickable, Animatable {
 
     private static MainCharacter mainCharacterInstance = null;
     private boolean residualFromPopUp = false;
-
 
     /**
      * Removes the stored main character instance so that the next call to any of the {@code getInstance} methods will
@@ -70,7 +70,7 @@ public class MainCharacter extends Peon
     }
 
     public static MainCharacter getInstance(float col, float row, float speed, String name, int health,
-        String[] textures) {
+            String[] textures) {
         if (mainCharacterInstance == null) {
             mainCharacterInstance = new MainCharacter(col, row, speed, name, health, textures);
         }
@@ -121,24 +121,31 @@ public class MainCharacter extends Peon
     // Manager for all of MainCharacter's inventories
     private InventoryManager inventories;
 
-    // List of blueprints that the player has learned.
+    public boolean toBuild;
+    //List of blueprints that the player has learned.
 
     private List<Blueprint> blueprintsLearned;
     private PetsManager petsManager;
     private BuildingFactory tempFactory;
 
-    // List of the Biomes Unlocked
+    // List of the Biomes locked
     private List<String> lockedBiomes;
 
-    /**
-     * Please feel free to change, this is not accurate as to the stages of the game
+    /*
+        What stage of the game is the player on? Controls what blueprints
+        the player can buy and make.
+        0 = Forest
+        1 = Desert
+        2 = Mountain
+        3 = Volcano
      */
-    public enum GameStage {
-        FOREST, DESERT, MOUNTAIN, SNOW, LAVA
-    }
+    public int gameStage;
 
     // The name of the item to be created.
     private String itemToCreate;
+
+    public List<BuildingType> craftedBuildings;
+    public List<BuildingType> constructedBuildings;
 
     // Variables to sound effects
     private static final String WALK_NORMAL = "people_walk_normal";
@@ -200,12 +207,6 @@ public class MainCharacter extends Peon
     private boolean cameraLock = true;
 
     /*
-     * What stage of the game is the player on? Controls what blueprints the player
-     * can buy and make.
-     */
-    private GameStage gameStage;
-
-    /*
      * Used for combat testing melee/range weapons. What number item slot the player
      * has pressed. e.g. 1 = test range weapon 2 = test melee weapon
      */
@@ -232,8 +233,6 @@ public class MainCharacter extends Peon
     private boolean isHurt = false;
     private boolean isRecovering = false;
     private boolean isTexChanging = false;
-
-    private boolean isAttacking = false;
 
     /**
      * Item player is currently equipped with/holding.
@@ -348,13 +347,16 @@ public class MainCharacter extends Peon
      */
     public MainCharacter(float col, float row, float speed, String name, int health) {
         super(row, col, speed, name, health, "MainCharacter");
+        toBuild = false;
         this.id = System.nanoTime();
-        gameStage = GameStage.FOREST;
+        gameStage = 0;
         this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
         this.setHeight(1);
         this.setObjectName("MainPiece");
         this.setMaxHealth(health);
         initialiselockedBiomes();
+        constructedBuildings = new ArrayList<>();
+        craftedBuildings = new ArrayList<>();
 
         InputManager inputManager = GameManager.getManagerFromInstance(InputManager.class);
         inputManager.addKeyDownListener(this);
@@ -406,7 +408,6 @@ public class MainCharacter extends Peon
         spellCaster = new SpellCaster(this);
     }
 
-
     /**
      * Constructor with various textures
      *
@@ -456,8 +457,9 @@ public class MainCharacter extends Peon
      */
     private void setupGameOverScreen() {
         // If the gameMenuManager does not equal null, create the game over screen
-        this.gameMenuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
-        if (this.gameMenuManager != null) {
+        // The GUI PopUp for the character
+        GameMenuManager gameMenuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
+        if (gameMenuManager != null) {
             gameMenuManager.hideOpened();
             gameMenuManager.setPopUp("gameOverTable");
             gameMenuManager.getPopUp("gameOverTable");
@@ -530,7 +532,9 @@ public class MainCharacter extends Peon
     public void unEquip() {
         // Return item to a tile in the world
         if (equippedItem instanceof Weapon) {
-            GameManager.get().getWorld().addEntity((StaticEntity) equippedItem);
+            Tile returnTile =
+                    GameManager.get().getWorld().getTile(((Weapon) equippedItem).getPosition());
+            GameManager.get().getWorld().addEntity(((Weapon) equippedItem).newInstance(returnTile));
         }
 
         this.equippedItem = new EmptyItem();
@@ -573,8 +577,8 @@ public class MainCharacter extends Peon
      */
     public void useEquipped() {
         if ((equippedItem instanceof Weapon && !((Weapon) equippedItem).isUsable())
-            || (equippedItem instanceof ManufacturedResources
-            && !((ManufacturedResources) equippedItem).isUsable())) {
+                || (equippedItem instanceof ManufacturedResources
+                        && !((ManufacturedResources) equippedItem).isUsable())) {
             this.unEquip();
             return;
         }
@@ -621,12 +625,12 @@ public class MainCharacter extends Peon
 
         // Make projectile move toward the angle
         // Spawn projectile in front of character
-        Projectile projectile = new Projectile(mousePosition,
-                ((Weapon)equippedItem).getTexture("attackEntity"),
-                "hitbox",
-            position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
-            position.getRow() + 0.5f + 1.5f * unitDirection.getRow(), ((Weapon) equippedItem).getDamage(),
-            ((Weapon) equippedItem).getAttackRate(), this.itemSlotSelected == 1 ? 1 : 0);
+        Projectile projectile = new Projectile(mousePosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
+                position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
+                position.getRow() + 0.5f + 1.5f * unitDirection.getRow(),
+                ((Weapon)equippedItem).getDamage(),
+                1,
+                this.itemSlotSelected == 1 ? (((Weapon)equippedItem).getName().equals("bow") ? 10 : 0) : 0);
 
         // Add the projectile entity to the game world.
         GameManager.get().getWorld().addEntity(projectile);
@@ -740,14 +744,6 @@ public class MainCharacter extends Peon
         //changeSwimming(false);
     }
 
-    public boolean isAttacking() {
-        return isAttacking;
-    }
-
-    private void setAttacking(boolean isAttacking) {
-        this.isAttacking = isAttacking;
-    }
-
     public void pickUpInventory(Item item) {
         this.inventories.add(item);
     }
@@ -767,18 +763,12 @@ public class MainCharacter extends Peon
      * @param damage the damage deal to the player.
      */
     public void playerHurt(int damage) {
-        // Change health and related fields accordingly
-        setHurt(true);
-        changeHealth(-damage);
-        updateHealth();
-        logger.info("Current Health: {}", this.getHealth());
-
         // If the player isn't recovering, set hurt and change health/animations
         if (!isRecovering) {
             setHurt(true);
-            this.changeHealth(-damage);
-            getBody().setLinearVelocity(getBody().getLinearVelocity()
-                    .lerp(new Vector2(0.f, 0.f), 0.5f));
+            changeHealth(-damage);
+            updateHealth();
+            setCurrentState(AnimationRole.HURT);
 
             // Check if player died and run kill method
             if (this.getHealth() < 1) {
@@ -787,7 +777,6 @@ public class MainCharacter extends Peon
             } else {
                 hurtTime = 0;
                 recoverTime = 0;
-
                 SoundManager.playSound(PLAYER_HURT);
 
                 if (hurtTime > 400) {
@@ -797,10 +786,10 @@ public class MainCharacter extends Peon
         }
     }
 
-    /*
+    /**
      * Checks if the players hurt is over
      */
-    private void checkIfHurtEnded() {
+    public void checkIfHurtEnded() {
         hurtTime += 20; // playerHurt for 1 second
 
         if (hurtTime > 400) {
@@ -814,7 +803,7 @@ public class MainCharacter extends Peon
     /**
      * Helper function to update healthBar outside of class.
      */
-    private void updateHealth() {
+    public void updateHealth() {
         if (this.healthBar != null) {
             this.healthBar.update();
         }
@@ -843,10 +832,10 @@ public class MainCharacter extends Peon
         this.isTexChanging = isTexChanging;
     }
 
-    /*
+    /**
      * Check if player has recovered
      */
-    private void checkIfRecovered() {
+    public void checkIfRecovered() {
         recoverTime += 20;
         this.changeCollideability(false);
 
@@ -948,7 +937,6 @@ public class MainCharacter extends Peon
     public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
         // only allow left clicks to move player
 
-        logger.info(String.valueOf(button));
         if (GameScreen.getIsPaused()) {
             return;
         }
@@ -959,8 +947,14 @@ public class MainCharacter extends Peon
             float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
             float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
 
-            // Check we have permission to build
-
+            //Check we have permission to build
+            if (toBuild) {
+                GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
+                ConstructionTable bs = (ConstructionTable) gmm.getPopUp("constructionTable");
+                bs.build(GameManager.get().getWorld(),
+                        (int) clickedPosition[0], (int) clickedPosition[1]);
+            }
+            /*
             if (GameManager.getManagerFromInstance(ConstructionManager.class).getStatus() == 1) {
                 // System.out.println(clickedPosition[0]);
                 // System.out.println(clickedPosition[1]);
@@ -977,8 +971,9 @@ public class MainCharacter extends Peon
                 // invRemove(buildingToBePlaced,GameManager.getManagerFromInstance(InventoryManager.class));
 
                 GameManager.getManagerFromInstance(ConstructionManager.class).build(GameManager.get().getWorld(),
-                    (int) clickedPosition[0], (int) clickedPosition[1]);
+                        (int) clickedPosition[0], (int) clickedPosition[1]);
             }
+             */
         }
 
     }
@@ -1014,6 +1009,7 @@ public class MainCharacter extends Peon
         }
         this.movementSound();
         this.centreCameraAuto();
+        this.setRecovering(false);
 
         // Mana restoration.
         this.manaCD++;
@@ -1037,7 +1033,11 @@ public class MainCharacter extends Peon
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-            GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
+            GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
+            ConstructionTable bs = (ConstructionTable) gmm.getPopUp("constructionTable");
+            bs.updateBlueprintShopPanel();
+            gmm.setPopUp("constructionTable");
+            //GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
         }
 
         // After death, check if health is restored after restart
@@ -1252,30 +1252,27 @@ public class MainCharacter extends Peon
         }
 
         switch (keycode) {
-            case Input.Keys.W:
-                yInput -= 1;
-                break;
-            case Input.Keys.A:
-                xInput -= -1;
-                break;
-            case Input.Keys.S:
-                yInput -= -1;
-                break;
-            case Input.Keys.D:
-                xInput -= 1;
-                break;
-            case Input.Keys.SHIFT_LEFT:
-                isSprinting = false;
-                maxSpeed /= 2.f;
-                break;
-            case Input.Keys.SPACE:
-                break;
-            case Input.Keys.G:
-                break;
-            case Input.Keys.M:
-                break;
-            default:
-                break;
+        case Input.Keys.W:
+            yInput -= 1;
+            break;
+        case Input.Keys.A:
+            xInput -= -1;
+            break;
+        case Input.Keys.S:
+            yInput -= -1;
+            break;
+        case Input.Keys.D:
+            xInput -= 1;
+            break;
+        case Input.Keys.SHIFT_LEFT:
+            isSprinting = false;
+            maxSpeed /= 2.f;
+            break;
+        case Input.Keys.SPACE:
+            SoundManager.stopSound(WALK_NORMAL);
+            break;
+        default:
+            break;
         }
     }
 
@@ -1366,10 +1363,9 @@ public class MainCharacter extends Peon
      */
     public void addClosestGoldPiece() {
         for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
-            if (entity instanceof GoldPiece) {
-                if (this.getPosition().distance(entity.getPosition()) <= 1) {
-                    this.addGold((GoldPiece) entity, 1);
-                }
+            if (entity instanceof GoldPiece &&
+                this.getPosition().distance(entity.getPosition()) <= 1) {
+                this.addGold((GoldPiece) entity, 1);
             }
         }
     }
@@ -1544,32 +1540,32 @@ public class MainCharacter extends Peon
         int playerDirectionIndex = Math.floorMod((int) Math.floor((playerDirectionAngle + 90.0) / 45), 8);
 
         switch (playerDirectionIndex) {
-            case 0:
-                setCurrentDirection(Direction.NORTH);
-                return "North";
-            case 1:
-                setCurrentDirection(Direction.NORTH_EAST);
-                return "North-East";
-            case 2:
-                setCurrentDirection(Direction.EAST);
-                return "East";
-            case 3:
-                setCurrentDirection(Direction.SOUTH_EAST);
-                return "South-East";
-            case 4:
-                setCurrentDirection(Direction.SOUTH);
-                return "South";
-            case 5:
-                setCurrentDirection(Direction.SOUTH_WEST);
-                return "South-West";
-            case 6:
-                setCurrentDirection(Direction.WEST);
-                return "West";
-            case 7:
-                setCurrentDirection(Direction.NORTH_WEST);
-                return "North-West";
-            default:
-                return "Invalid";
+        case 0:
+            setCurrentDirection(Direction.NORTH);
+            return "North";
+        case 1:
+            setCurrentDirection(Direction.NORTH_EAST);
+            return "North-East";
+        case 2:
+            setCurrentDirection(Direction.EAST);
+            return "East";
+        case 3:
+            setCurrentDirection(Direction.SOUTH_EAST);
+            return "South-East";
+        case 4:
+            setCurrentDirection(Direction.SOUTH);
+            return "South";
+        case 5:
+            setCurrentDirection(Direction.SOUTH_WEST);
+            return "South-West";
+        case 6:
+            setCurrentDirection(Direction.WEST);
+            return "West";
+        case 7:
+            setCurrentDirection(Direction.NORTH_WEST);
+            return "North-West";
+        default:
+            return "Invalid";
         }
     }
 
@@ -1635,27 +1631,51 @@ public class MainCharacter extends Peon
 
     public List<Blueprint> getUnlockedBlueprints() {
         List<Blueprint> unlocked = new ArrayList<>();
+
+        // For items and general storage
         QuestManager qm = GameManager.get().getManager(QuestManager.class);
         switch (gameStage) {
-            case LAVA:
-            case SNOW:
-                unlocked.add(CABIN);
-            case MOUNTAIN:
-                unlocked.add(WATCHTOWER);
-                unlocked.add(new MountainPortal(0, 0, 0));
-            case DESERT:
-                unlocked.add(CABIN);
-                unlocked.add(new DesertPortal(0, 0, 0));
-            case FOREST:
-                unlocked.add(new Hatchet());
-                unlocked.add(new PickAxe());
-                unlocked.add(new Sword());
-                unlocked.add(new Bow());
-                unlocked.add(new Spear());
-                unlocked.add(CASTLE);
-            if(qm.questFinished()) {
+        case 3:
+            unlocked.add(SAFEHOUSE);
+            break;
+        case 2:
+            unlocked.add(WATCHTOWER);
+            break;
+        case 1:
+            unlocked.add(CABIN);
+            break;
+        case 0:
+            unlocked.add(new Hatchet());
+            unlocked.add(new PickAxe());
+            unlocked.add(new Sword());
+            unlocked.add(new Bow());
+            unlocked.add(new Spear());
+            unlocked.add(CASTLE);
+            break;
+        }
+
+        // for portals
+        switch (gameStage) {
+        case 3:
+            if (constructedBuildings.contains(SAFEHOUSE)) {
                 unlocked.add(new ForestPortal(0, 0, 0));
             }
+            break;
+        case 2:
+            if (constructedBuildings.contains(WATCHTOWER)) {
+                unlocked.add(new MountainPortal(0, 0, 0));
+            }
+            break;
+        case 1:
+            if (constructedBuildings.contains(CABIN)) {
+                unlocked.add(new DesertPortal(0, 0, 0));
+            }
+            break;
+        case 0:
+            if (constructedBuildings.contains(CASTLE)) {
+                unlocked.add(new ForestPortal(0, 0, 0));
+            }
+            break;
         }
         return unlocked;
 
@@ -1698,66 +1718,84 @@ public class MainCharacter extends Peon
         for (Blueprint blueprint : getBlueprintsLearned()) {
             if (blueprint.getClass() == newItem.getClass()) {
 
-                if (newItem.getRequiredMetal() > this.getInventoryManager().getAmount("Metal")) {
-                    logger.info("You don't have enough Metal");
+//                if (newItem.getRequiredMetal() > this.getInventoryManager().
+//                        getAmount("Metal")) {
+//                    logger.info("You don't have enough Metal");
+//
+//                } else if (newItem.getRequiredWood() > this.getInventoryManager().
+//                        getAmount("Wood")) {
+//                    logger.info("You don't have enough Wood");
+//
+//                } else if (newItem.getRequiredStone() > this.getInventoryManager().
+//                        getAmount("Stone")) {
+//                    logger.info("You don't have enough Stone");
 
-                } else if (newItem.getRequiredWood() > this.getInventoryManager().getAmount("Wood")) {
-                    logger.info("You don't have enough Wood");
-
-                } else if (newItem.getRequiredStone() > this.getInventoryManager().getAmount("Stone")) {
-                    logger.info("You don't have enough Stone");
-
+                // testing
+                if (false) {
                 } else {
                     switch (newItem.getName()) {
-                        case "Hatchet":
-                            this.getInventoryManager().add(new Hatchet());
-                            break;
-                        case "Pick Axe":
-                            this.getInventoryManager().add(new PickAxe());
-                            break;
+                    case "Hatchet":
+                        this.getInventoryManager().add(new Hatchet());
+                        break;
+                    case "Pick Axe":
+                        this.getInventoryManager().add(new PickAxe());
+                        break;
 
-                        case "sword":
-                            this.getInventoryManager().add(new Sword());
-                            break;
-                        case "spear":
-                            this.getInventoryManager().add(new Spear());
-                            break;
-                        case "bow":
-                            this.getInventoryManager().add(new Bow());
-                            break;
+                    case "sword":
+                        this.getInventoryManager().add(new Sword());
+                        break;
+                    case "spear":
+                        this.getInventoryManager().add(new Spear());
+                        break;
+                    case "bow":
+                        this.getInventoryManager().add(new Bow());
+                        break;
 
-                        // These are only placeholders and will change once coordinated
-                        // with Building team
-                        case "Cabin":
-                            tempFactory.createCabin(this.getCol(), this.getRow());
-                            break;
+                    //These are only placeholders and will change once coordinated
+                    //with Building team
+                    case "Cabin":
+                        craftedBuildings.add(CABIN);
+                        break;
 
-                        case "StorageUnit":
-                            tempFactory.createStorageUnit(this.getCol(), this.getRow());
-                            break;
+                    case "StorageUnit":
+                        craftedBuildings.add(STORAGE_UNIT);
+                        break;
 
-                        case "TownCentre":
-                            tempFactory.createTownCentreBuilding(this.getCol(), this.getRow());
-                            break;
+                    case "TownCentre":
+                        craftedBuildings.add(TOWNCENTRE);
+                        break;
 
-                        case "Fence":
-                            tempFactory.createFenceBuilding(this.getCol(), this.getRow());
-                            break;
+                    case "Fence":
+                        craftedBuildings.add(FENCE);
+                        break;
 
-                        case "SafeHouse":
-                            tempFactory.createSafeHouse(this.getCol(), this.getRow());
-                            break;
+                    case "SafeHouse":
+                        craftedBuildings.add(SAFEHOUSE);
+                        break;
 
-                        case "WatchTower":
-                            tempFactory.createWatchTower(this.getCol(), this.getRow());
-                            break;
+                    case "WatchTower":
+                        craftedBuildings.add(WATCHTOWER);
+                        break;
 
-                        case "Castle":
-                            tempFactory.createCastle(this.getCol(), this.getRow());
-                            break;
-                        default:
-                            logger.info("Invalid Item");
-                            break;
+                    case "Castle":
+                        craftedBuildings.add(CASTLE);
+                        break;
+
+                    case "forestPortal":
+                        craftedBuildings.add(FORESTPORTAL);
+                        break;
+                    case "desertPortal":
+                        craftedBuildings.add(DESERTPORTAL);
+                        break;
+                    case "mountainPortal":
+                        craftedBuildings.add(MOUNTAINPORTAL);
+                        break;
+                    case "volcanoPortal":
+                        craftedBuildings.add(VOLCANOPORTAL);
+                        break;
+                    default:
+                        logger.info("Invalid Item");
+                        break;
                     }
 
                     this.getInventoryManager().dropMultiple("Metal", newItem.getRequiredMetal());
@@ -1776,56 +1814,58 @@ public class MainCharacter extends Peon
 
         // Walk animation
         addAnimations(AnimationRole.MOVE, Direction.NORTH_WEST,
-            new AnimationLinker("MainCharacterNW_Anim", AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
+                new AnimationLinker("MainCharacterNW_Anim",
+                        AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
 
         addAnimations(AnimationRole.MOVE, Direction.NORTH_EAST,
-            new AnimationLinker("MainCharacterNE_Anim", AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
+                new AnimationLinker("MainCharacterNE_Anim",
+                        AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
 
         addAnimations(AnimationRole.MOVE, Direction.SOUTH_WEST,
-            new AnimationLinker("MainCharacterSW_Anim", AnimationRole.MOVE, Direction.SOUTH_WEST, true, true));
+                new AnimationLinker("MainCharacterSW_Anim",
+                        AnimationRole.MOVE, Direction.SOUTH_WEST, true, true));
 
         addAnimations(AnimationRole.MOVE, Direction.SOUTH_EAST,
-            new AnimationLinker("MainCharacterSE_Anim", AnimationRole.MOVE, Direction.SOUTH_EAST, true, true));
+                new AnimationLinker("MainCharacterSE_Anim",
+                        AnimationRole.MOVE, Direction.SOUTH_EAST, true, true));
 
         addAnimations(AnimationRole.MOVE, Direction.EAST,
-            new AnimationLinker("MainCharacterE_Anim", AnimationRole.MOVE, Direction.EAST, true, true));
+                new AnimationLinker("MainCharacterE_Anim",
+                        AnimationRole.MOVE, Direction.EAST, true, true));
 
         addAnimations(AnimationRole.MOVE, Direction.NORTH,
-            new AnimationLinker("MainCharacterN_Anim", AnimationRole.MOVE, Direction.NORTH, true, true));
+                new AnimationLinker("MainCharacterN_Anim",
+                        AnimationRole.MOVE, Direction.NORTH, true, true));
 
         addAnimations(AnimationRole.MOVE, Direction.WEST,
-            new AnimationLinker("MainCharacterW_Anim", AnimationRole.MOVE, Direction.WEST, true, true));
+                new AnimationLinker("MainCharacterW_Anim",
+                        AnimationRole.MOVE, Direction.WEST, true, true));
 
         addAnimations(AnimationRole.MOVE, Direction.SOUTH,
-            new AnimationLinker("MainCharacterS_Anim", AnimationRole.MOVE, Direction.SOUTH, true, true));
+                new AnimationLinker("MainCharacterS_Anim",
+                        AnimationRole.MOVE, Direction.SOUTH, true, true));
 
         // Attack animation
-        addAnimations(AnimationRole.ATTACK, Direction.DEFAULT, new AnimationLinker("MainCharacter_Attack_E_Anim",
-            AnimationRole.ATTACK, Direction.DEFAULT, false, true));
+        addAnimations(AnimationRole.ATTACK, Direction.DEFAULT,
+                new AnimationLinker("MainCharacter_Attack_E_Anim",
+                        AnimationRole.ATTACK, Direction.DEFAULT, false, true));
 
         // Hurt animation
         addAnimations(AnimationRole.HURT, Direction.DEFAULT,
-            new AnimationLinker("MainCharacter_Hurt_E_Anim", AnimationRole.HURT, Direction.DEFAULT, true, true));
+                new AnimationLinker("MainCharacter_Hurt_E_Anim",
+                        AnimationRole.HURT, Direction.DEFAULT, true, true));
 
         // Dead animation
         addAnimations(AnimationRole.DEAD, Direction.DEFAULT,
-            new AnimationLinker("MainCharacter_Dead_E_Anim", AnimationRole.DEAD, Direction.DEFAULT, false, true));
+                new AnimationLinker("MainCharacter_Dead_E_Anim",
+                        AnimationRole.DEAD, Direction.DEFAULT, false, true));
+
 
         // Dead animation
         addAnimations(AnimationRole.STILL, Direction.DEFAULT,
                 new AnimationLinker("MainCharacter_Dead_E_Still",
                         AnimationRole.STILL, Direction.DEFAULT, false, true));
-
-        // Add bike animation
-        addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.WEST,
-                new AnimationLinker("bikeW",
-                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.WEST, true, true));
-        addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.EAST,
-                new AnimationLinker("bikeE",
-                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.EAST, true, true));
-
-
-         }
+    }
 
     private Map<Direction,String> defaultMainCharacterTextureMap=new HashMap<>();
 
@@ -1866,20 +1906,18 @@ public class MainCharacter extends Peon
     }
 
     private boolean isOnVehicle=false;
+
     /**
      * If the animation is moving sets the animation state to be Move else NULL. Also sets the direction
      */
-    private void updateAnimation() {
+    public void updateAnimation() {
         getPlayerDirectionCardinal();
 
         /* Short Animations */
-        if(!isOnVehicle) {
-            if (getToBeRun() != null) {
-                if (getToBeRun().getType() == AnimationRole.DEAD) {
-                    setCurrentState(AnimationRole.STILL);
-                } else if (getToBeRun().getType() == AnimationRole.ATTACK) {
-                    return;
-                }
+        if (!isOnVehicle) {
+            if (getToBeRun() != null &&
+                    getToBeRun().getType() == AnimationRole.ATTACK) {
+                return;
             }
 
             if (isDead()) {
@@ -1893,13 +1931,64 @@ public class MainCharacter extends Peon
                     setCurrentState(AnimationRole.MOVE);
                 }
             }
-
-        }else{
-            if (vehicleType.equals("bike")) {
-                setCurrentState(AnimationRole.VEHICLE_BIKE_MOVE);
-            }
+        } else if(vehicleType.equals("bike")) {
+            setCurrentState(AnimationRole.VEHICLE_BIKE_MOVE);
         }
     }
+
+    /**
+     * Get the duration main character hurts.
+     * @return the duration main character hurts.
+     */
+    public long getHurtTime() {
+        return hurtTime;
+    }
+    public void setHurtTime(long hurtTime) {
+        this.hurtTime = hurtTime;
+    }
+
+    /**
+     * Get the duration for main character to recover.
+     * @return the duration for main character to recover.
+     */
+    public long getRecoverTime() {
+        return recoverTime;
+    }
+    public void setRecoverTime(long recoverTime) {
+        this.recoverTime = recoverTime;
+    }
+
+    /**
+     * Get the duration for main character to die.
+     * @return the duration for main character to die.
+     */
+    public long getDeadTime() {
+        return deadTime;
+    }
+
+    /**
+     * Get the x-coordinate input of the player.
+     * @return the x-coordinate input of the player.
+     */
+    public int getXInput() {
+        return xInput;
+    }
+    /**
+     * Get the y-coordinate input of the player.
+     * @return the y-coordinate input of the player.
+     */
+    public int getYInput() {
+        return yInput;
+    }
+
+    /**
+     * Get whether main character is sprinting.
+     * @return whether main character is sprinting.
+     */
+    public boolean getIsSprinting() {
+        return isSprinting;
+    }
+
 
     /**
      * Toggles if the camera should follow the player
@@ -1985,15 +2074,12 @@ public class MainCharacter extends Peon
         this.goldPouch = memento.goldPouch;
         // this.blueprintsLearned = memento.blueprints;
         this.inventories = memento.inventory;
-        this.setHealth(memento.health);
-        this.setPosition(memento.col, memento.row);
-        this.gameStage = memento.stage;
-        // s.this.weapons = memento.weapons;
+        // this.weapons = memento.weapons;
         // this.hotbar = memento.hotbar;
     }
 
-    public static class MainCharacterMemento extends AbstractMemento implements Serializable {
-
+    public class MainCharacterMemento extends AbstractMemento implements Serializable {
+        //TODO:dannathan add stuff for entitiy
         private long saveID;
         private long mainCharacterID;
         private GameStage stage;

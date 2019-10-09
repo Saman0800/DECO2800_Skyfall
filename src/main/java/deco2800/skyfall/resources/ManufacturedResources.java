@@ -52,20 +52,20 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
         this.carryable = true;
         this.subtype = "Manufactured Resource";
         this.equippable = true;
-        this.durability = 15;
+        this.durability = 50;
     }
 
     public ManufacturedResources(MainCharacter owner){
         this.owner = owner;
         this.subtype = "Manufactured Resource";
         this.equippable = true;
-        this.durability = 15;
+        this.durability = 50;
     }
 
     public ManufacturedResources(){
         this.subtype= "Manufactured Resource";
         this.equippable = true;
-        this.durability = 15;
+        this.durability = 50;
     }
 
     /**

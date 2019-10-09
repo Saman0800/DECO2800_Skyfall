@@ -24,7 +24,7 @@ public class BuildingFactoryTest {
 
     @Test
     public void getCountTest() {
-        Assert.assertEquals(7, factory.getCount());
+        Assert.assertEquals(11, factory.getCount());
     }
 
     @Test

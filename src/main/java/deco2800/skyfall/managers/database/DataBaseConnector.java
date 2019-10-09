@@ -28,24 +28,10 @@ import deco2800.skyfall.entities.worlditems.VolcanicShrub;
 import deco2800.skyfall.entities.worlditems.VolcanicTree;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.resources.GoldPiece;
-import deco2800.skyfall.saving.DatabaseException;
-import deco2800.skyfall.saving.LoadException;
-import deco2800.skyfall.saving.RunTimeLoadException;
-import deco2800.skyfall.saving.RunTimeSaveException;
-import deco2800.skyfall.saving.Save;
+import deco2800.skyfall.saving.*;
 import deco2800.skyfall.saving.Save.SaveMemento;
-import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.*;
 import deco2800.skyfall.worlds.biomes.AbstractBiome.AbstractBiomeMemento;
-import deco2800.skyfall.worlds.biomes.BeachBiome;
-import deco2800.skyfall.worlds.biomes.DesertBiome;
-import deco2800.skyfall.worlds.biomes.ForestBiome;
-import deco2800.skyfall.worlds.biomes.LakeBiome;
-import deco2800.skyfall.worlds.biomes.MountainBiome;
-import deco2800.skyfall.worlds.biomes.OceanBiome;
-import deco2800.skyfall.worlds.biomes.RiverBiome;
-import deco2800.skyfall.worlds.biomes.SnowyMountainsBiome;
-import deco2800.skyfall.worlds.biomes.SwampBiome;
-import deco2800.skyfall.worlds.biomes.VolcanicMountainsBiome;
 import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.VoronoiEdge.VoronoiEdgeMemento;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
@@ -57,12 +43,7 @@ import deco2800.skyfall.worlds.world.World.WorldMemento;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -771,6 +752,14 @@ public class DataBaseConnector {
                 return new VolcanicTree(entityMemento);
             case "GoldPiece":
                 return new GoldPiece(entityMemento);
+            case "Desert_Environment":
+                return new DesertEnvironment(entityMemento);
+            case "Shipwrecks":
+                return new Shipwrecks(entityMemento);
+                case "ruinedRobot":
+                return new ruinedRobot(entityMemento);
+            case "ruinedCity":
+                return new ruinedCity(entityMemento);
             default:
                 throw new LoadException(
                     String.format("Could not create %s from memento", entityMemento.getEntityType()));
