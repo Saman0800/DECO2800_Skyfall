@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import deco2800.skyfall.mainmenu.MainMenuScreen;
+import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 
 /**
@@ -28,6 +29,7 @@ public class SkyfallGame extends Game {
 		saveRootHandle = Gdx.files.local(SAVE_ROOT_DIR);
 		batch = new SpriteBatch();
 		initUISkin();
+		DatabaseManager.get().startDataBaseConnector();
 		mainMenuScreen = new MainMenuScreen(this);
 		this.setScreen(mainMenuScreen);
 	}

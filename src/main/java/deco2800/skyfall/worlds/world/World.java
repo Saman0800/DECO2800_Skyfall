@@ -90,8 +90,6 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
 
     private GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
 
-    //private MainCharacter mc = gmm.getMainCharacter();
-
     private Save save;
 
     /**
@@ -116,8 +114,6 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
         this.load(memento);
         this.save = save;
         this.loadedChunks = new HashMap<>();
-
-        HashMap<AbstractBiome, List<EntitySpawnRule>> spawnRules = new HashMap<>();
 
         EntitySpawnRule.setNoiseSeed(this.worldParameters.getSeed());
         initialiseFrictionmap();
@@ -185,13 +181,12 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
             try {
                 generateTiles();
                 break;
-            } catch (WorldGenException | DeadEndGenerationException | NotEnoughPointsException ignored) {}
+            } catch (WorldGenException | DeadEndGenerationException | NotEnoughPointsException ignored) {
+                // Repeat if generation fails.
+            }
         }
 
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
-
-        // This does not work because it forces a chunk to be generated before the world is properly initialised.
-        // getTile(0,0).setObstructed(true);
     }
 
     /**
@@ -201,10 +196,10 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
      * @throws WorldGenException
      */
     private void generateTiles() throws NotEnoughPointsException, DeadEndGenerationException, WorldGenException {
-        ArrayList<WorldGenNode> worldGenNodes = new ArrayList<>();
+        ArrayList<WorldGenNode> localWorldGenNodes = new ArrayList<>();
         // TODO:Ontonator Sort this out.
         /*HashMap<Pair<Integer, Integer>, Chunk>*/ loadedChunks = new HashMap<>();
-        ArrayList<VoronoiEdge> voronoiEdges = new ArrayList<>();
+        ArrayList<VoronoiEdge> localVoronoiEdges = new ArrayList<>();
 
         // TODO:Ontonator Remove this.
         assert getTileMap().isEmpty();
@@ -223,22 +218,22 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
             float x = (float) (random.nextFloat() - 0.5) * 2 * worldSize;
             float y = (float) (random.nextFloat() - 0.5) * 2 * worldSize;
             WorldGenNode node = new WorldGenNode(x, y);
-            worldGenNodes.add(node);
+            localWorldGenNodes.add(node);
         }
-        worldGenNodes.sort(null);
+        localWorldGenNodes.sort(null);
 
         // Apply Delaunay triangulation to the nodes, so that vertices and
         // adjacencies can be calculated. Also apply Lloyd Relaxation twice
         // for more smooth looking polygons
-        WorldGenNode.calculateVertices(worldGenNodes, worldSize);
-        WorldGenNode.lloydRelaxation(worldGenNodes, 2, worldSize);
-        this.worldGenNodes = new CopyOnWriteArrayList<>(worldGenNodes);
+        WorldGenNode.calculateVertices(localWorldGenNodes, worldSize);
+        WorldGenNode.lloydRelaxation(localWorldGenNodes, 2, worldSize);
+        worldGenNodes = new CopyOnWriteArrayList<>(localWorldGenNodes);
 
-        WorldGenNode.removeZeroTileNodes(this, worldGenNodes, nodeSpacing, worldSize);
-        WorldGenNode.assignNeighbours(worldGenNodes, voronoiEdges, this);
-        VoronoiEdge.assignNeighbours(voronoiEdges);
+        WorldGenNode.removeZeroTileNodes(this, localWorldGenNodes, nodeSpacing, worldSize);
+        WorldGenNode.assignNeighbours(localWorldGenNodes, localVoronoiEdges, this);
+        VoronoiEdge.assignNeighbours(localVoronoiEdges);
 
-        BiomeGenerator biomeGenerator = new BiomeGenerator(this, worldGenNodes, voronoiEdges, random, worldParameters);
+        BiomeGenerator biomeGenerator = new BiomeGenerator(this, localWorldGenNodes, localVoronoiEdges, random, worldParameters);
         biomeGenerator.generateBiomes();
     }
 
@@ -411,8 +406,6 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
     }
 
     public Chunk getChunk(int x, int y) {
-        // TODO:Ontonator Remove this.
-        // return loadedChunks.computeIfAbsent(new Pair<>(x, y), pair -> Chunk.loadChunkAt(this, x, y));
         Chunk chunk = loadedChunks.get(new Pair<>(x, y));
         if (chunk == null) {
             chunk = Chunk.loadChunkAt(this, x, y);
@@ -486,11 +479,12 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
      *
      * @deprecated because it does not properly account for unloaded chunks and does not seem to be used anywhere
      */
+    @Deprecated
     public void updateEntity(AbstractEntity entity) {
         for (Chunk chunk : loadedChunks.values()) {
             for (AbstractEntity e : chunk.getEntities()) {
                 if (e.getEntityID() == entity.getEntityID()) {
-                    chunk.getEntities().remove(e);
+                    chunk.removeEntity(e);
                     addEntity(entity);
                     return;
                 }
@@ -501,6 +495,7 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
         // Since MultiEntities need to be attached to the tiles they live on, setup that
         // connection.
         // TODO:Ontonator Is this needed in the loop as well, or only for first-time setup?
+        // FIXME:Ontonator What happens to `MultiEntity`s when they straddle chunks?
         if (entity instanceof StaticEntity) {
             ((StaticEntity) entity).setup();
         }
@@ -612,9 +607,9 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
                 .flatMap(entry -> entry.getValue().getTiles().stream()
                         .sorted(Comparator.comparing(tile -> new Pair<>(tile.getCol(), tile.getRow()))))
                 .forEachOrdered(tile -> {
-                    String out = String.format("%f, %f, %s, %s\n", tile.getCol(), tile.getRow(),
+                    String out = String.format("%f, %f, %s, %s", tile.getCol(), tile.getRow(),
                                                tile.getBiome().getBiomeName(),
-                                               tile.getTextureName());
+                                               tile.getTextureName()) + '\n';
                     string.append(out);
                 });
         return string.toString();
@@ -663,14 +658,16 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
 
         float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
         float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
+        Pair<Integer, Integer> clickedChunkCoords =
+                Chunk.getChunkForCoordinates(clickedPosition[0], clickedPosition[1]);
+        Chunk clickedChunk = getChunk(clickedChunkCoords.getValue0(), clickedChunkCoords.getValue1());
 
         Tile tile = getTile(clickedPosition[0], clickedPosition[1]);
 
         if (tile == null) {
             return;
         }
-        // todo: more efficient way to find entities
-        for (AbstractEntity entity : getEntities()) {
+        for (AbstractEntity entity : clickedChunk.getEntities()) {
             if (!tile.getCoordinates().equals(entity.getPosition())) {
                 continue;
             }
@@ -678,17 +675,13 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
             if (entity instanceof Harvestable) {
                 removeEntity(entity);
                 List<AbstractEntity> drops = ((Harvestable) entity).harvest(tile);
-
-                for (AbstractEntity drop : drops) {
-                    addEntity(drop);
-                }
+                drops.forEach(this::addEntity);
             } else if (entity instanceof Weapon) {
                 MainCharacter mc = gmm.getMainCharacter();
-                if (tile.getCoordinates().distance(mc.getPosition()) > 2) {
-                    continue;
+                if (tile.getCoordinates().distance(mc.getPosition()) <= 2) {
+                    removeEntity(entity);
+                    gmm.getInventory().add((Item) entity);
                 }
-                removeEntity(entity);
-                gmm.getInventory().add((Item) entity);
             } else if (entity instanceof Chest) {
                 ChestTable chest = (ChestTable) gmm.getPopUp("chestTable");
                 chest.updateChestPanel((Chest) entity);
