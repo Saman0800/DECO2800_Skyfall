@@ -66,8 +66,8 @@ public class EnvironmentManager extends TickableManager {
      */
     public EnvironmentManager() throws NoSuchAlgorithmException {
         // Music file setup
-        file = "resources/sounds/forest_day.wav";
-        currentFile = "resources/sounds/forest_night.wav";
+        file = "resources/sounds/forest_day.mp3";
+        currentFile = "resources/sounds/forest_night.mp3";
 
         // Time setup
         timeListeners = new ArrayList<>();
@@ -425,19 +425,11 @@ public class EnvironmentManager extends TickableManager {
 
         // Check if there is a file
         if (!(file.contains(currentFile))) {
-            //BGMManager bgmManager = GameManager.getManagerFromInstance
-                    //(BGMManager.class);
-            //SoundManager sm = GameManager.getManagerFromInstance
-                    //(SoundManager.class);
             setFilename();
-
-            //bgmManager.initMusic(file);
-
 
             // Stop current music
             try {
                 SoundManager.stopSound(file);
-                //bgmManager.stop();
             } catch (Exception e) {
                 /* Exception caught, if any */
             }
@@ -446,11 +438,7 @@ public class EnvironmentManager extends TickableManager {
 
             // Play BGM
             try {
-                //bgmManager.initClip(currentFile);
-                //bgmManager.playSound(currentFile);
-                SoundManager.playSound(currentFile);
-                //System.out.println(currentFile);
-                //bgmManager.play();
+                SoundManager.loopSound(currentFile);
             } catch (Exception e) {
                 /* Exception caught, if any */
             }
