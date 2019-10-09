@@ -637,7 +637,7 @@ public class Enemy extends Peon
     @Override
     public String toString() {
         return String.format("%s at (%d, %d) %s biome",
-                getName(), (int)getCol(), (int)getRow(), getBiome());
+                enemy, (int)getCol(), (int)getRow(), getBiome());
     }
 
     /**

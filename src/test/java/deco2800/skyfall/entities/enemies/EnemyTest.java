@@ -32,7 +32,7 @@ public class EnemyTest {
         testCharacter = MainCharacter.getInstance();
 
         // Set up enemy, need the longer constructor to test toString(), equals() and hashcode()
-        testEnemy = new Enemy(30f, 30f, "enemyHitBox" , Enemy.EnemyType.SCOUT,
+        testEnemy = new Enemy(30f, 30f, "enemyHitBox" , Enemy.EnemyType.HEAVY,
             0.06f, biomeName, "enemyTexture");
         testEnemy.setHealth(10);
 
@@ -143,7 +143,7 @@ public class EnemyTest {
 
     @Test
     public void testToString() {
-        String testString = "Heavy at (30, 30) Forest biome";
+        String testString = "HEAVY at (30, 30) Forest biome";
         Assert.assertEquals(testString, testEnemy.toString());
     }
 
@@ -156,7 +156,7 @@ public class EnemyTest {
         Assert.assertFalse(testEnemy.equals(testCharacter));
 
         // Equals due to same instance and same hashcode
-        testDummyEnemy =  new Enemy(30f, 30f, "enemyHitBox" , Enemy.EnemyType.SCOUT,
+        testDummyEnemy =  new Enemy(30f, 30f, "enemyHitBox" , Enemy.EnemyType.HEAVY,
                 0.06f, biomeName, "enemyTexture");
         Assert.assertTrue(testEnemy.equals(testDummyEnemy));
     }
