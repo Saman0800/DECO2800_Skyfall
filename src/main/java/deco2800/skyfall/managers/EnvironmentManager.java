@@ -1,5 +1,9 @@
 package deco2800.skyfall.managers;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.observers.DayNightObserver;
@@ -7,6 +11,7 @@ import deco2800.skyfall.observers.SeasonObserver;
 import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.worlds.Tile;
 
+import java.io.File;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
@@ -393,14 +398,15 @@ public class EnvironmentManager extends TickableManager {
         currentBiome();
 
         // Name file accordingly
-        String filename = "day.wav";
-        filename = isDay() ? filename : "night.wav";
+        String filename = "day";
+        filename = isDay() ? filename : "night";
 
         // Until lake music created and ocean biome is restricted, play forest for now
         if (biome.equals("ocean") || biome.equals("lake") || biome.equals("river")) {
             file = "resources/sounds/forest_" + filename;
         } else {
-            file = "resources/sounds/" + biome + "_" + filename;
+            //file = "resources/sounds/" + biome + "_" + filename;
+            file = biome + "_" + filename;
         }
     }
 
@@ -419,13 +425,19 @@ public class EnvironmentManager extends TickableManager {
 
         // Check if there is a file
         if (!(file.contains(currentFile))) {
-            BGMManager bgmManager = GameManager.getManagerFromInstance(BGMManager.class);
-
+            //BGMManager bgmManager = GameManager.getManagerFromInstance
+                    //(BGMManager.class);
+            //SoundManager sm = GameManager.getManagerFromInstance
+                    //(SoundManager.class);
             setFilename();
+
+            //bgmManager.initMusic(file);
+
 
             // Stop current music
             try {
-                bgmManager.stop();
+                SoundManager.stopSound(file);
+                //bgmManager.stop();
             } catch (Exception e) {
                 /* Exception caught, if any */
             }
@@ -434,8 +446,11 @@ public class EnvironmentManager extends TickableManager {
 
             // Play BGM
             try {
-                bgmManager.initClip(currentFile);
-                bgmManager.play();
+                //bgmManager.initClip(currentFile);
+                //bgmManager.playSound(currentFile);
+                SoundManager.playSound(currentFile);
+                //System.out.println(currentFile);
+                //bgmManager.play();
             } catch (Exception e) {
                 /* Exception caught, if any */
             }
