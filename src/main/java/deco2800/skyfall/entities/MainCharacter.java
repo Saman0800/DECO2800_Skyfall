@@ -49,7 +49,6 @@ import java.util.Map;
 
 import static deco2800.skyfall.buildings.BuildingType.*;
 
-
 /**
  * Main character in the game
  */
@@ -1873,30 +1872,25 @@ public class MainCharacter extends Peon
         getPlayerDirectionCardinal();
 
         /* Short Animations */
-        if(!isOnVehicle) {
-            if (vehicleType.equals("bike")) {
-                setCurrentState(AnimationRole.VEHICLE_BIKE_MOVE);
-            }
-        }
-
-        if (getToBeRun() != null) {
-            if (getToBeRun().getType() == AnimationRole.DEAD) {
-                setCurrentState(AnimationRole.STILL);
-            } else if (getToBeRun().getType() == AnimationRole.ATTACK) {
+        if (!isOnVehicle) {
+            if (getToBeRun() != null &&
+                    getToBeRun().getType() == AnimationRole.ATTACK) {
                 return;
             }
-        }
 
-        if (isDead()) {
-            setCurrentState(AnimationRole.STILL);
-        } else if (isHurt) {
-            setCurrentState(AnimationRole.HURT);
-        } else {
-            if (getVelocity().get(2) == 0f) {
-                setCurrentState(AnimationRole.NULL);
+            if (isDead()) {
+                setCurrentState(AnimationRole.STILL);
+            } else if (isHurt) {
+                setCurrentState(AnimationRole.HURT);
             } else {
-                setCurrentState(AnimationRole.MOVE);
+                if (getVelocity().get(2) == 0f) {
+                    setCurrentState(AnimationRole.NULL);
+                } else {
+                    setCurrentState(AnimationRole.MOVE);
+                }
             }
+        } else if(vehicleType.equals("bike")) {
+            setCurrentState(AnimationRole.VEHICLE_BIKE_MOVE);
         }
     }
 
@@ -2011,18 +2005,18 @@ public class MainCharacter extends Peon
 
     public void load(MainCharacterMemento memento) {
         this.id = memento.mainCharacterID;
-    // this.equippedItem = memento.equippedItem;
+        // this.equippedItem = memento.equippedItem;
         this.level = memento.level;
         this.foodLevel = memento.foodLevel;
         this.foodAccum = memento.foodAccum;
         this.goldPouch = memento.goldPouch;
-    // this.blueprintsLearned = memento.blueprints;
+        // this.blueprintsLearned = memento.blueprints;
         this.inventories = memento.inventory;
-    // this.weapons = memento.weapons;
-    // this.hotbar = memento.hotbar;
+        // this.weapons = memento.weapons;
+        // this.hotbar = memento.hotbar;
     }
 
-    public static class MainCharacterMemento extends AbstractMemento implements Serializable {
+    public class MainCharacterMemento extends AbstractMemento implements Serializable {
 
         //TODO:dannathan add stuff for entitiy
         private long saveID;
@@ -2041,18 +2035,19 @@ public class MainCharacter extends Peon
 
         private List<String> blueprints;
 
+
         public MainCharacterMemento(MainCharacter character) {
             this.saveID = character.save.getSaveID();
             this.mainCharacterID = character.id;
-    // this.equippedItem = character.equippedItem;
+            // this.equippedItem = character.equippedItem;
             this.level = character.level;
             this.foodLevel = character.foodLevel;
             this.foodAccum = character.foodAccum;
             this.goldPouch = character.goldPouch;
-    // this.blueprints = character.blueprintsLearned;
+            // this.blueprints = character.blueprintsLearned;
             this.inventory = character.inventories;
-    // this.weapons = character.weapons;
-    // this.hotbar = character.hotbar;
+            // this.weapons = character.weapons;
+            // this.hotbar = character.hotbar;
         }
     }
 }
