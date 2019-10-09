@@ -949,9 +949,12 @@ public class MainCharacter extends Peon
             //Check we have permission to build
             if (toBuild) {
                 GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
+                QuestManager qm = GameManager.getManagerFromInstance(QuestManager.class);
+
                 ConstructionTable bs = (ConstructionTable) gmm.getPopUp("constructionTable");
                 bs.build(GameManager.get().getWorld(),
                         (int) clickedPosition[0], (int) clickedPosition[1]);
+                qm.addBuilding(bs.selectBuilding(bs.getBuildingID(), 0, 0).getBuildingType());
             }
             /*
             if (GameManager.getManagerFromInstance(ConstructionManager.class).getStatus() == 1) {
