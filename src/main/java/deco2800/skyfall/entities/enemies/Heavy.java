@@ -6,7 +6,10 @@ package deco2800.skyfall.entities.enemies;
 public class Heavy extends Enemy implements Spawnable {
 
     public Heavy(float col, float row, float scaling, String biome, String textureName) {
-        super(col, row, "Heavy", EnemyType.HEAVY, 0.06f,  biome, textureName);
+        super(col, row, "Heavy", EnemyType.HEAVY,
+                0.06f,  biome, "enemyHeavy");
+
+        this.setName("Heavy");
 
         // Assign values, includes default values
         this.setValues(scaling, 10, 5, 2,0.06f,0.03f);

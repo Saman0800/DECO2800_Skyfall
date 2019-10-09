@@ -139,16 +139,17 @@ public class MainCharacterTest {
         testCharacter.changeHealth(5);
         Assert.assertEquals(testCharacter.getHealth(), 15);
         testCharacter.changeHealth(-20);
-        Assert.assertEquals(testCharacter.getHealth(), 15);
+        Assert.assertEquals(testCharacter.getHealth(), 0);
         Assert.assertEquals(testCharacter.getDeaths(), 1);
+        Assert.assertTrue(testCharacter.isDead());
 
-        Assert.assertFalse(testCharacter.isDead());
+        testCharacter.changeHealth(10);
         Assert.assertEquals(testCharacter.getHealth(), 10);
         testCharacter.changeHealth(5);
         Assert.assertEquals(testCharacter.getHealth(), 15);
         testCharacter.changeHealth(-20);
         Assert.assertEquals(testCharacter.getHealth(), 0);
-        Assert.assertEquals(testCharacter.getDeaths(), 1);
+        Assert.assertEquals(testCharacter.getDeaths(), 2);
 
         testCharacter.setTexChanging(true);
         assertTrue(testCharacter.isTexChanging());
@@ -160,11 +161,10 @@ public class MainCharacterTest {
 
     }
 
-
-    @Test
     /**
      * Test level changing of main character
      */
+    @Test
     public void levelTest() {
         testCharacter.changeLevel(4);
         Assert.assertEquals(5, testCharacter.getLevel());
@@ -263,7 +263,7 @@ public class MainCharacterTest {
         testCharacter.playerHurt(3);
         assertTrue(testCharacter.isHurt());
         // Health decreases
-        assertEquals(7, testCharacter.getHealth());
+        assertEquals(4, testCharacter.getHealth());
         // set current animation to hurt
         assertEquals(AnimationRole.HURT, testCharacter.getCurrentState());
         // set hurt time and recover time to 0.
@@ -284,6 +284,7 @@ public class MainCharacterTest {
         // reset hurt time.
         assertEquals(0, testCharacter.getHurtTime());
     }
+
     /**
      * Test recover effect
      */
@@ -309,6 +310,7 @@ public class MainCharacterTest {
         // set animation/sprite status to "not recovering".
         assertFalse(testCharacter.isRecovering());
     }
+
     /**
      * Test kill effect and method
      */
@@ -320,9 +322,10 @@ public class MainCharacterTest {
         assertEquals(AnimationRole.DEAD, testCharacter.getCurrentState());
         // reset dead time to 0.
         assertEquals(0, testCharacter.getDeadTime());
-        // main character's number of death increases by 1.
-        Assert.assertEquals(1, testCharacter.getDeaths());
+        // main character's number of death increases from 1(from setterGetterTest) to 2.
+        Assert.assertEquals(2, testCharacter.getDeaths());
     }
+
     /**
      * Test whether the animation role is updated when
      * method is called.

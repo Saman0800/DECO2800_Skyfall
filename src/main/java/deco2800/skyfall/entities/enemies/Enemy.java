@@ -133,7 +133,8 @@ public class Enemy extends Peon
         setHurt(true);
         health -= damage;
 
-        // In Peon.class, when the health = 0, isDead will be set true automatically.
+        // In Peon.class, when the health = 0,
+        // isDead will be set true automatically.
         if (health <= 0) {
             die();
         }
