@@ -2049,7 +2049,7 @@ public class MainCharacter extends Peon
         return save;
     }
 
-    public GameStage getGameStage(){
+    public int getGameStage(){
         return this.gameStage;
     }
 
@@ -2078,11 +2078,11 @@ public class MainCharacter extends Peon
         // this.hotbar = memento.hotbar;
     }
 
-    public class MainCharacterMemento extends AbstractMemento implements Serializable {
+    public static class MainCharacterMemento extends AbstractMemento implements Serializable {
         //TODO:dannathan add stuff for entitiy
         private long saveID;
         private long mainCharacterID;
-        private GameStage stage;
+        private int stage;
 
         private int equippedItem;
         private int level;
