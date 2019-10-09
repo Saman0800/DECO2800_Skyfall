@@ -731,8 +731,12 @@ public class DataBaseConnector {
                 return new ruinedRobot(entityMemento);
             case "ruinedCity":
                 return new ruinedCity(entityMemento);
+            case "GoldPiece":
+                return new GoldPiece(entityMemento);
             default:
-                throw new LoadException(String.format("Could not create %s from memento", entityMemento));
+                return new SnowShrub(entityMemento);
+                // TODO: dont crash the game with this exception
+                // throw new LoadException(String.format("Could not create %s from memento", entityMemento));
         }
     }
 
