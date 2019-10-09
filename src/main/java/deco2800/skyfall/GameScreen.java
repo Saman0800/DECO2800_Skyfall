@@ -5,9 +5,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.enemies.*;
 import deco2800.skyfall.graphics.HasPointLight;
 import deco2800.skyfall.graphics.PointLight;
 import deco2800.skyfall.graphics.ShaderWrapper;
@@ -30,7 +33,8 @@ import deco2800.skyfall.worlds.world.WorldDirector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.util.*;
+import java.util.function.Function;
 
 public class GameScreen implements Screen, KeyDownObserver {
     private final Logger logger = LoggerFactory.getLogger(Renderer3D.class);
@@ -61,14 +65,13 @@ public class GameScreen implements Screen, KeyDownObserver {
     EnvironmentManager timeOfDay;
     private static boolean isPaused = false;
 
-    public static boolean getIsPaused(){
+    public static boolean getIsPaused() {
         return isPaused;
     }
 
-    public static void setIsPaused(boolean paused){
+    public static void setIsPaused(boolean paused) {
         isPaused = paused;
     }
-
 
     // A wrapper for shader
     private ShaderWrapper shader;
@@ -149,8 +152,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         World currentWorld = dbConnector.loadWorlds(save);
         save.setCurrentWorld(currentWorld);
 
-
-
         dbConnector.loadMainCharacter(save);
         world = save.getCurrentWorld();
         MainCharacter mainCharacter = MainCharacter.getInstance();
@@ -201,7 +202,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         /* Add BGM to game manager */
         gameManager.addManager(new BGMManager());
 
-        /* Add Quest Manager to game manager*/
+        /* Add Quest Manager to game manager */
         gameManager.addManager(new QuestManager());
 
         /**
@@ -379,7 +380,7 @@ public class GameScreen implements Screen, KeyDownObserver {
     /**
      * Resizes the viewport
      *
-     * @param width The new width of the viewport
+     * @param width  The new width of the viewport
      * @param height The new height of the viewport
      */
     @Override

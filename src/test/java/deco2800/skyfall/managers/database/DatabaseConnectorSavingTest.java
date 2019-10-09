@@ -59,8 +59,6 @@ public class DatabaseConnectorSavingTest {
 
     @Test
     public void saveGameTest() {
-        PreparedStatement getSaves = null;
-        ResultSet saveResults = null;
         try {
             Save save = new Save();
             MainCharacter.resetInstance();
@@ -77,29 +75,23 @@ public class DatabaseConnectorSavingTest {
 //            ArrayList<Save> saves = (ArrayList<Save>) dbConnector.loadSaveInformation();
 
             int count = 0;
-            getSaves = dbConnector.getConnection().prepareStatement("SELECT * FROM SAVES");
-            saveResults = getSaves.executeQuery();
-            while (saveResults.next()) {
-                count++;
+            try (PreparedStatement getSaves = dbConnector.getConnection().prepareStatement("SELECT * FROM SAVES")) {
+                try (ResultSet saveResults = getSaves.executeQuery()) {
+                    while (saveResults.next()) {
+                        count++;
+                    }
+                }
             }
             assertEquals(1, count);
 
         } catch (SQLException e) {
             fail("Failed to save world due to an exception occurring : " + e);
-        } finally {
-            try {
-                getSaves.close();
-                saveResults.close();
-            } catch (SQLException e) {
-            }
         }
 
     }
 
     @Test
     public void updateSaveTest(){
-        ResultSet saveResults = null;
-        PreparedStatement getSaves = null;
         try {
             Save save = new Save();
 
@@ -118,21 +110,17 @@ public class DatabaseConnectorSavingTest {
 //            ArrayList<Save> saves = (ArrayList<Save>) dbConnector.loadSaveInformation();
 
             int count = 0;
-            getSaves = dbConnector.getConnection().prepareStatement("SELECT * FROM SAVES");
-            saveResults = getSaves.executeQuery();
-            while (saveResults.next()) {
-                count++;
+            try (PreparedStatement getSaves = dbConnector.getConnection().prepareStatement("SELECT * FROM SAVES")) {
+                try (ResultSet saveResults = getSaves.executeQuery()) {
+                    while (saveResults.next()) {
+                        count++;
+                    }
+                }
             }
             assertEquals(1, count);
 
         } catch (SQLException e) {
             fail("Failed to update the save due to an exception occurring : " + e);
-        } finally {
-            try {
-                saveResults.close();
-                getSaves.close();
-            } catch (SQLException e) {
-            }
         }
     }
 
@@ -368,8 +356,6 @@ public class DatabaseConnectorSavingTest {
 
     @Test
     public void saveMainCharacterTest() {
-        PreparedStatement getSaves = null;
-        ResultSet saveResults = null;
         try {
             Save save = Mockito.mock(Save.class);
             when(save.getSaveID()).thenReturn(0L);
@@ -385,21 +371,18 @@ public class DatabaseConnectorSavingTest {
             dbConnector.saveMainCharacter();
 
             int count = 0;
-            getSaves = dbConnector.getConnection().prepareStatement("SELECT * FROM MAIN_CHARACTER");
-            saveResults = getSaves.executeQuery();
-            while (saveResults.next()) {
-                count++;
+            try (PreparedStatement getSaves = dbConnector.getConnection()
+                    .prepareStatement("SELECT * FROM MAIN_CHARACTER")) {
+                try (ResultSet saveResults = getSaves.executeQuery()) {
+                    while (saveResults.next()) {
+                        count++;
+                    }
+                }
             }
             assertEquals(1, count);
 
         } catch (SQLException | IOException e) {
             fail("Failed to the main character due to an exception occurring : " + e);
-        } finally {
-            try {
-                getSaves.close();
-                saveResults.close();
-            } catch (SQLException e) {
-            }
         }
 
     }

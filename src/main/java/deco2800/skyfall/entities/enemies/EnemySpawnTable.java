@@ -14,6 +14,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.badlogic.gdx.utils.Array;
+
 public class EnemySpawnTable implements TimeObserver {
 
     /**
@@ -62,21 +64,39 @@ public class EnemySpawnTable implements TimeObserver {
 
     public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
             Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
-            Function<EnvironmentManager, Double> probAdjFunc) {
-
-        this(spawnRadius, maxInRadius, frequency, biomeToConstructor, probAdjFunc, GameManager.get().getWorld());
+            Function<EnvironmentManager, Double> probAdjFunc,
+            EnvironmentManager gameEnvironManag) {
+        this(spawnRadius, maxInRadius, frequency, biomeToConstructor, probAdjFunc, GameManager.get().getWorld(),
+             gameEnvironManag);
     }
 
     public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
             Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
-            Function<EnvironmentManager, Double> probAdjFunc, World world) {
-
+            Function<EnvironmentManager, Double> probAdjFunc, World world,
+            EnvironmentManager gameEnvironManag) {
         this.spawnRadius = spawnRadius;
         this.maxInRadius = maxInRadius;
+        this.spawnFrequency = frequency;
         this.world = world;
-        this.environManager = GameManager.get().getManager(EnvironmentManager.class);
+        this.environManager = gameEnvironManag;
         this.biomeToConstructor = biomeToConstructor;
         this.probAdjFunc = probAdjFunc;
+    }
+
+    public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
+                           Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
+                           Function<EnvironmentManager, Double> probAdjFunc,
+                           World world) {
+
+        this(spawnRadius, maxInRadius, frequency, biomeToConstructor, probAdjFunc, world,
+             GameManager.get().getManager(EnvironmentManager.class));
+    }
+
+    public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
+                           Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
+                           Function<EnvironmentManager, Double> probAdjFunc) {
+
+        this(spawnRadius, maxInRadius, frequency, biomeToConstructor, probAdjFunc, GameManager.get().getWorld());
     }
 
     /**
@@ -100,9 +120,7 @@ public class EnemySpawnTable implements TimeObserver {
      * @return true if the entity is in range of the target. false otherwise.
      */
     public boolean inRange(AbstractEntity entity, float x, float y, float radius) {
-
         return Math.pow(entity.getRow() - x, 2) + Math.pow(entity.getCol() - y, 2) < radius * radius;
-
     }
 
     /**
@@ -134,26 +152,54 @@ public class EnemySpawnTable implements TimeObserver {
     /**
      * Returns how many enemies are with close proximity of another enemy.
      * 
-     * @param x The enemy that we are making the count for.
+     * @param targetEnemy The enemy that we are making the count for.
      */
     public int enemiesNearTargetCount(float x, float y) {
-
         return enemiesInTarget(x, y, 50).size();
-
     }
 
     /**
      * Check to see if it is time to start spawn more enemies
      */
     public void notifyTimeUpdate(long i) {
-
         if ((i % spawnFrequency) == 0) {
             spawnEnemies();
         }
-
-        return;
     }
 
+    /**
+     * Separates tiles into different lists based on the biome the tile was from.
+     */
+    public static Map<String, List<Tile>> partitonTiles(World gameWorld) {
+
+        // Create the new hashmap that will contain all the tiles
+        Map<String, List<Tile>> partitionedTiles = new HashMap<>();
+
+        for (Chunk chunk : gameWorld.getLoadedChunks().values()) {
+            for (Tile tile : chunk.getTiles()) {
+                // Try to get the list that curresponds to the current tile's
+                // biome string
+                List<Tile> tileBiomeList = partitionedTiles.get(tile.getBiome().getBiomeName());
+
+                if (tileBiomeList == null) {
+                    // A list for this biome does not exist yet
+                    List<Tile> newBiomeList = new ArrayList<>();
+                    newBiomeList.add(tile);
+                    partitionedTiles.put(tile.getBiome().getBiomeName(), newBiomeList);
+                    continue;
+                }
+
+                tileBiomeList.add(tile);
+            }
+        }
+
+        return partitionedTiles;
+    }
+
+    /**
+     * Spawns the enemies into the world under the conditions specified by input
+     * parameters.
+     */
     private void spawnEnemies() {
 
         // Find how many enemies are within range of the maincharacter
@@ -163,68 +209,73 @@ public class EnemySpawnTable implements TimeObserver {
             return;
         }
 
-        // Get all the tiles within the current chunk
-        List<Tile> chunkTiles = new ArrayList<>();
+        Map<String, List<Tile>> partitionedTiles = partitonTiles(world);
 
-        for (Chunk chunk : world.getLoadedChunks().values()) {
-            for (Tile tile : chunk.getTiles()) {
-                chunkTiles.add(tile);
-            }
-        }
+        for (String biomeName : biomeToConstructor.keySet()) {
 
-        // Shuffle the tile list
-        Collections.shuffle(chunkTiles);
+            // Get all the tiles within the current chunk
+            List<Tile> chunkTiles = partitionedTiles.get(biomeName);
 
-        Iterator<Tile> tileIter = chunkTiles.iterator();
-
-        int enemiesPlaced = 0;
-        Tile nextTile = null;
-        Random rand = new Random();
-
-        while (tileIter.hasNext() && (enemiesPlaced <= numberToSpawn)) {
-
-            nextTile = tileIter.next();
-
-            if (nextTile.isObstructed()) {
+            if (chunkTiles == null || chunkTiles.size() == 0) {
                 continue;
             }
 
-            // Check if the tile is in sight of the player
-            float[] tileWorldCord = WorldUtil.colRowToWorldCords(nextTile.getCol(), nextTile.getRow());
+            // Shuffle the tile list
+            Collections.shuffle(chunkTiles);
 
-           // if (!WorldUtil.areCoordinatesOffScreen(tileWorldCord[0], tileWorldCord[1], GameManager.get().getCamera())) {
-           //     continue;
-           // }
+            Iterator<Tile> tileIter = chunkTiles.iterator();
 
-            // Create an enemy using one of the appropriate constructors
-            List<Class<? extends Enemy>> possibleConstructors = biomeToConstructor
-                    .get(nextTile.getBiome().getBiomeName());
+            int enemiesPlaced = 0;
+            Tile nextTile = null;
+            Random rand = new Random();
 
-            if (possibleConstructors.size() == 0) {
-                // There are no suitable enemies to spawn on this tile
-                continue;
-            }
+            while (tileIter.hasNext() && (enemiesPlaced <= numberToSpawn)) {
 
-            // Get the chance to spawn the enemy using the provided lambda function
-            double spawnChance = probAdjFunc.apply(environManager);
+                nextTile = tileIter.next();
 
-            // Find all the enemies within close proximity to this tile and adjust the
-            // spawning chance accordingly
-            spawnChance = Math.pow(spawnChance, Math.log(enemiesNearTargetCount(nextTile.getRow(), nextTile.getCol())));
+                if (nextTile.isObstructed()) {
+                    continue;
+                }
 
-            // Pick a class, any class!
-            Class<? extends Enemy> randEnemyType = possibleConstructors
-                    .get(rand.nextInt(possibleConstructors.size()));
+                // Check if the tile is in sight of the player
+                float[] tileWorldCord = WorldUtil.colRowToWorldCords(nextTile.getCol(), nextTile.getRow());
 
-            Enemy newEnemy;
+                // if (!WorldUtil.areCoordinatesOffScreen(tileWorldCord[0], tileWorldCord[1],
+                //         GameManager.get().getCamera())) {
+                //     continue;
+                // }
 
-            try {
-                newEnemy = randEnemyType.getDeclaredConstructor(Float.class, Float.class).newInstance(nextTile.getRow(),
-                        nextTile.getCol());
-                world.addEntity(newEnemy);
-                enemiesPlaced += 1;
-            } catch (Exception E) {
-                System.err.println("Could not create new Enemy: " + E.getMessage());
+                // Create an enemy using one of the appropriate constructors
+                List<Class<? extends Enemy>> possibleConstructors = biomeToConstructor
+                        .get(nextTile.getBiome().getBiomeName());
+
+                if ((possibleConstructors == null) || (possibleConstructors.size() == 0)) {
+                    // There are no suitable enemies to spawn on this tile
+                    continue;
+                }
+
+                // Get the chance to spawn the enemy using the provided lambda function
+                double spawnChance = probAdjFunc.apply(environManager);
+
+                // Find all the enemies within close proximity to this tile and adjust the
+                // spawning chance accordingly
+                spawnChance = Math.pow(spawnChance,
+                        Math.log(enemiesNearTargetCount(nextTile.getRow(), nextTile.getCol())));
+
+                // Pick a class, any class!
+                Class<? extends Enemy> randEnemyType = possibleConstructors
+                        .get(rand.nextInt(possibleConstructors.size()));
+
+                Enemy newEnemy;
+
+                try {
+                    newEnemy = randEnemyType.getDeclaredConstructor(Float.class, Float.class).newInstance(nextTile.getRow(),
+                            nextTile.getCol());
+                    world.addEntity(newEnemy);
+                    enemiesPlaced += 1;
+                } catch (Exception e) {
+                    System.err.println("Could not create new AbstractEnemy: " + e.toString());
+                }
             }
         }
     }
