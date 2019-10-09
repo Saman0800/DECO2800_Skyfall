@@ -125,14 +125,14 @@ public class GameScreen implements Screen, KeyDownObserver {
             // FIXME:jeffvan12 implement better way of creating new stuff things
 
             // Comment this out when generating the data for the tests
-            DatabaseManager.get().getDataBaseConnector().saveGame(save);
+            // DatabaseManager.get().getDataBaseConnector().saveGame(save);
 
             // Uncomment this when generating the data for the tests
-            // save.setId(0);
-            // world.setId(0);
-            // MainCharacter.getInstance().setID(0);
-            // DatabaseManager.get().getDataBaseConnector().saveGame(save);
-            // DatabaseManager.get().getDataBaseConnector().saveAllTables();
+            save.setId(0);
+            world.setId(0);
+            MainCharacter.getInstance().setID(0);
+            DatabaseManager.get().getDataBaseConnector().saveGame(save);
+            DatabaseManager.get().getDataBaseConnector().saveAllTables();
 
             gameManager.getManager(NetworkManager.class).startHosting("host");
         }

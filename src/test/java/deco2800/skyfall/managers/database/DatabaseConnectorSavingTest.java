@@ -360,7 +360,6 @@ public class DatabaseConnectorSavingTest {
             Save save = Mockito.mock(Save.class);
             when(save.getSaveID()).thenReturn(0L);
             MainCharacter.resetInstance();
-            MainCharacter.getInstance();
             MainCharacter.getInstance().setSave(save);
 
             SaveMemento saveMementoMock = Mockito.mock(SaveMemento.class);
@@ -380,7 +379,6 @@ public class DatabaseConnectorSavingTest {
                 }
             }
             assertEquals(1, count);
-
         } catch (SQLException | IOException e) {
             fail("Failed to the main character due to an exception occurring : " + e);
         }

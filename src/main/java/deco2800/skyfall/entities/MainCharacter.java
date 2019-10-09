@@ -289,7 +289,6 @@ public class MainCharacter extends Peon
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
         this.petsManager = GameManager.getManagerFromInstance(PetsManager.class);
         this.inventories = GameManager.getManagerFromInstance(InventoryManager.class);
-        this.inventories.setContents(memento.inventoryContents);
         this.goldPouch = new HashMap<>();
 
         xInput = 0;
@@ -2073,7 +2072,7 @@ public class MainCharacter extends Peon
         this.foodAccum = memento.foodAccum;
         this.goldPouch = memento.goldPouch;
         // this.blueprintsLearned = memento.blueprints;
-        this.inventories = memento.inventory;
+        // this.inventories = memento.inventory;
         // this.weapons = memento.weapons;
         // this.hotbar = memento.hotbar;
     }
@@ -2091,8 +2090,7 @@ public class MainCharacter extends Peon
         private float col;
         private float row;
         private int health;
-        private InventoryManager inventory;
-        private Map<String, List<Item>> inventoryContents;
+        // private Map<String, List<Item>> inventoryContents;
         private WeaponManager weapons;
         private HashMap<Integer, Integer> goldPouch;
         private List<Item> hotbar;
@@ -2111,9 +2109,9 @@ public class MainCharacter extends Peon
             this.foodAccum = character.foodAccum;
             this.goldPouch = character.goldPouch;
             // this.blueprints = character.blueprintsLearned;
-            inventoryContents =
-                GameManager.getManagerFromInstance(InventoryManager.class).getContents();
-            this.inventory = character.inventories;
+            // inventoryContents =
+            //     GameManager.getManagerFromInstance(InventoryManager.class).getContents();
+            // this.inventory = character.inventories;
             // this.weapons = character.weapons;
             // this.hotbar = character.hotbar;
         }
