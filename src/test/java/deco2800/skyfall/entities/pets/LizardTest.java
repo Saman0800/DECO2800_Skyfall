@@ -67,7 +67,7 @@ public class LizardTest {
         mc = MainCharacter.getInstance(1f, 1f, 1f, "Main Piece", 2);
         lizard = new Lizard(1, 1, mc);
         WorldBuilder worldBuilder = new WorldBuilder();
-        WorldDirector.constructTestWorld(worldBuilder);
+        WorldDirector.constructTestWorld(worldBuilder, 0);
         w = worldBuilder.getWorld();
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);

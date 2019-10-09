@@ -10,11 +10,12 @@ import deco2800.skyfall.resources.items.*;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 
+import java.io.Serializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.*;
 
-public class InventoryManager extends TickableManager {
+public class InventoryManager extends TickableManager implements Serializable {
 
     // Logger for class to display messages
     private final transient Logger logger =
@@ -112,6 +113,11 @@ public class InventoryManager extends TickableManager {
      */
     public Map<String, List<Item>> getContents() {
         return Collections.unmodifiableMap(this.inventory);
+    }
+
+
+    public void setContents(Map<String, List<Item>> inventory){
+        this.inventory = inventory;
     }
 
     /**
