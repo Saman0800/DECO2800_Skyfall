@@ -216,10 +216,10 @@ public class MainCharacterTest {
                 inventoryManager.getAmount("Stone"));
     }
 
-    @Test
     /**
      * Test that the item properly switches.
      */
+    @Test
     public void switchItemTest() {
         Assert.assertEquals(1, testCharacter.getItemSlotSelected());
         testCharacter.switchItem(9);
@@ -258,31 +258,31 @@ public class MainCharacterTest {
      * Test playerHurt effect
      */
     @Test
-    public void hurtTest() {
+    public void playerHurtTest() {
         // Set isHurt to true.
         testCharacter.playerHurt(3);
-        assertTrue(testCharacter.isHurt());
+        Assert.assertTrue(testCharacter.isHurt());
         // Health decreases
-        assertEquals(4, testCharacter.getHealth());
+        Assert.assertEquals(4, testCharacter.getHealth());
         // set current animation to hurt
-        assertEquals(AnimationRole.HURT, testCharacter.getCurrentState());
+        Assert.assertEquals(AnimationRole.HURT, testCharacter.getCurrentState());
         // set hurt time and recover time to 0.
-        assertEquals(0, testCharacter.getHurtTime());
-        assertEquals(0, testCharacter.getRecoverTime());
+        Assert.assertEquals(0, testCharacter.getHurtTime());
+        Assert.assertEquals(0, testCharacter.getRecoverTime());
 
         // test checkIfHurtEnded()
         testCharacter.checkIfHurtEnded();
         // hurt time increases by 20.
-        assertEquals(20, testCharacter.getHurtTime());
+        Assert.assertEquals(20, testCharacter.getHurtTime());
         // after hurt animation finished (around 2 seconds),
         // finish hurting, start recovering.
         testCharacter.setHurtTime(500);
         testCharacter.checkIfHurtEnded();
         // set animation status to "not hurt" and is recovering.
-        assertFalse(testCharacter.isHurt());
-        assertTrue(testCharacter.isRecovering());
+        Assert.assertFalse(testCharacter.isHurt());
+        Assert.assertTrue(testCharacter.isRecovering());
         // reset hurt time.
-        assertEquals(0, testCharacter.getHurtTime());
+        Assert.assertEquals(0, testCharacter.getHurtTime());
     }
 
     /**
@@ -296,19 +296,19 @@ public class MainCharacterTest {
         testCharacter.checkIfRecovered();
         testCharacter.checkIfRecovered();
         // recover time increased by 20.
-        assertEquals(20, testCharacter.getRecoverTime());
+        Assert.assertEquals(20, testCharacter.getRecoverTime());
         // main character unable to be touched by other objects.
-        assertFalse(testCharacter.getCollidable());
+        Assert.assertFalse(testCharacter.getCollidable());
 
         // After recovered (around 3 seconds)...
         testCharacter.setRecoverTime(3000);
         testCharacter.checkIfRecovered();
         // reset recover time.
-        assertEquals(0, testCharacter.getRecoverTime());
+        Assert.assertEquals(0, testCharacter.getRecoverTime());
         // main character able to be touched by other objects again.
-        assertTrue(testCharacter.getCollidable());
+        Assert.assertTrue(testCharacter.getCollidable());
         // set animation/sprite status to "not recovering".
-        assertFalse(testCharacter.isRecovering());
+        Assert.assertFalse(testCharacter.isRecovering());
     }
 
     /**
@@ -319,9 +319,9 @@ public class MainCharacterTest {
         // call kill() when character's health is 0.
         testCharacter.playerHurt(100);
         // set animation status to DEAD.
-        assertEquals(AnimationRole.DEAD, testCharacter.getCurrentState());
+        Assert.assertEquals(AnimationRole.DEAD, testCharacter.getCurrentState());
         // reset dead time to 0.
-        assertEquals(0, testCharacter.getDeadTime());
+        Assert.assertEquals(0, testCharacter.getDeadTime());
         // main character's number of death increases from 1(from setterGetterTest) to 2.
         Assert.assertEquals(2, testCharacter.getDeaths());
     }
@@ -649,7 +649,7 @@ public class MainCharacterTest {
         HexVector old_pos = new HexVector(testCharacter.getPosition().getRow(), testCharacter.getPosition().getCol());
 
         world.addEntity(new Scout(old_pos.getRow() + 0.1f, old_pos.getCol() + 0.1f,
-                0.1f, "Forest", "Scout"));
+                0.1f, "Forest", Enemy.EnemyType.SCOUT));
 
         for (int i = 0; i < 100; ++i) {
             world.onTick(100);
@@ -736,7 +736,7 @@ public class MainCharacterTest {
      * Test the removeAllGold() method works.
      */
     @Test
-    public void playerHurtTest() {
+    public void playerAddGoldTest() {
         assertEquals(100, testCharacter.getGoldPouchTotalValue());
 
         testCharacter.removeAllGold();

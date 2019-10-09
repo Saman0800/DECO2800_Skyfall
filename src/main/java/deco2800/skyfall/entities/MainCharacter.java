@@ -236,8 +236,6 @@ public class MainCharacter extends Peon
     private boolean isRecovering = false;
     private boolean isTexChanging = false;
 
-    private boolean isAttacking = false;
-
     /**
      * Item player is currently equipped with/holding.
      */
@@ -273,11 +271,6 @@ public class MainCharacter extends Peon
      * The GUI health bar for the character.
      */
     private HealthCircle healthBar;
-
-    /**
-     * The GUI PopUp for the character
-     */
-    private GameMenuManager gameMenuManager;
 
     // TODO:dannathan Fix or remove this.
     // /**
@@ -408,8 +401,11 @@ public class MainCharacter extends Peon
      */
     private void setupGameOverScreen() {
         // If the gameMenuManager does not equal null, create the game over screen
-        this.gameMenuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
-        if (this.gameMenuManager != null) {
+        /**
+         * The GUI PopUp for the character
+         */
+        GameMenuManager gameMenuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
+        if (gameMenuManager != null) {
             gameMenuManager.hideOpened();
             gameMenuManager.setPopUp("gameOverTable");
             gameMenuManager.getPopUp("gameOverTable");
@@ -582,14 +578,6 @@ public class MainCharacter extends Peon
                 ((Weapon)equippedItem).getDamage(),
                 1,
                 this.itemSlotSelected == 1 ? (((Weapon)equippedItem).getName().equals("bow") ? 10 : 0) : 0);
-        /*
-        Projectile projectile = new Projectile(mousePosition,
-                ((Weapon)equippedItem).getTexture("attackEntity"),
-                "hitbox",
-            position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
-            position.getRow() + 0.5f + 1.5f * unitDirection.getRow(), ((Weapon) equippedItem).getDamage(),
-            ((Weapon) equippedItem).getAttackRate(), this.itemSlotSelected == 1 ? 1 : 0);
-            */
 
         // Add the projectile entity to the game world.
         GameManager.get().getWorld().addEntity(projectile);
@@ -705,14 +693,6 @@ public class MainCharacter extends Peon
         //changeSwimming(false);
     }
 
-    public boolean isAttacking() {
-        return isAttacking;
-    }
-
-    private void setAttacking(boolean isAttacking) {
-        this.isAttacking = isAttacking;
-    }
-
     public void pickUpInventory(Item item) {
         this.inventories.add(item);
     }
@@ -774,7 +754,6 @@ public class MainCharacter extends Peon
      */
     public void updateHealth() {
         if (this.healthBar != null) {
-            System.out.println("mnmnm");
             this.healthBar.update();
         }
     }
@@ -907,7 +886,6 @@ public class MainCharacter extends Peon
     public void notifyTouchDown(int screenX, int screenY, int pointer, int button) {
         // only allow left clicks to move player
 
-        logger.info(String.valueOf(button));
         if (GameScreen.getIsPaused()) {
             return;
         }
@@ -1338,10 +1316,9 @@ public class MainCharacter extends Peon
      */
     public void addClosestGoldPiece() {
         for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
-            if (entity instanceof GoldPiece) {
-                if (this.getPosition().distance(entity.getPosition()) <= 1) {
-                    this.addGold((GoldPiece) entity, 1);
-                }
+            if (entity instanceof GoldPiece &&
+                this.getPosition().distance(entity.getPosition()) <= 1) {
+                this.addGold((GoldPiece) entity, 1);
             }
         }
     }
@@ -1619,10 +1596,13 @@ public class MainCharacter extends Peon
         switch (gameStage) {
             case 3:
                 unlocked.add(SAFEHOUSE);
+                break;
             case 2:
                 unlocked.add(WATCHTOWER);
+                break;
             case 1:
                 unlocked.add(CABIN);
+                break;
             case 0:
                 unlocked.add(new Hatchet());
                 unlocked.add(new PickAxe());
@@ -1630,6 +1610,7 @@ public class MainCharacter extends Peon
                 unlocked.add(new Bow());
                 unlocked.add(new Spear());
                 unlocked.add(CASTLE);
+                break;
         }
 
         // for portals
@@ -1638,18 +1619,22 @@ public class MainCharacter extends Peon
                 if (constructedBuildings.contains(SAFEHOUSE)) {
                     unlocked.add(new ForestPortal(0, 0, 0));
                 }
+                break;
             case 2:
                 if (constructedBuildings.contains(WATCHTOWER)) {
                     unlocked.add(new MountainPortal(0, 0, 0));
                 }
+                break;
             case 1:
                 if (constructedBuildings.contains(CABIN)) {
                     unlocked.add(new DesertPortal(0, 0, 0));
                 }
+                break;
             case 0:
                 if (constructedBuildings.contains(CASTLE)) {
                     unlocked.add(new ForestPortal(0, 0, 0));
                 }
+                break;
         }
         return unlocked;
 
@@ -1763,8 +1748,10 @@ public class MainCharacter extends Peon
                             break;
                         case "mountainPortal":
                             craftedBuildings.add(MOUNTAINPORTAL);
+                            break;
                         case "volcanoPortal":
                             craftedBuildings.add(VOLCANOPORTAL);
+                            break;
                         default:
                             logger.info("Invalid Item");
                             break;
@@ -1887,29 +1874,28 @@ public class MainCharacter extends Peon
 
         /* Short Animations */
         if(!isOnVehicle) {
-            if (getToBeRun() != null) {
-                if (getToBeRun().getType() == AnimationRole.DEAD) {
-                    setCurrentState(AnimationRole.STILL);
-                } else if (getToBeRun().getType() == AnimationRole.ATTACK) {
-                    return;
-                }
-            }
-
-            if (isDead()) {
-                setCurrentState(AnimationRole.STILL);
-            } else if (isHurt) {
-                setCurrentState(AnimationRole.HURT);
-            } else {
-                if (getVelocity().get(2) == 0f) {
-                    setCurrentState(AnimationRole.NULL);
-                } else {
-                    setCurrentState(AnimationRole.MOVE);
-                }
-            }
-
-        }else{
             if (vehicleType.equals("bike")) {
                 setCurrentState(AnimationRole.VEHICLE_BIKE_MOVE);
+            }
+        }
+
+        if (getToBeRun() != null) {
+            if (getToBeRun().getType() == AnimationRole.DEAD) {
+                setCurrentState(AnimationRole.STILL);
+            } else if (getToBeRun().getType() == AnimationRole.ATTACK) {
+                return;
+            }
+        }
+
+        if (isDead()) {
+            setCurrentState(AnimationRole.STILL);
+        } else if (isHurt) {
+            setCurrentState(AnimationRole.HURT);
+        } else {
+            if (getVelocity().get(2) == 0f) {
+                setCurrentState(AnimationRole.NULL);
+            } else {
+                setCurrentState(AnimationRole.MOVE);
             }
         }
     }
