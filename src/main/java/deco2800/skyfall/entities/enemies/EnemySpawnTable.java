@@ -84,15 +84,17 @@ public class EnemySpawnTable implements TimeObserver {
     }
 
     public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
-            Map<String, List<Class<?>>> biomeToConstructor, Function<EnvironmentManager, Double> probAdjFunc,
-            World world) {
+                           Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
+                           Function<EnvironmentManager, Double> probAdjFunc,
+                           World world) {
 
         this(spawnRadius, maxInRadius, frequency, biomeToConstructor, probAdjFunc, world,
-                GameManager.get().getManager(EnvironmentManager.class));
+             GameManager.get().getManager(EnvironmentManager.class));
     }
 
     public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
-            Map<String, List<Class<?>>> biomeToConstructor, Function<EnvironmentManager, Double> probAdjFunc) {
+                           Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
+                           Function<EnvironmentManager, Double> probAdjFunc) {
 
         this(spawnRadius, maxInRadius, frequency, biomeToConstructor, probAdjFunc, GameManager.get().getWorld());
     }
