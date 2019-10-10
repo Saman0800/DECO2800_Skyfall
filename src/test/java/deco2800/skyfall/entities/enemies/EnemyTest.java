@@ -136,7 +136,7 @@ public class EnemyTest {
     @Test
     public void setAndGetSoundTest() {
         testEnemy.configureSounds();
-        Assert.assertEquals("pick up", testEnemy.getChaseSound());
+        Assert.assertEquals("walk_D", testEnemy.getChaseSound());
         Assert.assertEquals("fist_attack", testEnemy.getAttackSound());
         Assert.assertEquals("died", testEnemy.getDeadSound());
     }
