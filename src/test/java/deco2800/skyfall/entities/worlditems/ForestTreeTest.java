@@ -28,6 +28,7 @@ public class ForestTreeTest {
         Tile testTile = new Tile(null, 0.5f, 0.5f);
 
         testTree = new ForestTree(testTile, false);
+        testTree.onTick(0);
         assertEquals(testTree.getPosition(), new HexVector(0.5f, 0.5f));
         assertEquals(5, testTree.getRenderOrder());
         assertEquals(testTree.getCol(), 0.5f, 0.001f);
@@ -72,6 +73,9 @@ public class ForestTreeTest {
 
         assertEquals(testTree, testTree);
         assertEquals(testTree, testTreeEq);
+
+        MountainTree testRock = new MountainTree(testTile, false);
+        assertNotEquals(testTree, testRock);
     }
 
     @Test

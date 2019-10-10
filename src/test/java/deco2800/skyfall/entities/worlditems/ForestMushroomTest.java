@@ -29,6 +29,7 @@ public class ForestMushroomTest {
     public void basicConstructorTest() {
 
         testMushroom = new ForestMushroom();
+        testMushroom.onTick(0);
         assertEquals(testMushroom.getPosition(), new HexVector(0.0f, 0.0f));
         assertEquals(0, testMushroom.getRenderOrder());
         assertEquals(testMushroom.getCol(), 0.0f, 0.001f);
