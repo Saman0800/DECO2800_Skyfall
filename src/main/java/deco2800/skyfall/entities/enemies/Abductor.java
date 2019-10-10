@@ -6,11 +6,11 @@ package deco2800.skyfall.entities.enemies;
  */
 public class Abductor extends Enemy implements Spawnable {
 
-    public Abductor(float col, float row, float scaling, String biome, String textureName) {
+    public Abductor(float col, float row, float scaling, String biome, EnemyType enemyType) {
         super(col, row, "Abductor", EnemyType.ABDUCTOR,
                 0.06f,  biome, "enemyAbductor");
 
-        this.setName("Abductor");
+        this.setType(EnemyType.ABDUCTOR);
 
         // Assign values, includes default values
         this.setValues(scaling, 100, 1, 1,0.06f,0.06f);
@@ -26,7 +26,7 @@ public class Abductor extends Enemy implements Spawnable {
     public Abductor(float col, float row, float scaling) {
         super(col, row);
 
-        this.setValues(scaling, 100, 1, 1,0.06f,0.04f);
+        this.setValues(scaling, 100, 0, 0,0.14f,0.14f);
     }
 
     @Override
