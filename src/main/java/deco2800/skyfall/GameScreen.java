@@ -458,14 +458,15 @@ public class GameScreen implements Screen, KeyDownObserver {
             logger.info("Show Path is now {}", GameManager.get().showPath);
         }
 
+        //FIXME:jeffvan12 should replace with acutal world saving and loading
         if (keycode == Input.Keys.F3) { // F3
             // Save the world to the DB
-            DatabaseManager.saveWorld(null);
+//            DatabaseManager.saveWorld(null);
         }
 
         if (keycode == Input.Keys.F4) { // F4
             // Load the world to the DB
-            DatabaseManager.loadWorld(null);
+//            DatabaseManager.loadWorld(null);
         }
 
         if (keycode == Input.Keys.P) {
