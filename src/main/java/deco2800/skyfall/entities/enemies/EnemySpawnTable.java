@@ -151,8 +151,6 @@ public class EnemySpawnTable implements TimeObserver {
 
     /**
      * Returns how many enemies are with close proximity of another enemy.
-     * 
-     * @param targetEnemy The enemy that we are making the count for.
      */
     public int enemiesNearTargetCount(float x, float y) {
         return enemiesInTarget(x, y, 50).size();

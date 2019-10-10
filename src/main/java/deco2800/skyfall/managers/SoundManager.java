@@ -18,12 +18,16 @@ public class SoundManager extends AbstractManager {
     /* Initialize a map to store all looped sound effects */
     private static Map<String, Sound> soundLoops = new HashMap<>();
 
+    /* Initialize a map to store all music */
     private static Map<String, Music> musicMap = new HashMap<>();
 
+    /* String containing the current music playing */
     private static String playing;
 
+    /* Class logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(SoundManager.class);
 
+    /* Boolean to state whether the sound manager is paused or not */
     private static boolean paused = false;
 
     /**
