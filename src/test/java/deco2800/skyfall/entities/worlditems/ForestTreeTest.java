@@ -81,8 +81,14 @@ public class ForestTreeTest {
 
         testTree = new ForestTree(testTile, false);
         ForestTree testTreeEq = new ForestTree(testTile, false);
+        ForestTree testTreeNeq1 = new ForestTree(testTile, true);
+        ForestTree testTreeNeq2 = new ForestTree(testTile, false);
+        testTreeNeq2.setHeight(-12);
 
         assertEquals(testTree.hashCode(), testTreeEq.hashCode());
+        assertNotEquals(testTree.hashCode(), testTreeNeq1.hashCode());
+        assertNotEquals(testTree.hashCode(), testTreeNeq2.hashCode());
+        assertNotEquals(testTree.hashCode(), null);
     }
 
     @Test

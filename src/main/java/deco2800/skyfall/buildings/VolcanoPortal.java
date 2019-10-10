@@ -85,27 +85,6 @@ public class VolcanoPortal extends AbstractPortal implements Blueprint {
     }
 
     /**
-     * a getter method to check if a player has learned the blueprint
-     *
-     * @return true if the player has learned the blueprint, false otherwise
-     */
-    public boolean isBlueprintLearned() {
-        return blueprintLearned;
-    }
-
-    /**
-     * changes the boolean blueprintLearned to true.
-     */
-    public void toggleBlueprintLearned() {
-        if (blueprintLearned == true) {
-            blueprintLearned = false;
-        } else {
-            blueprintLearned = true;
-        }
-
-    }
-
-    /**
      * @return - cost of building the building
      */
     public int getCost() {

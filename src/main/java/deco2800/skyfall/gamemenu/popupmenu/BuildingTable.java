@@ -103,15 +103,12 @@ public class BuildingTable extends AbstractPopUpElement {
         itemInfo = new Table();
         blueprint.add(itemInfo);
 
-        // Right hand side of the table (list of blueprints)
+        // Right hand side of the table (list of blueprints
         Table items = new Table();
-        Label number = new Label("1/12", skin, "black-label");
-        items.add(number).padTop(10).colspan(4);
+        // Label number = new Label("1/12", skin, "black-label");
+        // items.add(number).padTop(10).colspan(4);
         items.row();
 
-        // testing
-        gameMenuManager.getMainCharacter().addBlueprint(new Hatchet());
-        gameMenuManager.getMainCharacter().addBlueprint(new PickAxe());
 
         List<Blueprint> blueprintsLearned = gameMenuManager.getMainCharacter().getBlueprintsLearned();
         // Generating items in getBlueprintsLearned
@@ -126,7 +123,7 @@ public class BuildingTable extends AbstractPopUpElement {
                     icon.addListener(new ClickListener() {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
-                            number.setText(String.valueOf(blueprintsLearned.indexOf(item) + 1) + "/12");
+                            // number.setText((blueprintsLearned.indexOf(item) + 1) + "/12");
                             showInfo(itemInfo, item);
                             selectedItem = item;
                         }

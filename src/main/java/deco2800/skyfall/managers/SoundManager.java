@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class SoundManager extends AbstractManager {
 
     /* Initialize a map to store all sound effects */
@@ -26,6 +25,7 @@ public class SoundManager extends AbstractManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(SoundManager.class);
 
     private static boolean paused = false;
+
     /**
      * Initialize SoundManager by adding different sounds in a map
      */
@@ -161,17 +161,18 @@ public class SoundManager extends AbstractManager {
             musicMap.put("volcanic_mountains_night", Gdx.audio.newMusic
                     (Gdx.files.internal(PATH + "volcanic_mountains_night.mp3")));
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             LOGGER.error("no song be found");
         }
     }
 
     /**
-     * Check whether this sound is stored in the map
+     * Check whether this sound is sored in the map
+     *
      * @param soundName Name/Key of the sound in the soundMap.
      * @return true if it does, otherwise, false.
      */
-    public boolean soundInMap(String soundName){
+    public boolean soundInMap(String soundName) {
         return soundMap.containsKey(soundName);
     }
 
@@ -180,8 +181,8 @@ public class SoundManager extends AbstractManager {
     }
 
     /**
-     * Plays a given sound if it exists in the HashMap.
-     * Returns true if sound is played.
+     * Plays a given sound if it exists in the HashMap. Returns true if sound is
+     * played.
      *
      * @param soundName Sound identifier/key
      * @return true if sound is played
@@ -198,7 +199,7 @@ public class SoundManager extends AbstractManager {
                 playing = soundName;
                 return true;
             } else {
-                LOGGER.info("There does not exist a {} sound", soundName);
+                // LOGGER.info("There does not exist a {} sound", soundName);
                 return false;
             }
         }
@@ -206,17 +207,17 @@ public class SoundManager extends AbstractManager {
     }
 
     /**
-     * Loops a given sound if it exists in soundMap.
-     * Returns true if sound is looped.
+     * Loops a given sound if it exists in soundMap. Returns true if sound is
+     * looped.
      *
      * @param soundName Sound identifier/key
      */
-    public static void loopSound(String soundName){
+    public static void loopSound(String soundName) {
         if (!paused) {
             if (soundMap.containsKey(soundName)) {
                 Sound sound = soundMap.get(soundName);
                 sound.loop(1);
-                //Add to the sounds which are being looped
+                // Add to the sounds which are being looped
                 soundLoops.put(soundName, soundMap.get(soundName));
             } else if (musicMap.containsKey(soundName)) {
                 Music music = musicMap.get(soundName);
@@ -224,13 +225,14 @@ public class SoundManager extends AbstractManager {
                 playing = soundName;
                 music.setLooping(true);
             } else {
-                LOGGER.info("There does not exist a {} sound", soundName);
+                // LOGGER.info("There does not exist a {} sound", soundName);
             }
         }
     }
 
     /**
      * Stop the sound.
+     *
      * @param soundName Sound identifier/key
      * @return true if the sound was successfully stopped, false otherwise
      */
@@ -246,7 +248,7 @@ public class SoundManager extends AbstractManager {
             music.stop();
             return true;
         } else {
-            LOGGER.info("There does not exist a {} sound", soundName);
+            // LOGGER.info("There does not exist a {} sound", soundName);
             return false;
         }
     }
@@ -259,7 +261,7 @@ public class SoundManager extends AbstractManager {
      */
     public static boolean pauseSound(String soundName) {
         if (soundLoops.containsKey(soundName)) {
-            //Access the originally placed sound
+            // Access the originally placed sound
             Sound sound = soundMap.get(soundName);
             sound.pause();
             return true;
@@ -268,7 +270,7 @@ public class SoundManager extends AbstractManager {
             music.pause();
             return true;
         } else {
-            LOGGER.info("There does not exist a {} sound", soundName);
+            // LOGGER.info("There does not exist a {} sound", soundName);
             return false;
         }
     }
@@ -282,7 +284,7 @@ public class SoundManager extends AbstractManager {
     public static boolean resumeSound(String soundName) {
         if (!paused) {
             if (soundLoops.containsKey(soundName)) {
-                //Access the originally placed sound
+                // Access the originally placed sound
                 Sound sound = soundMap.get(soundName);
                 sound.resume();
                 return true;
@@ -291,7 +293,7 @@ public class SoundManager extends AbstractManager {
                 music.play();
                 return true;
             } else {
-                LOGGER.info("There does not exist a {} sound", soundName);
+                // LOGGER.info("There does not exist a {} sound", soundName);
                 return false;
             }
         }
@@ -300,10 +302,11 @@ public class SoundManager extends AbstractManager {
 
     /**
      * Check whether the sound is in the loop
+     *
      * @param soundName name of the sound in soundMap.
      * @return true if it does, otherwise return false.
      */
-    public boolean checkLoop(String soundName){
+    public boolean checkLoop(String soundName) {
         return soundMap.containsKey(soundName)
                 || musicMap.containsKey(soundName);
     }
@@ -311,7 +314,7 @@ public class SoundManager extends AbstractManager {
     /**
      * Return the selected sound for corresponding action
      */
-    public Sound getTheSound(String soundName){
+    public Sound getTheSound(String soundName) {
         return soundMap.get(soundName);
     }
 
@@ -321,6 +324,7 @@ public class SoundManager extends AbstractManager {
 
     /**
      * Returns the map of sounds
+     *
      * @return soundMap<Sound, String>
      */
     public Map<String, Sound> getSoundMap() {

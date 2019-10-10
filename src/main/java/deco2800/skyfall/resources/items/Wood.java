@@ -19,6 +19,12 @@ public class Wood extends NaturalResources implements Item {
         this.name = "Wood";
         this.colour = "brown";
         this.biome = "Forest";
+        description = "This item can be found in the forest biome\n" +
+                "and can be used to create a pickaxe and start a fire.";
+    }
+
+    public String getColour() {
+        return colour;
     }
 
     /**
@@ -30,20 +36,4 @@ public class Wood extends NaturalResources implements Item {
         return "This item can be found in the forest biome " + "\n" +
                 "and can be used to create a pickaxe and start a fire.";
     }
-
-
-    /**
-     * Returns the colour of the wood
-     * @return the colour of the wood
-     */
-    public String getColour(){
-        return colour;
-    }
-
-
-    @Override
-    public void use(HexVector position){
-
-    }
-
 }

@@ -67,7 +67,7 @@ public class StaticEntityTest {
         PowerMockito.when(DatabaseManager.get()).thenReturn(manager);
 
         WorldBuilder worldBuilder = new WorldBuilder();
-        WorldDirector.constructTestWorld(worldBuilder);
+        WorldDirector.constructTestWorld(worldBuilder, 0);
         w = worldBuilder.getWorld();
 
         mockGM = mock(GameManager.class);

@@ -481,29 +481,6 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
         return null;
     }
 
-    /**
-     * Returns the number of metal required for the item.
-     *
-     * @return The name of the item
-     */
-    //@Override
-    public boolean isBlueprintLearned() {
-        //do nothing
-        return true;
-    }
-
-    /**
-     * Returns the number of metal required for the item.
-     *
-     * @return The name of the item
-     */
-    //@Override
-    public void toggleBlueprintLearned() {
-        //do nothing
-    }
-
-
-
     public void cabinInteract() {
         //Resting at the cabin restores a players health.
         MainCharacter player = GameManager.getManagerFromInstance(GameMenuManager.class).getMainCharacter();

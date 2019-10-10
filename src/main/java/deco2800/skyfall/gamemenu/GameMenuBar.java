@@ -178,10 +178,10 @@ public class GameMenuBar extends AbstractUIElement {
             String weaponName = entry.getKey();
             for (String weapon : weapons) {
                 if (weapon.equals(entry.getKey())) {
-                    weaponName = entry.getKey() + "_display";
+                    weaponName = entry.getKey() + "_";
                 }
             }
-            ImageButton icon = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(weaponName + "_inv"));
+            ImageButton icon = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(weaponName + "inv"));
             icon.setSize(size, size);
             icon.setPosition((xpos*count) + size*(count-1), ypos);
 

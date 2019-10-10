@@ -12,8 +12,6 @@ public class Stone extends NaturalResources implements Item {
     // the colour of the stone
     private String colour;
 
-
-
     /**
      * Creates a default stone item
      */
@@ -21,6 +19,8 @@ public class Stone extends NaturalResources implements Item {
         this.name = "Stone";
         this.colour = "white";
         this.biome = "Forest";
+        description = "This resource can be found in the forest and mountain\n"
+                + "biomes and can be used to build a Pickaxe.";
     }
 
 
@@ -31,24 +31,4 @@ public class Stone extends NaturalResources implements Item {
     public String getColour(){
         return colour;
     }
-
-
-
-    /**
-     * Returns the item description
-     * @return the item description
-     */
-    @Override
-    public String getDescription() {
-        return "This resource can be found in the forest and mountain" + "\n" +
-                " biomes and can be used to build a Pickaxe.";
-    }
-
-
-
-    @Override
-    public void use(HexVector position){
-
-    }
-
 }

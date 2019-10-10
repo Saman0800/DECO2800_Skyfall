@@ -5,14 +5,14 @@ package deco2800.skyfall.entities.enemies;
  */
 public class Heavy extends Enemy implements Spawnable {
 
-    public Heavy(float col, float row, float scaling, String biome, String textureName) {
+    public Heavy(float col, float row, float scaling, String biome, EnemyType enemyType) {
         super(col, row, "Heavy", EnemyType.HEAVY,
                 0.06f,  biome, "enemyHeavy");
 
-        this.setName("Heavy");
+        this.setType(EnemyType.HEAVY);
 
         // Assign values, includes default values
-        this.setValues(scaling, 10, 5, 2,0.06f,0.03f);
+        this.setValues(scaling, 100, 5, 2,0.06f,0.07f);
     }
 
     /**
@@ -25,12 +25,12 @@ public class Heavy extends Enemy implements Spawnable {
     public Heavy(float col, float row, float scaling) {
         super(col, row);
 
-        this.setValues(scaling, 100, 1, 1,0.06f,0.04f);
+        this.setValues(scaling, 100, 15, 1,0.08f,0.1f);
     }
 
     @Override
     public Enemy newInstance(float row, float col) {
-        return new Heavy(col, row, getScale(), getBiome(), getTexture());
+        return new Heavy(col, row, getScale(), getBiome(), EnemyType.HEAVY);
     }
 
     /**

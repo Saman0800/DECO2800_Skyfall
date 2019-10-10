@@ -12,16 +12,16 @@ public class Scout extends Enemy implements Spawnable  {
      * @param row the y-coordinate of the enemy.
      * @param scaling the factor the enemy's stat is scale in this enemy.
      * @param biome the biome this enemy is in.
-     * @param textureName the name of the texture of the enemy.
+     * @param enemyType the name of the texture of the enemy.
      */
-    public Scout(float col, float row, float scaling, String biome, String textureName) {
+    public Scout(float col, float row, float scaling, String biome, EnemyType enemyType) {
         super(col, row, "Scout", EnemyType.SCOUT,
                 0.06f,  biome, "enemyScout");
 
-        this.setName("Scout");
+        this.setType(EnemyType.SCOUT);
 
         // Assign values, includes default values
-        this.setValues(scaling, 3, 2, 1,0.06f,0.08f);
+        this.setValues(scaling, 100, 10, 3,0.08f,0.09f);
     }
 
     /**
@@ -39,6 +39,6 @@ public class Scout extends Enemy implements Spawnable  {
 
     @Override
     public Scout newInstance(float row, float col) {
-        return new Scout(col, row, this.getScale(), this.getBiome(), this.getTexture());
+        return new Scout(col, row, this.getScale(), this.getBiome(), EnemyType.SCOUT);
     }
 }
