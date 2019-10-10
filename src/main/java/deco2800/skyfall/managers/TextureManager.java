@@ -217,7 +217,7 @@ public class TextureManager extends AbstractManager {
                 }
             }
 
-            textureMap.put("sword", new Texture("resources/weapons/sword.png"));
+
 
             //environment things
             textureMap.put("shipwrecks", new Texture("resources/world_details/shipwrecks.png"));
@@ -229,9 +229,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("axe_tex", new Texture("resources/weapons/axe.png"));
             textureMap.put("bow_tex", new Texture("resources/weapons/bow.png"));
             textureMap.put("spear_tex", new Texture("resources/weapons/spear.png"));
-
-            textureMap.put("bow", new Texture("resources/weapons/bow.png"));
-            textureMap.put("spear", new Texture("resources/weapons/spear.png"));
+            textureMap.put("sword_tex", new Texture("resources/weapons/sword" +
+                    ".png"));
 
             // Weapons attack
             textureMap.put("sword_attack", new Texture("resources/weapons" +
@@ -242,17 +241,6 @@ public class TextureManager extends AbstractManager {
                     "/ArrowEast.png"));
             textureMap.put("spear_attack", new Texture("resources/weapons" +
                     "/spear.png"));
-
-            // Weapons display
-            textureMap.put("sword_display_inv", new Texture("resources" +
-                    "/weapons" +
-                    "/RustySword.png"));
-            textureMap.put("axe_display_inv", new Texture("resources/weapons" +
-                    "/axe.png"));
-            textureMap.put("bow_display_inv", new Texture("resources/weapons" +
-                    "/bow2.png"));
-            textureMap.put("spear_display_inv", new Texture("resources/weapons" +
-                    "/spear2.png"));
 
             textureMap.put("pop up screen", new Texture("resources/pop_up_screen_background.png"));
             textureMap.put("game menu bar", new Texture("resources/pop_up_screen_title_background.png"));
