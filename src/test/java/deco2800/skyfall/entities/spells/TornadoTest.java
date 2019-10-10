@@ -1,6 +1,6 @@
 package deco2800.skyfall.entities.spells;
 
-import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
@@ -19,17 +19,16 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ GameManager.class, AbstractEntity.class })
 public class TornadoTest {
 
-    Tornado tornado;
+    private Tornado tornado;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         GameMenuManager gmm = mock(GameMenuManager.class);
         when(gmm.getMainCharacter()).thenReturn(null);
 
@@ -60,7 +59,6 @@ public class TornadoTest {
 
     @Test
     public void testOnTick() {
-
         //Test the inside branch.
 
         GameManager gm = GameManager.get();
@@ -69,7 +67,7 @@ public class TornadoTest {
         gm.setWorld(world);
 
         //Add a new list with mock enemy.
-        List list = new LinkedList<AbstractEntity>();
+        List<AbstractEntity> list = new LinkedList<>();
         list.add(enemy);
 
         //Make gm and world return mocked objects.

@@ -103,7 +103,7 @@ public class MainCharacterTest {
         inventoryManager = GameManager.get().getManagerFromInstance(InventoryManager.class);
 
         WorldBuilder builder = new WorldBuilder();
-        WorldDirector.constructTestWorld(builder);
+        WorldDirector.constructTestWorld(builder, 0);
         w = builder.getWorld();
 
         mockGM = mock(GameManager.class);
@@ -124,12 +124,21 @@ public class MainCharacterTest {
         // testCharacter = null;
     }
 
-
-    @Test
     /**
      * Test getters and setters from Peon super Character class
      */
+    @Test
     public void setterGetterTest() {
+        testCharacter.setTexChanging(true);
+        Assert.assertTrue(testCharacter.isTexChanging());
+        testCharacter.setHurt(true);
+        Assert.assertTrue(testCharacter.isHurt());
+        testCharacter.setHurt(true);
+        Assert.assertTrue(testCharacter.isHurt());
+
+        testCharacter.changeTexture("mainCharacter");
+        assertEquals("mainCharacter", testCharacter.getTexture());
+
         Assert.assertEquals(testCharacter.getName(),
         "Main Piece"); testCharacter.setName("Side Piece");
         Assert.assertEquals(testCharacter.getName(), "Side Piece");
@@ -150,15 +159,6 @@ public class MainCharacterTest {
         testCharacter.changeHealth(-20);
         Assert.assertEquals(testCharacter.getHealth(), 0);
         Assert.assertEquals(testCharacter.getDeaths(), 2);
-
-        testCharacter.setTexChanging(true);
-        assertTrue(testCharacter.isTexChanging());
-        testCharacter.setHurt(true);
-        assertTrue(testCharacter.isHurt());
-
-        testCharacter.changeTexture("mainCharacter");
-        assertEquals("mainCharacter", testCharacter.getTexture());
-
     }
 
     /**
@@ -263,7 +263,7 @@ public class MainCharacterTest {
         testCharacter.playerHurt(3);
         Assert.assertTrue(testCharacter.isHurt());
         // Health decreases
-        Assert.assertEquals(4, testCharacter.getHealth());
+        Assert.assertEquals(7, testCharacter.getHealth());
         // set current animation to hurt
         Assert.assertEquals(AnimationRole.HURT, testCharacter.getCurrentState());
         // set hurt time and recover time to 0.
@@ -322,8 +322,8 @@ public class MainCharacterTest {
         Assert.assertEquals(AnimationRole.DEAD, testCharacter.getCurrentState());
         // reset dead time to 0.
         Assert.assertEquals(0, testCharacter.getDeadTime());
-        // main character's number of death increases from 1(from setterGetterTest) to 2.
-        Assert.assertEquals(2, testCharacter.getDeaths());
+        // main character's number of death increased by 1.
+        Assert.assertEquals(1, testCharacter.getDeaths());
     }
 
     /**
@@ -334,8 +334,8 @@ public class MainCharacterTest {
     public void updateAnimationTest() {
 
         // test hurt animation state
-        testCharacter.setHurt(true);
-        testCharacter.updateAnimation();
+        testCharacter.playerHurt(2);
+        // testCharacter.updateAnimation();
         assertEquals(AnimationRole.HURT, testCharacter.getCurrentState());
         testCharacter.setHurt(false);
     }
