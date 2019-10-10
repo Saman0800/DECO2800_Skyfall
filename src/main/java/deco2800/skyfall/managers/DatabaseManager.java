@@ -1,32 +1,6 @@
 package deco2800.skyfall.managers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.AgentEntity;
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.StaticEntity;
-import deco2800.skyfall.entities.worlditems.ForestRock;
 import deco2800.skyfall.managers.database.DataBaseConnector;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.world.World;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.nio.charset.Charset;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class DatabaseManager extends AbstractManager {
 
@@ -46,7 +20,7 @@ public final class DatabaseManager extends AbstractManager {
 
     /**
      * Gets the current DatabaseManger, and if it does exist create it and return it
-     * 
+     *
      * @return A DataBaseManager
      */
     public static DatabaseManager get() {
@@ -60,9 +34,9 @@ public final class DatabaseManager extends AbstractManager {
     /**
      * Creates and starts and new DataBaseConnector
      */
-    public void startDataBaseConnector() {
+    public static void startDataBaseConnector() {
         dataBaseConnector = new DataBaseConnector();
-         dataBaseConnector.start("Database");
+        dataBaseConnector.start("Database");
     }
 
     /**
@@ -74,7 +48,7 @@ public final class DatabaseManager extends AbstractManager {
 
     /**
      * Gets the Database connector
-     * 
+     *
      * @return The database connector
      */
     public DataBaseConnector getDataBaseConnector() {
