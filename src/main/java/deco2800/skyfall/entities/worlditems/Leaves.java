@@ -9,20 +9,29 @@ public class Leaves extends StaticEntity {
 
     public Leaves(SaveableEntityMemento memento) {
         super(memento);
+        setupParams();
     }
 
     public Leaves() {
-        this.setObjectName(ENTITY_ID_STRING);
+        super();
+        setupParams();
+
+        this.setTexture("leaves1");
     }
 
     public Leaves(Tile tile, boolean obstructed) {
         super(tile, 2, "leaves1", obstructed);
-        this.setObjectName(ENTITY_ID_STRING);
-        this.entityType = "Leaves";
+        setupParams();
     }
 
     public Leaves(Tile tile) {
         this(tile, false);
+        setupParams();
+    }
+
+    private void setupParams() {
+        this.setObjectName(ENTITY_ID_STRING);
+        this.entityType = "Leaves";
     }
 
     @Override

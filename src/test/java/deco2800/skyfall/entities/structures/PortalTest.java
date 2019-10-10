@@ -1,25 +1,27 @@
 package deco2800.skyfall.entities.structures;
 
-import deco2800.skyfall.buildings.*;
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.worlds.world.World;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.mockito.Mockito.mock;
+
+import java.util.ArrayList;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.ArrayList;
-
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertNotEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import deco2800.skyfall.buildings.AbstractPortal;
+import deco2800.skyfall.buildings.DesertPortal;
+import deco2800.skyfall.buildings.ForestPortal;
+import deco2800.skyfall.buildings.MountainPortal;
+import deco2800.skyfall.buildings.VolcanoPortal;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.worlds.world.World;
 
 public class PortalTest {
 
     public World world;
-
 
     @Before
     public void setup() {
@@ -30,7 +32,7 @@ public class PortalTest {
 
     @Test
     public void initialiselockedBiomes() {
-        MainCharacter character = new MainCharacter(1,1,1, "character", 10);
+        MainCharacter character = new MainCharacter(1, 1, 1, "character", 10);
         ArrayList<String> lockedBiomes = new ArrayList<>();
 
         lockedBiomes.add("desert");
@@ -43,7 +45,7 @@ public class PortalTest {
 
     @Test
     public void unlockBiome() {
-        MainCharacter character = new MainCharacter(1,1,1, "character", 10);
+        MainCharacter character = new MainCharacter(1, 1, 1, "character", 10);
         ArrayList<String> lockedBiomes = new ArrayList<>();
 
         lockedBiomes.add("mountain");
@@ -56,19 +58,18 @@ public class PortalTest {
 
     }
 
-
-    @Test @Ignore
+    @Test
+    @Ignore
     public void unlockDesert() {
-        MainCharacter character = new MainCharacter(1,1,1, "character", 10);
+        MainCharacter character = new MainCharacter(1, 1, 1, "character", 10);
         ArrayList<String> lockedBiomes = new ArrayList<>();
-
 
         lockedBiomes.add("mountain");
         lockedBiomes.add("volcanic_mountain");
 
         assertNotEquals(lockedBiomes, character.getlockedBiomes());
 
-        ForestPortal portal = new ForestPortal(2,2,1);
+        ForestPortal portal = new ForestPortal(2, 2, 1);
         portal.teleport(character, world);
 
         assertEquals(lockedBiomes, character.getlockedBiomes());
@@ -76,16 +77,17 @@ public class PortalTest {
     }
 
     // ignored because not working
-    @Test @Ignore
+    @Test
+    @Ignore
     public void unlockMountainPortal() {
-        MainCharacter character2 = new MainCharacter(1,1,1, "character", 10);
+        MainCharacter character2 = new MainCharacter(1, 1, 1, "character", 10);
         ArrayList<String> lockedBiomes = new ArrayList<>();
 
         lockedBiomes.add("volcanic_mountain");
 
         assertNotEquals(lockedBiomes, character2.getlockedBiomes());
 
-        DesertPortal portal = new DesertPortal(2,2,1);
+        DesertPortal portal = new DesertPortal(2, 2, 1);
         portal.teleport(character2, world);
 
         assertEquals(lockedBiomes, character2.getlockedBiomes());
@@ -93,14 +95,15 @@ public class PortalTest {
     }
 
     // ignored because not working
-    @Test @Ignore
+    @Test
+    @Ignore
     public void unlockVolcanoPortal() {
-        MainCharacter character3 = new MainCharacter(1,1,1, "character", 10);
+        MainCharacter character3 = new MainCharacter(1, 1, 1, "character", 10);
         ArrayList<String> lockedBiomes = new ArrayList<>();
 
         assertNotEquals(lockedBiomes, character3.getlockedBiomes());
 
-        MountainPortal portal = new MountainPortal(2,2,1);
+        MountainPortal portal = new MountainPortal(2, 2, 1);
         portal.teleport(character3, world);
 
         assertEquals(lockedBiomes, character3.getlockedBiomes());
@@ -110,7 +113,7 @@ public class PortalTest {
     @Test
     public void testForestPortal() {
 
-        AbstractPortal portal = new ForestPortal(1,1,1);
+        AbstractPortal portal = new ForestPortal(1, 1, 1);
         assertEquals("desert", portal.nextBiome);
 
     }
@@ -118,7 +121,7 @@ public class PortalTest {
     @Test
     public void testDesertPortal() {
 
-        AbstractPortal portal = new DesertPortal(1,1,1);
+        AbstractPortal portal = new DesertPortal(1, 1, 1);
         assertEquals("mountain", portal.nextBiome);
 
     }
@@ -126,7 +129,7 @@ public class PortalTest {
     @Test
     public void testMountainPortal() {
 
-        AbstractPortal portal = new MountainPortal(1,1,1);
+        AbstractPortal portal = new MountainPortal(1, 1, 1);
         assertEquals("volcanic_mountain", portal.nextBiome);
 
     }
@@ -134,43 +137,38 @@ public class PortalTest {
     @Test
     public void testVolcanoPortal() {
 
-        AbstractPortal portal = new VolcanoPortal(1,1,1);
+        AbstractPortal portal = new VolcanoPortal(1, 1, 1);
         assertEquals("volcanic_mountain", portal.nextBiome);
 
     }
 
-
-
     @Test
     public void testTeleportation() {
-        MainCharacter character = new MainCharacter(1,1,1, "character", 10);
+        MainCharacter character = new MainCharacter(1, 1, 1, "character", 10);
 
-        ForestPortal portal = new ForestPortal(2,2,1);
+        ForestPortal portal = new ForestPortal(2, 2, 1);
         portal.teleport(character, world);
 
-        assertNotEquals(1,character.getCol());
+        assertNotEquals(1, character.getCol());
         assertNotEquals(1, character.getRow());
 
         // Will implement this when portal placement is working
 
-        //WorldBuilder builder = Mockito.mock(WorldBuilder.class);
-        //WorldDirector.constructNBiomeSinglePlayerWorld(builder, 3, false);
-        //verify(builder).setType("single_player");
-        //verify(builder).setWorldSize(100);
-        //verify(builder).setNodeSpacing(20);
+        // WorldBuilder builder = Mockito.mock(WorldBuilder.class);
+        // WorldDirector.constructNBiomeSinglePlayerWorld(builder, 3, false);
+        // verify(builder).setType("single_player");
+        // verify(builder).setWorldSize(100);
+        // verify(builder).setNodeSpacing(20);
 
-        //Tile characterTile1= character.getTile(character.getCol(),character.getRow());
-        //assertEquals("desert", characterTile1.getBiome().getBiomeName());
+        // Tile characterTile1=
+        // character.getTile(character.getCol(),character.getRow());
+        // assertEquals("desert", characterTile1.getBiome().getBiomeName());
 
+        // Tile characterTile2=
+        // character.getTile(character.getCol(),character.getRow());
 
-
-        //Tile characterTile2= character.getTile(character.getCol(),character.getRow());
-
-        //assertEquals("desert", characterTile2.getBiome().getBiomeName());
+        // assertEquals("desert", characterTile2.getBiome().getBiomeName());
 
     }
-
-
-
 
 }
