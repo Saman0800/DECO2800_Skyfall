@@ -96,12 +96,6 @@ public class WorldBuilderTest {
         assertEquals(1, enemyEntities);
     }
 
-    @Test
-    public void TestServerWorld() {
-        builder.setType("server");
-        World world = builder.getWorld();
-        assertTrue(world instanceof ServerWorld);
-    }
 
     @Test
     public void TestTutorialWorld() {
@@ -110,12 +104,5 @@ public class WorldBuilderTest {
         assertTrue(world instanceof TutorialWorld);
     }
 
-    @Test
-    public void TestTestWorld(){
-        builder.setType("test");
-        try {
-            builder.getWorld();
-            fail();
-        } catch (UnsupportedOperationException ignored) {}
-    }
+
 }
