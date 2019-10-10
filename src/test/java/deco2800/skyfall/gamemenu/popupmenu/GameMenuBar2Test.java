@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import deco2800.skyfall.BaseGDXTest;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.weapons.EmptyItem;
 import deco2800.skyfall.gamemenu.GameMenuBar2;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InventoryManager;
@@ -51,7 +52,7 @@ public class GameMenuBar2Test extends BaseGDXTest {
     @Test
     public void setEquippedTest() {
         // Empty when game starts
-        assertEquals("", gameMenuBar2.getEquipped());
+        assertEquals(new EmptyItem().getName(), gameMenuBar2.getEquipped());
         gameMenuBar2.setEquipped("pick axe");
         assertEquals("pick axe", gameMenuBar2.getEquipped());
     }
