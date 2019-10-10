@@ -3,6 +3,7 @@ package deco2800.skyfall.entities.enemies;
 import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.EnvironmentManager;
@@ -42,7 +43,7 @@ public class EnemySpawnTable implements TimeObserver {
      * string of the biome name and the values a list of all the classes to be
      * spawned within the corresponding biome.
      */
-    private Map<String, List<Class<? extends Enemy>>> biomeToConstructor;
+    private Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor;
 
     /**
      * A reference to the environment manager to make queries to.
@@ -61,14 +62,14 @@ public class EnemySpawnTable implements TimeObserver {
     MainCharacter mainCharacter = MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
 
     public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
-            Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
+            Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor,
             Function<EnvironmentManager, Double> probAdjFunc) {
 
         this(spawnRadius, maxInRadius, frequency, biomeToConstructor, probAdjFunc, GameManager.get().getWorld());
     }
 
     public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
-            Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
+            Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor,
             Function<EnvironmentManager, Double> probAdjFunc, World world) {
 
         this.spawnRadius = spawnRadius;
@@ -84,8 +85,8 @@ public class EnemySpawnTable implements TimeObserver {
      */
     public List<Enemy> getAllEnemies() {
 
-        return world.getSortedAgentEntities().stream().filter(Enemy.class::isInstance)
-                .map(Enemy.class::cast).collect(Collectors.toList());
+        return world.getSortedAgentEntities().stream().filter(Enemy.class::isInstance).map(Enemy.class::cast)
+                .collect(Collectors.toList());
 
     }
 
@@ -117,8 +118,7 @@ public class EnemySpawnTable implements TimeObserver {
      */
     public List<Enemy> enemiesInTarget(float x, float y, float radius) {
 
-        return getAllEnemies().stream().filter(enemy -> inRange(enemy, x, y, radius))
-                .collect(Collectors.toList());
+        return getAllEnemies().stream().filter(enemy -> inRange(enemy, x, y, radius)).collect(Collectors.toList());
 
     }
 
@@ -192,12 +192,12 @@ public class EnemySpawnTable implements TimeObserver {
             // Check if the tile is in sight of the player
             float[] tileWorldCord = WorldUtil.colRowToWorldCords(nextTile.getCol(), nextTile.getRow());
 
-           // if (!WorldUtil.areCoordinatesOffScreen(tileWorldCord[0], tileWorldCord[1], GameManager.get().getCamera())) {
-           //     continue;
-           // }
+            if (!WorldUtil.areCoordinatesOffScreen(tileWorldCord[0], tileWorldCord[1], GameManager.get().getCamera())) {
+                continue;
+            }
 
             // Create an enemy using one of the appropriate constructors
-            List<Class<? extends Enemy>> possibleConstructors = biomeToConstructor
+            List<Function<HexVector, ? extends Enemy>> possibleConstructors = biomeToConstructor
                     .get(nextTile.getBiome().getBiomeName());
 
             if (possibleConstructors.size() == 0) {
@@ -213,19 +213,12 @@ public class EnemySpawnTable implements TimeObserver {
             spawnChance = Math.pow(spawnChance, Math.log(enemiesNearTargetCount(nextTile.getRow(), nextTile.getCol())));
 
             // Pick a class, any class!
-            Class<? extends Enemy> randEnemyType = possibleConstructors
+            Function<HexVector, ? extends Enemy> randEnemyType = possibleConstructors
                     .get(rand.nextInt(possibleConstructors.size()));
 
-            Enemy newEnemy;
-
-            try {
-                newEnemy = randEnemyType.getDeclaredConstructor(Float.class, Float.class).newInstance(nextTile.getRow(),
-                        nextTile.getCol());
-                world.addEntity(newEnemy);
-                enemiesPlaced += 1;
-            } catch (Exception E) {
-                System.err.println("Could not create new Enemy: " + E.getMessage());
-            }
+            Enemy newEnemy = randEnemyType.apply(new HexVector(nextTile.getRow(), nextTile.getCol()));
+            world.addEntity(newEnemy);
+            enemiesPlaced += 1;
         }
     }
 }
