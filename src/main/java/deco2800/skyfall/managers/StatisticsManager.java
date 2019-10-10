@@ -1,7 +1,7 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.*;
-import deco2800.skyfall.entities.enemies.AbstractEnemy;
+import deco2800.skyfall.entities.enemies.Enemy;
 
 import java.util.*;
 
@@ -11,7 +11,7 @@ public class StatisticsManager  extends TickableManager {
     private MainCharacter character;
 
     // Map recording kills of different enemies
-    private Map<AbstractEnemy, Integer> kills;
+    private Map<Enemy, Integer> kills;
 
     // Amount of experience the character has from doing various things in
     // the game, when character gets enough experience they'll level up
@@ -141,7 +141,7 @@ public class StatisticsManager  extends TickableManager {
      * @param enemy enemy being queried
      * @return number of killed enemy
      */
-    public int getAmountKilled(AbstractEnemy enemy) {
+    public int getAmountKilled(Enemy enemy) {
         return kills.get(enemy);
     }
 
@@ -149,7 +149,7 @@ public class StatisticsManager  extends TickableManager {
      * Add a killed enemy to the map
      * @param enemy enemy being recorded
      */
-    public void recordKill(AbstractEnemy enemy) {
+    public void recordKill(Enemy enemy) {
         if (!kills.containsKey(enemy)) {
             kills.put(enemy, 1);
         } else {

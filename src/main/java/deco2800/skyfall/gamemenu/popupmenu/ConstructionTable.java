@@ -165,7 +165,7 @@ public class ConstructionTable extends AbstractPopUpElement{
      * @param col - y position that building will be placed
      * @return Building Entity that is selected
      */
-    private BuildingEntity selectBuilding(BuildingType type, float row, float col){
+    public BuildingEntity selectBuilding(BuildingType type, float row, float col){
         BuildingFactory buildingFactory = new BuildingFactory();
         switch (type){
             case CABIN:
@@ -207,5 +207,9 @@ public class ConstructionTable extends AbstractPopUpElement{
         buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
         Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
         sm.getCharacter().toBuild = false;
+    }
+
+    public BuildingType getBuildingID() {
+        return buildingID;
     }
 }

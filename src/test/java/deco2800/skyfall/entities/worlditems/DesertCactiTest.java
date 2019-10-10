@@ -14,7 +14,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 public class DesertCactiTest {
 
-    DesertCacti testCacti;
+    private DesertCacti testCacti;
 
     @Before
     public void Setup() throws Exception {
@@ -71,19 +71,11 @@ public class DesertCactiTest {
         testCacti = new DesertCacti(testTile, false);
         DesertCacti testCactiEq = new DesertCacti(testTile, false);
 
+        MountainTree testRock = new MountainTree(testTile, false);
+
         assertEquals(testCacti, testCacti);
         assertEquals(testCacti, testCactiEq);
         assertNotEquals(testCacti, null);
-
-        testCactiEq.setCol(30.0f);
-        assertNotEquals(testCacti, testCactiEq);
-
-        DesertCacti testCactiNEq = new DesertCacti(testTile, false);
-        testCactiNEq.setHeight(100);
-
-        assertNotEquals(testCacti, testCactiNEq);
-
-        MountainTree testRock = new MountainTree(testTile, false);
         assertNotEquals(testCacti, testRock);
     }
 

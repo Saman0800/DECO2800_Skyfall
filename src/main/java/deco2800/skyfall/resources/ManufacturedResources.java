@@ -4,12 +4,13 @@ import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.util.HexVector;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * An abstract class representing a Manufactured Resource item.
  */
-public abstract class ManufacturedResources extends AbstractEntity implements Item, Blueprint {
+public abstract class ManufacturedResources extends AbstractEntity implements Item, Blueprint, Serializable {
 
     // the name of the item e.g. Hatchet, Pick Axe
     protected String name;
