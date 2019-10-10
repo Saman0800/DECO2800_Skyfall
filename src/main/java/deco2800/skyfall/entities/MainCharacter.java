@@ -16,12 +16,16 @@ import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellCaster;
 import deco2800.skyfall.entities.spells.SpellFactory;
 import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.entities.weapons.*;
+import deco2800.skyfall.gamemenu.HealthCircle;
+import deco2800.skyfall.gamemenu.popupmenu.ConstructionTable;
+import deco2800.skyfall.gamemenu.ManaBar;
 import deco2800.skyfall.entities.vehicle.AbstractVehicle;
 import deco2800.skyfall.entities.vehicle.Bike;
 import deco2800.skyfall.entities.vehicle.SandCar;
 import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.gamemenu.HealthCircle;
-import deco2800.skyfall.gamemenu.popupmenu.ConstructionTable;
+import deco2800.skyfall.gamemenu.ManaBar;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.observers.KeyUpObserver;
@@ -257,6 +261,11 @@ public class MainCharacter extends Peon
     protected int totalManaCooldown = 10;
 
     /**
+     * The GUI mana bar that can be updated when mana is restored/lost.
+     */
+    private ManaBar manaBar;
+
+    /**
      * The GUI health bar for the character.
      */
     private HealthCircle healthBar;
@@ -415,7 +424,20 @@ public class MainCharacter extends Peon
      */
     public void setUpGUI() {
         this.setupHealthBar();
+        this.setUpManaBar();
         this.setupGameOverScreen();
+    }
+
+    /**
+     * Set up the mana bar.
+     */
+    private void setUpManaBar() {
+        //Start with 100 mana.
+        if (this.manaBar != null) {
+            this.manaBar = new ManaBar(100, "mana_bar_inner", "mana_bar");
+        }
+        // Start with 100 mana.
+        this.manaBar = new ManaBar(100, "mana_bar_inner", "mana_bar");
     }
 
     /**
@@ -657,6 +679,10 @@ public class MainCharacter extends Peon
 
         // Subtract some mana, and update the GUI.
         this.mana -= manaCost;
+        if (this.manaBar != null) {
+            this.manaBar.update(this.mana);
+        }
+
         GameManager.get().getWorld().addEntity(spell);
     }
 
