@@ -52,8 +52,7 @@ public class QuestManager extends TickableManager{
         this.questLevel = 1;
         questSuccess = false;
         buildingsTotal = new ArrayList<>();
-        levelOneBuildings.add(BuildingType.CASTLE);
-        //levelOneBuildings.add("WatchTower");
+        levelOneBuildings.add(BuildingType.CASTLE );
         player = MainCharacter.getInstance();
         setMilestones();
     }
@@ -64,10 +63,10 @@ public class QuestManager extends TickableManager{
     private void setMilestones() {
         switch (questLevel) {
             case 1 :
-                setGoldTotal(1);
-                setWoodTotal(1);
-                setStoneTotal(1);
-                setMetalTotal(1);
+                setGoldTotal(10);
+                setWoodTotal(10);
+                setStoneTotal(10);
+                setMetalTotal(10);
                 setBuildingsTotal(levelOneBuildings);
                 break;
             case 2 :
@@ -239,6 +238,7 @@ public class QuestManager extends TickableManager{
      * @return True if all buildings are placed, False if not
      */
     public boolean checkBuildings() {
+        buildingsNum = buildingsPlaced.size();
         return buildingsPlaced.containsAll(buildingsTotal);
     }
 
@@ -339,6 +339,6 @@ public class QuestManager extends TickableManager{
                 return true;
             }
         }
-        return  false;
+        return false;
     }
 }
