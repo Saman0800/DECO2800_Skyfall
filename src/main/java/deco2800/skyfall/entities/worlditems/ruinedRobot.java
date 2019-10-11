@@ -9,6 +9,7 @@ public class ruinedRobot extends AbstractEnvironment {
      *
      */
     private static final String ENTITY_ID_STRING = "ruined_robot";
+    private static final String ruinedRobotString = "ruinedRobot";
 
     /**
      * Set the entity ID of ruined robot to the object name
@@ -16,7 +17,7 @@ public class ruinedRobot extends AbstractEnvironment {
      */
     public ruinedRobot() {
         super();
-        this.setTexture("ruinedRobot");
+        this.setTexture(ruinedRobotString);
         setupParams();
     }
 
@@ -27,7 +28,7 @@ public class ruinedRobot extends AbstractEnvironment {
      * @param obstructed - Whether the entity is obstructed by something
      */
     public ruinedRobot(Tile tile, boolean obstructed) {
-        super(tile, "ruinedRobot", obstructed);
+        super(tile, ruinedRobotString, obstructed);
         setupParams();
     }
 
@@ -43,7 +44,7 @@ public class ruinedRobot extends AbstractEnvironment {
 
     private void setupParams() {
         this.setObjectName(ENTITY_ID_STRING);
-        this.entityType = "ruinedRobot";
+        this.entityType = ruinedRobotString;
     }
 
     /**
