@@ -37,6 +37,7 @@ public class SkyfallGame extends Game {
 	/**
 	 * Disposes of the game
 	 */
+	@Override
 	public void dispose() {
 		mainMenuScreen.dispose();
 		batch.dispose();

@@ -1,16 +1,16 @@
+
 package deco2800.skyfall.buildings;
+
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.world.World;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
  * An AbstractPortal is an item that can transport a players position to the
@@ -26,6 +26,10 @@ public abstract class AbstractPortal extends AbstractEntity {
     public String nextBiome;
 
     private Map<String, Integer> buildCost;
+
+    protected boolean blueprintLearned = false;
+    protected String name = "abstractPortal";
+    protected String currentBiome;
 
     private float col;
     private float row;
@@ -47,6 +51,11 @@ public abstract class AbstractPortal extends AbstractEntity {
         }
     }
 
+    @Override
+    public void onTick(long i) {
+        // do nothing so far
+    }
+
     public Map<String, Integer> getBuildCost() {
         return this.buildCost;
     }
@@ -57,7 +66,6 @@ public abstract class AbstractPortal extends AbstractEntity {
     public void setNext(String nextBiome) {
         this.nextBiome = nextBiome;
     }
-
 
     /**
      * Move characters location to the next biome To be implemented when a player
@@ -72,10 +80,86 @@ public abstract class AbstractPortal extends AbstractEntity {
 
     }
 
+    /**
+     * Returns the number of wood required for the item.
+     *
+     * @return The amount of wood needed
+     */
+    public int getRequiredWood() {
+        return 0;
+    }
+
+    /**
+     * Returns the number of stones required for the item.
+     *
+     * @return The amount of stone needed
+     */
+    public int getRequiredStone() {
+        return 0;
+    }
+
+    /**
+     * Returns the number of metal required for the item.
+     *
+     * @return The amount of metal needed
+     */
+    public int getRequiredMetal() {
+        return 0;
+    }
+
+    /**
+     * Returns a map of the name of the required resource and the required number of
+     * each resource to create the item.
+     *
+     * @return a hashamp of the required resources and their number.
+     */
+    public Map<String, Integer> getAllRequirements() {
+        return getBuildCost();
+    }
+
+    /**
+     * Get the name of the Portal
+     *
+     * @return String - The name of the portal
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Get the biome for the Portal
+     *
+     * @return String - The name of the biome
+     */
+    public String getCurrentBiome() {
+        return this.currentBiome;
+    }
+
+    /**
+     * a getter method to check if a player has learned the blueprint
+     *
+     * @return true if the player has learned the blueprint, false otherwise
+     */
+    public boolean isBlueprintLearned() {
+        return blueprintLearned;
+    }
+
+    /**
+     * Toggles the boolean blueprintLearned between a true and false state.
+     */
+    public void toggleBlueprintLearned() {
+        blueprintLearned = !blueprintLearned;
+    }
+
+    /**
+     * @return - cost of building the building
+     */
+    public int getCost() {
+        return 0;
+    }
+
     public void unlocknext(MainCharacter character, String next) {
 
     }
-
-
 
 }

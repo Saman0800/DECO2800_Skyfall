@@ -1,29 +1,11 @@
 package deco2800.skyfall.buildings;
 
-import com.badlogic.gdx.graphics.Texture;
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.resources.Blueprint;
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import deco2800.skyfall.worlds.world.World;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * TODO: [Portal Team] Consider creating an abstract base class for the portal.
- */
-public class ForestPortal extends AbstractPortal implements Blueprint {
+import deco2800.skyfall.resources.Blueprint;
 
-    public String currentBiome = "forest";
-    public boolean blueprintLearned = false;
-    public String name = "forestPortal";
-    Texture texture;
-    // a logger
-    private final transient Logger logger = LoggerFactory.getLogger(ForestPortal.class);
+public class ForestPortal extends AbstractPortal implements Blueprint {
 
     /**
      * Constructor for an building entity with normal rendering size.
@@ -36,39 +18,10 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
         super(col, row, renderOrder);
         this.setTexture("portal_forest");
         this.setNext("desert");
+        this.currentBiome = "forest";
+        this.name = "forestPortal";
+        this.blueprintLearned = false;
 
-    }
-
-    @Override
-    public void onTick(long i) {
-        // do nothing so far
-    }
-
-    /**
-     * Returns the number of wood required for the item.
-     *
-     * @return The amount of wood needed
-     */
-    public int getRequiredWood() {
-        return 0;
-    }
-
-    /**
-     * Returns the number of stones required for the item.
-     *
-     * @return The amount of stone needed
-     */
-    public int getRequiredStone() {
-        return 0;
-    }
-
-    /**
-     * Returns the number of metal required for the item.
-     *
-     * @return The amount of metal needed
-     */
-    public int getRequiredMetal() {
-        return 0;
     }
 
     /**
@@ -85,41 +38,5 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
 
         return allRequirements;
     }
-
-    /**
-     * Get the name of the Portal
-     *
-     * @return String - The name of the portal
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * a getter method to check if a player has learned the blueprint
-     *
-     * @return true if the player has learned the blueprint, false otherwise
-     */
-    public boolean isBlueprintLearned() {
-        return blueprintLearned;
-    }
-
-    /**
-     * Toggles the boolean blueprintLearned between a true and false state.
-     */
-    public void toggleBlueprintLearned() {
-        blueprintLearned = !blueprintLearned;
-    }
-
-    /**
-     * @return - cost of building the building
-     */
-    public int getCost() {
-        return 0;
-    }
-
-
-
-
 
 }

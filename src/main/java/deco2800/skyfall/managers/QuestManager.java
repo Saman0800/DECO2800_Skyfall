@@ -1,9 +1,7 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.buildings.AbstractPortal;
-import deco2800.skyfall.buildings.BuildingEntity;
 import deco2800.skyfall.buildings.BuildingType;
-import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.resources.Blueprint;
 

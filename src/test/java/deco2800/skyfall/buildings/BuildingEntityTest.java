@@ -465,14 +465,6 @@ public class BuildingEntityTest {
     }
 
     @Test
-    public void isBlueprintLearned() {
-    }
-
-    @Test
-    public void toggleBlueprintLearned() {
-    }
-
-    @Test
     public void cabinInteract() {
     }
 

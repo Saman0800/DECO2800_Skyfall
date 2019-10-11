@@ -7,10 +7,10 @@ import deco2800.skyfall.managers.GameManager;
 public class Bike extends AbstractVehicle {
     MainCharacter mc;
     private boolean isOnUse = false;
-    private final String textureName = "bike";
+    private final static String textureName = "bike";
     private Direction movingDirection;
 
-    public Bike(float col, float row, MainCharacter mc){
+    public Bike(float col, float row, MainCharacter mc) {
         super(col, row, "bike");
         this.setTexture(textureName);
         this.setObjectName(textureName);
@@ -22,14 +22,14 @@ public class Bike extends AbstractVehicle {
         this.setDirectionTextures();
     }
 
-    public boolean isOnUse(){
+    public boolean isOnUse() {
         this.removeBike();
         return this.isOnUse;
     }
 
     @Override
     public String getName() {
-        return textureName;
+        return Bike.textureName;
     }
 
     @Override
@@ -37,8 +37,7 @@ public class Bike extends AbstractVehicle {
         return "bike";
     }
 
-    public void removeBike(){
+    public void removeBike() {
         GameManager.get().getWorld().removeEntity(this);
     }
 }
-

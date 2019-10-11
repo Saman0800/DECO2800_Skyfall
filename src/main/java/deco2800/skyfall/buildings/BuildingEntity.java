@@ -1,42 +1,40 @@
 package deco2800.skyfall.buildings;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.google.gson.annotations.Expose;
-
-import deco2800.skyfall.animation.AnimationRole;
-import deco2800.skyfall.entities.AbstractEntity;
-
-import deco2800.skyfall.entities.ICombatEntity;
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.Projectile;
-import deco2800.skyfall.entities.enemies.Enemy;
-import deco2800.skyfall.entities.weapons.Weapon;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.GameMenuManager;
-
-import deco2800.skyfall.managers.InventoryManager;
-
-
-import deco2800.skyfall.managers.SoundManager;
-import deco2800.skyfall.resources.Item;
-
-import deco2800.skyfall.util.Collider;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.world.World;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static deco2800.skyfall.entities.MainCharacter.AXEATTACK;
+import static deco2800.skyfall.entities.MainCharacter.BOWATTACK;
+import static deco2800.skyfall.entities.MainCharacter.HURT_SOUND_NAME;
+import static deco2800.skyfall.entities.MainCharacter.SPEARATTACK;
+import static deco2800.skyfall.entities.MainCharacter.SWORDATTACK;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static deco2800.skyfall.entities.MainCharacter.*;
+import com.badlogic.gdx.graphics.Texture;
+import com.google.gson.annotations.Expose;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.ICombatEntity;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.Projectile;
+import deco2800.skyfall.entities.weapons.Weapon;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.InventoryManager;
+import deco2800.skyfall.managers.SoundManager;
+import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.util.Collider;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.world.World;
 
 /**
- *  A BuildingEntity is an base class for all building entity subclass,
- *  including basic information that a building object should contains.
+ * A BuildingEntity is an base class for all building entity subclass, including
+ * basic information that a building object should contains.
  */
 public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
@@ -48,7 +46,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     // health
     private int health;
-    //The type of building to be created
+    // The type of building to be created
     private BuildingType buildingType;
 
     // consistent information for a specific building
@@ -73,7 +71,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
      */
     private Item equippedItem;
 
-    //default value
+    // default value
     private int itemSlotSelected = 0;
 
     @Override
@@ -92,7 +90,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     @Override
     public void dealDamage(MainCharacter mc) {
-
+        // Do nothing for now
     }
 
     @Override
@@ -103,22 +101,22 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
     @Override
     public int getDamage() {
         switch (buildingType) {
-            case CABIN:
-                return 0;
-            case CASTLE:
-                return 1;
-            case TOWNCENTRE:
-                return 2;
-            case FENCE:
-                return 0;
-            case SAFEHOUSE:
-                return 1;
-            case WATCHTOWER:
-                return 2;
-            case STORAGE_UNIT:
-                return 0;
-            default:
-                return 0;
+        case CABIN:
+            return 0;
+        case CASTLE:
+            return 1;
+        case TOWNCENTRE:
+            return 2;
+        case FENCE:
+            return 0;
+        case SAFEHOUSE:
+            return 1;
+        case WATCHTOWER:
+            return 2;
+        case STORAGE_UNIT:
+            return 0;
+        default:
+            return 0;
         }
     }
 
@@ -139,22 +137,19 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
     }
 
     enum AttackLevel {
-        LOW,
-        MEDIUM,
-        HIGH
+        LOW, MEDIUM, HIGH
     }
 
     enum DefendLevel {
-        LOW,
-        MEDIUM,
-        HIGH
+        LOW, MEDIUM, HIGH
     }
 
     /**
      * Constructor for an building entity with normal rendering size.
-     * @param col the col position on the world
-     * @param row the row position on the world
-     * @param renderOrder the height position on the world
+     * 
+     * @param col          the col position on the world
+     * @param row          the row position on the world
+     * @param renderOrder  the height position on the world
      * @param buildingType specific building information container
      */
     public BuildingEntity(float col, float row, int renderOrder, BuildingType buildingType) {
@@ -167,15 +162,16 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Constructor for an building entity with customized scaling factors.
-     * @param col the col position on the world
-     * @param row the row position on the world
-     * @param renderOrder the height position on the world
-     * @param buildingType specific building information container
+     * 
+     * @param col             the col position on the world
+     * @param row             the row position on the world
+     * @param renderOrder     the height position on the world
+     * @param buildingType    specific building information container
      * @param colRenderLength factor to scale the texture length
      * @param rowRenderLength factor to scale the texture width
      */
-    public BuildingEntity(float col, float row, int renderOrder, BuildingType buildingType,
-                          float colRenderLength, float rowRenderLength) {
+    public BuildingEntity(float col, float row, int renderOrder, BuildingType buildingType, float colRenderLength,
+            float rowRenderLength) {
         super(col, row, renderOrder, colRenderLength, rowRenderLength);
         this.setObjectName(ENTITY_ID_STRING);
         this.setRenderOrder(renderOrder);
@@ -197,32 +193,28 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
     }
 
     /**
-    * Creates a new Collider object at (x,y) coordinates with size xLength x yLength.
-    * Called by building factory before returning a building such that no building
-    * in the game has a Collider set to null.
-    */
+     * Creates a new Collider object at (x,y) coordinates with size xLength x
+     * yLength. Called by building factory before returning a building such that no
+     * building in the game has a Collider set to null.
+     */
     public void setCollider() {
         float[] cords = WorldUtil.colRowToWorldCords(position.getCol(), position.getRow());
 
         // preferred way as setting a collider based on texture size
         try {
             Texture texture = new Texture(getTexture());
-            collider = new Collider(cords[0], cords[1],
-                    texture.getWidth(), texture.getHeight());
+            collider = new Collider(cords[0], cords[1], texture.getWidth(), texture.getHeight());
             return;
         } catch (Exception e) {
-            log.info("Building {} can't set a collider with its texture",
-                    getObjectName() + getEntityID());
+            log.info("Building {} can't set a collider with its texture", getObjectName() + getEntityID());
         }
 
         // preferred way is blocked, setting a collider based on tile
         try {
             float tileSize = 100;
-            collider = new Collider(cords[0], cords[1],
-                    tileSize * getLength(), tileSize * getWidth());
+            collider = new Collider(cords[0], cords[1], tileSize * getLength(), tileSize * getWidth());
         } catch (Exception e2) {
-            log.info("Building {} has a null collider",
-                    getObjectName() + getEntityID());
+            log.info("Building {} has a null collider", getObjectName() + getEntityID());
         }
     }
 
@@ -240,12 +232,11 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
         // do nothing so far
     }
 
-
     /**
-     * @param x - X coordinate
-     * @param y - Y coordinate
+     * @param x      - X coordinate
+     * @param y      - Y coordinate
      * @param height - Render height
-     * @param world - World to place building in
+     * @param world  - World to place building in
      */
     public void placeBuilding(float x, float y, int height, World world) {
         setPosition(x, y, height);
@@ -261,13 +252,16 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Get the type of building
+     * 
      * @return building type
      */
-    public BuildingType getBuildingType() { return this.buildingType; }
-
+    public BuildingType getBuildingType() {
+        return this.buildingType;
+    }
 
     /**
      * Set the time needed to build a building entity.
+     * 
      * @param time time cost
      */
     public void setBuildTime(int time) {
@@ -276,6 +270,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Get the time needed to build a building entity.
+     * 
      * @return time cost
      */
     public int getBuildTime() {
@@ -284,8 +279,9 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Set the resources needed to build a building entity.
+     * 
      * @param resource resource name
-     * @param cost number of the resource cost
+     * @param cost     number of the resource cost
      */
     public void addBuildCost(String resource, int cost) {
         if (buildCost == null) {
@@ -299,12 +295,14 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
     /**
      * @return - cost of building the building
      */
-    public Map<String, Integer> getCost(){ return buildCost; }
-
+    public Map<String, Integer> getCost() {
+        return buildCost;
+    }
 
     /**
      * Adds a texture to the buildings list of textures.
-     * @param name the name of the texture
+     * 
+     * @param name    the name of the texture
      * @param texture the texture
      */
     public void addTexture(String name, String texture) {
@@ -315,15 +313,17 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
             buildingTextures.put(name, texture);
         }
     }
+
     /**
      * @return - the list of the building textures
      */
-    public Map<String, String> getTextures(){
+    public Map<String, String> getTextures() {
         return buildingTextures;
     }
 
     /**
      * Set the initial health to a building entity.
+     * 
      * @param health a building's initial health
      */
     public void setInitialHealth(int health) {
@@ -333,6 +333,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Get the initial health to a building entity.
+     * 
      * @return a building's initial health
      */
     public int getInitialHealth() {
@@ -341,6 +342,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Set a building entity length related to number of tile in terms of column.
+     * 
      * @param length a building's length (x length)
      */
     public void setLength(int length) {
@@ -351,6 +353,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Get a building entity length related to number of tile in terms of column.
+     * 
      * @return a building's length (x length)
      */
     public int getLength() {
@@ -359,6 +362,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Set a building entity width related to number of tile in terms of row.
+     * 
      * @param width a building's width (y length)
      */
     public void setWidth(int width) {
@@ -369,6 +373,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Get a building entity width related to number of tile in terms of row.
+     * 
      * @return a building's width (y length)
      */
     public int getWidth() {
@@ -377,6 +382,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Set a building entity upgrade state.
+     * 
      * @param upgradable by boolean value
      */
     public void setUpgradable(boolean upgradable) {
@@ -385,6 +391,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Get a building entity current upgrade state.
+     * 
      * @return boolean value for current upgrade state
      */
     public boolean isUpgradable() {
@@ -393,6 +400,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Set the level to a building entity.
+     * 
      * @param level building level
      */
     public void setBuildingLevel(int level) {
@@ -401,6 +409,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Get a building entity current level.
+     * 
      * @return current building level
      */
     public int getBuildingLevel() {
@@ -409,34 +418,33 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Updates the health of a Building
+     * 
      * @param amount - Amount of heath to update
      */
     public void updateHealth(int amount) {
-        if (amount <0 && (currentHealth + amount) > 0) {
-            currentHealth +=  amount;
+        if (amount < 0 && (currentHealth + amount) > 0) {
+            currentHealth += amount;
         }
-        if (amount >= 1 && currentHealth< maxHealth) {
-            currentHealth +=  amount;
+        if (amount >= 1 && currentHealth < maxHealth) {
+            currentHealth += amount;
         }
     }
 
-
     /**
      * Get the current health of a building entity.
+     * 
      * @return current building health
      */
     public int getCurrentHealth() {
         return this.currentHealth;
     }
 
-
-
     /**
      * Returns the number of wood required for the item.
      *
      * @return The name of the item
      */
-    //@Override
+    // @Override
     public int getRequiredWood() {
         return 1;
     }
@@ -446,7 +454,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
      *
      * @return The name of the item
      */
-    //@Override
+    // @Override
     public int getRequiredStone() {
         return 30;
     }
@@ -456,18 +464,18 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
      *
      * @return The name of the item
      */
-    //@Override
+    // @Override
     public int getRequiredMetal() {
         return 10;
     }
 
     /**
-     * Returns a map of the name of the required resource and
-     * the required number of each resource to create the item.
+     * Returns a map of the name of the required resource and the required number of
+     * each resource to create the item.
      *
      * @return a hashamp of the required resources and their number.
      */
-    //@Override
+    // @Override
     public Map<String, Integer> getAllRequirements() {
 
         buildCost.put("Wood", 50);
@@ -476,7 +484,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
         return buildCost;
     }
 
-    //@Override
+    // @Override
     public String getName() {
         return null;
     }
@@ -486,9 +494,9 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
      *
      * @return The name of the item
      */
-    //@Override
+    // @Override
     public boolean isBlueprintLearned() {
-        //do nothing
+        // do nothing
         return true;
     }
 
@@ -497,32 +505,41 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
      *
      * @return The name of the item
      */
-    //@Override
+    // @Override
     public void toggleBlueprintLearned() {
-        //do nothing
+        // TODO: Needs to be implemented
     }
 
-
-
     public void cabinInteract() {
-        //Resting at the cabin restores a players health.
+        // Resting at the cabin restores a players health.
         MainCharacter player = GameManager.getManagerFromInstance(GameMenuManager.class).getMainCharacter();
         player.changeHealth(+player.getMaxHealth());
 
     }
 
-    public void fenceInteract() {}
+    public void fenceInteract() {
+        // Do nothing for now.
+    }
 
-    public void castleInteract() {}
+    public void castleInteract() {
+        // Do nothing for now.
+    }
 
-    public void safehouseInteract() {}
+    public void safehouseInteract() {
+        // Do nothing for now.
+    }
 
-    public void towncentreInteract() {}
+    public void towncentreInteract() {
+        // Do nothing for now.
+    }
 
-    public void watchtowerInteract() {}
+    public void watchtowerInteract() {
+        // Do nothing for now.
+    }
 
     /**
      * getter method
+     * 
      * @return InventoryManager of the Building
      */
     public InventoryManager getInventoryManager() {
@@ -531,6 +548,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * setter method
+     * 
      * @param inventoryManager InventoryManager of the Building
      */
     public void setInventoryManager(InventoryManager inventoryManager) {
@@ -539,10 +557,11 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Add item into inventory of the building
+     * 
      * @param item the item added into inventory of the building
      * @return true if added successfully, otherwise false
      */
-    public boolean AddInventory(Item item){
+    public boolean AddInventory(Item item) {
         return this.inventoryManager.add(item);
     }
 
@@ -550,7 +569,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
      *
      * @param item
      */
-    public void quickAccessRemove(Item item){
+    public void quickAccessRemove(Item item) {
         this.inventoryManager.quickAccessRemove(item.getName());
     }
 
@@ -566,12 +585,9 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
         // Make projectile move toward the angle
         // Spawn projectile in front of character
-        Projectile projectile = new Projectile(enemyPosition,
-                ((Weapon) equippedItem).getTexture("attack"), "hitbox",
+        Projectile projectile = new Projectile(enemyPosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
                 position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
-                position.getRow() + 0.5f + 1.5f * unitDirection.getRow(),
-                ((Weapon)equippedItem).getDamage(),
-                1,
+                position.getRow() + 0.5f + 1.5f * unitDirection.getRow(), ((Weapon) equippedItem).getDamage(), 1,
                 this.itemSlotSelected == 1 ? (equippedItem.getName().equals("bow") ? 10 : 0) : 0);
 
         // Add the projectile entity to the game world.
@@ -579,21 +595,21 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
         // Play weapon attack sound
         switch (equippedItem.getName()) {
-            case "sword":
-                SoundManager.playSound(SWORDATTACK);
-                break;
-            case "spear":
-                SoundManager.playSound(SPEARATTACK);
-                break;
-            case "bow":
-                SoundManager.playSound(BOWATTACK);
-                break;
-            case "axe":
-                SoundManager.playSound(AXEATTACK);
-                break;
-            default:
-                SoundManager.playSound(HURT_SOUND_NAME);
-                break;
+        case "sword":
+            SoundManager.playSound(SWORDATTACK);
+            break;
+        case "spear":
+            SoundManager.playSound(SPEARATTACK);
+            break;
+        case "bow":
+            SoundManager.playSound(BOWATTACK);
+            break;
+        case "axe":
+            SoundManager.playSound(AXEATTACK);
+            break;
+        default:
+            SoundManager.playSound(HURT_SOUND_NAME);
+            break;
         }
 
     }

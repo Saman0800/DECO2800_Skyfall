@@ -55,7 +55,6 @@ public class BuildingInteractions {
         default:
             break;
         }
-        System.out.println("Failed");
     }
 
     /**
