@@ -151,6 +151,7 @@ public class NetworkManager extends TickableManager {
 
         // Add all listeners for the client, allowing it to receive information from the host.
         client.addListener(new Listener() {
+            @Override
             public void received(Connection connection, Object object) {
                 messagesReceived++;
                 if (object instanceof TileUpdateMessage) {

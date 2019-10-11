@@ -21,7 +21,7 @@ public class FlameWall extends Spell {
     /**
      * Key sequence required to cast this spell.
      */
-    public static int[] keySequence = new int[] {
+    public static final int[] keySequence = new int[] {
             Input.Keys.UP,
             Input.Keys.DOWN,
             Input.Keys.UP,

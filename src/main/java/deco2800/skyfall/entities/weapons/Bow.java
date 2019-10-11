@@ -22,14 +22,4 @@ public class Bow extends Weapon implements Item, IWeapon {
     public Bow newInstance(Tile tile) {
         return new Bow(tile, this.isObstructed());
     }
-
-    /**
-     * a getter method to check if a player has learned the blueprint
-     *
-     * @return true if the player has learned the blueprint.
-     */
-    @Override
-    public boolean isBlueprintLearned() {
-        return false;
-    }
 }

@@ -176,7 +176,7 @@ public class GameMenuBar extends AbstractUIElement {
             String weaponName = entry.getKey();
             for (String weapon : weapons) {
                 if (weapon.equals(entry.getKey())) {
-                    weaponName = entry.getKey() + "_display";
+                    weaponName = entry.getKey() + "_";
                 }
             }
             ImageButton icon = new ImageButton(

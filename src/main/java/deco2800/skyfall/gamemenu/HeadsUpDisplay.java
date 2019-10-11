@@ -33,6 +33,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
     private ImageButton location;
     private TextButton teleport;
     private boolean canTeleport = true;
+    private static final String bluePillString = "blue-pill";
 
     public HeadsUpDisplay(Stage stage, String[] textureNames, TextureManager tm, Skin skin, GameMenuManager gmm,
             Map<String, AbstractUIElement> hudElements, QuestManager qm) {
@@ -53,6 +54,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
         positionObjects.forEach((actor, posObj) -> posObj.updatePosition(actor));
     }
 
+    @Override
     public void update() {
         super.update();
         hudElements.forEach((key, value) -> value.update());
@@ -93,8 +95,8 @@ public class HeadsUpDisplay extends AbstractUIElement {
             }
         });
 
-        TextButton pauseT = new TextButton("PAUSE", skin, "blue-pill");
-        pauseT.getLabel().setStyle(skin.get("blue-pill", Label.LabelStyle.class));
+        TextButton pauseT = new TextButton("PAUSE", skin, bluePillString);
+        pauseT.getLabel().setStyle(skin.get(bluePillString, Label.LabelStyle.class));
         pauseT.getLabel().setAlignment(Align.center);
         pauseT.getLabel().setFontScale(0.8f);
         pauseT.addListener(new ClickListener() {
@@ -105,8 +107,8 @@ public class HeadsUpDisplay extends AbstractUIElement {
             }
         });
 
-        TextButton helpT = new TextButton("HELP", skin, "blue-pill");
-        helpT.getLabel().setStyle(skin.get("blue-pill", Label.LabelStyle.class));
+        TextButton helpT = new TextButton("HELP", skin, bluePillString);
+        helpT.getLabel().setStyle(skin.get(bluePillString, Label.LabelStyle.class));
         helpT.getLabel().setAlignment(Align.center);
         helpT.getLabel().setFontScale(0.8f);
         helpT.addListener(new ClickListener() {

@@ -93,7 +93,7 @@ public class VineTest {
      */
     @Test
     public void getDescriptionTest() {
-        assertEquals("This item can be found in the forest biome and can " + "\n" +
+        assertEquals("This item can be found in the forest biome and can" + "\n" +
                 "be used to produce rope.", vine.getDescription());
     }
 }

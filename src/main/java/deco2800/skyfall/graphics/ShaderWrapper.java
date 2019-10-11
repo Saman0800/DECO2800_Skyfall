@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import deco2800.skyfall.graphics.types.vec2;
 import deco2800.skyfall.graphics.types.vec3;
-import deco2800.skyfall.renderers.Renderer3D;
 import deco2800.skyfall.util.SettingsFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

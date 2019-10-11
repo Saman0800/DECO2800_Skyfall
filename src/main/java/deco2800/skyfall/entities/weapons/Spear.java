@@ -21,14 +21,4 @@ public class Spear extends Weapon {
     public Spear newInstance(Tile tile) {
         return new Spear(tile, this.isObstructed());
     }
-
-    /**
-     * a getter method to check if a player has learned the blueprint
-     *
-     * @return true if the player has learned the blueprint.
-     */
-    @Override
-    public boolean isBlueprintLearned() {
-        return false;
-    }
 }

@@ -61,8 +61,8 @@ public class EnvironmentManager extends TickableManager {
      */
     public EnvironmentManager() throws NoSuchAlgorithmException {
         // Music file setup
-        file = "resources/sounds/forest_day.wav";
-        currentFile = "resources/sounds/forest_night.wav";
+        file = "resources/sounds/forest_day.mp3";
+        currentFile = "resources/sounds/forest_night.mp3";
 
         // Time setup
         timeListeners = new ArrayList<>();
@@ -393,14 +393,15 @@ public class EnvironmentManager extends TickableManager {
         currentBiome();
 
         // Name file accordingly
-        String filename = "day.wav";
-        filename = isDay() ? filename : "night.wav";
+        String filename = "day";
+        filename = isDay() ? filename : "night";
 
         // Until lake music created and ocean biome is restricted, play forest for now
         if (biome.equals("ocean") || biome.equals("lake") || biome.equals("river")) {
-            file = "resources/sounds/forest_" + filename;
+            file = "forest" + "_" + filename;
         } else {
-            file = "resources/sounds/" + biome + "_" + filename;
+            //file = "resources/sounds/" + biome + "_" + filename;
+            file = biome + "_" + filename;
         }
     }
 
@@ -419,13 +420,11 @@ public class EnvironmentManager extends TickableManager {
 
         // Check if there is a file
         if (!(file.contains(currentFile))) {
-            BGMManager bgmManager = GameManager.getManagerFromInstance(BGMManager.class);
-
             setFilename();
 
             // Stop current music
             try {
-                bgmManager.stop();
+                SoundManager.stopSound(file);
             } catch (Exception e) {
                 /* Exception caught, if any */
             }
@@ -434,8 +433,7 @@ public class EnvironmentManager extends TickableManager {
 
             // Play BGM
             try {
-                bgmManager.initClip(currentFile);
-                bgmManager.play();
+                SoundManager.loopSound(currentFile);
             } catch (Exception e) {
                 /* Exception caught, if any */
             }
