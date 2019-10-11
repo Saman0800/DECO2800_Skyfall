@@ -19,6 +19,8 @@ import java.util.*;
  * This</a>
  */
 public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGenNode.WorldGenNodeMemento>, Serializable{
+    private static long nextID = System.nanoTime();
+
     private long id;
 
     // position
@@ -43,7 +45,7 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
      * @param y the y coordinate of the node
      */
     public WorldGenNode(double x, double y) {
-        this.id = System.nanoTime();
+        this.id = nextID++;
         this.x = x;
         this.y = y;
         this.neighbours = new ArrayList<>();
