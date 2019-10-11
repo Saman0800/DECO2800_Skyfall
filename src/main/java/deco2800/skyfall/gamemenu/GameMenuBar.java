@@ -13,7 +13,6 @@ import java.util.Map;
 
 public class GameMenuBar extends AbstractUIElement {
 
-
     private GameMenuManager gameMenuManager;
     private Table quickAccessPanel;
     private Skin skin;
@@ -26,13 +25,12 @@ public class GameMenuBar extends AbstractUIElement {
         this.draw();
     }
 
-
     /**
      * {@inheritDoc}
      */
     @Override
     public void updatePosition() {
-        //TODO : make menu bar scale with window size;
+        // Do nothing for now
     }
 
     /**
@@ -68,11 +66,11 @@ public class GameMenuBar extends AbstractUIElement {
             }
         });
 
-        //Set quick access panel with inventory button
+        // Set quick access panel with inventory button
         setQuickAccessPanel();
 
-
-        ImageButton selectCharacter = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("select-character"));
+        ImageButton selectCharacter = new ImageButton(
+                gameMenuManager.generateTextureRegionDrawableObject("select-character"));
         selectCharacter.setSize(width, width * 146 / 207f);
         selectCharacter.setPosition(208, 30 * 1000 / 800f);
         stage.addActor(selectCharacter);
@@ -124,34 +122,34 @@ public class GameMenuBar extends AbstractUIElement {
             }
         });
 
-
         LOGGER.info("Finished drawing menu bar");
     }
 
     /***
-     * Sets the quick access panel and inventory button displayed on the game's hot bar.
+     * Sets the quick access panel and inventory button displayed on the game's hot
+     * bar.
      */
-    public void setQuickAccessPanel(){
-        //Set Quick Access Panel
+    public void setQuickAccessPanel() {
+        // Set Quick Access Panel
         quickAccessPanel = new Table();
         quickAccessPanel.setSize(450, 207 * 0.55f);
         quickAccessPanel.setPosition(560, 30 * 1000 / 800f);
         quickAccessPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("quick_access_panel"));
 
-        //Populate quick access GUI with resources
+        // Populate quick access GUI with resources
         updateQuickAccess();
 
         stage.addActor(quickAccessPanel);
 
-
-        //Set open inventory button icon in quick access
-        ImageButton inventoryButton = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("inv_button"));
+        // Set open inventory button icon in quick access
+        ImageButton inventoryButton = new ImageButton(
+                gameMenuManager.generateTextureRegionDrawableObject("inv_button"));
         inventoryButton.setSize(50, 50 * 146 / 207f);
         inventoryButton.setPosition(950, 78);
 
         stage.addActor(inventoryButton);
 
-        //Add inventory button listener
+        // Add inventory button listener
         inventoryButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -161,10 +159,10 @@ public class GameMenuBar extends AbstractUIElement {
     }
 
     /***
-     * Updates the quick access inventory display to show the current contents
-     * of the quick access inventory.
+     * Updates the quick access inventory display to show the current contents of
+     * the quick access inventory.
      */
-    public void updateQuickAccess(){
+    public void updateQuickAccess() {
         Map<String, Integer> quickAccess = gameMenuManager.getInventory().getQuickAccess();
 
         int count = 1;
@@ -172,7 +170,7 @@ public class GameMenuBar extends AbstractUIElement {
         int ypos = 28;
         int size = 55;
 
-        String[] weapons = {"axe", "bow", "spear", "sword"};
+        String[] weapons = { "axe", "bow", "spear", "sword" };
 
         for (Map.Entry<String, Integer> entry : quickAccess.entrySet()) {
             String weaponName = entry.getKey();
@@ -181,20 +179,21 @@ public class GameMenuBar extends AbstractUIElement {
                     weaponName = entry.getKey() + "_";
                 }
             }
-            ImageButton icon = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(weaponName + "inv"));
+            ImageButton icon = new ImageButton(
+                    gameMenuManager.generateTextureRegionDrawableObject(weaponName + "_inv"));
             icon.setSize(size, size);
-            icon.setPosition(((float) xpos*count) + size*(count-1), ypos);
+            icon.setPosition((xpos * count) + size * (count - 1), ypos);
 
             quickAccessPanel.addActor(icon);
 
             Label num = new Label(entry.getValue().toString(), skin, "white-label");
-            num.setPosition((float) xpos*count + size*count - 10, (float) ypos + 40);
-            num.setFontScale((float)0.4);
+            num.setPosition(xpos * count + size * count - 10, ypos + 40);
+            num.setFontScale((float) 0.4);
             int numWidth = 18;
-            if(entry.getValue()>9){
+            if (entry.getValue() > 9) {
                 numWidth += 8;
             }
-            if(entry.getValue()>99){
+            if (entry.getValue() > 99) {
                 numWidth += 8;
             }
             num.setSize(numWidth, 25);
@@ -205,11 +204,11 @@ public class GameMenuBar extends AbstractUIElement {
         }
     }
 
-    public Table getQuickAccessPanel(){
+    public Table getQuickAccessPanel() {
         return quickAccessPanel;
     }
 
-    public void removeQuickAccessPanel(){
+    public void removeQuickAccessPanel() {
         quickAccessPanel.remove();
     }
 

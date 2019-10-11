@@ -1,3 +1,4 @@
+
 package deco2800.skyfall.buildings;
 
 import java.util.Map;
@@ -27,7 +28,8 @@ public abstract class AbstractPortal extends AbstractEntity {
     private Map<String, Integer> buildCost;
 
     protected boolean blueprintLearned = false;
-    public String name = "abstractPortal";
+    protected String name = "abstractPortal";
+    protected String currentBiome;
 
     private float col;
     private float row;
@@ -122,6 +124,15 @@ public abstract class AbstractPortal extends AbstractEntity {
      */
     public String getName() {
         return this.name;
+    }
+
+    /**
+     * Get the biome for the Portal
+     *
+     * @return String - The name of the biome
+     */
+    public String getCurrentBiome() {
+        return this.currentBiome;
     }
 
     /**
