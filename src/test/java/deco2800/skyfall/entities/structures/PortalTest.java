@@ -3,17 +3,10 @@ package deco2800.skyfall.entities.structures;
 import deco2800.skyfall.buildings.*;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import deco2800.skyfall.worlds.biomes.DesertBiome;
-import deco2800.skyfall.worlds.world.ServerWorld;
 import deco2800.skyfall.worlds.world.World;
-import deco2800.skyfall.worlds.world.WorldBuilder;
-import deco2800.skyfall.worlds.world.WorldDirector;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.util.ArrayList;
 
@@ -22,7 +15,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 public class PortalTest {
 

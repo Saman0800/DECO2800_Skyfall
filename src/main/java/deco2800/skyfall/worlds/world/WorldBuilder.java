@@ -501,12 +501,6 @@ public class WorldBuilder implements WorldBuilderInterface {
         case "tutorial":
             world = new TutorialWorld(worldParameters);
             break;
-        case "test":
-            world = new TestWorld(worldParameters);
-            break;
-        case "server":
-            world = new ServerWorld(worldParameters);
-            break;
         default:
             throw new IllegalArgumentException("The world type is not valid");
         }
