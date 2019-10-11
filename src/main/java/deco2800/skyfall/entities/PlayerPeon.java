@@ -105,7 +105,7 @@ public class PlayerPeon extends Peon implements KeyDownObserver,
         position.moveToward(destination, this.currentSpeed);
     }
 
-    public void notifyTouchDown ( int screenX, int screenY, int pointer,
+    public void notifyTouchDown ( int screenX, int screenY,
                                   int button) {
 
         // cant move when click game menu

@@ -178,17 +178,17 @@ public class GameMenuBar extends AbstractUIElement {
             String weaponName = entry.getKey();
             for (String weapon : weapons) {
                 if (weapon.equals(entry.getKey())) {
-                    weaponName = entry.getKey() + "_display";
+                    weaponName = entry.getKey() + "_";
                 }
             }
-            ImageButton icon = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(weaponName + "_inv"));
+            ImageButton icon = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(weaponName + "inv"));
             icon.setSize(size, size);
-            icon.setPosition((xpos*count) + size*(count-1), ypos);
+            icon.setPosition(((float) xpos*count) + size*(count-1), ypos);
 
             quickAccessPanel.addActor(icon);
 
             Label num = new Label(entry.getValue().toString(), skin, "white-label");
-            num.setPosition(xpos*count + size*count - 10, ypos + 40);
+            num.setPosition((float) xpos*count + size*count - 10, (float) ypos + 40);
             num.setFontScale((float)0.4);
             int numWidth = 18;
             if(entry.getValue()>9){

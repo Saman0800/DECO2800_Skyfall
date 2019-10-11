@@ -10,9 +10,7 @@ import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.QuestManager;
 import deco2800.skyfall.managers.TextureManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class HeadsUpDisplay extends AbstractUIElement {
@@ -52,6 +50,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
         positionObjects.forEach((actor, posObj) -> posObj.updatePosition(actor));
     }
 
+    @Override
     public void update() {
         super.update();
         hudElements.forEach((key, value) -> value.update());

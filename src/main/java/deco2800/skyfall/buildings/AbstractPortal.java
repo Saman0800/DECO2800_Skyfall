@@ -27,6 +27,9 @@ public abstract class AbstractPortal extends AbstractEntity {
 
     private Map<String, Integer> buildCost;
 
+    protected boolean blueprintLearned = false;
+    public String name = "abstractPortal";
+
     private float col;
     private float row;
 
@@ -45,6 +48,11 @@ public abstract class AbstractPortal extends AbstractEntity {
         if (!WorldUtil.validColRow(new HexVector(col, row))) {
             log.debug("Invalid position");
         }
+    }
+
+    @Override
+    public void onTick(long i) {
+        // do nothing so far
     }
 
     public Map<String, Integer> getBuildCost() {
@@ -71,8 +79,80 @@ public abstract class AbstractPortal extends AbstractEntity {
 
     }
 
+    /**
+     * Returns the number of wood required for the item.
+     *
+     * @return The amount of wood needed
+     */
+    public int getRequiredWood() {
+        return 0;
+    }
+
+    /**
+     * Returns the number of stones required for the item.
+     *
+     * @return The amount of stone needed
+     */
+    public int getRequiredStone() {
+        return 0;
+    }
+
+<<<<<<< HEAD
+=======
+    /**
+     * Returns the number of metal required for the item.
+     *
+     * @return The amount of metal needed
+     */
+    public int getRequiredMetal() {
+        return 0;
+    }
+
+    /**
+     * Returns a map of the name of the required resource and the required number of
+     * each resource to create the item.
+     *
+     * @return a hashamp of the required resources and their number.
+     */
+    public Map<String, Integer> getAllRequirements() {
+        return getBuildCost();
+    }
+
+    /**
+     * Get the name of the Portal
+     *
+     * @return String - The name of the portal
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * a getter method to check if a player has learned the blueprint
+     *
+     * @return true if the player has learned the blueprint, false otherwise
+     */
+    public boolean isBlueprintLearned() {
+        return blueprintLearned;
+    }
+
+    /**
+     * Toggles the boolean blueprintLearned between a true and false state.
+     */
+    public void toggleBlueprintLearned() {
+        blueprintLearned = !blueprintLearned;
+    }
+
+    /**
+     * @return - cost of building the building
+     */
+    public int getCost() {
+        return 0;
+    }
+
     public void unlocknext(MainCharacter character, String next) {
 
     }
 
+>>>>>>> 27fed885583f772032f1d1bb1ccd40cec48e71a1
 }

@@ -237,6 +237,10 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
 
     private void generateOceanEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
+        // Spawn some bows
+        EntitySpawnRule bowRule = new EntitySpawnRule(tile -> new Bow(tile, true), random.nextInt(), 0.03);
+        biomeSpawnRules.add(bowRule);
+
         EntitySpawnRule shipwrecks = new EntitySpawnRule(tile -> new Shipwrecks(tile, true), random.nextInt(), 0.003);
         biomeSpawnRules.add(shipwrecks);
     }
@@ -323,6 +327,10 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
 
     private void generateDesertEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
+        // Spawn some swords
+        EntitySpawnRule swordRule = new EntitySpawnRule(tile -> new Sword(tile, true), random.nextInt(), 0.02);
+        biomeSpawnRules.add(swordRule);
+
         // Spawn some axes
         EntitySpawnRule axeRule2 = new EntitySpawnRule(tile -> new Axe(tile, true), random.nextInt(), 0.03);
         biomeSpawnRules.add(axeRule2);
@@ -368,12 +376,12 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(bowRule);
 
         // Spawn some spears
-        EntitySpawnRule spearRule2 = new EntitySpawnRule(tile -> new Spear(tile, true), random.nextInt(), 0.005);
-        biomeSpawnRules.add(spearRule2);
+        EntitySpawnRule spearRule = new EntitySpawnRule(tile -> new Spear(tile, true), random.nextInt(), 0.01);
+        biomeSpawnRules.add(spearRule);
 
         // Spawn some swords
-        EntitySpawnRule swordRule2 = new EntitySpawnRule(tile -> new Sword(tile, true), random.nextInt(), 0.006);
-        biomeSpawnRules.add(swordRule2);
+        EntitySpawnRule swordRule = new EntitySpawnRule(tile -> new Sword(tile, true), random.nextInt(), 0.01);
+        biomeSpawnRules.add(swordRule);
 
         // Spawn gold pieces
         spawnGold(world, random, biomeSpawnRules);

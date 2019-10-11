@@ -14,8 +14,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.badlogic.gdx.utils.Array;
-
 public class EnemySpawnTable implements TimeObserver {
 
     /**
@@ -151,8 +149,6 @@ public class EnemySpawnTable implements TimeObserver {
 
     /**
      * Returns how many enemies are with close proximity of another enemy.
-     * 
-     * @param targetEnemy The enemy that we are making the count for.
      */
     public int enemiesNearTargetCount(float x, float y) {
         return enemiesInTarget(x, y, 50).size();
@@ -216,7 +212,7 @@ public class EnemySpawnTable implements TimeObserver {
             // Get all the tiles within the current chunk
             List<Tile> chunkTiles = partitionedTiles.get(biomeName);
 
-            if (chunkTiles == null || chunkTiles.size() == 0) {
+            if (chunkTiles == null || chunkTiles.isEmpty()) {
                 continue;
             }
 
@@ -249,7 +245,7 @@ public class EnemySpawnTable implements TimeObserver {
                 List<Class<? extends Enemy>> possibleConstructors = biomeToConstructor
                         .get(nextTile.getBiome().getBiomeName());
 
-                if ((possibleConstructors == null) || (possibleConstructors.size() == 0)) {
+                if ((possibleConstructors == null) || (possibleConstructors.isEmpty())) {
                     // There are no suitable enemies to spawn on this tile
                     continue;
                 }

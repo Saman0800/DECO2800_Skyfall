@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.weapons.EmptyItem;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.managers.TextureManager;
@@ -108,7 +109,7 @@ public class GameMenuBar2 extends AbstractUIElement {
         equippedTable.setBackground(gmm.generateTextureRegionDrawableObject("equipped_bar"));
         equippedTable.setSize(150, 100);
         // Equipped item text
-        equipped = new Label("", skin, "white-text");
+        equipped = new Label(new EmptyItem().getName(), skin, "white-text");
         equipped.setFontScale(0.7f);
         equippedTable.add(equipped).padBottom(10);
         stage.addActor(equippedTable);
@@ -199,7 +200,7 @@ public class GameMenuBar2 extends AbstractUIElement {
 
         int size = 80;
 
-        String[] weapons = {"axe", "box", "spear", "sword"};
+        String[] weapons = {"axe", "bow", "spear", "sword"};
 
         float sideBarWidth = 35;
 
@@ -214,12 +215,12 @@ public class GameMenuBar2 extends AbstractUIElement {
             String weaponName = entry.getKey();
             for (String weapon : weapons) {
                 if (weapon.equals(entry.getKey())) {
-                    weaponName = entry.getKey() + "_tex";
+                    weaponName = entry.getKey() + "_";
                 }
             }
             Table iconCell = new Table();
             iconCell.setName("iconCell");
-            ImageButton icon = new ImageButton(gmm.generateTextureRegionDrawableObject(weaponName + "_inv"));
+            ImageButton icon = new ImageButton(gmm.generateTextureRegionDrawableObject(weaponName + "inv"));
             icon.setName(entry.getKey());
 
             icon.addListener(new ClickListener() {

@@ -489,6 +489,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
         return null;
     }
 
+<<<<<<< HEAD
     /**
      * Returns the number of metal required for the item.
      *
@@ -510,6 +511,8 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
         // do nothing
     }
 
+=======
+>>>>>>> 27fed885583f772032f1d1bb1ccd40cec48e71a1
     public void cabinInteract() {
         // Resting at the cabin restores a players health.
         MainCharacter player = GameManager.getManagerFromInstance(GameMenuManager.class).getMainCharacter();

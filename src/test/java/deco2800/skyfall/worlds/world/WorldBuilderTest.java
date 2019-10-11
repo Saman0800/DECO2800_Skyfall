@@ -59,7 +59,7 @@ public class WorldBuilderTest {
         builder.addLake(1);
         builder.setRiverSize(2);
         builder.addRiver();
-        builder.addEntity(new Scout(-4f, -1f, 0.1f, "Forest", Enemy.EnemyType.SCOUT));
+        builder.addEntity(new Scout(-4f, -1f, 0.1f, "Forest"));
         builder.setStaticEntities(true);
         builder.setBeachSize(1);
 

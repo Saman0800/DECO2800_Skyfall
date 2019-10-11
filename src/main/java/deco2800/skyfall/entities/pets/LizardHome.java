@@ -1,7 +1,6 @@
 package deco2800.skyfall.entities.pets;
 
 import deco2800.skyfall.animation.Animatable;
-import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.Harvestable;
@@ -25,16 +24,13 @@ public class LizardHome extends AbstractPet implements Animatable, Harvestable {
         super(col, row);
         this.setTexture("lizardHome");
         this.setObjectName("lizardHome");
-        this.setHeight(1);
         this.setHealth(10);
         this.setLevel(1);
         this.setSpeed(1);
-        this.setArmour(1);
         this.mc = mc;
         this.configureAnimations();
         this.setDirectionTextures();
         this.setCurrentDirection(Direction.SOUTH);
-        this.setCurrentState(AnimationRole.NULL);
     }
 
     @Override
