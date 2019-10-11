@@ -27,7 +27,7 @@ public class CollectCreateTable extends AbstractPopUpElement{
     private Label titleLabel;
     private Type tableType;
     private Table labelTable;
-    private static enum Type {
+    private enum Type {
         COLLECT,
         CREATE
     }

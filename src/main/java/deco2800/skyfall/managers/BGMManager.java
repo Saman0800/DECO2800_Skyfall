@@ -2,15 +2,6 @@ package deco2800.skyfall.managers;
 
 import java.io.File;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
-
-import com.badlogic.gdx.files.FileHandle;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-
-//import java.io.File;
 import java.io.IOException;
 
 import deco2800.skyfall.observers.KeyTypedObserver;
@@ -20,14 +11,6 @@ import org.slf4j.LoggerFactory;
 import javax.sound.sampled.*;
 
 public class BGMManager extends AbstractManager implements KeyTypedObserver {
-
-    public Sound sound;
-
-    protected Music music;
-
-    private Media track;
-
-    private MediaPlayer player;
 
     /* Audio input stream */
     private AudioInputStream audioInputStream;
@@ -58,14 +41,6 @@ public class BGMManager extends AbstractManager implements KeyTypedObserver {
      */
     public BGMManager() {
         // Set parameters here
-    }
-
-    public void initMusic(String file) {
-        music = Gdx.audio.newMusic(new FileHandle(file));
-    }
-
-    public void playSound(String file) {
-        music.play();
     }
 
     /**

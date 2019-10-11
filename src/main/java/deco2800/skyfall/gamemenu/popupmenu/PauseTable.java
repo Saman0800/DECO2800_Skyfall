@@ -100,6 +100,7 @@ public class PauseTable extends AbstractPopUpElement{
         soundEffectsBar.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                // Do nothing for now.
             }
         });
 
@@ -115,6 +116,7 @@ public class PauseTable extends AbstractPopUpElement{
         musicBar.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                // Do nothing for now.
             }
         });
 
@@ -124,6 +126,7 @@ public class PauseTable extends AbstractPopUpElement{
         toHome.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // Do nothing for now.
             }
         });
 
@@ -148,6 +151,7 @@ public class PauseTable extends AbstractPopUpElement{
         reset.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // Do nothing for now.
             }
         });
 

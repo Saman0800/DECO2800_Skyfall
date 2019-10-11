@@ -232,14 +232,11 @@ public class Enemy extends Peon
 
             if (distance(mainCharacter) < 4) {
                 attackPlayer();
-                // SoundManager.playSound(getChaseSound());
-
             } else {
                 randomMoving();
                 setAttacking(false);
                 setSpeed(getWalkingSpeed());
                 setCurrentState(AnimationRole.MOVE);
-                // SoundManager.stopSound(getChaseSound());
             }
             if (isHurt) {
                 checkIfHurtEnded();

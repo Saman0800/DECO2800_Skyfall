@@ -9,12 +9,10 @@ import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.resources.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /***
  * A Hatchet item. Hatchet is a manufacturd resource. It can harvest a tree.

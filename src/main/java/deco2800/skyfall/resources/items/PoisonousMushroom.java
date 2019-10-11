@@ -1,8 +1,7 @@
 package deco2800.skyfall.resources.items;
 
-import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.HealthResources;
-import deco2800.skyfall.util.HexVector;
+
 
 public class PoisonousMushroom extends HealthResources {
 

@@ -1,6 +1,5 @@
 package deco2800.skyfall.resources;
 
-//import deco2800.skyfall.entities.EnemyEntity;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.util.HexVector;
@@ -43,7 +42,7 @@ public abstract class HealthResources extends AbstractEntity implements Item {
     // the colour of the health resource
     protected String colour;
 
-    private final transient Logger log = LoggerFactory.getLogger(HealthResources.class);
+    private final Logger logger = LoggerFactory.getLogger(HealthResources.class);
 
     /**
      * Creates a default health resource.

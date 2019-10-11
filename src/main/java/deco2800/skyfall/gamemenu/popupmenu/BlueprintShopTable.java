@@ -63,6 +63,7 @@ public class BlueprintShopTable extends AbstractPopUpElement {
      *
      * Draw the whole blueprint shop table.
      */
+    @Override
     public void draw() {
         super.draw();
         blueprintTable = new Table();
@@ -114,15 +115,15 @@ public class BlueprintShopTable extends AbstractPopUpElement {
             ImageButton icon = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(b.getName()));
             icon.setName("icon");
             icon.setSize(100, 100);
-            icon.setPosition(xpos + count * 130, ypos);
+            icon.setPosition(xpos + (float) count * 130, ypos);
             if (isBought(b)) {
                 Label cost = new Label("X", skin, "white-label");
                 cost.setName(b.getName());
-                cost.setPosition(xpos + 85 + count * 130, ypos + 75);
+                cost.setPosition(xpos + 85 + (float) count * 130, (float) ypos + 75);
                 blueprintPanel.addActor(cost);
             } else {
                 Label cost = new Label("$" + b.getCost(), skin, "white-label");
-                cost.setPosition(xpos + 85 + count * 130, ypos + 75);
+                cost.setPosition(xpos + 85 + (float) count * 130, (float) ypos + 75);
                 cost.setName(b.getName());
                 blueprintPanel.addActor(cost);
 

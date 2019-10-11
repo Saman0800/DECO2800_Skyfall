@@ -37,11 +37,13 @@ public class GoldTable extends AbstractPopUpElement{
         goldTable.setVisible(true);
     }
 
+    @Override
     public void update() {
         super.update();
         updateGoldPanel();
     }
 
+    @Override
     public void draw() {
         super.draw();
 
@@ -95,12 +97,12 @@ public class GoldTable extends AbstractPopUpElement{
             ImageButton icon = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("goldPiece" + entry.getKey()));
             icon.setName("icon");
             icon.setSize(100, 100);
-            icon.setPosition(xpos + count * 130, ypos);
+            icon.setPosition(xpos + (float) count * 130, ypos);
 
             goldPanel.addActor(icon);
 
             Label num = new Label(entry.getValue().toString(), skin, "white-label");
-            num.setPosition(xpos + 85 + count * 130, ypos + 75);
+            num.setPosition(xpos + 85 + (float) count * 130, (float) ypos + 75);
             goldPanel.addActor(num);
 
             count++;
