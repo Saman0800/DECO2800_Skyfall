@@ -4,7 +4,7 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameManager;
 
 public class SandCar extends AbstractVehicle {
-    private static final transient String BIOME = "desert";
+    private static final String BIOME = "desert";
     public final String textureName = "sand_car";
     private boolean underUsing = false;
     MainCharacter mc;

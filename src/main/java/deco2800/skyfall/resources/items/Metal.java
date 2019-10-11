@@ -1,8 +1,6 @@
 package deco2800.skyfall.resources.items;
 
-import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.NaturalResources;
-import deco2800.skyfall.util.HexVector;
 
 
 /**

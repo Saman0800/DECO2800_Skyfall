@@ -1,10 +1,8 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.Input;
-import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.enemies.Scout;
 import deco2800.skyfall.entities.weapons.EmptyItem;
-import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
@@ -639,7 +637,7 @@ public class MainCharacterTest {
         HexVector old_pos = new HexVector(testCharacter.getPosition().getRow(), testCharacter.getPosition().getCol());
 
         world.addEntity(new Scout(old_pos.getRow() + 0.1f, old_pos.getCol() + 0.1f,
-                0.1f, "Forest", Enemy.EnemyType.SCOUT));
+                0.1f, "Forest"));
 
         for (int i = 0; i < 100; ++i) {
             world.onTick(100);
