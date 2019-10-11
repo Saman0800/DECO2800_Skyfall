@@ -1,16 +1,16 @@
+
 package deco2800.skyfall.buildings;
+
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.world.World;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
  * An AbstractPortal is an item that can transport a players position to the
@@ -58,7 +58,6 @@ public abstract class AbstractPortal extends AbstractEntity {
         this.nextBiome = nextBiome;
     }
 
-
     /**
      * Move characters location to the next biome To be implemented when a player
      * clicks on the portal
@@ -75,7 +74,5 @@ public abstract class AbstractPortal extends AbstractEntity {
     public void unlocknext(MainCharacter character, String next) {
 
     }
-
-
 
 }
