@@ -16,13 +16,10 @@ public class IceWhitebear extends AbstractPet implements Animatable, Harvestable
         super(col, row);
         this.setTexture("icewhitebear");
         this.setObjectName("icewhitebear");
-        this.setHeight(1);
         this.setHealth(3);
         this.setLevel(1);
         this.setSpeed(1);
-        this.setArmour(1);
         this.mc = mc;
-
     }
 
     @Override

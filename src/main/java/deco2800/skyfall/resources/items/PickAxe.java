@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /***
  * A Pick Axe item. Pick Axe is a manufacturd resource. It can harvest a rock.

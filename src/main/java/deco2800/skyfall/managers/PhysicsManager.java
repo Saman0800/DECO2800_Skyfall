@@ -3,7 +3,6 @@ package deco2800.skyfall.managers;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.MainCharacter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
