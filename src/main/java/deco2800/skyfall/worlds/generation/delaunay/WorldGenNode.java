@@ -63,18 +63,9 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
             throw new NullPointerException();
         }
         if (this.getY() == other.getY()) {
-            if (this.getX() == other.getX()) {
-                return 0;
-            }
-            if (this.getX() < other.getX()) {
-                return -1;
-            }
-            return 1;
+            return Double.compare(this.getX(), other.getX());
         }
-        if (this.getY() < other.getY()) {
-            return -1;
-        }
-        return 1;
+        return Double.compare(this.getY(), other.getY());
     }
 
     /**
