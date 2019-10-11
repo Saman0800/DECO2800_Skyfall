@@ -23,6 +23,7 @@ import deco2800.skyfall.renderers.OverlayRenderer;
 import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.renderers.Renderer3D;
 import deco2800.skyfall.saving.Save;
+import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.lightinghelpers.*;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.packing.BirthPlacePacking;
@@ -262,6 +263,8 @@ public class GameScreen implements Screen, KeyDownObserver {
         blueKeyFrame.add(new TFTuple(19.0f, 0.19f));
         ambientBlue = new LinearSpectralValue(blueKeyFrame, gameEnvironManag);
 
+        enemySetUp(gameEnvironManag, world);
+
         // create a spawning manager
         SpawningManager.createSpawningManager();
 
@@ -285,10 +288,12 @@ public class GameScreen implements Screen, KeyDownObserver {
 
         GameLauncher.application.addLifecycleListener(new LifecycleListener() {
             @Override
-            public void pause() {}
+            public void pause() {
+            }
 
             @Override
-            public void resume() {}
+            public void resume() {
+            }
 
             @Override
             public void dispose() {
@@ -458,15 +463,15 @@ public class GameScreen implements Screen, KeyDownObserver {
             logger.info("Show Path is now {}", GameManager.get().showPath);
         }
 
-        //FIXME:jeffvan12 should replace with acutal world saving and loading
+        // FIXME:jeffvan12 should replace with acutal world saving and loading
         if (keycode == Input.Keys.F3) { // F3
             // Save the world to the DB
-//            DatabaseManager.saveWorld(null);
+            // DatabaseManager.saveWorld(null);
         }
 
         if (keycode == Input.Keys.F4) { // F4
             // Load the world to the DB
-//            DatabaseManager.loadWorld(null);
+            // DatabaseManager.loadWorld(null);
         }
 
         if (keycode == Input.Keys.P) {
@@ -514,5 +519,27 @@ public class GameScreen implements Screen, KeyDownObserver {
             }
         }
 
+    }
+
+    private void enemySetUp(EnvironmentManager gameEnvironManag, World world) {
+
+        Function<HexVector, ? extends Enemy> spawnAbductor = hexPos -> new Abductor(hexPos.getCol(), hexPos.getRow(),
+                0.8f, "Forest", Enemy.EnemyType.ABDUCTOR);
+
+        Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor = new HashMap<>();
+        List<Function<HexVector, ? extends Enemy>> forestList = new ArrayList<>();
+        forestList.add(spawnAbductor);
+
+        biomeToConstructor.put("forest", forestList);
+
+        Function<EnvironmentManager, Double> probAdjFunc = environMang -> 0.1;
+
+        EnemySpawnTable newEnemyTable = new EnemySpawnTable(100, 50, 1, biomeToConstructor, gameEnvironManag,
+                probAdjFunc, world);
+
+        gameEnvironManag.addTimeListener(newEnemyTable);
+        newEnemyTable.notifyTimeUpdate(1);
+
+        return;
     }
 }

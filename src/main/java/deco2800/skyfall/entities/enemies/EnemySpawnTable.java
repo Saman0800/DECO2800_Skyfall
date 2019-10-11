@@ -1,21 +1,25 @@
 package deco2800.skyfall.entities.enemies;
 
-import deco2800.skyfall.observers.TimeObserver;
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.EnvironmentManager;
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.world.World;
-import deco2800.skyfall.worlds.world.Chunk;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.badlogic.gdx.utils.Array;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.managers.EnvironmentManager;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.observers.TimeObserver;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.world.Chunk;
+import deco2800.skyfall.worlds.world.World;
 
 public class EnemySpawnTable implements TimeObserver {
 
@@ -187,6 +191,8 @@ public class EnemySpawnTable implements TimeObserver {
      */
     private void spawnEnemies() {
 
+        System.err.println("STARTED ENEMY SPAWNING");
+
         // Find how many enemies are within range of the maincharacter
         int numberToSpawn = maxInRadius - enemiesNearCharacter().size();
         if (numberToSpawn <= 0) {
@@ -251,9 +257,12 @@ public class EnemySpawnTable implements TimeObserver {
                 Function<HexVector, ? extends Enemy> randEnemyType = possibleConstructors
                         .get(rand.nextInt(possibleConstructors.size()));
 
-                Enemy newEnemy = randEnemyType.apply(new HexVector(nextTile.getRow(), nextTile.getCol()));
-                world.addEntity(newEnemy);
-                enemiesPlaced += 1;
+                if (rand.nextFloat() <= spawnChance) {
+                    System.err.println("Spawned Enemy in " + nextTile.getBiome().getBiomeName());
+                    Enemy newEnemy = randEnemyType.apply(new HexVector(nextTile.getRow(), nextTile.getCol()));
+                    world.addEntity(newEnemy);
+                    enemiesPlaced += 1;
+                }
             }
         }
     }
