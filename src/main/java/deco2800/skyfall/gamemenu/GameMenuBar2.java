@@ -26,7 +26,7 @@ public class GameMenuBar2 extends AbstractUIElement {
     private Table quickAccessPanel;
     // Shows what is equipped (Top right corner)
     private Table equippedTable;
-    // Text in equippedTable
+    // Text in eqiuppedTable
     private Label equipped;
     // Blue side bar next to quickAccessPanel
     private ImageButton sideBar;
@@ -39,8 +39,6 @@ public class GameMenuBar2 extends AbstractUIElement {
     private ImageButton equipActive;
     private ImageButton removeInactive;
     private ImageButton removeActive;
-
-    private static final String qaSelectedString = "-qaSelected";
 
     // Current inventory
     private InventoryManager inventory;
@@ -74,6 +72,7 @@ public class GameMenuBar2 extends AbstractUIElement {
     public void updatePosition() {
         equippedTable.setPosition(gmm.getTopRightX() - 170, gmm.getTopLeftY() - 130);
         quickAccessPanel.setPosition(gmm.getTopRightX() - 170, gmm.getTopRightY() - 650);
+        // t.setHeight(stage.getCamera().viewportHeight / 2);
         sideBar.setPosition(gmm.getTopRightX() - 180, gmm.getTopRightY() - 520);
         build.setPosition(gmm.getBottomRightX() - 170, gmm.getBottomRightY());
     }
@@ -108,7 +107,7 @@ public class GameMenuBar2 extends AbstractUIElement {
         equippedTable.setBackground(gmm.generateTextureRegionDrawableObject("equipped_bar"));
         equippedTable.setSize(150, 100);
         // Equipped item text
-        equipped = new Label("", skin, "white-text");
+        equipped = new Label("Nothing", skin, "white-text");
         equipped.setFontScale(0.7f);
         equippedTable.add(equipped).padBottom(10);
         stage.addActor(equippedTable);
@@ -159,7 +158,7 @@ public class GameMenuBar2 extends AbstractUIElement {
             public void clicked(InputEvent event, float x, float y) {
                 if (!quickAccessSelected.isEmpty()) {
                     inventory.quickAccessRemove(quickAccessSelected);
-                    quickAccessSelected = "";
+                    quickAccessSelected = "Nothing";
                     removeQuickAccessPanel();
                     setQuickAccessPanel();
                 }
@@ -206,7 +205,7 @@ public class GameMenuBar2 extends AbstractUIElement {
         // Places each item to quick access
         for (Map.Entry<String, Integer> entry : quickAccess.entrySet()) {
             Image selected = new Image(gmm.generateTextureRegionDrawableObject("selected"));
-            selected.setName(entry.getKey() + qaSelectedString);
+            selected.setName(entry.getKey() + "-qaSelected");
             selected.setSize((float) size + 15, (float) size + 15);
             selected.setPosition((float) -7.5, (float) -7.5);
             selected.setVisible(false);
@@ -228,10 +227,10 @@ public class GameMenuBar2 extends AbstractUIElement {
                     if (!quickAccessSelected.equals(icon.getName())) {
                         quickAccessSelected = icon.getName();
                     } else {
-                        quickAccessSelected = "";
+                        quickAccessSelected = "Nothing";
                     }
 
-                    Actor selected = stage.getRoot().findActor(icon.getName() + qaSelectedString);
+                    Actor selected = stage.getRoot().findActor(icon.getName() + "-qaSelected");
 
                     if (selected.isVisible()) {
                         selected.setVisible(false);
@@ -245,7 +244,7 @@ public class GameMenuBar2 extends AbstractUIElement {
 
                                 for (Actor iconActor : iconCell.getChildren()) {
                                     String name = iconActor.getName();
-                                    if (name != null && name.contains(qaSelectedString)) {
+                                    if (name != null && name.contains("-qaSelected")) {
                                         iconActor.setVisible(false);
                                     }
                                 }
