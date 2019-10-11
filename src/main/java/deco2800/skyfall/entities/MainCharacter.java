@@ -1,32 +1,21 @@
 package deco2800.skyfall.entities;
 
-import java.util.Map;
-import java.util.List;
-import org.slf4j.Logger;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.io.Serializable;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import org.slf4j.LoggerFactory;
-import deco2800.skyfall.Tickable;
-import deco2800.skyfall.GameScreen;
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.saving.Save;
-import deco2800.skyfall.buildings.*;
 import com.badlogic.gdx.math.Vector2;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.animation.Animatable;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import deco2800.skyfall.entities.spells.Spell;
-import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.GameScreen;
+import deco2800.skyfall.Tickable;
+import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
-import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.buildings.*;
+import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellCaster;
 import deco2800.skyfall.entities.spells.SpellFactory;
+import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.entities.vehicle.AbstractVehicle;
 import deco2800.skyfall.entities.vehicle.Bike;
 import deco2800.skyfall.entities.vehicle.SandCar;
@@ -44,6 +33,15 @@ import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.saving.AbstractMemento;
+import deco2800.skyfall.saving.Save;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.Tile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.*;
 
 import static deco2800.skyfall.buildings.BuildingType.*;
 
@@ -1825,9 +1823,13 @@ public class MainCharacter extends Peon
                         AnimationRole.ATTACK, Direction.DEFAULT, false, true));
 
         // Hurt animation
-        addAnimations(AnimationRole.HURT, Direction.DEFAULT,
+        addAnimations(AnimationRole.HURT, Direction.EAST,
                 new AnimationLinker("MainCharacter_Hurt_E_Anim",
-                        AnimationRole.HURT, Direction.DEFAULT, true, true));
+                        AnimationRole.HURT, Direction.EAST, true, true));
+
+        addAnimations(AnimationRole.HURT, Direction.WEST,
+                new AnimationLinker("MainCharacter_Hurt_W_Anim",
+                        AnimationRole.HURT, Direction.EAST, true, true));
 
         // Dead animation
         addAnimations(AnimationRole.DEAD, Direction.DEFAULT,
@@ -1841,7 +1843,7 @@ public class MainCharacter extends Peon
                         AnimationRole.STILL, Direction.DEFAULT, false, true));
     }
 
-    private Map<Direction,String> defaultMainCharacterTextureMap=new HashMap<>();
+    private Map<Direction,String> defaultMainCharacterTextureMap= new EnumMap<>(Direction.class);
 
     /**
      * Sets default direction textures uses the get index for Animation feature as described in the animation
