@@ -156,10 +156,10 @@ public class SoundManager extends AbstractManager {
                     (Gdx.files.internal(PATH + "desert_day.mp3")));
             musicMap.put("desert_night", Gdx.audio.newMusic
                     (Gdx.files.internal(PATH + "desert_night.mp3")));
-            musicMap.put("snowy_mountains_day", Gdx.audio.newMusic
-                    (Gdx.files.internal(PATH + "snowy_mountains_day.mp3")));
-            musicMap.put("snowy_mountains_night", Gdx.audio.newMusic
-                    (Gdx.files.internal(PATH + "snowy_mountains_night.mp3")));
+            musicMap.put("mountain_day", Gdx.audio.newMusic
+                    (Gdx.files.internal(PATH + "mountain_day.mp3")));
+            musicMap.put("mountain_night", Gdx.audio.newMusic
+                    (Gdx.files.internal(PATH + "mountain_night.mp3")));
             musicMap.put("volcanic_mountains_day", Gdx.audio.newMusic
                     (Gdx.files.internal(PATH + "volcanic_mountains_day.mp3")));
             musicMap.put("volcanic_mountains_night", Gdx.audio.newMusic
@@ -352,11 +352,9 @@ public class SoundManager extends AbstractManager {
             Sound sound = soundMap.get(soundName);
             sound.dispose();
             soundLoops.remove(soundName);
-            soundMap.remove(soundName);
         } else if (musicMap.containsKey(soundName)) {
             Music music = musicMap.get(soundName);
             music.dispose();
-            musicMap.remove(soundName);
         }
     }
 

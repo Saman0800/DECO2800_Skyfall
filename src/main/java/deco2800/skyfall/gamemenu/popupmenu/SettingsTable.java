@@ -1,6 +1,7 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -106,7 +107,6 @@ public class SettingsTable extends AbstractPopUpElement{
                     for (String sound : soundLoops.keySet()) {
                         SoundManager.playSound(sound);
                     }
-
                 }
             }
         });
@@ -114,23 +114,30 @@ public class SettingsTable extends AbstractPopUpElement{
         bgm.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                BGMManager bgmManager = GameManager.getManagerFromInstance(BGMManager.class);
+                Map<String, Music> bgmMap = soundManager.getMusicMap();
 
-                if (!bgm.isChecked()) {
-                    bgmManager.paused = true;
-                    bgmManager.mute();
+                if (!soundFX.isChecked()) {
+                    SoundManager.setPaused(true);
+
+                    for (String music : bgmMap.keySet()) {
+                        SoundManager.stopSound(music);
+                    }
+
                 } else {
-                    bgmManager.paused = false;
-                    bgmManager.unmute();
-                }
+                    SoundManager.setPaused(false);
 
+                    for (String music : bgmMap.keySet()) {
+                        SoundManager.playSound(music);
+                    }
+                }
             }
         });
+
         Label muteSoundFXText = new Label("Sound FX", skin,"white-text");
         Label muteSoundBGMText = new Label("Background Music", skin,"white-text");
 
         muteSoundFXText.setSize(50, 50);
-
+        muteSoundBGMText.setSize(50, 50);
 
         settingsTable.add(infoBar).width(550).height(550 * 188f / 1756).padTop(20).colspan(3);
         settingsTable.row().padTop(20);
