@@ -279,7 +279,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         // add shader to rendererDebug
         rendererDebug.setShader(shader);
 
-        GameLauncher.application.addLifecycleListener(new LifecycleListener() {
+        GameLauncher.getApplication().addLifecycleListener(new LifecycleListener() {
             @Override
             public void pause() {
                 // Do nothing for the time being.

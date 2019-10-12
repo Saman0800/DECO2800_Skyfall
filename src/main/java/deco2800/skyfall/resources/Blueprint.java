@@ -47,13 +47,6 @@ public interface Blueprint {
      */
     Map<String, Integer> getAllRequirements();
 
-//    /**
-//     * a getter method to check if a player has learned the blueprint
-//     *
-//     * @return true if the player has learned the blueprint.
-//     */
-//    boolean isBlueprintLearned();
-
     /**
      * @return - cost of building the building
      */

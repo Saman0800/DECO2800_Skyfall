@@ -17,10 +17,11 @@ public class SkyfallGame extends Game {
 	/**
 	 * The SpriteBatch for the game
 	 */
-	public SpriteBatch batch;
+	private SpriteBatch batch;
+	// TODO:jeffvan Remove these or use them to configure the database location.
 	public static final String SAVE_ROOT_DIR = "skyfall-saves";
-	public FileHandle saveRootHandle;
-	public MainMenuScreen mainMenuScreen;
+	private FileHandle saveRootHandle;
+	private MainMenuScreen mainMenuScreen;
 
 	/**
 	 * Creates the mainmenu screen
@@ -45,5 +46,32 @@ public class SkyfallGame extends Game {
 
 	public void initUISkin() {
 		GameManager.get().setSkin(new Skin(Gdx.files.internal("resources/uiskin.skin")));
+	}
+
+	/**
+	 * Gets the sprite batch for the game.
+	 *
+	 * @return the sprite batch for the game
+	 */
+	public SpriteBatch getBatch() {
+		return batch;
+	}
+
+	/**
+	 * Gets the file handle to the save location.
+	 *
+	 * @return the file handle to the save location
+	 */
+	public FileHandle getSaveRootHandle() {
+		return saveRootHandle;
+	}
+
+	/**
+	 * Gets the main menu screen for this game.
+	 *
+	 * @return the main menu screen for this game
+	 */
+	public MainMenuScreen getMainMenuScreen() {
+		return mainMenuScreen;
 	}
 }
