@@ -72,7 +72,7 @@ public class Hatchet extends ManufacturedResources implements Blueprint {
      */
     public void farmTree(AbstractTree treeToFarm) {
         if (treeToFarm.getWoodAmount() == 0) {
-            System.out.println("This tree has no more wood");
+            logger.info("This tree has no more wood");
             GameManager.get().getWorld().removeEntity(treeToFarm);
 
         } else {
@@ -97,15 +97,12 @@ public class Hatchet extends ManufacturedResources implements Blueprint {
     @Override
     public void use(HexVector position) {
         for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
-            if (entity instanceof AbstractTree) {
-                if (position.distance(entity.getPosition()) <= 1.5) {
+            if (entity instanceof AbstractTree && position.distance(entity.getPosition()) <= 1.5 ) {
                     this.farmTree((AbstractTree) entity);
-                }
             }
         }
         this.decreaseDurability();
-        logger.warn("Durability: " + this.getDurability());
+        logger.warn("Durability: %d", this.getDurability());
     }
-//
 
 }
