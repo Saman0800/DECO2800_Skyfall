@@ -9,7 +9,7 @@ public final class DatabaseManager extends AbstractManager {
 
     // An instance of DataBaseConnector that is used to connect and manage data in
     // the database
-    private static DataBaseConnector dataBaseConnector;
+    private DataBaseConnector dataBaseConnector;
 
     private DatabaseManager() {
         /*
@@ -34,7 +34,7 @@ public final class DatabaseManager extends AbstractManager {
     /**
      * Creates and starts and new DataBaseConnector
      */
-    public static void startDataBaseConnector() {
+    public void startDataBaseConnector() {
         dataBaseConnector = new DataBaseConnector();
         dataBaseConnector.start("Database");
     }

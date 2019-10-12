@@ -21,7 +21,7 @@ public class MountainPortal extends AbstractPortal implements Blueprint {
     }
 
     public void unlocknext(MainCharacter character) {
-        super.unlocknext(character, nextBiome);
+        super.unlocknext(character, getNext());
     }
 
 }

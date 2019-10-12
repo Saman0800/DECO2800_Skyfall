@@ -47,7 +47,7 @@ public class MainMenuScreen implements Screen {
      */
     public MainMenuScreen(final SkyfallGame game) {
         this.game = game;
-        stage = new Stage(new ExtendViewport(MIN_WIDTH, MIN_HEIGHT), game.batch);
+        stage = new Stage(new ExtendViewport(MIN_WIDTH, MIN_HEIGHT), game.getBatch());
         Skin skin = GameManager.get().getSkin();
 
         saveInfoList = DatabaseManager.get().getDataBaseConnector().loadSaveInformation();

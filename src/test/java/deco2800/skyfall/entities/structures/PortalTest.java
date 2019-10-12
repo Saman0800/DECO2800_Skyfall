@@ -1,23 +1,18 @@
 package deco2800.skyfall.entities.structures;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.mockito.Mockito.mock;
-
-import java.util.ArrayList;
-
+import deco2800.skyfall.buildings.*;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.worlds.world.World;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import deco2800.skyfall.buildings.AbstractPortal;
-import deco2800.skyfall.buildings.DesertPortal;
-import deco2800.skyfall.buildings.ForestPortal;
-import deco2800.skyfall.buildings.MountainPortal;
-import deco2800.skyfall.buildings.VolcanoPortal;
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.worlds.world.World;
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.mockito.Mockito.mock;
 
 public class PortalTest {
 
@@ -27,7 +22,6 @@ public class PortalTest {
     public void setup() {
         world = mock(World.class);
         GameManager.get().setWorld(world);
-
     }
 
     @Test
@@ -40,7 +34,6 @@ public class PortalTest {
         lockedBiomes.add("volcanic_mountain");
 
         assertEquals(lockedBiomes, character.getlockedBiomes());
-
     }
 
     @Test
@@ -55,7 +48,6 @@ public class PortalTest {
 
         character.unlockBiome("desert");
         assertEquals(lockedBiomes, character.getlockedBiomes());
-
     }
 
     @Test
@@ -73,7 +65,6 @@ public class PortalTest {
         portal.teleport(character, world);
 
         assertEquals(lockedBiomes, character.getlockedBiomes());
-
     }
 
     // ignored because not working
@@ -91,7 +82,6 @@ public class PortalTest {
         portal.teleport(character2, world);
 
         assertEquals(lockedBiomes, character2.getlockedBiomes());
-
     }
 
     // ignored because not working
@@ -107,39 +97,30 @@ public class PortalTest {
         portal.teleport(character3, world);
 
         assertEquals(lockedBiomes, character3.getlockedBiomes());
-
     }
 
     @Test
     public void testForestPortal() {
-
         AbstractPortal portal = new ForestPortal(1, 1, 1);
-        assertEquals("desert", portal.nextBiome);
-
+        assertEquals("desert", portal.getNext());
     }
 
     @Test
     public void testDesertPortal() {
-
         AbstractPortal portal = new DesertPortal(1, 1, 1);
-        assertEquals("mountain", portal.nextBiome);
-
+        assertEquals("mountain", portal.getNext());
     }
 
     @Test
     public void testMountainPortal() {
-
         AbstractPortal portal = new MountainPortal(1, 1, 1);
-        assertEquals("volcanic_mountain", portal.nextBiome);
-
+        assertEquals("volcanic_mountain", portal.getNext());
     }
 
     @Test
     public void testVolcanoPortal() {
-
         AbstractPortal portal = new VolcanoPortal(1, 1, 1);
-        assertEquals("volcanic_mountain", portal.nextBiome);
-
+        assertEquals("volcanic_mountain", portal.getNext());
     }
 
     @Test
@@ -168,7 +149,5 @@ public class PortalTest {
         // character.getTile(character.getCol(),character.getRow());
 
         // assertEquals("desert", characterTile2.getBiome().getBiomeName());
-
     }
-
 }
