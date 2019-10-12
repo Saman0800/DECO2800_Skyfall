@@ -10,12 +10,13 @@ import java.util.Random;
  * Forest Biome
  */
 public class ForestBiome extends AbstractBiome {
+    public static final String NAME = "forest";
 
     /**
      * Constructor for the ForestBiome
      */
     public ForestBiome(Random random) {
-        super("forest", null);
+        super(NAME, null);
 
         textureGenerator = new NoiseGenerator(random.nextLong(), 3, 60, 0.4);
     }
