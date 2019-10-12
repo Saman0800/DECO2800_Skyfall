@@ -24,7 +24,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
     private final Logger logger = LoggerFactory.getLogger(PickAxe.class);
 
     //Used for farming sound
-    private static final String WALK_NORMAL = "walk_D";
+    private static final String COLLECT_STONE = "collect_stone";
 
     /***
      * Create a Pick Axe with the name Pick Axe.
@@ -73,13 +73,13 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
     public void farmRock(AbstractRock rockToFarm) {
 
         if (rockToFarm.getHealth() == 0) {
-            System.out.println("This rock has nothing left to offer");
+            logger.info("This rock has nothing left to offer");
             GameManager.get().getWorld().removeEntity(rockToFarm);
 
         }
 
         else {
-            SoundManager.playSound(WALK_NORMAL);
+            SoundManager.playSound(COLLECT_STONE);
             GameManager.getManagerFromInstance(InventoryManager.class).add(new Stone());
             // lowering the possibility of gaining metal
             double x = (int) (Math.random() * (2));
@@ -108,13 +108,11 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
     @Override
     public void use(HexVector position) {
         for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
-            if (entity instanceof AbstractRock) {
-                if (position.distance(entity.getPosition()) <= 1.5) {
+            if (entity instanceof AbstractRock && position.distance(entity.getPosition()) <= 1.5) {
                     this.farmRock((AbstractRock) entity);
-                }
             }
         }
         this.decreaseDurability();
-        logger.warn("Durability: " + this.getDurability());
+        logger.warn("Durability: %d", this.getDurability());
     }
 }

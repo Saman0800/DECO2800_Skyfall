@@ -82,7 +82,7 @@ public class MainCharacter extends Peon
 
     public static MainCharacter getInstance() {
         if (mainCharacterInstance == null) {
-            mainCharacterInstance = new MainCharacter(0, 0, 0.05f, "Main Piece", 10);
+            mainCharacterInstance = new MainCharacter(0, 0, 0.05f, "Main Piece", 50);
         }
         return mainCharacterInstance;
     }
@@ -1262,9 +1262,6 @@ public class MainCharacter extends Peon
         case Input.Keys.SHIFT_LEFT:
             isSprinting = false;
             maxSpeed /= 2.f;
-            break;
-        case Input.Keys.SPACE:
-            SoundManager.stopSound(WALK_NORMAL);
             break;
         default:
             break;

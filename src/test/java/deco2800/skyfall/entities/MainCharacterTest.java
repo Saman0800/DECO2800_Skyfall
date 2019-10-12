@@ -132,19 +132,19 @@ public class MainCharacterTest {
         Assert.assertEquals(testCharacter.getName(), "Side Piece");
 
         Assert.assertFalse(testCharacter.isDead());
-        Assert.assertEquals(testCharacter.getHealth(), 10);
+        Assert.assertEquals(testCharacter.getHealth(), 50);
         testCharacter.changeHealth(5);
-        Assert.assertEquals(testCharacter.getHealth(), 15);
-        testCharacter.changeHealth(-20);
+        Assert.assertEquals(testCharacter.getHealth(), 55);
+        testCharacter.changeHealth(-55);
         Assert.assertEquals(testCharacter.getHealth(), 0);
         Assert.assertEquals(testCharacter.getDeaths(), 1);
         Assert.assertTrue(testCharacter.isDead());
 
-        testCharacter.changeHealth(10);
-        Assert.assertEquals(testCharacter.getHealth(), 10);
-        testCharacter.changeHealth(5);
-        Assert.assertEquals(testCharacter.getHealth(), 15);
-        testCharacter.changeHealth(-20);
+        testCharacter.changeHealth(50);
+        Assert.assertEquals(testCharacter.getHealth(), 50);
+        testCharacter.changeHealth(-2);
+        Assert.assertEquals(testCharacter.getHealth(), 48);
+        testCharacter.changeHealth(-48);
         Assert.assertEquals(testCharacter.getHealth(), 0);
         Assert.assertEquals(testCharacter.getDeaths(), 2);
     }
@@ -251,7 +251,7 @@ public class MainCharacterTest {
         testCharacter.playerHurt(3);
         Assert.assertTrue(testCharacter.isHurt());
         // Health decreases
-        Assert.assertEquals(7, testCharacter.getHealth());
+        Assert.assertEquals(47, testCharacter.getHealth());
         // set current animation to hurt
         Assert.assertEquals(AnimationRole.HURT, testCharacter.getCurrentState());
         // set hurt time and recover time to 0.
@@ -674,11 +674,11 @@ public class MainCharacterTest {
      */
     @Test
     public void getHealthTest() {
-        assertEquals(10, testCharacter.getHealth());
+        assertEquals(50, testCharacter.getHealth());
 
         testCharacter.changeHealth(-2);
 
-        assertEquals(8, testCharacter.getHealth());
+        assertEquals(48, testCharacter.getHealth());
     }
 
     /**
@@ -689,7 +689,7 @@ public class MainCharacterTest {
         testCharacter.setDead(false);
         assertFalse(testCharacter.isDead());
 
-        testCharacter.changeHealth(-10);
+        testCharacter.changeHealth(-50);
 
         assertTrue(testCharacter.isDead());
 
@@ -701,7 +701,7 @@ public class MainCharacterTest {
      */
     @Test
     public void getDeathsTest() {
-        testCharacter.changeHealth(-10);
+        testCharacter.changeHealth(-50);
         assertTrue(testCharacter.isDead());
 
         assertEquals(1, testCharacter.getDeaths());
