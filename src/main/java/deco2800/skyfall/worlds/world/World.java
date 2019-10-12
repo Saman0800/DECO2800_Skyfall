@@ -687,6 +687,7 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
                 }
             } else if (entity instanceof Chest) {
                 ChestTable chest = (ChestTable) gmm.getPopUp("chestTable");
+                chest.setWorldAndChestEntity(this, (Chest) entity);
                 chest.updateChestPanel((Chest) entity);
                 gmm.setPopUp("chestTable");
             } else if (entity instanceof Item) {
