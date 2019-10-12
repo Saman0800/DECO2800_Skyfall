@@ -4,13 +4,13 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameManager;
 
 public class SandCar extends AbstractVehicle {
-    private static final String BIOME = "desert";
-    public final String textureName = "sand_car";
+    private static final transient String BIOME = "desert";
+    public static final String textureName = "sand_car";
     private boolean underUsing = false;
     MainCharacter mc;
 
     public SandCar(float col, float row, MainCharacter mc) {
-        super(col, row, "sand_car");
+        super(col, row, textureName);
         this.setTexture(textureName);
         this.setObjectName(textureName);
         this.setHeight(1);
@@ -31,7 +31,7 @@ public class SandCar extends AbstractVehicle {
 
     @Override
     public String getName() {
-        return textureName;
+        return SandCar.textureName;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class SandCar extends AbstractVehicle {
         return "vehicle sand_car";
     }
 
-    public void removeSandCar(){
+    public void removeSandCar() {
         GameManager.get().getWorld().removeEntity(this);
     }
 }
