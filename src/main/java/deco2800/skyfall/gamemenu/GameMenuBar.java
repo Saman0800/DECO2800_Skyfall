@@ -167,10 +167,10 @@ public class GameMenuBar extends AbstractUIElement {
     public void updateQuickAccess(){
         Map<String, Integer> quickAccess = gameMenuManager.getInventory().getQuickAccess();
 
-        int count = 1;
-        int xpos = 15;
-        int ypos = 28;
-        int size = 55;
+        float count = 1;
+        float xpos = 15;
+        float ypos = 28;
+        float size = 55;
 
         String[] weapons = {"axe", "bow", "spear", "sword"};
 

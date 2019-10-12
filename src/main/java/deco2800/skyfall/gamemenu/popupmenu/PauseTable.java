@@ -21,8 +21,6 @@ import deco2800.skyfall.managers.TextureManager;
 public class PauseTable extends AbstractPopUpElement{
     private Skin skin;
     private Table table;
-    private BGMManager bgmManager;
-
 
     /**
      * Constructs a pause table.
@@ -40,7 +38,6 @@ public class PauseTable extends AbstractPopUpElement{
         super(stage, exit, textureNames,tm , gameMenuManager);
         this.skin = skin;
         this.draw();
-//        bgmManager = GameManager.getManagerFromInstance(BGMManager.class);
     }
 
     /**

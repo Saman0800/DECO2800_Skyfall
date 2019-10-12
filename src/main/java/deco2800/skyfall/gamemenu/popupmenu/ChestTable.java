@@ -1,7 +1,6 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -69,6 +68,7 @@ public class ChestTable extends AbstractPopUpElement{
         super.updatePosition();
     }
 
+    @Override
     public void update() {
         super.update();
     }
@@ -78,6 +78,7 @@ public class ChestTable extends AbstractPopUpElement{
      *
      * Draw the whole chest table.
      */
+    @Override
     public void draw() {
         super.draw();
         chestTable = new Table();
@@ -144,7 +145,7 @@ public class ChestTable extends AbstractPopUpElement{
      * @param xspace space between icons
      */
     private void setCounts(Map<String, Integer> inventoryAmounts, int xpos, int ypos, int size, int xspace){
-        int count = 0;
+        float count = 0;
 
         String[] weapons = {"axe", "bow", "spear", "sword"};
 

@@ -87,7 +87,7 @@ public class GameOverTable extends AbstractPopUpElement{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // If pressed, return home and hide screen
-                returnHome();
+                //returnHome();
                 hide();
             }
         });

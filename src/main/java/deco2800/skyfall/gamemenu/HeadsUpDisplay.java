@@ -10,9 +10,7 @@ import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.QuestManager;
 import deco2800.skyfall.managers.TextureManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class HeadsUpDisplay extends AbstractUIElement {
@@ -29,7 +27,6 @@ public class HeadsUpDisplay extends AbstractUIElement {
     private Table leftHUDTable;
     private ImageButton location;
     private TextButton teleport;
-    private boolean canTeleport = true;
     public HeadsUpDisplay(Stage stage, String[] textureNames, TextureManager tm,
                           Skin skin, GameMenuManager gmm,
                           Map<String, AbstractUIElement> hudElements,
@@ -94,9 +91,10 @@ public class HeadsUpDisplay extends AbstractUIElement {
             }
         });
 
+        String pill = "blue-pill";
 
-        TextButton pauseT = new TextButton("PAUSE", skin, "blue-pill");
-        pauseT.getLabel().setStyle(skin.get("blue-pill", Label.LabelStyle.class));
+        TextButton pauseT = new TextButton("PAUSE", skin, pill);
+        pauseT.getLabel().setStyle(skin.get(pill, Label.LabelStyle.class));
         pauseT.getLabel().setAlignment(Align.center);
         pauseT.getLabel().setFontScale(0.8f);
         pauseT.addListener(new ClickListener() {
@@ -108,8 +106,8 @@ public class HeadsUpDisplay extends AbstractUIElement {
         });
 
 
-        TextButton helpT = new TextButton("HELP", skin, "blue-pill");
-        helpT.getLabel().setStyle(skin.get("blue-pill", Label.LabelStyle.class));
+        TextButton helpT = new TextButton("HELP", skin, pill);
+        helpT.getLabel().setStyle(skin.get(pill, Label.LabelStyle.class));
         helpT.getLabel().setAlignment(Align.center);
         helpT.getLabel().setFontScale(0.8f);
         helpT.addListener(new ClickListener() {

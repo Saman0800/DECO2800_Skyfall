@@ -91,12 +91,13 @@ public class ProgressTable extends AbstractPopUpElement {
         baseTable.top();
 
 
+        String font = "game-font";
 
         Label titleLabel = new Label(" PROGRESS ", skin, "title-pill");
-        biomeLabel = new Label("ERR", skin, "game-font",Color.WHITE);
-        collectLabel = new Label("ERR", skin, "game-font",Color.WHITE);
-        createLabel = new Label("ERR", skin, "game-font",Color.WHITE);
-        blueprintLabel = new Label("ERR", skin, "game-font",Color.WHITE);
+        biomeLabel = new Label("ERR", skin, font,Color.WHITE);
+        collectLabel = new Label("ERR", skin, font,Color.WHITE);
+        createLabel = new Label("ERR", skin, font,Color.WHITE);
+        blueprintLabel = new Label("ERR", skin, font,Color.WHITE);
 
         titleLabel.getStyle().fontColor = Color.BLACK;
 

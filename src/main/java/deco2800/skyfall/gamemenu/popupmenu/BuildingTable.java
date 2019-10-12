@@ -26,7 +26,6 @@ public class BuildingTable extends AbstractPopUpElement {
     private Table itemInfo;
     private Blueprint selectedItem = null;
     private InventoryTable inventoryTable;
-//    private GameMenuManager gameMenuManager;
 
     /**
      * Constructs a building table.
@@ -42,7 +41,6 @@ public class BuildingTable extends AbstractPopUpElement {
             GameMenuManager gameMenuManager, Skin skin) {
         super(stage, exit, textureNames, tm, gameMenuManager);
         this.skin = skin;
-//        this.gameMenuManager = gameMenuManager;
         inventoryTable = (InventoryTable) gameMenuManager.getPopUp("inventoryTable");
         this.draw();
     }

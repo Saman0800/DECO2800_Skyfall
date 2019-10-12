@@ -1,7 +1,5 @@
 package deco2800.skyfall.gamemenu;
 
-import deco2800.skyfall.gamemenu.StatBar;
-
 /**
  * This should be used by the MainCharacter class, and only called when damage is taken in order to update it.
  *
@@ -22,7 +20,6 @@ public class ManaBar extends StatBar {
 
         if (smallerCircle == null) {
             if (biggerCircle == null) {
-                return;
             }
             return;
         }
