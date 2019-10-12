@@ -23,7 +23,7 @@ public class Hatchet extends ManufacturedResources implements Blueprint {
     private final Logger logger = LoggerFactory.getLogger(Hatchet.class);
 
     //Used for farming sound
-    private static final String WALK_NORMAL = "walk_D";
+    private static final String CUT_TREE = "cut_tree";
 
     /***
      * Create a Hatecht with the name Hatchet
@@ -76,7 +76,7 @@ public class Hatchet extends ManufacturedResources implements Blueprint {
             GameManager.get().getWorld().removeEntity(treeToFarm);
 
         } else {
-            SoundManager.playSound(WALK_NORMAL);
+            SoundManager.playSound(CUT_TREE);
             GameManager.getManagerFromInstance(InventoryManager.class).add(new Wood());
             treeToFarm.decreaseWoodAmount();
 

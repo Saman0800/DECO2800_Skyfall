@@ -24,7 +24,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
     private final Logger logger = LoggerFactory.getLogger(PickAxe.class);
 
     //Used for farming sound
-    private static final String WALK_NORMAL = "walk_D";
+    private static final String COLLECT_STONE = "collect_stone";
 
     /***
      * Create a Pick Axe with the name Pick Axe.
@@ -79,7 +79,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
         }
 
         else {
-            SoundManager.playSound(WALK_NORMAL);
+            SoundManager.playSound(COLLECT_STONE);
             GameManager.getManagerFromInstance(InventoryManager.class).add(new Stone());
             // lowering the possibility of gaining metal
             double x = (int) (Math.random() * (2));

@@ -1263,9 +1263,6 @@ public class MainCharacter extends Peon
             isSprinting = false;
             maxSpeed /= 2.f;
             break;
-        case Input.Keys.SPACE:
-            SoundManager.stopSound(WALK_NORMAL);
-            break;
         default:
             break;
         }
