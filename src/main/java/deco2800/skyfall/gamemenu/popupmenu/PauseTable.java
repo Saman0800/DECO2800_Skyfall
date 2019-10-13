@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
@@ -22,6 +23,8 @@ public class PauseTable extends AbstractPopUpElement{
     private Skin skin;
     private Table table;
     private SoundManager sound;
+//    private float volume;
+    private GameScreen game;
 
 
     /**
@@ -41,6 +44,7 @@ public class PauseTable extends AbstractPopUpElement{
         this.skin = skin;
         this.draw();
         sound = GameManager.getManagerFromInstance(SoundManager.class);
+//        volume = 100f;
     }
 
     /**
@@ -100,7 +104,7 @@ public class PauseTable extends AbstractPopUpElement{
         soundEffectsBar.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                // Do nothing for now.
+                sound.setSoundVolume(soundEffectsBar.getValue());
             }
         });
 
@@ -116,7 +120,7 @@ public class PauseTable extends AbstractPopUpElement{
         musicBar.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                // Do nothing for now.
+                sound.setMusicVolume(musicBar.getValue());
             }
         });
 
@@ -167,6 +171,10 @@ public class PauseTable extends AbstractPopUpElement{
         table.setVisible(false);
         stage.addActor(table);
     }
+//
+//    private float setMusicVolume() {
+//        sound.setVolume(volume);
+//    }
 
 
 }
