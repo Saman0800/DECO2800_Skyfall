@@ -53,8 +53,8 @@ public class Shield extends Spell implements Animatable {
 
         if (this.mc != null) {
             this.mc.setRecovering(true);
-
         }
+        
         setCurrentState(AnimationRole.STILL);
     }
 
