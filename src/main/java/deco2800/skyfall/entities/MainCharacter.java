@@ -45,7 +45,6 @@ import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.saving.AbstractMemento;
-import sun.security.krb5.internal.crypto.Des;
 
 import static deco2800.skyfall.buildings.BuildingType.*;
 
@@ -235,7 +234,7 @@ public class MainCharacter extends Peon
     /**
      * Item player is currently equipped with/holding.
      */
-    private Item equippedItem;
+    protected Item equippedItem;
 
     /**
      * The spell the user currently has selected to cast.
@@ -592,6 +591,8 @@ public class MainCharacter extends Peon
         }
     }
 
+    protected Projectile defaultProjectile = null;
+
     /**
      * Fire a projectile in the position that the mouse is in.
      *
@@ -607,18 +608,25 @@ public class MainCharacter extends Peon
         int bowRange = equippedItem.getName().equals("bow") ? 10 : 0;
         int range = this.itemSlotSelected == 1 ? bowRange : 0;
 
-        Projectile projectile = new Projectile(mousePosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
-                position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
-                position.getRow() + 0.5f + 1.5f * unitDirection.getRow(),
-                ((Weapon)equippedItem).getDamage(),
-                1,
-                range);
+        Projectile projectile;
+
+        //If there is a default projectile selected to fire, use that.
+        if (defaultProjectile == null) {
+            projectile = new Projectile(mousePosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
+                    position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
+                    position.getRow() + 0.5f + 1.5f * unitDirection.getRow(),
+                    ((Weapon)equippedItem).getDamage(),
+                    1,
+                    range);
+        } else {
+            projectile = defaultProjectile;
+        }
 
         // Add the projectile entity to the game world.
         GameManager.get().getWorld().addEntity(projectile);
 
         // Play weapon attackEntity sound
-        switch(((Weapon)equippedItem).getName()) {
+        switch((equippedItem).getName()) {
             case "sword":
                 SoundManager.playSound(SWORDATTACK);
                 break;
