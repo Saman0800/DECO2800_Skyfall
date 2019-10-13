@@ -154,6 +154,7 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
     public static class SaveMemento extends AbstractMemento implements Serializable {
         private long saveID;
         private long currentWorld;
+        private static final long serialVersionUID = 1234567890L;
 
         private SaveMemento(Save save) {
             this.saveID = save.getSaveID();
