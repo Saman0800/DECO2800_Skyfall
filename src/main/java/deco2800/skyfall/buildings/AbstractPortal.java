@@ -1,29 +1,27 @@
 
 package deco2800.skyfall.buildings;
 
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.world.World;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
  * An AbstractPortal is an item that can transport a players position to the
  * specified Biome, given the player has reached the necessary requirements.
  */
 public abstract class AbstractPortal extends AbstractEntity {
-
     // a logger
-    private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPortal.class);
     // a building object name
     private static final String ENTITY_ID_STRING = "PortalID";
     // The next biome to teleport to
-    public String nextBiome;
+    private String nextBiome;
 
     private Map<String, Integer> buildCost;
 
@@ -31,23 +29,19 @@ public abstract class AbstractPortal extends AbstractEntity {
     protected String name = "abstractPortal";
     protected String currentBiome;
 
-    private float col;
-    private float row;
-
     /**
      * Constructor for an building entity with normal rendering size.
      *
      * @param col         the col position on the world
      * @param row         the row position on the world
      * @param renderOrder the height position on the world
-     * @param
      */
     public AbstractPortal(float col, float row, int renderOrder) {
         super(col, row, renderOrder);
         this.setObjectName(ENTITY_ID_STRING);
 
         if (!WorldUtil.validColRow(new HexVector(col, row))) {
-            log.debug("Invalid position");
+            LOGGER.debug("Invalid position");
         }
     }
 
@@ -58,6 +52,15 @@ public abstract class AbstractPortal extends AbstractEntity {
 
     public Map<String, Integer> getBuildCost() {
         return this.buildCost;
+    }
+
+    /**
+     * Gets the next biome to teleport to.
+     *
+     * @return the next biome to teleport to
+     */
+    public String getNext() {
+        return nextBiome;
     }
 
     /**
@@ -77,7 +80,6 @@ public abstract class AbstractPortal extends AbstractEntity {
     public void teleport(MainCharacter character, World nextBiome) {
         // TODO: @CGulley - Create a general teleport method for all portals.
         // For now, individual functionality in child classes
-
     }
 
     /**

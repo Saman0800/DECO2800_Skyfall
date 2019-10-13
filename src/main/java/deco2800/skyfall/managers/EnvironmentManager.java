@@ -6,6 +6,7 @@ import deco2800.skyfall.observers.DayNightObserver;
 import deco2800.skyfall.observers.SeasonObserver;
 import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class EnvironmentManager extends TickableManager {
     private boolean isDay;
 
     // Biome player is currently in
-   public String biome = "forest";
+    public String biome;
 
     // Music filename
     private String file;
@@ -61,8 +62,8 @@ public class EnvironmentManager extends TickableManager {
      */
     public EnvironmentManager() throws NoSuchAlgorithmException {
         // Music file setup
-        file = "resources/sounds/forest_day.mp3";
-        currentFile = "resources/sounds/forest_night.mp3";
+        file = "forest_day";
+        currentFile = "something_random";
 
         // Time setup
         timeListeners = new ArrayList<>();
@@ -70,6 +71,7 @@ public class EnvironmentManager extends TickableManager {
         seasonListeners = new ArrayList<>();
         currentMillis = System.currentTimeMillis();
         season = "";
+        biome = "forest";
     }
 
     /**
@@ -396,13 +398,8 @@ public class EnvironmentManager extends TickableManager {
         String filename = "day";
         filename = isDay() ? filename : "night";
 
-        // Until lake music created and ocean biome is restricted, play forest for now
-        if (biome.equals("ocean") || biome.equals("lake") || biome.equals("river")) {
-            file = "forest" + "_" + filename;
-        } else {
-            //file = "resources/sounds/" + biome + "_" + filename;
-            file = biome + "_" + filename;
-        }
+        // Set file to be current biome the player is in
+        file = biome + "_" + filename;
     }
 
     /**
@@ -418,22 +415,23 @@ public class EnvironmentManager extends TickableManager {
      */
     public void setTODMusic() {
 
-        // Check if there is a file
-        if (!(file.contains(currentFile))) {
-            setFilename();
+        // Check for change in biome
+        if (!(file.equals(currentFile))) {
 
             // Stop current music
             try {
-                SoundManager.stopSound(file);
+                SoundManager.stopSound(currentFile);
             } catch (Exception e) {
                 /* Exception caught, if any */
             }
 
+            // Change file name to current biome
             currentFile = file;
+            setFilename();
 
             // Play BGM
             try {
-                SoundManager.loopSound(currentFile);
+                SoundManager.loopSound(file);
             } catch (Exception e) {
                 /* Exception caught, if any */
             }

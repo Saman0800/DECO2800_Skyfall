@@ -198,9 +198,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         // For debugging only!
         gameEnvironManag.setTime(12, 0);
 
-        /* Add BGM to game manager */
-        gameManager.addManager(new BGMManager());
-
         /* Add Quest Manager to game manager */
         gameManager.addManager(new QuestManager());
 
@@ -282,7 +279,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         // add shader to rendererDebug
         rendererDebug.setShader(shader);
 
-        GameLauncher.application.addLifecycleListener(new LifecycleListener() {
+        GameLauncher.getApplication().addLifecycleListener(new LifecycleListener() {
             @Override
             public void pause() {
                 // Do nothing for the time being.

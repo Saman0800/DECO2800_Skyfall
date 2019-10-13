@@ -9,9 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
-import deco2800.skyfall.managers.BGMManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.managers.TextureManager;
 
 
@@ -21,7 +21,7 @@ import deco2800.skyfall.managers.TextureManager;
 public class PauseTable extends AbstractPopUpElement{
     private Skin skin;
     private Table table;
-    private BGMManager bgmManager;
+    private SoundManager sound;
 
 
     /**
@@ -40,7 +40,7 @@ public class PauseTable extends AbstractPopUpElement{
         super(stage, exit, textureNames,tm , gameMenuManager);
         this.skin = skin;
         this.draw();
-//        bgmManager = GameManager.getManagerFromInstance(BGMManager.class);
+        sound = GameManager.getManagerFromInstance(SoundManager.class);
     }
 
     /**

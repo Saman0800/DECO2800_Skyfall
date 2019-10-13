@@ -355,7 +355,7 @@ public class MainCharacter extends Peon
 
         // create a new goldPouch object
         this.goldPouch = new HashMap<>();
-        // create the starting gold pouch with 1 x 100G
+
 
         // Initialises the players velocity properties
         xInput = 0;
@@ -1319,8 +1319,8 @@ public class MainCharacter extends Peon
      *
      * @return The total value of the Gold Pouch
      */
-    public int getGoldPouchTotalValue() {
-        int totalValue = 0;
+    public Integer getGoldPouchTotalValue() {
+        Integer totalValue = 0;
         for (Integer goldValue : goldPouch.keySet()) {
             totalValue += goldValue * goldPouch.get(goldValue);
         }

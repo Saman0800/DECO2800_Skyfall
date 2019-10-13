@@ -99,9 +99,9 @@ public class LizardTest {
         Assert.assertEquals(lizard.getIsOutSide(), true);
     }
 
-    /**
+/*    *//**
      * To test the pet will find the nearby gold
-     */
+     *//*
     @Test
     public void findNearbyGold() {
         GoldPiece goldPiece = new GoldPiece(1);
@@ -109,7 +109,7 @@ public class LizardTest {
         w.addEntity(lizard);
         lizard.findNearbyGold();
         Assert.assertEquals(mc.getGoldPouchTotalValue(), 0);
-    }
+    }*/
 
     /**
      * To test whether the pet will follow the mian character

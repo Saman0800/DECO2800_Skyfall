@@ -51,7 +51,7 @@ public class DataBaseConnector {
             migrateDatabase();
             Driver derbyData = new EmbeddedDriver();
             DriverManager.registerDriver(derbyData);
-            connection = DriverManager.getConnection("jdbc:derby:" + dataBaseName + ";create=true");
+            connection = DriverManager.getConnection(String.format("jdbc:derby:%s;create=true", dataBaseName));
         } catch (Exception e) {
             throw new DatabaseException("Failed to start database : " + dataBaseName, e);
         }
@@ -63,7 +63,7 @@ public class DataBaseConnector {
     public void close() {
         try {
             connection.close();
-            DriverManager.getConnection("jdbc:derby:" + dataBaseName + ";shutdown=true");
+            DriverManager.getConnection(String.format("jdbc:derby:%s;shutdown=true", dataBaseName));
         } catch (SQLException ignore) {
             // Should ignore exception, as shutting down database always throws exceptions
         }
@@ -751,7 +751,7 @@ public class DataBaseConnector {
      */
     private void migrateDatabase() {
         flyway = new Flyway();
-        flyway.setDataSource("jdbc:derby:" + dataBaseName + ";create=true", "", "");
+        flyway.setDataSource(String.format("jdbc:derby:%s;create=true", dataBaseName), "", "");
 
         flyway.setCleanOnValidationError(true);
         flyway.setValidateOnMigrate(true);
