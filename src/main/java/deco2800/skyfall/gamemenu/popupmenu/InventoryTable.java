@@ -38,7 +38,7 @@ public class InventoryTable extends AbstractPopUpElement {
     private InventoryManager inventory;
 
     //Current item selected in inventory user interface
-    private String inventorySelected;
+    private String inventorySelected = "";
 
     //Main Character being used by GameManager
     private MainCharacter mainCharacter;
@@ -105,7 +105,7 @@ public class InventoryTable extends AbstractPopUpElement {
     @Override
     public void hide() {
         super.hide();
-        inventorySelected = null;
+        inventorySelected = "";
         LOGGER.info("Hiding inventory table");
         inventoryTable.setVisible(false);
     }
@@ -256,7 +256,7 @@ public class InventoryTable extends AbstractPopUpElement {
             public void clicked(InputEvent event, float x, float y) {
                 if(inventorySelected != null){
                     inventory.dropAll(inventorySelected);
-                    inventorySelected = null;
+                    inventorySelected = "";
                     setButtonsActive(false);
                     updatePanels();
                     gameMenuBar.removeQuickAccessPanel();
@@ -280,7 +280,7 @@ public class InventoryTable extends AbstractPopUpElement {
                     Item item = inventory.drop(inventorySelected);
                     if (mainCharacter.setEquippedItem(item)) {
                         gameMenuBar.setEquipped(item.getName());
-                        inventorySelected = null;
+                        inventorySelected = "";
                         setButtonsActive(false);
                         updatePanels();
                         gameMenuBar.removeQuickAccessPanel();
@@ -305,7 +305,7 @@ public class InventoryTable extends AbstractPopUpElement {
             public void clicked(InputEvent event, float x, float y) {
                 if(inventorySelected != null) {
                     inventory.quickAccessAdd(inventorySelected);
-                    inventorySelected = null;
+                    inventorySelected = "";
                     gameMenuBar.removeQuickAccessPanel();
                     gameMenuBar.setQuickAccessPanel();
                 }
@@ -371,7 +371,7 @@ public class InventoryTable extends AbstractPopUpElement {
                     if(!inventorySelected.equals(icon.getName())){
                         inventorySelected = icon.getName();
                     }else{
-                        inventorySelected = null;
+                        inventorySelected = "";
                     }
 
                     Actor selected = stage.getRoot().findActor(icon.getName() + "-selected");
