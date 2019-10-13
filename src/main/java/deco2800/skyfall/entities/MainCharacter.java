@@ -1334,9 +1334,10 @@ public class MainCharacter extends Peon
      * @return The total value of the Gold Pouch
      */
     public Integer getGoldPouchTotalValue() {
-        Integer totalValue = 0;
-        for (Integer goldValue : goldPouch.keySet()) {
-            totalValue += goldValue * goldPouch.get(goldValue);
+        int totalValue = 0;
+
+        for (HashMap.Entry<Integer, Integer> entry : goldPouch.entrySet()) {
+            totalValue += entry.getKey() * entry.getValue();
         }
         return totalValue;
     }
