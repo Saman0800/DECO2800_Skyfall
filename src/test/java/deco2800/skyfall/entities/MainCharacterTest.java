@@ -724,15 +724,15 @@ public class MainCharacterTest {
 
     *//**
      * Test the removeAllGold() method works.
-     *//*
+     */
     @Test
     public void playerAddGoldTest() {
-        assertEquals(0, testCharacter.getGoldPouchTotalValue());
+        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(0));
 
         testCharacter.removeAllGold();
 
-        assertEquals(0, testCharacter.getGoldPouchTotalValue());
-    }*/
+        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(0));
+    }
 
     /**
      * Test the isRecovering() method works.
