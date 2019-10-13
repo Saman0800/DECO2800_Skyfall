@@ -327,6 +327,7 @@ public class QuestManager extends TickableManager {
         return (currentWeapon >= getWeaponsTotal(weapon));
     }
 
+
     /**
      * Checks if milestones are met each game tick
      * @param i Game tick
@@ -400,8 +401,20 @@ public class QuestManager extends TickableManager {
             amt += 1;
         }
 
-        if (checkWeapons("sword") && checkWeapons("spear")
-                && checkWeapons("axe") && checkWeapons("bow")) {
+
+        if (checkWeapons("sword") && swordTotal > 0) {
+            amt += 1;
+        }
+
+        if (checkWeapons("spear") && spearTotal > 0) {
+            amt += 1;
+        }
+
+        if (checkWeapons("axe") && axeTotal > 0) {
+            amt += 1;
+        }
+
+        if (checkWeapons("bow") && bowTotal > 0) {
             amt += 1;
         }
 
@@ -454,6 +467,10 @@ public class QuestManager extends TickableManager {
         }
 
         return false;
+    }
+
+    public int weaponsNum() {
+        return ((axeTotal > 0) ? 1 : 0) + ((swordTotal > 0) ? 1 : 0) + ((spearTotal > 0) ? 1 : 0) + ((bowTotal > 0) ? 1 : 0);
     }
 }
 
