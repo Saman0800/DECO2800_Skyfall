@@ -244,12 +244,16 @@ public class Renderer3D implements Renderer {
      */
 
     private void renderAbstractEntity(SpriteBatch batch, AbstractEntity entity, float[] entityWorldCord, Texture tex) {
+        TextureRegion tempRegion = new TextureRegion(tex);
         float x = entityWorldCord[0];
         float y = entityWorldCord[1];
+        float angle = entity.getAngle();
 
         float width = tex.getWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X * entity.getScale();
         float height = tex.getHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y * entity.getScale();
-        batch.draw(tex, x, y, width, height);
+        batch.draw(tempRegion, x, y, width / 2.f, height / 2.f, width, height,
+        1.f, 1.f, angle);
+        //batch.draw(tex, x, y, width, height);
     }
 
     private void renderPeonMovementTiles(SpriteBatch batch, OrthographicCamera camera, AbstractEntity entity,

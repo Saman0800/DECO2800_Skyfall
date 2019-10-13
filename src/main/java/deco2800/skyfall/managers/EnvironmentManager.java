@@ -17,6 +17,9 @@ public class EnvironmentManager extends TickableManager {
     //Hours in a game day
     private int hours;
 
+    //Accurate alternative minutes representation
+    private float trueMinutes;
+
     // Seconds in a game day
     private int minutes;
 
@@ -253,6 +256,7 @@ public class EnvironmentManager extends TickableManager {
     public void setTime(int hour, int mins) {
         hours = hour;
         minutes = mins;
+        trueMinutes = mins;
 
         //Check if observers need notifying, notifies if needed
         if (mins >= 60) {
@@ -261,6 +265,7 @@ public class EnvironmentManager extends TickableManager {
                 hours = hours - 24;
             }
             minutes = 0;
+            trueMinutes = 0;
             updateTimeListeners(hours);
         }
 
@@ -450,6 +455,8 @@ public class EnvironmentManager extends TickableManager {
             currentMillis = System.currentTimeMillis();
             minutes += 1;
         }
+
+        trueMinutes += (System.currentTimeMillis() - currentMillis) /1000;
 
         // Set the TOD and month in game
         setTime(hours, minutes);
