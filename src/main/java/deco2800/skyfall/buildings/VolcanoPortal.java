@@ -3,10 +3,8 @@ package deco2800.skyfall.buildings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.saving.Save;
-import deco2800.skyfall.worlds.world.World;
 
 public class VolcanoPortal extends AbstractPortal implements Blueprint {
     private final transient Logger logger = LoggerFactory.getLogger(BuildingEntity.class);
@@ -21,7 +19,7 @@ public class VolcanoPortal extends AbstractPortal implements Blueprint {
     public VolcanoPortal(float col, float row, int renderOrder) {
         super(col, row, renderOrder);
         this.setTexture("portal");
-        this.setNext("volcanic_mountain");
+        this.setNext("volcanic_mountains");
         this.entityType = "VolcanoPortal";
         this.currentBiome = "mountain";
         this.name = "portal_volcano";

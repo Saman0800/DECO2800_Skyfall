@@ -134,13 +134,13 @@ public class PortalTest {
     @Test
     public void testMountainPortal() {
         AbstractPortal portal = new MountainPortal(1, 1, 1);
-        assertEquals("volcanic_mountain", portal.getNext());
+        assertEquals("volcanic_mountains", portal.getNext());
     }
 
     @Test
     public void testVolcanoPortal() {
         AbstractPortal portal = new VolcanoPortal(1, 1, 1);
-        assertEquals("volcanic_mountain", portal.getNext());
+        assertEquals("volcanic_mountains", portal.getNext());
     }
 
     @Test

@@ -7,9 +7,6 @@ import deco2800.skyfall.resources.Blueprint;
 
 public class ForestPortal extends AbstractPortal implements Blueprint {
 
-    // a logger
-    private final transient Logger logger = LoggerFactory.getLogger(ForestPortal.class);
-
     /**
      * Constructor for an building entity with normal rendering size.
      *

@@ -2,12 +2,8 @@ package deco2800.skyfall.buildings;
 
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.resources.Blueprint;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MountainPortal extends AbstractPortal implements Blueprint {
-
-    private final transient Logger logger = LoggerFactory.getLogger(BuildingEntity.class);
 
     /**
      * Constructor for an building entity with normal rendering size.
@@ -19,7 +15,7 @@ public class MountainPortal extends AbstractPortal implements Blueprint {
     public MountainPortal(float col, float row, int renderOrder) {
         super(col, row, renderOrder);
         this.setTexture("portal_mountain");
-        this.setNext("volcanic_mountain");
+        this.setNext("volcanic_mountains");
         this.entityType = "MountainPortal";
         this.name = "mountainPortal";
         this.currentBiome = "mountain";
