@@ -58,8 +58,7 @@ public class WorldDirector {
                 builder.addBiome(new VolcanicMountainsBiome(random), 75);
                 break;
             default:
-                // TODO:dannathan make new exception for this
-                throw new RuntimeException();
+                throw new InvalidBiomeException("Invalid Biome");
         }
 
         builder.setWorldSize(300);

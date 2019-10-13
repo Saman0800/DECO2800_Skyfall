@@ -172,7 +172,6 @@ public class DataBaseConnector {
         }
     }
 
-    // TODO:dannathan Fix or remove this.
     public void saveMainCharacter() throws SQLException {
         try {
             ContainsDataQueries containsQueries = new ContainsDataQueries(connection);

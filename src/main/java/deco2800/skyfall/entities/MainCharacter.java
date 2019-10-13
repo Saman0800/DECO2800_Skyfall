@@ -87,7 +87,6 @@ public class MainCharacter extends Peon
         return mainCharacterInstance;
     }
 
-    // TODO:dannathan Fix or remove this.
     public static void loadMainCharacter(MainCharacterMemento memento, Save save) {
         if (mainCharacterInstance == null) {
             mainCharacterInstance = new MainCharacter(memento, save);
@@ -321,17 +320,6 @@ public class MainCharacter extends Peon
      * The GUI PopUp for the character
      */
     private GameMenuManager gameMenuManager;
-
-    // TODO:dannathan Fix or remove this.
-    // /**
-    // * Loads a main character from a memento
-    // *
-    // * @param memento the memento to load the character from
-    // */
-    // private MainCharacter(MainCharacterMemento memento, Save save) {
-    // this.load(memento);
-    // this.save = save;
-    // }
 
     /**
      * Base Main Character constructor
