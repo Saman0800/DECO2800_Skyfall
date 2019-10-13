@@ -60,7 +60,7 @@ public class HealthCircle extends AbstractUIElement {
         float diff = currentHealth - newHealth;
 
         smallerCircle.setSize((float) 2 * newHealth,
-                    (float) 2 * newHealth);
+                (float) 2 * newHealth);
 
         offset += (diff * 2) / 2;
         smallerCircle.setPosition(positionX + offset, positionY + offset);
