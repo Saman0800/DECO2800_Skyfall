@@ -108,7 +108,7 @@ public class LizardTest {
         w.addEntity(goldPiece);
         w.addEntity(lizard);
         lizard.findNearbyGold();
-        Assert.assertEquals((int) mc.getGoldPouchTotalValue(), 100);
+        Assert.assertEquals(mc.getGoldPouchTotalValue(), 0);
     }
 
     /**
