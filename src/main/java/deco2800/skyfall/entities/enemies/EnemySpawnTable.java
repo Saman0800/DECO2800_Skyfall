@@ -54,18 +54,18 @@ public class EnemySpawnTable implements TimeObserver {
     /**
      * A reference to the environment manager to make queries to.
      */
-    EnvironmentManager environManager;
+    private EnvironmentManager environManager;
 
     /**
      * A function that dictates how likely it is to spawn an enemy based on various
      * environment manager parameters
      */
-    Function<EnvironmentManager, Double> probAdjFunc;
+    private Function<EnvironmentManager, Double> probAdjFunc;
 
     /**
      * A reference to a main character for easy queries.
      */
-    MainCharacter mainCharacter = MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
+    private MainCharacter mainCharacter = MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
 
     public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
             Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor,
