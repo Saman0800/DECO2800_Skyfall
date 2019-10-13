@@ -32,21 +32,22 @@ public class SoundEffectTest {
         Sound sm = mock(Sound.class);
         SoundManager soundItem = mock(SoundManager.class);
 
-        when(Gdx.files.internal("resources/sounds/" + "COLLECT-STONE.wav")).thenReturn(null);
+        when(Gdx.files.internal("resources/sounds/" + "spell_fire.mp3"))
+                .thenReturn(null);
 
-        when(Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + "collect-stone.wav")))
+        when(Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + "spell_fire.mp3")))
                 .thenReturn(sm);
 
         when(sm.play(1)).thenReturn(1L);
 
-        // Test whether put ("stoneWalk", "stone_walk.wav") in the soundMap.
-        when(soundItem.soundInMap("stoneWalk")).thenReturn(true);
+        // Test whether put ("spell_fire", "spell_fire.mp3") in the soundMap.
+        when(soundItem.soundInMap("spell_fire")).thenReturn(true);
 
         // Check whether "stoneWalk" is the key of the stored entry ("stoneWalk", "stone_walk.wav")
-        when(soundItem.getTheSound("stoneWalk")).thenReturn(sm);
+        when(soundItem.getTheSound("spell_fire")).thenReturn(sm);
 
         SoundManager s = new SoundManager();
-        s.playSound("stoneWalk");
+        s.playSound("spell_fire");
     }
 
     /**
@@ -56,8 +57,8 @@ public class SoundEffectTest {
     @Test
     public void testHasSound() {
         try {
-            assertEquals(sound.getSoundMap().get("spiderWalk"),
-                    Gdx.audio.newSound(Gdx.files.internal(path + "spider" + ".wav")));
+            assertEquals(sound.getSoundMap().get("spear"),
+                    Gdx.audio.newSound(Gdx.files.internal(path + "spear" + ".mp3")));
         } catch (NullPointerException npe) {
         }
     }
@@ -75,7 +76,7 @@ public class SoundEffectTest {
      */
     @Test
     public void testStopSound() {
-        sound.playSound("spider");
+        sound.playSound("died");
         assertFalse(sound.stopSound("tester"));
     }
 
@@ -83,7 +84,7 @@ public class SoundEffectTest {
     public void exceptionTest() throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
         try {
-            sound.playSound("people_walk_normal");
+            sound.playSound("walk_D");
         } catch (Exception e) {
             e.getMessage();
         }
@@ -92,9 +93,9 @@ public class SoundEffectTest {
     @Test
     public void testPause() {
         try{
-            SoundManager.playSound("people_walk_normal");
+            SoundManager.playSound("walk_D");
             TimeUnit.SECONDS.sleep(1);
-            SoundManager.pauseSound("people_walk_normal");
+            SoundManager.pauseSound("walk_D");
 //            assertEquals(SoundManager.playSound("people_walk_normal"), false);
         } catch (Exception e){
             // exception caught

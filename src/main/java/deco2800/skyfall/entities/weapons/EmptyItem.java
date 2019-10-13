@@ -21,7 +21,7 @@ public class EmptyItem implements Item {
     private final Logger logger = LoggerFactory.getLogger(EmptyItem.class);
 
     public EmptyItem() {
-        this.name = "Empty Item";
+        this.name = "Nothing";
         this.subType = "Empty";
         this.carryable = false;
         this.exchangeable = false;
@@ -32,6 +32,7 @@ public class EmptyItem implements Item {
 
     /**
      * Returns the name of the item.
+     * 
      * @return The name of the item.
      */
     public String getName() {
@@ -40,6 +41,7 @@ public class EmptyItem implements Item {
 
     /**
      * Returns the subtype which the item belongs to.
+     * 
      * @return The subtype which the item belongs to.
      */
     public String getSubtype() {
@@ -48,8 +50,9 @@ public class EmptyItem implements Item {
 
     /**
      * Returns whether or not the item can be carried.
-     * @return True if the item can be carried in the inventory, false
-     * if it is consumed immediately.
+     * 
+     * @return True if the item can be carried in the inventory, false if it is
+     *         consumed immediately.
      */
     public boolean isCarryable() {
         return this.carryable;
@@ -57,6 +60,7 @@ public class EmptyItem implements Item {
 
     /**
      * Returns the co-ordinates of the tile the item is on.
+     * 
      * @return the co-ordinates of the tile the item is on.
      */
     public HexVector getCoords() {
@@ -65,6 +69,7 @@ public class EmptyItem implements Item {
 
     /**
      * Returns whether or not the item can be exchanged.
+     * 
      * @return True if the item can be exchanged, false otherwise.
      */
     public boolean isExchangeable() {
@@ -73,6 +78,7 @@ public class EmptyItem implements Item {
 
     /**
      * Returns a description about the item.
+     * 
      * @return a description about the item.
      */
     public String getDescription() {
@@ -86,6 +92,7 @@ public class EmptyItem implements Item {
 
     /**
      * Gets the durability of the item.
+     * 
      * @return 0.
      */
     public int getDurability() {
@@ -101,6 +108,7 @@ public class EmptyItem implements Item {
 
     /**
      * Returns whether or not the item can be equipped from the inventory.
+     * 
      * @return True if the item can be equipped, false otherwise.
      */
     public boolean isEquippable() {

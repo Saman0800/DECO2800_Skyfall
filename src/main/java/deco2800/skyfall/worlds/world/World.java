@@ -92,6 +92,7 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
 
     private Save save;
 
+    private AbstractEntity entityToBeDeleted = null;
     /**
      * The constructor used to create a simple dummey world, used for displaying world information on the
      * home screen
@@ -668,22 +669,25 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
             return;
         }
         for (AbstractEntity entity : clickedChunk.getEntities()) {
+            //NOTE: DO NOT RUN REMOVE ENTITY IN THIS LOOP, IT WILL CAUSE
+            //ConcurrentModificationException
             if (!tile.getCoordinates().equals(entity.getPosition())) {
                 continue;
             }
 
             if (entity instanceof Harvestable) {
-                removeEntity(entity);
+                entityToBeDeleted = entity;
                 List<AbstractEntity> drops = ((Harvestable) entity).harvest(tile);
                 drops.forEach(this::addEntity);
             } else if (entity instanceof Weapon) {
                 MainCharacter mc = gmm.getMainCharacter();
                 if (tile.getCoordinates().distance(mc.getPosition()) <= 2) {
-                    removeEntity(entity);
+                    entityToBeDeleted = entity;
                     gmm.getInventory().add((Item) entity);
                 }
             } else if (entity instanceof Chest) {
                 ChestTable chest = (ChestTable) gmm.getPopUp("chestTable");
+                chest.setWorldAndChestEntity(this, (Chest) entity);
                 chest.updateChestPanel((Chest) entity);
                 gmm.setPopUp("chestTable");
             } else if (entity instanceof Item) {
@@ -691,14 +695,14 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
                     if (tile.getCoordinates().distance(mc.getPosition()) > 2) {
                         continue;
                     }
-                    removeEntity(entity);
+                entityToBeDeleted = entity;
                     gmm.getInventory().add((Item) entity);
             } else if (entity instanceof GoldPiece) {
                 MainCharacter mc = gmm.getMainCharacter();
-                if (tile.getCoordinates().distance(mc.getPosition()) <= 1) {
+                if (tile.getCoordinates().distance(mc.getPosition()) <= 3) {
                     mc.addGold((GoldPiece) entity, 1);
                     // remove the gold piece instance from the world
-                    removeEntity(entity);
+                    entityToBeDeleted = entity;
                 }
             }
             else if (entity instanceof BlueprintShop) {
@@ -730,6 +734,11 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
                         break;
                 }
             }
+        }
+
+        if (entityToBeDeleted != null) {
+            removeEntity(entityToBeDeleted);
+            entityToBeDeleted = null;
         }
     }
 

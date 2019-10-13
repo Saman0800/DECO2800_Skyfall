@@ -5,12 +5,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.enemies.*;
+import deco2800.skyfall.entities.enemies.Abductor;
+import deco2800.skyfall.entities.enemies.Enemy;
+import deco2800.skyfall.entities.enemies.EnemySpawnTable;
 import deco2800.skyfall.graphics.HasPointLight;
 import deco2800.skyfall.graphics.PointLight;
 import deco2800.skyfall.graphics.ShaderWrapper;
@@ -37,8 +37,11 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.function.Function;
 
+/**
+ * An instance of a Game screen.
+ */
 public class GameScreen implements Screen, KeyDownObserver {
-    private final Logger logger = LoggerFactory.getLogger(Renderer3D.class);
+    private final Logger logger = LoggerFactory.getLogger(GameScreen.class);
     @SuppressWarnings("unused")
     private final SkyfallGame game;
     /**
@@ -200,9 +203,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         // For debugging only!
         gameEnvironManag.setTime(12, 0);
 
-        /* Add BGM to game manager */
-        gameManager.addManager(new BGMManager());
-
         /* Add Quest Manager to game manager */
         gameManager.addManager(new QuestManager());
 
@@ -286,13 +286,15 @@ public class GameScreen implements Screen, KeyDownObserver {
         // add shader to rendererDebug
         rendererDebug.setShader(shader);
 
-        GameLauncher.application.addLifecycleListener(new LifecycleListener() {
+        GameLauncher.getApplication().addLifecycleListener(new LifecycleListener() {
             @Override
             public void pause() {
+                // Do nothing for the time being.
             }
 
             @Override
             public void resume() {
+                // Do nothing for the time being.
             }
 
             @Override
@@ -524,7 +526,7 @@ public class GameScreen implements Screen, KeyDownObserver {
     private void enemySetUp(EnvironmentManager gameEnvironManag, World world) {
 
         Function<HexVector, ? extends Enemy> spawnAbductor = hexPos -> new Abductor(hexPos.getCol(), hexPos.getRow(),
-                0.8f, "Forest", Enemy.EnemyType.ABDUCTOR);
+                0.8f, "Forest");
 
         Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor = new HashMap<>();
         List<Function<HexVector, ? extends Enemy>> forestList = new ArrayList<>();

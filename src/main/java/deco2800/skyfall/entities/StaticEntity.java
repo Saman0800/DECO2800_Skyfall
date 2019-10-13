@@ -47,7 +47,6 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
         children.put(hexVector, memento.texture);
         if (!WorldUtil.validColRow(hexVector)) {
             log.debug("{} Is Invalid:", hexVector);
-            return;
         }
 
     }
@@ -235,7 +234,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
      */
     private Tile textureToTile(HexVector offset, HexVector center) {
         if (!WorldUtil.validColRow(offset)) {
-            log.debug(offset + " Is Invaid:");
+            log.debug("{} Is Invaid:", offset);
             return null;
         }
         HexVector targetTile = center.add(offset);

@@ -10,10 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.buildings.BuildingEntity;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.buildings.BuildingType;
-import deco2800.skyfall.entities.structures.Building;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.*;
-import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.worlds.world.World;
 
 import java.util.List;
@@ -73,6 +71,7 @@ public class ConstructionTable extends AbstractPopUpElement{
         super.updatePosition();
     }
 
+    @Override
     public void update() {
         super.update();
     }
@@ -82,6 +81,7 @@ public class ConstructionTable extends AbstractPopUpElement{
      *
      * Draw the whole blueprint shop table.
      */
+    @Override
     public void draw() {
         super.draw();
         blueprintTable = new Table();
@@ -133,7 +133,7 @@ public class ConstructionTable extends AbstractPopUpElement{
             ImageButton icon = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(b.getName()));
             icon.setName("icon");
             icon.setSize(100, 100);
-            icon.setPosition(xpos + count * 130, ypos);
+            icon.setPosition(xpos + (float) count * 130, ypos);
 
             icon.addListener(new ClickListener() {
                 @Override

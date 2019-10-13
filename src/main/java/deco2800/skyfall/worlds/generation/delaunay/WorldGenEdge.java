@@ -7,7 +7,6 @@ package deco2800.skyfall.worlds.generation.delaunay;
  * @author Johannes Diemke
  */
 class WorldGenEdge {
-
     private WorldGenNode a;
     private WorldGenNode b;
 
@@ -40,5 +39,4 @@ class WorldGenEdge {
     public WorldGenNode getB() {
         return this.b;
     }
-
 }

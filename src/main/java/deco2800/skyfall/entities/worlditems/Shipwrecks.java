@@ -6,17 +6,24 @@ public class Shipwrecks extends AbstractEnvironment {
     private static final String ENTITY_ID_STRING = "ship_wrecks";
 
     public Shipwrecks() {
-        this.setObjectName(ENTITY_ID_STRING);
+        super();
+        setupParams();
+        this.setTexture("shipwrecks");
     }
 
     public Shipwrecks(Tile tile, boolean obstructed) {
         super(tile, "shipwrecks", obstructed);
-        this.setObjectName(ENTITY_ID_STRING);
-        this.entityType = "Shipwrecks";
+        setupParams();
     }
 
     public Shipwrecks(SaveableEntityMemento memento) {
         super(memento);
+        setupParams();
+    }
+
+    private void setupParams() {
+        this.setObjectName(ENTITY_ID_STRING);
+        this.entityType = "Shipwrecks";
     }
 
     @Override

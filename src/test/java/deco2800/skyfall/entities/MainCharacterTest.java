@@ -1,13 +1,14 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.Input;
-import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.enemies.Scout;
+import deco2800.skyfall.entities.spells.Spell;
+import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.entities.weapons.EmptyItem;
-import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.entities.weapons.Sword;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.resources.GoldPiece;
@@ -48,14 +49,9 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 public class MainCharacterTest {
 
     private MainCharacter testCharacter;
-    private ForestTree testTree;
-    private ForestRock testRock;
     private Tile testTile;
     private GoldPiece testGoldPiece;
     private InventoryManager inventoryManager;
-    private Hatchet testHatchet;
-    private Hatchet testHatchet2;
-    private PickAxe testPickaxe;
     private World w = null;
 
     @Mock
@@ -91,12 +87,7 @@ public class MainCharacterTest {
         MainCharacter.resetInstance();
         testCharacter = MainCharacter.getInstance();
 
-        testHatchet = new Hatchet();
-        testHatchet2 = new Hatchet();
-
         testTile = new Tile(null, 0f, 0f);
-        testTree = new ForestTree(testTile, true);
-        testRock = new ForestRock(testTile, true);
 
         testGoldPiece = new GoldPiece(5);
 
@@ -144,19 +135,19 @@ public class MainCharacterTest {
         Assert.assertEquals(testCharacter.getName(), "Side Piece");
 
         Assert.assertFalse(testCharacter.isDead());
-        Assert.assertEquals(testCharacter.getHealth(), 10);
+        Assert.assertEquals(testCharacter.getHealth(), 50);
         testCharacter.changeHealth(5);
-        Assert.assertEquals(testCharacter.getHealth(), 15);
-        testCharacter.changeHealth(-20);
+        Assert.assertEquals(testCharacter.getHealth(), 55);
+        testCharacter.changeHealth(-55);
         Assert.assertEquals(testCharacter.getHealth(), 0);
         Assert.assertEquals(testCharacter.getDeaths(), 1);
         Assert.assertTrue(testCharacter.isDead());
 
-        testCharacter.changeHealth(10);
-        Assert.assertEquals(testCharacter.getHealth(), 10);
-        testCharacter.changeHealth(5);
-        Assert.assertEquals(testCharacter.getHealth(), 15);
-        testCharacter.changeHealth(-20);
+        testCharacter.changeHealth(50);
+        Assert.assertEquals(testCharacter.getHealth(), 50);
+        testCharacter.changeHealth(-2);
+        Assert.assertEquals(testCharacter.getHealth(), 48);
+        testCharacter.changeHealth(-48);
         Assert.assertEquals(testCharacter.getHealth(), 0);
         Assert.assertEquals(testCharacter.getDeaths(), 2);
     }
@@ -263,7 +254,7 @@ public class MainCharacterTest {
         testCharacter.playerHurt(3);
         Assert.assertTrue(testCharacter.isHurt());
         // Health decreases
-        Assert.assertEquals(7, testCharacter.getHealth());
+        Assert.assertEquals(47, testCharacter.getHealth());
         // set current animation to hurt
         Assert.assertEquals(AnimationRole.HURT, testCharacter.getCurrentState());
         // set hurt time and recover time to 0.
@@ -283,6 +274,27 @@ public class MainCharacterTest {
         Assert.assertTrue(testCharacter.isRecovering());
         // reset hurt time.
         Assert.assertEquals(0, testCharacter.getHurtTime());
+    }
+
+
+    @Test
+    public void testFireProjectile() {
+        Sword mockSword = mock(Sword.class);
+        when(mockSword.getName()).thenReturn("sword");
+        Projectile projectile = mock(Projectile.class);
+
+        testCharacter.equippedItem = mockSword;
+        testCharacter.defaultProjectile = projectile;
+        testCharacter.attack(new HexVector(0,0));
+
+        //Ensure the projectile has been added.
+        Assert.assertTrue(GameManager.get().getWorld().getEntities().contains(projectile));
+
+        //Test other branch.
+        testCharacter.spellSelected = SpellType.FLAME_WALL;
+        testCharacter.attack(new HexVector(0,0));
+        
+        Assert.assertTrue(GameManager.get().getWorld().getEntities().stream().anyMatch(e -> e instanceof Spell));
     }
 
     /**
@@ -649,7 +661,7 @@ public class MainCharacterTest {
         HexVector old_pos = new HexVector(testCharacter.getPosition().getRow(), testCharacter.getPosition().getCol());
 
         world.addEntity(new Scout(old_pos.getRow() + 0.1f, old_pos.getCol() + 0.1f,
-                0.1f, "Forest", Enemy.EnemyType.SCOUT));
+                0.1f, "Forest"));
 
         for (int i = 0; i < 100; ++i) {
             world.onTick(100);
@@ -686,11 +698,11 @@ public class MainCharacterTest {
      */
     @Test
     public void getHealthTest() {
-        assertEquals(10, testCharacter.getHealth());
+        assertEquals(50, testCharacter.getHealth());
 
         testCharacter.changeHealth(-2);
 
-        assertEquals(8, testCharacter.getHealth());
+        assertEquals(48, testCharacter.getHealth());
     }
 
     /**
@@ -701,7 +713,7 @@ public class MainCharacterTest {
         testCharacter.setDead(false);
         assertFalse(testCharacter.isDead());
 
-        testCharacter.changeHealth(-10);
+        testCharacter.changeHealth(-50);
 
         assertTrue(testCharacter.isDead());
 
@@ -713,7 +725,7 @@ public class MainCharacterTest {
      */
     @Test
     public void getDeathsTest() {
-        testCharacter.changeHealth(-10);
+        testCharacter.changeHealth(-50);
         assertTrue(testCharacter.isDead());
 
         assertEquals(1, testCharacter.getDeaths());

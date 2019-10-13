@@ -9,14 +9,13 @@ public class Scout extends Enemy implements Spawnable {
 
     /**
      * Constructor to create new Scout enemy.
-     *
-     * @param col       the x-coordinate of the enemy.
-     * @param row       the y-coordinate of the enemy.
-     * @param scaling   the factor the enemy's stat is scale in this enemy.
-     * @param biome     the biome this enemy is in.
-     * @param enemyType the name of the texture of the enemy.
+     * 
+     * @param col     the x-coordinate of the enemy.
+     * @param row     the y-coordinate of the enemy.
+     * @param scaling the factor the enemy's stat is scale in this enemy.
+     * @param biome   the biome this enemy is in.
      */
-    public Scout(float col, float row, float scaling, String biome, EnemyType enemyType) {
+    public Scout(float col, float row, float scaling, String biome) {
         super(col, row, "Scout", EnemyType.SCOUT, 0.06f, biome, "enemyScout");
 
         this.setType(EnemyType.SCOUT);
@@ -40,7 +39,7 @@ public class Scout extends Enemy implements Spawnable {
 
     @Override
     public Scout newInstance(float row, float col) {
-        return new Scout(col, row, this.getScale(), this.getBiome(), EnemyType.SCOUT);
+        return new Scout(col, row, this.getScale(), this.getBiome());
     }
 
     @Override
