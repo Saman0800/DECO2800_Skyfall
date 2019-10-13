@@ -3,6 +3,7 @@ package deco2800.skyfall.managers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.utils.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +30,8 @@ public class SoundManager extends AbstractManager {
 
     /* Boolean to state whether the sound manager is paused or not */
     private static boolean paused = false;
+
+    private static float FADE_CONSTANT = 0.1f;
 
     /**
      * Initialize SoundManager by adding different sounds in a map
@@ -204,6 +207,7 @@ public class SoundManager extends AbstractManager {
             } else if (musicMap.containsKey(soundName)) {
                 Music music = musicMap.get(soundName);
                 music.play();
+                music.setVolume(1f);
                 playing = soundName;
                 return true;
             } else {
@@ -230,12 +234,45 @@ public class SoundManager extends AbstractManager {
             } else if (musicMap.containsKey(soundName)) {
                 Music music = musicMap.get(soundName);
                 music.play();
+                music.setVolume(1f);
                 playing = soundName;
                 music.setLooping(true);
             } else {
                 // LOGGER.info("There does not exist a {} sound", soundName);
             }
         }
+    }
+
+    public static void fadeInPlay(String soundName) {
+        Music music = musicMap.get(soundName);
+        music.play();
+        music.setVolume(0f);
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                if (music.getVolume() < 1f) {
+                    music.setVolume(music.getVolume() + FADE_CONSTANT);
+                } else {
+                    music.setVolume(1f);
+                    this.cancel();
+                }
+            }
+        }, 0.3f, 0.01f);
+    }
+
+    public static void fadeOutStop(String soundName) {
+        Music music = musicMap.get(soundName);
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                if (music.getVolume() >= FADE_CONSTANT) {
+                    music.setVolume(music.getVolume() - FADE_CONSTANT);
+                } else {
+                    music.stop();
+                    this.cancel();
+                }
+            }
+        }, 0.3f, 0.01f);
     }
 
     /**
