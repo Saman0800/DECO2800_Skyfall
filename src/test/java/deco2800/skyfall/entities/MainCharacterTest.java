@@ -709,20 +709,19 @@ public class MainCharacterTest {
         assertEquals(1, testCharacter.getDeaths());
 
     }
-/*
-    *//**
-     * Test the removeAllGold() method works.
-     *//*
+
+     //Test the removeAllGold() method works.
+
     @Test
     public void removeAllGoldTest() {
-        assertEquals(0, testCharacter.getGoldPouchTotalValue());
+        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(0));
 
         testCharacter.removeAllGold();
 
-        assertEquals(0, testCharacter.getGoldPouchTotalValue());
+        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(0));
     }
 
-    *//**
+    /**
      * Test the removeAllGold() method works.
      */
     @Test

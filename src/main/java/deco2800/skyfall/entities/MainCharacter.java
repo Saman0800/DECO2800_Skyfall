@@ -355,9 +355,7 @@ public class MainCharacter extends Peon
 
         // create a new goldPouch object
         this.goldPouch = new HashMap<>();
-        // create the starting gold pouch with 1 x 100G
-/*        GoldPiece initialPiece = new GoldPiece(100);
-        this.addGold(initialPiece, 1);*/
+
 
         // Initialises the players velocity properties
         xInput = 0;
