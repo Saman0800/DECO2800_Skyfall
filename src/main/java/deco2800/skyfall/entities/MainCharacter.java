@@ -622,6 +622,8 @@ public class MainCharacter extends Peon
             projectile = defaultProjectile;
         }
 
+        projectile.setAngle(-90.f + (float)Math.toDegrees(Math.atan2(unitDirection.getRow(), unitDirection.getCol())));
+
         // Add the projectile entity to the game world.
         GameManager.get().getWorld().addEntity(projectile);
 

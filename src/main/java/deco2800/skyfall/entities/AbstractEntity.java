@@ -45,6 +45,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
     protected final EntityHexVector position;
+    protected float angle = 0.f;
     private int height;
     private float colRenderLength;
     private float rowRenderLength;
@@ -191,6 +192,20 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      */
     public float getRow() {
         return position.getRow();
+    }
+
+    /**
+     * Get the angle of this AbstractWorld Entity
+     */
+    public float getAngle() {
+        return angle;
+    }
+
+    /**
+     * Set the angle of this AbstractWorld Entity
+     */
+    public void setAngle(float angle) {
+        this.angle = angle;
     }
 
     /**
