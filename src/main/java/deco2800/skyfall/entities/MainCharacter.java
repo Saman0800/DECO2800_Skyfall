@@ -613,8 +613,8 @@ public class MainCharacter extends Peon
         //If there is a default projectile selected to fire, use that.
         if (defaultProjectile == null) {
             projectile = new Projectile(mousePosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
-                    position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
-                    position.getRow() + 0.5f + 1.5f * unitDirection.getRow(),
+                    new HexVector(position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
+                            position.getRow() + 0.5f + 1.5f * unitDirection.getRow()),
                     ((Weapon)equippedItem).getDamage(),
                     1,
                     range);

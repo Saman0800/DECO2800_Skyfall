@@ -586,8 +586,8 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
         // Make projectile move toward the angle
         // Spawn projectile in front of character
         Projectile projectile = new Projectile(enemyPosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
-                position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
-                position.getRow() + 0.5f + 1.5f * unitDirection.getRow(), ((Weapon) equippedItem).getDamage(), 1,
+                new HexVector(position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
+                        position.getRow() + 0.5f + 1.5f * unitDirection.getRow()), ((Weapon) equippedItem).getDamage(), 1,
                 this.itemSlotSelected == 1 ? (equippedItem.getName().equals("bow") ? 10 : 0) : 0);
 
         // Add the projectile entity to the game world.

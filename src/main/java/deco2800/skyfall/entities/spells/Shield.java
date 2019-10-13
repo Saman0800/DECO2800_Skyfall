@@ -21,7 +21,7 @@ public class Shield extends Spell implements Animatable {
     /**
      * Key sequence required to cast this spell.
      */
-    public static final int[] keySequence = new int[] {
+    protected static final int[] keySequence = new int[] {
             Input.Keys.LEFT,
             Input.Keys.LEFT,
             Input.Keys.RIGHT,
@@ -35,16 +35,15 @@ public class Shield extends Spell implements Animatable {
      * @param movementPosition The position the spell moves to.
      * @param textureName      The name of the texture to render.
      * @param objectName       The name to call this object.
-     * @param col              The column to spawn this projectile in.
-     * @param row              The row to spawn this projectile in.
+     * @param startPosition    The position to spawn this projectile in.
      * @param damage           The damage this projectile will deal on hit.
      * @param speed            How fast this projectile is travelling.
      * @param range            How far this spell can be cast.
      */
     public Shield(HexVector movementPosition, String textureName, String objectName,
-                  float col, float row, int damage, float speed, int range) {
+                  HexVector startPosition, int damage, float speed, int range) {
 
-        super(movementPosition, textureName, objectName, col, row, damage, speed, range);
+        super(movementPosition, textureName, objectName, startPosition, damage, speed, range);
 
         //Shield must stay in place on the player.
         this.range = 0;
