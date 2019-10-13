@@ -79,7 +79,6 @@ public class Horse extends VehicleEntity {
     }
 
     public void setDirectionTextures() {
-
-
+        // Do nothing for the time being.
     }
 }

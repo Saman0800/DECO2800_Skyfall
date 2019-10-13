@@ -1,14 +1,10 @@
 package deco2800.skyfall;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
@@ -18,6 +14,7 @@ import deco2800.skyfall.graphics.ShaderWrapper;
 import deco2800.skyfall.graphics.types.vec3;
 import deco2800.skyfall.handlers.KeyboardManager;
 import deco2800.skyfall.managers.*;
+import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.renderers.OverlayRenderer;
 import deco2800.skyfall.renderers.PotateCamera;
@@ -33,10 +30,13 @@ import deco2800.skyfall.worlds.world.WorldDirector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.util.*;
 
+/**
+ * An instance of a Game screen.
+ */
 public class GameScreen implements Screen, KeyDownObserver {
-    private final Logger logger = LoggerFactory.getLogger(Renderer3D.class);
+    private final Logger logger = LoggerFactory.getLogger(GameScreen.class);
     @SuppressWarnings("unused")
     private final SkyfallGame game;
     /**
@@ -47,7 +47,6 @@ public class GameScreen implements Screen, KeyDownObserver {
     OverlayRenderer rendererDebug = new OverlayRenderer();
     World world;
     Save save;
-    static Skin skin;
 
     /**
      * Create a camera for panning and zooming. Camera must be updated every render
@@ -59,21 +58,19 @@ public class GameScreen implements Screen, KeyDownObserver {
 
     long lastGameTick = 0;
 
-
     /**
      * Create an EnvironmentManager for ToD.
      */
     EnvironmentManager timeOfDay;
     private static boolean isPaused = false;
 
-    public static boolean getIsPaused(){
+    public static boolean getIsPaused() {
         return isPaused;
     }
 
-    public static void setIsPaused(boolean paused){
+    public static void setIsPaused(boolean paused) {
         isPaused = paused;
     }
-
 
     // A wrapper for shader
     private ShaderWrapper shader;
@@ -93,66 +90,96 @@ public class GameScreen implements Screen, KeyDownObserver {
     public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
         /* Create an example world for the engine */
         this.game = game;
-
         this.save = new Save();
 
-        MainCharacter.getInstance(0,0,0.05f, "Main Piece", 50);
-        MainCharacter.getInstance().setSave(this.save);
-        this.save.setMainCharacter(MainCharacter.getInstance());
-        GameManager gameManager = GameManager.get();
-        GameMenuManager gameMenuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
-        DatabaseManager databaseManager = DatabaseManager.get();
-        gameMenuManager.setStage(stage);
-        gameMenuManager.setSkin(gameManager.getSkin());
-        gameMenuManager.setGame(game);
-        databaseManager.startDataBaseConnector();
-
-        // Used to create to the world
+        GameManager gameManager = initializeMenuManager();
 
         // Create main world
         if (!isHost) {
             // Creating the world
-            WorldBuilder worldBuilder = new WorldBuilder();
-            WorldDirector.constructServerWorld(worldBuilder);
-            world = worldBuilder.getWorld();
+            world = WorldDirector.constructServerWorld(new WorldBuilder(), seed).getWorld();
+            save.getWorlds().add(world);
+            save.setCurrentWorld(world);
+            world.setSave(save);
+            MainCharacter.getInstance().setSave(save);
 
-            GameManager.get().getManager(NetworkManager.class).connectToHost("localhost", "duck1234");
+            gameManager.getManager(NetworkManager.class).connectToHost("localhost", "duck1234");
         } else {
             if (GameManager.get().isTutorial) {
-
-                WorldBuilder worldBuilder = new WorldBuilder();
-                WorldDirector.constructTutorialWorld(worldBuilder);
-                world = worldBuilder.getWorld();
+                world = WorldDirector.constructTutorialWorld(new WorldBuilder(), seed).getWorld();
             } else {
-
                 // Creating the world
-                world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 4, true).getWorld();
-                EnvironmentPacker packer = new EnvironmentPacker(world);
-                packer.addPackingComponent(new BirthPlacePacking(packer));
-                packer.doPackings();
-                save.getWorlds().add(world);
-                save.setCurrentWorld(world);
-                world.setSave(save);
-
-                //FIXME:jeffvan12 implement better way of creating new stuff things
-
-                //Comment this out when generating the data for the tests
-                DatabaseManager.get().getDataBaseConnector().saveGame(save);
-
-                //Uncomment this when generating the data for the tests
-//                save.setId(0);
-//                world.setId(0);
-//                DatabaseManager.get().getDataBaseConnector().saveGame(save);
-//                DatabaseManager.get().getDataBaseConnector().saveAllTables();
-
-
+                world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), seed, 4, true).getWorld();
             }
-            GameManager.get().getManager(NetworkManager.class).startHosting("host");
+            save.getWorlds().add(world);
+            save.setCurrentWorld(world);
+            world.setSave(save);
+
+            EnvironmentPacker packer = new EnvironmentPacker(world);
+            packer.addPackingComponent(new BirthPlacePacking(packer));
+            packer.doPackings();
+
+            MainCharacter.getInstance().setSave(save);
+
+            // FIXME:jeffvan12 implement better way of creating new stuff things
+
+            // Comment this out when generating the data for the tests
+            DatabaseManager.get().getDataBaseConnector().saveGame(save);
+
+            // Uncomment this when generating the data for the tests
+            // save.setId(0);
+            // world.setId(0);
+            // MainCharacter.getInstance().setID(0);
+            // DatabaseManager.get().getDataBaseConnector().saveGame(save);
+            // DatabaseManager.get().getDataBaseConnector().saveAllTables();
+
+            gameManager.getManager(NetworkManager.class).startHosting("host");
         }
 
         gameManager.setWorld(world);
 
-        // Add first peon to the world
+        initializeOtherManagers(gameManager);
+    }
+
+    public GameScreen(final SkyfallGame game, long saveID) {
+        this.game = game;
+
+        GameManager gameManager = initializeMenuManager();
+        DataBaseConnector dbConnector = DatabaseManager.get().getDataBaseConnector();
+
+        save = dbConnector.loadGame(saveID);
+        World currentWorld = dbConnector.loadWorlds(save);
+        save.setCurrentWorld(currentWorld);
+
+        dbConnector.loadMainCharacter(save);
+        world = save.getCurrentWorld();
+        MainCharacter mainCharacter = MainCharacter.getInstance();
+        mainCharacter.setSave(save);
+        world.addEntity(mainCharacter);
+
+        gameManager.getManager(NetworkManager.class).startHosting("host");
+
+        StatisticsManager sm = new StatisticsManager(mainCharacter);
+        GameManager.addManagerToInstance(sm);
+        GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
+        gmm.addStatsManager(sm);
+        gmm.drawAllElements();
+
+        gameManager.setWorld(world);
+
+        initializeOtherManagers(gameManager);
+    }
+
+    private GameManager initializeMenuManager() {
+        GameManager gameManager = GameManager.get();
+        GameMenuManager gameMenuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
+        gameMenuManager.setStage(stage);
+        gameMenuManager.setSkin(gameManager.getSkin());
+        gameMenuManager.setGame(game);
+        return gameManager;
+    }
+
+    private void initializeOtherManagers(GameManager gameManager) {
         camera = new PotateCamera(1920, 1080);
         cameraDebug = new PotateCamera(1920, 1080);
 
@@ -164,17 +191,14 @@ public class GameScreen implements Screen, KeyDownObserver {
         gameManager.addManager(new InventoryManager());
 
         /* Add construction manager to game manager */
-        //gameManager.addManager(new ConstructionManager());
+        // gameManager.addManager(new ConstructionManager());
 
         /* Add environment to game manager */
         EnvironmentManager gameEnvironManag = gameManager.getManager(EnvironmentManager.class);
-        // For debuggin only!
+        // For debugging only!
         gameEnvironManag.setTime(12, 0);
 
-        /* Add BGM to game manager */
-        gameManager.addManager(new BGMManager());
-
-        /* Add Quest Manager to game manager*/
+        /* Add Quest Manager to game manager */
         gameManager.addManager(new QuestManager());
 
         /**
@@ -254,6 +278,23 @@ public class GameScreen implements Screen, KeyDownObserver {
         shader = new ShaderWrapper("batch");
         // add shader to rendererDebug
         rendererDebug.setShader(shader);
+
+        GameLauncher.getApplication().addLifecycleListener(new LifecycleListener() {
+            @Override
+            public void pause() {
+                // Do nothing for the time being.
+            }
+
+            @Override
+            public void resume() {
+                // Do nothing for the time being.
+            }
+
+            @Override
+            public void dispose() {
+                DatabaseManager.get().getDataBaseConnector().saveGame(save);
+            }
+        });
     }
 
     /**
@@ -339,7 +380,7 @@ public class GameScreen implements Screen, KeyDownObserver {
     /**
      * Resizes the viewport
      *
-     * @param width The new width of the viewport
+     * @param width  The new width of the viewport
      * @param height The new height of the viewport
      */
     @Override
@@ -387,7 +428,8 @@ public class GameScreen implements Screen, KeyDownObserver {
         if (keycode == Input.Keys.F5) {
 
             // Create a random world
-            world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), 4, true).getWorld();
+            world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), world.getSeed() + 1, 4, true)
+                    .getWorld();
 
             // Add this world to the save
             save.getWorlds().add(world);
@@ -416,28 +458,19 @@ public class GameScreen implements Screen, KeyDownObserver {
             logger.info("Show Path is now {}", GameManager.get().showPath);
         }
 
+        //FIXME:jeffvan12 should replace with acutal world saving and loading
         if (keycode == Input.Keys.F3) { // F3
             // Save the world to the DB
-            DatabaseManager.saveWorld(null);
+//            DatabaseManager.saveWorld(null);
         }
 
         if (keycode == Input.Keys.F4) { // F4
             // Load the world to the DB
-            DatabaseManager.loadWorld(null);
+//            DatabaseManager.loadWorld(null);
         }
 
         if (keycode == Input.Keys.P) {
             DatabaseManager.get().getDataBaseConnector().saveGame(this.save);
-            // TODO:dannathan Save
-        }
-
-        if (keycode == Input.Keys.O) {
-            this.save = DatabaseManager.get().getDataBaseConnector().loadGame();
-            this.world = save.getCurrentWorld();
-            AbstractEntity.resetID();
-            Tile.resetID();
-            GameManager gameManager = GameManager.get();
-            gameManager.setWorld(world);
         }
     }
 

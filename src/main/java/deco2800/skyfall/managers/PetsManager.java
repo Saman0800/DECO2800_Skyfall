@@ -66,7 +66,7 @@ public class PetsManager extends AbstractManager {
      */
     public void replacePet(MainCharacter mc){
         i++;
-        if(petList.size()>0){
+        if(!petList.isEmpty()){
             //if no pet was summoned then call the first pet
             if(currentSummonedPet()==null){
                 System.out.println(this.inventoryManager);
@@ -139,10 +139,7 @@ public class PetsManager extends AbstractManager {
      * @return
      */
     public boolean isSummoned(AbstractPet pet){
-        if(pet.isSummoned()){
-            return true;
-        }
-        return false;
+        return pet.isSummoned();
     }
 
 

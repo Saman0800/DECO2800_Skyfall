@@ -9,12 +9,13 @@ import java.util.Random;
  * Swamp biome
  */
 public class SwampBiome extends AbstractBiome{
+    public static final String NAME = "swamp";
 
     /**
      * Constructor for the SwampBiome
      */
     public SwampBiome(Random random) {
-        super("swamp", null);
+        super(NAME, null);
 
         textureGenerator = new NoiseGenerator(random.nextLong(), 3, 60, 0.5);
     }

@@ -1,8 +1,7 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.buildings.AbstractPortal;
-import deco2800.skyfall.buildings.BuildingEntity;
-import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.buildings.BuildingType;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.resources.Blueprint;
 
@@ -28,13 +27,13 @@ public class QuestManager extends TickableManager{
     private int metalTotal;
 
     //Required buildings
-    private List<String> buildingsTotal;
+    private List<BuildingType> buildingsTotal;
 
     //Level 1 buildings
-    private List<String> levelOneBuildings = new ArrayList<>();
+    private List<BuildingType> levelOneBuildings = new ArrayList<>();
 
     //Level 2 buildings
-    private List<String> levelTwoBuildings = new ArrayList<>();
+    private List<BuildingType> levelTwoBuildings = new ArrayList<>();
 
     //Player character
     private MainCharacter player;
@@ -44,6 +43,8 @@ public class QuestManager extends TickableManager{
 
     //Updates this every checkBuildings
     private int buildingsNum;
+
+    private List<BuildingType> buildingsPlaced = new ArrayList<>();
     /**
      * Constructor, sets up beginning of game goals
      */
@@ -51,11 +52,8 @@ public class QuestManager extends TickableManager{
         this.questLevel = 1;
         questSuccess = false;
         buildingsTotal = new ArrayList<>();
-        levelOneBuildings.add("Cabin");
+        levelOneBuildings.add(BuildingType.CASTLE);
         //levelOneBuildings.add("WatchTower");
-        levelTwoBuildings.add("WatchTower");
-        levelTwoBuildings.add("StorageUnit");
-        levelTwoBuildings.add("TownCentre");
         player = MainCharacter.getInstance();
         setMilestones();
     }
@@ -66,10 +64,10 @@ public class QuestManager extends TickableManager{
     private void setMilestones() {
         switch (questLevel) {
             case 1 :
-                setGoldTotal(300);
-                setWoodTotal(50);
-                setStoneTotal(50);
-                setMetalTotal(30);
+                setGoldTotal(1);
+                setWoodTotal(1);
+                setStoneTotal(1);
+                setMetalTotal(1);
                 setBuildingsTotal(levelOneBuildings);
                 break;
             case 2 :
@@ -171,7 +169,7 @@ public class QuestManager extends TickableManager{
      * Sets the required buildings to be constructed
      * @param buildings The buildings to be constructed
      */
-    public void setBuildingsTotal(List<String> buildings) {
+    public void setBuildingsTotal(List<BuildingType> buildings) {
         buildingsTotal.clear();
         buildingsTotal.addAll(buildings);
     }
@@ -180,7 +178,7 @@ public class QuestManager extends TickableManager{
      * Returns the current required buildings
      * @return The current required buildings
      */
-    public List<String> getBuildingsTotal() {
+    public List<BuildingType> getBuildingsTotal() {
         return buildingsTotal;
     }
 
@@ -233,32 +231,15 @@ public class QuestManager extends TickableManager{
         return (currentMetal >= getMetalTotal());
     }
 
+    public void addBuilding(BuildingType newBuilding) {
+        buildingsPlaced.add(newBuilding);
+    }
 /*
      * Checks if all required buildings have been placed in the world
      * @return True if all buildings are placed, False if not
      */
     public boolean checkBuildings() {
-        boolean allBuildings = false;
-        ArrayList<String> currentBuildings = new ArrayList<>();
-        List<AbstractEntity> entities;
-        entities = GameManager.get().getWorld().getEntities();
-
-        for (int i = 0; i < entities.size(); i++) {
-            if (entities.get(i) instanceof BuildingEntity) {
-                for (int j = 0; j < buildingsTotal.size(); j++) {
-                    if (((BuildingEntity) entities.get(i)).getBuildingType().getName()
-                            .equals(buildingsTotal.get(j))) {
-                        currentBuildings.add(buildingsTotal.get(j));
-                    }
-                }
-            }
-        }
-
-        buildingsNum = currentBuildings.size();
-        if (currentBuildings.containsAll(buildingsTotal)) {
-            allBuildings = true;
-        }
-        return allBuildings;
+        return buildingsPlaced.containsAll(buildingsTotal);
     }
 
 

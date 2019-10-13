@@ -38,7 +38,7 @@ public class ShieldTest {
         when(GameManager.get()).thenReturn(gm);
 
         shield = new Shield(new HexVector(), "shield_placeholder",
-                "shield", 0f, 0f,
+                "shield", new HexVector(0f, 0f),
                 20,
                 0.1f,
                 10);
