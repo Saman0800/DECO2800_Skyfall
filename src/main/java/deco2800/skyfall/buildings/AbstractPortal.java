@@ -23,9 +23,8 @@ import java.util.Map;
  * specified Biome, given the player has reached the necessary requirements.
  */
 public abstract class AbstractPortal extends SaveableEntity {
-
     // a logger
-    private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPortal.class);
     // a building object name
     private static final String ENTITY_ID_STRING = "PortalID";
     // The next biome to teleport to
@@ -36,7 +35,6 @@ public abstract class AbstractPortal extends SaveableEntity {
     String currentBiome;
     String name;
     boolean blueprintLearned;
-    Texture texture;
 
     /**
      * Constructor for an building entity with normal rendering size.
@@ -44,19 +42,32 @@ public abstract class AbstractPortal extends SaveableEntity {
      * @param col         the col position on the world
      * @param row         the row position on the world
      * @param renderOrder the height position on the world
-     * @param
      */
     public AbstractPortal(float col, float row, int renderOrder) {
         super(col, row, renderOrder);
         this.setObjectName(ENTITY_ID_STRING);
 
         if (!WorldUtil.validColRow(new HexVector(col, row))) {
-            log.debug("Invalid position");
+            LOGGER.debug("Invalid position");
         }
+    }
+
+    @Override
+    public void onTick(long i) {
+        // do nothing so far
     }
 
     public Map<String, Integer> getBuildCost() {
         return this.buildCost;
+    }
+
+    /**
+     * Gets the next biome to teleport to.
+     *
+     * @return the next biome to teleport to
+     */
+    public String getNext() {
+        return nextBiome;
     }
 
     /**
@@ -65,7 +76,6 @@ public abstract class AbstractPortal extends SaveableEntity {
     public void setNext(String nextBiome) {
         this.nextBiome = nextBiome;
     }
-
 
     /**
      * Move characters location to the next biome To be implemented when a player
@@ -94,6 +104,84 @@ public abstract class AbstractPortal extends SaveableEntity {
         gameManager.setWorld(nextWorld);
 
         character.unlockBiome(nextBiome);
+    }
+
+    /**
+     * Returns the number of wood required for the item.
+     *
+     * @return The amount of wood needed
+     */
+    public int getRequiredWood() {
+        return 0;
+    }
+
+    /**
+     * Returns the number of stones required for the item.
+     *
+     * @return The amount of stone needed
+     */
+    public int getRequiredStone() {
+        return 0;
+    }
+
+    /**
+     * Returns the number of metal required for the item.
+     *
+     * @return The amount of metal needed
+     */
+    public int getRequiredMetal() {
+        return 0;
+    }
+
+    /**
+     * Returns a map of the name of the required resource and the required number of
+     * each resource to create the item.
+     *
+     * @return a hashamp of the required resources and their number.
+     */
+    public Map<String, Integer> getAllRequirements() {
+        return getBuildCost();
+    }
+
+    /**
+     * Get the name of the Portal
+     *
+     * @return String - The name of the portal
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Get the biome for the Portal
+     *
+     * @return String - The name of the biome
+     */
+    public String getCurrentBiome() {
+        return this.currentBiome;
+    }
+
+    /**
+     * a getter method to check if a player has learned the blueprint
+     *
+     * @return true if the player has learned the blueprint, false otherwise
+     */
+    public boolean isBlueprintLearned() {
+        return blueprintLearned;
+    }
+
+    /**
+     * Toggles the boolean blueprintLearned between a true and false state.
+     */
+    public void toggleBlueprintLearned() {
+        blueprintLearned = !blueprintLearned;
+    }
+
+    /**
+     * @return - cost of building the building
+     */
+    public int getCost() {
+        return 0;
     }
 
     public void unlocknext(MainCharacter character, String next) {

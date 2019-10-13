@@ -1,8 +1,5 @@
 package deco2800.skyfall.renderers;
 
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 import java.util.*;
 
 import com.badlogic.gdx.Gdx;
@@ -51,7 +48,6 @@ public class Renderer3D implements Renderer {
     private int tilesSkipped = 0;
 
     private TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
-    private AnimationManager animationManager = GameManager.getManagerFromInstance(AnimationManager.class);
 
     /**
      * Renders onto a batch, given a renderables with entities It is expected that AbstractWorld contains some entities
@@ -214,7 +210,6 @@ public class Renderer3D implements Renderer {
                         childTex.getHeight() * WorldUtil.SCALE_Y);
                 }
             } else {
-                Color c = batch.getColor();
                 if (!(entity instanceof Animatable)) {
                     renderAbstractEntity(batch, entity, entityWorldCoord, tex);
                 } else {
@@ -357,7 +352,7 @@ public class Renderer3D implements Renderer {
         float time = aniLink.getStartingTime();
 
         if (ani == null) {
-            System.err.println("Animation is null");
+            logger.info("Animation is null");
             renderDefaultSprite(batch, entity, entityWorldCoord);
             return;
         }

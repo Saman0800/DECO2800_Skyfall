@@ -14,12 +14,13 @@ import java.util.stream.Collectors;
  * Ocean Biome
  */
 public class OceanBiome extends AbstractBiome {
+    public static final String NAME = "ocean";
 
     /**
      * Constructor for a Biome
      */
     public OceanBiome(Random random) {
-        super("ocean", null);
+        super(NAME, null);
 
         textureGenerator = new NoiseGenerator(random.nextLong(), 5, 160, 0.9);
     }

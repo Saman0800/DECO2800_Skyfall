@@ -12,26 +12,28 @@ import deco2800.skyfall.util.WorldUtil;
 
 public class Tiger extends Enemy implements Animatable {
     // The health of tiger
-    private static final transient int HEALTH = 10;
+    private static final int HEALTH = 10;
     // The attack speed of tiger
-    private static final transient float RUNAWAYSPEED = 5f;
+    private static final float RUNAWAYSPEED = 5f;
     // The normal speed of tiger, if it is not in attack
-    private static final transient float NORMALSPEED = 0.01f;
+    private static final float NORMALSPEED = 0.01f;
     // The speed of tiger, if it get injure
-    private static final transient float INJURESPEED = 0.00001f;
+    private static final float INJURESPEED = 0.00001f;
     // The biome of tiger
-    private static final transient String BIOME = "forest";
+    private static final String BIOME = "forest";
     // Moving direction
     private Direction movingDirection;
     // Set boolean moving
     private boolean moving = false;
-    // Set the period equal to zero , to account attack time
-    private int period = 0;
+
     // Set the type
-    private static final transient String PET_TYPE = "tiger";
+    private static final String PET_TYPE = "tiger";
+
+    // Texture name
+    private static final String TEXTURENAME = "petTiger";
+
     // savage animation
     private MainCharacter mc;
-    private boolean attackStatus = false;
 
     // a routine for destination
     private HexVector destination = null;
@@ -47,8 +49,8 @@ public class Tiger extends Enemy implements Animatable {
      */
     public Tiger(float col, float row, MainCharacter mc) {
         super(col, row);
-        this.setTexture("petTiger");
-        this.setObjectName("petTiger");
+        this.setTexture(TEXTURENAME);
+        this.setObjectName(TEXTURENAME);
         this.setHeight(5);
         this.setHealth(HEALTH);
         this.setSpeed(2);
@@ -63,8 +65,8 @@ public class Tiger extends Enemy implements Animatable {
      */
     public Tiger(float col, float row) {
         super(col, row);
-        this.setTexture("petTiger");
-        this.setObjectName("petTiger");
+        this.setTexture(TEXTURENAME);
+        this.setObjectName(TEXTURENAME);
         this.setHeight(5);
         this.setHealth(HEALTH);
         this.setSpeed(2);
@@ -93,18 +95,9 @@ public class Tiger extends Enemy implements Animatable {
      * 
      * @return string of biome
      */
+    @Override
     public String getBiome() {
         return BIOME;
-    }
-
-    /**
-     * get the attack status of pet tiger
-     * 
-     * @param status - boolean value
-     */
-    public void SetAttackStatus(boolean status) {
-        this.attackStatus = status;
-
     }
 
     /**
@@ -145,14 +138,12 @@ public class Tiger extends Enemy implements Animatable {
             float rowDistance = mc.getRow() - this.getRow();
             if (getHealth() == 10) {
                 if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
-                    this.SetAttackStatus(true);
                     runAway();
                 } else {
                     randomMoving();
                 }
             } else {
                 followPlayer(mc);
-                this.SetAttackStatus(false);
                 setCurrentState(AnimationRole.MOVE);
                 if (getInjure()) {
                     this.position.moveToward(destination, Tiger.INJURESPEED);
@@ -162,7 +153,6 @@ public class Tiger extends Enemy implements Animatable {
                 }
             }
         }
-
     }
 
     /**
@@ -202,7 +192,7 @@ public class Tiger extends Enemy implements Animatable {
         if (destination.getCol() == this.getCol() && destination.getRow() == this.getRow()) {
             moving = false;
         }
-        if (getInjure() == true) {
+        if (getInjure()) {
             this.position.moveToward(destination, Tiger.INJURESPEED);
         }
         this.position.moveToward(destination, Tiger.NORMALSPEED);
@@ -238,16 +228,6 @@ public class Tiger extends Enemy implements Animatable {
     }
 
     /**
-     * Return a list of resistance attributes.
-     *
-     * @return A list of resistance attributes.
-     */
-    @Override
-    public int[] getResistanceAttributes() {
-        return new int[0];
-    }
-
-    /**
      * add pet tiger animations
      */
     @Override
@@ -262,11 +242,6 @@ public class Tiger extends Enemy implements Animatable {
      */
     @Override
     public void setDirectionTextures() {
-        // Do nothing for now.
-    }
-
-    @Override
-    public void dealDamage(MainCharacter mc) {
         // Do nothing for now.
     }
 }

@@ -28,7 +28,7 @@ public class GoldPiece extends StaticEntity {
     private static int nextValue = 5;
 
     // Logger to show messages
-    private final Logger logger = LoggerFactory.getLogger(MainCharacter.class);
+    private static final Logger logger = LoggerFactory.getLogger(MainCharacter.class);
 
 
     /**

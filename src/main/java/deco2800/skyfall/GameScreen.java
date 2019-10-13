@@ -5,12 +5,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.enemies.*;
 import deco2800.skyfall.graphics.HasPointLight;
 import deco2800.skyfall.graphics.PointLight;
 import deco2800.skyfall.graphics.ShaderWrapper;
@@ -34,10 +31,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.function.Function;
 
+/**
+ * An instance of a Game screen.
+ */
 public class GameScreen implements Screen, KeyDownObserver {
-    private final Logger logger = LoggerFactory.getLogger(Renderer3D.class);
+    private final Logger logger = LoggerFactory.getLogger(GameScreen.class);
     @SuppressWarnings("unused")
     private final SkyfallGame game;
     /**
@@ -283,12 +282,16 @@ public class GameScreen implements Screen, KeyDownObserver {
         // add shader to rendererDebug
         rendererDebug.setShader(shader);
 
-        GameLauncher.application.addLifecycleListener(new LifecycleListener() {
+        GameLauncher.getApplication().addLifecycleListener(new LifecycleListener() {
             @Override
-            public void pause() {}
+            public void pause() {
+                // Do nothing for the time being.
+            }
 
             @Override
-            public void resume() {}
+            public void resume() {
+                // Do nothing for the time being.
+            }
 
             @Override
             public void dispose() {

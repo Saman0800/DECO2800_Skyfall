@@ -8,7 +8,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
  * @author Tim Hadwen
  */
 public class GameLauncher {
-	public static LwjglApplication application;
+	private static LwjglApplication application;
 
 	/**
 	 * Private constructor to hide the implicit constructor
@@ -28,5 +28,14 @@ public class GameLauncher {
 		config.height = 1000;
 		config.title = "DECO2800 2019: Skyfall";
 		application = new LwjglApplication(new SkyfallGame(), config);
+	}
+
+	/**
+	 * Gets the LibGDX application.
+	 *
+	 * @return the LibGDX application
+	 */
+	public static LwjglApplication getApplication() {
+		return application;
 	}
 }

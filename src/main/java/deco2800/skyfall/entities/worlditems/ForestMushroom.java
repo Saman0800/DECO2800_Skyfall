@@ -16,25 +16,32 @@ public class ForestMushroom extends StaticEntity implements HasPointLight {
     PointLight entityPointLight;
 
     public ForestMushroom() {
-        this.setObjectName(ENTITY_ID_STRING);
+        setupParams();
+        this.setTexture("mushrooms" + nextImage);
+        ForestMushroom.nextImage = randomGen.nextInt(2) + 1;
     }
 
     public ForestMushroom(Tile tile, boolean obstructed) {
         super(tile, 2, "mushrooms" + nextImage, obstructed);
-        this.setObjectName(ENTITY_ID_STRING);
         ForestMushroom.nextImage = randomGen.nextInt(2) + 1;
         // Set up the point light for this entity
         pointLightSetUp();
-        this.entityType = "ForestMushroom";
+        setupParams();
     }
 
     public ForestMushroom(SaveableEntityMemento memento) {
         super(memento);
+        setupParams();
     }
 
     @Override
     public void onTick(long i) {
 
+    }
+
+    private void setupParams() {
+        this.setObjectName(ENTITY_ID_STRING);
+        this.entityType = "ForestMushroom";
     }
 
     /**

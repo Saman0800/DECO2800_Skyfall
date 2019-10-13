@@ -59,8 +59,13 @@ public final class EntitySpawnTable {
     }
 
     public static double getRandomValue(World world, EntitySpawnRule spawnRule, Tile tile) {
-        return normalizeStaticEntityNoise(world.getStaticEntityNoise().getOctavedPerlinValue(
-                tile.getCol() + spawnRule.getIndex() % 100, tile.getRow() + spawnRule.getIndex() % 100));
+
+        if (spawnRule.getUsePerlin()) {
+            return normalizeStaticEntityNoise(world.getStaticEntityNoise().getOctavedPerlinValue(
+                    tile.getCol() + spawnRule.getIndex() % 100, tile.getRow() + spawnRule.getIndex() % 100));
+        }
+
+        return randDirection.nextDouble();
     }
 
     private static void placeWithChance(Function<Tile, StaticEntity> newInstance, EntitySpawnRule rule, Tile nextTile,

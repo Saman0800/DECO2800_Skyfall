@@ -113,6 +113,6 @@ public class GameOverTable extends AbstractPopUpElement{
     public void returnHome() {
         // Create a game and set screen to main menu
         gameMenuManager.getGame().create();
-        ((Game)Gdx.app.getApplicationListener()).setScreen(gameMenuManager.getGame().mainMenuScreen);
+        ((Game)Gdx.app.getApplicationListener()).setScreen(gameMenuManager.getGame().getMainMenuScreen());
     }
 }

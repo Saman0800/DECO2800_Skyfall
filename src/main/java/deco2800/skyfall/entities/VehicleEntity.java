@@ -18,6 +18,7 @@ public abstract class VehicleEntity extends Peon {
         this.setTexture(textureName);
     }
 
+    @Override
     public void onTick(long i) {
 
     }
@@ -38,10 +39,12 @@ public abstract class VehicleEntity extends Peon {
         return this.beAttacked;
     }
 
+    @Override
     public int getHealth() {
         return this.health;
     }
 
+    @Override
     public void setHealth(int health) {
         this.health = health;
     }

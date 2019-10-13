@@ -14,8 +14,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.badlogic.gdx.utils.Array;
-
 public class EnemySpawnTable implements TimeObserver {
 
     /**
@@ -64,16 +62,14 @@ public class EnemySpawnTable implements TimeObserver {
 
     public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
             Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
-            Function<EnvironmentManager, Double> probAdjFunc,
-            EnvironmentManager gameEnvironManag) {
+            Function<EnvironmentManager, Double> probAdjFunc, EnvironmentManager gameEnvironManag) {
         this(spawnRadius, maxInRadius, frequency, biomeToConstructor, probAdjFunc, GameManager.get().getWorld(),
-             gameEnvironManag);
+                gameEnvironManag);
     }
 
     public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
             Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
-            Function<EnvironmentManager, Double> probAdjFunc, World world,
-            EnvironmentManager gameEnvironManag) {
+            Function<EnvironmentManager, Double> probAdjFunc, World world, EnvironmentManager gameEnvironManag) {
         this.spawnRadius = spawnRadius;
         this.maxInRadius = maxInRadius;
         this.spawnFrequency = frequency;
@@ -84,17 +80,16 @@ public class EnemySpawnTable implements TimeObserver {
     }
 
     public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
-                           Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
-                           Function<EnvironmentManager, Double> probAdjFunc,
-                           World world) {
+            Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
+            Function<EnvironmentManager, Double> probAdjFunc, World world) {
 
         this(spawnRadius, maxInRadius, frequency, biomeToConstructor, probAdjFunc, world,
-             GameManager.get().getManager(EnvironmentManager.class));
+                GameManager.get().getManager(EnvironmentManager.class));
     }
 
     public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
-                           Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
-                           Function<EnvironmentManager, Double> probAdjFunc) {
+            Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
+            Function<EnvironmentManager, Double> probAdjFunc) {
 
         this(spawnRadius, maxInRadius, frequency, biomeToConstructor, probAdjFunc, GameManager.get().getWorld());
     }
@@ -104,8 +99,8 @@ public class EnemySpawnTable implements TimeObserver {
      */
     public List<Enemy> getAllEnemies() {
 
-        return world.getSortedAgentEntities().stream().filter(Enemy.class::isInstance)
-                .map(Enemy.class::cast).collect(Collectors.toList());
+        return world.getSortedAgentEntities().stream().filter(Enemy.class::isInstance).map(Enemy.class::cast)
+                .collect(Collectors.toList());
 
     }
 
@@ -135,8 +130,7 @@ public class EnemySpawnTable implements TimeObserver {
      */
     public List<Enemy> enemiesInTarget(float x, float y, float radius) {
 
-        return getAllEnemies().stream().filter(enemy -> inRange(enemy, x, y, radius))
-                .collect(Collectors.toList());
+        return getAllEnemies().stream().filter(enemy -> inRange(enemy, x, y, radius)).collect(Collectors.toList());
 
     }
 
@@ -151,8 +145,6 @@ public class EnemySpawnTable implements TimeObserver {
 
     /**
      * Returns how many enemies are with close proximity of another enemy.
-     * 
-     * @param targetEnemy The enemy that we are making the count for.
      */
     public int enemiesNearTargetCount(float x, float y) {
         return enemiesInTarget(x, y, 50).size();
@@ -216,7 +208,7 @@ public class EnemySpawnTable implements TimeObserver {
             // Get all the tiles within the current chunk
             List<Tile> chunkTiles = partitionedTiles.get(biomeName);
 
-            if (chunkTiles == null || chunkTiles.size() == 0) {
+            if (chunkTiles == null || chunkTiles.isEmpty()) {
                 continue;
             }
 
@@ -240,16 +232,16 @@ public class EnemySpawnTable implements TimeObserver {
                 // Check if the tile is in sight of the player
                 float[] tileWorldCord = WorldUtil.colRowToWorldCords(nextTile.getCol(), nextTile.getRow());
 
-                // if (!WorldUtil.areCoordinatesOffScreen(tileWorldCord[0], tileWorldCord[1],
-                //         GameManager.get().getCamera())) {
-                //     continue;
-                // }
+                if (!WorldUtil.areCoordinatesOffScreen(tileWorldCord[0], tileWorldCord[1],
+                        GameManager.get().getCamera())) {
+                    continue;
+                }
 
                 // Create an enemy using one of the appropriate constructors
                 List<Class<? extends Enemy>> possibleConstructors = biomeToConstructor
                         .get(nextTile.getBiome().getBiomeName());
 
-                if ((possibleConstructors == null) || (possibleConstructors.size() == 0)) {
+                if ((possibleConstructors == null) || (possibleConstructors.isEmpty())) {
                     // There are no suitable enemies to spawn on this tile
                     continue;
                 }
@@ -269,8 +261,8 @@ public class EnemySpawnTable implements TimeObserver {
                 Enemy newEnemy;
 
                 try {
-                    newEnemy = randEnemyType.getDeclaredConstructor(Float.class, Float.class).newInstance(nextTile.getRow(),
-                            nextTile.getCol());
+                    newEnemy = randEnemyType.getDeclaredConstructor(Float.class, Float.class)
+                            .newInstance(nextTile.getRow(), nextTile.getCol());
                     world.addEntity(newEnemy);
                     enemiesPlaced += 1;
                 } catch (Exception e) {

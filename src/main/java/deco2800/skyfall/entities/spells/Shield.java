@@ -21,7 +21,7 @@ public class Shield extends Spell implements Animatable {
     /**
      * Key sequence required to cast this spell.
      */
-    public static int[] keySequence = new int[] {
+    public static final int[] keySequence = new int[] {
             Input.Keys.LEFT,
             Input.Keys.LEFT,
             Input.Keys.RIGHT,

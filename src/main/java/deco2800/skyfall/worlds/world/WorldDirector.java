@@ -4,7 +4,6 @@ import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.enemies.*;
 import deco2800.skyfall.entities.pets.IceWhitebear;
 import deco2800.skyfall.entities.pets.LizardHome;
-import deco2800.skyfall.entities.pets.Tiger;
 import deco2800.skyfall.entities.vehicle.Bike;
 import deco2800.skyfall.entities.vehicle.SandCar;
 import deco2800.skyfall.managers.GameManager;
@@ -177,9 +176,9 @@ public class WorldDirector {
         builder.addEntity(new IceWhitebear(-2, 0, mainCharacter));
         builder.addEntity(new Bike(-10f,-2f,mainCharacter));
         builder.addEntity(new SandCar(-20f,-2f, mainCharacter));
-        builder.addEntity(new Scout(0, 2, 0.4f, "Forest", Enemy.EnemyType.SCOUT));
-        builder.addEntity(new Heavy(7, 9, 0.2f, "Forest", Enemy.EnemyType.HEAVY));
-        builder.addEntity(new Abductor(4, 9, 0.8f, "Forest", Enemy.EnemyType.ABDUCTOR));
+        builder.addEntity(new Scout(0, 2, 0.4f, "Forest"));
+        builder.addEntity(new Heavy(7, 9, 0.2f, "Forest"));
+        builder.addEntity(new Abductor(4, 9, 0.8f, "Forest"));
 
         builder.addEntity(new Camel(34, -7, mainCharacter));
         builder.addEntity(new Horse(-8,-6, mainCharacter));
@@ -203,8 +202,8 @@ public class WorldDirector {
 
         builder.addEntity(mainCharacter);
 
-        builder.addEntity(new Scout(0, 2, 1f, "Forest", Enemy.EnemyType.SCOUT));
-        builder.addEntity(new Heavy(7, 9, 2f, "Forest", Enemy.EnemyType.HEAVY));
+        builder.addEntity(new Scout(0, 2, 1f, "Forest"));
+        builder.addEntity(new Heavy(7, 9, 2f, "Forest"));
 
         builder.addLake(5);
         builder.addRiver();
@@ -216,7 +215,7 @@ public class WorldDirector {
         builder.setType("tutorial");
         builder.setSeed(2);
         builder.setStaticEntities(true);
-        builder.addEntity(new Heavy(4, 1, 2f, "Forest", Enemy.EnemyType.HEAVY));
+        builder.addEntity(new Heavy(4, 1, 2f, "Forest"));
         builder.addBiome(new ForestBiome(random), 20);
         builder.addBiome(new DesertBiome(random), 20);
         builder.addBiome(new MountainBiome(random), 20);

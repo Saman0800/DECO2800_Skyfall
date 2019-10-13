@@ -21,7 +21,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Matchers.*;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -33,7 +33,6 @@ public class PortalTest {
 
     public World world;
     private Save save;
-
 
     @Before
     public void setup() {
@@ -56,12 +55,11 @@ public class PortalTest {
         when(DatabaseManager.get()).thenReturn(manager);
 
         GameManager.get().setWorld(world);
-
     }
 
     @Test
     public void initialiselockedBiomes() {
-        MainCharacter character = new MainCharacter(1,1,1, "character", 10);
+        MainCharacter character = new MainCharacter(1, 1, 1, "character", 10);
         ArrayList<String> lockedBiomes = new ArrayList<>();
 
         lockedBiomes.add("desert");
@@ -69,12 +67,11 @@ public class PortalTest {
         lockedBiomes.add("volcanic_mountains");
 
         assertEquals(lockedBiomes, character.getlockedBiomes());
-
     }
 
     @Test
     public void unlockBiome() {
-        MainCharacter character = new MainCharacter(1,1,1, "character", 10);
+        MainCharacter character = new MainCharacter(1, 1, 1, "character", 10);
         ArrayList<String> lockedBiomes = new ArrayList<>();
 
         lockedBiomes.add("mountain");
@@ -84,7 +81,6 @@ public class PortalTest {
 
         character.unlockBiome("desert");
         assertEquals(lockedBiomes, character.getlockedBiomes());
-
     }
 
 
@@ -95,7 +91,6 @@ public class PortalTest {
         save.setMainCharacter(character);
         character.setSave(save);
         ArrayList<String> lockedBiomes = new ArrayList<>();
-
 
         lockedBiomes.add("mountain");
         lockedBiomes.add("volcanic_mountains");
@@ -126,37 +121,27 @@ public class PortalTest {
 
     @Test
     public void testForestPortal() {
-
-        AbstractPortal portal = new ForestPortal(1,1,1);
-        assertEquals("desert", portal.getNextBiome());
-
+        AbstractPortal portal = new ForestPortal(1, 1, 1);
+        assertEquals("desert", portal.getNext());
     }
 
     @Test
     public void testDesertPortal() {
-
-        AbstractPortal portal = new DesertPortal(1,1,1);
-        assertEquals("mountain", portal.getNextBiome());
-
+        AbstractPortal portal = new DesertPortal(1, 1, 1);
+        assertEquals("mountain", portal.getNext());
     }
 
     @Test
     public void testMountainPortal() {
-
-        AbstractPortal portal = new MountainPortal(1,1,1);
-        assertEquals("volcanic_mountains", portal.getNextBiome());
-
+        AbstractPortal portal = new MountainPortal(1, 1, 1);
+        assertEquals("volcanic_mountain", portal.getNext());
     }
 
     @Test
     public void testVolcanoPortal() {
-
-        AbstractPortal portal = new VolcanoPortal(1,1,1);
-        assertEquals("volcanic_mountains", portal.getNextBiome());
-
+        AbstractPortal portal = new VolcanoPortal(1, 1, 1);
+        assertEquals("volcanic_mountain", portal.getNext());
     }
-
-
 
     @Test
     public void testTeleportation() {
@@ -173,8 +158,4 @@ public class PortalTest {
         assertEquals(0, character.getCol(), 0);
         assertEquals(0, character.getRow(), 0);
     }
-
-
-
-
 }
