@@ -12,6 +12,7 @@ import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.worlds.biomes.*;
 import deco2800.skyfall.entities.worlditems.*;
+import deco2800.skyfall.worlds.generation.WorldGenException;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -21,6 +22,83 @@ import java.util.Random;
  */
 public class WorldDirector {
     private WorldDirector() {}
+
+    public static WorldBuilder constructSingleBiomeWorld(WorldBuilder builder, long seed, boolean renderUI, String biomeName) {
+        Random random = new Random(seed);
+
+        builder.setType("single_player");
+        switch (biomeName) {
+            case "forest":
+                builder.addBiome(new ForestBiome(random), 75);
+                builder.addLake(1);
+                builder.addLake(1);
+                builder.addRiver();
+                break;
+            case "desert":
+                builder.addBiome(new DesertBiome(random), 75);
+                break;
+            case "mountain":
+                builder.addBiome(new MountainBiome(random), 75);
+                builder.addLake(3);
+                break;
+            case "snowy_mountains":
+                builder.addBiome(new SnowyMountainsBiome(random), 75);
+                builder.addLake(2);
+                builder.addRiver();
+                break;
+            case "swamp":
+                builder.addBiome(new SwampBiome(random), 75);
+                builder.addLake(4);
+                builder.addLake(3);
+                builder.addLake(2);
+                builder.addLake(1);
+                builder.addLake(1);
+                builder.addRiver();
+                break;
+            case "volcanic_mountains":
+                builder.addBiome(new VolcanicMountainsBiome(random), 75);
+                break;
+            default:
+                // TODO:dannathan make new exception for this
+                throw new RuntimeException();
+        }
+
+        builder.setWorldSize(300);
+        builder.setNodeSpacing(20);
+        builder.setSeed(random.nextInt());
+
+        builder.setRiverSize(1);
+        builder.setBeachSize(2);
+
+        builder.setStaticEntities(true);
+
+        MainCharacter mainCharacter = MainCharacter.getInstance(0, 0, 10f, "Main Piece", 10);
+        mainCharacter.setCol(0);
+        mainCharacter.setRow(0);
+
+        // mainCharacter.getUnlockedBiomes();
+        // for (String s: mainCharacter.getUnlockedBiomes()) {
+        //     for (AbstractBiome b: builder.getWorld().getBiomes()) {
+        //         if (b.getBiomeName() == "desert") {
+        //             for (Tile t: b.getTiles()){
+        //                 t.setObstructed(true);
+        //             }
+        //         }
+        //    }
+        // }
+
+        if (renderUI) {
+            StatisticsManager sm = new StatisticsManager(mainCharacter);
+            GameManager.addManagerToInstance(sm);
+            GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
+            gmm.addStatsManager(sm);
+            gmm.drawAllElements();
+        }
+
+        builder.addEntity(mainCharacter);
+
+        return builder;
+    }
 
     /**
      * A simple world used in single player with n random biomes

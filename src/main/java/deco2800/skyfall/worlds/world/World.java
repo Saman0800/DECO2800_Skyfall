@@ -712,19 +712,19 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
                 switch (e.getBuildingType()) {
                     case FORESTPORTAL:
                         ForestPortal forestPortal = new ForestPortal(0, 0, 0);
-                        forestPortal.teleport(mc, this);
+                        forestPortal.teleport(this.save);
                         break;
                     case MOUNTAINPORTAL:
                         MountainPortal mountainPortal = new MountainPortal(0, 0, 0);
-                        mountainPortal.teleport(mc, this);
+                        mountainPortal.teleport(this.save);
                         break;
                     case DESERTPORTAL:
                         DesertPortal desertPortal = new DesertPortal(0, 0, 0);
-                        desertPortal.teleport(mc, this);
+                        desertPortal.teleport(this.save);
                         break;
                     case VOLCANOPORTAL:
                         VolcanoPortal volcanoPortal = new VolcanoPortal(0, 0, 0);
-                        volcanoPortal.teleport(mc, this);
+                        volcanoPortal.teleport(this.save);
                         break;
                     default:
                         break;

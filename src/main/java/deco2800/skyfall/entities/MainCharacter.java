@@ -139,7 +139,6 @@ public class MainCharacter extends Peon
         2 = Mountain
         3 = Volcano
      */
-    public int gameStage;
 
     // The name of the item to be created.
     private String itemToCreate;
@@ -348,7 +347,6 @@ public class MainCharacter extends Peon
         super(row, col, speed, name, health, "MainCharacter");
         toBuild = false;
         this.id = System.nanoTime();
-        gameStage = 0;
         this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
         this.setHeight(1);
         this.setObjectName("MainPiece");
@@ -474,7 +472,7 @@ public class MainCharacter extends Peon
 
         lockedBiomes.add("desert");
         lockedBiomes.add("mountain");
-        lockedBiomes.add("volcanic_mountain");
+        lockedBiomes.add("volcanic_mountains");
 
     }
 
@@ -1636,7 +1634,7 @@ public class MainCharacter extends Peon
 
         // For items and general storage
         QuestManager qm = GameManager.get().getManager(QuestManager.class);
-        switch (gameStage) {
+        switch (save.getGameStage()) {
         case 3:
             unlocked.add(SAFEHOUSE);
             break;
@@ -1657,7 +1655,7 @@ public class MainCharacter extends Peon
         }
 
         // for portals
-        switch (gameStage) {
+        switch (save.getGameStage()) {
         case 3:
             if (constructedBuildings.contains(SAFEHOUSE)) {
                 unlocked.add(new ForestPortal(0, 0, 0));
@@ -2052,7 +2050,7 @@ public class MainCharacter extends Peon
     }
 
     public int getGameStage(){
-        return this.gameStage;
+        return this.save.getGameStage();
     }
 
 
@@ -2101,7 +2099,6 @@ public class MainCharacter extends Peon
 
         public MainCharacterMemento(MainCharacter character) {
             this.col = character.getCol();
-            this.stage = character.gameStage;
             this.row = character.getRow();
             this.saveID = character.save.getSaveID();
             this.mainCharacterID = character.id;

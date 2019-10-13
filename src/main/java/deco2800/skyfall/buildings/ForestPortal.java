@@ -18,10 +18,6 @@ import java.util.Map;
  */
 public class ForestPortal extends AbstractPortal implements Blueprint {
 
-    public String currentBiome = "forest";
-    public boolean blueprintLearned = false;
-    public String name = "forestPortal";
-    Texture texture;
     // a logger
     private final transient Logger logger = LoggerFactory.getLogger(ForestPortal.class);
 
@@ -36,7 +32,10 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
         super(col, row, renderOrder);
         this.setTexture("portal_forest");
         this.setNext("desert");
-
+        this.entityType = "ForestPortal";
+        this.currentBiome = "forest";
+        this.name = "forestPortal";
+        this.blueprintLearned = false;
     }
 
     @Override

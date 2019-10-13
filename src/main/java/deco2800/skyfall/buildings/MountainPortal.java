@@ -14,10 +14,6 @@ import java.util.Map;
 
 public class MountainPortal extends AbstractPortal implements Blueprint {
 
-    public String currentBiome = "mountain";
-    public String name = "mountainPortal";
-    public boolean blueprintLearned = false;
-    Texture texture;
     private final transient Logger logger = LoggerFactory.getLogger(BuildingEntity.class);
 
     /**
@@ -30,8 +26,11 @@ public class MountainPortal extends AbstractPortal implements Blueprint {
     public MountainPortal(float col, float row, int renderOrder) {
         super(col, row, renderOrder);
         this.setTexture("portal_mountain");
-        this.setNext("volcanic_mountain");
-
+        this.setNext("volcanic_mountains");
+        this.entityType = "MountainPortal";
+        currentBiome = "mountain";
+        String name = "mountainPortal";
+        blueprintLearned = false;
     }
 
     @Override

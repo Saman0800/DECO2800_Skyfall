@@ -3,6 +3,7 @@ package deco2800.skyfall.buildings;
 import com.badlogic.gdx.graphics.Texture;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.resources.Blueprint;
+import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.worlds.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,6 @@ public class VolcanoPortal extends AbstractPortal implements Blueprint {
     public String currentBiome = "mountain";
     public String name = "portal_volcano";
     public boolean blueprintLearned = false;
-    Texture texture;
     private final transient Logger logger = LoggerFactory.getLogger(BuildingEntity.class);
 
 
@@ -28,8 +28,11 @@ public class VolcanoPortal extends AbstractPortal implements Blueprint {
     public VolcanoPortal(float col, float row, int renderOrder) {
         super(col, row, renderOrder);
         this.setTexture("portal");
-        this.setNext("volcanic_mountain");
-
+        this.setNext("volcanic_mountains");
+        this.entityType = "VolcanoPortal";
+        currentBiome = "mountain";
+        name = "portal_volcano";
+        blueprintLearned = false;
     }
 
     @Override
@@ -113,7 +116,7 @@ public class VolcanoPortal extends AbstractPortal implements Blueprint {
     }
 
     @Override
-    public void teleport(MainCharacter character, World world) {
+    public void teleport(Save save) {
         logger.info("UNLOCKED ALL BIOMES - END OF GAME");
 
     }
