@@ -19,7 +19,9 @@ public class ManaBar extends StatBar {
      */
     protected void updateInnerCircle(int newValue) {
 
-        if (smallerCircle == null || biggerCircle == null) {
+        if (smallerCircle == null) {
+            if (biggerCircle == null) {
+            }
             return;
         }
 

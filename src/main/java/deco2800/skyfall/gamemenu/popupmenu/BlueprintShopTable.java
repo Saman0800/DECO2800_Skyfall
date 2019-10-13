@@ -106,9 +106,9 @@ public class BlueprintShopTable extends AbstractPopUpElement {
 
         List<Blueprint> unlocked = sm.getCharacter().getUnlockedBlueprints();
 
-        int count = 0;
-        int xpos = 20;
-        int ypos = 280;
+        float count = 0;
+        float xpos = 20;
+        float ypos = 280;
 
         for (Blueprint b : unlocked) {
 
@@ -133,7 +133,6 @@ public class BlueprintShopTable extends AbstractPopUpElement {
                         if (sm.getCharacter().getGoldPouchTotalValue() >= b.getCost()) {
                             sm.getCharacter().removeGold(b.getCost());
                             sm.getCharacter().addBlueprint(b);
-                        } else {
                         }
                         updateBlueprintShopPanel();
                     }

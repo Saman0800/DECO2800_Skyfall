@@ -25,12 +25,10 @@ public class CollectCreateTable extends AbstractPopUpElement {
     private Table baseTable;
     private TextButton complete;
     private Label titleLabel;
-    private Type tableType;
     private Table labelTable;
-    private enum Type {
-        COLLECT,
-        CREATE
-    }
+
+    private String collect = "collect";
+
     private Label labelGold;
     private Label labelMetal;
     private Label labelStone;
@@ -101,7 +99,7 @@ public class CollectCreateTable extends AbstractPopUpElement {
         labelTable.clear();
         String whiteText = "white-text";
         String format = "%d x %s";
-        if (type.equals("collect")) {
+        if (type.equals(collect)) {
             String currentText  = String.format(format, qm.getGoldTotal(), "Gold");
             Color color;
 
@@ -217,8 +215,7 @@ public class CollectCreateTable extends AbstractPopUpElement {
             return (qm.checkGold() && qm.checkMetal() &&
                     qm.checkStone() && qm.checkWood() &&
                     qm.checkWeapons("sword") && qm.checkWeapons("spear") &&
-                    qm.checkWeapons("axe") && qm.checkWeapons("bow"))
-                    || qm.questFinished();
+                    qm.checkWeapons("axe") && qm.checkWeapons("bow"));
         } else {
             return qm.checkBuildings() || qm.questFinished();
         }
@@ -238,7 +235,7 @@ public class CollectCreateTable extends AbstractPopUpElement {
         baseTable.top();
 
 
-        if (type.equals("collect")) {
+        if (type.equals(collect)) {
             titleLabel = new Label(" COLLECT ", skin,  "title-pill");
         } else {
             titleLabel = new Label(" CREATE ", skin,  "title-pill");

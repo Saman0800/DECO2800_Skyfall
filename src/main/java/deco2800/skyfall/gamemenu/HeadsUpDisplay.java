@@ -18,6 +18,10 @@ import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.QuestManager;
 import deco2800.skyfall.managers.TextureManager;
 
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class HeadsUpDisplay extends AbstractUIElement {
 
     interface UpdatePositionInterface {
@@ -32,11 +36,11 @@ public class HeadsUpDisplay extends AbstractUIElement {
     private Table leftHUDTable;
     private ImageButton location;
     private TextButton teleport;
-    private boolean canTeleport = true;
-    private static final String bluePillString = "blue-pill";
 
-    public HeadsUpDisplay(Stage stage, String[] textureNames, TextureManager tm, Skin skin, GameMenuManager gmm,
-            Map<String, AbstractUIElement> hudElements, QuestManager qm) {
+    public HeadsUpDisplay(Stage stage, String[] textureNames, TextureManager tm,
+                          Skin skin, GameMenuManager gmm,
+                          Map<String, AbstractUIElement> hudElements,
+                          QuestManager qm) {
         super(stage, textureNames, tm);
         this.gmm = gmm;
         this.skin = skin;
@@ -95,8 +99,11 @@ public class HeadsUpDisplay extends AbstractUIElement {
             }
         });
 
-        TextButton pauseT = new TextButton("PAUSE", skin, bluePillString);
-        pauseT.getLabel().setStyle(skin.get(bluePillString, Label.LabelStyle.class));
+
+        String pill = "blue-pill";
+
+        TextButton pauseT = new TextButton("PAUSE", skin, pill);
+        pauseT.getLabel().setStyle(skin.get(pill, Label.LabelStyle.class));
         pauseT.getLabel().setAlignment(Align.center);
         pauseT.getLabel().setFontScale(0.8f);
         pauseT.addListener(new ClickListener() {
@@ -107,8 +114,10 @@ public class HeadsUpDisplay extends AbstractUIElement {
             }
         });
 
-        TextButton helpT = new TextButton("HELP", skin, bluePillString);
-        helpT.getLabel().setStyle(skin.get(bluePillString, Label.LabelStyle.class));
+
+
+        TextButton helpT = new TextButton("HELP", skin, pill);
+        helpT.getLabel().setStyle(skin.get(pill, Label.LabelStyle.class));
         helpT.getLabel().setAlignment(Align.center);
         helpT.getLabel().setFontScale(0.8f);
         helpT.addListener(new ClickListener() {
