@@ -63,6 +63,7 @@ public class BlueprintShopTable extends AbstractPopUpElement {
      *
      * Draw the whole blueprint shop table.
      */
+    @Override
     public void draw() {
         super.draw();
         blueprintTable = new Table();
@@ -74,20 +75,20 @@ public class BlueprintShopTable extends AbstractPopUpElement {
         blueprintTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("pop up screen"));
         blueprintTable.setName("chestTable");
 
-        Image infoBar = new Image(gameMenuManager.generateTextureRegionDrawableObject("inventory_banner"));
+        Image infoBar = new Image(gameMenuManager.generateTextureRegionDrawableObject("blueprint_shop_banner"));
         infoBar.setSize(650, 55);
         infoBar.setPosition(130, 435);
 
-        Table infoPanel = new Table();
-        infoPanel.setSize(410, 400);
-        infoPanel.setPosition(25, 18);
-        infoPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("info_panel"));
+//        Table infoPanel = new Table();
+//        infoPanel.setSize(410, 400);
+//        infoPanel.setPosition(25, 18);
+//        infoPanel.setBackground(generateTextureRegionDrawableObject("info_panel"));
 
         this.blueprintPanel = new Table();
         // updateChestPanel(chest);
 
         blueprintTable.addActor(infoBar);
-        blueprintTable.addActor(infoPanel);
+        //blueprintTable.addActor(infoPanel);
         blueprintTable.addActor(this.blueprintPanel);
         blueprintTable.setVisible(false);
         stage.addActor(blueprintTable);
@@ -99,8 +100,8 @@ public class BlueprintShopTable extends AbstractPopUpElement {
     public void updateBlueprintShopPanel() {
         blueprintPanel.clear();
         blueprintPanel.setName("resourcePanel");
-        blueprintPanel.setSize(410, 400);
-        blueprintPanel.setPosition(475, 18);
+        blueprintPanel.setSize(800, 400);
+        blueprintPanel.setPosition(25, 18);
         blueprintPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("menu_panel"));
 
         List<Blueprint> unlocked = sm.getCharacter().getUnlockedBlueprints();
@@ -114,15 +115,15 @@ public class BlueprintShopTable extends AbstractPopUpElement {
             ImageButton icon = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(b.getName()));
             icon.setName("icon");
             icon.setSize(100, 100);
-            icon.setPosition(xpos + count * 130, ypos);
+            icon.setPosition(xpos + (float) count * 130, ypos);
             if (isBought(b)) {
                 Label cost = new Label("X", skin, "white-label");
                 cost.setName(b.getName());
-                cost.setPosition(xpos + 85 + count * 130, ypos + 75);
+                cost.setPosition(xpos + 85 + (float) count * 130, (float) ypos + 75);
                 blueprintPanel.addActor(cost);
             } else {
                 Label cost = new Label("$" + b.getCost(), skin, "white-label");
-                cost.setPosition(xpos + 85 + count * 130, ypos + 75);
+                cost.setPosition(xpos + 85 + (float) count * 130, (float) ypos + 75);
                 cost.setName(b.getName());
                 blueprintPanel.addActor(cost);
 
@@ -142,7 +143,7 @@ public class BlueprintShopTable extends AbstractPopUpElement {
 
             count++;
 
-            if ((count) % 3 == 0) {
+            if ((count) % 6 == 0) {
                 ypos -= 120;
                 count = 0;
             }
@@ -151,7 +152,7 @@ public class BlueprintShopTable extends AbstractPopUpElement {
 
     /**
      * Check if a blueprint has been bought already
-     * 
+     *
      * @param b blueprint to check
      * @return true if bought, else false
      */

@@ -73,7 +73,7 @@ public class SpawningManager extends TickableManager  {
 
         //Add enemies to manager
         //local.addEnemyForSpawning(new Heavy(3,2f, 0.7f, "Forest",
-        //      "enemyHeavy"), 1.0f);
+        //     "enemyHeavy"), 1.0f);
     }
 
     /**

@@ -193,6 +193,7 @@ public class HexVector {
     }
 
     public double getAngle() {
+        HexVector temp = this.normalized();
         return angle;
     }
 }

@@ -6,13 +6,11 @@ import deco2800.skyfall.observers.DayNightObserver;
 import deco2800.skyfall.observers.SeasonObserver;
 import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
 
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.List;
-import java.util.Arrays;
 
 public class EnvironmentManager extends TickableManager {
 
@@ -35,7 +33,7 @@ public class EnvironmentManager extends TickableManager {
     private boolean isDay;
 
     // Biome player is currently in
-   public String biome = "forest";
+    public String biome;
 
     // Music filename
     private String file;
@@ -55,27 +53,6 @@ public class EnvironmentManager extends TickableManager {
     //List of objects implementing SeasonObserver
     private ArrayList<SeasonObserver> seasonListeners;
 
-    // Correct biome name to display on screen
-    private String biomeDisplay;
-
-    // The previous biome that player was in
-    private String previousBiome;
-
-    // Current weather in the game
-    private String weather;
-
-    // Weather event to happen after a certain amount of ticks
-    private int weatherEvent = 0;
-
-    // List of weather events
-    private List<String> weatherList;
-
-    // Default weather
-    private String defaultWeather = "Clear";
-
-    // Random event
-    private Random rand = SecureRandom.getInstanceStrong();
-
     // Current season
     private String season;
 
@@ -85,8 +62,8 @@ public class EnvironmentManager extends TickableManager {
      */
     public EnvironmentManager() throws NoSuchAlgorithmException {
         // Music file setup
-        file = "resources/sounds/forest_day.wav";
-        currentFile = "resources/sounds/forest_night.wav";
+        file = "forest_day";
+        currentFile = "something_random";
 
         // Time setup
         timeListeners = new ArrayList<>();
@@ -94,11 +71,7 @@ public class EnvironmentManager extends TickableManager {
         seasonListeners = new ArrayList<>();
         currentMillis = System.currentTimeMillis();
         season = "";
-
-        // Weather setup
-        previousBiome = null;
-        weatherList = Arrays.asList(defaultWeather);
-        weather = defaultWeather;
+        biome = "forest";
     }
 
     /**
@@ -417,21 +390,16 @@ public class EnvironmentManager extends TickableManager {
      * Format for filenames: "biome_day/night" e.g. "forest_day"
      */
     public void setFilename() {
-        // FIXME What is this meant to do? This is just a getter.
         // Check environment
         isDay();
         currentBiome();
 
         // Name file accordingly
-        String filename = "day.wav";
-        filename = isDay() ? filename : "night.wav";
+        String filename = "day";
+        filename = isDay() ? filename : "night";
 
-        // Until lake music created and ocean biome is restricted, play forest for now
-        if (biome.equals("ocean") || biome.equals("lake") || biome.equals("river")) {
-            file = "resources/sounds/forest_" + filename;
-        } else {
-            file = "resources/sounds/" + biome + "_" + filename;
-        }
+        // Set file to be current biome the player is in
+        file = biome + "_" + filename;
     }
 
     /**
@@ -447,133 +415,28 @@ public class EnvironmentManager extends TickableManager {
      */
     public void setTODMusic() {
 
-        // Check if there is a file
-        if (!(file.contains(currentFile))) {
-            BGMManager bgmManager = GameManager.getManagerFromInstance(BGMManager.class);
-
-            setFilename();
+        // Check for change in biome
+        if (!(file.equals(currentFile))) {
 
             // Stop current music
             try {
-                bgmManager.stop();
+                SoundManager.stopSound(currentFile);
             } catch (Exception e) {
                 /* Exception caught, if any */
             }
 
+            // Change file name to current biome
             currentFile = file;
+            setFilename();
 
             // Play BGM
             try {
-                bgmManager.initClip(currentFile);
-                bgmManager.play();
+                SoundManager.loopSound(file);
             } catch (Exception e) {
                 /* Exception caught, if any */
             }
         }
-
         setFilename();
-
-    }
-
-    /**
-     * Gets current biome player is in
-     *
-     * @return String Current biome of player, or null if player is moving between tiles
-     */
-    public String biomeDisplayName() {
-
-        if (biome.equals("forest")) {
-            biomeDisplay = "Forest";
-        }
-        if (biome.equals("volcanic_mountains")) {
-            biomeDisplay = "Volcanic Mountains";
-        }
-        if (biome.equals("snowy_mountains")) {
-            biomeDisplay = "Snowy Mountains";
-        }
-        if (biome.equals("mountain")) {
-            biomeDisplay = "Mountain";
-        }
-        if (biome.equals("swamp")) {
-            biomeDisplay = "Swamp";
-        }
-        if (biome.equals("lake")) {
-            biomeDisplay = "Lake";
-        }
-        if (biome.equals("river")) {
-            biomeDisplay = "River";
-        }
-        if (biome.equals("jungle")) {
-            biomeDisplay = "Jungle";
-        }
-        if (biome.equals("desert")) {
-            biomeDisplay = "Desert";
-        }
-        if (biome.equals("beach")) {
-            biomeDisplay = "Beach";
-        }
-        if (biome.equals("ocean")) {
-            biomeDisplay = "Ocean";
-        }
-        return biomeDisplay;
-    }
-
-    /**
-     * The weather event that is happening
-     *
-     * @return String The current weather event
-     */
-    public String getcurrentWeather() {
-        return weather;
-    }
-
-    /**
-     * Sets a weather event
-     *
-     * @param event the weather event to occur
-     */
-    public void setWeather(String event) {
-        weather = event;
-    }
-
-    /**
-     * Generates a random weather event based on current biome
-     */
-    public void randomWeatherEvent() {
-
-        // Random weather element
-        String randomElement;
-
-        // Set default weather
-        String storm = "Storm";
-        String earthquake = "Earthquake";
-        String rain = "Rain";
-        String snow = "Snow";
-        String meteor = "Meteor";
-
-        // Check biome and set weather events accordingly
-        if (!biome.equals(previousBiome)) {
-            switch (biome) {
-                case "volcanic_mountains":
-                    weatherList = Arrays.asList(defaultWeather, storm, earthquake, meteor);
-                    previousBiome = biome;
-                    break;
-                case "desert":
-                    //same as above
-                case "snowy_mountains":
-                    weatherList = Arrays.asList(defaultWeather, storm, earthquake, snow, meteor);
-                    previousBiome = biome;
-                    break;
-                default:
-                    weatherList = Arrays.asList(defaultWeather, rain, storm, meteor);
-                    previousBiome = biome;
-                    break;
-            }
-        }
-
-        // Create a random weather event based on biome
-        randomElement = weatherList.get(rand.nextInt(weatherList.size()));
-        weather = randomElement;
     }
 
     /**
@@ -595,14 +458,6 @@ public class EnvironmentManager extends TickableManager {
         // Set Background music as per the specific biome and TOD
         setBiome();
         setTODMusic();
-        getcurrentWeather();
-
-        weatherEvent++;
-
-        if (weatherEvent == 10000) {
-            randomWeatherEvent();
-            weatherEvent = 0;
-        }
     }
 
     public int getMinutes() {

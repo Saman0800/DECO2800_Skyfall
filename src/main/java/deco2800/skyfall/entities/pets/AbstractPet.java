@@ -1,10 +1,13 @@
 package deco2800.skyfall.entities.pets;
 
+import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.ICombatEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.Peon;
+import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.util.HexVector;
 
-public abstract class AbstractPet extends Peon implements ICombatEntity {
+public abstract class AbstractPet extends Peon implements ICombatEntity, Item {
     // pet health
     private int health;
 
@@ -14,14 +17,11 @@ public abstract class AbstractPet extends Peon implements ICombatEntity {
     // pet damage
     private int damage;
 
-    // pet armour
-    private int armour;
-
     // is the pet domesticated
     private boolean domesticated = false;
 
     // is the pet on the way of collecting coins
-    private boolean isOnTheWay = false;
+    protected boolean isOnTheWay = false;
 
     // is the pet summoned
     private boolean isSummoned = false;
@@ -29,9 +29,10 @@ public abstract class AbstractPet extends Peon implements ICombatEntity {
     public AbstractPet(float col, float row) {
         this.setRow(row);
         this.setCol(col);
+        this.setHeight(1);
     }
 
-    public AbstractPet(float row, float col, String texturename, int health, int armour, int damage) {
+    public AbstractPet(float row, float col, String texturename, int health) {
         super(row, col, 0.2f, texturename, health);
         this.setTexture(texturename);
 
@@ -140,21 +141,12 @@ public abstract class AbstractPet extends Peon implements ICombatEntity {
     }
 
     /**
-     * Set armour of this pet
-     *
-     * @param armour armour value
-     */
-    public void setArmour(int armour) {
-        this.armour = armour;
-    }
-
-    /**
      * To get the damage of this pet
      *
      * @return damage value
      */
     @Override
-    public int getStrength() {
+    public int getDamage() {
         return this.damage;
     }
 
@@ -166,6 +158,93 @@ public abstract class AbstractPet extends Peon implements ICombatEntity {
     @Override
     public int[] getResistanceAttributes() {
         return new int[0];
+    }
+
+    /**
+     * get movement direction
+     *
+     * @param angle the angle between to tile
+     * @return direction
+     */
+    public Direction movementDirection(double angle) {
+        angle = Math.toDegrees(angle - Math.PI);
+        if (angle < 0) {
+            angle += 360;
+        }
+        if (angle >= 0 && angle <= 60) {
+            return Direction.SOUTH_WEST;
+        } else if (angle > 60 && angle <= 120) {
+            return Direction.SOUTH;
+        } else if (angle > 120 && angle <= 180) {
+            return Direction.SOUTH_EAST;
+        } else if (angle > 180 && angle <= 240) {
+            return Direction.NORTH_EAST;
+        } else if (angle > 240 && angle <= 300) {
+            return Direction.NORTH;
+        } else if (angle > 300 && angle < 360) {
+            return Direction.NORTH_WEST;
+        }
+        return null;
+
+    }
+
+    /**
+     * Returns the subtype which the pet belongs to.
+     *
+     * @return pet type
+     */
+    @Override
+    public String getSubtype() {
+        return "pets";
+    }
+
+    /**
+     * Returns whether or not the item can be carried
+     *
+     * @return true
+     */
+    @Override
+    public boolean isCarryable() {
+        return true;
+    }
+
+    /**
+     * Returns the co-ordinates of the tile the item is on
+     *
+     * @return coordinates
+     */
+    @Override
+    public HexVector getCoords() {
+        return new HexVector(this.getCol(), this.getRow());
+    }
+
+    /**
+     * Returns whether or not the pet can be exchanged
+     *
+     * @return True if the pet can be exchanged, false otherwise
+     */
+    @Override
+    public boolean isExchangeable() {
+        return true;
+    }
+
+    /**
+     * Returns a description about the pet
+     *
+     * @return description about the pet
+     */
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
+    @Override
+    public void use(HexVector position) {
+        // Do nothing for now.
+    }
+
+    public boolean isEquippable() {
+        return false;
     }
 
 }

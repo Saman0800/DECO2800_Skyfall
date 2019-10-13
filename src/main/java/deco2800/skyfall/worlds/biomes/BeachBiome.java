@@ -6,6 +6,7 @@ import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import java.util.Random;
 
 public class BeachBiome extends AbstractBiome {
+    public static final String NAME = "beach";
 
     /**
      * Constructor for a biome being loaded
@@ -24,7 +25,7 @@ public class BeachBiome extends AbstractBiome {
      * @param parentBiome The biome that the biome lives in, null if the biome has no parent
      */
     public BeachBiome(AbstractBiome parentBiome, Random random) {
-        super("beach", parentBiome);
+        super(NAME, parentBiome);
         textureGenerator = new NoiseGenerator(random.nextLong(), 3, 40, 0.7);
     }
 

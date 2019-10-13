@@ -67,7 +67,7 @@ public class EnemySpawnTableTest {
         agentEntities.add(new PlayerPeon(10f, 10f, 2));
         when(testWorld.getSortedAgentEntities()).thenReturn(agentEntities);
 
-        testTable = new EnemySpawnTable(50, 10, 10, null, null, testWorld);
+        testTable = new EnemySpawnTable(50, 10, 10, null, null, null, testWorld);
     }
 
     @Test

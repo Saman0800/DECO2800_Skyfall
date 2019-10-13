@@ -8,7 +8,7 @@ import deco2800.skyfall.tasks.*;
  * enemies) to inherit from.
  */
 public abstract class Character extends AgentEntity {
-    protected transient AbstractTask task;
+    protected AbstractTask task;
 
     // Name of the character
     private String name;

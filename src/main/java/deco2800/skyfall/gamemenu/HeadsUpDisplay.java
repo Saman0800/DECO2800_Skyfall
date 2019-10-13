@@ -1,19 +1,22 @@
 package deco2800.skyfall.gamemenu;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.QuestManager;
 import deco2800.skyfall.managers.TextureManager;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class HeadsUpDisplay extends AbstractUIElement {
 
@@ -30,10 +33,10 @@ public class HeadsUpDisplay extends AbstractUIElement {
     private ImageButton location;
     private TextButton teleport;
     private boolean canTeleport = true;
-    public HeadsUpDisplay(Stage stage, String[] textureNames, TextureManager tm,
-                          Skin skin, GameMenuManager gmm,
-                          Map<String, AbstractUIElement> hudElements,
-                          QuestManager qm) {
+    private static final String bluePillString = "blue-pill";
+
+    public HeadsUpDisplay(Stage stage, String[] textureNames, TextureManager tm, Skin skin, GameMenuManager gmm,
+            Map<String, AbstractUIElement> hudElements, QuestManager qm) {
         super(stage, textureNames, tm);
         this.gmm = gmm;
         this.skin = skin;
@@ -43,7 +46,6 @@ public class HeadsUpDisplay extends AbstractUIElement {
         this.draw();
     }
 
-
     @Override
     public void updatePosition() {
         leftHUDTable.setPosition(gmm.getTopLeftX() + 30, gmm.getTopLeftY() - 3 * stage.getCamera().viewportHeight / 4);
@@ -52,6 +54,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
         positionObjects.forEach((actor, posObj) -> posObj.updatePosition(actor));
     }
 
+    @Override
     public void update() {
         super.update();
         hudElements.forEach((key, value) -> value.update());
@@ -83,8 +86,6 @@ public class HeadsUpDisplay extends AbstractUIElement {
             }
         });
 
-
-
         ImageButton collect = new ImageButton(gmm.generateTextureRegionDrawableObject("collect_button"));
         collect.addListener(new ClickListener() {
             @Override
@@ -94,9 +95,8 @@ public class HeadsUpDisplay extends AbstractUIElement {
             }
         });
 
-
-        TextButton pauseT = new TextButton("PAUSE", skin, "blue-pill");
-        pauseT.getLabel().setStyle(skin.get("blue-pill", Label.LabelStyle.class));
+        TextButton pauseT = new TextButton("PAUSE", skin, bluePillString);
+        pauseT.getLabel().setStyle(skin.get(bluePillString, Label.LabelStyle.class));
         pauseT.getLabel().setAlignment(Align.center);
         pauseT.getLabel().setFontScale(0.8f);
         pauseT.addListener(new ClickListener() {
@@ -107,9 +107,8 @@ public class HeadsUpDisplay extends AbstractUIElement {
             }
         });
 
-
-        TextButton helpT = new TextButton("HELP", skin, "blue-pill");
-        helpT.getLabel().setStyle(skin.get("blue-pill", Label.LabelStyle.class));
+        TextButton helpT = new TextButton("HELP", skin, bluePillString);
+        helpT.getLabel().setStyle(skin.get(bluePillString, Label.LabelStyle.class));
         helpT.getLabel().setAlignment(Align.center);
         helpT.getLabel().setFontScale(0.8f);
         helpT.addListener(new ClickListener() {
@@ -131,9 +130,9 @@ public class HeadsUpDisplay extends AbstractUIElement {
         });
         stage.addActor(location);
 
-
-        positionObjects.put(location, (Actor actor) -> actor.setPosition(gmm.getBottomLeftX() + stage.getCamera().viewportWidth / 1024,
-                gmm.getBottomLeftY() + stage.getCamera().viewportHeight / 1024));
+        positionObjects.put(location,
+                (Actor actor) -> actor.setPosition(gmm.getBottomLeftX() + stage.getCamera().viewportWidth / 1024,
+                        gmm.getBottomLeftY() + stage.getCamera().viewportHeight / 1024));
 
         leftHUDTable = new Table();
         leftHUDTable.setWidth(200);
@@ -153,6 +152,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
 
     /**
      * Element associated with key
+     * 
      * @param key
      * @return
      */

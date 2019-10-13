@@ -70,4 +70,11 @@ public class BoneTest {
         String returnedTexture = testBone.getTexture();
         assertTrue(returnedTexture.equals("DSkull") || returnedTexture.equals("DRibs"));
     }
+
+    @Test
+    public void getNextTextureTest() {
+        assertEquals(Bone.getNextTexture(0), "DSkull");
+        assertEquals(Bone.getNextTexture(1), "DRibs");
+        assertEquals(Bone.getNextTexture(-50), "DRibs");
+    }
 }

@@ -67,7 +67,7 @@ public class InventoryTable extends AbstractPopUpElement {
     private StatisticsManager sm;
 
     //Logger for Inventory Table
-    private final transient Logger LOGGER =
+    private static final Logger LOGGER =
             LoggerFactory.getLogger(InventoryTable.class);
 
 
@@ -353,7 +353,7 @@ public class InventoryTable extends AbstractPopUpElement {
             Image selected = new Image(gameMenuManager.generateTextureRegionDrawableObject("selected"));
             selected.setName(entry.getKey() + "-selected");
             selected.setSize((float) size + 20, (float) size + 20);
-            selected.setPosition((float)(xpos + -10 + (size+xspace)*(count-1)), ypos -10);
+            selected.setPosition((float)(xpos + -10 + (size+xspace)*(count-1)), (float) ypos -10);
             selected.setVisible(false);
             String itemName = entry.getKey();
 
@@ -411,7 +411,7 @@ public class InventoryTable extends AbstractPopUpElement {
                 numWidth += 8;
             }
             num.setSize(numWidth, 25);
-            num.setPosition(xspace*count + size*count + xpos - 35, ypos + 65);
+            num.setPosition(xspace*count + (float) size*count + xpos - 35, (float) ypos + 65);
             resourcePanel.addActor(num);
 
             count++;

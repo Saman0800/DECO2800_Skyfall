@@ -9,20 +9,28 @@ public class OrganicMound extends StaticEntity {
 
     public OrganicMound(SaveableEntityMemento memento) {
         super(memento);
+        setupParams();
     }
 
     public OrganicMound() {
-        this.setObjectName(ENTITY_ID_STRING);
+        super();
+        this.setTexture("mound1");
+        setupParams();
     }
 
     public OrganicMound(Tile tile, boolean obstructed) {
         super(tile, 2, "mound1", obstructed);
-        this.setObjectName(ENTITY_ID_STRING);
-        this.entityType = "OrganicMound";
+        setupParams();
     }
 
     public OrganicMound(Tile tile) {
         this(tile, false);
+        setupParams();
+    }
+
+    private void setupParams() {
+        this.setObjectName(ENTITY_ID_STRING);
+        this.entityType = "OrganicMound";
     }
 
     @Override

@@ -10,12 +10,13 @@ import java.util.Random;
  * Mountain biome
  */
 public class MountainBiome extends AbstractBiome {
+    public static final String NAME = "mountain";
 
     /**
      * Constructor for a Biome
      */
     public MountainBiome(Random random) {
-        super("mountain", null);
+        super(NAME, null);
 
         textureGenerator = new NoiseGenerator(random.nextLong(), 3, 60, 0.5);
     }

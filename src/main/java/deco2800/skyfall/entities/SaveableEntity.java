@@ -63,7 +63,7 @@ public abstract class SaveableEntity extends AbstractEntity
     }
 
     public static class SaveableEntityMemento extends AbstractMemento implements Serializable {
-        public String entityType;
+        private String entityType;
         private int height;
         private float row;
         private float col;
@@ -72,12 +72,6 @@ public abstract class SaveableEntity extends AbstractEntity
         private float rowRenderLength;
         private int renderOrder;
         private boolean obstructed;
-
-        // TODO:dannathan find out if these need to be saved (they cause a stack
-        // overflow in gson)
-        /*
-         * private Body body; private Fixture fixture;
-         */
 
         protected boolean isCollidable;
         protected String texture;
@@ -92,10 +86,6 @@ public abstract class SaveableEntity extends AbstractEntity
             this.rowRenderLength = entity.getRowRenderLength();
             this.renderOrder = entity.getRenderOrder();
             this.obstructed = entity.obstructed;
-
-            /*
-             * this.body = entity.getBody(); this.fixture = entity.getFixture();
-             */
 
             this.isCollidable = entity.getCollidable();
             this.texture = entity.getTexture();

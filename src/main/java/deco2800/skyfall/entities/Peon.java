@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class Peon extends AgentEntity implements Tickable {
 	// Task being completed by character
-	protected transient AbstractTask task;
+	protected AbstractTask task;
 
 	// Name of the character
 	private String name;
@@ -67,10 +67,9 @@ public abstract class Peon extends AgentEntity implements Tickable {
 		this.deaths = 0;
 	}
 
-	@SuppressWarnings("WeakerAccess")
 	public Peon(float row, float col, float speed, String name, int health,
 				String fixtureDef) {
-		super(row, col, 3, speed, fixtureDef);
+		super(col, row, 3, speed, fixtureDef);
 		this.setTexture(CHARACTER);
 
 		if (name == null || name.equals("")) {
@@ -116,6 +115,7 @@ public abstract class Peon extends AgentEntity implements Tickable {
 		if(currentHealth > maxHealth) {
 			currentHealth = maxHealth;
 		}
+
 		// Add health to current health
 		currentHealth += amount;
 		this.health = currentHealth;
@@ -196,4 +196,15 @@ public abstract class Peon extends AgentEntity implements Tickable {
 					.getTask(this);
         }
     }
+
+
+	/**
+	 * Sets the health
+	 * @param health The amount of health the Peon's health will be set to
+	 */
+	public void setHealth(int health){
+    	this.health = health;
+	}
+
+
 }

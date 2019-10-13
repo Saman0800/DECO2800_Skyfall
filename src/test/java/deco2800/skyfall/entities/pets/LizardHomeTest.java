@@ -69,7 +69,7 @@ public class LizardHomeTest {
         lizardHome=new LizardHome(0,0,mc);
         mc = MainCharacter.getInstance(1f, 1f, 1f, "Main Piece", 2);
         WorldBuilder worldBuilder = new WorldBuilder();
-        WorldDirector.constructTestWorld(worldBuilder);
+        WorldDirector.constructTestWorld(worldBuilder, 0);
         w = worldBuilder.getWorld();
         mockGM = mock(GameManager.class);
         mockStatic(GameManager.class);

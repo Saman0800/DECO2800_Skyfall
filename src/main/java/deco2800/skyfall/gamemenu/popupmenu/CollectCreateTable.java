@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import deco2800.skyfall.buildings.BuildingType;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.QuestManager;
@@ -26,7 +27,7 @@ public class CollectCreateTable extends AbstractPopUpElement{
     private Label titleLabel;
     private Type tableType;
     private Table labelTable;
-    private static enum Type {
+    private enum Type {
         COLLECT,
         CREATE
     }
@@ -144,10 +145,10 @@ public class CollectCreateTable extends AbstractPopUpElement{
             labelTable.add(labelWood).left();
             labelTable.row();
         } else {
-            List<String> buildingsTotal = qm.getBuildingsTotal();
+            List<BuildingType> buildingsTotal = qm.getBuildingsTotal();
 
-            for (String entry :  buildingsTotal) {
-                String currentText  = String.format("1 x %s", entry);
+            for (BuildingType entry :  buildingsTotal) {
+                String currentText  = String.format("1 x %s", entry.toString());
                 labelTable.add(new Label(currentText, skin, "white-text")).left();
                 labelTable.row();
             }

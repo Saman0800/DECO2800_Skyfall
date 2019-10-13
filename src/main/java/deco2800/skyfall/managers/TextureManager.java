@@ -46,6 +46,9 @@ public class TextureManager extends AbstractManager {
     public TextureManager() {
         try {
             textureMap.put("background", new Texture("resources/actualbackground.jpg"));
+            textureMap.put("load_game_back", new Texture("resources/load_game_menu/back.png"));
+            textureMap.put("load_game_delete", new Texture("resources/load_game_menu/delete.png"));
+
             textureMap.put("spacman_ded", new Texture("resources/spacman_ded.png"));
             textureMap.put("spacman_blue", new Texture("resources/spacman_blue.png"));
             textureMap.put("bowman", new Texture("resources/bowman.png"));
@@ -156,7 +159,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bikeSOUTH", new Texture("resources/Bike/bike-face-player.png"));
             textureMap.put("bikeNORTH", new Texture("resources/Bike/back-side-player.png"));
             textureMap.put("bikeWEST", new Texture("resources/Bike/leftside-player.png"));
-            textureMap.put("bikeEAST", new Texture("resources/Bike/rightside-player 1.png"));
             textureMap.put("bikeEAST", new Texture("resources/Bike/rightside-player.png"));
 
             // Sand Car
@@ -214,7 +216,7 @@ public class TextureManager extends AbstractManager {
                 }
             }
 
-            textureMap.put("sword", new Texture("resources/weapons/sword.png"));
+
 
             //environment things
             textureMap.put("shipwrecks", new Texture("resources/world_details/shipwrecks.png"));
@@ -226,9 +228,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("axe_tex", new Texture("resources/weapons/axe.png"));
             textureMap.put("bow_tex", new Texture("resources/weapons/bow.png"));
             textureMap.put("spear_tex", new Texture("resources/weapons/spear.png"));
-
-            textureMap.put("bow", new Texture("resources/weapons/bow.png"));
-            textureMap.put("spear", new Texture("resources/weapons/spear.png"));
+            textureMap.put("sword_tex", new Texture("resources/weapons/sword" +
+                    ".png"));
 
             // Weapons attack
             textureMap.put("sword_attack", new Texture("resources/weapons" +
@@ -239,17 +240,6 @@ public class TextureManager extends AbstractManager {
                     "/ArrowEast.png"));
             textureMap.put("spear_attack", new Texture("resources/weapons" +
                     "/spear.png"));
-
-            // Weapons display
-            textureMap.put("sword_display_inv", new Texture("resources" +
-                    "/weapons" +
-                    "/RustySword.png"));
-            textureMap.put("axe_display_inv", new Texture("resources/weapons" +
-                    "/axe.png"));
-            textureMap.put("bow_display_inv", new Texture("resources/weapons" +
-                    "/bow2.png"));
-            textureMap.put("spear_display_inv", new Texture("resources/weapons" +
-                    "/spear2.png"));
 
             textureMap.put("pop up screen", new Texture("resources/pop_up_screen_background.png"));
             textureMap.put("game menu bar", new Texture("resources/pop_up_screen_title_background.png"));
@@ -279,10 +269,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("fence_top_right", new Texture("resources/world_structures/fence_top_right.png"));
             textureMap.put("portal", new Texture("resources/world_structures/portal.png"));
             textureMap.put("portal_inv", new Texture("resources/world_structures/portal.png"));
-            textureMap.put("mountainPortal", new Texture("resources/world_structures/portal.png"));
-            textureMap.put("mountainPortal_inv", new Texture("resources/world_structures/portal.png"));
-            textureMap.put("desertPortal", new Texture("resources/world_structures/portal.png"));
-            textureMap.put("desertPortal_inv", new Texture("resources/world_structures/portal.png"));
 
             textureMap.put("big_circle", new Texture("resources/new_ui/OrangeCircle.png"));
             textureMap.put("inner_circle", new Texture("resources/new_ui/RedCircle.png"));
@@ -330,13 +316,14 @@ public class TextureManager extends AbstractManager {
             textureMap.put("spring", new Texture("resources/clock/spring.png"));
             textureMap.put("autumn", new Texture("resources/clock/autumn.png"));
 
-            textureMap.put("rain", new Texture("resources/weather/rain.png")); // weather
-            textureMap.put("snow", new Texture("resources/weather/snow.png")); // weather
-
             textureMap.put("mana_bar", new Texture("resources/mana_bar.png"));
             textureMap.put("mana_bar_inner", new Texture("resources/mana_bar_inner.png"));
 
             textureMap.put("inventory_banner", new Texture("resources/inventory_banner.png"));
+            textureMap.put("chest_banner", new Texture("resources/chest_banner.png"));
+            textureMap.put("crafting_banner", new Texture("resources/crafting_banner.png"));
+            textureMap.put("blueprint_shop_banner", new Texture("resources/blueprint_shop_banner.png"));
+            textureMap.put("building_banner", new Texture("resources/building_banner.png"));
             textureMap.put("goldPiece5", new Texture("resources/goldPieces/goldPieceFive.png"));
             textureMap.put("goldPiece10", new Texture("resources/goldPieces/goldPieceTen.png"));
             textureMap.put("goldPiece50", new Texture("resources/goldPieces/goldPieceFifty.png"));
@@ -449,6 +436,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("MainCharacter_Dead_W_Anim", new Texture("resources/Main_Character_Dead_W.png"));
             textureMap.put("MainCharacter_Dead_E_Still", new Texture("resources/Main_Character_Dead_E_3.png"));
 
+
             // Spells
             textureMap.put("spells_fire_Anim", new Texture("resources/spells/fire_spritesheet.png"));
             textureMap.put("spells_shield_Anim", new Texture("resources/spells/shield_spritesheet.png"));
@@ -484,6 +472,24 @@ public class TextureManager extends AbstractManager {
             textureMap.put("watchtower_180", new Texture("resources/world_structures/watchtower_180.png"));
             textureMap.put("watchtower_270", new Texture("resources/world_structures/watchtower_270.png"));
 
+            //Portal Textures
+            textureMap.put("portal_desert", new Texture("resources/world_structures/portal_desert.png"));
+            textureMap.put("portal_forest", new Texture("resources/world_structures/portal_desert.png"));
+            textureMap.put("portal_mountain", new Texture("resources/world_structures/portal_desert.png"));
+            textureMap.put("portal_volcano", new Texture("resources/world_structures/portal_volcano.png"));
+            textureMap.put("desertPortal", new Texture("resources/world_structures/portal_desert.png"));
+            textureMap.put("forestPortal", new Texture("resources/world_structures/portal_desert.png"));
+            textureMap.put("volcanoPortal", new Texture("resources/world_structures/portal_volcano.png"));
+            textureMap.put("mountainPortal", new Texture("resources/world_structures/portal.png"));
+            textureMap.put("DesertPortal", new Texture("resources/world_structures/portal_desert.png"));
+            textureMap.put("ForestPortal", new Texture("resources/world_structures/portal_desert.png"));
+            textureMap.put("VolcanoPortal", new Texture("resources/world_structures/portal_volcano.png"));
+            textureMap.put("MountainPortal", new Texture("resources/world_structures/portal.png"));
+            textureMap.put("desertPortal_inv", new Texture("resources/world_structures/portal_desert.png"));
+            textureMap.put("forestPortal_inv", new Texture("resources/world_structures/portal_desert.png"));
+            textureMap.put("volcanoPortal_inv", new Texture("resources/world_structures/portal_volcano.png"));
+            textureMap.put("mountainPortal_inv", new Texture("resources/world_structures/portal.png"));
+
             LOGGER.info("ALL TEXTURES LOADED SUCCESSFULLY");
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -495,7 +501,7 @@ public class TextureManager extends AbstractManager {
      *
      * @param test is the function being tested.
      */
-    public void TextureManager(boolean test) {
+    public TextureManager(boolean test) {
 
     }
 

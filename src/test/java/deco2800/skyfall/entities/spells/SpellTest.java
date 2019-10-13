@@ -14,8 +14,7 @@ public class SpellTest  {
     private Spell spell = new Spell(new HexVector(),
             "flame_wall_placeholder",
             "spell",
-            1,
-            1,
+            new HexVector(1, 1),
             1,
             0.1f,
             0);

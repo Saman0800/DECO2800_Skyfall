@@ -4,6 +4,7 @@ import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.util.HexVector;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -28,7 +29,7 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
     protected MainCharacter owner;
 
     // a list of all required resources needed to create a manufactured resource item.
-    protected Map<String, Integer> allRequirements;
+    protected Map<String, Integer> allRequirements = new HashMap<>();
 
     // Can be item be equipped
     public boolean equippable;
@@ -36,8 +37,7 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
     // Durability of the item (how many times it can be used
     private int durability;
 
-    protected boolean blueprintLearned = false;
-
+    protected String description;
 
 
     /***
@@ -46,25 +46,21 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
      * @param position the Hexvector position of the manufactured resource.
      */
     public ManufacturedResources(MainCharacter owner, HexVector position) {
-        this.owner = owner;
+        this(owner);
         this.position = position;
-        this.carryable = true;
-        this.subtype = "Manufactured Resource";
-        this.equippable = true;
-        this.durability = 15;
     }
 
     public ManufacturedResources(MainCharacter owner){
+        this();
         this.owner = owner;
-        this.subtype = "Manufactured Resource";
-        this.equippable = true;
-        this.durability = 15;
     }
 
     public ManufacturedResources(){
         this.subtype= "Manufactured Resource";
         this.equippable = true;
-        this.durability = 15;
+        this.durability = 50;
+        description = "This item can be used to retrieve natural " +
+                "resources from the world.";
     }
 
     /**
@@ -119,8 +115,7 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
      */
     @Override
     public String getDescription() {
-        return "This item can be used to retrieve natural " +
-                "resources from the world.";
+        return description;
     }
 
     /**
@@ -130,7 +125,11 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
      */
     @Override
     public int getRequiredWood() {
-        return 0;
+        Integer amt = getAllRequirements().get("wood");
+        if (amt == null) {
+            return 0;
+        }
+        return amt;
     }
 
     /**
@@ -140,7 +139,16 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
      */
     @Override
     public int getRequiredStone() {
-        return 0;
+        Integer amt = getAllRequirements().get("stone");
+        if (amt == null) {
+            return 0;
+        }
+        return amt;
+    }
+
+    @Override
+    public Map<String, Integer> getAllRequirements() {
+        return allRequirements;
     }
 
     /**
@@ -150,26 +158,11 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
      */
     @Override
     public int getRequiredMetal() {
-        return 0;
-    }
-
-    /**
-     * a getter method to check if a player has learned the blueprint
-     *
-     * @return true if the player has learned the blueprint.
-     */
-    @Override
-    public boolean isBlueprintLearned() {
-
-        return blueprintLearned;
-    }
-
-    /**
-     * changes the boolean blueprintLearned to true.
-     */
-    public void toggleBlueprintLearned(){
-
-        blueprintLearned =true;
+        Integer amt = getAllRequirements().get("metal");
+        if (amt == null) {
+            return 0;
+        }
+        return amt;
     }
 
     /**

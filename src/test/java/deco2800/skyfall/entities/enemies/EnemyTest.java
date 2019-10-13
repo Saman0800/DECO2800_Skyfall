@@ -20,7 +20,6 @@ public class EnemyTest {
     private Enemy testDummyEnemy;
 
     // Strings
-    private String objectName = "Heavy";
     private String biomeName = "Forest";
 
     /**
@@ -33,11 +32,11 @@ public class EnemyTest {
         testCharacter = MainCharacter.getInstance();
 
         // Set up enemy, need the longer constructor to test toString(), equals() and hashcode()
-        testEnemy = new Enemy(30f, 30f, "enemyHitBox" , objectName,
+        testEnemy = new Enemy(30f, 30f, "enemyHitBox" , Enemy.EnemyType.HEAVY,
             0.06f, biomeName, "enemyTexture");
         testEnemy.setHealth(10);
 
-        testDummyEnemy = new Enemy(0f, 0f, "dummyHitBox" , objectName,
+        testDummyEnemy = new Enemy(0f, 0f, "dummyHitBox" , Enemy.EnemyType.SCOUT,
                 0.06f, biomeName, "dummyTexture");
     }
 
@@ -137,14 +136,14 @@ public class EnemyTest {
     @Test
     public void setAndGetSoundTest() {
         testEnemy.configureSounds();
-        Assert.assertEquals("enemy_walk", testEnemy.getChaseSound());
-        Assert.assertEquals("enemy_attack", testEnemy.getAttackSound());
-        Assert.assertEquals("enemy_dead", testEnemy.getDeadSound());
+        Assert.assertEquals("pick up", testEnemy.getChaseSound());
+        Assert.assertEquals("fist_attack", testEnemy.getAttackSound());
+        Assert.assertEquals("died", testEnemy.getDeadSound());
     }
 
     @Test
     public void testToString() {
-        String testString = "Heavy at (30, 30) Forest biome";
+        String testString = "HEAVY at (30, 30) Forest biome";
         Assert.assertEquals(testString, testEnemy.toString());
     }
 
@@ -157,8 +156,8 @@ public class EnemyTest {
         Assert.assertFalse(testEnemy.equals(testCharacter));
 
         // Equals due to same instance and same hashcode
-        testDummyEnemy = new Enemy(30f, 30f, "enemyHitBox" ,
-                "Heavy",0.06f, "Forest", "enemyTexture");
+        testDummyEnemy =  new Enemy(30f, 30f, "enemyHitBox" , Enemy.EnemyType.HEAVY,
+                0.06f, biomeName, "enemyTexture");
         Assert.assertTrue(testEnemy.equals(testDummyEnemy));
     }
 }
