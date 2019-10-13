@@ -79,7 +79,7 @@ public class QuestManager extends TickableManager {
                 setStoneTotal(10);
                 setMetalTotal(10);
                 setBuildingsTotal(levelOneBuildings);
-                setWeaponTotal("sword", 10);
+                setWeaponTotal("sword", 2);
                 setWeaponTotal("bow", 0);
                 setWeaponTotal("spear", 0);
                 setWeaponTotal("axe", 0);

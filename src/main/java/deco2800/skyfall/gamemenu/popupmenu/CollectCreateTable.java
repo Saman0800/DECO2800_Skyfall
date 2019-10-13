@@ -151,9 +151,8 @@ public class CollectCreateTable extends AbstractPopUpElement {
             labelTable.row();
 
             // Collect weapon labels
-            if (qm.checkWeapons("sword") && qm.checkWeapons("spear") &&
-                    qm.checkWeapons("axe") && qm.checkWeapons("bow") &&
-                    qm.questFinished()) {
+            if ((qm.checkWeapons("sword") && qm.checkWeapons("spear") &&
+                    qm.checkWeapons("axe") && qm.checkWeapons("bow")) || qm.questFinished()) {
                 color = Color.GREEN;
             } else {
                 color = Color.WHITE;
