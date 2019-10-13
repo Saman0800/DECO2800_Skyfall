@@ -2,10 +2,13 @@ package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.Input;
 import deco2800.skyfall.entities.enemies.Scout;
+import deco2800.skyfall.entities.spells.Spell;
+import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.entities.weapons.EmptyItem;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.entities.weapons.Sword;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.resources.GoldPiece;
@@ -271,6 +274,27 @@ public class MainCharacterTest {
         Assert.assertTrue(testCharacter.isRecovering());
         // reset hurt time.
         Assert.assertEquals(0, testCharacter.getHurtTime());
+    }
+
+
+    @Test
+    public void testFireProjectile() {
+        Sword mockSword = mock(Sword.class);
+        when(mockSword.getName()).thenReturn("sword");
+        Projectile projectile = mock(Projectile.class);
+
+        testCharacter.equippedItem = mockSword;
+        testCharacter.defaultProjectile = projectile;
+        testCharacter.attack(new HexVector(0,0));
+
+        //Ensure the projectile has been added.
+        Assert.assertTrue(GameManager.get().getWorld().getEntities().contains(projectile));
+
+        //Test other branch.
+        testCharacter.spellSelected = SpellType.FLAME_WALL;
+        testCharacter.attack(new HexVector(0,0));
+        
+        Assert.assertTrue(GameManager.get().getWorld().getEntities().stream().anyMatch(e -> e instanceof Spell));
     }
 
     /**
