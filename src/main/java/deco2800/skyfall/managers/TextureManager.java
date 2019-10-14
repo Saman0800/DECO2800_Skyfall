@@ -6,9 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Texture manager acts as a cache between the file system and the renderers.
@@ -531,14 +529,8 @@ public class TextureManager extends AbstractManager {
             }
 
         } else {
-            // log.info("Texture map does not contain P{}, returning default texture.", id);
-            // TODO fix the issue where tiles are not getting added to lakes correctly,
-            // Temporary fix is just to assign tiles without a texture the lake texture so
-            // that the
-            // issue isn't as noticable
             return textureMap.get("lake1.1");
         }
-
     }
 
     /**

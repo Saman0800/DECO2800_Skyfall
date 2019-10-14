@@ -105,8 +105,6 @@ public class GameScreen implements Screen, KeyDownObserver {
             world.setSave(save);
             MainCharacter.getInstance().setSave(save);
             save.setMainCharacter(MainCharacter.getInstance());
-
-            gameManager.getManager(NetworkManager.class).connectToHost("localhost", "duck1234");
         } else {
             if (GameManager.get().getIsTutorial()) {
                 world = WorldDirector.constructTutorialWorld(new WorldBuilder(), seed).getWorld();
@@ -136,8 +134,6 @@ public class GameScreen implements Screen, KeyDownObserver {
             // MainCharacter.getInstance().setID(0);
             // DatabaseManager.get().getDataBaseConnector().saveGame(save);
             // DatabaseManager.get().getDataBaseConnector().saveAllTables();
-
-            gameManager.getManager(NetworkManager.class).startHosting("host");
         }
 
         gameManager.setWorld(world);
@@ -160,8 +156,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         MainCharacter mainCharacter = MainCharacter.getInstance();
         mainCharacter.setSave(save);
         world.addEntity(mainCharacter);
-
-        gameManager.getManager(NetworkManager.class).startHosting("host");
 
         StatisticsManager sm = new StatisticsManager(mainCharacter);
         GameManager.addManagerToInstance(sm);

@@ -8,7 +8,6 @@ import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.renderers.Renderable;
 import deco2800.skyfall.resources.HealthResources;
@@ -284,7 +283,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     @Override
     public int compareTo(AbstractEntity otherEntity) {
-        return this.renderOrder - otherEntity.getRenderOrder();
+        return -Float.compare(this.getRow(), otherEntity.getRow());
     }
 
     @Override
@@ -421,7 +420,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     public void dispose() {
         body.destroyFixture(fixture);
 
-        GameManager.get().getManager(NetworkManager.class).deleteEntity(this);
         GameManager.get().getWorld().getEntities().remove(this);
     }
 
