@@ -47,6 +47,15 @@ public class AnimationManager extends AbstractManager {
         this.generateAnimationObject("bikeW","resources/Bike_Left_Animation/left.atlas",0.05f);
         this.generateAnimationObject("bikeE","resources/Bike_Right_Animation/right.atlas",0.05f);
 
+        // Add sand car animation
+        // Add bike animation
+        this.generateAnimationObject("sandcarW","resources/Sand_Car_Left/left.atlas",0.05f);
+        this.generateAnimationObject("sandcarE","resources/Sand_Car_Right/right.atlas",0.05f);
+        this.generateAnimationObject("sandcarNE","resources/Sand_Car_Right_Back/Right_Back.atlas",0.05f);
+        this.generateAnimationObject("sandcarNW","resources/Sand_Car_Left_Back/Left_Back.atlas",0.05f);
+        this.generateAnimationObject("sandcarSW","resources/Sand_Car_Left_Front/left_front.atlas",0.05f);
+        this.generateAnimationObject("sandcarSE","resources/Sand_Car_Right_Front/Right_Front.atlas",0.05f);
+
         this.generateAnimationObject("whitebearNE","resources/whitebearright/whitebearright.atlas",0.05f);
         this.generateAnimationObject("whitebearN","resources/whitebearback/whitebearback.atlas",0.05f);
         this.generateAnimationObject("whitebearNW","resources/whitebearleft/whitebearleft.atlas",0.05f);

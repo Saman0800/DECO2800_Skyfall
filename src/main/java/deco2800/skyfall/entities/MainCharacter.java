@@ -1854,6 +1854,41 @@ public class MainCharacter extends Peon
         addAnimations(AnimationRole.STILL, Direction.DEFAULT,
                 new AnimationLinker("MainCharacter_Dead_E_Still",
                         AnimationRole.STILL, Direction.DEFAULT, false, true));
+
+        // Bike animation
+        addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.WEST,
+                new AnimationLinker("bikeW",
+                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.WEST, true, true));
+
+        addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.EAST,
+                new AnimationLinker("bikeE",
+                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.EAST, true, true));
+
+        // Sand Car Animation
+        addAnimations(AnimationRole.VEHICLE_MOVE, Direction.WEST,
+                new AnimationLinker("sandcarW",
+                        AnimationRole.VEHICLE_MOVE, Direction.WEST, true, true));
+
+        addAnimations(AnimationRole.VEHICLE_MOVE, Direction.EAST,
+                new AnimationLinker("sandcarE",
+                        AnimationRole.VEHICLE_MOVE, Direction.EAST, true, true));
+
+        addAnimations(AnimationRole.VEHICLE_MOVE, Direction.NORTH_EAST,
+                new AnimationLinker("sandcarNE",
+                        AnimationRole.VEHICLE_MOVE, Direction.NORTH_EAST, true, true));
+
+        addAnimations(AnimationRole.VEHICLE_MOVE, Direction.NORTH_WEST,
+                new AnimationLinker("sandcarNW",
+                        AnimationRole.VEHICLE_MOVE, Direction.NORTH_WEST, true, true));
+
+        addAnimations(AnimationRole.VEHICLE_MOVE, Direction.SOUTH_WEST,
+                new AnimationLinker("sandcarSW",
+                        AnimationRole.VEHICLE_MOVE, Direction.SOUTH_WEST, true, true));
+
+        addAnimations(AnimationRole.VEHICLE_MOVE, Direction.SOUTH_EAST,
+                new AnimationLinker("sandcarSE",
+                        AnimationRole.VEHICLE_MOVE, Direction.SOUTH_EAST, true, true));
+
     }
 
     private Map<Direction,String> defaultMainCharacterTextureMap=new HashMap<>();
@@ -1878,10 +1913,11 @@ public class MainCharacter extends Peon
         vehicleDirection.put(Direction.EAST, "bikeEAST");
         vehicleDirection.put(Direction.NORTH, "bikeNORTH");
         vehicleDirection.put(Direction.WEST, "bikeWEST");
-        vehicleDirection.put(Direction.NORTH_EAST, "__ANIMATION_MainCharacterNE_Anim:0");
-        vehicleDirection.put(Direction.NORTH_WEST, "__ANIMATION_MainCharacterNW_Anim:0");
-        vehicleDirection.put(Direction.SOUTH_EAST, "__ANIMATION_MainCharacterSE_Anim:0");
-        vehicleDirection.put(Direction.SOUTH_WEST, "__ANIMATION_MainCharacterSW_Anim:0");
+        vehicleDirection.put(Direction.NORTH_EAST, "bikeSOUTHWEST");
+        vehicleDirection.put(Direction.NORTH_WEST, "bikeSOUTHEAST");
+        vehicleDirection.put(Direction.SOUTH_EAST, "bikeNORTHEAST");
+        vehicleDirection.put(Direction.SOUTH_WEST, "bikeNORTHWEST");
+
         // Sand Car
         vehicleDirection2.put(Direction.NORTH, "sand_car_NORTH");
         vehicleDirection2.put(Direction.SOUTH, "sand_car_SOUTH");
@@ -1920,8 +1956,10 @@ public class MainCharacter extends Peon
                     setCurrentState(AnimationRole.MOVE);
                 }
             }
-        } else if(vehicleType.equals("bike")) {
+        } else if(vehicleType.equals("bike")){
             setCurrentState(AnimationRole.VEHICLE_BIKE_MOVE);
+        }else if(vehicleType.equals("sand_car")){
+            setCurrentState(AnimationRole.VEHICLE_MOVE);
         }
     }
 
