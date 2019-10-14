@@ -73,10 +73,9 @@ public class GameMenuBar2 extends AbstractUIElement {
      */
     @Override
     public void updatePosition() {
-        equippedTable.setPosition(gmm.getTopRightX() - 170, gmm.getTopLeftY() - 130);
-        quickAccessPanel.setPosition(gmm.getTopRightX() - 170, gmm.getTopRightY() - 650);
-        // t.setHeight(stage.getCamera().viewportHeight / 2);
-        sideBar.setPosition(gmm.getTopRightX() - 180, gmm.getTopRightY() - 520);
+        equippedTable.setPosition(gmm.getTopRightX() - 170, gmm.getTopLeftY() - 100);
+        quickAccessPanel.setPosition(gmm.getTopRightX() - 170, gmm.getTopRightY() - stage.getCamera().viewportHeight * 0.8125f);
+        sideBar.setPosition(gmm.getTopRightX() - 180, gmm.getTopRightY() - stage.getCamera().viewportHeight * 0.8125f + 130);
         build.setPosition(gmm.getBottomRightX() - 170, gmm.getBottomRightY());
     }
 
@@ -90,7 +89,7 @@ public class GameMenuBar2 extends AbstractUIElement {
         setQuickAccessPanel();
 
         build = new ImageButton(gmm.generateTextureRegionDrawableObject("build"));
-        build.setSize(150, 295f / 316 * 150);
+        build.setSize(150, 150);
         build.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
