@@ -160,7 +160,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bikeNORTH", new Texture("resources/Bike/back-side-player.png"));
             textureMap.put("bikeWEST", new Texture("resources/Bike/leftside-player.png"));
             textureMap.put("bikeEAST", new Texture("resources/Bike/rightside-player.png"));
-            textureMap.put("bikeNORTHEAST", new Texture("resources/Bike/bike_left_front_player1.png"));
+            textureMap.put("bikeNORTHEAST", new Texture("resources/Bike/bike_.png"));
             textureMap.put("bikeNORTHWEST", new Texture("resources/Bike/bike_right_front_player1.png"));
             textureMap.put("bikeSOUTHWEST", new Texture("resources/Bike/bike_right_back_player1.png"));
             textureMap.put("bikeSOUTHEAST", new Texture("resources/Bike/bike_left_back_player1.png"));
