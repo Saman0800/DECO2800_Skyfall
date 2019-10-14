@@ -1864,6 +1864,22 @@ public class MainCharacter extends Peon
                 new AnimationLinker("bikeE",
                         AnimationRole.VEHICLE_BIKE_MOVE, Direction.EAST, true, true));
 
+        addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.NORTH_WEST,
+                new AnimationLinker("bikeNW",
+                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.NORTH_WEST, true, true));
+
+        addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.NORTH_EAST,
+                new AnimationLinker("bikeNE",
+                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.NORTH_EAST, true, true));
+
+        addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.SOUTH_WEST,
+                new AnimationLinker("bikeSW",
+                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.SOUTH_WEST, true, true));
+
+        addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.SOUTH_EAST,
+                new AnimationLinker("bikeSE",
+                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.SOUTH_EAST, true, true));
+
         // Sand Car Animation
         addAnimations(AnimationRole.VEHICLE_MOVE, Direction.WEST,
                 new AnimationLinker("sandcarW",

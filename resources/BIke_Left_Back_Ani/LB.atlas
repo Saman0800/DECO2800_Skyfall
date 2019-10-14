@@ -1,0 +1,38 @@
+
+LB.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bike LB1
+  rotate: false
+  xy: 0, 0
+  size: 688, 1155
+  orig: 688, 1155
+  offset: 0, 0
+  index: -1
+bike LB2
+  rotate: false
+  xy: 690, 0
+  size: 688, 1155
+  orig: 688, 1155
+  offset: 0, 0
+  index: -1
+
+LB2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bike LB3
+  rotate: false
+  xy: 0, 0
+  size: 688, 1155
+  orig: 688, 1155
+  offset: 0, 0
+  index: -1
+bike LB4
+  rotate: false
+  xy: 690, 0
+  size: 688, 1155
+  orig: 688, 1155
+  offset: 0, 0
+  index: -1
