@@ -101,10 +101,4 @@ public class SoundEffectTest {
             // exception caught
         }
     }
-
-    @Test
-    public void testMasterVolumeGetAndSet() {
-        SoundManager.setMasterVolume(5);
-        assertEquals(SoundManager.getMasterVolume(), 5f, 0.0001);
-    }
 }
