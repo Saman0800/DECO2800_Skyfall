@@ -14,263 +14,279 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameManager {
-	//debug values stored here
-	public int entitiesRendered;
-	public int entitiesCount;
-	public int tilesRendered;
-	public int tilesCount;
+    // debug values stored here
+    public int entitiesRendered;
+    public int entitiesCount;
+    public int tilesRendered;
+    public int tilesCount;
 
-	public boolean isTutorial = false;
+    public boolean isTutorial = false;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(GameManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameManager.class);
 
-	private static GameManager instance = null;
+    private static GameManager instance = null;
 
-	// The list of all instantiated managers classes.
-	private List<AbstractManager> managers = new ArrayList<>();
+    // The list of all instantiated managers classes.
+    private List<AbstractManager> managers = new ArrayList<>();
 
-	// The game world currently being played on.
-	private World gameWorld;
+    // The game world currently being played on.
+    private World gameWorld;
 
-	// The camera being used by the Game Screen to project the game world.
-	private PotateCamera camera;
+    // The camera being used by the Game Screen to project the game world.
+    private PotateCamera camera;
 
-	// The stage the game world is being rendered on to.
-	private Stage stage;
+    // The stage the game world is being rendered on to.
+    private Stage stage;
 
-	// The UI skin being used by the game for libGDX elements.
-	private Skin skin;
+    // The UI skin being used by the game for libGDX elements.
+    private Skin skin;
 
     // Showing if the game is paused.
     private static boolean paused = false;
 
-	public float fps = 0;
+    public float fps = 0;
 
-	public boolean debugMode = true;
+    public boolean debugMode = true;
 
-	/**
-	 * Whether or not we render info over the tiles.
-	 */
-	// Whether or not we render the movement path for Players.
-	public boolean showCoords = false;
-	
-	// The game screen for a game that's currently running.
-	public boolean showPath = false;
+    /**
+     * Whether or not we render info over the tiles.
+     */
+    // Whether or not we render the movement path for Players.
+    public boolean showCoords = false;
 
-	/**
-	 * Whether or not we render info over the entities
-	 */
-	public boolean showCoordsEntity = false;
+    // The game screen for a game that's currently running.
+    public boolean showPath = false;
 
-	/**
-	 * Returns an instance of the GM
-	 *
-	 * @return GameManager
-	 */
-	public static GameManager get() {
-		if (instance == null) {
-			instance = new GameManager();
-		}
-		return instance;
-	}
+    /**
+     * Whether or not we render info over the entities
+     */
+    public boolean showCoordsEntity = false;
 
-	/**
-	 * Private constructor to inforce use of get()
-	 */
-	private GameManager() {
+    /**
+     * Returns an instance of the GM
+     *
+     * @return GameManager
+     */
+    public static GameManager get() {
+        if (instance == null) {
+            instance = new GameManager();
+        }
+        return instance;
+    }
 
-	}
+    /**
+     * Private constructor to inforce use of get()
+     */
+    private GameManager() {
 
-	/**
-	 * Add a manager to the current instance, making a new instance if none
-	 * exist
-	 *
-	 * @param manager
-	 */
-	public static void addManagerToInstance(AbstractManager manager) {
-		get().addManager(manager);
-	}
+    }
 
-	/**
-	 * Adds a manager component to the GM
-	 *
-	 * @param manager
-	 */
-	public void addManager(AbstractManager manager) {
-		managers.add(manager);
-	}
+    /**
+     * Add a manager to the current instance, making a new instance if none exist
+     *
+     * @param manager
+     */
+    public static void addManagerToInstance(AbstractManager manager) {
+        get().addManager(manager);
+    }
 
-	/**
-	 * Retrieves a manager from the list.
-	 * If the manager does not exist one will be created, added to the list and returned
-	 *
-	 * @param type The class type (ie SoundManager.class)
-	 * @return A Manager component of the requested type
-	 */
-	@SuppressWarnings("unchecked")
-	public <T extends AbstractManager> T getManager(Class<T> type) {
-		/* Check if the manager exists */
-		for (AbstractManager m : managers) {
-			if (m.getClass() == type) {
-				return (T) m;
-			}
-		}
-		LOGGER.info("creating new manager instance");
-		/* Otherwise create one */
-		AbstractManager newInstance;
-		try {
-			Constructor<?> ctor = type.getConstructor();
-			newInstance = (AbstractManager) ctor.newInstance();
-			this.addManager(newInstance);
-			return (T) newInstance;
-		} catch (Exception e) {
-			// Gotta catch 'em all
-			LOGGER.error("Exception occurred when adding Manager.");
-		}
+    /**
+     * Adds a manager component to the GM
+     *
+     * @param manager
+     */
+    public void addManager(AbstractManager manager) {
+        managers.add(manager);
+    }
 
-		LOGGER.warn("GameManager.getManager returned null! It shouldn't have!");
-		return null;
-	}
+    /**
+     * Retrieves a manager from the list. If the manager does not exist one will be
+     * created, added to the list and returned
+     *
+     * @param type The class type (ie SoundManager.class)
+     * @return A Manager component of the requested type
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends AbstractManager> T getManager(Class<T> type) {
+        /* Check if the manager exists */
+        for (AbstractManager m : managers) {
+            if (m.getClass() == type) {
+                return (T) m;
+            }
+        }
+        LOGGER.info("creating new manager instance");
+        /* Otherwise create one */
+        AbstractManager newInstance;
+        try {
+            Constructor<?> ctor = type.getConstructor();
+            newInstance = (AbstractManager) ctor.newInstance();
+            this.addManager(newInstance);
+            return (T) newInstance;
+        } catch (Exception e) {
+            // Gotta catch 'em all
+            LOGGER.error("Exception occurred when adding Manager.");
+        }
 
-	/**
-	 * Retrieve a manager from the current GameManager instance, making a new
-	 * instance when none are available.
-	 *
-	 * @param type The class type (ie SoundManager.class)
-	 * @return A Manager component of the requested type
-	 */
-	public static <T extends AbstractManager> T getManagerFromInstance(Class<T> type) {
-		return get().getManager(type);
-	}
+        LOGGER.warn("GameManager.getManager returned null! It shouldn't have!");
+        return null;
+    }
 
-	
-	/* ------------------------------------------------------------------------
-	 * 				GETTERS AND SETTERS BELOW THIS COMMENT.
-	 * ------------------------------------------------------------------------ */
+    /**
+     * Retrieve a manager from the current GameManager instance, making a new
+     * instance when none are available.
+     *
+     * @param type The class type (ie SoundManager.class)
+     * @return A Manager component of the requested type
+     */
+    public static <T extends AbstractManager> T getManagerFromInstance(Class<T> type) {
+        return get().getManager(type);
+    }
 
-	/**Get entities rendered count
-	 * @return entities rendered count
-	 */
-	public int getEntitiesRendered() {
-		return this.entitiesRendered;
-	}
+    /*
+     * ------------------------------------------------------------------------
+     * GETTERS AND SETTERS BELOW THIS COMMENT.
+     * ------------------------------------------------------------------------
+     */
 
-	/** Set entities rendered to new amount
-	 * @param entitiesRendered the new amount
-	 */
-	public void setEntitiesRendered(int entitiesRendered) {
-		this.entitiesRendered = entitiesRendered;
-	}
-	/**Get number of entities
-	 * @return entities count
-	 */
-	public int getEntitiesCount() {
-		return this.entitiesCount;
-	}
+    /**
+     * Get entities rendered count
+     * 
+     * @return entities rendered count
+     */
+    public int getEntitiesRendered() {
+        return this.entitiesRendered;
+    }
 
-	/** Set entities count to new amount
-	 * @param entitiesCount the new amount
-	 */
-	public void setEntitiesCount(int entitiesCount) {
-		this.entitiesCount = entitiesCount;
-	}
+    /**
+     * Set entities rendered to new amount
+     * 
+     * @param entitiesRendered the new amount
+     */
+    public void setEntitiesRendered(int entitiesRendered) {
+        this.entitiesRendered = entitiesRendered;
+    }
 
-	/**Get tiles rendered count
-	 * @return tiles rendered count
-	 */
-	public int getTilesRendered() {
-		return this.tilesRendered;
-	}
+    /**
+     * Get number of entities
+     * 
+     * @return entities count
+     */
+    public int getEntitiesCount() {
+        return this.entitiesCount;
+    }
 
-	/** Set tiles rendered to new amount
-	 * @param tilesRendered the new amount
-	 */
-	public void setTilesRendered(int tilesRendered) {
-		this.tilesRendered = tilesRendered;
-	}
+    /**
+     * Set entities count to new amount
+     * 
+     * @param entitiesCount the new amount
+     */
+    public void setEntitiesCount(int entitiesCount) {
+        this.entitiesCount = entitiesCount;
+    }
 
-	/**Get number of tiles
-	 * @return tiles count
-	 */
-	public int getTilesCount() {
-		return this.tilesCount;
-	}
+    /**
+     * Get tiles rendered count
+     * 
+     * @return tiles rendered count
+     */
+    public int getTilesRendered() {
+        return this.tilesRendered;
+    }
 
-	/** Set tiles count to new amount
-	 * @param tilesCount the new amount
-	 */
-	public void setTilesCount(int tilesCount) {
-		this.tilesCount = tilesCount;
-	}
-	
-	/**
-	 * Sets the current game world
-	 *
-	 * @param world
-	 */
-	public void setWorld(World world) {
-		this.gameWorld = world;
-	}
+    /**
+     * Set tiles rendered to new amount
+     * 
+     * @param tilesRendered the new amount
+     */
+    public void setTilesRendered(int tilesRendered) {
+        this.tilesRendered = tilesRendered;
+    }
 
-	/**
-	 * Gets the current game world
-	 *
-	 * @return the game world
-	 */
-	public World getWorld() {
-		return gameWorld;
-	}
+    /**
+     * Get number of tiles
+     * 
+     * @return tiles count
+     */
+    public int getTilesCount() {
+        return this.tilesCount;
+    }
 
+    /**
+     * Set tiles count to new amount
+     * 
+     * @param tilesCount the new amount
+     */
+    public void setTilesCount(int tilesCount) {
+        this.tilesCount = tilesCount;
+    }
 
-	public void setCamera(PotateCamera camera) {
-		this.camera = camera;
-	}
+    /**
+     * Sets the current game world
+     *
+     * @param world
+     */
+    public void setWorld(World world) {
+        this.gameWorld = world;
+    }
 
-	/**
-	 * @return current game's stage
-	 */
-	public Stage getStage() {
-		return stage;
-	}
+    /**
+     * Gets the current game world
+     *
+     * @return the game world
+     */
+    public World getWorld() {
+        return gameWorld;
+    }
 
-	/**
-	 * @param stage - the current game's stage
-	 */
-	public void setStage(Stage stage) {
-		this.stage = stage;
-	}
+    public void setCamera(PotateCamera camera) {
+        this.camera = camera;
+    }
 
-	/**
-	 * @return current game's skin
-	 */
-	public Skin getSkin() {
-		return skin;
-	}
+    /**
+     * @return current game's stage
+     */
+    public Stage getStage() {
+        return stage;
+    }
 
-	/**
-	 * @param skin - the current game's skin
-	 */
-	public void setSkin(Skin skin) {
-		this.skin = skin;
-	}
+    /**
+     * @param stage - the current game's stage
+     */
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
 
-	public PotateCamera getCamera() {
-		return camera;
-	}
+    /**
+     * @return current game's skin
+     */
+    public Skin getSkin() {
+        return skin;
+    }
 
-	/**
-	 * On tick method for ticking managers with the TickableManager interface
-	 *
-	 * @param i
-	 */
-	public void onTick(long i) {
-		for (AbstractManager m : managers) {
-			if (m instanceof TickableManager) {
-				((TickableManager) m).onTick(i);
-			}
-		}
-		gameWorld.onTick(i);
-	}
+    /**
+     * @param skin - the current game's skin
+     */
+    public void setSkin(Skin skin) {
+        this.skin = skin;
+    }
+
+    public PotateCamera getCamera() {
+        return camera;
+    }
+
+    /**
+     * On tick method for ticking managers with the TickableManager interface
+     *
+     * @param i
+     */
+    public void onTick(long i) {
+        for (AbstractManager m : managers) {
+            if (m instanceof TickableManager) {
+                ((TickableManager) m).onTick(i);
+            }
+        }
+        gameWorld.onTick(i);
+    }
 
     /**
      * Pause or resume the game.
@@ -283,6 +299,7 @@ public class GameManager {
 
     /**
      * Get if the game is paused
+     * 
      * @return paused
      */
     public static boolean getPaused() {
