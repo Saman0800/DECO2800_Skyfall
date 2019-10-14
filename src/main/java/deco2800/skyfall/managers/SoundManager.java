@@ -30,6 +30,8 @@ public class SoundManager extends AbstractManager {
     /* Boolean to state whether the sound manager is paused or not */
     private static boolean paused = false;
 
+    private static float masterVolume = 1;
+
     /**
      * Initialize SoundManager by adding different sounds in a map
      */
@@ -195,7 +197,7 @@ public class SoundManager extends AbstractManager {
         if (!paused) {
             if (soundMap.containsKey(soundName)) {
                 Sound sound = soundMap.get(soundName);
-                sound.play(1);
+                sound.play(masterVolume);
                 return true;
             } else if (musicMap.containsKey(soundName)) {
                 Music music = musicMap.get(soundName);
@@ -220,7 +222,7 @@ public class SoundManager extends AbstractManager {
         if (!paused) {
             if (soundMap.containsKey(soundName)) {
                 Sound sound = soundMap.get(soundName);
-                sound.loop(1);
+                sound.loop(masterVolume);
                 // Add to the sounds which are being looped
                 soundLoops.put(soundName, soundMap.get(soundName));
             } else if (musicMap.containsKey(soundName)) {
@@ -358,6 +360,19 @@ public class SoundManager extends AbstractManager {
         }
     }
 
+    /**
+     * @return master volume
+     */
+    public static float getMasterVolume() {
+        return masterVolume;
+    }
 
-
+    /**
+     * Set the master volume
+     *
+     * @param masterVolume
+     */
+    public static void setMasterVolume(float masterVolume) {
+        SoundManager.masterVolume = masterVolume;
+    }
 }
