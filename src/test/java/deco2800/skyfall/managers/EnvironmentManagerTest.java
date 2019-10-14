@@ -180,14 +180,14 @@ public class EnvironmentManagerTest {
         manager.isDay();
         manager.biome = "ocean";
         manager.setFilename();
-        assertEquals("ocean_day", manager.getFilename());
+        assertEquals("forest_day", manager.getFilename());
 
         // Test night
         manager.setTime(24,0);
         manager.isDay();
         manager.biome = "lake";
         manager.setFilename();
-        assertEquals("lake_night", manager.getFilename());
+        assertEquals("forest_night", manager.getFilename());
     }
 
     @Test

@@ -66,7 +66,7 @@ public class EnvironmentManager extends TickableManager {
     public EnvironmentManager() throws NoSuchAlgorithmException {
         // Music file setup
         file = "forest_day";
-        currentFile = "something_random";
+        currentFile = "";
 
         // Time setup
         timeListeners = new ArrayList<>();
@@ -400,11 +400,16 @@ public class EnvironmentManager extends TickableManager {
         currentBiome();
 
         // Name file accordingly
-        String filename = "day";
-        filename = isDay() ? filename : "night";
+        String TOD = "day";
+        TOD = isDay() ? TOD : "night";
 
         // Set file to be current biome the player is in
-        file = biome + "_" + filename;
+        if (biome.equals("lake") || biome.equals("river") || biome.equals("ocean")) {
+            // no background music for the water biomes
+            file = "forest_" + TOD;
+        } else {
+            file = biome + "_" + TOD;
+        }
     }
 
     /**
@@ -425,7 +430,11 @@ public class EnvironmentManager extends TickableManager {
 
             // Stop current music
             try {
-                SoundManager.stopSound(currentFile);
+                if (!currentFile.equals("")) {
+                    SoundManager.fadeOutStop(currentFile);
+                } else {
+                    SoundManager.stopSound(currentFile);
+                }
             } catch (Exception e) {
                 /* Exception caught, if any */
             }
@@ -436,7 +445,7 @@ public class EnvironmentManager extends TickableManager {
 
             // Play BGM
             try {
-                SoundManager.loopSound(file);
+                SoundManager.fadeInPlay(currentFile);
             } catch (Exception e) {
                 /* Exception caught, if any */
             }

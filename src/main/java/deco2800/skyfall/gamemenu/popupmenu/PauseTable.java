@@ -8,8 +8,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
+import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.managers.TextureManager;
 
 
@@ -19,6 +22,11 @@ import deco2800.skyfall.managers.TextureManager;
 public class PauseTable extends AbstractPopUpElement{
     private Skin skin;
     private Table table;
+
+    private SoundManager sound;
+    private GameScreen game;
+
+
 
     /**
      * Constructs a pause table.
@@ -36,6 +44,7 @@ public class PauseTable extends AbstractPopUpElement{
         super(stage, exit, textureNames,tm , gameMenuManager);
         this.skin = skin;
         this.draw();
+        sound = GameManager.getManagerFromInstance(SoundManager.class);
     }
 
     /**
@@ -95,7 +104,7 @@ public class PauseTable extends AbstractPopUpElement{
         soundEffectsBar.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                // Do nothing for now.
+                SoundManager.setSoundVolume(soundEffectsBar.getValue());
             }
         });
 
@@ -111,7 +120,7 @@ public class PauseTable extends AbstractPopUpElement{
         musicBar.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                // Do nothing for now.
+                SoundManager.setMusicVolume(musicBar.getValue());
             }
         });
 
