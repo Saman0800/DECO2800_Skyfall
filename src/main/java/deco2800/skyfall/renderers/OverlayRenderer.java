@@ -45,7 +45,7 @@ public class OverlayRenderer implements Renderer {
 
         batch.begin();
 
-        if (GameManager.get().debugMode) {
+        if (GameManager.get().getDebugMode()) {
             renderDebugText(batch, camera);
         }
 
@@ -97,9 +97,9 @@ public class OverlayRenderer implements Renderer {
         int line = 0; // Set this to set the line number you want to debug message to
         debugLine(batch, camera, line++, "== Game Info ==");
         debugLine(batch, camera, line++,
-                String.format("Rendered: %d/%d entities, %d/%d tiles", GameManager.get().entitiesRendered,
-                        GameManager.get().entitiesCount, GameManager.get().tilesRendered,
-                        GameManager.get().tilesCount));
+                String.format("Rendered: %d/%d entities, %d/%d tiles", GameManager.get().getEntitiesRendered(),
+                        GameManager.get().getEntitiesCount(), GameManager.get().getTilesRendered(),
+                        GameManager.get().getTilesCount()));
         debugLine(batch, camera, line++, String.format("FPS: %d", Gdx.graphics.getFramesPerSecond()));
         debugLine(batch, camera, line++,
                 String.format("RAM: %dMB PEAK: %dMB", Gdx.app.getJavaHeap() / 1000000, peakRAM / 1000000));

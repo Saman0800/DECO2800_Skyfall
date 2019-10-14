@@ -15,12 +15,12 @@ import java.util.List;
 
 public class GameManager {
     // debug values stored here
-    public int entitiesRendered;
-    public int entitiesCount;
-    public int tilesRendered;
-    public int tilesCount;
+    private int entitiesRendered;
+    private int entitiesCount;
+    private int tilesRendered;
+    private int tilesCount;
 
-    public boolean isTutorial = false;
+    private boolean isTutorial = false;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GameManager.class);
 
@@ -44,23 +44,21 @@ public class GameManager {
     // Showing if the game is paused.
     private static boolean paused = false;
 
-    public float fps = 0;
-
-    public boolean debugMode = true;
+    private boolean debugMode = true;
 
     /**
      * Whether or not we render info over the tiles.
      */
     // Whether or not we render the movement path for Players.
-    public boolean showCoords = false;
+    private boolean showCoords = false;
 
     // The game screen for a game that's currently running.
-    public boolean showPath = false;
+    private boolean showPath = false;
 
     /**
      * Whether or not we render info over the entities
      */
-    public boolean showCoordsEntity = false;
+    private boolean showCoordsEntity = false;
 
     /**
      * Returns an instance of the GM
@@ -147,6 +145,114 @@ public class GameManager {
      * GETTERS AND SETTERS BELOW THIS COMMENT.
      * ------------------------------------------------------------------------
      */
+
+    /**
+     * Returns true if this is a tutorial world.
+     * 
+     * @return The debugMode boolean
+     */
+    public boolean getDebugMode() {
+        return this.debugMode;
+    }
+
+    /**
+     * Sets the debugging state for this class.
+     */
+    public void setDebugMode(boolean debugMode) {
+        this.debugMode = debugMode;
+    }
+
+    /**
+     * Toggles the debugging state
+     */
+    public void toggleDebugMode() {
+        this.debugMode = !debugMode;
+    }
+
+    /**
+     * Returns true if the path is to be shown
+     * 
+     * @return The showPath boolean
+     */
+    public boolean getShowPath() {
+        return this.showPath;
+    }
+
+    /**
+     * Sets the showing the path parameter
+     */
+    public void setShowPath(boolean showPath) {
+        this.showPath = showPath;
+    }
+
+    /**
+     * Toggles showing the path
+     */
+    public void toggleShowPath() {
+        this.showPath = !showPath;
+    }
+
+    /**
+     * Returns true if this is a tutorial world.
+     * 
+     * @return The isTutorial boolean
+     */
+    public boolean getIsTutorial() {
+        return this.isTutorial;
+    }
+
+    /**
+     * Sets the is tutorial variable for this class.
+     */
+    public void setIsTutorial(boolean isTutorial) {
+        this.isTutorial = isTutorial;
+    }
+
+    /**
+     * Returns true if this is a tutorial world.
+     * 
+     * @return The showCoords boolean
+     */
+    public boolean getShowCoords() {
+        return this.showCoords;
+    }
+
+    /**
+     * Sets the is tutorial variable for this class.
+     */
+    public void setShowCoords(boolean showCoords) {
+        this.showCoords = showCoords;
+    }
+
+    /**
+     * Toggle showing the coordinates
+     */
+    public void toggleShowCoords() {
+        this.showCoords = !showCoords;
+    }
+
+    /**
+     * Returns true is entity coords are beign shown
+     * 
+     * @return The showCoordsEntity boolean
+     */
+    public boolean getShowCoordsEntity() {
+        return this.showCoordsEntity;
+    }
+
+    /**
+     * Sets the is wether or not entity coords are shown
+     */
+    public void setShowCoordsEntity(boolean showCoordsEntity) {
+        this.showCoordsEntity = showCoordsEntity;
+    }
+
+    /**
+     * Toggle showing the entity coordinates
+     */
+    public void toggleShowCoordsEntity() {
+        this.showCoordsEntity = !showCoordsEntity;
+    }
 
     /**
      * Get entities rendered count
