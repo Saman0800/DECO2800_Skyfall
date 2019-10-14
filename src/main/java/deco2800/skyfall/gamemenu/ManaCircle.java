@@ -9,15 +9,15 @@ import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
 
-public class HealthCircle extends AbstractUIElement {
+public class ManaCircle extends AbstractUIElement {
     // Game manager to be used
     private final GameMenuManager gmm;
 
     // Current health of player
-    private float currentHealth;
+    private float currentMana;
 
     // New health after health change
-    private int newHealth; // maybe for animating it down.
+    private int newMana;
 
     // Bigger circle
     private  ImageButton biggerCircle;
@@ -34,7 +34,7 @@ public class HealthCircle extends AbstractUIElement {
     // Offset for positions
     private float offset;
 
-    // Health label
+    // Mana label
     private Label label;
 
     // Statistic manager to read player health from
@@ -53,25 +53,25 @@ public class HealthCircle extends AbstractUIElement {
         }
 
         // If health is greater than 50, set health to equal 50
-        if (newHealth > 50) {
-            newHealth = 50;
+        if (newMana > 100) {
+            newMana = 100;
         }
 
-        float diff = currentHealth - newHealth;
+        float diff = currentMana - newMana;
 
-        smallerCircle.setSize((float) 2 * newHealth,
-                (float) 2 * newHealth);
+        smallerCircle.setSize((float) newMana,
+                (float) newMana);
 
-        offset += (diff * 2) / 2;
+        offset += (diff) / 2;
         smallerCircle.setPosition(positionX + offset, positionY + offset);
 
-        currentHealth = newHealth;
+        currentMana = newMana;
 
         // Set label appropriately
-        if(sm.getHealth() < 1) {
-            label.setText("DEAD");
+        if(sm.getMana() < 0) {
+            label.setText("Mana: 0");
         } else {
-            label.setText("Health: " + (int) currentHealth);
+            label.setText("Mana: " + (int) currentMana);
         }
     }
 
@@ -90,7 +90,7 @@ public class HealthCircle extends AbstractUIElement {
     @Override
     public void update() {
         super.update();
-        newHealth = sm.getHealth();
+        newMana = sm.getMana();
         updateInnerCircle();
     }
     /**
@@ -98,7 +98,7 @@ public class HealthCircle extends AbstractUIElement {
      */
     @Override
     public void updatePosition() {
-        positionX = gmm.getTopRightX() - stage.getCamera().viewportWidth / 2 + 100;
+        positionX = gmm.getTopRightX() - stage.getCamera().viewportWidth / 2 - 200;
         positionY = gmm.getTopRightY() - 100;
         smallerCircle.setPosition(positionX + offset, positionY + offset);
         biggerCircle.setPosition(positionX, positionY);
@@ -113,7 +113,7 @@ public class HealthCircle extends AbstractUIElement {
     @Override
     public void draw() {
 
-        label = new Label("Health: 50", skin,  "blue-pill");
+        label = new Label("Mana: ERR", skin,  "blue-pill");
         label.setAlignment(Align.center);
         label.setFontScale(0.7f);
 
@@ -126,8 +126,8 @@ public class HealthCircle extends AbstractUIElement {
         this.smallerCircle = new ImageButton(textures[INNER_CIRCLE]);
         smallerCircle.setSize(100, 100);
 
-        smallerCircle.setName("innerHealthCircle");
-        biggerCircle.setName("outerHealthCircle");
+        smallerCircle.setName("innerManaCircle");
+        biggerCircle.setName("outerManaCircle");
 
         stage.addActor(biggerCircle);
         stage.addActor(smallerCircle);
@@ -142,12 +142,12 @@ public class HealthCircle extends AbstractUIElement {
      * @param tm The texture manager
      * @param sm The statistics manager
      */
-    public HealthCircle(Stage stage, String[] textureNames, TextureManager tm, StatisticsManager sm, Skin skin, GameMenuManager gmm) {
+    public ManaCircle(Stage stage, String[] textureNames, TextureManager tm, StatisticsManager sm, Skin skin, GameMenuManager gmm) {
         super(stage, textureNames, tm);
         this.sm = sm;
         this.skin = skin;
         this.gmm = gmm;
         this.draw();
-        currentHealth = sm.getHealth();
+        currentMana = sm.getMana();
     }
 }

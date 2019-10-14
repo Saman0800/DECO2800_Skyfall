@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 public class SoundEffectTest {
-    SoundManager sound = new SoundManager();
+    SoundManager sound = GameManager.getManagerFromInstance(SoundManager.class);
 
     String path = "resources/sounds/";
 
@@ -44,7 +44,7 @@ public class SoundEffectTest {
         when(soundItem.soundInMap("spell_fire")).thenReturn(true);
 
         // Check whether "stoneWalk" is the key of the stored entry ("stoneWalk", "stone_walk.wav")
-        when(soundItem.getTheSound("spell_fire")).thenReturn(sm);
+        // when(soundItem.getTheSound("spell_fire")).thenReturn(sm);
 
         SoundManager s = new SoundManager();
         s.playSound("spell_fire");

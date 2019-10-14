@@ -12,6 +12,7 @@ import deco2800.skyfall.graphics.HasPointLight;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InputManager;
+import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
@@ -93,6 +94,11 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
     private Save save;
 
     private AbstractEntity entityToBeDeleted = null;
+
+    // Import coin sound effect
+    public static final String GOLD_SOUND_EFFECT = "coins";
+
+
     /**
      * The constructor used to create a simple dummey world, used for displaying world information on the
      * home screen
@@ -701,6 +707,7 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
                 MainCharacter mc = gmm.getMainCharacter();
                 if (tile.getCoordinates().distance(mc.getPosition()) <= 3) {
                     mc.addGold((GoldPiece) entity, 1);
+                    SoundManager.playSound(GOLD_SOUND_EFFECT);
                     // remove the gold piece instance from the world
                     entityToBeDeleted = entity;
                 }

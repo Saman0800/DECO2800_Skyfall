@@ -105,7 +105,7 @@ public class GameScreen implements Screen, KeyDownObserver {
 
             gameManager.getManager(NetworkManager.class).connectToHost("localhost", "duck1234");
         } else {
-            if (GameManager.get().isTutorial) {
+            if (GameManager.get().getIsTutorial()) {
                 world = WorldDirector.constructTutorialWorld(new WorldBuilder(), seed).getWorld();
             } else {
                 // Creating the world
@@ -422,7 +422,7 @@ public class GameScreen implements Screen, KeyDownObserver {
     @Override
     public void notifyKeyDown(int keycode) {
         if (keycode == Input.Keys.F12) {
-            GameManager.get().debugMode = !GameManager.get().debugMode;
+            GameManager.get().toggleDebugMode();
         }
 
         if (keycode == Input.Keys.F5) {
@@ -444,29 +444,29 @@ public class GameScreen implements Screen, KeyDownObserver {
         }
 
         if (keycode == Input.Keys.F11) { // F11
-            GameManager.get().showCoords = !GameManager.get().showCoords;
-            logger.info("Show coords is now {}", GameManager.get().showCoords);
+            GameManager.get().toggleShowCoords();
+            logger.info("Show coords is now {}", GameManager.get().getShowCoords());
         }
 
         if (keycode == Input.Keys.C) { // F11
-            GameManager.get().showCoords = !GameManager.get().showCoords;
-            logger.info("Show coords is now {}", GameManager.get().showCoords);
+            GameManager.get().toggleShowCoords();
+            logger.info("Show coords is now {}", GameManager.get().getShowCoords());
         }
 
         if (keycode == Input.Keys.F10) { // F10
-            GameManager.get().showPath = !GameManager.get().showPath;
-            logger.info("Show Path is now {}", GameManager.get().showPath);
+            GameManager.get().toggleDebugMode();
+            logger.info("Show Path is now {}", GameManager.get().getShowPath());
         }
 
-        //FIXME:jeffvan12 should replace with acutal world saving and loading
+        // FIXME:jeffvan12 should replace with acutal world saving and loading
         if (keycode == Input.Keys.F3) { // F3
             // Save the world to the DB
-//            DatabaseManager.saveWorld(null);
+            // DatabaseManager.saveWorld(null);
         }
 
         if (keycode == Input.Keys.F4) { // F4
             // Load the world to the DB
-//            DatabaseManager.loadWorld(null);
+            // DatabaseManager.loadWorld(null);
         }
 
         if (keycode == Input.Keys.P) {
