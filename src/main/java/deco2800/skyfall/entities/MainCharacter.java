@@ -1,39 +1,27 @@
 package deco2800.skyfall.entities;
 
-import java.util.Map;
-import java.util.List;
-import org.slf4j.Logger;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.io.Serializable;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import org.slf4j.LoggerFactory;
-import deco2800.skyfall.Tickable;
-import deco2800.skyfall.GameScreen;
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.saving.Save;
-import deco2800.skyfall.buildings.*;
 import com.badlogic.gdx.math.Vector2;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.animation.Animatable;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import deco2800.skyfall.entities.spells.Spell;
-import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.GameScreen;
+import deco2800.skyfall.Tickable;
+import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
-import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.buildings.*;
+import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellCaster;
 import deco2800.skyfall.entities.spells.SpellFactory;
-import deco2800.skyfall.entities.weapons.*;
-import deco2800.skyfall.gamemenu.HealthCircle;
-import deco2800.skyfall.gamemenu.popupmenu.ConstructionTable;
-import deco2800.skyfall.gamemenu.ManaBar;
+import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.entities.vehicle.AbstractVehicle;
 import deco2800.skyfall.entities.vehicle.Bike;
 import deco2800.skyfall.entities.vehicle.SandCar;
+import deco2800.skyfall.entities.weapons.*;
+import deco2800.skyfall.gamemenu.HealthCircle;
+import deco2800.skyfall.gamemenu.popupmenu.ConstructionTable;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.observers.KeyUpObserver;
@@ -45,6 +33,16 @@ import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.saving.AbstractMemento;
+import deco2800.skyfall.saving.Save;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.Tile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.*;
+
 
 import static deco2800.skyfall.buildings.BuildingType.*;
 
@@ -228,7 +226,7 @@ public class MainCharacter extends Peon
     /**
      * Item player is currently equipped with/holding.
      */
-    private Item equippedItem;
+    protected Item equippedItem;
 
     /**
      * The spell the user currently has selected to cast.
@@ -250,11 +248,6 @@ public class MainCharacter extends Peon
 
     // Tick interval to restore mana.
     protected int totalManaCooldown = 10;
-
-    /**
-     * The GUI mana bar that can be updated when mana is restored/lost.
-     */
-    private ManaBar manaBar;
 
     /**
      * The GUI health bar for the character.
@@ -349,9 +342,7 @@ public class MainCharacter extends Peon
 
         // create a new goldPouch object
         this.goldPouch = new HashMap<>();
-        // create the starting gold pouch with 1 x 100G
-        GoldPiece initialPiece = new GoldPiece(100);
-        this.addGold(initialPiece, 1);
+
 
         // Initialises the players velocity properties
         xInput = 0;
@@ -403,21 +394,9 @@ public class MainCharacter extends Peon
      */
     public void setUpGUI() {
         this.setupHealthBar();
-        this.setUpManaBar();
         this.setupGameOverScreen();
     }
 
-    /**
-     * Set up the mana bar.
-     */
-    private void setUpManaBar() {
-        //Start with 100 mana.
-        if (this.manaBar != null) {
-            this.manaBar = new ManaBar(100, "mana_bar_inner", "mana_bar");
-        }
-        // Start with 100 mana.
-        this.manaBar = new ManaBar(100, "mana_bar_inner", "mana_bar");
-    }
 
     /**
      * Set up the health bar.
@@ -591,6 +570,8 @@ public class MainCharacter extends Peon
         }
     }
 
+    protected Projectile defaultProjectile = null;
+
     /**
      * Fire a projectile in the position that the mouse is in.
      *
@@ -603,18 +584,31 @@ public class MainCharacter extends Peon
 
         // Make projectile move toward the angle
         // Spawn projectile in front of character
-        Projectile projectile = new Projectile(mousePosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
-                position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
-                position.getRow() + 0.5f + 1.5f * unitDirection.getRow(),
-                ((Weapon)equippedItem).getDamage(),
-                1,
-                this.itemSlotSelected == 1 ? (((Weapon)equippedItem).getName().equals("bow") ? 10 : 0) : 0);
+
+        int bowRange = equippedItem.getName().equals("bow") ? 10 : 0;
+        int range = this.itemSlotSelected == 1 ? bowRange : 0;
+
+        Projectile projectile;
+
+        //If there is a default projectile selected to fire, use that.
+        if (defaultProjectile == null) {
+            projectile = new Projectile(mousePosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
+                    new HexVector(position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
+                            position.getRow() + 0.5f + 1.5f * unitDirection.getRow()),
+                    ((Weapon)equippedItem).getDamage(),
+                    1,
+                    range);
+        } else {
+            projectile = defaultProjectile;
+        }
+
+        projectile.setAngle(180.f + (float)Math.toDegrees(Math.atan2(unitDirection.getRow(), unitDirection.getCol())));
 
         // Add the projectile entity to the game world.
         GameManager.get().getWorld().addEntity(projectile);
 
         // Play weapon attackEntity sound
-        switch(((Weapon)equippedItem).getName()) {
+        switch((equippedItem).getName()) {
             case "sword":
                 SoundManager.playSound(SWORDATTACK);
                 break;
@@ -658,9 +652,6 @@ public class MainCharacter extends Peon
 
         // Subtract some mana, and update the GUI.
         this.mana -= manaCost;
-        if (this.manaBar != null) {
-            this.manaBar.update(this.mana);
-        }
 
         GameManager.get().getWorld().addEntity(spell);
     }
@@ -1249,6 +1240,9 @@ public class MainCharacter extends Peon
             isSprinting = false;
             maxSpeed /= 2.f;
             break;
+        case Input.Keys.SPACE:
+            SoundManager.stopSound(WALK_NORMAL);
+            break;
         default:
             break;
         }
@@ -1327,10 +1321,11 @@ public class MainCharacter extends Peon
      *
      * @return The total value of the Gold Pouch
      */
-    public int getGoldPouchTotalValue() {
+    public Integer getGoldPouchTotalValue() {
         int totalValue = 0;
-        for (Integer goldValue : goldPouch.keySet()) {
-            totalValue += goldValue * goldPouch.get(goldValue);
+
+        for (HashMap.Entry<Integer, Integer> entry : goldPouch.entrySet()) {
+            totalValue += entry.getKey() * entry.getValue();
         }
         return totalValue;
     }
@@ -1829,9 +1824,13 @@ public class MainCharacter extends Peon
                         AnimationRole.ATTACK, Direction.DEFAULT, false, true));
 
         // Hurt animation
-        addAnimations(AnimationRole.HURT, Direction.DEFAULT,
+        addAnimations(AnimationRole.HURT, Direction.EAST,
                 new AnimationLinker("MainCharacter_Hurt_E_Anim",
-                        AnimationRole.HURT, Direction.DEFAULT, true, true));
+                        AnimationRole.HURT, Direction.EAST, true, true));
+
+        addAnimations(AnimationRole.HURT, Direction.WEST,
+                new AnimationLinker("MainCharacter_Hurt_W_Anim",
+                        AnimationRole.HURT, Direction.EAST, true, true));
 
         // Dead animation
         addAnimations(AnimationRole.DEAD, Direction.DEFAULT,
@@ -1845,7 +1844,7 @@ public class MainCharacter extends Peon
                         AnimationRole.STILL, Direction.DEFAULT, false, true));
     }
 
-    private Map<Direction,String> defaultMainCharacterTextureMap=new HashMap<>();
+    private Map<Direction,String> defaultMainCharacterTextureMap= new EnumMap<>(Direction.class);
 
     /**
      * Sets default direction textures uses the get index for Animation feature as described in the animation

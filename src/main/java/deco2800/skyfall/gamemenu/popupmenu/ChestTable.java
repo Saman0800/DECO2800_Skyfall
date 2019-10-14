@@ -3,13 +3,17 @@ package deco2800.skyfall.gamemenu.popupmenu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.entities.Chest;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.worlds.world.World;
 
 import java.util.Map;
 
@@ -22,6 +26,8 @@ public class ChestTable extends AbstractPopUpElement{
     private final StatisticsManager sm;
     private Table chestTable;
     private Table resourcePanel;
+    private World world;
+    private Chest chestEntity;
 
     /**
      * Constructs a chest table.
@@ -129,12 +135,17 @@ public class ChestTable extends AbstractPopUpElement{
             public void clicked(InputEvent event, float x, float y) {
                 sm.getInventory().inventoryAddMultiple(chest.getManager().getContents());
                 hide();
+                world.removeEntity(chestEntity);
             }
         });
 
         chestTable.addActor(button);
     }
 
+    public void setWorldAndChestEntity(World world, Chest chest) {
+        this.world = world;
+        this.chestEntity = chest;
+    }
     /**
      * Sets the item icons and counts in the resource panel.
      * @param inventoryAmounts Map<String, Integer> of inventory contents
@@ -144,7 +155,7 @@ public class ChestTable extends AbstractPopUpElement{
      * @param xspace space between icons
      */
     private void setCounts(Map<String, Integer> inventoryAmounts, int xpos, int ypos, int size, int xspace){
-        int count = 0;
+        float count = 0;
 
         String[] weapons = {"axe", "bow", "spear", "sword"};
 

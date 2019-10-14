@@ -796,7 +796,7 @@ public class DataBaseConnector {
             return saves;
 
         } catch (Exception e) {
-            throw new RunTimeLoadException("Failed to load save information", e);
+            throw new RunTimeLoadException("Failed to load save information: " + e.getClass().getCanonicalName(), e);
         }
     }
 

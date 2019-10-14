@@ -10,14 +10,14 @@ public class vec3Test {
     @Test
     public void testConstructor() {
         vec3 testVec = new vec3(0.5f, 0.1f, 0.3f);
-        assertEquals(0.5f,testVec.x, 0.01f);
-        assertEquals(0.1f, testVec.y, 0.01f);
-        assertEquals(0.3f, testVec.z, 0.01f);
+        assertEquals(0.5f, testVec.getX(), 0.01f);
+        assertEquals(0.1f, testVec.getY(), 0.01f);
+        assertEquals(0.3f, testVec.getZ(), 0.01f);
 
         testVec = new vec3(1.0f);
-        assertEquals(1.0f,testVec.x, 0.01f);
-        assertEquals(1.0f, testVec.y, 0.01f);
-        assertEquals(1.0f, testVec.z, 0.01f);
+        assertEquals(1.0f, testVec.getX(), 0.01f);
+        assertEquals(1.0f, testVec.getY(), 0.01f);
+        assertEquals(1.0f, testVec.getZ(), 0.01f);
     }
 
     @Test
@@ -30,26 +30,26 @@ public class vec3Test {
 
     @Test
     public void testClamp() {
-        //min
+        // min
         vec3 testVec = new vec3(-0.1f, -0.1f, -0.1f);
         testVec = testVec.getClampedComponents(0.0f, 1.0f);
-        assertEquals(0.0f, testVec.x, 0.01f);
-        assertEquals(0.0f, testVec.y, 0.01f);
-        assertEquals(0.0f, testVec.z, 0.01f);
+        assertEquals(0.0f, testVec.getX(), 0.01f);
+        assertEquals(0.0f, testVec.getY(), 0.01f);
+        assertEquals(0.0f, testVec.getZ(), 0.01f);
 
-        //value
+        // value
         testVec = new vec3(0.5f, 0.5f, 0.5f);
         testVec = testVec.getClampedComponents(0.0f, 1.0f);
-        assertEquals(0.5f, testVec.x, 0.01f);
-        assertEquals(0.5f, testVec.y, 0.01f);
-        assertEquals(0.5f, testVec.z, 0.01f);
+        assertEquals(0.5f, testVec.getX(), 0.01f);
+        assertEquals(0.5f, testVec.getY(), 0.01f);
+        assertEquals(0.5f, testVec.getZ(), 0.01f);
 
-        //max
+        // max
         testVec = new vec3(30.0f, 30.0f, 30.0f);
         testVec = testVec.getClampedComponents(0.0f, 1.0f);
-        assertEquals(1.0f, testVec.x, 0.01f);
-        assertEquals(1.0f, testVec.y, 0.01f);
-        assertEquals(1.0f, testVec.z, 0.01f);
+        assertEquals(1.0f, testVec.getX(), 0.01f);
+        assertEquals(1.0f, testVec.getY(), 0.01f);
+        assertEquals(1.0f, testVec.getZ(), 0.01f);
     }
 
     @Test
@@ -63,12 +63,12 @@ public class vec3Test {
         assertFalse(a.equals(c));
         assertFalse(c.equals(a));
 
-        //test vec2 comparison
+        // test vec2 comparison
         vec2 d = new vec2(0.1f, 0.2f);
         vec3 e = new vec3(0.1f, 0.2f, 0.0f);
         assertTrue(e.equals(d));
 
-        //test comparison against invalid object
+        // test comparison against invalid object
         Array2D f = new Array2D(10, 10);
         assertFalse(a.equals(f));
     }

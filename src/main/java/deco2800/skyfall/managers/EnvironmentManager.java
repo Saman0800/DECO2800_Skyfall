@@ -1,5 +1,9 @@
 package deco2800.skyfall.managers;
 
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.observers.DayNightObserver;
@@ -7,14 +11,13 @@ import deco2800.skyfall.observers.SeasonObserver;
 import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.worlds.Tile;
 
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
-
 public class EnvironmentManager extends TickableManager {
 
-    //Hours in a game day
+    // Hours in a game day
     private int hours;
+
+    // Accurate alternative minutes representation
+    private float trueMinutes;
 
     // Seconds in a game day
     private int minutes;
@@ -32,7 +35,7 @@ public class EnvironmentManager extends TickableManager {
     private boolean isDay;
 
     // Biome player is currently in
-   public String biome = "forest";
+    private String biome;
 
     // Music filename
     private String file;
@@ -41,28 +44,27 @@ public class EnvironmentManager extends TickableManager {
     private String currentFile;
 
     // Abstract entity within entities list. (Public for testing)
-    public AbstractEntity player;
+    private AbstractEntity player;
 
-    //List of objects implementing TimeObserver
+    // List of objects implementing TimeObserver
     private ArrayList<TimeObserver> timeListeners;
 
-    //List of objects implementing DayNightObserver
+    // List of objects implementing DayNightObserver
     private ArrayList<DayNightObserver> dayNightListeners;
 
-    //List of objects implementing SeasonObserver
+    // List of objects implementing SeasonObserver
     private ArrayList<SeasonObserver> seasonListeners;
 
     // Current season
     private String season;
-
 
     /**
      * Constructor for setting up the environment
      */
     public EnvironmentManager() throws NoSuchAlgorithmException {
         // Music file setup
-        file = "resources/sounds/forest_day.mp3";
-        currentFile = "resources/sounds/forest_night.mp3";
+        file = "forest_day";
+        currentFile = "";
 
         // Time setup
         timeListeners = new ArrayList<>();
@@ -70,6 +72,39 @@ public class EnvironmentManager extends TickableManager {
         seasonListeners = new ArrayList<>();
         currentMillis = System.currentTimeMillis();
         season = "";
+        biome = "forest";
+    }
+
+    /**
+     * @return Returns the biome name as a string.
+     */
+    public String getBiomeString() {
+        return this.biome;
+    }
+
+    /**
+     * Sets the biome string for the environment.
+     *
+     * @param biomeName The biome name (as a string).
+     */
+    public void setBiomeString(String biomeName) {
+        this.biome = biomeName;
+    }
+
+    /**
+     * @return Returns a reference to the player object.
+     */
+    public AbstractEntity getPlayer() {
+        return this.player;
+    }
+
+    /**
+     * Sets the player used in class testing.
+     *
+     * @param player The player that will be used in testing
+     */
+    public void setPlayer(AbstractEntity player) {
+        this.player = player;
     }
 
     /**
@@ -187,8 +222,8 @@ public class EnvironmentManager extends TickableManager {
     }
 
     /**
-     * Tracks the biome the player is currently in by retrieving the player's coordinates,
-     * the corresponding tile, and the corresponding biome.
+     * Tracks the biome the player is currently in by retrieving the player's
+     * coordinates, the corresponding tile, and the corresponding biome.
      */
     public void setBiome() {
         // List of entities in the game
@@ -208,18 +243,10 @@ public class EnvironmentManager extends TickableManager {
     }
 
     /**
-     * Sets a biome string
-     *
-     * @param location The current biome that will be set
-     */
-    public void setBiomeString(String location) {
-        biome = location;
-    }
-
-    /**
      * Gets current biome player is in
      *
-     * @return String Current biome of player, or null if player is moving between tiles
+     * @return String Current biome of player, or null if player is moving between
+     *         tiles
      */
     public String currentBiome() {
         return biome;
@@ -236,7 +263,7 @@ public class EnvironmentManager extends TickableManager {
 
     /**
      * @return Converts the game minutes and hours into a hour-decimal value. For
-     * example the time 2:30am would yield a hour-decimal of 2.5
+     *         example the time 2:30am would yield a hour-decimal of 2.5
      */
     public float getHourDecimal() {
         return ((float) hours) + ((float) minutes / 60);
@@ -246,23 +273,26 @@ public class EnvironmentManager extends TickableManager {
      * Sets the time of day in game
      *
      * @param hour The hour of day to be set. Must be between 0-23 inclusive.
-     * @param mins The minutes of the hour of day to be set. Must be between 0-59 inclusive.
+     * @param mins The minutes of the hour of day to be set. Must be between 0-59
+     *             inclusive.
      */
     public void setTime(int hour, int mins) {
         hours = hour;
         minutes = mins;
+        trueMinutes = mins;
 
-        //Check if observers need notifying, notifies if needed
+        // Check if observers need notifying, notifies if needed
         if (mins >= 60) {
             hours += 1;
             if (hours >= 24) {
                 hours = hours - 24;
             }
             minutes = 0;
+            trueMinutes = 0;
             updateTimeListeners(hours);
         }
 
-        //Update isDay boolean
+        // Update isDay boolean
         isDay();
     }
 
@@ -275,13 +305,13 @@ public class EnvironmentManager extends TickableManager {
 
         // Day is 6am - 6pm, Night 6pm - 6am
         if (hours < 6 || hours >= 18) {
-            //check if observers need notifying
+            // check if observers need notifying
             if (isDay) {
                 updateDayNightListeners(false);
             }
             isDay = false;
         } else {
-            //check if observers need notifying
+            // check if observers need notifying
             if (!isDay) {
                 updateDayNightListeners(true);
             }
@@ -328,7 +358,7 @@ public class EnvironmentManager extends TickableManager {
      * @param i the time in milliseconds
      */
     public void setMonth(long i) {
-        //Each month goes for approx 30 days
+        // Each month goes for approx 30 days
         long timeMonth = (i / 60000) / 730;
         month = timeMonth % 12;
     }
@@ -375,7 +405,7 @@ public class EnvironmentManager extends TickableManager {
             seasonString = "Invalid season";
         }
 
-        //Check if season has changed, updates observers
+        // Check if season has changed, updates observers
         if (!season.equals(seasonString)) {
             updateSeasonListeners(seasonString);
             season = seasonString;
@@ -384,8 +414,8 @@ public class EnvironmentManager extends TickableManager {
     }
 
     /**
-     * Sets the filename in game.
-     * Format for filenames: "biome_day/night" e.g. "forest_day"
+     * Sets the filename in game. Format for filenames: "biome_day/night" e.g.
+     * "forest_day"
      */
     public void setFilename() {
         // Check environment
@@ -393,20 +423,21 @@ public class EnvironmentManager extends TickableManager {
         currentBiome();
 
         // Name file accordingly
-        String filename = "day";
-        filename = isDay() ? filename : "night";
+        String TOD = "day";
+        TOD = isDay() ? TOD : "night";
 
-        // Until lake music created and ocean biome is restricted, play forest for now
-        if (biome.equals("ocean") || biome.equals("lake") || biome.equals("river")) {
-            file = "forest" + "_" + filename;
+        // Set file to be current biome the player is in
+        if (biome.equals("lake") || biome.equals("river") || biome.equals("ocean")) {
+            // no background music for the water biomes
+            file = "forest_" + TOD;
         } else {
-            //file = "resources/sounds/" + biome + "_" + filename;
-            file = biome + "_" + filename;
+            file = biome + "_" + TOD;
         }
     }
 
     /**
      * Gets the filename in game.
+     *
      * @return the file being played
      */
     public String getFilename() {
@@ -417,22 +448,27 @@ public class EnvironmentManager extends TickableManager {
      * Sets the music in game as per current time and biome the player resides in.
      */
     public void setTODMusic() {
-        // Check if there is a file
-        if (!(file.contains(currentFile))) {
-            setFilename();
+        // Check for change in biome
+        if (!(file.equals(currentFile))) {
 
             // Stop current music
             try {
-                SoundManager.stopSound(file);
+                if (!currentFile.equals("")) {
+                    SoundManager.fadeOutStop(currentFile);
+                } else {
+                    SoundManager.stopSound(currentFile);
+                }
             } catch (Exception e) {
                 /* Exception caught, if any */
             }
 
+            // Change file name to current biome
             currentFile = file;
+            setFilename();
 
             // Play BGM
             try {
-                SoundManager.loopSound(currentFile);
+                SoundManager.fadeInPlay(currentFile);
             } catch (Exception e) {
                 /* Exception caught, if any */
             }
@@ -451,6 +487,8 @@ public class EnvironmentManager extends TickableManager {
             currentMillis = System.currentTimeMillis();
             minutes += 1;
         }
+
+        trueMinutes += (System.currentTimeMillis() - currentMillis) / 1000f;
 
         // Set the TOD and month in game
         setTime(hours, minutes);

@@ -11,12 +11,9 @@ import java.util.Map;
  */
 public class Building extends AbstractEntity {
 
-    private String name;
-    private int maxHealth;
     private int sizeX;
     private int sizeY;
     private int buildTime;
-    private String texture;
     private Map<String, Integer> buildCost = new HashMap<>();
 
     private float xcoord;
@@ -33,12 +30,9 @@ public class Building extends AbstractEntity {
      * @param texture   the texture for the building
      */
     public Building(String name, int maxHealth, int sizeX, int sizeY, int buildTime, String texture) {
-        this.name = name;
-        this.maxHealth = maxHealth;
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         this.buildTime = buildTime;
-        this.texture = texture;
     }
 
     public void onTick(long i) {

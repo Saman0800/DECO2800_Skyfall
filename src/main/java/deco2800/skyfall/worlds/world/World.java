@@ -12,6 +12,7 @@ import deco2800.skyfall.graphics.HasPointLight;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InputManager;
+import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.observers.TouchDownObserver;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
@@ -91,6 +92,12 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
     private GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
 
     private Save save;
+
+    private AbstractEntity entityToBeDeleted = null;
+
+    // Import coin sound effect
+    public static final String GOLD_SOUND_EFFECT = "coins";
+
 
     /**
      * The constructor used to create a simple dummey world, used for displaying world information on the
@@ -667,22 +674,25 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
             return;
         }
         for (AbstractEntity entity : clickedChunk.getEntities()) {
+            //NOTE: DO NOT RUN REMOVE ENTITY IN THIS LOOP, IT WILL CAUSE
+            //ConcurrentModificationException
             if (!tile.getCoordinates().equals(entity.getPosition())) {
                 continue;
             }
 
             if (entity instanceof Harvestable) {
-                removeEntity(entity);
+                entityToBeDeleted = entity;
                 List<AbstractEntity> drops = ((Harvestable) entity).harvest(tile);
                 drops.forEach(this::addEntity);
             } else if (entity instanceof Weapon) {
                 MainCharacter mc = gmm.getMainCharacter();
                 if (tile.getCoordinates().distance(mc.getPosition()) <= 2) {
-                    removeEntity(entity);
+                    entityToBeDeleted = entity;
                     gmm.getInventory().add((Item) entity);
                 }
             } else if (entity instanceof Chest) {
                 ChestTable chest = (ChestTable) gmm.getPopUp("chestTable");
+                chest.setWorldAndChestEntity(this, (Chest) entity);
                 chest.updateChestPanel((Chest) entity);
                 gmm.setPopUp("chestTable");
             } else if (entity instanceof Item) {
@@ -690,14 +700,15 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
                     if (tile.getCoordinates().distance(mc.getPosition()) > 2) {
                         continue;
                     }
-                    removeEntity(entity);
+                entityToBeDeleted = entity;
                     gmm.getInventory().add((Item) entity);
             } else if (entity instanceof GoldPiece) {
                 MainCharacter mc = gmm.getMainCharacter();
-                if (tile.getCoordinates().distance(mc.getPosition()) <= 1) {
+                if (tile.getCoordinates().distance(mc.getPosition()) <= 3) {
                     mc.addGold((GoldPiece) entity, 1);
+                    SoundManager.playSound(GOLD_SOUND_EFFECT);
                     // remove the gold piece instance from the world
-                    removeEntity(entity);
+                    entityToBeDeleted = entity;
                 }
             }
             else if (entity instanceof BlueprintShop) {
@@ -729,6 +740,11 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
                         break;
                 }
             }
+        }
+
+        if (entityToBeDeleted != null) {
+            removeEntity(entityToBeDeleted);
+            entityToBeDeleted = null;
         }
     }
 

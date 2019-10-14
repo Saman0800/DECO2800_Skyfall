@@ -3,6 +3,9 @@ package deco2800.skyfall.managers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.utils.Timer;
+import deco2800.skyfall.gamemenu.AbstractPopUpElement;
+import deco2800.skyfall.gamemenu.popupmenu.PauseTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,10 +33,19 @@ public class SoundManager extends AbstractManager {
     /* Boolean to state whether the sound manager is paused or not */
     private static boolean paused = false;
 
+    private static float FADE_CONSTANT = 0.1f;
+
+    private static float gameSoundVolume;
+    private static float gameMusicVolume;
+
     /**
      * Initialize SoundManager by adding different sounds in a map
      */
     public SoundManager() {
+
+        gameSoundVolume = 1f;
+        gameMusicVolume = 1f;
+
         LOGGER.info("soundManager song list");
 
         try {
@@ -156,6 +168,10 @@ public class SoundManager extends AbstractManager {
                     (Gdx.files.internal(PATH + "desert_day.mp3")));
             musicMap.put("desert_night", Gdx.audio.newMusic
                     (Gdx.files.internal(PATH + "desert_night.mp3")));
+            musicMap.put("mountain_day", Gdx.audio.newMusic
+                    (Gdx.files.internal(PATH + "mountain_day.mp3")));
+            musicMap.put("mountain_night", Gdx.audio.newMusic
+                    (Gdx.files.internal(PATH + "mountain_night.mp3")));
             musicMap.put("snowy_mountains_day", Gdx.audio.newMusic
                     (Gdx.files.internal(PATH + "snowy_mountains_day.mp3")));
             musicMap.put("snowy_mountains_night", Gdx.audio.newMusic
@@ -195,11 +211,12 @@ public class SoundManager extends AbstractManager {
         if (!paused) {
             if (soundMap.containsKey(soundName)) {
                 Sound sound = soundMap.get(soundName);
-                sound.play(1);
+                sound.play(gameSoundVolume);
                 return true;
             } else if (musicMap.containsKey(soundName)) {
                 Music music = musicMap.get(soundName);
                 music.play();
+                music.setVolume(gameMusicVolume);
                 playing = soundName;
                 return true;
             } else {
@@ -220,18 +237,52 @@ public class SoundManager extends AbstractManager {
         if (!paused) {
             if (soundMap.containsKey(soundName)) {
                 Sound sound = soundMap.get(soundName);
-                sound.loop(1);
+                sound.loop(gameSoundVolume);
                 // Add to the sounds which are being looped
                 soundLoops.put(soundName, soundMap.get(soundName));
             } else if (musicMap.containsKey(soundName)) {
                 Music music = musicMap.get(soundName);
                 music.play();
+                music.setVolume(gameMusicVolume);
                 playing = soundName;
                 music.setLooping(true);
             } else {
                 // LOGGER.info("There does not exist a {} sound", soundName);
             }
         }
+    }
+
+    public static void fadeInPlay(String soundName) {
+        Music music = musicMap.get(soundName);
+        music.play();
+        music.setVolume(0f);
+        playing = soundName;
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                if (music.getVolume() < gameMusicVolume) {
+                    music.setVolume(music.getVolume() + FADE_CONSTANT);
+                } else {
+                    music.setVolume(gameMusicVolume);
+                    this.cancel();
+                }
+            }
+        }, 0.3f, 0.01f);
+    }
+
+    public static void fadeOutStop(String soundName) {
+        Music music = musicMap.get(soundName);
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                if (music.getVolume() >= FADE_CONSTANT) {
+                    music.setVolume(music.getVolume() - FADE_CONSTANT);
+                } else {
+                    music.stop();
+                    this.cancel();
+                }
+            }
+        }, 0.3f, 0.01f);
     }
 
     /**
@@ -318,11 +369,11 @@ public class SoundManager extends AbstractManager {
     /**
      * Return the selected sound for corresponding action
      */
-    public Sound getTheSound(String soundName) {
+    public static Sound getTheSound(String soundName) {
         return soundMap.get(soundName);
     }
 
-    public Music getTheMusic(String musicName) {
+    public static Music getTheMusic(String musicName) {
         return musicMap.get(musicName);
     }
 
@@ -331,11 +382,11 @@ public class SoundManager extends AbstractManager {
      *
      * @return soundMap<Sound, String>
      */
-    public Map<String, Sound> getSoundMap() {
+    public static Map<String, Sound> getSoundMap() {
         return Collections.unmodifiableMap(soundMap);
     }
 
-    public Map<String, Music> getMusicMap() {
+    public static Map<String, Music> getMusicMap() {
         return Collections.unmodifiableMap(musicMap);
     }
 
@@ -343,8 +394,24 @@ public class SoundManager extends AbstractManager {
         SoundManager.paused = paused;
     }
 
+    public static void setSoundVolume(float volume) {
+        // needs to be between 0 and 1
+        gameSoundVolume = volume / 100;
+    }
+
+    public static void setMusicVolume(float volume) {
+        // needs to be between 0 and 1
+        gameMusicVolume = volume / 100;
+        updateVolume();
+    }
+
     public static String getPlaying() {
         return playing;
+    }
+
+    public static void updateVolume() {
+        Music bgm = getTheMusic(playing);
+        bgm.setVolume(gameMusicVolume);
     }
 
     public static void dispose(String soundName) {
@@ -352,14 +419,10 @@ public class SoundManager extends AbstractManager {
             Sound sound = soundMap.get(soundName);
             sound.dispose();
             soundLoops.remove(soundName);
-            soundMap.remove(soundName);
         } else if (musicMap.containsKey(soundName)) {
             Music music = musicMap.get(soundName);
             music.dispose();
-            musicMap.remove(soundName);
         }
     }
-
-
 
 }

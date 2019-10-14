@@ -37,7 +37,7 @@ public class TornadoTest {
         when(GameManager.get()).thenCallRealMethod();
 
         tornado = new Tornado(new HexVector(), "tornado_placeholder",
-                "spell", 0f, 0f,
+                "spell", new HexVector(0f, 0f),
                 20,
                 0.1f,
                 10);
