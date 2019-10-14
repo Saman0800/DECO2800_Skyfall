@@ -417,7 +417,6 @@ public class EnvironmentManager extends TickableManager {
      * Sets the music in game as per current time and biome the player resides in.
      */
     public void setTODMusic() {
-
         // Check if there is a file
         if (!(file.contains(currentFile))) {
             setFilename();

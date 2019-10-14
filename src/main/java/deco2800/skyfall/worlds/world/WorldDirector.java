@@ -24,29 +24,32 @@ public class WorldDirector {
 
     public static WorldBuilder constructSingleBiomeWorld(WorldBuilder builder, long seed, boolean renderUI, String biomeName) {
         Random random = new Random(seed);
-
+        final int BIOME_SIZE = 150;
         builder.setType("single_player");
         switch (biomeName) {
             case "forest":
-                builder.addBiome(new ForestBiome(random), 75);
+                builder.addBiome(new ForestBiome(random), BIOME_SIZE);
                 builder.addLake(1);
                 builder.addLake(1);
                 builder.addRiver();
                 break;
             case "desert":
-                builder.addBiome(new DesertBiome(random), 75);
+                builder.addBiome(new DesertBiome(random), BIOME_SIZE);
                 break;
             case "mountain":
-                builder.addBiome(new MountainBiome(random), 75);
-                builder.addLake(3);
+                builder.addBiome(new MountainBiome(random), BIOME_SIZE);
+                builder.addLake(2);
+                builder.addLake(1);
+                builder.addRiver();
                 break;
             case "snowy_mountains":
-                builder.addBiome(new SnowyMountainsBiome(random), 75);
-                builder.addLake(2);
+                builder.addBiome(new SnowyMountainsBiome(random), BIOME_SIZE);
+                builder.addLake(3);
+                builder.addRiver();
                 builder.addRiver();
                 break;
             case "swamp":
-                builder.addBiome(new SwampBiome(random), 75);
+                builder.addBiome(new SwampBiome(random), BIOME_SIZE);
                 builder.addLake(4);
                 builder.addLake(3);
                 builder.addLake(2);
@@ -55,35 +58,24 @@ public class WorldDirector {
                 builder.addRiver();
                 break;
             case "volcanic_mountains":
-                builder.addBiome(new VolcanicMountainsBiome(random), 75);
+                builder.addBiome(new VolcanicMountainsBiome(random), BIOME_SIZE);
                 break;
             default:
                 throw new InvalidBiomeException("Invalid Biome");
         }
 
         builder.setWorldSize(300);
-        builder.setNodeSpacing(20);
+        builder.setNodeSpacing(30);
         builder.setSeed(random.nextInt());
 
-        builder.setRiverSize(1);
-        builder.setBeachSize(2);
+        builder.setRiverSize(5);
+        builder.setBeachSize(4);
 
         builder.setStaticEntities(true);
 
         MainCharacter mainCharacter = MainCharacter.getInstance(0, 0, 10f, "Main Piece", 10);
         mainCharacter.setCol(0);
         mainCharacter.setRow(0);
-
-        // mainCharacter.getUnlockedBiomes();
-        // for (String s: mainCharacter.getUnlockedBiomes()) {
-        //     for (AbstractBiome b: builder.getWorld().getBiomes()) {
-        //         if (b.getBiomeName() == "desert") {
-        //             for (Tile t: b.getTiles()){
-        //                 t.setObstructed(true);
-        //             }
-        //         }
-        //    }
-        // }
 
         if (renderUI) {
             StatisticsManager sm = new StatisticsManager(mainCharacter);

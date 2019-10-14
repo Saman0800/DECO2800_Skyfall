@@ -522,7 +522,6 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
         for (Tile t : tilesToDelete) {
             deleteTile(t.getTileID());
         }
-
         MainCharacter mc = MainCharacter.getInstance();
         setLoadedArea(mc.getCol() - LOADED_RADIUS, mc.getRow() - LOADED_RADIUS,
                       mc.getCol() + LOADED_RADIUS, mc.getRow() + LOADED_RADIUS);

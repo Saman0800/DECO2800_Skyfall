@@ -5,7 +5,9 @@ import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.SaveableEntity;
 import deco2800.skyfall.managers.DatabaseManager;
+import deco2800.skyfall.managers.EnvironmentManager;
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
@@ -84,7 +86,9 @@ public abstract class AbstractPortal extends SaveableEntity {
      * @param save - The Save file this is for
      */
     public void teleport(Save save) {
-        // For now, individual functionality in child classes
+
+        // Stop the music from the previous biome/world
+        SoundManager.stopSound(GameManager.get().getManager(EnvironmentManager.class).getFilename());
 
         // Create a random world
         MainCharacter character = save.getMainCharacter();
