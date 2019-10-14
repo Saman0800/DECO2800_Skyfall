@@ -106,7 +106,7 @@ public class GameScreen implements Screen, KeyDownObserver {
             gameManager.getManager(NetworkManager.class).connectToHost("localhost", "duck1234");
         } else {
             if (GameManager.get().isTutorial) {
-                world = WorldDirector.constructTutorialWorld(new WorldBuilder(), seed).getWorld();
+                world = WorldDirector.constructTutorialWorld(new WorldBuilder(), seed, true).getWorld();
             } else {
                 // Creating the world
                 world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), seed, 4, true).getWorld();

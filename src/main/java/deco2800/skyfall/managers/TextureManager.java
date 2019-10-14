@@ -204,6 +204,15 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("rock", new Texture("resources/rocks.png"));
 
+            // Tutorial Textures
+            textureMap.put("story", new Texture("resources/tutorial/story.png"));
+            textureMap.put("your_mission", new Texture("resources/tutorial/your_mission.png"));
+            textureMap.put("tutorial_1", new Texture("resources/tutorial/tutorial_1.png"));
+            textureMap.put("tutorial_2", new Texture("resources/tutorial/tutorial_2.png"));
+            textureMap.put("tutorial_3", new Texture("resources/tutorial/tutorial_3.png"));
+            textureMap.put("tutorial_4", new Texture("resources/tutorial/tutorial_4.png"));
+            textureMap.put("tutorial_5", new Texture("resources/tutorial/tutorial_5.png"));
+
             files = new File("resources/world_details").listFiles();
             if (files == null) {
                 throw new FileNotFoundException();

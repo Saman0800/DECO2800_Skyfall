@@ -115,7 +115,7 @@ public class WorldDirector {
      *
      * @param builder The builder used to construct the world
      */
-    public static WorldBuilder constructTutorialWorld(WorldBuilder builder, long seed) {
+    public static WorldBuilder constructTutorialWorld(WorldBuilder builder, long seed, boolean renderUI) {
         Random random = new Random(seed);
 
         MainCharacter mainCharacter = MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
@@ -123,9 +123,6 @@ public class WorldDirector {
         mainCharacter.setRow(0);
 
         builder.addEntity(mainCharacter);
-
-        builder.addEntity(new Scout(0, 2, 1f, "Forest"));
-        builder.addEntity(new Heavy(7, 9, 2f, "Forest"));
 
         builder.addLake(5);
         builder.addRiver();
@@ -137,10 +134,17 @@ public class WorldDirector {
         builder.setType("tutorial");
         builder.setSeed(2);
         builder.setStaticEntities(true);
-        builder.addEntity(new Heavy(4, 1, 2f, "Forest"));
         builder.addBiome(new ForestBiome(random), 20);
         builder.addBiome(new DesertBiome(random), 20);
         builder.addBiome(new MountainBiome(random), 20);
+
+        if (renderUI) {
+            StatisticsManager sm = new StatisticsManager(mainCharacter);
+            GameManager.addManagerToInstance(sm);
+            GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
+            gmm.addStatsManager(sm);
+            gmm.drawAllElements();
+        }
 
         return builder;
     }
