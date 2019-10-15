@@ -5,15 +5,15 @@ import java.util.Objects;
 import static deco2800.skyfall.util.MathUtil.clamp;
 
 /**
- * An implementation of vec2
- * more convenient than array.
+ * An implementation of vec2 more convenient than array.
  */
 public class vec2 {
-    public float x;
-    public float y;
+    private float x;
+    private float y;
 
     /**
      * Component wise constructor
+     * 
      * @param x x component
      * @param y y component
      */
@@ -24,6 +24,7 @@ public class vec2 {
 
     /**
      * Alternative constructor for single value initialisation
+     * 
      * @param a value set to each component
      */
     public vec2(float a) {
@@ -47,6 +48,7 @@ public class vec2 {
 
     /**
      * returns a vec2 with each component clamped
+     * 
      * @param min minimum value for each component
      * @param max minimum value for each component
      * @return must be caught, vec2 called against will not be changed
@@ -56,32 +58,26 @@ public class vec2 {
     }
 
     /**
-     * Tests equality of components
-     * Will cast down vec3 and return true if z = 0
-     * @return true iff obj is equivalent vec2,
-     * or vec3 with equivalent x,y and z = 0
+     * Tests equality of components Will cast down vec3 and return true if z = 0
+     * 
+     * @return true iff obj is equivalent vec2, or vec3 with equivalent x,y and z =
+     *         0
      */
     @Override
     public boolean equals(Object obj) {
         vec2 v;
         if (obj instanceof vec2) {
-            v = (vec2)obj;
-        }
-        else if (obj instanceof vec3) {
-            if (((vec3) obj).z != 0.0f) {
+            v = (vec2) obj;
+        } else if (obj instanceof vec3) {
+            if (((vec3) obj).getZ() != 0.0f) {
                 return false;
             }
-            v = new vec2(((vec3) obj).x , ((vec3) obj).y);
-        }
-        else {
+            v = new vec2(((vec3) obj).getX(), ((vec3) obj).getY());
+        } else {
             return false;
         }
 
-        if (v.x == this.x && v.y == this.y) {
-            return true;
-        }
-
-        return false;
+        return v.x == this.x && v.y == this.y;
     }
 
     @Override

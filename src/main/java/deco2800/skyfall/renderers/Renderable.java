@@ -32,6 +32,12 @@ public interface Renderable {
     float getRow();
 
     /**
+     * Getter for the angle of the renderable object
+     * @return the angle of the object
+     */
+    float getAngle();
+
+    /**
      * Getter for the height coordinate of the renderable object
      * @return the height coordinate of the object
      */
