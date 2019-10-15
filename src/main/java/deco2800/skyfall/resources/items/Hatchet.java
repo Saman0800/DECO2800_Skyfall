@@ -102,7 +102,9 @@ public class Hatchet extends ManufacturedResources implements Blueprint {
             }
         }
         this.decreaseDurability();
-        logger.warn("Durability: %d", this.getDurability());
+
+        String message = String.format("Durability: %d", this.getDurability());
+        logger.warn(message);
     }
 
 }

@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.Map.Entry;
 
 
 import static deco2800.skyfall.buildings.BuildingType.*;
@@ -1302,12 +1303,12 @@ public class MainCharacter extends Peon
      */
     public void removeGold(Integer goldValue) {
         // if this gold value does not exist in the pouch
-        if (!(goldPouch.containsKey(goldValue))) {
-            return;
-        } else if (goldPouch.get(goldValue) > 1) {
-            goldPouch.put(goldValue, goldPouch.get(goldValue) - 1);
-        } else {
-            goldPouch.remove(goldValue);
+        if (goldPouch.containsKey(goldValue)) {
+            if (goldPouch.get(goldValue) > 1) {
+                goldPouch.put(goldValue, goldPouch.get(goldValue) - 1);
+            } else {
+                goldPouch.remove(goldValue);
+            }
         }
     }
 
@@ -1352,7 +1353,7 @@ public class MainCharacter extends Peon
     public Integer getGoldPouchTotalValue() {
         int totalValue = 0;
 
-        for (HashMap.Entry<Integer, Integer> entry : goldPouch.entrySet()) {
+        for (Entry<Integer, Integer> entry : goldPouch.entrySet()) {
             totalValue += entry.getKey() * entry.getValue();
         }
         return totalValue;
