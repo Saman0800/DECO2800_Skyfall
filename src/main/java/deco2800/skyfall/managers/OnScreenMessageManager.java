@@ -1,10 +1,11 @@
 package deco2800.skyfall.managers;
 
-import java.util.List;
-import java.util.ArrayList;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.handlers.KeyboardManager;
 import deco2800.skyfall.observers.KeyTypedObserver;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class OnScreenMessageManager extends AbstractManager implements KeyTypedObserver {
 	private List<String> messages = new ArrayList<>();
