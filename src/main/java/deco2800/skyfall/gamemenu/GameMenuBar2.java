@@ -315,4 +315,10 @@ public class GameMenuBar2 extends AbstractUIElement {
     public void setEquipped(String itemName) {
         equipped.setText(itemName);
     }
+
+    @Override
+    public void update() {
+        super.update();
+        setEquipped(gmm.getMainCharacter().getEquippedItem().getName());
+    }
 }

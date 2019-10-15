@@ -22,9 +22,10 @@ import deco2800.skyfall.managers.TextureManager;
 public class PauseTable extends AbstractPopUpElement{
     private Skin skin;
     private Table table;
+
     private SoundManager sound;
-//    private float volume;
     private GameScreen game;
+
 
 
     /**
@@ -44,7 +45,6 @@ public class PauseTable extends AbstractPopUpElement{
         this.skin = skin;
         this.draw();
         sound = GameManager.getManagerFromInstance(SoundManager.class);
-//        volume = 100f;
     }
 
     /**
@@ -104,7 +104,7 @@ public class PauseTable extends AbstractPopUpElement{
         soundEffectsBar.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                sound.setSoundVolume(soundEffectsBar.getValue());
+                SoundManager.setSoundVolume(soundEffectsBar.getValue());
             }
         });
 
@@ -120,7 +120,7 @@ public class PauseTable extends AbstractPopUpElement{
         musicBar.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                sound.setMusicVolume(musicBar.getValue());
+                SoundManager.setMusicVolume(musicBar.getValue());
             }
         });
 
@@ -171,10 +171,6 @@ public class PauseTable extends AbstractPopUpElement{
         table.setVisible(false);
         stage.addActor(table);
     }
-//
-//    private float setMusicVolume() {
-//        sound.setVolume(volume);
-//    }
 
 
 }
