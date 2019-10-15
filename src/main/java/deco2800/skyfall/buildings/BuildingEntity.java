@@ -600,25 +600,6 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
         // Add the projectile entity to the game world.
         GameManager.get().getWorld().addEntity(projectile);
 
-        // Play weapon attack sound
-        switch (equippedItem.getName()) {
-        case "sword":
-            SoundManager.playSound(SWORDATTACK);
-            break;
-        case "spear":
-            SoundManager.playSound(SPEARATTACK);
-            break;
-        case "bow":
-            SoundManager.playSound(BOWATTACK);
-            break;
-        case "axe":
-            SoundManager.playSound(AXEATTACK);
-            break;
-        default:
-            SoundManager.playSound(HURT_SOUND_NAME);
-            break;
-        }
-
     }
 
 }
