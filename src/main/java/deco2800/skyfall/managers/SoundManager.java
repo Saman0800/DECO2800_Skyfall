@@ -38,6 +38,7 @@ public class SoundManager extends AbstractManager {
     private static float gameSoundVolume;
     private static float gameMusicVolume;
 
+
     /**
      * Initialize SoundManager by adding different sounds in a map
      */
@@ -211,7 +212,9 @@ public class SoundManager extends AbstractManager {
         if (!paused) {
             if (soundMap.containsKey(soundName)) {
                 Sound sound = soundMap.get(soundName);
+
                 sound.play(gameSoundVolume);
+
                 return true;
             } else if (musicMap.containsKey(soundName)) {
                 Music music = musicMap.get(soundName);
@@ -237,7 +240,9 @@ public class SoundManager extends AbstractManager {
         if (!paused) {
             if (soundMap.containsKey(soundName)) {
                 Sound sound = soundMap.get(soundName);
+
                 sound.loop(gameSoundVolume);
+
                 // Add to the sounds which are being looped
                 soundLoops.put(soundName, soundMap.get(soundName));
             } else if (musicMap.containsKey(soundName)) {
@@ -424,5 +429,6 @@ public class SoundManager extends AbstractManager {
             music.dispose();
         }
     }
+
 
 }

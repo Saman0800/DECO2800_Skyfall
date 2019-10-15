@@ -9,6 +9,7 @@ import deco2800.skyfall.entities.vehicle.SandCar;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.*;
 import deco2800.skyfall.entities.worlditems.*;
 
@@ -94,16 +95,28 @@ public class WorldDirector {
         }
 
         builder.addEntity(mainCharacter);
+
+        float bikeCol = 0;
+        float bikeRow = 0;
+
+        for (AbstractBiome b : builder.getWorld().getBiomes()) {
+            Random rand = new Random();
+            if (b.getBiomeName().equals("forest")) {
+                Tile t = b.getTiles().get(rand.nextInt(b.getTiles().size()));
+                bikeCol = t.getCol();
+                bikeRow = t.getRow();
+            }
+            if (b.getBiomeName().equals("desert")) {
+                builder.addEntity(new SandCar(-20f,-2f, mainCharacter));
+            }
+        }
+        builder.addEntity(new Bike(bikeCol,bikeRow,mainCharacter));
         builder.addEntity(new LizardHome(0, 2, mainCharacter));
         builder.addEntity(new IceWhitebear(-2, 0, mainCharacter));
-        builder.addEntity(new Bike(-10f,-2f,mainCharacter));
-        builder.addEntity(new SandCar(-20f,-2f, mainCharacter));
+//        builder.addEntity(new SandCar(-20f,-2f, mainCharacter));
         builder.addEntity(new Scout(0, 2, 0.4f, "Forest"));
         builder.addEntity(new Heavy(7, 9, 0.2f, "Forest"));
         builder.addEntity(new Abductor(4, 9, 0.8f, "Forest"));
-
-        builder.addEntity(new Camel(34, -7, mainCharacter));
-        builder.addEntity(new Horse(-8,-6, mainCharacter));
 
         builder.addEntity(new hotSpring(2,10, mainCharacter));
 
