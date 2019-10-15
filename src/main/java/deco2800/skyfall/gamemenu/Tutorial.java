@@ -42,7 +42,7 @@ public class Tutorial extends AbstractUIElement {
         /*empty because of reasons*/
     }
 
-    private String getTutPage(int x) {
+    public String getTutPage(int x) {
         // increment some variable every time click next on the tutorial pages
         // have corresponding in the list to cycle through properly
 
@@ -118,8 +118,9 @@ public class Tutorial extends AbstractUIElement {
         }
     }
 
-    private void takeHome() {
-        gameMenuMan.getGame().create();
+    public void takeHome() {
         ((Game) Gdx.app.getApplicationListener()).setScreen(gameMenuMan.getGame().getMainMenuScreen());
+//        gameMenuMan.getGame().create();
+
     }
 }
