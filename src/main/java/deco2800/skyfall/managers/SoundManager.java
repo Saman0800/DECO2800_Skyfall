@@ -325,7 +325,7 @@ public class SoundManager extends AbstractManager {
             music.pause();
             return true;
         } else {
-            // LOGGER.info("There does not exist a {} sound", soundName);
+
             return false;
         }
     }

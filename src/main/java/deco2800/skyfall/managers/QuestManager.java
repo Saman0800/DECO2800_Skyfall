@@ -79,7 +79,7 @@ public class QuestManager extends TickableManager {
                 setStoneTotal(10);
                 setMetalTotal(10);
                 setBuildingsTotal(levelOneBuildings);
-                setWeaponTotal("sword", 2);
+                setWeaponTotal("sword", 10);
                 setWeaponTotal("bow", 0);
                 setWeaponTotal("spear", 0);
                 setWeaponTotal("axe", 0);
@@ -232,7 +232,7 @@ public class QuestManager extends TickableManager {
     }
 
     /**
-     * Get number fo weapons to collect
+     * Get number of weapons to collect
      * @param weapon weapon to check
      * @return the number of weapons to be collected to complete quest
      */

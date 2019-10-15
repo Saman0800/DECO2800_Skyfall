@@ -49,7 +49,6 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("spacman_ded", new Texture("resources/spacman_ded.png"));
             textureMap.put("spacman_blue", new Texture("resources/spacman_blue.png"));
-            textureMap.put("bowman", new Texture("resources/bowman.png"));
             textureMap.put("dialogue_text_background", new Texture("resources/dialogue_text_background.png"));
 
             textureMap.put("tornado_placeholder", new Texture("resources/spells/tornado_3.png"));
@@ -202,7 +201,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("fenceSE-SW", new Texture("resources/fence SE-SW.png"));
             textureMap.put("fenceNW-S", new Texture("resources/fence NW-S.png"));
 
-            textureMap.put("rock", new Texture("resources/rocks.png"));
+
 
             files = new File("resources/world_details").listFiles();
             if (files == null) {
@@ -335,7 +334,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("menu_panel", new Texture("resources/menu_panel.png"));
             textureMap.put("exitButton", new Texture("resources/exit_button.png"));
             textureMap.put("inv_button", new Texture("resources/inv_button.png"));
-            textureMap.put("Sand", new Texture("resources/temp_sand.png"));
             textureMap.put("Select", new Texture("resources/item_selected.png"));
             textureMap.put("quick_access_panel", new Texture("quick_access_panel.png"));
             textureMap.put("drop", new Texture("resources/inventory/drop_active.png"));

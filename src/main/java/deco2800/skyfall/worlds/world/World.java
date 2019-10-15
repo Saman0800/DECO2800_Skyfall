@@ -94,6 +94,9 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
     // Import coin sound effect
     public static final String GOLD_SOUND_EFFECT = "coins";
 
+    // Item pick-up sound effect
+    private static final String PICK_UP_SOUND = "pick_up";
+
 
     /**
      * The constructor used to create a simple dummey world, used for displaying world information on the
@@ -209,7 +212,7 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
         int worldSize = worldParameters.getWorldSize();
         int nodeSpacing = worldParameters.getNodeSpacing();
         int nodeCount = Math.round((float) worldSize * worldSize * 4 / nodeSpacing / nodeSpacing);
-        // TODO: if nodeCount is less than the number of biomes, throw an exception
+
 
         for (int i = 0; i < nodeCount; i++) {
             // Sets coordinates to a random number from -WORLD_SIZE to WORLD_SIZE
@@ -567,6 +570,7 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
                 MainCharacter mc = gmm.getMainCharacter();
                 if (tile.getCoordinates().distance(mc.getPosition()) <= 2) {
                     entityToBeDeleted = entity;
+                    SoundManager.playSound(PICK_UP_SOUND);
                     gmm.getInventory().add((Item) entity);
                 }
             } else if (entity instanceof Chest) {
