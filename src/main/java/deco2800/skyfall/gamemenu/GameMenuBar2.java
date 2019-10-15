@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.weapons.EmptyItem;
 import deco2800.skyfall.gamemenu.popupmenu.InventoryTable;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InventoryManager;
@@ -109,7 +110,7 @@ public class GameMenuBar2 extends AbstractUIElement {
         equippedTable.setBackground(gmm.generateTextureRegionDrawableObject("equipped_bar"));
         equippedTable.setSize(150, 100);
         // Equipped item text
-        equipped = new Label("Nothing", skin, "white-text");
+        equipped = new Label(new EmptyItem().getName(), skin, "white-text");
         equipped.setFontScale(0.7f);
         equippedTable.add(equipped).padBottom(10);
         stage.addActor(equippedTable);
@@ -160,7 +161,7 @@ public class GameMenuBar2 extends AbstractUIElement {
             public void clicked(InputEvent event, float x, float y) {
                 if (!quickAccessSelected.isEmpty() && !isInventoryTableOn) {
                     inventory.quickAccessRemove(quickAccessSelected);
-                    quickAccessSelected = "Nothing";
+                    quickAccessSelected = new EmptyItem().getName();
                     removeQuickAccessPanel();
                     setQuickAccessPanel();
                 }
@@ -200,8 +201,6 @@ public class GameMenuBar2 extends AbstractUIElement {
 
         int size = 80;
 
-        String[] weapons = { "axe", "box", "spear", "sword" };
-
         float sideBarWidth = 35;
 
         // Places each item to quick access
@@ -213,14 +212,11 @@ public class GameMenuBar2 extends AbstractUIElement {
             selected.setVisible(false);
 
             String weaponName = entry.getKey();
-            for (String weapon : weapons) {
-                if (weapon.equals(entry.getKey())) {
-                    weaponName = entry.getKey() + "_tex";
-                }
-            }
+
             Table iconCell = new Table();
             iconCell.setName("iconCell");
-            ImageButton icon = new ImageButton(gmm.generateTextureRegionDrawableObject(weaponName + "_inv"));
+            ImageButton icon =
+                    new ImageButton(gmm.generateTextureRegionDrawableObject(weaponName + "_inv"));
             icon.setName(entry.getKey());
 
             icon.addListener(new ClickListener() {
@@ -232,7 +228,7 @@ public class GameMenuBar2 extends AbstractUIElement {
                     if (!quickAccessSelected.equals(icon.getName())) {
                         quickAccessSelected = icon.getName();
                     } else {
-                        quickAccessSelected = "Nothing";
+                        quickAccessSelected = new EmptyItem().getName();
                     }
 
                     Actor selected = stage.getRoot().findActor(icon.getName() + "-qaSelected");
