@@ -598,6 +598,8 @@ public class MainCharacter extends Peon
      *
      * @param mousePosition The position of the user's mouse.
      */
+    protected Projectile currentProjectile = null;
+    protected boolean currentAttackIsMelee = false;
     protected void fireProjectile(HexVector mousePosition) {
         HexVector unitDirection = mousePosition.subtract(this.getPosition()).normalized();
 
@@ -608,24 +610,32 @@ public class MainCharacter extends Peon
         int bowRange = equippedItem.getName().equals("bow") ? 10 : 0;
         int range = this.itemSlotSelected == 1 ? bowRange : 0;
 
-        Projectile projectile;
+        if(!(equippedItem instanceof Weapon)) {
+            return;
+        }
+
+        if (currentProjectile != null && !(currentProjectile.beenDestroyed)) {
+            return;
+        }
+
+        currentAttackIsMelee = !(equippedItem.getName().equals("bow"));
 
         //If there is a default projectile selected to fire, use that.
         if (defaultProjectile == null) {
-            projectile = new Projectile(mousePosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
-                    new HexVector(position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
-                            position.getRow() + 0.5f + 1.5f * unitDirection.getRow()),
+            currentProjectile = new Projectile(mousePosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
+                    new HexVector(position.getCol() + 0.5f + 1.5f * (currentAttackIsMelee ? unitDirection.getRow() : unitDirection.getCol()),
+                            position.getRow() + 0.5f + 1.5f * (currentAttackIsMelee ? -unitDirection.getCol() : unitDirection.getRow())),
                     ((Weapon)equippedItem).getDamage(),
                     1,
                     range);
         } else {
-            projectile = defaultProjectile;
+            currentProjectile = defaultProjectile;
         }
 
-        projectile.setAngle(180.f + (float)Math.toDegrees(Math.atan2(unitDirection.getRow(), unitDirection.getCol())));
+        currentProjectile.setAngle((currentAttackIsMelee ? -90.f : 0.f) + 180.f + (float)Math.toDegrees(Math.atan2(unitDirection.getRow(), unitDirection.getCol())));
 
         // Add the projectile entity to the game world.
-        GameManager.get().getWorld().addEntity(projectile);
+        GameManager.get().getWorld().addEntity(currentProjectile);
 
         // Play weapon attackEntity sound
         switch((equippedItem).getName()) {
@@ -1008,6 +1018,21 @@ public class MainCharacter extends Peon
         this.manaCD++;
         if (this.manaCD > totalManaCooldown) {
             this.restoreMana();
+        }
+
+        if (currentProjectile != null && !(currentProjectile.beenDestroyed)
+                && currentAttackIsMelee) {
+            final float radius = 1.5f;
+            float currentAngle = currentProjectile.getAngle();
+            currentProjectile.setAngle(currentAngle + 12.f);
+
+            currentProjectile.setPosition((currentProjectile.getPosition()
+                    .add(new HexVector(
+                            (float)(radius * Math.cos(Math.toRadians(currentAngle))),
+                            (float)(radius * Math.sin(Math.toRadians(currentAngle))))))
+                    .subtract(new HexVector(
+                            (float)(radius * Math.cos(Math.toRadians(currentAngle + 12.f))),
+                            (float)(radius * Math.sin(Math.toRadians(currentAngle + 12.f))))));
         }
 
         if (isHurt) {
