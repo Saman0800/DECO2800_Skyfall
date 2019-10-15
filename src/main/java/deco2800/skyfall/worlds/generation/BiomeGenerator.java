@@ -14,9 +14,6 @@ import java.util.stream.Collectors;
  * Builds biomes from the nodes generated in the previous phase of the world generation.
  */
 public class BiomeGenerator implements BiomeGeneratorInterface {
-    /** The fraction of the original number of tiles that must remain in each biome after contiguity processing */
-    private static final double CONTIGUOUS_TILE_RETENTION_THRESHOLD = 0.75;
-
     /** The world this is generating biomes for */
     private final World world;
 
@@ -50,15 +47,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
     private int noLakes;
     private int[] lakeSizes;
     private int noRivers;
-
-    // Half the width of a river
-    private double riverWidth;
-    private double beachWidth;
-
-    private List<VoronoiEdge> riverEdges;
-    private List<VoronoiEdge> beachEdges;
-
-    // TODO Remove `noLakes` parameter (replace with `lakeSizes.length`).
 
     /**
      * Creates a {@code BiomeGenerator} for a list of nodes (but does not start the generation).
@@ -101,11 +89,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
         this.centerNode = calculateCenterNode();
         this.noLakes = worldParameters.getNumOfLakes();
         this.noRivers = worldParameters.getNoRivers();
-        this.riverWidth = worldParameters.getRiverWidth();
-        this.beachWidth = worldParameters.getBeachWidth();
         this.lakeSizes = worldParameters.getLakeSizesArray();
-        this.riverEdges = new ArrayList<>();
-        this.beachEdges = new ArrayList<>();
     }
 
     /**
@@ -159,15 +143,26 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                     biome.getTiles().clear();
                 }
                 // Remove all biomes that were added to the list during generation.
-                while (realBiomes.size() > biomeSizes.length) {
-                    realBiomes.remove(realBiomes.size() - 1);
-                }
+                truncateList(realBiomes, biomeSizes.length);
 
                 // If the generation reached a dead-end, try again.
                 if (i >= 5) {
                     throw e;
                 }
             }
+        }
+    }
+
+    /**
+     * Truncates a list until it is less than or equal to the desired size.
+     *
+     * @param list        the list to truncate
+     * @param desiredSize the size to which to truncate
+     * @param <T>         the type of the elements in the list
+     */
+    private <T> void truncateList(List<T> list, int desiredSize) {
+        while (list.size() > desiredSize && !list.isEmpty()) {
+            list.remove(list.size() - 1);
         }
     }
 
@@ -294,78 +289,14 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
         List<BiomeInProgress> lakesFound = new ArrayList<>();
         for (int i = 0; i < noLakes; i++) {
             // Nodes found for this lake
-            List<WorldGenNode> nodesFound = new ArrayList<>();
-            int attempts = 0;
-            while (true) {
-                attempts++;
-                // TODO implement something better than this
-                // If there hasn't been a valid spot for a lake found after enough
-                // attempts, assume there is no valid spot
-                if (attempts > usedNodes.size()) {
-                    throw new DeadEndGenerationException();
-                }
-                // Try to find a valid node to start a lake
-                WorldGenNode chosenNode = nodes.get(random.nextInt(nodes.size()));
-                if (!validLakeNode(chosenNode, tempLakeNodes)) {
-                    continue;
-                }
-
-                // Add the initial node
-                nodesFound.clear();
-                nodesFound.add(chosenNode);
-
-                // Find nodes to expand to
-                for (int j = 1; j < lakeSizes[i]; j++) {
-                    ArrayList<WorldGenNode> growToCandidates = new ArrayList<>();
-                    // All neighbours of lake nodes that are valid via validLakeNode
-                    // are possible candidates to grow to
-                    for (WorldGenNode node : nodesFound) {
-                        for (WorldGenNode neighbour : node.getNeighbours()) {
-                            if (validLakeNode(neighbour, tempLakeNodes) && !nodesFound.contains(neighbour)) {
-                                growToCandidates.add(neighbour);
-                            }
-                        }
-                    }
-                    // Don't attempt to add null
-                    if (growToCandidates.isEmpty()) {
-                        break;
-                    }
-                    // Add a random candidate
-                    WorldGenNode newNode = growToCandidates.get(random.nextInt(growToCandidates.size()));
-                    nodesFound.add(newNode);
-                }
-
-                if (nodesFound.size() < lakeSizes[i]) {
-                    continue;
-                }
-                break;
-            }
+            List<WorldGenNode> nodesFound = findPossibleLakeLocation(lakeSizes[i], tempLakeNodes);
 
             // Add the lake
             lakesFound.add(new BiomeInProgress(biomes.size() + i, null));
             chosenNodes.add(nodesFound);
             tempLakeNodes.addAll(nodesFound);
 
-            // Calculates how many nodes from each biome contribute to the lake
-            // To determine the lake's parent biome
-            HashMap<BiomeInProgress, Integer> nodesInBiome = new HashMap<>();
-            for (WorldGenNode node : nodesFound) {
-                BiomeInProgress biome = nodesBiomes.get(node);
-                if (!nodesInBiome.containsKey(biome)) {
-                    nodesInBiome.put(biome, 1);
-                } else {
-                    nodesInBiome.put(biome, nodesInBiome.get(biome) + 1);
-                }
-            }
-
-            // Get the biome that contributes the most nodes
-            BiomeInProgress maxNodesBiome = null;
-            for (BiomeInProgress biome : nodesInBiome.keySet()) {
-                if (maxNodesBiome == null || nodesInBiome.get(biome) > nodesInBiome.get(maxNodesBiome)) {
-                    maxNodesBiome = biome;
-                }
-            }
-
+            BiomeInProgress maxNodesBiome = findParentBiomeForLake(nodesFound);
             maxNodesBiomes.add(maxNodesBiome);
         }
 
@@ -383,6 +314,107 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 lake.addNode(node);
             }
         }
+    }
+
+    /**
+     * Finds a valid location for a lake.
+     *
+     * @param size          the size of the lake in nodes
+     * @param tempLakeNodes the lake nodes
+     *
+     * @return the list of nodes to comprise the lake
+     *
+     * @throws DeadEndGenerationException if too many attempts fail
+     */
+    private List<WorldGenNode> findPossibleLakeLocation(int size, List<WorldGenNode> tempLakeNodes)
+            throws DeadEndGenerationException {
+        List<WorldGenNode> nodesFound = new ArrayList<>();
+        int attempts = 0;
+        while (true) {
+            attempts++;
+            // If there hasn't been a valid spot for a lake found after enough
+            // attempts, assume there is no valid spot
+            if (attempts > usedNodes.size()) {
+                throw new DeadEndGenerationException();
+            }
+            // Try to find a valid node to start a lake
+            WorldGenNode chosenNode = nodes.get(random.nextInt(nodes.size()));
+            if (!validLakeNode(chosenNode, tempLakeNodes)) {
+                continue;
+            }
+
+            // Add the initial node
+            nodesFound.clear();
+            nodesFound.add(chosenNode);
+            expandLakeNodes(size, tempLakeNodes, nodesFound);
+
+            if (nodesFound.size() < size) {
+                continue;
+            }
+
+            return nodesFound;
+        }
+    }
+
+    /**
+     * Expands the lake from a single node to the given size. The list of nodes provided should initially contain only
+     * one node and should be modifiable. The result will be added to the list of nodes.
+     *
+     * @param size          the desired number of nodes
+     * @param tempLakeNodes the temporary lake nodes
+     * @param nodesFound    the list of nodes for the lake
+     */
+    private void expandLakeNodes(int size, List<WorldGenNode> tempLakeNodes, List<WorldGenNode> nodesFound) {
+        // Find nodes to expand to
+        for (int j = 1; j < size; j++) {
+            ArrayList<WorldGenNode> growToCandidates = new ArrayList<>();
+            // All neighbours of lake nodes that are valid via validLakeNode
+            // are possible candidates to grow to
+            for (WorldGenNode node : nodesFound) {
+                for (WorldGenNode neighbour : node.getNeighbours()) {
+                    if (validLakeNode(neighbour, tempLakeNodes) && !nodesFound.contains(neighbour)) {
+                        growToCandidates.add(neighbour);
+                    }
+                }
+            }
+            // Don't attempt to add null
+            if (growToCandidates.isEmpty()) {
+                break;
+            }
+            // Add a random candidate
+            WorldGenNode newNode = growToCandidates.get(random.nextInt(growToCandidates.size()));
+            nodesFound.add(newNode);
+        }
+    }
+
+    /**
+     * Calculate the parent biome for a lake with the given nodes.
+     *
+     * @param nodesFound the nodes of the lake
+     *
+     * @return the parent biome
+     */
+    private BiomeInProgress findParentBiomeForLake(List<WorldGenNode> nodesFound) {
+        // Calculates how many nodes from each biome contribute to the lake
+        // To determine the lake's parent biome
+        HashMap<BiomeInProgress, Integer> nodesInBiome = new HashMap<>();
+        for (WorldGenNode node : nodesFound) {
+            BiomeInProgress biome = nodesBiomes.get(node);
+            if (!nodesInBiome.containsKey(biome)) {
+                nodesInBiome.put(biome, 1);
+            } else {
+                nodesInBiome.put(biome, nodesInBiome.get(biome) + 1);
+            }
+        }
+
+        // Get the biome that contributes the most nodes
+        BiomeInProgress maxNodesBiome = null;
+        for (Map.Entry<BiomeInProgress, Integer> entry : nodesInBiome.entrySet()) {
+            if (maxNodesBiome == null || entry.getValue() > nodesInBiome.get(maxNodesBiome)) {
+                maxNodesBiome = entry.getKey();
+            }
+        }
+        return maxNodesBiome;
     }
 
     /**

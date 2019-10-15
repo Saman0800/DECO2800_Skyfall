@@ -33,8 +33,9 @@ public class RiverBiome extends AbstractBiome {
     @Override
     public void setTileTexture(Tile tile) {
         ArrayList<String> textures = new ArrayList<>();
-        textures.add("lake_1");
-        textures.add("lake_2");
+        textures.add("lake1.1");
+        textures.add("lake1.2");
+        textures.add("lake1.3");
 
         double perlinValue =
                 NoiseGenerator.fade(textureGenerator.getOctavedPerlinValue(tile.getCol(), tile.getRow()), 2);

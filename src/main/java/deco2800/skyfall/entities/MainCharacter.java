@@ -121,9 +121,6 @@ public class MainCharacter extends Peon
     private PetsManager petsManager;
     private BuildingFactory tempFactory;
 
-    // List of the Biomes locked
-    private List<String> lockedBiomes;
-
     /*
         What stage of the game is the player on? Controls what blueprints
         the player can buy and make.
@@ -267,7 +264,6 @@ public class MainCharacter extends Peon
         this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
         this.setHeight(1);
         this.setObjectName("MainPiece");
-        initialiselockedBiomes();
         GameManager.getManagerFromInstance(InputManager.class).addKeyDownListener(this);
         GameManager.getManagerFromInstance(InputManager.class).addKeyUpListener(this);
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
@@ -325,7 +321,6 @@ public class MainCharacter extends Peon
         this.setHeight(1);
         this.setObjectName("MainPiece");
         this.setMaxHealth(health);
-        initialiselockedBiomes();
         constructedBuildings = new ArrayList<>();
         craftedBuildings = new ArrayList<>();
 
@@ -386,7 +381,6 @@ public class MainCharacter extends Peon
     private MainCharacter(float col, float row, float speed, String name, int health, String[] textures) {
         this(col, row, speed, name, health);
         this.setTexture(textures[2]);
-        initialiselockedBiomes();
     }
 
     /**
@@ -422,36 +416,6 @@ public class MainCharacter extends Peon
             gameMenuManager.getPopUp("gameOverTable");
             logger.info("Game Over");
         }
-    }
-
-    /**
-     * Initialises all of the biomes as "unlocked" except the first biome (forest)
-     */
-    private void initialiselockedBiomes() {
-        lockedBiomes = new ArrayList<>();
-
-        lockedBiomes.add("desert");
-        lockedBiomes.add("mountain");
-        lockedBiomes.add("volcanic_mountains");
-
-    }
-
-    /**
-     * Gets all of the "locked" biomes
-     *
-     * @return lockedBiomes - a list of all of the locked biomes
-     */
-    public List<String> getlockedBiomes() {
-        return lockedBiomes;
-    }
-
-    /**
-     * Removes a biome from the locked list ("unlocking a biome")
-     *
-     * @param biome - The biome to "unlock"
-     */
-    public void unlockBiome(String biome) {
-        lockedBiomes.remove(biome);
     }
 
     /**
@@ -1159,7 +1123,6 @@ public class MainCharacter extends Peon
                     vehicleTexture("sand_car");
                     maxSpeed=10f;
                     vehicleType = "sand_car";
-                    unlockBiome("desert");
                 }
             }
 
@@ -1172,7 +1135,6 @@ public class MainCharacter extends Peon
             if (vehicleType.equals("sand_car")) {
                 defaultDirectionTextures = defaultMainCharacterTextureMap;
                 isOnVehicle=false;
-                lockedBiomes.add("desert");
                 GameManager.get().getWorld().addEntity(new SandCar(this.getCol(),this.getRow(),this));
             }
         }
@@ -1395,13 +1357,6 @@ public class MainCharacter extends Peon
         if (tile != null && (tile.getTextureName().contains("water") || tile.getTextureName().contains("lake")
             || tile.getTextureName().contains("ocean")) && !canSwim) {
             valid = false;
-        }
-
-        for (String s : lockedBiomes) {
-            if (tile != null && tile.getTextureName().contains(s)) {
-                valid = false;
-                break;
-            }
         }
 
         return valid;
