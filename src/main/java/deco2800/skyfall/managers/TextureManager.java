@@ -6,9 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Texture manager acts as a cache between the file system and the renderers.
@@ -63,6 +61,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("camel_character", new Texture("resources/camel/camel-withplayer1(left).png"));
             textureMap.put("horse_images", new Texture("resources/horse_images/horse-left-walk1.png"));
             textureMap.put("horse_character", new Texture("resources/horse_images/horse-left-walk-with-player1.png"));
+
+            textureMap.put("loading_texture", new Texture("resources/loading_anim.gif"));
 
             // Tile textures
             // Goes through all the folders with tile_textures and adds the tile name to the
@@ -533,14 +533,8 @@ public class TextureManager extends AbstractManager {
             }
 
         } else {
-            // log.info("Texture map does not contain P{}, returning default texture.", id);
-            // TODO fix the issue where tiles are not getting added to lakes correctly,
-            // Temporary fix is just to assign tiles without a texture the lake texture so
-            // that the
-            // issue isn't as noticable
             return textureMap.get("lake1.1");
         }
-
     }
 
     /**

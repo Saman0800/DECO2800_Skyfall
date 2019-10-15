@@ -585,32 +585,20 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
         // Make projectile move toward the angle
         // Spawn projectile in front of character
-        Projectile projectile = new Projectile(enemyPosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
-                new HexVector(position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
-                        position.getRow() + 0.5f + 1.5f * unitDirection.getRow()), ((Weapon) equippedItem).getDamage(), 1,
-                this.itemSlotSelected == 1 ? (equippedItem.getName().equals("bow") ? 10 : 0) : 0);
+        Projectile projectile;
+        if (this.itemSlotSelected == 1)
+            projectile = new Projectile(enemyPosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
+                    new HexVector(position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
+                            position.getRow() + 0.5f + 1.5f * unitDirection.getRow()), ((Weapon) equippedItem).getDamage(), 1,
+                    equippedItem.getName().equals("bow") ? 10 : 0);
+        else
+            projectile = new Projectile(enemyPosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
+                    new HexVector(position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
+                            position.getRow() + 0.5f + 1.5f * unitDirection.getRow()), ((Weapon) equippedItem).getDamage(), 1,
+                    0);
 
         // Add the projectile entity to the game world.
         GameManager.get().getWorld().addEntity(projectile);
-
-        // Play weapon attack sound
-        switch (equippedItem.getName()) {
-        case "sword":
-            SoundManager.playSound(SWORDATTACK);
-            break;
-        case "spear":
-            SoundManager.playSound(SPEARATTACK);
-            break;
-        case "bow":
-            SoundManager.playSound(BOWATTACK);
-            break;
-        case "axe":
-            SoundManager.playSound(AXEATTACK);
-            break;
-        default:
-            SoundManager.playSound(HURT_SOUND_NAME);
-            break;
-        }
 
     }
 
