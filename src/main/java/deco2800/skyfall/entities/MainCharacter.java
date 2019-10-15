@@ -541,6 +541,8 @@ public class MainCharacter extends Peon
      *
      * @param mousePosition The position of the user's mouse.
      */
+    protected Projectile currentProjectile = null;
+    protected boolean currentAttackIsMelee = false;
     protected void fireProjectile(HexVector mousePosition) {
         HexVector unitDirection = mousePosition.subtract(this.getPosition()).normalized();
 
@@ -552,24 +554,32 @@ public class MainCharacter extends Peon
         int bowRange = equippedItem.getName().equals("bow") ? 10 : 0;
         int range = this.itemSlotSelected == 1 ? bowRange : 0;
 
-        Projectile projectile;
+        if(!(equippedItem instanceof Weapon)) {
+            return;
+        }
+
+        if (currentProjectile != null && !(currentProjectile.beenDestroyed)) {
+            return;
+        }
+
+        currentAttackIsMelee = !(equippedItem.getName().equals("bow"));
 
         //If there is a default projectile selected to fire, use that.
         if (defaultProjectile == null) {
-            projectile = new Projectile(mousePosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
-                    new HexVector(position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
-                            position.getRow() + 0.5f + 1.5f * unitDirection.getRow()),
+            currentProjectile = new Projectile(mousePosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
+                    new HexVector(position.getCol() + 0.5f + 1.5f * (currentAttackIsMelee ? unitDirection.getRow() : unitDirection.getCol()),
+                            position.getRow() + 0.5f + 1.5f * (currentAttackIsMelee ? -unitDirection.getCol() : unitDirection.getRow())),
                     ((Weapon)equippedItem).getDamage(),
                     1,
                     range);
         } else {
-            projectile = defaultProjectile;
+            currentProjectile = defaultProjectile;
         }
 
-        projectile.setAngle(180.f + (float)Math.toDegrees(Math.atan2(unitDirection.getRow(), unitDirection.getCol())));
+        currentProjectile.setAngle((currentAttackIsMelee ? -90.f : 0.f) + 180.f + (float)Math.toDegrees(Math.atan2(unitDirection.getRow(), unitDirection.getCol())));
 
         // Add the projectile entity to the game world.
-        GameManager.get().getWorld().addEntity(projectile);
+        GameManager.get().getWorld().addEntity(currentProjectile);
 
         // Play weapon attackEntity sound
         switch((equippedItem).getName()) {
@@ -953,6 +963,21 @@ public class MainCharacter extends Peon
             this.restoreMana();
         }
 
+        if (currentProjectile != null && !(currentProjectile.beenDestroyed)
+                && currentAttackIsMelee) {
+            final float radius = 1.5f;
+            float currentAngle = currentProjectile.getAngle();
+            currentProjectile.setAngle(currentAngle + 12.f);
+
+            currentProjectile.setPosition((currentProjectile.getPosition()
+                    .add(new HexVector(
+                            (float)(radius * Math.cos(Math.toRadians(currentAngle))),
+                            (float)(radius * Math.sin(Math.toRadians(currentAngle))))))
+                    .subtract(new HexVector(
+                            (float)(radius * Math.cos(Math.toRadians(currentAngle + 12.f))),
+                            (float)(radius * Math.sin(Math.toRadians(currentAngle + 12.f))))));
+        }
+
         if (isHurt) {
             checkIfHurtEnded();
         } else if (isRecovering) {
@@ -1060,14 +1085,16 @@ public class MainCharacter extends Peon
                 maxSpeed *= 2.f;
                 break;
             case Input.Keys.SPACE:
-                useEquipped();
+                float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
+                float[] clickedPosition = WorldUtil.worldCoordinatesToSubColRow(mouse[0], mouse[1]);
+                HexVector mousePosition = new HexVector(clickedPosition[0], clickedPosition[1]);
 
-                if (this.equippedItem instanceof Weapon) {
-                    float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
-                    float[] clickedPosition = WorldUtil.worldCoordinatesToSubColRow(mouse[0], mouse[1]);
-                    HexVector mousePosition = new HexVector(clickedPosition[0], clickedPosition[1]);
+                if (spellSelected != SpellType.NONE) {
                     this.attack(mousePosition);
+                } else {
+                    useEquipped();
                 }
+
                 break;
             case Input.Keys.ALT_LEFT:
                 // Attack moved to SPACE
@@ -1585,28 +1612,27 @@ public class MainCharacter extends Peon
         // for portals
         switch (save.getGameStage()) {
         case 3:
-            if (constructedBuildings.contains(SAFEHOUSE)) {
+            if (qm.questFinished()) {
                 unlocked.add(new ForestPortal(0, 0, 0));
             }
             break;
         case 2:
-            if (constructedBuildings.contains(WATCHTOWER)) {
+            if (qm.questFinished()) {
                 unlocked.add(new MountainPortal(0, 0, 0));
             }
             break;
         case 1:
-            if (constructedBuildings.contains(CABIN)) {
+            if (qm.questFinished()) {
                 unlocked.add(new DesertPortal(0, 0, 0));
             }
             break;
         case 0:
-            if (constructedBuildings.contains(CASTLE)) {
+            if (qm.questFinished()) {
                 unlocked.add(new ForestPortal(0, 0, 0));
             }
             break;
         }
         return unlocked;
-
     }
 
     /***

@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class PotateCamera extends OrthographicCamera {
 
-private boolean potate = false;
+private boolean potate = true;
 private boolean goMoveEnabled = true;
 
 	public PotateCamera(int i, int j) {

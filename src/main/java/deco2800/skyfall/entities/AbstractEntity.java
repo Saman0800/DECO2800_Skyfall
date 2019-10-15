@@ -247,6 +247,16 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
     /**
+     * Sets the position of this entity.
+     *
+     * @param vec the new vector of this entity
+     */
+    public void setPosition(HexVector vec) {
+        this.position.setCol(vec.getCol());
+        this.position.setRow(vec.getRow());
+    }
+
+    /**
      * Sets the height coordinate for the entity
      */
     public void setHeight(int z) {

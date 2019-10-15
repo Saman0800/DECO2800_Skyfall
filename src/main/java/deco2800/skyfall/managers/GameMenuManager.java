@@ -403,6 +403,12 @@ public class GameMenuManager extends TickableManager {
         popUps.put("chestTable",new ChestTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this, sm, skin));
+
+        popUps.put("loadingTable", new BuildWorldProgressPopup(stage,
+                new ImageButton(generateTextureRegionDrawableObject(exitText)),
+                null, textureManager, this,
+                skin));
+
     }
 
     /**

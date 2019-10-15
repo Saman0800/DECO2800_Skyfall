@@ -10,6 +10,7 @@ import deco2800.skyfall.buildings.DesertPortal;
 import deco2800.skyfall.buildings.ForestPortal;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.gamemenu.popupmenu.BuildWorldProgressPopup;
 import deco2800.skyfall.graphics.HasPointLight;
 import deco2800.skyfall.graphics.PointLight;
 import deco2800.skyfall.graphics.ShaderWrapper;
@@ -23,7 +24,6 @@ import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.renderers.Renderer3D;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.util.lightinghelpers.*;
-import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.packing.BirthPlacePacking;
 import deco2800.skyfall.worlds.packing.EnvironmentPacker;
 import deco2800.skyfall.worlds.world.World;
@@ -88,6 +88,7 @@ public class GameScreen implements Screen, KeyDownObserver {
     private SpectralValue ambientRed;
     private SpectralValue ambientBlue;
     private SpectralValue ambientGreen;
+
 
     public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
         /* Create an example world for the engine */
@@ -442,6 +443,9 @@ public class GameScreen implements Screen, KeyDownObserver {
             gameManager.setWorld(world);
              */
             // Update the current music
+            //GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
+            //gmm.setPopUp("loadingTable");
+            // TODO: add loading animation when loading world
             ForestPortal portal = new ForestPortal(0, 0, 1);
             portal.teleport(save);
         }

@@ -63,6 +63,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("horse_images", new Texture("resources/horse_images/horse-left-walk1.png"));
             textureMap.put("horse_character", new Texture("resources/horse_images/horse-left-walk-with-player1.png"));
 
+            textureMap.put("loading_texture", new Texture("resources/loading_anim.gif"));
+
             // Tile textures
             // Goes through all the folders with tile_textures and adds the tile name to the
             // textures, it removes

@@ -600,6 +600,7 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
                 MainCharacter mc = gmm.getMainCharacter();
                 switch (e.getBuildingType()) {
                     case FORESTPORTAL:
+                        //TODO :@Kausta - Reset Quests on Right Click
                         ForestPortal forestPortal = new ForestPortal(0, 0, 0);
                         forestPortal.teleport(this.save);
                         break;
