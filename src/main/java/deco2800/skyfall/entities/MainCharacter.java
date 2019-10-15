@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.Map.Entry;
 
 
 import static deco2800.skyfall.buildings.BuildingType.*;
@@ -1338,7 +1339,7 @@ public class MainCharacter extends Peon
     public Integer getGoldPouchTotalValue() {
         int totalValue = 0;
 
-        for (HashMap.Entry<Integer, Integer> entry : goldPouch.entrySet()) {
+        for (Entry<Integer, Integer> entry : goldPouch.entrySet()) {
             totalValue += entry.getKey() * entry.getValue();
         }
         return totalValue;
