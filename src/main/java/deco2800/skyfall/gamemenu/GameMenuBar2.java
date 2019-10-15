@@ -186,6 +186,8 @@ public class GameMenuBar2 extends AbstractUIElement {
 
         stage.addActor(quickAccessPanel);
         stage.addActor(sideBar);
+        quickAccessPanel.setZIndex(1);
+        sideBar.setZIndex(2);
     }
 
     public void removeQuickAccessPanel() {

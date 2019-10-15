@@ -64,11 +64,9 @@ public class InventoryTable extends AbstractPopUpElement {
     //Inventory user interface equip item button (inactive)
     private ImageButton inactiveEquipButton;
 
-    private StatisticsManager sm;
-
     //Logger for Inventory Table
 
-    private final Logger LOGGER =
+    private final Logger logger =
             LoggerFactory.getLogger(InventoryTable.class);
 
 
@@ -88,7 +86,6 @@ public class InventoryTable extends AbstractPopUpElement {
         this.menuManager = gameMenuManager;
         this.inventory = gameMenuManager.getInventory();
         this.mainCharacter = gameMenuManager.getMainCharacter();
-        this.sm = GameManager.getManagerFromInstance(StatisticsManager.class);
 
         if(menuManager.getUIElement("HUD") instanceof HeadsUpDisplay){
             HeadsUpDisplay hud = (HeadsUpDisplay) menuManager.getUIElement("HUD");
@@ -99,6 +96,13 @@ public class InventoryTable extends AbstractPopUpElement {
         this.draw();
     }
 
+    @Override
+    public void update() {
+        super.update();
+        inventoryTable.toFront();
+        infoPanel.toFront();
+    }
+
     /**
      * Hides the inventory pop up
      */
@@ -106,7 +110,7 @@ public class InventoryTable extends AbstractPopUpElement {
     public void hide() {
         super.hide();
         inventorySelected = "";
-        LOGGER.info("Hiding inventory table");
+        logger.info("Hiding inventory table");
         inventoryTable.setVisible(false);
     }
 
@@ -117,7 +121,7 @@ public class InventoryTable extends AbstractPopUpElement {
     public void show() {
         super.show();
         updatePanels();
-        LOGGER.info("Showing inventory table");
+        logger.info("Showing inventory table");
         inventoryTable.setVisible(true);
     }
 
