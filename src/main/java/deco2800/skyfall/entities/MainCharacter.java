@@ -2075,6 +2075,7 @@ public class MainCharacter extends Peon
         this.foodLevel = memento.foodLevel;
         this.foodAccum = memento.foodAccum;
         this.goldPouch = memento.goldPouch;
+        this.setHealth(memento.health);
         // this.blueprintsLearned = memento.blueprints;
         // this.inventories = memento.inventory;
         // this.weapons = memento.weapons;
