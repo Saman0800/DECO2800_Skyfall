@@ -155,7 +155,7 @@ public class ChestTable extends AbstractPopUpElement{
      * @param xspace space between icons
      */
     private void setCounts(Map<String, Integer> inventoryAmounts, int xpos, int ypos, int size, int xspace){
-        int count = 0;
+        float count = 0;
 
         String[] weapons = {"axe", "bow", "spear", "sword"};
 

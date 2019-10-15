@@ -5,17 +5,17 @@ import java.util.Objects;
 import static deco2800.skyfall.util.MathUtil.clamp;
 
 /**
- * An implementation of vec3
- * more convenient than array
- * When referring to colour x,y,z maps to r,g,b
+ * An implementation of vec3 more convenient than array When referring to colour
+ * x,y,z maps to r,g,b
  */
 public class vec3 {
-    public float x;
-    public float y;
-    public float z;
+    private float x;
+    private float y;
+    private float z;
 
     /**
      * Component wise constructor
+     * 
      * @param x x component, might also be r for colours
      * @param y y component, might also be g for colours
      * @param z z component, might also be b for colours
@@ -28,6 +28,7 @@ public class vec3 {
 
     /**
      * Alternative constructor for single value initialisation
+     * 
      * @param a value set to each component
      */
     public vec3(float a) {
@@ -59,6 +60,7 @@ public class vec3 {
 
     /**
      * returns a vec3 with each component clamped
+     * 
      * @param min minimum value for each component
      * @param max minimum value for each component
      * @return must be caught, vec3 called against will not be changed
@@ -68,32 +70,26 @@ public class vec3 {
     }
 
     /**
-     * Tests equality of components
-     * Will cast up vec2 and return true if z = 0
-     * @return true iff obj is equivalent vec3,
-     * or vec2 with equivalent x,y and z = 0
+     * Tests equality of components Will cast up vec2 and return true if z = 0
+     * 
+     * @return true iff obj is equivalent vec3, or vec2 with equivalent x,y and z =
+     *         0
      */
     @Override
     public boolean equals(Object obj) {
         vec3 v;
         if (obj instanceof vec3) {
-            v = (vec3)obj;
-        }
-        else if (obj instanceof vec2) {
+            v = (vec3) obj;
+        } else if (obj instanceof vec2) {
             if (this.z != 0.0f) {
                 return false;
             }
-            v = new vec3(((vec2) obj).x , ((vec2) obj).y, 0.0f);
-        }
-        else {
+            v = new vec3(((vec2) obj).getX(), ((vec2) obj).getY(), 0.0f);
+        } else {
             return false;
         }
 
-        if (v.x == this.x && v.y == this.y && v.z == this.z) {
-            return true;
-        }
-
-        return false;
+        return v.x == this.x && v.y == this.y && v.z == this.z;
     }
 
     @Override
