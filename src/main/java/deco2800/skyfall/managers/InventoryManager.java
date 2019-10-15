@@ -5,16 +5,14 @@ import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.NaturalResources;
-import deco2800.skyfall.resources.items.Hatchet;
-import deco2800.skyfall.resources.items.PickAxe;
-import deco2800.skyfall.resources.items.Stone;
-import deco2800.skyfall.resources.items.Wood;
+import deco2800.skyfall.resources.items.*;
+
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.*;
 
 public class InventoryManager extends TickableManager implements Serializable {

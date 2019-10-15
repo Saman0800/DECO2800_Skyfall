@@ -20,6 +20,8 @@ public class ChestManager extends InventoryManager {
      * @param rarity the rarity of the loot
      * @return the generated loot
      */
+    @SuppressWarnings("squid:s128") // SonarQube complains about fall-through
+                                    // but this is intended behaviour
     public static Map<String, List<Item>> generateRandomLoot(
             int amount, LootRarity rarity) {
         Map<String, List<Item>> loot = new HashMap<>();

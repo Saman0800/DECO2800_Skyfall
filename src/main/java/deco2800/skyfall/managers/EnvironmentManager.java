@@ -84,7 +84,7 @@ public class EnvironmentManager extends TickableManager {
 
     /**
      * Sets the biome string for the environment.
-     * 
+     *
      * @param biomeName The biome name (as a string).
      */
     public void setBiomeString(String biomeName) {
@@ -100,7 +100,7 @@ public class EnvironmentManager extends TickableManager {
 
     /**
      * Sets the player used in class testing.
-     * 
+     *
      * @param player The player that will be used in testing
      */
     public void setPlayer(AbstractEntity player) {
@@ -437,7 +437,7 @@ public class EnvironmentManager extends TickableManager {
 
     /**
      * Gets the filename in game.
-     * 
+     *
      * @return the file being played
      */
     public String getFilename() {
@@ -448,7 +448,6 @@ public class EnvironmentManager extends TickableManager {
      * Sets the music in game as per current time and biome the player resides in.
      */
     public void setTODMusic() {
-
         // Check for change in biome
         if (!(file.equals(currentFile))) {
 

@@ -421,4 +421,37 @@ public class BuildingWidgets {
         }
     }
 
+    public void apply() {
+        if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
+            float[] mousePos = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
+            float[] clickedPos = WorldUtil.worldCoordinatesToColRow(mousePos[0], mousePos[1]);
+
+            Tile tile = world.getTile(clickedPos[0], clickedPos[1]);
+            if (tile == null) {
+                return;
+            }
+
+            // initialize widget and building information
+            menu.setVisible(false);
+            building = null;
+
+            for (AbstractEntity entity : world.getEntities()) {
+                if (entity instanceof BuildingEntity) {
+                    Collider collider = ((BuildingEntity) entity).getCollider();
+                    if ((collider != null) && !(collider.getX() <= mousePos[0] && collider.getY() <= mousePos[1]
+                            && collider.getX() + collider.getXLength() >= mousePos[0]
+                            && collider.getY() + collider.getYLength() >= mousePos[1])
+                            || (collider == null) && !tile.getCoordinates().equals(entity.getPosition())) {
+                        continue;
+                    }
+
+                    // show the building widgets if a building is clicked
+                    building = (BuildingEntity) entity;
+                    setWidgets((BuildingEntity) entity);
+                    menu.setVisible(true);
+                    break;
+                }
+            }
+        }
+    }
 }

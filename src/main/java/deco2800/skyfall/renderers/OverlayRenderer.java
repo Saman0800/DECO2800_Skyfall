@@ -133,18 +133,6 @@ public class OverlayRenderer implements Renderer {
         debugLine(batch, camera, line++, GameManager.get().getManager(PathFindingService.class).toString());
 
         line++;
-        debugLine(batch, camera, line++, "== Networking ==");
-        debugLine(batch, camera, line++,
-                String.format("ID: %d", GameManager.get().getManager(NetworkManager.class).getID()));
-        debugLine(batch, camera, line++, String.format("Messages Received: %d",
-                GameManager.get().getManager(NetworkManager.class).getMessagesReceived()));
-        debugLine(batch, camera, line++, String.format("Messages Sent: %d",
-                GameManager.get().getManager(NetworkManager.class).getMessagesSent()));
-        debugLine(batch, camera, line++,
-                String.format("Username: %s", GameManager.get().getManager(NetworkManager.class).getUsername()));
-        debugLine(batch, camera, line++, String.format("World seed: %d", GameManager.get().getWorld().getSeed()));
-
-        line++;
 
         debugLine(batch, camera, line++, "== Graphics ==");
         debugLine(batch, camera, line++, String.format("Extended shading: %s", shader.getActive() ? "True" : "False"));
