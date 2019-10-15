@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import deco2800.skyfall.buildings.DesertPortal;
+import deco2800.skyfall.buildings.ForestPortal;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.graphics.HasPointLight;
@@ -102,14 +104,13 @@ public class GameScreen implements Screen, KeyDownObserver {
             save.setCurrentWorld(world);
             world.setSave(save);
             MainCharacter.getInstance().setSave(save);
-
-            gameManager.getManager(NetworkManager.class).connectToHost("localhost", "duck1234");
+            save.setMainCharacter(MainCharacter.getInstance());
         } else {
-            if (GameManager.get().isTutorial) {
+            if (GameManager.get().getIsTutorial()) {
                 world = WorldDirector.constructTutorialWorld(new WorldBuilder(), seed).getWorld();
             } else {
                 // Creating the world
-                world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), seed, 4, true).getWorld();
+                world = WorldDirector.constructSingleBiomeWorld(new WorldBuilder(), seed, true, "forest").getWorld();
             }
             save.getWorlds().add(world);
             save.setCurrentWorld(world);
@@ -120,6 +121,7 @@ public class GameScreen implements Screen, KeyDownObserver {
             packer.doPackings();
 
             MainCharacter.getInstance().setSave(save);
+            save.setMainCharacter(MainCharacter.getInstance());
 
             // FIXME:jeffvan12 implement better way of creating new stuff things
 
@@ -132,8 +134,6 @@ public class GameScreen implements Screen, KeyDownObserver {
             // MainCharacter.getInstance().setID(0);
             // DatabaseManager.get().getDataBaseConnector().saveGame(save);
             // DatabaseManager.get().getDataBaseConnector().saveAllTables();
-
-            gameManager.getManager(NetworkManager.class).startHosting("host");
         }
 
         gameManager.setWorld(world);
@@ -156,8 +156,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         MainCharacter mainCharacter = MainCharacter.getInstance();
         mainCharacter.setSave(save);
         world.addEntity(mainCharacter);
-
-        gameManager.getManager(NetworkManager.class).startHosting("host");
 
         StatisticsManager sm = new StatisticsManager(mainCharacter);
         GameManager.addManagerToInstance(sm);
@@ -422,11 +420,12 @@ public class GameScreen implements Screen, KeyDownObserver {
     @Override
     public void notifyKeyDown(int keycode) {
         if (keycode == Input.Keys.F12) {
-            GameManager.get().debugMode = !GameManager.get().debugMode;
+            GameManager.get().toggleDebugMode();
         }
 
         if (keycode == Input.Keys.F5) {
 
+            /*
             // Create a random world
             world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), world.getSeed() + 1, 4, true)
                     .getWorld();
@@ -441,32 +440,36 @@ public class GameScreen implements Screen, KeyDownObserver {
             Tile.resetID();
             GameManager gameManager = GameManager.get();
             gameManager.setWorld(world);
+             */
+            // Update the current music
+            ForestPortal portal = new ForestPortal(0, 0, 1);
+            portal.teleport(save);
         }
 
         if (keycode == Input.Keys.F11) { // F11
-            GameManager.get().showCoords = !GameManager.get().showCoords;
-            logger.info("Show coords is now {}", GameManager.get().showCoords);
+            GameManager.get().toggleShowCoords();
+            logger.info("Show coords is now {}", GameManager.get().getShowCoords());
         }
 
         if (keycode == Input.Keys.C) { // F11
-            GameManager.get().showCoords = !GameManager.get().showCoords;
-            logger.info("Show coords is now {}", GameManager.get().showCoords);
+            GameManager.get().toggleShowCoords();
+            logger.info("Show coords is now {}", GameManager.get().getShowCoords());
         }
 
         if (keycode == Input.Keys.F10) { // F10
-            GameManager.get().showPath = !GameManager.get().showPath;
-            logger.info("Show Path is now {}", GameManager.get().showPath);
+            GameManager.get().toggleDebugMode();
+            logger.info("Show Path is now {}", GameManager.get().getShowPath());
         }
 
-        //FIXME:jeffvan12 should replace with acutal world saving and loading
+        // FIXME:jeffvan12 should replace with acutal world saving and loading
         if (keycode == Input.Keys.F3) { // F3
             // Save the world to the DB
-//            DatabaseManager.saveWorld(null);
+            // DatabaseManager.saveWorld(null);
         }
 
         if (keycode == Input.Keys.F4) { // F4
             // Load the world to the DB
-//            DatabaseManager.loadWorld(null);
+            // DatabaseManager.loadWorld(null);
         }
 
         if (keycode == Input.Keys.P) {

@@ -9,12 +9,12 @@ public class vec2Test {
     @Test
     public void testConstructor() {
         vec2 testVec = new vec2(0.5f, 0.1f);
-        assertEquals(0.5f,testVec.x, 0.01f);
-        assertEquals(0.1f, testVec.y, 0.01f);
+        assertEquals(0.5f, testVec.getX(), 0.01f);
+        assertEquals(0.1f, testVec.getY(), 0.01f);
 
         testVec = new vec2(1.0f);
-        assertEquals(1.0f,testVec.x, 0.01f);
-        assertEquals(1.0f, testVec.y, 0.01f);
+        assertEquals(1.0f, testVec.getX(), 0.01f);
+        assertEquals(1.0f, testVec.getY(), 0.01f);
     }
 
     @Test
@@ -26,23 +26,23 @@ public class vec2Test {
 
     @Test
     public void testClamp() {
-        //min
+        // min
         vec2 testVec = new vec2(-0.1f, -0.1f);
         testVec = testVec.getClampedComponents(0.0f, 1.0f);
-        assertEquals(0.0f, testVec.x, 0.01f);
-        assertEquals(0.0f, testVec.y, 0.01f);
+        assertEquals(0.0f, testVec.getX(), 0.01f);
+        assertEquals(0.0f, testVec.getY(), 0.01f);
 
-        //value
+        // value
         testVec = new vec2(0.5f, 0.5f);
         testVec = testVec.getClampedComponents(0.0f, 1.0f);
-        assertEquals(0.5f, testVec.x, 0.01f);
-        assertEquals(0.5f, testVec.y, 0.01f);
+        assertEquals(0.5f, testVec.getX(), 0.01f);
+        assertEquals(0.5f, testVec.getY(), 0.01f);
 
-        //max
+        // max
         testVec = new vec2(30.0f, 30.0f);
         testVec = testVec.getClampedComponents(0.0f, 1.0f);
-        assertEquals(1.0f, testVec.x, 0.01f);
-        assertEquals(1.0f, testVec.y, 0.01f);
+        assertEquals(1.0f, testVec.getX(), 0.01f);
+        assertEquals(1.0f, testVec.getY(), 0.01f);
     }
 
     @Test
@@ -56,11 +56,11 @@ public class vec2Test {
         assertFalse(a.equals(c));
         assertFalse(c.equals(a));
 
-        //test vec3 comparison
+        // test vec3 comparison
         vec3 d = new vec3(0.1f, 0.2f, 0.0f);
         assertTrue(a.equals(d));
 
-        //test comparison against invalid object
+        // test comparison against invalid object
         Array2D e = new Array2D(10, 10);
         assertFalse(a.equals(e));
     }

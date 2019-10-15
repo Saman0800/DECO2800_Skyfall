@@ -88,8 +88,6 @@ public class OnScreenMessageManager extends AbstractManager implements KeyTypedO
 					this.addMessage(String.format(GameManager.getManagerFromInstance(InventoryManager.class).toString()));
 				}  else	if (unsentMessage.startsWith("/set_time")) { // set time, as set_time@hh@mm
 					handleSetTime(unsentMessage);
-				} else {
-					GameManager.get().getManager(NetworkManager.class).sendChatMessage(unsentMessage);
 				}
 				GameManager.get().getCamera().setPotate(false);
 				unsentMessage = "";

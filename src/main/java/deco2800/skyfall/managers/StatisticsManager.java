@@ -181,6 +181,10 @@ public class StatisticsManager  extends TickableManager {
         return this.getCharacter().getGoldPouchTotalValue();
     }
 
+    public int getMana() {
+        return this.getCharacter().getMana();
+    }
+
     @Override
     public void onTick(long i) {
         // Auto-generated method stub

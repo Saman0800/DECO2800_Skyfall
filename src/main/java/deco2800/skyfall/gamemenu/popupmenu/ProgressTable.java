@@ -21,6 +21,7 @@ public class ProgressTable extends AbstractPopUpElement {
     private Label collectLabel;
     private Label createLabel;
     private Label blueprintLabel;
+    private Label weaponsLabel;
 
     public ProgressTable(Stage stage, ImageButton exit, String[] textureNames,
                          TextureManager tm, GameMenuManager gameMenuManager,
@@ -29,7 +30,6 @@ public class ProgressTable extends AbstractPopUpElement {
 
         this.skin = skin;
         this.qm = qm;
-        Table labelTable = new Table();
         this.draw();
         stage.addActor(baseTable);
     }
@@ -56,7 +56,8 @@ public class ProgressTable extends AbstractPopUpElement {
     public void update() {
             qm.checkBuildings();
             updateBiomeText(qm.getBiome());
-            updateCollectText(qm.collectNum() + "/4");
+            int collectTotal = 4 + qm.weaponsNum();
+            updateCollectText(qm.collectNum() + "/" + collectTotal);
             updateCreateText(qm.getBuildingsNum() + "/" + qm.getBuildingsTotal().size());
             updateBlueprintText(qm.getBlueprintLearned() ? "Purchased!" : "To Purchase");
     }
@@ -67,16 +68,20 @@ public class ProgressTable extends AbstractPopUpElement {
     }
 
     private void updateCollectText(String text) {
-        collectLabel.setText("COLLECT: " + text);
+        collectLabel.setText("RESOURCES: " + text);
     }
 
     private void updateCreateText(String text) {
-        createLabel.setText("CREATE: " + text);
+        createLabel.setText("BUILDINGS: " + text);
 
     }
 
     private void updateBlueprintText(String text) {
         blueprintLabel.setText( "Portal Blueprint: " + text);
+    }
+
+    private void updateWeaponsText(String text) {
+        blueprintLabel.setText( "WEAPONS: " + text);
     }
 
 
@@ -91,12 +96,13 @@ public class ProgressTable extends AbstractPopUpElement {
         baseTable.top();
 
 
+        String font = "game-font";
 
         Label titleLabel = new Label(" PROGRESS ", skin, "title-pill");
-        biomeLabel = new Label("ERR", skin, "game-font",Color.WHITE);
-        collectLabel = new Label("ERR", skin, "game-font",Color.WHITE);
-        createLabel = new Label("ERR", skin, "game-font",Color.WHITE);
-        blueprintLabel = new Label("ERR", skin, "game-font",Color.WHITE);
+        biomeLabel = new Label("ERR", skin, font,Color.WHITE);
+        collectLabel = new Label("ERR", skin, font,Color.WHITE);
+        createLabel = new Label("ERR", skin, font,Color.WHITE);
+        blueprintLabel = new Label("ERR", skin, font,Color.WHITE);
 
         titleLabel.getStyle().fontColor = Color.BLACK;
 
@@ -107,6 +113,8 @@ public class ProgressTable extends AbstractPopUpElement {
         baseTable.add(collectLabel).expand().left();
         baseTable.row();
         baseTable.add(createLabel).expand().left();
+        baseTable.row();
+        baseTable.add(weaponsLabel).expand().left();
         baseTable.row();
         baseTable.add(blueprintLabel).expand().left();
         baseTable.row();
