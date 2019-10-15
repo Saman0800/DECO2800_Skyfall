@@ -106,14 +106,14 @@ public class WorldDirector {
                 bikeCol = t.getCol();
                 bikeRow = t.getRow();
             }
-            if (b.getBiomeName().equals("desert")) {
-                builder.addEntity(new SandCar(-20f,-2f, mainCharacter));
-            }
+//            if (b.getBiomeName().equals("desert")) {
+//                builder.addEntity(new SandCar(-20f,-2f, mainCharacter));
+//            }
         }
         builder.addEntity(new Bike(bikeCol,bikeRow,mainCharacter));
         builder.addEntity(new LizardHome(0, 2, mainCharacter));
         builder.addEntity(new IceWhitebear(-2, 0, mainCharacter));
-//        builder.addEntity(new SandCar(-20f,-2f, mainCharacter));
+        builder.addEntity(new SandCar(-20f,-2f, mainCharacter));
         builder.addEntity(new Scout(0, 2, 0.4f, "Forest"));
         builder.addEntity(new Heavy(7, 9, 0.2f, "Forest"));
         builder.addEntity(new Abductor(4, 9, 0.8f, "Forest"));
