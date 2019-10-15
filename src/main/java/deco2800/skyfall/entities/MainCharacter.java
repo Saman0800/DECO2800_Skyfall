@@ -1630,28 +1630,27 @@ public class MainCharacter extends Peon
         // for portals
         switch (save.getGameStage()) {
         case 3:
-            if (constructedBuildings.contains(SAFEHOUSE)) {
+            if (qm.questFinished()) {
                 unlocked.add(new ForestPortal(0, 0, 0));
             }
             break;
         case 2:
-            if (constructedBuildings.contains(WATCHTOWER)) {
+            if (qm.questFinished()) {
                 unlocked.add(new MountainPortal(0, 0, 0));
             }
             break;
         case 1:
-            if (constructedBuildings.contains(CABIN)) {
+            if (qm.questFinished()) {
                 unlocked.add(new DesertPortal(0, 0, 0));
             }
             break;
         case 0:
-            if (constructedBuildings.contains(CASTLE)) {
+            if (qm.questFinished()) {
                 unlocked.add(new ForestPortal(0, 0, 0));
             }
             break;
         }
         return unlocked;
-
     }
 
     /***
