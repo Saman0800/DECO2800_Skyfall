@@ -112,7 +112,8 @@ public class BlueprintShopTable extends AbstractPopUpElement {
 
         for (Blueprint b : unlocked) {
 
-            ImageButton icon = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(b.getName()));
+            ImageButton icon =
+                    new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(b.getName() + "_inv"));
             icon.setName("icon");
             icon.setSize(100, 100);
             icon.setPosition(xpos + (float) count * 130, ypos);
