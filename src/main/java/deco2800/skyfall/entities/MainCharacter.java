@@ -1100,9 +1100,6 @@ public class MainCharacter extends Peon
                 xInput += 1;
                 break;
             case Input.Keys.V:
-                petsManager.replacePet(this);
-                break;
-            case Input.Keys.F:
                 vehicleToUse();
                 break;
             case Input.Keys.SHIFT_LEFT:
