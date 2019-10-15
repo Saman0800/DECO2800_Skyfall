@@ -1129,6 +1129,7 @@ public class MainCharacter extends Peon
                     this.attack(mousePosition);
                 } else {
                     useEquipped();
+                    fireProjectile(mousePosition);
                 }
 
                 break;
