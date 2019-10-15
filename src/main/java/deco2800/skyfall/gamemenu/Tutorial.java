@@ -16,7 +16,6 @@ import java.util.ArrayList;
 public class Tutorial extends AbstractUIElement {
     private final GameMenuManager gameMenuMan;
     private final GameManager gameMan;
-    private Image current;
     private String currentTut;
     private ArrayList<String> tutList = new ArrayList<>();
     private int count;
@@ -50,26 +49,27 @@ public class Tutorial extends AbstractUIElement {
         if ((x >= 0) && (x < 7)) {
             this.currentTut = tutList.get(x);
         } else {
-            System.out.print("Out of range" + "\n");
+            // Out of range
             // Maybe throw an IndexOutOfBounds error
         }
-
         return currentTut;
     }
 
     @Override
     public void draw() {
+        String direction = "next_back_button"; // defined as a constant to reduce code smell
         // if in tutorial world then display
         if (gameMan.isTutorial) {
             // display the current tutorial page
-            this.current = new Image(gameMenuMan.generateTextureRegionDrawableObject(getTutPage(count)));
+            Image current = new Image(gameMenuMan.generateTextureRegionDrawableObject(getTutPage(count)));
             current.setFillParent(true);
             stage.addActor(current);
 
             // add next button if current is tutList[0-5]
             if ((0 <= count) && (count < 6)) {
-                ImageButton next = new ImageButton(gameMenuMan.generateTextureRegionDrawableObject("unchecked"));
-                next.setPosition(1050, 10);
+                ImageButton next = new ImageButton(gameMenuMan.generateTextureRegionDrawableObject(direction));
+                next.setPosition(1070, 10);
+
                 stage.addActor(next);
 
                 next.addListener(new ClickListener() {
@@ -84,7 +84,8 @@ public class Tutorial extends AbstractUIElement {
 
             // Add back button if current is tutList[1-6]
             if ((0 < count) && (count < 7)) {
-                ImageButton back = new ImageButton(gameMenuMan.generateTextureRegionDrawableObject("unchecked"));
+                // Home button is larger than the next and back buttons. Use different button
+                ImageButton back = new ImageButton(gameMenuMan.generateTextureRegionDrawableObject(direction));
                 back.setPosition(10, 10);
                 stage.addActor(back);
 
@@ -100,8 +101,8 @@ public class Tutorial extends AbstractUIElement {
 
             // if current = tutorial5 then have toHome button not next button
             if ((count == 6)) {
-                ImageButton home = new ImageButton(gameMenuMan.generateTextureRegionDrawableObject("unchecked"));
-                home.setPosition(1050, 10);
+                ImageButton home = new ImageButton(gameMenuMan.generateTextureRegionDrawableObject("home_button"));
+                home.setPosition(1010, 10);
                 stage.addActor(home);
 
                 home.addListener(new ClickListener() {
