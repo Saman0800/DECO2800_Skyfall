@@ -76,6 +76,7 @@ public class QuestManager extends TickableManager {
      */
     private void setMilestones() {
         //inventory numbers need to be reset for player testing and actual game release
+        //reduced for ease of testing in game
         switch (questLevel) {
             case 1 :
                 setGoldTotal(10);
