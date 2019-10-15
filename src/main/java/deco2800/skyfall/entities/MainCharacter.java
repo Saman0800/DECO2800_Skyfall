@@ -1096,14 +1096,16 @@ public class MainCharacter extends Peon
                 maxSpeed *= 2.f;
                 break;
             case Input.Keys.SPACE:
-                useEquipped();
+                float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
+                float[] clickedPosition = WorldUtil.worldCoordinatesToSubColRow(mouse[0], mouse[1]);
+                HexVector mousePosition = new HexVector(clickedPosition[0], clickedPosition[1]);
 
-                if (this.equippedItem instanceof Weapon) {
-                    float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
-                    float[] clickedPosition = WorldUtil.worldCoordinatesToSubColRow(mouse[0], mouse[1]);
-                    HexVector mousePosition = new HexVector(clickedPosition[0], clickedPosition[1]);
+                if (spellSelected != SpellType.NONE) {
                     this.attack(mousePosition);
+                } else {
+                    useEquipped();
                 }
+
                 break;
             case Input.Keys.ALT_LEFT:
                 // Attack moved to SPACE
