@@ -13,7 +13,7 @@ public class Abductor extends Enemy implements Spawnable {
         this.setType(EnemyType.ABDUCTOR);
 
         // Assign values, includes default values
-        this.setValues(scaling, 100, 1, 1, 0.06f, 0.06f);
+        this.setValues(scaling, 100, 1, 1, 4f, 6f);
     }
 
     /**

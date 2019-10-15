@@ -1,39 +1,28 @@
 package deco2800.skyfall.entities;
 
-import java.util.Map;
-import java.util.List;
-import org.slf4j.Logger;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.io.Serializable;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import org.slf4j.LoggerFactory;
-import deco2800.skyfall.Tickable;
-import deco2800.skyfall.GameScreen;
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.saving.Save;
-import deco2800.skyfall.buildings.*;
 import com.badlogic.gdx.math.Vector2;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
-import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.animation.Animatable;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import deco2800.skyfall.entities.spells.Spell;
-import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.GameScreen;
+import deco2800.skyfall.Tickable;
+import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
-import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.buildings.*;
+import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellCaster;
 import deco2800.skyfall.entities.spells.SpellFactory;
-import deco2800.skyfall.entities.weapons.*;
-import deco2800.skyfall.gamemenu.HealthCircle;
-import deco2800.skyfall.gamemenu.popupmenu.ConstructionTable;
-import deco2800.skyfall.gamemenu.ManaBar;
+import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.entities.vehicle.AbstractVehicle;
 import deco2800.skyfall.entities.vehicle.Bike;
 import deco2800.skyfall.entities.vehicle.SandCar;
+import deco2800.skyfall.entities.weapons.*;
+import deco2800.skyfall.gamemenu.HealthCircle;
+import deco2800.skyfall.gamemenu.ManaBar;
+import deco2800.skyfall.gamemenu.popupmenu.ConstructionTable;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.observers.KeyUpObserver;
@@ -45,6 +34,18 @@ import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.saving.AbstractMemento;
+import deco2800.skyfall.saving.Save;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.Tile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static deco2800.skyfall.buildings.BuildingType.*;
 
@@ -1505,7 +1506,7 @@ public class MainCharacter extends Peon
      *
      * @return the player direction (units: degrees)
      */
-    private double getPlayerDirectionAngle() {
+    public double getPlayerDirectionAngle() {
         double val;
         if (xInput != 0 || yInput != 0) {
             val = Math.atan2(yInput, xInput);

@@ -441,7 +441,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * @param x the entities x coordinate
      * @param y the entities y coordinate
      */
-    private void initialiseBox2D(float x, float y) {
+    public void initialiseBox2D(float x, float y) {
         if (!(this instanceof StaticEntity || this instanceof NaturalResources ||
                 this instanceof ManufacturedResources || this instanceof HealthResources)) {
             defineBody(x, y);

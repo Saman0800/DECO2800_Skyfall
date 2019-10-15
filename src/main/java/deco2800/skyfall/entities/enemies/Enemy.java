@@ -15,6 +15,8 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.AnimationLinker;
 
+import java.util.Random;
+
 /**
  * An instance to abstract the basic variables and methods of an enemy.
  */
@@ -27,8 +29,12 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
     private int health;
     private int strength;
     private float attackRange;
+    private float chaseRange = 10;
     private float walkingSpeed;
     private float chasingSpeed;
+
+    // Enemy target error
+    private int targetError = -2 + new Random().nextInt(3);
 
     // Name of the biome the enemy is in.
     private String biome;
@@ -64,12 +70,12 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
     private float[] originalPosition = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
 
     public Enemy(float col, float row, String hitBoxPath, EnemyType enemyType, float speed, String biome,
-            String textureName) {
+                 String textureName) {
         super(row, col, speed, textureName, 10);
 
         // Sets the spawning location and all the collision
         this.setPosition(col, row);
-        // this.initialiseBox2D(col, row, hitBoxPath);
+        this.initialiseBox2D(col, row);
         this.setCollidable(true);
 
         // Sets the main character in the game.
@@ -92,7 +98,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     /**
      * This constructor is written for testing.
-     * 
+     *
      * @param col the x-coordinate of the enemy.
      * @param row the y-coordinate of the enemy.
      */
@@ -104,11 +110,37 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
     /**
      * Enemy chase the player, if player position is in range, enemy attacks player.
      */
-    private void attackPlayer() {
+    private void attackAction() {
         if (!(mainCharacter.isDead() || mainCharacter.isRecovering() || mainCharacter.isHurt())) {
             this.setSpeed(getChasingSpeed());
-            this.destination = new HexVector(mainCharacter.getPosition());
-            this.position.moveToward(destination, this.getChasingSpeed());
+
+            float targetShift = (float) targetError / 2;
+
+            double xDestination;
+            double yDestination;
+
+            float xDirection;
+            float yDirection;
+
+            double playerAngle = Math.toRadians(-mainCharacter.getPlayerDirectionAngle() + 90);
+
+            if (distance(mainCharacter) < targetShift) {
+                xDirection = mainCharacter.getPosition().getCol() - getBody().getPosition().x;
+                yDirection = mainCharacter.getPosition().getRow() - getBody().getPosition().y;
+            } else {
+                xDestination = mainCharacter.getPosition().getCol() + targetShift * Math.cos(playerAngle);
+                yDestination = mainCharacter.getPosition().getRow() + targetShift * Math.sin(playerAngle);
+
+                xDirection = (float) xDestination - getBody().getPosition().x;
+                yDirection = (float) yDestination - getBody().getPosition().y;
+            }
+
+            getBody().setLinearVelocity(xDirection, yDirection);
+            getBody().setLinearVelocity(getBody().getLinearVelocity().limit(chasingSpeed));
+
+            this.position.set(getBody().getPosition().x, getBody().getPosition().y);
+
+            this.setCurrentState(AnimationRole.MOVE);
 
             // if the player in attack range then attack player
             if (distance(mainCharacter) < getAttackRange()) {
@@ -120,8 +152,28 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
     }
 
     /**
+     * under normal situation the enemy will random wandering in 100 radius circle
+     */
+    private void randomMoveAction() {
+        setAttacking(false);
+        setCurrentState(AnimationRole.MOVE);
+
+        if (!isAttacking) {
+            double moveAngle = new Random().nextDouble() * 2 * Math.PI;
+
+            float xDirection = (float) Math.cos(moveAngle);
+            float yDirection = (float) Math.sin(moveAngle);
+
+            getBody().setLinearVelocity(xDirection, yDirection);
+            getBody().setLinearVelocity(getBody().getLinearVelocity().limit(walkingSpeed));
+
+            this.position.set(getBody().getPosition().x, getBody().getPosition().y);
+        }
+    }
+
+    /**
      * Damage taken
-     * 
+     *
      * @param damage hero damage
      */
     @Override
@@ -139,7 +191,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     /**
      * Deals damage to the main character by lowering their health
-     * 
+     *
      * @param mc The main character
      */
     @Override
@@ -152,7 +204,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     /**
      * Determines whether the enemy can deal damage
-     * 
+     *
      * @return True if they can deal damage, false otherwise
      */
     @Override
@@ -162,7 +214,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     /**
      * Get enemy's current strength
-     * 
+     *
      * @return enemy's current strength.
      */
     @Override
@@ -172,7 +224,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     /**
      * Return a list of resistance attributes.
-     * 
+     *
      * @return A list of resistance attributes.
      */
     @Override
@@ -182,7 +234,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     /**
      * Set the type of enemy.
-     * 
+     *
      * @param enemyType the type of the enemy.
      */
     public void setType(EnemyType enemyType) {
@@ -195,7 +247,9 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
      */
     public void updateAnimation() {
         setTexture(getDefaultTexture());
-        setCurrentDirection(movementDirection(this.position.getAngle()));
+        double angle = Math.atan2(getBody().getLinearVelocity().y, getBody().getLinearVelocity().x);
+
+        setCurrentDirection(movementDirection(angle));
 
         /* Short Animations */
         if (getToBeRun() != null) {
@@ -215,7 +269,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     /**
      * Handles the action of the enemy per time tick in game.
-     * 
+     *
      * @param tick number of second tin the game.
      */
     @Override
@@ -228,27 +282,22 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
                 die();
             }
         } else {
-            this.randomMoving();
-            this.setCurrentState(AnimationRole.MOVE);
-            this.updateAnimation();
-
-            if (distance(mainCharacter) < 4) {
-                attackPlayer();
+            if (distance(mainCharacter) < chaseRange) {
+                attackAction();
             } else {
-                randomMoving();
-                setAttacking(false);
-                setSpeed(getWalkingSpeed());
-                setCurrentState(AnimationRole.MOVE);
+                randomMoveAction();
+
             }
             if (isHurt) {
                 checkIfHurtEnded();
             }
+            this.updateAnimation();
         }
     }
 
     /**
      * To set enemy heal
-     * 
+     *
      * @param health set heal of enemy
      */
     public void setHealth(int health) {
@@ -257,7 +306,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     /**
      * Return the health this enemy has.
-     * 
+     *
      * @return The health this enemy has.
      */
     public int getHealth() {
@@ -368,7 +417,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     /**
      * Getter of the enemy's speed when walking.
-     * 
+     *
      * @return the walking speed of this enemy.
      */
     private float getWalkingSpeed() {
@@ -397,7 +446,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
      * Getter if the enemy's sound when chasing the player.
      *
      * @return the name of the chasing sound (defined in {@link SoundManager}) of
-     *         this enemy.
+     * this enemy.
      */
     public String getChaseSound() {
         return this.chasingSound;
@@ -407,7 +456,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
      * Getter of the enemy's sound when enemy is dying.
      *
      * @return the name of the dead sound (defined in {@link SoundManager}) of this
-     *         enemy.
+     * enemy.
      */
     public String getDeadSound() {
         return this.diedSound;
@@ -417,7 +466,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
      * Getter of the enemy's sound when enemy is attacking.
      *
      * @return the name of the dead sound (defined in {@link SoundManager}) of this
-     *         enemy.
+     * enemy.
      */
     public String getAttackSound() {
         return this.attackingSound;
@@ -425,7 +474,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     /**
      * Set the amount of damage for this enemy.
-     * 
+     *
      * @param strength the new amount of damage to be set.
      */
     public void setStrength(int strength) {
@@ -444,7 +493,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     /**
      * Get the name of the biome this enemy is located at.
-     * 
+     *
      * @return the name of the biome this enemy is located.
      */
     public String getBiome() {
@@ -453,7 +502,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     /**
      * Getter and setter of the main character object in the game.
-     * 
+     *
      * @param mainCharacter the main character in the game.
      */
     public void setMainCharacter(MainCharacter mainCharacter) {
@@ -462,7 +511,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     /**
      * Get the main character instance in the game
-     * 
+     *
      * @return the main character object in the game.
      */
     public MainCharacter getMainCharacter() {
@@ -481,7 +530,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     /**
      * Get the attack range of the enemy.
-     * 
+     *
      * @return the attack range of the enemy.
      */
     public float getAttackRange() {
@@ -497,7 +546,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     /**
      * Set whether enemy is hurt.
-     * 
+     *
      * @param isHurt the player's "hurt" status
      */
     public void setHurt(boolean isHurt) {
@@ -539,22 +588,8 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
     }
 
     /**
-     * under normal situation the enemy will random wandering in 100 radius circle
-     */
-    private void randomMoving() {
-        if ((!isAttacking)) {
-            // logger.info("{} is moving randomly.", getName());
-            float[] targetPosition = new float[2];
-            targetPosition[0] = (float) (Math.random() * 1200 + originalPosition[0]);
-            targetPosition[1] = (float) (Math.random() * 1200 + originalPosition[1]);
-            float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow(targetPosition[0], targetPosition[1]);
-            destination = new HexVector(randomPositionWorld[0], randomPositionWorld[1]);
-        }
-    }
-
-    /**
      * Get movement direction
-     * 
+     *
      * @param angle the angle between to tile
      */
     public Direction movementDirection(double angle) {
@@ -595,7 +630,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     /**
      * Get the duration main character hurts.
-     * 
+     *
      * @return the duration main character hurts.
      */
     public long getHurtTime() {
@@ -608,7 +643,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     /**
      * @return string representation of this class including its enemy type, biome
-     *         and x,y coordinates
+     * and x,y coordinates
      */
     @Override
     public String toString() {
