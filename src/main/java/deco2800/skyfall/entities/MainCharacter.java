@@ -21,7 +21,7 @@ import deco2800.skyfall.entities.vehicle.Bike;
 import deco2800.skyfall.entities.vehicle.SandCar;
 import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.gamemenu.HealthCircle;
-import deco2800.skyfall.gamemenu.ManaBar;
+//import deco2800.skyfall.gamemenu.ManaBar;
 import deco2800.skyfall.gamemenu.popupmenu.ConstructionTable;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
