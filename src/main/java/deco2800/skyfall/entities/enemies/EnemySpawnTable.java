@@ -21,10 +21,6 @@ import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
 
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 public class EnemySpawnTable implements TimeObserver {
 
     /**

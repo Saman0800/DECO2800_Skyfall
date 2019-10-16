@@ -6,13 +6,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import deco2800.skyfall.buildings.DesertPortal;
 import deco2800.skyfall.buildings.ForestPortal;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.enemies.Abductor;
-import deco2800.skyfall.entities.enemies.Enemy;
-import deco2800.skyfall.entities.enemies.EnemySpawnTable;
+import deco2800.skyfall.entities.enemies.*;
 import deco2800.skyfall.graphics.HasPointLight;
 import deco2800.skyfall.graphics.PointLight;
 import deco2800.skyfall.graphics.ShaderWrapper;
@@ -531,9 +528,13 @@ public class GameScreen implements Screen, KeyDownObserver {
         Function<HexVector, ? extends Enemy> spawnAbductor = hexPos -> new Abductor(hexPos.getCol(), hexPos.getRow(),
                 0.8f, "Forest");
 
+        Function<HexVector, ? extends Enemy> spawnScout = hexPos -> new Scout(hexPos.getCol(), hexPos.getRow(),
+                0.2f, "Forest");
+
         Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor = new HashMap<>();
         List<Function<HexVector, ? extends Enemy>> forestList = new ArrayList<>();
         forestList.add(spawnAbductor);
+        forestList.add(spawnScout);
 
         biomeToConstructor.put("forest", forestList);
 
@@ -544,7 +545,5 @@ public class GameScreen implements Screen, KeyDownObserver {
 
         gameEnvironManag.addTimeListener(newEnemyTable);
         newEnemyTable.notifyTimeUpdate(1);
-
-        return;
     }
 }

@@ -11,7 +11,6 @@ import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.worlds.biomes.*;
 import deco2800.skyfall.entities.worlditems.*;
-import deco2800.skyfall.worlds.generation.WorldGenException;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -167,8 +166,8 @@ public class WorldDirector {
         builder.addEntity(new IceWhitebear(-2, 0, mainCharacter));
         builder.addEntity(new Bike(-10f,-2f,mainCharacter));
         builder.addEntity(new SandCar(-20f,-2f, mainCharacter));
-        builder.addEntity(new Scout(0, 2, 0.4f, "Forest"));
-        builder.addEntity(new Heavy(7, 9, 0.2f, "Forest"));
+        builder.addEntity(new Scout(4, 9, 0.4f, "Forest"));
+        builder.addEntity(new Heavy(4, 9, 0.2f, "Forest"));
         builder.addEntity(new Abductor(4, 9, 0.8f, "Forest"));
 
         builder.addEntity(new Camel(34, -7, mainCharacter));
