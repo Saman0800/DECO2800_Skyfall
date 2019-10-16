@@ -16,14 +16,13 @@ import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.saving.Save;
-import deco2800.skyfall.gamemenu.TutorialScreen;
 
 import java.util.List;
 import java.util.Random;
 
 public class MainMenuScreen implements Screen {
-    private static final String MAIN_MENU_STYLE = "main_menu";
-    private static final String LOAD_GAME_STYLE = "load-game";
+    public static final String MAIN_MENU_STYLE = "main_menu";
+    public static final String LOAD_GAME_STYLE = "load-game";
 
     private final SkyfallGame game;
     private Stage stage;
@@ -32,9 +31,9 @@ public class MainMenuScreen implements Screen {
     private static final int MIN_WIDTH = 1280;
 
     // Used for generating readable save names.
-    private static final char[] CONSONANTS =
+    private static char[] CONSONANTS =
             { 'B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'V', 'W', 'X', 'Z' };
-    private static final char[] VOWELS = { 'A', 'E', 'I', 'O', 'U', 'Y' };
+    private static char[] VOWELS = { 'A', 'E', 'I', 'O', 'U', 'Y' };
 
     private final List<Save> saveInfoList;
     private Window loadGameWindow;
@@ -91,8 +90,8 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 GameManager.get().isTutorial = true;
-//                game.setScreen(new GameScreen(game, 3, true));
-                game.setScreen(new TutorialScreen());
+                // TODO Accept user-provided seed or generate random seed.
+                game.setScreen(new GameScreen(game, 3, true));
             }
         });
 
