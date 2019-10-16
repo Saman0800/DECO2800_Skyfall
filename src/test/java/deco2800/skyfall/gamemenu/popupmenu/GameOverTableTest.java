@@ -11,7 +11,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Ignore;
 import org.mockito.Mockito;
 
 import static org.junit.Assert.*;
@@ -61,8 +60,7 @@ public class GameOverTableTest extends BaseGDXTest {
         assertTrue(gameOverTable.isVisible());
     }
 
-    @Test @Ignore
-    // broke after adding tutorial stuff. Check this later!
+    @Test
     public void retryQuestTest() {
         gameOverTable.retryQuest();
 
