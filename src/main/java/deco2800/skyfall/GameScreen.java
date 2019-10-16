@@ -126,12 +126,14 @@ public class GameScreen implements Screen, KeyDownObserver {
             // Comment this out when generating the data for the tests
             DatabaseManager.get().getDataBaseConnector().saveGame(save);
 
-            // Uncomment this when generating the data for the tests
-            // save.setId(0);
-            // world.setId(0);
-            // MainCharacter.getInstance().setID(0);
-            // DatabaseManager.get().getDataBaseConnector().saveGame(save);
-            // DatabaseManager.get().getDataBaseConnector().saveAllTables();
+            /*
+            Uncomment this when generating the data for the tests
+            save.setId(0);
+            world.setId(0);
+            MainCharacter.getInstance().setID(0);
+            DatabaseManager.get().getDataBaseConnector().saveGame(save);
+            DatabaseManager.get().getDataBaseConnector().saveAllTables();
+            */
         }
 
         gameManager.setWorld(world);
@@ -182,10 +184,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         /* Add the window to the stage */
         GameManager.get().setStage(stage);
         GameManager.get().setCamera(camera);
-
-        /* Add inventory to game manager */
-        gameManager.addManager(new InventoryManager());
-
 
         /* Add environment to game manager */
         EnvironmentManager gameEnvironManag = gameManager.getManager(EnvironmentManager.class);
@@ -420,27 +418,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         }
 
         if (keycode == Input.Keys.F5) {
-
-            /*
-            // Create a random world
-            world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), world.getSeed() + 1, 4, true)
-                    .getWorld();
-
-            // Add this world to the save
-            save.getWorlds().add(world);
-            save.setCurrentWorld(world);
-            world.setSave(save);
-            DatabaseManager.get().getDataBaseConnector().saveGame(save);
-
-            AbstractEntity.resetID();
-            Tile.resetID();
-            GameManager gameManager = GameManager.get();
-            gameManager.setWorld(world);
-             */
-            // Update the current music
-            //GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
-            //gmm.setPopUp("loadingTable");
-            // TODO: add loading animation when loading world
             ForestPortal portal = new ForestPortal(0, 0, 1);
             portal.teleport(save);
         }

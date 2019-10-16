@@ -72,7 +72,6 @@ public class GameMenuBar2 extends AbstractUIElement {
     public void updatePosition() {
         equippedTable.setPosition(gmm.getTopRightX() - 170, gmm.getTopLeftY() - 130);
         quickAccessPanel.setPosition(gmm.getTopRightX() - 170, gmm.getTopRightY() - 650);
-        // t.setHeight(stage.getCamera().viewportHeight / 2);
         sideBar.setPosition(gmm.getTopRightX() - 180, gmm.getTopRightY() - 520);
         build.setPosition(gmm.getBottomRightX() - 170, gmm.getBottomRightY());
     }

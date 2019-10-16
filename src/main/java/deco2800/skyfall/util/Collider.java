@@ -133,7 +133,7 @@ public class Collider {
         }
 
         // y larger
-        return !(y > collider.y + collider.yLength);
+        return (y <= collider.y + collider.yLength);
     }
 
     /**

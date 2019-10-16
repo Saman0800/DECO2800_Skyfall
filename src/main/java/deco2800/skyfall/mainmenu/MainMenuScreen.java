@@ -31,9 +31,9 @@ public class MainMenuScreen implements Screen {
     private static final int MIN_WIDTH = 1280;
 
     // Used for generating readable save names.
-    private static char[] CONSONANTS = { 'B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'V',
-            'W', 'X', 'Z' };
-    private static char[] VOWELS = { 'A', 'E', 'I', 'O', 'U', 'Y' };
+    private static final char[] CONSONANTS = {'B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V',
+            'W', 'X', 'Z'};
+    private static final char[] VOWELS = {'A', 'E', 'I', 'O', 'U', 'Y'};
 
     private final List<Save> saveInfoList;
     private Window loadGameWindow;
@@ -91,7 +91,6 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 GameManager.get().setIsTutorial(true);
-                // TODO Accept user-provided seed or generate random seed.
                 game.setScreen(new GameScreen(game, 3, true));
             }
         });
@@ -108,7 +107,6 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 GameManager.get().setIsTutorial(false);
-                // TODO Accept user-provided seed or generate random seed.
                 game.setScreen(new GameScreen(game, 3, false));
             }
         });

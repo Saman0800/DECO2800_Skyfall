@@ -92,22 +92,22 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
     @Override
     public int getDamage() {
         switch (buildingType) {
-        case CABIN:
-            return 0;
-        case CASTLE:
-            return 1;
-        case TOWNCENTRE:
-            return 2;
-        case FENCE:
-            return 0;
-        case SAFEHOUSE:
-            return 1;
-        case WATCHTOWER:
-            return 2;
-        case STORAGE_UNIT:
-            return 0;
-        default:
-            return 0;
+            case CABIN:
+                return 0;
+            case CASTLE:
+                return 1;
+            case TOWNCENTRE:
+                return 2;
+            case FENCE:
+                return 0;
+            case SAFEHOUSE:
+                return 1;
+            case WATCHTOWER:
+                return 2;
+            case STORAGE_UNIT:
+                return 0;
+            default:
+                return 0;
         }
     }
 
@@ -137,7 +137,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Constructor for an building entity with normal rendering size.
-     * 
+     *
      * @param col          the col position on the world
      * @param row          the row position on the world
      * @param renderOrder  the height position on the world
@@ -153,7 +153,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Constructor for an building entity with customized scaling factors.
-     * 
+     *
      * @param col             the col position on the world
      * @param row             the row position on the world
      * @param renderOrder     the height position on the world
@@ -162,7 +162,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
      * @param rowRenderLength factor to scale the texture width
      */
     public BuildingEntity(float col, float row, int renderOrder, BuildingType buildingType, float colRenderLength,
-            float rowRenderLength) {
+                          float rowRenderLength) {
         super(col, row, renderOrder, colRenderLength, rowRenderLength);
         this.setObjectName(ENTITY_ID_STRING);
         this.setRenderOrder(renderOrder);
@@ -243,7 +243,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Get the type of building
-     * 
+     *
      * @return building type
      */
     public BuildingType getBuildingType() {
@@ -252,7 +252,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Set the time needed to build a building entity.
-     * 
+     *
      * @param time time cost
      */
     public void setBuildTime(int time) {
@@ -261,7 +261,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Get the time needed to build a building entity.
-     * 
+     *
      * @return time cost
      */
     public int getBuildTime() {
@@ -270,7 +270,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Set the resources needed to build a building entity.
-     * 
+     *
      * @param resource resource name
      * @param cost     number of the resource cost
      */
@@ -292,7 +292,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Adds a texture to the buildings list of textures.
-     * 
+     *
      * @param name    the name of the texture
      * @param texture the texture
      */
@@ -314,7 +314,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Set the initial health to a building entity.
-     * 
+     *
      * @param health a building's initial health
      */
     private void setInitialHealth(int health) {
@@ -324,7 +324,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Get the initial health to a building entity.
-     * 
+     *
      * @return a building's initial health
      */
     public int getInitialHealth() {
@@ -333,7 +333,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Set a building entity length related to number of tile in terms of column.
-     * 
+     *
      * @param length a building's length (x length)
      */
     public void setLength(int length) {
@@ -344,7 +344,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Get a building entity length related to number of tile in terms of column.
-     * 
+     *
      * @return a building's length (x length)
      */
     public int getLength() {
@@ -353,7 +353,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Set a building entity width related to number of tile in terms of row.
-     * 
+     *
      * @param width a building's width (y length)
      */
     public void setWidth(int width) {
@@ -364,7 +364,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Get a building entity width related to number of tile in terms of row.
-     * 
+     *
      * @return a building's width (y length)
      */
     public int getWidth() {
@@ -373,7 +373,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Set a building entity upgrade state.
-     * 
+     *
      * @param upgradable by boolean value
      */
     public void setUpgradable(boolean upgradable) {
@@ -382,7 +382,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Get a building entity current upgrade state.
-     * 
+     *
      * @return boolean value for current upgrade state
      */
     public boolean isUpgradable() {
@@ -391,7 +391,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Set the level to a building entity.
-     * 
+     *
      * @param level building level
      */
     public void setBuildingLevel(int level) {
@@ -400,7 +400,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Get a building entity current level.
-     * 
+     *
      * @return current building level
      */
     public int getBuildingLevel() {
@@ -409,7 +409,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Updates the health of a Building
-     * 
+     *
      * @param amount - Amount of heath to update
      */
     public void updateHealth(int amount) {
@@ -423,7 +423,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Get the current health of a building entity.
-     * 
+     *
      * @return current building health
      */
     public int getCurrentHealth() {
@@ -496,9 +496,8 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
      *
      * @return The name of the item
      */
-    // @Override
     public void toggleBlueprintLearned() {
-        // TODO: Needs to be implemented
+        // TODO: This method needs to be implimented
     }
 
     public void cabinInteract() {
@@ -530,7 +529,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * getter method
-     * 
+     *
      * @return InventoryManager of the Building
      */
     public InventoryManager getInventoryManager() {
@@ -539,7 +538,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * setter method
-     * 
+     *
      * @param inventoryManager InventoryManager of the Building
      */
     public void setInventoryManager(InventoryManager inventoryManager) {
@@ -548,7 +547,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     /**
      * Add item into inventory of the building
-     * 
+     *
      * @param item the item added into inventory of the building
      * @return true if added successfully, otherwise false
      */
@@ -557,7 +556,6 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
     }
 
     /**
-     *
      * @param item
      */
     public void quickAccessRemove(Item item) {

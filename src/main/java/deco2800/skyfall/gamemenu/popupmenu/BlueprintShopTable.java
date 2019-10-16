@@ -10,6 +10,7 @@ import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.resources.Blueprint;
+
 import java.util.List;
 
 
@@ -33,7 +34,7 @@ public class BlueprintShopTable extends AbstractPopUpElement {
      * @param skin            Current skin.
      */
     public BlueprintShopTable(Stage stage, ImageButton exit, String[] textureNames, TextureManager tm,
-            GameMenuManager gameMenuManager, StatisticsManager sm, Skin skin) {
+                              GameMenuManager gameMenuManager, StatisticsManager sm, Skin skin) {
         super(stage, exit, textureNames, tm, gameMenuManager);
         this.skin = skin;
         this.draw();
@@ -60,7 +61,7 @@ public class BlueprintShopTable extends AbstractPopUpElement {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Draw the whole blueprint shop table.
      */
     @Override
