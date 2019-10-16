@@ -66,7 +66,6 @@ public class WorldDirectorTest {
 //        verify(builder, times(3)).addBiome(any(AbstractBiome.class), any(Integer.class));
 //    }
 
-
     @Test
     public void constructServerWorldTest(){
         WorldBuilder builder = Mockito.mock(WorldBuilder.class);
