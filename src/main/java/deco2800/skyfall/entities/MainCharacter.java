@@ -1168,7 +1168,7 @@ public class MainCharacter extends Peon
                     isOnVehicle=true;
                     setCurrentState(AnimationRole.NULL);
                     vehicleTexture("sand_car");
-                    maxSpeed=10f;
+                    maxSpeed=20f;
                     vehicleType = "sand_car";
                     unlockBiome("desert");
                 }
