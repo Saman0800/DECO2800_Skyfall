@@ -49,8 +49,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("load_game_delete", new Texture("resources/load_game_menu/delete.png"));
 
             textureMap.put("spacman_ded", new Texture("resources/spacman_ded.png"));
-            textureMap.put("spacman_blue", new Texture("resources/spacman_blue.png"));
-            textureMap.put("bowman", new Texture("resources/bowman.png"));
             textureMap.put("dialogue_text_background", new Texture("resources/dialogue_text_background.png"));
 
             textureMap.put("tornado_placeholder", new Texture("resources/spells/tornado_3.png"));
@@ -336,7 +334,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("menu_panel", new Texture("resources/menu_panel.png"));
             textureMap.put("exitButton", new Texture("resources/exit_button.png"));
             textureMap.put("inv_button", new Texture("resources/inv_button.png"));
-            textureMap.put("Sand", new Texture("resources/temp_sand.png"));
             textureMap.put("Select", new Texture("resources/item_selected.png"));
             textureMap.put("quick_access_panel", new Texture("quick_access_panel.png"));
             textureMap.put("drop", new Texture("resources/inventory/drop_active.png"));
@@ -349,7 +346,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("addqa inactive", new Texture("resources/inventory/add_qa_inactive.png"));
             textureMap.put("removeqa", new Texture("resources/inventory/removeqa_active.png"));
             textureMap.put("removeqa inactive", new Texture("resources/inventory/removeqa_inactive.png"));
-            textureMap.put("takeall", new Texture("resources/takeall.png"));
             textureMap.put("selected", new Texture("resources/items_icons/selected.png"));
             textureMap.put("item_background", new Texture("resources/items_icons/item_background.png"));
             textureMap.put("checked", new Texture("resources/checked.png"));
