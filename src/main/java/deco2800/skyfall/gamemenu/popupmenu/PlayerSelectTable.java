@@ -112,7 +112,7 @@ public class PlayerSelectTable extends AbstractPopUpElement{
         leftArrow.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                currentCharacter = (currentCharacter + gameMenuManager.NUMBEROFCHARACTERS - 1) % gameMenuManager.NUMBEROFCHARACTERS;
+                currentCharacter = (currentCharacter + GameMenuManager.NUMBEROFCHARACTERS - 1) % GameMenuManager.NUMBEROFCHARACTERS;
                 updateCharacters(characterTables, characterTableWidth);
             }
         });
@@ -120,7 +120,7 @@ public class PlayerSelectTable extends AbstractPopUpElement{
         rightArrow.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                currentCharacter = (currentCharacter + 1) % gameMenuManager.NUMBEROFCHARACTERS;
+                currentCharacter = (currentCharacter + 1) % GameMenuManager.NUMBEROFCHARACTERS;
                 updateCharacters(characterTables, characterTableWidth);
             }
         });

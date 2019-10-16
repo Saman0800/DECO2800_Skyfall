@@ -1,6 +1,5 @@
 package deco2800.skyfall.buildings;
 
-import com.badlogic.gdx.graphics.Texture;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.SaveableEntity;
@@ -26,8 +25,8 @@ import java.util.Map;
  */
 public abstract class AbstractPortal extends SaveableEntity {
     // a logger
+
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPortal.class);
-    // a building object name
     private static final String ENTITY_ID_STRING = "PortalID";
     // The next biome to teleport to
     String nextBiome;

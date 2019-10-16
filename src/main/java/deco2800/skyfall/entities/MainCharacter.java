@@ -301,14 +301,7 @@ public class MainCharacter extends Peon
         configureAnimations();
 
         spellCaster = new SpellCaster(this);
-
-//        updatePosition();
     }
-
-    /**
-     * The GUI PopUp for the character
-     */
-    private GameMenuManager gameMenuManager;
 
     /**
      * Base Main Character constructor
@@ -658,20 +651,15 @@ public class MainCharacter extends Peon
         // Determine the vehicle they are entering and set their new speed and
         // texture
         if (vehicle.equals("Camel")) {
-            // this.setTexture();
             setAcceleration(0.1f);
             setMaxSpeed(0.8f);
         } else if (vehicle.equals("Dragon")) {
-            // this.setTexture();
             setAcceleration(0.125f);
             setMaxSpeed(1f);
         } else if (vehicle.equals("Boat")) {
-            // this.setTexture();
             setAcceleration(0.01f);
             setMaxSpeed(0.5f);
-            //changeSwimming(true);
         } else {
-            // this.setTexture();
             setAcceleration(0.03f);
             setMaxSpeed(0.6f);
         }
@@ -1609,6 +1597,8 @@ public class MainCharacter extends Peon
                 unlocked.add(new Spear());
                 unlocked.add(CASTLE);
                 break;
+            default:
+                break;
         }
 
         // for portals
@@ -1632,6 +1622,8 @@ public class MainCharacter extends Peon
                 if (qm.questFinished()) {
                     unlocked.add(new ForestPortal(0, 0, 0));
                 }
+                break;
+            default:
                 break;
         }
         return unlocked;
@@ -2061,7 +2053,6 @@ public class MainCharacter extends Peon
         private float col;
         private float row;
         private int health;
-        // private Map<String, List<Item>> inventoryContents;
         private WeaponManager weapons;
         private HashMap<Integer, Integer> goldPouch;
         private List<Item> hotbar;
@@ -2072,18 +2063,11 @@ public class MainCharacter extends Peon
             this.row = character.getRow();
             this.saveID = character.save.getSaveID();
             this.mainCharacterID = character.id;
-//             this.equippedItem = character.equippedItem;
             this.level = character.level;
             this.health = character.getHealth();
             this.foodLevel = character.foodLevel;
             this.foodAccum = character.foodAccum;
             this.goldPouch = character.goldPouch;
-            // this.blueprints = character.blueprintsLearned;
-            // inventoryContents =
-            //     GameManager.getManagerFromInstance(InventoryManager.class).getContents();
-            // this.inventory = character.inventories;
-            // this.weapons = character.weapons;
-            // this.hotbar = character.hotbar;
         }
     }
 }

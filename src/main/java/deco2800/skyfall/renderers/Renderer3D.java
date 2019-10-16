@@ -204,8 +204,8 @@ public class Renderer3D implements Renderer {
                     // think of a massive tree with the tree trunk at the centre of the tile
                     // and it's branches and leaves over surrounding tiles
 
-                    int drawX = (int) (childWorldCoord[0] + (w - childTex.getWidth()) / 2 * WorldUtil.SCALE_X);
-                    int drawY = (int) (childWorldCoord[1] + (h - childTex.getHeight()) / 2 * WorldUtil.SCALE_Y);
+                    int drawX = (int) (childWorldCoord[0] + (w - childTex.getWidth()) / 2.0 * WorldUtil.SCALE_X);
+                    int drawY = (int) (childWorldCoord[1] + (h - childTex.getHeight()) / 2.0 * WorldUtil.SCALE_Y);
 
                     batch.draw(childTex, drawX, drawY, childTex.getWidth() * WorldUtil.SCALE_X,
                             childTex.getHeight() * WorldUtil.SCALE_Y);

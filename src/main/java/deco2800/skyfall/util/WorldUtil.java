@@ -1,14 +1,13 @@
 package deco2800.skyfall.util;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
-
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.worlds.Tile;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
 
 /**
  * A utility class for the World instances
@@ -100,7 +99,7 @@ public class WorldUtil {
 	 * @param row the y coordinate of a position
 	 * @return A boolean stating if the position is safe to walk on.
 	 */
-	public static boolean isWalkable(float col, float row) {
+	private static boolean isWalkable(float col, float row) {
 		if (GameManager.get().getWorld() == null || GameManager.get().getWorld().getTile(col, row) == null)
 			return false;
 
