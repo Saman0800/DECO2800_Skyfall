@@ -1,6 +1,7 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.graphics.Texture;
+import deco2800.skyfall.GameLauncher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -531,7 +532,8 @@ public class TextureManager extends AbstractManager {
             }
 
         } else {
-            return textureMap.get("lake1.1");
+            LOGGER.warn("Texture {} could not be found", id);
+            return textureMap.get("spacman_ded");
         }
     }
 

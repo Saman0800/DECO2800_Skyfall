@@ -86,7 +86,6 @@ public abstract class AbstractPortal extends SaveableEntity {
      * @param save - The Save file this is for
      */
     public void teleport(Save save) {
-
         // Stop the music from the previous biome/world
         SoundManager.stopSound(GameManager.get().getManager(EnvironmentManager.class).getFilename());
 
@@ -106,8 +105,6 @@ public abstract class AbstractPortal extends SaveableEntity {
         Tile.resetID();
         GameManager gameManager = GameManager.get();
         gameManager.setWorld(nextWorld);
-
-        character.unlockBiome(nextBiome);
     }
 
     /**
