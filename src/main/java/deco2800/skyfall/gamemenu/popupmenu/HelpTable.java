@@ -16,6 +16,10 @@ import deco2800.skyfall.managers.TextureManager;
 public class HelpTable extends AbstractPopUpElement{
     private Skin skin;
     private Table table;
+    private Image pages[] = {new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page1")),
+            new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page2")),
+            new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page3"))};
+
 
     /**
      * Constructs a help table.
@@ -70,7 +74,7 @@ public class HelpTable extends AbstractPopUpElement{
 
         drawBanner();
         // Show first page
-        toPrev();
+        toPage(1);
         table.setVisible(false);
         stage.addActor(table);
     }
@@ -85,8 +89,61 @@ public class HelpTable extends AbstractPopUpElement{
         Label title = new Label("HELP", skin, "navy-text");
         banner.add(title);
 
-        table.add(banner).width(700).height(70).padTop(20).colspan(2);
+        table.add(banner).width(700).height(70).padTop(20).colspan(4);
         table.row().padTop(10);
+    }
+
+    /**
+     * Switch page {page} (more commands).
+     *
+     * @param page page we want to switch to
+     */
+    private void toPage(int page) {
+        Image currentPage = pages[page - 1];
+        table.add(currentPage).width(650).height(1704f / 2556 * 650).colspan(4);
+        table.row();
+
+        TextureRegionDrawable arrow = gameMenuManager.generateTextureRegionDrawableObject("help_arrow");
+
+        if (page > 1) {
+            ImageButton leftArrow = new ImageButton(arrow);
+            // Rotates the arrow
+            leftArrow.setTransform(true);
+            leftArrow.setOrigin(30, 25);
+            leftArrow.setRotation(180);
+            table.add(leftArrow).width(60).height(50).padLeft(10).spaceRight(10);
+            leftArrow.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    // Redraws the table and switch to the second page
+                    table.clearChildren();
+                    drawBanner();
+                    toPage(page-1);
+                }
+            });
+            Label prev = new Label("PREVIOUS", skin, "white-text");
+            prev.setFontScale(0.7f);
+            table.add(prev).left().expandX();
+        }
+
+        if (page < 3) {
+            Label next = new Label("NEXT", skin, "white-text");
+            next.setFontScale(0.7f);
+            table.add(next).right().expandX();
+
+            ImageButton rightArrow = new ImageButton(arrow);
+            table.add(rightArrow).width(60).height(50).spaceLeft(10).padRight(10);
+            rightArrow.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    // Redraw the table and switch to first page
+                    table.clearChildren();
+                    drawBanner();
+                    toPage(page+1);
+                }
+            });
+        }
+
     }
 
     /**
@@ -94,7 +151,7 @@ public class HelpTable extends AbstractPopUpElement{
      */
     private void toNext() {
         Image page2 = new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page2"));
-        table.add(page2).width(650).height(1704f / 2556 * 650).colspan(2);
+        table.add(page2).width(650).height(1704f / 2556 * 650).colspan(4);
         table.row();
 
         TextureRegionDrawable arrow = gameMenuManager.generateTextureRegionDrawableObject("help_arrow");
