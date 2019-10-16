@@ -6,7 +6,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.gamemenu.popupmenu.InventoryTable;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.managers.TextureManager;
@@ -45,8 +44,6 @@ public class GameMenuBar2 extends AbstractUIElement {
     private InventoryManager inventory;
     // Main character in the game
     private MainCharacter mainCharacter;
-
-    private boolean isInventoryTableOn;
 
     /**
      * Constructs the right side of the menu including equipped table which shows
@@ -130,7 +127,7 @@ public class GameMenuBar2 extends AbstractUIElement {
         this.equipActive.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!quickAccessSelected.isEmpty() && !isInventoryTableOn) {
+                if (!quickAccessSelected.isEmpty()) {
                     Item item = inventory.drop(quickAccessSelected);
                     if (mainCharacter.setEquippedItem(item)) {
                         setEquipped(quickAccessSelected);
@@ -159,7 +156,7 @@ public class GameMenuBar2 extends AbstractUIElement {
         this.removeActive.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!quickAccessSelected.isEmpty() && !isInventoryTableOn) {
+                if (!quickAccessSelected.isEmpty()) {
                     inventory.quickAccessRemove(quickAccessSelected);
                     quickAccessSelected = "Nothing";
                     removeQuickAccessPanel();
@@ -227,9 +224,6 @@ public class GameMenuBar2 extends AbstractUIElement {
             icon.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if (isInventoryTableOn) {
-                        return;
-                    }
                     if (!quickAccessSelected.equals(icon.getName())) {
                         quickAccessSelected = icon.getName();
                     } else {
@@ -292,7 +286,7 @@ public class GameMenuBar2 extends AbstractUIElement {
             removeInactive.setVisible(false);
             removeActive.setVisible(true);
 
-            if (inventory.getItemInstance(quickAccessSelected).isEquippable()) {
+            if (Boolean.TRUE.equals(inventory.getItemInstance(quickAccessSelected).isEquippable())) {
                 equipActive.setVisible(true);
                 equipInactive.setVisible(false);
             }
@@ -325,11 +319,6 @@ public class GameMenuBar2 extends AbstractUIElement {
     @Override
     public void update() {
         super.update();
-        if (gmm.getCurrentPopUp() instanceof InventoryTable) {
-            isInventoryTableOn  = true;
-        } else {
-            isInventoryTableOn = false;
-        }
         setEquipped(gmm.getMainCharacter().getEquippedItem().getName());
     }
 }

@@ -157,6 +157,10 @@ public class ConstructionTable extends AbstractPopUpElement {
         }
     }
 
+    public void setBuildingID(BuildingType buildingID) {
+        this.buildingID = buildingID;
+    }
+
     /**
      *
      * @param type - index of the values in BuildingType

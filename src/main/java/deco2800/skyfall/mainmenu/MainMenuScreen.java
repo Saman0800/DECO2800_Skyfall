@@ -231,7 +231,7 @@ public class MainMenuScreen implements Screen {
             Button deleteSaveButton = new Button(skin, LOAD_GAME_STYLE);
             deleteSaveButton.setColor(Color.LIGHT_GRAY);
             deleteSaveButton.add(deleteIcon).pad(-50).center();
-            loadGameWindow.addListener(new ClickListener() {
+            deleteSaveButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     DatabaseManager.get().getDataBaseConnector().deleteSave(saveID);

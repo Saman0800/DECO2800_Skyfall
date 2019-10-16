@@ -1,11 +1,20 @@
-
 package deco2800.skyfall.buildings;
 
+import com.badlogic.gdx.graphics.Texture;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.SaveableEntity;
+import deco2800.skyfall.managers.DatabaseManager;
+import deco2800.skyfall.managers.EnvironmentManager;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.SoundManager;
+import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.World;
+import deco2800.skyfall.worlds.world.WorldBuilder;
+import deco2800.skyfall.worlds.world.WorldDirector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,19 +24,19 @@ import java.util.Map;
  * An AbstractPortal is an item that can transport a players position to the
  * specified Biome, given the player has reached the necessary requirements.
  */
-public abstract class AbstractPortal extends AbstractEntity {
+public abstract class AbstractPortal extends SaveableEntity {
     // a logger
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPortal.class);
     // a building object name
     private static final String ENTITY_ID_STRING = "PortalID";
     // The next biome to teleport to
-    private String nextBiome;
+    String nextBiome;
 
     private Map<String, Integer> buildCost;
 
-    protected boolean blueprintLearned = false;
-    protected String name = "abstractPortal";
-    protected String currentBiome;
+    String currentBiome;
+    String name;
+    boolean blueprintLearned;
 
     /**
      * Constructor for an building entity with normal rendering size.
@@ -74,12 +83,31 @@ public abstract class AbstractPortal extends AbstractEntity {
      * Move characters location to the next biome To be implemented when a player
      * clicks on the portal
      *
-     * @param character - The Character to teleport
-     * @param nextBiome - the Biome to teleport to
+     * @param save - The Save file this is for
      */
-    public void teleport(MainCharacter character, World nextBiome) {
-        // TODO: @CGulley - Create a general teleport method for all portals.
-        // For now, individual functionality in child classes
+    public void teleport(Save save) {
+
+        // Stop the music from the previous biome/world
+        SoundManager.stopSound(GameManager.get().getManager(EnvironmentManager.class).getFilename());
+
+        // Create a random world
+        MainCharacter character = save.getMainCharacter();
+        World currentWorld = character.getSave().getCurrentWorld();
+        World nextWorld = WorldDirector.constructSingleBiomeWorld(new WorldBuilder(), currentWorld.getSeed() + 1, true, nextBiome).getWorld();
+        // Add this world to the save
+        save.getWorlds().add(nextWorld);
+        save.setCurrentWorld(nextWorld);
+        nextWorld.setSave(save);
+        // Move main character to origin of new world
+        save.getMainCharacter().setPosition(0, 0);
+        DatabaseManager.get().getDataBaseConnector().saveGame(save);
+
+        AbstractEntity.resetID();
+        Tile.resetID();
+        GameManager gameManager = GameManager.get();
+        gameManager.setWorld(nextWorld);
+
+        character.unlockBiome(nextBiome);
     }
 
     /**
@@ -163,5 +191,16 @@ public abstract class AbstractPortal extends AbstractEntity {
     public void unlocknext(MainCharacter character, String next) {
 
     }
+
+    /**
+     * Returns the next biome for this portal
+     *
+     * @return the next biome for this portal
+     */
+    public String getNextBiome() {
+        return this.nextBiome;
+    }
+
+
 
 }
