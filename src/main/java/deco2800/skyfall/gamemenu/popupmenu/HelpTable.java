@@ -97,7 +97,7 @@ public class HelpTable extends AbstractPopUpElement{
         table.add(page2).width(650).height(1704f / 2556 * 650).colspan(2);
         table.row();
 
-        TextureRegionDrawable arrow = gameMenuManager.generateTextureRegionDrawableObject("help_arrow");
+        TextureRegionDrawable arrow = gameMenuManager.generateTextureRegionDrawableObject("arrow");
         ImageButton leftArrow = new ImageButton(arrow);
         // Rotates the arrow
         leftArrow.setTransform(true);
@@ -131,7 +131,7 @@ public class HelpTable extends AbstractPopUpElement{
         next.setFontScale(0.7f);
         table.add(next).right().expandX();
 
-        TextureRegionDrawable arrow = gameMenuManager.generateTextureRegionDrawableObject("help_arrow");
+        TextureRegionDrawable arrow = gameMenuManager.generateTextureRegionDrawableObject("arrow");
         ImageButton rightArrow = new ImageButton(arrow);
         table.add(rightArrow).width(60).height(50).spaceLeft(10).padRight(10);
         rightArrow.addListener(new ClickListener() {

@@ -213,7 +213,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("tutorial_4", new Texture("resources/tutorial/tutorial_4.png"));
             textureMap.put("tutorial_5", new Texture("resources/tutorial/tutorial_5.png"));
             textureMap.put("next_back_button", new Texture("resources/tutorial/next_back_button.png"));
-            textureMap.put("home_button", new Texture("resources/tutorial/home_button.png"));
+            textureMap.put("home_button", new Texture("resources/tutorial/done.png"));
 
 
             files = new File("resources/world_details").listFiles();
@@ -313,12 +313,11 @@ public class TextureManager extends AbstractManager {
             textureMap.put("knob", new Texture("resources/new_ui/pauseTable/volume_knob.png"));
             textureMap.put("knob_before", new Texture("resources/new_ui/pauseTable/volume_green.png"));
             textureMap.put("equipped_bar", new Texture("resources/new_ui/equipped_bar.png"));
-
+            textureMap.put("arrow", new Texture("resources/new_ui/arrow.png"));
 
             // Help table
             textureMap.put("help_page1", new Texture("resources/new_ui/helpTable/help_page1.png"));
             textureMap.put("help_page2", new Texture("resources/new_ui/helpTable/help_page2.png"));
-            textureMap.put("help_arrow", new Texture("resources/new_ui/helpTable/arrow.png"));
 
             // Clock/Season graphics
             textureMap.put("dawn", new Texture("resources/clock/dawn_clock.png"));
