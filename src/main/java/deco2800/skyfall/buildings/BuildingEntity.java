@@ -2,29 +2,21 @@ package deco2800.skyfall.buildings;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.google.gson.annotations.Expose;
-
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.entities.AbstractEntity;
-
 import deco2800.skyfall.entities.ICombatEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.Projectile;
-import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
-
 import deco2800.skyfall.managers.InventoryManager;
-
-
 import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.resources.Item;
-
 import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.world.World;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +33,7 @@ import static deco2800.skyfall.entities.MainCharacter.*;
 public class BuildingEntity extends AbstractEntity implements ICombatEntity {
 
     // a logger
-    private final transient Logger log = LoggerFactory.getLogger(BuildingEntity.class);
+    private final Logger log = LoggerFactory.getLogger(BuildingEntity.class);
     // a building object name
     private static final String ENTITY_ID_STRING = "buildingEntityID";
     private Collider collider;
@@ -326,7 +318,7 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
      * Set the initial health to a building entity.
      * @param health a building's initial health
      */
-    public void setInitialHealth(int health) {
+    private void setInitialHealth(int health) {
         maxHealth = health;
         this.currentHealth = maxHealth;
     }

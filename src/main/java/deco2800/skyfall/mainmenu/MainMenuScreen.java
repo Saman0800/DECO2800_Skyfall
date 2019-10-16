@@ -32,7 +32,7 @@ public class MainMenuScreen implements Screen {
      */
     public MainMenuScreen(final SkyfallGame game) {
         this.game = game;
-        stage = new Stage(new ExtendViewport(MIN_WIDTH, MIN_HEIGHT), game.batch);
+        stage = new Stage(new ExtendViewport(MIN_WIDTH, MIN_HEIGHT), game.getBatch());
         skin = GameManager.get().getSkin();
 
         Image background = new Image(GameManager.get().getManager(TextureManager.class).getTexture("background"));

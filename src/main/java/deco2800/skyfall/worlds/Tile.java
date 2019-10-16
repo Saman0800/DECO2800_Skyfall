@@ -1,11 +1,7 @@
 package deco2800.skyfall.worlds;
 
-import java.util.*;
-import java.util.Map.Entry;
-
 import com.badlogic.gdx.graphics.Texture;
 import com.google.gson.annotations.Expose;
-
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.NetworkManager;
@@ -20,6 +16,9 @@ import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
 import org.javatuples.Pair;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 public class Tile {
     private static int nextID = 0;

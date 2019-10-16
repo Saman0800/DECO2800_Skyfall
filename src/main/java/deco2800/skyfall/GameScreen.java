@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
@@ -36,34 +35,28 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 
 public class GameScreen implements Screen, KeyDownObserver {
-    private final Logger logger = LoggerFactory.getLogger(Renderer3D.class);
-    @SuppressWarnings("unused")
-    private final SkyfallGame game;
+    private final Logger logger = LoggerFactory.getLogger(GameScreen.class);
+
     /**
      * Set the renderer. 3D is for Isometric worlds Check the documentation for each
      * renderer to see how it handles WorldEntity coordinates
      */
-    Renderer3D renderer = new Renderer3D();
-    OverlayRenderer rendererDebug = new OverlayRenderer();
-    World world;
-    Save save;
-    static Skin skin;
+    private Renderer3D renderer = new Renderer3D();
+    private OverlayRenderer rendererDebug = new OverlayRenderer();
+    private World world;
+    private Save save;
+
 
     /**
      * Create a camera for panning and zooming. Camera must be updated every render
      * cycle.
      */
-    PotateCamera camera;
-    PotateCamera cameraDebug;
+    private PotateCamera camera;
+    private PotateCamera cameraDebug;
     private Stage stage = new Stage(new ExtendViewport(1280, 720));
 
-    long lastGameTick = 0;
+    private long lastGameTick = 0;
 
-
-    /**
-     * Create an EnvironmentManager for ToD.
-     */
-    EnvironmentManager timeOfDay;
     private static boolean isPaused = false;
 
     public static boolean getIsPaused(){
@@ -92,8 +85,6 @@ public class GameScreen implements Screen, KeyDownObserver {
 
     public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
         /* Create an example world for the engine */
-        this.game = game;
-
         this.save = new Save();
 
         MainCharacter.getInstance(0,0,0.05f, "Main Piece", 50);
@@ -164,8 +155,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         gameManager.addManager(new InventoryManager());
 
         /* Add construction manager to game manager */
-        //gameManager.addManager(new ConstructionManager());
-
         /* Add environment to game manager */
         EnvironmentManager gameEnvironManag = gameManager.getManager(EnvironmentManager.class);
         // For debuggin only!
@@ -177,7 +166,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         /* Add Quest Manager to game manager*/
         gameManager.addManager(new QuestManager());
 
-        /**
+        /*
          * NOTE: Now that the Environment Manager has been added start creating the
          * SpectralValue instances for the Ambient Light.
          */
