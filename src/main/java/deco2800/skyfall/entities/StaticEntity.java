@@ -23,9 +23,9 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
     private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
 
     private static final String ENTITY_ID_STRING = "staticEntityID";
-    private static TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
+    private static final TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
 
-    public Map<HexVector, String> children;
+    private Map<HexVector, String> children;
 
     private Map<HexVector, String> textures;
 
@@ -47,7 +47,6 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
         children.put(hexVector, memento.texture);
         if (!WorldUtil.validColRow(hexVector)) {
             log.debug("{} Is Invalid:", hexVector);
-            return;
         }
 
     }
@@ -235,7 +234,7 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
      */
     private Tile textureToTile(HexVector offset, HexVector center) {
         if (!WorldUtil.validColRow(offset)) {
-            log.debug(offset + " Is Invaid:");
+            log.debug("{} Is Invaid:", offset);
             return null;
         }
         HexVector targetTile = center.add(offset);

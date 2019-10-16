@@ -1,14 +1,13 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.graphics.Texture;
+import deco2800.skyfall.GameLauncher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Texture manager acts as a cache between the file system and the renderers.
@@ -46,6 +45,9 @@ public class TextureManager extends AbstractManager {
     public TextureManager() {
         try {
             textureMap.put("background", new Texture("resources/actualbackground.jpg"));
+            textureMap.put("load_game_back", new Texture("resources/load_game_menu/back.png"));
+            textureMap.put("load_game_delete", new Texture("resources/load_game_menu/delete.png"));
+
             textureMap.put("spacman_ded", new Texture("resources/spacman_ded.png"));
             textureMap.put("spacman_blue", new Texture("resources/spacman_blue.png"));
             textureMap.put("bowman", new Texture("resources/bowman.png"));
@@ -60,6 +62,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("camel_character", new Texture("resources/camel/camel-withplayer1(left).png"));
             textureMap.put("horse_images", new Texture("resources/horse_images/horse-left-walk1.png"));
             textureMap.put("horse_character", new Texture("resources/horse_images/horse-left-walk-with-player1.png"));
+
+            textureMap.put("loading_texture", new Texture("resources/loading_anim.gif"));
 
             // Tile textures
             // Goes through all the folders with tile_textures and adds the tile name to the
@@ -101,18 +105,54 @@ public class TextureManager extends AbstractManager {
             textureMap.put("ruinedCity", new Texture("resources/Environment/ruinedCity.png"));
             textureMap.put("ruinedRobot", new Texture("resources/Environment/ruinedRobot.png"));
 
-            /*
             // New Enemies (Scout, Heavy, Abductor)
-            textureMap.put("enemyScout_Move_N", new Texture("resources/Enemies/Abductor/enemy3_B.png"));
-            textureMap.put("enemyScout_Move_NW", new Texture("resources/Enemies/Abductor/enemy3_BL.png"));
-            textureMap.put("enemyScout_Move_NE", new Texture("resources/Enemies/Abductor/enemy3_NE.png"));
-            textureMap.put("enemyScout_Move_S", new Texture("resources/Enemies/Abductor/enemy3_F.png"));
-            textureMap.put("enemyScout_Move_SW", new Texture("resources/Enemies/Abductor/enemy3_FL.png"));
-            textureMap.put("enemyScout_Move_SE", new Texture("resources/Enemies/Abductor/enemy3_FR.png"));
-            textureMap.put("enemyScout_Move_W", new Texture("resources/Enemies/Abductor/enemy3_L.png"));
-            textureMap.put("enemyScout_Move_E", new Texture("resources/Enemies/Abductor/enemy3_R.png"));
-            */
+            textureMap.put("enemyScout_Move_N", new Texture("resources/Enemies/Scout/enemy1_B_walk.png"));
+            textureMap.put("enemyScout_Move_NW", new Texture("resources/Enemies/Scout/enemy1_BL_walk.png"));
+            textureMap.put("enemyScout_Move_NE", new Texture("resources/Enemies/Scout/enemy1_BR_walk.png"));
+            textureMap.put("enemyScout_Move_S", new Texture("resources/Enemies/Scout/enemy1_F_walk.png"));
+            textureMap.put("enemyScout_Move_SW", new Texture("resources/Enemies/Scout/enemy1_FL_walk.png"));
+            textureMap.put("enemyScout_Move_SE", new Texture("resources/Enemies/Scout/enemy1_FR_walk.png"));
+            textureMap.put("enemyScout_Move_W", new Texture("resources/Enemies/Scout/enemy1_L_walk.png"));
+            textureMap.put("enemyScout_Move_E", new Texture("resources/Enemies/Scout/enemy1_R_walk.png"));
 
+            textureMap.put("enemyAbductor", new Texture("resources/Enemies/Abductor/enemy3_F.png"));
+            textureMap.put("enemyAbductor_Move_N", new Texture("resources/Enemies/Abductor/enemy3_B_walk.png"));
+            textureMap.put("enemyAbductor_Move_NW", new Texture("resources/Enemies/Abductor/enemy3_BL_walk.png"));
+            textureMap.put("enemyAbductor_Move_NE", new Texture("resources/Enemies/Abductor/enemy3_BR_walk.png"));
+            textureMap.put("enemyAbductor_Move_S", new Texture("resources/Enemies/Abductor/enemy3_F_walk.png"));
+            textureMap.put("enemyAbductor_Move_SW", new Texture("resources/Enemies/Abductor/enemy3_FL_walk.png"));
+            textureMap.put("enemyAbductor_Move_SE", new Texture("resources/Enemies/Abductor/enemy3_FR_walk.png"));
+            textureMap.put("enemyAbductor_Move_W", new Texture("resources/Enemies/Abductor/enemy3_L_walk.png"));
+            textureMap.put("enemyAbductor_Move_E", new Texture("resources/Enemies/Abductor/enemy3_R_walk.png"));
+
+            textureMap.put("enemyHeavy", new Texture("resources/Enemies/Heavy/enemy2_F.png"));
+            textureMap.put("enemyHeavy_Move_N", new Texture("resources/Enemies/Heavy/enemy2_B_walk.png"));
+            textureMap.put("enemyHeavy_Move_NW", new Texture("resources/Enemies/Heavy/enemy2_BL_walk.png"));
+            textureMap.put("enemyHeavy_Move_NE", new Texture("resources/Enemies/Heavy/enemy2_BR_walk.png"));
+            textureMap.put("enemyHeavy_Move_S", new Texture("resources/Enemies/Heavy/enemy2_F_walk.png"));
+            textureMap.put("enemyHeavy_Move_SW", new Texture("resources/Enemies/Heavy/enemy2_FL_walk.png"));
+            textureMap.put("enemyHeavy_Move_SE", new Texture("resources/Enemies/Heavy/enemy2_FR_walk.png"));
+            textureMap.put("enemyHeavy_Move_W", new Texture("resources/Enemies/Heavy/enemy2_L_walk.png"));
+            textureMap.put("enemyHeavy_Move_E", new Texture("resources/Enemies/Heavy/enemy2_R_walk.png"));
+
+            textureMap.put("enemyHeavy_Attack_N", new Texture("resources/Enemies/Heavy/enemy2_B_attack.png"));
+            textureMap.put("enemyHeavy_Attack_NW", new Texture("resources/Enemies/Heavy/enemy2_BL_attack.png"));
+            textureMap.put("enemyHeavy_Attack_NE", new Texture("resources/Enemies/Heavy/enemy2_BR_attack.png"));
+            textureMap.put("enemyHeavy_Attack_S", new Texture("resources/Enemies/Heavy/enemy2_F_attack.png"));
+            textureMap.put("enemyHeavy_Attack_SW", new Texture("resources/Enemies/Heavy/enemy2_FL_attack.png"));
+            textureMap.put("enemyHeavy_Attack_SE", new Texture("resources/Enemies/Heavy/enemy2_FR_attack.png"));
+            textureMap.put("enemyHeavy_Attack_W", new Texture("resources/Enemies/Heavy/enemy2_L_attack.png"));
+            textureMap.put("enemyHeavy_Attack_E", new Texture("resources/Enemies/Heavy/enemy2_R_attack.png"));
+
+            textureMap.put("enemyHeavy_Damage_E", new Texture("resources/Enemies/Heavy/enemy2_F_die.png"));
+            textureMap.put("enemyHeavy_Damage_N", new Texture("resources/Enemies/Heavy/enemy2_B_damage.png"));
+            textureMap.put("enemyHeavy_Damage_NW", new Texture("resources/Enemies/Heavy/enemy2_BL_damage.png"));
+            textureMap.put("enemyHeavy_Damage_NE", new Texture("resources/Enemies/Heavy/enemy2_BR_damage.png"));
+            textureMap.put("enemyHeavy_Damage_S", new Texture("resources/Enemies/Heavy/enemy2_F_damage.png"));
+            textureMap.put("enemyHeavy_Damage_SW", new Texture("resources/Enemies/Heavy/enemy2_FL_damage.png"));
+            textureMap.put("enemyHeavy_Damage_SE", new Texture("resources/Enemies/Heavy/enemy2_FR_damage.png"));
+            textureMap.put("enemyHeavy_Damage_W", new Texture("resources/Enemies/Heavy/enemy2_L_damage.png"));
+            textureMap.put("enemyDie", new Texture("resources/Enemies/Heavy/enemy2_F_die.png"));
 
             //vehicle section
             //Bike
@@ -120,7 +160,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bikeSOUTH", new Texture("resources/Bike/bike-face-player.png"));
             textureMap.put("bikeNORTH", new Texture("resources/Bike/back-side-player.png"));
             textureMap.put("bikeWEST", new Texture("resources/Bike/leftside-player.png"));
-            textureMap.put("bikeEAST", new Texture("resources/Bike/rightside-player 1.png"));
             textureMap.put("bikeEAST", new Texture("resources/Bike/rightside-player.png"));
 
             // Sand Car
@@ -178,7 +217,7 @@ public class TextureManager extends AbstractManager {
                 }
             }
 
-            textureMap.put("sword", new Texture("resources/weapons/sword.png"));
+
 
             //environment things
             textureMap.put("shipwrecks", new Texture("resources/world_details/shipwrecks.png"));
@@ -190,12 +229,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("axe_tex", new Texture("resources/weapons/axe.png"));
             textureMap.put("bow_tex", new Texture("resources/weapons/bow.png"));
             textureMap.put("spear_tex", new Texture("resources/weapons/spear.png"));
-
-            textureMap.put("bow", new Texture("resources/weapons/bow.png"));
-            textureMap.put("spear", new Texture("resources/weapons/spear.png"));
-
-            textureMap.put("bow_inv", new Texture("resources/weapons/bow.png"));
-            textureMap.put("spear_inv", new Texture("resources/weapons/spear.png"));
+            textureMap.put("sword_tex", new Texture("resources/weapons/sword" +
+                    ".png"));
 
             // Weapons attack
             textureMap.put("sword_attack", new Texture("resources/weapons" +
@@ -206,17 +241,6 @@ public class TextureManager extends AbstractManager {
                     "/ArrowEast.png"));
             textureMap.put("spear_attack", new Texture("resources/weapons" +
                     "/spear.png"));
-
-            // Weapons display
-            textureMap.put("sword_display_inv", new Texture("resources" +
-                    "/weapons" +
-                    "/RustySword.png"));
-            textureMap.put("axe_display_inv", new Texture("resources/weapons" +
-                    "/axe.png"));
-            textureMap.put("bow_display_inv", new Texture("resources/weapons" +
-                    "/bow2.png"));
-            textureMap.put("spear_display_inv", new Texture("resources/weapons" +
-                    "/spear2.png"));
 
             textureMap.put("pop up screen", new Texture("resources/pop_up_screen_background.png"));
             textureMap.put("game menu bar", new Texture("resources/pop_up_screen_title_background.png"));
@@ -249,6 +273,8 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("big_circle", new Texture("resources/new_ui/OrangeCircle.png"));
             textureMap.put("inner_circle", new Texture("resources/new_ui/RedCircle.png"));
+            textureMap.put("mana_big_circle", new Texture("resources/new_ui/LightBlueCircle.png"));
+            textureMap.put("mana_inner_circle", new Texture("resources/new_ui/BlueCircle.png"));
             textureMap.put("blue_pill", new Texture("resources/new_ui/blue_pill_background.png"));
             textureMap.put("green_pill", new Texture("resources/new_ui/green_pill_background.png"));
             textureMap.put("build_button", new Texture("resources/new_ui/build_section.png"));
@@ -389,6 +415,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("Aloe_Vera", new Texture("resources/inventory/apple-1.png"));
             textureMap.put("Berry", new Texture("resources/inventory/201567400471_.pic_thumb.png"));
 
+            // Main Character
             textureMap.put("MainCharacter", new Texture("resources/Main_Character_F_Right.png"));
             textureMap.put("MainCharacterN_Anim", new Texture("resources/Main_Character_Back_Anim.png"));
             textureMap.put("MainCharacterNE_Anim", new Texture("resources/Main_Character_B_Right_Anim.png"));
@@ -398,16 +425,20 @@ public class TextureManager extends AbstractManager {
             textureMap.put("MainCharacterSW_Anim", new Texture("resources/Main_Character_F_Left_Anim.png"));
             textureMap.put("MainCharacterW_Anim", new Texture("resources/Main_Character_Left_Anim.png"));
             textureMap.put("MainCharacterNW_Anim", new Texture("resources/Main_Character_B_Left_Anim.png"));
-
             // Main character Attack animation
             textureMap.put("MainCharacter_Attack_E_Anim", new Texture("resources/Main_Character_Attack_E.png"));
-
+            textureMap.put("MainCharacter_Attack_W_Anim", new Texture("resources/Main_Character_Attack_W.png"));
+            textureMap.put("MainCharacter_Attack_N_Anim", new Texture("resources/Main_Character_Attack_N.png"));
             // Main character Hurt animation
             textureMap.put("MainCharacter_Hurt_E_Anim", new Texture("resources/Main_Character_Hurt_E.png"));
-
+            textureMap.put("MainCharacter_Hurt_W_Anim", new Texture("resources/Main_Character_Hurt_W.png"));
             // Main character Dead animation
             textureMap.put("MainCharacter_Dead_E_Anim", new Texture("resources/Main_Character_Dead_E.png"));
+            textureMap.put("MainCharacter_Dead_L_Anim", new Texture("resources/Main_Character_Dead_L.png"));
+            textureMap.put("MainCharacter_Dead_R_Anim", new Texture("resources/Main_Character_Dead_R.png"));
+            textureMap.put("MainCharacter_Dead_W_Anim", new Texture("resources/Main_Character_Dead_W.png"));
             textureMap.put("MainCharacter_Dead_E_Still", new Texture("resources/Main_Character_Dead_E_3.png"));
+
 
             // Spells
             textureMap.put("spells_fire_Anim", new Texture("resources/spells/fire_spritesheet.png"));
@@ -462,24 +493,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("volcanoPortal_inv", new Texture("resources/world_structures/portal_volcano.png"));
             textureMap.put("mountainPortal_inv", new Texture("resources/world_structures/portal.png"));
 
-            // Old Enemy
-            textureMap.put("robot", new Texture("resources/enemyOld/robot.png"));
-            textureMap.put("spider", new Texture("resources/enemyOld/spider.png"));
-            textureMap.put("flower", new Texture("resources/enemyOld/flower.png"));
-            textureMap.put("enemyStone", new Texture("resources/enemyOld/enemyStone.png"));
-            textureMap.put("flowerDead", new Texture("resources/enemyOld/flowerDead.png"));
-            textureMap.put("treemanDead", new Texture("resources/enemyOld/TreemanDead.png"));
-            textureMap.put("enemyTreeman", new Texture("resources/enemyOld/Treeman.png"));
-            textureMap.put("stoneRS", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRS.png"));
-            textureMap.put("stoneRSE", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRSE.png"));
-            textureMap.put("stoneRSW", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRSW.png"));
-            textureMap.put("stoneRNE", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRNE.png"));
-            textureMap.put("stoneRNW", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRNW.png"));
-            textureMap.put("stoneRN", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/stoneRN.png"));
-            textureMap.put("stoneDead", new Texture("resources/enemyOld/EnemyAnimationPacked/stoneUnderAttacking/Dead.png"));
-
-            System.out.println("ALL TEXTURES LOADED SUCCESSFULLY");
-
+            LOGGER.info("ALL TEXTURES LOADED SUCCESSFULLY");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -518,14 +532,9 @@ public class TextureManager extends AbstractManager {
             }
 
         } else {
-            // log.info("Texture map does not contain P{}, returning default texture.", id);
-            // TODO fix the issue where tiles are not getting added to lakes correctly,
-            // Temporary fix is just to assign tiles without a texture the lake texture so
-            // that the
-            // issue isn't as noticable
-            return textureMap.get("lake1.1");
+            LOGGER.warn("Texture {} could not be found", id);
+            return textureMap.get("spacman_ded");
         }
-
     }
 
     /**

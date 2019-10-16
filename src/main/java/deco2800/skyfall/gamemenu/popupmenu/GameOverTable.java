@@ -87,7 +87,7 @@ public class GameOverTable extends AbstractPopUpElement{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // If pressed, return home and hide screen
-                returnHome();
+                //returnHome();
                 hide();
             }
         });
@@ -113,6 +113,6 @@ public class GameOverTable extends AbstractPopUpElement{
     public void returnHome() {
         // Create a game and set screen to main menu
         gameMenuManager.getGame().create();
-        ((Game)Gdx.app.getApplicationListener()).setScreen(gameMenuManager.getGame().mainMenuScreen);
+        ((Game)Gdx.app.getApplicationListener()).setScreen(gameMenuManager.getGame().getMainMenuScreen());
     }
 }

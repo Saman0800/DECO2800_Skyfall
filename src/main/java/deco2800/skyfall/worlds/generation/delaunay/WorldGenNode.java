@@ -19,6 +19,8 @@ import java.util.*;
  * This</a>
  */
 public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGenNode.WorldGenNodeMemento>, Serializable{
+    private static long nextID = System.nanoTime();
+
     private long id;
 
     // position
@@ -43,7 +45,7 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
      * @param y the y coordinate of the node
      */
     public WorldGenNode(double x, double y) {
-        this.id = System.nanoTime();
+        this.id = nextID++;
         this.x = x;
         this.y = y;
         this.neighbours = new ArrayList<>();
@@ -61,18 +63,23 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
             throw new NullPointerException();
         }
         if (this.getY() == other.getY()) {
-            if (this.getX() == other.getX()) {
-                return 0;
-            }
-            if (this.getX() < other.getX()) {
-                return -1;
-            }
-            return 1;
+            return Double.compare(this.getX(), other.getX());
         }
-        if (this.getY() < other.getY()) {
-            return -1;
+        return Double.compare(this.getY(), other.getY());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof WorldGenNode) {
+            return compareTo((WorldGenNode) obj) == 0;
+        } else {
+            return false;
         }
-        return 1;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getX(), getY());
     }
 
     /**
@@ -83,7 +90,7 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
      *
      * @throws InvalidCoordinatesException if any vertex's coordinates are not 2 dimensional
      */
-    public double[] getCentroid() throws InvalidCoordinatesException {
+    public double[] getCentroid() {
         double[] centroid = { 0, 0 };
         // If there are no vertices, return the same position this node is
         // already in
@@ -164,8 +171,7 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
      *
      * @throws InvalidCoordinatesException if any nodes have a vertex whose coordinates are not 2 dimensional
      */
-    public static void assignNeighbours(List<WorldGenNode> nodes, List<VoronoiEdge> edges, World world)
-            throws InvalidCoordinatesException {
+    public static void assignNeighbours(List<WorldGenNode> nodes, List<VoronoiEdge> edges, World world) {
         // Compare each node with each other node
         for (int i = 0; i < nodes.size(); i++) {
             for (int j = i + 1; j < nodes.size(); j++) {
@@ -196,8 +202,7 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
      *
      * @throws InvalidCoordinatesException if one of the WorldGenNodes has invalid coordinates
      */
-    public static boolean isAdjacent(WorldGenNode a, WorldGenNode b)
-            throws InvalidCoordinatesException {
+    public static boolean isAdjacent(WorldGenNode a, WorldGenNode b) {
         return sharedVertex(a, b, null) != null;
     }
 
@@ -213,8 +218,7 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
      *
      * @throws InvalidCoordinatesException if one of the nodes has a vertex whose coordinates are not 2 dimensions
      */
-    public static double[] sharedVertex(WorldGenNode a, WorldGenNode b, double[] alreadyFoundVertex)
-            throws InvalidCoordinatesException {
+    public static double[] sharedVertex(WorldGenNode a, WorldGenNode b, double[] alreadyFoundVertex) {
         // Compare each vertex of one with each vertex of the other
         for (double[] vertexA : a.getVertices()) {
             if (vertexA.length != 2) {
@@ -469,8 +473,7 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
      * @throws NotEnoughPointsException Thrown when the point set contains less than three points
      * @author Johannes Diemke
      */
-    static TriangleSoup triangulate(List<WorldGenNode> nodes)
-            throws NotEnoughPointsException {
+    static TriangleSoup triangulate(List<WorldGenNode> nodes) {
         TriangleSoup triangleSoup = new TriangleSoup();
 
         if (nodes == null || nodes.size() < 3) {
@@ -636,7 +639,7 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
      *
      * @throws InvalidCoordinatesException if the vertex's coordinates are not 2 dimensional
      */
-    public void addVertex(double[] vertex) throws InvalidCoordinatesException {
+    public void addVertex(double[] vertex) {
         if (vertex.length != 2) {
             throw new InvalidCoordinatesException();
         }
@@ -658,7 +661,7 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
         // (Other parts of the world generation algorithm relies on there being
         // some)
         // TODO remove
-        if (triangleSoup.getBorderNodes().size() == 0) {
+        if (triangleSoup.getBorderNodes().isEmpty()) {
             throw new WorldGenException("No border nodes");
         }
 
@@ -785,8 +788,6 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
         private double x;
         private double y;
 
-        private boolean borderNode;
-
         /**
          * Constructor for a new NodeSaveInfo
          *
@@ -797,6 +798,5 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
             this.x = node.x;
             this.y = node.y;
         }
-
     }
 }

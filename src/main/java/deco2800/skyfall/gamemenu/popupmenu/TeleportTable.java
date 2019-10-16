@@ -7,12 +7,7 @@ import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.QuestManager;
-import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 
 public class TeleportTable extends AbstractPopUpElement {
     private final String type;

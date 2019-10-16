@@ -24,7 +24,7 @@ public class FlameWallTest {
     @Before
     public void setup() throws Exception {
         flameWall = new FlameWall(new HexVector(), "flame_wall",
-                "spell", 2f, 2f,
+                "spell", new HexVector(2f, 2f),
                 1,
                 0.1f,
                 10);
@@ -35,8 +35,8 @@ public class FlameWallTest {
      */
     @Test
     public void positionTest(){
-        //assertThat("", flameWall.getCol(), is(equalTo(2f)));
-        //assertThat("", flameWall.getRow(), is(equalTo(2f)));
+        assertThat("", flameWall.getCol(), is(equalTo(2f)));
+        assertThat("", flameWall.getRow(), is(equalTo(2f)));
     }
 
     @Test

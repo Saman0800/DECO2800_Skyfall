@@ -21,7 +21,7 @@ public class Projectile extends AgentEntity implements Animatable {
     /**
      * How many game ticks all projectiles survive for before being removed.
      */
-    public static final int LIFE_TIME_TICKS = 15;
+    public static final int LIFE_TIME_TICKS = 40;
 
     /**
      * The amount of damage this projectile deals.
@@ -55,15 +55,14 @@ public class Projectile extends AgentEntity implements Animatable {
      * 
      * @param textureName The name of the texture to render.
      * @param objectName  The name to call this object.
-     * @param col         The column to spawn this projectile in.
-     * @param row         The row to spawn this projectile in.
+     * @param startPosition The position to spawn this projectile in.
      * @param damage      The damage this projectile will deal on hit.
      * @param speed       How fast this projectile is travelling.
      */
 
     public Projectile(HexVector movementPosition, String textureName, String objectName,
-                      float col, float row, int damage, float speed, float range) {
-        super(col, row, 3, speed);
+                      HexVector startPosition, int damage, float speed, float range) {
+        super(startPosition.getCol(), startPosition.getRow(), 3, speed);
 
         this.damage = damage;
         this.speed = speed;

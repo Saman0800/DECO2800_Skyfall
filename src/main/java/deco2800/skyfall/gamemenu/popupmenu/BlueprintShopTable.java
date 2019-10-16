@@ -63,6 +63,7 @@ public class BlueprintShopTable extends AbstractPopUpElement {
      *
      * Draw the whole blueprint shop table.
      */
+    @Override
     public void draw() {
         super.draw();
         blueprintTable = new Table();
@@ -105,24 +106,24 @@ public class BlueprintShopTable extends AbstractPopUpElement {
 
         List<Blueprint> unlocked = sm.getCharacter().getUnlockedBlueprints();
 
-        int count = 0;
-        int xpos = 20;
-        int ypos = 280;
+        float count = 0;
+        float xpos = 20;
+        float ypos = 280;
 
         for (Blueprint b : unlocked) {
 
             ImageButton icon = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(b.getName()));
             icon.setName("icon");
             icon.setSize(100, 100);
-            icon.setPosition(xpos + count * 130, ypos);
+            icon.setPosition(xpos + (float) count * 130, ypos);
             if (isBought(b)) {
                 Label cost = new Label("X", skin, "white-label");
                 cost.setName(b.getName());
-                cost.setPosition(xpos + 85 + count * 130, ypos + 75);
+                cost.setPosition(xpos + 85 + (float) count * 130, (float) ypos + 75);
                 blueprintPanel.addActor(cost);
             } else {
                 Label cost = new Label("$" + b.getCost(), skin, "white-label");
-                cost.setPosition(xpos + 85 + count * 130, ypos + 75);
+                cost.setPosition(xpos + 85 + (float) count * 130, (float) ypos + 75);
                 cost.setName(b.getName());
                 blueprintPanel.addActor(cost);
 
@@ -132,7 +133,6 @@ public class BlueprintShopTable extends AbstractPopUpElement {
                         if (sm.getCharacter().getGoldPouchTotalValue() >= b.getCost()) {
                             sm.getCharacter().removeGold(b.getCost());
                             sm.getCharacter().addBlueprint(b);
-                        } else {
                         }
                         updateBlueprintShopPanel();
                     }
