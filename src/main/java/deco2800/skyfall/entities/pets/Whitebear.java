@@ -10,25 +10,22 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.HexVector;
-
 import java.util.List;
 
 public class Whitebear extends AbstractPet implements Animatable, Item {
     MainCharacter mc;
     private boolean isOutSide = false;
     private boolean isOnTheWay = false;
-    private final String textureName = "whitebear";
+    private static final String TEXTURENAME = "whitebear";
     private Direction movingDirection;
 
     public Whitebear(float col, float row, MainCharacter mc) {
         super(col, row);
-        this.setTexture(textureName);
-        this.setObjectName(textureName);
-        this.setHeight(1);
+        this.setTexture(TEXTURENAME);
+        this.setObjectName(TEXTURENAME);
         this.setHealth(10);
         this.setLevel(1);
         this.setSpeed(0.04f);
-        this.setArmour(1);
         this.mc = mc;
         this.configureAnimations();
         this.setDirectionTextures();
@@ -78,13 +75,8 @@ public class Whitebear extends AbstractPet implements Animatable, Item {
             setCurrentDirection(movementDirection(this.position.getAngle()));
             this.position.moveToward(destination, this.getSpeed());
             // when the pet arrive then make it face to the player
-            boolean complete = false;
             if (destination.getCol() == this.getCol() && destination.getRow() == this.getRow()) {
-                complete = true;
-                if (movingDirection == Direction.NORTH_EAST) {
-                    movingDirection = Direction.SOUTH_WEST;
-                    setCurrentDirection(Direction.SOUTH_WEST);
-                } else if (movingDirection == Direction.NORTH) {
+                if (movingDirection == Direction.NORTH) {
                     movingDirection = Direction.SOUTH;
                     setCurrentDirection(Direction.SOUTH);
                 } else if (movingDirection == Direction.NORTH_WEST || movingDirection == Direction.SOUTH_EAST) {
@@ -92,32 +84,9 @@ public class Whitebear extends AbstractPet implements Animatable, Item {
                     setCurrentDirection(Direction.SOUTH_WEST);
                 }
             } else {
-                complete = false;
                 movingDirection = movementDirection(this.position.getAngle());
             }
         }
-    }
-
-    public Direction movementDirection(double angle) {
-        angle = Math.toDegrees(angle - Math.PI);
-        if (angle < 0) {
-            angle += 360;
-        }
-        if (angle >= 0 && angle <= 60) {
-            return Direction.SOUTH_WEST;
-        } else if (angle > 60 && angle <= 120) {
-            return Direction.SOUTH;
-        } else if (angle > 120 && angle <= 180) {
-            return Direction.SOUTH_EAST;
-        } else if (angle > 180 && angle <= 240) {
-            return Direction.NORTH_EAST;
-        } else if (angle > 240 && angle <= 300) {
-            return Direction.NORTH;
-        } else if (angle > 300 && angle < 360) {
-            return Direction.NORTH_WEST;
-        }
-        return null;
-
     }
 
     @Override
@@ -144,41 +113,11 @@ public class Whitebear extends AbstractPet implements Animatable, Item {
 
     @Override
     public String getName() {
-        return textureName;
-    }
-
-    @Override
-    public String getSubtype() {
-        return "pets";
-    }
-
-    @Override
-    public boolean isCarryable() {
-        return true;
-    }
-
-    @Override
-    public HexVector getCoords() {
-        return new HexVector(this.getCol(), this.getRow());
-    }
-
-    @Override
-    public boolean isExchangeable() {
-        return true;
+        return TEXTURENAME;
     }
 
     @Override
     public String getDescription() {
         return "pet whitebear";
     }
-
-    @Override
-    public void use(HexVector position) {
-        // Do nothing for now.
-    }
-
-    public boolean isEquippable() {
-        return false;
-    }
-
 }

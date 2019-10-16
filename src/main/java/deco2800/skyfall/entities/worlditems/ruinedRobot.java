@@ -5,31 +5,32 @@ import deco2800.skyfall.worlds.Tile;
 public class ruinedRobot extends AbstractEnvironment {
 
     /**
-     *Entity ID
+     * Entity ID
      *
      */
     private static final String ENTITY_ID_STRING = "ruined_robot";
+    private static final String ruinedRobotString = "ruinedRobot";
 
     /**
-     *Set the entity ID of ruined robot to the object name
+     * Set the entity ID of ruined robot to the object name
      *
      */
     public ruinedRobot() {
-        this.setObjectName(ENTITY_ID_STRING);
+        super();
+        this.setTexture(ruinedRobotString);
+        setupParams();
     }
 
     /**
-     *Initialises
+     * Initialises
      *
-     *@param tile - The tile it spawns on
-     *@param obstructed - Whether the entity is obstructed by something
+     * @param tile       - The tile it spawns on
+     * @param obstructed - Whether the entity is obstructed by something
      */
     public ruinedRobot(Tile tile, boolean obstructed) {
-        super(tile, "ruinedCity", obstructed);
-        this.setObjectName(ENTITY_ID_STRING);
-        this.entityType = "ruinedCity";
+        super(tile, ruinedRobotString, obstructed);
+        setupParams();
     }
-
 
     /**
      * Loads a static entity from a memento
@@ -38,6 +39,12 @@ public class ruinedRobot extends AbstractEnvironment {
      */
     public ruinedRobot(SaveableEntityMemento memento) {
         super(memento);
+        setupParams();
+    }
+
+    private void setupParams() {
+        this.setObjectName(ENTITY_ID_STRING);
+        this.entityType = ruinedRobotString;
     }
 
     /**

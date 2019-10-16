@@ -8,6 +8,7 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.graphics.types.*;
 import deco2800.skyfall.graphics.*;
+
 import java.util.Random;
 
 public class TikiTorch extends StaticEntity implements HasPointLight {
@@ -19,15 +20,27 @@ public class TikiTorch extends StaticEntity implements HasPointLight {
     private float randomPointLightPeriod;
 
     public TikiTorch() {
-        this.setObjectName(ENTITY_ID_STRING);
+        super();
+        setupParams();
+        this.setTexture("tikitorch");
     }
 
     public TikiTorch(Tile tile, boolean obstructed) {
         super(tile, 2, "tikitorch", obstructed);
-        this.setObjectName(ENTITY_ID_STRING);
+        setupParams();
         // Set up the point light for this entity
         randomPointLightPeriod = randomGen.nextFloat() * 150 + 100;
         pointLightSetUp();
+    }
+
+    public TikiTorch(SaveableEntityMemento memento) {
+        super(memento);
+        setupParams();
+    }
+
+    private void setupParams() {
+        this.setObjectName(ENTITY_ID_STRING);
+        this.entityType = "TikiTorch";
     }
 
     @Override
@@ -62,6 +75,8 @@ public class TikiTorch extends StaticEntity implements HasPointLight {
         float gametime = environmentManager.getHourDecimal();
         float kValue = (float) Math.sin(randomPointLightPeriod * gametime) * 0.15f + 1.2f;
         this.entityPointLight.setKValue(kValue);
+
+        return;
     }
 
     @Override

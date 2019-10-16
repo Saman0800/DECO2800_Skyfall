@@ -17,9 +17,6 @@ public class WoodCube extends AbstractEntity implements Collectable {
     // how violently should the cube wiggle
     private static final float VELOCITY = 0.01f;
 
-    //random value for movement
-    private Random random = new Random();
-
     public WoodCube(float col, float row) {
         super(col, row, 2);
         this.setTexture("woodcube");
@@ -32,6 +29,7 @@ public class WoodCube extends AbstractEntity implements Collectable {
         // a little wiggle to disperse the cubes
         // this would ideally be replaced with slowly moving up and down as
         // most games do
+        Random random = new Random();
         int targetX = random.nextInt(RANGE) - (RANGE / 2);
         int targetY = random.nextInt(RANGE) - (RANGE / 2);
         HexVector newPosition = new HexVector(targetX, targetY);

@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
@@ -66,7 +65,6 @@ public class Tile {
     @Expose
     private int tileID = 0;
 
-    // FIXME:Ontonator Consider removing these; they are only useful for tests.
     private WorldGenNode node;
     private VoronoiEdge edge;
 
@@ -307,8 +305,8 @@ public class Tile {
      * @param riverWidth The maximum distance away for rivers
      * @param beachWidth The maximum distance away for edges
      */
-    public void assignEdge(LinkedHashMap<VoronoiEdge, RiverBiome> riverEdges,
-                           LinkedHashMap<VoronoiEdge, BeachBiome> beachEdges,
+    public void assignEdge(Map<VoronoiEdge, RiverBiome> riverEdges,
+                           Map<VoronoiEdge, BeachBiome> beachEdges,
                            int nodeSpacing, double riverWidth, double beachWidth) {
         /* TODO do something better than this to prevent rivers from being on
             the origin
@@ -316,7 +314,6 @@ public class Tile {
         if (getBiome().getBiomeName().equals("ocean")) {
             return;
         }
-        // FIXME:Ontonator Fix the beaches' noise.
         VoronoiEdge closestEdge = findNearestEdge(null, new ArrayList<>(beachEdges.keySet()), beachWidth, nodeSpacing,
                                                   beachWidth * 2);
         if (!(Math.abs(getCol()) < riverWidth && Math.abs(getRow()) < riverWidth)) {
@@ -384,8 +381,6 @@ public class Tile {
                 }
             }
         }
-
-        GameManager.get().getManager(NetworkManager.class).deleteTile(this);
 
         this.removeReferanceFromNeighbours();
         Pair<Integer, Integer> chunk = Chunk.getChunkForCoordinates(getCol(), getRow());

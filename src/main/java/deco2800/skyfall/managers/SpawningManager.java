@@ -1,54 +1,67 @@
 package deco2800.skyfall.managers;
 
-import deco2800.skyfall.entities.enemies.AbstractEnemy;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.enemies.Spawnable;
 import deco2800.skyfall.graphics.types.vec2;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Random;
-import java.util.Vector;
-
 /*Handles spawning enemies into the game on tick*/
-public class SpawningManager extends TickableManager  {
-    //After a single construction, this will be set to true for error checking
+public class SpawningManager extends TickableManager {
+    // After a single construction, this will be set to true for error checking
     private static boolean constructed = false;
-    //As a singleton, able to keep a single reference
+    // As a singleton, able to keep a single reference
     private static SpawningManager reference = null;
 
-    //the random used for enemy generation
-    Random random;
+    // A maximum to the number of enemies allowed to be managed
+    private final int MAXENTITIES = 5;
 
-    //A map of enemy strength to enemy
-    //enemy must implement Spawnable
-    //float is the k value used for spawning
-    Map<Spawnable, Float> spawnTable;
+    // the random used for enemy generation
+    private Random random;
 
-    //All enemies that have spawned will be kept with a referece
-    //kept by spawn order
-    Vector<AbstractEnemy> enemyReferences;
+    // A map of enemy strength to enemy
+    // enemy must implement Spawnable
+    // float is the k value used for spawning
+    private Map<Spawnable, Float> spawnTable;
+
+    // All enemies that have spawned will be kept with a referece
+    // kept by spawn order
+    protected List<Enemy> enemyReferences;
 
     public static SpawningManager getGlobalSpawningManager() {
         return reference;
     }
 
-    //Useful for controlling enemy counts
-    static final int MAXIMUM_ENEMIES = 100;
+    // Useful for controlling enemy counts
+    final int MAXIMUM_ENEMIES = 10;
 
-    //Enemies spawn in a circle around the player
-    static final float SPAWN_DISTANCE = 100;
+    // Enemies spawn in a circle around the player
+    private final float SPAWN_DISTANCE = 100;
+
+    // Enemies will be culled if they get too far
+    private final float CULL_DISTANCE = 1000;
 
     /**
      * Use createdSpawningManager instead of constructor
      */
     private SpawningManager() {
         random = new Random();
+        spawnTable = new HashMap<Spawnable, Float>();
+        enemyReferences = new ArrayList<Enemy>();
     }
 
-    /** Allows SpawningManager to be created and attached to GameManager with
-     * no local instance
+    /**
+     * Allows SpawningManager to be created and attached to GameManager with no
+     * local instance
      *
-     * @throws ExceptionInInitializerError if another SpawningManager already existed
+     * @throws ExceptionInInitializerError if another SpawningManager already
+     *                                     existed
      */
     public static void createSpawningManager() throws ExceptionInInitializerError {
         if (constructed) {
@@ -57,64 +70,134 @@ public class SpawningManager extends TickableManager  {
 
         SpawningManager local = new SpawningManager();
 
-        //set singleton patterns
+        // set singleton patterns
         constructed = true;
         reference = local;
-        //add to game manager
+        // add to game manager
         GameManager.addManagerToInstance(local);
+
+        // Add enemies to manager
+        // local.addEnemyForSpawning(new Heavy(3,2f, 0.7f, "Forest",
+        // "enemyHeavy"), 1.0f);
     }
 
     /**
      * Spawns the enemy a given distance from the player
+     * 
      * @param enemy A reference to Spawnable
      */
     private void spawnEnemy(Spawnable enemy) {
-        vec2 location = ((AbstractEnemy)enemy).getPlayerLocation();
+        if (MAXENTITIES <= enemyReferences.size()) {
+            return;
+        }
 
-        //calculate the location of the player
+        // calculate the location of the player
+        MainCharacter mc = MainCharacter.getInstance();
+        vec2 location = new vec2(mc.getRow(), mc.getCol());
+
         double angle = random.nextDouble() * 2.0f * Math.PI;
-        location = new vec2(
-                location.x + SPAWN_DISTANCE*(float)Math.cos(angle),
-                location.y + SPAWN_DISTANCE*(float)Math.sin(angle)
-        );
+        location = new vec2(location.getX() + SPAWN_DISTANCE * (float) Math.cos(angle),
+                location.getY() + SPAWN_DISTANCE * (float) Math.sin(angle));
 
-        enemyReferences.add( (AbstractEnemy)enemy.newInstance(location.x, location.y) );
+        // create new instance
+        Enemy instance = (Enemy) enemy.newInstance(location.getX(), location.getY());
+        instance.setMainCharacter(MainCharacter.getInstance());
+        // add to references
+        enemyReferences.add((Enemy) instance);
+        // add to game world
+        GameManager.get().getWorld().addEntity((AbstractEntity) instance);
     }
 
     /**
-     * Will look at the internal spawn table to determine
-     * if its time to spawn
+     * clears the list of old references to dead enemies
+     */
+    void updateReferences() {
+        enemyReferences.removeIf(s -> s.isDead());
+        enemyReferences.removeIf(s -> s.distance(MainCharacter.getInstance()) > CULL_DISTANCE);
+    }
+
+    /**
+     * Returns an enemy of the given type If no such enemy can be found, returns
+     * null
+     * 
+     * @param type The class type to pull
+     * @param <T>  The class must inherit Enemy
+     * @return returns the first enemy found, or null
+     */
+    public <T extends Enemy> T getFirstEnemy(Class<T> type) {
+        for (Enemy e : enemyReferences) {
+            if (type.isInstance(e)) {
+                return (T) e;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Will look at the internal spawn table to determine if its time to spawn
+     * 
      * @param i standard tick time
      */
     @Override
     public void onTick(long i) {
-        //return if day
+        // return if day
         if (GameManager.getManagerFromInstance(EnvironmentManager.class).isDay()) {
             return;
         }
 
-        Iterator it = spawnTable.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
+        updateReferences();
 
-            if (random.nextFloat() < (Float)pair.getValue()) {
-                spawnEnemy((Spawnable)pair.getKey());
+        for (Map.Entry<Spawnable, Float> entry : spawnTable.entrySet()) {
+            if (random.nextFloat() < (Float) entry.getValue()) {
+                spawnEnemy((Spawnable) entry.getKey());
             }
-
-            it.remove();
         }
     }
 
     /**
-     * Adds an enemy to be spawned with the spawn manager, also acts as a gateway to enforce
-     * correct enemy types are added
-     * @param template The enemy that wises to be spawned, has a complex class requirement <T>
-     * @param k Enemy spawning peaks at midnight, this is the horrizontal scaling value
-     * @param a A scaling value which defines the maximum probability an enemy spawns this tick
-     * @param <T> The Enemy must be an AbstractEnemy, and implement Spawnable
+     * Adds an enemy to be spawned with the spawn manager, also acts as a gateway to
+     * enforce correct enemy types are added
+     * 
+     * @param template The enemy that wises to be spawned, has a complex class
+     *                 requirement <T>
+     * @param k        Enemy spawning peaks at midnight, this is the horrizontal
+     *                 scaling value
+     * @param <T>      The Enemy must be an Enemy, and implement Spawnable
      */
-     public <T extends AbstractEnemy & Spawnable>
-     void addEnemyForSpawning(T template, float k) {
-         spawnTable.put(template, k);
-     }
+    public <T extends Enemy & Spawnable> void addEnemyForSpawning(T template, float k) {
+        spawnTable.put(template, k);
+    }
+
+    /**
+     * Specifically, enemies spawned by this manager
+     * 
+     * @return number of enemy instances managed
+     */
+    public int getNumberOfEntsManaged() {
+        return enemyReferences.size();
+    }
+
+    /**
+     * Counts templates only
+     * 
+     * @return size of spawn table
+     */
+    public int getEntCountInSpawnTable() {
+        return spawnTable.size();
+    }
+
+    /**
+     * Deletes all templates
+     */
+    public void clearSpawnTable() {
+        spawnTable.clear();
+    }
+
+    /**
+     * @return gets the current culling distance
+     */
+    public float getCullingDistance() {
+        return CULL_DISTANCE;
+    }
+
 }

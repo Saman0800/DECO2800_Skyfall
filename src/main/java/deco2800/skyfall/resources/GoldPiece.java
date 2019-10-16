@@ -1,6 +1,5 @@
 package deco2800.skyfall.resources;
 
-import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.worlds.Tile;
 import org.slf4j.Logger;
@@ -8,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 
 /**
@@ -22,13 +22,15 @@ public class GoldPiece extends StaticEntity {
     private int value;
 
     // all possible gold piece values in a list
-    public static final List<Integer> goldValues = Arrays.asList(5,10,50,100);
+    protected static final List<Integer> goldValues = Arrays.asList(5,10,50,100);
 
     // have the value of the first gold piece be equal to 5
     private static int nextValue = 5;
 
     // Logger to show messages
-    private final Logger logger = LoggerFactory.getLogger(MainCharacter.class);
+    private static final Logger logger = LoggerFactory.getLogger(GoldPiece.class);
+
+    Random random = new Random();
 
 
     /**
@@ -60,7 +62,8 @@ public class GoldPiece extends StaticEntity {
         this.value = GoldPiece.nextValue;
 
         // generate a random index between 0 and 3
-        int index = (int)(Math.random()*4);
+        int index = random.nextInt(4);
+
 
         // update the gold piece value using the randomly generated index
         GoldPiece.nextValue = goldValues.get(index);
@@ -102,6 +105,7 @@ public class GoldPiece extends StaticEntity {
     public Integer getValue(){
         return this.value;
     }
+
 
 
 

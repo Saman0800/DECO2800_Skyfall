@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class Collider {
-
+    @SuppressWarnings("unused")
     private static final Logger LOGGER = LoggerFactory.getLogger(Collider.class);
 
     private float x;
@@ -35,7 +35,6 @@ public class Collider {
      *            The yLength (in y).
      */
     public Collider(float x, float y, float xLength, float yLength) {
-        //LOGGER.info("Creating a collider at {}, {}", x, y);
         this.x = x;
         this.y = y;
         this.xLength = xLength;
@@ -134,11 +133,7 @@ public class Collider {
         }
 
         // y larger
-        if (y > collider.y + collider.yLength) {
-            return false;
-        }
-
-        return true;
+        return !(y > collider.y + collider.yLength);
     }
 
     /**

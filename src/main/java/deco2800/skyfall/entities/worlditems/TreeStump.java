@@ -9,20 +9,28 @@ public class TreeStump extends StaticEntity {
 
     public TreeStump(SaveableEntityMemento memento) {
         super(memento);
+        setupParams();
+
     }
 
     public TreeStump() {
-        this.setObjectName(ENTITY_ID_STRING);
+        super();
+        setupParams();
+        this.setTexture("trunk1");
     }
 
     public TreeStump(Tile tile, boolean obstructed) {
         super(tile, 2, "trunk1", obstructed);
-        this.setObjectName(ENTITY_ID_STRING);
-        this.entityType = "TreeStump";
+        setupParams();
     }
 
     public TreeStump(Tile tile) {
-        this(tile, false);
+        this(tile, true);
+    }
+
+    private void setupParams() {
+        this.setObjectName(ENTITY_ID_STRING);
+        this.entityType = "TreeStump";
     }
 
     @Override

@@ -2,9 +2,11 @@ package deco2800.skyfall;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import deco2800.skyfall.mainmenu.MainMenuScreen;
+import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 
 /**
@@ -15,6 +17,9 @@ public class SkyfallGame extends Game {
 	 * The SpriteBatch for the game
 	 */
 	private SpriteBatch batch;
+	// TODO:jeffvan Remove these or use them to configure the database location.
+	public static final String SAVE_ROOT_DIR = "skyfall-saves";
+	private FileHandle saveRootHandle;
 	private MainMenuScreen mainMenuScreen;
 
 	/**
@@ -23,6 +28,7 @@ public class SkyfallGame extends Game {
 	public void create() {
 		batch = new SpriteBatch();
 		initUISkin();
+		DatabaseManager.get().startDataBaseConnector();
 		mainMenuScreen = new MainMenuScreen(this);
 		this.setScreen(mainMenuScreen);
 	}
@@ -40,11 +46,30 @@ public class SkyfallGame extends Game {
 		GameManager.get().setSkin(new Skin(Gdx.files.internal("resources/uiskin.skin")));
 	}
 
-    public SpriteBatch getBatch() {
-        return batch;
-    }
+	/**
+	 * Gets the sprite batch for the game.
+	 *
+	 * @return the sprite batch for the game
+	 */
+	public SpriteBatch getBatch() {
+		return batch;
+	}
 
-    public MainMenuScreen getMainMenuScreen() {
-        return mainMenuScreen;
-    }
+	/**
+	 * Gets the file handle to the save location.
+	 *
+	 * @return the file handle to the save location
+	 */
+	public FileHandle getSaveRootHandle() {
+		return saveRootHandle;
+	}
+
+	/**
+	 * Gets the main menu screen for this game.
+	 *
+	 * @return the main menu screen for this game
+	 */
+	public MainMenuScreen getMainMenuScreen() {
+		return mainMenuScreen;
+	}
 }

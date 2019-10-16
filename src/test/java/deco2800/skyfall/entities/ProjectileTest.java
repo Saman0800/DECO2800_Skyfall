@@ -26,7 +26,7 @@ public class ProjectileTest  {
      * Create a new Projectile.
      */
     private Projectile projectile = new Projectile(new HexVector(),"slash",
-            "projectileTest",1,1,1,1,1);
+            "projectileTest",new HexVector(1,1),1,1,1);
 
 
     /**
@@ -99,6 +99,19 @@ public class ProjectileTest  {
         projectile.onTick(-1);
         assertThat("", projectile.ticksAliveFor, is(equalTo(3L)));
 
+    }
+
+    /**
+     * Test the rangeof the projectile.
+     */
+    @Test
+    public void testRange() {
+        projectile.range = 10.f;
+        for (int i  = 0; i < 11; ++i) {
+            projectile.onTick(0);
+        }
+
+        assertThat("", projectile.position.length() < 12.f ,is(equalTo(true)));
     }
 
 }

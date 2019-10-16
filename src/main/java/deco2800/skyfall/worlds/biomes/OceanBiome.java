@@ -1,7 +1,9 @@
 package deco2800.skyfall.worlds.biomes;
 
+import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.worlds.Tile;
 
+import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import deco2800.skyfall.worlds.generation.perlinnoise.TileNoiseGenerator;
 
@@ -14,12 +16,13 @@ import java.util.stream.Collectors;
  * Ocean Biome
  */
 public class OceanBiome extends AbstractBiome {
+    public static final String NAME = "ocean";
 
     /**
      * Constructor for a Biome
      */
     public OceanBiome(Random random) {
-        super("ocean", null);
+        super(NAME, null);
 
         textureGenerator = new NoiseGenerator(random.nextLong(), 5, 160, 0.9);
     }
@@ -79,7 +82,6 @@ public class OceanBiome extends AbstractBiome {
 
     @Override
     public void setTileTexture(Tile tile) {
-        // TODO:Ontonator Fix ths once Dan's algorithm is complete.
         tile.setTexture("ocean_1");
     }
 }

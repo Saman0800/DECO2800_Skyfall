@@ -97,6 +97,7 @@ public class SpellCaster {
     private void resetSpellSequence() {
         //Reset keylog and index.
         this.keyLog = new int[5];
+
         index = 0;
     }
 

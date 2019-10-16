@@ -5,7 +5,7 @@ import deco2800.skyfall.util.HexVector;
 /**
  * An interface representing a generic resource item.
  */
-public interface Item {
+public interface Item{
 
     /**
      * Returns the name of the item.

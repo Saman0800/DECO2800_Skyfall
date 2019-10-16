@@ -7,6 +7,7 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.SaveableEntity.SaveableEntityMemento;
 import deco2800.skyfall.entities.worlditems.Bone;
 import deco2800.skyfall.entities.worlditems.DesertCacti;
@@ -97,28 +98,26 @@ public class DataBaseConnectorLoadingTest {
 
     @Test
     public void loadWorldsTest() {
-        SaveMemento saveMemMock = Mockito.mock(SaveMemento.class);
         Save saveMock = Mockito.mock(Save.class);
         when(saveMock.getSaveID()).thenReturn(SAVE_ID);
-        when(saveMemMock.getWorldID()).thenReturn(WOLRD_ID);
-        World world = dataBaseConnectorExpected.loadWorlds(saveMock, saveMemMock);
+        when(saveMock.getCurrentWorldId()).thenReturn(WOLRD_ID);
+        World world = dataBaseConnectorExpected.loadWorlds(saveMock);
         assertEquals(WOLRD_ID, world.getID());
-        assertEquals(100, world.getWorldGenNodes().size());
-        assertEquals(39, world.getBeachEdges().size());
-        assertEquals(2, world.getRiverEdges().size());
+        assertEquals(400, world.getWorldGenNodes().size());
+        assertEquals(116, world.getBeachEdges().size());
+        assertEquals(13, world.getRiverEdges().size());
     }
 
-    // FIXME:jeffvan12 not entirely sure how to fix this
     @Test
     public void loadGameTest() {
-        Save save = dataBaseConnectorExpected.loadGame();
+        Save save = dataBaseConnectorExpected.loadGame(0);
         assertEquals(SAVE_ID, save.getSaveID());
         assertEquals(1, save.getWorlds().size());
         assertEquals(0, save.getWorlds().get(0).getEntities().size());
         assertEquals(WOLRD_ID, save.getWorlds().get(0).getID());
-        assertEquals(100, save.getWorlds().get(0).getWorldGenNodes().size());
-        assertEquals(39, save.getWorlds().get(0).getBeachEdges().size());
-        assertEquals(2, save.getWorlds().get(0).getRiverEdges().size());
+        assertEquals(400, save.getWorlds().get(0).getWorldGenNodes().size());
+        assertEquals(116, save.getWorlds().get(0).getBeachEdges().size());
+        assertEquals(13, save.getWorlds().get(0).getRiverEdges().size());
     }
 
     @Test
@@ -126,7 +125,7 @@ public class DataBaseConnectorLoadingTest {
         World worldMock = Mockito.mock(World.class);
         when(worldMock.getID()).thenReturn(WOLRD_ID);
         ArrayList<AbstractBiome> biomes = (ArrayList<AbstractBiome>) dataBaseConnectorExpected.loadBiomes(worldMock);
-        assertEquals(48, biomes.size());
+        assertEquals(133, biomes.size());
     }
 
     @Test
@@ -148,8 +147,7 @@ public class DataBaseConnectorLoadingTest {
                 }
             }
 
-            assertEquals(4, countNodesInForst);
-
+            assertEquals(151, countNodesInForst);
         } catch (LoadException | SQLException e) {
             fail("Failed to load the nodes due to an exception occuring");
         }
@@ -157,7 +155,6 @@ public class DataBaseConnectorLoadingTest {
 
     @Test
     public void loadBeachEdgesTest() {
-
         try {
             World worldMock = Mockito.mock(World.class);
             when(worldMock.getID()).thenReturn(WOLRD_ID);
@@ -167,12 +164,10 @@ public class DataBaseConnectorLoadingTest {
             LinkedHashMap<VoronoiEdge, BeachBiome> edges = (LinkedHashMap<VoronoiEdge, BeachBiome>) dataBaseConnectorExpected
                     .loadBeachEdges(worldMock, biomes);
 
-            assertEquals(39, edges.size());
-
+            assertEquals(116, edges.size());
         } catch (SQLException | LoadException e) {
             fail("Failed to load the beach edges due to an exception occuring");
         }
-
     }
 
     @Test
@@ -186,8 +181,7 @@ public class DataBaseConnectorLoadingTest {
             LinkedHashMap<VoronoiEdge, RiverBiome> edges = (LinkedHashMap<VoronoiEdge, RiverBiome>) dataBaseConnectorExpected
                     .loadRiverEdges(worldMock, biomes);
 
-            assertEquals(2, edges.size());
-
+            assertEquals(13, edges.size());
         } catch (SQLException | LoadException e) {
             fail("Failed to load the beach edges due to an exception occuring");
         }
@@ -195,19 +189,35 @@ public class DataBaseConnectorLoadingTest {
 
     @Test
     public void loadChunkTest() {
-        SaveMemento saveMemMock = Mockito.mock(SaveMemento.class);
         Save saveMock = Mockito.mock(Save.class);
         when(saveMock.getSaveID()).thenReturn(SAVE_ID);
-        when(saveMemMock.getWorldID()).thenReturn(WOLRD_ID);
-        World world = dataBaseConnectorExpected.loadWorlds(saveMock, saveMemMock);
+        when(saveMock.getCurrentWorldId()).thenReturn(WOLRD_ID);
+        World world = dataBaseConnectorExpected.loadWorlds(saveMock);
 
         Chunk chunk = dataBaseConnectorExpected.loadChunk(world, 0, 0);
 
         assertEquals(0, chunk.getX());
         assertEquals(0, chunk.getY());
-        assertEquals(6, chunk.getEntities().size());
+        assertEquals(19, chunk.getEntities().size());
         assertEquals(WOLRD_ID, chunk.getWorld().getID());
         assertEquals(100, chunk.getTiles().size());
+    }
+
+    @Test
+    public void loadMainCharacterTest() {
+        SaveMemento saveMemMock = Mockito.mock(SaveMemento.class);
+        Save saveMock = Mockito.mock(Save.class);
+        when(saveMock.getSaveID()).thenReturn(SAVE_ID);
+        when(saveMemMock.getWorldID()).thenReturn(WOLRD_ID);
+        dataBaseConnectorExpected.loadMainCharacter(saveMock);
+
+        assertEquals(50, MainCharacter.getInstance().getHealth());
+        assertEquals(0, MainCharacter.getInstance().getFoodLevel());
+        assertEquals(4, MainCharacter.getInstance().getInventoryManager().getContents().size());
+        assertEquals(0, MainCharacter.getInstance().getRow(), 0.000001);
+        assertEquals(0, MainCharacter.getInstance().getCol(), 0.0000001);
+
+        assertEquals(0, MainCharacter.getInstance().getGameStage());
     }
 
     @Test
