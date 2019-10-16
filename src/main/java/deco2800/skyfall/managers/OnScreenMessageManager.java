@@ -1,10 +1,11 @@
 package deco2800.skyfall.managers;
 
-import java.util.List;
-import java.util.ArrayList;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.handlers.KeyboardManager;
 import deco2800.skyfall.observers.KeyTypedObserver;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class OnScreenMessageManager extends AbstractManager implements KeyTypedObserver {
 	private List<String> messages = new ArrayList<>();
@@ -88,8 +89,6 @@ public class OnScreenMessageManager extends AbstractManager implements KeyTypedO
 					this.addMessage(String.format(GameManager.getManagerFromInstance(InventoryManager.class).toString()));
 				}  else	if (unsentMessage.startsWith("/set_time")) { // set time, as set_time@hh@mm
 					handleSetTime(unsentMessage);
-				} else {
-					GameManager.get().getManager(NetworkManager.class).sendChatMessage(unsentMessage);
 				}
 				GameManager.get().getCamera().setPotate(false);
 				unsentMessage = "";

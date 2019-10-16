@@ -44,6 +44,9 @@ public class QuestManager extends TickableManager {
     // Level 2 buildings
     private List<BuildingType> levelTwoBuildings = new ArrayList<>();
 
+    //Level 3 buildings
+    private List<BuildingType> levelThreeBuildings = new ArrayList<>();
+
     // Player character
     private MainCharacter player;
 
@@ -72,6 +75,8 @@ public class QuestManager extends TickableManager {
      * Sets goals to be achieved at each level
      */
     private void setMilestones() {
+        //inventory numbers need to be reset for player testing and actual game release
+        //reduced for ease of testing in game
         switch (questLevel) {
             case 1 :
                 setGoldTotal(10);
@@ -85,22 +90,26 @@ public class QuestManager extends TickableManager {
                 setWeaponTotal("axe", 0);
                 break;
             case 2 :
-                setGoldTotal(600);
-                setWoodTotal(100);
-                setStoneTotal(100);
-                setMetalTotal(60);
+                setGoldTotal(20);
+                setWoodTotal(20);
+                setStoneTotal(20);
+                setMetalTotal(20);
                 setBuildingsTotal(levelTwoBuildings);
-                setWeaponTotal("sword", 10);
-                setWeaponTotal("bow", 10);
+                setWeaponTotal("sword", 3);
+                setWeaponTotal("bow", 3);
                 setWeaponTotal("spear", 0);
                 setWeaponTotal("axe", 0);
                 break;
             case 3 :
-                // Other things to be set
-                setWeaponTotal("sword", 10);
-                setWeaponTotal("bow", 10);
-                setWeaponTotal("spear", 10);
-                setWeaponTotal("axe", 10);
+                setGoldTotal(30);
+                setWoodTotal(30);
+                setStoneTotal(30);
+                setMetalTotal(30);
+                setBuildingsTotal(levelThreeBuildings);
+                setWeaponTotal("sword", 4);
+                setWeaponTotal("bow", 4);
+                setWeaponTotal("spear", 4);
+                setWeaponTotal("axe", 4);
                 break;
             default :
                 break;

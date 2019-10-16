@@ -31,8 +31,8 @@ public class MainMenuScreen implements Screen {
     private static final int MIN_WIDTH = 1280;
 
     // Used for generating readable save names.
-    private static char[] CONSONANTS =
-            { 'B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'V', 'W', 'X', 'Z' };
+    private static char[] CONSONANTS = { 'B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'V',
+            'W', 'X', 'Z' };
     private static char[] VOWELS = { 'A', 'E', 'I', 'O', 'U', 'Y' };
 
     private final List<Save> saveInfoList;
@@ -89,7 +89,7 @@ public class MainMenuScreen implements Screen {
         tutorialButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                GameManager.get().isTutorial = true;
+                GameManager.get().setIsTutorial(true);
                 // TODO Accept user-provided seed or generate random seed.
                 game.setScreen(new GameScreen(game, 3, true));
             }
@@ -98,7 +98,7 @@ public class MainMenuScreen implements Screen {
         newGameBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                GameManager.get().isTutorial = false;
+                GameManager.get().setIsTutorial(false);
                 showStartGameWindow();
             }
         });
@@ -106,7 +106,7 @@ public class MainMenuScreen implements Screen {
         connectToServerButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                GameManager.get().isTutorial = false;
+                GameManager.get().setIsTutorial(false);
                 // TODO Accept user-provided seed or generate random seed.
                 game.setScreen(new GameScreen(game, 3, false));
             }
@@ -163,8 +163,9 @@ public class MainMenuScreen implements Screen {
     }
 
     /**
-     * Calculates a seed based on the given string. If the string is empty, a random number is generated. If the seed is
-     * an integer, that integer is used. Otherwise, the hash of the string is used.
+     * Calculates a seed based on the given string. If the string is empty, a random
+     * number is generated. If the seed is an integer, that integer is used.
+     * Otherwise, the hash of the string is used.
      *
      * @param seedString the string from which to calculate the seed
      * @return the seed
@@ -230,7 +231,7 @@ public class MainMenuScreen implements Screen {
             Button deleteSaveButton = new Button(skin, LOAD_GAME_STYLE);
             deleteSaveButton.setColor(Color.LIGHT_GRAY);
             deleteSaveButton.add(deleteIcon).pad(-50).center();
-            loadGameWindow.addListener(new ClickListener() {
+            deleteSaveButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     DatabaseManager.get().getDataBaseConnector().deleteSave(saveID);
@@ -305,7 +306,7 @@ public class MainMenuScreen implements Screen {
      */
     @Override
     public void pause() {
-        //do nothing
+        // do nothing
     }
 
     /**
@@ -313,7 +314,7 @@ public class MainMenuScreen implements Screen {
      */
     @Override
     public void resume() {
-        //do nothing
+        // do nothing
     }
 
     /**
@@ -321,7 +322,7 @@ public class MainMenuScreen implements Screen {
      */
     @Override
     public void hide() {
-        //do nothing
+        // do nothing
     }
 
     /**

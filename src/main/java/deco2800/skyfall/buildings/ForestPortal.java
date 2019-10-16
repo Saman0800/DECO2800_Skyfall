@@ -18,6 +18,7 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
         super(col, row, renderOrder);
         this.setTexture("portal_forest");
         this.setNext("desert");
+        this.entityType = "ForestPortal";
         this.currentBiome = "forest";
         this.name = "forestPortal";
         this.blueprintLearned = false;
