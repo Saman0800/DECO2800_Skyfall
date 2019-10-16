@@ -398,7 +398,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         chunk.getTiles().add(tile);
     }
 
-    public Map<Pair<Integer, Integer>, Chunk> getLoadedChunks() {
+    public HashMap<Pair<Integer, Integer>, Chunk> getLoadedChunks() {
         return loadedChunks;
     }
 
