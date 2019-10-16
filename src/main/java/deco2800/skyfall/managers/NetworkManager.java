@@ -48,8 +48,8 @@ public class NetworkManager extends TickableManager {
     /**
      * Increments the number of messages received.
      * <p>
-     *     Used be the client and server listeners to update the number of
-     *     messages received by this particular NetworkManager.
+     * Used be the client and server listeners to update the number of messages
+     * received by this particular NetworkManager.
      * </p>
      */
     public void incrementMessagesReceived() {
@@ -58,8 +58,9 @@ public class NetworkManager extends TickableManager {
 
     /**
      * Add a user connection to the list of connections
+     * 
      * @param connectionID - the id of the connected user
-     * @param username - the username of the connected user
+     * @param username     - the username of the connected user
      */
     public void addClientConnection(Integer connectionID, String username) {
         if (!userConnections.containsKey(connectionID)) {
@@ -72,11 +73,12 @@ public class NetworkManager extends TickableManager {
     /**
      * Deletes a mapping between the given client and user.
      * <p>
-     *     Once a client disconnects from the server (for whatever reason),
-     *     if they had a user then it will be deleted.
+     * Once a client disconnects from the server (for whatever reason), if they had
+     * a user then it will be deleted.
      * </p>
+     * 
      * @param connectionID The connectionID of the client to be removed.
-     * @param username The username of the client to be removed.
+     * @param username     The username of the client to be removed.
      */
     public void removeClientConnection(Integer connectionID, String username) {
         userConnections.remove(connectionID, username);
@@ -84,8 +86,11 @@ public class NetworkManager extends TickableManager {
 
     /**
      * Retrieves a username mapped to a particular connection ID.
-     * @param connectionID The connection ID of the client to retrieve the username of.
-     * @return the username mapped to the given connection ID, or null if it doesn't exist.
+     * 
+     * @param connectionID The connection ID of the client to retrieve the username
+     *                     of.
+     * @return the username mapped to the given connection ID, or null if it doesn't
+     *         exist.
      */
     public String getClientUsernameFromConnection(int connectionID) {
         return userConnections.getOrDefault(connectionID, null);
@@ -93,6 +98,7 @@ public class NetworkManager extends TickableManager {
 
     /**
      * Returns the number of messages received
+     * 
      * @return the number of messages received
      */
     public int getMessagesReceived() {
@@ -101,6 +107,7 @@ public class NetworkManager extends TickableManager {
 
     /**
      * Returns the number of messages sent
+     * 
      * @return the number of messages sent
      */
     public int getMessagesSent() {
@@ -109,6 +116,7 @@ public class NetworkManager extends TickableManager {
 
     /**
      * Is this user the host?
+     * 
      * @return true if hosting, false otherwise
      */
     public boolean isHost() {
@@ -117,7 +125,8 @@ public class NetworkManager extends TickableManager {
 
     /**
      * Connects to a host at specified ip and port
-     * @param ip - the ip of the host
+     * 
+     * @param ip       - the ip of the host
      * @param username - the username to connect with
      * @return boolean - Was the connection successful?
      */
@@ -149,23 +158,24 @@ public class NetworkManager extends TickableManager {
             return false;
         }
 
-        // Add all listeners for the client, allowing it to receive information from the host.
+        // Add all listeners for the client, allowing it to receive information from the
+        // host.
         client.addListener(new Listener() {
             @Override
             public void received(Connection connection, Object object) {
                 messagesReceived++;
                 if (object instanceof TileUpdateMessage) {
-                    GameManager.get().getWorld().updateTile(((TileUpdateMessage) object).tile);
+                    GameManager.get().getWorld().updateTile(((TileUpdateMessage) object).getTile());
                     // FIXME:Ontonator This needs to be fixed, if multiplayer ever becomes a thing.
                     // GameManager.get().getWorld().generateNeighbours();
                 } else if (object instanceof ChatMessage) {
                     GameManager.get().getManager(OnScreenMessageManager.class).addMessage(object.toString());
                 } else if (object instanceof SingleEntityUpdateMessage) {
-                    GameManager.get().getWorld().updateEntity(((SingleEntityUpdateMessage) object).entity);
+                    GameManager.get().getWorld().updateEntity(((SingleEntityUpdateMessage) object).getEntity());
                 } else if (object instanceof TileDeleteMessage) {
-                    GameManager.get().getWorld().deleteTile(((TileDeleteMessage) object).tileID);
+                    GameManager.get().getWorld().deleteTile(((TileDeleteMessage) object).getTileID());
                 } else if (object instanceof EntityDeleteMessage) {
-                    GameManager.get().getWorld().deleteEntity(((EntityDeleteMessage) object).entityID);
+                    GameManager.get().getWorld().deleteEntity(((EntityDeleteMessage) object).getEntityID());
                 }
             }
         });
@@ -174,13 +184,14 @@ public class NetworkManager extends TickableManager {
                 "Sending initial connect message to host, requesting initial information to be sent to this client.");
 
         ConnectMessage request = new ConnectMessage();
-        request.username = username;
+        request.setUsername(username);
         client.sendTCP(request);
 
         // Broadcast to the host in-game that this client has connected.
         sendChatMessage("Joined the game.");
 
-        // Broadcast to this client in-game that it has successfully connected to the server.
+        // Broadcast to this client in-game that it has successfully connected to the
+        // server.
         GameManager.get().getManager(OnScreenMessageManager.class).addMessage("Connected to server.");
         logger.info("CLIENT WAS INITIALISED SUCCESSFULLY.");
         return true;
@@ -188,6 +199,7 @@ public class NetworkManager extends TickableManager {
 
     /**
      * Hosts a game with the specified username on ports (54555, 54777).
+     * 
      * @param username - the username of the host
      * @return true if
      */
@@ -218,7 +230,8 @@ public class NetworkManager extends TickableManager {
             return false;
         }
 
-        // Add all listeners for the host, allowing it to receive information from all its clients.
+        // Add all listeners for the host, allowing it to receive information from all
+        // its clients.
         logger.info("Attempting to add message listeners to server.");
         server.addListener(new Listener() {
             @Override
@@ -231,7 +244,7 @@ public class NetworkManager extends TickableManager {
 
                     System.err.println(message);
 
-                    GameManager.get().getWorld().updateEntity(((SingleEntityUpdateMessage) object).entity);
+                    GameManager.get().getWorld().updateEntity(((SingleEntityUpdateMessage) object).getEntity());
                 }
 
                 if (object instanceof ChatMessage) {
@@ -246,13 +259,13 @@ public class NetworkManager extends TickableManager {
                     TileUpdateMessage message = new TileUpdateMessage();
                     List<Tile> tiles = GameManager.get().getWorld().getTileMap();
                     for (Tile t : tiles) {
-                        message.tile = t;
+                        message.setTile(t);
                         server.sendToTCP(connection.getID(), message);
                     }
                 }
 
                 if (object instanceof TileDeleteMessage) {
-                    GameManager.get().getWorld().deleteTile(((TileDeleteMessage) object).tileID);
+                    GameManager.get().getWorld().deleteTile(((TileDeleteMessage) object).getTileID());
                 }
             }
         });
@@ -263,6 +276,7 @@ public class NetworkManager extends TickableManager {
 
     /**
      * On tick method
+     * 
      * @param i
      */
     @Override
@@ -278,10 +292,10 @@ public class NetworkManager extends TickableManager {
      * Runs each tick for hosts.
      */
     private void onTickHost() {
-        //Only send messages if there are clients
+        // Only send messages if there are clients
         for (AbstractEntity e : GameManager.get().getWorld().getEntities()) {
             SingleEntityUpdateMessage message = new SingleEntityUpdateMessage();
-            message.entity = e;
+            message.setEntity(e);
             server.sendToAllTCP(message);
         }
 
@@ -296,6 +310,7 @@ public class NetworkManager extends TickableManager {
 
     /**
      * Sends a chat message to the network clients
+     * 
      * @param message
      */
     public void sendChatMessage(String message) {
@@ -310,6 +325,7 @@ public class NetworkManager extends TickableManager {
 
     /**
      * Get the ID of the client
+     * 
      * @return int - the client id
      */
     public int getID() {
@@ -324,6 +340,7 @@ public class NetworkManager extends TickableManager {
 
     /**
      * Get the username of a host/client
+     * 
      * @return String - the username of the host/client
      */
     public String getUsername() {
@@ -332,11 +349,12 @@ public class NetworkManager extends TickableManager {
 
     /**
      * Delete the given tile
+     * 
      * @param t - the tile to delete
      */
     public void deleteTile(Tile t) {
         TileDeleteMessage msg = new TileDeleteMessage();
-        msg.tileID = t.getTileID();
+        msg.setTileID(t.getTileID());
         if (isHosting) {
             server.sendToAllTCP(msg);
         } else {
@@ -347,16 +365,17 @@ public class NetworkManager extends TickableManager {
     /**
      * Delete the given entity.
      * <p>
-     *     The host will ensure the entity has also been deleted in its own game.
-     *     Client deletion of entities is handled in the EntityDeleteMessage class,
-     *     which will be sent by the server once it receives the EntityDeleteMessage
-     *     from the client.
+     * The host will ensure the entity has also been deleted in its own game. Client
+     * deletion of entities is handled in the EntityDeleteMessage class, which will
+     * be sent by the server once it receives the EntityDeleteMessage from the
+     * client.
      * </p>
+     * 
      * @param e - the entity to delete
      */
     public void deleteEntity(AbstractEntity e) {
         EntityDeleteMessage msg = new EntityDeleteMessage();
-        msg.entityID = e.getEntityID();
+        msg.setEntityID(e.getEntityID());
         if (isHosting) {
             server.sendToAllTCP(msg);
         } else {
