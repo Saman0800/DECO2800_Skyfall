@@ -32,7 +32,6 @@ public class WorldParameters {
     //List of the biomes in the world
     private List<AbstractBiome> biomes;
 
-    // TODO:Ontonator Consider removing this.
     //List of the entities in the world
     private List<AbstractEntity> entities;
 

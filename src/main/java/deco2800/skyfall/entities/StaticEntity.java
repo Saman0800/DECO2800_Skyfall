@@ -23,9 +23,9 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
     private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
 
     private static final String ENTITY_ID_STRING = "staticEntityID";
-    private static TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
+    private static final TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
 
-    public Map<HexVector, String> children;
+    private Map<HexVector, String> children;
 
     private Map<HexVector, String> textures;
 

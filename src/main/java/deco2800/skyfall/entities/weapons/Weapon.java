@@ -27,7 +27,7 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon, Blue
     private int durability;
     private boolean carryable;
     private boolean exchangeable;
-    public boolean equippable;
+    private boolean equippable;
     private HexVector position;
 
     private int woodRequired;

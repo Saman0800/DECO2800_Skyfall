@@ -1,7 +1,9 @@
 package deco2800.skyfall.worlds.biomes;
 
+import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.worlds.Tile;
 
+import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import deco2800.skyfall.worlds.generation.perlinnoise.TileNoiseGenerator;
 
@@ -80,7 +82,6 @@ public class OceanBiome extends AbstractBiome {
 
     @Override
     public void setTileTexture(Tile tile) {
-        // TODO:Ontonator Fix ths once Dan's algorithm is complete.
         tile.setTexture("ocean_1");
     }
 }
