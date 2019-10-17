@@ -25,7 +25,7 @@ public class Bone extends StaticEntity {
         setBoneParams();
         this.setTexture(Bone.nextTextureString);
 
-        Bone.nextTextureString = Bone.getNextTexture(randomGen.nextInt());
+
     }
 
     public Bone(Tile tile, boolean obstructed) {

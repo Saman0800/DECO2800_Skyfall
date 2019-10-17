@@ -120,7 +120,7 @@ public class MainCharacter extends Peon
 
     private List<Blueprint> blueprintsLearned;
     private PetsManager petsManager;
-    private BuildingFactory tempFactory;
+
 
     /*
         What stage of the game is the player on? Controls what blueprints
@@ -143,8 +143,7 @@ public class MainCharacter extends Peon
     public static final String DIED_SOUND_NAME = "died";
 
     public static final String BOWATTACK = "bow_standard";
-    public static final String AXEATTACK = "sword_standard";
-    public static final String SWORDATTACK = "sword_standard";
+    public static final String MELEEATTACK = "sword_standard";
     public static final String SPEARATTACK = "spear";
 
     // Level/point system for the Main Character to be recorded as game goes on
@@ -281,7 +280,7 @@ public class MainCharacter extends Peon
         velHistoryY = new ArrayList<>();
 
         blueprintsLearned = new ArrayList<>();
-        tempFactory = new BuildingFactory();
+
 
         this.equippedItem = new EmptyItem();
         isMoving = false;
@@ -343,7 +342,7 @@ public class MainCharacter extends Peon
         velHistoryY = new ArrayList<>();
 
         blueprintsLearned = new ArrayList<>();
-        tempFactory = new BuildingFactory();
+
 
         this.equippedItem = new EmptyItem();
         isMoving = false;
@@ -580,7 +579,7 @@ public class MainCharacter extends Peon
         // Play weapon attackEntity sound
         switch ((equippedItem).getName()) {
             case "sword":
-                SoundManager.playSound(SWORDATTACK);
+                SoundManager.playSound(MELEEATTACK);
                 break;
             case "spear":
                 SoundManager.playSound(SPEARATTACK);
@@ -589,7 +588,7 @@ public class MainCharacter extends Peon
                 SoundManager.playSound(BOWATTACK);
                 break;
             case "axe":
-                SoundManager.playSound(AXEATTACK);
+                SoundManager.playSound(MELEEATTACK);
                 break;
             default:
                 SoundManager.playSound(HURT_SOUND_NAME);
@@ -672,10 +671,10 @@ public class MainCharacter extends Peon
      * swimming to false in case they were in a boat
      */
     public void exitVehicle() {
-        // this.setTexture();
+
         setAcceleration(0.01f);
         setMaxSpeed(0.4f);
-        //changeSwimming(false);
+
     }
 
     public void pickUpInventory(Item item) {
@@ -891,26 +890,7 @@ public class MainCharacter extends Peon
                         (int) clickedPosition[0], (int) clickedPosition[1]);
                 qm.addBuilding(bs.selectBuilding(bs.getBuildingID(), 0, 0).getBuildingType());
             }
-            /*
-            if (GameManager.getManagerFromInstance(ConstructionManager.class).getStatus() == 1) {
-                // System.out.println(clickedPosition[0]);
-                // System.out.println(clickedPosition[1]);
-                // cheking inventories
-                // if
-                // (GameManager.getManagerFromInstance(ConstructionManager.class).invCheck(inventories)){
-                // GameManager.getManagerFromInstance(ConstructionManager.class).build(GameManager.get().getWorld(),clickedPosition[0],
-                // clickedPosition[1]);
-                // }
 
-                // REMOVE THE INVENTORIES
-                // buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(),
-                // world);
-                // invRemove(buildingToBePlaced,GameManager.getManagerFromInstance(InventoryManager.class));
-
-                GameManager.getManagerFromInstance(ConstructionManager.class).build(GameManager.get().getWorld(),
-                        (int) clickedPosition[0], (int) clickedPosition[1]);
-            }
-             */
         }
 
     }
@@ -989,7 +969,7 @@ public class MainCharacter extends Peon
             ConstructionTable bs = (ConstructionTable) gmm.getPopUp("constructionTable");
             bs.updateBlueprintShopPanel();
             gmm.setPopUp("constructionTable");
-            //GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
+
         }
 
         // After death, check if health is restored after restart
@@ -1669,21 +1649,6 @@ public class MainCharacter extends Peon
         for (Blueprint blueprint : getBlueprintsLearned()) {
             if (blueprint.getClass() == newItem.getClass()) {
 
-//                if (newItem.getRequiredMetal() > this.getInventoryManager().
-//                        getAmount("Metal")) {
-//                    logger.info("You don't have enough Metal");
-//
-//                } else if (newItem.getRequiredWood() > this.getInventoryManager().
-//                        getAmount("Wood")) {
-//                    logger.info("You don't have enough Wood");
-//
-//                } else if (newItem.getRequiredStone() > this.getInventoryManager().
-//                        getAmount("Stone")) {
-//                    logger.info("You don't have enough Stone");
-
-                // testing
-                if (false) {
-                } else {
                     switch (newItem.getName()) {
                         case "Hatchet":
                             this.getInventoryManager().add(new Hatchet());
@@ -1752,7 +1717,7 @@ public class MainCharacter extends Peon
                     this.getInventoryManager().dropMultiple("Metal", newItem.getRequiredMetal());
                     this.getInventoryManager().dropMultiple("Stone", newItem.getRequiredStone());
                     this.getInventoryManager().dropMultiple("Wood", newItem.getRequiredWood());
-                }
+
             }
         }
     }
@@ -2024,47 +1989,39 @@ public class MainCharacter extends Peon
     }
 
 
-    // FIXME:dannothan Fix or remove this.
-    // FIXME:jeffvan figure out what needs saving
     public MainCharacterMemento save() {
         return new MainCharacterMemento(this);
     }
 
     public void load(MainCharacterMemento memento) {
         this.id = memento.mainCharacterID;
-        // this.equippedItem = memento.equippedItem;
+
         this.level = memento.level;
         this.foodLevel = memento.foodLevel;
         this.foodAccum = memento.foodAccum;
         this.goldPouch = memento.goldPouch;
-        // this.blueprintsLearned = memento.blueprints;
-        // this.inventories = memento.inventory;
-        // this.weapons = memento.weapons;
-        // this.hotbar = memento.hotbar;
+
     }
 
     public static class MainCharacterMemento extends AbstractMemento implements Serializable {
-        //TODO:dannathan add stuff for entitiy
-        private long saveID;
-        private long mainCharacterID;
-        private int stage;
 
-        private int equippedItem;
+
+        private long mainCharacterID;
+
         private int level;
         private int foodLevel;
         private float foodAccum;
         private float col;
         private float row;
         private int health;
-        private WeaponManager weapons;
+
         private HashMap<Integer, Integer> goldPouch;
-        private List<Item> hotbar;
-        private List<String> blueprints;
+
 
         public MainCharacterMemento(MainCharacter character) {
             this.col = character.getCol();
             this.row = character.getRow();
-            this.saveID = character.save.getSaveID();
+
             this.mainCharacterID = character.id;
             this.level = character.level;
             this.health = character.getHealth();
