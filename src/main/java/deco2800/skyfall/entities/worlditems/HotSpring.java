@@ -3,7 +3,7 @@ package deco2800.skyfall.entities.worlditems;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 
-public class hotSpring extends AbstractEntity {
+public class HotSpring extends AbstractEntity {
 
     /**
      * Create a hot spring in forest biome
@@ -12,7 +12,7 @@ public class hotSpring extends AbstractEntity {
     // Entity ID of hot spring
     private static final String ENTITY_ID_STRING = "hot_spring";
     // Amount of recovering
-    private static final int recoverHealingPower = 3;
+    private static final int RecoverHealingPower = 3;
     // Biome
     private static final transient String BIOME = "forest";
     // MainCharacter player
@@ -25,7 +25,7 @@ public class hotSpring extends AbstractEntity {
      * @param row    - the row of hot spring
      * @param player - the character
      */
-    public hotSpring(float col, float row, MainCharacter player) {
+    public HotSpring(float col, float row, MainCharacter player) {
         super(col, row, 2);
         this.setTexture(ENTITY_ID_STRING);
         this.setHeight(0);
@@ -76,7 +76,7 @@ public class hotSpring extends AbstractEntity {
      * The amount of recovering
      */
     public int amountOfRecovering() {
-        return recoverHealingPower;
+        return RecoverHealingPower;
     }
 
     /**

@@ -3,19 +3,19 @@ package deco2800.skyfall.entities;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import deco2800.skyfall.entities.worlditems.hotSpring;
+import deco2800.skyfall.entities.worlditems.HotSpring;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 // A test for hot spring class
-public class hotSpringTest {
-    private hotSpring HotSpring;
+public class HotSpringTest {
+    private HotSpring HotSpring;
 
     private MainCharacter mainCharacter;
     @Before
     public void setup() throws Exception {
-        HotSpring = new hotSpring(2f,2f, mainCharacter);
+        HotSpring = new HotSpring(2f,2f, mainCharacter);
     }
 
 

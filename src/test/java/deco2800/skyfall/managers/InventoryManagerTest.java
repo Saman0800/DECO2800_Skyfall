@@ -191,7 +191,7 @@ public class InventoryManagerTest {
         List<Item> apples = new ArrayList<>();
         apples.add(new Apple());
         List<Item> aloe = new ArrayList<>();
-        aloe.add(new Aloe_Vera());
+        aloe.add(new AloeVera());
         List<Item> wood = new ArrayList<>();
         wood.add(new Wood());
         List<Item> sand = new ArrayList<>();
@@ -199,7 +199,7 @@ public class InventoryManagerTest {
 
         inventory.put(new Stone().getName(), stones);
         inventory.put(new Apple().getName(), apples);
-        inventory.put(new Aloe_Vera().getName(), aloe);
+        inventory.put(new AloeVera().getName(), aloe);
         inventory.put(new Wood().getName(), wood);
         inventory.put(new Sand().getName(), sand);
 
