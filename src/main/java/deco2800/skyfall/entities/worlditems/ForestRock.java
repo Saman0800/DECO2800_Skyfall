@@ -12,7 +12,7 @@ public class ForestRock extends AbstractRock {
         setupParams();
     }
 
-    @Deprecated // This really doesn't make sense anymore.
+
     public ForestRock() {
         super(new Tile(null, 0.0f, 0.0f), true, "rock" + ForestRock.nextRock);
         ForestRock.nextRock = randomGen.nextInt(3) + 1;

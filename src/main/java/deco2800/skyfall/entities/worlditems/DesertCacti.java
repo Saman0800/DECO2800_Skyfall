@@ -26,7 +26,7 @@ public class DesertCacti extends StaticEntity implements Tickable, Harvestable {
     public DesertCacti(Tile tile, boolean obstructed) {
         super(tile, 5, "DCactus" + DesertCacti.nextImage, obstructed);
         setCactiParams();
-        DesertCacti.nextImage = randomGen.nextInt(4) + 1;
+
     }
 
     private void setCactiParams() {

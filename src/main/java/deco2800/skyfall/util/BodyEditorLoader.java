@@ -63,7 +63,7 @@ public class BodyEditorLoader {
      * place this reference point carefully to let you place your body in your
      * world easily with its BodyDef.position point. Note that to draw an image
      * at the position of your body, you will need to know this reference point
-     * (see {@link #getOrigin(java.lang.String, float)}.
+     * .
      * <br/><br/>
      *
      * Also, saved shapes are normalized. As shown in the tool, the width of
@@ -126,19 +126,6 @@ public class BodyEditorLoader {
     }
 
     /**
-     * Gets the origin point attached to the given name. Since the point is
-     * normalized in [0,1] coordinates, it needs to be scaled to your body
-     * size. Warning: this method returns the same Vector2 object each time, so
-     * copy it if you need it for later use.
-     */
-    private Vector2 getOrigin(String name, float scale) {
-        RigidBodyModel rbModel = model.rigidBodies.get(name);
-        if (rbModel == null) throw new BodyEditorLoaderException("Name '" + name + "' was not found.");
-
-        return vec.set(rbModel.origin).scl(scale);
-    }
-
-    /**
      * <b>For advanced users only.</b> Lets you access the internal model of
      * this loader and modify it. Be aware that any modification is permanent
      * and that you should really know what you are doing.
@@ -156,11 +143,18 @@ public class BodyEditorLoader {
     }
 
     public static class RigidBodyModel {
-        public String name;
+        private String name;
         String imagePath;
         final Vector2 origin = new Vector2();
         final List<PolygonModel> polygons = new ArrayList<>();
         final List<CircleModel> circles = new ArrayList<>();
+
+        public String getName() {
+            return name;
+        }
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 
     public static class PolygonModel {

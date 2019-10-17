@@ -5,8 +5,8 @@ import java.util.Arrays;
 /**
  * A triangle of WorldGenNodes.
  * Code taken from https://github.com/jdiemke/delaunay-triangulator/blob/master/library/src/main/java/io/github/jdiemke/triangulation/Triangle2D.java
- *
- * @author Johannes Diemke
+ * <p>
+ * author: Johannes Diemke
  */
 class WorldGenTriangle {
 
@@ -45,11 +45,7 @@ class WorldGenTriangle {
 
         double pca = point.subtract(c).crossProduct(a.subtract(c));
 
-        if (!hasSameSign(pab, pca)) {
-            return false;
-        }
-
-        return true;
+        return hasSameSign(pab, pca);
     }
 
     /**
@@ -63,7 +59,7 @@ class WorldGenTriangle {
      *
      * @param point The point to be tested
      * @return Returns true iff the point lies inside the circumcircle through
-     *         the three points a, b, and c of the triangle
+     * the three points a, b, and c of the triangle
      */
     boolean isPointInCircumcircle(WorldGenNode point) {
         double a11 = a.getX() - point.getX();
@@ -97,7 +93,7 @@ class WorldGenTriangle {
      * See Real-Time Collision Detection, chap. 3, p. 32
      *
      * @return Returns true iff the triangle ABC is oriented counterclockwise
-     *         (CCW)
+     * (CCW)
      */
     boolean isOrientedCCW() {
         double a11 = a.getX() - c.getX();
@@ -146,14 +142,10 @@ class WorldGenTriangle {
      *
      * @param vertex The vertex to be tested
      * @return Returns true if the Vertex is one of the vertices describing this
-     *         triangle
+     * triangle
      */
     boolean hasVertex(WorldGenNode vertex) {
-        if (a == vertex || b == vertex || c == vertex) {
-            return true;
-        }
-
-        return false;
+        return (a == vertex || b == vertex || c == vertex);
     }
 
     /**
@@ -179,8 +171,8 @@ class WorldGenTriangle {
     /**
      * Computes the closest point on the given edge to the specified point.
      *
-     * @param edge The edge on which we search the closest point to the
-     *             specified point
+     * @param edge  The edge on which we search the closest point to the
+     *              specified point
      * @param point The point to which we search the closest point on the edge
      * @return The closest point on the given edge to the specified point
      */
@@ -201,10 +193,8 @@ class WorldGenTriangle {
     /**
      * Tests if the two arguments have the same sign.
      *
-     * @param a
-     *            The first floating point argument
-     * @param b
-     *            The second floating point argument
+     * @param a The first floating point argument
+     * @param b The second floating point argument
      * @return Returns true iff both arguments have the same sign
      */
     private boolean hasSameSign(double a, double b) {
@@ -220,10 +210,10 @@ class WorldGenTriangle {
      * Calculates the coordinates circumcentre of the triangle.
      * This method was not taken from the source of the rest of this class
      *
-     * @author Daniel Nathan
      * @return the coordinates of the circumcentre
      * @throws CollinearPointsException if the three points of this triangle are
-     *         collinear
+     *                                  collinear
+     * @author Daniel Nathan
      */
     double[] circumcentre() throws CollinearPointsException {
         double ax = a.getX();
@@ -243,10 +233,8 @@ class WorldGenTriangle {
         // If two have the same x value and one doesn't, they aren't collinear
         // If they all have different x values, they are collinear if any two of
         // The gradients between them are equal
-        if (ax != bx && ax != cx) {
-            if ((by - ay) / (bx - ax) == (cy - ay) / (cx - ax)) {
-                throw new CollinearPointsException();
-            }
+        if ((ax != bx && ax != cx) && ((by - ay) / (bx - ax) == (cy - ay) / (cx - ax))) {
+            throw new CollinearPointsException();
         }
 
         // The coordinates to return. This method calculates the circumcentre by

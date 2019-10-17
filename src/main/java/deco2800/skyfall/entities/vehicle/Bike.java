@@ -8,7 +8,7 @@ public class Bike extends AbstractVehicle {
     MainCharacter mc;
     private boolean isOnUse = false;
     private final static String textureName = "bike";
-    private Direction movingDirection;
+
 
     public Bike(float col, float row, MainCharacter mc) {
         super(col, row, "bike");

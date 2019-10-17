@@ -1,6 +1,6 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.*;
+
 import com.badlogic.gdx.math.*;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.managers.*;
@@ -12,10 +12,6 @@ public class PlayerPeon extends Peon implements KeyDownObserver, KeyUpObserver, 
     protected Vector2 direction;
     protected float currentSpeed;
 
-    private boolean moveUp = false;
-    private boolean moveLeft = false;
-    private boolean moveRight = false;
-    private boolean moveDown = false;
 
     /**
      * PlayerPeon Constructor
@@ -67,12 +63,6 @@ public class PlayerPeon extends Peon implements KeyDownObserver, KeyUpObserver, 
 
     }
 
-    /**
-     * Perform a special attack with the right click.
-     */
-    public void specialAttack() {
-        // release a more powerful attack.
-    }
 
     @Override
     public void moveTowards(HexVector destination) {
@@ -103,22 +93,7 @@ public class PlayerPeon extends Peon implements KeyDownObserver, KeyUpObserver, 
             return;
         }
 
-        switch (keycode) {
-        case Input.Keys.W:
-            moveUp = true;
-            break;
-        case Input.Keys.A:
-            moveLeft = true;
-            break;
-        case Input.Keys.S:
-            moveDown = true;
-            break;
-        case Input.Keys.D:
-            moveRight = true;
-            break;
-        default:
-            break;
-        }
+
     }
 
     /**
@@ -128,21 +103,6 @@ public class PlayerPeon extends Peon implements KeyDownObserver, KeyUpObserver, 
      */
     @Override
     public void notifyKeyUp(int keycode) {
-        switch (keycode) {
-        case Input.Keys.W:
-            moveUp = false;
-            break;
-        case Input.Keys.A:
-            moveLeft = false;
-            break;
-        case Input.Keys.S:
-            moveDown = false;
-            break;
-        case Input.Keys.D:
-            moveRight = false;
-            break;
-        default:
-            break;
-        }
+
     }
 }

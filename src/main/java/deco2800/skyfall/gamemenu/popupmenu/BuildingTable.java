@@ -101,8 +101,6 @@ public class BuildingTable extends AbstractPopUpElement {
 
         // Right hand side of the table (list of blueprints
         Table items = new Table();
-        // Label number = new Label("1/12", skin, "black-label");
-        // items.add(number).padTop(10).colspan(4);
         items.row();
 
 
@@ -119,7 +117,6 @@ public class BuildingTable extends AbstractPopUpElement {
                     icon.addListener(new ClickListener() {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
-                            // number.setText((blueprintsLearned.indexOf(item) + 1) + "/12");
                             showInfo(itemInfo, item);
                             selectedItem = item;
                         }

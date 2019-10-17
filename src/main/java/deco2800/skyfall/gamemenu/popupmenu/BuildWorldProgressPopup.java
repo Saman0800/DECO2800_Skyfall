@@ -79,23 +79,6 @@ public class BuildWorldProgressPopup extends AbstractPopUpElement {
         table.add(banner).width(750).height(750 * 188f / 1756).padTop(20).colspan(2);
         table.row();
         table.add(image);
-        //
-//        // Left hand side of the table
-//        Table blueprint = new Table();
-//        Label blueprintTitle = new Label("BLUEPRINT", skin, "black-label");
-//        blueprint.add(blueprintTitle).padTop(10);
-//        blueprint.row();
-//
-//        // Information about the item selected (left hand side)
-//        itemInfo = new Table();
-//        blueprint.add(itemInfo);
-//
-//        // Right hand side of the table (list of blueprints
-//        Table items = new Table();
-//        // Label number = new Label("1/12", skin, "black-label");
-//        // items.add(number).padTop(10).colspan(4);
-//        items.row();
-
         table.setVisible(false);
         stage.addActor(table);
     }

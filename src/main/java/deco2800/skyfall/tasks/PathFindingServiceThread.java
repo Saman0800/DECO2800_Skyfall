@@ -15,7 +15,7 @@ public class PathFindingServiceThread implements Runnable {
 	public void run() {
 		Pathfinder pathfinder = new BFSPathfinder();
 		movementTask.setPath( pathfinder.pathfind(GameManager.get().getWorld(),
-				movementTask.entity.getPosition(), movementTask.destination));
+				movementTask.agentEntity.getPosition(), movementTask.destination));
 	}
 
 	public void start() {

@@ -73,7 +73,7 @@ public class Enemy extends Peon
 
         // Sets the spawning location and all the collision
         this.setPosition(col, row);
-        // this.initialiseBox2D(col, row, hitBoxPath);
+
         this.setCollidable(true);
 
         // Sets the main character in the game.
