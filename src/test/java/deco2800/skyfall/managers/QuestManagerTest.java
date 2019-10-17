@@ -56,7 +56,7 @@ public class QuestManagerTest {
 
     }
 
-    
+
 
     @Test
     public void setGoldTotalTest() {
