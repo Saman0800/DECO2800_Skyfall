@@ -359,14 +359,13 @@ public class InventoryManager extends TickableManager implements Serializable {
                     GameManager.get().getWorld().addEntity((ManufacturedResources) item);
                 }
             }
-
             return items;
 
         }
 
         logger.warn("You can't remove what you don't have!");
 
-        return null;
+        return new ArrayList<>();
     }
 
     /**
