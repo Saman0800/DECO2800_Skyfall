@@ -54,8 +54,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("tornado_placeholder", new Texture("resources/spells/tornado_3.png"));
             textureMap.put("shield_placeholder", new Texture("resources/spells/shield_3.png"));
             textureMap.put("flame_wall_placeholder", new Texture("resources/spells/fire_3.png"));
-            textureMap.put("range_test", new Texture("resources/projectile.png"));
-            textureMap.put("melee_test", new Texture("resources/punch.png"));
             textureMap.put("camel", new Texture("resources/camel/camel-face(no-player).png"));
             textureMap.put("camel_character", new Texture("resources/camel/camel-withplayer1(left).png"));
             textureMap.put("horse_images", new Texture("resources/horse_images/horse-left-walk1.png"));
@@ -316,9 +314,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("winter", new Texture("resources/clock/winter.png"));
             textureMap.put("spring", new Texture("resources/clock/spring.png"));
             textureMap.put("autumn", new Texture("resources/clock/autumn.png"));
-
-            textureMap.put("mana_bar", new Texture("resources/mana_bar.png"));
-            textureMap.put("mana_bar_inner", new Texture("resources/mana_bar_inner.png"));
 
             textureMap.put("inventory_banner", new Texture("resources/inventory_banner.png"));
             textureMap.put("chest_banner", new Texture("resources/chest_banner.png"));
