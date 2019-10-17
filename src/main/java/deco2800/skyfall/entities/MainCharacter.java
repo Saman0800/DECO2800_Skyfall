@@ -546,8 +546,8 @@ public class MainCharacter extends Peon
         // Make projectile move toward the angle
         // Spawn projectile in front of character
 
-        int bowRange = equippedItem.getName().equals("bow") ? 10 : 0;
-        int range = this.itemSlotSelected == 1 ? bowRange : 0;
+        int weaponRange = equippedItem.getSubtype().equals("range") ? 10 : 0;
+        int range = this.itemSlotSelected == 1 ? weaponRange : 0;
 
         if (!(equippedItem instanceof Weapon)) {
             return;
@@ -557,7 +557,8 @@ public class MainCharacter extends Peon
             return;
         }
 
-        currentAttackIsMelee = !(equippedItem.getName().equals("bow"));
+        currentAttackIsMelee =
+                !(((Weapon) equippedItem).getWeaponType().equals("range"));
 
         //If there is a default projectile selected to fire, use that.
         if (defaultProjectile == null) {
@@ -565,7 +566,7 @@ public class MainCharacter extends Peon
                     new HexVector(position.getCol() + 0.5f + 1.5f * (currentAttackIsMelee ? unitDirection.getRow() : unitDirection.getCol()),
                             position.getRow() + 0.5f + 1.5f * (currentAttackIsMelee ? -unitDirection.getCol() : unitDirection.getRow())),
                     ((Weapon) equippedItem).getDamage(),
-                    1,
+                    ((Weapon) equippedItem).getAttackRate(),
                     range);
         } else {
             currentProjectile = defaultProjectile;
