@@ -491,7 +491,6 @@ public class BuildingEntity extends AbstractEntity implements ICombatEntity {
         return true;
     }
 
-
     public void cabinInteract() {
         // Resting at the cabin restores a players health.
         MainCharacter player = GameManager.getManagerFromInstance(GameMenuManager.class).getMainCharacter();
