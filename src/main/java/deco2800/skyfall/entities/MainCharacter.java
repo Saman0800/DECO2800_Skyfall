@@ -178,7 +178,7 @@ public class MainCharacter extends Peon
     public static final String DIED_SOUND_NAME = "died";
 
     public static final String BOWATTACK = "bow_standard";
-    public static final String AXEATTACK = "sword_standard";
+    public static final String AXEATTACK = "axe_standard";
     public static final String SWORDATTACK = "sword_standard";
     public static final String SPEAR = "spear";
 
