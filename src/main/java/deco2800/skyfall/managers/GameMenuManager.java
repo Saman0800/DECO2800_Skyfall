@@ -11,7 +11,6 @@ import deco2800.skyfall.SkyfallGame;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gamemenu.Clock;
 import deco2800.skyfall.gamemenu.*;
-import deco2800.skyfall.gamemenu.popupmenu.SettingsTable;
 import deco2800.skyfall.gamemenu.popupmenu.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -326,11 +325,6 @@ public class GameMenuManager extends TickableManager {
         s.knobAfter.setMinHeight(50);
         skin.add("default-slider", s);
 
-        popUps.put("settingsTable", new SettingsTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject(exitText)),
-                null, textureManager, this,
-                skin, soundManager));
-
         popUps.put("helpTable", new HelpTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this,
@@ -365,18 +359,14 @@ public class GameMenuManager extends TickableManager {
 
         popUps.put("constructionTable", new ConstructionTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                null, textureManager, this, sm, skin));
+                null, textureManager, this, sm));
         popUps.put("collectTable", new CollectCreateTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject(exitText)),
-                null, textureManager, this, questManager, skin, "collect"));
-
-        popUps.put("teleportTable", new TeleportTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject(exitText)),
-                null, textureManager, this, questManager, skin, "collect"));
+                null, textureManager, this, skin, "collect"));
 
         popUps.put("createTable", new CollectCreateTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject(exitText)),
-                null, textureManager, this, questManager, skin, "create"));
+                null, textureManager, this, skin, "create"));
 
         popUps.put("progressTable", new ProgressTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject(exitText)),
@@ -485,6 +475,11 @@ public class GameMenuManager extends TickableManager {
         if (this.getCurrentPopUp() != null) {
             this.getCurrentPopUp().hide();
         }
+    }
+
+
+    public QuestManager getQuestManager() {
+        return questManager;
     }
 }
 

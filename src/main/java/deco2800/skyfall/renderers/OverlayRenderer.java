@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import deco2800.skyfall.graphics.ShaderWrapper;
-import deco2800.skyfall.graphics.types.vec3;
+import deco2800.skyfall.graphics.types.Vec3;
 import deco2800.skyfall.gui.GuiMaster;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.util.WorldUtil;
@@ -137,7 +137,7 @@ public class OverlayRenderer implements Renderer {
         debugLine(batch, camera, line++, "== Graphics ==");
         debugLine(batch, camera, line++, String.format("Extended shading: %s", shader.getActive() ? "True" : "False"));
         debugLine(batch, camera, line++, String.format("Ambient Intensity: %f", shader.getAmbientIntensity()));
-        vec3 colour = shader.getAmbientColour();
+        Vec3 colour = shader.getAmbientColour();
         debugLine(batch, camera, line++,
                 String.format("Ambient Colour: (%f, %f, %f)", colour.getX(), colour.getY(), colour.getZ()));
         debugLine(batch, camera, line++,

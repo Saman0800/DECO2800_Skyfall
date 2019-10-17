@@ -9,12 +9,17 @@ import deco2800.skyfall.managers.EnvironmentManager;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.Chunk;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class EnemySpawnTable implements TimeObserver {
+
+    // Logger for tracking enemy information
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * The radius in the which the enemies may spawn in
@@ -266,7 +271,7 @@ public class EnemySpawnTable implements TimeObserver {
                     world.addEntity(newEnemy);
                     enemiesPlaced += 1;
                 } catch (Exception e) {
-                    System.err.println("Could not create new AbstractEnemy: " + e.toString());
+                    logger.error("Could not create new AbstractEnemy: " + e.toString());
                 }
             }
         }

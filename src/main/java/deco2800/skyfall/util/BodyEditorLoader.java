@@ -65,8 +65,7 @@ public class BodyEditorLoader {
      * over the BodyDef position point. Therefore, you should place this reference
      * point carefully to let you place your body in your world easily with its
      * BodyDef.position point. Note that to draw an image at the position of your
-     * body, you will need to know this reference point (see
-     * {@link #getOrigin(java.lang.String, float)}. <br/>
+     * body, you will need to know this reference point . <br/>
      * <br/>
      *
      * Also, saved shapes are normalized. As shown in the tool, the width of the
@@ -152,6 +151,14 @@ public class BodyEditorLoader {
         final Vector2 origin = new Vector2();
         final List<PolygonModel> polygons = new ArrayList<>();
         final List<CircleModel> circles = new ArrayList<>();
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 
     public static class PolygonModel {

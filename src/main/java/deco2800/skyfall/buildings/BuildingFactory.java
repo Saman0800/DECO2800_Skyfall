@@ -23,13 +23,13 @@ public class BuildingFactory {
     /**
      * Add to made buildings and remove from crafted
      * 
-     * @param type
+     * @param type the building type
      */
     private void addToConstucted(BuildingType type) {
         GameMenuManager manager = GameManager.getManagerFromInstance(GameMenuManager.class);
         MainCharacter mc = manager.getMainCharacter();
-        mc.getConstructedBuildings().add(type);
-        mc.getCraftedBuildings().remove(type);
+        mc.addConstructedBuilding(type);
+        mc.removeCraftedBuilding(type);
     }
 
     /**

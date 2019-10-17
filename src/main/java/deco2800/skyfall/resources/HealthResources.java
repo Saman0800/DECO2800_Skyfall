@@ -22,7 +22,7 @@ public abstract class HealthResources extends AbstractEntity implements Item {
     protected String subtype;
 
     // the co-ordinates of the tile the item has been placed on
-    private HexVector position;
+    private HexVector location;
 
     // Items could change or not e.g. coins, items
     private boolean exchangeable;
@@ -73,7 +73,7 @@ public abstract class HealthResources extends AbstractEntity implements Item {
         hasHealingPower = true;
         exchangeable = true;
         equippable = false;
-        this.position = position.getCoordinates();
+        this.location = position.getCoordinates();
         description = "This item increases or decreases a player's health.";
         healthValue = 10;
     }
@@ -154,7 +154,7 @@ public abstract class HealthResources extends AbstractEntity implements Item {
      */
     @Override
     public HexVector getCoords() {
-        return position;
+        return location;
     }
 
     public int getFoodValue() {
@@ -212,9 +212,6 @@ public abstract class HealthResources extends AbstractEntity implements Item {
         if (MainCharacter.getInstance().getHealth() < 50 && !MainCharacter.getInstance().isDead()) {
             // Add health to player
             MainCharacter.getInstance().changeHealth(getHealthValue());
-
-            // Update health message
-            // logger.info(getName() + " eaten. Health increased by {}!", getHealthValue());
         }
     }
 

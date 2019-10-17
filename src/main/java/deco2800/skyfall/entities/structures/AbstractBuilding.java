@@ -1,7 +1,6 @@
 package deco2800.skyfall.entities.structures;
 
 import deco2800.skyfall.entities.SaveableEntity;
-import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.worlds.world.World;
 
 import java.util.HashMap;
@@ -23,12 +22,7 @@ public abstract class AbstractBuilding extends SaveableEntity {
 
     private Map<String, Integer> buildCost = new HashMap<>();
 
-    private InventoryManager inventoryManager;
-
-    // private boolean hasPlayer;
-
     /**
-     *
      * @param x - X coordinate of building
      * @param y - Y coordinate of building
      */

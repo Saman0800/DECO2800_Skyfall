@@ -29,7 +29,7 @@ public abstract class NaturalResources extends AbstractEntity implements Item, S
     protected String biome;
 
     // Can be item be equipped
-    private boolean equippable;
+    protected boolean equippable;
 
     // item description
     protected String description;

@@ -16,8 +16,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import deco2800.skyfall.entities.SaveableEntity;
 import deco2800.skyfall.graphics.PointLight;
-import deco2800.skyfall.graphics.types.vec2;
-import deco2800.skyfall.graphics.types.vec3;
+import deco2800.skyfall.graphics.types.Vec2;
+import deco2800.skyfall.graphics.types.Vec3;
 import deco2800.skyfall.managers.EnvironmentManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
@@ -98,7 +98,7 @@ public class TikiTorchTest {
 
         float kValue = (float) Math.sin(0.5 * 0.2) * 0.15f + 1.2f;
 
-        PointLight testLight = new PointLight(new vec2(0, 0), new vec3(1.0f, 0.729f, 0.3372f), kValue, 0.5f);
+        PointLight testLight = new PointLight(new Vec2(0, 0), new Vec3(1.0f, 0.729f, 0.3372f), kValue, 0.5f);
         PointLight torchLight = testTikiTorch.getPointLight();
 
         assertEquals(testLight.getColour(), torchLight.getColour());

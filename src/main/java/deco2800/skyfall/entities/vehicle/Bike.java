@@ -1,6 +1,6 @@
 package deco2800.skyfall.entities.vehicle;
 
-import deco2800.skyfall.animation.Direction;
+
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameManager;
 
@@ -8,7 +8,7 @@ public class Bike extends AbstractVehicle {
     MainCharacter mc;
     private boolean isOnUse = false;
     private final static String textureName = "bike";
-    private Direction movingDirection;
+
 
     public Bike(float col, float row, MainCharacter mc) {
         super(col, row, "bike");
