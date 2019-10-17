@@ -69,7 +69,7 @@ public class InventoryTable extends AbstractPopUpElement {
 
     //Logger for Inventory Table
 
-    private final Logger LOGGER =
+    private final Logger logger =
             LoggerFactory.getLogger(InventoryTable.class);
 
 
@@ -106,7 +106,7 @@ public class InventoryTable extends AbstractPopUpElement {
     public void hide() {
         super.hide();
         inventorySelected = "";
-        LOGGER.info("Hiding inventory table");
+        logger.info("Hiding inventory table");
         baseTable.setVisible(false);
     }
 
@@ -117,7 +117,7 @@ public class InventoryTable extends AbstractPopUpElement {
     public void show() {
         super.show();
         updatePanels();
-        LOGGER.info("Showing inventory table");
+        logger.info("Showing inventory table");
         baseTable.setVisible(true);
     }
 

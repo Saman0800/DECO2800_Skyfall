@@ -32,7 +32,7 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
     protected Map<String, Integer> allRequirements = new HashMap<>();
 
     // Can be item be equipped
-    public boolean equippable;
+    protected boolean equippable;
 
     // Durability of the item (how many times it can be used
     private int durability;

@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.Map.Entry;
 
 
 import static deco2800.skyfall.buildings.BuildingType.*;
@@ -376,6 +377,7 @@ public class MainCharacter extends Peon
 
         blueprintsLearned = new ArrayList<>();
 
+
         this.equippedItem = new EmptyItem();
         isMoving = false;
 
@@ -577,8 +579,8 @@ public class MainCharacter extends Peon
         // Make projectile move toward the angle
         // Spawn projectile in front of character
 
-        int bowRange = equippedItem.getName().equals(BOW) ? 10 : 0;
-        int range = this.itemSlotSelected == 1 ? bowRange : 0;
+        int weaponRange = equippedItem.getSubtype().equals("range") ? 10 : 0;
+        int range = this.itemSlotSelected == 1 ? weaponRange : 0;
 
         if (!(equippedItem instanceof Weapon)) {
             return;
@@ -588,18 +590,17 @@ public class MainCharacter extends Peon
             return;
         }
 
-        currentAttackIsMelee = !(equippedItem.getName().equals(BOW));
+        currentAttackIsMelee =
+                !(((Weapon) equippedItem).getWeaponType().equals("range"));
 
         //If there is a default projectile selected to fire, use that.
         if (defaultProjectile == null) {
             currentProjectile = new Projectile(mousePosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
-                new HexVector(position.getCol() + 0.5f + 1.5f * (currentAttackIsMelee ? unitDirection.getRow()
-                    : unitDirection.getCol()),
-                    position.getRow() + 0.5f + 1.5f * (currentAttackIsMelee ? -unitDirection.getCol()
-                        : unitDirection.getRow())),
-                ((Weapon) equippedItem).getDamage(),
-                1,
-                range);
+                    new HexVector(position.getCol() + 0.5f + 1.5f * (currentAttackIsMelee ? unitDirection.getRow() : unitDirection.getCol()),
+                            position.getRow() + 0.5f + 1.5f * (currentAttackIsMelee ? -unitDirection.getCol() : unitDirection.getRow())),
+                    ((Weapon) equippedItem).getDamage(),
+                    ((Weapon) equippedItem).getAttackRate(),
+                    range);
         } else {
             currentProjectile = defaultProjectile;
         }
@@ -613,7 +614,7 @@ public class MainCharacter extends Peon
         // Play weapon attackEntity sound
         switch ((equippedItem).getName()) {
             case SWORD:
-                SoundManager.playSound(SWORDATTACK);
+                SoundManager.playSound(MELEEATTACK);
                 break;
             case SPEAR:
                 SoundManager.playSound(SPEAR);
@@ -622,7 +623,7 @@ public class MainCharacter extends Peon
                 SoundManager.playSound(BOWATTACK);
                 break;
             case AXE:
-                SoundManager.playSound(AXEATTACK);
+                SoundManager.playSound(MELEEATTACK);
                 break;
             default:
                 SoundManager.playSound(HURT_SOUND_NAME);
@@ -1145,6 +1146,7 @@ public class MainCharacter extends Peon
                     this.attack(mousePosition);
                 } else {
                     useEquipped();
+                    fireProjectile(mousePosition);
                 }
 
                 break;
@@ -1370,7 +1372,7 @@ public class MainCharacter extends Peon
     public Integer getGoldPouchTotalValue() {
         int totalValue = 0;
 
-        for (Map.Entry<Integer, Integer> entry : goldPouch.entrySet()) {
+        for (Entry<Integer, Integer> entry : goldPouch.entrySet()) {
             totalValue += entry.getKey() * entry.getValue();
         }
         return totalValue;
@@ -1801,7 +1803,7 @@ public class MainCharacter extends Peon
                 this.getInventoryManager().dropMultiple("Metal", newItem.getRequiredMetal());
                 this.getInventoryManager().dropMultiple("Stone", newItem.getRequiredStone());
                 this.getInventoryManager().dropMultiple("Wood", newItem.getRequiredWood());
-            }
+                }
         }
     }
 

@@ -93,6 +93,9 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
     // Import coin sound effect
     public static final String GOLD_SOUND_EFFECT = "coins";
 
+    // Item pick-up sound effect
+    private static final String PICK_UP_SOUND = "pick_up";
+
 
     /**
      * The constructor used to create a simple dummey world, used for displaying world information on the
@@ -542,6 +545,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
                 MainCharacter mc = gmm.getMainCharacter();
                 if (tile.getCoordinates().distance(mc.getPosition()) <= 2) {
                     entityToBeDeleted = entity;
+                    SoundManager.playSound(PICK_UP_SOUND);
                     gmm.getInventory().add((Item) entity);
                 }
             } else if (entity instanceof Chest) {

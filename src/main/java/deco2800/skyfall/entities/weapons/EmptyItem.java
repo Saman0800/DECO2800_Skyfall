@@ -21,7 +21,7 @@ public class EmptyItem implements Item {
     private final Logger logger = LoggerFactory.getLogger(EmptyItem.class);
 
     public EmptyItem() {
-        this.name = "Nothing";
+        this.name = "No Item";
         this.subType = "Empty";
         this.carryable = false;
         this.exchangeable = false;

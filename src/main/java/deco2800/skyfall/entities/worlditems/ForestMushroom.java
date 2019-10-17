@@ -18,12 +18,12 @@ public class ForestMushroom extends StaticEntity implements HasPointLight {
     public ForestMushroom() {
         setupParams();
         this.setTexture("mushrooms" + nextImage);
-        ForestMushroom.nextImage = randomGen.nextInt(2) + 1;
+
     }
 
     public ForestMushroom(Tile tile, boolean obstructed) {
         super(tile, 2, "mushrooms" + nextImage, obstructed);
-        ForestMushroom.nextImage = randomGen.nextInt(2) + 1;
+
         // Set up the point light for this entity
         pointLightSetUp();
         setupParams();

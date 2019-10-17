@@ -117,7 +117,8 @@ public class CollectCreateTableTest extends BaseGDXTest {
         assertEquals("30 x Wood" ,element.getLabelWood().getText().toString());
         assertEquals("30 x Stone" ,element.getLabelStone().getText().toString());
 
-        assertEquals("10 x Sword" ,element.getLabelSword().getText().toString());
+        assertEquals("10 x Sword" ,
+                element.getLabelSword().getText().toString());
         assertEquals("10 x Spear" ,
                 element.getLabelSpear().getText().toString());
         assertEquals("10 x Bow" ,element.getLabelBow().getText().toString());

@@ -26,6 +26,10 @@ public class CollectCreateTable extends AbstractPopUpElement {
     private Table labelTable;
 
     private String collect = "collect";
+    private static final String SWORD = "sword";
+    private static final String AXE = "axe";
+    private static final String SPEAR = "spear";
+    private static final String BOW = "bow";
 
     private Label labelGold;
     private Label labelMetal;
@@ -116,8 +120,8 @@ public class CollectCreateTable extends AbstractPopUpElement {
         if (type.equals("collect")) {
             return (qm.checkGold() && qm.checkMetal() &&
                     qm.checkStone() && qm.checkWood() &&
-                    qm.checkWeapons("sword") && qm.checkWeapons("spear") &&
-                    qm.checkWeapons("axe") && qm.checkWeapons("bow"));
+                    qm.checkWeapons(SWORD) && qm.checkWeapons(SPEAR) &&
+                    qm.checkWeapons(AXE) && qm.checkWeapons(BOW));
         } else {
             return qm.checkBuildings() || qm.questFinished();
         }
@@ -217,15 +221,15 @@ public class CollectCreateTable extends AbstractPopUpElement {
         String whiteText = "white-text";
         String format = "%d x %s";
 
-        if ((qm.checkWeapons("sword") && qm.checkWeapons("spear") &&
-                qm.checkWeapons("axe") && qm.checkWeapons("bow")) || qm.questFinished()) {
+        if ((qm.checkWeapons(SWORD) && qm.checkWeapons(SPEAR) &&
+                qm.checkWeapons(AXE) && qm.checkWeapons(BOW)) || qm.questFinished()) {
             color = Color.GREEN;
         } else {
             color = Color.WHITE;
         }
 
-        if (qm.getWeaponsTotal("sword") > 0) {
-            currentText  = String.format(format, qm.getWeaponsTotal("sword"),
+        if (qm.getWeaponsTotal(SWORD) > 0) {
+            currentText  = String.format(format, qm.getWeaponsTotal(SWORD),
                     "Sword");
             labelSword = new Label(currentText, skin, whiteText);
             labelSword.setColor(color);
@@ -233,8 +237,8 @@ public class CollectCreateTable extends AbstractPopUpElement {
             labelTable.row();
         }
 
-        if (qm.getWeaponsTotal("spear") > 0) {
-            currentText  = String.format(format, qm.getWeaponsTotal("spear"),
+        if (qm.getWeaponsTotal(SPEAR) > 0) {
+            currentText  = String.format(format, qm.getWeaponsTotal(SPEAR),
                     "Spear");
             labelSpear = new Label(currentText, skin, whiteText);
             labelSpear.setColor(color);
@@ -242,8 +246,8 @@ public class CollectCreateTable extends AbstractPopUpElement {
             labelTable.row();
         }
 
-        if (qm.getWeaponsTotal("axe") > 0) {
-            currentText  = String.format(format, qm.getWeaponsTotal("axe"),
+        if (qm.getWeaponsTotal(AXE) > 0) {
+            currentText  = String.format(format, qm.getWeaponsTotal(AXE),
                     "Axe");
             labelAxe = new Label(currentText, skin, whiteText);
             labelAxe.setColor(color);
@@ -251,8 +255,8 @@ public class CollectCreateTable extends AbstractPopUpElement {
             labelTable.row();
         }
 
-        if (qm.getWeaponsTotal("bow") > 0) {
-            currentText  = String.format(format, qm.getWeaponsTotal("bow"),
+        if (qm.getWeaponsTotal(BOW) > 0) {
+            currentText  = String.format(format, qm.getWeaponsTotal(BOW),
                     "Bow");
             labelBow = new Label(currentText, skin, whiteText);
             labelBow.setColor(color);

@@ -42,7 +42,7 @@ public class Renderer3D implements Renderer {
 
     // mouse cursor
     private static final String TEXTURE_SELECTION = "selection";
-    private static final String TEXTURE_DESTINATION = "selection";
+
     private static final String TEXTURE_PATH = "path";
     private float elapsedTime = 0f;
     private int tilesSkipped = 0;
@@ -62,8 +62,7 @@ public class Renderer3D implements Renderer {
             font.getData().setScale(1f);
         }
 
-        // Render tiles onto the map
-        // List<Tile> tileMap = GameManager.get().getWorld().getTileMap();
+
         HashMap<Pair<Integer, Integer>, Chunk> chunks = GameManager.get().getWorld().getLoadedChunks();
         int tileCount = chunks.values().stream().mapToInt(chunk -> chunk.getTiles().size()).sum();
         List<Tile> tilesToBeSkipped = new ArrayList<>();
@@ -268,7 +267,7 @@ public class Renderer3D implements Renderer {
             for (Tile tile : path) {
                 // Place transparent tiles for the path, but place a non-transparent tile for
                 // the destination
-                Texture tex = path.get(path.size() - 1) == tile ? textureManager.getTexture(TEXTURE_DESTINATION)
+                Texture tex = path.get(path.size() - 1) == tile ? textureManager.getTexture(TEXTURE_SELECTION)
                         : textureManager.getTexture(TEXTURE_PATH);
                 float[] tileWorldCord = WorldUtil.colRowToWorldCords(tile.getCol(), tile.getRow());
                 if (WorldUtil.areCoordinatesOffScreen(tileWorldCord[0], tileWorldCord[1], camera)) {
