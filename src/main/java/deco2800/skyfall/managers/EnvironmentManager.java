@@ -17,7 +17,7 @@ public class EnvironmentManager extends TickableManager {
     private int hours;
 
     // Accurate alternative minutes representation
-    private float trueMinutes;
+
 
     // Seconds in a game day
     private int minutes;
