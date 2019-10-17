@@ -1861,6 +1861,14 @@ public class MainCharacter extends Peon
                         AnimationRole.STILL, Direction.DEFAULT, false, true));
 
         // Bike animation
+        addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.NORTH,
+                new AnimationLinker("bikeN",
+                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.NORTH, true, true));
+
+        addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.SOUTH,
+                new AnimationLinker("bikeS",
+                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.SOUTH, true, true));
+
         addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.WEST,
                 new AnimationLinker("bikeW",
                         AnimationRole.VEHICLE_BIKE_MOVE, Direction.WEST, true, true));
@@ -1886,6 +1894,13 @@ public class MainCharacter extends Peon
                         AnimationRole.VEHICLE_BIKE_MOVE, Direction.SOUTH_EAST, true, true));
 
         // Sand Car Animation
+        addAnimations(AnimationRole.VEHICLE_MOVE, Direction.NORTH,
+                new AnimationLinker("sandcarN",
+                        AnimationRole.VEHICLE_MOVE, Direction.NORTH, true, true));
+
+        addAnimations(AnimationRole.VEHICLE_MOVE, Direction.SOUTH,
+                new AnimationLinker("sandcarS",
+                        AnimationRole.VEHICLE_MOVE, Direction.SOUTH, true, true));
         addAnimations(AnimationRole.VEHICLE_MOVE, Direction.WEST,
                 new AnimationLinker("sandcarW",
                         AnimationRole.VEHICLE_MOVE, Direction.WEST, true, true));
