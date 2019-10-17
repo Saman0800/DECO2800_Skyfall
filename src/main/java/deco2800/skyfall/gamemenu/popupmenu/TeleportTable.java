@@ -10,7 +10,6 @@ import deco2800.skyfall.managers.QuestManager;
 import deco2800.skyfall.managers.TextureManager;
 
 public class TeleportTable extends AbstractPopUpElement {
-    private final String type;
     private final QuestManager qm;
     private Skin skin;
     private Table baseTable;
@@ -18,11 +17,10 @@ public class TeleportTable extends AbstractPopUpElement {
     private Label teleportLabel;
     public TeleportTable(Stage stage, ImageButton exit, String[] textureNames,
                          TextureManager tm, GameMenuManager gameMenuManager,
-                         QuestManager qm, Skin skin, String type) {
+                         QuestManager qm, Skin skin) {
         super(stage,exit, textureNames, tm, gameMenuManager);
 
         this.skin = skin;
-        this.type = type;
         this.qm = qm;
         this.draw();
 
@@ -107,7 +105,6 @@ public class TeleportTable extends AbstractPopUpElement {
         locationLabel.setFontScale(0.8f);
         teleportLabel = new Label("TELEPORT TO: ERR", skin, "white-text");
         teleportLabel.setFontScale(0.8f);
-        //TODO: (@Kausta) Teleport Button
 
         labelTable.add();
         labelTable.row();
