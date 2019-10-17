@@ -149,7 +149,7 @@ public class DataBaseConnector {
         for (WorldGenNode worldGenNode : world.getWorldGenNodes()) {
             if (containsQueries.containsNode(world.getID(), worldGenNode.getX(), worldGenNode.getY())) {
                 updateQueries.updateNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(), worldGenNode.save(),
-                        worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
+                    worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
             } else {
                 insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(), worldGenNode.save(),
                     worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
@@ -164,12 +164,13 @@ public class DataBaseConnector {
 
     /**
      * Saves the edges
-     * @param world The world from which the edges are beings saved
+     *
+     * @param world           The world from which the edges are beings saved
      * @param containsQueries Class that contains query selections
-     * @param insertQueries Class that contains query insertions
-     * @param updateQueries Class that contains query updates
+     * @param insertQueries   Class that contains query insertions
+     * @param updateQueries   Class that contains query updates
      * @throws SQLException If an sql error occurs
-     * @throws IOException If a writing error occurs
+     * @throws IOException  If a writing error occurs
      */
     private void saveEdges(World world, ContainsDataQueries containsQueries, InsertDataQueries insertQueries,
         UpdateDataQueries updateQueries) throws SQLException, IOException {
@@ -321,7 +322,7 @@ public class DataBaseConnector {
     /**
      * Loads the world of a save
      *
-     * @param save        the save to load from
+     * @param save the save to load from
      * @return the save's current world
      */
     public World loadWorlds(Save save) {
@@ -758,7 +759,7 @@ public class DataBaseConnector {
                 return new DesertEnvironment(entityMemento);
             case "Shipwrecks":
                 return new Shipwrecks(entityMemento);
-                case "ruinedRobot":
+            case "ruinedRobot":
                 return new RuinedRobot(entityMemento);
             case "ruinedCity":
                 return new RuinedCity(entityMemento);
@@ -883,8 +884,17 @@ public class DataBaseConnector {
         }
     }
 
-    // FIXME:jeffvan12 implement delete save method
+    /**
+     * Deletes a save
+     * @param saveId The id of the save to be deleted
+     */
     public void deleteSave(long saveId) {
-
+            try (PreparedStatement preparedStatement = connection
+                .prepareStatement("DELETE FROM SAVES WHERE save_id = ?")) {
+                preparedStatement.setLong(1, saveId);
+                preparedStatement.execute();
+            } catch(SQLException e){
+                throw new RunTimeSaveException("Unable to delete save", e);
+            }
     }
 }
