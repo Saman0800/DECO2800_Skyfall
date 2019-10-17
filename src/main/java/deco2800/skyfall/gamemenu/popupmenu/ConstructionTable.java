@@ -106,7 +106,7 @@ public class ConstructionTable extends AbstractPopUpElement{
         blueprintPanel.setPosition(475, 18);
         blueprintPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("menu_panel"));
 
-        List<BuildingType> unlocked = sm.getCharacter().craftedBuildings;
+        List<BuildingType> unlocked = sm.getCharacter().getCraftedBuildings();
 
         int count = 0;
         int xpos = 20;
@@ -126,7 +126,7 @@ public class ConstructionTable extends AbstractPopUpElement{
                     Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
                     pm.dispose();
                     buildingID = b;
-                    sm.getCharacter().toBuild = true;
+                    sm.getCharacter().setToBuild(true);
                     hide();
                 }
             });
@@ -194,7 +194,7 @@ public class ConstructionTable extends AbstractPopUpElement{
         //Permissions
         buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
         Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
-        sm.getCharacter().toBuild = false;
+        sm.getCharacter().setToBuild(true);
     }
 
     public BuildingType getBuildingID() {

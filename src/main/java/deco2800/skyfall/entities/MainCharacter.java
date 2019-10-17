@@ -52,6 +52,14 @@ import static deco2800.skyfall.buildings.BuildingType.*;
 public class MainCharacter extends Peon
         implements KeyDownObserver, KeyUpObserver, TouchDownObserver, Tickable, Animatable {
 
+    public static final String ANIMATION_MAIN_CHARACTER_E_ANIM_0 = "__ANIMATION_MainCharacterE_Anim:0";
+    public static final String CONSTRUCTION_TABLE = "constructionTable";
+    public static final String SAND_CAR = "sand_car";
+    public static final String SWORD = "sword";
+    public static final String BOW = "bow";
+    public static final String AXE = "axe";
+    public static final String PICK_AXE = "Pick Axe";
+    public static final String HATCHET = "Hatchet";
     private static MainCharacter mainCharacterInstance = null;
     private boolean residualFromPopUp = false;
 
@@ -114,7 +122,15 @@ public class MainCharacter extends Peon
     // Manager for all of MainCharacter's inventories
     private InventoryManager inventories;
 
-    public boolean toBuild;
+    /**
+     * Gets toBuild
+     * @return The toBuild value
+     */
+    public boolean isToBuild() {
+        return toBuild;
+    }
+
+    private boolean toBuild;
     //List of blueprints that the player has learned.
 
     private List<Blueprint> blueprintsLearned;
@@ -133,8 +149,25 @@ public class MainCharacter extends Peon
     // The name of the item to be created.
     private String itemToCreate;
 
-    public List<BuildingType> craftedBuildings;
-    public List<BuildingType> constructedBuildings;
+    /**
+     * Gets the crafted buildings
+     * @return The crafted buildings
+     */
+    public List<BuildingType> getCraftedBuildings() {
+        return craftedBuildings;
+    }
+
+    private List<BuildingType> craftedBuildings;
+
+    /**
+     * Gets the constructed builds
+     * @return The constructored buildings
+     */
+    public List<BuildingType> getConstructedBuildings() {
+        return constructedBuildings;
+    }
+
+    private List<BuildingType> constructedBuildings;
 
     // Variables to sound effects
     private static final String WALK_NORMAL = "walk_D";
@@ -144,7 +177,7 @@ public class MainCharacter extends Peon
     public static final String BOWATTACK = "bow_standard";
     public static final String AXEATTACK = "sword_standard";
     public static final String SWORDATTACK = "sword_standard";
-    public static final String SPEARATTACK = "spear";
+    public static final String SPEAR = "spear";
 
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
@@ -261,7 +294,7 @@ public class MainCharacter extends Peon
         super(memento.row, memento.col, 0, "Main Character", memento.health, "MainCharacter");
         this.load(memento);
         this.save = save;
-        this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
+        this.setTexture(ANIMATION_MAIN_CHARACTER_E_ANIM_0);
         this.setHeight(1);
         this.setObjectName("MainPiece");
         GameManager.getManagerFromInstance(InputManager.class).addKeyDownListener(this);
@@ -310,7 +343,7 @@ public class MainCharacter extends Peon
         super(row, col, speed, name, health, "MainCharacter");
         toBuild = false;
         this.id = System.nanoTime();
-        this.setTexture("__ANIMATION_MainCharacterE_Anim:0");
+        this.setTexture(ANIMATION_MAIN_CHARACTER_E_ANIM_0);
         this.setHeight(1);
         this.setObjectName("MainPiece");
         this.setMaxHealth(health);
@@ -545,7 +578,7 @@ public class MainCharacter extends Peon
         // Make projectile move toward the angle
         // Spawn projectile in front of character
 
-        int bowRange = equippedItem.getName().equals("bow") ? 10 : 0;
+        int bowRange = equippedItem.getName().equals(BOW) ? 10 : 0;
         int range = this.itemSlotSelected == 1 ? bowRange : 0;
 
         if (!(equippedItem instanceof Weapon)) {
@@ -556,7 +589,7 @@ public class MainCharacter extends Peon
             return;
         }
 
-        currentAttackIsMelee = !(equippedItem.getName().equals("bow"));
+        currentAttackIsMelee = !(equippedItem.getName().equals(BOW));
 
         //If there is a default projectile selected to fire, use that.
         if (defaultProjectile == null) {
@@ -577,16 +610,16 @@ public class MainCharacter extends Peon
 
         // Play weapon attackEntity sound
         switch ((equippedItem).getName()) {
-            case "sword":
+            case SWORD:
                 SoundManager.playSound(SWORDATTACK);
                 break;
-            case "spear":
-                SoundManager.playSound(SPEARATTACK);
+            case SPEAR:
+                SoundManager.playSound(SPEAR);
                 break;
-            case "bow":
+            case BOW:
                 SoundManager.playSound(BOWATTACK);
                 break;
-            case "axe":
+            case AXE:
                 SoundManager.playSound(AXEATTACK);
                 break;
             default:
@@ -609,7 +642,8 @@ public class MainCharacter extends Peon
         // Create the spell using the factory.
         Spell spell = SpellFactory.createSpell(spellType, mousePosition);
 
-        logger.info("Spell Case: {}", spellType.name());
+        String spellName = spellType.name();
+        logger.info("Spell Case: {}", spellName);
 
         int manaCost = spell.getManaCost();
 
@@ -670,10 +704,8 @@ public class MainCharacter extends Peon
      * swimming to false in case they were in a boat
      */
     public void exitVehicle() {
-        // this.setTexture();
         setAcceleration(0.01f);
         setMaxSpeed(0.4f);
-        //changeSwimming(false);
     }
 
     public void pickUpInventory(Item item) {
@@ -884,7 +916,7 @@ public class MainCharacter extends Peon
                 GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
                 QuestManager qm = GameManager.getManagerFromInstance(QuestManager.class);
 
-                ConstructionTable bs = (ConstructionTable) gmm.getPopUp("constructionTable");
+                ConstructionTable bs = (ConstructionTable) gmm.getPopUp(CONSTRUCTION_TABLE);
                 bs.build(GameManager.get().getWorld(),
                         (int) clickedPosition[0], (int) clickedPosition[1]);
                 qm.addBuilding(bs.selectBuilding(bs.getBuildingID(), 0, 0).getBuildingType());
@@ -927,21 +959,53 @@ public class MainCharacter extends Peon
         }
     }
 
+
+    /**
+     * Adds a crafted building
+     * @param building The BuildingType to add to crafted buildings
+     */
+    public void addCraftedBuilding(BuildingType building){
+        craftedBuildings.add(building);
+    }
+
+    /**
+     * Adds a constructed building
+     * @param building The building to add to constructed buildings
+     */
+    public void addConstructedBuilding(BuildingType building){
+        constructedBuildings.add(building);
+    }
+
+    /**
+     * Removes a crafted building
+     * @param building The crated building to remove
+     */
+    public void removeCraftedBuilding(BuildingType building){
+        craftedBuildings.remove(building);
+    }
+
+    /**
+     * Removes a constructed building
+     * @param building The constructed building to remove
+     */
+    public void removeConstructedBuilding(BuildingType building){
+        constructedBuildings.remove(building);
+    }
+
+    /**
+     * Sets the toBuild value
+     * @param toBuild The value to toBuild value will be set to
+     */
+    public void setToBuild(Boolean toBuild){
+        this.toBuild = toBuild;
+    }
+
     /**
      * Handles tick based stuff, e.g. movement
      */
     @Override
     public void onTick(long i) {
-        if (!GameScreen.getIsPaused()) {
-            if (residualFromPopUp) {
-                residualInputsFromPopUp();
-            }
-            this.updatePosition();
-        } else {
-            SoundManager.stopSound(WALK_NORMAL);
-            getBody().setLinearVelocity(0f, 0f);
-            residualFromPopUp = true;
-        }
+        onTickNotPaused();
         this.movementSound();
         this.centreCameraAuto();
         this.setRecovering(false);
@@ -984,9 +1048,9 @@ public class MainCharacter extends Peon
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
-            ConstructionTable bs = (ConstructionTable) gmm.getPopUp("constructionTable");
+            ConstructionTable bs = (ConstructionTable) gmm.getPopUp(CONSTRUCTION_TABLE);
             bs.updateBlueprintShopPanel();
-            gmm.setPopUp("constructionTable");
+            gmm.setPopUp(CONSTRUCTION_TABLE);
             //GameManager.getManagerFromInstance(ConstructionManager.class).displayWindow();
         }
 
@@ -1009,6 +1073,19 @@ public class MainCharacter extends Peon
 
     }
 
+    private void onTickNotPaused() {
+        if (!GameScreen.getIsPaused()) {
+            if (residualFromPopUp) {
+                residualInputsFromPopUp();
+            }
+            this.updatePosition();
+        } else {
+            SoundManager.stopSound(WALK_NORMAL);
+            getBody().setLinearVelocity(0f, 0f);
+            residualFromPopUp = true;
+        }
+    }
+
     @Override
     public void handleCollision(Object other) {
         // Put specific collision logic here
@@ -1025,7 +1102,7 @@ public class MainCharacter extends Peon
         if (vehicleName.equals("bike")) {
             defaultDirectionTextures = vehicleDirection;
         }
-        if (vehicleName.equals("sand_car")) {
+        if (vehicleName.equals(SAND_CAR)) {
             defaultDirectionTextures = vehicleDirection2;
         }
 
@@ -1121,38 +1198,44 @@ public class MainCharacter extends Peon
 
     public void vehicleToUse() {
         if (!isOnVehicle) {
-            AbstractVehicle vehicle = null;
-            for (AbstractEntity ve : GameManager.get().getWorld().getEntities()) {
-                if (ve instanceof Bike && ve.distance(this) < 3) {
-                    vehicle = (Bike) ve;
-                    ((Bike) vehicle).removeBike();
-                    isOnVehicle = true;
-                    setCurrentState(AnimationRole.NULL);
-                    vehicleTexture("bike");
-                    maxSpeed = 10f;
-                    vehicleType = "bike";
-                }
-                if (ve instanceof SandCar && ve.distance(this) < 3) {
-                    vehicle = (SandCar) ve;
-                    ((SandCar) vehicle).removeSandCar();
-                    isOnVehicle = true;
-                    setCurrentState(AnimationRole.NULL);
-                    vehicleTexture("sand_car");
-                    maxSpeed = 10f;
-                    vehicleType = "sand_car";
-                }
-            }
-
+            notOnVehicle();
         } else {
             if (vehicleType.equals("bike")) {
                 defaultDirectionTextures = defaultMainCharacterTextureMap;
                 isOnVehicle = false;
                 GameManager.get().getWorld().addEntity(new Bike(this.getCol(), this.getRow(), this));
             }
-            if (vehicleType.equals("sand_car")) {
+            if (vehicleType.equals(SAND_CAR)) {
                 defaultDirectionTextures = defaultMainCharacterTextureMap;
                 isOnVehicle = false;
                 GameManager.get().getWorld().addEntity(new SandCar(this.getCol(), this.getRow(), this));
+            }
+        }
+    }
+
+    /**
+     * When the character is not on a vehicle
+     */
+    private void notOnVehicle() {
+        AbstractVehicle vehicle = null;
+        for (AbstractEntity ve : GameManager.get().getWorld().getEntities()) {
+            if (ve instanceof Bike && ve.distance(this) < 3) {
+                vehicle = (Bike) ve;
+                ((Bike) vehicle).removeBike();
+                isOnVehicle = true;
+                setCurrentState(AnimationRole.NULL);
+                vehicleTexture("bike");
+                maxSpeed = 10f;
+                vehicleType = "bike";
+            }
+            if (ve instanceof SandCar && ve.distance(this) < 3) {
+                vehicle = (SandCar) ve;
+                ((SandCar) vehicle).removeSandCar();
+                isOnVehicle = true;
+                setCurrentState(AnimationRole.NULL);
+                vehicleTexture(SAND_CAR);
+                maxSpeed = 10f;
+                vehicleType = SAND_CAR;
             }
         }
     }
@@ -1253,12 +1336,12 @@ public class MainCharacter extends Peon
      */
     public void removeGold(Integer goldValue) {
         // if this gold value does not exist in the pouch
-        if (!(goldPouch.containsKey(goldValue))) {
-            return;
-        } else if (goldPouch.get(goldValue) > 1) {
-            goldPouch.put(goldValue, goldPouch.get(goldValue) - 1);
-        } else {
-            goldPouch.remove(goldValue);
+        if (goldPouch.containsKey(goldValue)) {
+            if (goldPouch.get(goldValue) > 1) {
+                goldPouch.put(goldValue, goldPouch.get(goldValue) - 1);
+            } else {
+                goldPouch.remove(goldValue);
+            }
         }
     }
 
@@ -1666,36 +1749,25 @@ public class MainCharacter extends Peon
         for (Blueprint blueprint : getBlueprintsLearned()) {
             if (blueprint.getClass() == newItem.getClass()) {
 
-//                if (newItem.getRequiredMetal() > this.getInventoryManager().
-//                        getAmount("Metal")) {
-//                    logger.info("You don't have enough Metal");
-//
-//                } else if (newItem.getRequiredWood() > this.getInventoryManager().
-//                        getAmount("Wood")) {
-//                    logger.info("You don't have enough Wood");
-//
-//                } else if (newItem.getRequiredStone() > this.getInventoryManager().
-//                        getAmount("Stone")) {
-//                    logger.info("You don't have enough Stone");
+
 
                 // testing
                 if (false) {
                 } else {
                     switch (newItem.getName()) {
-                        case "Hatchet":
+                        case HATCHET:
                             this.getInventoryManager().add(new Hatchet());
                             break;
-                        case "Pick Axe":
+                        case PICK_AXE:
                             this.getInventoryManager().add(new PickAxe());
                             break;
-
-                        case "sword":
+                        case SWORD:
                             this.getInventoryManager().add(new Sword());
                             break;
-                        case "spear":
+                        case SPEAR:
                             this.getInventoryManager().add(new Spear());
                             break;
-                        case "bow":
+                        case BOW:
                             this.getInventoryManager().add(new Bow());
                             break;
 
@@ -1828,7 +1900,7 @@ public class MainCharacter extends Peon
     @Override
     public void setDirectionTextures() {
 
-        defaultMainCharacterTextureMap.put(Direction.EAST, "__ANIMATION_MainCharacterE_Anim:0");
+        defaultMainCharacterTextureMap.put(Direction.EAST, ANIMATION_MAIN_CHARACTER_E_ANIM_0);
         defaultMainCharacterTextureMap.put(Direction.NORTH, "__ANIMATION_MainCharacterN_Anim:0");
         defaultMainCharacterTextureMap.put(Direction.WEST, "__ANIMATION_MainCharacterW_Anim:0");
         defaultMainCharacterTextureMap.put(Direction.SOUTH, "__ANIMATION_MainCharacterS_Anim:0");
@@ -2021,47 +2093,31 @@ public class MainCharacter extends Peon
     }
 
 
-    // FIXME:dannothan Fix or remove this.
-    // FIXME:jeffvan figure out what needs saving
     public MainCharacterMemento save() {
         return new MainCharacterMemento(this);
     }
 
     public void load(MainCharacterMemento memento) {
         this.id = memento.mainCharacterID;
-        // this.equippedItem = memento.equippedItem;
         this.level = memento.level;
         this.foodLevel = memento.foodLevel;
         this.foodAccum = memento.foodAccum;
         this.goldPouch = memento.goldPouch;
-        // this.blueprintsLearned = memento.blueprints;
-        // this.inventories = memento.inventory;
-        // this.weapons = memento.weapons;
-        // this.hotbar = memento.hotbar;
     }
 
     public static class MainCharacterMemento extends AbstractMemento implements Serializable {
-        //TODO:dannathan add stuff for entitiy
-        private long saveID;
         private long mainCharacterID;
-        private int stage;
-
-        private int equippedItem;
         private int level;
         private int foodLevel;
         private float foodAccum;
         private float col;
         private float row;
         private int health;
-        private WeaponManager weapons;
         private HashMap<Integer, Integer> goldPouch;
-        private List<Item> hotbar;
-        private List<String> blueprints;
 
         public MainCharacterMemento(MainCharacter character) {
             this.col = character.getCol();
             this.row = character.getRow();
-            this.saveID = character.save.getSaveID();
             this.mainCharacterID = character.id;
             this.level = character.level;
             this.health = character.getHealth();

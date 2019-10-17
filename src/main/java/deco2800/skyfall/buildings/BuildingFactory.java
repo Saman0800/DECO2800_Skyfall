@@ -25,8 +25,8 @@ public class BuildingFactory {
     private void addToConstucted(BuildingType type) {
         GameMenuManager manager = GameManager.getManagerFromInstance(GameMenuManager.class);
         MainCharacter mc = manager.getMainCharacter();
-        mc.constructedBuildings.add(type);
-        mc.craftedBuildings.remove(type);
+        mc.addConstructedBuilding(type);
+        mc.removeCraftedBuilding(type);
     }
 
     /**
