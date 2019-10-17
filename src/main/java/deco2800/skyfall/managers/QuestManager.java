@@ -99,9 +99,9 @@ public class QuestManager extends TickableManager {
                 setStoneTotal(20);
                 setMetalTotal(20);
                 setBuildingsTotal(levelTwoBuildings);
-                setWeaponTotal("sword", 3);
+                setWeaponTotal(SWORD, 3);
                 setWeaponTotal("bow", 3);
-                setWeaponTotal("spear", 0);
+                setWeaponTotal(SPEAR, 0);
                 setWeaponTotal("axe", 0);
                 break;
             case 3 :
@@ -110,9 +110,9 @@ public class QuestManager extends TickableManager {
                 setStoneTotal(30);
                 setMetalTotal(30);
                 setBuildingsTotal(levelThreeBuildings);
-                setWeaponTotal("sword", 4);
+                setWeaponTotal(SWORD, 4);
                 setWeaponTotal("bow", 4);
-                setWeaponTotal("spear", 4);
+                setWeaponTotal(SPEAR, 4);
                 setWeaponTotal("axe", 4);
                 break;
             default :
