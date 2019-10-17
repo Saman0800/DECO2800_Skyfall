@@ -33,16 +33,14 @@ public class SoundManager extends AbstractManager {
 
     private static float fadeConstant = 0.1f;
 
-    private static float gameSoundVolume;
-    private static float gameMusicVolume;
+    private static float gameSoundVolume = 1f;
+    private static float gameMusicVolume = 1f;
 
     /**
      * Initialize SoundManager by adding different sounds in a map
      */
     public SoundManager() {
 
-        gameSoundVolume = 1f;
-        gameMusicVolume = 1f;
 
         LOGGER.info("soundManager song list");
 
@@ -243,7 +241,6 @@ public class SoundManager extends AbstractManager {
                 music.setVolume(gameMusicVolume);
                 playing = soundName;
                 music.setLooping(true);
-            } else {
             }
         }
     }

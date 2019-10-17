@@ -379,7 +379,7 @@ public class QuestManager extends TickableManager {
      * @return String of biome
      */
     public String getBiome() {
-        return GameManager.get().getWorld().getBiomes().get(0).getBiomeName().replaceAll("_", " ").toUpperCase();
+        return GameManager.get().getWorld().getBiomes().get(0).getBiomeName().replace("_", " ").toUpperCase();
     }
 
     /**
