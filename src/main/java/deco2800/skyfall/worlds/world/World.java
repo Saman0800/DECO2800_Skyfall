@@ -539,8 +539,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
 
             if (entity instanceof Harvestable) {
                 entityToBeDeleted = entity;
-                List<AbstractEntity> drops = ((Harvestable) entity).harvest(tile);
-                drops.forEach(this::addEntity);
+
             } else if (entity instanceof Weapon) {
                 MainCharacter mc = gmm.getMainCharacter();
                 if (tile.getCoordinates().distance(mc.getPosition()) <= 2) {
@@ -601,6 +600,10 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         }
 
         if (entityToBeDeleted != null) {
+            if (entityToBeDeleted instanceof Harvestable) {
+                List<AbstractEntity> drops = ((Harvestable) entityToBeDeleted).harvest(tile);
+                drops.forEach(this::addEntity);
+            }
             removeEntity(entityToBeDeleted);
             entityToBeDeleted = null;
         }
