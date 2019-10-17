@@ -8,15 +8,20 @@ import java.util.*;
  */
 public interface Blueprint {
 
-    final static String cabinString = "Cabin";
-    final static String cabinString0 = "cabin_0";
-    final static String storageUnitString = "StorageUnit";
-    final static String storageUnitStringLower = "storage_unit";
-    final static String townCentreString = "TownCentre";
-    final static String townCentreStringLower = "town_centre";
-    final static String woodString = "Wood";
-    final static String stoneString = "Stone";
-    final static String metalString = "Metal";
+
+    enum BluePrintNames {
+        ;
+
+        public static final String CABIN_STRING = "Cabin";
+        public static final String CABIN_STRING_0 = "cabin_0";
+        public static final String STORAGE_UNIT_STRING = "StorageUnit";
+        public static final String STORAGE_UNIT_STRING_LOWER = "storage_unit";
+        public static final String TOWN_CENTRE_STRING = "TownCentre";
+        public static final String TOWN_CENTRE_STRING_LOWER = "town_centre";
+        public static final String WOOD_STRING = "Wood";
+        public static final String STONE_STRING = "Stone";
+        public static final String METAL_STRING = "Metal";
+    }
 
     /**
      * Returns the number of wood required for the item.

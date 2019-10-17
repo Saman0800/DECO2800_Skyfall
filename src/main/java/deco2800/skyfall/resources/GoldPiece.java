@@ -39,6 +39,7 @@ public class GoldPiece extends StaticEntity {
      */
     public GoldPiece(int value){
         this.setObjectName(ENTITY_ID_STRING);
+        changeCollideability(false);
 
         // if the GoldPiece is of value of 5,10,50 or 100
         if (value == 5 || value == 10 || value == 50 || value == 100){

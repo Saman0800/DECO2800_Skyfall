@@ -12,6 +12,7 @@ import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.resources.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.Random;
 
 import java.util.HashMap;
 
@@ -25,6 +26,9 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
     //Used for farming sound
     private static final String COLLECT_STONE = "collect_stone";
+
+    Random random = new Random();
+
 
     /***
      * Create a Pick Axe with the name Pick Axe.
@@ -82,6 +86,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
             SoundManager.playSound(COLLECT_STONE);
             GameManager.getManagerFromInstance(InventoryManager.class).add(new Stone());
             // lowering the possibility of gaining metal
+
             double x = (int) (Math.random() * (2));
 
             if (x == 1) {
@@ -113,6 +118,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
             }
         }
         this.decreaseDurability();
-        logger.warn("Durability: %d", this.getDurability());
+        String message = String.format("Durability: %d", this.getDurability());
+        logger.warn(message);
     }
 }

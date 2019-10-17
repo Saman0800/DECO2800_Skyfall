@@ -183,12 +183,7 @@ public class MainMenuScreen implements Screen {
         return seed;
     }
 
-    /**
-     * Hides the window element for the start game window.
-     */
-    private void hideStartGameWindow() {
-        startGameWindow.setVisible(false);
-    }
+
 
     /**
      * Creates the window element for the load game window.

@@ -33,21 +33,21 @@ public class SoundManager extends AbstractManager {
 
     private static float fadeConstant = 0.1f;
 
-    private static float gameSoundVolume;
-    private static float gameMusicVolume;
+    private static float gameSoundVolume = 1f;
+    private static float gameMusicVolume = 1f;
 
     /**
      * Initialize SoundManager by adding different sounds in a map
      */
     public SoundManager() {
 
-        gameSoundVolume = 1f;
-        gameMusicVolume = 1f;
 
         LOGGER.info("soundManager song list");
 
         try {
             String path = "resources/sounds/";
+            soundMap.put("axe_standard", Gdx.audio.newSound
+                    (Gdx.files.internal(path + "sword_standard.mp3")));
             soundMap.put("be_hit", Gdx.audio.newSound
                     (Gdx.files.internal(path + "be_hit.mp3")));
             soundMap.put("bow_desert", Gdx.audio.newSound
@@ -243,7 +243,6 @@ public class SoundManager extends AbstractManager {
                 music.setVolume(gameMusicVolume);
                 playing = soundName;
                 music.setLooping(true);
-            } else {
             }
         }
     }
