@@ -6,11 +6,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import deco2800.skyfall.buildings.DesertPortal;
 import deco2800.skyfall.buildings.ForestPortal;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.gamemenu.popupmenu.BuildWorldProgressPopup;
 import deco2800.skyfall.graphics.HasPointLight;
 import deco2800.skyfall.graphics.PointLight;
 import deco2800.skyfall.graphics.ShaderWrapper;
@@ -32,38 +30,36 @@ import deco2800.skyfall.worlds.world.WorldDirector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
 
 /**
  * An instance of a Game screen.
  */
 public class GameScreen implements Screen, KeyDownObserver {
     private final Logger logger = LoggerFactory.getLogger(GameScreen.class);
+
     @SuppressWarnings("unused")
     private final SkyfallGame game;
     /**
      * Set the renderer. 3D is for Isometric worlds Check the documentation for each
      * renderer to see how it handles WorldEntity coordinates
      */
-    Renderer3D renderer = new Renderer3D();
-    OverlayRenderer rendererDebug = new OverlayRenderer();
-    World world;
-    Save save;
+    private Renderer3D renderer = new Renderer3D();
+    private OverlayRenderer rendererDebug = new OverlayRenderer();
+    private World world;
+    private Save save;
+
 
     /**
      * Create a camera for panning and zooming. Camera must be updated every render
      * cycle.
      */
-    PotateCamera camera;
-    PotateCamera cameraDebug;
+    private PotateCamera camera;
+    private PotateCamera cameraDebug;
     private Stage stage = new Stage(new ExtendViewport(1280, 720));
 
-    long lastGameTick = 0;
+    private long lastGameTick = 0;
 
-    /**
-     * Create an EnvironmentManager for ToD.
-     */
-    EnvironmentManager timeOfDay;
     private static boolean isPaused = false;
 
     public static boolean getIsPaused() {
@@ -93,6 +89,7 @@ public class GameScreen implements Screen, KeyDownObserver {
     public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
         /* Create an example world for the engine */
         this.game = game;
+
         this.save = new Save();
 
         GameManager gameManager = initializeMenuManager();
@@ -129,12 +126,14 @@ public class GameScreen implements Screen, KeyDownObserver {
             // Comment this out when generating the data for the tests
             DatabaseManager.get().getDataBaseConnector().saveGame(save);
 
-            // Uncomment this when generating the data for the tests
-            // save.setId(0);
-            // world.setId(0);
-            // MainCharacter.getInstance().setID(0);
-            // DatabaseManager.get().getDataBaseConnector().saveGame(save);
-            // DatabaseManager.get().getDataBaseConnector().saveAllTables();
+            /*
+            Uncomment this when generating the data for the tests
+            save.setId(0);
+            world.setId(0);
+            MainCharacter.getInstance().setID(0);
+            DatabaseManager.get().getDataBaseConnector().saveGame(save);
+            DatabaseManager.get().getDataBaseConnector().saveAllTables();
+            */
         }
 
         gameManager.setWorld(world);
@@ -186,12 +185,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         GameManager.get().setStage(stage);
         GameManager.get().setCamera(camera);
 
-        /* Add inventory to game manager */
-        gameManager.addManager(new InventoryManager());
-
-        /* Add construction manager to game manager */
-        // gameManager.addManager(new ConstructionManager());
-
         /* Add environment to game manager */
         EnvironmentManager gameEnvironManag = gameManager.getManager(EnvironmentManager.class);
         // For debugging only!
@@ -200,7 +193,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         /* Add Quest Manager to game manager */
         gameManager.addManager(new QuestManager());
 
-        /**
+        /*
          * NOTE: Now that the Environment Manager has been added start creating the
          * SpectralValue instances for the Ambient Light.
          */
@@ -425,27 +418,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         }
 
         if (keycode == Input.Keys.F5) {
-
-            /*
-            // Create a random world
-            world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), world.getSeed() + 1, 4, true)
-                    .getWorld();
-
-            // Add this world to the save
-            save.getWorlds().add(world);
-            save.setCurrentWorld(world);
-            world.setSave(save);
-            DatabaseManager.get().getDataBaseConnector().saveGame(save);
-
-            AbstractEntity.resetID();
-            Tile.resetID();
-            GameManager gameManager = GameManager.get();
-            gameManager.setWorld(world);
-             */
-            // Update the current music
-            //GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
-            //gmm.setPopUp("loadingTable");
-            // TODO: add loading animation when loading world
             ForestPortal portal = new ForestPortal(0, 0, 1);
             portal.teleport(save);
         }

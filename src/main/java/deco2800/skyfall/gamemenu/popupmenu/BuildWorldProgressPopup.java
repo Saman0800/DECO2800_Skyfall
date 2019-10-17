@@ -1,18 +1,11 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
-import deco2800.skyfall.resources.Blueprint;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -86,23 +79,6 @@ public class BuildWorldProgressPopup extends AbstractPopUpElement {
         table.add(banner).width(750).height(750 * 188f / 1756).padTop(20).colspan(2);
         table.row();
         table.add(image);
-        //
-//        // Left hand side of the table
-//        Table blueprint = new Table();
-//        Label blueprintTitle = new Label("BLUEPRINT", skin, "black-label");
-//        blueprint.add(blueprintTitle).padTop(10);
-//        blueprint.row();
-//
-//        // Information about the item selected (left hand side)
-//        itemInfo = new Table();
-//        blueprint.add(itemInfo);
-//
-//        // Right hand side of the table (list of blueprints
-//        Table items = new Table();
-//        // Label number = new Label("1/12", skin, "black-label");
-//        // items.add(number).padTop(10).colspan(4);
-//        items.row();
-
         table.setVisible(false);
         stage.addActor(table);
     }

@@ -10,6 +10,7 @@ import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.resources.Blueprint;
+
 import java.util.List;
 
 
@@ -33,7 +34,7 @@ public class BlueprintShopTable extends AbstractPopUpElement {
      * @param skin            Current skin.
      */
     public BlueprintShopTable(Stage stage, ImageButton exit, String[] textureNames, TextureManager tm,
-            GameMenuManager gameMenuManager, StatisticsManager sm, Skin skin) {
+                              GameMenuManager gameMenuManager, StatisticsManager sm, Skin skin) {
         super(stage, exit, textureNames, tm, gameMenuManager);
         this.skin = skin;
         this.draw();
@@ -60,7 +61,7 @@ public class BlueprintShopTable extends AbstractPopUpElement {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Draw the whole blueprint shop table.
      */
     @Override
@@ -79,16 +80,9 @@ public class BlueprintShopTable extends AbstractPopUpElement {
         infoBar.setSize(650, 55);
         infoBar.setPosition(130, 435);
 
-//        Table infoPanel = new Table();
-//        infoPanel.setSize(410, 400);
-//        infoPanel.setPosition(25, 18);
-//        infoPanel.setBackground(generateTextureRegionDrawableObject("info_panel"));
-
         this.blueprintPanel = new Table();
-        // updateChestPanel(chest);
 
         blueprintTable.addActor(infoBar);
-        //blueprintTable.addActor(infoPanel);
         blueprintTable.addActor(this.blueprintPanel);
         blueprintTable.setVisible(false);
         stage.addActor(blueprintTable);
@@ -116,15 +110,15 @@ public class BlueprintShopTable extends AbstractPopUpElement {
                     new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(b.getName() + "_inv"));
             icon.setName("icon");
             icon.setSize(100, 100);
-            icon.setPosition(xpos + (float) count * 130, ypos);
+            icon.setPosition(xpos + count * 130, ypos);
             if (isBought(b)) {
                 Label cost = new Label("X", skin, "white-label");
                 cost.setName(b.getName());
-                cost.setPosition(xpos + 85 + (float) count * 130, (float) ypos + 75);
+                cost.setPosition(xpos + 85 + count * 130, ypos + 75);
                 blueprintPanel.addActor(cost);
             } else {
                 Label cost = new Label("$" + b.getCost(), skin, "white-label");
-                cost.setPosition(xpos + 85 + (float) count * 130, (float) ypos + 75);
+                cost.setPosition(xpos + 85 + count * 130, ypos + 75);
                 cost.setName(b.getName());
                 blueprintPanel.addActor(cost);
 

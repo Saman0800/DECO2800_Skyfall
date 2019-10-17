@@ -1,12 +1,12 @@
 package deco2800.skyfall.tasks;
 
-import java.util.List;
-
 import deco2800.skyfall.entities.AgentEntity;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.PathFindingService;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
+
+import java.util.List;
 
 public class MovementTask extends AbstractTask{
 	
@@ -15,7 +15,7 @@ public class MovementTask extends AbstractTask{
 	private boolean computingPath = false;
 	private boolean taskAlive = true;
 	
-	AgentEntity entity;
+	AgentEntity agentEntity;
 	HexVector destination;
 	
 	private List<Tile> path;
@@ -23,9 +23,9 @@ public class MovementTask extends AbstractTask{
 	public MovementTask(AgentEntity entity, HexVector destination) {
 		super(entity);
 		
-		this.entity = entity;
+		this.agentEntity = entity;
 		this.destination = destination;
-		this.complete = false;//path == null || path.isEmpty();
+		this.complete = false;
 	}
 
 	@Override
@@ -35,9 +35,9 @@ public class MovementTask extends AbstractTask{
 			if(path.isEmpty()) {
 				complete = true;
 			} else {
-				entity.moveTowards(path.get(0).getCoordinates());
+				agentEntity.moveTowards(path.get(0).getCoordinates());
 				//This is a bit of a hack.
-				if(entity.getPosition().isCloseEnoughToBeTheSame(path.get(0).getCoordinates())) {
+				if(agentEntity.getPosition().isCloseEnoughToBeTheSame(path.get(0).getCoordinates())) {
 					path.remove(0);
 				}
 			}			

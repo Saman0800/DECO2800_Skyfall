@@ -1,7 +1,6 @@
 package deco2800.skyfall.saving;
 
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.worlds.world.World;
 
 import java.io.Serializable;
@@ -55,7 +54,6 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
      * @param mainCharacter The main character in this save state
      */
     public Save(List<World> worlds, MainCharacter mainCharacter, World currentWorld) {
-        // FIXME: this may break if a save is stored for ~293+ years
         this.saveID = System.nanoTime();
 
         this.worlds = worlds;
@@ -174,9 +172,6 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
         private long saveID;
         private long currentWorld;
         private int gameStage;
-
-        // Supposed to fix comparability issues but bricks the tests :(
-        //private static final long serialVersionUID = 1234567890L;
 
         private SaveMemento(Save save) {
             this.saveID = save.getSaveID();

@@ -1,17 +1,20 @@
 package deco2800.skyfall.worlds.world;
 
-import deco2800.skyfall.entities.*;
-import deco2800.skyfall.entities.enemies.*;
+import deco2800.skyfall.entities.Camel;
+import deco2800.skyfall.entities.Horse;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.enemies.Abductor;
+import deco2800.skyfall.entities.enemies.Heavy;
+import deco2800.skyfall.entities.enemies.Scout;
 import deco2800.skyfall.entities.pets.IceWhitebear;
 import deco2800.skyfall.entities.pets.LizardHome;
 import deco2800.skyfall.entities.vehicle.Bike;
 import deco2800.skyfall.entities.vehicle.SandCar;
+import deco2800.skyfall.entities.worlditems.hotSpring;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.worlds.biomes.*;
-import deco2800.skyfall.entities.worlditems.*;
-import deco2800.skyfall.worlds.generation.WorldGenException;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -20,7 +23,8 @@ import java.util.Random;
  * Class that helps with creating worlds using WorldBuilders
  */
 public class WorldDirector {
-    private WorldDirector() {}
+    private WorldDirector() {
+    }
 
     public static WorldBuilder constructSingleBiomeWorld(WorldBuilder builder, long seed, boolean renderUI, String biomeName) {
         Random random = new Random(seed);
@@ -94,9 +98,7 @@ public class WorldDirector {
      * A simple world used in single player with n random biomes
      *
      * @param builder The builder used to construct the world
-     *
      * @return The builder that was passed in
-     *
      * @throws IllegalArgumentException if n is less than 1 or greater than 5
      * @author Ontonator
      */
@@ -114,20 +116,13 @@ public class WorldDirector {
         choices.add(new DesertBiome(random));
         choices.add(new MountainBiome(random));
         choices.add(new VolcanicMountainsBiome(random));
-        // For future development of the game
-        //choices.add(new SwampBiome(random));
-        //choices.add(new SnowyMountainsBiome(random));
 
         for (int i = 0; i < choices.size(); i++) {
-            // builder.addBiome(choices.remove(random.nextInt(choices.size())), 40);
-            // builder.addBiome(choices.remove(random.nextInt(choices.size())), 25);
             builder.addBiome(choices.remove(random.nextInt(choices.size())), 5);
         }
 
         builder.setWorldSize(100);
-        //builder.setWorldSize(300);
         builder.setNodeSpacing(20);
-        // builder.setNodeSpacing(25);
         builder.setSeed(random.nextInt());
 
         builder.addLake(1);
@@ -143,17 +138,6 @@ public class WorldDirector {
         mainCharacter.setCol(0);
         mainCharacter.setRow(0);
 
-        // mainCharacter.getUnlockedBiomes();
-        // for (String s: mainCharacter.getUnlockedBiomes()) {
-        //     for (AbstractBiome b: builder.getWorld().getBiomes()) {
-        //         if (b.getBiomeName() == "desert") {
-        //             for (Tile t: b.getTiles()){
-        //                 t.setObstructed(true);
-        //             }
-        //         }
-        //    }
-        // }
-
         if (renderUI) {
             StatisticsManager sm = new StatisticsManager(mainCharacter);
             GameManager.addManagerToInstance(sm);
@@ -165,16 +149,16 @@ public class WorldDirector {
         builder.addEntity(mainCharacter);
         builder.addEntity(new LizardHome(0, 2, mainCharacter));
         builder.addEntity(new IceWhitebear(-2, 0, mainCharacter));
-        builder.addEntity(new Bike(-10f,-2f,mainCharacter));
-        builder.addEntity(new SandCar(-20f,-2f, mainCharacter));
+        builder.addEntity(new Bike(-10f, -2f, mainCharacter));
+        builder.addEntity(new SandCar(-20f, -2f, mainCharacter));
         builder.addEntity(new Scout(0, 2, 0.4f, "Forest"));
         builder.addEntity(new Heavy(7, 9, 0.2f, "Forest"));
         builder.addEntity(new Abductor(4, 9, 0.8f, "Forest"));
 
         builder.addEntity(new Camel(34, -7, mainCharacter));
-        builder.addEntity(new Horse(-8,-6, mainCharacter));
+        builder.addEntity(new Horse(-8, -6, mainCharacter));
 
-        builder.addEntity(new hotSpring(2,10, mainCharacter));
+        builder.addEntity(new hotSpring(2, 10, mainCharacter));
 
         return builder;
     }
