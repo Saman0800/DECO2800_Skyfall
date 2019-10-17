@@ -15,10 +15,10 @@ public class OnScreenMessageManager extends AbstractManager implements KeyTypedO
 	/**handles a set time invocation
 	 * Silently fails if something goes wrong
 	 * @param unsentMessage the recieved message, needs to be set_time*/
-	private void handleSetTime(String unsentMessage) {
+	private String handleSetTime(String unsentMessage) {
 		String[] split = unsentMessage.split("@", 3);
 		if (split.length != 3) {
-			return;
+			return "Invalid usauge";
 		}
 		int min;
 		int hours;
@@ -28,9 +28,10 @@ public class OnScreenMessageManager extends AbstractManager implements KeyTypedO
 			min = Integer.parseInt(split[2]);
 		}
 		catch (NumberFormatException e) {
-			return;
+			return "Invalid hour/min";
 		}
 		GameManager.get().getManager(EnvironmentManager.class).setTime(hours, min);
+		return "Time set";
 	}
 
 	public OnScreenMessageManager() {
@@ -88,7 +89,7 @@ public class OnScreenMessageManager extends AbstractManager implements KeyTypedO
 					// Display inventory in the console
 					this.addMessage(String.format(GameManager.getManagerFromInstance(InventoryManager.class).toString()));
 				}  else	if (unsentMessage.startsWith("/set_time")) { // set time, as set_time@hh@mm
-					handleSetTime(unsentMessage);
+					this.addMessage(handleSetTime(unsentMessage));
 				}
 				GameManager.get().getCamera().setPotate(false);
 				unsentMessage = "";
