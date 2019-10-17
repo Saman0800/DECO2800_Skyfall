@@ -3,6 +3,7 @@ package deco2800.skyfall.worlds.world;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.BlueprintShop;
 import deco2800.skyfall.entities.Chest;
+import deco2800.skyfall.entities.enemies.*;
 import deco2800.skyfall.entities.weapons.Axe;
 import deco2800.skyfall.entities.weapons.Bow;
 import deco2800.skyfall.entities.weapons.Spear;
@@ -11,6 +12,7 @@ import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.ChestManager;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.LootRarity;
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 
@@ -457,6 +459,91 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
 
     /**
+     * The method to be used to spawn an electric enemies on a tile, while the electric enemy is
+     * randomly chosen from Abductor, Heavy, Scout enemy types with impact of factors.
+     *
+     * @param random        :     an random generator
+     * @param tile          :     a tile that will spawn an enemy
+     * @param world         :     the game world
+     * @param enemyScaling  :     scaling factor to enemy states
+     */
+    private void spawnAnElectricEnemyOnTile(Random random, Tile tile, World world, float enemyScaling) {
+        // factor or ratio between Abductor, Heavy, Scout enemies
+        int abductorFactor = 3;
+        int heavyFactor = 3;
+        int scoutFactor = 4;
+
+        // check the tile whether is empty or not
+        for (AbstractEntity entity : world.getEntities()) {
+            if (entity.getPosition().equals(tile.getCoordinates())) {
+                return;
+            }
+        }
+
+        // spawn an random electric enemy on a empty tile only
+        int start = 0;
+        int factor = random.nextInt(abductorFactor + heavyFactor + scoutFactor);
+        // chance to choose abductor enemy
+        if ((start <= factor) && (factor <= (start + abductorFactor))) {
+            world.addEntity(new Abductor(tile.getCol(), tile.getRow(), enemyScaling, tile.getBiome().getBiomeName()));
+            return;
+        } else {
+            start += abductorFactor;
+        }
+        // chance to choose heavy enemy
+        if ((start <= factor) && (factor <= (start + heavyFactor))) {
+            world.addEntity(new Heavy(tile.getCol(), tile.getRow(), enemyScaling, tile.getBiome().getBiomeName()));
+            return;
+        } else {
+            start += heavyFactor;
+        }
+        // chance to choose scout enemy
+        if ((start <= factor) && (factor <= (start + scoutFactor))) {
+            world.addEntity(new Scout(tile.getCol(), tile.getRow(), enemyScaling, tile.getBiome().getBiomeName()));
+        }
+    }
+
+    /**
+     * The method to be used to spawn electric enemies.
+     *
+     * @param random        :     an random generator
+     * @param chance        :     chance to spawn an enemy
+     * @param biome         :     biome where enemy spawned on
+     * @param world         :     the game world
+     * @param enemyScaling  :     scaling factor to enemy states
+     */
+    private void spawnElectricEnemies(Random random, float chance, AbstractBiome biome, World world, float enemyScaling) {
+        for (Tile tile : biome.getTiles()) {
+            if (random.nextFloat() <= chance) {
+                spawnAnElectricEnemyOnTile(random, tile, world, enemyScaling);
+            }
+        }
+    }
+
+    private void generateEnemies(World world, float enemyScaling) {
+        Random random = new Random(world.getSeed());
+
+        for (AbstractBiome biome : world.getBiomes()) {
+            switch (biome.getBiomeName()) {
+                case "forest":
+                    spawnElectricEnemies(random, 0.02f, biome, world, enemyScaling);
+                    break;
+                case "mountain":
+                    spawnElectricEnemies(random, 0.015f, biome, world, enemyScaling);
+                    break;
+                case "desert":
+                    spawnElectricEnemies(random, 0.01f, biome, world, enemyScaling);
+                    break;
+                case "snowy_mountains":
+                    spawnElectricEnemies(random, 0.025f, biome, world, enemyScaling);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /**
      * Creates a world based on the values set in the builder
      *
      * @return A world
@@ -486,6 +573,9 @@ public class WorldBuilder implements WorldBuilderInterface {
         default:
             throw new IllegalArgumentException("The world type is not valid");
         }
+
+        // generate enemies on the world
+        generateEnemies(world, 0.6f);
 
         return world;
     }
