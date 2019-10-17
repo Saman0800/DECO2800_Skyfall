@@ -14,7 +14,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 public class RuinedRobotTest {
 
-    ruinedRobot testRuinedRobot;
+    RuinedRobot testRuinedRobot;
 
     @Before
     public void Setup() throws Exception {
@@ -25,7 +25,7 @@ public class RuinedRobotTest {
     @Test
     public void basicConstructorTest() {
 
-        testRuinedRobot = new ruinedRobot();
+        testRuinedRobot = new RuinedRobot();
         assertEquals(testRuinedRobot.getPosition(), new HexVector(0.0f, 0.0f));
         assertEquals(0, testRuinedRobot.getRenderOrder());
         assertEquals(testRuinedRobot.getCol(), 0.0f, 0.001f);
@@ -40,9 +40,9 @@ public class RuinedRobotTest {
     @Test
     public void mementoConstructorTest() {
 
-        ruinedRobot toSave = new ruinedRobot();
+        RuinedRobot toSave = new RuinedRobot();
         SaveableEntity.SaveableEntityMemento testRuinedRobotMemento = toSave.save();
-        testRuinedRobot = new ruinedRobot(testRuinedRobotMemento);
+        testRuinedRobot = new RuinedRobot(testRuinedRobotMemento);
         assertEquals(testRuinedRobot.getPosition(), new HexVector(0.0f, 0.0f));
         assertEquals(0, testRuinedRobot.getRenderOrder());
         assertEquals(testRuinedRobot.getCol(), 0.0f, 0.001f);
@@ -59,7 +59,7 @@ public class RuinedRobotTest {
 
         Tile testTile = new Tile(null, 0.5f, 0.5f);
 
-        testRuinedRobot = new ruinedRobot(testTile, false);
+        testRuinedRobot = new RuinedRobot(testTile, false);
         assertEquals(testRuinedRobot.getPosition(), new HexVector(0.5f, 0.5f));
         assertEquals(2, testRuinedRobot.getRenderOrder());
         assertEquals(testRuinedRobot.getCol(), 0.5f, 0.001f);
@@ -76,8 +76,8 @@ public class RuinedRobotTest {
 
         Tile testTile = new Tile(null, 0.5f, 0.5f);
 
-        testRuinedRobot = new ruinedRobot(testTile, true);
-        ruinedRobot testRuinedRobotNew = testRuinedRobot.newInstance(testTile);
+        testRuinedRobot = new RuinedRobot(testTile, true);
+        RuinedRobot testRuinedRobotNew = testRuinedRobot.newInstance(testTile);
 
         assertEquals(testRuinedRobotNew.getPosition(), testRuinedRobot.getPosition());
         assertEquals(testRuinedRobotNew.getCol(), 0.5f, 0.001f);

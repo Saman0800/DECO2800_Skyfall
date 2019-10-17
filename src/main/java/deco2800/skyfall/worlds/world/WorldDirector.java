@@ -10,7 +10,7 @@ import deco2800.skyfall.entities.pets.IceWhitebear;
 import deco2800.skyfall.entities.pets.LizardHome;
 import deco2800.skyfall.entities.vehicle.Bike;
 import deco2800.skyfall.entities.vehicle.SandCar;
-import deco2800.skyfall.entities.worlditems.hotSpring;
+import deco2800.skyfall.entities.worlditems.HotSpring;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
@@ -158,7 +158,7 @@ public class WorldDirector {
         builder.addEntity(new Camel(34, -7, mainCharacter));
         builder.addEntity(new Horse(-8, -6, mainCharacter));
 
-        builder.addEntity(new hotSpring(2, 10, mainCharacter));
+        builder.addEntity(new HotSpring(2, 10, mainCharacter));
 
         return builder;
     }
