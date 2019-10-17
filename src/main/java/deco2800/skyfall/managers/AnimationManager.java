@@ -53,12 +53,12 @@ public class AnimationManager extends AbstractManager {
 
 
         // Add sand car animation
-        this.generateAnimationObject("sandcarW","resources/Sand_Car_Left/left.atlas",0.05f);
-        this.generateAnimationObject("sandcarE","resources/Sand_Car_Right/right.atlas",0.05f);
-        this.generateAnimationObject("sandcarNE","resources/Sand_Car_Right_Back/Right_Back.atlas",0.05f);
-        this.generateAnimationObject("sandcarNW","resources/Sand_Car_Left_Back/Left_Back.atlas",0.05f);
-        this.generateAnimationObject("sandcarSW","resources/Sand_Car_Left_Front/left_front.atlas",0.05f);
-        this.generateAnimationObject("sandcarSE","resources/Sand_Car_Right_Front/Right_Front.atlas",0.05f);
+        this.generateAnimationObject("sandcarW","resources/West/west.atlas",0.05f);
+        this.generateAnimationObject("sandcarE","resources/East/east.atlas",0.05f);
+        this.generateAnimationObject("sandcarNE","resources/NorthEast/NE.atlas",0.05f);
+        this.generateAnimationObject("sandcarNW","resources/NorthWest/NW.atlas",0.05f);
+        this.generateAnimationObject("sandcarSW","resources/SouthWest/SW.atlas",0.05f);
+        this.generateAnimationObject("sandcarSE","resources/SouthEast/SE.atlas",0.05f);
 
         this.generateAnimationObject("whitebearNE","resources/whitebearright/whitebearright.atlas",0.05f);
         this.generateAnimationObject("whitebearN","resources/whitebearback/whitebearback.atlas",0.05f);

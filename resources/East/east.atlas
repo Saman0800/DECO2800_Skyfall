@@ -1,0 +1,33 @@
+
+east.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+sand_car_right_with_player
+  rotate: false
+  xy: 0, 458
+  size: 844, 457
+  orig: 844, 457
+  offset: 0, 0
+  index: -1
+sand_car_right_with_player1
+  rotate: false
+  xy: 846, 459
+  size: 844, 456
+  orig: 844, 456
+  offset: 0, 0
+  index: -1
+sand_car_right_with_player2
+  rotate: false
+  xy: 846, 1
+  size: 844, 456
+  orig: 844, 456
+  offset: 0, 0
+  index: -1
+sand_car_right_with_player3
+  rotate: false
+  xy: 0, 0
+  size: 844, 456
+  orig: 844, 456
+  offset: 0, 0
+  index: -1
