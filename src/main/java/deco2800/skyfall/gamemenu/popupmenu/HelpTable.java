@@ -15,6 +15,10 @@ import deco2800.skyfall.managers.TextureManager;
  */
 public class HelpTable extends AbstractPopUpElement{
     private Skin skin;
+    private Image pages[] = {new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page1")),
+            new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page2")),
+            new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page3"))};
+
     private Table baseTable;
 
     /**
@@ -85,6 +89,7 @@ public class HelpTable extends AbstractPopUpElement{
         Label title = new Label("HELP", skin, "navy-text");
         banner.add(title);
 
+
         baseTable.add(banner).width(700).height(70).padTop(20).colspan(2);
         baseTable.row().padTop(10);
     }
@@ -96,6 +101,7 @@ public class HelpTable extends AbstractPopUpElement{
         Image page2 = new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page2"));
         baseTable.add(page2).width(650).height(1704f / 2556 * 650).colspan(2);
         baseTable.row();
+
 
         TextureRegionDrawable arrow = gameMenuManager.generateTextureRegionDrawableObject("help_arrow");
         ImageButton leftArrow = new ImageButton(arrow);

@@ -66,7 +66,6 @@ public class InventoryTable extends AbstractPopUpElement {
     //Inventory user interface equip item button (inactive)
     private ImageButton inactiveEquipButton;
 
-
     //Logger for Inventory Table
 
     private final Logger logger =
@@ -99,6 +98,13 @@ public class InventoryTable extends AbstractPopUpElement {
         this.draw();
     }
 
+    @Override
+    public void update() {
+        super.update();
+        baseTable.toFront();
+        infoPanel.toFront();
+    }
+
     /**
      * Hides the inventory pop up
      */
@@ -119,6 +125,7 @@ public class InventoryTable extends AbstractPopUpElement {
         updatePanels();
         logger.info("Showing inventory table");
         baseTable.setVisible(true);
+
     }
 
 
@@ -179,8 +186,12 @@ public class InventoryTable extends AbstractPopUpElement {
             addqaButton.setVisible(true);
             dropButton.setVisible(true);
 
+
             if(inventory.getItemInstance(inventorySelected).isEquippable()){
                 equipButton.setVisible(true);
+                inactiveEquipButton.setVisible(false);
+            } else {
+                equipButton.setVisible(false);
                 inactiveEquipButton.setVisible(false);
             }
         }else{
