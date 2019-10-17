@@ -33,6 +33,17 @@ import org.flywaydb.core.Flyway;
 
 public class DataBaseConnector {
 
+    public static final String RIVER = "river";
+    public static final String SNOWY_MOUNTAINS = "snowy_mountains";
+    public static final String SWAMP = "swamp";
+    public static final String VOLCANIC_MOUNTAINS = "volcanic_mountains";
+    public static final String MOUNTAIN = "mountain";
+    public static final String OCEAN = "ocean";
+    public static final String LAKE = "lake";
+    public static final String FOREST = "forest";
+    public static final String DESERT = "desert";
+    public static final String BEACH = "beach";
+    public static final String BIOME_ID = "biome_id";
     /* The connection to the database */
     private Connection connection;
 
@@ -144,7 +155,24 @@ public class DataBaseConnector {
                     worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
             }
         }
+        saveEdges(world, containsQueries, insertQueries, updateQueries);
 
+        for (Chunk chunk : world.getLoadedChunks().values()) {
+            saveChunk(chunk);
+        }
+    }
+
+    /**
+     * Saves the edges
+     * @param world The world from which the edges are beings saved
+     * @param containsQueries Class that contains query selections
+     * @param insertQueries Class that contains query insertions
+     * @param updateQueries Class that contains query updates
+     * @throws SQLException If an sql error occurs
+     * @throws IOException If a writing error occurs
+     */
+    private void saveEdges(World world, ContainsDataQueries containsQueries, InsertDataQueries insertQueries,
+        UpdateDataQueries updateQueries) throws SQLException, IOException {
         // Save beach edges
         for (VoronoiEdge voronoiEdge : world.getBeachEdges().keySet()) {
             if (containsQueries.containsEdge(voronoiEdge.getID())) {
@@ -165,10 +193,6 @@ public class DataBaseConnector {
                 insertQueries.insertEdges(world.getID(), voronoiEdge.getID(),
                     world.getRiverEdges().get(voronoiEdge).getBiomeID(), voronoiEdge.save());
             }
-        }
-
-        for (Chunk chunk : world.getLoadedChunks().values()) {
-            saveChunk(chunk);
         }
     }
 
@@ -242,7 +266,6 @@ public class DataBaseConnector {
             byte[] buffer;
             try (ResultSet result = preparedStatement.executeQuery()) {
                 connection.setAutoCommit(false);
-                // fixme:jeffvan12 sort this out
 
                 if (!result.next()) {
                     connection.setAutoCommit(true);
@@ -388,34 +411,34 @@ public class DataBaseConnector {
                         AbstractBiome biome;
 
                         switch (biomeType) {
-                            case "beach":
+                            case BEACH:
                                 biome = new BeachBiome(memento);
                                 break;
-                            case "desert":
+                            case DESERT:
                                 biome = new DesertBiome(memento);
                                 break;
-                            case "forest":
+                            case FOREST:
                                 biome = new ForestBiome(memento);
                                 break;
-                            case "lake":
+                            case LAKE:
                                 biome = new LakeBiome(memento);
                                 break;
-                            case "mountain":
+                            case MOUNTAIN:
                                 biome = new MountainBiome(memento);
                                 break;
-                            case "ocean":
+                            case OCEAN:
                                 biome = new OceanBiome(memento);
                                 break;
-                            case "river":
+                            case RIVER:
                                 biome = new RiverBiome(memento);
                                 break;
-                            case "snowy_mountains":
+                            case SNOWY_MOUNTAINS:
                                 biome = new SnowyMountainsBiome(memento);
                                 break;
-                            case "swamp":
+                            case SWAMP:
                                 biome = new SwampBiome(memento);
                                 break;
-                            case "volcanic_mountains":
+                            case VOLCANIC_MOUNTAINS:
                                 biome = new VolcanicMountainsBiome(memento);
                                 break;
                             default:
@@ -467,7 +490,7 @@ public class DataBaseConnector {
 
                     nodes = new ArrayList<>();
                     do {
-                        long biomeID = result.getLong("biome_id");
+                        long biomeID = result.getLong(BIOME_ID);
 
                         byte[] buffer = result.getBytes("data");
                         ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(buffer));
@@ -528,7 +551,7 @@ public class DataBaseConnector {
                         byte[] buffer = result.getBytes("data");
                         ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(buffer));
                         VoronoiEdgeMemento memento = (VoronoiEdgeMemento) objectIn.readObject();
-                        long biomeID = result.getLong("biome_id");
+                        long biomeID = result.getLong(BIOME_ID);
 
                         VoronoiEdge edge = new VoronoiEdge(memento);
                         edge.setWorld(world);
@@ -536,10 +559,10 @@ public class DataBaseConnector {
                         for (AbstractBiome biome : biomes) {
                             if (biome.getBiomeID() == biomeID) {
                                 foundBiome = true;
-                                if (biome.getBiomeName().equals("beach")) {
+                                if (biome.getBiomeName().equals(BEACH)) {
                                     edges.put(edge, (BeachBiome) biome);
                                     break;
-                                } else if (!biome.getBiomeName().equals("river")) {
+                                } else if (!biome.getBiomeName().equals(RIVER)) {
                                     connection.setAutoCommit(true);
                                     throw new LoadException();
                                 }
@@ -587,7 +610,7 @@ public class DataBaseConnector {
 
                     edges = new LinkedHashMap<>();
                     do {
-                        long biomeID = result.getLong("biome_id");
+                        long biomeID = result.getLong(BIOME_ID);
 
                         byte[] buffer = result.getBytes("data");
                         ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(buffer));
@@ -596,7 +619,7 @@ public class DataBaseConnector {
                         VoronoiEdge edge = new VoronoiEdge(memento);
                         edge.setWorld(world);
                         for (AbstractBiome biome : biomes) {
-                            if (biome.getBiomeID() == biomeID && biome.getBiomeName().equals("river")) {
+                            if (biome.getBiomeID() == biomeID && biome.getBiomeName().equals(RIVER)) {
                                 edges.put(edge, (RiverBiome) biome);
                                 break;
                             }

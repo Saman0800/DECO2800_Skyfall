@@ -14,7 +14,7 @@ public class GuiMaster {
     static Map<String, AbstractGui> guiElementsMap = new HashMap<>();
     static List<AbstractGui> guiElementsList = new LinkedList<>();
 
-    private static GuiMaster singleInstance = null;
+
 
     private GuiMaster() {}
 

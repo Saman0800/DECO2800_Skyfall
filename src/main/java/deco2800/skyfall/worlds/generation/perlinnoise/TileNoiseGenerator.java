@@ -8,6 +8,7 @@ import java.util.function.BiConsumer;
 /**
  * Used to generate noise values for biomes
  */
+@Deprecated
 public class TileNoiseGenerator {
     /** List of the tiles that will have a noise value generated for them **/
     private List<Tile> tiles;

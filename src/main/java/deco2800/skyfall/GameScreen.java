@@ -12,7 +12,7 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.graphics.HasPointLight;
 import deco2800.skyfall.graphics.PointLight;
 import deco2800.skyfall.graphics.ShaderWrapper;
-import deco2800.skyfall.graphics.types.vec3;
+import deco2800.skyfall.graphics.types.Vec3;
 import deco2800.skyfall.handlers.KeyboardManager;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.managers.database.DataBaseConnector;
@@ -121,9 +121,17 @@ public class GameScreen implements Screen, KeyDownObserver {
             MainCharacter.getInstance().setSave(save);
             save.setMainCharacter(MainCharacter.getInstance());
 
+            // FIXME:jeffvan12 implement better way of creating new stuff things (please don't delete this for now)
+
             // Comment this out when generating the data for the tests
             DatabaseManager.get().getDataBaseConnector().saveGame(save);
 
+//            Uncomment this when generating the data for the tests
+//            save.setId(0);
+//            world.setId(0);
+//            MainCharacter.getInstance().setID(0);
+//            DatabaseManager.get().getDataBaseConnector().saveGame(save);
+//            DatabaseManager.get().getDataBaseConnector().saveAllTables();
         }
 
         gameManager.setWorld(world);
@@ -332,7 +340,7 @@ public class GameScreen implements Screen, KeyDownObserver {
     private void rerenderMapObjects(SpriteBatch batch, OrthographicCamera camera) {
         // set ambient light
         shader.setAmbientComponent(
-                new vec3(ambientRed.getIntensity(), ambientGreen.getIntensity(), ambientBlue.getIntensity()),
+                new Vec3(ambientRed.getIntensity(), ambientGreen.getIntensity(), ambientBlue.getIntensity()),
                 ambientIntensity.getIntensity());
 
         // Add all the point lights of entities that implement the HasPointLight
@@ -428,16 +436,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         }
 
 
-        if (keycode == Input.Keys.F3) { // F3
-            // Save the world to the DB
-
-        }
-
-        if (keycode == Input.Keys.F4) { // F4
-            // Load the world to the DB
-
-        }
-
         if (keycode == Input.Keys.P) {
             DatabaseManager.get().getDataBaseConnector().saveGame(this.save);
         }
@@ -455,21 +453,7 @@ public class GameScreen implements Screen, KeyDownObserver {
                 goFastSpeed *= goFastSpeed * goFastSpeed;
             }
 
-            if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-                camera.translate(-goFastSpeed, 0, 0);
-            }
-
-            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-                camera.translate(goFastSpeed, 0, 0);
-            }
-
-            if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-                camera.translate(0, -goFastSpeed, 0);
-            }
-
-            if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-                camera.translate(0, goFastSpeed, 0);
-            }
+            handleCameraTranslation(goFastSpeed);
 
             if (Gdx.input.isKeyPressed(Input.Keys.EQUALS)) {
                 camera.zoom *= 1 - 0.01 * normilisedGameSpeed;
@@ -483,5 +467,27 @@ public class GameScreen implements Screen, KeyDownObserver {
             }
         }
 
+    }
+
+    /**
+     * Handles the camera translation
+     * @param goFastSpeed The go fast speed?
+     */
+    private void handleCameraTranslation(int goFastSpeed) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            camera.translate(-goFastSpeed, 0, 0);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            camera.translate(goFastSpeed, 0, 0);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            camera.translate(0, -goFastSpeed, 0);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            camera.translate(0, goFastSpeed, 0);
+        }
     }
 }

@@ -7,7 +7,7 @@ import static deco2800.skyfall.util.MathUtil.clamp;
 /**
  * An implementation of vec2 more convenient than array.
  */
-public class vec2 {
+public class Vec2 {
     private float x;
     private float y;
 
@@ -17,7 +17,7 @@ public class vec2 {
      * @param x x component
      * @param y y component
      */
-    public vec2(float x, float y) {
+    public Vec2(float x, float y) {
         this.x = x;
         this.y = y;
     }
@@ -27,7 +27,7 @@ public class vec2 {
      * 
      * @param a value set to each component
      */
-    public vec2(float a) {
+    public Vec2(float a) {
         this.x = a;
         this.y = a;
     }
@@ -53,8 +53,8 @@ public class vec2 {
      * @param max minimum value for each component
      * @return must be caught, vec2 called against will not be changed
      */
-    public vec2 getClampedComponents(float min, float max) {
-        return new vec2(clamp(x, min, max), clamp(y, min, max));
+    public Vec2 getClampedComponents(float min, float max) {
+        return new Vec2(clamp(x, min, max), clamp(y, min, max));
     }
 
     /**
@@ -65,14 +65,14 @@ public class vec2 {
      */
     @Override
     public boolean equals(Object obj) {
-        vec2 v;
-        if (obj instanceof vec2) {
-            v = (vec2) obj;
-        } else if (obj instanceof vec3) {
-            if (((vec3) obj).getZ() != 0.0f) {
+        Vec2 v;
+        if (obj instanceof Vec2) {
+            v = (Vec2) obj;
+        } else if (obj instanceof Vec3) {
+            if (((Vec3) obj).getZ() != 0.0f) {
                 return false;
             }
-            v = new vec2(((vec3) obj).getX(), ((vec3) obj).getY());
+            v = new Vec2(((Vec3) obj).getX(), ((Vec3) obj).getY());
         } else {
             return false;
         }

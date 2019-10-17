@@ -1,6 +1,6 @@
 package deco2800.skyfall.entities.vehicle;
 
-import deco2800.skyfall.animation.Direction;
+
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameManager;
 
