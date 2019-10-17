@@ -1,22 +1,48 @@
 package deco2800.skyfall;
 
-import com.badlogic.gdx.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.LifecycleListener;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.enemies.Abductor;
 import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.enemies.EnemySpawnTable;
+import deco2800.skyfall.entities.enemies.Heavy;
+import deco2800.skyfall.entities.enemies.Scout;
 import deco2800.skyfall.graphics.HasPointLight;
 import deco2800.skyfall.graphics.PointLight;
 import deco2800.skyfall.graphics.ShaderWrapper;
 import deco2800.skyfall.graphics.types.vec3;
 import deco2800.skyfall.handlers.KeyboardManager;
-import deco2800.skyfall.managers.*;
+import deco2800.skyfall.managers.DatabaseManager;
+import deco2800.skyfall.managers.EnvironmentManager;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.InputManager;
+import deco2800.skyfall.managers.InventoryManager;
+import deco2800.skyfall.managers.NetworkManager;
+import deco2800.skyfall.managers.PathFindingService;
+import deco2800.skyfall.managers.QuestManager;
+import deco2800.skyfall.managers.SpawningManager;
+import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.renderers.OverlayRenderer;
@@ -24,18 +50,17 @@ import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.renderers.Renderer3D;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.lightinghelpers.*;
+import deco2800.skyfall.util.lightinghelpers.FunctionalSpectralValue;
+import deco2800.skyfall.util.lightinghelpers.IntensityFunction;
+import deco2800.skyfall.util.lightinghelpers.LinearSpectralValue;
+import deco2800.skyfall.util.lightinghelpers.SpectralValue;
+import deco2800.skyfall.util.lightinghelpers.TFTuple;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.packing.BirthPlacePacking;
 import deco2800.skyfall.worlds.packing.EnvironmentPacker;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.*;
-import java.util.function.Function;
 
 /**
  * An instance of a Game screen.
@@ -525,8 +550,18 @@ public class GameScreen implements Screen, KeyDownObserver {
 
     private void enemySetUp(EnvironmentManager gameEnvironManag, World world) {
 
-        Function<HexVector, ? extends Enemy> spawnAbductor = hexPos -> new Abductor(hexPos.getCol(), hexPos.getRow(),
-                0.8f, "Forest");
+        ForestEnemySetup(gameEnvironManag, world);
+        DesertEnemySetup(gameEnvironManag, world);
+        MountainEnemySetup(gameEnvironManag, world);
+        VolcanicMountainEnemySetup(gameEnvironManag, world);
+
+        return;
+    }
+
+    private void ForestEnemySetup(EnvironmentManager gameEnvironManag, World world) {
+
+        Function<HexVector, ? extends Enemy> spawnAbductor = hexPos -> new Scout(hexPos.getCol(), hexPos.getRow(), 0.7f,
+                "Forest");
 
         Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor = new HashMap<>();
         List<Function<HexVector, ? extends Enemy>> forestList = new ArrayList<>();
@@ -534,13 +569,121 @@ public class GameScreen implements Screen, KeyDownObserver {
 
         biomeToConstructor.put("forest", forestList);
 
-        Function<EnvironmentManager, Double> probAdjFunc = environMang -> 0.1;
+        Function<EnvironmentManager, Double> probAdjFunc = environMang -> {
 
-        EnemySpawnTable newEnemyTable = new EnemySpawnTable(100, 50, 1, biomeToConstructor, gameEnvironManag,
+            if ((environMang.getHourDecimal() >= 19) && (environMang.getHourDecimal() <= 3)) {
+                return 0.05;
+            }
+
+            return 0.0;
+        };
+
+        EnemySpawnTable newEnemyTable = new EnemySpawnTable(70, 30, 3, biomeToConstructor, gameEnvironManag,
                 probAdjFunc, world);
 
         gameEnvironManag.addTimeListener(newEnemyTable);
-        newEnemyTable.notifyTimeUpdate(1);
+
+        return;
+    }
+
+    private void DesertEnemySetup(EnvironmentManager gameEnvironManag, World world) {
+
+        Function<HexVector, ? extends Enemy> spawnScout = hexPos -> new Scout(hexPos.getCol(), hexPos.getRow(), 0.9f,
+                "Desert");
+        Function<HexVector, ? extends Enemy> spawnAbductor = hexPos -> new Abductor(hexPos.getCol(), hexPos.getRow(),
+                0.9f, "Desert");
+
+        Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor = new HashMap<>();
+        List<Function<HexVector, ? extends Enemy>> desertList = new ArrayList<>();
+        desertList.add(spawnScout);
+        desertList.add(spawnAbductor);
+
+        biomeToConstructor.put("desert", desertList);
+
+        // Set up
+        Function<EnvironmentManager, Double> probAdjFunc = environMang -> {
+
+            if ((environMang.getHourDecimal() >= 19) && (environMang.getHourDecimal() <= 3)) {
+                return 0.02;
+            }
+
+            return 0.0;
+        };
+
+        EnemySpawnTable newEnemyTable = new EnemySpawnTable(100, 30, 2, biomeToConstructor, gameEnvironManag,
+                probAdjFunc, world);
+
+        gameEnvironManag.addTimeListener(newEnemyTable);
+
+        return;
+    }
+
+    private void MountainEnemySetup(EnvironmentManager gameEnvironManag, World world) {
+
+        Function<HexVector, ? extends Enemy> spawnScout = hexPos -> new Scout(hexPos.getCol(), hexPos.getRow(), 1.1f,
+                "Mountain");
+        Function<HexVector, ? extends Enemy> spawnAbductor = hexPos -> new Abductor(hexPos.getCol(), hexPos.getRow(),
+                1.1f, "Mountain");
+        Function<HexVector, ? extends Enemy> spawnHeavy = hexPos -> new Heavy(hexPos.getCol(), hexPos.getRow(), 1.1f,
+                "Mountain");
+
+        Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor = new HashMap<>();
+        List<Function<HexVector, ? extends Enemy>> mountainList = new ArrayList<>();
+        mountainList.add(spawnScout);
+        mountainList.add(spawnAbductor);
+        mountainList.add(spawnHeavy);
+
+        biomeToConstructor.put("mountain", mountainList);
+
+        // Set up
+        Function<EnvironmentManager, Double> probAdjFunc = environMang -> {
+
+            if ((environMang.getHourDecimal() >= 17) && (environMang.getHourDecimal() <= 5)) {
+                return 0.04;
+            }
+
+            return 0.0;
+        };
+
+        EnemySpawnTable newEnemyTable = new EnemySpawnTable(70, 20, 2, biomeToConstructor, gameEnvironManag,
+                probAdjFunc, world);
+
+        gameEnvironManag.addTimeListener(newEnemyTable);
+
+        return;
+    }
+
+    private void VolcanicMountainEnemySetup(EnvironmentManager gameEnvironManag, World world) {
+
+        Function<HexVector, ? extends Enemy> spawnScout = hexPos -> new Scout(hexPos.getCol(), hexPos.getRow(), 1.1f,
+                "VolcanicMountain");
+        Function<HexVector, ? extends Enemy> spawnAbductor = hexPos -> new Abductor(hexPos.getCol(), hexPos.getRow(),
+                1.1f, "VolcanicMountain");
+        Function<HexVector, ? extends Enemy> spawnHeavy = hexPos -> new Heavy(hexPos.getCol(), hexPos.getRow(), 1.1f,
+                "VolcanicMountain");
+
+        Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor = new HashMap<>();
+        List<Function<HexVector, ? extends Enemy>> volcanicMountainList = new ArrayList<>();
+        volcanicMountainList.add(spawnScout);
+        volcanicMountainList.add(spawnAbductor);
+        volcanicMountainList.add(spawnHeavy);
+
+        biomeToConstructor.put("volcanic", volcanicMountainList);
+
+        // Set up
+        Function<EnvironmentManager, Double> probAdjFunc = environMang -> {
+
+            if ((environMang.getHourDecimal() >= 18) && (environMang.getHourDecimal() <= 4)) {
+                return 0.05;
+            }
+
+            return 0.0;
+        };
+
+        EnemySpawnTable newEnemyTable = new EnemySpawnTable(70, 15, 2, biomeToConstructor, gameEnvironManag,
+                probAdjFunc, world);
+
+        gameEnvironManag.addTimeListener(newEnemyTable);
 
         return;
     }
