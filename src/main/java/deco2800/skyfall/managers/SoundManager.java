@@ -46,6 +46,8 @@ public class SoundManager extends AbstractManager {
 
         try {
             String path = "resources/sounds/";
+            soundMap.put("axe_standard", Gdx.audio.newSound
+                    (Gdx.files.internal(path + "sword_standard.mp3")));
             soundMap.put("be_hit", Gdx.audio.newSound
                     (Gdx.files.internal(path + "be_hit.mp3")));
             soundMap.put("bow_desert", Gdx.audio.newSound

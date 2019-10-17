@@ -57,7 +57,7 @@ public class Tile {
     static final int[] NORTHS = { NORTH_WEST, NORTH, NORTH_EAST };
     static final int[] SOUTHS = { SOUTH_WEST, SOUTH, SOUTH_EAST };
 
-    private  Map<Integer, Tile> neighbours;
+    private Map<Integer, Tile> neighbours;
 
     @Expose
     private int index = -1;
@@ -98,6 +98,7 @@ public class Tile {
 
     /**
      * Returns a integer to represent the tile type
+     * 
      * @param tileType Name of tile texture
      * @return int representation of the tile type
      */
@@ -147,12 +148,13 @@ public class Tile {
 
     /**
      * Gets the friction value for the tile
+     * 
      * @param tileType The type of the tile
      * @return The friction value for the tile
      */
     public static float getFriction(String tileType) {
-        //Gets the friction map for the world
-        Map<String, Float> frictionMap = GameManager.get().getWorld().frictionMap;
+        // Gets the friction map for the world
+        Map<String, Float> frictionMap = GameManager.get().getWorld().getfrictionMap();
         // Checks the type of the tile
         switch (Tile.getTileType(tileType)) {
         case 0:
@@ -173,7 +175,8 @@ public class Tile {
     }
 
     /**
-     * Gets a {@link NoiseGenerator} that is appropriate for generating tile offset noise for biome determination.
+     * Gets a {@link NoiseGenerator} that is appropriate for generating tile offset
+     * noise for biome determination.
      *
      * @param random      the instance of {@link Random} for the world
      * @param nodeSpacing the node spacing for the world
@@ -190,12 +193,13 @@ public class Tile {
 
     /**
      * Gets the location of the tile with noise added.
+     * 
      * @param noiseFactor the amplitude of the noise
      * @return the new column coordinate
      */
     private double getNoisyCol(double noiseFactor) {
-        return getCol() + world.getTileOffsetNoiseGeneratorX().getOctavedPerlinValue(getCol(), getRow()) * noiseFactor -
-                noiseFactor / 2d;
+        return getCol() + world.getTileOffsetNoiseGeneratorX().getOctavedPerlinValue(getCol(), getRow()) * noiseFactor
+                - noiseFactor / 2d;
     }
 
     /**
@@ -206,8 +210,8 @@ public class Tile {
      * @return the new row coordinate
      */
     private double getNoisyRow(double noiseFactor) {
-        return getRow() + world.getTileOffsetNoiseGeneratorY().getOctavedPerlinValue(getCol(), getRow()) * noiseFactor -
-                noiseFactor / 2d;
+        return getRow() + world.getTileOffsetNoiseGeneratorY().getOctavedPerlinValue(getCol(), getRow()) * noiseFactor
+                - noiseFactor / 2d;
     }
 
     /**
@@ -229,7 +233,7 @@ public class Tile {
     }
 
     private VoronoiEdge findNearestEdge(VoronoiEdge currentEdge, List<VoronoiEdge> edges, double maxDistance,
-                                        int nodeSpacing, double noiseFactor) {
+            int nodeSpacing, double noiseFactor) {
         double tileX = getNoisyCol(nodeSpacing);
         double tileY = getNoisyRow(nodeSpacing);
 
@@ -271,20 +275,17 @@ public class Tile {
                 if (dotProduct < 0 || dotProduct > edgeLength) {
                     double squareDistanceToA = dxA * dxA + dyA * dyA;
                     double squareDistanceToB = dxB * dxB + dyB * dyB;
-                    squareDistance = Math.min(squareDistanceToA,
-                            squareDistanceToB);
+                    squareDistance = Math.min(squareDistanceToA, squareDistanceToB);
                 } else {
                     double gradient = (ay - by) / (ax - bx);
                     // A quantity used to calculate the distance
-                    double distanceNumerator = -1 * gradient * tileX + tileY
-                            + gradient * bx - by;
+                    double distanceNumerator = -1 * gradient * tileX + tileY + gradient * bx - by;
                     // Get the square distance
                     squareDistance = distanceNumerator * distanceNumerator / (gradient * gradient + 1);
                 }
             }
 
-            if (squareDistance < closestDistance
-                    && squareDistance < maxDistance * maxDistance) {
+            if (squareDistance < closestDistance && squareDistance < maxDistance * maxDistance) {
                 closestDistance = squareDistance;
                 closestEdge = voronoiEdge;
             }
@@ -294,26 +295,24 @@ public class Tile {
 
     /**
      * Assigns the nearest river or beach edge to this node, giving priority to
-     * rivers. It will only assign for tiles within a certain distance of an
-     * edge
+     * rivers. It will only assign for tiles within a certain distance of an edge
      *
      * @param riverEdges A list of edges that are in rivers
      * @param beachEdges A list of edges that are in beaches
      * @param riverWidth The maximum distance away for rivers
      * @param beachWidth The maximum distance away for edges
      */
-    public void assignEdge(Map<VoronoiEdge, RiverBiome> riverEdges,
-                           Map<VoronoiEdge, BeachBiome> beachEdges,
-                           int nodeSpacing, double riverWidth, double beachWidth) {
+    public void assignEdge(Map<VoronoiEdge, RiverBiome> riverEdges, Map<VoronoiEdge, BeachBiome> beachEdges,
+            int nodeSpacing, double riverWidth, double beachWidth) {
 
         if (getBiome().getBiomeName().equals("ocean")) {
             return;
         }
         VoronoiEdge closestEdge = findNearestEdge(null, new ArrayList<>(beachEdges.keySet()), beachWidth, nodeSpacing,
-                                                  beachWidth * 2);
+                beachWidth * 2);
         if (!(Math.abs(getCol()) < riverWidth && Math.abs(getRow()) < riverWidth)) {
             closestEdge = findNearestEdge(closestEdge, new ArrayList<>(riverEdges.keySet()), riverWidth, nodeSpacing,
-                                          riverWidth * 2);
+                    riverWidth * 2);
         }
         this.edge = closestEdge;
         // Add the tile to the biome for the beach/river
@@ -379,11 +378,7 @@ public class Tile {
 
         this.removeReferanceFromNeighbours();
         Pair<Integer, Integer> chunk = Chunk.getChunkForCoordinates(getCol(), getRow());
-        GameManager.get()
-                .getWorld()
-                .getChunk(chunk.getValue0(), chunk.getValue1())
-                .getTiles()
-                .remove(this);
+        GameManager.get().getWorld().getChunk(chunk.getValue0(), chunk.getValue1()).getTiles().remove(this);
     }
 
     public int calculateIndex() {

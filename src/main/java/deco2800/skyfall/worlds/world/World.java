@@ -54,10 +54,10 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
     protected int width;
     protected int length;
 
-    //Used to generate random numbers
+    // Used to generate random numbers
     protected Random random;
 
-    public Map<String, Float> frictionMap;
+    private Map<String, Float> frictionMap;
 
     protected HashMap<Pair<Integer, Integer>, Chunk> loadedChunks;
 
@@ -66,7 +66,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
     private int loadedAreaUpperX;
     private int loadedAreaUpperY;
 
-    //A list of all the tiles within a world
+    // A list of all the tiles within a world
     protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
     protected CopyOnWriteArrayList<VoronoiEdge> voronoiEdges;
 
@@ -96,10 +96,9 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
     // Item pick-up sound effect
     private static final String PICK_UP_SOUND = "pick_up";
 
-
     /**
-     * The constructor used to create a simple dummey world, used for displaying world information on the
-     * home screen
+     * The constructor used to create a simple dummey world, used for displaying
+     * world information on the home screen
      *
      * @param worldId The id of the world
      * @param save    The save the world is in
@@ -169,18 +168,22 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
             addEntity(entity);
         }
 
-
-        // Set this to null once generation is complete since using this after construction is likely not deterministic
-        // due to ordering of events being affected by external factors like player movement. If you just want to
-        // generate random numbers, then this isn't appropriate either, since it is seeded, so not properly random.
-        // DON'T REMOVE THIS JUST BECAUSE YOUR CODE IS THROWING `NullPointerException`, YOU PROBABLY HAND DEEP AND
+        // Set this to null once generation is complete since using this after
+        // construction is likely not deterministic
+        // due to ordering of events being affected by external factors like player
+        // movement. If you just want to
+        // generate random numbers, then this isn't appropriate either, since it is
+        // seeded, so not properly random.
+        // DON'T REMOVE THIS JUST BECAUSE YOUR CODE IS THROWING `NullPointerException`,
+        // YOU PROBABLY HAND DEEP AND
         // FUNDAMENTAL ISSUES WITH WHAT YOU ARE DOING.
         random = null;
     }
 
     /**
-     * Generates the tiles and biomes in the world and adds the world to a listener to allow for interaction.
-     * Continuously repeats generation until it reaches a stable world
+     * Generates the tiles and biomes in the world and adds the world to a listener
+     * to allow for interaction. Continuously repeats generation until it reaches a
+     * stable world
      */
     protected void generateWorld() {
         while (true) {
@@ -235,7 +238,8 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         WorldGenNode.assignNeighbours(localWorldGenNodes, localVoronoiEdges, this);
         VoronoiEdge.assignNeighbours(localVoronoiEdges);
 
-        BiomeGenerator biomeGenerator = new BiomeGenerator(this, localWorldGenNodes, localVoronoiEdges, random, worldParameters);
+        BiomeGenerator biomeGenerator = new BiomeGenerator(this, localWorldGenNodes, localVoronoiEdges, random,
+                worldParameters);
         biomeGenerator.generateBiomes();
     }
 
@@ -253,8 +257,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
      * @return All Entities in the world
      */
     public List<AbstractEntity> getEntities() {
-        return loadedChunks.values().stream()
-                .flatMap(chunk -> chunk.getEntities().stream())
+        return loadedChunks.values().stream().flatMap(chunk -> chunk.getEntities().stream())
                 .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
     }
 
@@ -296,9 +299,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
      * @return all entities in the world
      */
     public List<AgentEntity> getSortedAgentEntities() {
-        return getSortedEntities().stream()
-                .filter(AgentEntity.class::isInstance)
-                .map(AgentEntity.class::cast)
+        return getSortedEntities().stream().filter(AgentEntity.class::isInstance).map(AgentEntity.class::cast)
                 .collect(Collectors.toList());
     }
 
@@ -333,23 +334,24 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
                 break;
             }
         }
-        // Does not need to be kept sorted because removing an entity will not affect the ordering of the remaining
+        // Does not need to be kept sorted because removing an entity will not affect
+        // the ordering of the remaining
         // elements.
     }
 
     /**
-     * Returns a list of all of the tiles in the world. This list is <em>not</em> the list used internally (due to
-     * chunking) so modifying this list will not modify the list of tiles.
+     * Returns a list of all of the tiles in the world. This list is <em>not</em>
+     * the list used internally (due to chunking) so modifying this list will not
+     * modify the list of tiles.
      *
      * @return a list of all of the tiles in the world
-     * @deprecated since this is no longer a trivial operation. Getting the chunk map and iterating through the tiles of
-     * the individual chunks should be preferred since it does not perform an unnecesary copy.
+     * @deprecated since this is no longer a trivial operation. Getting the chunk
+     *             map and iterating through the tiles of the individual chunks
+     *             should be preferred since it does not perform an unnecesary copy.
      */
     @Deprecated
     public List<Tile> getTileMap() {
-        return loadedChunks.values().stream()
-                .flatMap(chunk -> chunk.getTiles().stream())
-                .collect(Collectors.toList());
+        return loadedChunks.values().stream().flatMap(chunk -> chunk.getTiles().stream()).collect(Collectors.toList());
     }
 
     public Tile getTile(float col, float row) {
@@ -383,7 +385,8 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
      * Sets all the tiles in the loaded chunks.
      *
      * @param tileMap the new tiles to use
-     * @deprecated since this only affects the loaded chunks and is no longer a trivial replacement of lists
+     * @deprecated since this only affects the loaded chunks and is no longer a
+     *             trivial replacement of lists
      */
     @Deprecated
     public void setTileMap(CopyOnWriteArrayList<Tile> tileMap) {
@@ -406,13 +409,14 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
     }
 
     public void onTick(long i) {
-        // Don't tick the entities in the outer band. This allows entities to detect collisions with entities which
-        // are not in the loaded area, since nothing in the outer band will ever be able to move.
+        // Don't tick the entities in the outer band. This allows entities to detect
+        // collisions with entities which
+        // are not in the loaded area, since nothing in the outer band will ever be able
+        // to move.
         List<AbstractEntity> entities = getLoadedChunks().values().stream()
-                .filter(chunk -> chunk.getX() > loadedAreaLowerX && chunk.getY() > loadedAreaLowerY &&
-                        chunk.getX() < loadedAreaUpperX - 1 && chunk.getY() < loadedAreaUpperY - 1)
-                .flatMap(chunk -> chunk.getEntities().stream())
-                .collect(Collectors.toList());
+                .filter(chunk -> chunk.getX() > loadedAreaLowerX && chunk.getY() > loadedAreaLowerY
+                        && chunk.getX() < loadedAreaUpperX - 1 && chunk.getY() < loadedAreaUpperY - 1)
+                .flatMap(chunk -> chunk.getEntities().stream()).collect(Collectors.toList());
 
         for (AbstractEntity entity : entities) {
             entity.onTick(i);
@@ -423,8 +427,8 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         }
 
         MainCharacter mc = MainCharacter.getInstance();
-        setLoadedArea(mc.getCol() - LOADED_RADIUS, mc.getRow() - LOADED_RADIUS,
-                mc.getCol() + LOADED_RADIUS, mc.getRow() + LOADED_RADIUS);
+        setLoadedArea(mc.getCol() - LOADED_RADIUS, mc.getRow() - LOADED_RADIUS, mc.getCol() + LOADED_RADIUS,
+                mc.getRow() + LOADED_RADIUS);
     }
 
     public void deleteEntity(int entityID) {
@@ -463,14 +467,12 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
 
     public String worldToString() {
         StringBuilder string = new StringBuilder();
-        loadedChunks.entrySet().stream()
-                .sorted(Comparator.comparing(Map.Entry::getKey))
+        loadedChunks.entrySet().stream().sorted(Comparator.comparing(Map.Entry::getKey))
                 .flatMap(entry -> entry.getValue().getTiles().stream()
                         .sorted(Comparator.comparing(tile -> new Pair<>(tile.getCol(), tile.getRow()))))
                 .forEachOrdered(tile -> {
                     String out = String.format("%f, %f, %s, %s", tile.getCol(), tile.getRow(),
-                            tile.getBiome().getBiomeName(),
-                            tile.getTextureName()) + '\n';
+                            tile.getBiome().getBiomeName(), tile.getTextureName()) + '\n';
                     string.append(out);
                 });
         return string.toString();
@@ -494,7 +496,6 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         return save;
     }
 
-
     /**
      * Gets the nodes of the world
      *
@@ -502,6 +503,13 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
      */
     public List<WorldGenNode> getWorldGenNodes() {
         return worldGenNodes;
+    }
+
+    /**
+     * @return Returns the friction map for the world
+     */
+    public Map<String, Float> getfrictionMap() {
+        return this.frictionMap;
     }
 
     /**
@@ -521,8 +529,8 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
 
         float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
         float[] clickedPosition = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
-        Pair<Integer, Integer> clickedChunkCoords =
-                Chunk.getChunkForCoordinates(clickedPosition[0], clickedPosition[1]);
+        Pair<Integer, Integer> clickedChunkCoords = Chunk.getChunkForCoordinates(clickedPosition[0],
+                clickedPosition[1]);
         Chunk clickedChunk = getChunk(clickedChunkCoords.getValue0(), clickedChunkCoords.getValue1());
 
         Tile tile = getTile(clickedPosition[0], clickedPosition[1]);
@@ -531,8 +539,8 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
             return;
         }
         for (AbstractEntity entity : clickedChunk.getEntities()) {
-            //NOTE: DO NOT RUN REMOVE ENTITY IN THIS LOOP, IT WILL CAUSE
-            //ConcurrentModificationException
+            // NOTE: DO NOT RUN REMOVE ENTITY IN THIS LOOP, IT WILL CAUSE
+            // ConcurrentModificationException
             if (!tile.getCoordinates().equals(entity.getPosition())) {
                 continue;
             }
@@ -577,25 +585,25 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
                 BuildingEntity e = (BuildingEntity) entity;
                 MainCharacter mc = gmm.getMainCharacter();
                 switch (e.getBuildingType()) {
-                    case FORESTPORTAL:
-                        //TODO :@Kausta - Reset Quests on Right Click
-                        ForestPortal forestPortal = new ForestPortal(0, 0, 0);
-                        forestPortal.teleport(this.save);
-                        break;
-                    case MOUNTAINPORTAL:
-                        MountainPortal mountainPortal = new MountainPortal(0, 0, 0);
-                        mountainPortal.teleport(this.save);
-                        break;
-                    case DESERTPORTAL:
-                        DesertPortal desertPortal = new DesertPortal(0, 0, 0);
-                        desertPortal.teleport(this.save);
-                        break;
-                    case VOLCANOPORTAL:
-                        VolcanoPortal volcanoPortal = new VolcanoPortal(0, 0, 0);
-                        volcanoPortal.teleport(this.save);
-                        break;
-                    default:
-                        break;
+                case FORESTPORTAL:
+                    // TODO :@Kausta - Reset Quests on Right Click
+                    ForestPortal forestPortal = new ForestPortal(0, 0, 0);
+                    forestPortal.teleport(this.save);
+                    break;
+                case MOUNTAINPORTAL:
+                    MountainPortal mountainPortal = new MountainPortal(0, 0, 0);
+                    mountainPortal.teleport(this.save);
+                    break;
+                case DESERTPORTAL:
+                    DesertPortal desertPortal = new DesertPortal(0, 0, 0);
+                    desertPortal.teleport(this.save);
+                    break;
+                case VOLCANOPORTAL:
+                    VolcanoPortal volcanoPortal = new VolcanoPortal(0, 0, 0);
+                    volcanoPortal.teleport(this.save);
+                    break;
+                default:
+                    break;
                 }
             }
         }
@@ -607,18 +615,22 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
     }
 
     /**
-     * Gets the noise generator for the X coordinate used for selecting the {@code WorldGenNode} for the tiles.
+     * Gets the noise generator for the X coordinate used for selecting the
+     * {@code WorldGenNode} for the tiles.
      *
-     * @return the noise generator for the X coordinate used for selecting the {@code WorldGenNode} for the tiles
+     * @return the noise generator for the X coordinate used for selecting the
+     *         {@code WorldGenNode} for the tiles
      */
     public NoiseGenerator getTileOffsetNoiseGeneratorX() {
         return tileOffsetNoiseGeneratorX;
     }
 
     /**
-     * Gets the noise generator for the Y coordinate used for selecting the {@code WorldGenNode} for the tiles.
+     * Gets the noise generator for the Y coordinate used for selecting the
+     * {@code WorldGenNode} for the tiles.
      *
-     * @return the noise generator for the Y coordinate used for selecting the {@code WorldGenNode} for the tiles
+     * @return the noise generator for the Y coordinate used for selecting the
+     *         {@code WorldGenNode} for the tiles
      */
     public NoiseGenerator getTileOffsetNoiseGeneratorY() {
         return tileOffsetNoiseGeneratorY;
@@ -682,7 +694,6 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         return worldParameters;
     }
 
-
     /**
      * Sets the id of a world
      *
@@ -701,7 +712,8 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
      * @param upperRow the top bound of the area loaded
      */
     public void setLoadedArea(double lowerCol, double lowerRow, double upperCol, double upperRow) {
-        // Add an extra band of chunks around the selected area which will be loaded but not active (entities will not
+        // Add an extra band of chunks around the selected area which will be loaded but
+        // not active (entities will not
         // be ticked).
         loadedAreaLowerX = (int) Math.floor(lowerCol / Chunk.CHUNK_SIDE_LENGTH) - 1;
         loadedAreaLowerY = (int) Math.floor(lowerRow / Chunk.CHUNK_SIDE_LENGTH) - 1;
@@ -758,7 +770,6 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         this.tileOffsetNoiseGeneratorY = worldMemento.tileOffsetNoiseGeneratorY;
         this.worldParameters.setWorldSize(worldMemento.worldSize);
     }
-
 
     public static class WorldMemento extends AbstractMemento implements Serializable {
         private long saveID;
