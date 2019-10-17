@@ -34,7 +34,7 @@ public class ChestManager extends InventoryManager {
                 itemPool.add(new Apple());
                 // Fall through
             case EPIC:
-                itemPool.add(new Aloe_Vera());
+                itemPool.add(new AloeVera());
                 // Fall through
             case RARE:
                 itemPool.add(new Berry());
