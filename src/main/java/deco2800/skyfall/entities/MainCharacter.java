@@ -1159,7 +1159,8 @@ public class MainCharacter extends Peon
                     isOnVehicle=true;
                     setCurrentState(AnimationRole.NULL);
                     vehicleTexture("bike");
-                    maxSpeed=10f;
+                    setAcceleration(25.f);
+                    setMaxSpeed(13.f);
                     vehicleType = "bike";
                 }
                 if (ve instanceof SandCar && ve.distance(this) < 3) {
@@ -1168,7 +1169,8 @@ public class MainCharacter extends Peon
                     isOnVehicle=true;
                     setCurrentState(AnimationRole.NULL);
                     vehicleTexture("sand_car");
-                    maxSpeed=20f;
+                    setAcceleration(25.f);
+                    setMaxSpeed(13.f);
                     vehicleType = "sand_car";
                     unlockBiome("desert");
                 }
@@ -1178,11 +1180,15 @@ public class MainCharacter extends Peon
             if (vehicleType.equals("bike")) {
                 defaultDirectionTextures=defaultMainCharacterTextureMap;
                 isOnVehicle=false;
+                setAcceleration(10.f);
+                setMaxSpeed(5.f);
                 GameManager.get().getWorld().addEntity(new Bike(this.getCol(),this.getRow(),this));
             }
             if (vehicleType.equals("sand_car")) {
                 defaultDirectionTextures = defaultMainCharacterTextureMap;
                 isOnVehicle=false;
+                setAcceleration(10.f);
+                setMaxSpeed(5.f);
                 lockedBiomes.add("desert");
                 GameManager.get().getWorld().addEntity(new SandCar(this.getCol(),this.getRow(),this));
             }
