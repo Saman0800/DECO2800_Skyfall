@@ -8,7 +8,7 @@ import static deco2800.skyfall.util.MathUtil.clamp;
  * An implementation of vec3 more convenient than array When referring to colour
  * x,y,z maps to r,g,b
  */
-public class vec3 {
+public class Vec3 {
     private float x;
     private float y;
     private float z;
@@ -20,7 +20,7 @@ public class vec3 {
      * @param y y component, might also be g for colours
      * @param z z component, might also be b for colours
      */
-    public vec3(float x, float y, float z) {
+    public Vec3(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -31,7 +31,7 @@ public class vec3 {
      * 
      * @param a value set to each component
      */
-    public vec3(float a) {
+    public Vec3(float a) {
         this.x = a;
         this.y = a;
         this.z = a;
@@ -65,8 +65,8 @@ public class vec3 {
      * @param max minimum value for each component
      * @return must be caught, vec3 called against will not be changed
      */
-    public vec3 getClampedComponents(float min, float max) {
-        return new vec3(clamp(x, min, max), clamp(y, min, max), clamp(z, min, max));
+    public Vec3 getClampedComponents(float min, float max) {
+        return new Vec3(clamp(x, min, max), clamp(y, min, max), clamp(z, min, max));
     }
 
     /**
@@ -77,14 +77,14 @@ public class vec3 {
      */
     @Override
     public boolean equals(Object obj) {
-        vec3 v;
-        if (obj instanceof vec3) {
-            v = (vec3) obj;
-        } else if (obj instanceof vec2) {
+        Vec3 v;
+        if (obj instanceof Vec3) {
+            v = (Vec3) obj;
+        } else if (obj instanceof Vec2) {
             if (this.z != 0.0f) {
                 return false;
             }
-            v = new vec3(((vec2) obj).getX(), ((vec2) obj).getY(), 0.0f);
+            v = new Vec3(((Vec2) obj).getX(), ((Vec2) obj).getY(), 0.0f);
         } else {
             return false;
         }

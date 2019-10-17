@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import deco2800.skyfall.graphics.types.vec2;
-import deco2800.skyfall.graphics.types.vec3;
+import deco2800.skyfall.graphics.types.Vec2;
+import deco2800.skyfall.graphics.types.Vec3;
 import deco2800.skyfall.util.SettingsFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class ShaderWrapper {
     private ShaderProgram shaderProgram;
 
     // Ambient components
-    private vec3 ambientColour = new vec3(0.0f);
+    private Vec3 ambientColour = new Vec3(0.0f);
     private float ambientIntensity = 0;
 
     // used for counting number of light points allocated
@@ -125,7 +125,7 @@ public class ShaderWrapper {
      * @param intensity intensity of light from [0,1], point light intensity will be
      *                  1-intensity
      */
-    public void setAmbientComponent(vec3 color, float intensity) {
+    public void setAmbientComponent(Vec3 color, float intensity) {
         ambientColour = color.getClampedComponents(0.0f, 1.0f);
         ambientIntensity = clamp(intensity, 0.0f, 1.0f);
         if (active) {
@@ -139,7 +139,7 @@ public class ShaderWrapper {
      * 
      * @return in the form (r,g,b) with each component in [0,1]
      */
-    public vec3 getAmbientColour() {
+    public Vec3 getAmbientColour() {
         return ambientColour;
     }
 
@@ -164,8 +164,8 @@ public class ShaderWrapper {
             // creates the string for the target point light
             String target = "pointLights[" + pointLightCount + "]";
 
-            vec3 colour = pointLight.getColour();
-            vec2 position = pointLight.getPosition();
+            Vec3 colour = pointLight.getColour();
+            Vec2 position = pointLight.getPosition();
 
             // set the values of the uniform point lights in the shader
             shaderProgram.setUniformf(target + ".colour", colour.getX(), colour.getY(), colour.getZ());

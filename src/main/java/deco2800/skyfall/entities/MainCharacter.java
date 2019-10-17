@@ -614,7 +614,7 @@ public class MainCharacter extends Peon
         // Play weapon attackEntity sound
         switch ((equippedItem).getName()) {
             case SWORD:
-                SoundManager.playSound(MELEEATTACK);
+                SoundManager.playSound(SWORD);
                 break;
             case SPEAR:
                 SoundManager.playSound(SPEAR);
@@ -623,7 +623,7 @@ public class MainCharacter extends Peon
                 SoundManager.playSound(BOWATTACK);
                 break;
             case AXE:
-                SoundManager.playSound(MELEEATTACK);
+                SoundManager.playSound(AXEATTACK);
                 break;
             default:
                 SoundManager.playSound(HURT_SOUND_NAME);

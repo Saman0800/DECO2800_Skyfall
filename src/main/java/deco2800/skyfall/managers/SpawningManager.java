@@ -10,7 +10,7 @@ import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.enemies.Spawnable;
-import deco2800.skyfall.graphics.types.vec2;
+import deco2800.skyfall.graphics.types.Vec2;
 
 /*Handles spawning enemies into the game on tick*/
 public class SpawningManager extends TickableManager {
@@ -93,10 +93,10 @@ public class SpawningManager extends TickableManager {
 
         // calculate the location of the player
         MainCharacter mc = MainCharacter.getInstance();
-        vec2 location = new vec2(mc.getRow(), mc.getCol());
+        Vec2 location = new Vec2(mc.getRow(), mc.getCol());
 
         double angle = random.nextDouble() * 2.0f * Math.PI;
-        location = new vec2(location.getX() + SPAWN_DISTANCE * (float) Math.cos(angle),
+        location = new Vec2(location.getX() + SPAWN_DISTANCE * (float) Math.cos(angle),
                 location.getY() + SPAWN_DISTANCE * (float) Math.sin(angle));
 
         // create new instance
