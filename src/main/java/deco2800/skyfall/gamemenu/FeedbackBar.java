@@ -25,27 +25,28 @@ public class FeedbackBar extends AbstractUIElement {
         super(stage, textureNames, tm);
         this.gmm = gmm;
         this.skin = skin;
+        this.draw();
     }
 
     @Override
     public void updatePosition() {
-        feedbackBar.setPosition(gmm.getBottomRightX() - 300, gmm.getBottomRightY());
-    }
-
-    @Override
-    public void update() {
-        //to be implemented
+        feedbackBar.setPosition(gmm.getTopLeftX() + stage.getCamera().viewportWidth / 5, gmm.getBottomRightY());
     }
 
     @Override
     public void draw() {
         feedbackBar = new Table();
         feedbackBar.setBackground(gmm.generateTextureRegionDrawableObject("feedback_bar"));
-        feedbackBar.setSize(500, 65);
+        feedbackBar.setSize(800, 55);
 
-        feedback = new Label("", skin, "white-text");
+        feedback = new Label("test", skin, "white-text");
         feedback.setFontScale(0.8f);
         feedbackBar.add(feedback).padBottom(10);
         stage.addActor(feedbackBar);
+    }
+
+    @Override
+    public void update() {
+        super.update();
     }
 }

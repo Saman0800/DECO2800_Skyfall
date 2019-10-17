@@ -388,6 +388,8 @@ public class GameMenuManager extends TickableManager {
         hudElements.put("gameMenuBar2", new GameMenuBar2(stage, null, textureManager, skin, this));
         hudElements.put("clock" , new Clock(stage, skin, this, em));
 
+        hudElements.put("feedbackBar", new FeedbackBar(stage, null, textureManager, skin, this));
+
         uiElements.put("HUD", new HeadsUpDisplay(stage, null, textureManager, skin, this, hudElements, questManager));
 
         popUps.put("inventoryTable",
