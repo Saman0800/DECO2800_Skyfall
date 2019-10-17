@@ -51,8 +51,8 @@ public class hotSpring extends AbstractEntity {
                 player.changeHealth(this.amountOfRecovering());
 
             } else {
-                this.setTexture("hot_spring");
-                this.setObjectName("hot_spring");
+                this.setTexture(ENTITY_ID_STRING);
+                this.setObjectName(ENTITY_ID_STRING);
             }
         }
     }

@@ -5,8 +5,6 @@ public class HexVector {
     private float row;
     private double angle;
 
-    // TODO:Ontonator Work out if the constructors should use the setter methods.
-
     /**
      * Constructor for a HexVector
      * 

@@ -233,7 +233,6 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
         for (Tile tile : tiles) {
             tile.removeReferanceFromNeighbours();
         }
-        //TODO:(@Kausta) Uncomment this before merge
         DatabaseManager.get().getDataBaseConnector().saveChunk(this);
 
         world.getLoadedChunks().remove(new Pair<>(x, y));

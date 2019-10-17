@@ -1,11 +1,10 @@
 package deco2800.skyfall.managers;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-
-
 import deco2800.skyfall.tasks.MovementTask;
 import deco2800.skyfall.tasks.PathFindingServiceThread;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class PathFindingService extends TickableManager {
 
@@ -32,7 +31,6 @@ public class PathFindingService extends TickableManager {
 
 	@Override
 	public void onTick(long i) {
-		// TODO Auto-generated method stub
-		
+		// Currently not used but required due to interface
 	}
 }

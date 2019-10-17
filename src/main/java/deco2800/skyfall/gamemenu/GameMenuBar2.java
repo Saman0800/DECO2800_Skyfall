@@ -74,9 +74,9 @@ public class GameMenuBar2 extends AbstractUIElement {
      */
     @Override
     public void updatePosition() {
-        equippedTable.setPosition(gmm.getTopRightX() - 170, gmm.getTopLeftY() - 100);
-        quickAccessPanel.setPosition(gmm.getTopRightX() - 170, gmm.getTopRightY() - stage.getCamera().viewportHeight * 0.8125f);
-        sideBar.setPosition(gmm.getTopRightX() - 180, gmm.getTopRightY() - stage.getCamera().viewportHeight * 0.8125f + 130);
+        equippedTable.setPosition(gmm.getTopRightX() - 170, gmm.getTopLeftY() - 130);
+        quickAccessPanel.setPosition(gmm.getTopRightX() - 170, gmm.getTopRightY() - 650);
+        sideBar.setPosition(gmm.getTopRightX() - 180, gmm.getTopRightY() - 520);
         build.setPosition(gmm.getBottomRightX() - 170, gmm.getBottomRightY());
     }
 
@@ -186,6 +186,8 @@ public class GameMenuBar2 extends AbstractUIElement {
 
         stage.addActor(quickAccessPanel);
         stage.addActor(sideBar);
+        quickAccessPanel.setZIndex(1);
+        sideBar.setZIndex(2);
     }
 
     public void removeQuickAccessPanel() {

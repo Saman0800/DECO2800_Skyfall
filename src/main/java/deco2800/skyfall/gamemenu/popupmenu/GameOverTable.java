@@ -74,7 +74,6 @@ public class GameOverTable extends AbstractPopUpElement{
         retry.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // If pressed, restart level and hide screen
                 retryQuest();
                 hide();
             }
@@ -86,8 +85,6 @@ public class GameOverTable extends AbstractPopUpElement{
         toHome.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // If pressed, return home and hide screen
-                //returnHome();
                 hide();
             }
         });

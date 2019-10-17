@@ -1,14 +1,9 @@
 package deco2800.skyfall.worlds;
 
-import java.util.*;
-import java.util.Map.Entry;
-
 import com.badlogic.gdx.graphics.Texture;
 import com.google.gson.annotations.Expose;
-
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
@@ -20,6 +15,9 @@ import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
 import org.javatuples.Pair;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 public class Tile {
     private static int nextID = 0;
@@ -59,7 +57,7 @@ public class Tile {
     static final int[] NORTHS = { NORTH_WEST, NORTH, NORTH_EAST };
     static final int[] SOUTHS = { SOUTH_WEST, SOUTH, SOUTH_EAST };
 
-    private transient Map<Integer, Tile> neighbours;
+    private  Map<Integer, Tile> neighbours;
 
     @Expose
     private int index = -1;
@@ -67,7 +65,6 @@ public class Tile {
     @Expose
     private int tileID = 0;
 
-    // FIXME:Ontonator Consider removing these; they are only useful for tests.
     private WorldGenNode node;
     private VoronoiEdge edge;
 
@@ -228,14 +225,11 @@ public class Tile {
         // Assign node to the tile
         node = nodes.get(minDistanceIndex);
         // Assign tile to the node
-        // TODO see if this is necessary
-        //node.addTile(this);
         node.getBiome().addTile(this);
     }
 
     private VoronoiEdge findNearestEdge(VoronoiEdge currentEdge, List<VoronoiEdge> edges, double maxDistance,
                                         int nodeSpacing, double noiseFactor) {
-        // TODO make noise contiguous
         double tileX = getNoisyCol(nodeSpacing);
         double tileY = getNoisyRow(nodeSpacing);
 
@@ -308,16 +302,13 @@ public class Tile {
      * @param riverWidth The maximum distance away for rivers
      * @param beachWidth The maximum distance away for edges
      */
-    public void assignEdge(LinkedHashMap<VoronoiEdge, RiverBiome> riverEdges,
-                           LinkedHashMap<VoronoiEdge, BeachBiome> beachEdges,
+    public void assignEdge(Map<VoronoiEdge, RiverBiome> riverEdges,
+                           Map<VoronoiEdge, BeachBiome> beachEdges,
                            int nodeSpacing, double riverWidth, double beachWidth) {
-        /* TODO do something better than this to prevent rivers from being on
-            the origin
-         */
+
         if (getBiome().getBiomeName().equals("ocean")) {
             return;
         }
-        // FIXME:Ontonator Fix the beaches' noise.
         VoronoiEdge closestEdge = findNearestEdge(null, new ArrayList<>(beachEdges.keySet()), beachWidth, nodeSpacing,
                                                   beachWidth * 2);
         if (!(Math.abs(getCol()) < riverWidth && Math.abs(getRow()) < riverWidth)) {
@@ -386,8 +377,6 @@ public class Tile {
             }
         }
 
-        GameManager.get().getManager(NetworkManager.class).deleteTile(this);
-
         this.removeReferanceFromNeighbours();
         Pair<Integer, Integer> chunk = Chunk.getChunkForCoordinates(getCol(), getRow());
         GameManager.get()
@@ -440,7 +429,6 @@ public class Tile {
     public boolean checkObstructed(String texture) {
         ArrayList<String> obstructables = new ArrayList<>();
         obstructables.add("water");
-        // TODO This list needs to be kept up-to-date.
         for (String obstructable : obstructables) {
             if (texture.contains(obstructable)) {
                 return true;

@@ -21,7 +21,6 @@ public class ProgressTable extends AbstractPopUpElement {
     private Label collectLabel;
     private Label createLabel;
     private Label blueprintLabel;
-    private Label weaponsLabel;
 
     public ProgressTable(Stage stage, ImageButton exit, String[] textureNames,
                          TextureManager tm, GameMenuManager gameMenuManager,
@@ -80,10 +79,6 @@ public class ProgressTable extends AbstractPopUpElement {
         blueprintLabel.setText( "Portal Blueprint: " + text);
     }
 
-    private void updateWeaponsText(String text) {
-        blueprintLabel.setText( "WEAPONS: " + text);
-    }
-
 
     @Override
     public void draw() {
@@ -113,8 +108,6 @@ public class ProgressTable extends AbstractPopUpElement {
         baseTable.add(collectLabel).expand().left();
         baseTable.row();
         baseTable.add(createLabel).expand().left();
-        baseTable.row();
-        baseTable.add(weaponsLabel).expand().left();
         baseTable.row();
         baseTable.add(blueprintLabel).expand().left();
         baseTable.row();

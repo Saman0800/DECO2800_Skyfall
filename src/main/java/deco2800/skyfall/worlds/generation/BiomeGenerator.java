@@ -14,9 +14,6 @@ import java.util.stream.Collectors;
  * Builds biomes from the nodes generated in the previous phase of the world generation.
  */
 public class BiomeGenerator implements BiomeGeneratorInterface {
-    /** The fraction of the original number of tiles that must remain in each biome after contiguity processing */
-    private static final double CONTIGUOUS_TILE_RETENTION_THRESHOLD = 0.75;
-
     /** The world this is generating biomes for */
     private final World world;
 
@@ -51,15 +48,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
     private int[] lakeSizes;
     private int noRivers;
 
-    // Half the width of a river
-    private double riverWidth;
-    private double beachWidth;
-
-    private List<VoronoiEdge> riverEdges;
-    private List<VoronoiEdge> beachEdges;
-
-    // TODO Remove `noLakes` parameter (replace with `lakeSizes.length`).
-
     /**
      * Creates a {@code BiomeGenerator} for a list of nodes (but does not start the generation).
      *
@@ -84,10 +72,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             throw new IllegalArgumentException("All biomes must require at least one node");
         }
 
-        //if (worldParameters.getBiomeSizesArray().length != worldParameters.getBiomes().size()) {
-        //    throw new IllegalArgumentException("The number of biomes must be equal to the number of biome sizes");
-        //}
-
         if (nodes.stream().filter(node -> !node.isBorderNode()).count() < Arrays.stream(worldParameters.getBiomeSizesArray()).sum()) {
             throw new NotEnoughPointsException("Not enough nodes to build biomes");
         }
@@ -101,11 +85,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
         this.centerNode = calculateCenterNode();
         this.noLakes = worldParameters.getNumOfLakes();
         this.noRivers = worldParameters.getNoRivers();
-        this.riverWidth = worldParameters.getRiverWidth();
-        this.beachWidth = worldParameters.getBeachWidth();
         this.lakeSizes = worldParameters.getLakeSizesArray();
-        this.riverEdges = new ArrayList<>();
-        this.beachEdges = new ArrayList<>();
     }
 
     /**
@@ -148,8 +128,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 generateLakes(lakeSizes, noLakes);
                 generateBeaches();
                 generateRivers(noRivers, voronoiEdges);
-                // FIXME:Ontonator Adapt this to work with chunks.
-                // ensureContiguity();
 
                 return;
             } catch (DeadEndGenerationException e) {
@@ -161,15 +139,26 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                     biome.getTiles().clear();
                 }
                 // Remove all biomes that were added to the list during generation.
-                while (realBiomes.size() > biomeSizes.length) {
-                    realBiomes.remove(realBiomes.size() - 1);
-                }
+                truncateList(realBiomes, biomeSizes.length);
 
                 // If the generation reached a dead-end, try again.
                 if (i >= 5) {
                     throw e;
                 }
             }
+        }
+    }
+
+    /**
+     * Truncates a list until it is less than or equal to the desired size.
+     *
+     * @param list        the list to truncate
+     * @param desiredSize the size to which to truncate
+     * @param <T>         the type of the elements in the list
+     */
+    private <T> void truncateList(List<T> list, int desiredSize) {
+        while (list.size() > desiredSize && !list.isEmpty()) {
+            list.remove(list.size() - 1);
         }
     }
 
@@ -296,78 +285,14 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
         List<BiomeInProgress> lakesFound = new ArrayList<>();
         for (int i = 0; i < noLakes; i++) {
             // Nodes found for this lake
-            List<WorldGenNode> nodesFound = new ArrayList<>();
-            int attempts = 0;
-            while (true) {
-                attempts++;
-                // TODO implement something better than this
-                // If there hasn't been a valid spot for a lake found after enough
-                // attempts, assume there is no valid spot
-                if (attempts > usedNodes.size()) {
-                    throw new DeadEndGenerationException();
-                }
-                // Try to find a valid node to start a lake
-                WorldGenNode chosenNode = nodes.get(random.nextInt(nodes.size()));
-                if (!validLakeNode(chosenNode, tempLakeNodes)) {
-                    continue;
-                }
-
-                // Add the initial node
-                nodesFound.clear();
-                nodesFound.add(chosenNode);
-
-                // Find nodes to expand to
-                for (int j = 1; j < lakeSizes[i]; j++) {
-                    ArrayList<WorldGenNode> growToCandidates = new ArrayList<>();
-                    // All neighbours of lake nodes that are valid via validLakeNode
-                    // are possible candidates to grow to
-                    for (WorldGenNode node : nodesFound) {
-                        for (WorldGenNode neighbour : node.getNeighbours()) {
-                            if (validLakeNode(neighbour, tempLakeNodes) && !nodesFound.contains(neighbour)) {
-                                growToCandidates.add(neighbour);
-                            }
-                        }
-                    }
-                    // Don't attempt to add null
-                    if (growToCandidates.isEmpty()) {
-                        break;
-                    }
-                    // Add a random candidate
-                    WorldGenNode newNode = growToCandidates.get(random.nextInt(growToCandidates.size()));
-                    nodesFound.add(newNode);
-                }
-
-                if (nodesFound.size() < lakeSizes[i]) {
-                    continue;
-                }
-                break;
-            }
+            List<WorldGenNode> nodesFound = findPossibleLakeLocation(lakeSizes[i], tempLakeNodes);
 
             // Add the lake
             lakesFound.add(new BiomeInProgress(biomes.size() + i, null));
             chosenNodes.add(nodesFound);
             tempLakeNodes.addAll(nodesFound);
 
-            // Calculates how many nodes from each biome contribute to the lake
-            // To determine the lake's parent biome
-            HashMap<BiomeInProgress, Integer> nodesInBiome = new HashMap<>();
-            for (WorldGenNode node : nodesFound) {
-                BiomeInProgress biome = nodesBiomes.get(node);
-                if (!nodesInBiome.containsKey(biome)) {
-                    nodesInBiome.put(biome, 1);
-                } else {
-                    nodesInBiome.put(biome, nodesInBiome.get(biome) + 1);
-                }
-            }
-
-            // Get the biome that contributes the most nodes
-            BiomeInProgress maxNodesBiome = null;
-            for (BiomeInProgress biome : nodesInBiome.keySet()) {
-                if (maxNodesBiome == null || nodesInBiome.get(biome) > nodesInBiome.get(maxNodesBiome)) {
-                    maxNodesBiome = biome;
-                }
-            }
-
+            BiomeInProgress maxNodesBiome = findParentBiomeForLake(nodesFound);
             maxNodesBiomes.add(maxNodesBiome);
         }
 
@@ -385,6 +310,107 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 lake.addNode(node);
             }
         }
+    }
+
+    /**
+     * Finds a valid location for a lake.
+     *
+     * @param size          the size of the lake in nodes
+     * @param tempLakeNodes the lake nodes
+     *
+     * @return the list of nodes to comprise the lake
+     *
+     * @throws DeadEndGenerationException if too many attempts fail
+     */
+    private List<WorldGenNode> findPossibleLakeLocation(int size, List<WorldGenNode> tempLakeNodes)
+            throws DeadEndGenerationException {
+        List<WorldGenNode> nodesFound = new ArrayList<>();
+        int attempts = 0;
+        while (true) {
+            attempts++;
+            // If there hasn't been a valid spot for a lake found after enough
+            // attempts, assume there is no valid spot
+            if (attempts > usedNodes.size()) {
+                throw new DeadEndGenerationException();
+            }
+            // Try to find a valid node to start a lake
+            WorldGenNode chosenNode = nodes.get(random.nextInt(nodes.size()));
+            if (!validLakeNode(chosenNode, tempLakeNodes)) {
+                continue;
+            }
+
+            // Add the initial node
+            nodesFound.clear();
+            nodesFound.add(chosenNode);
+            expandLakeNodes(size, tempLakeNodes, nodesFound);
+
+            if (nodesFound.size() < size) {
+                continue;
+            }
+
+            return nodesFound;
+        }
+    }
+
+    /**
+     * Expands the lake from a single node to the given size. The list of nodes provided should initially contain only
+     * one node and should be modifiable. The result will be added to the list of nodes.
+     *
+     * @param size          the desired number of nodes
+     * @param tempLakeNodes the temporary lake nodes
+     * @param nodesFound    the list of nodes for the lake
+     */
+    private void expandLakeNodes(int size, List<WorldGenNode> tempLakeNodes, List<WorldGenNode> nodesFound) {
+        // Find nodes to expand to
+        for (int j = 1; j < size; j++) {
+            ArrayList<WorldGenNode> growToCandidates = new ArrayList<>();
+            // All neighbours of lake nodes that are valid via validLakeNode
+            // are possible candidates to grow to
+            for (WorldGenNode node : nodesFound) {
+                for (WorldGenNode neighbour : node.getNeighbours()) {
+                    if (validLakeNode(neighbour, tempLakeNodes) && !nodesFound.contains(neighbour)) {
+                        growToCandidates.add(neighbour);
+                    }
+                }
+            }
+            // Don't attempt to add null
+            if (growToCandidates.isEmpty()) {
+                break;
+            }
+            // Add a random candidate
+            WorldGenNode newNode = growToCandidates.get(random.nextInt(growToCandidates.size()));
+            nodesFound.add(newNode);
+        }
+    }
+
+    /**
+     * Calculate the parent biome for a lake with the given nodes.
+     *
+     * @param nodesFound the nodes of the lake
+     *
+     * @return the parent biome
+     */
+    private BiomeInProgress findParentBiomeForLake(List<WorldGenNode> nodesFound) {
+        // Calculates how many nodes from each biome contribute to the lake
+        // To determine the lake's parent biome
+        HashMap<BiomeInProgress, Integer> nodesInBiome = new HashMap<>();
+        for (WorldGenNode node : nodesFound) {
+            BiomeInProgress biome = nodesBiomes.get(node);
+            if (!nodesInBiome.containsKey(biome)) {
+                nodesInBiome.put(biome, 1);
+            } else {
+                nodesInBiome.put(biome, nodesInBiome.get(biome) + 1);
+            }
+        }
+
+        // Get the biome that contributes the most nodes
+        BiomeInProgress maxNodesBiome = null;
+        for (Map.Entry<BiomeInProgress, Integer> entry : nodesInBiome.entrySet()) {
+            if (maxNodesBiome == null || entry.getValue() > nodesInBiome.get(maxNodesBiome)) {
+                maxNodesBiome = entry.getKey();
+            }
+        }
+        return maxNodesBiome;
     }
 
     /**
@@ -520,7 +546,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      * @return A VoronoiEdge that has exactly one vertex in the biome, null if there is no such edge
      */
     private VoronoiEdge edgeProtrudingFromBiome(List<VoronoiEdge> edges, WorldGenNode node, BiomeInProgress biome) {
-        // TODO make this not loop through all edges every time
         for (VoronoiEdge edge : edges) {
             // If the edge is adjacent to the biome
             if (edge.getEndNodes().contains(node)) {
@@ -541,126 +566,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             }
         }
         return null;
-    }
-
-    /**
-     * Ensures that biomes are contiguous. For small non-contiguous groups of tiles, they are just removed, but for
-     * large groups, the generation must be restarted, as the biome size could lose too many tiles.
-     *
-     * @throws DeadEndGenerationException if too many tiles from a biome are lost
-     */
-    private void ensureContiguity() throws DeadEndGenerationException {
-        // TODO:Ontonator Adjust this to work chunk-by-chunk.
-        // TODO:Ontonator Optimise search using border nodes only.
-
-        HashSet<Tile> removedTiles = new HashSet<>();
-
-        for (AbstractBiome biome : realBiomes) {
-            // HashSet<Tile> biomeUncheckedTiles = new HashSet<>(biome.getTiles());
-            ArrayList<Tile> descendants = biome.getDescendantBiomes().stream()
-                    .flatMap(descendant -> descendant.getTiles().stream())
-                    .collect(Collectors.toCollection(ArrayList::new));
-            HashSet<Tile> biomeUncheckedTiles = new HashSet<>(descendants);
-            ArrayList<Tile> mainClusterTiles = new ArrayList<>();
-
-            while (!biomeUncheckedTiles.isEmpty()) {
-                // // If there are fewer remaining tiles in the biome than the main cluster, than the largest cluster must
-                // // already be found, so break early.
-                // if (biomeUncheckedTiles.size() <= mainClusterTiles.size()) {
-                //     removedTiles.addAll(biomeUncheckedTiles);
-                //     break;
-                // }
-
-                // The tiles to be checked.
-                ArrayDeque<Tile> clusterCheckQueue = new ArrayDeque<>();
-                // The tiles known to be in the cluster.
-                ArrayList<Tile> clusterTiles = new ArrayList<>();
-
-                // Get the first tile from the biome that hasn't been checked. Note that you can't just take a tile from
-                // the unchecked tiles directly because the ordering is not deterministic, so it would break seeding.
-                Tile clusterStart = descendants.stream().filter(biomeUncheckedTiles::contains).findFirst()
-                        .orElseThrow(IllegalStateException::new);
-                biomeUncheckedTiles.remove(clusterStart);
-
-                clusterCheckQueue.add(clusterStart);
-
-                boolean parentFound = biome.getParentBiome() == null;
-                while (!clusterCheckQueue.isEmpty()) {
-                    Tile expandFrom = clusterCheckQueue.remove();
-                    // Don't add tiles from sub-biomes to this cluster's tiles.
-                    if (expandFrom.getBiome() == biome) {
-                        clusterTiles.add(expandFrom);
-                    }
-
-                    // Expand the cluster to adjacent tiles in the same biome.
-                    for (Tile neighbour : expandFrom.getNeighbours().values()) {
-                        if (biomeUncheckedTiles.contains(neighbour) && neighbour.getBiome().isDescendedFrom(biome)) {
-                            clusterCheckQueue.add(neighbour);
-                            biomeUncheckedTiles.remove(neighbour);
-                        }
-                        if (!parentFound && neighbour.getBiome() == biome.getParentBiome() &&
-                                !removedTiles.contains(neighbour)) {
-                            parentFound = true;
-                        }
-                    }
-                }
-
-                // Keep the biggest cluster of tiles and mark the tile from the other cluster to be removed.
-                if (parentFound && clusterTiles.size() > mainClusterTiles.size()) {
-                    if (biome.getParentBiome() == null) {
-                        removedTiles.addAll(mainClusterTiles);
-                    } else {
-                        for (Tile tile : mainClusterTiles) {
-                            biome.getParentBiome().addTile(tile);
-                        }
-                    }
-                    mainClusterTiles = clusterTiles;
-                } else if (biome.getParentBiome() != null && parentFound) {
-                    for (Tile tile : clusterTiles) {
-                        biome.getParentBiome().addTile(tile);
-                    }
-                } else {
-                    removedTiles.addAll(clusterTiles);
-                }
-            }
-
-            if (mainClusterTiles.size() < biome.getTiles().size() * CONTIGUOUS_TILE_RETENTION_THRESHOLD) {
-                throw new DeadEndGenerationException();
-            }
-        }
-
-        // Find the border tiles to expand from.
-        ArrayList<Tile> borderTiles = new ArrayList<>();
-        for (Tile tile : removedTiles) {
-            for (Tile neighbour : tile.getNeighbours().values()) {
-                if (!removedTiles.contains(neighbour) && !borderTiles.contains(neighbour)) {
-                    borderTiles.add(neighbour);
-                }
-            }
-        }
-        // Sort this list to make the algorithm deterministic (so it doesn't rely on the order of the `HashSet`).
-        borderTiles.sort((a, b) -> (int) Math.floor(a.getCol()) == (int) Math.floor(b.getCol())
-                                   ? (int) Math.floor(a.getRow()) - (int) Math.floor(b.getRow())
-                                   : (int) Math.floor(a.getCol()) - (int) Math.floor(b.getCol()));
-
-        // Expand outwards from the border tiles into the non-contiguous tiles.
-        while (!removedTiles.isEmpty()) {
-            Tile expandFrom = borderTiles.get(random.nextInt(borderTiles.size()));
-            ArrayList<Tile> expandToCandidates = expandFrom.getNeighbours().values().stream()
-                    .filter(removedTiles::contains)
-                    .collect(Collectors.toCollection(ArrayList::new));
-            Tile expandTo = expandToCandidates.get(random.nextInt(expandToCandidates.size()));
-            expandFrom.getBiome().addTile(expandTo);
-            removedTiles.remove(expandTo);
-            if (expandTo.getNeighbours().values().stream().anyMatch(removedTiles::contains)) {
-                borderTiles.add(expandTo);
-            }
-            for (Tile neighbour : expandTo.getNeighbours().values()) {
-                if (neighbour.getNeighbours().values().stream().noneMatch(removedTiles::contains)) {
-                    borderTiles.remove(neighbour);
-                }
-            }
-        }
     }
 
     /**

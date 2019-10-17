@@ -20,7 +20,6 @@ import java.util.List;
  * A class for blueprint shop table pop up.
  */
 public class ConstructionTable extends AbstractPopUpElement{
-    private final Skin skin;
     private final StatisticsManager sm;
     private Table blueprintTable;
     private Table blueprintPanel;
@@ -34,13 +33,11 @@ public class ConstructionTable extends AbstractPopUpElement{
      * @param textureNames Names of the textures.
      * @param tm Current texture manager.
      * @param gameMenuManager Current game menu manager.
-     * @param skin Current skin.
      */
     public ConstructionTable(Stage stage, ImageButton exit, String[] textureNames,
                               TextureManager tm, GameMenuManager gameMenuManager,
-                              StatisticsManager sm, Skin skin) {
+                              StatisticsManager sm) {
         super(stage,exit, textureNames, tm, gameMenuManager);
-        this.skin = skin;
         this.draw();
         this.sm = sm;
     }
@@ -63,18 +60,6 @@ public class ConstructionTable extends AbstractPopUpElement{
         blueprintTable.setVisible(true);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void updatePosition() {
-        super.updatePosition();
-    }
-
-    @Override
-    public void update() {
-        super.update();
-    }
 
     /**
      * {@inheritDoc}
@@ -103,7 +88,6 @@ public class ConstructionTable extends AbstractPopUpElement{
         infoPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("info_panel"));
 
         this.blueprintPanel = new Table();
-        //updateChestPanel(chest);
 
         blueprintTable.addActor(infoBar);
         blueprintTable.addActor(infoPanel);
@@ -156,6 +140,10 @@ public class ConstructionTable extends AbstractPopUpElement{
                 count = 0;
             }
         }
+    }
+
+    public void setBuildingID(BuildingType buildingID) {
+        this.buildingID = buildingID;
     }
 
     /**

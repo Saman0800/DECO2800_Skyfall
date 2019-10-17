@@ -10,7 +10,9 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.gamemenu.GameMenuBar2;
 import deco2800.skyfall.gamemenu.HeadsUpDisplay;
-import deco2800.skyfall.managers.*;
+import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.InventoryManager;
+import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.resources.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +22,7 @@ import java.util.Map;
 
 public class InventoryTable extends AbstractPopUpElement {
     //The inventory table
-    private Table inventoryTable;
+    private Table baseTable;
 
     //Resource panel on right side of inventory table
     private Table resourcePanel;
@@ -64,11 +66,9 @@ public class InventoryTable extends AbstractPopUpElement {
     //Inventory user interface equip item button (inactive)
     private ImageButton inactiveEquipButton;
 
-    private StatisticsManager sm;
-
     //Logger for Inventory Table
 
-    private final Logger LOGGER =
+    private final Logger logger =
             LoggerFactory.getLogger(InventoryTable.class);
 
 
@@ -88,7 +88,6 @@ public class InventoryTable extends AbstractPopUpElement {
         this.menuManager = gameMenuManager;
         this.inventory = gameMenuManager.getInventory();
         this.mainCharacter = gameMenuManager.getMainCharacter();
-        this.sm = GameManager.getManagerFromInstance(StatisticsManager.class);
 
         if(menuManager.getUIElement("HUD") instanceof HeadsUpDisplay){
             HeadsUpDisplay hud = (HeadsUpDisplay) menuManager.getUIElement("HUD");
@@ -99,6 +98,13 @@ public class InventoryTable extends AbstractPopUpElement {
         this.draw();
     }
 
+    @Override
+    public void update() {
+        super.update();
+        baseTable.toFront();
+        infoPanel.toFront();
+    }
+
     /**
      * Hides the inventory pop up
      */
@@ -106,8 +112,8 @@ public class InventoryTable extends AbstractPopUpElement {
     public void hide() {
         super.hide();
         inventorySelected = "";
-        LOGGER.info("Hiding inventory table");
-        inventoryTable.setVisible(false);
+        logger.info("Hiding inventory table");
+        baseTable.setVisible(false);
     }
 
     /**
@@ -117,8 +123,9 @@ public class InventoryTable extends AbstractPopUpElement {
     public void show() {
         super.show();
         updatePanels();
-        LOGGER.info("Showing inventory table");
-        inventoryTable.setVisible(true);
+        logger.info("Showing inventory table");
+        baseTable.setVisible(true);
+
     }
 
 
@@ -129,23 +136,23 @@ public class InventoryTable extends AbstractPopUpElement {
     public void draw() {
         super.draw();
 
-        inventoryTable = setBaseInventoryTable();
+        baseTable = setBaseInventoryTable();
         Table infoBar = setHeading();
         infoPanel = setInfoPanel();
         updatePanels();
         setButtons();
 
-        inventoryTable.addActor(infoBar);
-        inventoryTable.addActor(infoPanel);
-        inventoryTable.addActor(dropButton);
-        inventoryTable.addActor(inactiveDropButton);
-        inventoryTable.addActor(equipButton);
-        inventoryTable.addActor(inactiveEquipButton);
-        inventoryTable.addActor(addqaButton);
-        inventoryTable.addActor(inactiveAddqaButton);
+        baseTable.addActor(infoBar);
+        baseTable.addActor(infoPanel);
+        baseTable.addActor(dropButton);
+        baseTable.addActor(inactiveDropButton);
+        baseTable.addActor(equipButton);
+        baseTable.addActor(inactiveEquipButton);
+        baseTable.addActor(addqaButton);
+        baseTable.addActor(inactiveAddqaButton);
 
-        inventoryTable.setVisible(false);
-        stage.addActor(inventoryTable);
+        baseTable.setVisible(false);
+        stage.addActor(baseTable);
     }
 
     /***
@@ -153,7 +160,7 @@ public class InventoryTable extends AbstractPopUpElement {
      */
     protected void updatePanels(){
         if(resourcePanel != null){
-            inventoryTable.removeActor(resourcePanel);
+            baseTable.removeActor(resourcePanel);
         }
 
         resourcePanel = setResourcePanel();
@@ -164,7 +171,7 @@ public class InventoryTable extends AbstractPopUpElement {
 
         setCounts(inventoryAmounts, 115, 215, 80, 20);
 
-        inventoryTable.addActor(this.resourcePanel);
+        baseTable.addActor(this.resourcePanel);
 
     }
 
@@ -199,19 +206,19 @@ public class InventoryTable extends AbstractPopUpElement {
 
     /**
      * Sets the base of the inventory table
-     * @return inventoryTable
+     * @return baseTable
      */
     private Table setBaseInventoryTable(){
-        inventoryTable = new Table();
-        inventoryTable.setSize(910, 510);
-        inventoryTable.setPosition((Gdx.graphics.getWidth()/2f - inventoryTable.getWidth()/2 + 60),
-                (Gdx.graphics.getHeight() + 160) / 2f - inventoryTable.getHeight()/2);
-        inventoryTable.setDebug(false);
-        inventoryTable.top();
-        inventoryTable.setBackground(menuManager.generateTextureRegionDrawableObject("popup_bg"));
-        inventoryTable.setName("inventoryTable");
+        baseTable = new Table();
+        baseTable.setSize(910, 510);
+        baseTable.setPosition((Gdx.graphics.getWidth()/2f - baseTable.getWidth()/2 + 60),
+                (Gdx.graphics.getHeight() + 160) / 2f - baseTable.getHeight()/2);
+        baseTable.setDebug(false);
+        baseTable.top();
+        baseTable.setBackground(menuManager.generateTextureRegionDrawableObject("popup_bg"));
+        baseTable.setName("baseTable");
 
-        return inventoryTable;
+        return baseTable;
     }
 
     /**
@@ -235,12 +242,12 @@ public class InventoryTable extends AbstractPopUpElement {
      * @return infoPanel
      */
     private Table setInfoPanel(){
-        Table infoPanel = new Table();
-        infoPanel.setSize(410, 320);
-        infoPanel.setPosition(25, 98);
-        infoPanel.setBackground(menuManager.generateTextureRegionDrawableObject("Description_Panel"));
+        Table table = new Table();
+        table.setSize(410, 320);
+        table.setPosition(25, 98);
+        table.setBackground(menuManager.generateTextureRegionDrawableObject("Description_Panel"));
 
-        return infoPanel;
+        return table;
     }
 
     /**
@@ -343,6 +350,8 @@ public class InventoryTable extends AbstractPopUpElement {
         }
     }
 
+    private static final String SELECTED_SUFFIX = "-selected";
+
     /**
      * Sets the item icons and counts in the resource panel.
      * @param inventoryAmounts Map<String, Integer> of inventory contents
@@ -354,9 +363,10 @@ public class InventoryTable extends AbstractPopUpElement {
     private void setCounts(Map<String, Integer> inventoryAmounts, int xpos, int ypos, int size, int xspace){
         float count = 0;
 
+
         for (Map.Entry<String, Integer> entry : inventoryAmounts.entrySet()) {
             Image selected = new Image(menuManager.generateTextureRegionDrawableObject("selected"));
-            selected.setName(entry.getKey() + "-selected");
+            selected.setName(entry.getKey() + SELECTED_SUFFIX);
             selected.setSize((float) size + 20, (float) size + 20);
             selected.setPosition((float)(xpos + -10 + (size+xspace)*(count-1)), (float) ypos -10);
             selected.setVisible(false);
@@ -366,43 +376,8 @@ public class InventoryTable extends AbstractPopUpElement {
                     new ImageButton(menuManager.generateTextureRegionDrawableObject(itemName + "_inv"));
             icon.setName(entry.getKey());
             icon.setSize((float)size, (float)size);
-            icon.setPosition((float)(xpos + (size+xspace)*(count-1)), ypos);
-
-            icon.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-
-                    if(!inventorySelected.equals(icon.getName())){
-                        inventorySelected = icon.getName();
-                    }else{
-                        inventorySelected = "";
-                    }
-
-                    Actor selected = stage.getRoot().findActor(icon.getName() + "-selected");
-
-                    if(selected.isVisible()){
-                        selected.setVisible(false);
-                        setButtonsActive(false);
-
-                    }else{
-                        for(Actor actor: resourcePanel.getChildren()){
-                            String name = actor.getName();
-                            if(name != null && name.contains("-selected")){
-                                actor.setVisible(false);
-                            }
-                        }
-
-                        selected.setVisible(true);
-
-                        setButtonsActive(true);
-
-                    }
-
-                    updateItemInfo();
-
-                }
-            });
-
+            icon.setPosition(xpos + (size+xspace)*(count-1), ypos);
+            iconAddListener(icon);
             resourcePanel.addActor(selected);
             resourcePanel.addActor(icon);
 
@@ -426,6 +401,43 @@ public class InventoryTable extends AbstractPopUpElement {
                 count = 0;
             }
         }
+    }
+
+    private void iconAddListener(ImageButton icon) {
+        icon.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+
+                if(!inventorySelected.equals(icon.getName())){
+                    inventorySelected = icon.getName();
+                }else{
+                    inventorySelected = "";
+                }
+
+                Actor selected = stage.getRoot().findActor(icon.getName() + SELECTED_SUFFIX);
+
+                if(selected.isVisible()){
+                    selected.setVisible(false);
+                    setButtonsActive(false);
+
+                }else{
+                    for(Actor actor: resourcePanel.getChildren()){
+                        String name = actor.getName();
+                        if(name != null && name.contains(SELECTED_SUFFIX)){
+                            actor.setVisible(false);
+                        }
+                    }
+
+                    selected.setVisible(true);
+
+                    setButtonsActive(true);
+
+                }
+
+                updateItemInfo();
+
+            }
+        });
     }
 
 }

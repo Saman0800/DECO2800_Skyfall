@@ -27,9 +27,10 @@ public class OceanBiome extends AbstractBiome {
 
     /**
      * Loads a biome from a memento
+     *
      * @param memento The memento that holds the save data
      */
-    public OceanBiome(AbstractBiomeMemento memento){
+    public OceanBiome(AbstractBiomeMemento memento) {
         super(memento);
         textureGenerator = new NoiseGenerator(memento.noiseGeneratorSeed, 5, 160, 0.9);
     }
@@ -80,7 +81,6 @@ public class OceanBiome extends AbstractBiome {
 
     @Override
     public void setTileTexture(Tile tile) {
-        // TODO:Ontonator Fix ths once Dan's algorithm is complete.
         tile.setTexture("ocean_1");
     }
 }

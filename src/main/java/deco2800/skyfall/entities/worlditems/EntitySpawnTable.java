@@ -36,7 +36,6 @@ public final class EntitySpawnTable {
         // instead of checking the number of
         // neighbours each time.
         double adjustmentFactor = rule.getLimitAdjacentValue();
-        // FIXME:Ontonator Check that this actualy works with chunks.
         adjustmentFactor = Math.pow(adjustmentFactor,
                 nextTile.getNeighbours().values().stream().filter(Tile::isObstructed).count());
 
