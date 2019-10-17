@@ -372,6 +372,10 @@ public class GameMenuManager extends TickableManager {
                 new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this, questManager, skin));
 
+        popUps.put("teleportTable", new TeleportTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject(exitText)),
+                null, textureManager, this,
+                questManager, skin));
         Map<String, AbstractUIElement> hudElements = new HashMap<>();
 
         hudElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"},

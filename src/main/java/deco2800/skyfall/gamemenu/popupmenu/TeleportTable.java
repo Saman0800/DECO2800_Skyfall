@@ -1,13 +1,17 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import deco2800.skyfall.buildings.AbstractPortal;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.QuestManager;
 import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.saving.Save;
 
 public class TeleportTable extends AbstractPopUpElement {
     private final QuestManager qm;
@@ -15,6 +19,9 @@ public class TeleportTable extends AbstractPopUpElement {
     private Table baseTable;
     private Label locationLabel;
     private Label teleportLabel;
+    private Save save;
+    private AbstractPortal portal;
+
     public TeleportTable(Stage stage, ImageButton exit, String[] textureNames,
                          TextureManager tm, GameMenuManager gameMenuManager,
                          QuestManager qm, Skin skin) {
@@ -99,7 +106,12 @@ public class TeleportTable extends AbstractPopUpElement {
         baseTable.row();
         baseTable.setVisible(false);
 
-
+        teleport.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                portal.teleport(save);
+            }
+        });
 
         locationLabel = new Label("LOCATION: ERR", skin, "white-text");
         locationLabel.setFontScale(0.8f);
@@ -117,4 +129,12 @@ public class TeleportTable extends AbstractPopUpElement {
         stage.addActor(baseTable);
     }
 
+
+    public void setSave(Save save) {
+        this.save = save;
+    }
+
+    public void setPortal(AbstractPortal abstractPortal) {
+        this.portal = abstractPortal;
+    }
 }
