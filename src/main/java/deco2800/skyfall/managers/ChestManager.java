@@ -71,7 +71,7 @@ public class ChestManager extends InventoryManager {
      */
     public ChestManager() {
         initInventory(new HashMap<>());
-        HAS_QUICK_ACCESS = false;
+        hasQuickAccess = false;
     }
 
     /**
