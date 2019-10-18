@@ -13,7 +13,6 @@ import java.util.Map;
 public class GoldTable extends AbstractPopUpElement{
     private final Skin skin;
     private final StatisticsManager sm;
-    private Table baseTable;
     private Table goldPanel;
 
     public GoldTable(Stage stage, ImageButton exit, String[] textureNames,
@@ -25,17 +24,6 @@ public class GoldTable extends AbstractPopUpElement{
         this.draw();
     }
 
-    @Override
-    public void hide() {
-        super.hide();
-        baseTable.setVisible(false);
-    }
-
-    @Override
-    public void show() {
-        super.show();
-        baseTable.setVisible(true);
-    }
 
     @Override
     public void update() {

@@ -21,9 +21,6 @@ import java.util.Map;
 
 
 public class InventoryTable extends AbstractPopUpElement {
-    //The inventory table
-    private Table baseTable;
-
     //Resource panel on right side of inventory table
     private Table resourcePanel;
 

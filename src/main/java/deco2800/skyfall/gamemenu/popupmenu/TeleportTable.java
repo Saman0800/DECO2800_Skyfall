@@ -14,7 +14,6 @@ import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.saving.Save;
 
 public class TeleportTable extends AbstractPopUpElement {
-    private final QuestManager qm;
     private Skin skin;
     private Table baseTable;
     private Label locationLabel;
@@ -28,27 +27,8 @@ public class TeleportTable extends AbstractPopUpElement {
         super(stage,exit, textureNames, tm, gameMenuManager);
 
         this.skin = skin;
-        this.qm = qm;
         this.draw();
 
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void hide() {
-        super.hide();
-        baseTable.setVisible(false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void show() {
-        super.show();
-        baseTable.setVisible(true);
     }
 
 
