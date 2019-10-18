@@ -577,8 +577,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
                     entityToBeDeleted = entity;
                 }
             } else if (entity instanceof BlueprintShop) {
-                GameMenuManager menuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
-                BlueprintShopTable bs = (BlueprintShopTable) menuManager.getPopUp("blueprintShopTable");
+                BlueprintShopTable bs = (BlueprintShopTable) gmm.getPopUp("blueprintShopTable");
                 bs.updateBlueprintShopPanel();
                 gmm.setPopUp("blueprintShopTable");
             } else if (entity instanceof BuildingEntity) {

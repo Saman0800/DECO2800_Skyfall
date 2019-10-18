@@ -36,8 +36,8 @@ public class BlueprintShopTable extends AbstractPopUpElement {
                               GameMenuManager gameMenuManager, StatisticsManager sm, Skin skin) {
         super(stage, exit, textureNames, tm, gameMenuManager);
         this.skin = skin;
-        this.draw();
         this.sm = sm;
+        this.draw();
     }
 
     /**
