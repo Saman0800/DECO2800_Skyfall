@@ -615,9 +615,6 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         }
 
         if (entityToBeDeleted != null) {
-            if (entityToBeDeleted instanceof Harvestable) {
-                List<AbstractEntity> drops = ((Harvestable) entityToBeDeleted).harvest(tile);
-            }
             removeEntity(entityToBeDeleted);
             entityToBeDeleted = null;
         }
