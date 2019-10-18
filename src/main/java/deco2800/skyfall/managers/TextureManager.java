@@ -6,9 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Texture manager acts as a cache between the file system and the renderers.
@@ -105,14 +103,33 @@ public class TextureManager extends AbstractManager {
             textureMap.put("ruinedRobot", new Texture("resources/Environment/ruinedRobot.png"));
 
             // New Enemies (Scout, Heavy, Abductor)
-            textureMap.put("enemyScout_Move_N", new Texture("resources/Enemies/Scout/enemy1_B_walk.png"));
-            textureMap.put("enemyScout_Move_NW", new Texture("resources/Enemies/Scout/enemy1_BL_walk.png"));
-            textureMap.put("enemyScout_Move_NE", new Texture("resources/Enemies/Scout/enemy1_BR_walk.png"));
-            textureMap.put("enemyScout_Move_S", new Texture("resources/Enemies/Scout/enemy1_F_walk.png"));
-            textureMap.put("enemyScout_Move_SW", new Texture("resources/Enemies/Scout/enemy1_FL_walk.png"));
-            textureMap.put("enemyScout_Move_SE", new Texture("resources/Enemies/Scout/enemy1_FR_walk.png"));
-            textureMap.put("enemyScout_Move_W", new Texture("resources/Enemies/Scout/enemy1_L_walk.png"));
-            textureMap.put("enemyScout_Move_E", new Texture("resources/Enemies/Scout/enemy1_R_walk.png"));
+            textureMap.put("enemyScout", new Texture("resources/Enemies/Scout/enemy4_B_walk.png"));
+            textureMap.put("enemyScout_Move_N", new Texture("resources/Enemies/Scout/enemy4_B_walk.png"));
+            textureMap.put("enemyScout_Move_NW", new Texture("resources/Enemies/Scout/enemy4_BL_walk.png"));
+            textureMap.put("enemyScout_Move_NE", new Texture("resources/Enemies/Scout/enemy4_BR_walk.png"));
+            textureMap.put("enemyScout_Move_S", new Texture("resources/Enemies/Scout/enemy4_F_walk.png"));
+            textureMap.put("enemyScout_Move_SW", new Texture("resources/Enemies/Scout/enemy4_FL_walk.png"));
+            textureMap.put("enemyScout_Move_SE", new Texture("resources/Enemies/Scout/enemy4_FR_walk.png"));
+            textureMap.put("enemyScout_Move_W", new Texture("resources/Enemies/Scout/enemy4_L_walk.png"));
+            textureMap.put("enemyScout_Move_E", new Texture("resources/Enemies/Scout/enemy4_R_walk.png"));
+
+            textureMap.put("enemyScout_Attack_N", new Texture("resources/Enemies/Scout/enemy4_B_attack.png"));
+            textureMap.put("enemyScout_Attack_NW", new Texture("resources/Enemies/Scout/enemy4_BL_attack.png"));
+            textureMap.put("enemyScout_Attack_NE", new Texture("resources/Enemies/Scout/enemy4_BR_attack.png"));
+            textureMap.put("enemyScout_Attack_S", new Texture("resources/Enemies/Scout/enemy4_F_attack.png"));
+            textureMap.put("enemyScout_Attack_SW", new Texture("resources/Enemies/Scout/enemy4_FL_attack.png"));
+            textureMap.put("enemyScout_Attack_SE", new Texture("resources/Enemies/Scout/enemy4_FR_attack.png"));
+            textureMap.put("enemyScout_Attack_W", new Texture("resources/Enemies/Scout/enemy4_L_attack.png"));
+            textureMap.put("enemyScout_Attack_E", new Texture("resources/Enemies/Scout/enemy4_R_attack.png"));
+
+            textureMap.put("enemyScout_Damage_N", new Texture("resources/Enemies/Scout/enemy4_B_damage.png"));
+            textureMap.put("enemyScout_Damage_NW", new Texture("resources/Enemies/Scout/enemy4_BL_damage.png"));
+            textureMap.put("enemyScout_Damage_NE", new Texture("resources/Enemies/Scout/enemy4_BR_damage.png"));
+            textureMap.put("enemyScout_Damage_S", new Texture("resources/Enemies/Scout/enemy4_F_damage.png"));
+            textureMap.put("enemyScout_Damage_SW", new Texture("resources/Enemies/Scout/enemy4_FL_damage.png"));
+            textureMap.put("enemyScout_Damage_SE", new Texture("resources/Enemies/Scout/enemy4_FR_damage.png"));
+            textureMap.put("enemyScout_Damage_W", new Texture("resources/Enemies/Scout/enemy4_L_damage.png"));
+            textureMap.put("enemyScout_Damage_E", new Texture("resources/Enemies/Scout/enemy4_R_damage.png"));
 
             textureMap.put("enemyAbductor", new Texture("resources/Enemies/Abductor/enemy3_F.png"));
             textureMap.put("enemyAbductor_Move_N", new Texture("resources/Enemies/Abductor/enemy3_B_walk.png"));
@@ -272,6 +289,8 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("big_circle", new Texture("resources/new_ui/OrangeCircle.png"));
             textureMap.put("inner_circle", new Texture("resources/new_ui/RedCircle.png"));
+            textureMap.put("mana_big_circle", new Texture("resources/new_ui/LightBlueCircle.png"));
+            textureMap.put("mana_inner_circle", new Texture("resources/new_ui/BlueCircle.png"));
             textureMap.put("blue_pill", new Texture("resources/new_ui/blue_pill_background.png"));
             textureMap.put("green_pill", new Texture("resources/new_ui/green_pill_background.png"));
             textureMap.put("build_button", new Texture("resources/new_ui/build_section.png"));
@@ -529,14 +548,8 @@ public class TextureManager extends AbstractManager {
             }
 
         } else {
-            // log.info("Texture map does not contain P{}, returning default texture.", id);
-            // TODO fix the issue where tiles are not getting added to lakes correctly,
-            // Temporary fix is just to assign tiles without a texture the lake texture so
-            // that the
-            // issue isn't as noticable
             return textureMap.get("lake1.1");
         }
-
     }
 
     /**

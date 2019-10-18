@@ -60,7 +60,7 @@ public class HealthCircle extends AbstractUIElement {
         float diff = currentHealth - newHealth;
 
         smallerCircle.setSize((float) 2 * newHealth,
-                    (float) 2 * newHealth);
+                (float) 2 * newHealth);
 
         offset += (diff * 2) / 2;
         smallerCircle.setPosition(positionX + offset, positionY + offset);
@@ -98,7 +98,7 @@ public class HealthCircle extends AbstractUIElement {
      */
     @Override
     public void updatePosition() {
-        positionX = gmm.getTopRightX() - stage.getCamera().viewportWidth / 2;
+        positionX = gmm.getTopRightX() - stage.getCamera().viewportWidth / 2 + 100;
         positionY = gmm.getTopRightY() - 100;
         smallerCircle.setPosition(positionX + offset, positionY + offset);
         biggerCircle.setPosition(positionX, positionY);

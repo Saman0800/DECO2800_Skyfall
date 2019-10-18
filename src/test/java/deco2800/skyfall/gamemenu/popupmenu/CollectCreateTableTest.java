@@ -73,6 +73,10 @@ public class CollectCreateTableTest extends BaseGDXTest {
         when(qm.checkMetal()).thenReturn(true);
         when(qm.checkStone()).thenReturn(true);
         when(qm.checkWood()).thenReturn(true);
+        when(qm.checkWeapons("sword")).thenReturn(true);
+        when(qm.checkWeapons("spear")).thenReturn(true);
+        when(qm.checkWeapons("bow")).thenReturn(true);
+        when(qm.checkWeapons("axe")).thenReturn(true);
         element.setComplete();
         assertTrue(element.getComplete().isVisible());
     }
@@ -91,16 +95,30 @@ public class CollectCreateTableTest extends BaseGDXTest {
     @Test
     public void updateTextTest() {
         element = new CollectCreateTable(stage, exitButton, null, tm,  gmm, qm, skin, "collect");
+
         when(qm.getGoldTotal()).thenReturn(30);
         when(qm.getMetalTotal()).thenReturn(30);
         when(qm.getWoodTotal()).thenReturn(30);
         when(qm.getStoneTotal()).thenReturn(30);
+
+        when(qm.getWeaponsTotal("sword")).thenReturn(10);
+        when(qm.getWeaponsTotal("spear")).thenReturn(10);
+        when(qm.getWeaponsTotal("bow")).thenReturn(10);
+        when(qm.getWeaponsTotal("axe")).thenReturn(10);
+
         element.updateText();
 
         assertEquals("30 x Gold" ,element.getLabelGold().getText().toString());
         assertEquals("30 x Metal" ,element.getLabelMetal().getText().toString());
         assertEquals("30 x Wood" ,element.getLabelWood().getText().toString());
         assertEquals("30 x Stone" ,element.getLabelStone().getText().toString());
+
+        assertEquals("10 x Sword" ,element.getLabelSword().getText().toString());
+        assertEquals("10 x Spear" ,
+                element.getLabelSpear().getText().toString());
+        assertEquals("10 x Bow" ,element.getLabelBow().getText().toString());
+        assertEquals("10 x Axe" ,
+                element.getLabelAxe().getText().toString());
 
     }
 

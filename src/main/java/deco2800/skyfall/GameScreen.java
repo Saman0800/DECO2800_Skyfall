@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import deco2800.skyfall.buildings.ForestPortal;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.enemies.Abductor;
@@ -38,7 +39,6 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.InventoryManager;
-import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.PathFindingService;
 import deco2800.skyfall.managers.QuestManager;
 import deco2800.skyfall.managers.SpawningManager;
@@ -55,7 +55,6 @@ import deco2800.skyfall.util.lightinghelpers.IntensityFunction;
 import deco2800.skyfall.util.lightinghelpers.LinearSpectralValue;
 import deco2800.skyfall.util.lightinghelpers.SpectralValue;
 import deco2800.skyfall.util.lightinghelpers.TFTuple;
-import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.packing.BirthPlacePacking;
 import deco2800.skyfall.worlds.packing.EnvironmentPacker;
 import deco2800.skyfall.worlds.world.World;
@@ -132,14 +131,13 @@ public class GameScreen implements Screen, KeyDownObserver {
             save.setCurrentWorld(world);
             world.setSave(save);
             MainCharacter.getInstance().setSave(save);
-
-            gameManager.getManager(NetworkManager.class).connectToHost("localhost", "duck1234");
+            save.setMainCharacter(MainCharacter.getInstance());
         } else {
-            if (GameManager.get().isTutorial) {
+            if (GameManager.get().getIsTutorial()) {
                 world = WorldDirector.constructTutorialWorld(new WorldBuilder(), seed).getWorld();
             } else {
                 // Creating the world
-                world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), seed, 4, true).getWorld();
+                world = WorldDirector.constructSingleBiomeWorld(new WorldBuilder(), seed, true, "forest").getWorld();
             }
             save.getWorlds().add(world);
             save.setCurrentWorld(world);
@@ -150,6 +148,7 @@ public class GameScreen implements Screen, KeyDownObserver {
             packer.doPackings();
 
             MainCharacter.getInstance().setSave(save);
+            save.setMainCharacter(MainCharacter.getInstance());
 
             // FIXME:jeffvan12 implement better way of creating new stuff things
 
@@ -162,8 +161,6 @@ public class GameScreen implements Screen, KeyDownObserver {
             // MainCharacter.getInstance().setID(0);
             // DatabaseManager.get().getDataBaseConnector().saveGame(save);
             // DatabaseManager.get().getDataBaseConnector().saveAllTables();
-
-            gameManager.getManager(NetworkManager.class).startHosting("host");
         }
 
         gameManager.setWorld(world);
@@ -186,8 +183,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         MainCharacter mainCharacter = MainCharacter.getInstance();
         mainCharacter.setSave(save);
         world.addEntity(mainCharacter);
-
-        gameManager.getManager(NetworkManager.class).startHosting("host");
 
         StatisticsManager sm = new StatisticsManager(mainCharacter);
         GameManager.addManagerToInstance(sm);
@@ -454,40 +449,41 @@ public class GameScreen implements Screen, KeyDownObserver {
     @Override
     public void notifyKeyDown(int keycode) {
         if (keycode == Input.Keys.F12) {
-            GameManager.get().debugMode = !GameManager.get().debugMode;
+            GameManager.get().toggleDebugMode();
         }
 
         if (keycode == Input.Keys.F5) {
 
-            // Create a random world
-            world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), world.getSeed() + 1, 4, true)
-                    .getWorld();
-
-            // Add this world to the save
-            save.getWorlds().add(world);
-            save.setCurrentWorld(world);
-            world.setSave(save);
-            DatabaseManager.get().getDataBaseConnector().saveGame(save);
-
-            AbstractEntity.resetID();
-            Tile.resetID();
-            GameManager gameManager = GameManager.get();
-            gameManager.setWorld(world);
+            /*
+             * // Create a random world world =
+             * WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(),
+             * world.getSeed() + 1, 4, true) .getWorld();
+             * 
+             * // Add this world to the save save.getWorlds().add(world);
+             * save.setCurrentWorld(world); world.setSave(save);
+             * DatabaseManager.get().getDataBaseConnector().saveGame(save);
+             * 
+             * AbstractEntity.resetID(); Tile.resetID(); GameManager gameManager =
+             * GameManager.get(); gameManager.setWorld(world);
+             */
+            // Update the current music
+            ForestPortal portal = new ForestPortal(0, 0, 1);
+            portal.teleport(save);
         }
 
         if (keycode == Input.Keys.F11) { // F11
-            GameManager.get().showCoords = !GameManager.get().showCoords;
-            logger.info("Show coords is now {}", GameManager.get().showCoords);
+            GameManager.get().toggleShowCoords();
+            logger.info("Show coords is now {}", GameManager.get().getShowCoords());
         }
 
         if (keycode == Input.Keys.C) { // F11
-            GameManager.get().showCoords = !GameManager.get().showCoords;
-            logger.info("Show coords is now {}", GameManager.get().showCoords);
+            GameManager.get().toggleShowCoords();
+            logger.info("Show coords is now {}", GameManager.get().getShowCoords());
         }
 
         if (keycode == Input.Keys.F10) { // F10
-            GameManager.get().showPath = !GameManager.get().showPath;
-            logger.info("Show Path is now {}", GameManager.get().showPath);
+            GameManager.get().toggleDebugMode();
+            logger.info("Show Path is now {}", GameManager.get().getShowPath());
         }
 
         // FIXME:jeffvan12 should replace with acutal world saving and loading
@@ -563,9 +559,13 @@ public class GameScreen implements Screen, KeyDownObserver {
         Function<HexVector, ? extends Enemy> spawnAbductor = hexPos -> new Scout(hexPos.getCol(), hexPos.getRow(), 0.7f,
                 "Forest");
 
+        Function<HexVector, ? extends Enemy> spawnScout = hexPos -> new Scout(hexPos.getCol(), hexPos.getRow(), 0.2f,
+                "Forest");
+
         Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor = new HashMap<>();
         List<Function<HexVector, ? extends Enemy>> forestList = new ArrayList<>();
         forestList.add(spawnAbductor);
+        forestList.add(spawnScout);
 
         biomeToConstructor.put("forest", forestList);
 

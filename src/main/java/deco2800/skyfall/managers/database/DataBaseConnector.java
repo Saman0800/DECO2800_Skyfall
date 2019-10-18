@@ -172,7 +172,6 @@ public class DataBaseConnector {
         }
     }
 
-    // TODO:dannathan Fix or remove this.
     public void saveMainCharacter() throws SQLException {
         try {
             ContainsDataQueries containsQueries = new ContainsDataQueries(connection);
@@ -797,7 +796,7 @@ public class DataBaseConnector {
             return saves;
 
         } catch (Exception e) {
-            throw new RunTimeLoadException("Failed to load save information", e);
+            throw new RunTimeLoadException("Failed to load save information: " + e.getClass().getCanonicalName(), e);
         }
     }
 

@@ -195,14 +195,6 @@ public class WorldBuilder implements WorldBuilderInterface {
 
         Random random = new Random(worldSeed);
 
-        // FIXME:Ontonator Make this work properly.
-        // You can't spawn things here.
-        // Tile torchTile1 = world.getTile(0.0f, 5.0f);
-        // world.addEntity(new TikiTorch(torchTile1, false));
-        //
-        // Tile torchTile2 = world.getTile(0.0f, -3.0f);
-        // world.addEntity(new TikiTorch(torchTile2, false));
-
         for (AbstractBiome biome : world.getBiomes()) {
             ArrayList<EntitySpawnRule> biomeSpawnRules = new ArrayList<>();
             switch (biome.getBiomeName()) {
