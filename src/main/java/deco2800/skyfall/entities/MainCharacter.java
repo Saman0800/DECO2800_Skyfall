@@ -1750,36 +1750,70 @@ public class MainCharacter extends Peon
     }
 
     /***
+     * Checks if the player has sufficient resources , used in building a new item, returns true if the player
+     * has sufficient resources , false otherwise.
+     * @param newItem the new Item that the player wants to create
+     */
+    public boolean checkRequiredResources(Blueprint newItem){
+
+        if (newItem.getRequiredWood() > this.getInventoryManager().getAmount("Wood")) {
+            logger.info("You don't haven enough wood");
+            return false;
+
+        } else if (newItem.getRequiredStone() > this.getInventoryManager().getAmount("Stone")) {
+            logger.info("You don't haven enough stone");
+            return false;
+
+        } else if (newItem.getRequiredMetal() > this.getInventoryManager().getAmount("Metal")) {
+            logger.info("You don't haven enough metal");
+            return false;
+
+        } else {
+            return true;
+        }
+    }
+
+    /***
+     * Reduces the required resources form the player , used in item building
+     * @param newItem the new Item that the player wants to create
+     */
+    public void deductRequiredResources(Blueprint newItem){
+
+        this.getInventoryManager().dropMultiple("Metal", newItem.getRequiredMetal());
+        this.getInventoryManager().dropMultiple("Stone", newItem.getRequiredStone());
+        this.getInventoryManager().dropMultiple("Wood", newItem.getRequiredWood());
+    }
+
+    /***
      * Creates an item if the player has the blueprint. Checks if required resources
      * are in the inventory. if yes, creates the item, adds it to the player's
      * inventory and deducts the required resource from inventory
      */
-    public void createItem(Blueprint newItem) {
+    public void createItem (Blueprint newItem) {
 
-        for (Blueprint blueprint : getBlueprintsLearned()) {
-            if (blueprint.getClass() == newItem.getClass()) {
+        if (checkRequiredResources(newItem)){
 
-                // testing
-            } else {
-                switch (newItem.getName()) {
+            switch (newItem.getName()) {
+
                 case HATCHET:
                     this.getInventoryManager().add(new Hatchet());
                     break;
+
                 case PICK_AXE:
                     this.getInventoryManager().add(new PickAxe());
                     break;
+
                 case SWORD:
                     this.getInventoryManager().add(new Sword());
                     break;
                 case SPEAR:
                     this.getInventoryManager().add(new Spear());
                     break;
+
                 case BOW:
                     this.getInventoryManager().add(new Bow());
                     break;
 
-                // These are only placeholders and will change once coordinated
-                // with Building team
                 case "Cabin":
                     craftedBuildings.add(CABIN);
                     break;
@@ -1820,15 +1854,12 @@ public class MainCharacter extends Peon
                 case "volcanoPortal":
                     craftedBuildings.add(VOLCANOPORTAL);
                     break;
+
                 default:
                     logger.info("Invalid Item");
                     break;
                 }
-
-                this.getInventoryManager().dropMultiple("Metal", newItem.getRequiredMetal());
-                this.getInventoryManager().dropMultiple("Stone", newItem.getRequiredStone());
-                this.getInventoryManager().dropMultiple("Wood", newItem.getRequiredWood());
-            }
+                deductRequiredResources(newItem);
         }
     }
 

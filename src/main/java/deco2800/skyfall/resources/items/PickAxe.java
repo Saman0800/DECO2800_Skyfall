@@ -121,4 +121,35 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
         String message = String.format("Durability: %d", this.getDurability());
         logger.warn(message);
     }
+
+    /**
+     * Returns the number of wood required for the item.
+     *
+     * @return The name of the item
+     */
+    @Override
+    public int getRequiredWood() {
+        return 20;
+    }
+
+    /**
+     * Returns the number of stones required for the item.
+     *
+     * @return The name of the item
+     */
+    @Override
+    public int getRequiredStone() {
+        return 10;
+    }
+
+    /**
+     * Returns the number of metal required for the item.
+     *
+     * @return The name of the item
+     */
+    @Override
+    public int getRequiredMetal() {
+        return 4;
+    }
+
 }
