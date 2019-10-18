@@ -2,8 +2,11 @@ package deco2800.skyfall.resources;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public abstract class HealthResources extends AbstractEntity implements Item {
@@ -40,6 +43,10 @@ public abstract class HealthResources extends AbstractEntity implements Item {
 
     // the colour of the health resource
     protected String colour;
+
+    // Logger for class to display messages
+    private final transient Logger logger =
+            LoggerFactory.getLogger(InventoryManager.class);
 
 
 
