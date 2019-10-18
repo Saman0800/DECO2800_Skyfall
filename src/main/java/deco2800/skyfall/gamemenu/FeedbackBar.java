@@ -39,9 +39,9 @@ public class FeedbackBar extends AbstractUIElement {
         feedbackBar.setBackground(gmm.generateTextureRegionDrawableObject("feedback_bar"));
         feedbackBar.setSize(800, 55);
 
-        feedback = new Label("test", skin, "white-text");
+        feedback = new Label("Click 'HELP' if you get stuck", skin, "white-text");
         feedback.setFontScale(0.8f);
-        feedbackBar.add(feedback).padBottom(10);
+        feedbackBar.add(feedback);
         stage.addActor(feedbackBar);
     }
 
