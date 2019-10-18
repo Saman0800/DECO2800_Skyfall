@@ -223,6 +223,7 @@ public class MainCharacter extends Peon
     private boolean isHurt = false;
     private boolean isRecovering = false;
     private boolean isTexChanging = false;
+    public boolean isAbducted = false;
 
     /**
      * Item player is currently equipped with/holding.
@@ -1061,7 +1062,6 @@ public class MainCharacter extends Peon
         // Put specific collision logic here
     }
 
-
     private Map<Direction, String> vehicleDirection=new HashMap<>();
 
     private Map<Direction, String> vehicleDirection2 = new HashMap<>();
@@ -1375,6 +1375,9 @@ public class MainCharacter extends Peon
      * Moves the player based on current key inputs Called in onTick method
      */
     private void updatePosition() {
+        if (isAbducted) {
+            return;
+        }
         // Gets the players current position
         float xPos = position.getCol();
         float yPos = position.getRow();
@@ -1398,6 +1401,12 @@ public class MainCharacter extends Peon
         // If the player can move to the next tile process the movement
         if (checkTileMovement()) {
             this.processMovement();
+        } else {
+            recordVelHistory(0,0);
+            preventSliding(0,0);
+            getBody().applyForceToCenter(new Vector2(0, 0), true);
+            getBody().setLinearVelocity(getBody().getLinearVelocity().limit(maxSpeed));
+            updateVel();
         }
 
         // Updates the players position based on where their body is located
