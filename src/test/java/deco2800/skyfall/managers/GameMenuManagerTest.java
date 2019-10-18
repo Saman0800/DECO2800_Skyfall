@@ -5,7 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.gamemenu.AbstractUIElement;
-import deco2800.skyfall.gamemenu.HealthCircle;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -13,7 +12,6 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import static org.mockito.Mockito.*;
 
@@ -21,7 +19,6 @@ import static org.mockito.Mockito.*;
 public class GameMenuManagerTest {
     private GameMenuManager gmm;
     private TextureManager tm;
-    private SoundManager sm;
     private InventoryManager im;
     private Stage stage;
     private Skin skin;
@@ -32,7 +29,6 @@ public class GameMenuManagerTest {
     @Before
     public void setUp() {
         tm = mock(TextureManager.class);
-        sm = mock(SoundManager.class);
         im = mock(InventoryManager.class);
         stage = mock(Stage.class);
         skin = mock(Skin.class);
@@ -45,7 +41,7 @@ public class GameMenuManagerTest {
         camera.viewportHeight = 100;
         when(stage.getCamera()).thenReturn(camera);
 
-        gmm = new GameMenuManager(tm, sm, im, stage, skin, popUps, uiElements);
+        gmm = new GameMenuManager(tm, im, stage, skin, popUps, uiElements);
     }
 
     @Test
@@ -120,7 +116,6 @@ public class GameMenuManagerTest {
     @After()
     public void tearDown() {
         tm = null;
-        sm = null;
         im = null;
         stage = null;
         skin = null;
