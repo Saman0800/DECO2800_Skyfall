@@ -212,6 +212,8 @@ public abstract class HealthResources extends AbstractEntity implements Item {
         if (MainCharacter.getInstance().getHealth() < 50 && !MainCharacter.getInstance().isDead()) {
             // Add health to player
             MainCharacter.getInstance().changeHealth(getHealthValue());
+        }else{
+            logger.info("Health already at a maximum of 50, cannot add more");
         }
     }
 
