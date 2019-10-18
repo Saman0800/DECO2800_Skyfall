@@ -583,7 +583,6 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
                 gmm.setPopUp("blueprintShopTable");
             } else if (entity instanceof BuildingEntity) {
                 BuildingEntity e = (BuildingEntity) entity;
-                MainCharacter mc = gmm.getMainCharacter();
                 switch (e.getBuildingType()) {
                 case FORESTPORTAL:
                     ForestPortal forestPortal = new ForestPortal(0, 0, 0);
@@ -618,7 +617,6 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         if (entityToBeDeleted != null) {
             if (entityToBeDeleted instanceof Harvestable) {
                 List<AbstractEntity> drops = ((Harvestable) entityToBeDeleted).harvest(tile);
-                drops.forEach(this::addEntity);
             }
             removeEntity(entityToBeDeleted);
             entityToBeDeleted = null;
