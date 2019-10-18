@@ -19,7 +19,7 @@ public class FeedbackBar extends AbstractUIElement {
     private Label feedback;
 
     //Feedback bar
-    private Table feedbackBar;
+    private Table feedbackBarTable;
 
     public FeedbackBar(Stage stage, String[] textureNames, TextureManager tm, Skin skin, GameMenuManager gmm) {
         super(stage, textureNames, tm);
@@ -30,19 +30,31 @@ public class FeedbackBar extends AbstractUIElement {
 
     @Override
     public void updatePosition() {
-        feedbackBar.setPosition(gmm.getTopLeftX() + stage.getCamera().viewportWidth / 5, gmm.getBottomRightY());
+        feedbackBarTable.setPosition(gmm.getTopLeftX() + stage.getCamera().viewportWidth / 5, gmm.getBottomRightY());
     }
 
     @Override
     public void draw() {
-        feedbackBar = new Table();
-        feedbackBar.setBackground(gmm.generateTextureRegionDrawableObject("feedback_bar"));
-        feedbackBar.setSize(800, 55);
+        feedbackBarTable = new Table();
+        feedbackBarTable.setBackground(gmm.generateTextureRegionDrawableObject("feedback_bar"));
+        feedbackBarTable.setSize(800, 55);
 
         feedback = new Label("Click 'HELP' if you get stuck", skin, "white-text");
         feedback.setFontScale(0.8f);
-        feedbackBar.add(feedback);
-        stage.addActor(feedbackBar);
+        feedbackBarTable.add(feedback);
+        stage.addActor(feedbackBarTable);
+    }
+
+    public void updateText(String text) {
+        feedback.setText(text);
+    }
+
+    public void showFeedbackBar() {
+        feedbackBarTable.setVisible(true);
+    }
+
+    public void hideFeedbackBar() {
+        feedbackBarTable.setVisible(false);
     }
 
     @Override
