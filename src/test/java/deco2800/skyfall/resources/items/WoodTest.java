@@ -1,6 +1,5 @@
 package deco2800.skyfall.resources.items;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,9 +18,6 @@ public class WoodTest  {
         wood = new Wood();
     }
 
-    @After
-    public void tearDown()  {
-    }
 
     /**
      * Ensure that the getName method returns the name of the subclass
@@ -48,13 +44,6 @@ public class WoodTest  {
     @Test
     public void getSubtype1() {
         assertEquals("Natural Resource", wood.getSubtype());
-    }
-
-
-
-
-    @Test
-    public void getCoords1() {
     }
 
 

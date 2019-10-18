@@ -189,7 +189,7 @@ public class InventoryTable extends AbstractPopUpElement {
                 inactiveEquipButton.setVisible(false);
             } else {
                 equipButton.setVisible(false);
-                inactiveEquipButton.setVisible(false);
+                inactiveEquipButton.setVisible(true);
             }
         }else{
             inactiveAddqaButton.setVisible(true);
@@ -262,7 +262,7 @@ public class InventoryTable extends AbstractPopUpElement {
         this.dropButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(inventorySelected != null){
+                if(!inventorySelected.equals("")){
                     inventory.dropAll(inventorySelected);
                     inventorySelected = "";
                     setButtonsActive(false);
@@ -284,7 +284,7 @@ public class InventoryTable extends AbstractPopUpElement {
         this.equipButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (inventorySelected != null) {
+                if (!inventorySelected.equals("")) {
                     Item item = inventory.drop(inventorySelected);
                     if (mainCharacter.setEquippedItem(item)) {
                         gameMenuBar.setEquipped(item.getName());
@@ -311,7 +311,7 @@ public class InventoryTable extends AbstractPopUpElement {
         this.addqaButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(inventorySelected != null) {
+                if(!inventorySelected.equals("")) {
                     inventory.quickAccessAdd(inventorySelected);
                     inventorySelected = "";
                     gameMenuBar.removeQuickAccessPanel();
@@ -340,7 +340,7 @@ public class InventoryTable extends AbstractPopUpElement {
      * what item is selected.
      */
     private void updateItemInfo(){
-        if (inventorySelected != null){
+        if (!inventorySelected.equals("")){
             infoPanel.setBackground(menuManager.generateTextureRegionDrawableObject(inventorySelected + "_desc"));
         } else{
             infoPanel.setBackground(menuManager.generateTextureRegionDrawableObject("Description_Panel"));

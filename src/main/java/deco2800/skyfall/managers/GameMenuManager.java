@@ -353,9 +353,6 @@ public class GameMenuManager extends TickableManager {
         popUps.put("gameOverTable", new GameOverTable(stage,
                 null, null, textureManager, this));
 
-        popUps.put("blueprintShopTable", new BlueprintShopTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject(exitText)),
-                null, textureManager, this, sm, skin));
 
         popUps.put("constructionTable", new ConstructionTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
@@ -389,6 +386,10 @@ public class GameMenuManager extends TickableManager {
         hudElements.put("clock" , new Clock(stage, skin, this, em));
 
         uiElements.put("HUD", new HeadsUpDisplay(stage, null, textureManager, skin, this, hudElements, questManager));
+
+        popUps.put("blueprintShopTable", new BlueprintShopTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject(exitText)),
+                null, textureManager, this, sm, skin));
 
         popUps.put("inventoryTable",
                 new InventoryTable(stage, new ImageButton(generateTextureRegionDrawableObject(exitText)),
