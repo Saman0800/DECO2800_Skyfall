@@ -151,6 +151,8 @@ public class MainCharacter extends Peon
     public static final String SWORDATTACK = "sword_standard";
     public static final String SPEARATTACK = "spear";
 
+    public static final String DRIVEBIKE = "flower_open";
+
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
 
@@ -1073,6 +1075,7 @@ public class MainCharacter extends Peon
 
     boolean petout = false;
 
+
     /**
      * Sets the appropriate movement flags to true on keyDown
      *
@@ -1157,6 +1160,9 @@ public class MainCharacter extends Peon
                     vehicle = (Bike) ve;
                     ((Bike) vehicle).removeBike();
                     isOnVehicle=true;
+                    SoundManager.stopSound(WALK_NORMAL);
+                    isMoving = false;
+                    SoundManager.loopSound(DRIVEBIKE);
                     setCurrentState(AnimationRole.NULL);
                     vehicleTexture("bike");
                     setAcceleration(25.f);
@@ -1600,9 +1606,10 @@ public class MainCharacter extends Peon
     }
 
     private void movementSound() {
-        if (!isMoving && vel != 0) {
+        if (!isMoving && vel != 0 && !isOnVehicle) {
             // Runs when the player starts moving
             isMoving = true;
+            SoundManager.stopSound(DRIVEBIKE);
             SoundManager.loopSound(WALK_NORMAL);
         }
 
@@ -1612,6 +1619,8 @@ public class MainCharacter extends Peon
             SoundManager.stopSound(WALK_NORMAL);
         }
     }
+
+
 
     public void addBlueprint(Blueprint blueprint) {
         if (blueprint != null) {
@@ -1944,6 +1953,7 @@ public class MainCharacter extends Peon
         defaultMainCharacterTextureMap.put(Direction.NORTH_WEST, "__ANIMATION_MainCharacterNW_Anim:0");
         defaultMainCharacterTextureMap.put(Direction.SOUTH_EAST, "__ANIMATION_MainCharacterSE_Anim:0");
         defaultMainCharacterTextureMap.put(Direction.SOUTH_WEST, "__ANIMATION_MainCharacterSW_Anim:0");
+
         // Bike
         vehicleDirection.put(Direction.SOUTH, "bikeSOUTH");
         vehicleDirection.put(Direction.EAST, "bikeEAST");
@@ -1974,13 +1984,12 @@ public class MainCharacter extends Peon
     public void updateAnimation() {
         getPlayerDirectionCardinal();
 
-        /* Short Animations */
+        /* Short Animations for vehicles */
         if (!isOnVehicle) {
             if (getToBeRun() != null &&
                     getToBeRun().getType() == AnimationRole.ATTACK) {
                 return;
             }
-
             if (isDead()) {
                 setCurrentState(AnimationRole.STILL);
             } else if (isHurt) {
@@ -1992,17 +2001,21 @@ public class MainCharacter extends Peon
                     setCurrentState(AnimationRole.MOVE);
                 }
             }
-        } else if(vehicleType.equals("bike")){
-            if (getVelocity().get(2) == 0f) {
-                setCurrentState(AnimationRole.NULL);
-            } else {
-                setCurrentState(AnimationRole.VEHICLE_BIKE_MOVE);
-            }
-        }else if(vehicleType.equals("sand_car")){
-            if (getVelocity().get(2) == 0f) {
-                setCurrentState(AnimationRole.NULL);
-            } else {
-                setCurrentState(AnimationRole.VEHICLE_MOVE);
+        } else {
+            if(vehicleType.equals("bike")){
+                if (getVelocity().get(2) == 0f) {
+                    setCurrentState(AnimationRole.NULL);
+                    SoundManager.stopSound(DRIVEBIKE);
+                } else {
+                    setCurrentState(AnimationRole.VEHICLE_BIKE_MOVE);
+                    SoundManager.loopSound(DRIVEBIKE);
+                }
+            }else if(vehicleType.equals("sand_car")){
+                if (getVelocity().get(2) == 0f) {
+                    setCurrentState(AnimationRole.NULL);
+                } else {
+                    setCurrentState(AnimationRole.VEHICLE_MOVE);
+                }
             }
         }
     }
