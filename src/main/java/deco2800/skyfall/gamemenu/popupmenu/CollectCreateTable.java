@@ -29,6 +29,7 @@ public class CollectCreateTable extends AbstractPopUpElement {
     private static final String AXE = "axe";
     private static final String SPEAR = "spear";
     private static final String BOW = "bow";
+    private static final String WHITE_TEXT = "white-text";
 
     private Label labelGold;
     private Label labelMetal;
@@ -86,7 +87,7 @@ public class CollectCreateTable extends AbstractPopUpElement {
 
             for (BuildingType entry :  buildingsTotal) {
                 String currentText  = String.format("1 x %s", entry.toString());
-                labelTable.add(new Label(currentText, skin, "white-text")).left();
+                labelTable.add(new Label(currentText, skin, WHITE_TEXT)).left();
                 labelTable.row();
             }
         }
@@ -139,7 +140,7 @@ public class CollectCreateTable extends AbstractPopUpElement {
     }
 
     private void populateItems() {
-        String whiteText = "white-text";
+        String whiteText = WHITE_TEXT;
         String format = "%d x %s";
 
         String currentText  = String.format(format, qm.getGoldTotal(), "Gold");
@@ -200,7 +201,7 @@ public class CollectCreateTable extends AbstractPopUpElement {
 
         String currentText;
         Color color;
-        String whiteText = "white-text";
+        String whiteText = WHITE_TEXT;
         String format = "%d x %s";
 
         if ((qm.checkWeapons(SWORD) && qm.checkWeapons(SPEAR) &&
