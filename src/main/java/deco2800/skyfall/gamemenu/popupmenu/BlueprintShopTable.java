@@ -13,7 +13,6 @@ import deco2800.skyfall.resources.Blueprint;
 
 import java.util.List;
 
-
 /**
  * A class for blueprint shop table pop up.
  */
@@ -33,11 +32,12 @@ public class BlueprintShopTable extends AbstractPopUpElement {
      * @param skin            Current skin.
      */
     public BlueprintShopTable(Stage stage, ImageButton exit, String[] textureNames, TextureManager tm,
-                              GameMenuManager gameMenuManager, StatisticsManager sm, Skin skin) {
+            GameMenuManager gameMenuManager, StatisticsManager sm, Skin skin) {
         super(stage, exit, textureNames, tm, gameMenuManager);
         this.skin = skin;
-        this.draw();
         this.sm = sm;
+        this.draw();
+
     }
 
     /**
@@ -64,7 +64,6 @@ public class BlueprintShopTable extends AbstractPopUpElement {
         infoBar.setPosition(130, 435);
         Label text = new Label("Blueprint Shop", skin, "navy-text");
         infoBar.add(text);
-
         this.blueprintPanel = new Table();
 
         baseTable.addActor(infoBar);
@@ -91,8 +90,8 @@ public class BlueprintShopTable extends AbstractPopUpElement {
 
         for (Blueprint b : unlocked) {
 
-            ImageButton icon =
-                    new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(b.getName() + "_inv"));
+            ImageButton icon = new ImageButton(
+                    gameMenuManager.generateTextureRegionDrawableObject(b.getName() + "_inv"));
             icon.setName("icon");
             icon.setSize(100, 100);
             icon.setPosition(xpos + count * 130, ypos);

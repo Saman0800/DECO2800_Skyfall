@@ -18,8 +18,8 @@ public class ManufacturedResourcesTest {
     public void setUp() {
 
 
-        hatchet = new Hatchet(testOwner,testPosition);
-        pickAxe = new PickAxe(testOwner,testPosition);
+        hatchet = new Hatchet();
+        pickAxe = new PickAxe();
 
     }
 

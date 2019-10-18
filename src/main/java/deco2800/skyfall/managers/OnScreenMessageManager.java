@@ -1,6 +1,10 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.enemies.Abductor;
+import deco2800.skyfall.entities.enemies.Enemy;
+import deco2800.skyfall.entities.enemies.Heavy;
+import deco2800.skyfall.entities.enemies.Scout;
 import deco2800.skyfall.handlers.KeyboardManager;
 import deco2800.skyfall.observers.KeyTypedObserver;
 
@@ -14,11 +18,11 @@ public class OnScreenMessageManager extends AbstractManager implements KeyTypedO
 
 	/**handles a set time invocation
 	 * Silently fails if something goes wrong
-	 * @param unsentMessage the recieved message, needs to be set_time*/
-	private void handleSetTime(String unsentMessage) {
+	 * @param unsentMessage the recieved message, needs to be /set_time*/
+	private String handleSetTime(String unsentMessage) {
 		String[] split = unsentMessage.split("@", 3);
 		if (split.length != 3) {
-			return;
+			return "Invalid usauge";
 		}
 		int min;
 		int hours;
@@ -28,9 +32,39 @@ public class OnScreenMessageManager extends AbstractManager implements KeyTypedO
 			min = Integer.parseInt(split[2]);
 		}
 		catch (NumberFormatException e) {
-			return;
+			return "Invalid hour/min";
 		}
 		GameManager.get().getManager(EnvironmentManager.class).setTime(hours, min);
+		return "Time set";
+	}
+
+	/**
+	 * Spawns enemy on player location
+	 * @param unsetMessage the recieved message, must start /spawn_enemy
+	 */
+	private String handleSpawnEnemy(String unsentMessage) {
+		String[] split = unsentMessage.split("@", 2);
+		if (split.length != 2) {
+			return "Invalid usauge";
+		}
+		Enemy enemyToSpawn = null;
+		float row = MainCharacter.getInstance().getRow();
+		float col = MainCharacter.getInstance().getCol();
+		switch (split[1]) {
+			case "abductor":
+				enemyToSpawn = new Abductor(col, row, 1.0f, "Forest");
+				break;
+			case "heavy":
+				enemyToSpawn = new Heavy(col, row, 1.0f, "Forest");
+				break;
+			case "scout":
+				enemyToSpawn = new Scout(col, row, 1.0f, "Forest");
+				break;
+			default:
+				return "Invalid option for spawning";
+		}
+		GameManager.get().getWorld().addEntity(enemyToSpawn);
+		return "Spawned " + split[1];
 	}
 
 	public OnScreenMessageManager() {
@@ -88,7 +122,9 @@ public class OnScreenMessageManager extends AbstractManager implements KeyTypedO
 					// Display inventory in the console
 					this.addMessage(String.format(GameManager.getManagerFromInstance(InventoryManager.class).toString()));
 				}  else	if (unsentMessage.startsWith("/set_time")) { // set time, as set_time@hh@mm
-					handleSetTime(unsentMessage);
+					this.addMessage(handleSetTime(unsentMessage));
+				} else if (unsentMessage.startsWith("/enemy")) { // spawns enemy of type, as /enemy@{EnemyType}
+					this.addMessage(handleSpawnEnemy(unsentMessage));
 				}
 				GameManager.get().getCamera().setPotate(false);
 				unsentMessage = "";

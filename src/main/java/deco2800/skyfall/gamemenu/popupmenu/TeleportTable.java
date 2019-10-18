@@ -9,21 +9,18 @@ import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.buildings.AbstractPortal;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.managers.QuestManager;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.saving.Save;
 
 public class TeleportTable extends AbstractPopUpElement {
     private Skin skin;
-    private Table baseTable;
     private Label locationLabel;
     private Label teleportLabel;
     private Save save;
     private AbstractPortal portal;
 
     public TeleportTable(Stage stage, ImageButton exit, String[] textureNames,
-                         TextureManager tm, GameMenuManager gameMenuManager,
-                         QuestManager qm, Skin skin) {
+                         TextureManager tm, GameMenuManager gameMenuManager, Skin skin) {
         super(stage,exit, textureNames, tm, gameMenuManager);
 
         this.skin = skin;

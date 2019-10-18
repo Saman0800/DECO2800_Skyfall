@@ -17,7 +17,6 @@ public class SkyfallGame extends Game {
 	 * The SpriteBatch for the game
 	 */
 	private SpriteBatch batch;
-	// TODO:jeffvan Remove these or use them to configure the database location.
 	public static final String SAVE_ROOT_DIR = "skyfall-saves";
 	private FileHandle saveRootHandle;
 	private MainMenuScreen mainMenuScreen;

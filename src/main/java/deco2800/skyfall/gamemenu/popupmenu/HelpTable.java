@@ -15,9 +15,9 @@ import deco2800.skyfall.managers.TextureManager;
  */
 public class HelpTable extends AbstractPopUpElement{
     private Skin skin;
-    private Image pages[] = {new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page1")),
-            new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page2")),
-            new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page3"))};
+   // private Image pages[] = {new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page1")),
+    //       new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page2")),
+    //     new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page3"))
 
     /**
      * Constructs a help baseTable.

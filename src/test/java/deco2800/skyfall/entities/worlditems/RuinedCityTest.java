@@ -14,7 +14,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 public class RuinedCityTest {
 
-    ruinedCity testRuinedCity;
+    RuinedCity testRuinedCity;
 
     @Before
     public void Setup() throws Exception {
@@ -25,7 +25,7 @@ public class RuinedCityTest {
     @Test
     public void basicConstructorTest() {
 
-        testRuinedCity = new ruinedCity();
+        testRuinedCity = new RuinedCity();
         assertEquals(testRuinedCity.getPosition(), new HexVector(0.0f, 0.0f));
         assertEquals(0, testRuinedCity.getRenderOrder());
         assertEquals(testRuinedCity.getCol(), 0.0f, 0.001f);
@@ -40,9 +40,9 @@ public class RuinedCityTest {
     @Test
     public void mementoConstructorTest() {
 
-        ruinedCity toSave = new ruinedCity();
+        RuinedCity toSave = new RuinedCity();
         SaveableEntity.SaveableEntityMemento testRuinedCityMemento = toSave.save();
-        testRuinedCity = new ruinedCity(testRuinedCityMemento);
+        testRuinedCity = new RuinedCity(testRuinedCityMemento);
         assertEquals(testRuinedCity.getPosition(), new HexVector(0.0f, 0.0f));
         assertEquals(0, testRuinedCity.getRenderOrder());
         assertEquals(testRuinedCity.getCol(), 0.0f, 0.001f);
@@ -59,7 +59,7 @@ public class RuinedCityTest {
 
         Tile testTile = new Tile(null, 0.5f, 0.5f);
 
-        testRuinedCity = new ruinedCity(testTile, false);
+        testRuinedCity = new RuinedCity(testTile, false);
         assertEquals(testRuinedCity.getPosition(), new HexVector(0.5f, 0.5f));
         assertEquals(2, testRuinedCity.getRenderOrder());
         assertEquals(testRuinedCity.getCol(), 0.5f, 0.001f);
@@ -76,8 +76,8 @@ public class RuinedCityTest {
 
         Tile testTile = new Tile(null, 0.5f, 0.5f);
 
-        testRuinedCity = new ruinedCity(testTile, true);
-        ruinedCity testRuinedCityNew = testRuinedCity.newInstance(testTile);
+        testRuinedCity = new RuinedCity(testTile, true);
+        RuinedCity testRuinedCityNew = testRuinedCity.newInstance(testTile);
 
         assertEquals(testRuinedCityNew.getPosition(), testRuinedCity.getPosition());
         assertEquals(testRuinedCityNew.getCol(), 0.5f, 0.001f);

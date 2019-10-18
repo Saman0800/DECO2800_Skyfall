@@ -2,23 +2,23 @@ package deco2800.skyfall.entities.worlditems;
 
 import deco2800.skyfall.worlds.Tile;
 
-public class ruinedCity extends AbstractEnvironment {
+public class RuinedCity extends AbstractEnvironment {
 
     /**
      * Entity ID
      *
      */
     private static final String ENTITY_ID_STRING = "ruined_city";
-    private static final String ruinedCityString = "ruinedCity";
+    private static final String RuinedCityString = "ruinedCity";
 
     /**
      * Set the entity ID of ruined city to the object name
      *
      */
-    public ruinedCity() {
+    public RuinedCity() {
         super();
         setupParams();
-        this.setTexture(ruinedCityString);
+        this.setTexture(RuinedCityString);
     }
 
     /**
@@ -27,8 +27,8 @@ public class ruinedCity extends AbstractEnvironment {
      * @param tile       - The tile it spawns on
      * @param obstructed - Whether the entity is obstructed by something
      */
-    public ruinedCity(Tile tile, boolean obstructed) {
-        super(tile, ruinedCityString, obstructed);
+    public RuinedCity(Tile tile, boolean obstructed) {
+        super(tile, RuinedCityString, obstructed);
         setupParams();
     }
 
@@ -37,14 +37,14 @@ public class ruinedCity extends AbstractEnvironment {
      *
      * @param memento the static ruined city to add
      */
-    public ruinedCity(SaveableEntityMemento memento) {
+    public RuinedCity(SaveableEntityMemento memento) {
         super(memento);
         setupParams();
     }
 
     private void setupParams() {
         this.setObjectName(ENTITY_ID_STRING);
-        this.entityType = ruinedCityString;
+        this.entityType = RuinedCityString;
     }
 
     /**
@@ -53,7 +53,7 @@ public class ruinedCity extends AbstractEnvironment {
      * @param tile - The tile it spawns on
      */
     @Override
-    public ruinedCity newInstance(Tile tile) {
-        return new ruinedCity(tile, this.isObstructed());
+    public RuinedCity newInstance(Tile tile) {
+        return new RuinedCity(tile, this.isObstructed());
     }
 }

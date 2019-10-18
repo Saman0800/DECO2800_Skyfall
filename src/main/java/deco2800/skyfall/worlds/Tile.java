@@ -31,6 +31,9 @@ public class Tile {
         nextID = 0;
     }
 
+    // String Constant
+    private static final String WATER = "water";
+
     @Expose
     private String texture;
     private HexVector coords;
@@ -109,7 +112,7 @@ public class Tile {
             return 1;
         } else if (tileType.contains("mountain")) {
             return 2;
-        } else if (tileType.contains("water") || tileType.contains("lake") || tileType.contains("ocean")) {
+        } else if (tileType.contains(WATER) || tileType.contains("lake") || tileType.contains("ocean")) {
             return 3;
         } else if (tileType.contains("snow")) {
             return 4;
@@ -164,7 +167,7 @@ public class Tile {
         case 2:
             return frictionMap.get("mountain");
         case 3:
-            return frictionMap.get("water");
+            return frictionMap.get(WATER);
         case 4:
             return frictionMap.get("snow");
         case 5:
@@ -233,7 +236,7 @@ public class Tile {
     }
 
     private VoronoiEdge findNearestEdge(VoronoiEdge currentEdge, List<VoronoiEdge> edges, double maxDistance,
-            int nodeSpacing, double noiseFactor) {
+            int nodeSpacing) {
         double tileX = getNoisyCol(nodeSpacing);
         double tileY = getNoisyRow(nodeSpacing);
 
@@ -264,25 +267,7 @@ public class Tile {
                     squareDistance = this.squareDistanceTo(ax, smallY);
                 }
             } else {
-                double dxA = tileX - ax;
-                double dxB = tileX - bx;
-                double dyA = tileY - ay;
-                double dyB = tileY - by;
-
-                double edgeLength = voronoiEdge.getSquareOfLength();
-                double dotProduct = (dxA * (bx - ax) + dyA * (by - ay));
-
-                if (dotProduct < 0 || dotProduct > edgeLength) {
-                    double squareDistanceToA = dxA * dxA + dyA * dyA;
-                    double squareDistanceToB = dxB * dxB + dyB * dyB;
-                    squareDistance = Math.min(squareDistanceToA, squareDistanceToB);
-                } else {
-                    double gradient = (ay - by) / (ax - bx);
-                    // A quantity used to calculate the distance
-                    double distanceNumerator = -1 * gradient * tileX + tileY + gradient * bx - by;
-                    // Get the square distance
-                    squareDistance = distanceNumerator * distanceNumerator / (gradient * gradient + 1);
-                }
+                squareDistance = getSquareDistanceInvalidY(tileX, tileY, voronoiEdge, ax, ay, bx, by);
             }
 
             if (squareDistance < closestDistance && squareDistance < maxDistance * maxDistance) {
@@ -291,6 +276,31 @@ public class Tile {
             }
         }
         return closestEdge;
+    }
+
+    private double getSquareDistanceInvalidY(double tileX, double tileY, VoronoiEdge voronoiEdge, double ax, double ay,
+            double bx, double by) {
+        double squareDistance;
+        double dxA = tileX - ax;
+        double dxB = tileX - bx;
+        double dyA = tileY - ay;
+        double dyB = tileY - by;
+
+        double edgeLength = voronoiEdge.getSquareOfLength();
+        double dotProduct = (dxA * (bx - ax) + dyA * (by - ay));
+
+        if (dotProduct < 0 || dotProduct > edgeLength) {
+            double squareDistanceToA = dxA * dxA + dyA * dyA;
+            double squareDistanceToB = dxB * dxB + dyB * dyB;
+            squareDistance = Math.min(squareDistanceToA, squareDistanceToB);
+        } else {
+            double gradient = (ay - by) / (ax - bx);
+            // A quantity used to calculate the distance
+            double distanceNumerator = -1 * gradient * tileX + tileY + gradient * bx - by;
+            // Get the square distance
+            squareDistance = distanceNumerator * distanceNumerator / (gradient * gradient + 1);
+        }
+        return squareDistance;
     }
 
     /**
@@ -308,11 +318,9 @@ public class Tile {
         if (getBiome().getBiomeName().equals("ocean")) {
             return;
         }
-        VoronoiEdge closestEdge = findNearestEdge(null, new ArrayList<>(beachEdges.keySet()), beachWidth, nodeSpacing,
-                beachWidth * 2);
+        VoronoiEdge closestEdge = findNearestEdge(null, new ArrayList<>(beachEdges.keySet()), beachWidth, nodeSpacing);
         if (!(Math.abs(getCol()) < riverWidth && Math.abs(getRow()) < riverWidth)) {
-            closestEdge = findNearestEdge(closestEdge, new ArrayList<>(riverEdges.keySet()), riverWidth, nodeSpacing,
-                    riverWidth * 2);
+            closestEdge = findNearestEdge(closestEdge, new ArrayList<>(riverEdges.keySet()), riverWidth, nodeSpacing);
         }
         this.edge = closestEdge;
         // Add the tile to the biome for the beach/river
@@ -423,7 +431,7 @@ public class Tile {
 
     public boolean checkObstructed(String texture) {
         ArrayList<String> obstructables = new ArrayList<>();
-        obstructables.add("water");
+        obstructables.add(WATER);
         for (String obstructable : obstructables) {
             if (texture.contains(obstructable)) {
                 return true;
@@ -467,7 +475,7 @@ public class Tile {
     private boolean checkIsBuildable(String texture) {
         ArrayList<String> buildables = new ArrayList<>();
         // List of buildable tiles
-        buildables.add("water");
+        buildables.add(WATER);
         buildables.add("sand");
         for (String obstructable : buildables) {
             if (texture.contains(obstructable)) {
