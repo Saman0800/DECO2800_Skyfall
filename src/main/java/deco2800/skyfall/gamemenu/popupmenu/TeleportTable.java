@@ -78,8 +78,8 @@ public class TeleportTable extends AbstractPopUpElement {
         teleport.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                gameMenuManager.hideOpened();
                 portal.teleport(save);
-                gameMenuManager.getPopUp("teleportTable").hide();
                 gameMenuManager.getQuestManager().nextQuest();
             }
         });
