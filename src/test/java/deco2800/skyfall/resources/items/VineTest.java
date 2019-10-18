@@ -1,6 +1,5 @@
 package deco2800.skyfall.resources.items;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,11 +19,6 @@ public class VineTest {
 
         vine = new Vine();
     }
-
-    @After
-    public void tearDown() {
-    }
-
 
     /**
      * Ensure that the getName method returns the name of the subclass

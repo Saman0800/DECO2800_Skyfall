@@ -168,7 +168,7 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
 
     /**
-     * The method to be used to spawn gold into a particular woorld
+     * The method to be used to spawn gold into a particular world
      * 
      * @param world           The world that will get static entities
      * @param random          Generates random integers

@@ -7,6 +7,7 @@ import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
 import deco2800.skyfall.gamemenu.popupmenu.BlueprintShopTable;
 import deco2800.skyfall.gamemenu.popupmenu.ChestTable;
+import deco2800.skyfall.gamemenu.popupmenu.TeleportTable;
 import deco2800.skyfall.graphics.HasPointLight;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
@@ -582,24 +583,30 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
                 gmm.setPopUp("blueprintShopTable");
             } else if (entity instanceof BuildingEntity) {
                 BuildingEntity e = (BuildingEntity) entity;
-                MainCharacter mc = gmm.getMainCharacter();
                 switch (e.getBuildingType()) {
                 case FORESTPORTAL:
-                    // TODO :@Kausta - Reset Quests on Right Click
                     ForestPortal forestPortal = new ForestPortal(0, 0, 0);
-                    forestPortal.teleport(this.save);
+                    updateTeleportTable("FOREST",
+                            forestPortal.getNext().toUpperCase(),
+                            this.save, forestPortal, gmm);
                     break;
                 case MOUNTAINPORTAL:
                     MountainPortal mountainPortal = new MountainPortal(0, 0, 0);
-                    mountainPortal.teleport(this.save);
+                    updateTeleportTable("MOUNTAIN",
+                            mountainPortal.getNext().toUpperCase(),
+                            this.save, mountainPortal, gmm);
                     break;
                 case DESERTPORTAL:
                     DesertPortal desertPortal = new DesertPortal(0, 0, 0);
-                    desertPortal.teleport(this.save);
+                    updateTeleportTable("DESERT",
+                            desertPortal.getNext().toUpperCase(),
+                            this.save, desertPortal, gmm);
                     break;
                 case VOLCANOPORTAL:
                     VolcanoPortal volcanoPortal = new VolcanoPortal(0, 0, 0);
-                    volcanoPortal.teleport(this.save);
+                    updateTeleportTable("VOLCANO",
+                            volcanoPortal.getNext().toUpperCase(),
+                            this.save, volcanoPortal, gmm);
                     break;
                 default:
                     break;
@@ -608,13 +615,30 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         }
 
         if (entityToBeDeleted != null) {
-            if (entityToBeDeleted instanceof Harvestable) {
-                List<AbstractEntity> drops = ((Harvestable) entityToBeDeleted).harvest(tile);
-                drops.forEach(this::addEntity);
-            }
             removeEntity(entityToBeDeleted);
             entityToBeDeleted = null;
         }
+    }
+
+
+    /**
+     * Updates the teleport table with the relevant informatio0n
+     * @param updateLocation The current location
+     * @param teleportTo the location to be teleported to
+     * @param save the current game save
+     * @param portal the abstract portal class used
+     * @param gmm game menu manager.
+     */
+    public void updateTeleportTable(String updateLocation,
+                                    String teleportTo, Save save,
+                                    AbstractPortal portal, GameMenuManager gmm) {
+        TeleportTable teleportTable = (TeleportTable) gmm.getPopUp("teleportTable");
+        teleportTable.updateLocation(updateLocation);
+        teleportTable.updateTeleportTo(teleportTo);
+        teleportTable.setSave(save);
+        teleportTable.setPortal(portal);
+        gmm.setPopUp("teleportTable");
+
     }
 
     /**

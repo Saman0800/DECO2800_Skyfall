@@ -14,7 +14,6 @@ import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.saving.Save;
 
 public class TeleportTable extends AbstractPopUpElement {
-    private final QuestManager qm;
     private Skin skin;
     private Table baseTable;
     private Label locationLabel;
@@ -28,50 +27,23 @@ public class TeleportTable extends AbstractPopUpElement {
         super(stage,exit, textureNames, tm, gameMenuManager);
 
         this.skin = skin;
-        this.qm = qm;
         this.draw();
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void hide() {
-        super.hide();
-        baseTable.setVisible(false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void show() {
-        super.show();
-        baseTable.setVisible(true);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void update() {
-        updateLocation(qm.getBiome());
-        updateTeleportTo("SNOW");
-    }
 
     /**
      * Updates the location label
      * @param text The new text for it
      */
-    private void updateLocation(String text) {
+    public void updateLocation(String text) {
         locationLabel.setText("LOCATION : " + text);
     }
     /**
      * Updates the teleport to label
      * @param text The new text for it
      */
-    private void updateTeleportTo(String text) {
+    public void updateTeleportTo(String text) {
         teleportLabel.setText("TELEPORT TO : " + text);
     }
 
@@ -110,6 +82,8 @@ public class TeleportTable extends AbstractPopUpElement {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 portal.teleport(save);
+                gameMenuManager.getPopUp("teleportTable").hide();
+                gameMenuManager.getQuestManager().nextQuest();
             }
         });
 

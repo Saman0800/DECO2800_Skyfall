@@ -1,34 +1,10 @@
 package deco2800.skyfall.entities;
 
-import static deco2800.skyfall.buildings.BuildingType.CABIN;
-import static deco2800.skyfall.buildings.BuildingType.CASTLE;
-import static deco2800.skyfall.buildings.BuildingType.DESERTPORTAL;
-import static deco2800.skyfall.buildings.BuildingType.FENCE;
-import static deco2800.skyfall.buildings.BuildingType.FORESTPORTAL;
-import static deco2800.skyfall.buildings.BuildingType.MOUNTAINPORTAL;
-import static deco2800.skyfall.buildings.BuildingType.SAFEHOUSE;
-import static deco2800.skyfall.buildings.BuildingType.STORAGE_UNIT;
-import static deco2800.skyfall.buildings.BuildingType.TOWNCENTRE;
-import static deco2800.skyfall.buildings.BuildingType.VOLCANOPORTAL;
-import static deco2800.skyfall.buildings.BuildingType.WATCHTOWER;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.Animatable;
@@ -46,20 +22,10 @@ import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.entities.vehicle.AbstractVehicle;
 import deco2800.skyfall.entities.vehicle.Bike;
 import deco2800.skyfall.entities.vehicle.SandCar;
-import deco2800.skyfall.entities.weapons.Bow;
-import deco2800.skyfall.entities.weapons.EmptyItem;
-import deco2800.skyfall.entities.weapons.Spear;
-import deco2800.skyfall.entities.weapons.Sword;
-import deco2800.skyfall.entities.weapons.Weapon;
+import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gamemenu.popupmenu.ConstructionTable;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.managers.InputManager;
-import deco2800.skyfall.managers.InventoryManager;
-import deco2800.skyfall.managers.PetsManager;
-import deco2800.skyfall.managers.QuestManager;
-import deco2800.skyfall.managers.SoundManager;
+import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.observers.KeyUpObserver;
 import deco2800.skyfall.observers.TouchDownObserver;
@@ -74,6 +40,14 @@ import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.*;
+import java.util.Map.Entry;
+
+import static deco2800.skyfall.buildings.BuildingType.*;
 
 /**
  * Main character in the game
@@ -945,6 +919,7 @@ public class MainCharacter extends Peon
                 ConstructionTable bs = (ConstructionTable) gmm.getPopUp(CONSTRUCTION_TABLE);
                 bs.build(GameManager.get().getWorld(), (int) clickedPosition[0], (int) clickedPosition[1]);
                 qm.addBuilding(bs.selectBuilding(bs.getBuildingID(), 0, 0).getBuildingType());
+                toBuild = false;
             }
 
         }
@@ -1171,12 +1146,6 @@ public class MainCharacter extends Peon
             break;
         case Input.Keys.ALT_LEFT:
             // Attack moved to SPACE
-            break;
-        case Input.Keys.G:
-            addClosestGoldPiece();
-            break;
-        case Input.Keys.M:
-            getGoldPouchTotalValue();
             break;
         case Input.Keys.Z:
             selectSpell(SpellType.FLAME_WALL);
@@ -1758,9 +1727,6 @@ public class MainCharacter extends Peon
 
         for (Blueprint blueprint : getBlueprintsLearned()) {
             if (blueprint.getClass() == newItem.getClass()) {
-
-                // testing
-            } else {
                 switch (newItem.getName()) {
                 case HATCHET:
                     this.getInventoryManager().add(new Hatchet());

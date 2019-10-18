@@ -21,7 +21,6 @@ public class CollectCreateTable extends AbstractPopUpElement {
     private final String type;
     private final QuestManager qm;
     private Skin skin;
-    private Table baseTable;
     private TextButton complete;
     private Table labelTable;
 
@@ -55,25 +54,6 @@ public class CollectCreateTable extends AbstractPopUpElement {
 
         labelTable = new Table();
         this.draw();
-        stage.addActor(baseTable);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void hide() {
-        super.hide();
-        baseTable.setVisible(false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void show() {
-        super.show();
-        baseTable.setVisible(true);
     }
 
     /**
@@ -154,6 +134,8 @@ public class CollectCreateTable extends AbstractPopUpElement {
         baseTable.row();
         baseTable.add(complete).bottom().width(200).expand();
         baseTable.setVisible(false);
+        stage.addActor(baseTable);
+
     }
 
     private void populateItems() {
