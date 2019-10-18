@@ -512,30 +512,38 @@ public class WorldBuilder implements WorldBuilderInterface {
      * @param world         :     the game world
      * @param enemyScaling  :     scaling factor to enemy states
      */
-    private void spawnElectricEnemies(Random random, float chance, AbstractBiome biome, World world, float enemyScaling) {
-        for (Tile tile : biome.getTiles()) {
-            if (random.nextFloat() <= chance) {
-                spawnAnElectricEnemyOnTile(random, tile, world, enemyScaling);
+    private void spawnEnemies(Random random, float chance, AbstractBiome biome, World world, float enemyScaling) {
+        // NOTE: biome.getTiles() and world.getWorldGenNodes() return a list of loaded tiles only
+        int worldSize = world.getWorldParameters().getWorldSize();
+        int spawnGap = 3;
+        for (int col = worldSize * -1; col <= worldSize; col += spawnGap) {
+            for (int row = worldSize * -1; row <= worldSize; row += spawnGap) {
+                if (random.nextFloat() <= chance) {
+                    Tile tile = world.getTile((float)col, (float)row);
+                    if ((tile != null) && (tile.getBiome().getBiomeName().equals(biome.getBiomeName()))) {
+                        spawnAnElectricEnemyOnTile(random, tile, world, enemyScaling);
+                    }
+                }
             }
         }
     }
 
-    private void generateEnemies(World world, float enemyScaling) {
+    private void generateNotStaticEntities(World world, float enemyScaling) {
         Random random = new Random(world.getSeed());
 
         for (AbstractBiome biome : world.getBiomes()) {
             switch (biome.getBiomeName()) {
                 case "forest":
-                    spawnElectricEnemies(random, 0.02f, biome, world, enemyScaling);
+                    spawnEnemies(random, 0.02f, biome, world, enemyScaling);
                     break;
                 case "mountain":
-                    spawnElectricEnemies(random, 0.015f, biome, world, enemyScaling);
+                    spawnEnemies(random, 0.015f, biome, world, enemyScaling);
                     break;
                 case "desert":
-                    spawnElectricEnemies(random, 0.01f, biome, world, enemyScaling);
+                    spawnEnemies(random, 0.01f, biome, world, enemyScaling);
                     break;
                 case "snowy_mountains":
-                    spawnElectricEnemies(random, 0.025f, biome, world, enemyScaling);
+                    spawnEnemies(random, 0.025f, biome, world, enemyScaling);
                     break;
                 default:
                     break;
@@ -574,8 +582,8 @@ public class WorldBuilder implements WorldBuilderInterface {
             throw new IllegalArgumentException("The world type is not valid");
         }
 
-        // generate enemies on the world
-        generateEnemies(world, 0.6f);
+        // generate not static entities on the world (like enemies, etc.)
+        generateNotStaticEntities(world, 0.6f);
 
         return world;
     }
