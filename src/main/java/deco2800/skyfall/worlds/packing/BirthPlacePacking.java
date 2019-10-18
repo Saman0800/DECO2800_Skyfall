@@ -1,7 +1,8 @@
 package deco2800.skyfall.worlds.packing;
 
-import deco2800.skyfall.entities.worlditems.ForestTree;
-import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.worlds.world.World;
 
 public class BirthPlacePacking extends AbstractPacking {
@@ -17,39 +18,26 @@ public class BirthPlacePacking extends AbstractPacking {
 
     @Override
     public void packing(World world) {
-        // change some tiles' biome type for a large region
-        AbstractBiome changeBiome = getBiomeFromTile(0f, 0f);
-        changeTileBiome(1f, -0.5f, changeBiome);
-        changeTileBiome(0f, -1f, changeBiome);
-        changeTileBiome(2f, -1f, changeBiome);
-        changeTileBiome(2f, 0f, changeBiome);
+        // limit to enemies that are not appear too close to initial start point
+        emptyEntityOnTile(world, Enemy.class, 6);
 
-        // arrange entity on the region
-        removeEntityOnTile(1f, 1.5f);
-        removeEntityOnTile(-1f, -1.5f);
-        removeEntityOnTile(-1f, 3.5f);
-        removeEntityOnTile(-2f, 0f);
-        removeEntityOnTile(-3f, 0.5f);
-        removeEntityOnTile(-3f, -0.5f);
-        removeEntityOnTile(4f, 1f);
-        removeEntityOnTile(-5f, -0.5f);
-        removeEntityOnTile(-5f, 0.5f);
-        removeEntityOnTile(-5f, 2.5f);
-        removeEntityOnTile(-4f, 2f);
-        moveEntityFromTileToTile(0f, 2f, -2f, 0f);
-        moveEntityFromTileToTile(-2f, -3f, 4f, 6f);
-        moveEntityFromTileToTile(-4f, -3f, -12f, 3f);
-        moveEntityFromTileToTile(-4f, -2f, -22f, 3f);
+        // limit to static entities that are not appear too close to initial start point
+        emptyEntityOnTile(world, StaticEntity.class, 3);
+    }
 
-        // add some entity on the region
-        addEntityWithOrder(world, new ForestTree(world.getTile(-2f, 3f), true), 0);
-        addEntityWithOrder(world, new ForestTree(world.getTile(1f, 2.5f), true), 1);
-        addEntityWithOrder(world, new ForestTree(world.getTile(-3f, 2.5f), true), 1);
-        addEntityWithOrder(world, new ForestTree(world.getTile(2f, 2f), true), 1);
-        addEntityWithOrder(world, new ForestTree(world.getTile(-4f, 2f), true), 1);
-        addEntityWithOrder(world, new ForestTree(world.getTile(-4f, 1f), true), 1);
-        addEntityWithOrder(world, new ForestTree(world.getTile(-5f, 0.5f), true), 0);
-        addEntityWithOrder(world, new ForestTree(world.getTile(-5f, -0.5f), true), 1);
-        addEntityWithOrder(world, new ForestTree(world.getTile(-5f, -1.5f), true), 1);
+    /**
+     * Empty an specific class of entities on a region that is initial start point with radius.
+     *
+     * @param world     :   the game world
+     * @param type      :   an entity class
+     * @param radius    :   radius from the start point
+     */
+    private <T extends AbstractEntity> void emptyEntityOnTile(World world, Class<T> type, int radius) {
+        for (AbstractEntity entity : world.getSortedEntities()) {
+            if ((type.isInstance(entity)) && (radius * -1 <= entity.getCol()) && (entity.getCol() <= radius)
+                    && (radius * -1 <= entity.getRow()) && (entity.getRow() <= radius)) {
+                removeEntityOnTile(entity.getCol(), entity.getRow());
+            }
+        }
     }
 }
