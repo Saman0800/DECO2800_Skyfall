@@ -4,8 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.entities.Peon;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.managers.GameManager;
@@ -62,12 +60,6 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     // Main character instance in the game.
     private MainCharacter mainCharacter;
-
-    // A routine for destination
-    private HexVector destination = null;
-
-    // world coordinate of this enemy
-    private float[] originalPosition = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
 
     public Enemy(float col, float row, String hitBoxPath, EnemyType enemyType, float speed, String biome,
                  String textureName) {
@@ -165,7 +157,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
             float yDirection = (float) Math.sin(moveAngle);
 
             getBody().setLinearVelocity(xDirection, yDirection);
-            getBody().setLinearVelocity(getBody().getLinearVelocity().limit(walkingSpeed));
+            getBody().setLinearVelocity(getBody().getLinearVelocity().limit(getWalkingSpeed()));
 
             this.position.set(getBody().getPosition().x, getBody().getPosition().y);
         }
@@ -577,7 +569,6 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
             if (getDeadSound() != null) {
                 SoundManager.playSound(getDeadSound());
 
-                this.destination = new HexVector(this.getCol(), this.getRow());
                 this.setDead(true);
                 logger.info("Enemy destroyed.");
 

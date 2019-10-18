@@ -21,10 +21,6 @@ import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
 
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 public class EnemySpawnTable implements TimeObserver {
 
     /**
@@ -193,8 +189,6 @@ public class EnemySpawnTable implements TimeObserver {
      */
     private void spawnEnemies() {
 
-        System.err.println("STARTED ENEMY SPAWNING");
-
         // Find how many enemies are within range of the maincharacter
         int numberToSpawn = maxInRadius - enemiesNearCharacter().size();
         if (numberToSpawn <= 0) {
@@ -260,7 +254,6 @@ public class EnemySpawnTable implements TimeObserver {
                         .get(rand.nextInt(possibleConstructors.size()));
 
                 if (rand.nextFloat() <= spawnChance) {
-                    System.err.println("Spawned Enemy in " + nextTile.getBiome().getBiomeName());
                     Enemy newEnemy = randEnemyType.apply(new HexVector(nextTile.getRow(), nextTile.getCol()));
                     world.addEntity(newEnemy);
                     enemiesPlaced += 1;

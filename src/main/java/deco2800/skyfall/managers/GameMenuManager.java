@@ -24,7 +24,7 @@ public class GameMenuManager extends TickableManager {
 
     private static TextureManager textureManager;
     private Stage stage;
-    private MainCharacter mainCharacter;
+    protected MainCharacter mainCharacter;
     private EnvironmentManager em;
     private InventoryManager inventory;
     private SoundManager soundManager;
