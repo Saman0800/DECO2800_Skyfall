@@ -1,6 +1,5 @@
 package deco2800.skyfall.resources;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,16 +14,14 @@ public class GoldPieceTest {
     private GoldPiece g100;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp()  {
         g5 = new GoldPiece(5);
         g10 = new GoldPiece(10);
         g50 = new GoldPiece(50);
         g100 = new GoldPiece(100);
     }
 
-    @After
-    public void tearDown() throws Exception {
-    }
+
 
     /**
      * Ensure that each gold piece returns the correct value
