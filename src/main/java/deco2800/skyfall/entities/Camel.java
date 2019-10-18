@@ -9,7 +9,7 @@ public class Camel extends VehicleEntity {
 
     public Camel(float col, float row, MainCharacter mc) {
         super(col, row);
-        CHARACTER = "camel_character";
+        character = "camel_character";
         this.mc = mc;
         this.setTexture(VEHICLE);
         this.setObjectName(VEHICLE);
@@ -20,8 +20,8 @@ public class Camel extends VehicleEntity {
 
     public Camel(float col, float row) {
         super(col, row);
-        this.setTexture(CHARACTER);
-        this.setObjectName(CHARACTER);
+        this.setTexture(character);
+        this.setObjectName(character);
         this.setHeight(1);
     }
 

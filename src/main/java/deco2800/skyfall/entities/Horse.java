@@ -14,7 +14,7 @@ public class Horse extends VehicleEntity {
 
     public Horse(float col, float row, MainCharacter mc) {
         super(col, row);
-        CHARACTER = "horse_character";
+        character = "horse_character";
         this.mc = mc;
         this.setTexture(VEHICLE);
         this.setObjectName(VEHICLE);
