@@ -618,7 +618,7 @@ public class MainCharacterTest {
     @Test
     public void healthItemTest() {
         // Create items that give you health
-        Aloe_Vera alo = new Aloe_Vera();
+        AloeVera alo = new AloeVera();
         Apple apple = new Apple();
         Berry berry = new Berry();
 

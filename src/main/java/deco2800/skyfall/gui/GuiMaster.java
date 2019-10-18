@@ -35,7 +35,7 @@ public class GuiMaster {
      * otherwise it grabs the existing scrolling text box in the map
      * @param hash the hash to check for in the elements map
      */
-    public static ScrollingTextBox ScrollingTextBox(String hash) {
+    public static ScrollingTextBox scrollingtextBox(String hash) {
         if (guiElementsMap.containsKey(hash)) {
             AbstractGui item = guiElementsMap.get(hash);
 

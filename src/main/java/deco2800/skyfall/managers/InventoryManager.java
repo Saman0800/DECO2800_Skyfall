@@ -31,7 +31,10 @@ public class InventoryManager extends TickableManager implements Serializable {
     // Maximum size of quick access inventory
     private static final int QA_MAX_SIZE = 4;
 
-    protected boolean HAS_QUICK_ACCESS = true;
+    // Constant String
+    private static final String WORLD = "_world";
+
+    public boolean hasQuickAccess = true;
 
     public static final int COLS = 4;
     public static final int ROWS = 3;
@@ -108,7 +111,7 @@ public class InventoryManager extends TickableManager implements Serializable {
 
     /**
      * Get a copy of the inventory contents.
-     * 
+     *
      * @return a copy of the inventory
      */
     public Map<String, List<Item>> getContents() {
@@ -121,7 +124,7 @@ public class InventoryManager extends TickableManager implements Serializable {
 
     /**
      * Get the amount of each item in the inventory
-     * 
+     *
      * @return a map of item name to the integer amount in the inventory for all
      *         inventory items.
      */
@@ -138,7 +141,7 @@ public class InventoryManager extends TickableManager implements Serializable {
 
     /**
      * Gets the total number of inventory items
-     * 
+     *
      * @return total number of inventory items
      */
     public int getTotalAmount() {
@@ -155,7 +158,7 @@ public class InventoryManager extends TickableManager implements Serializable {
 
     /**
      * Get the items in the quick access inventory.
-     * 
+     *
      * @return a map of the items in the quick access inventory, and the number of
      *         each item
      */
@@ -174,7 +177,7 @@ public class InventoryManager extends TickableManager implements Serializable {
      * Ensures that the item being added to quick access inventory is in full
      * inventory and that quick access inventory doesn't contain more than 6 item
      * type.
-     * 
+     *
      * @param item the String name of the item to add to the quick access inventory.
      */
     public void quickAccessAdd(String item) {
@@ -187,7 +190,7 @@ public class InventoryManager extends TickableManager implements Serializable {
 
     /**
      * Remove an item type from the quick access inventory.
-     * 
+     *
      * @param item the String name of the item to remove from quick access.
      */
     public void quickAccessRemove(String item) {
@@ -196,7 +199,7 @@ public class InventoryManager extends TickableManager implements Serializable {
 
     /**
      * Get the amount of a single item in the inventory.
-     * 
+     *
      * @param item the string name for the item
      * @return the integer number of that item type in the inventory
      */
@@ -212,7 +215,7 @@ public class InventoryManager extends TickableManager implements Serializable {
 
     /**
      * Get the full inventory as a string.
-     * 
+     *
      * @return a string representation of the inventory.
      */
     @Override
@@ -231,7 +234,7 @@ public class InventoryManager extends TickableManager implements Serializable {
 
     /**
      * Add an item to the full inventory.
-     * 
+     *
      * @param item the item to add to the inventory, implements Item interface.
      */
     public boolean add(Item item) {
@@ -250,25 +253,33 @@ public class InventoryManager extends TickableManager implements Serializable {
                 pos.add(entry.getValue());
             }
 
-            if (pos.isEmpty()) {
-                positions.put(name, new Tuple(0, 0));
-                inventory.put(name, itemsList);
+            if (processPosition(name, itemsList, pos)) {
                 return true;
             } else {
-                for (int i = 0; i < ROWS; i++) {
-                    for (int j = 0; j < COLS; j++) {
-                        if (!pos.contains(new Tuple(j, i))) {
-                            positions.put(name, new Tuple(j, i));
-                            inventory.put(name, itemsList);
-                            return true;
-                        }
+                logger.warn("Not enough space in inventory");
+                return false;
+            }
+        }
+
+    }
+
+    private boolean processPosition(String name, List<Item> itemsList, List<Tuple> pos) {
+        if (pos.isEmpty()) {
+            positions.put(name, new Tuple(0, 0));
+            inventory.put(name, itemsList);
+            return true;
+        } else {
+            for (int i = 0; i < ROWS; i++) {
+                for (int j = 0; j < COLS; j++) {
+                    if (!pos.contains(new Tuple(j, i))) {
+                        positions.put(name, new Tuple(j, i));
+                        inventory.put(name, itemsList);
+                        return true;
                     }
                 }
             }
-            logger.warn("Not enough space in inventory");
-            return false;
         }
-
+        return false;
     }
 
     public void inventoryAddMultiple(Map<String, List<Item>> items) {
@@ -285,7 +296,7 @@ public class InventoryManager extends TickableManager implements Serializable {
      * Removes an item from the inventory and returns it. If the item is the last of
      * a specific type present in the inventory (and quick access inventory) it is
      * also removed from these stores.
-     * 
+     *
      * @param itemName the String name of the item to drop from the inventory.
      * @return the Item dropped from the inventory
      */
@@ -314,7 +325,7 @@ public class InventoryManager extends TickableManager implements Serializable {
     /**
      * Removes all of a specific item type from the inventory, and quick access
      * inventory. Returns as a list of items.
-     * 
+     *
      * @param itemName the String name of the item type to drop from the inventory.
      * @return List of instances of item type dropped from inventory
      */
@@ -347,28 +358,31 @@ public class InventoryManager extends TickableManager implements Serializable {
                     validPos = WorldUtil.validColRow(pos);
                 }
 
-                if (item instanceof NaturalResources) {
-                    ((NaturalResources) item).setPosition(col, row);
-                    ((NaturalResources) item).setTexture(item.getName() + "_world");
-                    GameManager.get().getWorld().addEntity((NaturalResources) item);
-                } else if (item instanceof HealthResources) {
-                    ((HealthResources) item).setPosition(col, row);
-                    ((HealthResources) item).setTexture(item.getName() + "_world");
-                    GameManager.get().getWorld().addEntity((HealthResources) item);
-                } else if (item instanceof ManufacturedResources) {
-                    ((ManufacturedResources) item).setPosition(col, row);
-                    ((ManufacturedResources) item).setTexture(item.getName() + "_world");
-                    GameManager.get().getWorld().addEntity((ManufacturedResources) item);
-                }
+                processItem(item, col, row);
             }
-
             return items;
 
         }
 
         logger.warn("You can't remove what you don't have!");
 
-        return null;
+        return new ArrayList<>();
+    }
+
+    private void processItem(Item item, float col, float row) {
+        if (item instanceof NaturalResources) {
+            ((NaturalResources) item).setPosition(col, row);
+            ((NaturalResources) item).setTexture(item.getName() + WORLD);
+            GameManager.get().getWorld().addEntity((NaturalResources) item);
+        } else if (item instanceof HealthResources) {
+            ((HealthResources) item).setPosition(col, row);
+            ((HealthResources) item).setTexture(item.getName() + WORLD);
+            GameManager.get().getWorld().addEntity((HealthResources) item);
+        } else if (item instanceof ManufacturedResources) {
+            ((ManufacturedResources) item).setPosition(col, row);
+            ((ManufacturedResources) item).setTexture(item.getName() + WORLD);
+            GameManager.get().getWorld().addEntity((ManufacturedResources) item);
+        }
     }
 
     /**
@@ -418,7 +432,7 @@ public class InventoryManager extends TickableManager implements Serializable {
 
     /**
      * Returns the description of item
-     * 
+     *
      * @param itemName String name of item
      * @return Description of item
      */
@@ -443,13 +457,12 @@ public class InventoryManager extends TickableManager implements Serializable {
 
     /**
      * Returns an instance of a particular item type
-     * 
+     *
      * @param itemName String name of item
      * @return Item instance of type itemName
      */
     public Item getItemInstance(String itemName) {
         List<Item> itemsList = this.inventory.get(itemName);
-        Item item = itemsList.get(0);
-        return item;
+        return itemsList.get(0);
     }
 }
