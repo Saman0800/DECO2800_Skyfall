@@ -1,7 +1,6 @@
 package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
@@ -24,17 +23,6 @@ public class Hatchet extends ManufacturedResources implements Blueprint {
 
     //Used for farming sound
     private static final String CUT_TREE = "cut_tree";
-
-    /***
-     * Create a Hatecht with the name Hatchet
-     *
-     * @param owner    the owner of the inventory.
-     * @param position the position of the Hatchet.
-     */
-    public Hatchet(MainCharacter owner, HexVector position) {
-        super(owner, position);
-        init();
-    }
 
     private void init() {
         this.name = "Hatchet";

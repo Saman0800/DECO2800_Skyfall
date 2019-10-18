@@ -20,10 +20,10 @@ public class HatchetTest {
 
     @Before
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
+        hatchet = new Hatchet();
         MainCharacter.resetInstance();
         position = new HexVector(1f, 1f);
         owner = MainCharacter.getInstance(1f, 1f, 0.05f, "player", 10);
-        hatchet = new Hatchet(owner, position);
         testTile = new Tile(null, 1f, 1f);
         treeToFarm = new ForestTree(testTile, true);
     }
@@ -42,12 +42,6 @@ public class HatchetTest {
         assertEquals("Manufactured Resource", hatchet.getSubtype());
     }
 
-    @Test
-    public void getCoords() {
-        assertEquals(1f, position.getCol(), 0);
-        assertEquals(1f, position.getRow(), 0);
-
-    }
 
     @Test
     public void toStringtest() {

@@ -19,8 +19,8 @@ public class ManufacturedResourcesTest {
     public void setUp() throws Exception {
 
 
-        hatchet = new Hatchet(testOwner,testPosition);
-        pickAxe = new PickAxe(testOwner,testPosition);
+        hatchet = new Hatchet();
+        pickAxe = new PickAxe();
 
     }
 
@@ -42,10 +42,6 @@ public class ManufacturedResourcesTest {
         assertEquals("Manufactured Resource", pickAxe.getSubtype());
     }
 
-    @Test
-    public void getCoordsTest() {
-
-    }
 
     @Test
     public void toStringTest() {

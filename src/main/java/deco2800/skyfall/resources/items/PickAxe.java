@@ -1,7 +1,6 @@
 package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
@@ -28,18 +27,6 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
     private static final String COLLECT_STONE = "collect_stone";
 
     Random random = new Random();
-
-
-    /***
-     * Create a Pick Axe with the name Pick Axe.
-     *
-     * @param owner    the owner of the inventory.
-     * @param position the position of the Pick Axe.
-     */
-    public PickAxe(MainCharacter owner, HexVector position) {
-        super(owner, position);
-        init();
-    }
 
     private void init() {
         this.name = "Pick Axe";
@@ -146,5 +133,6 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
     public int getRequiredMetal() {
         return 4;
     }
+
 
 }
