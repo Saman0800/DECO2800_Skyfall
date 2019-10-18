@@ -1,7 +1,6 @@
 package deco2800.skyfall.resources;
 
 import deco2800.skyfall.entities.SaveableEntity;
-import deco2800.skyfall.entities.worlditems.ForestRock;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 import org.junit.Before;
@@ -60,11 +59,10 @@ public class GoldPieceTest {
     @Test
     public void mementoConstructorTest() {
 
-        ForestRock toSave = new ForestRock();
+        GoldPiece toSave = new GoldPiece(5);
         SaveableEntity.SaveableEntityMemento testGoldPieceMemento = toSave.save();
         testGoldPiece = new GoldPiece(testGoldPieceMemento);
         assertEquals(testGoldPiece.getPosition(), new HexVector(0.0f, 0.0f));
-        assertEquals(2, testGoldPiece.getRenderOrder());
         assertEquals(testGoldPiece.getCol(), 0.0f, 0.001f);
         assertEquals(testGoldPiece.getRow(), 0.0f, 0.001f);
         assertTrue(testGoldPiece.isObstructed());
