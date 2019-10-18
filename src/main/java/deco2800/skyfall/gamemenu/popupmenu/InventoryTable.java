@@ -265,7 +265,7 @@ public class InventoryTable extends AbstractPopUpElement {
         this.dropButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(inventorySelected != null){
+                if(inventorySelected != ""){
                     inventory.dropAll(inventorySelected);
                     inventorySelected = "";
                     setButtonsActive(false);
@@ -287,7 +287,7 @@ public class InventoryTable extends AbstractPopUpElement {
         this.equipButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (inventorySelected != null) {
+                if (inventorySelected != "") {
                     Item item = inventory.drop(inventorySelected);
                     if (mainCharacter.setEquippedItem(item)) {
                         gameMenuBar.setEquipped(item.getName());
@@ -314,7 +314,7 @@ public class InventoryTable extends AbstractPopUpElement {
         this.addqaButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(inventorySelected != null) {
+                if(inventorySelected != "") {
                     inventory.quickAccessAdd(inventorySelected);
                     inventorySelected = "";
                     gameMenuBar.removeQuickAccessPanel();
@@ -343,7 +343,7 @@ public class InventoryTable extends AbstractPopUpElement {
      * what item is selected.
      */
     private void updateItemInfo(){
-        if (inventorySelected != null){
+        if (inventorySelected != ""){
             infoPanel.setBackground(menuManager.generateTextureRegionDrawableObject(inventorySelected + "_desc"));
         } else{
             infoPanel.setBackground(menuManager.generateTextureRegionDrawableObject("Description_Panel"));
