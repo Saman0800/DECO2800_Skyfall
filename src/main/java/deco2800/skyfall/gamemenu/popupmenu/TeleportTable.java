@@ -51,27 +51,19 @@ public class TeleportTable extends AbstractPopUpElement {
         baseTable.setVisible(true);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void update() {
-        updateLocation(qm.getBiome());
-        updateTeleportTo("SNOW");
-    }
 
     /**
      * Updates the location label
      * @param text The new text for it
      */
-    private void updateLocation(String text) {
+    public void updateLocation(String text) {
         locationLabel.setText("LOCATION : " + text);
     }
     /**
      * Updates the teleport to label
      * @param text The new text for it
      */
-    private void updateTeleportTo(String text) {
+    public void updateTeleportTo(String text) {
         teleportLabel.setText("TELEPORT TO : " + text);
     }
 
@@ -110,6 +102,8 @@ public class TeleportTable extends AbstractPopUpElement {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 portal.teleport(save);
+                gameMenuManager.getPopUp("teleportTable").hide();
+                gameMenuManager.getQuestManager().nextQuest();
             }
         });
 

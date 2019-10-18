@@ -63,6 +63,8 @@ public class QuestManager extends TickableManager {
     // List of buildings to be placed
     private List<BuildingType> buildingsPlaced = new ArrayList<>();
 
+    private boolean isGameFinished = false;
+
     /**
      * Constructor, sets up beginning of game goals
      */
@@ -71,6 +73,8 @@ public class QuestManager extends TickableManager {
         questSuccess = false;
         buildingsTotal = new ArrayList<>();
         levelOneBuildings.add(BuildingType.CASTLE);
+        levelTwoBuildings.add(BuildingType.CASTLE);
+        levelTwoBuildings.add(BuildingType.CABIN);
         player = MainCharacter.getInstance();
         setMilestones();
     }
@@ -434,6 +438,12 @@ public class QuestManager extends TickableManager {
         return amt;
     }
 
+    public void nextQuest() {
+        resetQuest();
+        questLevel += 1;
+        setMilestones();
+    }
+
     /**
      * Resets the current quest of the player
      */
@@ -464,6 +474,7 @@ public class QuestManager extends TickableManager {
         getPlayer().getInventoryManager().dropAll("axe");
         getPlayer().getInventoryManager().dropAll("bow");
     }
+
 
     /**
      * See if a blueprint is learned
