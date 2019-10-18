@@ -6,7 +6,7 @@ import deco2800.skyfall.managers.GameManager;
 
 public class Bike extends AbstractVehicle {
     
-    private final static String textureName = "bike";
+    private static final String textureName = "bike";
     private boolean isOnUse = false;
     MainCharacter mc;
 
