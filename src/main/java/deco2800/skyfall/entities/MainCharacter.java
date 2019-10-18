@@ -2094,7 +2094,6 @@ public class MainCharacter extends Peon
     }
 
     public static class MainCharacterMemento extends AbstractMemento implements Serializable {
-
         private long mainCharacterID;
         private int level;
         private int foodLevel;
