@@ -1,5 +1,15 @@
 package deco2800.skyfall.managers;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import deco2800.skyfall.gui.Tuple;
 import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
@@ -11,11 +21,6 @@ import deco2800.skyfall.resources.items.Stone;
 import deco2800.skyfall.resources.items.Wood;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.Serializable;
-import java.util.*;
 
 public class InventoryManager extends TickableManager implements Serializable {
 
@@ -34,7 +39,7 @@ public class InventoryManager extends TickableManager implements Serializable {
     // Constant String
     private static final String WORLD = "_world";
 
-    public boolean hasQuickAccess = true;
+    protected boolean hasQuickAccess = true;
 
     public static final int COLS = 4;
     public static final int ROWS = 3;
@@ -118,8 +123,27 @@ public class InventoryManager extends TickableManager implements Serializable {
         return Collections.unmodifiableMap(this.inventory);
     }
 
+    /**
+     * Sets the contents of this manager.
+     * 
+     * @param inventory The new inventory to be set to.
+     */
     public void setContents(Map<String, List<Item>> inventory) {
         this.inventory = inventory;
+    }
+
+    /**
+     * @return Gets the hasQuickAccess parameter
+     */
+    public boolean getHasQuickAccess() {
+        return this.hasQuickAccess;
+    }
+
+    /**
+     * Sets the hasQuickAccess parameter.
+     */
+    public void setHasQuickAccess(boolean hasQuickAccess) {
+        this.hasQuickAccess = hasQuickAccess;
     }
 
     /**
