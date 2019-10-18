@@ -497,13 +497,3 @@ public class QuestManager extends TickableManager {
         return ((axeTotal > 0) ? 1 : 0) + ((swordTotal > 0) ? 1 : 0) + ((spearTotal > 0) ? 1 : 0) + ((bowTotal > 0) ? 1 : 0);
     }
 }
-
-    /*
-    Stuff to be done:
-    - track player inventory
-    - track buildings placed in the world
-    - confirm milestones have been met
-    - reset inventory/health upon starting new level?
-    - how to set quest level upon levelling up?
-    - figure out how portal activation fits in with all this
-     */
