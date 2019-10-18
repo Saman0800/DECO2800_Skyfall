@@ -90,15 +90,16 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("gold", new Texture("resources/gold.png"));
 
-            textureMap.put("whitebear", new Texture("resources/whitebear.png"));
-            textureMap.put("icewhitebear", new Texture("resources/icewhitebear.png"));
-            textureMap.put("lizardHome", new Texture("resources/lizard/home.png"));
-            textureMap.put("lizard", new Texture("resources/lizard/lizard.png"));
-            textureMap.put("lizardE", new Texture("resources/lizard/lizardE.png"));
-            textureMap.put("lizardN", new Texture("resources/lizard/lizardN.png"));
-            textureMap.put("lizardS", new Texture("resources/lizard/lizardS.png"));
+            // Are these Pet Textures? If so, can I remove?
+//            textureMap.put("whitebear", new Texture("resources/whitebear.png"));
+//            textureMap.put("icewhitebear", new Texture("resources/icewhitebear.png"));
+//            textureMap.put("lizardHome", new Texture("resources/lizard/home.png"));
+//            textureMap.put("lizard", new Texture("resources/lizard/lizard.png"));
+//            textureMap.put("lizardE", new Texture("resources/lizard/lizardE.png"));
+//            textureMap.put("lizardN", new Texture("resources/lizard/lizardN.png"));
+//            textureMap.put("lizardS", new Texture("resources/lizard/lizardS.png"));
 
-
+            // Cosmetic Environment Textures(?)
             textureMap.put("hot_spring", new Texture("resources/Environment/HotSprings.png"));
             textureMap.put("in_hot_spring", new Texture("resources/Environment/HotSprings1.png"));
             textureMap.put("ruinedCity", new Texture("resources/Environment/ruinedCity.png"));
@@ -175,7 +176,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("chestClosed", new Texture("resources/chest_icon.png"));
             textureMap.put("blueprintShop", new Texture("resources/shopkeeper.png"));
 
-            textureMap.put("petTiger", new Texture("resources/tiger_front1.png"));
+//            textureMap.put("petTiger", new Texture("resources/tiger_front1.png")); // Pet Texture
 
             textureMap.put("grass_tuff", new Texture("resources/world_details/grass1.png"));
 
@@ -212,7 +213,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("tutorial_3", new Texture("resources/tutorial/tutorial_3.png"));
             textureMap.put("tutorial_4", new Texture("resources/tutorial/tutorial_4.png"));
             textureMap.put("tutorial_5", new Texture("resources/tutorial/tutorial_5.png"));
-            textureMap.put("next_back_button", new Texture("resources/tutorial/next_back_button.png"));
+            textureMap.put("tutorial_6", new Texture("resources/tutorial/tutorial_6.png"));
             textureMap.put("home_button", new Texture("resources/tutorial/done.png"));
 
 
@@ -320,17 +321,18 @@ public class TextureManager extends AbstractManager {
             textureMap.put("help_page2", new Texture("resources/new_ui/helpTable/help_page2.png"));
 
             // Clock/Season graphics
-            textureMap.put("dawn", new Texture("resources/clock/dawn_clock.png"));
-            textureMap.put("dusk", new Texture("resources/clock/dusk_clock.png"));
-            textureMap.put("day", new Texture("resources/clock/day_clock.png"));
-            textureMap.put("night", new Texture("resources/clock/night_clock.png"));
-            textureMap.put("summer", new Texture("resources/clock/summer.png"));
-            textureMap.put("winter", new Texture("resources/clock/winter.png"));
-            textureMap.put("spring", new Texture("resources/clock/spring.png"));
-            textureMap.put("autumn", new Texture("resources/clock/autumn.png"));
+//            textureMap.put("dawn", new Texture("resources/clock/dawn_clock.png"));
+//            textureMap.put("dusk", new Texture("resources/clock/dusk_clock.png"));
+//            textureMap.put("day", new Texture("resources/clock/day_clock.png"));
+//            textureMap.put("night", new Texture("resources/clock/night_clock.png"));
+//            textureMap.put("summer", new Texture("resources/clock/summer.png"));
+//            textureMap.put("winter", new Texture("resources/clock/winter.png"));
+//            textureMap.put("spring", new Texture("resources/clock/spring.png"));
+//            textureMap.put("autumn", new Texture("resources/clock/autumn.png"));
 
-            textureMap.put("mana_bar", new Texture("resources/mana_bar.png"));
-            textureMap.put("mana_bar_inner", new Texture("resources/mana_bar_inner.png"));
+            // Mana Bar Textures
+//            textureMap.put("mana_bar", new Texture("resources/mana_bar.png"));
+//            textureMap.put("mana_bar_inner", new Texture("resources/mana_bar_inner.png"));
 
             textureMap.put("inventory_banner", new Texture("resources/inventory_banner.png"));
             textureMap.put("chest_banner", new Texture("resources/chest_banner.png"));

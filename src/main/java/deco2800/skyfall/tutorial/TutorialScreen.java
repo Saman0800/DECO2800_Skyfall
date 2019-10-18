@@ -31,7 +31,7 @@ public class TutorialScreen implements Screen {
     private Skin skin;
     private TextureManager textureManager;
     private List<Image> screens;
-    private static final int  NUMBER_OF_SCREENS = 7;
+    private static final int  NUMBER_OF_SCREENS = 8;
     private SkyfallGame game;
 
     public TutorialScreen(SkyfallGame game) {
@@ -40,7 +40,8 @@ public class TutorialScreen implements Screen {
         textureManager = GameManager.get().getManager(TextureManager.class);
         skin = GameManager.get().getSkin();
         screens = new ArrayList<>();
-        String[] screenNames = {"story", "your_mission", "tutorial_1", "tutorial_2", "tutorial_3", "tutorial_4", "tutorial_5"};
+        String[] screenNames = {"story", "your_mission", "tutorial_1", "tutorial_2", "tutorial_3", "tutorial_4",
+                "tutorial_5", "tutorial_6"};
         for (String screenName : screenNames) {
             screens.add(new Image(new TextureRegionDrawable((new TextureRegion(textureManager.getTexture(screenName))))));
         }
