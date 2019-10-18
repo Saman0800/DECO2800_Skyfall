@@ -24,7 +24,7 @@ public class RuinedCity extends AbstractEnvironment {
     /**
      * Initialises
      *
-     * @param tile       - The tile it spawns on
+     * @param tile - The tile it spawns on
      * @param obstructed - Whether the entity is obstructed by something
      */
     public RuinedCity(Tile tile, boolean obstructed) {

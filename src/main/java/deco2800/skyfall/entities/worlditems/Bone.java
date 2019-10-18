@@ -24,8 +24,6 @@ public class Bone extends StaticEntity {
         this.setObjectName(ENTITY_ID_STRING);
         setBoneParams();
         this.setTexture(Bone.nextTextureString);
-
-
     }
 
     public Bone(Tile tile, boolean obstructed) {

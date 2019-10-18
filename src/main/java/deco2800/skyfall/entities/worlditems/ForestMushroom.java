@@ -18,7 +18,6 @@ public class ForestMushroom extends StaticEntity implements HasPointLight {
     public ForestMushroom() {
         setupParams();
         this.setTexture("mushrooms" + nextImage);
-
     }
 
     public ForestMushroom(Tile tile, boolean obstructed) {
@@ -60,7 +59,6 @@ public class ForestMushroom extends StaticEntity implements HasPointLight {
     @Override
     public void updatePointLight() {
         // All the values will always stay constant for the mushrooms.
-        return;
     }
 
     @Override

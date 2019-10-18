@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class that represents the biomes
+ * Class that represents the biomes.
  */
 public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBiomeMemento>, Serializable {
     private long id;
@@ -125,7 +125,7 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
      *
      * @return a list of the child biomes
      */
-    public List<AbstractBiome> getChildBiomes() {
+    private List<AbstractBiome> getChildBiomes() {
         return this.childBiomes;
     }
 

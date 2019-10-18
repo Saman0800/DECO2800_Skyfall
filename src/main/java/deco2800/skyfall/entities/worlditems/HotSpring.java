@@ -49,7 +49,6 @@ public class HotSpring extends AbstractEntity {
                 this.setObjectName("in_hot_spring");
                 player.setRecovering(true);
                 player.changeHealth(this.amountOfRecovering());
-
             } else {
                 this.setTexture(ENTITY_ID_STRING);
                 this.setObjectName(ENTITY_ID_STRING);
@@ -67,7 +66,6 @@ public class HotSpring extends AbstractEntity {
         float rowDistance = player.getRow() - this.getRow();
         if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
             player.changeHealth(this.amountOfRecovering());
-
         }
 
     }

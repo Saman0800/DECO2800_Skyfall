@@ -60,7 +60,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
 
     private Map<String, Float> frictionMap;
 
-    protected Map<Pair<Integer, Integer>, Chunk> loadedChunks;
+    private Map<Pair<Integer, Integer>, Chunk> loadedChunks;
 
     private int loadedAreaLowerX;
     private int loadedAreaLowerY;
@@ -124,7 +124,6 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         EntitySpawnRule.setNoiseSeed(this.worldParameters.getSeed());
         initialiseFrictionmap();
         staticEntityNoise = new NoiseGenerator((new Random(this.worldParameters.getSeed())).nextLong(), 3, 4, 1.3);
-
     }
 
     private Map<AbstractBiome, List<EntitySpawnRule>> generateStartEntitiesInternal() {
