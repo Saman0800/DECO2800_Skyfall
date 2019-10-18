@@ -27,6 +27,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
         if (exitButton != null) {
             exitButton.setVisible(false);
         }
+        // Play menu sound when the player click exit button
         SoundManager.playSound("menu");
         isVisible = false;
         gameMenuManager.getMainCharacter().resetVelocity();
@@ -58,6 +59,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
             exitButton.setVisible(true);
             exitButton.top();
         }
+        // Play menu sound when the player open the menu
         SoundManager.playSound("menu");
         gameMenuManager.getMainCharacter().resetVelocity();
         isVisible = true;
