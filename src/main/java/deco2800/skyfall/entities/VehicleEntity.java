@@ -12,7 +12,7 @@ public abstract class VehicleEntity extends Peon {
 
     protected MainCharacter mc;
 
-    protected static String CHARACTER;
+    protected static String character;
 
     public VehicleEntity(float col, float row) {
         this.setRow(row);
@@ -33,8 +33,8 @@ public abstract class VehicleEntity extends Peon {
 
             if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
 
-                setTexture(CHARACTER);
-                setObjectName(CHARACTER);
+                setTexture(character);
+                setObjectName(character);
 
             } else {
                 this.setCurrentState(AnimationRole.NULL);

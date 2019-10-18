@@ -1,7 +1,5 @@
 package deco2800.skyfall.entities;
 
-import deco2800.skyfall.animation.AnimationRole;
-
 public class Camel extends VehicleEntity {
     private static final String BIOME = "desert";
     private boolean available = true;
