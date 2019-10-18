@@ -4,7 +4,6 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,17 +18,13 @@ public class HatchetTest {
     private Tile testTile;
 
     @Before
-    public void setUp() throws NoSuchFieldException, IllegalAccessException {
+    public void setUp() {
         MainCharacter.resetInstance();
         position = new HexVector(1f, 1f);
         owner = MainCharacter.getInstance(1f, 1f, 0.05f, "player", 10);
         hatchet = new Hatchet(owner, position);
         testTile = new Tile(null, 1f, 1f);
         treeToFarm = new ForestTree(testTile, true);
-    }
-
-    @After
-    public void tearDown() {
     }
 
     @Test
