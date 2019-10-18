@@ -151,7 +151,7 @@ public class MainCharacter extends Peon
     public static final String SWORDATTACK = "sword_standard";
     public static final String SPEARATTACK = "spear";
 
-    public static final String DRIVEBIKE = "flower_open";
+    public static final String DRIVEBIKE = "bike_animation";
 
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
