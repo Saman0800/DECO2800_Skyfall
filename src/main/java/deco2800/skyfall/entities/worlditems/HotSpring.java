@@ -12,7 +12,7 @@ public class HotSpring extends AbstractEntity {
     // Entity ID of hot spring
     private static final String ENTITY_ID_STRING = "hot_spring";
     // Amount of recovering
-    private static final int recoverHealingPower = 3;
+    private static final int RECOVERHEALINGPOWER = 3;
     // Biome
     private static final transient String BIOME = "forest";
     // MainCharacter player
@@ -74,7 +74,7 @@ public class HotSpring extends AbstractEntity {
      * The amount of recovering
      */
     public int amountOfRecovering() {
-        return recoverHealingPower;
+        return RECOVERHEALINGPOWER;
     }
 
     /**

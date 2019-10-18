@@ -63,7 +63,7 @@ public class QuestManager extends TickableManager {
     // List of buildings to be placed
     private List<BuildingType> buildingsPlaced = new ArrayList<>();
 
-   
+
 
     /**
      * Constructor, sets up beginning of game goals
