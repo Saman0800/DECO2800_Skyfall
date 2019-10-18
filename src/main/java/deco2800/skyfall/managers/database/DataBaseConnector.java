@@ -5,13 +5,51 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.MainCharacter.MainCharacterMemento;
 import deco2800.skyfall.entities.SaveableEntity.SaveableEntityMemento;
 import deco2800.skyfall.entities.StaticEntity;
-import deco2800.skyfall.entities.worlditems.*;
+import deco2800.skyfall.entities.worlditems.Bone;
+import deco2800.skyfall.entities.worlditems.DesertCacti;
+import deco2800.skyfall.entities.worlditems.DesertEnvironment;
+import deco2800.skyfall.entities.worlditems.DesertRock;
+import deco2800.skyfall.entities.worlditems.DesertShrub;
+import deco2800.skyfall.entities.worlditems.ForestMushroom;
+import deco2800.skyfall.entities.worlditems.ForestRock;
+import deco2800.skyfall.entities.worlditems.ForestShrub;
+import deco2800.skyfall.entities.worlditems.ForestTree;
+import deco2800.skyfall.entities.worlditems.Leaves;
+import deco2800.skyfall.entities.worlditems.MountainRock;
+import deco2800.skyfall.entities.worlditems.MountainTree;
+import deco2800.skyfall.entities.worlditems.OrganicMound;
+import deco2800.skyfall.entities.worlditems.RuinedCity;
+import deco2800.skyfall.entities.worlditems.RuinedRobot;
+import deco2800.skyfall.entities.worlditems.Shipwrecks;
+import deco2800.skyfall.entities.worlditems.SnowClump;
+import deco2800.skyfall.entities.worlditems.SnowShrub;
+import deco2800.skyfall.entities.worlditems.SwampRock;
+import deco2800.skyfall.entities.worlditems.SwampShrub;
+import deco2800.skyfall.entities.worlditems.SwampTree;
+import deco2800.skyfall.entities.worlditems.TreeStump;
+import deco2800.skyfall.entities.worlditems.VolcanicRock;
+import deco2800.skyfall.entities.worlditems.VolcanicShrub;
+import deco2800.skyfall.entities.worlditems.VolcanicTree;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.resources.GoldPiece;
-import deco2800.skyfall.saving.*;
+import deco2800.skyfall.saving.DatabaseException;
+import deco2800.skyfall.saving.LoadException;
+import deco2800.skyfall.saving.RunTimeLoadException;
+import deco2800.skyfall.saving.RunTimeSaveException;
+import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.saving.Save.SaveMemento;
-import deco2800.skyfall.worlds.biomes.*;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.AbstractBiome.AbstractBiomeMemento;
+import deco2800.skyfall.worlds.biomes.BeachBiome;
+import deco2800.skyfall.worlds.biomes.DesertBiome;
+import deco2800.skyfall.worlds.biomes.ForestBiome;
+import deco2800.skyfall.worlds.biomes.LakeBiome;
+import deco2800.skyfall.worlds.biomes.MountainBiome;
+import deco2800.skyfall.worlds.biomes.OceanBiome;
+import deco2800.skyfall.worlds.biomes.RiverBiome;
+import deco2800.skyfall.worlds.biomes.SnowyMountainsBiome;
+import deco2800.skyfall.worlds.biomes.SwampBiome;
+import deco2800.skyfall.worlds.biomes.VolcanicMountainsBiome;
 import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.VoronoiEdge.VoronoiEdgeMemento;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
@@ -23,7 +61,12 @@ import deco2800.skyfall.worlds.world.World.WorldMemento;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -149,7 +192,7 @@ public class DataBaseConnector {
         for (WorldGenNode worldGenNode : world.getWorldGenNodes()) {
             if (containsQueries.containsNode(world.getID(), worldGenNode.getX(), worldGenNode.getY())) {
                 updateQueries.updateNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(), worldGenNode.save(),
-                        worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
+                    worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
             } else {
                 insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(), worldGenNode.save(),
                     worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
@@ -164,12 +207,13 @@ public class DataBaseConnector {
 
     /**
      * Saves the edges
-     * @param world The world from which the edges are beings saved
+     *
+     * @param world           The world from which the edges are beings saved
      * @param containsQueries Class that contains query selections
-     * @param insertQueries Class that contains query insertions
-     * @param updateQueries Class that contains query updates
+     * @param insertQueries   Class that contains query insertions
+     * @param updateQueries   Class that contains query updates
      * @throws SQLException If an sql error occurs
-     * @throws IOException If a writing error occurs
+     * @throws IOException  If a writing error occurs
      */
     private void saveEdges(World world, ContainsDataQueries containsQueries, InsertDataQueries insertQueries,
         UpdateDataQueries updateQueries) throws SQLException, IOException {
@@ -321,7 +365,7 @@ public class DataBaseConnector {
     /**
      * Loads the world of a save
      *
-     * @param save        the save to load from
+     * @param save the save to load from
      * @return the save's current world
      */
     public World loadWorlds(Save save) {
@@ -758,10 +802,10 @@ public class DataBaseConnector {
                 return new DesertEnvironment(entityMemento);
             case "Shipwrecks":
                 return new Shipwrecks(entityMemento);
-                case "ruinedRobot":
-                return new ruinedRobot(entityMemento);
+            case "ruinedRobot":
+                return new RuinedRobot(entityMemento);
             case "ruinedCity":
-                return new ruinedCity(entityMemento);
+                return new RuinedCity(entityMemento);
             default:
                 throw new LoadException(
                     String.format("Could not create %s from memento", entityMemento.getEntityType()));
@@ -883,8 +927,17 @@ public class DataBaseConnector {
         }
     }
 
-    // FIXME:jeffvan12 implement delete save method
+    /**
+     * Deletes a save
+     * @param saveId The id of the save to be deleted
+     */
     public void deleteSave(long saveId) {
-
+            try (PreparedStatement preparedStatement = connection
+                .prepareStatement("DELETE FROM SAVES WHERE save_id = ?")) {
+                preparedStatement.setLong(1, saveId);
+                preparedStatement.execute();
+            } catch(SQLException e){
+                throw new RunTimeSaveException("Unable to delete save", e);
+            }
     }
 }

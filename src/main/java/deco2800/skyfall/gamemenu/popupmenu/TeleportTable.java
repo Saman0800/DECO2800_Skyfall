@@ -15,7 +15,6 @@ import deco2800.skyfall.saving.Save;
 
 public class TeleportTable extends AbstractPopUpElement {
     private Skin skin;
-    private Table baseTable;
     private Label locationLabel;
     private Label teleportLabel;
     private Save save;

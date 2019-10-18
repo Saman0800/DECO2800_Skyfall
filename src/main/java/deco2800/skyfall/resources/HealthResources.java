@@ -5,8 +5,6 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public abstract class HealthResources extends AbstractEntity implements Item {
@@ -43,12 +41,6 @@ public abstract class HealthResources extends AbstractEntity implements Item {
 
     // the colour of the health resource
     protected String colour;
-
-    // Logger for class to display messages
-    private final transient Logger logger =
-            LoggerFactory.getLogger(InventoryManager.class);
-
-
 
     /**
      * Creates a default health resource.
@@ -218,8 +210,6 @@ public abstract class HealthResources extends AbstractEntity implements Item {
         if (MainCharacter.getInstance().getHealth() < 50 && !MainCharacter.getInstance().isDead()) {
             // Add health to player
             MainCharacter.getInstance().changeHealth(getHealthValue());
-        }else{
-            logger.info("Health already at a maximum of 50, cannot add more");
         }
     }
 

@@ -1,7 +1,6 @@
 package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
@@ -25,24 +24,13 @@ public class Hatchet extends ManufacturedResources implements Blueprint {
     //Used for farming sound
     private static final String CUT_TREE = "cut_tree";
 
-    /***
-     * Create a Hatecht with the name Hatchet
-     *
-     * @param owner    the owner of the inventory.
-     * @param position the position of the Hatchet.
-     */
-    public Hatchet(MainCharacter owner, HexVector position) {
-        super(owner, position);
-        init();
-    }
-
     private void init() {
         this.name = "Hatchet";
         allRequirements = new HashMap<>();
         allRequirements.put("Wood", 25);
         allRequirements.put("Stone", 10);
         allRequirements.put("Metal", 0);
-        description = "hatchey";
+        description = "hatchet";
         carryable = true;
     }
 
@@ -51,6 +39,36 @@ public class Hatchet extends ManufacturedResources implements Blueprint {
      */
     public Hatchet() {
         init();
+    }
+
+    /**
+     * Returns the number of wood required for the item.
+     *
+     * @return The name of the item
+     */
+    @Override
+    public int getRequiredWood() {
+        return 25;
+    }
+
+    /**
+     * Returns the number of stones required for the item.
+     *
+     * @return The name of the item
+     */
+    @Override
+    public int getRequiredStone() {
+        return 10;
+    }
+
+    /**
+     * Returns the number of metal required for the item.
+     *
+     * @return The name of the item
+     */
+    @Override
+    public int getRequiredMetal() {
+        return 0;
     }
 
     /**
@@ -106,5 +124,6 @@ public class Hatchet extends ManufacturedResources implements Blueprint {
         String message = String.format("Durability: %d", this.getDurability());
         logger.warn(message);
     }
+
 
 }

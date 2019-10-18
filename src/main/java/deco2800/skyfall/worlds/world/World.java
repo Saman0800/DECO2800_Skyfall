@@ -60,7 +60,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
 
     private Map<String, Float> frictionMap;
 
-    protected HashMap<Pair<Integer, Integer>, Chunk> loadedChunks;
+    protected Map<Pair<Integer, Integer>, Chunk> loadedChunks;
 
     private int loadedAreaLowerX;
     private int loadedAreaLowerY;
@@ -68,15 +68,15 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
     private int loadedAreaUpperY;
 
     // A list of all the tiles within a world
-    protected CopyOnWriteArrayList<WorldGenNode> worldGenNodes;
-    protected CopyOnWriteArrayList<VoronoiEdge> voronoiEdges;
+    protected List<WorldGenNode> worldGenNodes;
+    protected List<VoronoiEdge> voronoiEdges;
 
     // The noise generators used when adding offset during the biome assignment.
     protected NoiseGenerator tileOffsetNoiseGeneratorX;
     protected NoiseGenerator tileOffsetNoiseGeneratorY;
 
-    protected LinkedHashMap<VoronoiEdge, RiverBiome> riverEdges;
-    protected LinkedHashMap<VoronoiEdge, BeachBiome> beachEdges;
+    protected Map<VoronoiEdge, RiverBiome> riverEdges;
+    protected Map<VoronoiEdge, BeachBiome> beachEdges;
 
     protected Map<AbstractBiome, List<EntitySpawnRule>> spawnRules;
     protected NoiseGenerator staticEntityNoise;
@@ -389,8 +389,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
      * @deprecated since this only affects the loaded chunks and is no longer a
      *             trivial replacement of lists
      */
-    @Deprecated
-    public void setTileMap(CopyOnWriteArrayList<Tile> tileMap) {
+    public void setTileMap(List<Tile> tileMap) {
         for (Chunk chunk : loadedChunks.values()) {
             chunk.getEntities().clear();
         }
@@ -405,7 +404,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         chunk.getTiles().add(tile);
     }
 
-    public HashMap<Pair<Integer, Integer>, Chunk> getLoadedChunks() {
+    public Map<Pair<Integer, Integer>, Chunk> getLoadedChunks() {
         return loadedChunks;
     }
 
@@ -472,9 +471,8 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
                 .flatMap(entry -> entry.getValue().getTiles().stream()
                         .sorted(Comparator.comparing(tile -> new Pair<>(tile.getCol(), tile.getRow()))))
                 .forEachOrdered(tile -> {
-                    String out = String.format("%f, %f, %s, %s", tile.getCol(), tile.getRow(),
-                            tile.getBiome().getBiomeName(), tile.getTextureName()) + '\n';
-                    string.append(out);
+                    string.append(String.format("%f, %f, %s, %s", tile.getCol(), tile.getRow(),
+                            tile.getBiome().getBiomeName(), tile.getTextureName()) + '\n');
                 });
         return string.toString();
     }
@@ -667,7 +665,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
      *
      * @param edges the list of edges that are rivers
      */
-    public void setRiverEdges(LinkedHashMap<VoronoiEdge, RiverBiome> edges) {
+    public void setRiverEdges(Map<VoronoiEdge, RiverBiome> edges) {
         this.riverEdges = edges;
     }
 
@@ -676,7 +674,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
      *
      * @param edges the list of edges that are beaches
      */
-    public void setBeachEdges(LinkedHashMap<VoronoiEdge, BeachBiome> edges) {
+    public void setBeachEdges(Map<VoronoiEdge, BeachBiome> edges) {
         this.beachEdges = edges;
     }
 
@@ -685,7 +683,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
      *
      * @return the edges that are in rivers, and their associated biomes
      */
-    public LinkedHashMap<VoronoiEdge, RiverBiome> getRiverEdges() {
+    public Map<VoronoiEdge, RiverBiome> getRiverEdges() {
         return this.riverEdges;
     }
 
@@ -694,7 +692,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
      *
      * @return the edges that are in beaches, and their associated biomes
      */
-    public LinkedHashMap<VoronoiEdge, BeachBiome> getBeachEdges() {
+    public Map<VoronoiEdge, BeachBiome> getBeachEdges() {
         return this.beachEdges;
     }
 

@@ -9,20 +9,44 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
 
 /**
- * Generic Pop up element.
- * By default just displays an exit button.
+ * Generic Pop up element. By default just displays an exit button.
  */
 public class AbstractPopUpElement extends AbstractUIElement {
     protected GameMenuManager gameMenuManager;
     protected Table baseTable;
     private ImageButton exitButton;
     private boolean isVisible = false;
+
+    /**
+     * Constructor
+     * 
+     * @param stage           Game stage
+     * @param exitButton      Exit button to display
+     * @param textureNames    Texture names to fetch
+     * @param tm              The texture manager
+     * @param gameMenuManager The gamemenumanager
+     */
+    public AbstractPopUpElement(Stage stage, ImageButton exitButton, String[] textureNames, TextureManager tm,
+            GameMenuManager gameMenuManager) {
+        super(stage, textureNames, tm);
+        this.exitButton = exitButton;
+        this.gameMenuManager = gameMenuManager;
+        if (exitButton != null) {
+            exitButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    hide();
+                }
+            });
+        }
+    }
 
     /**
      * Hides all of the elements associated with the element.
@@ -77,33 +101,10 @@ public class AbstractPopUpElement extends AbstractUIElement {
      */
     @Override
     public void updatePosition() {
-        float x  = stage.getCamera().position.x  + (stage.getCamera().viewportWidth / 2);
-        float y = stage.getCamera().position.y  +  (stage.getCamera().viewportHeight / 2);
+        float x = stage.getCamera().position.x + (stage.getCamera().viewportWidth / 2);
+        float y = stage.getCamera().position.y + (stage.getCamera().viewportHeight / 2);
         if (exitButton != null) {
             exitButton.setPosition(x * 0.8f, y * 0.9f);
-        }
-    }
-
-    /**
-     * Constructor
-     * @param stage Game stage
-     * @param exitButton Exit button to display
-     * @param textureNames Texture names to fetch
-     * @param tm The texture manager
-     * @param gameMenuManager The gamemenumanager
-     */
-    public AbstractPopUpElement(Stage stage, ImageButton exitButton, String[] textureNames,
-                                TextureManager tm, GameMenuManager gameMenuManager) {
-        super(stage, textureNames, tm);
-        this.exitButton = exitButton;
-        this.gameMenuManager = gameMenuManager;
-        if (exitButton != null) {
-            exitButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    hide();
-                }
-            });
         }
     }
 
@@ -122,7 +123,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
     }
 
 
-    public void buidlingAndBuildWorldCommonFunctionality(Skin skin, String title) {
+    protected void buidlingAndBuildWorldCommonFunctionality(Skin skin, String title) {
         baseTable = new Table();
         baseTable.setSize(800, 800 * 1346 / 1862f);
         baseTable.setPosition(Gdx.graphics.getWidth() / 2f - baseTable.getWidth() / 2,

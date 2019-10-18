@@ -2,22 +2,22 @@ package deco2800.skyfall.entities.worlditems;
 
 import deco2800.skyfall.worlds.Tile;
 
-public class ruinedRobot extends AbstractEnvironment {
+public class RuinedRobot extends AbstractEnvironment {
 
     /**
      * Entity ID
      *
      */
     private static final String ENTITY_ID_STRING = "ruined_robot";
-    private static final String ruinedRobotString = "ruinedRobot";
+    private static final String RuinedRobotString = "ruinedRobot";
 
     /**
      * Set the entity ID of ruined robot to the object name
      *
      */
-    public ruinedRobot() {
+    public RuinedRobot() {
         super();
-        this.setTexture(ruinedRobotString);
+        this.setTexture(RuinedRobotString);
         setupParams();
     }
 
@@ -27,8 +27,8 @@ public class ruinedRobot extends AbstractEnvironment {
      * @param tile       - The tile it spawns on
      * @param obstructed - Whether the entity is obstructed by something
      */
-    public ruinedRobot(Tile tile, boolean obstructed) {
-        super(tile, ruinedRobotString, obstructed);
+    public RuinedRobot(Tile tile, boolean obstructed) {
+        super(tile, RuinedRobotString, obstructed);
         setupParams();
     }
 
@@ -37,14 +37,14 @@ public class ruinedRobot extends AbstractEnvironment {
      *
      * @param memento the static ruined robot to add
      */
-    public ruinedRobot(SaveableEntityMemento memento) {
+    public RuinedRobot(SaveableEntityMemento memento) {
         super(memento);
         setupParams();
     }
 
     private void setupParams() {
         this.setObjectName(ENTITY_ID_STRING);
-        this.entityType = ruinedRobotString;
+        this.entityType = RuinedRobotString;
     }
 
     /**
@@ -53,7 +53,7 @@ public class ruinedRobot extends AbstractEnvironment {
      * @param tile - The tile it spawns on
      */
     @Override
-    public ruinedRobot newInstance(Tile tile) {
-        return new ruinedRobot(tile, this.isObstructed());
+    public RuinedRobot newInstance(Tile tile) {
+        return new RuinedRobot(tile, this.isObstructed());
     }
 }

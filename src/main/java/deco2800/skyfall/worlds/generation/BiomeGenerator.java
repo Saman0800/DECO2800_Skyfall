@@ -7,6 +7,7 @@ import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldParameters;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -14,33 +15,58 @@ import java.util.stream.Collectors;
  * Builds biomes from the nodes generated in the previous phase of the world generation.
  */
 public class BiomeGenerator implements BiomeGeneratorInterface {
-    /** The world this is generating biomes for */
+    /**
+     * The world this is generating biomes for
+     */
     private final World world;
 
-    /** The `Random` instance being used for world generation. */
+    /**
+     * The `Random` instance being used for world generation.
+     */
     private final Random random;
 
-    /** The number of nodes to be generated in each biome. */
+    /**
+     * The number of nodes to be generated in each biome.
+     */
     private final int[] biomeSizes;
 
-    /** The nodes generated in the previous phase of the world generation. */
+    // String Constant
+    private static final String OCEAN = "ocean";
+
+    /**
+     * The nodes generated in the previous phase of the world generation.
+     */
     private final List<WorldGenNode> nodes;
-    /** The edges generated in the previous phase of the world generation. */
+    /**
+     * The edges generated in the previous phase of the world generation.
+     */
     private final List<VoronoiEdge> voronoiEdges;
-    /** The nodes that have already been assigned to */
+    /**
+     * The nodes that have already been assigned to
+     */
     private HashSet<WorldGenNode> usedNodes;
-    /** The nodes that are currently adjacent to a free node. */
+    /**
+     * The nodes that are currently adjacent to a free node.
+     */
     private ArrayList<WorldGenNode> borderNodes;
 
-    /** The biomes generated during the generation process. */
+    /**
+     * The biomes generated during the generation process.
+     */
     private ArrayList<BiomeInProgress> biomes;
-    /** The actual biomes to fill after generation. */
+    /**
+     * The actual biomes to fill after generation.
+     */
     private final List<AbstractBiome> realBiomes;
 
-    /** A map from a WorldGenNode to the BiomeInProgress that contains it. */
+    /**
+     * A map from a WorldGenNode to the BiomeInProgress that contains it.
+     */
     private HashMap<WorldGenNode, BiomeInProgress> nodesBiomes;
 
-    /** The node on the center of the map */
+    /**
+     * The node on the center of the map
+     */
     private WorldGenNode centerNode;
 
     // The number of lakes and rivers
@@ -51,10 +77,9 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
     /**
      * Creates a {@code BiomeGenerator} for a list of nodes (but does not start the generation).
      *
-     * @param nodes      the nodes generated in the previous phase of the world generation
-     * @param random     the random number generator used for deterministic generation
+     * @param nodes           the nodes generated in the previous phase of the world generation
+     * @param random          the random number generator used for deterministic generation
      * @param worldParameters A class that contains most the world parameters
-     *
      * @throws NotEnoughPointsException if there are not enough non-border nodes from which to form the biomes
      */
     public BiomeGenerator(World world, List<WorldGenNode> nodes, List<VoronoiEdge> voronoiEdges, Random random,
@@ -64,7 +89,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
         Objects.requireNonNull(random, "random must not be null");
         Objects.requireNonNull(worldParameters.getBiomeSizes(), "biomeSizes must not be null");
         Objects.requireNonNull(worldParameters.getBiomes(), "realBiomes must not be null");
-        for (AbstractBiome realBiome : worldParameters.getBiomes()){
+        for (AbstractBiome realBiome : worldParameters.getBiomes()) {
             Objects.requireNonNull(realBiome, "Elements of realBiome must not be null");
         }
 
@@ -95,7 +120,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      */
     private WorldGenNode calculateCenterNode() {
         // Start the first biome at the node closest to the centre.
-        WorldGenNode centerNode = null;
+        WorldGenNode worldCenterNode = null;
         // Keep track of the squared distance, because it saves calls to the relatively expensive
         // Math.sqrt().
         double centerDistanceSquared = Double.POSITIVE_INFINITY;
@@ -105,10 +130,10 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             double newCenterDistanceSquared = x * x + y * y;
             if (newCenterDistanceSquared < centerDistanceSquared) {
                 centerDistanceSquared = newCenterDistanceSquared;
-                centerNode = node;
+                worldCenterNode = node;
             }
         }
-        return centerNode;
+        return worldCenterNode;
     }
 
     /**
@@ -239,12 +264,12 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
 
         for (VoronoiEdge edge : voronoiEdges) {
             int oceanIndex = -1;
-            if (realBiomes.get(nodesBiomes.get(edge.getEdgeNodes().get(0)).id).getBiomeName().equals("ocean")) {
+            if (realBiomes.get(nodesBiomes.get(edge.getEdgeNodes().get(0)).id).getBiomeName().equals(OCEAN)) {
                 oceanIndex = 0;
             }
-            if (realBiomes.get(nodesBiomes.get(edge.getEdgeNodes().get(1)).id).getBiomeName().equals("ocean")) {
+            if (realBiomes.get(nodesBiomes.get(edge.getEdgeNodes().get(1)).id).getBiomeName().equals(OCEAN)) {
 
-                if (realBiomes.get(nodesBiomes.get(edge.getEdgeNodes().get(0)).id).getBiomeName().equals("ocean") ||
+                if (realBiomes.get(nodesBiomes.get(edge.getEdgeNodes().get(0)).id).getBiomeName().equals(OCEAN) ||
                         oceanIndex == 0) {
                     oceanIndex = -1;
                 } else {
@@ -271,7 +296,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      *
      * @param lakeSizes The number of WorldGenNodes to make each lake out of
      * @param noLakes   The number of lakes to genereate
-     *
      * @throws DeadEndGenerationException If a valid position for a lake cannot be found
      */
     private void generateLakes(int[] lakeSizes, int noLakes) throws DeadEndGenerationException {
@@ -317,9 +341,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      *
      * @param size          the size of the lake in nodes
      * @param tempLakeNodes the lake nodes
-     *
      * @return the list of nodes to comprise the lake
-     *
      * @throws DeadEndGenerationException if too many attempts fail
      */
     private List<WorldGenNode> findPossibleLakeLocation(int size, List<WorldGenNode> tempLakeNodes)
@@ -387,7 +409,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      * Calculate the parent biome for a lake with the given nodes.
      *
      * @param nodesFound the nodes of the lake
-     *
      * @return the parent biome
      */
     private BiomeInProgress findParentBiomeForLake(List<WorldGenNode> nodesFound) {
@@ -422,9 +443,8 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      * the adjacent nodes, it gets the biome of node.getTiles().get(0), which can be a lake if some of the tiles have
      * already been overwritten by rivers. This method is still deterministic for a constant riverWidth
      *
-     * @param noRivers   The number of rivers to generate
-     * @param edges      A list of edges that a river can use
-     *
+     * @param noRivers The number of rivers to generate
+     * @param edges    A list of edges that a river can use
      * @throws DeadEndGenerationException If not enough valid rivers can be found
      */
     private void generateRivers(int noRivers, List<VoronoiEdge> edges)
@@ -521,7 +541,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      *
      * @param node      The node to check
      * @param nodeBiome The biome of the node
-     *
      * @return whether or not the node has a neighbour with a different biome to it
      */
     private boolean hasNeighbourOfDifferentBiome(WorldGenNode node, BiomeInProgress nodeBiome) {
@@ -542,7 +561,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      * @param edges a list of edges to check
      * @param node  a node on the edge of the biome
      * @param biome the biome the edge is protruding from
-     *
      * @return A VoronoiEdge that has exactly one vertex in the biome, null if there is no such edge
      */
     private VoronoiEdge edgeProtrudingFromBiome(List<VoronoiEdge> edges, WorldGenNode node, BiomeInProgress biome) {
@@ -572,7 +590,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      * Returns whether the node is adjacent to any free nodes.
      *
      * @param node the node to check
-     *
      * @return whether the node is adjacent to any free nodes
      */
     private boolean nodeIsBorder(WorldGenNode node) {
@@ -583,7 +600,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      * Returns whether the node is free to be expanded into.
      *
      * @param node the node to check
-     *
      * @return whether the node is free to be expanded into.
      */
     private boolean nodeIsFree(WorldGenNode node) {
@@ -595,7 +611,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      *
      * @param node          the node to check
      * @param tempLakeNodes the nodes that have already been assigned as lakes
-     *
      * @return whether the node is a valid lake node
      */
     private boolean validLakeNode(WorldGenNode node, List<WorldGenNode> tempLakeNodes) {
@@ -612,22 +627,26 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             }
         }
 
+        return !(biomeLoop(node, neighbours));
+    }
+
+    private boolean biomeLoop(WorldGenNode node, List<WorldGenNode> neighbours) {
         // Loop through each biome to find which one the node is in
         for (int i = 0; i < biomes.size(); i++) {
             String biomeName = realBiomes.get(i).getBiomeName();
-            boolean invalidBiome = (biomeName.equals("ocean") || biomeName.equals("lake"));
+            boolean invalidBiome = (biomeName.equals(OCEAN) || biomeName.equals("lake"));
             // If the node is in a lake or ocean, don't allow it
             if (biomes.get(i).nodes.contains(node) && invalidBiome) {
-                return false;
+                return true;
             }
             // Don't allow nodes that are adjacent to the ocean or other lakes
             for (WorldGenNode nodeToTest : neighbours) {
                 if (biomes.get(i).nodes.contains(nodeToTest) && invalidBiome) {
-                    return false;
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
     }
 
     /**
@@ -635,7 +654,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      *
      * @param nodes  the nodes from which to select
      * @param random the RNG used for the selection
-     *
      * @return a random node from the provided list
      */
     private static WorldGenNode selectWeightedRandomNode(List<WorldGenNode> nodes, Random random) {
@@ -656,13 +674,19 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      * because it contains extra data that is not needed after the generation process.
      */
     private class BiomeInProgress {
-        /** The ID of the biome. */
+        /**
+         * The ID of the biome.
+         */
         private int id;
 
-        /** The nodes contained within this biome. */
+        /**
+         * The nodes contained within this biome.
+         */
         private ArrayList<WorldGenNode> nodes;
 
-        /** The nodes on the border of the biome (for growing). */
+        /**
+         * The nodes on the border of the biome (for growing).
+         */
         private ArrayList<WorldGenNode> borderNodes;
 
         /**

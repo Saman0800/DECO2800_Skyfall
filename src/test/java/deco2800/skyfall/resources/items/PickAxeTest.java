@@ -18,11 +18,11 @@ public class PickAxeTest {
     private Tile testTile;
 
     @Before
-    public void setUp() {
+    public void setUp() throws NoSuchFieldException, IllegalAccessException {
+        pickAxe = new PickAxe();
         MainCharacter.resetInstance();
         owner = MainCharacter.getInstance(1f, 1f, 0.05f, "player", 10);
         position = new HexVector(1f, 1f);
-        pickAxe = new PickAxe(owner, position);
         testTile = new Tile(null, 1f, 1f);
         rockToFarm = new ForestRock(testTile, true);
     }
