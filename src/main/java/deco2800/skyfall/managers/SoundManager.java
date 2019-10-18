@@ -153,7 +153,8 @@ public class SoundManager extends AbstractManager {
                     (Gdx.files.internal(PATH + "walk_N.mp3")));
             soundMap.put("bike_animation", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "bike-movement.wav")));
-
+            soundMap.put("sand_car_animation", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "movement-car.wav")));
 
             // make into for-loop for nicer code :)
             musicMap.put("forest_day", Gdx.audio.newMusic

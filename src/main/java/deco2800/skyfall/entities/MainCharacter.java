@@ -152,7 +152,7 @@ public class MainCharacter extends Peon
     public static final String SPEARATTACK = "spear";
 
     public static final String DRIVEBIKE = "bike_animation";
-    public static final String DRIVESANDCAR = "flower_open";
+    public static final String DRIVESANDCAR = "sand_car_animation";
 
 
     // Level/point system for the Main Character to be recorded as game goes on
