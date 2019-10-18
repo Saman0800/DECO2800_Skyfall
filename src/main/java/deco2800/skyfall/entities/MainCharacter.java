@@ -166,13 +166,6 @@ public class MainCharacter extends Peon
     private List<Blueprint> blueprintsLearned;
     private PetsManager petsManager;
 
-    /*
-     * What stage of the game is the player on? Controls what blueprints the player
-     * can buy and make. 0 = Forest 1 = Desert 2 = Mountain 3 = Volcano
-     */
-
-    // The name of the item to be created.
-    private String itemToCreate;
 
     /**
      * Gets the crafted buildings
@@ -1729,24 +1722,6 @@ public class MainCharacter extends Peon
      */
     public List<Blueprint> getBlueprintsLearned() {
         return this.blueprintsLearned;
-    }
-
-    /***
-     * A getter method to get the Item to be created.
-     *
-     * @return the item to create.
-     */
-    public String getItemToCreate() {
-        return this.itemToCreate;
-    }
-
-    /***
-     * A Setter method to get the Item to be created.
-     *
-     * @param item the item to be created.
-     */
-    public void setItemToCreate(String item) {
-        this.itemToCreate = item;
     }
 
     /***
