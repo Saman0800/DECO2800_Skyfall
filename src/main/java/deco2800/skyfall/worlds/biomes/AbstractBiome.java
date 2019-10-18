@@ -213,7 +213,6 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
             this.biomeType = biome.getBiomeName();
             this.noiseGeneratorSeed = biome.textureGenerator.getSeed();
             if (biome.getParentBiome() == null) {
-                // TODO find a better value to represent null
                 this.parentBiomeID = -1;
             } else {
                 this.parentBiomeID = biome.parentBiome.id;

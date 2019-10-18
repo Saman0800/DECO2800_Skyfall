@@ -33,7 +33,7 @@ public class TutorialWorld extends World implements TouchDownObserver {
 
         List<AbstractEntity> entityList = GameManager.get().getWorld().getEntities();
 
-        ScrollingTextBox testTutorialBox = GuiMaster.ScrollingTextBox("tutorialScrollingBox");
+        ScrollingTextBox testTutorialBox = GuiMaster.scrollingtextBox("tutorialScrollingBox");
         if (firstTime) {
             // Flavour text for the tutorial
             testTutorialBox

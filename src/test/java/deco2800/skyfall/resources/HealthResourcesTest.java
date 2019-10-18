@@ -1,7 +1,7 @@
 package deco2800.skyfall.resources;
 
 import deco2800.skyfall.resources.items.Apple;
-import deco2800.skyfall.resources.items.Aloe_Vera;
+import deco2800.skyfall.resources.items.AloeVera;
 import deco2800.skyfall.resources.items.Berry;
 import deco2800.skyfall.resources.items.PoisonousMushroom;
 import org.junit.After;
@@ -22,7 +22,7 @@ public class HealthResourcesTest {
     @Before
     public void setUp() throws Exception {
         apple = new Apple();
-        aloe_vera = new Aloe_Vera();
+        aloe_vera = new AloeVera();
         berry = new Berry();
         poisonousmushroom = new PoisonousMushroom();
 

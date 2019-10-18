@@ -9,10 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import deco2800.skyfall.BaseGDXTest;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.gamemenu.AbstractPopUpElement;
-import deco2800.skyfall.gamemenu.Clock;
-
-import deco2800.skyfall.managers.*;
+import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.QuestManager;
+import deco2800.skyfall.managers.TextureManager;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -67,8 +66,9 @@ public class CollectCreateTableTest extends BaseGDXTest {
 
     @Test
     public void setCompleteTest1() {
-        element = new CollectCreateTable(stage, exitButton, null, tm,  gmm, qm, skin, "collect");
+        when(gmm.getQuestManager()).thenReturn(qm);
 
+        element = new CollectCreateTable(stage, exitButton, null, tm,  gmm, skin, "collect");
         when(qm.checkGold()).thenReturn(true);
         when(qm.checkMetal()).thenReturn(true);
         when(qm.checkStone()).thenReturn(true);
@@ -84,7 +84,9 @@ public class CollectCreateTableTest extends BaseGDXTest {
 
     @Test
     public void setCompleteTest2() {
-        element = new CollectCreateTable(stage, exitButton, null, tm,  gmm, qm, skin, "collect");
+        when(gmm.getQuestManager()).thenReturn(qm);
+
+        element = new CollectCreateTable(stage, exitButton, null, tm,  gmm, skin, "collect");
 
         when(qm.checkGold()).thenReturn(false);
         when(qm.checkMetal()).thenReturn(false);
@@ -94,7 +96,9 @@ public class CollectCreateTableTest extends BaseGDXTest {
 
     @Test
     public void updateTextTest() {
-        element = new CollectCreateTable(stage, exitButton, null, tm,  gmm, qm, skin, "collect");
+        when(gmm.getQuestManager()).thenReturn(qm);
+
+        element = new CollectCreateTable(stage, exitButton, null, tm,  gmm, skin, "collect");
 
         when(qm.getGoldTotal()).thenReturn(30);
         when(qm.getMetalTotal()).thenReturn(30);
@@ -113,7 +117,8 @@ public class CollectCreateTableTest extends BaseGDXTest {
         assertEquals("30 x Wood" ,element.getLabelWood().getText().toString());
         assertEquals("30 x Stone" ,element.getLabelStone().getText().toString());
 
-        assertEquals("10 x Sword" ,element.getLabelSword().getText().toString());
+        assertEquals("10 x Sword" ,
+                element.getLabelSword().getText().toString());
         assertEquals("10 x Spear" ,
                 element.getLabelSpear().getText().toString());
         assertEquals("10 x Bow" ,element.getLabelBow().getText().toString());
