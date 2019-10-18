@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.managers.TextureManager;
 
 /**
@@ -26,6 +27,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
         if (exitButton != null) {
             exitButton.setVisible(false);
         }
+        SoundManager.playSound("menu");
         isVisible = false;
         gameMenuManager.getMainCharacter().resetVelocity();
         resume();
@@ -56,6 +58,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
             exitButton.setVisible(true);
             exitButton.top();
         }
+        SoundManager.playSound("menu");
         gameMenuManager.getMainCharacter().resetVelocity();
         isVisible = true;
         pause();

@@ -152,6 +152,7 @@ public class MainCharacter extends Peon
     public static final String SPEARATTACK = "spear";
 
     public static final String DRIVEBIKE = "bike_animation";
+    public static final String DRIVESANDCAR = "flower_open";
 
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
@@ -1189,6 +1190,11 @@ public class MainCharacter extends Peon
                     vehicle = (SandCar) ve;
                     ((SandCar) vehicle).removeSandCar();
                     isOnVehicle=true;
+                    // Stop main character walking sound
+                    SoundManager.stopSound(WALK_NORMAL);
+                    isMoving = false;
+                    // Play sandcar sound when it is on use
+                    SoundManager.loopSound(DRIVESANDCAR);
                     setCurrentState(AnimationRole.NULL);
                     vehicleTexture("sand_car");
                     setAcceleration(25.f);
@@ -2029,8 +2035,10 @@ public class MainCharacter extends Peon
             }else if(vehicleType.equals("sand_car")){
                 if (getVelocity().get(2) == 0f) {
                     setCurrentState(AnimationRole.NULL);
+                    SoundManager.stopSound(DRIVESANDCAR);
                 } else {
                     setCurrentState(AnimationRole.VEHICLE_MOVE);
+                    SoundManager.loopSound(DRIVESANDCAR);
                 }
             }
         }
