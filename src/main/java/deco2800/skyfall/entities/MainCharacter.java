@@ -193,6 +193,8 @@ public class MainCharacter extends Peon
     private ArrayList<Integer> velHistoryX;
     private ArrayList<Integer> velHistoryY;
     private boolean isMoving;
+    // A boolean variable for vehicle
+    private boolean isOnVehicle=false;
     private boolean canSwim;
     private boolean isSprinting;
 
@@ -1052,12 +1054,18 @@ public class MainCharacter extends Peon
     }
 
 
+    //A map to store all direction data for bike
     private Map<Direction, String> vehicleDirection=new HashMap<>();
 
+    //A map to store all direction data for sand car
     private Map<Direction, String> vehicleDirection2 = new HashMap<>();
 
     private String vehicleType = null;
 
+    /**
+     * Set corresponding vehicle directions to defaultDirectionTextures
+     * @param vehicleName
+     */
     private void vehicleTexture(String vehicleName){
         if (vehicleName.equals("bike")){
             defaultDirectionTextures = vehicleDirection;
@@ -1065,7 +1073,6 @@ public class MainCharacter extends Peon
         if (vehicleName.equals("sand_car")) {
             defaultDirectionTextures = vehicleDirection2;
         }
-
     }
 
     public void resetVelocity() {
@@ -1152,16 +1159,24 @@ public class MainCharacter extends Peon
         spellCaster.onKeyPressed(keycode);
     }
 
+    /**
+     * To apply a type vehicle between Bike and SandCar when the player pressed "V"
+     * and loop the vehicle sound when it is on use
+     */
     public void vehicleToUse() {
+        // If the vehicle is not on use
         if(!isOnVehicle){
             AbstractVehicle vehicle = null;
             for (AbstractEntity ve : GameManager.get().getWorld().getEntities()) {
+                // If the player has chosen bike
                 if (ve instanceof Bike && ve.distance(this) < 3) {
                     vehicle = (Bike) ve;
                     ((Bike) vehicle).removeBike();
                     isOnVehicle=true;
+                    // Stop main character walking sound
                     SoundManager.stopSound(WALK_NORMAL);
                     isMoving = false;
+                    // Play bike sound when it is on use
                     SoundManager.loopSound(DRIVEBIKE);
                     setCurrentState(AnimationRole.NULL);
                     vehicleTexture("bike");
@@ -1169,6 +1184,7 @@ public class MainCharacter extends Peon
                     setMaxSpeed(13.f);
                     vehicleType = "bike";
                 }
+                // If the player has chosen bike
                 if (ve instanceof SandCar && ve.distance(this) < 3) {
                     vehicle = (SandCar) ve;
                     ((SandCar) vehicle).removeSandCar();
@@ -1181,7 +1197,7 @@ public class MainCharacter extends Peon
                     unlockBiome("desert");
                 }
             }
-
+            // If the vehicle is on use
         }else{
             if (vehicleType.equals("bike")) {
                 defaultDirectionTextures=defaultMainCharacterTextureMap;
@@ -1976,10 +1992,10 @@ public class MainCharacter extends Peon
         defaultDirectionTextures=defaultMainCharacterTextureMap;
     }
 
-    private boolean isOnVehicle=false;
 
     /**
-     * If the animation is moving sets the animation state to be Move else NULL. Also sets the direction
+     * If the vehicle is moving sets the animation state to be Move and loop the
+     * vehicle sound; Otherwise, set to NULL and stop sound.
      */
     public void updateAnimation() {
         getPlayerDirectionCardinal();
