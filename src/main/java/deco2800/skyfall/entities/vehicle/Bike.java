@@ -6,6 +6,7 @@ import deco2800.skyfall.managers.GameManager;
 
 public class Bike extends AbstractVehicle {
     MainCharacter mc;
+    private static final transient String BIOME = "forest";
     private boolean isOnUse = false;
     private final static String textureName = "bike";
     private Direction movingDirection;
@@ -25,6 +26,10 @@ public class Bike extends AbstractVehicle {
     public boolean isOnUse() {
         this.removeBike();
         return this.isOnUse;
+    }
+
+    public String getBiome() {
+        return BIOME;
     }
 
     @Override

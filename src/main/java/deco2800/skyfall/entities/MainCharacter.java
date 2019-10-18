@@ -154,6 +154,7 @@ public class MainCharacter extends Peon
     public static final String DRIVEBIKE = "bike_animation";
     public static final String DRIVESANDCAR = "flower_open";
 
+
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
 
@@ -1067,7 +1068,7 @@ public class MainCharacter extends Peon
      * Set corresponding vehicle directions to defaultDirectionTextures
      * @param vehicleName
      */
-    private void vehicleTexture(String vehicleName){
+    public void vehicleTexture(String vehicleName){
         if (vehicleName.equals("bike")){
             defaultDirectionTextures = vehicleDirection;
         }
@@ -1112,6 +1113,7 @@ public class MainCharacter extends Peon
                 break;
             case Input.Keys.V:
                 vehicleToUse();
+                System.out.println(keycode);
                 break;
             case Input.Keys.SHIFT_LEFT:
                 isSprinting = true;
