@@ -31,7 +31,7 @@ public class InventoryManager extends TickableManager implements Serializable {
     // Maximum size of quick access inventory
     private static final int QA_MAX_SIZE = 4;
 
-    private final boolean HAS_QUICK_ACCESS = true;
+    protected boolean HAS_QUICK_ACCESS = true;
 
     public static final int COLS = 4;
     public static final int ROWS = 3;

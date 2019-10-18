@@ -1,27 +1,27 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
-import com.badlogic.gdx.Gdx;
+import java.util.List;
+
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import deco2800.skyfall.gamemenu.AbstractPopUpElement;
+
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.resources.Blueprint;
 
-import java.util.List;
-
-
 /**
  * A class for blueprint shop table pop up.
  */
-public class BlueprintShopTable extends AbstractPopUpElement {
+public class BlueprintShopTable extends AbstractPopUpConstruction {
     private final Skin skin;
     private final StatisticsManager sm;
-    private Table blueprintTable;
-    private Table blueprintPanel;
 
     /**
      * Constructs a blueprint shop table.
@@ -34,29 +34,11 @@ public class BlueprintShopTable extends AbstractPopUpElement {
      * @param skin            Current skin.
      */
     public BlueprintShopTable(Stage stage, ImageButton exit, String[] textureNames, TextureManager tm,
-                              GameMenuManager gameMenuManager, StatisticsManager sm, Skin skin) {
+            GameMenuManager gameMenuManager, StatisticsManager sm, Skin skin) {
         super(stage, exit, textureNames, tm, gameMenuManager);
         this.skin = skin;
         this.draw();
         this.sm = sm;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void hide() {
-        super.hide();
-        blueprintTable.setVisible(false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void show() {
-        super.show();
-        blueprintTable.setVisible(true);
     }
 
     /**
@@ -67,19 +49,8 @@ public class BlueprintShopTable extends AbstractPopUpElement {
     @Override
     public void draw() {
         super.draw();
-        blueprintTable = new Table();
-        blueprintTable.setSize(910, 510);
-        blueprintTable.setPosition(Gdx.graphics.getWidth() / 2f - blueprintTable.getWidth() / 2,
-                (Gdx.graphics.getHeight() + 160) / 2f - blueprintTable.getHeight() / 2);
-        blueprintTable.setDebug(true);
-        blueprintTable.top();
-        blueprintTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("pop up screen"));
-        blueprintTable.setName("chestTable");
 
-        Image infoBar = new Image(gameMenuManager.generateTextureRegionDrawableObject("blueprint_shop_banner"));
-        infoBar.setSize(650, 55);
-        infoBar.setPosition(130, 435);
-
+        Image infoBar = this.setNewInfoBar();
         this.blueprintPanel = new Table();
 
         blueprintTable.addActor(infoBar);
@@ -106,8 +77,8 @@ public class BlueprintShopTable extends AbstractPopUpElement {
 
         for (Blueprint b : unlocked) {
 
-            ImageButton icon =
-                    new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(b.getName() + "_inv"));
+            ImageButton icon = new ImageButton(
+                    gameMenuManager.generateTextureRegionDrawableObject(b.getName() + "_inv"));
             icon.setName("icon");
             icon.setSize(100, 100);
             icon.setPosition(xpos + count * 130, ypos);
