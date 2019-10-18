@@ -49,7 +49,8 @@ import java.util.stream.Collectors;
  * items.
  */
 public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
-    public static final int LOADED_RADIUS = 50;
+    public static final int LOADED_RADIUS = 25;
+
     protected long id;
 
     protected int width;
@@ -94,7 +95,6 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
     // Import coin sound effect
     public static final String GOLD_SOUND_EFFECT = "coins";
 
-
     /**
      * The constructor used to create a simple dummey world, used for displaying world information on the
      * home screen
@@ -121,7 +121,6 @@ public class World implements TouchDownObserver , Saveable<World.WorldMemento> {
         EntitySpawnRule.setNoiseSeed(this.worldParameters.getSeed());
         initialiseFrictionmap();
         staticEntityNoise = new NoiseGenerator((new Random(this.worldParameters.getSeed())).nextLong(), 3, 4, 1.3);
-
     }
 
     private Map<AbstractBiome, List<EntitySpawnRule>> generateStartEntitiesInternal() {
