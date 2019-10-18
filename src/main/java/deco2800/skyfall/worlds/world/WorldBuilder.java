@@ -349,17 +349,17 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(dRockRule);
 
         // Spawn desert environment
-        EntitySpawnRule DesertEnvironment = new EntitySpawnRule(tile -> new DesertEnvironment(tile, true),
+        EntitySpawnRule desertEnvironment = new EntitySpawnRule(tile -> new DesertEnvironment(tile, true),
                 random.nextInt(), 0.01);
-        biomeSpawnRules.add(DesertEnvironment);
+        biomeSpawnRules.add(desertEnvironment);
 
         // Spawn ruined robot
-        EntitySpawnRule RuinedRobot = new EntitySpawnRule(tile -> new RuinedRobot(tile, true), random.nextInt(), 0.01);
-        biomeSpawnRules.add(RuinedRobot);
+        EntitySpawnRule ruinedRobot = new EntitySpawnRule(tile -> new RuinedRobot(tile, true), random.nextInt(), 0.01);
+        biomeSpawnRules.add(ruinedRobot);
 
         // Spawn ruined city
-        EntitySpawnRule RuinedCity = new EntitySpawnRule(tile -> new RuinedCity(tile, true), random.nextInt(), 0.01);
-        biomeSpawnRules.add(RuinedCity);
+        EntitySpawnRule ruinedCity = new EntitySpawnRule(tile -> new RuinedCity(tile, true), random.nextInt(), 0.01);
+        biomeSpawnRules.add(ruinedCity);
     }
 
     private void generateSnowyMountainsEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {

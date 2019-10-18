@@ -2,8 +2,8 @@ package deco2800.skyfall.worlds.generation.delaunay;
 
 /**
  * A class that contains a WorldGenEdge, and a distance to that edge from a
- * point
- * Code is taken from https://github.com/jdiemke/delaunay-triangulator/blob/master/library/src/main/java/io/github/jdiemke/triangulation/EdgeDistancePack.java
+ * point Code is taken from
+ * https://github.com/jdiemke/delaunay-triangulator/blob/master/library/src/main/java/io/github/jdiemke/triangulation/EdgeDistancePack.java
  *
  * @author Johannes Diemke
  */
@@ -17,7 +17,7 @@ class EdgeDistancePack implements Comparable<EdgeDistancePack> {
      * distance pack instance from a 2D edge and a scalar value describing a
      * distance.
      *
-     * @param edge The edge
+     * @param edge     The edge
      * @param distance The distance of the edge to some point
      */
     EdgeDistancePack(WorldGenEdge edge, double distance) {
@@ -30,4 +30,14 @@ class EdgeDistancePack implements Comparable<EdgeDistancePack> {
         return Double.compare(this.distance, o.distance);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof EdgeDistancePack)) {
+            return false;
+        }
+
+        EdgeDistancePack edgeIn = (EdgeDistancePack) o;
+
+        return (this.compareTo(edgeIn) == 0);
+    }
 }

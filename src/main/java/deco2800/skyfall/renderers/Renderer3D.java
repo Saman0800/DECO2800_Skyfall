@@ -62,8 +62,7 @@ public class Renderer3D implements Renderer {
             font.getData().setScale(1f);
         }
 
-
-        HashMap<Pair<Integer, Integer>, Chunk> chunks = GameManager.get().getWorld().getLoadedChunks();
+        Map<Pair<Integer, Integer>, Chunk> chunks = GameManager.get().getWorld().getLoadedChunks();
         int tileCount = chunks.values().stream().mapToInt(chunk -> chunk.getTiles().size()).sum();
         List<Tile> tilesToBeSkipped = new ArrayList<>();
         elapsedTime += Gdx.graphics.getDeltaTime();

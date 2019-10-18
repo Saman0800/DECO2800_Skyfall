@@ -1,26 +1,27 @@
 package deco2800.skyfall.entities.enemies;
 
-import deco2800.skyfall.entities.AgentEntity;
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.PlayerPeon;
-import deco2800.skyfall.entities.MainCharacter;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-import deco2800.skyfall.worlds.world.World;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.AgentEntity;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.PlayerPeon;
+import deco2800.skyfall.worlds.world.World;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ World.class, AbstractEntity.class, MainCharacter.class })
