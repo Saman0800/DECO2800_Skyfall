@@ -8,9 +8,9 @@ import java.util.Random;
 public class Bone extends StaticEntity {
 
     protected static final Random randomGen = new Random(2);
-    private static final String StringTexture1 = "DSkull";
-    private static final String StringTexture2 = "DRibs";
-    private static String nextTextureString = StringTexture1;
+    private static final String stringTexture1 = "DSkull";
+    private static final String stringTexture2 = "DRibs";
+    private static String nextTextureString = stringTexture1;
 
     protected static final String ENTITY_ID_STRING = "bone";
 
@@ -31,7 +31,7 @@ public class Bone extends StaticEntity {
     public Bone(Tile tile, boolean obstructed) {
         super(tile, 2, Bone.nextTextureString, obstructed);
         setBoneParams();
-        Bone.nextTextureString = Bone.getNextTexture(randomGen.nextInt());
+        nextTextureString = Bone.getNextTexture(randomGen.nextInt());
     }
 
     private void setBoneParams() {
@@ -46,6 +46,6 @@ public class Bone extends StaticEntity {
      * @return The string of texture corresponding the input value.
      */
     public static String getNextTexture(int textureNum) {
-        return textureNum == 0 ? StringTexture1 : StringTexture2;
+        return textureNum == 0 ? stringTexture1 : stringTexture2;
     }
 }

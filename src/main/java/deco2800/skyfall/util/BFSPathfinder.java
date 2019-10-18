@@ -18,7 +18,7 @@ public class BFSPathfinder implements Pathfinder {
 		Tile originTile = getTileByHexVector(world, origin);
 		Tile destinationTile = getTileByHexVector(world, destination);
 		if (originTile == null || destinationTile == null) {
-			return null;
+			return new LinkedList<>();
 		}
 
 		return pathfindBFS(originTile, destinationTile);

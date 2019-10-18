@@ -31,9 +31,9 @@ import deco2800.skyfall.worlds.biomes.VolcanicMountainsBiome;
  */
 public class WorldDirector {
 
-    private final static String SINGLE_PLAYER_STRING = "single_player";
-    private final static String MAIN_PIECE_STRING = "Main Piece";
-    private final static String FOREST_STRING = "Forest";
+    private static final String SINGLE_PLAYER_STRING = "single_player";
+    private static final String MAIN_PIECE_STRING = "Main Piece";
+    private static final String FOREST_STRING = "Forest";
 
     private WorldDirector() {
     }

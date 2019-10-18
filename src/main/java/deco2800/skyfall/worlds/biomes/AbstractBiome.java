@@ -66,8 +66,8 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
      * Sets the tiles in the biome
      * @param tiles The list of tiles for the biome
      */
-    public void setTiles(ArrayList<Tile> tiles){
-        this.tiles = tiles;
+    public void setTiles(List<Tile> tiles){
+        this.tiles = (ArrayList<Tile>) tiles;
     }
 
     /**
@@ -169,15 +169,6 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
 
     public long getBiomeID() {
         return this.id;
-    }
-
-    public void setBiomeID(int id) {
-        this.id = id;
-    }
-
-
-    private void setWorldID(long worldID) {
-        this.worldID = worldID;
     }
 
     @Override

@@ -34,11 +34,6 @@ public class ForestMushroom extends StaticEntity implements HasPointLight {
         setupParams();
     }
 
-    @Override
-    public void onTick(long i) {
-
-    }
-
     private void setupParams() {
         this.setObjectName(ENTITY_ID_STRING);
         this.entityType = "ForestMushroom";
