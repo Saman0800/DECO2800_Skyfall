@@ -1,16 +1,15 @@
 package deco2800.skyfall.managers;
 
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.Peon;
+import deco2800.skyfall.entities.enemies.Enemy;
+import deco2800.skyfall.entities.enemies.Spawnable;
+import deco2800.skyfall.graphics.types.Vec2;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.enemies.Enemy;
-import deco2800.skyfall.entities.enemies.Spawnable;
-import deco2800.skyfall.graphics.types.vec2;
 
 /*Handles spawning enemies into the game on tick*/
 public class SpawningManager extends TickableManager {
@@ -20,7 +19,7 @@ public class SpawningManager extends TickableManager {
     private static SpawningManager reference = null;
 
     // A maximum to the number of enemies allowed to be managed
-    private final int MAXENTITIES = 5;
+    private static final int MAXENTITIES = 5;
 
     // the random used for enemy generation
     private Random random;
@@ -39,21 +38,21 @@ public class SpawningManager extends TickableManager {
     }
 
     // Useful for controlling enemy counts
-    final int MAXIMUM_ENEMIES = 10;
+    static final int MAXIMUM_ENEMIES = 10;
 
     // Enemies spawn in a circle around the player
-    private final float SPAWN_DISTANCE = 100;
+    private static final float SPAWN_DISTANCE = 100;
 
     // Enemies will be culled if they get too far
-    private final float CULL_DISTANCE = 1000;
+    private static final float CULL_DISTANCE = 1000;
 
     /**
      * Use createdSpawningManager instead of constructor
      */
     private SpawningManager() {
         random = new Random();
-        spawnTable = new HashMap<Spawnable, Float>();
-        enemyReferences = new ArrayList<Enemy>();
+        spawnTable = new HashMap<>();
+        enemyReferences = new ArrayList<>();
     }
 
     /**
@@ -76,9 +75,6 @@ public class SpawningManager extends TickableManager {
         // add to game manager
         GameManager.addManagerToInstance(local);
 
-        // Add enemies to manager
-        // local.addEnemyForSpawning(new Heavy(3,2f, 0.7f, "Forest",
-        // "enemyHeavy"), 1.0f);
     }
 
     /**
@@ -93,26 +89,26 @@ public class SpawningManager extends TickableManager {
 
         // calculate the location of the player
         MainCharacter mc = MainCharacter.getInstance();
-        vec2 location = new vec2(mc.getRow(), mc.getCol());
+        Vec2 location = new Vec2(mc.getRow(), mc.getCol());
 
         double angle = random.nextDouble() * 2.0f * Math.PI;
-        location = new vec2(location.getX() + SPAWN_DISTANCE * (float) Math.cos(angle),
+        location = new Vec2(location.getX() + SPAWN_DISTANCE * (float) Math.cos(angle),
                 location.getY() + SPAWN_DISTANCE * (float) Math.sin(angle));
 
         // create new instance
-        Enemy instance = (Enemy) enemy.newInstance(location.getX(), location.getY());
+        Enemy instance = enemy.newInstance(location.getX(), location.getY());
         instance.setMainCharacter(MainCharacter.getInstance());
         // add to references
-        enemyReferences.add((Enemy) instance);
+        enemyReferences.add(instance);
         // add to game world
-        GameManager.get().getWorld().addEntity((AbstractEntity) instance);
+        GameManager.get().getWorld().addEntity(instance);
     }
 
     /**
      * clears the list of old references to dead enemies
      */
     void updateReferences() {
-        enemyReferences.removeIf(s -> s.isDead());
+        enemyReferences.removeIf(Peon::isDead);
         enemyReferences.removeIf(s -> s.distance(MainCharacter.getInstance()) > CULL_DISTANCE);
     }
 

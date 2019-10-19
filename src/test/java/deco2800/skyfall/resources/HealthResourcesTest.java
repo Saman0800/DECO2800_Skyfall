@@ -1,10 +1,9 @@
 package deco2800.skyfall.resources;
 
 import deco2800.skyfall.resources.items.Apple;
-import deco2800.skyfall.resources.items.Aloe_Vera;
+import deco2800.skyfall.resources.items.AloeVera;
 import deco2800.skyfall.resources.items.Berry;
 import deco2800.skyfall.resources.items.PoisonousMushroom;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,17 +19,14 @@ public class HealthResourcesTest {
      * Create a new Apple, Aloe_Vera, Berry, PoisonousMushroom health Resource
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         apple = new Apple();
-        aloe_vera = new Aloe_Vera();
+        aloe_vera = new AloeVera();
         berry = new Berry();
         poisonousmushroom = new PoisonousMushroom();
 
     }
 
-    @After
-    public void tearDown() throws Exception {
-    }
 
     /**
      * Ensure that the getName method returns the name of the subclass
@@ -50,9 +46,10 @@ public class HealthResourcesTest {
      */
     @Test
     public void getBiomeTest(){
-        assertEquals("Forest", apple.getBiome());
-        assertEquals("Forest", berry.getBiome());
-        assertEquals("Forest", poisonousmushroom.getBiome());
+        String forestWord = "Forest";
+        assertEquals(forestWord, apple.getBiome());
+        assertEquals(forestWord, berry.getBiome());
+        assertEquals(forestWord, poisonousmushroom.getBiome());
         assertEquals("Desert", aloe_vera.getBiome());
 
     }
@@ -87,10 +84,11 @@ public class HealthResourcesTest {
      */
     @Test
     public void getSubtype2() {
-        assertEquals("Health Resource", apple.getSubtype());
-        assertEquals("Health Resource", aloe_vera.getSubtype());
-        assertEquals("Health Resource", berry.getSubtype());
-        assertEquals("Health Resource", poisonousmushroom.getSubtype());
+        String healthResource = "Health Resource";
+        assertEquals(healthResource, apple.getSubtype());
+        assertEquals(healthResource, aloe_vera.getSubtype());
+        assertEquals(healthResource, berry.getSubtype());
+        assertEquals(healthResource, poisonousmushroom.getSubtype());
     }
 
     /**

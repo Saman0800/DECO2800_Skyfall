@@ -14,7 +14,7 @@ public class GuiMaster {
     static Map<String, AbstractGui> guiElementsMap = new HashMap<>();
     static List<AbstractGui> guiElementsList = new LinkedList<>();
 
-    private static GuiMaster singleInstance = null;
+
 
     private GuiMaster() {}
 
@@ -35,7 +35,7 @@ public class GuiMaster {
      * otherwise it grabs the existing scrolling text box in the map
      * @param hash the hash to check for in the elements map
      */
-    public static ScrollingTextBox ScrollingTextBox(String hash) {
+    public static ScrollingTextBox scrollingtextBox(String hash) {
         if (guiElementsMap.containsKey(hash)) {
             AbstractGui item = guiElementsMap.get(hash);
 
@@ -66,7 +66,7 @@ public class GuiMaster {
      * @param camera the camera to be used
      * @param shapeRenderer the shape renderer
      */
-    public static <T extends AbstractGui> void renderAll(BitmapFont font,
+    public static void renderAll(BitmapFont font,
             SpriteBatch batch, OrthographicCamera camera,
             ShapeRenderer shapeRenderer) {
         for (AbstractGui guiElement : guiElementsList) {

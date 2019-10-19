@@ -5,13 +5,17 @@ import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.buildings.BuildingEntity;
 import deco2800.skyfall.buildings.BuildingFactory;
 import deco2800.skyfall.buildings.BuildingType;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
-import deco2800.skyfall.managers.*;
+import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.StatisticsManager;
+import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.worlds.world.World;
 
 import java.util.List;
@@ -19,61 +23,25 @@ import java.util.List;
 /**
  * A class for blueprint shop table pop up.
  */
-public class ConstructionTable extends AbstractPopUpElement{
-    private final Skin skin;
+public class ConstructionTable extends AbstractPopUpElement {
     private final StatisticsManager sm;
-    private Table blueprintTable;
     private Table blueprintPanel;
     private BuildingType buildingID;
 
     /**
      * Constructs a blueprint shop table.
      *
-     * @param stage Current stage.
-     * @param exit Exit button if it has one.
-     * @param textureNames Names of the textures.
-     * @param tm Current texture manager.
+     * @param stage           Current stage.
+     * @param exit            Exit button if it has one.
+     * @param textureNames    Names of the textures.
+     * @param tm              Current texture manager.
      * @param gameMenuManager Current game menu manager.
-     * @param skin Current skin.
      */
-    public ConstructionTable(Stage stage, ImageButton exit, String[] textureNames,
-                              TextureManager tm, GameMenuManager gameMenuManager,
-                              StatisticsManager sm, Skin skin) {
-        super(stage,exit, textureNames, tm, gameMenuManager);
-        this.skin = skin;
+    public ConstructionTable(Stage stage, ImageButton exit, String[] textureNames, TextureManager tm,
+            GameMenuManager gameMenuManager, StatisticsManager sm) {
+        super(stage, exit, textureNames, tm, gameMenuManager);
         this.draw();
         this.sm = sm;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void hide() {
-        super.hide();
-        blueprintTable.setVisible(false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void show() {
-        super.show();
-        blueprintTable.setVisible(true);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void updatePosition() {
-        super.updatePosition();
-    }
-
-    @Override
-    public void update() {
-        super.update();
     }
 
     /**
@@ -84,14 +52,14 @@ public class ConstructionTable extends AbstractPopUpElement{
     @Override
     public void draw() {
         super.draw();
-        blueprintTable = new Table();
-        blueprintTable.setSize(910, 510);
-        blueprintTable.setPosition(Gdx.graphics.getWidth()/2f - blueprintTable.getWidth()/2,
-                (Gdx.graphics.getHeight() + 160) / 2f - blueprintTable.getHeight()/2);
-        blueprintTable.setDebug(true);
-        blueprintTable.top();
-        blueprintTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("pop up screen"));
-        blueprintTable.setName("chestTable");
+        baseTable = new Table();
+        baseTable.setSize(910, 510);
+        baseTable.setPosition(Gdx.graphics.getWidth() / 2f - baseTable.getWidth() / 2,
+                (Gdx.graphics.getHeight() + 160) / 2f - baseTable.getHeight() / 2);
+        baseTable.setDebug(true);
+        baseTable.top();
+        baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("pop up screen"));
+        baseTable.setName("chestTable");
 
         Image infoBar = new Image(gameMenuManager.generateTextureRegionDrawableObject("building_banner"));
         infoBar.setSize(650, 55);
@@ -103,13 +71,12 @@ public class ConstructionTable extends AbstractPopUpElement{
         infoPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("info_panel"));
 
         this.blueprintPanel = new Table();
-        //updateChestPanel(chest);
 
-        blueprintTable.addActor(infoBar);
-        blueprintTable.addActor(infoPanel);
-        blueprintTable.addActor(this.blueprintPanel);
-        blueprintTable.setVisible(false);
-        stage.addActor(blueprintTable);
+        baseTable.addActor(infoBar);
+        baseTable.addActor(infoPanel);
+        baseTable.addActor(this.blueprintPanel);
+        baseTable.setVisible(false);
+        stage.addActor(baseTable);
     }
 
     /**
@@ -122,7 +89,7 @@ public class ConstructionTable extends AbstractPopUpElement{
         blueprintPanel.setPosition(475, 18);
         blueprintPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("menu_panel"));
 
-        List<BuildingType> unlocked = sm.getCharacter().craftedBuildings;
+        List<BuildingType> unlocked = sm.getCharacter().getCraftedBuildings();
 
         int count = 0;
         int xpos = 20;
@@ -142,7 +109,7 @@ public class ConstructionTable extends AbstractPopUpElement{
                     Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
                     pm.dispose();
                     buildingID = b;
-                    sm.getCharacter().toBuild = true;
+                    sm.getCharacter().setToBuild(true);
                     hide();
                 }
             });
@@ -165,52 +132,53 @@ public class ConstructionTable extends AbstractPopUpElement{
     /**
      *
      * @param type - index of the values in BuildingType
-     * @param row - x position that building will be placed
-     * @param col - y position that building will be placed
+     * @param row  - x position that building will be placed
+     * @param col  - y position that building will be placed
      * @return Building Entity that is selected
      */
-    public BuildingEntity selectBuilding(BuildingType type, float row, float col){
+    public BuildingEntity selectBuilding(BuildingType type, float row, float col) {
         BuildingFactory buildingFactory = new BuildingFactory();
-        switch (type){
-            case CABIN:
-                return buildingFactory.createCabin(row, col);
-            case STORAGE_UNIT:
-                return buildingFactory.createStorageUnit(row, col);
-            case TOWNCENTRE:
-                return buildingFactory.createTownCentreBuilding(row, col);
-            case FENCE:
-                return buildingFactory.createFenceBuilding(row, col);
-            case SAFEHOUSE:
-                return buildingFactory.createSafeHouse(row, col);
-            case WATCHTOWER:
-                return buildingFactory.createWatchTower(row, col);
-            case CASTLE:
-                return buildingFactory.createCastle(row, col);
-            case FORESTPORTAL:
-                return buildingFactory.createForestPortal(row, col);
-            case DESERTPORTAL:
-                return buildingFactory.createDesertPortal(row, col);
-            case MOUNTAINPORTAL:
-                return buildingFactory.createMountainPortal(row, col);
-            case VOLCANOPORTAL:
-                return buildingFactory.createVolcanoPortal(row, col);
-            default:
-                return buildingFactory.createCabin(row, col);
+        switch (type) {
+        case CABIN:
+            return buildingFactory.createCabin(row, col);
+        case STORAGE_UNIT:
+            return buildingFactory.createStorageUnit(row, col);
+        case TOWNCENTRE:
+            return buildingFactory.createTownCentreBuilding(row, col);
+        case FENCE:
+            return buildingFactory.createFenceBuilding(row, col);
+        case SAFEHOUSE:
+            return buildingFactory.createSafeHouse(row, col);
+        case WATCHTOWER:
+            return buildingFactory.createWatchTower(row, col);
+        case CASTLE:
+            return buildingFactory.createCastle(row, col);
+        case FORESTPORTAL:
+            return buildingFactory.createForestPortal(row, col);
+        case DESERTPORTAL:
+            return buildingFactory.createDesertPortal(row, col);
+        case MOUNTAINPORTAL:
+            return buildingFactory.createMountainPortal(row, col);
+        case VOLCANOPORTAL:
+            return buildingFactory.createVolcanoPortal(row, col);
+        default:
+            return buildingFactory.createCabin(row, col);
         }
     }
 
     /**
      * Places a structure in the world.
+     * 
      * @param world - World to place in
-     * @param x - x coordinate
-     * @param y - y coordinate
+     * @param x     - x coordinate
+     * @param y     - y coordinate
      */
     public void build(World world, float x, float y) {
         BuildingEntity buildingToBePlaced = selectBuilding(buildingID, x, y);
-        //Permissions
+        // Permissions
         buildingToBePlaced.placeBuilding(x, y, buildingToBePlaced.getHeight(), world);
         Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
-        sm.getCharacter().toBuild = false;
+        sm.getCharacter().setToBuild(true);
     }
 
     public BuildingType getBuildingID() {

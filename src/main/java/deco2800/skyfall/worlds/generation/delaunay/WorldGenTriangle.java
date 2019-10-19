@@ -3,10 +3,10 @@ package deco2800.skyfall.worlds.generation.delaunay;
 import java.util.Arrays;
 
 /**
- * A triangle of WorldGenNodes.
- * Code taken from https://github.com/jdiemke/delaunay-triangulator/blob/master/library/src/main/java/io/github/jdiemke/triangulation/Triangle2D.java
- *
- * @author Johannes Diemke
+ * A triangle of WorldGenNodes. Code taken from
+ * https://github.com/jdiemke/delaunay-triangulator/blob/master/library/src/main/java/io/github/jdiemke/triangulation/Triangle2D.java
+ * <p>
+ * author: Johannes Diemke
  */
 class WorldGenTriangle {
 
@@ -15,8 +15,8 @@ class WorldGenTriangle {
     private WorldGenNode c;
 
     /**
-     * Constructor of the 2D triangle class used to create a new triangle
-     * instance from three 2D vectors describing the triangle's vertices.
+     * Constructor of the 2D triangle class used to create a new triangle instance
+     * from three 2D vectors describing the triangle's vertices.
      *
      * @param a The first vertex of the triangle
      * @param b The second vertex of the triangle
@@ -45,25 +45,20 @@ class WorldGenTriangle {
 
         double pca = point.subtract(c).crossProduct(a.subtract(c));
 
-        if (!hasSameSign(pab, pca)) {
-            return false;
-        }
-
-        return true;
+        return hasSameSign(pab, pca);
     }
 
     /**
      * Tests if a given point lies in the circumcircle of this triangle. Let the
-     * triangle ABC appear in counterclockwise (CCW) order. Then when det &gt;
-     * 0, the point lies inside the circumcircle through the three points a, b
-     * and c. If instead det &lt; 0, the point lies outside the circumcircle.
-     * When det = 0, the four points are cocircular. If the triangle is oriented
-     * clockwise (CW) the result is reversed. See Real-Time Collision Detection,
-     * chap. 3, p. 34.
+     * triangle ABC appear in counterclockwise (CCW) order. Then when det &gt; 0,
+     * the point lies inside the circumcircle through the three points a, b and c.
+     * If instead det &lt; 0, the point lies outside the circumcircle. When det = 0,
+     * the four points are cocircular. If the triangle is oriented clockwise (CW)
+     * the result is reversed. See Real-Time Collision Detection, chap. 3, p. 34.
      *
      * @param point The point to be tested
-     * @return Returns true iff the point lies inside the circumcircle through
-     *         the three points a, b, and c of the triangle
+     * @return Returns true iff the point lies inside the circumcircle through the
+     *         three points a, b, and c of the triangle
      */
     boolean isPointInCircumcircle(WorldGenNode point) {
         double a11 = a.getX() - point.getX();
@@ -74,9 +69,12 @@ class WorldGenTriangle {
         double a22 = b.getY() - point.getY();
         double a32 = c.getY() - point.getY();
 
-        double a13 = (a.getX() - point.getX()) * (a.getX() - point.getX()) + (a.getY() - point.getY()) * (a.getY() - point.getY());
-        double a23 = (b.getX() - point.getX()) * (b.getX() - point.getX()) + (b.getY() - point.getY()) * (b.getY() - point.getY());
-        double a33 = (c.getX() - point.getX()) * (c.getX() - point.getX()) + (c.getY() - point.getY()) * (c.getY() - point.getY());
+        double a13 = (a.getX() - point.getX()) * (a.getX() - point.getX())
+                + (a.getY() - point.getY()) * (a.getY() - point.getY());
+        double a23 = (b.getX() - point.getX()) * (b.getX() - point.getX())
+                + (b.getY() - point.getY()) * (b.getY() - point.getY());
+        double a33 = (c.getX() - point.getX()) * (c.getX() - point.getX())
+                + (c.getY() - point.getY()) * (c.getY() - point.getY());
 
         double det = a11 * a22 * a33 + a12 * a23 * a31 + a13 * a21 * a32 - a13 * a22 * a31 - a12 * a21 * a33
                 - a11 * a23 * a32;
@@ -89,15 +87,14 @@ class WorldGenTriangle {
     }
 
     /**
-     * Test if this triangle is oriented counterclockwise (CCW). Let A, B and C
-     * be three 2D points. If det &gt; 0, C lies to the left of the directed
-     * line AB. Equivalently the triangle ABC is oriented counterclockwise. When
-     * det &lt; 0, C lies to the right of the directed line AB, and the triangle
-     * ABC is oriented clockwise. When det = 0, the three points are colinear.
-     * See Real-Time Collision Detection, chap. 3, p. 32
+     * Test if this triangle is oriented counterclockwise (CCW). Let A, B and C be
+     * three 2D points. If det &gt; 0, C lies to the left of the directed line AB.
+     * Equivalently the triangle ABC is oriented counterclockwise. When det &lt; 0,
+     * C lies to the right of the directed line AB, and the triangle ABC is oriented
+     * clockwise. When det = 0, the three points are colinear. See Real-Time
+     * Collision Detection, chap. 3, p. 32
      *
-     * @return Returns true iff the triangle ABC is oriented counterclockwise
-     *         (CCW)
+     * @return Returns true iff the triangle ABC is oriented counterclockwise (CCW)
      */
     boolean isOrientedCCW() {
         double a11 = a.getX() - c.getX();
@@ -149,16 +146,12 @@ class WorldGenTriangle {
      *         triangle
      */
     boolean hasVertex(WorldGenNode vertex) {
-        if (a == vertex || b == vertex || c == vertex) {
-            return true;
-        }
-
-        return false;
+        return (a == vertex || b == vertex || c == vertex);
     }
 
     /**
-     * Returns an EdgeDistancePack containing the edge and its distance nearest
-     * to the specified point.
+     * Returns an EdgeDistancePack containing the edge and its distance nearest to
+     * the specified point.
      *
      * @param point The point the nearest edge is queried for
      * @return The edge of this triangle that is nearest to the specified point
@@ -179,15 +172,14 @@ class WorldGenTriangle {
     /**
      * Computes the closest point on the given edge to the specified point.
      *
-     * @param edge The edge on which we search the closest point to the
-     *             specified point
+     * @param edge  The edge on which we search the closest point to the specified
+     *              point
      * @param point The point to which we search the closest point on the edge
      * @return The closest point on the given edge to the specified point
      */
     private WorldGenNode computeClosestPoint(WorldGenEdge edge, WorldGenNode point) {
         WorldGenNode ab = edge.getB().subtract(edge.getA());
-        double t = point.subtract(edge.getA()).dotProduct(ab)
-                / ab.dotProduct(ab);
+        double t = point.subtract(edge.getA()).dotProduct(ab) / ab.dotProduct(ab);
 
         if (t < 0.0d) {
             t = 0.0d;
@@ -201,10 +193,8 @@ class WorldGenTriangle {
     /**
      * Tests if the two arguments have the same sign.
      *
-     * @param a
-     *            The first floating point argument
-     * @param b
-     *            The second floating point argument
+     * @param a The first floating point argument
+     * @param b The second floating point argument
      * @return Returns true iff both arguments have the same sign
      */
     private boolean hasSameSign(double a, double b) {
@@ -217,13 +207,13 @@ class WorldGenTriangle {
     }
 
     /**
-     * Calculates the coordinates circumcentre of the triangle.
-     * This method was not taken from the source of the rest of this class
+     * Calculates the coordinates circumcentre of the triangle. This method was not
+     * taken from the source of the rest of this class
      *
-     * @author Daniel Nathan
      * @return the coordinates of the circumcentre
      * @throws CollinearPointsException if the three points of this triangle are
-     *         collinear
+     *                                  collinear
+     * @author Daniel Nathan
      */
     double[] circumcentre() throws CollinearPointsException {
         double ax = a.getX();
@@ -243,20 +233,18 @@ class WorldGenTriangle {
         // If two have the same x value and one doesn't, they aren't collinear
         // If they all have different x values, they are collinear if any two of
         // The gradients between them are equal
-        if (ax != bx && ax != cx) {
-            if ((by - ay) / (bx - ax) == (cy - ay) / (cx - ax)) {
-                throw new CollinearPointsException();
-            }
+        if ((ax != bx && ax != cx) && ((by - ay) / (bx - ax) == (cy - ay) / (cx - ax))) {
+            throw new CollinearPointsException();
         }
 
         // The coordinates to return. This method calculates the circumcentre by
         // finding the intersection between the normals of sides AB and AC
         // passing through the midpoint
-        double[] coords = {0, 0};
+        double[] coords = { 0, 0 };
 
         // The midpoints of the sides of the triangle
-        double[] midAB = {(ax + bx) / 2, (ay + by) / 2};
-        double[] midAC = {(ax + cx) / 2, (ay + cy) / 2};
+        double[] midAB = { (ax + bx) / 2, (ay + by) / 2 };
+        double[] midAC = { (ax + cx) / 2, (ay + cy) / 2 };
 
         // See if two points have the same y value (if so, the gradient of the
         // normal is undefined)
@@ -275,7 +263,7 @@ class WorldGenTriangle {
             coords[0] = midAC[0];
         }
 
-        // The slope of the normal to the sides of the triangle;
+        // The slope of the normal to the sides of the triangle.
         double normAB = 0;
         double normAC = 0;
 
@@ -296,8 +284,7 @@ class WorldGenTriangle {
         } else {
             // Solution to simultaneous equations y - yab = mab(x - xab) and
             // y - yac = mac(x - xac)
-            coords[0] = (normAB * midAB[0] - normAC * midAC[0]
-                    - midAB[1] + midAC[1]) / (normAB - normAC);
+            coords[0] = (normAB * midAB[0] - normAC * midAC[0] - midAB[1] + midAC[1]) / (normAB - normAC);
             coords[1] = midAB[1] + normAB * (coords[0] - midAB[0]);
         }
 

@@ -17,7 +17,7 @@ public abstract class AbstractShrub extends StaticEntity {
     public AbstractShrub(Tile tile, boolean obstructed) {
         super(tile, 2, "bush" + AbstractShrub.nextTexture, obstructed);
         this.setObjectName(ENTITY_ID_STRING);
-        AbstractShrub.nextTexture = randomGen.nextInt(3) + 1;
+
         this.entityType = "AbstractShrub";
     }
 

@@ -62,7 +62,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
     private MainCharacter mainCharacter;
 
     public Enemy(float col, float row, String hitBoxPath, EnemyType enemyType, float speed, String biome,
-                 String textureName) {
+            String textureName) {
         super(row, col, speed, textureName, 10);
 
         // Sets the spawning location and all the collision
@@ -438,7 +438,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
      * Getter if the enemy's sound when chasing the player.
      *
      * @return the name of the chasing sound (defined in {@link SoundManager}) of
-     * this enemy.
+     *         this enemy.
      */
     public String getChaseSound() {
         return this.chasingSound;
@@ -448,7 +448,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
      * Getter of the enemy's sound when enemy is dying.
      *
      * @return the name of the dead sound (defined in {@link SoundManager}) of this
-     * enemy.
+     *         enemy.
      */
     public String getDeadSound() {
         return this.diedSound;
@@ -458,7 +458,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
      * Getter of the enemy's sound when enemy is attacking.
      *
      * @return the name of the dead sound (defined in {@link SoundManager}) of this
-     * enemy.
+     *         enemy.
      */
     public String getAttackSound() {
         return this.attackingSound;
@@ -634,7 +634,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     /**
      * @return string representation of this class including its enemy type, biome
-     * and x,y coordinates
+     *         and x,y coordinates
      */
     @Override
     public String toString() {

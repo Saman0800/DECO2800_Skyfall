@@ -10,6 +10,9 @@ import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.EnvironmentManager;
@@ -22,6 +25,9 @@ import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
 
 public class EnemySpawnTable implements TimeObserver {
+
+    // Logger for tracking enemy information
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * The radius in the which the enemies may spawn in
@@ -130,7 +136,7 @@ public class EnemySpawnTable implements TimeObserver {
     }
 
     /**
-     * Returns a list of all the enemies within range of the main character.
+     * @return Returns a list of all the enemies within range of the main character.
      */
     public List<Enemy> enemiesNearCharacter() {
 
@@ -140,6 +146,11 @@ public class EnemySpawnTable implements TimeObserver {
 
     /**
      * Returns how many enemies are with close proximity of another enemy.
+     * 
+     * @param x The row position of the target.
+     * @param y the column position of the target.
+     * 
+     * @return A count of all the enemies nearby.
      */
     public int enemiesNearTargetCount(float x, float y) {
         return enemiesInTarget(x, y, 50).size();
@@ -147,15 +158,22 @@ public class EnemySpawnTable implements TimeObserver {
 
     /**
      * Check to see if it is time to start spawn more enemies
+     * 
+     * @param time The current game time.
      */
-    public void notifyTimeUpdate(long i) {
-        if ((i % spawnFrequency) == 0) {
+    public void notifyTimeUpdate(long time) {
+        if ((time % spawnFrequency) == 0) {
             spawnEnemies();
         }
     }
 
     /**
      * Separates tiles into different lists based on the biome the tile was from.
+     * 
+     * @param gameWorld The current world the player is spawned in.
+     * 
+     * @return A map whose keys are biome type and values are the tiles
+     *         corresponding to that biome.
      */
     public static Map<String, List<Tile>> partitonTiles(World gameWorld) {
 
@@ -246,8 +264,6 @@ public class EnemySpawnTable implements TimeObserver {
 
                 // Find all the enemies within close proximity to this tile and adjust the
                 // spawning chance accordingly
-                spawnChance = Math.pow(spawnChance,
-                        Math.log(enemiesNearTargetCount(nextTile.getRow(), nextTile.getCol())));
 
                 // Pick a class, any class!
                 Function<HexVector, ? extends Enemy> randEnemyType = possibleConstructors
@@ -257,6 +273,8 @@ public class EnemySpawnTable implements TimeObserver {
                     Enemy newEnemy = randEnemyType.apply(new HexVector(nextTile.getRow(), nextTile.getCol()));
                     world.addEntity(newEnemy);
                     enemiesPlaced += 1;
+
+                    logger.info("Enemy Spawned in " + nextTile.getBiome().getBiomeName());
                 }
             }
         }
