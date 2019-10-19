@@ -1656,6 +1656,7 @@ public class MainCharacter extends Peon
             break;
         }
 
+        unlocked.add(new ForestPortal(0, 0, 0));
         // for portals
         switch (save.getGameStage()) {
         case 3:
