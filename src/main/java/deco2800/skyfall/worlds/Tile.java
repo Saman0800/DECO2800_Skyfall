@@ -236,7 +236,7 @@ public class Tile {
     }
 
     private VoronoiEdge findNearestEdge(VoronoiEdge currentEdge, List<VoronoiEdge> edges, double maxDistance,
-            int nodeSpacing, double noiseFactor) {
+            int nodeSpacing) {
         double tileX = getNoisyCol(nodeSpacing);
         double tileY = getNoisyRow(nodeSpacing);
 
@@ -278,7 +278,8 @@ public class Tile {
         return closestEdge;
     }
 
-    private double getSquareDistanceInvalidY(double tileX, double tileY, VoronoiEdge voronoiEdge, double ax, double ay, double bx, double by) {
+    private double getSquareDistanceInvalidY(double tileX, double tileY, VoronoiEdge voronoiEdge, double ax, double ay,
+            double bx, double by) {
         double squareDistance;
         double dxA = tileX - ax;
         double dxB = tileX - bx;
@@ -317,11 +318,9 @@ public class Tile {
         if (getBiome().getBiomeName().equals("ocean")) {
             return;
         }
-        VoronoiEdge closestEdge = findNearestEdge(null, new ArrayList<>(beachEdges.keySet()), beachWidth, nodeSpacing,
-                beachWidth * 2);
+        VoronoiEdge closestEdge = findNearestEdge(null, new ArrayList<>(beachEdges.keySet()), beachWidth, nodeSpacing);
         if (!(Math.abs(getCol()) < riverWidth && Math.abs(getRow()) < riverWidth)) {
-            closestEdge = findNearestEdge(closestEdge, new ArrayList<>(riverEdges.keySet()), riverWidth, nodeSpacing,
-                    riverWidth * 2);
+            closestEdge = findNearestEdge(closestEdge, new ArrayList<>(riverEdges.keySet()), riverWidth, nodeSpacing);
         }
         this.edge = closestEdge;
         // Add the tile to the biome for the beach/river

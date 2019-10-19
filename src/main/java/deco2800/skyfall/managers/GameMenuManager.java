@@ -21,12 +21,10 @@ import java.util.*;
  */
 public class GameMenuManager extends TickableManager {
 
-    private static TextureManager textureManager;
+    private TextureManager textureManager;
     private Stage stage;
-    private MainCharacter mainCharacter;
     private EnvironmentManager em;
     private InventoryManager inventory;
-    private SoundManager soundManager;
     private Skin skin;
     private String[] characters;
     private SkyfallGame game;
@@ -62,7 +60,6 @@ public class GameMenuManager extends TickableManager {
     public GameMenuManager() {
         updateTextureManager(GameManager.get().getManager(TextureManager.class));
         inventory = GameManager.get().getManager(InventoryManager.class);
-        soundManager = GameManager.get().getManager(SoundManager.class);
         questManager = GameManager.get().getManager(QuestManager.class);
         em = GameManager.get().getManager(EnvironmentManager.class);
         stage = null;
@@ -79,12 +76,11 @@ public class GameMenuManager extends TickableManager {
     }
 
     //used for testing
-    public GameMenuManager(TextureManager tm, SoundManager sm,
+    public GameMenuManager(TextureManager tm,
                            InventoryManager im, Stage stage, Skin skin,
                            Map<String, AbstractPopUpElement> popUps,
                            Map<String, AbstractUIElement> uiElements) {
         this.updateTextureManager(tm);
-        soundManager = sm;
         inventory = im;
         this.stage = stage;
         this.skin = skin;
@@ -128,9 +124,8 @@ public class GameMenuManager extends TickableManager {
 
         }
 
-        for (String key: uiElements.keySet()) {
-            AbstractUIElement uiElement = uiElements.get(key);
-            uiElement.update();
+        for (Map.Entry<String, AbstractUIElement> entry: uiElements.entrySet()) {
+            entry.getValue().update();
         }
     }
 
@@ -166,7 +161,7 @@ public class GameMenuManager extends TickableManager {
      *
      * @return TextureManager of the menu.
      */
-    public static TextureManager getTextureManager() {
+    public TextureManager getTextureManager() {
         return textureManager;
     }
 
@@ -223,20 +218,6 @@ public class GameMenuManager extends TickableManager {
      */
     public TextureRegionDrawable generateTextureRegionDrawableObject(String sName) {
         return new TextureRegionDrawable((new TextureRegion(textureManager.getTexture(sName))));
-    }
-
-    /**
-     * Set main character of the game to be {mainCharacter}.
-     *
-     * @param mainCharacter Main character of the game.
-     */
-    public void setMainCharacter(MainCharacter mainCharacter) {
-        if (stage == null) {
-            logger.info("Please set stage before adding character");
-            return;
-        }
-        this.mainCharacter = mainCharacter;
-
     }
 
     /**
@@ -353,9 +334,6 @@ public class GameMenuManager extends TickableManager {
         popUps.put("gameOverTable", new GameOverTable(stage,
                 null, null, textureManager, this));
 
-        popUps.put("blueprintShopTable", new BlueprintShopTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject(exitText)),
-                null, textureManager, this, sm, skin));
 
         popUps.put("constructionTable", new ConstructionTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject("exitButton")),
@@ -372,6 +350,9 @@ public class GameMenuManager extends TickableManager {
                 new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this, questManager, skin));
 
+        popUps.put("teleportTable", new TeleportTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject(exitText)),
+                null, textureManager, this, skin));
         Map<String, AbstractUIElement> hudElements = new HashMap<>();
 
         hudElements.put("healthCircle", new HealthCircle(stage, new String[]{"inner_circle", "big_circle"},
@@ -385,6 +366,10 @@ public class GameMenuManager extends TickableManager {
         hudElements.put("clock" , new Clock(stage, skin, this, em));
 
         uiElements.put("HUD", new HeadsUpDisplay(stage, null, textureManager, skin, this, hudElements, questManager));
+
+        popUps.put("blueprintShopTable", new BlueprintShopTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject(exitText)),
+                null, textureManager, this, sm, skin));
 
         popUps.put("inventoryTable",
                 new InventoryTable(stage, new ImageButton(generateTextureRegionDrawableObject(exitText)),

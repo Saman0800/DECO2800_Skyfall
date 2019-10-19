@@ -62,8 +62,7 @@ public class Renderer3D implements Renderer {
             font.getData().setScale(1f);
         }
 
-
-        HashMap<Pair<Integer, Integer>, Chunk> chunks = GameManager.get().getWorld().getLoadedChunks();
+        Map<Pair<Integer, Integer>, Chunk> chunks = GameManager.get().getWorld().getLoadedChunks();
         int tileCount = chunks.values().stream().mapToInt(chunk -> chunk.getTiles().size()).sum();
         List<Tile> tilesToBeSkipped = new ArrayList<>();
         elapsedTime += Gdx.graphics.getDeltaTime();
@@ -252,7 +251,6 @@ public class Renderer3D implements Renderer {
         float width = tex.getWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X * entity.getScale();
         float height = tex.getHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y * entity.getScale();
         batch.draw(tempRegion, x, y, width / 2.f, height / 2.f, width, height, 1.f, 1.f, angle);
-        // batch.draw(tex, x, y, width, height);
     }
 
     private void renderPeonMovementTiles(SpriteBatch batch, OrthographicCamera camera, AbstractEntity entity,

@@ -9,20 +9,16 @@ import java.util.*;
 
 public class BFSPathfinder implements Pathfinder {
 	
-	@SuppressWarnings("unused")
 	private final Logger log = LoggerFactory.getLogger(BFSPathfinder.class);
-
 
 	public List<Tile> pathfind(World world, HexVector origin, HexVector destination) {
 
 		Tile originTile = getTileByHexVector(world, origin);
 		Tile destinationTile = getTileByHexVector(world, destination);
 		if (originTile == null || destinationTile == null) {
-			return null;
+			return new LinkedList<>();
 		}
-
 		return pathfindBFS(originTile, destinationTile);
-
 	}
 
 	private List<Tile> pathfindBFS(Tile origin, Tile destination) {
@@ -71,7 +67,6 @@ public class BFSPathfinder implements Pathfinder {
 			}
 		}
 		return null;
-
 	}
 
 }

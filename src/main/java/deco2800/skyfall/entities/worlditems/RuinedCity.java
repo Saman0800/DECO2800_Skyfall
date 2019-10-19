@@ -9,7 +9,7 @@ public class RuinedCity extends AbstractEnvironment {
      *
      */
     private static final String ENTITY_ID_STRING = "ruined_city";
-    private static final String RuinedCityString = "ruinedCity";
+    private static final String RUINEDCITYSTRING = "ruinedCity";
 
     /**
      * Set the entity ID of ruined city to the object name
@@ -18,17 +18,17 @@ public class RuinedCity extends AbstractEnvironment {
     public RuinedCity() {
         super();
         setupParams();
-        this.setTexture(RuinedCityString);
+        this.setTexture(RUINEDCITYSTRING);
     }
 
     /**
      * Initialises
      *
-     * @param tile       - The tile it spawns on
+     * @param tile - The tile it spawns on
      * @param obstructed - Whether the entity is obstructed by something
      */
     public RuinedCity(Tile tile, boolean obstructed) {
-        super(tile, RuinedCityString, obstructed);
+        super(tile, RUINEDCITYSTRING, obstructed);
         setupParams();
     }
 
@@ -44,7 +44,7 @@ public class RuinedCity extends AbstractEnvironment {
 
     private void setupParams() {
         this.setObjectName(ENTITY_ID_STRING);
-        this.entityType = RuinedCityString;
+        this.entityType = RUINEDCITYSTRING;
     }
 
     /**

@@ -98,11 +98,11 @@ public class PlayerPeon extends Peon implements KeyDownObserver, KeyUpObserver, 
 
     /**
      * Sets the appropriate movement flags to false on keyUp
-     * 
+     *
      * @param keycode the key being released
      */
     @Override
     public void notifyKeyUp(int keycode) {
-
+        // No needed implementation.
     }
 }

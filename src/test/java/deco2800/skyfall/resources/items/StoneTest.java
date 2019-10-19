@@ -1,6 +1,5 @@
 package deco2800.skyfall.resources.items;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,10 +18,6 @@ public class StoneTest {
     public void setUp()  {
 
         stone = new Stone();
-    }
-
-    @After
-    public void tearDown() {
     }
 
     /**

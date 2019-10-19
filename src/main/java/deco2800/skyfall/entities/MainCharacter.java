@@ -1,34 +1,10 @@
 package deco2800.skyfall.entities;
 
-import static deco2800.skyfall.buildings.BuildingType.CABIN;
-import static deco2800.skyfall.buildings.BuildingType.CASTLE;
-import static deco2800.skyfall.buildings.BuildingType.DESERTPORTAL;
-import static deco2800.skyfall.buildings.BuildingType.FENCE;
-import static deco2800.skyfall.buildings.BuildingType.FORESTPORTAL;
-import static deco2800.skyfall.buildings.BuildingType.MOUNTAINPORTAL;
-import static deco2800.skyfall.buildings.BuildingType.SAFEHOUSE;
-import static deco2800.skyfall.buildings.BuildingType.STORAGE_UNIT;
-import static deco2800.skyfall.buildings.BuildingType.TOWNCENTRE;
-import static deco2800.skyfall.buildings.BuildingType.VOLCANOPORTAL;
-import static deco2800.skyfall.buildings.BuildingType.WATCHTOWER;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.Animatable;
@@ -46,20 +22,10 @@ import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.entities.vehicle.AbstractVehicle;
 import deco2800.skyfall.entities.vehicle.Bike;
 import deco2800.skyfall.entities.vehicle.SandCar;
-import deco2800.skyfall.entities.weapons.Bow;
-import deco2800.skyfall.entities.weapons.EmptyItem;
-import deco2800.skyfall.entities.weapons.Spear;
-import deco2800.skyfall.entities.weapons.Sword;
-import deco2800.skyfall.entities.weapons.Weapon;
+import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gamemenu.popupmenu.ConstructionTable;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.managers.InputManager;
-import deco2800.skyfall.managers.InventoryManager;
-import deco2800.skyfall.managers.PetsManager;
-import deco2800.skyfall.managers.QuestManager;
-import deco2800.skyfall.managers.SoundManager;
+import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.observers.KeyUpObserver;
 import deco2800.skyfall.observers.TouchDownObserver;
@@ -74,6 +40,14 @@ import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.*;
+import java.util.Map.Entry;
+
+import static deco2800.skyfall.buildings.BuildingType.*;
 
 /**
  * Main character in the game
@@ -166,13 +140,6 @@ public class MainCharacter extends Peon
     private List<Blueprint> blueprintsLearned;
     private PetsManager petsManager;
 
-    /*
-     * What stage of the game is the player on? Controls what blueprints the player
-     * can buy and make. 0 = Forest 1 = Desert 2 = Mountain 3 = Volcano
-     */
-
-    // The name of the item to be created.
-    private String itemToCreate;
 
     /**
      * Gets the crafted buildings
@@ -489,6 +456,9 @@ public class MainCharacter extends Peon
      */
     public boolean setEquippedItem(Item item) {
         if (item.isEquippable()) {
+            if (!this.equippedItem.getName().equals(new EmptyItem().getName())) {
+                this.inventories.add(this.equippedItem);
+            }
             this.equippedItem = item;
             return true;
         } else {
@@ -945,6 +915,7 @@ public class MainCharacter extends Peon
                 ConstructionTable bs = (ConstructionTable) gmm.getPopUp(CONSTRUCTION_TABLE);
                 bs.build(GameManager.get().getWorld(), (int) clickedPosition[0], (int) clickedPosition[1]);
                 qm.addBuilding(bs.selectBuilding(bs.getBuildingID(), 0, 0).getBuildingType());
+                toBuild = false;
             }
 
         }
@@ -1171,12 +1142,6 @@ public class MainCharacter extends Peon
             break;
         case Input.Keys.ALT_LEFT:
             // Attack moved to SPACE
-            break;
-        case Input.Keys.G:
-            addClosestGoldPiece();
-            break;
-        case Input.Keys.M:
-            getGoldPouchTotalValue();
             break;
         case Input.Keys.Z:
             selectSpell(SpellType.FLAME_WALL);
@@ -1732,21 +1697,38 @@ public class MainCharacter extends Peon
     }
 
     /***
-     * A getter method to get the Item to be created.
-     *
-     * @return the item to create.
+     * Checks if the player has sufficient resources , used in building a new item, returns true if the player
+     * has sufficient resources , false otherwise.
+     * @param newItem the new Item that the player wants to create
      */
-    public String getItemToCreate() {
-        return this.itemToCreate;
+    public boolean checkRequiredResources(Blueprint newItem){
+
+        if (newItem.getRequiredWood() > this.getInventoryManager().getAmount("Wood")) {
+            logger.info("You don't haven enough wood");
+            return false;
+
+        } else if (newItem.getRequiredStone() > this.getInventoryManager().getAmount("Stone")) {
+            logger.info("You don't haven enough stone");
+            return false;
+
+        } else if (newItem.getRequiredMetal() > this.getInventoryManager().getAmount("Metal")) {
+            logger.info("You don't haven enough metal");
+            return false;
+
+        } else {
+            return true;
+        }
     }
 
     /***
-     * A Setter method to get the Item to be created.
-     *
-     * @param item the item to be created.
+     * Reduces the required resources form the player , used in item building
+     * @param newItem the new Item that the player wants to create
      */
-    public void setItemToCreate(String item) {
-        this.itemToCreate = item;
+    public void deductRequiredResources(Blueprint newItem){
+
+        this.getInventoryManager().dropMultiple("Metal", newItem.getRequiredMetal());
+        this.getInventoryManager().dropMultiple("Stone", newItem.getRequiredStone());
+        this.getInventoryManager().dropMultiple("Wood", newItem.getRequiredWood());
     }
 
     /***
@@ -1754,32 +1736,28 @@ public class MainCharacter extends Peon
      * are in the inventory. if yes, creates the item, adds it to the player's
      * inventory and deducts the required resource from inventory
      */
-    public void createItem(Blueprint newItem) {
-
-        for (Blueprint blueprint : getBlueprintsLearned()) {
-            if (blueprint.getClass() == newItem.getClass()) {
-
-                // testing
-            } else {
-                switch (newItem.getName()) {
+    public void createItem (Blueprint newItem) {
+        if (checkRequiredResources(newItem)){
+            switch (newItem.getName()) {
                 case HATCHET:
                     this.getInventoryManager().add(new Hatchet());
                     break;
+
                 case PICK_AXE:
                     this.getInventoryManager().add(new PickAxe());
                     break;
+
                 case SWORD:
                     this.getInventoryManager().add(new Sword());
                     break;
                 case SPEAR:
                     this.getInventoryManager().add(new Spear());
                     break;
+
                 case BOW:
                     this.getInventoryManager().add(new Bow());
                     break;
 
-                // These are only placeholders and will change once coordinated
-                // with Building team
                 case "Cabin":
                     craftedBuildings.add(CABIN);
                     break;
@@ -1820,15 +1798,12 @@ public class MainCharacter extends Peon
                 case "volcanoPortal":
                     craftedBuildings.add(VOLCANOPORTAL);
                     break;
+
                 default:
                     logger.info("Invalid Item");
                     break;
                 }
-
-                this.getInventoryManager().dropMultiple("Metal", newItem.getRequiredMetal());
-                this.getInventoryManager().dropMultiple("Stone", newItem.getRequiredStone());
-                this.getInventoryManager().dropMultiple("Wood", newItem.getRequiredWood());
-            }
+                deductRequiredResources(newItem);
         }
     }
 
@@ -2094,7 +2069,6 @@ public class MainCharacter extends Peon
     }
 
     public static class MainCharacterMemento extends AbstractMemento implements Serializable {
-
         private long mainCharacterID;
         private int level;
         private int foodLevel;
