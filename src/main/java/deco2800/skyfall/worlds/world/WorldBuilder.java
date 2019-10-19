@@ -229,7 +229,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         return spawnRules;
     }
 
-    private void generateOceanEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
+    private void generateOceanEntities(List<EntitySpawnRule> biomeSpawnRules, Random random) {
 
         EntitySpawnRule shipwrecks = new EntitySpawnRule(tile -> new Shipwrecks(tile, true), random.nextInt(), 0.003);
         biomeSpawnRules.add(shipwrecks);
@@ -316,7 +316,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(mSnowRule);
     }
 
-    private void generateDesertEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
+    private void generateDesertEntities(List<EntitySpawnRule> biomeSpawnRules, Random random) {
         // Spawn some swords
         EntitySpawnRule swordRule = new EntitySpawnRule(tile -> new Sword(tile, true), random.nextInt(), 0.02);
         biomeSpawnRules.add(swordRule);
@@ -360,7 +360,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(ruinedCity);
     }
 
-    private void generateSnowyMountainsEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
+    private void generateSnowyMountainsEntities(List<EntitySpawnRule> biomeSpawnRules, Random random) {
         // Spawn some bows
         EntitySpawnRule bowRule = new EntitySpawnRule(tile -> new Bow(tile, true), random.nextInt(), 0.03);
         biomeSpawnRules.add(bowRule);
