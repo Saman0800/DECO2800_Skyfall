@@ -370,6 +370,8 @@ public class QuestManager extends TickableManager {
                 && checkWeapons("axe") && checkWeapons("bow"))
                 || (questSuccess) ) {
             questSuccess = true;
+            GameManager.get().getManager(FeedbackManager.class).setFeedbackBarUpdate(true);
+            GameManager.get().getManager(FeedbackManager.class).setFeedbackText("All quest items collected!");
             // Other quest success stuff here, or quest success method
         }
     }
