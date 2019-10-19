@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.badlogic.gdx.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +45,9 @@ public class InventoryManager extends TickableManager implements Serializable {
     public static final int ROWS = 3;
 
     private Map<String, Tuple> positions;
+
+    //Feedback manager for inventory updates
+    private final FeedbackManager fm = GameManager.get().getManager(FeedbackManager.class);
 
     @Override
     public void onTick(long i) {
@@ -287,11 +289,11 @@ public class InventoryManager extends TickableManager implements Serializable {
             }
         }
         if (successful) {
-            GameManager.get().getManager(FeedbackManager.class).setFeedbackBarUpdate(true);
-            GameManager.get().getManager(FeedbackManager.class).setFeedbackText("" + item.getName() + " added to inventory");
+            fm.setFeedbackBarUpdate(true);
+            fm.setFeedbackText("" + item.getName() + " added to inventory");
         } else {
-            GameManager.get().getManager(FeedbackManager.class).setFeedbackBarUpdate(true);
-            GameManager.get().getManager(FeedbackManager.class).setFeedbackText("Inventory full");
+            fm.setFeedbackBarUpdate(true);
+            fm.setFeedbackText("Inventory full");
         }
         return successful;
     }
@@ -397,6 +399,8 @@ public class InventoryManager extends TickableManager implements Serializable {
 
                 processItem(item, col, row);
             }
+            fm.setFeedbackBarUpdate(true);
+            fm.setFeedbackText(itemName + " removed from inventory");
             return items;
 
         }
