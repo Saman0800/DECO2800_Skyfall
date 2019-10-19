@@ -206,10 +206,10 @@ public class WorldBuilder implements WorldBuilderInterface {
                 generateMountainEntities(biomeSpawnRules, random, world);
                 break;
             case "desert":
-                generateDesertEntities(biomeSpawnRules, random, world);
+                generateDesertEntities(biomeSpawnRules, random);
                 break;
             case "snowy_mountains":
-                generateSnowyMountainsEntities(biomeSpawnRules, random, world);
+                generateSnowyMountainsEntities(biomeSpawnRules, random);
                 break;
             case "volcanic_mountains":
                 generateVolcanicMountainsEntities(biomeSpawnRules, random, world);
@@ -218,7 +218,7 @@ public class WorldBuilder implements WorldBuilderInterface {
                 generateSwampEntities(biomeSpawnRules, random, world);
                 break;
             case "ocean":
-                generateOceanEntities(biomeSpawnRules, random, world);
+                generateOceanEntities(biomeSpawnRules, random);
                 break;
             default:
                 break;
@@ -458,13 +458,14 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
 
     /**
-     * The method to be used to spawn an electric enemies on a tile, while the electric enemy is
-     * randomly chosen from Abductor, Heavy, Scout enemy types with impact of factors.
+     * The method to be used to spawn an electric enemies on a tile, while the
+     * electric enemy is randomly chosen from Abductor, Heavy, Scout enemy types
+     * with impact of factors.
      *
-     * @param random        :     an random generator
-     * @param tile          :     a tile that will spawn an enemy
-     * @param world         :     the game world
-     * @param enemyScaling  :     scaling factor to enemy states
+     * @param random       : an random generator
+     * @param tile         : a tile that will spawn an enemy
+     * @param world        : the game world
+     * @param enemyScaling : scaling factor to enemy states
      */
     private void spawnAnElectricEnemyOnTile(Random random, Tile tile, World world, float enemyScaling) {
         // factor or ratio between Abductor, Heavy, Scout enemies
@@ -505,14 +506,15 @@ public class WorldBuilder implements WorldBuilderInterface {
     /**
      * The method to be used to spawn electric enemies.
      *
-     * @param random        :     an random generator
-     * @param chance        :     chance to spawn an enemy
-     * @param biome         :     biome where enemy spawned on
-     * @param world         :     the game world
-     * @param enemyScaling  :     scaling factor to enemy states
+     * @param random       : an random generator
+     * @param chance       : chance to spawn an enemy
+     * @param biome        : biome where enemy spawned on
+     * @param world        : the game world
+     * @param enemyScaling : scaling factor to enemy states
      */
     private void spawnEnemies(Random random, float chance, AbstractBiome biome, World world, float enemyScaling) {
-        // NOTE: biome.getTiles() and world.getWorldGenNodes() return a list of loaded tiles only
+        // NOTE: biome.getTiles() and world.getWorldGenNodes() return a list of loaded
+        // tiles only
         int worldSize = world.getWorldParameters().getWorldSize();
         int spawnGap = 3;
         for (float col = worldSize * -1f; col <= worldSize; col += spawnGap) {
@@ -533,20 +535,20 @@ public class WorldBuilder implements WorldBuilderInterface {
 
         for (AbstractBiome biome : world.getBiomes()) {
             switch (biome.getBiomeName()) {
-                case "forest":
-                    spawnEnemies(random, 0.02f, biome, world, enemyScaling);
-                    break;
-                case "mountain":
-                    spawnEnemies(random, 0.015f, biome, world, enemyScaling);
-                    break;
-                case "desert":
-                    spawnEnemies(random, 0.01f, biome, world, enemyScaling);
-                    break;
-                case "snowy_mountains":
-                    spawnEnemies(random, 0.025f, biome, world, enemyScaling);
-                    break;
-                default:
-                    break;
+            case "forest":
+                spawnEnemies(random, 0.02f, biome, world, enemyScaling);
+                break;
+            case "mountain":
+                spawnEnemies(random, 0.015f, biome, world, enemyScaling);
+                break;
+            case "desert":
+                spawnEnemies(random, 0.01f, biome, world, enemyScaling);
+                break;
+            case "snowy_mountains":
+                spawnEnemies(random, 0.025f, biome, world, enemyScaling);
+                break;
+            default:
+                break;
             }
         }
     }
