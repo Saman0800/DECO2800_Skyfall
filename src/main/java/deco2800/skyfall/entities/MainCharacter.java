@@ -456,6 +456,9 @@ public class MainCharacter extends Peon
      */
     public boolean setEquippedItem(Item item) {
         if (item.isEquippable()) {
+            if (!this.equippedItem.getName().equals(new EmptyItem().getName())) {
+                this.inventories.add(this.equippedItem);
+            }
             this.equippedItem = item;
             return true;
         } else {
