@@ -457,6 +457,8 @@ public class MainCharacter extends Peon
     public boolean setEquippedItem(Item item) {
         if (item.isEquippable()) {
             this.equippedItem = item;
+            GameManager.get().getManager(FeedbackManager.class).setFeedbackBarUpdate(true);
+            GameManager.get().getManager(FeedbackManager.class).setFeedbackText(item.getName() + " equipped");
             return true;
         } else {
             logger.warn("You can't equip {}.", item.getName());
