@@ -229,9 +229,6 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
 
     private void generateOceanEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
-        // Spawn some bows
-        EntitySpawnRule bowRule = new EntitySpawnRule(tile -> new Bow(tile, true), random.nextInt(), 0.03);
-        biomeSpawnRules.add(bowRule);
 
         EntitySpawnRule shipwrecks = new EntitySpawnRule(tile -> new Shipwrecks(tile, true), random.nextInt(), 0.003);
         biomeSpawnRules.add(shipwrecks);
@@ -254,7 +251,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(spearRule);
 
         // Spawn some bows
-        EntitySpawnRule bowRule = new EntitySpawnRule(tile -> new Bow(tile, true), random.nextInt(), 0.03);
+        EntitySpawnRule bowRule = new EntitySpawnRule(tile -> new Bow(tile, true), random.nextInt(), 0.003);
         biomeSpawnRules.add(bowRule);
 
         // Create a new perlin noise map
