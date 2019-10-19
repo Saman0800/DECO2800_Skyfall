@@ -1,27 +1,27 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
-import java.util.List;
-
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-
+import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.resources.Blueprint;
 
+import java.util.List;
+
 /**
  * A class for blueprint shop table pop up.
  */
-public class BlueprintShopTable extends AbstractPopUpConstruction {
+public class BlueprintShopTable extends AbstractPopUpElement {
     private final Skin skin;
     private final StatisticsManager sm;
+    private Table blueprintPanel;
 
     /**
      * Constructs a blueprint shop table.
@@ -37,8 +37,9 @@ public class BlueprintShopTable extends AbstractPopUpConstruction {
             GameMenuManager gameMenuManager, StatisticsManager sm, Skin skin) {
         super(stage, exit, textureNames, tm, gameMenuManager);
         this.skin = skin;
-        this.draw();
         this.sm = sm;
+        this.draw();
+
     }
 
     /**
@@ -49,14 +50,21 @@ public class BlueprintShopTable extends AbstractPopUpConstruction {
     @Override
     public void draw() {
         super.draw();
+        super.blueprintShopTableDuplicatedCode() ;
+        baseTable.setName("bluePrintTable");
 
-        Image infoBar = this.setNewInfoBar();
+        Table infoBar = new Table();
+        infoBar.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_banner"));
+        infoBar.setSize(650, 55);
+        infoBar.setPosition(130, 435);
+        Label text = new Label("Blueprint Shop", skin, "navy-text");
+        infoBar.add(text);
         this.blueprintPanel = new Table();
 
-        blueprintTable.addActor(infoBar);
-        blueprintTable.addActor(this.blueprintPanel);
-        blueprintTable.setVisible(false);
-        stage.addActor(blueprintTable);
+        baseTable.addActor(infoBar);
+        baseTable.addActor(this.blueprintPanel);
+        baseTable.setVisible(false);
+        stage.addActor(baseTable);
     }
 
     /**
@@ -66,7 +74,7 @@ public class BlueprintShopTable extends AbstractPopUpConstruction {
         blueprintPanel.clear();
         blueprintPanel.setName("resourcePanel");
         blueprintPanel.setSize(800, 400);
-        blueprintPanel.setPosition(25, 18);
+        blueprintPanel.setPosition(60, 18);
         blueprintPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("menu_panel"));
 
         List<Blueprint> unlocked = sm.getCharacter().getUnlockedBlueprints();

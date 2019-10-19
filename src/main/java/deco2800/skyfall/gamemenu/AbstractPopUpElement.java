@@ -1,8 +1,10 @@
 package deco2800.skyfall.gamemenu;
 
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import deco2800.skyfall.GameScreen;
@@ -15,6 +17,7 @@ import deco2800.skyfall.managers.TextureManager;
  */
 public class AbstractPopUpElement extends AbstractUIElement {
     protected GameMenuManager gameMenuManager;
+    protected Table baseTable;
     private ImageButton exitButton;
     private boolean isVisible = false;
 
@@ -51,6 +54,9 @@ public class AbstractPopUpElement extends AbstractUIElement {
         }
         isVisible = false;
         gameMenuManager.getMainCharacter().resetVelocity();
+        if (baseTable != null) {
+            baseTable.setVisible(false);
+        }
         resume();
         gameMenuManager.setPopUp(null);
     }
@@ -74,12 +80,15 @@ public class AbstractPopUpElement extends AbstractUIElement {
     /**
      * Shows the element
      */
-    public void show() {
+    public void show(){
         if (exitButton != null) {
             exitButton.setVisible(true);
             exitButton.top();
         }
         gameMenuManager.getMainCharacter().resetVelocity();
+        if (baseTable != null) {
+            baseTable.setVisible(true);
+        }
         isVisible = true;
         pause();
     }
@@ -110,4 +119,51 @@ public class AbstractPopUpElement extends AbstractUIElement {
         return isVisible;
     }
 
+
+    protected void buidlingAndBuildWorldCommonFunctionality(Skin skin, String title) {
+        baseTable = new Table();
+        baseTable.setSize(800, 800 * 1346 / 1862f);
+        baseTable.setPosition(Gdx.graphics.getWidth() / 2f - baseTable.getWidth() / 2,
+                Gdx.graphics.getHeight() / 2f - baseTable.getHeight() / 2);
+        baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
+
+        // baseTable banner
+        Table banner = new Table();
+        banner.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_banner"));
+
+        Label text = new Label(title, skin, "navy-text");
+        text.setFontScale(1.1f);
+        banner.add(text);
+
+        baseTable.add(banner).width(750).height(750 * 188f / 1756).padTop(20).colspan(2);
+        baseTable.row();
+
+    }
+
+
+    protected void blueprintShopTableDuplicatedCode () {
+        baseTable = new Table();
+        baseTable.setSize(910, 510);
+        baseTable.setPosition(Gdx.graphics.getWidth() / 2f - baseTable.getWidth() / 2,
+                (Gdx.graphics.getHeight() + 160) / 2f - baseTable.getHeight() / 2);
+        baseTable.setDebug(true);
+        baseTable.top();
+        baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
+    }
+
+
+    protected  void goldAndConstructionTableDuplicatedFunctionality (String bannerName) {
+
+
+        Image infoBar = new Image(gameMenuManager.generateTextureRegionDrawableObject(bannerName));
+        infoBar.setSize(550, 55);
+        infoBar.setPosition(90, 600);
+
+        Table infoPanel = new Table();
+        infoPanel.setSize(410, 400);
+        infoPanel.setPosition(25, 18);
+        infoPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("info_panel"));
+        baseTable.addActor(infoBar);
+
+    }
 }

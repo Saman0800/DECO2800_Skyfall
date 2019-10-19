@@ -66,7 +66,7 @@ public class GuiMaster {
      * @param camera the camera to be used
      * @param shapeRenderer the shape renderer
      */
-    public static <T extends AbstractGui> void renderAll(BitmapFont font,
+    public static void renderAll(BitmapFont font,
             SpriteBatch batch, OrthographicCamera camera,
             ShapeRenderer shapeRenderer) {
         for (AbstractGui guiElement : guiElementsList) {

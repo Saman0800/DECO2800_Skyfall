@@ -187,7 +187,7 @@ public class Box3D {
 		}
 
 		// z larger
-		return !(z > box.z + box.zLength);
+		return z <= box.z + box.zLength;
 	}
 
 	/**

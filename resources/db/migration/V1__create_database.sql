@@ -13,7 +13,7 @@ CREATE TABLE WORLDS
     is_current_world boolean,
     data blob,
     primary key (world_id) ,
-    foreign key (save_id) references SAVES(save_id)
+    foreign key (save_id) references SAVES(save_id) on delete cascade
 );
 
 
@@ -23,7 +23,7 @@ CREATE TABLE MAIN_CHARACTER
     save_id             bigint not null ,
     data blob,
     PRIMARY KEY (character_id),
-    FOREIGN KEY (save_id) references SAVES (save_id)
+    FOREIGN KEY (save_id) references SAVES (save_id) on delete cascade
 );
 
 
@@ -34,7 +34,7 @@ CREATE table BIOMES
     biome_type     CLOB ,
     data blob,
     primary key (biome_id, world_id),
-    foreign key (world_id) references WORLDS(world_id)
+    foreign key (world_id) references WORLDS(world_id) on delete cascade
 );
 
 
@@ -47,7 +47,7 @@ CREATE TABLE NODES
     data blob,
     biome_id bigint not null,
     primary key (node_id),
-    foreign key (biome_id, world_id) references BIOMES (biome_id,world_id)
+    foreign key (biome_id, world_id) references BIOMES (biome_id,world_id) on delete cascade
 );
 
 CREATE TABLE EDGES
@@ -57,7 +57,7 @@ CREATE TABLE EDGES
     biome_id bigint,
     data blob,
     primary key (edge_id),
-    foreign key (biome_id, world_id) references BIOMES(biome_id, world_id)
+    foreign key (biome_id, world_id) references BIOMES(biome_id, world_id) on delete cascade
 );
 
 
@@ -68,7 +68,7 @@ CREATE TABLE CHUNKS
     y int not null ,
     data blob,
     PRIMARY KEY (world_id, x, y),
-    FOREIGN KEY (world_id) references WORLDS(world_id)
+    FOREIGN KEY (world_id) references WORLDS(world_id) on delete cascade
 );
 
 CREATE TABLE ENTITIES
@@ -82,6 +82,6 @@ CREATE TABLE ENTITIES
     world_id bigint not null,
     data blob,
     PRIMARY KEY (entity_id, world_id),
-    foreign key (world_id, chunk_x, chunk_y) references CHUNKS(world_id, x, y)
+    foreign key (world_id, chunk_x, chunk_y) references CHUNKS(world_id, x, y) on delete cascade
 )
 

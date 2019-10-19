@@ -1,39 +1,13 @@
 package deco2800.skyfall.worlds.world;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
-
 import com.badlogic.gdx.Gdx;
-
-import org.javatuples.Pair;
-
-import deco2800.skyfall.buildings.BuildingEntity;
-import deco2800.skyfall.buildings.DesertPortal;
-import deco2800.skyfall.buildings.ForestPortal;
-import deco2800.skyfall.buildings.MountainPortal;
-import deco2800.skyfall.buildings.VolcanoPortal;
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.AgentEntity;
-import deco2800.skyfall.entities.BlueprintShop;
-import deco2800.skyfall.entities.Chest;
-import deco2800.skyfall.entities.Harvestable;
-import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.buildings.*;
+import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
 import deco2800.skyfall.gamemenu.popupmenu.BlueprintShopTable;
 import deco2800.skyfall.gamemenu.popupmenu.ChestTable;
+import deco2800.skyfall.gamemenu.popupmenu.TeleportTable;
 import deco2800.skyfall.graphics.HasPointLight;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
@@ -58,6 +32,15 @@ import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
+import org.javatuples.Pair;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 /**
  * AbstractWorld is the Game AbstractWorld
@@ -77,7 +60,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
 
     private Map<String, Float> frictionMap;
 
-    protected Map<Pair<Integer, Integer>, Chunk> loadedChunks;
+    private Map<Pair<Integer, Integer>, Chunk> loadedChunks;
 
     private int loadedAreaLowerX;
     private int loadedAreaLowerY;
@@ -141,7 +124,6 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         EntitySpawnRule.setNoiseSeed(this.worldParameters.getSeed());
         initialiseFrictionmap();
         staticEntityNoise = new NoiseGenerator((new Random(this.worldParameters.getSeed())).nextLong(), 3, 4, 1.3);
-
     }
 
     private Map<AbstractBiome, List<EntitySpawnRule>> generateStartEntitiesInternal() {
@@ -563,8 +545,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
 
             if (entity instanceof Harvestable) {
                 entityToBeDeleted = entity;
-                List<AbstractEntity> drops = ((Harvestable) entity).harvest(tile);
-                drops.forEach(this::addEntity);
+
             } else if (entity instanceof Weapon) {
                 MainCharacter mc = gmm.getMainCharacter();
                 if (tile.getCoordinates().distance(mc.getPosition()) <= 2) {
@@ -593,29 +574,35 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
                     entityToBeDeleted = entity;
                 }
             } else if (entity instanceof BlueprintShop) {
-                GameMenuManager menuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
-                BlueprintShopTable bs = (BlueprintShopTable) menuManager.getPopUp("blueprintShopTable");
+                BlueprintShopTable bs = (BlueprintShopTable) gmm.getPopUp("blueprintShopTable");
                 bs.updateBlueprintShopPanel();
                 gmm.setPopUp("blueprintShopTable");
             } else if (entity instanceof BuildingEntity) {
                 BuildingEntity e = (BuildingEntity) entity;
                 switch (e.getBuildingType()) {
                 case FORESTPORTAL:
-                    // TODO :@Kausta - Reset Quests on Right Click
                     ForestPortal forestPortal = new ForestPortal(0, 0, 0);
-                    forestPortal.teleport(this.save);
+                    updateTeleportTable("FOREST",
+                            forestPortal.getNext().toUpperCase(),
+                            this.save, forestPortal, gmm);
                     break;
                 case MOUNTAINPORTAL:
                     MountainPortal mountainPortal = new MountainPortal(0, 0, 0);
-                    mountainPortal.teleport(this.save);
+                    updateTeleportTable("MOUNTAIN",
+                            mountainPortal.getNext().toUpperCase(),
+                            this.save, mountainPortal, gmm);
                     break;
                 case DESERTPORTAL:
                     DesertPortal desertPortal = new DesertPortal(0, 0, 0);
-                    desertPortal.teleport(this.save);
+                    updateTeleportTable("DESERT",
+                            desertPortal.getNext().toUpperCase(),
+                            this.save, desertPortal, gmm);
                     break;
                 case VOLCANOPORTAL:
                     VolcanoPortal volcanoPortal = new VolcanoPortal(0, 0, 0);
-                    volcanoPortal.teleport(this.save);
+                    updateTeleportTable("VOLCANO",
+                            volcanoPortal.getNext().toUpperCase(),
+                            this.save, volcanoPortal, gmm);
                     break;
                 default:
                     break;
@@ -627,6 +614,27 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
             removeEntity(entityToBeDeleted);
             entityToBeDeleted = null;
         }
+    }
+
+
+    /**
+     * Updates the teleport table with the relevant informatio0n
+     * @param updateLocation The current location
+     * @param teleportTo the location to be teleported to
+     * @param save the current game save
+     * @param portal the abstract portal class used
+     * @param gmm game menu manager.
+     */
+    public void updateTeleportTable(String updateLocation,
+                                    String teleportTo, Save save,
+                                    AbstractPortal portal, GameMenuManager gmm) {
+        TeleportTable teleportTable = (TeleportTable) gmm.getPopUp("teleportTable");
+        teleportTable.updateLocation(updateLocation);
+        teleportTable.updateTeleportTo(teleportTo);
+        teleportTable.setSave(save);
+        teleportTable.setPortal(portal);
+        gmm.setPopUp("teleportTable");
+
     }
 
     /**

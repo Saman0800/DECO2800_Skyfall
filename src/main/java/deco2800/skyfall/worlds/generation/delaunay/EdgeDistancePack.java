@@ -40,4 +40,11 @@ class EdgeDistancePack implements Comparable<EdgeDistancePack> {
 
         return (this.compareTo(edgeIn) == 0);
     }
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 3 * hash + (int)distance;
+        hash = 3 * hash + this.edge.hashCode();
+        return hash;
+    }
 }

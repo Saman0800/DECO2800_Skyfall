@@ -1,18 +1,10 @@
-package deco2800.skyfall.entities.structures;
+package deco2800.skyfall.buildings;
 
 import deco2800.skyfall.buildings.BuildingEntity;
 import deco2800.skyfall.buildings.BuildingType;
 import deco2800.skyfall.entities.AbstractEntity;
 
 public class BuildingInteractions {
-
-    // Click on an object here
-
-    // Check the Enum-> building type
-    // create a switch case that checks the building type and then calls all of the
-    // respective building Classes.
-    //
-    // tiles have a get biome method!!
 
     /**
      * Check if entity is building
