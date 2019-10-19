@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
 
@@ -45,8 +46,22 @@ public class FeedbackBar extends AbstractUIElement {
         stage.addActor(feedbackBarTable);
     }
 
-    public void updateText(String text) {
+    public void updateText(int i) {
+        String text;
+        switch (i) {
+            case 1 :
+                text = "Item added to inventory";
+                break;
+            case 2 :
+                text = "Inventory full";
+                break;
+            default :
+                text = "";
+                break;
+        }
         feedback.setText(text);
+        showFeedbackBar();
+        gmm.setFeedbackBarUpdate(0);
     }
 
     public void showFeedbackBar() {
@@ -60,5 +75,9 @@ public class FeedbackBar extends AbstractUIElement {
     @Override
     public void update() {
         super.update();
+        int i = gmm.getFeedbackBarUpdate();
+        if (i != 0) {
+            updateText(i);
+        }
     }
 }

@@ -263,12 +263,13 @@ public class InventoryManager extends TickableManager implements Serializable {
      */
     public boolean add(Item item) {
         String name = item.getName();
+        boolean successful;
 
         if (this.inventory.get(name) != null) {
             List<Item> itemsList = this.inventory.get(name);
             itemsList.add(item);
             this.inventory.put(name, itemsList);
-            return true;
+            successful = true;
         } else {
             List<Item> itemsList = new ArrayList<>();
             itemsList.add(item);
@@ -278,13 +279,18 @@ public class InventoryManager extends TickableManager implements Serializable {
             }
 
             if (processPosition(name, itemsList, pos)) {
-                return true;
+                successful = true;
             } else {
                 logger.warn("Not enough space in inventory");
-                return false;
+                successful = false;
             }
         }
-
+        if (successful) {
+            GameManager.get().getManager(GameMenuManager.class).setFeedbackBarUpdate(1);
+        } else {
+            GameManager.get().getManager(GameMenuManager.class).setFeedbackBarUpdate(2);
+        }
+        return successful;
     }
 
     private boolean processPosition(String name, List<Item> itemsList, List<Tuple> pos) {
