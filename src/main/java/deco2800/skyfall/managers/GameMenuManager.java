@@ -53,6 +53,8 @@ public class GameMenuManager extends TickableManager {
     private float bottomRightX = 0;
     private float bottomRightY = 0;
 
+    private int feedbackBarUpdate = 0;
+
     /**
      * Initialise a new GameMenuManager with stage and skin including the characters in the game.
      * And construct Manager instances for later use.
@@ -370,6 +372,8 @@ public class GameMenuManager extends TickableManager {
         hudElements.put("gameMenuBar2", new GameMenuBar2(stage, null, textureManager, skin, this));
         hudElements.put("clock" , new Clock(stage, skin, this, em));
 
+        hudElements.put("feedbackBar", new FeedbackBar(stage, null, textureManager, skin, this));
+
         uiElements.put("HUD", new HeadsUpDisplay(stage, null, textureManager, skin, this, hudElements, questManager));
 
         popUps.put("blueprintShopTable", new BlueprintShopTable(stage,
@@ -456,6 +460,14 @@ public class GameMenuManager extends TickableManager {
 
     public float getBottomRightY() {
         return bottomRightY;
+    }
+
+    public void setFeedbackBarUpdate(int i) {
+        feedbackBarUpdate = i;
+    }
+
+    public int getFeedbackBarUpdate() {
+        return feedbackBarUpdate;
     }
 
     /**

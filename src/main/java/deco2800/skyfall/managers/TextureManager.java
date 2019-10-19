@@ -344,6 +344,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("unchecked", new Texture("resources/unchecked.png"));
             textureMap.put("take all", new Texture("resources/inventory/take_all.png"));
             textureMap.put("inventory_panel", new Texture("resources/inventory/inventory_panel.png"));
+            textureMap.put("feedback_bar", new Texture("resources/new_ui/feedback_bar.png"));
+            textureMap.put("feedback_bar_big", new Texture("resources/new_ui/feedback_bar_big.png"));
 
 
 
