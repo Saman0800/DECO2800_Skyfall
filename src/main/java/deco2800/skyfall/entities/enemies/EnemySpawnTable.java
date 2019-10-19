@@ -275,8 +275,7 @@ public class EnemySpawnTable implements TimeObserver {
 
                 // Find all the enemies within close proximity to this tile and adjust the
                 // spawning chance accordingly
-                spawnChance = Math.pow(spawnChance,
-                        Math.log(enemiesNearTargetCount(nextTile.getRow(), nextTile.getCol())));
+
 
                 // Pick a class, any class!
                 Class<? extends Enemy> randEnemyType = possibleConstructors

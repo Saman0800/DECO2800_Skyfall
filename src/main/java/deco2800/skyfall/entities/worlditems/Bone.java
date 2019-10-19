@@ -29,7 +29,7 @@ public class Bone extends StaticEntity {
     public Bone(Tile tile, boolean obstructed) {
         super(tile, 2, Bone.nextTextureString, obstructed);
         setBoneParams();
-        nextTextureString = Bone.getNextTexture(randomGen.nextInt());
+
     }
 
     private void setBoneParams() {
