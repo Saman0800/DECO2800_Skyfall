@@ -2063,6 +2063,7 @@ public class MainCharacter extends Peon
         this.foodLevel = memento.foodLevel;
         this.foodAccum = memento.foodAccum;
         this.goldPouch = memento.goldPouch;
+        this.setHealth(memento.health);
     }
 
     public static class MainCharacterMemento extends AbstractMemento implements Serializable {

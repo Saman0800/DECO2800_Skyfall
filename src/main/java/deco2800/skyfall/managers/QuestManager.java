@@ -452,6 +452,9 @@ public class QuestManager extends TickableManager {
         int currentLevel = this.getQuestLevel();
         this.setQuestLevel(currentLevel);
 
+        // Set health to 50
+        this.getPlayer().setHealth(50);
+
         // Get amount of building items in inventory
         int currentMetal = player.getInventoryManager()
                 .getAmount(METAL);
