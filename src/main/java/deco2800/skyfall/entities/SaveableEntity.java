@@ -24,6 +24,11 @@ public abstract class SaveableEntity extends AbstractEntity
         super(col, row, renderOrder, fixtureDef);
     }
 
+    public SaveableEntity(float col, float row, int height, float colRenderLength, float rowRenderLength) {
+        super(col, row, height, colRenderLength, rowRenderLength);
+    }
+
+
     @Override
     public SaveableEntityMemento save() {
         return new SaveableEntityMemento(this);
