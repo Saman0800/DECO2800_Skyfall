@@ -87,6 +87,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
         }
         gameMenuManager.getMainCharacter().resetVelocity();
         if (baseTable != null) {
+            baseTable.setZIndex(30);
             baseTable.setVisible(true);
         }
         isVisible = true;
@@ -153,7 +154,6 @@ public class AbstractPopUpElement extends AbstractUIElement {
 
 
     protected  void goldAndConstructionTableDuplicatedFunctionality (String bannerName) {
-
 
         Image infoBar = new Image(gameMenuManager.generateTextureRegionDrawableObject(bannerName));
         infoBar.setSize(550, 55);

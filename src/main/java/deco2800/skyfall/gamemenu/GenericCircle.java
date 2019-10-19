@@ -8,11 +8,10 @@ import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
+import org.lwjgl.Sys;
 
 public class GenericCircle extends AbstractUIElement {
     protected GameMenuManager gmm;
-
-
 
     // Bigger circle
     protected ImageButton biggerCircle;
@@ -51,6 +50,7 @@ public class GenericCircle extends AbstractUIElement {
         this.skin = skin;
         this.gmm = gmm;
         this.draw();
+        System.out.println("Circle" + smallerCircle.getZIndex());
     }
 
 
