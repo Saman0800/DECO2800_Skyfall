@@ -90,16 +90,38 @@ public class BlueprintShopTable extends AbstractPopUpElement {
             icon.setName("icon");
             icon.setSize(100, 100);
             icon.setPosition(xpos + count * 130, ypos);
+            Label cost;
             if (isBought(b)) {
-                Label cost = new Label("X", skin, "white-label");
+                cost = new Label("X", skin, "white-label");
                 cost.setName(b.getName());
-                cost.setPosition(xpos + 85 + count * 130, ypos + 75);
-                blueprintPanel.addActor(cost);
+                cost.setPosition(xpos + 80 + count * 130, ypos + 75);
+                cost.setFontScale((float)0.5);
+
+                int costWidth = 30;
+                if(b.getCost()>9){
+                    costWidth += 10;
+                }
+                if(b.getCost()>99){
+                    costWidth += 10;
+                }
+
+                cost.setSize(costWidth, 40);
             } else {
-                Label cost = new Label("$" + b.getCost(), skin, "white-label");
-                cost.setPosition(xpos + 85 + count * 130, ypos + 75);
+                cost = new Label("$" + b.getCost(), skin, "white-label");
+                cost.setPosition(xpos + 80 + count * 130, ypos + 75);
                 cost.setName(b.getName());
-                blueprintPanel.addActor(cost);
+                cost.setFontScale((float)0.5);
+
+                int costWidth = 35;
+                if(b.getCost()>9){
+                    costWidth += 10;
+                }
+                if(b.getCost()>99){
+                    costWidth += 10;
+                }
+
+                cost.setSize(costWidth, 40);
+
 
                 icon.addListener(new ClickListener() {
                     @Override
@@ -113,6 +135,7 @@ public class BlueprintShopTable extends AbstractPopUpElement {
                 });
             }
             blueprintPanel.addActor(icon);
+            blueprintPanel.addActor(cost);
 
             count++;
 
