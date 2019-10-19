@@ -285,11 +285,6 @@ public class InventoryManager extends TickableManager implements Serializable {
                 successful = false;
             }
         }
-        if (successful) {
-            GameManager.get().getManager(GameMenuManager.class).setFeedbackBarUpdate(1);
-        } else {
-            GameManager.get().getManager(GameMenuManager.class).setFeedbackBarUpdate(2);
-        }
         return successful;
     }
 
