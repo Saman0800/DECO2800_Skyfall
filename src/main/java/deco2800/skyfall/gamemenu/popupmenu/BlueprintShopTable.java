@@ -1,9 +1,11 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
@@ -13,14 +15,12 @@ import deco2800.skyfall.resources.Blueprint;
 
 import java.util.List;
 
-
 /**
  * A class for blueprint shop table pop up.
  */
 public class BlueprintShopTable extends AbstractPopUpElement {
     private final Skin skin;
     private final StatisticsManager sm;
-    private Table blueprintTable;
     private Table blueprintPanel;
 
     /**
@@ -34,29 +34,12 @@ public class BlueprintShopTable extends AbstractPopUpElement {
      * @param skin            Current skin.
      */
     public BlueprintShopTable(Stage stage, ImageButton exit, String[] textureNames, TextureManager tm,
-                              GameMenuManager gameMenuManager, StatisticsManager sm, Skin skin) {
+            GameMenuManager gameMenuManager, StatisticsManager sm, Skin skin) {
         super(stage, exit, textureNames, tm, gameMenuManager);
         this.skin = skin;
-        this.draw();
         this.sm = sm;
-    }
+        this.draw();
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void hide() {
-        super.hide();
-        blueprintTable.setVisible(false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void show() {
-        super.show();
-        blueprintTable.setVisible(true);
     }
 
     /**
@@ -67,25 +50,21 @@ public class BlueprintShopTable extends AbstractPopUpElement {
     @Override
     public void draw() {
         super.draw();
-        blueprintTable = new Table();
-        blueprintTable.setSize(910, 510);
-        blueprintTable.setPosition(Gdx.graphics.getWidth() / 2f - blueprintTable.getWidth() / 2,
-                (Gdx.graphics.getHeight() + 160) / 2f - blueprintTable.getHeight() / 2);
-        blueprintTable.setDebug(true);
-        blueprintTable.top();
-        blueprintTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("pop up screen"));
-        blueprintTable.setName("chestTable");
+        super.blueprintShopTableDuplicatedCode() ;
+        baseTable.setName("bluePrintTable");
 
-        Image infoBar = new Image(gameMenuManager.generateTextureRegionDrawableObject("blueprint_shop_banner"));
+        Table infoBar = new Table();
+        infoBar.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_banner"));
         infoBar.setSize(650, 55);
         infoBar.setPosition(130, 435);
-
+        Label text = new Label("Blueprint Shop", skin, "navy-text");
+        infoBar.add(text);
         this.blueprintPanel = new Table();
 
-        blueprintTable.addActor(infoBar);
-        blueprintTable.addActor(this.blueprintPanel);
-        blueprintTable.setVisible(false);
-        stage.addActor(blueprintTable);
+        baseTable.addActor(infoBar);
+        baseTable.addActor(this.blueprintPanel);
+        baseTable.setVisible(false);
+        stage.addActor(baseTable);
     }
 
     /**
@@ -95,7 +74,7 @@ public class BlueprintShopTable extends AbstractPopUpElement {
         blueprintPanel.clear();
         blueprintPanel.setName("resourcePanel");
         blueprintPanel.setSize(800, 400);
-        blueprintPanel.setPosition(25, 18);
+        blueprintPanel.setPosition(60, 18);
         blueprintPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("menu_panel"));
 
         List<Blueprint> unlocked = sm.getCharacter().getUnlockedBlueprints();
@@ -106,8 +85,8 @@ public class BlueprintShopTable extends AbstractPopUpElement {
 
         for (Blueprint b : unlocked) {
 
-            ImageButton icon =
-                    new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(b.getName() + "_inv"));
+            ImageButton icon = new ImageButton(
+                    gameMenuManager.generateTextureRegionDrawableObject(b.getName() + "_inv"));
             icon.setName("icon");
             icon.setSize(100, 100);
             icon.setPosition(xpos + count * 130, ypos);

@@ -34,7 +34,7 @@ public class LakeAndRiverTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        Random random = new Random(0);
+        Random random = new Random(1);
         whenNew(Random.class).withAnyArguments().thenReturn(random);
 
         DataBaseConnector connector = mock(DataBaseConnector.class);
@@ -98,8 +98,8 @@ public class LakeAndRiverTest {
     public void noWaterOnOriginTile() {
         for (World world : worlds) {
             Tile tile = world.getTile(0, 0);
-            assertFalse(
-                    tile.getBiome().getBiomeName().equals("lake") || tile.getBiome().getBiomeName().equals("river"));
+            assertNotEquals("lake", tile.getBiome().getBiomeName());
+            assertNotEquals("river", tile.getBiome().getBiomeName());
         }
     }
 
