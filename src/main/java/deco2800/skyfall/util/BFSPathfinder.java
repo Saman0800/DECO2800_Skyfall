@@ -2,14 +2,10 @@ package deco2800.skyfall.util;
 
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.World;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 public class BFSPathfinder implements Pathfinder {
-	
-	private final Logger log = LoggerFactory.getLogger(BFSPathfinder.class);
 
 	public List<Tile> pathfind(World world, HexVector origin, HexVector destination) {
 

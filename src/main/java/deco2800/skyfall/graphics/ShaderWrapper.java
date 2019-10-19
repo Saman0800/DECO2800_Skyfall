@@ -18,10 +18,10 @@ import static deco2800.skyfall.util.MathUtil.clamp;
  */
 public class ShaderWrapper {
     //location of shaders
-    final String SHADER_LOCATION = "resources/shaders/";
+    private static final String SHADER_LOCATION = "resources/shaders/";
 
     //maximum number of point lights, must be same as shader
-    final int MAX_POINT_LIGHTS = 20;
+    private static final int MAX_POINT_LIGHTS = 20;
 
     // default shader used if not active
     private boolean active = false;
@@ -52,8 +52,8 @@ public class ShaderWrapper {
             shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
         } catch (GdxRuntimeException e) {
             logger.warn("\nShader source not found, check:");
-            logger.warn(String.format(SHADER_LOCATION + "/%s.vert", shaderName));
-            logger.warn(String.format(SHADER_LOCATION + "%s.frag", shaderName));
+            logger.warn(String.format("%s%s.vert", SHADER_LOCATION, shaderName));
+            logger.warn(String.format("%s%s.frag", SHADER_LOCATION, shaderName));
             logger.warn("Extended shader disabled");
             return;
         }
