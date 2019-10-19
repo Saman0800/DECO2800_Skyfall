@@ -102,7 +102,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
     /**
      * Enemy chase the player, if player position is in range, enemy attacks player.
      */
-    private void attackAction() {
+    public void attackAction() {
         if (!(mainCharacter.isDead() || mainCharacter.isRecovering() || mainCharacter.isHurt())) {
             this.setSpeed(getChasingSpeed());
 
@@ -132,10 +132,8 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
             this.position.set(getBody().getPosition().x, getBody().getPosition().y);
 
-            this.setCurrentState(AnimationRole.MOVE);
-
             // if the player in attack range then attack player
-            if (distance(mainCharacter) < getAttackRange()) {
+            if (distance(mainCharacter) < 0.02f) {
                 setCurrentState(AnimationRole.ATTACK);
                 dealDamage(mainCharacter);
                 setAttacking(true);
@@ -146,21 +144,18 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
     /**
      * under normal situation the enemy will random wandering in 100 radius circle
      */
-    private void randomMoveAction() {
+    public void randomMoveAction() {
         setAttacking(false);
         setCurrentState(AnimationRole.MOVE);
+        double moveAngle = new Random().nextDouble() * 2 * Math.PI;
 
-        if (!isAttacking) {
-            double moveAngle = new Random().nextDouble() * 2 * Math.PI;
+        float xDirection = (float) Math.cos(moveAngle);
+        float yDirection = (float) Math.sin(moveAngle);
 
-            float xDirection = (float) Math.cos(moveAngle);
-            float yDirection = (float) Math.sin(moveAngle);
+        getBody().setLinearVelocity(xDirection, yDirection);
+        getBody().setLinearVelocity(getBody().getLinearVelocity().limit(0.01f));
 
-            getBody().setLinearVelocity(xDirection, yDirection);
-            getBody().setLinearVelocity(getBody().getLinearVelocity().limit(getWalkingSpeed()));
-
-            this.position.set(getBody().getPosition().x, getBody().getPosition().y);
-        }
+        this.position.set(getBody().getPosition().x, getBody().getPosition().y);
     }
 
     /**
@@ -274,11 +269,11 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
                 die();
             }
         } else {
-            if (distance(mainCharacter) < chaseRange) {
+            if (this.distance(mainCharacter) < attackRange &&
+                    !(mainCharacter.isDead() || mainCharacter.isRecovering() || mainCharacter.isHurt())) {
                 attackAction();
             } else {
                 randomMoveAction();
-
             }
             if (isHurt) {
                 checkIfHurtEnded();
@@ -421,7 +416,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
      *
      * @param chasingSpeed the enemy's chasing speed.
      */
-    private void setChasingSpeed(float chasingSpeed) {
+    public void setChasingSpeed(float chasingSpeed) {
         this.chasingSpeed = chasingSpeed;
     }
 
@@ -430,7 +425,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
      *
      * @return the chasing speed of this enemy.
      */
-    private float getChasingSpeed() {
+    public float getChasingSpeed() {
         return this.chasingSpeed;
     }
 

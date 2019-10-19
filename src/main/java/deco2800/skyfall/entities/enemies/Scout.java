@@ -21,7 +21,7 @@ public class Scout extends Enemy implements Spawnable {
         this.setType(EnemyType.SCOUT);
 
         // Assign values, includes default values
-        this.setValues(scaling, 100, 10, 3, 5f, 7f);
+        this.setValues(scaling, 100, 10, 8, 5f, 7f);
     }
 
     /**

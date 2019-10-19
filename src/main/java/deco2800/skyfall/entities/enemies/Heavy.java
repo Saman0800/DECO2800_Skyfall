@@ -13,7 +13,7 @@ public class Heavy extends Enemy implements Spawnable {
         this.setType(EnemyType.HEAVY);
 
         // Assign values, includes default values
-        this.setValues(scaling, 100, 5, 2, 3f, 4f);
+        this.setValues(scaling, 100, 5, 6, 3f, 4f);
     }
 
     /**
