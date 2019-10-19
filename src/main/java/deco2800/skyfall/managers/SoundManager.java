@@ -416,6 +416,10 @@ public class SoundManager extends AbstractManager {
         updateVolume();
     }
 
+    public static float getSoundVolume() {
+        return gameSoundVolume;
+    }
+
     public static String getPlaying() {
         return playing;
     }

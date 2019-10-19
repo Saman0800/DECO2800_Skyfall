@@ -51,7 +51,7 @@ public class BikeTest {
      */
     @Test
     public void getTypeTest() {
-        Assert.assertEquals("sand_car", bike.getName());
+        Assert.assertEquals("bike", bike.getName());
     }
 
     /**
@@ -59,7 +59,7 @@ public class BikeTest {
      */
     @Test
     public void getBIOMETest() {
-        Assert.assertEquals("desert", bike.getBiome());
+        Assert.assertEquals("forest", bike.getBiome());
         Assert.assertTrue(bike.getBiome().equals("forest"));
     }
 
