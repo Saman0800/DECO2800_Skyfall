@@ -732,6 +732,9 @@ public class MainCharacter extends Peon
     public void playerHurt(int damage) {
         // If the player isn't recovering, set hurt and change health/animations
         if (!isRecovering) {
+            if (isOnVehicle) {
+                damage *= 0.7;
+            }
             setHurt(true);
             changeHealth(-damage);
             updateHealth();
