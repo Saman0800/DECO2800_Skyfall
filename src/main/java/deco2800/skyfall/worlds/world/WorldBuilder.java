@@ -303,6 +303,7 @@ public class WorldBuilder implements WorldBuilderInterface {
 
         // Spawn gold pieces
         spawnGold(world, random, biomeSpawnRules);
+        spawnBlueprintShop(world, random, biomeSpawnRules);
 
         spawnChests(world, random, biomeSpawnRules);
 
@@ -335,7 +336,8 @@ public class WorldBuilder implements WorldBuilderInterface {
 
         // Spawn gold pieces
         spawnGold(world, random, biomeSpawnRules);
-
+        spawnChests(world, random, biomeSpawnRules);
+        spawnBlueprintShop(world, random, biomeSpawnRules);
         // Spawn some bones
         EntitySpawnRule boneRule = new EntitySpawnRule(tile -> new Bone(tile, true), random.nextInt(), 0.004);
         biomeSpawnRules.add(boneRule);
@@ -374,6 +376,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         // Spawn some swords
         EntitySpawnRule swordRule = new EntitySpawnRule(tile -> new Sword(tile, true), random.nextInt(), 0.01);
         biomeSpawnRules.add(swordRule);
+        spawnBlueprintShop(world, random, biomeSpawnRules);
 
         // Spawn gold pieces
         spawnGold(world, random, biomeSpawnRules);
@@ -400,6 +403,7 @@ public class WorldBuilder implements WorldBuilderInterface {
                 cubic);
         mTreeControl.setLimitAdjacent(true);
         biomeSpawnRules.add(mTreeControl);
+        spawnBlueprintShop(world, random, biomeSpawnRules);
 
         // Spawn gold pieces
         spawnGold(world, random, biomeSpawnRules);

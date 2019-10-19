@@ -29,9 +29,8 @@ public abstract class AbstractPortal extends SaveableEntity {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPortal.class);
     private static final String ENTITY_ID_STRING = "PortalID";
     // The next biome to teleport to
-    String nextBiome;
+    private String nextBiome;
 
-    private Map<String, Integer> buildCost;
 
     String currentBiome;
     String name;
@@ -94,6 +93,7 @@ public abstract class AbstractPortal extends SaveableEntity {
         World nextWorld = WorldDirector.constructSingleBiomeWorld(new WorldBuilder(), currentWorld.getSeed() + 1, true, nextBiome).getWorld();
         // Add this world to the save
         save.getWorlds().add(nextWorld);
+        save.incrementGameStage();
         save.setCurrentWorld(nextWorld);
         nextWorld.setSave(save);
         // Move main character to origin of new world
