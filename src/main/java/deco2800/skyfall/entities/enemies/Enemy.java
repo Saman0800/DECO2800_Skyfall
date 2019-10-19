@@ -39,7 +39,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     // Enemy types
     public enum EnemyType {
-        ABDUCTOR, HEAVY, SCOUT
+        ABDUCTOR, HEAVY, SCOUT, MEDIUM
     }
 
     // type this enemy is
