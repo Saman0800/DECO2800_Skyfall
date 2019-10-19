@@ -53,8 +53,6 @@ public class GameMenuManager extends TickableManager {
     private float bottomRightX = 0;
     private float bottomRightY = 0;
 
-    private int feedbackBarUpdate = 0;
-
     /**
      * Initialise a new GameMenuManager with stage and skin including the characters in the game.
      * And construct Manager instances for later use.
@@ -460,14 +458,6 @@ public class GameMenuManager extends TickableManager {
 
     public float getBottomRightY() {
         return bottomRightY;
-    }
-
-    public void setFeedbackBarUpdate(int i) {
-        feedbackBarUpdate = i;
-    }
-
-    public int getFeedbackBarUpdate() {
-        return feedbackBarUpdate;
     }
 
     /**

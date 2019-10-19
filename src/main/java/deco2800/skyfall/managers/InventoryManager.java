@@ -46,6 +46,9 @@ public class InventoryManager extends TickableManager implements Serializable {
 
     private Map<String, Tuple> positions;
 
+    //Feedback manager for inventory updates
+    private final FeedbackManager fm = GameManager.get().getManager(FeedbackManager.class);
+
     @Override
     public void onTick(long i) {
         // Auto-generated method stub
@@ -285,6 +288,13 @@ public class InventoryManager extends TickableManager implements Serializable {
                 successful = false;
             }
         }
+        if (successful) {
+            fm.setFeedbackBarUpdate(true);
+            fm.setFeedbackText("" + item.getName() + " added to inventory");
+        } else {
+            fm.setFeedbackBarUpdate(true);
+            fm.setFeedbackText("Inventory full");
+        }
         return successful;
     }
 
@@ -389,6 +399,8 @@ public class InventoryManager extends TickableManager implements Serializable {
 
                 processItem(item, col, row);
             }
+            fm.setFeedbackBarUpdate(true);
+            fm.setFeedbackText(itemName + " removed from inventory");
             return items;
 
         }

@@ -4,6 +4,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import deco2800.skyfall.managers.FeedbackManager;
+import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
 
@@ -11,6 +13,9 @@ public class FeedbackBar extends AbstractUIElement {
 
     //Game menu manager
     private final GameMenuManager gmm;
+
+    //Feedback manager
+    private final FeedbackManager fm;
 
     //Current skin
     private final Skin skin;
@@ -24,6 +29,7 @@ public class FeedbackBar extends AbstractUIElement {
     public FeedbackBar(Stage stage, String[] textureNames, TextureManager tm, Skin skin, GameMenuManager gmm) {
         super(stage, textureNames, tm);
         this.gmm = gmm;
+        this.fm = GameManager.get().getManager(FeedbackManager.class);
         this.skin = skin;
         this.draw();
     }
@@ -45,22 +51,10 @@ public class FeedbackBar extends AbstractUIElement {
         stage.addActor(feedbackBarTable);
     }
 
-    public void updateText(int i) {
-        String text;
-        switch (i) {
-            case 1 :
-                text = "Item added to inventory";
-                break;
-            case 2 :
-                text = "Inventory full";
-                break;
-            default :
-                text = "";
-                break;
-        }
+    public void updateText(String text) {
         feedback.setText(text);
         showFeedbackBar();
-        gmm.setFeedbackBarUpdate(0);
+        fm.setFeedbackBarUpdate(false);
     }
 
     public void showFeedbackBar() {
@@ -74,9 +68,8 @@ public class FeedbackBar extends AbstractUIElement {
     @Override
     public void update() {
         super.update();
-        int i = gmm.getFeedbackBarUpdate();
-        if (i != 0) {
-            updateText(i);
+        if (fm.getFeedbackBarUpdate()) {
+            updateText(fm.getFeedbackText());
         }
     }
 }
