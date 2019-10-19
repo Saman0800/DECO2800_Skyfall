@@ -501,6 +501,10 @@ public class WorldBuilder implements WorldBuilderInterface {
         if ((start <= factor) && (factor <= (start + scoutFactor))) {
             world.addEntity(new Scout(tile.getCol(), tile.getRow(), enemyScaling, tile.getBiome().getBiomeName()));
         }
+        // chance to choose medium enemy
+        if ((start <= factor) && (factor <= (start + scoutFactor))) {
+            world.addEntity(new Medium(tile.getCol(), tile.getRow(), enemyScaling, tile.getBiome().getBiomeName()));
+        }
     }
 
     /**

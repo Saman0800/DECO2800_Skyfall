@@ -44,6 +44,8 @@ import java.util.function.Function;
 public class GameScreen implements Screen, KeyDownObserver {
     public static final String VOLCANIC_MOUNTAIN = "VolcanicMountain";
     public static final String MOUNTAIN = "Mountain";
+    public static final String DESERT = "Desert";
+    public static final String FOREST = "Forest";
     private final Logger logger = LoggerFactory.getLogger(GameScreen.class);
 
     @SuppressWarnings("unused")
@@ -495,16 +497,21 @@ public class GameScreen implements Screen, KeyDownObserver {
      */
     private void forestEnemySetup(EnvironmentManager gameEnvironManag, World world) {
 
-        Function<HexVector, ? extends Enemy> spawnAbductor = hexPos -> new Scout(hexPos.getCol(), hexPos.getRow(), 0.7f,
-                "Forest");
-
-        Function<HexVector, ? extends Enemy> spawnScout = hexPos -> new Scout(hexPos.getCol(), hexPos.getRow(), 0.2f,
-                "Forest");
+        Function<HexVector, ? extends Enemy> spawnAbductor = hexPos -> new Abductor(hexPos.getCol(), hexPos.getRow(), 1.1f,
+                FOREST);
+        Function<HexVector, ? extends Enemy> spawnScout = hexPos -> new Scout(hexPos.getCol(), hexPos.getRow(), 0.8f,
+                FOREST);
+        Function<HexVector, ? extends Enemy> spawnHeavy = hexPos -> new Heavy(hexPos.getCol(), hexPos.getRow(), 1.2f,
+                FOREST);
+        Function<HexVector, ? extends Enemy> spawnMedium = hexPos -> new Medium(hexPos.getCol(), hexPos.getRow(), 1.0f,
+                FOREST);
 
         Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor = new HashMap<>();
         List<Function<HexVector, ? extends Enemy>> forestList = new ArrayList<>();
         forestList.add(spawnAbductor);
         forestList.add(spawnScout);
+        forestList.add(spawnHeavy);
+        forestList.add(spawnMedium);
 
         biomeToConstructor.put("forest", forestList);
 
@@ -535,14 +542,20 @@ public class GameScreen implements Screen, KeyDownObserver {
     private void desertEnemySetup(EnvironmentManager gameEnvironManag, World world) {
 
         Function<HexVector, ? extends Enemy> spawnScout = hexPos -> new Scout(hexPos.getCol(), hexPos.getRow(), 0.9f,
-                "Desert");
+                DESERT);
         Function<HexVector, ? extends Enemy> spawnAbductor = hexPos -> new Abductor(hexPos.getCol(), hexPos.getRow(),
-                0.9f, "Desert");
+                0.9f, DESERT);
+        Function<HexVector, ? extends Enemy> spawnHeavy = hexPos -> new Heavy(hexPos.getCol(), hexPos.getRow(),
+                1.2f, DESERT);
+        Function<HexVector, ? extends Enemy> spawnMedium = hexPos -> new Medium(hexPos.getCol(), hexPos.getRow(),
+                1.0f, DESERT);
 
         Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor = new HashMap<>();
         List<Function<HexVector, ? extends Enemy>> desertList = new ArrayList<>();
         desertList.add(spawnScout);
         desertList.add(spawnAbductor);
+        desertList.add(spawnHeavy);
+        desertList.add(spawnMedium);
 
         biomeToConstructor.put("desert", desertList);
 
@@ -579,12 +592,15 @@ public class GameScreen implements Screen, KeyDownObserver {
                 1.1f, MOUNTAIN);
         Function<HexVector, ? extends Enemy> spawnHeavy = hexPos -> new Heavy(hexPos.getCol(), hexPos.getRow(), 1.1f,
                 MOUNTAIN);
+        Function<HexVector, ? extends Enemy> spawnMedium = hexPos -> new Medium(hexPos.getCol(), hexPos.getRow(), 1.1f,
+                MOUNTAIN);
 
         Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor = new HashMap<>();
         List<Function<HexVector, ? extends Enemy>> mountainList = new ArrayList<>();
         mountainList.add(spawnScout);
         mountainList.add(spawnAbductor);
         mountainList.add(spawnHeavy);
+        mountainList.add(spawnMedium);
 
         biomeToConstructor.put("mountain", mountainList);
 
@@ -621,12 +637,15 @@ public class GameScreen implements Screen, KeyDownObserver {
                 1.1f, VOLCANIC_MOUNTAIN);
         Function<HexVector, ? extends Enemy> spawnHeavy = hexPos -> new Heavy(hexPos.getCol(), hexPos.getRow(), 1.1f,
                 VOLCANIC_MOUNTAIN);
+        Function<HexVector, ? extends Enemy> spawnMedium = hexPos -> new Medium(hexPos.getCol(), hexPos.getRow(), 1.1f,
+                VOLCANIC_MOUNTAIN);
 
         Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor = new HashMap<>();
         List<Function<HexVector, ? extends Enemy>> volcanicMountainList = new ArrayList<>();
         volcanicMountainList.add(spawnScout);
         volcanicMountainList.add(spawnAbductor);
         volcanicMountainList.add(spawnHeavy);
+        volcanicMountainList.add(spawnMedium);
 
         biomeToConstructor.put("volcanic", volcanicMountainList);
 

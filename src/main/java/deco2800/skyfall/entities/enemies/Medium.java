@@ -16,9 +16,9 @@ public class Medium extends Enemy implements Spawnable {
      * @param biome   the biome this enemy is in.
      */
     public Medium(float col, float row, float scaling, String biome) {
-        super(col, row, "Scout", EnemyType.SCOUT, 0.06f, biome, "enemyScout");
+        super(col, row, EnemyType.MEDIUM, 0.06f, biome, "enemyMedium");
 
-        this.setType(EnemyType.SCOUT);
+        this.setType(EnemyType.MEDIUM);
 
         // Assign values, includes default values
         this.setValues(scaling, 100, 10, 8, 5f, 7f);

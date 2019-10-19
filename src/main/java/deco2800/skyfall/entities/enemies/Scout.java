@@ -16,7 +16,7 @@ public class Scout extends Enemy implements Spawnable {
      * @param biome   the biome this enemy is in.
      */
     public Scout(float col, float row, float scaling, String biome) {
-        super(col, row, "Scout", EnemyType.SCOUT, 0.06f, biome, "enemyScout");
+        super(col, row, EnemyType.SCOUT, 0.06f, biome, "enemyScout");
 
         this.setType(EnemyType.SCOUT);
 

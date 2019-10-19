@@ -59,8 +59,8 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
     // Main character instance in the game.
     private MainCharacter mainCharacter;
 
-    public Enemy(float col, float row, String hitBoxPath, EnemyType enemyType, float speed, String biome,
-            String textureName) {
+    public Enemy(float col, float row, EnemyType enemyType, float speed, String biome,
+                 String textureName) {
         super(row, col, speed, textureName, 10);
 
         // Sets the spawning location and all the collision
@@ -144,6 +144,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
      */
     public void randomMoveAction() {
         setCurrentState(AnimationRole.MOVE);
+        setSpeed(getWalkingSpeed());
         double moveAngle = new Random().nextDouble() * 2 * Math.PI;
 
         float xDirection = (float) Math.cos(moveAngle);

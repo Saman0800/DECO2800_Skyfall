@@ -8,7 +8,7 @@ import deco2800.skyfall.util.HexVector;
 public class Heavy extends Enemy implements Spawnable {
 
     public Heavy(float col, float row, float scaling, String biome) {
-        super(col, row, "Heavy", EnemyType.HEAVY, 0.06f, biome, "enemyHeavy");
+        super(col, row, EnemyType.HEAVY, 0.06f, biome, "enemyHeavy");
 
         this.setType(EnemyType.HEAVY);
 
