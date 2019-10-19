@@ -12,12 +12,10 @@ public class BlueprintShop extends StaticEntity implements HasHealth {
     private int health = 100;
     private static final String ENTITY_ID_STRING = "blueprintShop";
 
-
-
     /**
      * constructs a blueprint shop to be put into the game
      * @param tile tile to place on
-     * @param obstructed
+     * @param obstructed is obstructed or not
      */
     public BlueprintShop(Tile tile, boolean obstructed) {
         super(tile, 2, ENTITY_ID_STRING, obstructed);

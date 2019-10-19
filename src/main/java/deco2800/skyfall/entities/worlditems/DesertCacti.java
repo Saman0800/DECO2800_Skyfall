@@ -14,7 +14,6 @@ import java.util.Random;
 public class DesertCacti extends StaticEntity implements Tickable, Harvestable {
     private int woodAmount; // amount of wood that each tree has
 
-    private static Random randomGen = new Random();
     private static int nextImage = 1;
     protected static final String ENTITY_ID_STRING = "desert_cacti";
 
@@ -24,9 +23,9 @@ public class DesertCacti extends StaticEntity implements Tickable, Harvestable {
     }
 
     public DesertCacti(Tile tile, boolean obstructed) {
-        super(tile, 5, "DCactus" + nextImage, obstructed);
+        super(tile, 5, "DCactus" + DesertCacti.nextImage, obstructed);
         setCactiParams();
-        nextImage = randomGen.nextInt(4) + 1;
+
     }
 
     private void setCactiParams() {

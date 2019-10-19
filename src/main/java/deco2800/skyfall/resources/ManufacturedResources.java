@@ -4,6 +4,7 @@ import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.util.HexVector;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -20,57 +21,38 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
     // the name of the subtype the item belongs to
     protected String subtype;
 
-
-    // the co-ordinates of the tile the item has been placed on
-    protected HexVector position;
-
     // an AngnetEntity instance representing the owner of the resource.
     protected MainCharacter owner;
 
-    // a list of all required resources needed to create a manufactured resource item.
-    protected Map<String, Integer> allRequirements;
+    // a list of all required resources needed to create a manufactured resource
+    // item.
+    protected Map<String, Integer> allRequirements = new HashMap<>();
 
     // Can be item be equipped
-    public boolean equippable;
+    protected boolean equippable;
 
     // Durability of the item (how many times it can be used
     private int durability;
 
-    protected boolean blueprintLearned = false;
+    protected String description;
 
-
-
-    /***
-     * Creates a default manufactured resource .
-     * @param owner the resource owner.
-     * @param position the Hexvector position of the manufactured resource.
-     */
-    public ManufacturedResources(MainCharacter owner, HexVector position) {
+    public ManufacturedResources(MainCharacter owner) {
+        this();
         this.owner = owner;
-        this.position = position;
-        this.carryable = true;
-        this.subtype = "Manufactured Resource";
-        this.equippable = true;
-        this.durability = 15;
     }
 
-    public ManufacturedResources(MainCharacter owner){
-        this.owner = owner;
+    public ManufacturedResources() {
         this.subtype = "Manufactured Resource";
         this.equippable = true;
-        this.durability = 15;
-    }
-
-    public ManufacturedResources(){
-        this.subtype= "Manufactured Resource";
-        this.equippable = true;
-        this.durability = 15;
+        this.durability = 50;
+        description = "This item can be used to retrieve natural " + "resources from the world.";
     }
 
     /**
      * Returns whether or not the item can be stored in the inventory
-     * @return True if the item can be added to the inventory, false
-     * if it is consumed immediately
+     * 
+     * @return True if the item can be added to the inventory, false if it is
+     *         consumed immediately
      */
     @Override
     public boolean isCarryable() {
@@ -79,6 +61,7 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
 
     /**
      * Returns the name of the Manufactured Resource.
+     * 
      * @return The subtype which the item belongs to.
      */
     @Override
@@ -87,7 +70,22 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
     }
 
     /**
+     * @return Returns true if this subtype is equippable.
+     */
+    public boolean getEquippable() {
+        return this.equippable;
+    }
+
+    /**
+     * Sets the equippable value of this sub-type.
+     */
+    public void setEquippable(boolean equippable) {
+        this.equippable = equippable;
+    }
+
+    /**
      * Returns the co-ordinates of the tile the item is on.
+     * 
      * @return the co-ordinates of the tile the item is on.
      */
     @Override
@@ -97,6 +95,7 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
 
     /**
      * Returns the co-ordinates of the tile the item is on.
+     * 
      * @return the co-ordinates of the tile the item is on.
      */
     @Override
@@ -106,6 +105,7 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
 
     /**
      * A string representation of the manufactured resource.
+     * 
      * @return name of the natural resource and its subtype as a string.
      */
     @Override
@@ -115,12 +115,12 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
 
     /**
      * Returns the item description
+     * 
      * @return the item description
      */
     @Override
     public String getDescription() {
-        return "This item can be used to retrieve natural " +
-                "resources from the world.";
+        return description;
     }
 
     /**
@@ -130,7 +130,11 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
      */
     @Override
     public int getRequiredWood() {
-        return 0;
+        Integer amt = getAllRequirements().get("wood");
+        if (amt == null) {
+            return 0;
+        }
+        return amt;
     }
 
     /**
@@ -140,7 +144,16 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
      */
     @Override
     public int getRequiredStone() {
-        return 0;
+        Integer amt = getAllRequirements().get("stone");
+        if (amt == null) {
+            return 0;
+        }
+        return amt;
+    }
+
+    @Override
+    public Map<String, Integer> getAllRequirements() {
+        return allRequirements;
     }
 
     /**
@@ -150,30 +163,16 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
      */
     @Override
     public int getRequiredMetal() {
-        return 0;
-    }
-
-    /**
-     * a getter method to check if a player has learned the blueprint
-     *
-     * @return true if the player has learned the blueprint.
-     */
-    @Override
-    public boolean isBlueprintLearned() {
-
-        return blueprintLearned;
-    }
-
-    /**
-     * changes the boolean blueprintLearned to true.
-     */
-    public void toggleBlueprintLearned(){
-
-        blueprintLearned =true;
+        Integer amt = getAllRequirements().get("metal");
+        if (amt == null) {
+            return 0;
+        }
+        return amt;
     }
 
     /**
      * Returns whether or not the item can be equipped from the inventory
+     * 
      * @return True if the item can be equipped, false otherwise
      */
     public boolean isEquippable() {
@@ -196,6 +195,7 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
 
     /**
      * If the durability of the hatchet have durability bigger than 0
+     * 
      * @return whether to hatchet is still usable
      */
     public boolean isUsable() {
@@ -208,5 +208,3 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
     }
 
 }
-
-

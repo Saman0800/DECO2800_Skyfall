@@ -1,6 +1,5 @@
 package deco2800.skyfall.resources.items;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -18,9 +17,6 @@ public class PoisonousMushroomTest{
         poisonousMushroom = new PoisonousMushroom();
     }
 
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Ensure that the getName method returns the name of the subclass
@@ -46,14 +42,6 @@ public class PoisonousMushroomTest{
     @Test
     public void isCarryable2() {
         assertTrue(poisonousMushroom.isCarryable());
-    }
-
-    /**
-     * Ensure that poisonous mushroom is classified as food effect
-     */
-    @Test
-    public void hasFoodEffect() {
-        assertTrue(poisonousMushroom.hasFoodEffect());
     }
 
     /**

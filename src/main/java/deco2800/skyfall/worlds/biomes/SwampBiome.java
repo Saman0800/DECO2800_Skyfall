@@ -9,12 +9,13 @@ import java.util.Random;
  * Swamp biome
  */
 public class SwampBiome extends AbstractBiome{
+    public static final String NAME = "swamp";
 
     /**
      * Constructor for the SwampBiome
      */
     public SwampBiome(Random random) {
-        super("swamp", null);
+        super(NAME, null);
 
         textureGenerator = new NoiseGenerator(random.nextLong(), 3, 60, 0.5);
     }
@@ -41,7 +42,6 @@ public class SwampBiome extends AbstractBiome{
         if (adjustedPerlinValue >= textures.size()) {
             adjustedPerlinValue = textures.size() - 1;
         }
-        // TODO Is `setPerlinValue` still required?
         tile.setPerlinValue(adjustedPerlinValue);
         tile.setTexture(textures.get(adjustedPerlinValue));
     }

@@ -10,12 +10,13 @@ import java.util.Random;
  * Biomes that gets assigned to rivers on the map
  */
 public class RiverBiome extends AbstractBiome {
+    public static final String NAME = "river";
 
     /**
      * Constructor for the RiverBiome
      */
     public RiverBiome(AbstractBiome parentBiome, Random random) {
-        super("river", parentBiome);
+        super(NAME, parentBiome);
 
         textureGenerator = new NoiseGenerator(random.nextLong(), 3, 40, 0.7);
     }
@@ -32,8 +33,9 @@ public class RiverBiome extends AbstractBiome {
     @Override
     public void setTileTexture(Tile tile) {
         ArrayList<String> textures = new ArrayList<>();
-        textures.add("lake_1");
-        textures.add("lake_2");
+        textures.add("lake1.1");
+        textures.add("lake1.2");
+        textures.add("lake1.3");
 
         double perlinValue =
                 NoiseGenerator.fade(textureGenerator.getOctavedPerlinValue(tile.getCol(), tile.getRow()), 2);
@@ -41,7 +43,6 @@ public class RiverBiome extends AbstractBiome {
         if (adjustedPerlinValue >= textures.size()) {
             adjustedPerlinValue = textures.size() - 1;
         }
-        // TODO Is `setPerlinValue` still required?
         tile.setPerlinValue(adjustedPerlinValue);
         tile.setTexture(textures.get(adjustedPerlinValue));
     }

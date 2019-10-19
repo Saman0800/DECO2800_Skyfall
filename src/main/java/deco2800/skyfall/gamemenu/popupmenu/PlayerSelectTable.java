@@ -19,7 +19,6 @@ import deco2800.skyfall.managers.TextureManager;
 public class PlayerSelectTable extends AbstractPopUpElement{
 
     private Skin skin;
-    private Table playerSelectTable;
     private int currentCharacter;
     private MainCharacter mainCharacter;
 
@@ -43,24 +42,6 @@ public class PlayerSelectTable extends AbstractPopUpElement{
         mainCharacter = gameMenuManager.getMainCharacter();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void hide() {
-        super.hide();
-        playerSelectTable.setVisible(false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void show() {
-        super.show();
-        playerSelectTable.setVisible(true);
-    }
-
 
     /**
      * {@inheritDoc}
@@ -69,11 +50,11 @@ public class PlayerSelectTable extends AbstractPopUpElement{
     @Override
     public void draw() {
         super.draw();
-        playerSelectTable = new Table();
-        playerSelectTable.setSize(600, 600 * 1346 / 1862f);
-        playerSelectTable.setPosition(Gdx.graphics.getWidth()/2f - playerSelectTable.getWidth()/2,
-                (Gdx.graphics.getHeight() + 160) / 2f - playerSelectTable.getHeight()/2);
-        playerSelectTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("pop up screen"));
+        baseTable = new Table();
+        baseTable.setSize(600, 600 * 1346 / 1862f);
+        baseTable.setPosition(Gdx.graphics.getWidth()/2f - baseTable.getWidth()/2,
+                (Gdx.graphics.getHeight() + 160) / 2f - baseTable.getHeight()/2);
+        baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("pop up screen"));
 
         Table infoBar = new Table();
         infoBar.setBackground(gameMenuManager.generateTextureRegionDrawableObject("game menu bar"));
@@ -81,15 +62,15 @@ public class PlayerSelectTable extends AbstractPopUpElement{
         Label text = new Label("PLAYER SELECT", skin, "black-text");
         infoBar.add(text);
 
-        playerSelectTable.add(infoBar).width(550).height(550f * 180 / 1756).padTop(20).colspan(5).padBottom(20);
-        playerSelectTable.row();
+        baseTable.add(infoBar).width(550).height(550f * 180 / 1756).padTop(20).colspan(5).padBottom(20);
+        baseTable.row();
 
         int arrowWidth = 60;
 
         //height = width
         ImageButton leftArrow = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("left_arrow"));
 
-        playerSelectTable.add(leftArrow).width(arrowWidth).height(arrowWidth).expandY();
+        baseTable.add(leftArrow).width(arrowWidth).height(arrowWidth).expandY();
 
         Table[] characterTables = new Table[3];
 
@@ -103,16 +84,16 @@ public class PlayerSelectTable extends AbstractPopUpElement{
         updateCharacters(characterTables, characterTableWidth);
 
         for (int i = 0; i < 3; i++) {
-            playerSelectTable.add(characterTables[i]).width(characterTableWidth).height(600f * 1346 / 1862 - 550f * 180 / 1756 - 40 - 30 - 200f*138/478).spaceLeft(5).spaceRight(5);
+            baseTable.add(characterTables[i]).width(characterTableWidth).height(600f * 1346 / 1862 - 550f * 180 / 1756 - 40 - 30 - 200f*138/478).spaceLeft(5).spaceRight(5);
         }
 
         ImageButton rightArrow = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("right_arrow"));
-        playerSelectTable.add(rightArrow).width(arrowWidth).height(arrowWidth).expandY();
+        baseTable.add(rightArrow).width(arrowWidth).height(arrowWidth).expandY();
 
         leftArrow.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                currentCharacter = (currentCharacter + gameMenuManager.NUMBEROFCHARACTERS - 1) % gameMenuManager.NUMBEROFCHARACTERS;
+                currentCharacter = (currentCharacter + GameMenuManager.NUMBEROFCHARACTERS - 1) % GameMenuManager.NUMBEROFCHARACTERS;
                 updateCharacters(characterTables, characterTableWidth);
             }
         });
@@ -120,15 +101,15 @@ public class PlayerSelectTable extends AbstractPopUpElement{
         rightArrow.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                currentCharacter = (currentCharacter + 1) % gameMenuManager.NUMBEROFCHARACTERS;
+                currentCharacter = (currentCharacter + 1) % GameMenuManager.NUMBEROFCHARACTERS;
                 updateCharacters(characterTables, characterTableWidth);
             }
         });
 
-        playerSelectTable.row().padTop(20).padBottom(10);
+        baseTable.row().padTop(20).padBottom(10);
 
         ImageButton select = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("select"));
-        playerSelectTable.add(select).width(200).height(200 * select.getHeight() /select.getWidth()).expandX().colspan(5);
+        baseTable.add(select).width(200).height(200 * select.getHeight() /select.getWidth()).expandX().colspan(5);
 
         select.addListener(new ClickListener() {
             @Override
@@ -141,8 +122,8 @@ public class PlayerSelectTable extends AbstractPopUpElement{
             }
         });
 
-        playerSelectTable.setVisible(false);
-        stage.addActor(playerSelectTable);
+        baseTable.setVisible(false);
+        stage.addActor(baseTable);
     }
 
     /**

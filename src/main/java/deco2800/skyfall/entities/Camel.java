@@ -1,25 +1,15 @@
 package deco2800.skyfall.entities;
 
-
-import deco2800.skyfall.animation.AnimationRole;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 public class Camel extends VehicleEntity {
     private static final String BIOME = "desert";
-    private MainCharacter mc;
     private boolean available = true;
     private boolean moving = false;
     private static final String VEHICLE = "camel";
-    private static final String CHARACTER = "camel_character";
     private static final int HEALTH = 10;
 
-    private final Logger logger =
-            LoggerFactory.getLogger(Camel.class);
-
     public Camel(float col, float row, MainCharacter mc) {
-        super(col,row);
+        super(col, row);
+        character = "camel_character";
         this.mc = mc;
         this.setTexture(VEHICLE);
         this.setObjectName(VEHICLE);
@@ -29,9 +19,9 @@ public class Camel extends VehicleEntity {
     }
 
     public Camel(float col, float row) {
-        super(col,row);
-        this.setTexture(CHARACTER);
-        this.setObjectName(CHARACTER);
+        super(col, row);
+        this.setTexture(character);
+        this.setObjectName(character);
         this.setHeight(1);
     }
 
@@ -41,31 +31,6 @@ public class Camel extends VehicleEntity {
 
     public String getBiome() {
         return BIOME;
-    }
-
-    @Override
-    public void onTick(long i) {
-        super.onTick(i);
-        if (mc != null) {
-
-
-            float colDistance = mc.getCol() - this.getCol();
-            float rowDistance = mc.getRow() - this.getRow();
-
-            if ((colDistance * colDistance + rowDistance * rowDistance) < 4){
-
-                // Let main character get onto vehicle
-               setTexture("camel_character");
-               setObjectName("camel_character");
-
-
-            } else {
-                this.setCurrentState(AnimationRole.NULL);
-            }
-        } else {
-            logger.info("Main Character is null");
-        }
-
     }
 
     public String getVehicleType() {

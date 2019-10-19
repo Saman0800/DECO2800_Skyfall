@@ -52,9 +52,6 @@ public abstract class SaveableEntity extends AbstractEntity
         this.setEntityID(memento.entityID);
         setRenderOrder(memento.renderOrder);
         this.obstructed = memento.obstructed;
-        /*
-         * this.setBody(memento.body); this.setFixture(memento.fixture);
-         */
         this.setCollidable(memento.isCollidable);
         this.setTexture(memento.texture);
         this.setColRenderLength(memento.colRenderLength);
@@ -73,12 +70,6 @@ public abstract class SaveableEntity extends AbstractEntity
         private int renderOrder;
         private boolean obstructed;
 
-        // TODO:dannathan find out if these need to be saved (they cause a stack
-        // overflow in gson)
-        /*
-         * private Body body; private Fixture fixture;
-         */
-
         protected boolean isCollidable;
         protected String texture;
 
@@ -92,10 +83,6 @@ public abstract class SaveableEntity extends AbstractEntity
             this.rowRenderLength = entity.getRowRenderLength();
             this.renderOrder = entity.getRenderOrder();
             this.obstructed = entity.obstructed;
-
-            /*
-             * this.body = entity.getBody(); this.fixture = entity.getFixture();
-             */
 
             this.isCollidable = entity.getCollidable();
             this.texture = entity.getTexture();

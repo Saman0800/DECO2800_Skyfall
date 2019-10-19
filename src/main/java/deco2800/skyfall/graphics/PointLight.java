@@ -1,7 +1,7 @@
 package deco2800.skyfall.graphics;
 
-import deco2800.skyfall.graphics.types.vec2;
-import deco2800.skyfall.graphics.types.vec3;
+import deco2800.skyfall.graphics.types.Vec2;
+import deco2800.skyfall.graphics.types.Vec3;
 
 /**
  * Represents all information required for a point light
@@ -10,9 +10,9 @@ import deco2800.skyfall.graphics.types.vec3;
  */
 public class PointLight {
     //world space position of light emitter
-    vec2 position;
+    Vec2 position;
     //colour emitted by the light caster
-    vec3 colour;
+    Vec3 colour;
     //light strength scalar
     float k;
     //light horizontal dispersion constant
@@ -25,7 +25,7 @@ public class PointLight {
      * @param k scaling constant, lower values will result in lower overall strength
      * @param a horizontal spread constant, lower values spread light out further
      */
-    public PointLight(vec2 position, vec3 colour, float k, float a) {
+    public PointLight(Vec2 position, Vec3 colour, float k, float a) {
         this.position = position;
         this.colour = colour;
         this.k = k;
@@ -35,14 +35,14 @@ public class PointLight {
     /**
      * @return current position of light in world space
      */
-    public vec2 getPosition() {
+    public Vec2 getPosition() {
         return position;
     }
 
     /**
      * @param position the new position of the point light in world space
      */
-    public void setPosition(vec2 position) {
+    public void setPosition(Vec2 position) {
         this.position = position;
     }
 
@@ -56,7 +56,7 @@ public class PointLight {
     /**
      * @return returns colour of light, each component is from [0,1]
      */
-    public vec3 getColour() {
+    public Vec3 getColour() {
         return colour;
     }
 

@@ -1,49 +1,70 @@
 package deco2800.skyfall.managers;
 
-import deco2800.skyfall.buildings.AbstractPortal;
-import deco2800.skyfall.buildings.BuildingEntity;
-import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.buildings.*;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.resources.Blueprint;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
-public class QuestManager extends TickableManager{
+public class QuestManager extends TickableManager {
 
-    //Current level of quest
+    public static final String SWORD = "sword";
+    public static final String SPEAR = "spear";
+    public static final String STONE = "Stone";
+    public static final String METAL = "Metal";
+    // Current level of quest
     private int questLevel;
 
-    //Required gold amount
+    // Required gold amount
     private int goldTotal;
 
-    //Required wood amount
+    // Required wood amount
     private int woodTotal;
 
-    //Required stone amount
+    // Required stone amount
     private int stoneTotal;
 
-    //Required metal amount
+    // Required metal amount
     private int metalTotal;
 
-    //Required buildings
-    private List<String> buildingsTotal;
+    // Require sword amount
+    private int swordTotal;
 
-    //Level 1 buildings
-    private List<String> levelOneBuildings = new ArrayList<>();
+    // Require spear amount
+    private int spearTotal;
 
-    //Level 2 buildings
-    private List<String> levelTwoBuildings = new ArrayList<>();
+    // Require axe amount
+    private int axeTotal;
 
-    //Player character
+    // Require bow amount
+    private int bowTotal;
+
+    // Required buildings
+    private List<BuildingType> buildingsTotal;
+
+    // Level 1 buildings
+    private List<BuildingType> levelOneBuildings = new ArrayList<>();
+
+    // Level 2 buildings
+    private List<BuildingType> levelTwoBuildings = new ArrayList<>();
+
+    //Level 3 buildings
+    private List<BuildingType> levelThreeBuildings = new ArrayList<>();
+
+    // Player character
     private MainCharacter player;
 
-    //Quest milestones achieved or not
+    // Quest milestones achieved or not
     private boolean questSuccess;
 
-    //Updates this every checkBuildings
+    // Updates this every checkBuildings
     private int buildingsNum;
+
+    // List of buildings to be placed
+    private List<BuildingType> buildingsPlaced = new ArrayList<>();
+
+    private boolean isGameFinished = false;
+
     /**
      * Constructor, sets up beginning of game goals
      */
@@ -51,11 +72,9 @@ public class QuestManager extends TickableManager{
         this.questLevel = 1;
         questSuccess = false;
         buildingsTotal = new ArrayList<>();
-        levelOneBuildings.add("Cabin");
-        //levelOneBuildings.add("WatchTower");
-        levelTwoBuildings.add("WatchTower");
-        levelTwoBuildings.add("StorageUnit");
-        levelTwoBuildings.add("TownCentre");
+        levelOneBuildings.add(BuildingType.CASTLE);
+        levelTwoBuildings.add(BuildingType.CASTLE);
+        levelTwoBuildings.add(BuildingType.CABIN);
         player = MainCharacter.getInstance();
         setMilestones();
     }
@@ -64,20 +83,41 @@ public class QuestManager extends TickableManager{
      * Sets goals to be achieved at each level
      */
     private void setMilestones() {
+        //inventory numbers need to be reset for player testing and actual game release
+        //reduced for ease of testing in game
         switch (questLevel) {
             case 1 :
-                setGoldTotal(300);
-                setWoodTotal(50);
-                setStoneTotal(50);
-                setMetalTotal(30);
+                setGoldTotal(10);
+                setWoodTotal(10);
+                setStoneTotal(10);
+                setMetalTotal(10);
                 setBuildingsTotal(levelOneBuildings);
+                setWeaponTotal(SWORD, 2);
+                setWeaponTotal("bow", 0);
+                setWeaponTotal(SPEAR, 0);
+                setWeaponTotal("axe", 0);
                 break;
             case 2 :
-                setGoldTotal(600);
-                setWoodTotal(100);
-                setStoneTotal(100);
-                setMetalTotal(60);
+                setGoldTotal(20);
+                setWoodTotal(20);
+                setStoneTotal(20);
+                setMetalTotal(20);
                 setBuildingsTotal(levelTwoBuildings);
+                setWeaponTotal(SWORD, 3);
+                setWeaponTotal("bow", 3);
+                setWeaponTotal(SPEAR, 0);
+                setWeaponTotal("axe", 0);
+                break;
+            case 3 :
+                setGoldTotal(30);
+                setWoodTotal(30);
+                setStoneTotal(30);
+                setMetalTotal(30);
+                setBuildingsTotal(levelThreeBuildings);
+                setWeaponTotal(SWORD, 4);
+                setWeaponTotal("bow", 4);
+                setWeaponTotal(SPEAR, 4);
+                setWeaponTotal("axe", 4);
                 break;
             default :
                 break;
@@ -171,7 +211,7 @@ public class QuestManager extends TickableManager{
      * Sets the required buildings to be constructed
      * @param buildings The buildings to be constructed
      */
-    public void setBuildingsTotal(List<String> buildings) {
+    public void setBuildingsTotal(List<BuildingType> buildings) {
         buildingsTotal.clear();
         buildingsTotal.addAll(buildings);
     }
@@ -180,19 +220,54 @@ public class QuestManager extends TickableManager{
      * Returns the current required buildings
      * @return The current required buildings
      */
-    public List<String> getBuildingsTotal() {
+    public List<BuildingType> getBuildingsTotal() {
         return buildingsTotal;
     }
 
-    /*
-    Stuff to be done:
-    - track player inventory
-    - track buildings placed in the world
-    - confirm milestones have been met
-    - reset inventory/health upon starting new level?
-    - how to set quest level upon levelling up?
-    - figure out how portal activation fits in with all this
+    /**
+     * Sets the required weapons to be collected
+     * @param weapon the weapon being set
+     * @param amount the amount being set
      */
+    public void setWeaponTotal(String weapon, int amount) {
+        switch (weapon) {
+            case SWORD:
+                this.swordTotal = amount;
+                break;
+            case SPEAR:
+                this.spearTotal = amount;
+                break;
+            case "bow":
+                this.bowTotal = amount;
+                break;
+            case "axe":
+                this.axeTotal = amount;
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Get number of weapons to collect
+     * @param weapon weapon to check
+     * @return the number of weapons to be collected to complete quest
+     */
+    public int getWeaponsTotal(String weapon) {
+        switch (weapon) {
+            case SWORD:
+                return this.swordTotal;
+            case SPEAR:
+                return this.spearTotal;
+            case "bow":
+                return this.bowTotal;
+            case "axe":
+                return this.axeTotal;
+            default:
+                break;
+        }
+        return 0;
+    }
 
     /**
      * Checks if amount of gold in player inventory meets gold milestone amount
@@ -219,7 +294,7 @@ public class QuestManager extends TickableManager{
      */
     public boolean checkStone() {
         int currentStone = player.getInventoryManager()
-                .getAmount("Stone");
+                .getAmount(STONE);
         return (currentStone >= getStoneTotal());
     }
 
@@ -229,42 +304,46 @@ public class QuestManager extends TickableManager{
      */
     public boolean checkMetal() {
         int currentMetal = player.getInventoryManager()
-                .getAmount("Metal");
+                .getAmount(METAL);
         return (currentMetal >= getMetalTotal());
     }
 
-/*
+    /**
+     * Adds a building to be built for quest
+     * @param newBuilding building to be added
+     */
+    public void addBuilding(BuildingType newBuilding) {
+        buildingsPlaced.add(newBuilding);
+    }
+
+    /**
      * Checks if all required buildings have been placed in the world
      * @return True if all buildings are placed, False if not
      */
     public boolean checkBuildings() {
-        boolean allBuildings = false;
-        ArrayList<String> currentBuildings = new ArrayList<>();
-        List<AbstractEntity> entities;
-        entities = GameManager.get().getWorld().getEntities();
-
-        for (int i = 0; i < entities.size(); i++) {
-            if (entities.get(i) instanceof BuildingEntity) {
-                for (int j = 0; j < buildingsTotal.size(); j++) {
-                    if (((BuildingEntity) entities.get(i)).getBuildingType().getName()
-                            .equals(buildingsTotal.get(j))) {
-                        currentBuildings.add(buildingsTotal.get(j));
-                    }
-                }
-            }
-        }
-
-        buildingsNum = currentBuildings.size();
-        if (currentBuildings.containsAll(buildingsTotal)) {
-            allBuildings = true;
-        }
-        return allBuildings;
+        buildingsNum = buildingsPlaced.size();
+        return buildingsPlaced.containsAll(buildingsTotal);
     }
 
-
+    /**
+     * Get the building number
+     * @return buildingsNum
+     */
     public int getBuildingsNum() {
         return buildingsNum;
     }
+
+    /**
+     * Check if the number of weapons to be collected has been collected
+     * @param weapon weapon to check
+     * @return true or false
+     */
+    public boolean checkWeapons(String weapon) {
+        int currentWeapon = player.getInventoryManager().getAmount(weapon);
+
+        return (currentWeapon >= getWeaponsTotal(weapon));
+    }
+
 
     /**
      * Checks if milestones are met each game tick
@@ -277,14 +356,20 @@ public class QuestManager extends TickableManager{
         checkWood();
         checkMetal();
         checkBuildings();
+        checkWeapons(SWORD);
+        checkWeapons(SPEAR);
+        checkWeapons("axe");
+        checkWeapons("bow");
 
-        if ((checkGold() && checkStone() && checkWood() &&
-        checkMetal() && checkBuildings()) || (questSuccess) ) {
+        if ((checkGold() && checkStone() && checkWood()
+                && checkMetal() && checkBuildings()
+                && checkWeapons(SWORD) && checkWeapons(SPEAR)
+                && checkWeapons("axe") && checkWeapons("bow"))
+                || (questSuccess) ) {
             questSuccess = true;
-            //Other quest success stuff here, or quest success method
+            // Other quest success stuff here, or quest success method
         }
     }
-
 
     /**
      * Access player for testing
@@ -294,16 +379,29 @@ public class QuestManager extends TickableManager{
         return player;
     }
 
+    /**
+     * Whether the quest has finished
+     * @return true of false
+     */
     public boolean questFinished() {
         return questSuccess;
     }
 
+    /**
+     * Get Biome of character
+     * @return String of biome
+     */
     public String getBiome() {
-        return GameManager.get().getWorld().getBiomes().get(0).getBiomeName().replaceAll("_", " ").toUpperCase();
+        return GameManager.get().getWorld().getBiomes().get(0).getBiomeName().replace("_", " ").toUpperCase();
     }
 
+    /**
+     * Get the number of items for quest collected
+     * @return amount of needed items collected
+     */
     public int collectNum() {
         int amt = 0;
+
         if (checkWood()) {
             amt += 1;
         }
@@ -319,8 +417,31 @@ public class QuestManager extends TickableManager{
         if (checkGold()) {
             amt += 1;
         }
-        return amt;
 
+
+        if (checkWeapons(SWORD) && swordTotal > 0) {
+            amt += 1;
+        }
+
+        if (checkWeapons(SPEAR) && spearTotal > 0) {
+            amt += 1;
+        }
+
+        if (checkWeapons("axe") && axeTotal > 0) {
+            amt += 1;
+        }
+
+        if (checkWeapons("bow") && bowTotal > 0) {
+            amt += 1;
+        }
+
+        return amt;
+    }
+
+    public void nextQuest() {
+        resetQuest();
+        questLevel += 1;
+        setMilestones();
     }
 
     /**
@@ -333,31 +454,46 @@ public class QuestManager extends TickableManager{
 
         // Get amount of building items in inventory
         int currentMetal = player.getInventoryManager()
-                .getAmount("Metal");
+                .getAmount(METAL);
 
         int currentWood = player.getInventoryManager()
                 .getAmount("Wood");
 
         int currentStone = player.getInventoryManager()
-                .getAmount("Stone");
+                .getAmount(STONE);
 
         // Reset the inventory
         buildingsNum = 0;
         questSuccess = false;
         getPlayer().removeAllGold();
-        getPlayer().getInventoryManager().dropMultiple("Metal", currentMetal);
-        getPlayer().getInventoryManager().dropMultiple("Stone", currentStone);
+        getPlayer().getInventoryManager().dropMultiple(METAL, currentMetal);
+        getPlayer().getInventoryManager().dropMultiple(STONE, currentStone);
         getPlayer().getInventoryManager().dropMultiple("Wood", currentWood);
+        getPlayer().getInventoryManager().dropAll(SWORD);
+        getPlayer().getInventoryManager().dropAll(SPEAR);
+        getPlayer().getInventoryManager().dropAll("axe");
+        getPlayer().getInventoryManager().dropAll("bow");
     }
 
 
+    /**
+     * See if a blueprint is learned
+     * @return true or false
+     */
     public boolean getBlueprintLearned() {
-        Iterator<Blueprint> iter = getPlayer().getBlueprintsLearned().iterator();
+        Iterator<Blueprint> iter =
+                getPlayer().getBlueprintsLearned().iterator();
+
         while (iter.hasNext()) {
             if (iter.next() instanceof AbstractPortal) {
                 return true;
             }
         }
-        return  false;
+
+        return false;
+    }
+
+    public int weaponsNum() {
+        return ((axeTotal > 0) ? 1 : 0) + ((swordTotal > 0) ? 1 : 0) + ((spearTotal > 0) ? 1 : 0) + ((bowTotal > 0) ? 1 : 0);
     }
 }

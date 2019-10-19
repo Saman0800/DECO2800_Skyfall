@@ -1,0 +1,92 @@
+package deco2800.skyfall.gamemenu;
+
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.StatisticsManager;
+import deco2800.skyfall.managers.TextureManager;
+
+public class ManaCircle extends GenericCircle {
+    // Game manager to be used
+
+    // Current health of player
+    private float currentMana;
+
+    // New health after health change
+    private int newMana;
+
+
+    /**
+     * Updates the inner circle.
+     */
+    private void updateInnerCircle() {
+        // Check if null
+        if (smallerCircle == null || biggerCircle == null) {
+            return;
+        }
+
+        // If health is greater than 50, set health to equal 50
+        if (newMana > 100) {
+            newMana = 100;
+        }
+
+        float diff = currentMana - newMana;
+
+        smallerCircle.setSize((float) newMana,
+                (float) newMana);
+
+        offset += (diff) / 2;
+        smallerCircle.setPosition(positionX + offset, positionY + offset);
+
+        currentMana = newMana;
+
+        // Set label appropriately
+        if(sm.getMana() < 0) {
+            label.setText("Mana: 0");
+        } else {
+            label.setText("Mana: " + (int) currentMana);
+        }
+    }
+
+    /**
+     * Get smaller circle size
+     *
+     * @return Inner circle image
+     */
+    public ImageButton getInnerCircle() {
+        return this.smallerCircle;
+    }
+
+    /**
+     * Updates the health circle and the position if the screen has been resized
+     */
+    @Override
+    public void update() {
+        super.update();
+        newMana = sm.getMana();
+        updateInnerCircle();
+    }
+    /**
+     * Keeps the object on the top left of the screen
+     */
+    @Override
+    public void updatePosition() {
+        super.updatePosition();
+        positionX = gmm.getTopRightX() - stage.getCamera().viewportWidth / 2 - 200;
+    }
+
+
+
+    /**
+     * Constructors
+     * @param stage The game stage
+     * @param textureNames The texture names to fetch
+     * @param tm The texture manager
+     * @param sm The statistics manager
+     */
+    public ManaCircle(Stage stage, String[] textureNames, TextureManager tm, StatisticsManager sm, Skin skin, GameMenuManager gmm) {
+        super(stage, textureNames, tm, sm, skin, gmm);
+        currentMana = sm.getMana();
+    }
+}

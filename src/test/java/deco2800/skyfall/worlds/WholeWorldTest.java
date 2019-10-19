@@ -36,8 +36,8 @@ public class WholeWorldTest {
         World world = generateWorld();
 
         try {
-            BufferedReader reader =
-                    new BufferedReader(new FileReader("src/test/java/deco2800/skyfall/worlds/ExampleWorldOutput.txt"));
+            BufferedReader reader = new BufferedReader(
+                    new FileReader("src/test/java/deco2800/skyfall/worlds/ExampleWorldOutput.txt"));
             StringBuilder content = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -54,13 +54,13 @@ public class WholeWorldTest {
     // @Test
     // @Ignore
     // public void generateExampleWorld() throws Exception {
-    //     World world = generateWorld();
+    // World world = generateWorld();
     //
-    //     try {
-    //         world.saveWorld("src/test/java/deco2800/skyfall/worlds/ExampleWorldOutput.txt");
-    //     } catch (IOException e) {
-    //         System.out.println("Could not save world");
-    //     }
+    // try {
+    // world.saveWorld("src/test/java/deco2800/skyfall/worlds/ExampleWorldOutput.txt");
+    // } catch (IOException e) {
+    // System.out.println("Could not save world");
+    // }
     // }
 
     private World generateWorld() throws Exception {
@@ -68,14 +68,12 @@ public class WholeWorldTest {
         whenNew(Random.class).withAnyArguments().thenReturn(random);
 
         DataBaseConnector connector = mock(DataBaseConnector.class);
-        when(connector.loadChunk(any(World.class), anyInt(), anyInt())).then(
-                (Answer<Chunk>) invocation -> {
-                    Chunk chunk = new Chunk(invocation.getArgumentAt(0, World.class),
-                                            invocation.getArgumentAt(1, Integer.class),
-                                            invocation.getArgumentAt(2, Integer.class));
-                    chunk.generateEntities();
-                    return chunk;
-                });
+        when(connector.loadChunk(any(World.class), anyInt(), anyInt())).then((Answer<Chunk>) invocation -> {
+            Chunk chunk = new Chunk(invocation.getArgumentAt(0, World.class),
+                    invocation.getArgumentAt(1, Integer.class), invocation.getArgumentAt(2, Integer.class));
+            chunk.generateEntities();
+            return chunk;
+        });
 
         DatabaseManager manager = mock(DatabaseManager.class);
         when(manager.getDataBaseConnector()).thenReturn(connector);
@@ -84,7 +82,7 @@ public class WholeWorldTest {
         when(DatabaseManager.get()).thenReturn(manager);
 
         WorldBuilder worldBuilder = new WorldBuilder();
-        WorldDirector.constructTestWorld(worldBuilder);
+        WorldDirector.constructTestWorld(worldBuilder, 0);
         worldBuilder.setType("single_player");
         worldBuilder.setStaticEntities(false);
         World world = worldBuilder.getWorld();
@@ -102,11 +100,11 @@ public class WholeWorldTest {
     @Test
     public void testFrictionMap() {
         WorldBuilder worldBuilder = new WorldBuilder();
-        WorldDirector.constructTestWorld(worldBuilder);
+        WorldDirector.constructTestWorld(worldBuilder, 0);
         worldBuilder.setType("single_player");
         worldBuilder.setStaticEntities(false);
         World world = worldBuilder.getWorld();
-        Map<String, Float> frictionMap = world.frictionMap;
+        Map<String, Float> frictionMap = world.getfrictionMap();
 
         Map<String, Float> expectedFrictionMap = new HashMap<>();
         frictionMap.put("grass", 0.8f);

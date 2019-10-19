@@ -10,12 +10,13 @@ import java.util.Random;
  * Lake biome that is used for the lakes
  */
 public class LakeBiome extends AbstractBiome {
+    public static final String NAME = "lake";
 
     /**
      * Constructor for a Biome
      */
     public LakeBiome(AbstractBiome parentBiome, Random random) {
-        super("lake", parentBiome);
+        super(NAME, parentBiome);
 
         textureGenerator = new NoiseGenerator(random.nextLong(), 3, 40, 0.7);
     }
@@ -43,7 +44,6 @@ public class LakeBiome extends AbstractBiome {
         if (adjustedPerlinValue >= textures.size()) {
             adjustedPerlinValue = textures.size() - 1;
         }
-        // TODO Is `setPerlinValue` still required?
         tile.setPerlinValue(adjustedPerlinValue);
         tile.setTexture(textures.get(adjustedPerlinValue));
     }

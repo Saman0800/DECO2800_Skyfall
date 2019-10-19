@@ -3,6 +3,7 @@ package deco2800.skyfall.worlds.generation;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.biomes.OceanBiome;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.world.World;
 
@@ -13,6 +14,8 @@ import java.util.*;
  * A class to represent an edge of a polygon in a Voronoi Diagram
  */
 public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
+    private static long nextID = System.nanoTime();
+
     private World world;
     private long edgeID;
 
@@ -36,15 +39,6 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
     private List<Tile> tiles;
 
     /**
-     * Constructor for a VoronoiEdge being loaded from a memento
-     *
-     * @param memento the memento of the edge
-     */
-    public VoronoiEdge(VoronoiEdgeMemento memento) {
-        this.load(memento);
-    }
-
-    /**
      * Constructor for a VoronoiEdge
      *
      * @param pointA The first vertex of the edge
@@ -53,7 +47,7 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
      */
     public VoronoiEdge(double[] pointA, double[] pointB, World world) {
         this.world = world;
-        this.edgeID = System.nanoTime();
+        this.edgeID = nextID++;
         this.pointA = pointA;
         this.pointB = pointB;
         this.pointANeighbours = new ArrayList<>();
@@ -64,8 +58,13 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
     }
 
     /**
-     * If an edge node for the edge appears in all sub-lists of previousNodes, return false
+     * Constructor for a VoronoiEdge being loaded from a memento
+     *
+     * @param memento the memento of the edge
      */
+    public VoronoiEdge(VoronoiEdgeMemento memento) {
+        this.load(memento);
+    }
 
     /**
      * Find if an edge node for the edge appears in all sub-lists of previousNodes
@@ -133,7 +132,7 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
             while (!validNeighbour) {
                 // If none of the adjacent edges are valid to add, or valid to
                 // terminate the path
-                if (tempEdges.size() == 0) {
+                if (tempEdges.isEmpty()) {
                     throw new DeadEndGenerationException();
                 }
                 // Get a random neighbour from tempEdges
@@ -155,7 +154,7 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
                         // Get the biome of the end node
                         String biomeName = node.getBiome().getBiomeName();
                         // If the path is already at the ocean
-                        if (biomeName.equals("ocean")) {
+                        if (biomeName.equals(OceanBiome.NAME)) {
                             return path;
                         }
 
@@ -178,7 +177,7 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
                     }
                     String biomeName = node.getBiome().getBiomeName();
                     // If the new edge ends with the ocean or a lake
-                    if (biomeName.equals("ocean") || biomeName.equals("lake")) {
+                    if (biomeName.equals(OceanBiome.NAME) || biomeName.equals("lake")) {
                         return path;
                     }
                 }
@@ -189,7 +188,7 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
                     }
                     String biomeName = node.getBiome().getBiomeName();
                     // If the new edge ends with the ocean or a lake
-                    if (biomeName.equals("ocean") || biomeName.equals("lake")) {
+                    if (biomeName.equals(OceanBiome.NAME) || biomeName.equals("lake")) {
                         return path;
                     }
                 }
@@ -262,19 +261,13 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
                 if (Arrays.equals(edgeA.getA(), edgeB.getA())) {
                     edgeA.addANeighbour(edgeB);
                     edgeB.addANeighbour(edgeA);
-                    continue;
-                }
-                if (Arrays.equals(edgeA.getA(), edgeB.getB())) {
+                } else if (Arrays.equals(edgeA.getA(), edgeB.getB())) {
                     edgeA.addANeighbour(edgeB);
                     edgeB.addBNeighbour(edgeA);
-                    continue;
-                }
-                if (Arrays.equals(edgeA.getB(), edgeB.getA())) {
+                } else if (Arrays.equals(edgeA.getB(), edgeB.getA())) {
                     edgeA.addBNeighbour(edgeB);
                     edgeB.addANeighbour(edgeA);
-                    continue;
-                }
-                if (Arrays.equals(edgeA.getB(), edgeB.getB())) {
+                } else if (Arrays.equals(edgeA.getB(), edgeB.getB())) {
                     edgeA.addBNeighbour(edgeB);
                     edgeB.addBNeighbour(edgeA);
                 }
@@ -417,13 +410,12 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
     public void load(VoronoiEdgeMemento memento) {
         this.pointA = new double[] {memento.ax, memento.ay};
         this.pointB = new double[] {memento.bx, memento.by};
+
+        this.edgeID = memento.edgeID;
     }
 
     public static class VoronoiEdgeMemento extends AbstractMemento implements Serializable {
-
         private long edgeID;
-
-        private long biomeID;
 
         // The coordinates of the two vertices of this edge
         private double ax;
@@ -431,29 +423,18 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
         private double bx;
         private double by;
 
-
         /**
          * Constructor for a new VoronoiEdgeMemento
          *
          * @param edge the edge this is for
          */
         public VoronoiEdgeMemento(VoronoiEdge edge)  {
-
             this.edgeID = edge.edgeID;
 
-            if (edge.world.getBeachEdges().containsKey(edge)) {
-                this.biomeID = edge.world.getBeachEdges().get(edge).getBiomeID();
-            } else if (edge.world.getRiverEdges().containsKey(edge)){
-                this.biomeID = edge.world.getRiverEdges().get(edge).getBiomeID();
-            } else {
-                // Failsafe: edges that aren't beaches or rivers shouldn't be saved
-                this.biomeID = 0;
-            }
             this.ax = edge.getA()[0];
             this.ay = edge.getA()[1];
             this.bx = edge.getB()[0];
             this.by = edge.getB()[1];
-
         }
     }
 }

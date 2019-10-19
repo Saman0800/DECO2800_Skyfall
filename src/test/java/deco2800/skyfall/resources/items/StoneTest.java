@@ -1,6 +1,5 @@
 package deco2800.skyfall.resources.items;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,10 +18,6 @@ public class StoneTest {
     public void setUp()  {
 
         stone = new Stone();
-    }
-
-    @After
-    public void tearDown() {
     }
 
     /**
@@ -102,6 +97,6 @@ public class StoneTest {
     @Test
     public void getDescriptionTest() {
         assertEquals("This resource can be found in the forest and mountain" + "\n" +
-                " biomes and can be used to build a Pickaxe.", stone.getDescription());
+                "biomes and can be used to build a Pickaxe.", stone.getDescription());
     }
 }

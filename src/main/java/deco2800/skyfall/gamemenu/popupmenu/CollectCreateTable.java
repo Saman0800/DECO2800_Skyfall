@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import deco2800.skyfall.buildings.BuildingType;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.QuestManager;
@@ -15,35 +16,37 @@ import java.util.List;
 /**
  * Doubles for the both the Collect Button and Create Button
  */
-public class CollectCreateTable extends AbstractPopUpElement{
+public class CollectCreateTable extends AbstractPopUpElement {
 
     private final String type;
     private final QuestManager qm;
-    private GameMenuManager gmm;
     private Skin skin;
-    private Table baseTable;
     private TextButton complete;
-    private Label titleLabel;
     private Table labelTable;
+
     private String collect = "collect";
-    private static enum Type {
-        COLLECT,
-        CREATE
-    }
+    private static final String SWORD = "sword";
+    private static final String AXE = "axe";
+    private static final String SPEAR = "spear";
+    private static final String BOW = "bow";
+
     private Label labelGold;
     private Label labelMetal;
     private Label labelStone;
     private Label labelWood;
+    private Label labelSword;
+    private Label labelSpear;
+    private Label labelAxe;
+    private Label labelBow;
 
     public CollectCreateTable(Stage stage, ImageButton exit, String[] textureNames,
                               TextureManager tm, GameMenuManager gameMenuManager,
-                              QuestManager qm, Skin skin, String type) {
+                              Skin skin, String type) {
         super(stage, exit, textureNames, tm, gameMenuManager);
 
         this.skin = skin;
-        this.gmm = gameMenuManager;
         this.type = type;
-        this.qm  = qm;
+        this.qm  = gameMenuManager.getQuestManager();
         complete = new TextButton("  COMPLETED!  ", skin);
         complete.getLabel().setStyle(skin.get("green-pill",
                 Label.LabelStyle.class));
@@ -51,25 +54,6 @@ public class CollectCreateTable extends AbstractPopUpElement{
 
         labelTable = new Table();
         this.draw();
-        stage.addActor(baseTable);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void hide() {
-        super.hide();
-        baseTable.setVisible(false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void show() {
-        super.show();
-        baseTable.setVisible(true);
     }
 
     /**
@@ -94,60 +78,14 @@ public class CollectCreateTable extends AbstractPopUpElement{
      */
     public void updateText() {
         labelTable.clear();
-        String whiteText = "white-text";
-        String format = "%d x %s";
         if (type.equals(collect)) {
-            String currentText  = String.format(format, qm.getGoldTotal(), "Gold");
-            Color color;
-
-            if (qm.checkGold() || qm.questFinished()) {
-                color = Color.GREEN;
-            } else {
-                color = Color.WHITE;
-            }
-
-            labelGold = new Label(currentText, skin, whiteText);
-            labelGold.setColor(color);
-            labelTable.add(labelGold).left();
-            labelTable.row();
-            if (qm.checkMetal() || qm.questFinished()) {
-                color = Color.GREEN;
-            } else {
-                color = Color.WHITE;
-            }
-
-            currentText  = String.format(format, qm.getMetalTotal(), "Metal");
-            labelMetal = new Label(currentText, skin, whiteText);
-            labelMetal.setColor(color);
-            labelTable.add(labelMetal).left();
-            labelTable.row();
-
-            if (qm.checkStone() || qm.questFinished()) {
-                color = Color.GREEN;
-            } else {
-                color = Color.WHITE;
-            }
-
-            currentText  = String.format(format, qm.getStoneTotal(), "Stone");
-            labelStone = new Label(currentText, skin, whiteText);
-            labelStone.setColor(color);
-            labelTable.add(labelStone).left();
-            labelTable.row();
-            if (qm.checkWood() || qm.questFinished()) {
-                color = Color.GREEN;
-            } else {
-                color = Color.WHITE;
-            }
-            currentText  = String.format(format, qm.getWoodTotal(), "Wood");
-            labelWood = new Label(currentText, skin, whiteText);
-            labelWood.setColor(color);
-            labelTable.add(labelWood).left();
-            labelTable.row();
+            populateItems();
+            populateWeapons();
         } else {
-            List<String> buildingsTotal = qm.getBuildingsTotal();
+            List<BuildingType> buildingsTotal = qm.getBuildingsTotal();
 
-            for (String entry :  buildingsTotal) {
-                String currentText  = String.format("1 x %s", entry);
+            for (BuildingType entry :  buildingsTotal) {
+                String currentText  = String.format("1 x %s", entry.toString());
                 labelTable.add(new Label(currentText, skin, "white-text")).left();
                 labelTable.row();
             }
@@ -159,8 +97,11 @@ public class CollectCreateTable extends AbstractPopUpElement{
      * @return True if all resources have been collected
      */
     private boolean checkComplete() {
-        if (type.equals(collect)) {
-            return (qm.checkGold() && qm.checkMetal() && qm.checkStone() && qm.checkWood()) || qm.questFinished();
+        if (type.equals("collect")) {
+            return (qm.checkGold() && qm.checkMetal() &&
+                    qm.checkStone() && qm.checkWood() &&
+                    qm.checkWeapons(SWORD) && qm.checkWeapons(SPEAR) &&
+                    qm.checkWeapons(AXE) && qm.checkWeapons(BOW));
         } else {
             return qm.checkBuildings() || qm.questFinished();
         }
@@ -180,6 +121,7 @@ public class CollectCreateTable extends AbstractPopUpElement{
         baseTable.top();
 
 
+        Label titleLabel;
         if (type.equals(collect)) {
             titleLabel = new Label(" COLLECT ", skin,  "title-pill");
         } else {
@@ -192,6 +134,117 @@ public class CollectCreateTable extends AbstractPopUpElement{
         baseTable.row();
         baseTable.add(complete).bottom().width(200).expand();
         baseTable.setVisible(false);
+        stage.addActor(baseTable);
+
+    }
+
+    private void populateItems() {
+        String whiteText = "white-text";
+        String format = "%d x %s";
+
+        String currentText  = String.format(format, qm.getGoldTotal(), "Gold");
+        Color color;
+
+        // Gold label
+        if (qm.checkGold() || qm.questFinished()) {
+            color = Color.GREEN;
+        } else {
+            color = Color.WHITE;
+        }
+        labelGold = new Label(currentText, skin, whiteText);
+        labelGold.setColor(color);
+        labelTable.add(labelGold).left();
+        labelTable.row();
+
+        // Metal label
+        if (qm.checkMetal() || qm.questFinished()) {
+            color = Color.GREEN;
+        } else {
+            color = Color.WHITE;
+        }
+        currentText  = String.format(format, qm.getMetalTotal(), "Metal");
+        labelMetal = new Label(currentText, skin, whiteText);
+        labelMetal.setColor(color);
+        labelTable.add(labelMetal).left();
+        labelTable.row();
+
+        // Stone label
+        if (qm.checkStone() || qm.questFinished()) {
+            color = Color.GREEN;
+        } else {
+            color = Color.WHITE;
+        }
+        currentText  = String.format(format, qm.getStoneTotal(), "Stone");
+        labelStone = new Label(currentText, skin, whiteText);
+        labelStone.setColor(color);
+        labelTable.add(labelStone).left();
+        labelTable.row();
+
+        // Wood label
+        if (qm.checkWood() || qm.questFinished()) {
+            color = Color.GREEN;
+        } else {
+            color = Color.WHITE;
+        }
+        currentText  = String.format(format, qm.getWoodTotal(), "Wood");
+        labelWood = new Label(currentText, skin, whiteText);
+        labelWood.setColor(color);
+        labelTable.add(labelWood).left();
+        labelTable.row();
+
+
+    }
+
+    private void populateWeapons() {
+        // Collect weapon labels
+
+        String currentText;
+        Color color;
+        String whiteText = "white-text";
+        String format = "%d x %s";
+
+        if ((qm.checkWeapons(SWORD) && qm.checkWeapons(SPEAR) &&
+                qm.checkWeapons(AXE) && qm.checkWeapons(BOW)) || qm.questFinished()) {
+            color = Color.GREEN;
+        } else {
+            color = Color.WHITE;
+        }
+
+        if (qm.getWeaponsTotal(SWORD) > 0) {
+            currentText  = String.format(format, qm.getWeaponsTotal(SWORD),
+                    "Sword");
+            labelSword = new Label(currentText, skin, whiteText);
+            labelSword.setColor(color);
+            labelTable.add(labelSword).left();
+            labelTable.row();
+        }
+
+        if (qm.getWeaponsTotal(SPEAR) > 0) {
+            currentText  = String.format(format, qm.getWeaponsTotal(SPEAR),
+                    "Spear");
+            labelSpear = new Label(currentText, skin, whiteText);
+            labelSpear.setColor(color);
+            labelTable.add(labelSpear).left();
+            labelTable.row();
+        }
+
+        if (qm.getWeaponsTotal(AXE) > 0) {
+            currentText  = String.format(format, qm.getWeaponsTotal(AXE),
+                    "Axe");
+            labelAxe = new Label(currentText, skin, whiteText);
+            labelAxe.setColor(color);
+            labelTable.add(labelAxe).left();
+            labelTable.row();
+        }
+
+        if (qm.getWeaponsTotal(BOW) > 0) {
+            currentText  = String.format(format, qm.getWeaponsTotal(BOW),
+                    "Bow");
+            labelBow = new Label(currentText, skin, whiteText);
+            labelBow.setColor(color);
+            labelTable.add(labelBow).left();
+            labelTable.row();
+        }
     }
 
 
@@ -209,6 +262,22 @@ public class CollectCreateTable extends AbstractPopUpElement{
 
     public Label getLabelWood() {
         return labelWood;
+    }
+
+    public Label getLabelSword() {
+        return labelSword;
+    }
+
+    public Label getLabelSpear() {
+        return labelSpear;
+    }
+
+    public Label getLabelAxe() {
+        return labelAxe;
+    }
+
+    public Label getLabelBow() {
+        return labelBow;
     }
 
     public TextButton getComplete() {

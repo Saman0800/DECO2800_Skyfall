@@ -1,11 +1,11 @@
 package deco2800.skyfall.resources;
 
-//import deco2800.skyfall.entities.EnemyEntity;
 import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 public abstract class HealthResources extends AbstractEntity implements Item {
 
@@ -13,15 +13,16 @@ public abstract class HealthResources extends AbstractEntity implements Item {
     private boolean carryable;
 
     // the name of the item e.g. food, poison
-    private String name;
+    protected String name;
 
     // impact the player's health or not
     private boolean hasHealingPower;
 
     // the name of the subtype the item belongs to
     protected String subtype;
+
     // the co-ordinates of the tile the item has been placed on
-    private HexVector position;
+    private HexVector location;
 
     // Items could change or not e.g. coins, items
     private boolean exchangeable;
@@ -40,8 +41,6 @@ public abstract class HealthResources extends AbstractEntity implements Item {
 
     // the colour of the health resource
     protected String colour;
-
-    private final transient Logger log = LoggerFactory.getLogger(HealthResources.class);
 
     /**
      * Creates a default health resource.
@@ -67,16 +66,14 @@ public abstract class HealthResources extends AbstractEntity implements Item {
 
     public HealthResources(String name, Tile position) {
         this.name = name;
-        this.carryable = true;
-        this.subtype = "Health Resource";
-        this.hasHealingPower = true;
-        //Do we need a new type like FoodResources?
-        // and hasFoodEffect may false in here as medicine may not affect the food fullness
-        this.exchangeable = true;
-        this.equippable = false;
-        this.position = position.getCoordinates();
-
-        this.healthValue = 10;
+        carryable = true;
+        subtype = "Health Resource";
+        hasHealingPower = true;
+        exchangeable = true;
+        equippable = false;
+        this.location = position.getCoordinates();
+        description = "This item increases or decreases a player's health.";
+        healthValue = 10;
     }
 
     /**
@@ -138,16 +135,6 @@ public abstract class HealthResources extends AbstractEntity implements Item {
         return hasHealingPower;
     }
 
-
-/*    *//**
-     * Returns whether or not the item could deduct the HP of players
-     * @return True if the item deduct the player's health, false otherwise
-
-
-     */
-
-
-
     /**
      * Returns whether or not the item could be exchanged
      *
@@ -165,7 +152,7 @@ public abstract class HealthResources extends AbstractEntity implements Item {
      */
     @Override
     public HexVector getCoords() {
-        return position;
+        return location;
     }
 
     public int getFoodValue() {
@@ -179,6 +166,8 @@ public abstract class HealthResources extends AbstractEntity implements Item {
     public int getHealthValue(){
         return healthValue;
     }
+
+    protected String description;
 
     /**
      * Creates a string representation of the health resource in the format:
@@ -204,7 +193,7 @@ public abstract class HealthResources extends AbstractEntity implements Item {
      */
     @Override
     public String getDescription() {
-        return "This item increases or decreases a player's health.";
+        return description;
     }
 
     /**
@@ -213,6 +202,15 @@ public abstract class HealthResources extends AbstractEntity implements Item {
      */
     public boolean isEquippable() {
         return this.equippable;
+    }
+
+    @Override
+    public void use(HexVector position){
+        // Check player status
+        if (MainCharacter.getInstance().getHealth() < 50 && !MainCharacter.getInstance().isDead()) {
+            // Add health to player
+            MainCharacter.getInstance().changeHealth(getHealthValue());
+        }
     }
 
     @Override

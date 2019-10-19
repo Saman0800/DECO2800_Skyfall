@@ -9,12 +9,13 @@ import java.util.Random;
  * Volcanic Mountains Biome
  */
 public class VolcanicMountainsBiome extends AbstractBiome {
+    public static final String NAME = "volcanic_mountains";
 
     /**
      * Constructor for the VolcanicMountainsBiome
      */
     public VolcanicMountainsBiome(Random random){
-        super("volcanic_mountains", null);
+        super(NAME, null);
 
         textureGenerator = new NoiseGenerator(random.nextLong(), 3, 60, 0.5);
     }
@@ -42,7 +43,6 @@ public class VolcanicMountainsBiome extends AbstractBiome {
         if (adjustedPerlinValue >= textures.size()) {
             adjustedPerlinValue = textures.size() - 1;
         }
-        // TODO Is `setPerlinValue` still required?
         tile.setPerlinValue(adjustedPerlinValue);
         tile.setTexture(textures.get(adjustedPerlinValue));
     }

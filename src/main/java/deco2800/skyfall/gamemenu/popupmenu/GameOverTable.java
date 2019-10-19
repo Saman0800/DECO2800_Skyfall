@@ -16,9 +16,6 @@ import deco2800.skyfall.managers.*;
  */
 public class GameOverTable extends AbstractPopUpElement{
 
-    // Table to be displayed
-    private Table mainTable;
-
     /**
      * Constructs a game over table.
      *
@@ -37,63 +34,42 @@ public class GameOverTable extends AbstractPopUpElement{
 
     /**
      * {@inheritDoc}
-     */
-    @Override
-    public void hide() {
-        super.hide();
-        mainTable.setVisible(false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void show() {
-        super.show();
-        mainTable.setVisible(true);
-    }
-
-    /**
-     * {@inheritDoc}
      * Draws the game over table.
      */
     @Override
     public void draw() {
         super.draw();
-        mainTable = new Table();
-        mainTable.bottom();
-        mainTable.setSize(500, 500 * 1346 / 1862f);
-        mainTable.setPosition(Gdx.graphics.getWidth()/2f - mainTable.getWidth()/2,
-                (Gdx.graphics.getHeight() + 160) / 2f - mainTable.getHeight()/2);
-        mainTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("game_over_temp_bg"));
+        baseTable = new Table();
+        baseTable.bottom();
+        baseTable.setSize(500, 500 * 1346 / 1862f);
+        baseTable.setPosition(Gdx.graphics.getWidth()/2f - baseTable.getWidth()/2,
+                (Gdx.graphics.getHeight() + 160) / 2f - baseTable.getHeight()/2);
+        baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("game_over_temp_bg"));
 
         ImageButton retry = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("game over retry temp"));
-        mainTable.add(retry).padBottom(15).width(450).height(450*302/2313f);
-        mainTable.row();
+        baseTable.add(retry).padBottom(15).width(450).height(450*302/2313f);
+        baseTable.row();
 
         retry.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // If pressed, restart level and hide screen
                 retryQuest();
                 hide();
             }
         });
 
         ImageButton toHome = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("game over home temp"));
-        mainTable.add(toHome).padBottom(15).width(450).height(450*302/2313f);
-        mainTable.row();
+        baseTable.add(toHome).padBottom(15).width(450).height(450*302/2313f);
+        baseTable.row();
         toHome.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // If pressed, return home and hide screen
-                //returnHome();
                 hide();
             }
         });
 
-        mainTable.setVisible(false);
-        stage.addActor(mainTable);
+        baseTable.setVisible(false);
+        stage.addActor(baseTable);
     }
 
     /**
@@ -113,6 +89,6 @@ public class GameOverTable extends AbstractPopUpElement{
     public void returnHome() {
         // Create a game and set screen to main menu
         gameMenuManager.getGame().create();
-        ((Game)Gdx.app.getApplicationListener()).setScreen(gameMenuManager.getGame().mainMenuScreen);
+        ((Game)Gdx.app.getApplicationListener()).setScreen(gameMenuManager.getGame().getMainMenuScreen());
     }
 }

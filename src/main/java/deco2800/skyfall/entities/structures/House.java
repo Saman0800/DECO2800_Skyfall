@@ -2,7 +2,6 @@ package deco2800.skyfall.entities.structures;
 
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.entities.StaticEntity;
-import deco2800.skyfall.managers.ConstructionManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
@@ -17,7 +16,6 @@ public class House extends AbstractBuilding {
     private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
 
     private static final String ENTITY_ID_STRING = "HouseID";
-    private int renderOrder;
     private int maxHealth = 10;
     private int currentHealth;
     //Build time in seconds.
@@ -27,7 +25,6 @@ public class House extends AbstractBuilding {
     private int sizeY = 1;
     private HexVector coords;
     private String texture = "house1";
-    ConstructionManager permissions = new ConstructionManager();
 
     @Expose
     public Map<HexVector, String> children;

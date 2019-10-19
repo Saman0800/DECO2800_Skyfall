@@ -1,80 +1,34 @@
 package deco2800.skyfall.buildings;
 
-import com.badlogic.gdx.graphics.Texture;
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.resources.Blueprint;
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.biomes.AbstractBiome;
-import deco2800.skyfall.worlds.world.World;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * TODO: [Portal Team] Consider creating an abstract base class for the portal.
- */
-public class ForestPortal extends AbstractPortal implements Blueprint {
+import deco2800.skyfall.resources.Blueprint;
 
-    public String currentBiome = "forest";
-    public String nextBiome = "desert";
-    public boolean blueprintLearned = false;
-    public String name = "portal";
-    Texture texture;
-    // a logger
-    private final transient Logger logger = LoggerFactory.getLogger(ForestPortal.class);
+public class ForestPortal extends AbstractPortal implements Blueprint {
 
     /**
      * Constructor for an building entity with normal rendering size.
-     * 
+     *
      * @param col         the col position on the world
      * @param row         the row position on the world
      * @param renderOrder the height position on the world
      */
     public ForestPortal(float col, float row, int renderOrder) {
         super(col, row, renderOrder);
-        this.setTexture("portal");
+        this.setTexture("portal_forest");
+        this.setNext("desert");
+        this.entityType = "ForestPortal";
+        this.currentBiome = "forest";
+        this.name = "forestPortal";
+        this.blueprintLearned = false;
 
-    }
-
-    @Override
-    public void onTick(long i) {
-        // do nothing so far
-    }
-
-    /**
-     * Returns the number of wood required for the item.
-     * 
-     * @return The amount of wood needed
-     */
-    public int getRequiredWood() {
-        return 0;
-    }
-
-    /**
-     * Returns the number of stones required for the item.
-     * 
-     * @return The amount of stone needed
-     */
-    public int getRequiredStone() {
-        return 0;
-    }
-
-    /**
-     * Returns the number of metal required for the item.
-     * 
-     * @return The amount of metal needed
-     */
-    public int getRequiredMetal() {
-        return 0;
     }
 
     /**
      * Returns a map of the name of the required resource and the required number of
      * each resource to create the item.
-     * 
+     *
      * @return a hashamp of the required resources and their number.
      */
     public Map<String, Integer> getAllRequirements() {
@@ -84,72 +38,6 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
         allRequirements.put("Metal", 0);
 
         return allRequirements;
-    }
-
-    /**
-     * Get the name of the Portal
-     *
-     * @return String - The name of the portal
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * a getter method to check if a player has learned the blueprint
-     *
-     * @return true if the player has learned the blueprint, false otherwise
-     */
-    public boolean isBlueprintLearned() {
-        return blueprintLearned;
-    }
-
-    /**
-     * Toggles the boolean blueprintLearned between a true and false state.
-     */
-    public void toggleBlueprintLearned() {
-        blueprintLearned = !blueprintLearned;
-    }
-
-    /**
-     * @return - cost of building the building
-     */
-    public int getCost() {
-        return 0;
-    }
-
-    public void unlocknext(MainCharacter character) {
-        super.unlocknext(character, nextBiome);
-    }
-
-    /**
-     * Move characters location to the next biome To be implemented when a player
-     * clicks on the portal
-     * 
-     * @param character - The Character to teleport
-     * @param world     - The world to teleport through
-     */
-    public void teleport(MainCharacter character, World world) {
-        character.unlockBiome(nextBiome);
-        // move to a random place on the map
-        AbstractBiome next = null;
-        for (AbstractBiome biome : world.getBiomes()) {
-            if (biome.getBiomeName() == nextBiome) {
-                next = biome;
-            }
-        }
-
-        if (next == null) {
-            // TODO: @CGulley add a logger and send message to the logger about invalid
-            // biome
-            logger.warn("No next biome");
-
-        } else {
-            ArrayList<Tile> biomeTiles = (ArrayList<Tile>) next.getTiles();
-            Tile firstTile = biomeTiles.get(0);
-            // Setting the characters tile to the next biome
-            character.setPosition(firstTile.getCol(), firstTile.getRow());
-        }
     }
 
 }

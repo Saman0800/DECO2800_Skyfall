@@ -22,8 +22,14 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
     // The world the player is currently in
     private World currentWorld;
 
+    private long currentWorldId;
+
     // The ID of the main character in this save
     private MainCharacter mainCharacter;
+
+    private int gameStage;
+
+
 
     /**
      * Constructor for a save without parameters
@@ -48,23 +54,30 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
      * @param mainCharacter The main character in this save state
      */
     public Save(List<World> worlds, MainCharacter mainCharacter, World currentWorld) {
-        // FIXME: this may break if a save is stored for ~293+ years
         this.saveID = System.nanoTime();
 
         this.worlds = worlds;
 
         this.mainCharacter = mainCharacter;
         this.currentWorld = currentWorld;
+        this.gameStage = 0;
     }
 
     public Save(SaveMemento saveMemento) {
         this.load(saveMemento);
-        this.worlds = new ArrayList<>();
+        if (this.worlds == null){
+            this.worlds = new ArrayList<>();
+        }
         this.mainCharacter = null;
+        this.gameStage = saveMemento.gameStage;
     }
 
     public World getCurrentWorld() {
         return currentWorld;
+    }
+
+    public long getCurrentWorldId(){
+        return currentWorldId;
     }
 
     /**
@@ -120,14 +133,36 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
         this.worlds.add(world);
     }
 
+    /**
+     * Increases the game stage by one
+     */
+    public void incrementGameStage() {
+        this.gameStage++;
+    }
+
+    /**
+     * Returns the game stage
+     *
+     * @return the game stage
+     */
+    public int getGameStage() {
+        return this.gameStage;
+    }
+
     @Override
     public SaveMemento save() {
         return new SaveMemento(this);
     }
 
+
     @Override
     public void load(SaveMemento saveMemento) {
+        if (this.worlds == null){
+            this.worlds = new ArrayList<>();
+        }
         this.saveID = saveMemento.saveID;
+        this.currentWorldId = saveMemento.currentWorld;
+        this.gameStage = saveMemento.gameStage;
     }
 
     /**
@@ -136,10 +171,12 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
     public static class SaveMemento extends AbstractMemento implements Serializable {
         private long saveID;
         private long currentWorld;
+        private int gameStage;
 
         private SaveMemento(Save save) {
             this.saveID = save.getSaveID();
             this.currentWorld = save.currentWorld.getID();
+            this.gameStage = save.gameStage;
         }
 
         public long getWorldID() {

@@ -8,16 +8,16 @@ import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.worlds.Tile;
 
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.List;
-import java.util.Arrays;
 
 public class EnvironmentManager extends TickableManager {
 
-    //Hours in a game day
+    // Hours in a game day
     private int hours;
+
+    // Accurate alternative minutes representation
+    private float trueMinutes;
 
     // Seconds in a game day
     private int minutes;
@@ -35,7 +35,7 @@ public class EnvironmentManager extends TickableManager {
     private boolean isDay;
 
     // Biome player is currently in
-   public String biome = "forest";
+    private String biome;
 
     // Music filename
     private String file;
@@ -44,49 +44,27 @@ public class EnvironmentManager extends TickableManager {
     private String currentFile;
 
     // Abstract entity within entities list. (Public for testing)
-    public AbstractEntity player;
+    private AbstractEntity player;
 
-    //List of objects implementing TimeObserver
+    // List of objects implementing TimeObserver
     private ArrayList<TimeObserver> timeListeners;
 
-    //List of objects implementing DayNightObserver
+    // List of objects implementing DayNightObserver
     private ArrayList<DayNightObserver> dayNightListeners;
 
-    //List of objects implementing SeasonObserver
+    // List of objects implementing SeasonObserver
     private ArrayList<SeasonObserver> seasonListeners;
-
-    // Correct biome name to display on screen
-    private String biomeDisplay;
-
-    // The previous biome that player was in
-    private String previousBiome;
-
-    // Current weather in the game
-    private String weather;
-
-    // Weather event to happen after a certain amount of ticks
-    private int weatherEvent = 0;
-
-    // List of weather events
-    private List<String> weatherList;
-
-    // Default weather
-    private String defaultWeather = "Clear";
-
-    // Random event
-    private Random rand = SecureRandom.getInstanceStrong();
 
     // Current season
     private String season;
-
 
     /**
      * Constructor for setting up the environment
      */
     public EnvironmentManager() throws NoSuchAlgorithmException {
         // Music file setup
-        file = "resources/sounds/forest_day.wav";
-        currentFile = "resources/sounds/forest_night.wav";
+        file = "forest_day";
+        currentFile = "";
 
         // Time setup
         timeListeners = new ArrayList<>();
@@ -94,11 +72,39 @@ public class EnvironmentManager extends TickableManager {
         seasonListeners = new ArrayList<>();
         currentMillis = System.currentTimeMillis();
         season = "";
+        biome = "forest";
+    }
 
-        // Weather setup
-        previousBiome = null;
-        weatherList = Arrays.asList(defaultWeather);
-        weather = defaultWeather;
+    /**
+     * @return Returns the biome name as a string.
+     */
+    public String getBiomeString() {
+        return this.biome;
+    }
+
+    /**
+     * Sets the biome string for the environment.
+     *
+     * @param biomeName The biome name (as a string).
+     */
+    public void setBiomeString(String biomeName) {
+        this.biome = biomeName;
+    }
+
+    /**
+     * @return Returns a reference to the player object.
+     */
+    public AbstractEntity getPlayer() {
+        return this.player;
+    }
+
+    /**
+     * Sets the player used in class testing.
+     *
+     * @param player The player that will be used in testing
+     */
+    public void setPlayer(AbstractEntity player) {
+        this.player = player;
     }
 
     /**
@@ -216,8 +222,8 @@ public class EnvironmentManager extends TickableManager {
     }
 
     /**
-     * Tracks the biome the player is currently in by retrieving the player's coordinates,
-     * the corresponding tile, and the corresponding biome.
+     * Tracks the biome the player is currently in by retrieving the player's
+     * coordinates, the corresponding tile, and the corresponding biome.
      */
     public void setBiome() {
         // List of entities in the game
@@ -237,18 +243,10 @@ public class EnvironmentManager extends TickableManager {
     }
 
     /**
-     * Sets a biome string
-     *
-     * @param location The current biome that will be set
-     */
-    public void setBiomeString(String location) {
-        biome = location;
-    }
-
-    /**
      * Gets current biome player is in
      *
-     * @return String Current biome of player, or null if player is moving between tiles
+     * @return String Current biome of player, or null if player is moving between
+     *         tiles
      */
     public String currentBiome() {
         return biome;
@@ -265,7 +263,7 @@ public class EnvironmentManager extends TickableManager {
 
     /**
      * @return Converts the game minutes and hours into a hour-decimal value. For
-     * example the time 2:30am would yield a hour-decimal of 2.5
+     *         example the time 2:30am would yield a hour-decimal of 2.5
      */
     public float getHourDecimal() {
         return ((float) hours) + ((float) minutes / 60);
@@ -275,23 +273,26 @@ public class EnvironmentManager extends TickableManager {
      * Sets the time of day in game
      *
      * @param hour The hour of day to be set. Must be between 0-23 inclusive.
-     * @param mins The minutes of the hour of day to be set. Must be between 0-59 inclusive.
+     * @param mins The minutes of the hour of day to be set. Must be between 0-59
+     *             inclusive.
      */
     public void setTime(int hour, int mins) {
         hours = hour;
         minutes = mins;
+        trueMinutes = mins;
 
-        //Check if observers need notifying, notifies if needed
+        // Check if observers need notifying, notifies if needed
         if (mins >= 60) {
             hours += 1;
             if (hours >= 24) {
                 hours = hours - 24;
             }
             minutes = 0;
+            trueMinutes = 0;
             updateTimeListeners(hours);
         }
 
-        //Update isDay boolean
+        // Update isDay boolean
         isDay();
     }
 
@@ -304,13 +305,13 @@ public class EnvironmentManager extends TickableManager {
 
         // Day is 6am - 6pm, Night 6pm - 6am
         if (hours < 6 || hours >= 18) {
-            //check if observers need notifying
+            // check if observers need notifying
             if (isDay) {
                 updateDayNightListeners(false);
             }
             isDay = false;
         } else {
-            //check if observers need notifying
+            // check if observers need notifying
             if (!isDay) {
                 updateDayNightListeners(true);
             }
@@ -357,7 +358,7 @@ public class EnvironmentManager extends TickableManager {
      * @param i the time in milliseconds
      */
     public void setMonth(long i) {
-        //Each month goes for approx 30 days
+        // Each month goes for approx 30 days
         long timeMonth = (i / 60000) / 730;
         month = timeMonth % 12;
     }
@@ -404,7 +405,7 @@ public class EnvironmentManager extends TickableManager {
             seasonString = "Invalid season";
         }
 
-        //Check if season has changed, updates observers
+        // Check if season has changed, updates observers
         if (!season.equals(seasonString)) {
             updateSeasonListeners(seasonString);
             season = seasonString;
@@ -413,29 +414,30 @@ public class EnvironmentManager extends TickableManager {
     }
 
     /**
-     * Sets the filename in game.
-     * Format for filenames: "biome_day/night" e.g. "forest_day"
+     * Sets the filename in game. Format for filenames: "biome_day/night" e.g.
+     * "forest_day"
      */
     public void setFilename() {
-        // FIXME What is this meant to do? This is just a getter.
         // Check environment
         isDay();
         currentBiome();
 
         // Name file accordingly
-        String filename = "day.wav";
-        filename = isDay() ? filename : "night.wav";
+        String TOD = "day";
+        TOD = isDay() ? TOD : "night";
 
-        // Until lake music created and ocean biome is restricted, play forest for now
-        if (biome.equals("ocean") || biome.equals("lake") || biome.equals("river")) {
-            file = "resources/sounds/forest_" + filename;
+        // Set file to be current biome the player is in
+        if (biome.equals("lake") || biome.equals("river") || biome.equals("ocean")) {
+            // no background music for the water biomes
+            file = "forest_" + TOD;
         } else {
-            file = "resources/sounds/" + biome + "_" + filename;
+            file = biome + "_" + TOD;
         }
     }
 
     /**
      * Gets the filename in game.
+     *
      * @return the file being played
      */
     public String getFilename() {
@@ -446,134 +448,32 @@ public class EnvironmentManager extends TickableManager {
      * Sets the music in game as per current time and biome the player resides in.
      */
     public void setTODMusic() {
-
-        // Check if there is a file
-        if (!(file.contains(currentFile))) {
-            BGMManager bgmManager = GameManager.getManagerFromInstance(BGMManager.class);
-
-            setFilename();
+        // Check for change in biome
+        if (!(file.equals(currentFile))) {
 
             // Stop current music
             try {
-                bgmManager.stop();
+                if (!currentFile.equals("")) {
+                    SoundManager.fadeOutStop(currentFile);
+                } else {
+                    SoundManager.stopSound(currentFile);
+                }
             } catch (Exception e) {
                 /* Exception caught, if any */
             }
 
+            // Change file name to current biome
             currentFile = file;
+            setFilename();
 
             // Play BGM
             try {
-                bgmManager.initClip(currentFile);
-                bgmManager.play();
+                SoundManager.fadeInPlay(currentFile);
             } catch (Exception e) {
                 /* Exception caught, if any */
             }
         }
-
         setFilename();
-
-    }
-
-    /**
-     * Gets current biome player is in
-     *
-     * @return String Current biome of player, or null if player is moving between tiles
-     */
-    public String biomeDisplayName() {
-
-        if (biome.equals("forest")) {
-            biomeDisplay = "Forest";
-        }
-        if (biome.equals("volcanic_mountains")) {
-            biomeDisplay = "Volcanic Mountains";
-        }
-        if (biome.equals("snowy_mountains")) {
-            biomeDisplay = "Snowy Mountains";
-        }
-        if (biome.equals("mountain")) {
-            biomeDisplay = "Mountain";
-        }
-        if (biome.equals("swamp")) {
-            biomeDisplay = "Swamp";
-        }
-        if (biome.equals("lake")) {
-            biomeDisplay = "Lake";
-        }
-        if (biome.equals("river")) {
-            biomeDisplay = "River";
-        }
-        if (biome.equals("jungle")) {
-            biomeDisplay = "Jungle";
-        }
-        if (biome.equals("desert")) {
-            biomeDisplay = "Desert";
-        }
-        if (biome.equals("beach")) {
-            biomeDisplay = "Beach";
-        }
-        if (biome.equals("ocean")) {
-            biomeDisplay = "Ocean";
-        }
-        return biomeDisplay;
-    }
-
-    /**
-     * The weather event that is happening
-     *
-     * @return String The current weather event
-     */
-    public String getcurrentWeather() {
-        return weather;
-    }
-
-    /**
-     * Sets a weather event
-     *
-     * @param event the weather event to occur
-     */
-    public void setWeather(String event) {
-        weather = event;
-    }
-
-    /**
-     * Generates a random weather event based on current biome
-     */
-    public void randomWeatherEvent() {
-
-        // Random weather element
-        String randomElement;
-
-        // Set default weather
-        String storm = "Storm";
-        String earthquake = "Earthquake";
-        String rain = "Rain";
-        String snow = "Snow";
-        String meteor = "Meteor";
-
-        // Check biome and set weather events accordingly
-        if (!biome.equals(previousBiome)) {
-            switch (biome) {
-                case "volcanic_mountains":
-                    weatherList = Arrays.asList(defaultWeather, storm, earthquake, meteor);
-                    previousBiome = biome;
-                    break;
-                case "desert":
-                    //same as above
-                case "snowy_mountains":
-                    weatherList = Arrays.asList(defaultWeather, storm, earthquake, snow, meteor);
-                    previousBiome = biome;
-                    break;
-                default:
-                    weatherList = Arrays.asList(defaultWeather, rain, storm, meteor);
-                    previousBiome = biome;
-                    break;
-            }
-        }
-
-        // Create a random weather event based on biome
-        randomElement = weatherList.get(rand.nextInt(weatherList.size()));
-        weather = randomElement;
     }
 
     /**
@@ -588,6 +488,8 @@ public class EnvironmentManager extends TickableManager {
             minutes += 1;
         }
 
+        trueMinutes += (System.currentTimeMillis() - currentMillis) / 1000f;
+
         // Set the TOD and month in game
         setTime(hours, minutes);
         setMonth(currentMillis);
@@ -595,14 +497,6 @@ public class EnvironmentManager extends TickableManager {
         // Set Background music as per the specific biome and TOD
         setBiome();
         setTODMusic();
-        getcurrentWeather();
-
-        weatherEvent++;
-
-        if (weatherEvent == 10000) {
-            randomWeatherEvent();
-            weatherEvent = 0;
-        }
     }
 
     public int getMinutes() {

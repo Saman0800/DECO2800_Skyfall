@@ -1,14 +1,14 @@
 package deco2800.skyfall.resources;
 
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
+import java.io.Serializable;
 
 /**
  * An abstract class representing a Natural Resource item
  */
-public abstract class NaturalResources extends AbstractEntity implements Item {
+public abstract class NaturalResources extends AbstractEntity implements Item, Serializable {
 
     // the name of the item e.g. wood, stone
     protected String name;
@@ -29,25 +29,29 @@ public abstract class NaturalResources extends AbstractEntity implements Item {
     protected String biome;
 
     // Can be item be equipped
-    public boolean equippable;
+    protected boolean equippable;
+
+    // item description
+    protected String description;
 
     /***
      * Creates a default natural resource where the position is unknown
      */
-    public NaturalResources(){
+    public NaturalResources() {
         this.name = null;
         this.carryable = true;
         this.subtype = "Natural Resource";
         this.exchangeable = true;
         this.equippable = false;
+        description = "These items exist naturally in the world.";
     }
-
 
     /**
      * Creates a new Natural Resource with the given position
+     * 
      * @param position the tile which the item has been placed on
      */
-    public NaturalResources(Tile position){
+    public NaturalResources(Tile position) {
         this.name = null;
         this.carryable = true;
         this.subtype = "Natural Resource";
@@ -58,6 +62,7 @@ public abstract class NaturalResources extends AbstractEntity implements Item {
 
     /**
      * Returns the name of the natural resource
+     * 
      * @return The name of the natural resource
      */
     @Override
@@ -67,17 +72,18 @@ public abstract class NaturalResources extends AbstractEntity implements Item {
 
     /**
      * Returns the biome the stone is situated in
+     * 
      * @return the biome the stone is situated in
      */
-    public String getBiome(){
+    public String getBiome() {
         return biome;
     }
 
-
     /**
      * Returns whether or not the item can be carried
-     * @return True if the item can be carried in the inventory, false
-     * if it is consumed immediately
+     * 
+     * @return True if the item can be carried in the inventory, false if it is
+     *         consumed immediately
      */
     @Override
     public boolean isCarryable() {
@@ -86,6 +92,7 @@ public abstract class NaturalResources extends AbstractEntity implements Item {
 
     /**
      * Returns the subtype which the item belongs to.
+     * 
      * @return The subtype which the item belongs to.
      */
     @Override
@@ -93,9 +100,9 @@ public abstract class NaturalResources extends AbstractEntity implements Item {
         return subtype;
     }
 
-
     /**
      * Returns the co-ordinates of the tile the item is on.
+     * 
      * @return the co-ordinates of the tile the item is on.
      */
     @Override
@@ -105,8 +112,9 @@ public abstract class NaturalResources extends AbstractEntity implements Item {
 
     /**
      * Returns whether or not the natural resource is exchangeable
-     * @return True or false depending on whether or not the resource
-     * is exchangeable
+     * 
+     * @return True or false depending on whether or not the resource is
+     *         exchangeable
      */
     @Override
     public boolean isExchangeable() {
@@ -116,13 +124,18 @@ public abstract class NaturalResources extends AbstractEntity implements Item {
     /**
      * Creates a string representation of the natural resource in the format:
      *
-     * <p>'{Natural Resource}:{Name}' </p>
+     * <p>
+     * '{Natural Resource}:{Name}'
+     * </p>
      *
-     * <p>without surrounding quotes and with {natural resource} replaced by
-     * the subtype of the item and {name} replaced with the item name
-     * For example: </p>
+     * <p>
+     * without surrounding quotes and with {natural resource} replaced by the
+     * subtype of the item and {name} replaced with the item name For example:
+     * </p>
      *
-     * <p>Natural Resource:Wood </p>
+     * <p>
+     * Natural Resource:Wood
+     * </p>
      *
      * @return A string representation of the natural resource.
      */
@@ -131,19 +144,19 @@ public abstract class NaturalResources extends AbstractEntity implements Item {
         return "" + subtype + ":" + name;
     }
 
-
-
     /**
      * Returns the item description
+     * 
      * @return the item description
      */
     @Override
     public String getDescription() {
-        return "These items exist naturally in the world.";
+        return description;
     }
 
     /**
      * Returns whether or not the item can be equipped from the inventory
+     * 
      * @return True if the item can be equipped, false otherwise
      */
     public boolean isEquippable() {
@@ -155,5 +168,8 @@ public abstract class NaturalResources extends AbstractEntity implements Item {
         // Auto-generated method stub
     }
 
+    @Override
+    public void use(HexVector position) {
 
+    }
 }

@@ -7,8 +7,10 @@ import java.util.Random;
 
 public class Bone extends StaticEntity {
 
-    protected static Random randomGen = new Random(2);
-    private static String nextTextureString = "DSkull";
+    protected static final Random randomGen = new Random(2);
+    private static final String StringTexture1 = "DSkull";
+    private static final String StringTexture2 = "DRibs";
+    private static String nextTextureString = StringTexture1;
 
     protected static final String ENTITY_ID_STRING = "bone";
 
@@ -23,13 +25,13 @@ public class Bone extends StaticEntity {
         setBoneParams();
         this.setTexture(Bone.nextTextureString);
 
-        Bone.nextTextureString = randomGen.nextInt() == 0 ? "DSkull" : "DRibs";
+
     }
 
     public Bone(Tile tile, boolean obstructed) {
         super(tile, 2, Bone.nextTextureString, obstructed);
         setBoneParams();
-        Bone.nextTextureString = randomGen.nextInt() == 0 ? "DSkull" : "DRibs";
+        Bone.nextTextureString = Bone.getNextTexture(randomGen.nextInt());
     }
 
     private void setBoneParams() {
@@ -37,8 +39,13 @@ public class Bone extends StaticEntity {
         this.entityType = "Bone";
     }
 
-    @Override
-    public void onTick(long i) {
-        // Do nothing on tick
+    /**
+     * Gets the appropriate textrue based off the input value.
+     * 
+     * @param textureNum The number corresponding to the texture type.
+     * @return The string of texture corresponding the input value.
+     */
+    public static String getNextTexture(int textureNum) {
+        return textureNum == 0 ? StringTexture1 : StringTexture2;
     }
 }

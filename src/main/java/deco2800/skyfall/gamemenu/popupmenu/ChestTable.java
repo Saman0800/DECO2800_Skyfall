@@ -3,13 +3,17 @@ package deco2800.skyfall.gamemenu.popupmenu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.entities.Chest;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.worlds.world.World;
 
 import java.util.Map;
 
@@ -20,8 +24,9 @@ import java.util.Map;
 public class ChestTable extends AbstractPopUpElement{
     private final Skin skin;
     private final StatisticsManager sm;
-    private Table chestTable;
     private Table resourcePanel;
+    private World world;
+    private Chest chestEntity;
 
     /**
      * Constructs a chest table.
@@ -48,7 +53,7 @@ public class ChestTable extends AbstractPopUpElement{
     @Override
     public void hide() {
         super.hide();
-        chestTable.setVisible(false);
+        baseTable.setVisible(false);
     }
 
     /**
@@ -57,21 +62,9 @@ public class ChestTable extends AbstractPopUpElement{
     @Override
     public void show() {
         super.show();
-        chestTable.setVisible(true);
+        baseTable.setVisible(true);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void updatePosition() {
-        super.updatePosition();
-    }
-
-    @Override
-    public void update() {
-        super.update();
-    }
+    
 
     /**
      * {@inheritDoc}
@@ -81,13 +74,13 @@ public class ChestTable extends AbstractPopUpElement{
     @Override
     public void draw() {
         super.draw();
-        chestTable = new Table();
-        chestTable.setSize(500, 510);
-        chestTable.setPosition((Gdx.graphics.getWidth()/2f - chestTable.getWidth()/2 + 60),
-                (Gdx.graphics.getHeight() + 160) / 2f - chestTable.getHeight()/2);
-        chestTable.top();
-        chestTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
-        chestTable.setName("chestTable");
+        baseTable = new Table();
+        baseTable.setSize(500, 510);
+        baseTable.setPosition((Gdx.graphics.getWidth()/2f - baseTable.getWidth()/2 + 60),
+                (Gdx.graphics.getHeight() + 160) / 2f - baseTable.getHeight()/2);
+        baseTable.top();
+        baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
+        baseTable.setName("baseTable");
 
         Table infoBar = new Table();
         infoBar.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_banner"));
@@ -96,14 +89,12 @@ public class ChestTable extends AbstractPopUpElement{
         Label text = new Label("CHEST", skin, "navy-text");
         infoBar.add(text);
 
-
         this.resourcePanel = new Table();
-        //updateChestPanel(chest);
 
-        chestTable.addActor(infoBar);
-        chestTable.addActor(this.resourcePanel);
-        chestTable.setVisible(false);
-        stage.addActor(chestTable);
+        baseTable.addActor(infoBar);
+        baseTable.addActor(this.resourcePanel);
+        baseTable.setVisible(false);
+        stage.addActor(baseTable);
     }
 
     /**
@@ -130,12 +121,17 @@ public class ChestTable extends AbstractPopUpElement{
             public void clicked(InputEvent event, float x, float y) {
                 sm.getInventory().inventoryAddMultiple(chest.getManager().getContents());
                 hide();
+                world.removeEntity(chestEntity);
             }
         });
 
-        chestTable.addActor(button);
+        baseTable.addActor(button);
     }
 
+    public void setWorldAndChestEntity(World world, Chest chest) {
+        this.world = world;
+        this.chestEntity = chest;
+    }
     /**
      * Sets the item icons and counts in the resource panel.
      * @param inventoryAmounts Map<String, Integer> of inventory contents
@@ -173,7 +169,7 @@ public class ChestTable extends AbstractPopUpElement{
                 numWidth += 8;
             }
             num.setSize(numWidth, 25);
-            num.setPosition(xspace*count + size*count + xpos - 35, ypos + 65);
+            num.setPosition((float) xspace*count + size*count + xpos - 35, (float) ypos + 65);
             resourcePanel.addActor(num);
 
             count++;

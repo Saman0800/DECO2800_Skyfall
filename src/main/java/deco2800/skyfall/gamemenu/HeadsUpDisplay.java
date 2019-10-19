@@ -27,6 +27,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
     private Table leftHUDTable;
     private ImageButton location;
     private TextButton teleport;
+
     public HeadsUpDisplay(Stage stage, String[] textureNames, TextureManager tm,
                           Skin skin, GameMenuManager gmm,
                           Map<String, AbstractUIElement> hudElements,
@@ -40,7 +41,6 @@ public class HeadsUpDisplay extends AbstractUIElement {
         this.draw();
     }
 
-
     @Override
     public void updatePosition() {
         leftHUDTable.setPosition(gmm.getTopLeftX() + 30, gmm.getTopLeftY() - 3 * stage.getCamera().viewportHeight / 4);
@@ -49,6 +49,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
         positionObjects.forEach((actor, posObj) -> posObj.updatePosition(actor));
     }
 
+    @Override
     public void update() {
         super.update();
         hudElements.forEach((key, value) -> value.update());
@@ -80,8 +81,6 @@ public class HeadsUpDisplay extends AbstractUIElement {
             }
         });
 
-
-
         ImageButton collect = new ImageButton(gmm.generateTextureRegionDrawableObject("collect_button"));
         collect.addListener(new ClickListener() {
             @Override
@@ -90,6 +89,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
                 gmm.setPopUp("collectTable");
             }
         });
+
 
         String pill = "blue-pill";
 
@@ -104,6 +104,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
                 gmm.setPopUp("pauseTable");
             }
         });
+
 
 
         TextButton helpT = new TextButton("HELP", skin, pill);
@@ -129,9 +130,9 @@ public class HeadsUpDisplay extends AbstractUIElement {
         });
         stage.addActor(location);
 
-
-        positionObjects.put(location, (Actor actor) -> actor.setPosition(gmm.getBottomLeftX() + stage.getCamera().viewportWidth / 1024,
-                gmm.getBottomLeftY() + stage.getCamera().viewportHeight / 1024));
+        positionObjects.put(location,
+                (Actor actor) -> actor.setPosition(gmm.getBottomLeftX() + stage.getCamera().viewportWidth / 1024,
+                        gmm.getBottomLeftY() + stage.getCamera().viewportHeight / 1024));
 
         leftHUDTable = new Table();
         leftHUDTable.setWidth(200);
@@ -151,6 +152,7 @@ public class HeadsUpDisplay extends AbstractUIElement {
 
     /**
      * Element associated with key
+     * 
      * @param key
      * @return
      */

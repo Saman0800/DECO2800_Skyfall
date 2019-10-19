@@ -17,14 +17,14 @@ public class BuildingFactoryTest {
     public void setup() {
         this.gm = GameManager.get();
         WorldBuilder wb = new WorldBuilder();
-        WorldDirector.constructTestWorld(wb);
+        WorldDirector.constructTestWorld(wb, 0);
         this.gm.setWorld(wb.getWorld());
         this.factory = new BuildingFactory();
     }
 
     @Test
     public void getCountTest() {
-        Assert.assertEquals(7, factory.getCount());
+        Assert.assertEquals(11, factory.getCount());
     }
 
     @Test

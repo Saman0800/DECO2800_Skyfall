@@ -1,6 +1,5 @@
 package deco2800.skyfall.resources.items;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,11 +19,6 @@ public class VineTest {
 
         vine = new Vine();
     }
-
-    @After
-    public void tearDown() {
-    }
-
 
     /**
      * Ensure that the getName method returns the name of the subclass
@@ -93,7 +87,7 @@ public class VineTest {
      */
     @Test
     public void getDescriptionTest() {
-        assertEquals("This item can be found in the forest biome and can " + "\n" +
+        assertEquals("This item can be found in the forest biome and can" + "\n" +
                 "be used to produce rope.", vine.getDescription());
     }
 }

@@ -1,6 +1,5 @@
 package deco2800.skyfall.managers.database;
 
-import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.MainCharacter.MainCharacterMemento;
 import deco2800.skyfall.entities.SaveableEntity.SaveableEntityMemento;
 import deco2800.skyfall.saving.Save.SaveMemento;

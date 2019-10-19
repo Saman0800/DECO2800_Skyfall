@@ -10,12 +10,13 @@ import java.util.Random;
  * Snowy Mountains biome
  */
 public class SnowyMountainsBiome extends AbstractBiome {
+    public static final String NAME = "snowy_mountains";
 
     /**
      * Constructor for the snowy mountains biome
      */
     public SnowyMountainsBiome(Random random) {
-        super("snowy_mountains", null);
+        super(NAME, null);
 
         textureGenerator = new NoiseGenerator(random.nextLong(), 3, 60, 0.5);
     }
@@ -42,7 +43,6 @@ public class SnowyMountainsBiome extends AbstractBiome {
         if (adjustedPerlinValue >= textures.size()) {
             adjustedPerlinValue = textures.size() - 1;
         }
-        // TODO Is `setPerlinValue` still required?
         tile.setPerlinValue(adjustedPerlinValue);
         tile.setTexture(textures.get(adjustedPerlinValue));
     }

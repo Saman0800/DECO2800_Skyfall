@@ -5,8 +5,6 @@ public class HexVector {
     private float row;
     private double angle;
 
-    // TODO:Ontonator Work out if the constructors should use the setter methods.
-
     /**
      * Constructor for a HexVector
      * 
@@ -109,8 +107,8 @@ public class HexVector {
     }
 
     private float distanceAsCartesian(HexVector point) {
-        return (float) Math.sqrt((point.getCol() - getCol()) * (point.getCol() - getCol()) +
-                                         (point.getRow() - getRow()) * (point.getRow() - getRow()));
+        return (float) Math.sqrt((point.getCol() - getCol()) * (point.getCol() - getCol())
+                + (point.getRow() - getRow()) * (point.getRow() - getRow()));
     }
 
     public void moveToward(HexVector point, double distance) {
@@ -147,8 +145,6 @@ public class HexVector {
      */
     @Override
     public boolean equals(Object obj) {
-        // FIXME This isn't technically transitive (one of the properties required by the spec), since the values just
-        //  have to be "close enough".
         if (!(obj instanceof HexVector)) {
             return false;
         }
@@ -163,7 +159,7 @@ public class HexVector {
 
     @Override
     public String toString() {
-        return String.format("%f, %f", getCol(), getRow());
+        return String.format("%.1f, %.1f", getCol(), getRow());
     }
 
     public HexVector getInt() {
@@ -183,17 +179,15 @@ public class HexVector {
     }
 
     public float length() {
-        return (float)Math.sqrt(getRow() * getRow() + getCol() * getCol());
+        return (float) Math.sqrt(getRow() * getRow() + getCol() * getCol());
     }
 
     public HexVector normalized() {
         float len = length();
-        HexVector temp = new HexVector(getCol() / len, getRow() / len);
-        return temp;
+        return new HexVector(getCol() / len, getRow() / len);
     }
 
     public double getAngle() {
-        HexVector temp = this.normalized();
-        return Math.atan2(temp.getRow(), temp.getCol());
+        return this.angle;
     }
 }

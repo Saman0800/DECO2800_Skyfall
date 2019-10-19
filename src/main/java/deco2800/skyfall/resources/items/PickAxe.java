@@ -1,99 +1,48 @@
 package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
+import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.resources.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.Random;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /***
  * A Pick Axe item. Pick Axe is a manufacturd resource. It can harvest a rock.
  */
 public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
-    private boolean blueprintLearned = false;
-
     // Logger to show messages
     private final Logger logger = LoggerFactory.getLogger(PickAxe.class);
 
-    /***
-     * Create a Pick Axe with the name Pick Axe.
-     *
-     * @param owner    the owner of the inventory.
-     * @param position the position of the Pick Axe.
-     */
-    public PickAxe(MainCharacter owner, HexVector position) {
-        super(owner, position);
-        this.name = "Pick Axe";
-    }
+    //Used for farming sound
+    private static final String COLLECT_STONE = "collect_stone";
 
-    /***
-     * Create a Pick Axe with only one owner parameter.
-     *
-     * @param owner the owner of the inventory.
-     */
-    public PickAxe(MainCharacter owner) {
-        super(owner);
+    Random random = new Random();
+
+    private void init() {
         this.name = "Pick Axe";
+        allRequirements = new HashMap<>();
+        allRequirements.put("Wood", 20);
+        allRequirements.put("Stone", 10);
+        allRequirements.put("Metal", 4);
+        description = "This item can be constructed using stone and wood. " + "\n" + "It can farm stone from biomes.";
+        carryable = true;
     }
 
     /***
      * Create a Pick Axe no parameter.
      */
     public PickAxe() {
-        this.name = "Pick Axe";
-    }
-
-    /**
-     * A getter method for the name of the item
-     * 
-     * @return The name of the item
-     */
-    @Override
-    public String getName() {
-
-        return this.name;
-    }
-
-    /**
-     * A getter method for the subtype of the item.
-     * 
-     * @return The name of the subtype.
-     */
-    @Override
-    public String getSubtype() {
-
-        return super.subtype;
-    }
-
-    /**
-     * A getter method to the position of the item.
-     * 
-     * @return the position of the hatchet.
-     */
-    @Override
-    public HexVector getCoords() {
-        return this.position;
-    }
-
-    /**
-     * Creates a string representation Pick Axe.
-     * 
-     * @return hatchet name and it's subtype.
-     */
-    @Override
-    public String toString() {
-
-        return "" + subtype + ":" + name;
+        init();
     }
 
     /**
@@ -115,41 +64,44 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
     public void farmRock(AbstractRock rockToFarm) {
 
         if (rockToFarm.getHealth() == 0) {
-            System.out.println("This rock has nothing left to offer");
+            logger.info("This rock has nothing left to offer");
             GameManager.get().getWorld().removeEntity(rockToFarm);
 
         }
 
         else {
+            SoundManager.playSound(COLLECT_STONE);
             GameManager.getManagerFromInstance(InventoryManager.class).add(new Stone());
-
             // lowering the possibility of gaining metal
-            double x = (int) (Math.random() * ((1 - 0) + 1));
+
+            int x = random.nextInt(2);
 
             if (x == 1) {
                 GameManager.getManagerFromInstance(InventoryManager.class).add(new Metal());
             }
-
             // lowering the possibility of gaining sand
-            double y = Math.random();
-
-            if (y >= 0.8) {
+            if (x == 0) {
                 GameManager.getManagerFromInstance(InventoryManager.class).add(new Sand());
             }
-
             rockToFarm.setHealth(rockToFarm.getHealth() - 10);
         }
-
     }
 
-    /**
-     * Returns the item description
-     * 
-     * @return the item description
-     */
     @Override
-    public String getDescription() {
-        return "This item can be constructed using stone and wood. " + "\n" + "It can farm stone from biomes.";
+    public int getCost() {
+        return 20;
+    }
+
+    @Override
+    public void use(HexVector position) {
+        for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
+            if (entity instanceof AbstractRock && position.distance(entity.getPosition()) <= 1.5) {
+                    this.farmRock((AbstractRock) entity);
+            }
+        }
+        this.decreaseDurability();
+        String message = String.format("Durability: %d", this.getDurability());
+        logger.warn(message);
     }
 
     /**
@@ -159,7 +111,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
      */
     @Override
     public int getRequiredWood() {
-        return 50;
+        return 20;
     }
 
     /**
@@ -169,7 +121,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
      */
     @Override
     public int getRequiredStone() {
-        return 30;
+        return 10;
     }
 
     /**
@@ -179,52 +131,8 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
      */
     @Override
     public int getRequiredMetal() {
-        return 10;
+        return 4;
     }
 
-    /**
-     * Returns a map of the name of the required resource and the required number of
-     * each resource to create the item.
-     *
-     * @return a hashamp of the required resources and their number.
-     */
-    @Override
-    public Map<String, Integer> getAllRequirements() {
 
-        Map<String, Integer> allRequirements = new HashMap<>();
-        allRequirements.put("Wood", 50);
-        allRequirements.put("Stone", 30);
-        allRequirements.put("Metal", 10);
-
-        return allRequirements;
-    }
-
-    /**
-     * a getter method to check if a player has learned the blueprint
-     *
-     * @return true if the player has learned the blueprint.
-     */
-    @Override
-    public boolean isBlueprintLearned() {
-
-        return blueprintLearned;
-    }
-
-    @Override
-    public int getCost() {
-        return 40;
-    }
-
-    @Override
-    public void use(HexVector position) {
-        for (AbstractEntity entity : GameManager.get().getWorld().getEntities()) {
-            if (entity instanceof AbstractRock) {
-                if (position.distance(entity.getPosition()) <= 1.5) {
-                    this.farmRock((AbstractRock) entity);
-                }
-            }
-        }
-        this.decreaseDurability();
-        logger.warn("Durability: " + this.getDurability());
-    }
 }

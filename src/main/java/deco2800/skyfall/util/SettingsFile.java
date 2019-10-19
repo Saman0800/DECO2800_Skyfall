@@ -31,7 +31,7 @@ public class SettingsFile {
      */
     public SettingsFile(String path) {
         this.path = path;
-        values = new HashMap<String, String>();
+        values = new HashMap<>();
         try ( BufferedReader file = new BufferedReader( new FileReader(path) ) ) {
             //File found, attempt to read it
             String line;
@@ -44,12 +44,7 @@ public class SettingsFile {
                 }
                 values.put( vec[0], line.substring(vec[0].length()+1) );
             }
-        }
-        catch (FileNotFoundException ex) {
-            //File not found
-            //This is fine, the class will create a file on exit
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             //IO related error
             //Also fine
         }
@@ -87,11 +82,9 @@ public class SettingsFile {
      * @return Returned value, backup on failure
      */
     public double get(String key, double backup) {
+        values.putIfAbsent(key, Double.toString(backup));
         String value = values.get(key);
-        if (value == null) {
-            values.put( key, Double.toString(backup) );
-            value = values.get(key);
-        }
+
         try {
             return Float.parseFloat(value);
         }
@@ -109,11 +102,9 @@ public class SettingsFile {
      * @return Returned value, backup on failure
      */
     public int get(String key, int backup) {
+        values.putIfAbsent(key, Integer.toString(backup));
         String value = values.get(key);
-        if (value == null) {
-            values.put( key, Integer.toString(backup) );
-            value = values.get(key);
-        }
+
         try {
             return Integer.parseInt(value);
         }
@@ -131,12 +122,8 @@ public class SettingsFile {
      * @return Returned value, backup on failure
      */
     public String get(String key, String backup) {
-        String value = values.get(key);
-        if (value == null) {
-            values.put( key, backup );
-            value = values.get(key);
-        }
-        return value;
+        values.putIfAbsent(key, backup);
+        return values.get(key);
     }
 
     /**

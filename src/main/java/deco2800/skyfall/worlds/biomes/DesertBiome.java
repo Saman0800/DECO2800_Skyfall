@@ -11,12 +11,13 @@ import java.util.Random;
  * Desert Biome
  */
 public class DesertBiome extends AbstractBiome {
+    public static final String NAME = "desert";
 
     /**
      * Constructor for the DesertBiome
      */
     public DesertBiome(Random random) {
-        super("desert", null);
+        super(NAME, null);
 
         textureGenerator = new NoiseGenerator(random.nextInt(), 4, 50, 0.5);
     }
@@ -43,7 +44,6 @@ public class DesertBiome extends AbstractBiome {
         if (adjustedPerlinValue >= textures.size()) {
             adjustedPerlinValue = textures.size() - 1;
         }
-        // TODO Is `setPerlinValue` still required?
         tile.setPerlinValue(adjustedPerlinValue);
         tile.setTexture(textures.get(adjustedPerlinValue));
     }

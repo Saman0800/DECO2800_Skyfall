@@ -16,7 +16,6 @@ import deco2800.skyfall.managers.TextureManager;
 public class ProgressTable extends AbstractPopUpElement {
     private final QuestManager qm;
     private Skin skin;
-    private Table baseTable;
     private Label biomeLabel;
     private Label collectLabel;
     private Label createLabel;
@@ -29,34 +28,16 @@ public class ProgressTable extends AbstractPopUpElement {
 
         this.skin = skin;
         this.qm = qm;
-        Table labelTable = new Table();
         this.draw();
-        stage.addActor(baseTable);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void hide() {
-        super.hide();
-        baseTable.setVisible(false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void show() {
-        super.show();
-        baseTable.setVisible(true);
-    }
 
     @Override
     public void update() {
             qm.checkBuildings();
             updateBiomeText(qm.getBiome());
-            updateCollectText(qm.collectNum() + "/4");
+            int collectTotal = 4 + qm.weaponsNum();
+            updateCollectText(qm.collectNum() + "/" + collectTotal);
             updateCreateText(qm.getBuildingsNum() + "/" + qm.getBuildingsTotal().size());
             updateBlueprintText(qm.getBlueprintLearned() ? "Purchased!" : "To Purchase");
     }
@@ -67,11 +48,11 @@ public class ProgressTable extends AbstractPopUpElement {
     }
 
     private void updateCollectText(String text) {
-        collectLabel.setText("COLLECT: " + text);
+        collectLabel.setText("RESOURCES: " + text);
     }
 
     private void updateCreateText(String text) {
-        createLabel.setText("CREATE: " + text);
+        createLabel.setText("BUILDINGS: " + text);
 
     }
 
@@ -112,6 +93,8 @@ public class ProgressTable extends AbstractPopUpElement {
         baseTable.add(blueprintLabel).expand().left();
         baseTable.row();
         baseTable.setVisible(false);
+        stage.addActor(baseTable);
+
     }
 
     public Label getBiomeLabel() {

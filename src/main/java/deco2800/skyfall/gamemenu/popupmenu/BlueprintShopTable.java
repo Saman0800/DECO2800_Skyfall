@@ -10,8 +10,8 @@ import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.resources.Blueprint;
-import java.util.List;
 
+import java.util.List;
 
 /**
  * A class for blueprint shop table pop up.
@@ -19,7 +19,6 @@ import java.util.List;
 public class BlueprintShopTable extends AbstractPopUpElement {
     private final Skin skin;
     private final StatisticsManager sm;
-    private Table blueprintTable;
     private Table blueprintPanel;
 
     /**
@@ -36,62 +35,41 @@ public class BlueprintShopTable extends AbstractPopUpElement {
             GameMenuManager gameMenuManager, StatisticsManager sm, Skin skin) {
         super(stage, exit, textureNames, tm, gameMenuManager);
         this.skin = skin;
-        this.draw();
         this.sm = sm;
+        this.draw();
+
     }
 
     /**
      * {@inheritDoc}
-     */
-    @Override
-    public void hide() {
-        super.hide();
-        blueprintTable.setVisible(false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void show() {
-        super.show();
-        blueprintTable.setVisible(true);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
+     * <p>
      * Draw the whole blueprint shop table.
      */
     @Override
     public void draw() {
         super.draw();
-        blueprintTable = new Table();
-        blueprintTable.setSize(910, 510);
-        blueprintTable.setPosition(Gdx.graphics.getWidth() / 2f - blueprintTable.getWidth() / 2,
-                (Gdx.graphics.getHeight() + 160) / 2f - blueprintTable.getHeight() / 2);
-        blueprintTable.setDebug(true);
-        blueprintTable.top();
-        blueprintTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("pop up screen"));
-        blueprintTable.setName("chestTable");
+        baseTable = new Table();
+        baseTable.setSize(910, 510);
+        baseTable.setPosition(Gdx.graphics.getWidth() / 2f - baseTable.getWidth() / 2,
+                (Gdx.graphics.getHeight() + 160) / 2f - baseTable.getHeight() / 2);
+        baseTable.setDebug(true);
+        baseTable.top();
+        baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
+        baseTable.setName("bluePrintTable");
 
-        Image infoBar = new Image(gameMenuManager.generateTextureRegionDrawableObject("inventory_banner"));
+
+        Table infoBar = new Table();
+        infoBar.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_banner"));
         infoBar.setSize(650, 55);
         infoBar.setPosition(130, 435);
-
-        Table infoPanel = new Table();
-        infoPanel.setSize(410, 400);
-        infoPanel.setPosition(25, 18);
-        infoPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("info_panel"));
-
+        Label text = new Label("Blueprint Shop", skin, "navy-text");
+        infoBar.add(text);
         this.blueprintPanel = new Table();
-        // updateChestPanel(chest);
 
-        blueprintTable.addActor(infoBar);
-        blueprintTable.addActor(infoPanel);
-        blueprintTable.addActor(this.blueprintPanel);
-        blueprintTable.setVisible(false);
-        stage.addActor(blueprintTable);
+        baseTable.addActor(infoBar);
+        baseTable.addActor(this.blueprintPanel);
+        baseTable.setVisible(false);
+        stage.addActor(baseTable);
     }
 
     /**
@@ -100,8 +78,8 @@ public class BlueprintShopTable extends AbstractPopUpElement {
     public void updateBlueprintShopPanel() {
         blueprintPanel.clear();
         blueprintPanel.setName("resourcePanel");
-        blueprintPanel.setSize(410, 400);
-        blueprintPanel.setPosition(475, 18);
+        blueprintPanel.setSize(800, 400);
+        blueprintPanel.setPosition(60, 18);
         blueprintPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("menu_panel"));
 
         List<Blueprint> unlocked = sm.getCharacter().getUnlockedBlueprints();
@@ -112,7 +90,8 @@ public class BlueprintShopTable extends AbstractPopUpElement {
 
         for (Blueprint b : unlocked) {
 
-            ImageButton icon = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject(b.getName()));
+            ImageButton icon = new ImageButton(
+                    gameMenuManager.generateTextureRegionDrawableObject(b.getName() + "_inv"));
             icon.setName("icon");
             icon.setSize(100, 100);
             icon.setPosition(xpos + count * 130, ypos);
@@ -142,7 +121,7 @@ public class BlueprintShopTable extends AbstractPopUpElement {
 
             count++;
 
-            if ((count) % 3 == 0) {
+            if ((count) % 6 == 0) {
                 ypos -= 120;
                 count = 0;
             }
@@ -151,7 +130,7 @@ public class BlueprintShopTable extends AbstractPopUpElement {
 
     /**
      * Check if a blueprint has been bought already
-     * 
+     *
      * @param b blueprint to check
      * @return true if bought, else false
      */

@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import deco2800.skyfall.graphics.ShaderWrapper;
-import deco2800.skyfall.graphics.types.vec3;
+import deco2800.skyfall.graphics.types.Vec3;
 import deco2800.skyfall.gui.GuiMaster;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.util.WorldUtil;
@@ -19,7 +19,7 @@ import deco2800.skyfall.util.WorldUtil;
 public class OverlayRenderer implements Renderer {
     BitmapFont font;
     ShapeRenderer shapeRenderer;
-     
+
     FPSLogger fpsLogger = new FPSLogger();
 
     long peakRAM = 0;
@@ -27,29 +27,30 @@ public class OverlayRenderer implements Renderer {
     ShaderWrapper shader;
 
     /**
-     * Renders onto a batch, given a renderables with entities
-     * It is expected that AbstractWorld contains some entities and a Map to read tiles from
+     * Renders onto a batch, given a renderables with entities It is expected that
+     * AbstractWorld contains some entities and a Map to read tiles from
+     * 
      * @param batch Batch to render onto
      */
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
-    	 if (shapeRenderer == null) {
-             shapeRenderer = new ShapeRenderer();
-         }
-    	 
+        if (shapeRenderer == null) {
+            shapeRenderer = new ShapeRenderer();
+        }
+
         if (font == null) {
             font = new BitmapFont();
             font.getData().setScale(1f);
         }
-           
+
         batch.begin();
 
-        if( GameManager.get().debugMode) {
-        	renderDebugText(batch, camera);
+        if (GameManager.get().getDebugMode()) {
+            renderDebugText(batch, camera);
         }
 
-				GuiMaster.updateAll(1);
-				GuiMaster.renderAll(font, batch, camera, shapeRenderer);
+        GuiMaster.updateAll(1);
+        GuiMaster.renderAll(font, batch, camera, shapeRenderer);
 
         int line = GameManager.get().getManager(OnScreenMessageManager.class).getMessages().size();
         for (String message : GameManager.get().getManager(OnScreenMessageManager.class).getMessages()) {
@@ -67,105 +68,80 @@ public class OverlayRenderer implements Renderer {
         batch.end();
     }
 
-	/**
-	 * Sets the current shader
-	 * @param shader shader to use
-	 */
-	public void setShader(ShaderWrapper shader) {
-		this.shader = shader;
-	}
+    /**
+     * Sets the current shader
+     * 
+     * @param shader shader to use
+     */
+    public void setShader(ShaderWrapper shader) {
+        this.shader = shader;
+    }
 
-	private void debugLine(SpriteBatch batch, Camera camera, int line, String string) {
-		font.draw(batch, string, camera.position.x - camera.viewportWidth / 2 + 10,
-				camera.position.y + camera.viewportHeight / 2 - line * 20 - 10);
-	}
+    private void debugLine(SpriteBatch batch, Camera camera, int line, String string) {
+        font.draw(batch, string, camera.position.x - camera.viewportWidth / 2 + 10,
+                camera.position.y + camera.viewportHeight / 2 - line * 20 - 10);
+    }
 
-	private void chatLine(SpriteBatch batch, Camera camera, int line, String string) {
-		font.draw(batch, string, camera.position.x - camera.viewportWidth / 2 + 10,
-				camera.position.y - camera.viewportHeight / 2 + line * 25 + 25);
-	}
+    private void chatLine(SpriteBatch batch, Camera camera, int line, String string) {
+        font.draw(batch, string, camera.position.x - camera.viewportWidth / 2 + 10,
+                camera.position.y - camera.viewportHeight / 2 + line * 25 + 25);
+    }
 
-	/**
-	 * Renders the debug information in the top left
-	 * @param batch Batch to render onto
-	 * @param camera Camera to render onto
-	 */
-	private void renderDebugText(SpriteBatch batch, Camera camera) {
-		int line = 0; // Set this to set the line number you want to debug message to
-		debugLine(batch, camera, line++, "== Game Info ==");
-		debugLine(batch, camera, line++,
-				String.format("Rendered: %d/%d entities, %d/%d tiles", GameManager.get().entitiesRendered,
-						GameManager.get().entitiesCount, GameManager.get().tilesRendered,
-						GameManager.get().tilesCount));
-		debugLine(batch, camera, line++, String.format("FPS: %d", Gdx.graphics.getFramesPerSecond()));
-		debugLine(batch, camera, line++,
-				String.format("RAM: %dMB PEAK: %dMB", Gdx.app.getJavaHeap() / 1000000, peakRAM / 1000000));
+    /**
+     * Renders the debug information in the top left
+     * 
+     * @param batch  Batch to render onto
+     * @param camera Camera to render onto
+     */
+    private void renderDebugText(SpriteBatch batch, Camera camera) {
+        int line = 0; // Set this to set the line number you want to debug message to
+        debugLine(batch, camera, line++, "== Game Info ==");
+        debugLine(batch, camera, line++,
+                String.format("Rendered: %d/%d entities, %d/%d tiles", GameManager.get().getEntitiesRendered(),
+                        GameManager.get().getEntitiesCount(), GameManager.get().getTilesRendered(),
+                        GameManager.get().getTilesCount()));
+        debugLine(batch, camera, line++, String.format("FPS: %d", Gdx.graphics.getFramesPerSecond()));
+        debugLine(batch, camera, line++,
+                String.format("RAM: %dMB PEAK: %dMB", Gdx.app.getJavaHeap() / 1000000, peakRAM / 1000000));
 
-		float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
-		debugLine(batch, camera, line++, String.format("Mouse: X:%d Y:%d", Gdx.input.getX(), Gdx.input.getY()));
-		debugLine(batch, camera, line++, String.format("World: X:%.0f Y:%.0f", mouse[0], mouse[1]));
+        float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
+        debugLine(batch, camera, line++, String.format("Mouse: X:%d Y:%d", Gdx.input.getX(), Gdx.input.getY()));
+        debugLine(batch, camera, line++, String.format("World: X:%.0f Y:%.0f", mouse[0], mouse[1]));
 
-		float[] ColRow = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
-		debugLine(batch, camera, line++, String.format("World: X:%.0f Y:%.0f", ColRow[0], ColRow[1]));
+        float[] ColRow = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
+        debugLine(batch, camera, line++, String.format("World: X:%.0f Y:%.0f", ColRow[0], ColRow[1]));
 
-		// Display current time in game
-		debugLine(batch, camera, line++,
-				String.format("Time: %s",
-						GameManager.get().getManager(EnvironmentManager.class).getTOD()));
+        // Display current time in game
+        debugLine(batch, camera, line++,
+                String.format("Time: %s", GameManager.get().getManager(EnvironmentManager.class).getTOD()));
 
-		// Display current month in game
-		debugLine(batch, camera, line++,
-				String.format("Season: %s",
-						GameManager.get().getManager(EnvironmentManager.class).getSeason()));
+        // Display current month in game
+        debugLine(batch, camera, line++,
+                String.format("Season: %s", GameManager.get().getManager(EnvironmentManager.class).getSeason()));
 
-		// Display current biome in game
-		debugLine(batch, camera, line++,
-				String.format("Biome: %s",
-						GameManager.get().getManager(EnvironmentManager.class).biomeDisplayName()));
+        // Display current biome in game
+        debugLine(batch, camera, line++,
+                String.format("Biome: %s", GameManager.get().getManager(EnvironmentManager.class).currentBiome()));
 
-		// Display current weather in game
-		debugLine(batch, camera, line++,
-				String.format("Weather: %s",
-						GameManager.get().getManager(EnvironmentManager.class).getcurrentWeather()));
+        // Display player's current equipped item
+        debugLine(batch, camera, line++, String.format("Equipped Item: %s",
+                GameManager.get().getManager(StatisticsManager.class).getCharacter().displayEquippedItem()));
 
-		line++;
+        line++;
 
-		// Display player's current equipped item
+        debugLine(batch, camera, line++, "PathfindingService");
+        debugLine(batch, camera, line++, GameManager.get().getManager(PathFindingService.class).toString());
 
-		debugLine(batch, camera, line++,
-				String.format("Equipped Item: %s",
-						GameManager.get().getManager(StatisticsManager.class).getCharacter().displayEquippedItem()));
+        line++;
 
-		line++;
-
-		debugLine(batch, camera, line++, "PathfindingService");
-		debugLine(batch, camera, line++, GameManager.get().getManager(PathFindingService.class).toString());
-
-		line++;
-		debugLine(batch, camera, line++, "== Networking ==");
-		debugLine(batch, camera, line++,
-				String.format("ID: %d", GameManager.get().getManager(NetworkManager.class).getID()));
-		debugLine(batch, camera, line++, String.format("Messages Received: %d",
-				GameManager.get().getManager(NetworkManager.class).getMessagesReceived()));
-		debugLine(batch, camera, line++,
-				String.format("Messages Sent: %d", GameManager.get().getManager(NetworkManager.class).getMessagesSent()));
-		debugLine(batch, camera, line++,
-				String.format("Username: %s", GameManager.get().getManager(NetworkManager.class).getUsername()));
-		debugLine(batch, camera, line++, String.format("World seed: %d", GameManager.get().getWorld().getSeed()));
-
-		line++;
-
-		debugLine(batch, camera, line++, "== Graphics ==");
-		debugLine(batch, camera, line++,
-				String.format("Extended shading: %s", shader.getActive() ? "True" : "False"));
-		debugLine(batch, camera, line++,
-				String.format("Ambient Intensity: %f", shader.getAmbientIntensity()));
-		vec3 colour = shader.getAmbientColour();
-		debugLine(batch, camera, line++,
-				String.format("Ambient Colour: (%f, %f, %f)", colour.x, colour.y, colour.z));
-		debugLine(batch, camera, line++,
-				String.format("Point Light Intensity: %f", 1.0f - shader.getAmbientIntensity()));
-		debugLine(batch, camera, line,
-				String.format("Point Light Count: %d", shader.getPointLightCount()));
-	}
+        debugLine(batch, camera, line++, "== Graphics ==");
+        debugLine(batch, camera, line++, String.format("Extended shading: %s", shader.getActive() ? "True" : "False"));
+        debugLine(batch, camera, line++, String.format("Ambient Intensity: %f", shader.getAmbientIntensity()));
+        Vec3 colour = shader.getAmbientColour();
+        debugLine(batch, camera, line++,
+                String.format("Ambient Colour: (%f, %f, %f)", colour.getX(), colour.getY(), colour.getZ()));
+        debugLine(batch, camera, line++,
+                String.format("Point Light Intensity: %f", 1.0f - shader.getAmbientIntensity()));
+        debugLine(batch, camera, line, String.format("Point Light Count: %d", shader.getPointLightCount()));
+    }
 }

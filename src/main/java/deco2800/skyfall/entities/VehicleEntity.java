@@ -1,5 +1,7 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.animation.AnimationRole;
+
 public abstract class VehicleEntity extends Peon {
 
     private int health;
@@ -7,6 +9,10 @@ public abstract class VehicleEntity extends Peon {
     private boolean beAttacked = false;
 
     private boolean available = true;
+
+    protected MainCharacter mc;
+
+    protected static String character;
 
     public VehicleEntity(float col, float row) {
         this.setRow(row);
@@ -18,7 +24,22 @@ public abstract class VehicleEntity extends Peon {
         this.setTexture(textureName);
     }
 
+    @Override
     public void onTick(long i) {
+        super.onTick(i);
+        if (mc != null) {
+            float colDistance = mc.getCol() - this.getCol();
+            float rowDistance = mc.getRow() - this.getRow();
+
+            if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
+
+                setTexture(character);
+                setObjectName(character);
+
+            } else {
+                this.setCurrentState(AnimationRole.NULL);
+            }
+        }
 
     }
 
@@ -38,10 +59,12 @@ public abstract class VehicleEntity extends Peon {
         return this.beAttacked;
     }
 
+    @Override
     public int getHealth() {
         return this.health;
     }
 
+    @Override
     public void setHealth(int health) {
         this.health = health;
     }
