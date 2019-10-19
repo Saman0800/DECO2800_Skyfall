@@ -569,12 +569,12 @@ public class BuildingEntity extends SaveableEntity implements ICombatEntity {
             projectile = new Projectile(enemyPosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
                     new HexVector(position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
                             position.getRow() + 0.5f + 1.5f * unitDirection.getRow()), ((Weapon) equippedItem).getDamage(), 1,
-                    equippedItem.getName().equals("bow") ? 10 : 0);
+                    equippedItem.getName().equals("bow") ? 10 : 0, 40);
         else
             projectile = new Projectile(enemyPosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
                     new HexVector(position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
                             position.getRow() + 0.5f + 1.5f * unitDirection.getRow()), ((Weapon) equippedItem).getDamage(), 1,
-                    0);
+                    0, 40);
 
         // Add the projectile entity to the game world.
         GameManager.get().getWorld().addEntity(projectile);

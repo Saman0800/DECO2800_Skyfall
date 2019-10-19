@@ -19,19 +19,14 @@ import deco2800.skyfall.entities.enemies.Enemy;
 public class Projectile extends AgentEntity implements Animatable {
 
     /**
-     * How many game ticks all projectiles survive for before being removed.
+     * How many game ticks a projectile will survive for before being removed.
      */
-    public static final int LIFE_TIME_TICKS = 40;
+    public int lifespan = 40;
 
     /**
      * The amount of damage this projectile deals.
      */
     private int damage;
-
-    /**
-     * Speed in which projectile is travelling.
-     */
-    protected float speed;
 
     /**
      * How many game ticks this object has survived.
@@ -61,13 +56,14 @@ public class Projectile extends AgentEntity implements Animatable {
      */
 
     public Projectile(HexVector movementPosition, String textureName, String objectName,
-                      HexVector startPosition, int damage, float speed, float range) {
+                      HexVector startPosition, int damage, float speed, float range, int lifespan) {
         super(startPosition.getCol(), startPosition.getRow(), 3, speed);
 
         this.damage = damage;
         this.speed = speed;
         this.movementPosition = movementPosition;
         this.range = range;
+        this.lifespan = lifespan;
         this.textureName = textureName;
 
         this.setTexture(textureName);
@@ -124,7 +120,7 @@ public class Projectile extends AgentEntity implements Animatable {
 
         // If this projectile has been alive for longer than the set number of ticks,
         // remove it from the world.
-        if (this.ticksAliveFor > LIFE_TIME_TICKS) {
+        if (this.ticksAliveFor > lifespan) {
             this.destroy();
         }
 
@@ -151,7 +147,8 @@ public class Projectile extends AgentEntity implements Animatable {
             ((Enemy) other).takeDamage(this.getDamage());
             ((Enemy) other).setHurt(true);
             toBeDestroyed = true;
-            ((Enemy) other).getBody().setLinearVelocity(new Vector2(0.f, 0.f));
+            HexVector knockbackDir = movementPosition.subtract(((Enemy)other).getPosition()).normalized().times(damage);
+            ((Enemy) other).getBody().setLinearVelocity(knockbackDir.toVector2());
         }
     }
 
