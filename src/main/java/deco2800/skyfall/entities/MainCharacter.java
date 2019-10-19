@@ -1095,6 +1095,7 @@ public class MainCharacter extends Peon
     }
 
     boolean petout = false;
+    private boolean pushKey = false;
 
     /**
      * Sets the appropriate movement flags to true on keyDown
@@ -1111,15 +1112,19 @@ public class MainCharacter extends Peon
         }
         switch (keycode) {
         case Input.Keys.W:
+            pushKey = true;
             yInput += 1;
             break;
         case Input.Keys.A:
+            pushKey = true;
             xInput += -1;
             break;
         case Input.Keys.S:
+            pushKey = true;
             yInput += -1;
             break;
         case Input.Keys.D:
+            pushKey = true;
             xInput += 1;
             break;
         case Input.Keys.V:
@@ -1132,8 +1137,10 @@ public class MainCharacter extends Peon
             isSprinting = true;
             maxSpeed *= 2.f;
             // Add running sound when push shift
-            SoundManager.pauseSound(WALK_NORMAL);
-            SoundManager.loopSound(RUNNING);
+            if (pushKey) {
+                SoundManager.pauseSound(WALK_NORMAL);
+                SoundManager.loopSound(RUNNING);
+            }
             break;
         case Input.Keys.SPACE:
             float[] mouse = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
@@ -1277,15 +1284,19 @@ public class MainCharacter extends Peon
 
         switch (keycode) {
         case Input.Keys.W:
+            pushKey = false;
             yInput -= 1;
             break;
         case Input.Keys.A:
+            pushKey = false;
             xInput -= -1;
             break;
         case Input.Keys.S:
+            pushKey = false;
             yInput -= -1;
             break;
         case Input.Keys.D:
+            pushKey = false;
             xInput -= 1;
             break;
         case Input.Keys.SHIFT_LEFT:
