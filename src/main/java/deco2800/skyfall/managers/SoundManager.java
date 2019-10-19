@@ -155,6 +155,8 @@ public class SoundManager extends AbstractManager {
                     (Gdx.files.internal(PATH + "bike-movement.wav")));
             soundMap.put("sand_car_animation", Gdx.audio.newSound
                     (Gdx.files.internal(PATH + "movement-car.wav")));
+            soundMap.put("running", Gdx.audio.newSound
+                    (Gdx.files.internal(PATH + "run.wav")));
 
             // make into for-loop for nicer code :)
             musicMap.put("forest_day", Gdx.audio.newMusic
@@ -370,7 +372,7 @@ public class SoundManager extends AbstractManager {
      * @param soundName name of the sound in soundMap.
      * @return true if it does, otherwise return false.
      */
-    public boolean checkLoop(String soundName) {
+    public static boolean checkLoop(String soundName) {
         return soundMap.containsKey(soundName)
                 || musicMap.containsKey(soundName);
     }

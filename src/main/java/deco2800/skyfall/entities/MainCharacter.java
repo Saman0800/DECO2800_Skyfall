@@ -153,6 +153,7 @@ public class MainCharacter extends Peon
 
     public static final String DRIVEBIKE = "bike_animation";
     public static final String DRIVESANDCAR = "sand_car_animation";
+    public static final String RUNNING = "running";
 
 
     // Level/point system for the Main Character to be recorded as game goes on
@@ -1118,6 +1119,9 @@ public class MainCharacter extends Peon
             case Input.Keys.SHIFT_LEFT:
                 isSprinting = true;
                 maxSpeed *= 2.f;
+                // Add running sound when push shift
+                SoundManager.pauseSound(WALK_NORMAL);
+                SoundManager.loopSound(RUNNING);
                 break;
             case Input.Keys.SPACE:
                 useEquipped();
@@ -1176,11 +1180,6 @@ public class MainCharacter extends Peon
                     vehicle = (Bike) ve;
                     ((Bike) vehicle).removeBike();
                     isOnVehicle=true;
-                    // Stop main character walking sound
-                    SoundManager.stopSound(WALK_NORMAL);
-                    isMoving = false;
-                    // Play bike sound when it is on use
-                    SoundManager.loopSound(DRIVEBIKE);
                     setCurrentState(AnimationRole.NULL);
                     vehicleTexture("bike");
                     setAcceleration(25.f);
@@ -1192,11 +1191,6 @@ public class MainCharacter extends Peon
                     vehicle = (SandCar) ve;
                     ((SandCar) vehicle).removeSandCar();
                     isOnVehicle=true;
-                    // Stop main character walking sound
-                    SoundManager.stopSound(WALK_NORMAL);
-                    isMoving = false;
-                    // Play sandcar sound when it is on use
-                    SoundManager.loopSound(DRIVESANDCAR);
                     setCurrentState(AnimationRole.NULL);
                     vehicleTexture("sand_car");
                     setAcceleration(25.f);
@@ -1286,6 +1280,9 @@ public class MainCharacter extends Peon
         case Input.Keys.SHIFT_LEFT:
             isSprinting = false;
             maxSpeed /= 2.f;
+            // Remove running sound when release shift
+            SoundManager.stopSound(RUNNING);
+            SoundManager.resumeSound(WALK_NORMAL);
             break;
         case Input.Keys.SPACE:
             SoundManager.stopSound(WALK_NORMAL);
@@ -1630,17 +1627,31 @@ public class MainCharacter extends Peon
     }
 
     private void movementSound() {
-        if (!isMoving && vel != 0 && !isOnVehicle) {
+        if (!isMoving && vel != 0 ) {
             // Runs when the player starts moving
             isMoving = true;
-            SoundManager.stopSound(DRIVEBIKE);
-            SoundManager.loopSound(WALK_NORMAL);
+            if (isOnVehicle) {
+                // Change sound when get on the bike
+                if (vehicleType.equals("bike")) {
+                    SoundManager.stopSound(WALK_NORMAL);
+                    SoundManager.loopSound(DRIVEBIKE);
+                }
+                // Change sound when get on the sand car
+                if (vehicleType.equals("sand_car")) {
+                    SoundManager.stopSound(WALK_NORMAL);
+                    SoundManager.loopSound(DRIVESANDCAR);
+                }
+            } else {
+                SoundManager.loopSound(WALK_NORMAL);
+            }
         }
 
         if (isMoving && vel == 0) {
             // Runs when the player stops moving
             isMoving = false;
             SoundManager.stopSound(WALK_NORMAL);
+            SoundManager.stopSound(DRIVEBIKE);
+            SoundManager.stopSound(DRIVESANDCAR);
         }
     }
 
@@ -2029,18 +2040,14 @@ public class MainCharacter extends Peon
             if(vehicleType.equals("bike")){
                 if (getVelocity().get(2) == 0f) {
                     setCurrentState(AnimationRole.NULL);
-                    SoundManager.stopSound(DRIVEBIKE);
                 } else {
                     setCurrentState(AnimationRole.VEHICLE_BIKE_MOVE);
-                    SoundManager.loopSound(DRIVEBIKE);
                 }
             }else if(vehicleType.equals("sand_car")){
                 if (getVelocity().get(2) == 0f) {
                     setCurrentState(AnimationRole.NULL);
-                    SoundManager.stopSound(DRIVESANDCAR);
                 } else {
                     setCurrentState(AnimationRole.VEHICLE_MOVE);
-                    SoundManager.loopSound(DRIVESANDCAR);
                 }
             }
         }
