@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.badlogic.gdx.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -284,6 +285,13 @@ public class InventoryManager extends TickableManager implements Serializable {
                 logger.warn("Not enough space in inventory");
                 successful = false;
             }
+        }
+        if (successful) {
+            GameManager.get().getManager(FeedbackManager.class).setFeedbackBarUpdate(true);
+            GameManager.get().getManager(FeedbackManager.class).setFeedbackText("" + item.getName() + " added to inventory");
+        } else {
+            GameManager.get().getManager(FeedbackManager.class).setFeedbackBarUpdate(true);
+            GameManager.get().getManager(FeedbackManager.class).setFeedbackText("Inventory full");
         }
         return successful;
     }

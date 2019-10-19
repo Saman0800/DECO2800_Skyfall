@@ -191,6 +191,9 @@ public class GameScreen implements Screen, KeyDownObserver {
         /* Add Quest Manager to game manager */
         gameManager.addManager(new QuestManager());
 
+        /* Add new Feedback Manager if not already created */
+        gameManager.getManager(FeedbackManager.class);
+
         /*
          * NOTE: Now that the Environment Manager has been added start creating the
          * SpectralValue instances for the Ambient Light.
