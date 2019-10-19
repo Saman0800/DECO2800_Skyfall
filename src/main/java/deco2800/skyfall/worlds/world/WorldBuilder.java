@@ -528,7 +528,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         }
     }
 
-    private void generateNotStaticEntities(World world, float enemyScaling) {
+    public void generateNotStaticEntities(World world, float enemyScaling) {
         Random random = new Random(world.getSeed());
 
         for (AbstractBiome biome : world.getBiomes()) {
@@ -581,9 +581,6 @@ public class WorldBuilder implements WorldBuilderInterface {
         default:
             throw new IllegalArgumentException("The world type is not valid");
         }
-
-        // generate not static entities on the world (like enemies, etc.)
-        generateNotStaticEntities(world, 0.6f);
 
         return world;
     }
