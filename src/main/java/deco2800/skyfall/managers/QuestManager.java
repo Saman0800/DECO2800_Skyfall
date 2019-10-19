@@ -63,18 +63,14 @@ public class QuestManager extends TickableManager {
     // List of buildings to be placed
     private List<BuildingType> buildingsPlaced = new ArrayList<>();
 
-    private boolean isGameFinished = false;
-
     /**
      * Constructor, sets up beginning of game goals
      */
     public QuestManager() {
-        this.questLevel = 1;
+        this.questLevel = 0;
         questSuccess = false;
         buildingsTotal = new ArrayList<>();
-        levelOneBuildings.add(BuildingType.CASTLE);
-        levelTwoBuildings.add(BuildingType.CASTLE);
-        levelTwoBuildings.add(BuildingType.CABIN);
+        //levelOneBuildings.add(BuildingType.CASTLE);
         player = MainCharacter.getInstance();
         setMilestones();
     }
@@ -86,18 +82,18 @@ public class QuestManager extends TickableManager {
         //inventory numbers need to be reset for player testing and actual game release
         //reduced for ease of testing in game
         switch (questLevel) {
-            case 1 :
+            case 0 :
                 setGoldTotal(10);
                 setWoodTotal(10);
                 setStoneTotal(10);
                 setMetalTotal(10);
                 setBuildingsTotal(levelOneBuildings);
-                setWeaponTotal(SWORD, 2);
+                setWeaponTotal(SWORD, 0);
                 setWeaponTotal("bow", 0);
                 setWeaponTotal(SPEAR, 0);
                 setWeaponTotal("axe", 0);
                 break;
-            case 2 :
+            case 1 :
                 setGoldTotal(20);
                 setWoodTotal(20);
                 setStoneTotal(20);
@@ -108,7 +104,7 @@ public class QuestManager extends TickableManager {
                 setWeaponTotal(SPEAR, 0);
                 setWeaponTotal("axe", 0);
                 break;
-            case 3 :
+            case 2 :
                 setGoldTotal(30);
                 setWoodTotal(30);
                 setStoneTotal(30);
@@ -118,8 +114,9 @@ public class QuestManager extends TickableManager {
                 setWeaponTotal("bow", 4);
                 setWeaponTotal(SPEAR, 4);
                 setWeaponTotal("axe", 4);
+                break;
             default :
-                if (questLevel > 3) {
+                if (questLevel >= 3) {
                     setupEndGameScreen();
                 }
                 break;
@@ -508,14 +505,13 @@ public class QuestManager extends TickableManager {
     /**
      * Set up the game over screen.
      */
-    private void setupEndGameScreen() {
+    public void setupEndGameScreen() {
         // If the gameMenuManager does not equal null, create the game over screen
         // The GUI PopUp for the character
         GameMenuManager gameMenuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
         if (gameMenuManager != null) {
             gameMenuManager.hideOpened();
             gameMenuManager.setPopUp("endGameTable");
-            gameMenuManager.getPopUp("endGameTable");
         }
     }
 }

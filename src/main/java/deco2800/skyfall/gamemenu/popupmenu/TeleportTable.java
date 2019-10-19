@@ -10,6 +10,7 @@ import deco2800.skyfall.buildings.AbstractPortal;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.saving.Save;
 
 public class TeleportTable extends AbstractPopUpElement {
@@ -18,7 +19,7 @@ public class TeleportTable extends AbstractPopUpElement {
     private Label teleportLabel;
     private Save save;
     private AbstractPortal portal;
-
+    private Blueprint purchased;
     public TeleportTable(Stage stage, ImageButton exit, String[] textureNames,
                          TextureManager tm, GameMenuManager gameMenuManager, Skin skin) {
         super(stage,exit, textureNames, tm, gameMenuManager);
@@ -81,6 +82,14 @@ public class TeleportTable extends AbstractPopUpElement {
                 gameMenuManager.hideOpened();
                 portal.teleport(save);
                 gameMenuManager.getQuestManager().nextQuest();
+
+                if (save.getGameStage() >= 3) {
+                    gameMenuManager.getQuestManager().setupEndGameScreen();
+                }
+
+                if (purchased != null) {
+                    gameMenuManager.getMainCharacter().removeBlueprint(purchased);
+                }
             }
         });
 
@@ -107,5 +116,9 @@ public class TeleportTable extends AbstractPopUpElement {
 
     public void setPortal(AbstractPortal abstractPortal) {
         this.portal = abstractPortal;
+    }
+
+    public void setPurchased(Blueprint purchased) {
+        this.purchased = purchased;
     }
 }

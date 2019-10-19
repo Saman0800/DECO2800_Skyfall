@@ -1631,6 +1631,13 @@ public class MainCharacter extends Peon
         }
     }
 
+    public void removeBlueprint(Blueprint blueprint) {
+        if (blueprint != null) {
+            this.blueprintsLearned.remove(blueprint);
+        }
+    }
+
+
     public List<Blueprint> getUnlockedBlueprints() {
         List<Blueprint> unlocked = new ArrayList<>();
 
@@ -1672,11 +1679,13 @@ public class MainCharacter extends Peon
             break;
         case 1:
             if (qm.questFinished()) {
+                logger.info("QUEST FINISHED ADDED DESERT PORTAL");
                 unlocked.add(new DesertPortal(0, 0, 0));
             }
             break;
         case 0:
             if (qm.questFinished()) {
+                logger.info("QUEST FINISHED ADDED FOREST PORTAL");
                 unlocked.add(new ForestPortal(0, 0, 0));
             }
             break;

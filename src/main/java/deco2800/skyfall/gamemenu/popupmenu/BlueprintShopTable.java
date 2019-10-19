@@ -7,6 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import deco2800.skyfall.buildings.DesertPortal;
+import deco2800.skyfall.buildings.ForestPortal;
+import deco2800.skyfall.buildings.MountainPortal;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
@@ -129,6 +132,9 @@ public class BlueprintShopTable extends AbstractPopUpElement {
                         if (sm.getCharacter().getGoldPouchTotalValue() >= b.getCost()) {
                             sm.getCharacter().removeGold(b.getCost());
                             sm.getCharacter().addBlueprint(b);
+                            if (b instanceof ForestPortal || b instanceof DesertPortal || b instanceof MountainPortal) {
+                                ((TeleportTable) gameMenuManager.getPopUp("teleportTable")).setPurchased(b);
+                            }
                         }
                         updateBlueprintShopPanel();
                     }
