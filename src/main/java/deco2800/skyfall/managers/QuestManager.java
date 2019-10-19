@@ -63,8 +63,6 @@ public class QuestManager extends TickableManager {
     // List of buildings to be placed
     private List<BuildingType> buildingsPlaced = new ArrayList<>();
 
-    private boolean isGameFinished = false;
-
     /**
      * Constructor, sets up beginning of game goals
      */
@@ -73,8 +71,6 @@ public class QuestManager extends TickableManager {
         questSuccess = false;
         buildingsTotal = new ArrayList<>();
         levelOneBuildings.add(BuildingType.CASTLE);
-        levelTwoBuildings.add(BuildingType.CASTLE);
-        levelTwoBuildings.add(BuildingType.CABIN);
         player = MainCharacter.getInstance();
         setMilestones();
     }
@@ -118,6 +114,7 @@ public class QuestManager extends TickableManager {
                 setWeaponTotal("bow", 4);
                 setWeaponTotal(SPEAR, 4);
                 setWeaponTotal("axe", 4);
+                break;
             default :
                 if (questLevel > 3) {
                     setupEndGameScreen();
@@ -513,7 +510,6 @@ public class QuestManager extends TickableManager {
         if (gameMenuManager != null) {
             gameMenuManager.hideOpened();
             gameMenuManager.setPopUp("endGameTable");
-            gameMenuManager.getPopUp("endGameTable");
         }
     }
 }
