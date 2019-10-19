@@ -1,5 +1,6 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
@@ -23,7 +24,6 @@ import deco2800.skyfall.managers.*;
  */
 public class PauseTable extends AbstractPopUpElement{
     private Skin skin;
-    private SkyfallGame game;
 
     /**
      * Constructs a pause baseTable.
@@ -154,7 +154,8 @@ public class PauseTable extends AbstractPopUpElement{
      * Returns to the main screen
      */
     public void returnHome() {
-        game = GameManager.getManagerFromInstance(GameMenuManager.class).getGame();
+        SkyfallGame game = gameMenuManager.getGame();
+        game.create();
         game.setScreen(new MainMenuScreen(game));
     }
 
