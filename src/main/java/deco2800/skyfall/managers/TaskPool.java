@@ -12,18 +12,18 @@ import deco2800.skyfall.worlds.Tile;
 
 public class TaskPool extends AbstractManager {
 
-	private List<AbstractTask> taskPool;
+	private List<AbstractTask> poolOfTasks;
 	private World world;
 	private Random random;
 
 	public TaskPool() {
-		taskPool = new ArrayList<AbstractTask>();
+		poolOfTasks = new ArrayList<>();
 		world = GameManager.get().getWorld();
 		random = new Random();
 	}
 	
 	public AbstractTask getTask(AgentEntity entity) {
-		if (taskPool.isEmpty()) {
+		if (poolOfTasks.isEmpty()) {
 			List<Tile> tiles = world.getTileMap();
 			if (tiles.isEmpty()) {
 				// There are no tiles
@@ -32,6 +32,6 @@ public class TaskPool extends AbstractManager {
 			Tile destination = tiles.get(random.nextInt(tiles.size()));
 			return new MovementTask(entity, destination.getCoordinates());
 		}
-		return taskPool.remove(0);
+		return poolOfTasks.remove(0);
 	}
 }

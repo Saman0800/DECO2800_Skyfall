@@ -118,8 +118,10 @@ public class QuestManager extends TickableManager {
                 setWeaponTotal("bow", 4);
                 setWeaponTotal(SPEAR, 4);
                 setWeaponTotal("axe", 4);
-                break;
             default :
+                if (questLevel > 3) {
+                    setupEndGameScreen();
+                }
                 break;
         }
     }
@@ -127,6 +129,7 @@ public class QuestManager extends TickableManager {
     /* Getters and Setters */
 
     /**
+     break;
      * Sets quest level, updates milestones
      * @param level The level to be set
      */
@@ -452,6 +455,9 @@ public class QuestManager extends TickableManager {
         int currentLevel = this.getQuestLevel();
         this.setQuestLevel(currentLevel);
 
+        // Set health to 50
+        this.getPlayer().setHealth(50);
+
         // Get amount of building items in inventory
         int currentMetal = player.getInventoryManager()
                 .getAmount(METAL);
@@ -495,5 +501,19 @@ public class QuestManager extends TickableManager {
 
     public int weaponsNum() {
         return ((axeTotal > 0) ? 1 : 0) + ((swordTotal > 0) ? 1 : 0) + ((spearTotal > 0) ? 1 : 0) + ((bowTotal > 0) ? 1 : 0);
+    }
+
+    /**
+     * Set up the game over screen.
+     */
+    private void setupEndGameScreen() {
+        // If the gameMenuManager does not equal null, create the game over screen
+        // The GUI PopUp for the character
+        GameMenuManager gameMenuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
+        if (gameMenuManager != null) {
+            gameMenuManager.hideOpened();
+            gameMenuManager.setPopUp("endGameTable");
+            gameMenuManager.getPopUp("endGameTable");
+        }
     }
 }

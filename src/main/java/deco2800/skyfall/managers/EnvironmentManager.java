@@ -7,7 +7,6 @@ import deco2800.skyfall.observers.SeasonObserver;
 import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.worlds.Tile;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,9 +14,6 @@ public class EnvironmentManager extends TickableManager {
 
     // Hours in a game day
     private int hours;
-
-    // Accurate alternative minutes representation
-    private float trueMinutes;
 
     // Seconds in a game day
     private int minutes;
@@ -61,7 +57,7 @@ public class EnvironmentManager extends TickableManager {
     /**
      * Constructor for setting up the environment
      */
-    public EnvironmentManager() throws NoSuchAlgorithmException {
+    public EnvironmentManager()  {
         // Music file setup
         file = "forest_day";
         currentFile = "";
@@ -279,7 +275,6 @@ public class EnvironmentManager extends TickableManager {
     public void setTime(int hour, int mins) {
         hours = hour;
         minutes = mins;
-        trueMinutes = mins;
 
         // Check if observers need notifying, notifies if needed
         if (mins >= 60) {
@@ -288,7 +283,6 @@ public class EnvironmentManager extends TickableManager {
                 hours = hours - 24;
             }
             minutes = 0;
-            trueMinutes = 0;
             updateTimeListeners(hours);
         }
 
@@ -423,15 +417,15 @@ public class EnvironmentManager extends TickableManager {
         currentBiome();
 
         // Name file accordingly
-        String TOD = "day";
-        TOD = isDay() ? TOD : "night";
+        String tod = "day";
+        tod = isDay() ? tod : "night";
 
         // Set file to be current biome the player is in
         if (biome.equals("lake") || biome.equals("river") || biome.equals("ocean")) {
             // no background music for the water biomes
-            file = "forest_" + TOD;
+            file = "forest_" + tod;
         } else {
-            file = biome + "_" + TOD;
+            file = biome + "_" + tod;
         }
     }
 
@@ -487,8 +481,6 @@ public class EnvironmentManager extends TickableManager {
             currentMillis = System.currentTimeMillis();
             minutes += 1;
         }
-
-        trueMinutes += (System.currentTimeMillis() - currentMillis) / 1000f;
 
         // Set the TOD and month in game
         setTime(hours, minutes);

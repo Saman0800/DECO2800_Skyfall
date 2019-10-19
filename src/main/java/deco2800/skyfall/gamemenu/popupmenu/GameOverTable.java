@@ -6,7 +6,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.*;
 
@@ -76,9 +75,6 @@ public class GameOverTable extends AbstractPopUpElement{
      * Resets the quest once play dies and chooses retry.
      */
     public void retryQuest() {
-        // Restore health to full
-        MainCharacter.getInstance().changeHealth(50);
-
         // Reset quest
         GameManager.getManagerFromInstance(QuestManager.class).resetQuest();
     }
