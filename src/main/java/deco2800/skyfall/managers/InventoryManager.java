@@ -307,6 +307,10 @@ public class InventoryManager extends TickableManager implements Serializable {
         return false;
     }
 
+    /**
+     * Adds multiple of an item type to inventory
+     * @param items list of items to add to the inventory
+     */
     public void inventoryAddMultiple(Map<String, List<Item>> items) {
         for (Map.Entry<String, List<Item>> e : items.entrySet()) {
             if (inventory.get(e.getKey()) != null) {
@@ -455,30 +459,6 @@ public class InventoryManager extends TickableManager implements Serializable {
         this.positions.remove(itemName);
     }
 
-    /**
-     * Returns the description of item
-     *
-     * @param itemName String name of item
-     * @return Description of item
-     */
-    public String getItemDescription(String itemName) {
-        if (this.inventory.get(itemName) != null) {
-            int num = this.inventory.get(itemName).size();
-
-            if (num == 1) {
-                Item item = this.inventory.get(itemName).get(0);
-                return item.getDescription();
-            } else if (num > 1) {
-                List<Item> itemsList = this.inventory.get(itemName);
-                Item item = itemsList.get(num - 1);
-                return item.getDescription();
-            }
-        }
-
-        logger.warn("You don't have that!");
-
-        return null;
-    }
 
     /**
      * Returns an instance of a particular item type
