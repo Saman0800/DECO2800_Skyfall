@@ -37,7 +37,6 @@ import java.util.ArrayList;
  */
 public class GameScreen implements Screen, KeyDownObserver {
     private final Logger logger = LoggerFactory.getLogger(GameScreen.class);
-
     @SuppressWarnings("unused")
     private final SkyfallGame game;
     /**
@@ -338,7 +337,7 @@ public class GameScreen implements Screen, KeyDownObserver {
     }
 
     /**
-     * Use the selected renderer to render objects onto the map
+     * Use the selected rendere./gr to render objects onto the map
      */
     private void rerenderMapObjects(SpriteBatch batch, OrthographicCamera camera) {
         // set ambient light
@@ -492,5 +491,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             camera.translate(0, goFastSpeed, 0);
         }
+
     }
 }

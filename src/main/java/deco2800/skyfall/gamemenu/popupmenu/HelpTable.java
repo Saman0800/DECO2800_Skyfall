@@ -71,7 +71,7 @@ public class HelpTable extends AbstractPopUpElement{
         banner.add(title);
 
 
-        baseTable.add(banner).width(700).height(70).padTop(20).colspan(2);
+        baseTable.add(banner).width(700).height(70).padTop(20).colspan(4);
         baseTable.row().padTop(10);
     }
 
@@ -85,7 +85,7 @@ public class HelpTable extends AbstractPopUpElement{
         baseTable.add(currentPage).width(650).height(1704f / 2556 * 650).colspan(4);
         baseTable.row();
 
-        TextureRegionDrawable arrow = gameMenuManager.generateTextureRegionDrawableObject("help_arrow");
+        TextureRegionDrawable arrow = gameMenuManager.generateTextureRegionDrawableObject("arrow");
 
         // Add left arrow except for the first page
         if (page > 1) {
