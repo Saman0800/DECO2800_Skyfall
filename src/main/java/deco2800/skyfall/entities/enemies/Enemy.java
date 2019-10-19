@@ -27,7 +27,6 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
     private int health;
     private int strength;
     private float attackRange;
-    private float chaseRange = 10;
     private float walkingSpeed;
     private float chasingSpeed;
 
@@ -39,7 +38,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     // Enemy types
     public enum EnemyType {
-        ABDUCTOR, HEAVY, SCOUT
+        ABDUCTOR, HEAVY, SCOUT, MEDIUM
     }
 
     // type this enemy is
@@ -49,7 +48,6 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
     private long hurtTime = 0;
     private long deadTime = 0;
     // Booleans to check whether Enemy is in a state.
-    private boolean isAttacking = false;
     private boolean isHurt = false;
 
     // sound effects
@@ -133,10 +131,10 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
             this.position.set(getBody().getPosition().x, getBody().getPosition().y);
 
             // if the player in attack range then attack player
-            if (distance(mainCharacter) < 0.02f) {
+            if (distance(mainCharacter) < 0.98f) {
                 setCurrentState(AnimationRole.ATTACK);
+                mainCharacter.setCurrentState(AnimationRole.HURT);
                 dealDamage(mainCharacter);
-                setAttacking(true);
             }
         }
     }
@@ -145,7 +143,6 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
      * under normal situation the enemy will random wandering in 100 radius circle
      */
     public void randomMoveAction() {
-        setAttacking(false);
         setCurrentState(AnimationRole.MOVE);
         double moveAngle = new Random().nextDouble() * 2 * Math.PI;
 
@@ -240,17 +237,15 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
         /* Short Animations */
         if (getToBeRun() != null) {
-            if (getToBeRun().getType() == AnimationRole.DEAD) {
+            if (getToBeRun().getType() == AnimationRole.ATTACK) {
+                return;
+            } else if (getToBeRun().getType() == AnimationRole.DEAD) {
                 setCurrentState(AnimationRole.STILL);
-            } else if (getToBeRun().getType() == AnimationRole.ATTACK) {
-                setAttacking(false);
             }
-        } else {
-            if (isDead()) {
-                setCurrentState(AnimationRole.STILL);
-            } else if (isHurt) {
-                setCurrentState(AnimationRole.HURT);
-            }
+        }
+
+        if (isHurt) {
+             setCurrentState(AnimationRole.HURT);
         }
     }
 
@@ -272,10 +267,13 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
             if (this.distance(mainCharacter) < attackRange &&
                     !(mainCharacter.isDead() || mainCharacter.isRecovering() || mainCharacter.isHurt())) {
                 attackAction();
+                setCurrentState(AnimationRole.ATTACK);
             } else {
+                setCurrentState(AnimationRole.MOVE);
                 randomMoveAction();
             }
             if (isHurt) {
+                setCurrentState(AnimationRole.HURT);
                 checkIfHurtEnded();
             }
             this.updateAnimation();
@@ -603,15 +601,6 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
             return Direction.NORTH_WEST;
         }
         return null;
-    }
-
-    /**
-     * Setting the enemy to attack model
-     *
-     * @param isAttacking whether the enemy is attacking.
-     */
-    private void setAttacking(boolean isAttacking) {
-        this.isAttacking = isAttacking;
     }
 
     /**

@@ -99,10 +99,12 @@ public class EnemyTest {
 
     @Test
     public void enemyAttackTest() {
+
         testEnemy.getMainCharacter().setHurt(false);
         testEnemy.getMainCharacter().setRecovering(false);
         testEnemy.getMainCharacter().setDead(false);
-        testCharacter = new MainCharacter(29f, 29f, 0.05f, "Main Piece", 50);
+        testCharacter = new MainCharacter(30f, 30f, 0.05f, "Main Piece", 50);
+        testEnemy.setMainCharacter(testCharacter);
         testEnemy.setStrength(3);
         testEnemy.setChasingSpeed(3f);
         testEnemy.setAttackRange(100);
@@ -134,8 +136,21 @@ public class EnemyTest {
         testEnemy.setHurtTime(400);
         testEnemy.checkIfHurtEnded();
 
+        testEnemy.getMainCharacter().setHurt(false);
+        testEnemy.getMainCharacter().setRecovering(false);
+        testEnemy.getMainCharacter().setDead(true);
+        testEnemy.attackAction();
+        Assert.assertEquals(AnimationRole.ATTACK, testEnemy.getCurrentState());
+        Assert.assertTrue(testEnemy.getMainCharacter().isHurt());
+        testCharacter = new MainCharacter(0f, 0f, 0.05f, "Main Piece", 50);
+        testEnemy.setMainCharacter(testCharacter);
+        testEnemy.randomMoveAction();
 
-
+        testEnemy.getMainCharacter().setHurt(false);
+        testEnemy.getMainCharacter().setRecovering(false);
+        testEnemy.getMainCharacter().setDead(false);
+        testEnemy.attackAction();
+        Assert.assertEquals(AnimationRole.MOVE, testEnemy.getCurrentState());
     }
 
     @Test
