@@ -337,12 +337,12 @@ public class GameScreen implements Screen, KeyDownObserver {
     }
 
     /**
-     * Use the selected renderer to render objects onto the map
+     * Use the selected rendere./gr to render objects onto the map
      */
     private void rerenderMapObjects(SpriteBatch batch, OrthographicCamera camera) {
         // set ambient light
         shader.setAmbientComponent(
-                new vec3(ambientRed.getIntensity(), ambientGreen.getIntensity(), ambientBlue.getIntensity()),
+                new Vec3(ambientRed.getIntensity(), ambientGreen.getIntensity(), ambientBlue.getIntensity()),
                 ambientIntensity.getIntensity());
 
         // Add all the point lights of entities that implement the HasPointLight
