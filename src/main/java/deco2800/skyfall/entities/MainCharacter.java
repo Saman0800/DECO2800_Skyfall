@@ -24,6 +24,7 @@ import deco2800.skyfall.entities.vehicle.Bike;
 import deco2800.skyfall.entities.vehicle.SandCar;
 import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.gamemenu.HealthCircle;
+//import deco2800.skyfall.gamemenu.ManaBar;
 import deco2800.skyfall.gamemenu.popupmenu.ConstructionTable;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
@@ -456,6 +457,9 @@ public class MainCharacter extends Peon
      */
     public boolean setEquippedItem(Item item) {
         if (item.isEquippable()) {
+            if (!this.equippedItem.getName().equals(new EmptyItem().getName())) {
+                this.inventories.add(this.equippedItem);
+            }
             this.equippedItem = item;
             return true;
         } else {
@@ -1516,7 +1520,7 @@ public class MainCharacter extends Peon
      *
      * @return the player direction (units: degrees)
      */
-    private double getPlayerDirectionAngle() {
+    public double getPlayerDirectionAngle() {
         double val;
         if (xInput != 0 || yInput != 0) {
             val = Math.atan2(yInput, xInput);

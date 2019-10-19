@@ -18,6 +18,7 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.EnvironmentManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.observers.TimeObserver;
+import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.Chunk;
@@ -54,34 +55,37 @@ public class EnemySpawnTable implements TimeObserver {
      * string of the biome name and the values a list of all the classes to be
      * spawned within the corresponding biome.
      */
-    private Map<String, List<Class<? extends Enemy>>> biomeToConstructor;
+    private Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor;
 
     /**
      * A reference to the environment manager to make queries to.
      */
-    EnvironmentManager environManager;
+    private EnvironmentManager environManager;
 
     /**
      * A function that dictates how likely it is to spawn an enemy based on various
      * environment manager parameters
      */
-    Function<EnvironmentManager, Double> probAdjFunc;
+    private Function<EnvironmentManager, Double> probAdjFunc;
 
     /**
      * A reference to a main character for easy queries.
      */
-    MainCharacter mainCharacter = MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
+    private MainCharacter mainCharacter = MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
 
     public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
-            Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
-            Function<EnvironmentManager, Double> probAdjFunc, EnvironmentManager gameEnvironManag) {
-        this(spawnRadius, maxInRadius, frequency, biomeToConstructor, probAdjFunc, GameManager.get().getWorld(),
-                gameEnvironManag);
+            Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor,
+            Function<EnvironmentManager, Double> probAdjFunc) {
+
+        this(spawnRadius, maxInRadius, frequency, biomeToConstructor,
+                GameManager.getManagerFromInstance(EnvironmentManager.class), probAdjFunc,
+                GameManager.get().getWorld());
     }
 
     public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
-            Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
-            Function<EnvironmentManager, Double> probAdjFunc, World world, EnvironmentManager gameEnvironManag) {
+            Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor,
+            EnvironmentManager gameEnvironManag, Function<EnvironmentManager, Double> probAdjFunc, World world) {
+
         this.spawnRadius = spawnRadius;
         this.maxInRadius = maxInRadius;
         this.spawnFrequency = frequency;
@@ -89,21 +93,6 @@ public class EnemySpawnTable implements TimeObserver {
         this.environManager = gameEnvironManag;
         this.biomeToConstructor = biomeToConstructor;
         this.probAdjFunc = probAdjFunc;
-    }
-
-    public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
-            Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
-            Function<EnvironmentManager, Double> probAdjFunc, World world) {
-
-        this(spawnRadius, maxInRadius, frequency, biomeToConstructor, probAdjFunc, world,
-                GameManager.get().getManager(EnvironmentManager.class));
-    }
-
-    public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
-            Map<String, List<Class<? extends Enemy>>> biomeToConstructor,
-            Function<EnvironmentManager, Double> probAdjFunc) {
-
-        this(spawnRadius, maxInRadius, frequency, biomeToConstructor, probAdjFunc, GameManager.get().getWorld());
     }
 
     /**
@@ -262,7 +251,7 @@ public class EnemySpawnTable implements TimeObserver {
                 }
 
                 // Create an enemy using one of the appropriate constructors
-                List<Class<? extends Enemy>> possibleConstructors = biomeToConstructor
+                List<Function<HexVector, ? extends Enemy>> possibleConstructors = biomeToConstructor
                         .get(nextTile.getBiome().getBiomeName());
 
                 if ((possibleConstructors == null) || (possibleConstructors.isEmpty())) {
@@ -275,22 +264,17 @@ public class EnemySpawnTable implements TimeObserver {
 
                 // Find all the enemies within close proximity to this tile and adjust the
                 // spawning chance accordingly
-                spawnChance = Math.pow(spawnChance,
-                        Math.log(enemiesNearTargetCount(nextTile.getRow(), nextTile.getCol())));
 
                 // Pick a class, any class!
-                Class<? extends Enemy> randEnemyType = possibleConstructors
+                Function<HexVector, ? extends Enemy> randEnemyType = possibleConstructors
                         .get(rand.nextInt(possibleConstructors.size()));
 
-                Enemy newEnemy;
-
-                try {
-                    newEnemy = randEnemyType.getDeclaredConstructor(Float.class, Float.class)
-                            .newInstance(nextTile.getRow(), nextTile.getCol());
+                if (rand.nextFloat() <= spawnChance) {
+                    Enemy newEnemy = randEnemyType.apply(new HexVector(nextTile.getRow(), nextTile.getCol()));
                     world.addEntity(newEnemy);
                     enemiesPlaced += 1;
-                } catch (Exception e) {
-                    logger.error("Could not create new AbstractEnemy: " + e.toString());
+
+                    logger.info("Enemy Spawned in " + nextTile.getBiome().getBiomeName());
                 }
             }
         }
