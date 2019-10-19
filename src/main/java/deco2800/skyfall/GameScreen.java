@@ -140,6 +140,8 @@ public class GameScreen implements Screen, KeyDownObserver {
             save.setCurrentWorld(world);
             world.setSave(save);
 
+            WorldBuilder worldBuilder = new WorldBuilder();
+            worldBuilder.generateNotStaticEntities(world, 0.6f);
             EnvironmentPacker packer = new EnvironmentPacker(world);
             packer.addPackingComponent(new BirthPlacePacking(packer));
             packer.doPackings();
