@@ -457,6 +457,8 @@ public class MainCharacter extends Peon
     public boolean setEquippedItem(Item item) {
         if (item.isEquippable()) {
             this.equippedItem = item;
+            GameManager.get().getManager(FeedbackManager.class).setFeedbackBarUpdate(true);
+            GameManager.get().getManager(FeedbackManager.class).setFeedbackText(item.getName() + " equipped");
             return true;
         } else {
             logger.warn("You can't equip {}.", item.getName());
@@ -910,7 +912,7 @@ public class MainCharacter extends Peon
                 QuestManager qm = GameManager.getManagerFromInstance(QuestManager.class);
 
                 ConstructionTable bs = (ConstructionTable) gmm.getPopUp(CONSTRUCTION_TABLE);
-                bs.build(GameManager.get().getWorld(), (int) clickedPosition[0], (int) clickedPosition[1]);
+                bs.build(GameManager.get().getWorld(), clickedPosition[0], clickedPosition[1]);
                 qm.addBuilding(bs.selectBuilding(bs.getBuildingID(), 0, 0).getBuildingType());
                 toBuild = false;
             }
@@ -1629,6 +1631,13 @@ public class MainCharacter extends Peon
         }
     }
 
+    public void removeBlueprint(Blueprint blueprint) {
+        if (blueprint != null) {
+            this.blueprintsLearned.remove(blueprint);
+        }
+    }
+
+
     public List<Blueprint> getUnlockedBlueprints() {
         List<Blueprint> unlocked = new ArrayList<>();
 
@@ -1670,11 +1679,13 @@ public class MainCharacter extends Peon
             break;
         case 1:
             if (qm.questFinished()) {
+                logger.info("QUEST FINISHED ADDED DESERT PORTAL");
                 unlocked.add(new DesertPortal(0, 0, 0));
             }
             break;
         case 0:
             if (qm.questFinished()) {
+                logger.info("QUEST FINISHED ADDED FOREST PORTAL");
                 unlocked.add(new ForestPortal(0, 0, 0));
             }
             break;

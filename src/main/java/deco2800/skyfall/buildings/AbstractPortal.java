@@ -94,6 +94,7 @@ public abstract class AbstractPortal extends SaveableEntity {
         World nextWorld = WorldDirector.constructSingleBiomeWorld(new WorldBuilder(), currentWorld.getSeed() + 1, true, nextBiome).getWorld();
         // Add this world to the save
         save.getWorlds().add(nextWorld);
+        save.incrementGameStage();
         save.setCurrentWorld(nextWorld);
         nextWorld.setSave(save);
         // Move main character to origin of new world

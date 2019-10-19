@@ -1,10 +1,15 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import deco2800.skyfall.buildings.DesertPortal;
+import deco2800.skyfall.buildings.ForestPortal;
+import deco2800.skyfall.buildings.MountainPortal;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
@@ -48,15 +53,8 @@ public class BlueprintShopTable extends AbstractPopUpElement {
     @Override
     public void draw() {
         super.draw();
-        baseTable = new Table();
-        baseTable.setSize(910, 510);
-        baseTable.setPosition(Gdx.graphics.getWidth() / 2f - baseTable.getWidth() / 2,
-                (Gdx.graphics.getHeight() + 160) / 2f - baseTable.getHeight() / 2);
-        baseTable.setDebug(true);
-        baseTable.top();
-        baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
+        super.blueprintShopTableDuplicatedCode() ;
         baseTable.setName("bluePrintTable");
-
 
         Table infoBar = new Table();
         infoBar.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_banner"));
@@ -95,16 +93,38 @@ public class BlueprintShopTable extends AbstractPopUpElement {
             icon.setName("icon");
             icon.setSize(100, 100);
             icon.setPosition(xpos + count * 130, ypos);
+            Label cost;
             if (isBought(b)) {
-                Label cost = new Label("X", skin, "white-label");
+                cost = new Label("X", skin, "white-label");
                 cost.setName(b.getName());
-                cost.setPosition(xpos + 85 + count * 130, ypos + 75);
-                blueprintPanel.addActor(cost);
+                cost.setPosition(xpos + 80 + count * 130, ypos + 75);
+                cost.setFontScale((float)0.5);
+
+                int costWidth = 30;
+                if(b.getCost()>9){
+                    costWidth += 10;
+                }
+                if(b.getCost()>99){
+                    costWidth += 10;
+                }
+
+                cost.setSize(costWidth, 40);
             } else {
-                Label cost = new Label("$" + b.getCost(), skin, "white-label");
-                cost.setPosition(xpos + 85 + count * 130, ypos + 75);
+                cost = new Label("$" + b.getCost(), skin, "white-label");
+                cost.setPosition(xpos + 80 + count * 130, ypos + 75);
                 cost.setName(b.getName());
-                blueprintPanel.addActor(cost);
+                cost.setFontScale((float)0.5);
+
+                int costWidth = 35;
+                if(b.getCost()>9){
+                    costWidth += 10;
+                }
+                if(b.getCost()>99){
+                    costWidth += 10;
+                }
+
+                cost.setSize(costWidth, 40);
+
 
                 icon.addListener(new ClickListener() {
                     @Override
@@ -112,12 +132,16 @@ public class BlueprintShopTable extends AbstractPopUpElement {
                         if (sm.getCharacter().getGoldPouchTotalValue() >= b.getCost()) {
                             sm.getCharacter().removeGold(b.getCost());
                             sm.getCharacter().addBlueprint(b);
+                            if (b instanceof ForestPortal || b instanceof DesertPortal || b instanceof MountainPortal) {
+                                ((TeleportTable) gameMenuManager.getPopUp("teleportTable")).setPurchased(b);
+                            }
                         }
                         updateBlueprintShopPanel();
                     }
                 });
             }
             blueprintPanel.addActor(icon);
+            blueprintPanel.addActor(cost);
 
             count++;
 

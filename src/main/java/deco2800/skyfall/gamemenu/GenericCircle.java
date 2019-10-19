@@ -12,8 +12,6 @@ import deco2800.skyfall.managers.TextureManager;
 public class GenericCircle extends AbstractUIElement {
     protected GameMenuManager gmm;
 
-
-
     // Bigger circle
     protected ImageButton biggerCircle;
 

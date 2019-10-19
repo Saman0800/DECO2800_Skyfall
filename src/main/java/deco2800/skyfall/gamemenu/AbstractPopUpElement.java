@@ -4,10 +4,7 @@ package deco2800.skyfall.gamemenu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import deco2800.skyfall.GameScreen;
@@ -90,6 +87,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
         }
         gameMenuManager.getMainCharacter().resetVelocity();
         if (baseTable != null) {
+            baseTable.setZIndex(30);
             baseTable.setVisible(true);
         }
         isVisible = true;
@@ -143,4 +141,28 @@ public class AbstractPopUpElement extends AbstractUIElement {
 
     }
 
+
+    protected void blueprintShopTableDuplicatedCode () {
+        baseTable = new Table();
+        baseTable.setSize(910, 510);
+        baseTable.setPosition(Gdx.graphics.getWidth() / 2f - baseTable.getWidth() / 2 + 60,
+                (Gdx.graphics.getHeight() + 160) / 2f - baseTable.getHeight() / 2);
+        baseTable.top();
+        baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
+    }
+
+
+    protected  void goldAndConstructionTableDuplicatedFunctionality (String bannerName) {
+
+        Image infoBar = new Image(gameMenuManager.generateTextureRegionDrawableObject(bannerName));
+        infoBar.setSize(550, 55);
+        infoBar.setPosition(90, 600);
+
+        Table infoPanel = new Table();
+        infoPanel.setSize(410, 400);
+        infoPanel.setPosition(25, 18);
+        infoPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("info_panel"));
+        baseTable.addActor(infoBar);
+
+    }
 }

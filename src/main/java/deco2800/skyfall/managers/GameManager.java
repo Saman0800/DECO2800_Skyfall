@@ -44,7 +44,7 @@ public class GameManager {
     // Showing if the game is paused.
     private static boolean paused = false;
 
-    private boolean debugMode = true;
+    private boolean debugMode = false;
 
     /**
      * Whether or not we render info over the tiles.

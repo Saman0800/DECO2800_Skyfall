@@ -43,18 +43,9 @@ public class GoldTable extends AbstractPopUpElement{
         baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("pop up screen"));
         baseTable.setName("baseTable");
 
-        Image infoBar = new Image(gameMenuManager.generateTextureRegionDrawableObject("goldBanner"));
-        infoBar.setSize(550, 55);
-        infoBar.setPosition(90, 600);
-
-        Table infoPanel = new Table();
-        infoPanel.setSize(410, 400);
-        infoPanel.setPosition(25, 18);
-        infoPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("info_panel"));
-
+        super.goldAndConstructionTableDuplicatedFunctionality("goldBanner");
         updateGoldPanel();
 
-        baseTable.addActor(infoBar);
         baseTable.addActor(this.goldPanel);
         baseTable.setVisible(false);
 
