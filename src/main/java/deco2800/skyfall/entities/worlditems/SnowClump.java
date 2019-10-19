@@ -4,13 +4,10 @@ import deco2800.skyfall.entities.HasHealth;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.worlds.Tile;
 
-import java.util.Random;
-
 public class SnowClump extends StaticEntity implements HasHealth {
     private int health = 100;
     private static final String ENTITY_ID_STRING = "rock";
 
-    private static Random randomGen = new Random();
     private static int nextImage = 1;
 
     public SnowClump() {

@@ -6,12 +6,10 @@ import deco2800.skyfall.graphics.types.Vec2;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.graphics.types.*;
 import deco2800.skyfall.graphics.*;
-import java.util.Random;
 
 public class ForestMushroom extends StaticEntity implements HasPointLight {
 
     private static final String ENTITY_ID_STRING = "forest_mushrooms";
-    private static Random randomGen = new Random();
     private static int nextImage = 1;
     PointLight entityPointLight;
 
