@@ -130,8 +130,6 @@ public class WorldDirector {
         MainCharacter mainCharacter = setupBeachAndStats(builder, renderUI);
         builder.addEntity(new LizardHome(0, 2, mainCharacter));
         builder.addEntity(new IceWhitebear(-2, 0, mainCharacter));
-        builder.addEntity(new Bike(-10f, -2f, mainCharacter));
-        builder.addEntity(new SandCar(-20f, -2f, mainCharacter));
         builder.addEntity(new Scout(0, 2, 0.4f, WorldDirector.FOREST_STRING));
         builder.addEntity(new Heavy(7, 9, 0.2f, WorldDirector.FOREST_STRING));
         builder.addEntity(new Abductor(4, 9, 0.8f, WorldDirector.FOREST_STRING));
@@ -163,6 +161,8 @@ public class WorldDirector {
         }
 
         builder.addEntity(mainCharacter);
+        builder.addEntity(new Bike(-10f, -2f, mainCharacter));
+        builder.addEntity(new SandCar(-20f, -2f, mainCharacter));
 
         return mainCharacter;
     }
@@ -183,6 +183,7 @@ public class WorldDirector {
 
         builder.addEntity(new Scout(0, 2, 1f, WorldDirector.FOREST_STRING));
         builder.addEntity(new Heavy(7, 9, 2f, WorldDirector.FOREST_STRING));
+        builder.addEntity(new Bike(-10f, -2f, mainCharacter));
 
         builder.addLake(5);
         builder.addRiver();
